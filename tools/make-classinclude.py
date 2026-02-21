@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-扫描指定目录下的.h头文件，提取带有QWT_EXPORT导出符号的类和结构体
+扫描指定目录下的.h头文件，提取带有QWT_EXPORT或QWT3D_EXPORT导出符号的类和结构体
 为每个导出的类/结构体生成对应的包含文件
 同时处理固定文件和模板类
 python make-classinclude.py --scan-dir ../src --output-dir ../classincludes
@@ -15,6 +15,15 @@ from pathlib import Path
 FIXED_FILES = {
     'QwtMath': 'qwt_math.h',
     'QwtGlobal': 'qwt_global.h'
+}
+
+# 需要处理的导出符号列表
+EXPORT_SYMBOLS = ['QWT_EXPORT', 'QWT3D_EXPORT']
+
+# 导出符号到文件前缀的映射
+EXPORT_PREFIX = {
+    'QWT_EXPORT': '',           # QWT_EXPORT -> 不添加前缀
+    'QWT3D_EXPORT': 'Qwt3D'     # QWT3D_EXPORT -> 添加Qwt3D前缀
 }
 
 def parse_arguments():
@@ -51,57 +60,73 @@ def find_header_files(scan_dir):
 
 def extract_exported_classes(file_path):
     """
-    从头文件中提取带有QWT_EXPORT的类和结构体，以及模板类
-    返回类/结构体名称列表
+    从头文件中提取带有指定导出符号的类和结构体
+    返回字典，键为类名，值为导出符号
+    只处理EXPORT_SYMBOLS中定义的导出符号
     """
-    exported_classes = []
+    exported_classes = {}  # 存储类名和对应的导出符号
     
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
         
-        # 正则表达式匹配QWT_EXPORT的类和结构体
-        # 匹配模式: class QWT_EXPORT 类名 或 struct QWT_EXPORT 结构体名
-        export_patterns = [
-            r'class\s+QWT_EXPORT\s+(\w+)\s*[:{<]',  # class QWT_EXPORT ClassName
-            r'struct\s+QWT_EXPORT\s+(\w+)\s*[:{<]', # struct QWT_EXPORT StructName
-        ]
+        # 只为指定的导出符号创建正则表达式模式
+        for export_symbol in EXPORT_SYMBOLS:
+            # 正则表达式匹配带有导出符号的类和结构体
+            # 匹配模式: class 导出符号 类名 或 struct 导出符号 结构体名
+            # 使用更精确的匹配，确保导出符号紧跟在class/struct后面
+            export_patterns = [
+                rf'class\s+{export_symbol}\s+(\w+)(?:\s*[:{{<]|\s*$)',  # class EXPORT_SYMBOL ClassName
+                rf'struct\s+{export_symbol}\s+(\w+)(?:\s*[:{{<]|\s*$)', # struct EXPORT_SYMBOL StructName
+            ]
+            
+            for pattern in export_patterns:
+                matches = re.findall(pattern, content)
+                for class_name in matches:
+                    # 只添加有效的类名，避免重复
+                    if class_name and class_name not in exported_classes:
+                        exported_classes[class_name] = export_symbol
+                        print(f"    找到导出类: {class_name} 使用 {export_symbol}")
         
-        for pattern in export_patterns:
-            matches = re.findall(pattern, content)
-            for class_name in matches:
-                if class_name not in exported_classes:
-                    exported_classes.append(class_name)
-        
-        # 匹配模板类
-        # 匹配模式: template<...> class 类名 或 template<...> struct 结构体名
+        # 可选：处理模板类，但只处理带有导出符号的模板类
+        # 模板类的匹配更复杂，需要谨慎处理
         template_patterns = [
-            r'template\s*<[^>]*>\s*class\s+(\w+)\s*[:{<]',  # template<...> class ClassName
-            r'template\s*<[^>]*>\s*struct\s+(\w+)\s*[:{<]', # template<...> struct StructName
+            rf'template\s*<[^>]*>\s*class\s+{export_symbol}\s+(\w+)',  # template<...> class EXPORT_SYMBOL ClassName
+            rf'template\s*<[^>]*>\s*struct\s+{export_symbol}\s+(\w+)', # template<...> struct EXPORT_SYMBOL StructName
         ]
         
-        for pattern in template_patterns:
-            matches = re.findall(pattern, content)
-            for class_name in matches:
-                # 排除一些常见的内部模板类
-                if (class_name not in exported_classes and 
-                    not class_name.startswith('QwtArray') and
-                    not class_name.startswith('QwtVector') and
-                    class_name not in ['QMap', 'QList', 'QVector', 'QSharedPointer']):
-                    exported_classes.append(class_name)
+        for export_symbol in EXPORT_SYMBOLS:
+            for pattern in template_patterns:
+                matches = re.findall(pattern.format(export_symbol=export_symbol), content)
+                for class_name in matches:
+                    if class_name and class_name not in exported_classes:
+                        exported_classes[class_name] = export_symbol
+                        print(f"    找到模板导出类: {class_name} 使用 {export_symbol}")
         
     except Exception as e:
         print(f"读取文件 {file_path} 时出错: {e}")
     
     return exported_classes
 
-def generate_include_file(output_dir, class_name, header_file_path=None, scan_dir=None, fixed_header=None):
+def generate_output_filename(class_name, export_symbol):
+    """
+    根据导出符号生成输出文件名
+    """
+    if export_symbol in EXPORT_PREFIX and EXPORT_PREFIX[export_symbol]:
+        # 对于有前缀映射的导出符号，添加前缀
+        return f"{EXPORT_PREFIX[export_symbol]}{class_name}"
+    else:
+        # 对于没有前缀映射的导出符号，直接使用类名
+        return class_name
+
+def generate_include_file(output_dir, class_name, export_symbol, header_file_path=None, scan_dir=None, fixed_header=None):
     """
     为每个导出的类生成包含文件
     """
     try:
-        # 创建输出文件路径
-        output_file = Path(output_dir) / class_name
+        # 生成输出文件名
+        output_filename = generate_output_filename(class_name, export_symbol)
+        output_file = Path(output_dir) / output_filename
         
         if fixed_header:
             # 固定文件，直接使用指定的头文件
@@ -115,11 +140,11 @@ def generate_include_file(output_dir, class_name, header_file_path=None, scan_di
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(include_content)
         
-        return True
+        return True, output_filename
         
     except Exception as e:
         print(f"生成文件 {class_name} 时出错: {e}")
-        return False
+        return False, None
 
 def generate_fixed_files(output_dir, scan_dir):
     """
@@ -131,8 +156,12 @@ def generate_fixed_files(output_dir, scan_dir):
         # 检查头文件是否存在
         header_path = Path(scan_dir) / header_name
         if header_path.exists():
-            if generate_include_file(output_dir, class_name, fixed_header=header_name):
-                print(f"生成固定文件: {class_name} -> {header_name}")
+            # 固定文件使用特殊的导出符号标记
+            success, output_filename = generate_include_file(
+                output_dir, class_name, 'FIXED', fixed_header=header_name
+            )
+            if success:
+                print(f"生成固定文件: {output_filename} -> {header_name}")
                 generated_count += 1
         else:
             print(f"警告: 固定文件所需的头文件不存在: {header_name}")
@@ -146,8 +175,10 @@ def main():
     output_path = Path(args.output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     
+    print(f"将处理以下导出符号: {', '.join(EXPORT_SYMBOLS)}")
+    
     # 生成固定文件
-    print("生成固定文件...")
+    print("\n生成固定文件...")
     fixed_count = generate_fixed_files(args.output_dir, args.scan_dir)
     
     # 查找所有头文件
@@ -158,29 +189,39 @@ def main():
     
     total_classes = fixed_count
     processed_files = 0
+    files_with_exports = 0
     
     # 处理每个头文件
     for header_file in header_files:
-        print(f"处理文件: {header_file}")
+        print(f"\n处理文件: {header_file}")
         
-        # 提取导出的类和模板类
+        # 提取导出的类
         exported_classes = extract_exported_classes(header_file)
         
         if exported_classes:
-            print(f"  找到导出类和模板类: {', '.join(exported_classes)}")
+            files_with_exports += 1
+            class_list = list(exported_classes.keys())
+            print(f"  找到 {len(exported_classes)} 个导出类: {', '.join(class_list)}")
             
             # 为每个导出的类生成文件
-            for class_name in exported_classes:
+            for class_name, export_symbol in exported_classes.items():
                 # 检查是否已经生成了固定文件，避免重复
                 if class_name not in FIXED_FILES:
-                    if generate_include_file(args.output_dir, class_name, header_file, args.scan_dir):
+                    success, output_filename = generate_include_file(
+                        args.output_dir, class_name, export_symbol, 
+                        header_file, args.scan_dir
+                    )
+                    if success:
                         total_classes += 1
-                        print(f"    生成文件: {class_name}")
+                        print(f"    生成文件: {output_filename} (来自类 {class_name}, 使用 {export_symbol})")
+        else:
+            print(f"  没有找到带有指定导出符号的类")
         
         processed_files += 1
     
     print(f"\n处理完成!")
     print(f"扫描头文件: {processed_files} 个")
+    print(f"包含导出类的头文件: {files_with_exports} 个")
     print(f"生成包含文件: {total_classes} 个")
     print(f"输出目录: {args.output_dir}")
 
