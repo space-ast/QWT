@@ -49,7 +49,7 @@ option(QWT_CONFIG_QWTPLOT_3D "Enable QwtPlot3D module" ON)
 
 option(QWT_CONFIG_BUILD_EXAMPLE "Build example applications" ON)
 option(QWT_CONFIG_BUILD_PLAYGROUND "Build playground applications" ON)
-option(QWT_CONFIG_BUILD_STATIC_EXAMPLE "Build static examples (takes relatively long compilation time)" OFF)
+option(QWT_CONFIG_BUILD_STATIC_EXAMPLE "Build static examples (takes relatively long compilation time)" ON)
 
 ########################################################
 # MSVC Settings

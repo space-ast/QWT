@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DEST=../src
-OPTS='-i "../src" -w "*.cpp;*.h;*.hpp" -s'
+OPTS='-i "../src" -i "../src/3rdparty/gl2ps" -w "*.cpp;*.h;*.hpp;*.c" -s'
 ./Amalgamate.exe $OPTS ./amalgamate/QWTAmalgamTemplate.h $DEST/../src-amalgamate/QwtPlot.h
 ./Amalgamate.exe $OPTS ./amalgamate/QWTAmalgamTemplate.cpp $DEST/../src-amalgamate/QwtPlot.cpp
 #  使用read命令达到类似bat中的pause命令效果

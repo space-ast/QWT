@@ -149,6 +149,33 @@
 #include "../../src/qwt_knob.cpp"
 #include "../../src/qwt_analog_clock.cpp"
 #include "../../src/qwt_magnifier.cpp"
+// 3rdparty gl2ps for plot3d 
+#include "../../src/3rdparty/gl2ps/gl2ps.h"
+#include "../../src/3rdparty/gl2ps/gl2ps.c"
+// plot3d
+#include "../../src/qwt3d_axis.cpp"
+#include "../../src/qwt3d_color.cpp"
+#include "../../src/qwt3d_coordsys.cpp"
+#include "../../src/qwt3d_drawable.cpp"
+#include "../../src/qwt3d_mousekeyboard.cpp"
+#include "../../src/qwt3d_movements.cpp"
+#include "../../src/qwt3d_lighting.cpp"
+#include "../../src/qwt3d_colorlegend.cpp"
+#include "../../src/qwt3d_plot.cpp"
+#include "../../src/qwt3d_label.cpp"
+#include "../../src/qwt3d_types.cpp"
+#include "../../src/qwt3d_enrichment_std.cpp"
+#include "../../src/qwt3d_autoscaler.cpp"
+#include "../../src/qwt3d_io_reader.cpp"
+#include "../../src/qwt3d_io.cpp"
+#include "../../src/qwt3d_scale.cpp"
+#include "../../src/qwt3d_gridmapping.cpp"
+#include "../../src/qwt3d_parametricsurface.cpp"
+#include "../../src/qwt3d_function.cpp"
+#include "../../src/qwt3d_surfaceplot.cpp"
+#include "../../src/qwt3d_gridplot.cpp"
+#include "../../src/qwt3d_meshplot.cpp"
+#include "../../src/qwt3d_io_gl2ps.cpp"
 #ifdef _MSC_VER
 #pragma warning (pop)
 #pragma pop_macro ("_CRT_SECURE_NO_WARNINGS")
