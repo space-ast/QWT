@@ -29,7 +29,22 @@ target_link_libraries(YOU_APP_TARGET
     Qt${QT_VERSION_MAJOR}::OpenGL
     Qt${QT_VERSION_MAJOR}::PrintSupport
     )
+
+if(${QT_VERSION_MAJOR} EQUAL 6)
+   find_package(Qt${QT_VERSION_MAJOR} ${QWT_MIN_QT_VERSION} COMPONENTS
+       OpenGLWidgets
+       REQUIRED
+   )
+   target_link_libraries(YOU_APP_TARGET PRIVATE
+       Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+   )
+endif()
+find_package(OpenGL COMPONENTS OpenGL REQUIRED)
+target_link_libraries(YOU_APP_TARGET PRIVATE OpenGL::GLU)
 ```
+
+!!! tip "提示"
+    qwt7.1之后合并了qwtplot3d库，因此需要引入opengl相关的依赖
 
 ## 基于cmake引入QWT库
 
@@ -52,30 +67,17 @@ set(QWT_DIR "C:\src\Qt\SARibbon\bin_qt5.14.2_MSVC_x64\lib\cmake\SARibbonBar")
 
 `QWT` 提供了标准的 `CMake` 配置文件，可以通过 `find_package` 命令引入
 
-qwt依赖的Qt模块为`Core`、`Gui`、`Widgets`、`Svg`、`Concurrent`、`OpenGL`、`PrintSupport`，因此需要添加这些模块的链接
-
 ```cmake hl_lines="4 19"
 # QwtPlot依赖Core Gui Widgets Svg Concurrent OpenGL PrintSupport这几个模块，需要引入工程
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} 5.8 COMPONENTS Core Gui Widgets Svg Concurrent OpenGL PrintSupport REQUIRED)
 find_package(qwt REQUIRED)
-
-# 链接必要的Qt库
-target_link_libraries(YOU_APP_TARGET 
-    PUBLIC
-    Qt${QT_VERSION_MAJOR}::Core 
-    Qt${QT_VERSION_MAJOR}::Gui 
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Svg
-    Qt${QT_VERSION_MAJOR}::Concurrent
-    Qt${QT_VERSION_MAJOR}::OpenGL
-    Qt${QT_VERSION_MAJOR}::PrintSupport
-)
-
 # 链接 QWT 库到您的目标
-target_link_libraries(your_target PRIVATE qwt::qwt)
+target_link_libraries(YOU_APP_TARGET PRIVATE qwt::qwt)
 ```
 
+qwt依赖的Qt模块为`Core`、`Gui`、`Widgets`、`Svg`、`Concurrent`、`OpenGL`、`PrintSupport`，（如果是Qt6还会包含`OpenGLWidgets`），这些模块在引入`qwt`库时，会自动添加依赖
+
+此外`qwt7.1`之后合并了qwtplot3d库，如果3D选项打开，会自动引入`OpenGL::GLU`依赖
 
 ## 公开的预定义宏
 

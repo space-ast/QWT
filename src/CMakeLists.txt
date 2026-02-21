@@ -218,6 +218,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_canvas_picker.h
         qwt_plot_picker.h
         qwt_plot_series_data_picker.h
+        qwt_plot_series_data_picker_group.h
         qwt_plot_axis_zoomer.h
         qwt_plot_canvas_zoomer.h
         qwt_plot_magnifier.h
@@ -284,6 +285,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_canvas_picker.cpp
         qwt_plot_picker.cpp
         qwt_plot_series_data_picker.cpp
+        qwt_plot_series_data_picker_group.cpp
         qwt_plot_axis_zoomer.cpp
         qwt_plot_canvas_zoomer.cpp
         qwt_plot_magnifier.cpp
@@ -406,26 +408,78 @@ if(QWT_CONFIG_QWTWIDGETS)
     list(APPEND QWT_SOURCE_FILES ${QWT_SOURCE_WIDGETS})
 endif()
 
-#QT5_WRAP_CPP(QWT_HEADERS_MOC ${QWT_HEADER_FILES})
+if(QWT_CONFIG_QWTPLOT_3D)
+    set(QWT_HEADER_PLOT_3D
+        qwt3d_color.h
+        qwt3d_global.h
+        qwt3d_types.h
+        qwt3d_axis.h
+        qwt3d_coordsys.h
+        qwt3d_drawable.h
+        qwt3d_helper.h
+        qwt3d_label.h
+        qwt3d_openglhelper.h
+        qwt3d_colorlegend.h
+        qwt3d_plot.h
+        qwt3d_enrichment.h
+        qwt3d_enrichment_std.h
+        qwt3d_autoscaler.h
+        qwt3d_autoptr.h
+        qwt3d_io.h
+        qwt3d_io_reader.h
+        qwt3d_scale.h
+        qwt3d_portability.h
+        qwt3d_mapping.h
+        qwt3d_gridmapping.h
+        qwt3d_parametricsurface.h
+        qwt3d_function.h
+        qwt3d_surfaceplot.h
+        qwt3d_volumeplot.h
+        qwt3d_graphplot.h
+        qwt3d_multiplot.h
+        qwt3d_io_gl2ps.h
+    )
+    set(QWT_SOURCE_PLOT_3D
+        qwt3d_axis.cpp
+        qwt3d_color.cpp
+        qwt3d_coordsys.cpp
+        qwt3d_drawable.cpp
+        qwt3d_mousekeyboard.cpp
+        qwt3d_movements.cpp
+        qwt3d_lighting.cpp
+        qwt3d_colorlegend.cpp
+        qwt3d_plot.cpp
+        qwt3d_label.cpp
+        qwt3d_types.cpp
+        qwt3d_enrichment_std.cpp
+        qwt3d_autoscaler.cpp
+        qwt3d_io_reader.cpp
+        qwt3d_io.cpp
+        qwt3d_scale.cpp
+        qwt3d_gridmapping.cpp
+        qwt3d_parametricsurface.cpp
+        qwt3d_function.cpp
+        qwt3d_surfaceplot.cpp
+        qwt3d_gridplot.cpp
+        qwt3d_meshplot.cpp
+        qwt3d_io_gl2ps.cpp
+    )
+    list(APPEND QWT_HEADER_FILES ${QWT_HEADER_PLOT_3D})
+    list(APPEND QWT_SOURCE_FILES ${QWT_SOURCE_PLOT_3D})
+endif()
+
 add_library(${QWT_LIB_NAME} SHARED
         ${QWT_HEADER_FILES}
         ${QWT_SOURCE_FILES}
-        qwt_plot_series_data_picker_group.h qwt_plot_series_data_picker_group.cpp
-#        ${QWT_HEADERS_MOC}
 )
 # 启用别名，可以通过qwt::qwt引入
 add_library(${QWT_LIB_NAME}::${QWT_LIB_NAME} ALIAS ${QWT_LIB_NAME})
 
-# 构建库定义的宏
-target_compile_definitions(${QWT_LIB_NAME} PRIVATE QT_DLL)
-# 此宏必须为public
-target_compile_definitions(${QWT_LIB_NAME} PUBLIC QWT_DLL)
-#此宏必须为private
-target_compile_definitions(${QWT_LIB_NAME} PRIVATE QWT_MAKEDLL)
+
 ########################################################
 # 依赖链接
 ########################################################
-target_link_libraries(${QWT_LIB_NAME} PRIVATE
+target_link_libraries(${QWT_LIB_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets
@@ -438,7 +492,7 @@ if(QWT_CONFIG_QWTOPENGL)
         OpenGL
         REQUIRED
     )
-    target_link_libraries(${QWT_LIB_NAME} PRIVATE
+    target_link_libraries(${QWT_LIB_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::OpenGL
     )
     if(${QT_VERSION_MAJOR} EQUAL 6)
@@ -446,7 +500,7 @@ if(QWT_CONFIG_QWTOPENGL)
             OpenGLWidgets
             REQUIRED
         )
-        target_link_libraries(${QWT_LIB_NAME} PRIVATE
+        target_link_libraries(${QWT_LIB_NAME} PUBLIC
             Qt${QT_VERSION_MAJOR}::OpenGLWidgets
         )
         message(STATUS "target link Qt${QT_VERSION_MAJOR}::OpenGLWidgets")
@@ -458,9 +512,49 @@ if(QWT_CONFIG_QWTSVG)
         Svg
         REQUIRED
     )
-    target_link_libraries(${QWT_LIB_NAME} PRIVATE
+    target_link_libraries(${QWT_LIB_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Svg
     )
+endif()
+
+if(QWT_CONFIG_QWTPLOT_3D)
+    find_package( OpenGL COMPONENTS OpenGL REQUIRED )
+    find_library( GL2PS_LIBRARY NAMES gl2ps )
+    if( GL2PS_LIBRARY )
+      find_path ( GL2PS_INCLUDE_DIR NAMES gl2ps.h REQUIRED )
+      message( STATUS "Found GL2PS: ${GL2PS_LIBRARY}, with include: ${GL2PS_INCLUDE_DIR}" )
+    endif()
+    target_link_libraries(${QWT_LIB_NAME} PUBLIC
+        OpenGL::GLU
+    )
+    if(NOT QWT_CONFIG_QWTOPENGL)
+        find_package(Qt${QT_VERSION_MAJOR} ${QWT_MIN_QT_VERSION} COMPONENTS
+            OpenGL
+            REQUIRED
+        )
+        target_link_libraries(${QWT_LIB_NAME} PUBLIC
+            Qt${QT_VERSION_MAJOR}::OpenGL
+        )
+        if(${QT_VERSION_MAJOR} EQUAL 6)
+            find_package(Qt${QT_VERSION_MAJOR} ${QWT_MIN_QT_VERSION} COMPONENTS
+                OpenGLWidgets
+                REQUIRED
+            )
+            target_link_libraries(${QWT_LIB_NAME} PUBLIC
+                Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+            )
+            message(STATUS "target link Qt${QT_VERSION_MAJOR}::OpenGLWidgets")
+        endif()
+    endif()
+
+    if(NOT GL2PS_LIBRARY )
+      enable_language( C )
+      target_sources(${QWT_LIB_NAME} PRIVATE "3rdparty/gl2ps/gl2ps.c" "3rdparty/gl2ps/gl2ps.h" )
+      target_include_directories(${QWT_LIB_NAME} PRIVATE "3rdparty/gl2ps" )
+    else()
+      target_link_libraries(${QWT_LIB_NAME} ${GL2PS_LIBRARY})
+      target_include_directories(${QWT_LIB_NAME} PRIVATE ${GL2PS_INCLUDE_DIR})
+    endif()
 endif()
 ########################################################
 # 设置target属性，以及Qt的moc
@@ -487,7 +581,17 @@ target_include_directories(${QWT_LIB_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../classincludes>
 )
 
+# 构建库定义的宏
+target_compile_definitions(${QWT_LIB_NAME} PRIVATE QT_DLL)
+# 此宏必须为public
+target_compile_definitions(${QWT_LIB_NAME} PUBLIC QWT_DLL)
+#此宏必须为private
+target_compile_definitions(${QWT_LIB_NAME} PRIVATE QWT_MAKEDLL)
 
+if(QWT_CONFIG_QWTPLOT_3D)
+    target_compile_definitions(${QWT_LIB_NAME} PUBLIC QWT3D_DLL)
+    target_compile_definitions(${QWT_LIB_NAME} PRIVATE QWT3D_MAKEDLL)
+endif()
 ########################################################
 # 自动化生成配置头文件
 ########################################################

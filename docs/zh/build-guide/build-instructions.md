@@ -1,7 +1,7 @@
 # QWT构建说明
 
 !!! tips "提示"
-    你不需要编译QWT，只需把`QwtPlot.h`和`QwtPlot.cpp`（这两个文件位于`src-amalgamate`目录下）引入你的工程即可
+    你可以不把QWT编译为动态库，只需把`QwtPlot.h`和`QwtPlot.cpp`（这两个文件位于`src-amalgamate`目录下）引入你的工程即可
 
 此文会详细介绍如何构建QWT为**动态库**，如果你不熟悉C++的构建，你只需把`QwtPlot.h`和`QwtPlot.cpp`引入你的工程即可使用
 
@@ -16,9 +16,13 @@
 | `QWT_CONFIG_QWTWIDGETS` | `ON` | 启用除 QwtPlot 外的其他控件（如滑块、刻度盘等）相关类 |
 | `QWT_CONFIG_QWTSVG` | `ON` | 启用 SVG 图像显示和导出功能，允许在图表上显示 SVG 图像或将图表导出为 SVG 文档 |
 | `QWT_CONFIG_QWTOPENGL` | `ON` | 启用 OpenGL 画布支持，允许使用 OpenGL 渲染图表 |
+| `QWT_CONFIG_QWTPLOT_3D` | `ON` | 启用 QwtPlot3D，允许使用3D图表 |
 | `QWT_CONFIG_BUILD_EXAMPLE` | `ON` | 构建示例程序 |
 | `QWT_CONFIG_BUILD_PLAYGROUND` | `ON` | 构建实验性代码 |
 | `QWT_CONFIG_BUILD_STATIC_EXAMPLE` | `OFF` | 构建静态链接示例。注意：构建静态示例会需要相对较长的编译时间 |
+
+!!! tips "提示"
+    QWT 7.1之后的版本把QwtPlot3D的代码整合，实现了2D和3D图表，QwtPlot3D的代码来自[https://github.com/SciDAVis/qwtplot3d](https://github.com/SciDAVis/qwtplot3d)
 
 ### 基本构建步骤
 
