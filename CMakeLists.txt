@@ -17,7 +17,8 @@ message(STATUS "QWT Version is ${QWT_VERSION}")
 # Project Definition
 ########################################################
 set(QWT_PROJECT_NAME "qwt-project")
-
+set(QWT_LIB_NAME "qwt")
+set(QWT_TARGET_NAME "qwtTargets") # This is the unified export set for all modules.
 project(${QWT_PROJECT_NAME} 
         VERSION ${QWT_VERSION} 
         LANGUAGES CXX
@@ -65,7 +66,7 @@ endif()
 ########################################################
 # Install Path Settings
 ########################################################
-set(QWT_MIN_QT_VERSION 5.10)
+set(QWT_MIN_QT_VERSION 5.12)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 
 # Determine platform architecture
@@ -77,11 +78,6 @@ endif()
 
 set(QWT_BIN_DIR_NAME bin_qt${QT_VERSION}_${CMAKE_BUILD_TYPE}_${QWT_PLATFORM_NAME})
 
-
-##################################
-# Install
-##################################
-message(STATUS "CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}")
 
 ########################################################
 # Source Directories
@@ -95,3 +91,37 @@ if(QWT_CONFIG_BUILD_PLAYGROUND)
     add_subdirectory(playground)
 endif()
 
+########################################################
+# install
+########################################################
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${QWT_LIB_NAME}ConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/qwtConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${QWT_LIB_NAME}Config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${QWT_LIB_NAME}
+)
+#Unified export of all module targets
+install(EXPORT ${QWT_TARGET_NAME}
+    FILE ${QWT_TARGET_NAME}.cmake
+    NAMESPACE ${QWT_LIB_NAME}::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${QWT_LIB_NAME}
+)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${QWT_LIB_NAME}ConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${QWT_LIB_NAME}Config.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${QWT_LIB_NAME}
+)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/classincludes"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${QWT_LIB_NAME}
+)
+install(FILES
+    ${QWTPLOT_HEADER_FILES}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${QWT_LIB_NAME}/${QWTPLOT_LIB_EXPORT_NAME}
+    COMPONENT headers
+)

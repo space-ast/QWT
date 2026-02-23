@@ -44,9 +44,13 @@ target_link_libraries(YOU_APP_TARGET PRIVATE OpenGL::GLU)
 ```
 
 !!! tip "提示"
-    qwt7.1之后合并了qwtplot3d库，因此需要引入opengl相关的依赖
+    qwt7.1之后合并了`qwtplot3d`库，因此需要引入opengl相关的依赖
 
 ## 基于cmake引入QWT库
+
+> **这是推荐的引入`QWT`库方式**
+
+首先不建议直接把整个qwt库作为子项目加入到你的项目中，而是先编译并安装到本地，编译安装方法参考:[QWT构建说明](../build-guide/build-instructions.md)
 
 基于cmake引入`QWT`库按照如下步骤执行：
 
@@ -55,32 +59,44 @@ target_link_libraries(YOU_APP_TARGET PRIVATE OpenGL::GLU)
 把安装目录下的`lib/cmake/qwt`位置设置给`qwt_DIR`变量(CMake在执行`find_package(xx)`时，会先查看是否有`xx_DIR`变量，如果有，会先查询`xx_DIR`下是否有对应的`xxConfig.cmake`文件)
 
 !!! tips "提示"
-    如果你使用默认安装目录，那么`qwt_DIR`变量可以不设置，cmake能找到
+    如果你使用默认安装目录，那么`qwt_DIR`变量可以不设置，cmake能自动找到
 
 例如:
 
 ```cmake
-set(QWT_DIR "C:\src\Qt\SARibbon\bin_qt5.14.2_MSVC_x64\lib\cmake\SARibbonBar")
+set(qwt_DIR "C:\src\my-install-path\cmake\qwt")
 ```
 
 ### 2. 使用find_package加载库
 
 `QWT` 提供了标准的 `CMake` 配置文件，可以通过 `find_package` 命令引入
 
-```cmake hl_lines="4 19"
-# QwtPlot依赖Core Gui Widgets Svg Concurrent OpenGL PrintSupport这几个模块，需要引入工程
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+```cmake hl_lines="4 7"
 find_package(qwt REQUIRED)
-# 链接 QWT 库到您的目标
-target_link_libraries(YOU_APP_TARGET PRIVATE qwt::qwt)
+
+# 链接 QWT的2D绘图库到您的目标
+target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot) # 会自动把qt的依赖添加到目标中
+
+# 链接 QWT的3D绘图库到您的目标
+target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot3d) # 会自动把qt的依赖以及opengl的依赖添加到目标中
 ```
 
-qwt依赖的Qt模块为`Core`、`Gui`、`Widgets`、`Svg`、`Concurrent`、`OpenGL`、`PrintSupport`，（如果是Qt6还会包含`OpenGLWidgets`），这些模块在引入`qwt`库时，会自动添加依赖
+`qwt`项目提供了两个模块：
 
-此外`qwt7.1`之后合并了qwtplot3d库，如果3D选项打开，会自动引入`OpenGL::GLU`依赖
+- `plot`模块，主要为2D绘图库，是原qwt的功能集成
+- `plot3d`模块，主要为3D绘图库，是qwtplot3d的功能集成
+
+> **依赖说明**
+>
+>    qwt依赖的Qt模块为`Core`、`Gui`、`Widgets`、`Svg`、`Concurrent`、`OpenGL`、`PrintSupport`，（如果是Qt6还会包含`OpenGLWidgets`），这些模块在引入`qwt`库时，会自动添加依赖
+>
+>   此外`qwt7.1`之后合并了qwtplot3d库，如果3D选项打开，会自动引入`OpenGL::GLU`依赖
 
 ## 公开的预定义宏
 
-`QWT`在编译过程中有些预定义宏，如果你是用`CMake`管理项目，那么通过find_package加载库时，会自动预定定义好，无需手动添加
+`QWT`在编译过程中有些预定义宏，如果你是用`CMake`管理项目，那么通过`find_package`加载库时，会自动预定定义好，无需手动添加
 
-但如果你使用类似`vistual studio`的界面来手动引入库，你除了添加lib文件外，还需要指定预定于宏。如果是编译为dll库，你需要预定义宏`QWT_DLL`，此宏将指定`QWT_EXPORT`为`Q_DECL_IMPORT`
+但如果你使用类似`vistual studio`的界面来手动引入库，你除了添加lib文件外，还需要指定预定于宏。如果是编译为dll库，引入qwtplot库你需要预定义宏`QWT_DLL`，引入qwtplot3d库你需要预定义宏`QWT3D_DLL`
+
+!!! tips "提示"
+    作为现代c++项目，强烈建议使用cmake构建你的项目，这些预定义项都在cmake的配置中预制好

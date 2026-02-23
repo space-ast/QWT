@@ -1,0 +1,11 @@
+# cmake/qwtConfig.cmake.in
+@PACKAGE_INIT@
+
+# include all export targets（plot + plot3d）
+include("${CMAKE_CURRENT_LIST_DIR}/qwtTargets.cmake")
+
+# 设置包级变量
+set_and_check(QWT_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(QWT_LIBRARY_DIR "${PACKAGE_PREFIX_DIR}/@CMAKE_INSTALL_LIBDIR@")
+
+check_required_components(qwt)

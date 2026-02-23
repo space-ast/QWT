@@ -49,13 +49,18 @@ Qwt7.0已经支持`CMake`，并且未来将考虑抛弃`QMake`
 安装Qwt后，你的项目只需如下即可引入Qwt，免去以往繁琐的配置和预定义宏：
 
 ```cmake
-target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::qwt)
+find_package(qwt)
+# 引入2d绘图
+target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot)
+# 引入3d绘图
+target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 ```
 
 ### 单一头文件和源文件
 
-参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用：
+参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用
 
+具体参阅:[QWT库的引入](https://czyt1988.github.io/QWT/zh/use-guide/import-qwt)
 
 ### 美化了风格
 

@@ -17,18 +17,14 @@ add_executable(${QWT_APP_NAME}
     ${APP_QRC_FILES}
 )
 
-if(NOT TARGET qwt)
+if(NOT TARGET qwt::plot)
     # 说明这个例子是单独加载
-    message(STATUS "NOT TARGET qwt find_package(qwt REQUIRED)")
+    message(STATUS "NOT TARGET qwt::plot find_package(qwt REQUIRED)")
     find_package(qwt REQUIRED)
 endif()
 
-target_link_libraries(${QWT_APP_NAME} PUBLIC qwt::qwt)
-target_link_libraries(${QWT_APP_NAME} PUBLIC
-                                       Qt${QT_VERSION_MAJOR}::Core 
-                                       Qt${QT_VERSION_MAJOR}::Gui 
-                                       Qt${QT_VERSION_MAJOR}::Widgets
-                                       Qt${QT_VERSION_MAJOR}::Svg)
+target_link_libraries(${QWT_APP_NAME} PUBLIC qwt::plot)
+
 
 set_target_properties(${QWT_APP_NAME} PROPERTIES
     AUTOMOC ON

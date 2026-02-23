@@ -17,13 +17,13 @@ add_executable(${QWT_APP_NAME}
     ${APP_RESOURCE_FILES}
 )
 
-if(NOT TARGET qwt)
+if(NOT TARGET qwt::plot3d)
     # Note: This example is loaded separately
-    message(STATUS "NOT TARGET qwt find_package(qwt REQUIRED)")
+    message(STATUS "NOT TARGET qwt::plot3d find_package(qwt REQUIRED)")
     find_package(qwt REQUIRED)
 endif()
 
-target_link_libraries(${QWT_APP_NAME} PUBLIC qwt::qwt)
+target_link_libraries(${QWT_APP_NAME} PUBLIC qwt::plot3d)
 
 
 set_target_properties(${QWT_APP_NAME} PROPERTIES
