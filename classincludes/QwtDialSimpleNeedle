@@ -1,1 +1,1 @@
-#include "qwt_dial_needle.h"
+#include "../plot/qwt_dial_needle.h"

@@ -1,1 +1,1 @@
-#include "qwt_plot_glcanvas.h"
+#include "../plot/qwt_plot_glcanvas.h"

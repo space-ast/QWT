@@ -1,1 +1,1 @@
-#include "qwt_samples.h"
+#include "../plot/qwt_samples.h"

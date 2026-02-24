@@ -1,1 +1,1 @@
-#include "qwt_column_symbol.h"
+#include "../plot/qwt_column_symbol.h"

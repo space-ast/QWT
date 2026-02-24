@@ -1,1 +1,1 @@
-#include "qwt_plot_tradingcurve.h"
+#include "../plot/qwt_plot_tradingcurve.h"

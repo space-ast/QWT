@@ -1,1 +1,1 @@
-#include "qwt_polar_itemdict.h"
+#include "../plot/qwt_polar_itemdict.h"

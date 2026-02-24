@@ -1,1 +1,1 @@
-#include "qwt_cache_panner.h"
+#include "../plot/qwt_cache_panner.h"

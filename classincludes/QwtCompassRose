@@ -1,1 +1,1 @@
-#include "qwt_compass_rose.h"
+#include "../plot/qwt_compass_rose.h"

@@ -1,1 +1,1 @@
-#include "qwt_painter_command.h"
+#include "../plot/qwt_painter_command.h"

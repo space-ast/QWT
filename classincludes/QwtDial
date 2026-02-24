@@ -1,1 +1,1 @@
-#include "qwt_dial.h"
+#include "../plot/qwt_dial.h"

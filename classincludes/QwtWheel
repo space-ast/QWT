@@ -1,1 +1,1 @@
-#include "qwt_wheel.h"
+#include "../plot/qwt_wheel.h"

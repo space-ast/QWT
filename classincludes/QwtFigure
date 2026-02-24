@@ -1,1 +1,1 @@
-#include "qwt_figure.h"
+#include "../plot/qwt_figure.h"

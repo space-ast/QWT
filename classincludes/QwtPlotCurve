@@ -1,1 +1,1 @@
-#include "qwt_plot_curve.h"
+#include "../plot/qwt_plot_curve.h"

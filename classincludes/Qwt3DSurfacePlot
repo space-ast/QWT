@@ -1,1 +1,1 @@
-#include "qwt3d_surfaceplot.h"
+#include "../plot3d/qwt3d_surfaceplot.h"

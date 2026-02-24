@@ -1,1 +1,1 @@
-#include "qwt_point_3d.h"
+#include "../plot/qwt_point_3d.h"

@@ -1,1 +1,1 @@
-#include "qwt_plot_intervalcurve.h"
+#include "../plot/qwt_plot_intervalcurve.h"

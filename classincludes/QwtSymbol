@@ -1,1 +1,1 @@
-#include "qwt_symbol.h"
+#include "../plot/qwt_symbol.h"

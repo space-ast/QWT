@@ -1,1 +1,1 @@
-#include "qwt_legend_label.h"
+#include "../plot/qwt_legend_label.h"

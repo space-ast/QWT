@@ -1,1 +1,1 @@
-#include "qwt_global.h"
+#include "../plot/qwt_global.h"

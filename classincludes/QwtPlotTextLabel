@@ -1,1 +1,1 @@
-#include "qwt_plot_textlabel.h"
+#include "../plot/qwt_plot_textlabel.h"
