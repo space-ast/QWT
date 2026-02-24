@@ -1,6 +1,7 @@
-#include "qwt_plot_series_data_picker_group.h"
+﻿#include "qwt_plot_series_data_picker_group.h"
 #include "qwt_plot_series_data_picker.h"
 #include <QWidget>
+#include <QPointer>
 
 class QwtPlotSeriesDataPickerGroup::PrivateData
 {
@@ -8,6 +9,7 @@ class QwtPlotSeriesDataPickerGroup::PrivateData
 public:
     PrivateData(QwtPlotSeriesDataPickerGroup* p);
     QList< QwtPlotSeriesDataPicker* > pickers;
+    bool enable { true };
 };
 
 QwtPlotSeriesDataPickerGroup::PrivateData::PrivateData(QwtPlotSeriesDataPickerGroup* p) : q_ptr(p)
@@ -23,7 +25,6 @@ QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObje
 
 QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
 {
-
 }
 
 /**
@@ -47,10 +48,18 @@ QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
  */
 void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
 {
+    if (m_data->pickers.contains(pick)) {
+        return;
+    }
     m_data->pickers.append(pick);
     connect(pick, &QwtPlotSeriesDataPicker::moved, this, &QwtPlotSeriesDataPickerGroup::onPickerMove);
     connect(pick, &QwtPlotSeriesDataPicker::activated, this, &QwtPlotSeriesDataPickerGroup::onPickerActivated);
     connect(pick, &QwtPlotSeriesDataPicker::destroyed, this, &QwtPlotSeriesDataPickerGroup::onPickerDestroy);
+}
+
+void QwtPlotSeriesDataPickerGroup::removePicker(QwtPlotSeriesDataPicker* pick)
+{
+    m_data->pickers.removeAll(pick);
 }
 
 /**
@@ -73,8 +82,21 @@ QList< QwtPlotSeriesDataPicker* > QwtPlotSeriesDataPickerGroup::pickers() const
     return m_data->pickers;
 }
 
+void QwtPlotSeriesDataPickerGroup::setEnabled(bool on)
+{
+    m_data->enable = on;
+}
+
+bool QwtPlotSeriesDataPickerGroup::isEnabled() const
+{
+    return m_data->enable;
+}
+
 void QwtPlotSeriesDataPickerGroup::onPickerMove(const QPoint& pos)
 {
+    if (!isEnabled()) {
+        return;
+    }
     QwtPlotSeriesDataPicker* pick = qobject_cast< QwtPlotSeriesDataPicker* >(sender());
     if (!pick) {
         return;
@@ -104,6 +126,9 @@ void QwtPlotSeriesDataPickerGroup::onPickerMove(const QPoint& pos)
 
 void QwtPlotSeriesDataPickerGroup::onPickerActivated(bool on)
 {
+    if (!isEnabled()) {
+        return;
+    }
     QwtPlotSeriesDataPicker* pick = qobject_cast< QwtPlotSeriesDataPicker* >(sender());
     if (!pick) {
         return;

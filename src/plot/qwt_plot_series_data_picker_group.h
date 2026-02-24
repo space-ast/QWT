@@ -1,4 +1,4 @@
-#ifndef QWT_PLOT_SERIES_DATA_PICKER_GROUP_H
+﻿#ifndef QWT_PLOT_SERIES_DATA_PICKER_GROUP_H
 #define QWT_PLOT_SERIES_DATA_PICKER_GROUP_H
 #include <QObject>
 #include "qwt_global.h"
@@ -48,7 +48,11 @@ public:
     ~QwtPlotSeriesDataPickerGroup();
     // Add Plot Series Data Picker To Group
     void addPicker(QwtPlotSeriesDataPicker* pick);
+    void removePicker(QwtPlotSeriesDataPicker* pick);
     QList< QwtPlotSeriesDataPicker* > pickers() const;
+    // 是否生效
+    void setEnabled(bool on);
+    bool isEnabled() const;
 public Q_SLOTS:
     void onPickerMove(const QPoint& pos);
     void onPickerActivated(bool on);
