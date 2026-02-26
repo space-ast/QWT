@@ -89,11 +89,12 @@ public:
     void setPenWidthF(qreal width);
     qreal penWidthF() const;
 
-    // 设置是否选中，选中状态的绘制会有一定差异
+    // Set whether the scale draw is selected
     void setSelected(bool on);
+    // Check if the scale draw is selected
     bool isSelected() const;
 
-    // 设置选中后画笔的宽度修正
+    // Set the pen width adjustment after selection
     void setSelectedPenWidthOffset(qreal offset = 1);
     qreal selectedPenWidthOffset() const;
 

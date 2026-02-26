@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -173,8 +173,8 @@ qreal QwtAbstractScaleDraw::penWidthF() const
 }
 
 /**
- * @brief 设置是否选中
- * @param on
+ * @brief Set whether the scale draw is selected
+ * @param on True to select, false to deselect
  */
 void QwtAbstractScaleDraw::setSelected(bool on)
 {
@@ -182,8 +182,8 @@ void QwtAbstractScaleDraw::setSelected(bool on)
 }
 
 /**
- * @brief 是否选中
- * @return
+ * @brief Check if the scale draw is selected
+ * @return True if selected, false otherwise
  */
 bool QwtAbstractScaleDraw::isSelected() const
 {
@@ -191,13 +191,14 @@ bool QwtAbstractScaleDraw::isSelected() const
 }
 
 /**
- * @brief 设置坐标轴在选中状态下的画笔宽度附加值
+ * @brief Set the pen width offset for the axis when it is in selected state
  *
- * 当一个坐标轴（例如 X 轴或 Y 轴）被用户选中时，其绘制的画笔宽度会
- * 在原始宽度的基础上增加这个附加值，从而实现视觉上的突出显示效果。
+ * When an axis (e.g., X-axis or Y-axis) is selected by the user, the pen width used for drawing
+ * will be increased by this offset value, thus achieving a visual highlighting effect.
  *
- * @param offset 选中时增加的宽度值（单位：像素）。
- *               该值应为非负数。如果为 0，则选中状态下的线宽与普通状态相同。
+ * @param offset The additional width value to be added when selected (unit: pixels).
+ *               This value should be non-negative. If it is 0, the line width in selected state
+ *               will be the same as in normal state.
  *
  * @sa selectedPenWidthOffset()
  */
@@ -207,8 +208,8 @@ void QwtAbstractScaleDraw::setSelectedPenWidthOffset(qreal offset)
 }
 
 /**
- * @brief 获取当前坐标轴在选中状态下的画笔宽度附加值
- * @return  当前的宽度附加值。
+ * @brief Get the current pen width offset for the axis when it is in selected state
+ * @return The current width offset value.
  * @sa setSelectedPenWidthOffset
  */
 qreal QwtAbstractScaleDraw::selectedPenWidthOffset() const
@@ -232,7 +233,6 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
     pen.setWidthF(m_data->penWidthF);
     if (isSelected()) {
         if (qFuzzyIsNull(m_data->penWidthF)) {
-            // m_data->penWidthF可以为0，这时要加1
             pen.setWidthF(1.0 + m_data->penWidthOffset);
         } else {
             pen.setWidthF(m_data->penWidthF + m_data->penWidthOffset);
