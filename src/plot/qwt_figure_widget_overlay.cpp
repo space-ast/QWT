@@ -574,12 +574,24 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
             me->ignore();  // 让事件继续传递
         }
         return;
+    } else {
+        // 有激活的窗口，但点击的不是激活的窗口
+        if (hitPlot != d->mActiveWidget) {
+            // 把hitPlot切换为激活窗口
+            setActiveWidget(hitPlot);
+            updateOverlay();
+            if (!testBuiltInFunctions(FunResizePlot)) {
+                // 处理了此事件
+                me->accept();
+                return;
+            }
+        }
     }
     if (!testBuiltInFunctions(FunResizePlot)) {
         // 没有resize plot 功能，退出
         return QwtWidgetOverlay::mousePressEvent(me);
     }
-    // 到这里，说明一定有激活的窗体
+    // 到这里，说明一定有激活的窗体,且要进行resize操作
     ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
 
     // 情况2： 点击到了激活窗口的外围
