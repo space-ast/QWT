@@ -354,6 +354,25 @@ void QwtFigureWidgetOverlay::showPercentText(bool on)
 }
 
 /**
+ * @brief 取消,此函数会发射finished(false)信号,重写应该显示调用
+ *
+ * @code
+ * bool MyFigureWidgetOverlay::cancel(){
+ *    ...
+ *    //显示调用，用以触发finished(true);
+ *    QwtFigureWidgetOverlay::cancel();
+ *    return true;
+ * }
+ * @endcode
+ * @return
+ */
+bool QwtFigureWidgetOverlay::cancel()
+{
+    Q_EMIT finished(true);
+    return true;
+}
+
+/**
  * @brief 设置当前激活的窗口
  * @param w 如果w和当前的activePlot一样，不做任何动作
  * @note 此函数会发射信号activeWidgetChanged
@@ -378,7 +397,7 @@ void QwtFigureWidgetOverlay::drawOverlay(QPainter* p) const
     }
     // 对于激活的窗口，绘制到四周的距离提示线
     p->save();
-    if (m_data->mIsStartResize) {
+    if (m_data->mIsStartResize && m_data->mFuntion.testFlag(FunResizePlot)) {
         // 在resize状态，绘制控制线
         drawResizeingControlLine(p, m_data->mWillSetNormRect);
     } else {
@@ -556,6 +575,10 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         }
         return;
     }
+    if (!testBuiltInFunctions(FunResizePlot)) {
+        // 没有resize plot 功能，退出
+        return QwtWidgetOverlay::mousePressEvent(me);
+    }
     // 到这里，说明一定有激活的窗体
     ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
 
@@ -597,7 +620,10 @@ void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
     QWT_D(d);
 
     QWidget* activeW = d->mActiveWidget;
-
+    if (!testBuiltInFunctions(FunResizePlot)) {
+        // 没有resize plot 功能，退出
+        return QwtWidgetOverlay::mouseMoveEvent(me);
+    }
     if (!activeW) {
         // 没有激活窗口，更新光标并传递事件
         unsetCursor();
@@ -745,6 +771,10 @@ void QwtFigureWidgetOverlay::mouseReleaseEvent(QMouseEvent* me)
     qDebug() << "QwtFigureWidgetOverlay::onMouseReleaseEvent" << me->pos();
 #endif
     QWT_D(d);
+    if (!testBuiltInFunctions(FunResizePlot)) {
+        // 没有resize plot 功能，退出
+        return QwtWidgetOverlay::mouseReleaseEvent(me);
+    }
     if (me->button() == Qt::LeftButton && d->mIsStartResize) {
         // 结束调整尺寸操作
         d->mIsStartResize = false;
@@ -783,6 +813,11 @@ void QwtFigureWidgetOverlay::keyPressEvent(QKeyEvent* ke)
     case Qt::Key_Right:
     case Qt::Key_Down: {
         selectNextWidget(false);
+        ke->accept();
+    case Qt::Key_Escape:
+        if (cancel()) {
+            hide();
+        }
         ke->accept();
     } break;
 

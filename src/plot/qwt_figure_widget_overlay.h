@@ -87,7 +87,8 @@ public:
     QwtPlot* currentActivePlot() const;
     // 显示占比数值
     void showPercentText(bool on = true);
-
+    // 取消,此函数会发射finished(false)信号，重写应该显示调用
+    virtual bool cancel();
 public Q_SLOTS:
     // 改变激活窗口
     void setActiveWidget(QWidget* w);
@@ -124,7 +125,11 @@ Q_SIGNALS:
      * @param newActive 如果没有新的激活窗口，此指针有可能是nullptr
      */
     void activeWidgetChanged(QWidget* oldActive, QWidget* newActive);
-
+    /**
+     * @brief 操作完成信号
+     * @param isCancel 是否为取消操作
+     */
+    void finished(bool isCancel);
 private Q_SLOTS:
     void onAxesRemove(QwtPlot* removedAxes);
 };
