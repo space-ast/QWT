@@ -74,7 +74,6 @@ QwtFigureWidgetOverlay::QwtFigureWidgetOverlay(QwtFigure* fig) : QwtWidgetOverla
     connect(fig, &QwtFigure::axesRemoved, this, &QwtFigureWidgetOverlay::onAxesRemove);
     setMouseTracking(true);
     setTransparentForMouseEvents(false);  // 这里对鼠标不透明，避免被绘图的坐标轴事件截取
-    hide();
 }
 
 QwtFigureWidgetOverlay::~QwtFigureWidgetOverlay()
@@ -131,8 +130,7 @@ Qt::CursorShape QwtFigureWidgetOverlay::controlTypeToCursor(QwtFigureWidgetOverl
  * @param err 允许误差
  * @return
  */
-QwtFigureWidgetOverlay::ControlType
-QwtFigureWidgetOverlay::getPositionControlType(const QPoint& pos, const QRect& region, int err)
+QwtFigureWidgetOverlay::ControlType QwtFigureWidgetOverlay::getPositionControlType(const QPoint& pos, const QRect& region, int err)
 {
     if (!region.adjusted(-err, -err, err, err).contains(pos)) {
         return (OutSide);
@@ -576,7 +574,7 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         return;
     } else {
         // 有激活的窗口，但点击的不是激活的窗口
-        if (hitPlot != d->mActiveWidget) {
+        if (hitPlot && (hitPlot != d->mActiveWidget)) {
             // 把hitPlot切换为激活窗口
             setActiveWidget(hitPlot);
             updateOverlay();
