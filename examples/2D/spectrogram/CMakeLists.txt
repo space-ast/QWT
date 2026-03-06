@@ -22,7 +22,10 @@ if(NOT TARGET qwt::plot)
 endif()
 
 target_link_libraries(${QWT_APP_NAME} PUBLIC qwt::plot)
-
+# This example uses printing-related functionality, so PrintSupport is introduced.
+target_link_libraries(${QWT_APP_NAME} PRIVATE
+    Qt${QT_VERSION_MAJOR}::PrintSupport
+)
 set_target_properties(${QWT_APP_NAME} PROPERTIES
     AUTOMOC ON
     AUTORCC ON

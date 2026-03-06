@@ -150,7 +150,7 @@ public:
     }
 
 private:
-    virtual QPolygonF points(double phase) const QWT_OVERRIDE
+    virtual QPolygonF points(double phase) const override
     {
         const double speed = 0.05;
 

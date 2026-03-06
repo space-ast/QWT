@@ -30,7 +30,7 @@ void PickLinker::onPickerMove(const QPoint& pos)
     }
     double xPresent = (double)pos.x() / canvas->width();
     // 让其它picker也设置这个位置的移动
-    for (QwtPlotSeriesDataPicker* p : qAsConst(m_pickers)) {
+    for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_pickers)) {
         if (p == pick) {
             continue;
         }
@@ -51,7 +51,7 @@ void PickLinker::onPickerActivated(bool on)
     if (!pick) {
         return;
     }
-    for (QwtPlotSeriesDataPicker* p : qAsConst(m_pickers)) {
+    for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_pickers)) {
         if (p == pick) {
             continue;
         }

@@ -4,8 +4,7 @@
  *****************************************************************************/
 
 #pragma once
-
-#include <QwtSeriesData>
+#include "qwt_series_data.h"
 #include <QVector>
 
 class CircularBuffer : public QwtSeriesData< QPointF >

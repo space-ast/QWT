@@ -4,8 +4,7 @@
  *****************************************************************************/
 
 #include "Plot.h"
-
-#include <QwtSeriesData>
+#include "qwt_series_data.h"
 #include <QwtSymbol>
 #include <QwtLegend>
 #include <QwtPolarGrid>

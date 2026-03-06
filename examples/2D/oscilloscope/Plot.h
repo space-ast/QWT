@@ -22,9 +22,9 @@ public:
     virtual ~Plot();
 
     void start();
-    virtual void replot() override
+    virtual void replot() override;
 
-        virtual bool eventFilter(QObject*, QEvent*) override;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
 public Q_SLOTS:
     void setIntervalLength(double);
