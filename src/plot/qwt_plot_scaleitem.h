@@ -67,7 +67,7 @@ public:
 
     virtual ~QwtPlotScaleItem();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setScaleDiv(const QwtScaleDiv&);
     const QwtScaleDiv& scaleDiv() const;
@@ -94,9 +94,9 @@ public:
 
     void setAlignment(QwtScaleDraw::Alignment);
 
-    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-    virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) QWT_OVERRIDE;
+    virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
 private:
     class PrivateData;

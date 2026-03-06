@@ -37,7 +37,7 @@ class QwtPlotItem::PrivateData
 {
   public:
     PrivateData()
-        : plot( NULL )
+        : plot( nullptr )
         , isVisible( true )
         , renderThreadCount( 1 )
         , z( 0.0 )
@@ -97,7 +97,7 @@ QwtPlotItem::QwtPlotItem( const QwtText& title )
 //! Destroy the QwtPlotItem
 QwtPlotItem::~QwtPlotItem()
 {
-    attach( NULL );
+    attach( nullptr );
     delete m_data;
 }
 
@@ -106,7 +106,7 @@ QwtPlotItem::~QwtPlotItem()
 
    This method will attach a QwtPlotItem to the QwtPlot argument. It will first
    detach the QwtPlotItem from any plot from a previous call to attach (if
-   necessary). If a NULL argument is passed, it will detach from any QwtPlot it
+   necessary). If a nullptr argument is passed, it will detach from any QwtPlot it
    was attached to.
 
    \param plot Plot widget
@@ -130,12 +130,12 @@ void QwtPlotItem::attach( QwtPlot* plot )
    \brief This method detaches a QwtPlotItem from any
           QwtPlot it has been associated with.
 
-   detach() is equivalent to calling attach( NULL )
+   detach() is equivalent to calling attach( nullptr )
    \sa attach()
  */
 void QwtPlotItem::detach()
 {
-    attach( NULL );
+    attach( nullptr );
 }
 
 /*!

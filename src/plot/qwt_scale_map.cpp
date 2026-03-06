@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -35,7 +35,7 @@
 
    The scale and paint device intervals are both set to [0,1].
  */
-QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(NULL)
+QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
 {
 }
 
@@ -47,7 +47,7 @@ QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
     , m_p2(other.m_p2)
     , m_cnv(other.m_cnv)
     , m_ts1(other.m_ts1)
-    , m_transform(NULL)
+    , m_transform(nullptr)
 {
     if (other.m_transform)
         m_transform = other.m_transform->copy();
@@ -77,7 +77,7 @@ QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
     m_ts1 = other.m_ts1;
 
     delete m_transform;
-    m_transform = NULL;
+    m_transform = nullptr;
 
     if (other.m_transform)
         m_transform = other.m_transform->copy();

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -254,7 +254,7 @@ public:
 
     virtual ~QwtPlotCurve();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setPaintAttribute(PaintAttribute, bool on = true);
     bool testPaintAttribute(PaintAttribute) const;
@@ -289,7 +289,7 @@ public:
     void setSamples(const QVector< QPointF >&);
     void setSamples(QwtSeriesData< QPointF >*);
 
-    virtual int closestPoint(const QPointF& pos, double* dist = NULL) const;
+    virtual int closestPoint(const QPointF& pos, double* dist = nullptr) const;
 
     double minXValue() const;
     double maxXValue() const;
@@ -323,9 +323,9 @@ public:
                             const QwtScaleMap& yMap,
                             const QRectF& canvasRect,
                             int from,
-                            int to) const QWT_OVERRIDE;
+                            int to) const override;
 
-    virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+    virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:
     void init();

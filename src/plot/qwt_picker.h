@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -264,7 +264,7 @@ public:
     bool isEnabled() const;
     bool isActive() const;
 
-    virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
     QWidget* parentWidget();
     const QWidget* parentWidget() const;

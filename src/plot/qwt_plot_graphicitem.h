@@ -54,13 +54,13 @@ class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
     void setGraphic( const QRectF& rect, const QwtGraphic& );
     QwtGraphic graphic() const;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
   private:
     void init();

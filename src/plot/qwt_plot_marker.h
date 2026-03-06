@@ -88,7 +88,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 
     virtual ~QwtPlotMarker();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     double xValue() const;
     double yValue() const;
@@ -123,12 +123,12 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& ) const QWT_OVERRIDE;
+        const QRectF& ) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
   protected:
     virtual void drawLines( QPainter*,

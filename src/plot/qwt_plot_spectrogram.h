@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -86,8 +86,8 @@ public:
     void setColorTableSize(int numColors);
     int colorTableSize() const;
 
-    virtual QwtInterval interval(Qt::Axis) const QWT_OVERRIDE;
-    virtual QRectF pixelHint(const QRectF&) const QWT_OVERRIDE;
+    virtual QwtInterval interval(Qt::Axis) const override;
+    virtual QRectF pixelHint(const QRectF&) const override;
 
     void setDefaultContourPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     void setDefaultContourPen(const QPen&);
@@ -101,15 +101,15 @@ public:
     void setContourLevels(const QList< double >&);
     QList< double > contourLevels() const;
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
-    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
 protected:
     virtual QImage renderImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,
                                const QRectF& area,
-                               const QSize& imageSize) const QWT_OVERRIDE;
+                               const QSize& imageSize) const override;
 
     virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 

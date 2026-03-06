@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -35,7 +35,7 @@
 class QwtPlotCanvas::PrivateData
 {
 public:
-    PrivateData() : backingStore(NULL)
+    PrivateData() : backingStore(nullptr)
     {
     }
 
@@ -94,7 +94,7 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
     switch (attribute) {
     case BackingStore: {
         if (on) {
-            if (m_data->backingStore == NULL)
+            if (m_data->backingStore == nullptr)
                 m_data->backingStore = new QPixmap();
 
             if (isVisible()) {
@@ -106,7 +106,7 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
             }
         } else {
             delete m_data->backingStore;
-            m_data->backingStore = NULL;
+            m_data->backingStore = nullptr;
         }
         break;
     }
@@ -181,7 +181,7 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
-    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != NULL) {
+    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != nullptr) {
         QPixmap& bs = *m_data->backingStore;
         if (bs.size() != size() * QwtPainter::devicePixelRatio(&bs)) {
             bs = QwtPainter::backingStore(this, size());

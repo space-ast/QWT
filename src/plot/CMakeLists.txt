@@ -28,7 +28,6 @@ set(QWTPLOT_HEADER_BASE
         qwt_date_scale_draw.h
         qwt_date_scale_engine.h
         qwt_dyngrid_layout.h
-        qwt_global.h
         qwt_graphic.h
         qwt_interval.h
         qwt_interval_symbol.h

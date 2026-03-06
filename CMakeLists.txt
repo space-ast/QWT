@@ -33,8 +33,17 @@ set(CMAKE_RELEASE_POSTFIX "" CACHE STRING "add a postfix, usually empty on windo
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "add a postfix, usually empty on windows")
 set(CMAKE_MINSIZEREL_POSTFIX "" CACHE STRING "add a postfix, usually empty on windows")
 
-# C++ standard, require C++17
-set(CMAKE_CXX_STANDARD 17)
+# Detect Qt version first (needed for C++ standard selection)
+set(QWT_MIN_QT_VERSION 5.12)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+
+# C++ standard: Qt6 requires C++17, Qt5 uses C++11
+# Code is written to be C++11 compatible (qwt_make_unique, qwt_as_const, etc.)
+if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+    set(CMAKE_CXX_STANDARD 17)
+else()
+    set(CMAKE_CXX_STANDARD 11)
+endif()
 # Enforce the requirement
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -66,8 +75,6 @@ endif()
 ########################################################
 # Install Path Settings
 ########################################################
-set(QWT_MIN_QT_VERSION 5.12)
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 
 # Determine platform architecture
 if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
@@ -122,6 +129,7 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/classincludes"
 )
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/qwt_version_info.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/qwt_global.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${QWT_LIB_NAME}
     COMPONENT headers
 )

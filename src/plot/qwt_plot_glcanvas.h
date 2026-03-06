@@ -73,28 +73,28 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     Q_PROPERTY( double borderRadius READ borderRadius WRITE setBorderRadius )
 
   public:
-    explicit QwtPlotGLCanvas( QwtPlot* = NULL );
-    explicit QwtPlotGLCanvas( const QGLFormat&, QwtPlot* = NULL );
+    explicit QwtPlotGLCanvas( QwtPlot* = nullptr );
+    explicit QwtPlotGLCanvas( const QGLFormat&, QwtPlot* = nullptr );
     virtual ~QwtPlotGLCanvas();
 
-    Q_INVOKABLE virtual void invalidateBackingStore() QWT_OVERRIDE;
+    Q_INVOKABLE virtual void invalidateBackingStore() override;
     Q_INVOKABLE QPainterPath borderPath( const QRect& ) const;
 
-    virtual bool event( QEvent* ) QWT_OVERRIDE;
+    virtual bool event( QEvent* ) override;
 
   public Q_SLOTS:
     void replot();
 
   protected:
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
 
-    virtual void initializeGL() QWT_OVERRIDE;
-    virtual void paintGL() QWT_OVERRIDE;
-    virtual void resizeGL( int width, int height ) QWT_OVERRIDE;
+    virtual void initializeGL() override;
+    virtual void paintGL() override;
+    virtual void resizeGL( int width, int height ) override;
 
   private:
     void init();
-    virtual void clearBackingStore() QWT_OVERRIDE;
+    virtual void clearBackingStore() override;
 
     class PrivateData;
     PrivateData* m_data;

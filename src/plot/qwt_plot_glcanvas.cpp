@@ -48,7 +48,7 @@ public:
 class QwtPlotGLCanvas::PrivateData
 {
 public:
-    PrivateData() : fboDirty(true), fbo(NULL)
+    PrivateData() : fboDirty(true), fbo(nullptr)
     {
     }
 
@@ -151,7 +151,7 @@ void QwtPlotGLCanvas::invalidateBackingStore()
 void QwtPlotGLCanvas::clearBackingStore()
 {
     delete m_data->fbo;
-    m_data->fbo = NULL;
+    m_data->fbo = nullptr;
 }
 
 /*!
@@ -181,7 +181,7 @@ void QwtPlotGLCanvas::paintGL()
     QPainter painter;
 
     if (testPaintAttribute(QwtPlotGLCanvas::BackingStore)) {
-        const qreal pixelRatio = QwtPainter::devicePixelRatio(NULL);
+        const qreal pixelRatio = QwtPainter::devicePixelRatio(nullptr);
         const QRect rect(0, 0, width() * pixelRatio, height() * pixelRatio);
 
         if (hasFocusIndicator)
@@ -190,11 +190,11 @@ void QwtPlotGLCanvas::paintGL()
         if (m_data->fbo) {
             if (m_data->fbo->size() != rect.size()) {
                 delete m_data->fbo;
-                m_data->fbo = NULL;
+                m_data->fbo = nullptr;
             }
         }
 
-        if (m_data->fbo == NULL) {
+        if (m_data->fbo == nullptr) {
             QGLFramebufferObjectFormat format;
             format.setSamples(4);
             format.setAttachment(QGLFramebufferObject::CombinedDepthStencil);
@@ -219,7 +219,7 @@ void QwtPlotGLCanvas::paintGL()
             usually makes more sense then.
          */
 
-        QGLFramebufferObject::blitFramebuffer(NULL, rect.translated(0, height() - rect.height()), m_data->fbo, rect);
+        QGLFramebufferObject::blitFramebuffer(nullptr, rect.translated(0, height() - rect.height()), m_data->fbo, rect);
     } else {
         painter.begin(this);
         draw(&painter);

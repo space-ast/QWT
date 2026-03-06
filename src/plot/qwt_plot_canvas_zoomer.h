@@ -113,12 +113,12 @@ Q_SIGNALS:
 protected:
     virtual void rescale();
 
-    virtual void widgetMouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-    virtual void widgetKeyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+    virtual void widgetMouseReleaseEvent(QMouseEvent*) override;
+    virtual void widgetKeyPressEvent(QKeyEvent*) override;
 
-    virtual void begin() QWT_OVERRIDE;
-    virtual bool end(bool ok = true) QWT_OVERRIDE;
-    virtual bool accept(QPolygon&) const QWT_OVERRIDE;
+    virtual void begin() override;
+    virtual bool end(bool ok = true) override;
+    virtual bool accept(QPolygon&) const override;
 
 private:
     void init(bool doReplot);

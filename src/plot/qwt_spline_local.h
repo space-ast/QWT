@@ -84,14 +84,14 @@ class QWT_EXPORT QwtSplineLocal : public QwtSplineC1
 
     Type type() const;
 
-    virtual uint locality() const QWT_OVERRIDE;
+    virtual uint locality() const override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
     // calculating the parametric equations
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< double > slopes( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+    virtual QVector< double > slopes( const QPolygonF& ) const override;
 
   private:
     const Type m_type;

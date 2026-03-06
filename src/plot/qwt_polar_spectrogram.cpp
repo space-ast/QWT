@@ -37,7 +37,7 @@ class QwtPolarSpectrogram::PrivateData
 {
   public:
     PrivateData()
-        : data( NULL )
+        : data( nullptr )
     {
         colorMap = new QwtLinearColorMap();
     }
@@ -236,7 +236,7 @@ QImage QwtPolarSpectrogram::renderImage(
     const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
     const QPointF& pole, const QRect& rect ) const
 {
-    if ( m_data->data == NULL || m_data->colorMap == NULL )
+    if ( m_data->data == nullptr || m_data->colorMap == nullptr )
         return QImage();
 
     QImage image( rect.size(), m_data->colorMap->format() == QwtColorMap::RGB

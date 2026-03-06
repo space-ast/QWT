@@ -41,7 +41,7 @@ class QwtPlotMarker::PrivateData
         : labelAlignment( Qt::AlignCenter )
         , labelOrientation( Qt::Horizontal )
         , spacing( 2 )
-        , symbol( NULL )
+        , symbol( nullptr )
         , style( QwtPlotMarker::NoLine )
         , xValue( 0.0 )
         , yValue( 0.0 )
@@ -220,7 +220,7 @@ void QwtPlotMarker::drawLines( QPainter* painter,
 void QwtPlotMarker::drawSymbol( QPainter* painter,
     const QRectF& canvasRect, const QPointF& pos ) const
 {
-    if ( m_data->symbol == NULL )
+    if ( m_data->symbol == nullptr )
         return;
 
     const QwtSymbol& symbol = *m_data->symbol;

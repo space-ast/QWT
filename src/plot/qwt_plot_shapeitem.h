@@ -114,16 +114,16 @@ class QWT_EXPORT QwtPlotShapeItem : public QwtPlotItem
     void setRenderTolerance( double );
     double renderTolerance() const;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
   private:
     void init();

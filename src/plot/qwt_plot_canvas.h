@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -136,7 +136,7 @@ public:
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-    explicit QwtPlotCanvas(QwtPlot* = NULL);
+    explicit QwtPlotCanvas(QwtPlot* = nullptr);
     virtual ~QwtPlotCanvas();
 
     void setPaintAttribute(PaintAttribute, bool on = true);
@@ -145,7 +145,7 @@ public:
     const QPixmap* backingStore() const;
     Q_INVOKABLE void invalidateBackingStore();
 
-    virtual bool event(QEvent*) QWT_OVERRIDE;
+    virtual bool event(QEvent*) override;
 
     Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
@@ -153,10 +153,10 @@ public Q_SLOTS:
     void replot();
 
 protected:
-    virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+    virtual void paintEvent(QPaintEvent*) override;
+    virtual void resizeEvent(QResizeEvent*) override;
 
-    virtual void drawBorder(QPainter*) QWT_OVERRIDE;
+    virtual void drawBorder(QPainter*) override;
 
 private:
     class PrivateData;

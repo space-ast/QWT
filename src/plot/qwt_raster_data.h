@@ -34,8 +34,10 @@ class QwtInterval;
 class QPolygonF;
 class QRectF;
 class QSize;
-template< typename T > class QList;
-template< class Key, class T > class QMap;
+template< typename T >
+class QList;
+template< class Key, class T >
+class QMap;
 
 /*!
    \brief QwtRasterData defines an interface to any type of raster data.
@@ -58,9 +60,9 @@ template< class Key, class T > class QMap;
  */
 class QWT_EXPORT QwtRasterData
 {
-  public:
+public:
     //! Contour lines
-    typedef QMap< double, QPolygonF > ContourLines;
+    using ContourLines = QMap< double, QPolygonF >;
 
     /*!
        \brief Raster data attributes
@@ -88,7 +90,7 @@ class QWT_EXPORT QwtRasterData
         WithoutGaps = 0x01
     };
 
-    Q_DECLARE_FLAGS( Attributes, Attribute )
+    Q_DECLARE_FLAGS(Attributes, Attribute)
 
     //! Flags to modify the contour algorithm
     enum ConrecFlag
@@ -100,23 +102,23 @@ class QWT_EXPORT QwtRasterData
         IgnoreOutOfRange = 0x02
     };
 
-    Q_DECLARE_FLAGS( ConrecFlags, ConrecFlag )
+    Q_DECLARE_FLAGS(ConrecFlags, ConrecFlag)
 
     QwtRasterData();
     virtual ~QwtRasterData();
 
-    void setAttribute( Attribute, bool on = true );
-    bool testAttribute( Attribute ) const;
+    void setAttribute(Attribute, bool on = true);
+    bool testAttribute(Attribute) const;
 
     /*!
        \return Bounding interval for an axis
        \sa setInterval
      */
-    virtual QwtInterval interval( Qt::Axis ) const = 0;
+    virtual QwtInterval interval(Qt::Axis) const = 0;
 
-    virtual QRectF pixelHint( const QRectF& ) const;
+    virtual QRectF pixelHint(const QRectF&) const;
 
-    virtual void initRaster( const QRectF&, const QSize& raster );
+    virtual void initRaster(const QRectF&, const QSize& raster);
     virtual void discardRaster();
 
     /*!
@@ -124,23 +126,21 @@ class QWT_EXPORT QwtRasterData
        \param x X value in plot coordinates
        \param y Y value in plot coordinates
      */
-    virtual double value( double x, double y ) const = 0;
+    virtual double value(double x, double y) const = 0;
 
-    virtual ContourLines contourLines( const QRectF& rect,
-        const QSize& raster, const QList< double >& levels,
-        ConrecFlags ) const;
+    virtual ContourLines contourLines(const QRectF& rect, const QSize& raster, const QList< double >& levels, ConrecFlags) const;
 
     class Contour3DPoint;
     class ContourPlane;
 
-  private:
+private:
     Q_DISABLE_COPY(QwtRasterData)
 
     class PrivateData;
     PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtRasterData::ConrecFlags )
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtRasterData::Attributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::ConrecFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::Attributes)
 
 #endif

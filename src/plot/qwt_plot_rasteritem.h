@@ -116,12 +116,12 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     virtual QRectF pixelHint( const QRectF& ) const;
 
     virtual QwtInterval interval(Qt::Axis) const;
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
   protected:
     /*!

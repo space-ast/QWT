@@ -14,13 +14,13 @@
 
 class Plot : public QwtPlot
 {
-  public:
-    Plot( QWidget* = NULL);
+public:
+    Plot(QWidget* = NULL);
 
-  protected:
-    virtual void timerEvent( QTimerEvent* ) QWT_OVERRIDE;
+protected:
+    virtual void timerEvent(QTimerEvent*) override;
 
-  private:
+private:
     void updateCurves();
 
     QElapsedTimer m_timer;

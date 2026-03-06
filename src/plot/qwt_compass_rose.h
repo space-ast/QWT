@@ -86,7 +86,7 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 
     virtual void draw( QPainter*,
         const QPointF& center, double radius, double north,
-        QPalette::ColorGroup = QPalette::Active ) const QWT_OVERRIDE;
+        QPalette::ColorGroup = QPalette::Active ) const override;
 
     static void drawRose( QPainter*, const QPalette&,
         const QPointF& center, double radius, double north, double width,

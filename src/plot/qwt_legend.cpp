@@ -109,7 +109,7 @@ void LegendMap::removeWidget(const QWidget* widget)
 
 QVariant LegendMap::itemInfo(const QWidget* widget) const
 {
-    if (widget != NULL) {
+    if (widget != nullptr) {
         QWidget* w = const_cast< QWidget* >(widget);
 
         for (int i = 0; i < m_entries.size(); i++) {
@@ -139,7 +139,7 @@ QList< QWidget* > LegendMap::legendWidgets(const QVariant& itemInfo) const
 class QwtLegend::PrivateData
 {
 public:
-    PrivateData() : itemMode(QwtLegendData::ReadOnly), view(NULL)
+    PrivateData() : itemMode(QwtLegendData::ReadOnly), view(nullptr)
     {
     }
 
@@ -150,7 +150,7 @@ public:
     LegendView* view;
 };
 
-class QwtLegend::PrivateData::LegendView QWT_FINAL : public QScrollArea
+class QwtLegend::PrivateData::LegendView final : public QScrollArea
 {
 public:
     explicit LegendView(QWidget* parent) : QScrollArea(parent)
@@ -169,7 +169,7 @@ public:
         viewport()->setAutoFillBackground(false);
     }
 
-    virtual bool event(QEvent* event) QWT_OVERRIDE
+    virtual bool event(QEvent* event) override
     {
         if (event->type() == QEvent::PolishRequest) {
             setFocusPolicy(Qt::NoFocus);
@@ -194,7 +194,7 @@ public:
         return QScrollArea::event(event);
     }
 
-    virtual bool viewportEvent(QEvent* event) QWT_OVERRIDE
+    virtual bool viewportEvent(QEvent* event) override
     {
         bool ok = QScrollArea::viewportEvent(event);
 
@@ -229,7 +229,7 @@ public:
     void layoutContents()
     {
         const QwtDynGridLayout* tl = qobject_cast< QwtDynGridLayout* >(contentsWidget->layout());
-        if (tl == NULL)
+        if (tl == nullptr)
             return;
 
         const QSize visibleSize = viewport()->contentsRect().size();
@@ -495,7 +495,7 @@ void QwtLegend::updateTabOrder()
     if (contentsLayout) {
         // set tab focus chain
 
-        QWidget* w = NULL;
+        QWidget* w = nullptr;
 
         for (int i = 0; i < contentsLayout->count(); i++) {
             QLayoutItem* item = contentsLayout->itemAt(i);
@@ -561,7 +561,7 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
         case QEvent::LayoutRequest: {
             m_data->view->layoutContents();
 
-            if (parentWidget() && parentWidget()->layout() == NULL) {
+            if (parentWidget() && parentWidget()->layout() == nullptr) {
                 /*
                    We want the parent widget ( usually QwtPlot ) to recalculate
                    its layout, when the contentsWidget has changed. But
@@ -644,7 +644,7 @@ void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBac
     }
 
     const QwtDynGridLayout* legendLayout = qobject_cast< QwtDynGridLayout* >(contentsWidget()->layout());
-    if (legendLayout == NULL)
+    if (legendLayout == nullptr)
         return;
 
     const QMargins m = contentsMargins();
@@ -744,7 +744,7 @@ QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 {
     const QList< QWidget* > list = m_data->itemMap.legendWidgets(itemInfo);
     if (list.isEmpty())
-        return NULL;
+        return nullptr;
 
     return list[ 0 ];
 }

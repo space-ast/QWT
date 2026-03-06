@@ -117,7 +117,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
         OriginCustom
     };
 
-    explicit QwtThermo( QWidget* parent = NULL );
+    explicit QwtThermo( QWidget* parent = nullptr );
     virtual ~QwtThermo();
 
     void setOrientation( Qt::Orientation );
@@ -162,8 +162,8 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 
     double value() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     void setScaleDraw( QwtScaleDraw* );
     const QwtScaleDraw* scaleDraw() const;
@@ -173,11 +173,11 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 
   protected:
     virtual void drawLiquid( QPainter*, const QRect& ) const;
-    virtual void scaleChange() QWT_OVERRIDE;
+    virtual void scaleChange() override;
 
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
-    virtual void changeEvent( QEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void resizeEvent( QResizeEvent* ) override;
+    virtual void changeEvent( QEvent* ) override;
 
     QwtScaleDraw* scaleDraw();
 

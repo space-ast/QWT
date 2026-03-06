@@ -22,7 +22,7 @@ public:
     {
     }
 
-    virtual double transform(double value) const QWT_OVERRIDE
+    virtual double transform(double value) const override
     {
         const double v1 = m_position - m_range;
         const double v2 = v1 + 2 * m_range;
@@ -46,7 +46,7 @@ public:
         return v;
     }
 
-    virtual double invTransform(double value) const QWT_OVERRIDE
+    virtual double invTransform(double value) const override
     {
         const double v1 = m_position - m_range;
         const double v2 = v1 + 2 * m_powRange;
@@ -69,7 +69,7 @@ public:
         return v;
     }
 
-    virtual QwtTransform* copy() const QWT_OVERRIDE
+    virtual QwtTransform* copy() const override
     {
         return new TransformPos(m_position, m_range, m_factor);
     }

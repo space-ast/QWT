@@ -76,12 +76,12 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 
     virtual void autoScale(
         int maxNumSteps, double& x1, double& x2,
-        double& stepSize ) const QWT_OVERRIDE;
+        double& stepSize ) const override;
 
     virtual QwtScaleDiv divideScale(
         double x1, double x2,
         int maxMajorSteps, int maxMinorSteps,
-        double stepSize = 0.0 ) const QWT_OVERRIDE;
+        double stepSize = 0.0 ) const override;
 
     virtual QwtDate::IntervalType intervalType(
         const QDateTime&, const QDateTime&, int maxSteps ) const;

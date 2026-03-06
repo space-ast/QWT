@@ -13,7 +13,7 @@ class Plot : public QwtPlot
 {
     Q_OBJECT
 
-  public:
+public:
     enum ColorMap
     {
         RGBMap,
@@ -24,26 +24,25 @@ class Plot : public QwtPlot
         AlphaMap
     };
 
-    Plot( QWidget* = NULL );
+    Plot(QWidget* = NULL);
 
-  Q_SIGNALS:
-    void rendered( const QString& status );
+Q_SIGNALS:
+    void rendered(const QString& status);
 
-  public Q_SLOTS:
-    void showContour( bool on );
-    void showSpectrogram( bool on );
+public Q_SLOTS:
+    void showContour(bool on);
+    void showSpectrogram(bool on);
 
-    void setColorMap( int );
-    void setColorTableSize( int );
-    void setAlpha( int );
+    void setColorMap(int);
+    void setColorTableSize(int);
+    void setAlpha(int);
 
 #ifndef QT_NO_PRINTER
     void printPlot();
 #endif
 
-  private:
-    virtual void drawItems( QPainter*, const QRectF&,
-        const QwtScaleMap maps[QwtAxis::AxisPositions] ) const QWT_OVERRIDE;
+private:
+    virtual void drawItems(QPainter*, const QRectF&, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const override;
 
     QwtPlotSpectrogram* m_spectrogram;
 

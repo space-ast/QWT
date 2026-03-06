@@ -10,16 +10,15 @@
 
 class SpeedoMeter : public QwtDial
 {
-  public:
-    SpeedoMeter( QWidget* parent = NULL );
+public:
+    SpeedoMeter(QWidget* parent = NULL);
 
-    void setLabel( const QString& );
+    void setLabel(const QString&);
     QString label() const;
 
-  protected:
-    virtual void drawScaleContents( QPainter* painter,
-        const QPointF& center, double radius ) const QWT_OVERRIDE;
+protected:
+    virtual void drawScaleContents(QPainter* painter, const QPointF& center, double radius) const override;
 
-  private:
+private:
     QString m_label;
 };

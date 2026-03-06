@@ -8,14 +8,14 @@
 #include "CpuStat.h"
 #include <QwtPlot>
 
-#define HISTORY 60 // seconds
+#define HISTORY 60  // seconds
 
 class QwtPlotCurve;
 
 class CpuPlot : public QwtPlot
 {
     Q_OBJECT
-  public:
+public:
     enum CpuData
     {
         User,
@@ -26,28 +26,28 @@ class CpuPlot : public QwtPlot
         NCpuData
     };
 
-    CpuPlot( QWidget* = 0 );
-    const QwtPlotCurve* cpuCurve( int id ) const
+    CpuPlot(QWidget* = 0);
+    const QwtPlotCurve* cpuCurve(int id) const
     {
-        return m_data[id].curve;
+        return m_data[ id ].curve;
     }
 
-  protected:
-    void timerEvent( QTimerEvent* ) QWT_OVERRIDE;
+protected:
+    void timerEvent(QTimerEvent*) override;
 
-  private Q_SLOTS:
-    void legendChecked( const QVariant&, bool on );
+private Q_SLOTS:
+    void legendChecked(const QVariant&, bool on);
 
-  private:
-    void showCurve( QwtPlotItem*, bool on );
+private:
+    void showCurve(QwtPlotItem*, bool on);
 
     struct
     {
         QwtPlotCurve* curve;
-        double data[HISTORY];
-    } m_data[NCpuData];
+        double data[ HISTORY ];
+    } m_data[ NCpuData ];
 
-    double m_timeData[HISTORY];
+    double m_timeData[ HISTORY ];
 
     int m_dataCount;
     CpuStat m_cpuStat;

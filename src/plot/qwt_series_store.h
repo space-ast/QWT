@@ -129,7 +129,7 @@ public:
        \return Number of samples of the series
        \sa setData(), QwtSeriesData<T>::size()
      */
-    virtual size_t dataSize() const QWT_OVERRIDE;
+    virtual size_t dataSize() const override;
 
     /*!
        \return Bounding rectangle of the series
@@ -137,7 +137,7 @@ public:
 
        \sa QwtSeriesData<T>::boundingRect()
      */
-    virtual QRectF dataRect() const QWT_OVERRIDE;
+    virtual QRectF dataRect() const override;
 
     /*!
        Set a the "rect of interest" for the series
@@ -145,7 +145,7 @@ public:
        \param rect Rectangle of interest
        \sa QwtSeriesData<T>::setRectOfInterest()
      */
-    virtual void setRectOfInterest(const QRectF& rect) QWT_OVERRIDE;
+    virtual void setRectOfInterest(const QRectF& rect) override;
 
     /*!
        Replace a series without deleting the previous one
@@ -160,7 +160,7 @@ private:
 };
 
 template< typename T >
-QwtSeriesStore< T >::QwtSeriesStore() : m_series(NULL)
+QwtSeriesStore< T >::QwtSeriesStore() : m_series(nullptr)
 {
 }
 
@@ -201,7 +201,7 @@ void QwtSeriesStore< T >::setData(QwtSeriesData< T >* series)
 template< typename T >
 size_t QwtSeriesStore< T >::dataSize() const
 {
-    if (m_series == NULL)
+    if (m_series == nullptr)
         return 0;
 
     return m_series->size();
@@ -210,7 +210,7 @@ size_t QwtSeriesStore< T >::dataSize() const
 template< typename T >
 QRectF QwtSeriesStore< T >::dataRect() const
 {
-    if (m_series == NULL)
+    if (m_series == nullptr)
         return QRectF(1.0, 1.0, -2.0, -2.0);  // invalid
 
     return m_series->boundingRect();

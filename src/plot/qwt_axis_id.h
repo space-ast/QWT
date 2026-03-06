@@ -40,6 +40,6 @@
 
     \sa QwtAxis
  */
-typedef int QwtAxisId;
+using QwtAxisId = int;
 
 #endif

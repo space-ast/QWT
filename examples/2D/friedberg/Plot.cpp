@@ -33,7 +33,7 @@ public:
         setMinorPen(Qt::gray, 0, Qt::DotLine);
     }
 
-    virtual void updateScaleDiv(const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv) QWT_OVERRIDE
+    virtual void updateScaleDiv(const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv) override
     {
         QwtScaleDiv scaleDiv(xScaleDiv.lowerBound(), xScaleDiv.upperBound());
 
@@ -60,7 +60,7 @@ public:
         setSpacing(15);
     }
 
-    virtual QwtText label(double value) const QWT_OVERRIDE
+    virtual QwtText label(double value) const override
     {
         const int month = int(value / 30) + 1;
         return QLocale::system().monthName(month, QLocale::LongFormat);

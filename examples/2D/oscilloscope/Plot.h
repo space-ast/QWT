@@ -17,24 +17,24 @@ class Plot : public QwtPlot
 {
     Q_OBJECT
 
-  public:
-    Plot( QWidget* = NULL );
+public:
+    Plot(QWidget* = NULL);
     virtual ~Plot();
 
     void start();
-    virtual void replot() QWT_OVERRIDE;
+    virtual void replot() override
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+        virtual bool eventFilter(QObject*, QEvent*) override;
 
-  public Q_SLOTS:
-    void setIntervalLength( double );
+public Q_SLOTS:
+    void setIntervalLength(double);
 
-  protected:
-    virtual void showEvent( QShowEvent* ) QWT_OVERRIDE;
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
-    virtual void timerEvent( QTimerEvent* ) QWT_OVERRIDE;
+protected:
+    virtual void showEvent(QShowEvent*) override;
+    virtual void resizeEvent(QResizeEvent*) override;
+    virtual void timerEvent(QTimerEvent*) override;
 
-  private:
+private:
     void updateCurve();
     void incrementInterval();
 

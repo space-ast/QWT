@@ -81,7 +81,7 @@ class QWT_EXPORT QwtPolarCurve : public QwtPolarItem
 
     virtual ~QwtPolarCurve();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setLegendAttribute( LegendAttribute, bool on = true );
     bool testLegendAttribute( LegendAttribute ) const;
@@ -107,15 +107,15 @@ class QWT_EXPORT QwtPolarCurve : public QwtPolarItem
     virtual void draw( QPainter* p,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
         const QPointF& pole, double radius,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     virtual void draw( QPainter* p,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
         const QPointF& pole, int from, int to ) const;
 
-    virtual QwtInterval boundingInterval( int scaleId ) const QWT_OVERRIDE;
+    virtual QwtInterval boundingInterval( int scaleId ) const override;
 
-    virtual QwtGraphic legendIcon( int index, const QSizeF& ) const QWT_OVERRIDE;
+    virtual QwtGraphic legendIcon( int index, const QSizeF& ) const override;
 
   protected:
 

@@ -55,7 +55,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
 
     virtual ~QwtPlotSpectroCurve();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setPaintAttribute( PaintAttribute, bool on = true );
     bool testPaintAttribute( PaintAttribute ) const;
@@ -72,7 +72,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
 
     virtual void drawSeries( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const QWT_OVERRIDE;
+        const QRectF& canvasRect, int from, int to ) const override;
 
     void setPenWidth( double );
     double penWidth() const;

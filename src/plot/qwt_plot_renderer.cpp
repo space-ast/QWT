@@ -303,7 +303,7 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution)
 {
-    if (plot == NULL || sizeMM.isEmpty() || resolution <= 0)
+    if (plot == nullptr || sizeMM.isEmpty() || resolution <= 0)
         return;
 
     QString title = plot->title().text();
@@ -984,7 +984,7 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
  */
 bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {
-    if (plot == NULL)
+    if (plot == nullptr)
         return false;
 
     QString fileName = documentName;
@@ -1019,11 +1019,11 @@ bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const
         filter += imageFilter;
     }
 
-    fileName = QFileDialog::getSaveFileName(NULL,
+    fileName = QFileDialog::getSaveFileName(nullptr,
                                             tr("Export File Name"),
                                             fileName,
                                             filter.join(";;"),
-                                            NULL,
+                                            nullptr,
                                             QFileDialog::DontConfirmOverwrite);
 #endif
     if (fileName.isEmpty())

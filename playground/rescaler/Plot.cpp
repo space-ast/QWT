@@ -23,7 +23,7 @@ public:
         m_text = text;
     }
 
-    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect) const QWT_OVERRIDE
+    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect) const override
     {
         const int margin      = 5;
         const QRectF textRect = canvasRect.adjusted(margin, margin, -margin, -margin);
@@ -76,12 +76,12 @@ public:
         }
     }
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE
+    virtual QRectF boundingRect() const override
     {
         return m_rect;
     }
 
-    virtual void draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF&) const QWT_OVERRIDE
+    virtual void draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF&) const override
     {
         if (m_rect.isValid()) {
             const QRectF rect = QwtScaleMap::transform(xMap, yMap, m_rect);

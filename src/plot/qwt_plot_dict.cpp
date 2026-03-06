@@ -36,7 +36,7 @@ class QwtPlotDict::PrivateData
       public:
         void insertItem( QwtPlotItem* item )
         {
-            if ( item == NULL )
+            if ( item == nullptr )
                 return;
 
             QList< QwtPlotItem* >::iterator it =
@@ -46,7 +46,7 @@ class QwtPlotDict::PrivateData
 
         void removeItem( QwtPlotItem* item )
         {
-            if ( item == NULL )
+            if ( item == nullptr )
                 return;
 
             QList< QwtPlotItem* >::iterator it =
@@ -164,7 +164,7 @@ void QwtPlotDict::detachItems( int rtti, bool autoDelete )
 
         if ( rtti == QwtPlotItem::Rtti_PlotItem || item->rtti() == rtti )
         {
-            item->attach( NULL );
+            item->attach( nullptr );
             if ( autoDelete )
                 delete item;
         }

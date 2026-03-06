@@ -1,4 +1,4 @@
-﻿#ifndef QWT_PLOT_PANNER_H
+#ifndef QWT_PLOT_PANNER_H
 #define QWT_PLOT_PANNER_H
 #include "qwt_global.h"
 #include "qwt_picker.h"
@@ -37,9 +37,9 @@ Q_SIGNALS:
     void panned(int dx, int dy);
 
 protected:
-    virtual void widgetMousePressEvent(QMouseEvent* mouseEvent) QWT_OVERRIDE;
-    virtual void move(const QPoint&) QWT_OVERRIDE;
-    virtual bool end(bool ok = true) QWT_OVERRIDE;
+    virtual void widgetMousePressEvent(QMouseEvent* mouseEvent) override;
+    virtual void move(const QPoint&) override;
+    virtual bool end(bool ok = true) override;
 
 private:
     void init();

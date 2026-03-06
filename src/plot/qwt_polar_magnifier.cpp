@@ -86,7 +86,7 @@ QwtPolarPlot* QwtPolarMagnifier::plot()
     if (c)
         return c->plot();
 
-    return NULL;
+    return nullptr;
 }
 
 //! \return observed plot
@@ -96,7 +96,7 @@ const QwtPolarPlot* QwtPolarMagnifier::plot() const
     if (c)
         return c->plot();
 
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -128,7 +128,7 @@ void QwtPolarMagnifier::rescale(double factor)
         return;
 
     QwtPolarPlot* plt = plot();
-    if (plt == NULL)
+    if (plt == nullptr)
         return;
 
     QwtPointPolar zoomPos;

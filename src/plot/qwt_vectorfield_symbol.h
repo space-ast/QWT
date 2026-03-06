@@ -79,12 +79,12 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
   public:
     QwtVectorFieldArrow( qreal headWidth = 6.0, qreal tailWidth = 1.0 );
-    virtual ~QwtVectorFieldArrow() QWT_OVERRIDE;
+    virtual ~QwtVectorFieldArrow() override;
 
-    virtual void setLength( qreal length ) QWT_OVERRIDE;
-    virtual qreal length() const QWT_OVERRIDE;
+    virtual void setLength( qreal length ) override;
+    virtual qreal length() const override;
 
-    virtual void paint( QPainter* ) const QWT_OVERRIDE;
+    virtual void paint( QPainter* ) const override;
 
   private:
     class PrivateData;
@@ -99,12 +99,12 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
   public:
     QwtVectorFieldThinArrow( qreal headWidth = 6.0 );
-    virtual ~QwtVectorFieldThinArrow() QWT_OVERRIDE;
+    virtual ~QwtVectorFieldThinArrow() override;
 
-    virtual void setLength( qreal length ) QWT_OVERRIDE;
-    virtual qreal length() const QWT_OVERRIDE;
+    virtual void setLength( qreal length ) override;
+    virtual qreal length() const override;
 
-    virtual void paint( QPainter* ) const QWT_OVERRIDE;
+    virtual void paint( QPainter* ) const override;
 
   private:
     class PrivateData;

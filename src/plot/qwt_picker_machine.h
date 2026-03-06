@@ -105,7 +105,7 @@ class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
     QwtPickerTrackerMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -122,7 +122,7 @@ class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
     QwtPickerClickPointMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -138,7 +138,7 @@ class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
     QwtPickerDragPointMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -160,7 +160,7 @@ class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
     QwtPickerClickRectMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -181,7 +181,7 @@ class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
     QwtPickerDragRectMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -205,7 +205,7 @@ class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
     QwtPickerDragLineMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -225,7 +225,7 @@ class QWT_EXPORT QwtPickerPolygonMachine : public QwtPickerMachine
     QwtPickerPolygonMachine();
 
     virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) QWT_OVERRIDE;
+        const QwtEventPattern&, const QEvent* ) override;
 };
 
 #endif

@@ -14,13 +14,13 @@ class QwtPlotCurve;
 
 class CanvasPicker : public QObject
 {
-  public:
-    CanvasPicker( bool sortedX, QwtPlot* plot );
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+public:
+    CanvasPicker(bool sortedX, QwtPlot* plot);
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-  private:
-    void select( const QPointF& );
-    void move( const QPointF& );
+private:
+    void select(const QPointF&);
+    void move(const QPointF&);
 
     QwtPlot* plot();
     const QwtPlot* plot() const;

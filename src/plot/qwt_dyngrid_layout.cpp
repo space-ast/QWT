@@ -170,7 +170,7 @@ uint QwtDynGridLayout::itemCount() const
 QLayoutItem* QwtDynGridLayout::itemAt(int index) const
 {
     if (index < 0 || index >= m_data->itemList.count())
-        return NULL;
+        return nullptr;
 
     return m_data->itemList.at(index);
 }
@@ -185,7 +185,7 @@ QLayoutItem* QwtDynGridLayout::itemAt(int index) const
 QLayoutItem* QwtDynGridLayout::takeAt(int index)
 {
     if (index < 0 || index >= m_data->itemList.count())
-        return NULL;
+        return nullptr;
 
     m_data->isDirty = true;
     return m_data->itemList.takeAt(index);
@@ -247,8 +247,8 @@ void QwtDynGridLayout::setGeometry(const QRect& rect)
     const QList< QRect > itemGeometries = layoutItems(rect, m_data->numColumns);
 
     int index = 0;
-    for (QList< QLayoutItem* >::const_iterator it = m_data->itemList.constBegin(); it != m_data->itemList.constEnd(); ++it) {
-        (*it)->setGeometry(itemGeometries[ index ]);
+    for (auto* item : qwt_as_const(m_data->itemList)) {
+        item->setGeometry(itemGeometries[ index ]);
         index++;
     }
 }

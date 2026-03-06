@@ -40,18 +40,18 @@
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {
   public:
-    explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = NULL );
+    explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
     virtual ~QwtArrowButton();
 
     Qt::ArrowType arrowType() const;
     int num() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
   protected:
-    virtual void paintEvent( QPaintEvent*) QWT_OVERRIDE;
-    virtual void keyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent*) override;
+    virtual void keyPressEvent( QKeyEvent* ) override;
 
     virtual void drawButtonLabel( QPainter* );
     virtual void drawArrow( QPainter*,

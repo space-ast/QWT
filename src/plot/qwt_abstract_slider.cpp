@@ -650,7 +650,7 @@ double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
 
     const QwtTransform* transformation = scaleMap().transformation();
 
-    if (transformation == NULL) {
+    if (transformation == nullptr) {
         const double range = maximum() - minimum();
         value += stepCount * range / m_data->totalSteps;
     } else {
@@ -719,7 +719,7 @@ double QwtAbstractSlider::alignedValue(double value) const
 
     double stepSize;
 
-    if (scaleMap().transformation() == NULL) {
+    if (scaleMap().transformation() == nullptr) {
         stepSize = (maximum() - minimum()) / m_data->totalSteps;
         if (stepSize > 0.0) {
             value = lowerBound() + qRound((value - lowerBound()) / stepSize) * stepSize;

@@ -57,7 +57,7 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
     void setLabelMap( const QMap< double, QString >& map );
     QMap< double, QString > labelMap() const;
 
-    virtual QwtText label( double value ) const QWT_OVERRIDE;
+    virtual QwtText label( double value ) const override;
 
   private:
     class PrivateData;
@@ -80,7 +80,7 @@ class QWT_EXPORT QwtCompass : public QwtDial
     Q_OBJECT
 
   public:
-    explicit QwtCompass( QWidget* parent = NULL );
+    explicit QwtCompass( QWidget* parent = nullptr );
     virtual ~QwtCompass();
 
     void setRose( QwtCompassRose* rose );
@@ -92,9 +92,9 @@ class QWT_EXPORT QwtCompass : public QwtDial
         double radius, double north, QPalette::ColorGroup ) const;
 
     virtual void drawScaleContents( QPainter*,
-        const QPointF& center, double radius ) const QWT_OVERRIDE;
+        const QPointF& center, double radius ) const override;
 
-    virtual void keyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
+    virtual void keyPressEvent( QKeyEvent* ) override;
 
   private:
     class PrivateData;

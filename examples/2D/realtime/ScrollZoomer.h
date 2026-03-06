@@ -42,9 +42,9 @@ public:
     QWidget* cornerWidget() const;
     virtual void setCornerWidget(QWidget*);
 
-    virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-    virtual void rescale() QWT_OVERRIDE;
+    virtual void rescale() override;
 
 protected:
     virtual ScrollBar* scrollBar(Qt::Orientation);

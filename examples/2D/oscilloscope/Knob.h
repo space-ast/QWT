@@ -15,27 +15,26 @@ class Knob : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY( QColor theme READ theme WRITE setTheme )
+    Q_PROPERTY(QColor theme READ theme WRITE setTheme)
 
-  public:
-    Knob( const QString& title,
-        double min, double max, QWidget* parent = NULL );
+public:
+    Knob(const QString& title, double min, double max, QWidget* parent = NULL);
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
 
-    void setValue( double value );
+    void setValue(double value);
     double value() const;
 
-    void setTheme( const QColor& );
+    void setTheme(const QColor&);
     QColor theme() const;
 
-  Q_SIGNALS:
-    double valueChanged( double );
+Q_SIGNALS:
+    double valueChanged(double);
 
-  protected:
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
+protected:
+    virtual void resizeEvent(QResizeEvent*) override;
 
-  private:
+private:
     QwtKnob* m_knob;
     QLabel* m_label;
 };

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -75,7 +75,7 @@ public:
     PrivateData()
         : style(QwtPlotCurve::Lines)
         , baseline(0.0)
-        , symbol(NULL)
+        , symbol(nullptr)
         , pen(Qt::black)
         , paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPoints)
     {
@@ -253,7 +253,7 @@ QwtPlotCurve::CurveStyle QwtPlotCurve::style() const
 
    The curve will take the ownership of the symbol, hence the previously
    set symbol will be delete by setting a new one. If \p symbol is
-   \c NULL no symbol will be drawn.
+   \c nullptr no symbol will be drawn.
 
    \param symbol Symbol
    \sa symbol()
@@ -272,7 +272,7 @@ void QwtPlotCurve::setSymbol(QwtSymbol* symbol)
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtSymbol* QwtPlotCurve::symbol() const
@@ -797,7 +797,7 @@ bool QwtPlotCurve::testCurveAttribute(CurveAttribute attribute) const
    Assign a curve fitter
 
    The curve fitter "smooths" the curve points, when the Fitted
-   CurveAttribute is set. setCurveFitter(NULL) also disables curve fitting.
+   CurveAttribute is set. setCurveFitter(nullptr) also disables curve fitting.
 
    The curve fitter operates on the translated points ( = widget coordinates)
    to be functional for logarithmic scales. Obviously this is less performant
@@ -819,7 +819,7 @@ void QwtPlotCurve::setCurveFitter(QwtCurveFitter* curveFitter)
 }
 
 /*!
-   Get the curve fitter. If curve fitting is disabled NULL is returned.
+   Get the curve fitter. If curve fitting is disabled nullptr is returned.
 
    \return Curve fitter
    \sa setCurveFitter(), Fitted
@@ -991,7 +991,7 @@ double QwtPlotCurve::baseline() const
    Find the closest curve point for a specific position
 
    \param pos Position, where to look for the closest curve point
-   \param dist If dist != NULL, closestPoint() returns the distance between
+   \param dist If dist != nullptr, closestPoint() returns the distance between
               the position and the closest curve point
    \return Index of the closest curve point, or -1 if none can be found
           ( f.e when the curve has no points )
@@ -1002,7 +1002,7 @@ int QwtPlotCurve::closestPoint(const QPointF& pos, double* dist) const
 {
     const size_t numSamples = dataSize();
 
-    if (plot() == NULL || numSamples <= 0)
+    if (plot() == nullptr || numSamples <= 0)
         return -1;
 
     const QwtSeriesData< QPointF >* series = data();

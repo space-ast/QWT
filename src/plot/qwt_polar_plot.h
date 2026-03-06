@@ -81,8 +81,8 @@ class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
         ExternalLegend
     };
 
-    explicit QwtPolarPlot( QWidget* parent = NULL );
-    QwtPolarPlot( const QwtText& title, QWidget* parent = NULL );
+    explicit QwtPolarPlot( QWidget* parent = nullptr );
+    QwtPolarPlot( const QwtText& title, QWidget* parent = nullptr );
 
     virtual ~QwtPolarPlot();
 
@@ -196,8 +196,8 @@ class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
     void setAzimuthOrigin( double );
 
   protected:
-    virtual bool event( QEvent* ) QWT_OVERRIDE;
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
+    virtual bool event( QEvent* ) override;
+    virtual void resizeEvent( QResizeEvent* ) override;
 
     virtual void updateLayout();
 

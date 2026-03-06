@@ -190,17 +190,17 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     RenderHints renderHints() const;
 
   protected:
-    virtual QSize sizeMetrics() const QWT_OVERRIDE;
+    virtual QSize sizeMetrics() const override;
 
-    virtual void drawPath( const QPainterPath& ) QWT_OVERRIDE;
+    virtual void drawPath( const QPainterPath& ) override;
 
     virtual void drawPixmap( const QRectF&,
-        const QPixmap&, const QRectF& ) QWT_OVERRIDE;
+        const QPixmap&, const QRectF& ) override;
 
     virtual void drawImage( const QRectF&, const QImage&,
-        const QRectF&, Qt::ImageConversionFlags ) QWT_OVERRIDE;
+        const QRectF&, Qt::ImageConversionFlags ) override;
 
-    virtual void updateState( const QPaintEngineState& ) QWT_OVERRIDE;
+    virtual void updateState( const QPaintEngineState& ) override;
 
   private:
     void renderGraphic( QPainter*, QTransform* ) const;

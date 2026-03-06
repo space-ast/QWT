@@ -61,7 +61,7 @@ class QwtPlotDirectPainter::PrivateData
   public:
     PrivateData()
         : hasClipping( false )
-        , seriesItem( NULL )
+        , seriesItem( nullptr )
         , from( 0 )
         , to( 0 )
     {
@@ -189,7 +189,7 @@ QRegion QwtPlotDirectPainter::clipRegion() const
 void QwtPlotDirectPainter::drawSeries(
     QwtPlotSeriesItem* seriesItem, int from, int to )
 {
-    if ( seriesItem == NULL || seriesItem->plot() == NULL )
+    if ( seriesItem == nullptr || seriesItem->plot() == nullptr )
         return;
 
     QWidget* canvas = seriesItem->plot()->canvas();
@@ -273,7 +273,7 @@ void QwtPlotDirectPainter::drawSeries(
         canvas->repaint(clipRegion);
         canvas->removeEventFilter( this );
 
-        m_data->seriesItem = NULL;
+        m_data->seriesItem = nullptr;
     }
 }
 

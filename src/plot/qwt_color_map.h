@@ -144,9 +144,9 @@ public:
     QColor color1() const;
     QColor color2() const;
 
-    virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+    virtual QRgb rgb(const QwtInterval&, double value) const override;
 
-    virtual uint colorIndex(int numColors, const QwtInterval&, double value) const QWT_OVERRIDE;
+    virtual uint colorIndex(int numColors, const QwtInterval&, double value) const override;
 
     class ColorStops;
 
@@ -172,7 +172,7 @@ public:
     void setColor(const QColor&);
     QColor color() const;
 
-    virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+    virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
     class PrivateData;
@@ -207,7 +207,7 @@ public:
     int value() const;
     int alpha() const;
 
-    virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+    virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
     class PrivateData;
@@ -241,7 +241,7 @@ public:
     int value2() const;
     int alpha() const;
 
-    virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+    virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
     class PrivateData;

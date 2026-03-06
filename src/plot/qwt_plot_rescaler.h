@@ -128,7 +128,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
     QwtPlot* plot();
     const QwtPlot* plot() const;
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+    virtual bool eventFilter( QObject*, QEvent* ) override;
 
     void rescale() const;
 

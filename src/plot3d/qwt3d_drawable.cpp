@@ -21,8 +21,8 @@ void Drawable::saveGLState()
     glGetBooleanv(GL_TEXTURE_2D, &tex2d);
     glGetIntegerv(GL_POLYGON_MODE, polmode);
     glGetIntegerv(GL_MATRIX_MODE, &matrixmode);
-    glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &poloffs[0]);
-    glGetFloatv(GL_POLYGON_OFFSET_UNITS, &poloffs[1]);
+    glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &poloffs[ 0 ]);
+    glGetFloatv(GL_POLYGON_OFFSET_UNITS, &poloffs[ 1 ]);
     glGetBooleanv(GL_POLYGON_OFFSET_FILL, &poloffsfill);
 }
 
@@ -38,10 +38,10 @@ void Drawable::restoreGLState()
     glLineStipple(factor, pattern);
     Enable(GL_LINE_STIPPLE, sallowed);
     Enable(GL_TEXTURE_2D, tex2d);
-    glPolygonMode(polmode[0], polmode[1]);
+    glPolygonMode(polmode[ 0 ], polmode[ 1 ]);
     glMatrixMode(matrixmode);
-    glPolygonOffset(poloffs[0], poloffs[1]);
-    setDevicePolygonOffset(poloffs[0], poloffs[1]);
+    glPolygonOffset(poloffs[ 0 ], poloffs[ 1 ]);
+    setDevicePolygonOffset(poloffs[ 0 ], poloffs[ 1 ]);
 
     Enable(GL_POLYGON_OFFSET_FILL, poloffsfill);
 }
@@ -54,7 +54,7 @@ void Drawable::Enable(GLenum what, GLboolean val)
         glDisable(what);
 }
 
-void Drawable::attach(Drawable *dr)
+void Drawable::attach(Drawable* dr)
 {
     if (dlist.end() == std::find(dlist.begin(), dlist.end(), dr))
         if (dr) {
@@ -62,9 +62,9 @@ void Drawable::attach(Drawable *dr)
         }
 }
 
-void Drawable::detach(Drawable *dr)
+void Drawable::detach(Drawable* dr)
 {
-    std::list<Drawable *>::iterator it = std::find(dlist.begin(), dlist.end(), dr);
+    std::list< Drawable* >::iterator it = std::find(dlist.begin(), dlist.end(), dr);
 
     if (it != dlist.end()) {
         dlist.erase(it);
@@ -79,13 +79,12 @@ void Drawable::detachAll()
 /**
         Don't rely on (use) this in display lists !
 */
-Triple Drawable::ViewPort2World(Triple win, bool *err)
+Triple Drawable::ViewPort2World(Triple win, bool* err)
 {
     Triple obj;
 
     getMatrices(modelMatrix, projMatrix, viewport);
-    int res = gluUnProject(win.x, win.y, win.z, modelMatrix, projMatrix, viewport, &obj.x, &obj.y,
-                           &obj.z);
+    int res = gluUnProject(win.x, win.y, win.z, modelMatrix, projMatrix, viewport, &obj.x, &obj.y, &obj.z);
 
     if (err)
         *err = (res) ? false : true;
@@ -96,13 +95,12 @@ Triple Drawable::ViewPort2World(Triple win, bool *err)
 /**
         Don't rely on (use) this in display lists !
 */
-Triple Drawable::World2ViewPort(Triple obj, bool *err)
+Triple Drawable::World2ViewPort(Triple obj, bool* err)
 {
     Triple win;
 
     getMatrices(modelMatrix, projMatrix, viewport);
-    int res = gluProject(obj.x, obj.y, obj.z, modelMatrix, projMatrix, viewport, &win.x, &win.y,
-                         &win.z);
+    int res = gluProject(obj.x, obj.y, obj.z, modelMatrix, projMatrix, viewport, &win.x, &win.y, &win.z);
 
     if (err)
         *err = (res) ? false : true;
@@ -114,16 +112,15 @@ Triple Drawable::World2ViewPort(Triple obj, bool *err)
 */
 Triple Drawable::relativePosition(Triple rel)
 {
-    return ViewPort2World(Triple((rel.x - viewport[0]) * viewport[2],
-                                 (rel.y - viewport[1]) * viewport[3], rel.z));
+    return ViewPort2World(Triple((rel.x - viewport[ 0 ]) * viewport[ 2 ], (rel.y - viewport[ 1 ]) * viewport[ 3 ], rel.z));
 }
 
 void Drawable::draw()
 {
     saveGLState();
 
-    for (std::list<Drawable *>::iterator it = dlist.begin(); it != dlist.end(); ++it) {
-        (*it)->draw();
+    for (auto* drawable : dlist) {
+        drawable->draw();
     }
     restoreGLState();
 }

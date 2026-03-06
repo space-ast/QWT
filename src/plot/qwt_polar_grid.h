@@ -105,7 +105,7 @@ class QWT_EXPORT QwtPolarGrid : public QwtPolarItem
     explicit QwtPolarGrid();
     virtual ~QwtPolarGrid();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setDisplayFlag( DisplayFlag, bool on = true );
     bool testDisplayFlag( DisplayFlag ) const;
@@ -150,12 +150,12 @@ class QWT_EXPORT QwtPolarGrid : public QwtPolarItem
     virtual void draw( QPainter* p,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
         const QPointF& pole, double radius,
-        const QRectF& rect ) const QWT_OVERRIDE;
+        const QRectF& rect ) const override;
 
     virtual void updateScaleDiv( const QwtScaleDiv& azimuthMap,
-        const QwtScaleDiv& radialMap, const QwtInterval& ) QWT_OVERRIDE;
+        const QwtScaleDiv& radialMap, const QwtInterval& ) override;
 
-    virtual int marginHint() const QWT_OVERRIDE;
+    virtual int marginHint() const override;
 
   protected:
     void drawRays( QPainter*, const QRectF&,

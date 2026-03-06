@@ -60,17 +60,17 @@ class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
 
     void setAngleRange( double angle1, double angle2 );
 
-    virtual double extent( const QFont& ) const QWT_OVERRIDE;
+    virtual double extent( const QFont& ) const override;
 
   protected:
     virtual void drawTick( QPainter*,
-        double value, double len ) const QWT_OVERRIDE;
+        double value, double len ) const override;
 
     virtual void drawBackbone(
-        QPainter* ) const QWT_OVERRIDE;
+        QPainter* ) const override;
 
     virtual void drawLabel(
-        QPainter*, double value ) const QWT_OVERRIDE;
+        QPainter*, double value ) const override;
 
   private:
     class PrivateData;

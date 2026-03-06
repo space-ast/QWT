@@ -17,7 +17,7 @@ class QwtPolarItem::PrivateData
 {
   public:
     PrivateData()
-        : plot( NULL )
+        : plot( nullptr )
         , isVisible( true )
         , renderThreadCount( 1 )
         , z( 0.0 )
@@ -54,7 +54,7 @@ QwtPolarItem::QwtPolarItem( const QwtText& title )
 //! Destroy the QwtPolarItem
 QwtPolarItem::~QwtPolarItem()
 {
-    attach( NULL );
+    attach( nullptr );
     delete m_data;
 }
 
@@ -64,7 +64,7 @@ QwtPolarItem::~QwtPolarItem()
    This method will attach a QwtPolarItem to the QwtPolarPlot argument.
    It will first detach the QwtPolarItem from any plot from a previous
    call to attach (if necessary).
-   If a NULL argument is passed, it will detach from any QwtPolarPlot it
+   If a nullptr argument is passed, it will detach from any QwtPolarPlot it
    was attached to.
 
    \param plot Plot widget
@@ -89,12 +89,12 @@ void QwtPolarItem::attach( QwtPolarPlot* plot )
    \brief This method detaches a QwtPolarItem from the QwtPolarPlot it
           has been associated with.
 
-   detach() is equivalent to calling attach( NULL )
+   detach() is equivalent to calling attach( nullptr )
    \sa attach()
  */
 void QwtPolarItem::detach()
 {
-    attach( NULL );
+    attach( nullptr );
 }
 
 /*!

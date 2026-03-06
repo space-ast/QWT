@@ -68,7 +68,7 @@
 class QwtPolarRenderer::PrivateData
 {
 public:
-    PrivateData() : plot(NULL)
+    PrivateData() : plot(nullptr)
     {
     }
 
@@ -130,7 +130,7 @@ void QwtPolarRenderer::renderDocument(QwtPolarPlot* plot,
                                       const QSizeF& sizeMM,
                                       int resolution)
 {
-    if (plot == NULL || sizeMM.isEmpty() || resolution <= 0)
+    if (plot == nullptr || sizeMM.isEmpty() || resolution <= 0)
         return;
 
     QString title = plot->title().text();
@@ -303,7 +303,7 @@ void QwtPolarRenderer::renderTo(QwtPolarPlot* plot, QSvgGenerator& generator) co
  */
 void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {
-    if (plot == NULL || painter == NULL || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
+    if (plot == nullptr || painter == nullptr || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
         return;
     }
 
@@ -351,7 +351,7 @@ void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRect
 
     layout->invalidate();
 
-    m_data->plot = NULL;
+    m_data->plot = nullptr;
 }
 
 /*!
@@ -400,7 +400,7 @@ void QwtPolarRenderer::renderLegend(const QwtPolarPlot* plot, QPainter* painter,
  */
 bool QwtPolarRenderer::exportTo(QwtPolarPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {
-    if (plot == NULL)
+    if (plot == nullptr)
         return false;
 
     QString fileName = documentName;
@@ -435,11 +435,11 @@ bool QwtPolarRenderer::exportTo(QwtPolarPlot* plot, const QString& documentName,
         filter += imageFilter;
     }
 
-    fileName = QFileDialog::getSaveFileName(NULL,
+    fileName = QFileDialog::getSaveFileName(nullptr,
                                             tr("Export File Name"),
                                             fileName,
                                             filter.join(";;"),
-                                            NULL,
+                                            nullptr,
                                             QFileDialog::DontConfirmOverwrite);
 #endif
     if (fileName.isEmpty())

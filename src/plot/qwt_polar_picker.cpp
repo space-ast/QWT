@@ -67,7 +67,7 @@ QwtPolarPlot* QwtPolarPicker::plot()
     if (w)
         return w->plot();
 
-    return NULL;
+    return nullptr;
 }
 
 //! \return Plot widget, containing the observed plot canvas
@@ -77,7 +77,7 @@ const QwtPolarPlot* QwtPolarPicker::plot() const
     if (w)
         return w->plot();
 
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -199,7 +199,7 @@ bool QwtPolarPicker::end(bool ok)
 QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
 {
     QwtPointPolar polarPos;
-    if (canvas() == NULL)
+    if (canvas() == nullptr)
         return QwtPointPolar();
 
     return canvas()->invTransform(pos);

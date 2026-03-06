@@ -22,7 +22,7 @@
 class QwtPolarCanvas::PrivateData
 {
 public:
-    PrivateData() : backingStore(NULL)
+    PrivateData() : backingStore(nullptr)
     {
     }
 
@@ -89,7 +89,7 @@ void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
     switch (attribute) {
     case BackingStore: {
         if (on) {
-            if (m_data->backingStore == NULL)
+            if (m_data->backingStore == nullptr)
                 m_data->backingStore = new QPixmap();
 
             if (isVisible()) {
@@ -102,7 +102,7 @@ void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
             }
         } else {
             delete m_data->backingStore;
-            m_data->backingStore = NULL;
+            m_data->backingStore = nullptr;
         }
         break;
     }
@@ -143,7 +143,7 @@ void QwtPolarCanvas::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
-    if ((m_data->paintAttributes & BackingStore) && m_data->backingStore != NULL) {
+    if ((m_data->paintAttributes & BackingStore) && m_data->backingStore != nullptr) {
         QPixmap& bs = *m_data->backingStore;
         if (bs.size() != size()) {
             bs = QPixmap(size());

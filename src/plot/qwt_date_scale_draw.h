@@ -84,7 +84,7 @@ public:
     void setWeek0Type(QwtDate::Week0Type);
     QwtDate::Week0Type week0Type() const;
 
-    virtual QwtText label(double) const QWT_OVERRIDE;
+    virtual QwtText label(double) const override;
 
     QDateTime toDateTime(double) const;
 

@@ -176,7 +176,7 @@ void QwtPlotPanner::moveCanvas(int dx, int dy)
     //! 这里有个问题要注意，对于寄生轴，如果这个轴是共享了宿主的某个轴，那么不应该响应pan，
     //! 因此，这里要求确保宿主绘图最后pan,这样宿主绘图的更新会同步更新给寄生绘图的共享轴
     const QList< QwtPlot* > allPlots = plt->plotList(true);  // 倒序获取，宿主最后更新
-    for (auto plot : allPlots) {
+    for (auto* plot : allPlots) {
         // 移动过程位置要相反，视图才能正好跟随鼠标方向
         plot->panCanvas(QPoint(dx, dy));
     }

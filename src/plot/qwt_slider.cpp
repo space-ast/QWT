@@ -346,7 +346,7 @@ QSize QwtSlider::handleSize() const
 void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
     const QwtScaleDraw* previousScaleDraw = this->scaleDraw();
-    if (scaleDraw == NULL || scaleDraw == previousScaleDraw)
+    if (scaleDraw == nullptr || scaleDraw == previousScaleDraw)
         return;
 
     if (previousScaleDraw)
@@ -423,7 +423,7 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
         innerRect    = sliderRect.adjusted(bw, bw, -bw, -bw);
 
         painter->fillRect(innerRect, palette().brush(QPalette::Mid));
-        qDrawShadePanel(painter, sliderRect, palette(), true, bw, NULL);
+        qDrawShadePanel(painter, sliderRect, palette(), true, bw, nullptr);
     }
 
     if (m_data->hasGroove) {

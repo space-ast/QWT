@@ -110,7 +110,7 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 
     Q_DECLARE_FLAGS( LayoutFlags, LayoutFlag )
 
-    explicit QwtPlotRenderer( QObject* = NULL );
+    explicit QwtPlotRenderer( QObject* = nullptr );
     virtual ~QwtPlotRenderer();
 
     void setDiscardFlag( DiscardFlag flag, bool on = true );

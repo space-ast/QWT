@@ -2,6 +2,7 @@
 #define QWT3D_GLOBAL_H
 
 #include <qglobal.h>
+#include "qwt_global.h"
 
 //
 // Create Qwt3d DLL if QWT3D_DLL is defined (Windows only)

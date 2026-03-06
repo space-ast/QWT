@@ -49,8 +49,8 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
 
   public:
-    explicit QwtTextLabel( QWidget* parent = NULL );
-    explicit QwtTextLabel( const QwtText&, QWidget* parent = NULL );
+    explicit QwtTextLabel( QWidget* parent = nullptr );
+    explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
     virtual ~QwtTextLabel();
 
     void setPlainText( const QString& );
@@ -72,16 +72,16 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     int margin() const;
     void setMargin( int );
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
-    virtual int heightForWidth( int ) const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
+    virtual int heightForWidth( int ) const override;
 
     QRect textRect() const;
 
     virtual void drawText( QPainter*, const QRectF& );
 
   protected:
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
     virtual void drawContents( QPainter* );
 
   private:

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -56,7 +56,7 @@ public:
     QwtPlotRescaler::AxisData* axisData(QwtAxisId axisId)
     {
         if (!QwtAxis::isValid(axisId))
-            return NULL;
+            return nullptr;
 
         return &m_axisData[ axisId ];
     }

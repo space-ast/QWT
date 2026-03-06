@@ -54,7 +54,7 @@ class QWT_EXPORT QwtPlotZoneItem :
     explicit QwtPlotZoneItem();
     virtual ~QwtPlotZoneItem();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setOrientation( Qt::Orientation );
     Qt::Orientation orientation() const;
@@ -72,9 +72,9 @@ class QWT_EXPORT QwtPlotZoneItem :
 
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
   private:
     class PrivateData;

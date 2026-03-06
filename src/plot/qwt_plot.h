@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -128,8 +128,8 @@ public:
         TopLegend
     };
 
-    explicit QwtPlot(QWidget* = NULL);
-    explicit QwtPlot(const QwtText& title, QWidget* = NULL);
+    explicit QwtPlot(QWidget* = nullptr);
+    explicit QwtPlot(const QwtText& title, QWidget* = nullptr);
 
     virtual ~QwtPlot();
 
@@ -241,8 +241,8 @@ public:
 
     // Misc
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     virtual void updateLayout();
     virtual void drawCanvas(QPainter*);
@@ -257,8 +257,8 @@ public:
                                       double& right,
                                       double& bottom) const;
 
-    virtual bool event(QEvent*) QWT_OVERRIDE;
-    virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+    virtual bool event(QEvent*) override;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
     virtual void drawItems(QPainter*, const QRectF&, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const;
 
@@ -403,7 +403,7 @@ public Q_SLOTS:
     void autoRefreshAll();
 
 protected:
-    virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+    virtual void resizeEvent(QResizeEvent*) override;
     // Add a parasite plot to this host plot/向此宿主绘图添加寄生绘图
     void addParasitePlot(QwtPlot* parasite);
     // 初始化寄生轴的基本属性

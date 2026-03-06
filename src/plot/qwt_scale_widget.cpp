@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -326,14 +326,14 @@ void QwtScaleWidget::setLabelRotation(double rotation)
 void QwtScaleWidget::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
     const QwtScaleDraw* sd = m_data->scaleDraw.get();
-    if ((scaleDraw == NULL) || (scaleDraw == sd)) {
+    if ((scaleDraw == nullptr) || (scaleDraw == sd)) {
         return;
     }
     if (sd) {
         scaleDraw->setAlignment(sd->alignment());
         scaleDraw->setScaleDiv(sd->scaleDiv());
 
-        QwtTransform* transform = NULL;
+        QwtTransform* transform = nullptr;
         if (sd->scaleMap().transformation())
             transform = sd->scaleMap().transformation()->copy();
 
@@ -712,7 +712,7 @@ void QwtScaleWidget::layoutScale(bool update_geometry)
          */
 
         if (QWidget* w = parentWidget()) {
-            if (!w->isVisible() && w->layout() == NULL) {
+            if (!w->isVisible() && w->layout() == nullptr) {
                 if (w->testAttribute(Qt::WA_WState_Polished))
                     QApplication::postEvent(w, new QEvent(QEvent::LayoutRequest));
             }

@@ -67,8 +67,8 @@ public Q_SLOTS:
     virtual void moveCanvas(int dx, int dy);
 
 protected:
-    virtual QBitmap contentsMask() const QWT_OVERRIDE;
-    virtual QPixmap grab() const QWT_OVERRIDE;
+    virtual QBitmap contentsMask() const override;
+    virtual QPixmap grab() const override;
 
 private:
     class PrivateData;

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -237,7 +237,7 @@ QRectF QwtPlotAxisZoomer::zoomBase() const
 void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 {
     QwtPlot* plt = plot();
-    if (plt == NULL)
+    if (plt == nullptr)
         return;
 
     if (doReplot)

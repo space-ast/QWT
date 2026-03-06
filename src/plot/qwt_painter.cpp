@@ -915,10 +915,8 @@ void QwtPainter::drawFrame(QPainter* painter,
             painter->drawPath(path5);
         } else {
             const QRectF outerRect = rect.adjusted(0.0, 0.0, -1.0, -1.0);
-            const QRectF innerRect = outerRect.adjusted(frameWidth - 1.0,
-                                                        frameWidth - 1.0,
-                                                        -(frameWidth - 1.0),
-                                                        -(frameWidth - 1.0));
+            const QRectF innerRect =
+                outerRect.adjusted(frameWidth - 1.0, frameWidth - 1.0, -(frameWidth - 1.0), -(frameWidth - 1.0));
 
             QPainterPath path1;
             path1.moveTo(outerRect.bottomLeft());
@@ -1229,8 +1227,8 @@ void QwtPainter::fillPixmap(const QWidget* widget, QPixmap& pixmap, const QPoint
 void QwtPainter::fillRegion(QPainter* painter, const QRegion& region)
 {
 #if QT_VERSION >= 0x050800
-    for (QRegion::const_iterator it = region.cbegin(); it != region.cend(); ++it) {
-        painter->drawRect(*it);
+    for (const QRect& r : region) {
+        painter->drawRect(r);
     }
 #else
     painter->drawRects(region.rects());
@@ -1402,11 +1400,8 @@ void QwtPainter::drawCanvasBackgound(QPainter* painter, QWidget* canvas)
 
     QPainterPath borderClip;
 
-    (void)QMetaObject::invokeMethod(canvas,
-                                    "borderPath",
-                                    Qt::DirectConnection,
-                                    Q_RETURN_ARG(QPainterPath, borderClip),
-                                    Q_ARG(QRect, canvas->rect()));
+    (void)QMetaObject::invokeMethod(
+        canvas, "borderPath", Qt::DirectConnection, Q_RETURN_ARG(QPainterPath, borderClip), Q_ARG(QRect, canvas->rect()));
 
     if (!borderClip.isEmpty()) {
         painter->setClipPath(borderClip, Qt::IntersectClip);
@@ -1535,12 +1530,12 @@ QFont QwtPainter::scaledFont(const QFont& font, const QPaintDevice* paintDevice)
 #else
         class PaintDevice : public QPaintDevice
         {
-            virtual QPaintEngine* paintEngine() const QWT_OVERRIDE
+            virtual QPaintEngine* paintEngine() const override
             {
                 return nullptr;
             }
 
-            virtual int metric(PaintDeviceMetric metric) const QWT_OVERRIDE
+            virtual int metric(PaintDeviceMetric metric) const override
             {
                 if (metric == PdmDpiY) {
                     QScreen* screen = QGuiApplication::primaryScreen();

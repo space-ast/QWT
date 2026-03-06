@@ -32,7 +32,7 @@ public:
         setTrackerMode(ActiveOnly);
     }
 
-    virtual QwtText trackerTextPolar(const QwtPointPolar& pos) const QWT_OVERRIDE
+    virtual QwtText trackerTextPolar(const QwtPointPolar& pos) const override
     {
         QColor bg(Qt::white);
         bg.setAlpha(200);
@@ -53,7 +53,7 @@ public:
         m_interval[ Qt::ZAxis ].setInterval(0.0, 10.0);
     }
 
-    virtual double value(double azimuth, double radius) const QWT_OVERRIDE
+    virtual double value(double azimuth, double radius) const override
     {
         const double c = 0.842;
         const double x = radius / 10.0 * 3.0 - 1.5;
@@ -66,7 +66,7 @@ public:
         return v;
     }
 
-    virtual QwtInterval interval(Qt::Axis axis) const QWT_OVERRIDE
+    virtual QwtInterval interval(Qt::Axis axis) const override
     {
         return m_interval[ axis ];
     }
@@ -78,7 +78,7 @@ private:
 class AzimuthScaleDraw : public QwtRoundScaleDraw
 {
 public:
-    virtual QwtText label(double value) const QWT_OVERRIDE
+    virtual QwtText label(double value) const override
     {
         if (qFuzzyCompare(fmod(value, 2 * M_PI), 0.0)) {
             return QString("0");

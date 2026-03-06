@@ -100,7 +100,7 @@ class QWT_EXPORT QwtPlotHistogram
     explicit QwtPlotHistogram( const QwtText& title );
     virtual ~QwtPlotHistogram();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setPen( const QColor&,
         qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
@@ -125,12 +125,12 @@ class QWT_EXPORT QwtPlotHistogram
 
     virtual void drawSeries( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const QWT_OVERRIDE;
+        const QRectF& canvasRect, int from, int to ) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
   protected:
     virtual QwtColumnRect columnRect( const QwtIntervalSample&,

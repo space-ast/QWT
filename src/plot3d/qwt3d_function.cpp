@@ -3,25 +3,27 @@
 
 using namespace Qwt3D;
 
-Function::Function() : GridMapping() { }
+Function::Function() : GridMapping()
+{
+}
 
-Function::Function(SurfacePlot &pw) : GridMapping()
+Function::Function(SurfacePlot& pw) : GridMapping()
 {
     plotwidget_p = &pw;
 }
 
-Function::Function(SurfacePlot *pw) : GridMapping()
+Function::Function(SurfacePlot* pw) : GridMapping()
 {
     plotwidget_p = pw;
 }
 
-void Function::assign(SurfacePlot &plotWidget)
+void Function::assign(SurfacePlot& plotWidget)
 {
     if (&plotWidget != plotwidget_p)
         plotwidget_p = &plotWidget;
 }
 
-void Function::assign(SurfacePlot *plotWidget)
+void Function::assign(SurfacePlot* plotWidget)
 {
     if (plotWidget != plotwidget_p)
         plotwidget_p = plotWidget;
@@ -43,11 +45,11 @@ bool Function::create()
         return false;
 
     /* allocate some space for the mesh */
-    double **data = new double *[umesh_p];
+    double** data = new double*[ umesh_p ];
 
     unsigned i, j;
     for (i = 0; i < umesh_p; i++) {
-        data[i] = new double[vmesh_p];
+        data[ i ] = new double[ vmesh_p ];
     }
 
     /* get the data */
@@ -57,12 +59,12 @@ bool Function::create()
 
     for (i = 0; i < umesh_p; ++i) {
         for (j = 0; j < vmesh_p; ++j) {
-            data[i][j] = operator()(minu_p + i * dx, minv_p + j * dy);
+            data[ i ][ j ] = operator()(minu_p + i * dx, minv_p + j * dy);
 
-            if (data[i][j] > range_p.maxVertex.z)
-                data[i][j] = range_p.maxVertex.z;
-            else if (data[i][j] < range_p.minVertex.z)
-                data[i][j] = range_p.minVertex.z;
+            if (data[ i ][ j ] > range_p.maxVertex.z)
+                data[ i ][ j ] = range_p.maxVertex.z;
+            else if (data[ i ][ j ] < range_p.minVertex.z)
+                data[ i ][ j ] = range_p.minVertex.z;
         }
     }
 
@@ -70,12 +72,11 @@ bool Function::create()
     if (!plotwidget_p) {
         fprintf(stderr, "Function: no valid Plot3D Widget assigned");
     } else {
-        ((SurfacePlot *)plotwidget_p)
-                ->loadFromData(data, umesh_p, vmesh_p, minu_p, maxu_p, minv_p, maxv_p);
+        static_cast< SurfacePlot* >(plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, minu_p, maxu_p, minv_p, maxv_p);
     }
 
     for (i = 0; i < umesh_p; i++) {
-        delete[] data[i];
+        delete[] data[ i ];
     }
 
     delete[] data;
@@ -83,7 +84,7 @@ bool Function::create()
     return true;
 }
 
-bool Function::create(SurfacePlot &pl)
+bool Function::create(SurfacePlot& pl)
 {
     assign(pl);
     return create();

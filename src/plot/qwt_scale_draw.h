@@ -78,7 +78,7 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     int minLabelDist( const QFont& ) const;
 
     int minLength( const QFont& ) const;
-    virtual double extent( const QFont& ) const QWT_OVERRIDE;
+    virtual double extent( const QFont& ) const override;
 
     void move( double x, double y );
     void move( const QPointF& );
@@ -112,10 +112,10 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     QTransform labelTransformation( const QPointF&, const QSizeF& ) const;
 
     virtual void drawTick( QPainter*,
-        double value, double len ) const QWT_OVERRIDE;
+        double value, double len ) const override;
 
-    virtual void drawBackbone( QPainter* ) const QWT_OVERRIDE;
-    virtual void drawLabel( QPainter*, double value ) const QWT_OVERRIDE;
+    virtual void drawBackbone( QPainter* ) const override;
+    virtual void drawLabel( QPainter*, double value ) const override;
 
   private:
     void updateMap();

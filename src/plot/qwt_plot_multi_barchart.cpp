@@ -187,7 +187,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
         m_data->symbolMap.find(valueIndex);
     if ( it == m_data->symbolMap.end() )
     {
-        if ( symbol != NULL )
+        if ( symbol != nullptr )
         {
             m_data->symbolMap.insert( valueIndex, symbol );
 
@@ -201,7 +201,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
         {
             delete it.value();
 
-            if ( symbol == NULL )
+            if ( symbol == nullptr )
             {
                 m_data->symbolMap.remove( valueIndex );
             }
@@ -220,7 +220,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
    Find a symbol in the symbol map
 
    \param valueIndex Index of a value in a set
-   \return The symbol, that had been set by setSymbol() or NULL.
+   \return The symbol, that had been set by setSymbol() or nullptr.
 
    \sa setSymbol(), specialSymbol(), drawBar()
  */
@@ -229,14 +229,14 @@ const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
     QMap< int, QwtColumnSymbol* >::const_iterator it =
         m_data->symbolMap.constFind( valueIndex );
 
-    return ( it == m_data->symbolMap.constEnd() ) ? NULL : it.value();
+    return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /*!
    Find a symbol in the symbol map
 
    \param valueIndex Index of a value in a set
-   \return The symbol, that had been set by setSymbol() or NULL.
+   \return The symbol, that had been set by setSymbol() or nullptr.
 
    \sa setSymbol(), specialSymbol(), drawBar()
  */
@@ -245,7 +245,7 @@ QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
     QMap< int, QwtColumnSymbol* >::const_iterator it =
         m_data->symbolMap.constFind( valueIndex );
 
-    return ( it == m_data->symbolMap.constEnd() ) ? NULL : it.value();
+    return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /*!
@@ -267,14 +267,14 @@ void QwtPlotMultiBarChart::resetSymbolMap()
    The symbol has to be created by new each time specialSymbol() is
    called. As soon as the symbol is painted this symbol gets deleted.
 
-   When no symbol ( NULL ) is returned, the value will be displayed
+   When no symbol ( nullptr ) is returned, the value will be displayed
    with the standard symbol that is used for all symbols with the same
    valueIndex.
 
    \param sampleIndex Index of the sample
    \param valueIndex Index of the value in the set
 
-   \return NULL, meaning that the value is not special
+   \return nullptr, meaning that the value is not special
 
  */
 QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
@@ -283,7 +283,7 @@ QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
     Q_UNUSED( sampleIndex );
     Q_UNUSED( valueIndex );
 
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -669,12 +669,12 @@ void QwtPlotMultiBarChart::drawStackedBars( QPainter* painter,
 void QwtPlotMultiBarChart::drawBar( QPainter* painter,
     int sampleIndex, int valueIndex, const QwtColumnRect& rect ) const
 {
-    const QwtColumnSymbol* specialSym = NULL;
+    const QwtColumnSymbol* specialSym = nullptr;
     if ( sampleIndex >= 0 )
         specialSym = specialSymbol( sampleIndex, valueIndex );
 
     const QwtColumnSymbol* sym = specialSym;
-    if ( sym == NULL )
+    if ( sym == nullptr )
         sym = symbol( valueIndex );
 
     if ( sym )

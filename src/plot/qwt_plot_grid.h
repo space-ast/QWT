@@ -53,7 +53,7 @@ class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
     explicit QwtPlotGrid();
     virtual ~QwtPlotGrid();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void enableX( bool );
     bool xEnabled() const;
@@ -90,10 +90,10 @@ class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     virtual void updateScaleDiv(
-        const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) QWT_OVERRIDE;
+        const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) override;
 
   private:
     void drawLines( QPainter*, const QRectF&,

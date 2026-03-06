@@ -30,8 +30,8 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
     void setStepCount( int size );
     int stepCount() const;
 
-    virtual QPolygonF fitCurve( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QPainterPath fitCurvePath( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
     class PrivateData;

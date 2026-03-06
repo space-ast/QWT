@@ -66,7 +66,7 @@ class QwtPlotIntervalCurve::PrivateData
   public:
     PrivateData():
         style( QwtPlotIntervalCurve::Tube ),
-        symbol( NULL ),
+        symbol( nullptr ),
         pen( Qt::black ),
         brush( Qt::white )
     {
@@ -231,7 +231,7 @@ void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const

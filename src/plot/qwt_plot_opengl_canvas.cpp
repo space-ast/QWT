@@ -37,7 +37,7 @@
 class QwtPlotOpenGLCanvas::PrivateData
 {
 public:
-    PrivateData() : isPolished(false), fboDirty(true), fbo(NULL)
+    PrivateData() : isPolished(false), fboDirty(true), fbo(nullptr)
     {
     }
 
@@ -159,7 +159,7 @@ void QwtPlotOpenGLCanvas::invalidateBackingStore()
 void QwtPlotOpenGLCanvas::clearBackingStore()
 {
     delete m_data->fbo;
-    m_data->fbo = NULL;
+    m_data->fbo = nullptr;
 }
 
 /*!
@@ -189,7 +189,7 @@ void QwtPlotOpenGLCanvas::paintGL()
     QPainter painter;
 
     if (testPaintAttribute(QwtPlotOpenGLCanvas::BackingStore) && QOpenGLFramebufferObject::hasOpenGLFramebufferBlit()) {
-        const qreal pixelRatio = QwtPainter::devicePixelRatio(NULL);
+        const qreal pixelRatio = QwtPainter::devicePixelRatio(nullptr);
         const QSize fboSize    = size() * pixelRatio;
 
         if (hasFocusIndicator)
@@ -208,11 +208,11 @@ void QwtPlotOpenGLCanvas::paintGL()
         if (m_data->fbo) {
             if (m_data->fbo->size() != fboSize) {
                 delete m_data->fbo;
-                m_data->fbo = NULL;
+                m_data->fbo = nullptr;
             }
         }
 
-        if (m_data->fbo == NULL) {
+        if (m_data->fbo == nullptr) {
             QOpenGLFramebufferObjectFormat fboFormat;
             fboFormat.setSamples(m_data->numSamples);
             fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -234,7 +234,7 @@ void QwtPlotOpenGLCanvas::paintGL()
             m_data->fboDirty = false;
         }
 
-        QOpenGLFramebufferObject::blitFramebuffer(NULL, m_data->fbo);
+        QOpenGLFramebufferObject::blitFramebuffer(nullptr, m_data->fbo);
     } else {
         painter.begin(this);
         draw(&painter);

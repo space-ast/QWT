@@ -217,9 +217,9 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
         double distance, bool withNodes ) const;
 
     virtual QPolygonF polygon(
-        const QPolygonF&, double tolerance ) const QWT_OVERRIDE;
+        const QPolygonF&, double tolerance ) const override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPainterPath painterPath( const QPolygonF& ) const override;
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const = 0;
 
   private:
@@ -255,11 +255,11 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
     QwtSplineC1();
     virtual ~QwtSplineC1();
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
     virtual QPolygonF equidistantPolygon( const QPolygonF&,
-        double distance, bool withNodes ) const QWT_OVERRIDE;
+        double distance, bool withNodes ) const override;
 
     // these methods are the non parametric part
     virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const;
@@ -312,15 +312,15 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
     QwtSplineC2();
     virtual ~QwtSplineC2();
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
     virtual QPolygonF equidistantPolygon( const QPolygonF&,
-        double distance, bool withNodes ) const QWT_OVERRIDE;
+        double distance, bool withNodes ) const override;
 
     // calculating the parametric equations
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< double > slopes( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+    virtual QVector< double > slopes( const QPolygonF& ) const override;
     virtual QVector< double > curvatures( const QPolygonF& ) const = 0;
 };
 

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -43,8 +43,8 @@ public:
     QwtPointArrayData(QVector< T >&& x, QVector< T >&& y);
     QwtPointArrayData(const T* x, const T* y, size_t size);
 
-    virtual size_t size() const QWT_OVERRIDE;
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+    virtual size_t size() const override;
+    virtual QPointF sample(size_t index) const override;
 
     const QVector< T >& xData() const;
     const QVector< T >& yData() const;
@@ -63,8 +63,8 @@ class QwtCPointerData : public QwtPointSeriesData
 public:
     QwtCPointerData(const T* x, const T* y, size_t size);
 
-    virtual size_t size() const QWT_OVERRIDE;
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+    virtual size_t size() const override;
+    virtual QPointF sample(size_t index) const override;
 
     const T* xData() const;
     const T* yData() const;
@@ -88,8 +88,8 @@ public:
     QwtValuePointData(const QVector< T >& y);
     QwtValuePointData(const T* y, size_t size);
 
-    virtual size_t size() const QWT_OVERRIDE;
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+    virtual size_t size() const override;
+    virtual QPointF sample(size_t index) const override;
 
     const QVector< T >& yData() const;
 
@@ -109,8 +109,8 @@ class QwtCPointerValueData : public QwtPointSeriesData
 public:
     QwtCPointerValueData(const T* y, size_t size);
 
-    virtual size_t size() const QWT_OVERRIDE;
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+    virtual size_t size() const override;
+    virtual QPointF sample(size_t index) const override;
 
     const T* yData() const;
 
@@ -178,13 +178,13 @@ public:
     QwtSyntheticPointData(size_t size, const QwtInterval& = QwtInterval());
 
     void setSize(size_t size);
-    virtual size_t size() const QWT_OVERRIDE;
+    virtual size_t size() const override;
 
     void setInterval(const QwtInterval&);
     QwtInterval interval() const;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
+    virtual QPointF sample(size_t index) const override;
 
     /*!
        Calculate a y value for a x value
@@ -195,7 +195,7 @@ public:
     virtual double y(double x) const = 0;
     virtual double x(size_t index) const;
 
-    virtual void setRectOfInterest(const QRectF&) QWT_OVERRIDE;
+    virtual void setRectOfInterest(const QRectF&) override;
     QRectF rectOfInterest() const;
 
 private:

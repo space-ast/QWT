@@ -92,7 +92,7 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
 QwtArrowButton::~QwtArrowButton()
 {
     delete m_data;
-    m_data = NULL;
+    m_data = nullptr;
 }
 
 /*!

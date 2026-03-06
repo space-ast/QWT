@@ -199,7 +199,7 @@ namespace
             m_y1 = m_y0 + m_numRows * m_dy;
 
             m_entries = ( Entry* )::calloc( m_numRows * m_numColumns, sizeof( Entry ) );
-            if ( m_entries == NULL )
+            if ( m_entries == nullptr )
             {
                 qWarning() << "QwtPlotVectorField: raster for filtering too fine - running out of memory";
             }
@@ -267,7 +267,7 @@ class QwtPlotVectorField::PrivateData
         , maxArrowLength( std::numeric_limits< short >::max() )
         , magnitudeModes( MagnitudeAsLength )
     {
-        colorMap = NULL;
+        colorMap = nullptr;
         symbol = new QwtVectorFieldThinArrow();
     }
 
@@ -587,7 +587,7 @@ void QwtPlotVectorField::setSamples( QwtVectorFieldData* data )
  */
 void QwtPlotVectorField::setColorMap( QwtColorMap* colorMap )
 {
-    if ( colorMap == NULL )
+    if ( colorMap == nullptr )
         return;
 
     if ( colorMap != m_data->colorMap )
@@ -877,7 +877,7 @@ void QwtPlotVectorField::drawSymbols( QPainter* painter,
     {
         // user input error, can't draw without color map
         // TODO: Discuss! Without colormap, silently fall back to uniform colors?
-        if ( m_data->colorMap == NULL)
+        if ( m_data->colorMap == nullptr)
             return;
     }
     else

@@ -7,49 +7,51 @@
 
 using namespace Qwt3D;
 
-IO::Entry::Entry() : iofunc(0) { }
+IO::Entry::Entry() : iofunc(0)
+{
+}
 
 IO::Entry::~Entry()
 {
     delete iofunc;
 }
 
-IO::Entry::Entry(IO::Entry const &e)
+IO::Entry::Entry(IO::Entry const& e)
 {
     if (this == &e)
         return;
 
-    fmt = e.fmt;
+    fmt    = e.fmt;
     iofunc = e.iofunc->clone();
 }
 
-void IO::Entry::operator=(IO::Entry const &e)
+void IO::Entry::operator=(IO::Entry const& e)
 {
     if (this == &e)
         return;
 
     delete iofunc;
-    fmt = e.fmt;
+    fmt    = e.fmt;
     iofunc = e.iofunc->clone();
 }
 
-IO::Entry::Entry(QString const &s, Functor const &f) : fmt(s)
+IO::Entry::Entry(QString const& s, Functor const& f) : fmt(s)
 {
     iofunc = f.clone();
 }
 
-IO::Entry::Entry(QString const &s, Function f) : fmt(s)
+IO::Entry::Entry(QString const& s, Function f) : fmt(s)
 {
     Wrapper w(f);
     iofunc = w.clone();
 }
 
-IO::FormatCompare::FormatCompare(IO::Entry const &e)
+IO::FormatCompare::FormatCompare(IO::Entry const& e)
 {
     e_ = e;
 }
 
-bool IO::FormatCompare::operator()(IO::Entry const &e)
+bool IO::FormatCompare::operator()(IO::Entry const& e)
 {
     return (e.fmt == e_.fmt);
 }
@@ -59,12 +61,12 @@ IO::FormatCompare2::FormatCompare2(QString s)
     s_ = s;
 }
 
-bool IO::FormatCompare2::operator()(IO::Entry const &e)
+bool IO::FormatCompare2::operator()(IO::Entry const& e)
 {
     return (e.fmt == s_);
 }
 
-bool IO::add_unique(Container &l, Entry const &e)
+bool IO::add_unique(Container& l, Entry const& e)
 {
     FormatCompare comp(e);
     l.erase(std::remove_if(l.begin(), l.end(), comp), l.end());
@@ -73,16 +75,16 @@ bool IO::add_unique(Container &l, Entry const &e)
     return true;
 }
 
-IO::IT IO::find(Container &l, QString const &fmt)
+IO::IT IO::find(Container& l, QString const& fmt)
 {
     FormatCompare2 comp(fmt);
     return std::find_if(l.begin(), l.end(), comp);
 }
 
-IO::Container &IO::rlist()
+IO::Container& IO::rlist()
 {
     static Container rl = Container();
-    static bool rfirst = true;
+    static bool rfirst  = true;
     if (rfirst) {
         rfirst = false;
         setupHandler();
@@ -90,10 +92,10 @@ IO::Container &IO::rlist()
     return rl;
 }
 
-IO::Container &IO::wlist()
+IO::Container& IO::wlist()
 {
     static Container wl = Container();
-    static bool wfirst = true;
+    static bool wfirst  = true;
     if (wfirst) {
         wfirst = false;
         setupHandler();
@@ -106,7 +108,7 @@ IO::Container &IO::wlist()
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineInputHandler(QString const &format, IO::Function func)
+bool IO::defineInputHandler(QString const& format, IO::Function func)
 {
     return add_unique(rlist(), Entry(format, func));
 }
@@ -116,7 +118,7 @@ bool IO::defineInputHandler(QString const &format, IO::Function func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineInputHandler(QString const &format, IO::Functor const &func)
+bool IO::defineInputHandler(QString const& format, IO::Functor const& func)
 {
     return add_unique(rlist(), Entry(format, func));
 }
@@ -126,7 +128,7 @@ bool IO::defineInputHandler(QString const &format, IO::Functor const &func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
  */
-bool IO::defineOutputHandler(QString const &format, IO::Function func)
+bool IO::defineOutputHandler(QString const& format, IO::Function func)
 {
     return add_unique(wlist(), Entry(format, func));
 }
@@ -136,7 +138,7 @@ bool IO::defineOutputHandler(QString const &format, IO::Function func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineOutputHandler(QString const &format, IO::Functor const &func)
+bool IO::defineOutputHandler(QString const& format, IO::Functor const& func)
 {
     return add_unique(wlist(), Entry(format, func));
 }
@@ -149,7 +151,7 @@ bool IO::defineOutputHandler(QString const &format, IO::Functor const &func)
   \return The return value from the called Function/Functor.
   The function returns false, if no registered handler could be found.
 */
-bool IO::load(Plot3D *plot, QString const &fname, QString const &format)
+bool IO::load(Plot3D* plot, QString const& fname, QString const& format)
 {
     IT it = IO::find(rlist(), format);
 
@@ -167,7 +169,7 @@ bool IO::load(Plot3D *plot, QString const &fname, QString const &format)
   \return The return value from the called Function/Functor.
   The function returns false, if no registered handler could be found.
 */
-bool IO::save(Plot3D *plot, QString const &fname, QString const &format)
+bool IO::save(Plot3D* plot, QString const& fname, QString const& format)
 {
     IT it = IO::find(wlist(), format);
 
@@ -204,7 +206,7 @@ QStringList IO::outputFormatList()
 /*!
   Returns the input functor in charge for format and 0 if non-existent.
 */
-IO::Functor *IO::inputHandler(QString const &format)
+IO::Functor* IO::inputHandler(QString const& format)
 {
     IO::IT it = IO::find(rlist(), format);
 
@@ -217,7 +219,7 @@ IO::Functor *IO::inputHandler(QString const &format)
 /*!
   Returns the output functor in charge for format and 0 if non-existent.
 */
-IO::Functor *IO::outputHandler(QString const &format)
+IO::Functor* IO::outputHandler(QString const& format)
 {
     IO::IT it = IO::find(wlist(), format);
 
@@ -227,7 +229,7 @@ IO::Functor *IO::outputHandler(QString const &format)
     return it->iofunc;
 }
 
-bool PixmapWriter::operator()(Plot3D *plot, QString const &fname)
+bool PixmapWriter::operator()(Plot3D* plot, QString const& fname)
 {
     QImage im = plot->grabFramebuffer();
 
@@ -246,8 +248,8 @@ void PixmapWriter::setQuality(int val)
 
 void IO::setupHandler()
 {
-    QList<QByteArray> list = QImageWriter::supportedImageFormats();
-    QList<QByteArray>::Iterator it = list.begin();
+    QList< QByteArray > list         = QImageWriter::supportedImageFormats();
+    QList< QByteArray >::Iterator it = list.begin();
     PixmapWriter qtw;
     while (it != list.end()) {
         qtw.fmt_ = *it;
@@ -287,12 +289,11 @@ void IO::setupHandler()
         \b Beware: BSPSORT turns out to behave very slowly and memory consuming, especially in cases
   where many polygons appear. It is still more exact than SIMPLESORT.
 */
-bool Plot3D::saveVector(QString const &fileName, QString const &format, VectorWriter::TEXTMODE text,
-                        VectorWriter::SORTMODE sortmode)
+bool Plot3D::saveVector(QString const& fileName, QString const& format, VectorWriter::TEXTMODE text, VectorWriter::SORTMODE sortmode)
 {
-    if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ"
-        || format == "PDF" || format == "SVG" || format == "PGF") {
-        VectorWriter *gl2ps = (VectorWriter *)IO::outputHandler(format);
+    if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ" || format == "PDF"
+        || format == "SVG" || format == "PGF") {
+        VectorWriter* gl2ps = static_cast< VectorWriter* >(IO::outputHandler(format));
         if (gl2ps) {
             gl2ps->setSortMode(sortmode);
             gl2ps->setTextMode(text);
@@ -306,10 +307,10 @@ bool Plot3D::saveVector(QString const &fileName, QString const &format, VectorWr
 
   Saves the framebuffer to the file fileName using one of the image file formats supported by Qt.
 */
-bool Plot3D::savePixmap(QString const &fileName, QString const &format)
+bool Plot3D::savePixmap(QString const& fileName, QString const& format)
 {
-    if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ"
-        || format == "PDF" || format == "SVG" || format == "PGF")
+    if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ" || format == "PDF"
+        || format == "SVG" || format == "PGF")
         return false;
 
     return IO::save(this, fileName, format);
@@ -319,7 +320,7 @@ bool Plot3D::savePixmap(QString const &fileName, QString const &format)
   Saves content in one of the registered output formats. To modify the
   behaviour for more complex output handling use IO::outputHandler.
 */
-bool Plot3D::save(QString const &fileName, QString const &format)
+bool Plot3D::save(QString const& fileName, QString const& format)
 {
     return IO::save(this, fileName, format);
 }

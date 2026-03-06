@@ -27,86 +27,96 @@
 #include <QColor>
 
 //! Common namespace for all QwtPlot3D classes
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 const double PI = 3.14159265358979323846264338328;
 
 //! Plotting style
-enum PLOTSTYLE {
-    NOPLOT, //!< No visible data
-    WIREFRAME, //!< Wireframe style
-    HIDDENLINE, //!< Hidden Line style
-    FILLED, //!< Color filled polygons w/o edges
-    FILLEDMESH, //!< Color filled polygons w/ separately colored edges
-    POINTS, //!< User defined style (used by Enrichments)
-    USER //!< User defined style (used by Enrichments)
+enum PLOTSTYLE
+{
+    NOPLOT,      //!< No visible data
+    WIREFRAME,   //!< Wireframe style
+    HIDDENLINE,  //!< Hidden Line style
+    FILLED,      //!< Color filled polygons w/o edges
+    FILLEDMESH,  //!< Color filled polygons w/ separately colored edges
+    POINTS,      //!< User defined style (used by Enrichments)
+    USER         //!< User defined style (used by Enrichments)
 };
 
 //! Shading style
-enum SHADINGSTYLE {
-    FLAT, //!< Flat shading (OpenGL)
-    GOURAUD //!< Gouraud Shading (OpenGL)
+enum SHADINGSTYLE
+{
+    FLAT,    //!< Flat shading (OpenGL)
+    GOURAUD  //!< Gouraud Shading (OpenGL)
 };
 
 //! Style of Coordinate system
-enum COORDSTYLE {
-    NOCOORD, //!< Coordinate system is not visible
-    BOX, //!< Boxed
-    FRAME //!< Frame - 3 visible axes
+enum COORDSTYLE
+{
+    NOCOORD,  //!< Coordinate system is not visible
+    BOX,      //!< Boxed
+    FRAME     //!< Frame - 3 visible axes
 };
 
 //! Different types of axis scales
-enum SCALETYPE {
-    LINEARSCALE, //!< Linear scaling
-    LOG10SCALE, //!< Logarithmic scaling (base 10)
-    USERSCALE //!< User-defined (for extensions)
+enum SCALETYPE
+{
+    LINEARSCALE,  //!< Linear scaling
+    LOG10SCALE,   //!< Logarithmic scaling (base 10)
+    USERSCALE     //!< User-defined (for extensions)
 };
 
 //! Plotting style for floor data (projections)
-enum FLOORSTYLE {
-    NOFLOOR, //!< Empty floor
-    FLOORISO, //!< Isoline projections visible
-    FLOORDATA //!< Projected polygons visible
+enum FLOORSTYLE
+{
+    NOFLOOR,   //!< Empty floor
+    FLOORISO,  //!< Isoline projections visible
+    FLOORDATA  //!< Projected polygons visible
 };
 
 //! Mesh type
-enum DATATYPE {
-    GRID, //!< Rectangular grid
-    POLYGON //!< Convex polygon
+enum DATATYPE
+{
+    GRID,    //!< Rectangular grid
+    POLYGON  //!< Convex polygon
 };
 
 //! The 12 axes
 /**
 \image html axes.png
 */
-enum AXIS {
-    X1 = 0, //!<  1st x-axis
-    X2 = 3, //!<  2nd x-axis
-    X3 = 4, //!<  3th x-axis
-    X4 = 5, //!<  4th x-axis
-    Y1 = 1, //!<  1st y-axis
-    Y2 = 8, //!<  2nd y-axis
-    Y3 = 7, //!<  3th y-axis
-    Y4 = 6, //!<  4th y-axis
-    Z1 = 2, //!<  1st z-axis
-    Z2 = 9, //!<  2nd z-axis
-    Z3 = 11, //!<  3th z-axis
-    Z4 = 10 //!<  4th z-axis
+enum AXIS
+{
+    X1 = 0,   //!<  1st x-axis
+    X2 = 3,   //!<  2nd x-axis
+    X3 = 4,   //!<  3th x-axis
+    X4 = 5,   //!<  4th x-axis
+    Y1 = 1,   //!<  1st y-axis
+    Y2 = 8,   //!<  2nd y-axis
+    Y3 = 7,   //!<  3th y-axis
+    Y4 = 6,   //!<  4th y-axis
+    Z1 = 2,   //!<  1st z-axis
+    Z2 = 9,   //!<  2nd z-axis
+    Z3 = 11,  //!<  3th z-axis
+    Z4 = 10   //!<  4th z-axis
 };
 
 //! The 6 sides
-enum SIDE {
+enum SIDE
+{
     NOSIDEGRID = 0,
-    LEFT = 1 << 0,
-    RIGHT = 1 << 1,
-    CEIL = 1 << 2,
-    FLOOR = 1 << 3,
-    FRONT = 1 << 4,
-    BACK = 1 << 5
+    LEFT       = 1 << 0,
+    RIGHT      = 1 << 1,
+    CEIL       = 1 << 2,
+    FLOOR      = 1 << 3,
+    FRONT      = 1 << 4,
+    BACK       = 1 << 5
 };
 
 //! Possible anchor points for drawing operations
-enum ANCHOR {
+enum ANCHOR
+{
     BottomLeft,
     BottomRight,
     BottomCenter,
@@ -121,8 +131,12 @@ enum ANCHOR {
 //! Tuple <tt>[x,y]</tt>
 struct QWT3D_EXPORT Tuple
 {
-    Tuple() : x(0), y(0) { } //!< Calls Tuple(0,0)
-    Tuple(double X, double Y) : x(X), y(Y) { } //!< Initialize Tuple with x and y
+    Tuple() : x(0), y(0)
+    {
+    }  //!< Calls Tuple(0,0)
+    Tuple(double X, double Y) : x(X), y(Y)
+    {
+    }  //!< Initialize Tuple with x and y
     //! Tuple coordinates
     double x, y;
 };
@@ -134,11 +148,13 @@ Consider Triples also as vectors in R^3
 struct QWT3D_EXPORT Triple
 {
     //! Initialize Triple with x,y and z
-    explicit Triple(double xv = 0, double yv = 0, double zv = 0) : x(xv), y(yv), z(zv) { }
+    explicit Triple(double xv = 0, double yv = 0, double zv = 0) : x(xv), y(yv), z(zv)
+    {
+    }
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 #ifdef Q_OS_IRIX
-    Triple(const Triple &val)
+    Triple(const Triple& val)
     {
         if (&val == this)
             return;
@@ -146,7 +162,7 @@ struct QWT3D_EXPORT Triple
         y = val.y;
         z = val.z;
     }
-    const Triple &operator=(const Triple &val)
+    const Triple& operator=(const Triple& val)
     {
         if (&val == this)
             return *this;
@@ -156,12 +172,12 @@ struct QWT3D_EXPORT Triple
         return *this;
     }
 #endif
-#endif // QWT3D_NOT_FOR_DOXYGEN
+#endif  // QWT3D_NOT_FOR_DOXYGEN
 
     //! Triple coordinates
     double x, y, z;
 
-    Triple &operator+=(Triple t)
+    Triple& operator+=(Triple t)
     {
         x += t.x;
         y += t.y;
@@ -170,7 +186,7 @@ struct QWT3D_EXPORT Triple
         return *this;
     }
 
-    Triple &operator-=(Triple t)
+    Triple& operator-=(Triple t)
     {
         x -= t.x;
         y -= t.y;
@@ -178,7 +194,7 @@ struct QWT3D_EXPORT Triple
 
         return *this;
     }
-    Triple &operator*=(double d)
+    Triple& operator*=(double d)
     {
         x *= d;
         y *= d;
@@ -186,7 +202,7 @@ struct QWT3D_EXPORT Triple
 
         return *this;
     }
-    Triple &operator/=(double d)
+    Triple& operator/=(double d)
     {
         x /= d;
         y /= d;
@@ -194,7 +210,7 @@ struct QWT3D_EXPORT Triple
 
         return *this;
     }
-    Triple &operator*=(Triple t) // scale
+    Triple& operator*=(Triple t)  // scale
     {
         x *= t.x;
         y *= t.y;
@@ -205,11 +221,13 @@ struct QWT3D_EXPORT Triple
 
     bool operator!=(Triple t) const
     {
-        return !isPracticallyZero(x, t.x) || !isPracticallyZero(y, t.y)
-                || !isPracticallyZero(z, t.z);
+        return !isPracticallyZero(x, t.x) || !isPracticallyZero(y, t.y) || !isPracticallyZero(z, t.z);
     }
 
-    bool operator==(Triple t) const { return !operator!=(t); }
+    bool operator==(Triple t) const
+    {
+        return !operator!=(t);
+    }
 
     double length() const
     {
@@ -225,31 +243,31 @@ struct QWT3D_EXPORT Triple
     }
 };
 
-inline const Triple operator+(const Triple &t, const Triple &t2)
+inline const Triple operator+(const Triple& t, const Triple& t2)
 {
     return Triple(t) += t2;
 }
-inline const Triple operator-(const Triple &t, const Triple &t2)
+inline const Triple operator-(const Triple& t, const Triple& t2)
 {
     return Triple(t) -= t2;
 }
-inline const Triple operator*(double d, const Triple &t)
+inline const Triple operator*(double d, const Triple& t)
 {
     return Triple(t) *= d;
 }
-inline const Triple operator*(const Triple &t, double d)
+inline const Triple operator*(const Triple& t, double d)
 {
     return Triple(t) *= d;
 }
-inline const Triple operator/(double d, const Triple &t)
+inline const Triple operator/(double d, const Triple& t)
 {
     return Triple(t) /= d;
 }
-inline const Triple operator/(const Triple &t, double d)
+inline const Triple operator/(const Triple& t, double d)
 {
     return Triple(t) /= d;
 }
-inline const Triple operator*(const Triple &t, const Triple &t2)
+inline const Triple operator*(const Triple& t, const Triple& t2)
 {
     return Triple(t) *= t2;
 }
@@ -264,14 +282,18 @@ minVertex.z <= maxVertex.z\n
 struct QWT3D_EXPORT ParallelEpiped
 {
     //! Construct non-initialized Parallelepiped
-    ParallelEpiped() { }
+    ParallelEpiped()
+    {
+    }
 
     //! Construct initialized Parallelepiped
     /**
             minv -> minVertex\n
             maxv -> maxVertex\n
     */
-    ParallelEpiped(Triple minv, Triple maxv) : minVertex(minv), maxVertex(maxv) { }
+    ParallelEpiped(Triple minv, Triple maxv) : minVertex(minv), maxVertex(maxv)
+    {
+    }
 
     Triple minVertex;
     Triple maxVertex;
@@ -283,61 +305,80 @@ struct QWT3D_EXPORT ParallelEpiped
 */
 struct QWT3D_EXPORT FreeVector
 {
-    FreeVector() { }
+    FreeVector()
+    {
+    }
 
     //! Construct initialized vector
     /**
             b -> base\n
             e -> top\n
     */
-    FreeVector(Triple b, Triple t) : base(b), top(t) { }
+    FreeVector(Triple b, Triple t) : base(b), top(t)
+    {
+    }
 
     Triple base;
     Triple top;
 };
 
 //! A free vector field in R^3
-typedef std::vector<FreeVector> FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector<Triple> TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector<unsigned> Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector<Cell> CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
-unsigned tesselationSize(Qwt3D::CellField const &t);
+unsigned tesselationSize(Qwt3D::CellField const& t);
 
 //! Red-Green-Blue-Alpha value
 struct QWT3D_EXPORT RGBA
 {
-    RGBA() : r(0), g(0), b(0), a(1) { }
-    RGBA(double rr, double gg, double bb, double aa = 1) : r(rr), g(gg), b(bb), a(aa) { }
+    RGBA() : r(0), g(0), b(0), a(1)
+    {
+    }
+    RGBA(double rr, double gg, double bb, double aa = 1) : r(rr), g(gg), b(bb), a(aa)
+    {
+    }
     double r, g, b, a;
 };
 
 //! A Color field
-typedef std::vector<RGBA> ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
-QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b); //!< RGB -> QColor
-QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col); //!< QColor -> RGBA
+QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
+QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double *Vertex;
-typedef std::vector<Vertex> DataRow;
-typedef std::vector<DataRow> DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
 public:
     Qwt3D::DATATYPE datatype;
-    Data() { datatype = Qwt3D::POLYGON; }
-    virtual ~Data() { }
-    virtual void clear() = 0; //!< destroy content
-    virtual bool empty() const = 0; //!< no data
-    void setHull(Qwt3D::ParallelEpiped const &h) { hull_p = h; }
-    Qwt3D::ParallelEpiped const &hull() const { return hull_p; }
+    Data()
+    {
+        datatype = Qwt3D::POLYGON;
+    }
+    virtual ~Data()
+    {
+    }
+    virtual void clear()       = 0;  //!< destroy content
+    virtual bool empty() const = 0;  //!< no data
+    void setHull(Qwt3D::ParallelEpiped const& h)
+    {
+        hull_p = h;
+    }
+    Qwt3D::ParallelEpiped const& hull() const
+    {
+        return hull_p;
+    }
 
 protected:
     Qwt3D::ParallelEpiped hull_p;
@@ -348,27 +389,38 @@ class GridData : public Data
 {
 public:
     GridData();
-    GridData(unsigned int columns, unsigned int rows); //!< see setSize()
-    ~GridData() { clear(); }
+    GridData(unsigned int columns, unsigned int rows);  //!< see setSize()
+    ~GridData()
+    {
+        clear();
+    }
 
     int columns() const;
     int rows() const;
 
-    void clear(); //!< destroy content
-    bool empty() const { return vertices.empty(); }
-    void
-    setSize(unsigned int columns,
-            unsigned int rows); //!< destroys content and set new size, elements are uninitialized
+    void clear();  //!< destroy content
+    bool empty() const
+    {
+        return vertices.empty();
+    }
+    void setSize(unsigned int columns,
+                 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
-    DataMatrix vertices; //!< mesh vertices
-    DataMatrix normals; //!< mesh normals
+    DataMatrix vertices;  //!< mesh vertices
+    DataMatrix normals;   //!< mesh normals
     void setPeriodic(bool u, bool v)
     {
         uperiodic_ = u;
         vperiodic_ = v;
     }
-    bool uperiodic() const { return uperiodic_; }
-    bool vperiodic() const { return vperiodic_; }
+    bool uperiodic() const
+    {
+        return uperiodic_;
+    }
+    bool vperiodic() const
+    {
+        return vperiodic_;
+    }
 
 private:
     bool uperiodic_, vperiodic_;
@@ -378,20 +430,29 @@ private:
 class CellData : public Data
 {
 public:
-    CellData() { datatype = Qwt3D::POLYGON; }
-    ~CellData() { clear(); }
+    CellData()
+    {
+        datatype = Qwt3D::POLYGON;
+    }
+    ~CellData()
+    {
+        clear();
+    }
 
-    void clear(); //!< destroy content
-    bool empty() const { return cells.empty(); }
+    void clear();  //!< destroy content
+    bool empty() const
+    {
+        return cells.empty();
+    }
 
-    Triple const &operator()(unsigned cellnumber, unsigned vertexnumber);
+    Triple const& operator()(unsigned cellnumber, unsigned vertexnumber);
 
-    CellField cells; //!< polygon/cell mesh
+    CellField cells;  //!< polygon/cell mesh
     TripleField nodes;
-    TripleField normals; //!< mesh normals
+    TripleField normals;  //!< mesh normals
 };
 
-inline Triple normalizedcross(Triple const &u, Triple const &v)
+inline Triple normalizedcross(Triple const& u, Triple const& v)
 {
     Triple n;
 
@@ -411,15 +472,15 @@ inline Triple normalizedcross(Triple const &u, Triple const &v)
     return n;
 }
 
-inline double dotProduct(Triple const &u, Triple const &v)
+inline double dotProduct(Triple const& u, Triple const& v)
 {
     return u.x * v.x + u.y * v.y + u.z * v.z;
 }
 
-void convexhull2d(std::vector<unsigned> &idx, const std::vector<Qwt3D::Tuple> &src);
+void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple >& src);
 
-#endif // QWT3D_NOT_FOR_DOXYGEN
+#endif  // QWT3D_NOT_FOR_DOXYGEN
 
-} // ns
+}  // ns
 
 #endif

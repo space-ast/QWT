@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 2024   ChenZongYan <czy.t@163.com>
  *****************************************************************************/
@@ -107,16 +107,16 @@ public:
     QPoint textTrackerOffset() const;
 
     // 顶部矩形文字
-    QwtText trackerText(const QPoint& pos) const QWT_OVERRIDE;
+    QwtText trackerText(const QPoint& pos) const override;
 
     // 让矩形在最顶部
-    QRect trackerRect(const QFont& f) const QWT_OVERRIDE;
+    QRect trackerRect(const QFont& f) const override;
 
     // 绘制rubberband
-    virtual void drawRubberBand(QPainter* painter) const QWT_OVERRIDE;
+    virtual void drawRubberBand(QPainter* painter) const override;
 
     // 手动设置位置
-    virtual void setTrackerPosition(const QPoint& pos) QWT_OVERRIDE;
+    virtual void setTrackerPosition(const QPoint& pos) override;
 
 protected:
     // 获取绘图区域屏幕坐标pos上，的所有可拾取的y值,返回获取的个数
@@ -134,7 +134,7 @@ protected:
     // 绘制特征点
     virtual void drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
     // 鼠标移动
-    virtual void move(const QPoint& pos) QWT_OVERRIDE;
+    virtual void move(const QPoint& pos) override;
     // 格式化为坐标轴对应的内容，针对时间轴，value是一个大浮点数，用户需要看到的是2024-10-01这样的数字
     QString formatAxisValue(double value, int axisId, QwtPlot* plot) const;
 

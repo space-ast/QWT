@@ -89,7 +89,7 @@ public:
 
     virtual ~QwtPlotBarChart();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setSamples(const QVector< QPointF >&);
     void setSamples(const QVector< double >&);
@@ -115,9 +115,9 @@ public:
                             const QwtScaleMap& yMap,
                             const QRectF& canvasRect,
                             int from,
-                            int to) const QWT_OVERRIDE;
+                            int to) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual QwtColumnSymbol* specialSymbol(int sampleIndex, const QPointF&) const;
 
@@ -140,8 +140,8 @@ protected:
                              const QwtInterval& boundingInterval,
                              const QPointF& sample) const;
 
-    QList< QwtLegendData > legendData() const QWT_OVERRIDE;
-    QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+    QList< QwtLegendData > legendData() const override;
+    QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 private:
     void init();

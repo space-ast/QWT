@@ -57,8 +57,8 @@ public:
         , abortKey(Qt::Key_Escape)
         , abortKeyModifiers(Qt::NoModifier)
 #ifndef QT_NO_CURSOR
-        , cursor(NULL)
-        , restoreCursor(NULL)
+        , cursor(nullptr)
+        , restoreCursor(nullptr)
         , hasCursor(false)
 #endif
         , isEnabled(false)
@@ -332,7 +332,7 @@ QPixmap QwtCachePanner::grab() const
  */
 bool QwtCachePanner::eventFilter(QObject* object, QEvent* event)
 {
-    if (object == NULL || object != parentWidget())
+    if (object == nullptr || object != parentWidget())
         return false;
 
     switch (event->type()) {
@@ -381,7 +381,7 @@ void QwtCachePanner::widgetMousePressEvent(QMouseEvent* mouseEvent)
     }
 
     QWidget* w = parentWidget();
-    if (w == NULL)
+    if (w == nullptr)
         return;
 
 #ifndef QT_NO_CURSOR
@@ -498,7 +498,7 @@ void QwtCachePanner::showCursor(bool on)
         return;
 
     QWidget* w = parentWidget();
-    if (w == NULL || m_data->cursor == NULL)
+    if (w == nullptr || m_data->cursor == nullptr)
         return;
 
     m_data->hasCursor = on;
@@ -513,7 +513,7 @@ void QwtCachePanner::showCursor(bool on)
         if (m_data->restoreCursor) {
             w->setCursor(*m_data->restoreCursor);
             delete m_data->restoreCursor;
-            m_data->restoreCursor = NULL;
+            m_data->restoreCursor = nullptr;
         } else
             w->unsetCursor();
     }
