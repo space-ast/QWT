@@ -1,4 +1,5 @@
 /*@remap "QWTAmalgamTemplatePublicHeaders.h" "QwtPlot.h" */
+/*@remap "gl2ps.h" "QwtPlot.h" */
 #include "QWTAmalgamTemplateHeaderGlue.h"
 
 // disable warnings about unsafe standard library calls

@@ -1,6 +1,6 @@
 ﻿// 通用定义
 #include "../../src/qwt_version_info.h"
-#include "../../src/plot/qwt_global.h"
+#include "../../src/qwt_global.h"
 #include "../../src/plot/qwt_polar.h"
 #include "../../src/plot/qwt_math.h"
 #include "../../src/plot/qwt_algorithm.hpp"
