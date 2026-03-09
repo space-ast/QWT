@@ -1,37 +1,32 @@
 #!/bin/bash
-# 设置控制台编码为UTF-8
-chcp.com 65001 > /dev/null
-# 设置输出编码
-export LANG=zh_CN.UTF-8
-export LC_ALL=zh_CN.UTF-8
 
 DEST=../src
 OPTS='-i "../src" -i "../src/3rdparty/gl2ps" -w "*.cpp;*.h;*.hpp;*.c" -s'
 ./Amalgamate.exe $OPTS ./amalgamate/QWTAmalgamTemplate.h $DEST/../src-amalgamate/QwtPlot.h
 ./Amalgamate.exe $OPTS ./amalgamate/QWTAmalgamTemplate.cpp $DEST/../src-amalgamate/QwtPlot.cpp
 
-# 删除 QwtPlot.cpp 中的 #include "gl2ps.h" 行
+# Remove the line containing #include "gl2ps.h" from QwtPlot.cpp
 if [ -f "$DEST/../src-amalgamate/QwtPlot.cpp" ]; then
     sed -i '/#include "gl2ps.h"/d' "$DEST/../src-amalgamate/QwtPlot.cpp"
-    echo "已从 QwtPlot.cpp 中删除 #include \"gl2ps.h\""
+    echo "Removed #include \"gl2ps.h\" from QwtPlot.cpp"
     
-    # 将换行符从 LF 转换为 CRLF
+    # Convert line endings from LF to CRLF
     convert_to_crlf() {
         local file="$1"
         if [ -f "$file" ]; then
             awk '{sub(/$/, "\r"); print}' "$file" > "${file}.tmp"
             mv "${file}.tmp" "$file"
-            echo "已将 $file 的换行符转换为 CRLF"
+            echo "Converted line endings to CRLF for $file"
         fi
     }
     
     convert_to_crlf "$DEST/../src-amalgamate/QwtPlot.cpp"
     convert_to_crlf "$DEST/../src-amalgamate/QwtPlot.h"
 else
-    echo "警告: QwtPlot.cpp 文件不存在"
+    echo "Warning: QwtPlot.cpp file does not exist"
 fi
 
-#  使用read命令达到类似bat中的pause命令效果
-echo 按任意键继续
+# Use read command to achieve functionality similar to pause in batch files
+echo Press any key to continue...
 read -n 1
-echo 继续运行
+echo Continuing...
