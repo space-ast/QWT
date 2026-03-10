@@ -98,7 +98,7 @@ public:
         , autoFillPipe(true)
         , originMode(QwtThermo::OriginMinimum)
         , origin(0.0)
-        , colorMap(NULL)
+        , colorMap(nullptr)
         , value(0.0)
     {
         rangeFlags = QwtInterval::IncludeBorders;
@@ -262,7 +262,7 @@ void QwtThermo::paintEvent(QPaintEvent* event)
     const int bw = m_data->borderWidth;
 
     const QBrush brush = palette().brush(QPalette::Base);
-    qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, m_data->autoFillPipe ? &brush : NULL);
+    qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, m_data->autoFillPipe ? &brush : nullptr);
 
     drawLiquid(&painter, tRect);
 }
@@ -541,7 +541,7 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 
     QRect liquidRect = fillRect(pipeRect);
 
-    if (m_data->colorMap != NULL) {
+    if (m_data->colorMap != nullptr) {
         const QwtInterval interval = scaleDiv().interval().normalized();
 
         // Because the positions of the ticks are rounded

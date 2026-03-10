@@ -57,9 +57,9 @@ class QWT_EXPORT QwtSamplingThread : public QThread
     void stop();
 
   protected:
-    explicit QwtSamplingThread( QObject* parent = NULL );
+    explicit QwtSamplingThread( QObject* parent = nullptr );
 
-    virtual void run() QWT_OVERRIDE;
+    virtual void run() override;
 
     /*!
        Collect a sample

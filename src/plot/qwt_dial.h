@@ -109,7 +109,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
         RotateScale
     };
 
-    explicit QwtDial( QWidget* parent = NULL );
+    explicit QwtDial( QWidget* parent = nullptr );
     virtual ~QwtDial();
 
     void setFrameShadow( Shadow );
@@ -141,8 +141,8 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
 
     virtual QRect scaleInnerRect() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     void setScaleDraw( QwtRoundScaleDraw* );
 
@@ -150,9 +150,9 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     const QwtRoundScaleDraw* scaleDraw() const;
 
   protected:
-    virtual void wheelEvent( QWheelEvent* ) QWT_OVERRIDE;
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void changeEvent( QEvent* ) QWT_OVERRIDE;
+    virtual void wheelEvent( QWheelEvent* ) override;
+    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void changeEvent( QEvent* ) override;
 
     virtual void drawFrame( QPainter* );
     virtual void drawContents( QPainter* ) const;
@@ -169,11 +169,11 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     virtual void drawNeedle( QPainter*, const QPointF&,
         double radius, double direction, QPalette::ColorGroup ) const;
 
-    virtual double scrolledTo( const QPoint& ) const QWT_OVERRIDE;
-    virtual bool isScrollPosition( const QPoint& ) const QWT_OVERRIDE;
+    virtual double scrolledTo( const QPoint& ) const override;
+    virtual bool isScrollPosition( const QPoint& ) const override;
 
-    virtual void sliderChange() QWT_OVERRIDE;
-    virtual void scaleChange() QWT_OVERRIDE;
+    virtual void sliderChange() override;
+    virtual void scaleChange() override;
 
   private:
     void setAngleRange( double angle, double span );

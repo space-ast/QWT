@@ -37,7 +37,7 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
     Q_OBJECT
 
   public:
-    explicit QwtPolarRenderer( QObject* parent = NULL );
+    explicit QwtPolarRenderer( QObject* parent = nullptr );
     virtual ~QwtPolarRenderer();
 
     void renderDocument( QwtPolarPlot*, const QString& format,

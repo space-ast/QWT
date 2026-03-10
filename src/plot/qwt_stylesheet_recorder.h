@@ -10,18 +10,18 @@
 #include <QBrush>
 #include <QPointF>
 
-class QWT_EXPORT QwtStyleSheetRecorder QWT_FINAL : public QwtNullPaintDevice
+class QWT_EXPORT QwtStyleSheetRecorder final : public QwtNullPaintDevice
 {
 public:
     explicit QwtStyleSheetRecorder(const QSize& size);
-    virtual void updateState(const QPaintEngineState& state) QWT_OVERRIDE;
-    virtual void drawRects(const QRectF* rects, int count) QWT_OVERRIDE;
-    virtual void drawRects(const QRect* rects, int count) QWT_OVERRIDE;
-    virtual void drawPath(const QPainterPath& path) QWT_OVERRIDE;
+    virtual void updateState(const QPaintEngineState& state) override;
+    virtual void drawRects(const QRectF* rects, int count) override;
+    virtual void drawRects(const QRect* rects, int count) override;
+    virtual void drawPath(const QPainterPath& path) override;
     void setCornerRects(const QPainterPath& path);
 
 protected:
-    virtual QSize sizeMetrics() const QWT_OVERRIDE;
+    virtual QSize sizeMetrics() const override;
 
 private:
     void alignCornerRects(const QRectF& rect);

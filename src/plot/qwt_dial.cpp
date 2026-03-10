@@ -89,7 +89,7 @@ public:
         , origin(90.0)
         , minScaleArc(0.0)
         , maxScaleArc(0.0)
-        , needle(NULL)
+        , needle(nullptr)
         , arcOffset(0.0)
         , mouseOffset(0.0)
     {
@@ -463,7 +463,7 @@ void QwtDial::drawNeedle(QPainter* painter) const
 void QwtDial::drawScale(QPainter* painter, const QPointF& center, double radius) const
 {
     QwtRoundScaleDraw* sd = const_cast< QwtRoundScaleDraw* >(scaleDraw());
-    if (sd == NULL)
+    if (sd == nullptr)
         return;
 
     sd->setRadius(radius);

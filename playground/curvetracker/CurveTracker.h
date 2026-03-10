@@ -12,14 +12,14 @@ class QLineF;
 
 class CurveTracker : public QwtPlotPicker
 {
-  public:
-    CurveTracker( QWidget* );
+public:
+    CurveTracker(QWidget*);
 
-  protected:
-    virtual QwtText trackerTextF( const QPointF& ) const QWT_OVERRIDE;
-    virtual QRect trackerRect( const QFont& ) const QWT_OVERRIDE;
+protected:
+    virtual QwtText trackerTextF(const QPointF&) const override;
+    virtual QRect trackerRect(const QFont&) const override;
 
-  private:
-    QString curveInfoAt( const QwtPlotCurve*, const QPointF& ) const;
-    QLineF curveLineAt( const QwtPlotCurve*, double x ) const;
+private:
+    QString curveInfoAt(const QwtPlotCurve*, const QPointF&) const;
+    QLineF curveLineAt(const QwtPlotCurve*, double x) const;
 };

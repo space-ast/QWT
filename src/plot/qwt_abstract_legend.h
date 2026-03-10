@@ -51,7 +51,7 @@ class QWT_EXPORT QwtAbstractLegend : public QFrame
         Q_OBJECT
 
 public:
-        explicit QwtAbstractLegend(QWidget* parent = NULL);
+        explicit QwtAbstractLegend(QWidget* parent = nullptr);
         virtual ~QwtAbstractLegend();
 
         /*!

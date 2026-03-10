@@ -84,7 +84,7 @@ class QWT_EXPORT QwtPlotMultiBarChart
 
     virtual ~QwtPlotMultiBarChart();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setBarTitles( const QList< QwtText >& );
     QList< QwtText > barTitles() const;
@@ -103,14 +103,14 @@ class QWT_EXPORT QwtPlotMultiBarChart
 
     virtual void drawSeries( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const QWT_OVERRIDE;
+        const QRectF& canvasRect, int from, int to ) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
-    virtual QList< QwtLegendData > legendData() const QWT_OVERRIDE;
+    virtual QList< QwtLegendData > legendData() const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
   protected:
     QwtColumnSymbol* symbol( int valueIndex );

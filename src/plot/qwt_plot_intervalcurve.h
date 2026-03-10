@@ -98,7 +98,7 @@ class QWT_EXPORT QwtPlotIntervalCurve
 
     virtual ~QwtPlotIntervalCurve();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setPaintAttribute( PaintAttribute, bool on = true );
     bool testPaintAttribute( PaintAttribute ) const;
@@ -123,12 +123,12 @@ class QWT_EXPORT QwtPlotIntervalCurve
 
     virtual void drawSeries( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const QWT_OVERRIDE;
+        const QRectF& canvasRect, int from, int to ) const override;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
   protected:
 

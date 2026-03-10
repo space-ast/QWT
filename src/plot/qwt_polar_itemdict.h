@@ -13,8 +13,8 @@
 #include "qwt_polar_item.h"
 #include <qlist.h>
 
-typedef QList< QwtPolarItem* >::ConstIterator QwtPolarItemIterator;
-typedef QList< QwtPolarItem* > QwtPolarItemList;
+using QwtPolarItemIterator = QList< QwtPolarItem* >::ConstIterator;
+using QwtPolarItemList     = QList< QwtPolarItem* >;
 
 /*!
    \brief A dictionary for polar plot items
@@ -27,23 +27,22 @@ typedef QList< QwtPolarItem* > QwtPolarItemList;
  */
 class QWT_EXPORT QwtPolarItemDict
 {
-  public:
+public:
     explicit QwtPolarItemDict();
     ~QwtPolarItemDict();
 
-    void setAutoDelete( bool );
+    void setAutoDelete(bool);
     bool autoDelete() const;
 
     const QwtPolarItemList& itemList() const;
 
-    void detachItems( int rtti = QwtPolarItem::Rtti_PolarItem,
-        bool autoDelete = true );
+    void detachItems(int rtti = QwtPolarItem::Rtti_PolarItem, bool autoDelete = true);
 
-  protected:
-    void insertItem( QwtPolarItem* );
-    void removeItem( QwtPolarItem* );
+protected:
+    void insertItem(QwtPolarItem*);
+    void removeItem(QwtPolarItem*);
 
-  private:
+private:
     class PrivateData;
     PrivateData* m_data;
 };

@@ -50,7 +50,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
 
     virtual ~QwtDynGridLayout();
 
-    virtual void invalidate() QWT_OVERRIDE;
+    virtual void invalidate() override;
 
     void setMaxColumns( uint maxColumns );
     uint maxColumns() const;
@@ -58,26 +58,26 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
     uint numRows () const;
     uint numColumns () const;
 
-    virtual void addItem( QLayoutItem* ) QWT_OVERRIDE;
+    virtual void addItem( QLayoutItem* ) override;
 
-    virtual QLayoutItem* itemAt( int index ) const QWT_OVERRIDE;
-    virtual QLayoutItem* takeAt( int index ) QWT_OVERRIDE;
-    virtual int count() const QWT_OVERRIDE;
+    virtual QLayoutItem* itemAt( int index ) const override;
+    virtual QLayoutItem* takeAt( int index ) override;
+    virtual int count() const override;
 
     void setExpandingDirections( Qt::Orientations );
-    virtual Qt::Orientations expandingDirections() const QWT_OVERRIDE;
+    virtual Qt::Orientations expandingDirections() const override;
     QList< QRect > layoutItems( const QRect&, uint numColumns ) const;
 
     virtual int maxItemWidth() const;
 
-    virtual void setGeometry( const QRect& ) QWT_OVERRIDE;
+    virtual void setGeometry( const QRect& ) override;
 
-    virtual bool hasHeightForWidth() const QWT_OVERRIDE;
-    virtual int heightForWidth( int ) const QWT_OVERRIDE;
+    virtual bool hasHeightForWidth() const override;
+    virtual int heightForWidth( int ) const override;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
 
-    virtual bool isEmpty() const QWT_OVERRIDE;
+    virtual bool isEmpty() const override;
     uint itemCount() const;
 
     virtual uint columnsForWidth( int width ) const;

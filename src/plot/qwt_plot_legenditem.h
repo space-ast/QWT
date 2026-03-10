@@ -80,7 +80,7 @@ class QWT_EXPORT QwtPlotLegendItem : public QwtPlotItem
     explicit QwtPlotLegendItem();
     virtual ~QwtPlotLegendItem();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setAlignmentInCanvas( Qt::Alignment );
     Qt::Alignment alignmentInCanvas() const;
@@ -123,12 +123,12 @@ class QWT_EXPORT QwtPlotLegendItem : public QwtPlotItem
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     void clearLegend();
 
     virtual void updateLegend( const QwtPlotItem*,
-        const QList< QwtLegendData >& ) QWT_OVERRIDE;
+        const QList< QwtLegendData >& ) override;
 
     virtual QRect geometry( const QRectF& canvasRect ) const;
 

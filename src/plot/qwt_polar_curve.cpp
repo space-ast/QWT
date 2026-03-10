@@ -26,7 +26,7 @@ static inline bool qwtInsidePole(const QwtScaleMap& map, double radius)
 class QwtPolarCurve::PrivateData
 {
 public:
-    PrivateData() : style(QwtPolarCurve::Lines), curveFitter(NULL)
+    PrivateData() : style(QwtPolarCurve::Lines), curveFitter(nullptr)
     {
         symbol = new QwtSymbol();
         pen    = QPen(Qt::black);
@@ -81,7 +81,7 @@ QwtPolarCurve::~QwtPolarCurve()
 void QwtPolarCurve::init()
 {
     m_data   = new PrivateData;
-    m_series = NULL;
+    m_series = nullptr;
 
     setItemAttribute(QwtPolarItem::AutoScale);
     setItemAttribute(QwtPolarItem::Legend);
@@ -216,7 +216,7 @@ void QwtPolarCurve::setData(QwtSeriesData< QwtPointPolar >* data)
 
    A curve fitter interpolates the curve points. F.e QwtPolarFitter
    adds equidistant points so that the connection gets rounded instead
-   of having straight lines. If curveFitter is NULL fitting is disabled.
+   of having straight lines. If curveFitter is nullptr fitting is disabled.
 
    \sa curveFitter()
  */

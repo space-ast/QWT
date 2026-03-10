@@ -1,4 +1,4 @@
-﻿
+
 /*** Start of inlined file: QWTAmalgamTemplateHeaderGlue.h ***/
 // This file provides an extra level of indirection for the @remap in the template
 #include "QwtPlot.h"
@@ -1757,7 +1757,7 @@ QwtTransform* QwtPowerTransform::copy() const
 
    The scale and paint device intervals are both set to [0,1].
  */
-QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(NULL)
+QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
 {
 }
 
@@ -1769,7 +1769,7 @@ QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
 	, m_p2(other.m_p2)
 	, m_cnv(other.m_cnv)
 	, m_ts1(other.m_ts1)
-	, m_transform(NULL)
+	, m_transform(nullptr)
 {
 	if (other.m_transform)
 		m_transform = other.m_transform->copy();
@@ -1799,7 +1799,7 @@ QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
 	m_ts1 = other.m_ts1;
 
 	delete m_transform;
-	m_transform = NULL;
+	m_transform = nullptr;
 
 	if (other.m_transform)
 		m_transform = other.m_transform->copy();
@@ -2146,7 +2146,7 @@ uint QwtDynGridLayout::itemCount() const
 QLayoutItem* QwtDynGridLayout::itemAt(int index) const
 {
 	if (index < 0 || index >= m_data->itemList.count())
-		return NULL;
+		return nullptr;
 
 	return m_data->itemList.at(index);
 }
@@ -2161,7 +2161,7 @@ QLayoutItem* QwtDynGridLayout::itemAt(int index) const
 QLayoutItem* QwtDynGridLayout::takeAt(int index)
 {
 	if (index < 0 || index >= m_data->itemList.count())
-		return NULL;
+		return nullptr;
 
 	m_data->isDirty = true;
 	return m_data->itemList.takeAt(index);
@@ -2223,8 +2223,8 @@ void QwtDynGridLayout::setGeometry(const QRect& rect)
 	const QList< QRect > itemGeometries = layoutItems(rect, m_data->numColumns);
 
 	int index = 0;
-	for (QList< QLayoutItem* >::const_iterator it = m_data->itemList.constBegin(); it != m_data->itemList.constEnd(); ++it) {
-		(*it)->setGeometry(itemGeometries[ index ]);
+	for (auto* item : qwt_as_const(m_data->itemList)) {
+		item->setGeometry(itemGeometries[ index ]);
 		index++;
 	}
 }
@@ -3917,7 +3917,7 @@ void QwtMatrixRasterData::update()
 
 #if QT_VERSION >= 0x050000
 
-typedef qint64 QwtJulianDay;
+using QwtJulianDay                              = qint64;
 static const QwtJulianDay cs_date_minJulianDayD = Q_INT64_C(-784350574879);
 static const QwtJulianDay cs_date_maxJulianDayD = Q_INT64_C(784354017364);
 
@@ -3927,7 +3927,7 @@ static const QwtJulianDay cs_date_maxJulianDayD = Q_INT64_C(784354017364);
 // there is QDate::fromJulianDay( int ). That's why
 // we have the range [ 1, INT_MAX ]
 
-typedef int QwtJulianDay;
+using QwtJulianDay                              = int;
 static const QwtJulianDay cs_date_minJulianDayD = 1;
 static const QwtJulianDay cs_date_maxJulianDayD = std::numeric_limits< int >::max();
 
@@ -4928,105 +4928,106 @@ QDebug operator<<( QDebug debug, const QwtPointPolar& point )
 
 namespace QwtClip
 {
-	// some templates used for inlining
-	template< class Point, typename T > class LeftEdge;
-	template< class Point, typename T > class RightEdge;
-	template< class Point, typename T > class TopEdge;
-	template< class Point, typename T > class BottomEdge;
+// some templates used for inlining
+template< class Point, typename T >
+class LeftEdge;
+template< class Point, typename T >
+class RightEdge;
+template< class Point, typename T >
+class TopEdge;
+template< class Point, typename T >
+class BottomEdge;
 }
 
 template< class Point, typename Value >
 class QwtClip::LeftEdge
 {
-  public:
-	inline LeftEdge( Value x1, Value, Value, Value ):
-		m_x1( x1 )
+public:
+	inline LeftEdge(Value x1, Value, Value, Value) : m_x1(x1)
 	{
 	}
 
-	inline bool isInside( const Point& p  ) const
+	inline bool isInside(const Point& p) const
 	{
 		return p.x() >= m_x1;
 	}
 
-	inline Point intersection( const Point& p1, const Point& p2 ) const
+	inline Point intersection(const Point& p1, const Point& p2) const
 	{
-		double dy = ( p1.y() - p2.y() ) / double( p1.x() - p2.x() );
-		return Point( m_x1, static_cast< Value >( p2.y() + ( m_x1 - p2.x() ) * dy ) );
+		double dy = (p1.y() - p2.y()) / double(p1.x() - p2.x());
+		return Point(m_x1, static_cast< Value >(p2.y() + (m_x1 - p2.x()) * dy));
 	}
-  private:
+
+private:
 	const Value m_x1;
 };
 
 template< class Point, typename Value >
 class QwtClip::RightEdge
 {
-  public:
-	inline RightEdge( Value, Value x2, Value, Value ):
-		m_x2( x2 )
+public:
+	inline RightEdge(Value, Value x2, Value, Value) : m_x2(x2)
 	{
 	}
 
-	inline bool isInside( const Point& p  ) const
+	inline bool isInside(const Point& p) const
 	{
 		return p.x() <= m_x2;
 	}
 
-	inline Point intersection( const Point& p1, const Point& p2 ) const
+	inline Point intersection(const Point& p1, const Point& p2) const
 	{
-		double dy = ( p1.y() - p2.y() ) / double( p1.x() - p2.x() );
-		return Point( m_x2, static_cast< Value >( p2.y() + ( m_x2 - p2.x() ) * dy ) );
+		double dy = (p1.y() - p2.y()) / double(p1.x() - p2.x());
+		return Point(m_x2, static_cast< Value >(p2.y() + (m_x2 - p2.x()) * dy));
 	}
 
-  private:
+private:
 	const Value m_x2;
 };
 
 template< class Point, typename Value >
 class QwtClip::TopEdge
 {
-  public:
-	inline TopEdge( Value, Value, Value y1, Value ):
-		m_y1( y1 )
+public:
+	inline TopEdge(Value, Value, Value y1, Value) : m_y1(y1)
 	{
 	}
 
-	inline bool isInside( const Point& p  ) const
+	inline bool isInside(const Point& p) const
 	{
 		return p.y() >= m_y1;
 	}
 
-	inline Point intersection( const Point& p1, const Point& p2 ) const
+	inline Point intersection(const Point& p1, const Point& p2) const
 	{
-		double dx = ( p1.x() - p2.x() ) / double( p1.y() - p2.y() );
-		return Point( static_cast< Value >( p2.x() + ( m_y1 - p2.y() ) * dx ), m_y1 );
+		double dx = (p1.x() - p2.x()) / double(p1.y() - p2.y());
+		return Point(static_cast< Value >(p2.x() + (m_y1 - p2.y()) * dx), m_y1);
 	}
 
-  private:
+private:
 	const Value m_y1;
 };
 
 template< class Point, typename Value >
 class QwtClip::BottomEdge
 {
-  public:
-	inline BottomEdge( Value, Value, Value, Value y2 ):
-		m_y2( y2 )
+public:
+	inline BottomEdge(Value, Value, Value, Value y2) : m_y2(y2)
 	{
 	}
 
-	inline bool isInside( const Point& p ) const
+	inline bool isInside(const Point& p) const
 	{
 		return p.y() <= m_y2;
 	}
 
-	inline Point intersection( const Point& p1, const Point& p2 ) const
+	inline Point intersection(const Point& p1, const Point& p2) const
 	{
-		double dx = ( p1.x() - p2.x() ) / double( p1.y() - p2.y() );
-		return Point( static_cast< Value >( p2.x() + ( m_y2 - p2.y() ) * dx ), m_y2 );
+		double dx = (p1.x() - p2.x()) / double(p1.y() - p2.y());
+		return Point(static_cast< Value >(p2.x() + (m_y2 - p2.y()) * dx), m_y2);
 	}
 
-  private:
+private:
 	const Value m_y2;
 };
 
@@ -5035,14 +5036,14 @@ using namespace QwtClip;
 template< class Polygon, class Rect, typename T >
 class QwtPolygonClipper
 {
-	typedef typename Polygon::value_type Point;
-  public:
-	explicit QwtPolygonClipper( const Rect& clipRect ):
-		m_clipRect( clipRect )
+	using Point = typename Polygon::value_type;
+
+public:
+	explicit QwtPolygonClipper(const Rect& clipRect) : m_clipRect(clipRect)
 	{
 	}
 
-	void clipPolygon( Polygon& points1, bool closePolygon ) const
+	void clipPolygon(Polygon& points1, bool closePolygon) const
 	{
 #if 0
 		if ( m_clipRect.contains( points1.boundingRect() ) )
@@ -5050,75 +5051,63 @@ class QwtPolygonClipper
 #endif
 
 		Polygon points2;
-		points2.reserve( qMin( 256, points1.size() ) );
+		points2.reserve(qMin(256, points1.size()));
 
-		clipEdge< LeftEdge< Point, T > >( closePolygon, points1, points2 );
-		clipEdge< RightEdge< Point, T > >( closePolygon, points2, points1 );
-		clipEdge< TopEdge< Point, T > >( closePolygon, points1, points2 );
-		clipEdge< BottomEdge< Point, T > >( closePolygon, points2, points1 );
+		clipEdge< LeftEdge< Point, T > >(closePolygon, points1, points2);
+		clipEdge< RightEdge< Point, T > >(closePolygon, points2, points1);
+		clipEdge< TopEdge< Point, T > >(closePolygon, points1, points2);
+		clipEdge< BottomEdge< Point, T > >(closePolygon, points2, points1);
 	}
 
-  private:
+private:
 	template< class Edge >
-	inline void clipEdge( bool closePolygon,
-		const Polygon& points, Polygon& clippedPoints ) const
+	inline void clipEdge(bool closePolygon, const Polygon& points, Polygon& clippedPoints) const
 	{
 		clippedPoints.clear();
 
-		if ( points.size() < 2 )
-		{
-			if ( points.size() == 1 )
-				clippedPoints += points[0];
+		if (points.size() < 2) {
+			if (points.size() == 1)
+				clippedPoints += points[ 0 ];
 
 			return;
 		}
 
-		const Edge edge( m_clipRect.x(), m_clipRect.x() + m_clipRect.width(),
-			m_clipRect.y(), m_clipRect.y() + m_clipRect.height() );
+		const Edge edge(
+			m_clipRect.x(), m_clipRect.x() + m_clipRect.width(), m_clipRect.y(), m_clipRect.y() + m_clipRect.height());
 
-		if ( !closePolygon )
-		{
+		if (!closePolygon) {
 			const Point& p1 = points.first();
 
-			if ( edge.isInside( p1 ) )
+			if (edge.isInside(p1))
 				clippedPoints += p1;
-		}
-		else
-		{
+		} else {
 			const Point& p1 = points.first();
 			const Point& p2 = points.last();
 
-			if ( edge.isInside( p1 ) )
-			{
-				if ( !edge.isInside( p2 ) )
-					clippedPoints += edge.intersection( p1, p2 );
+			if (edge.isInside(p1)) {
+				if (!edge.isInside(p2))
+					clippedPoints += edge.intersection(p1, p2);
 
 				clippedPoints += p1;
-			}
-			else if ( edge.isInside( p2 ) )
-			{
-				clippedPoints += edge.intersection( p1, p2 );
+			} else if (edge.isInside(p2)) {
+				clippedPoints += edge.intersection(p1, p2);
 			}
 		}
 
 		const uint nPoints = points.size();
-		const Point* p = points.constData();
+		const Point* p     = points.constData();
 
-		for ( uint i = 1; i < nPoints; i++ )
-		{
-			const Point& p1 = p[i];
-			const Point& p2 = p[i - 1];
+		for (uint i = 1; i < nPoints; i++) {
+			const Point& p1 = p[ i ];
+			const Point& p2 = p[ i - 1 ];
 
-			if ( edge.isInside( p1 ) )
-			{
-				if ( !edge.isInside( p2 ) )
-					clippedPoints += edge.intersection( p1, p2 );
+			if (edge.isInside(p1)) {
+				if (!edge.isInside(p2))
+					clippedPoints += edge.intersection(p1, p2);
 
 				clippedPoints += p1;
-			}
-			else if ( edge.isInside( p2 ) )
-			{
-				clippedPoints += edge.intersection( p1, p2 );
+			} else if (edge.isInside(p2)) {
+				clippedPoints += edge.intersection(p1, p2);
 			}
 		}
 	}
@@ -5128,11 +5117,11 @@ class QwtPolygonClipper
 
 class QwtCircleClipper
 {
-  public:
-	explicit QwtCircleClipper( const QRectF& r );
-	QVector< QwtInterval > clipCircle( const QPointF&, double radius ) const;
+public:
+	explicit QwtCircleClipper(const QRectF& r);
+	QVector< QwtInterval > clipCircle(const QPointF&, double radius) const;
 
-  private:
+private:
 	enum Edge
 	{
 		Left,
@@ -5143,84 +5132,70 @@ class QwtCircleClipper
 		NEdges
 	};
 
-	QVector< QPointF > cuttingPoints(
-		Edge, const QPointF& pos, double radius ) const;
+	QVector< QPointF > cuttingPoints(Edge, const QPointF& pos, double radius) const;
 
-	double toAngle( const QPointF&, const QPointF& ) const;
+	double toAngle(const QPointF&, const QPointF&) const;
 
 	const QRectF m_rect;
 };
 
-QwtCircleClipper::QwtCircleClipper( const QRectF& r )
-	: m_rect( r )
+QwtCircleClipper::QwtCircleClipper(const QRectF& r) : m_rect(r)
 {
 }
 
-QVector< QwtInterval > QwtCircleClipper::clipCircle(
-	const QPointF& pos, double radius ) const
+QVector< QwtInterval > QwtCircleClipper::clipCircle(const QPointF& pos, double radius) const
 {
 	// using QVarLengthArray TODO ...
 
 	QVector< QPointF > points;
-	for ( int edge = 0; edge < NEdges; edge++ )
-		points += cuttingPoints( static_cast< Edge >( edge ), pos, radius );
+	for (int edge = 0; edge < NEdges; edge++)
+		points += cuttingPoints(static_cast< Edge >(edge), pos, radius);
 
 	QVector< QwtInterval > intv;
-	if ( points.size() <= 0 )
-	{
-		QRectF cRect( 0, 0, 2 * radius, 2 * radius );
-		cRect.moveCenter( pos );
-		if ( m_rect.contains( cRect ) )
-			intv += QwtInterval( 0.0, 2 * M_PI );
-	}
-	else
-	{
+	if (points.size() <= 0) {
+		QRectF cRect(0, 0, 2 * radius, 2 * radius);
+		cRect.moveCenter(pos);
+		if (m_rect.contains(cRect))
+			intv += QwtInterval(0.0, 2 * M_PI);
+	} else {
 		QVector< double > angles;
-		angles.reserve( points.size() );
+		angles.reserve(points.size());
 
-		for ( int i = 0; i < points.size(); i++ )
-			angles += toAngle( pos, points[i] );
+		for (int i = 0; i < points.size(); i++)
+			angles += toAngle(pos, points[ i ]);
 
-		std::sort( angles.begin(), angles.end() );
+		std::sort(angles.begin(), angles.end());
 
-		const int in = m_rect.contains( qwtPolar2Pos( pos, radius,
-			angles[0] + ( angles[1] - angles[0] ) / 2 ) );
+		const int in = m_rect.contains(qwtPolar2Pos(pos, radius, angles[ 0 ] + (angles[ 1 ] - angles[ 0 ]) / 2));
 
-		intv.reserve( angles.size() / 2 );
-		if ( in )
-		{
-			for ( int i = 0; i < angles.size() - 1; i += 2 )
-				intv += QwtInterval( angles[i], angles[i + 1] );
-		}
-		else
-		{
-			for ( int i = 1; i < angles.size() - 1; i += 2 )
-				intv += QwtInterval( angles[i], angles[i + 1] );
+		intv.reserve(angles.size() / 2);
+		if (in) {
+			for (int i = 0; i < angles.size() - 1; i += 2)
+				intv += QwtInterval(angles[ i ], angles[ i + 1 ]);
+		} else {
+			for (int i = 1; i < angles.size() - 1; i += 2)
+				intv += QwtInterval(angles[ i ], angles[ i + 1 ]);
 
-			intv += QwtInterval( angles.last(), angles.first() );
+			intv += QwtInterval(angles.last(), angles.first());
 		}
 	}
 
 	return intv;
 }
 
-double QwtCircleClipper::toAngle(
-	const QPointF& from, const QPointF& to ) const
+double QwtCircleClipper::toAngle(const QPointF& from, const QPointF& to) const
 {
-	if ( from.x() == to.x() )
+	if (from.x() == to.x())
 		return from.y() <= to.y() ? M_PI / 2.0 : 3 * M_PI / 2.0;
 
-	const double m = qAbs( ( to.y() - from.y() ) / ( to.x() - from.x() ) );
+	const double m = qAbs((to.y() - from.y()) / (to.x() - from.x()));
 
-	double angle = std::atan( m );
-	if ( to.x() > from.x() )
-	{
-		if ( to.y() > from.y() )
+	double angle = std::atan(m);
+	if (to.x() > from.x()) {
+		if (to.y() > from.y())
 			angle = 2 * M_PI - angle;
-	}
-	else
-	{
-		if ( to.y() > from.y() )
+	} else {
+		if (to.y() > from.y())
 			angle = M_PI + angle;
 		else
 			angle = M_PI - angle;
@@ -5229,39 +5204,33 @@ double QwtCircleClipper::toAngle(
 	return angle;
 }
 
-QVector< QPointF > QwtCircleClipper::cuttingPoints(
-	Edge edge, const QPointF& pos, double radius ) const
+QVector< QPointF > QwtCircleClipper::cuttingPoints(Edge edge, const QPointF& pos, double radius) const
 {
 	QVector< QPointF > points;
 
-	if ( edge == Left || edge == Right )
-	{
-		const double x = ( edge == Left ) ? m_rect.left() : m_rect.right();
-		if ( qAbs( pos.x() - x ) < radius )
-		{
-			const double off = std::sqrt( qwtSqr( radius ) - qwtSqr( pos.x() - x ) );
+	if (edge == Left || edge == Right) {
+		const double x = (edge == Left) ? m_rect.left() : m_rect.right();
+		if (qAbs(pos.x() - x) < radius) {
+			const double off  = std::sqrt(qwtSqr(radius) - qwtSqr(pos.x() - x));
 			const double m_y1 = pos.y() + off;
-			if ( m_y1 >= m_rect.top() && m_y1 <= m_rect.bottom() )
-				points += QPointF( x, m_y1 );
+			if (m_y1 >= m_rect.top() && m_y1 <= m_rect.bottom())
+				points += QPointF(x, m_y1);
 
 			const double m_y2 = pos.y() - off;
-			if ( m_y2 >= m_rect.top() && m_y2 <= m_rect.bottom() )
-				points += QPointF( x, m_y2 );
+			if (m_y2 >= m_rect.top() && m_y2 <= m_rect.bottom())
+				points += QPointF(x, m_y2);
 		}
-	}
-	else
-	{
-		const double y = ( edge == Top ) ? m_rect.top() : m_rect.bottom();
-		if ( qAbs( pos.y() - y ) < radius )
-		{
-			const double off = std::sqrt( qwtSqr( radius ) - qwtSqr( pos.y() - y ) );
-			const double x1 = pos.x() + off;
-			if ( x1 >= m_rect.left() && x1 <= m_rect.right() )
-				points += QPointF( x1, y );
+	} else {
+		const double y = (edge == Top) ? m_rect.top() : m_rect.bottom();
+		if (qAbs(pos.y() - y) < radius) {
+			const double off = std::sqrt(qwtSqr(radius) - qwtSqr(pos.y() - y));
+			const double x1  = pos.x() + off;
+			if (x1 >= m_rect.left() && x1 <= m_rect.right())
+				points += QPointF(x1, y);
 
 			const double m_x2 = pos.x() - off;
-			if ( m_x2 >= m_rect.left() && m_x2 <= m_rect.right() )
-				points += QPointF( m_x2, y );
+			if (m_x2 >= m_rect.left() && m_x2 <= m_rect.right())
+				points += QPointF(m_x2, y);
 		}
 	}
 	return points;
@@ -5274,18 +5243,17 @@ QVector< QPointF > QwtCircleClipper::cuttingPoints(
    \param polygon Polygon IN/OUT
    \param closePolygon True, when the polygon is closed
  */
-void QwtClipper::clipPolygon(
-	const QRectF& clipRect, QPolygon& polygon, bool closePolygon )
+void QwtClipper::clipPolygon(const QRectF& clipRect, QPolygon& polygon, bool closePolygon)
 {
-	const int minX = qCeil( clipRect.left() );
-	const int maxX = qFloor( clipRect.right() );
-	const int minY = qCeil( clipRect.top() );
-	const int maxY = qFloor( clipRect.bottom() );
+	const int minX = qCeil(clipRect.left());
+	const int maxX = qFloor(clipRect.right());
+	const int minY = qCeil(clipRect.top());
+	const int maxY = qFloor(clipRect.bottom());
 
-	const QRect r( minX, minY, maxX - minX, maxY - minY );
+	const QRect r(minX, minY, maxX - minX, maxY - minY);
 
-	QwtPolygonClipper< QPolygon, QRect, int > clipper( r );
-	clipper.clipPolygon( polygon, closePolygon );
+	QwtPolygonClipper< QPolygon, QRect, int > clipper(r);
+	clipper.clipPolygon(polygon, closePolygon);
 }
 
 /*!
@@ -5295,11 +5263,10 @@ void QwtClipper::clipPolygon(
    \param polygon Polygon IN/OUT
    \param closePolygon True, when the polygon is closed
  */
-void QwtClipper::clipPolygon(
-	const QRect& clipRect, QPolygon& polygon, bool closePolygon )
+void QwtClipper::clipPolygon(const QRect& clipRect, QPolygon& polygon, bool closePolygon)
 {
-	QwtPolygonClipper< QPolygon, QRect, int > clipper( clipRect );
-	clipper.clipPolygon( polygon, closePolygon );
+	QwtPolygonClipper< QPolygon, QRect, int > clipper(clipRect);
+	clipper.clipPolygon(polygon, closePolygon);
 }
 
 /*!
@@ -5309,11 +5276,10 @@ void QwtClipper::clipPolygon(
    \param polygon Polygon IN/OUT
    \param closePolygon True, when the polygon is closed
  */
-void QwtClipper::clipPolygonF(
-	const QRectF& clipRect, QPolygonF& polygon, bool closePolygon )
+void QwtClipper::clipPolygonF(const QRectF& clipRect, QPolygonF& polygon, bool closePolygon)
 {
-	QwtPolygonClipper< QPolygonF, QRectF, double > clipper( clipRect );
-	clipper.clipPolygon( polygon, closePolygon );
+	QwtPolygonClipper< QPolygonF, QRectF, double > clipper(clipRect);
+	clipper.clipPolygon(polygon, closePolygon);
 }
 
 /*!
@@ -5325,11 +5291,10 @@ void QwtClipper::clipPolygonF(
 
    \return Clipped polygon
  */
-QPolygon QwtClipper::clippedPolygon(
-	const QRectF& clipRect, const QPolygon& polygon, bool closePolygon )
+QPolygon QwtClipper::clippedPolygon(const QRectF& clipRect, const QPolygon& polygon, bool closePolygon)
 {
-	QPolygon points( polygon );
-	clipPolygon( clipRect, points, closePolygon );
+	QPolygon points(polygon);
+	clipPolygon(clipRect, points, closePolygon);
 
 	return points;
 }
@@ -5342,11 +5307,10 @@ QPolygon QwtClipper::clippedPolygon(
 
    \return Clipped polygon
  */
-QPolygon QwtClipper::clippedPolygon(
-	const QRect& clipRect, const QPolygon& polygon, bool closePolygon )
+QPolygon QwtClipper::clippedPolygon(const QRect& clipRect, const QPolygon& polygon, bool closePolygon)
 {
-	QPolygon points( polygon );
-	clipPolygon( clipRect, points, closePolygon );
+	QPolygon points(polygon);
+	clipPolygon(clipRect, points, closePolygon);
 
 	return points;
 }
@@ -5360,11 +5324,10 @@ QPolygon QwtClipper::clippedPolygon(
 
    \return Clipped polygon
  */
-QPolygonF QwtClipper::clippedPolygonF(
-	const QRectF& clipRect, const QPolygonF& polygon, bool closePolygon )
+QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& polygon, bool closePolygon)
 {
-	QPolygonF points( polygon );
-	clipPolygonF( clipRect, points, closePolygon );
+	QPolygonF points(polygon);
+	clipPolygonF(clipRect, points, closePolygon);
 
 	return points;
 }
@@ -5382,11 +5345,10 @@ QPolygonF QwtClipper::clippedPolygonF(
 
    \return Arcs of the circle
  */
-QVector< QwtInterval > QwtClipper::clipCircle( const QRectF& clipRect,
-	const QPointF& center, double radius )
+QVector< QwtInterval > QwtClipper::clipCircle(const QRectF& clipRect, const QPointF& center, double radius)
 {
-	QwtCircleClipper clipper( clipRect );
-	return clipper.clipCircle( center, radius );
+	QwtCircleClipper clipper(clipRect);
+	return clipper.clipCircle(center, radius);
 }
 
 /*** End of inlined file: qwt_clipper.cpp ***/
@@ -5407,48 +5369,48 @@ class QwtNullPaintDevice::PrivateData
 	QwtNullPaintDevice::Mode mode;
 };
 
-class QwtNullPaintDevice::PaintEngine QWT_FINAL : public QPaintEngine
+class QwtNullPaintDevice::PaintEngine final : public QPaintEngine
 {
   public:
 	PaintEngine();
 
-	virtual bool begin( QPaintDevice* ) QWT_OVERRIDE;
-	virtual bool end() QWT_OVERRIDE;
+	virtual bool begin( QPaintDevice* ) override;
+	virtual bool end() override;
 
-	virtual Type type () const QWT_OVERRIDE;
-	virtual void updateState(const QPaintEngineState&) QWT_OVERRIDE;
+	virtual Type type () const override;
+	virtual void updateState(const QPaintEngineState&) override;
 
-	virtual void drawRects(const QRect*, int ) QWT_OVERRIDE;
-	virtual void drawRects(const QRectF*, int ) QWT_OVERRIDE;
+	virtual void drawRects(const QRect*, int ) override;
+	virtual void drawRects(const QRectF*, int ) override;
 
-	virtual void drawLines(const QLine*, int ) QWT_OVERRIDE;
-	virtual void drawLines(const QLineF*, int ) QWT_OVERRIDE;
+	virtual void drawLines(const QLine*, int ) override;
+	virtual void drawLines(const QLineF*, int ) override;
 
-	virtual void drawEllipse(const QRectF&) QWT_OVERRIDE;
-	virtual void drawEllipse(const QRect&) QWT_OVERRIDE;
+	virtual void drawEllipse(const QRectF&) override;
+	virtual void drawEllipse(const QRect&) override;
 
-	virtual void drawPath(const QPainterPath&) QWT_OVERRIDE;
+	virtual void drawPath(const QPainterPath&) override;
 
-	virtual void drawPoints(const QPointF*, int ) QWT_OVERRIDE;
-	virtual void drawPoints(const QPoint*, int ) QWT_OVERRIDE;
-
-	virtual void drawPolygon(
-		const QPointF*, int, PolygonDrawMode ) QWT_OVERRIDE;
+	virtual void drawPoints(const QPointF*, int ) override;
+	virtual void drawPoints(const QPoint*, int ) override;
 
 	virtual void drawPolygon(
-		const QPoint*, int, PolygonDrawMode ) QWT_OVERRIDE;
+		const QPointF*, int, PolygonDrawMode ) override;
+
+	virtual void drawPolygon(
+		const QPoint*, int, PolygonDrawMode ) override;
 
 	virtual void drawPixmap(const QRectF&,
-		const QPixmap&, const QRectF&) QWT_OVERRIDE;
+		const QPixmap&, const QRectF&) override;
 
 	virtual void drawTextItem(
-		const QPointF&, const QTextItem&) QWT_OVERRIDE;
+		const QPointF&, const QTextItem&) override;
 
 	virtual void drawTiledPixmap(const QRectF&,
-		const QPixmap&, const QPointF& s) QWT_OVERRIDE;
+		const QPixmap&, const QPointF& s) override;
 
 	virtual void drawImage(const QRectF&, const QImage&,
-		const QRectF&, Qt::ImageConversionFlags ) QWT_OVERRIDE;
+		const QRectF&, Qt::ImageConversionFlags ) override;
 
   private:
 	QwtNullPaintDevice* nullDevice();
@@ -5485,7 +5447,7 @@ void QwtNullPaintDevice::PaintEngine::drawRects(
 	const QRect* rects, int rectCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5501,7 +5463,7 @@ void QwtNullPaintDevice::PaintEngine::drawRects(
 	const QRectF* rects, int rectCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5517,7 +5479,7 @@ void QwtNullPaintDevice::PaintEngine::drawLines(
 	const QLine* lines, int lineCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5533,7 +5495,7 @@ void QwtNullPaintDevice::PaintEngine::drawLines(
 	const QLineF* lines, int lineCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5549,7 +5511,7 @@ void QwtNullPaintDevice::PaintEngine::drawEllipse(
 	const QRectF& rect)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5565,7 +5527,7 @@ void QwtNullPaintDevice::PaintEngine::drawEllipse(
 	const QRect& rect)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5581,7 +5543,7 @@ void QwtNullPaintDevice::PaintEngine::drawPath(
 	const QPainterPath& path)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	device->drawPath( path );
@@ -5591,7 +5553,7 @@ void QwtNullPaintDevice::PaintEngine::drawPoints(
 	const QPointF* points, int pointCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5607,7 +5569,7 @@ void QwtNullPaintDevice::PaintEngine::drawPoints(
 	const QPoint* points, int pointCount)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5623,7 +5585,7 @@ void QwtNullPaintDevice::PaintEngine::drawPolygon(
 	const QPointF* points, int pointCount, PolygonDrawMode mode)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() == QwtNullPaintDevice::PathMode )
@@ -5651,7 +5613,7 @@ void QwtNullPaintDevice::PaintEngine::drawPolygon(
 	const QPoint* points, int pointCount, PolygonDrawMode mode)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() == QwtNullPaintDevice::PathMode )
@@ -5679,7 +5641,7 @@ void QwtNullPaintDevice::PaintEngine::drawPixmap(
 	const QRectF& rect, const QPixmap& pm, const QRectF& subRect )
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	device->drawPixmap( rect, pm, subRect );
@@ -5689,7 +5651,7 @@ void QwtNullPaintDevice::PaintEngine::drawTextItem(
 	const QPointF& pos, const QTextItem& textItem)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5706,7 +5668,7 @@ void QwtNullPaintDevice::PaintEngine::drawTiledPixmap(
 	const QPointF& subRect)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -5723,7 +5685,7 @@ void QwtNullPaintDevice::PaintEngine::drawImage(
 	const QRectF& subRect, Qt::ImageConversionFlags flags)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	device->drawImage( rect, image, subRect, flags );
@@ -5733,7 +5695,7 @@ void QwtNullPaintDevice::PaintEngine::updateState(
 	const QPaintEngineState& engineState)
 {
 	QwtNullPaintDevice* device = nullDevice();
-	if ( device == NULL )
+	if ( device == nullptr )
 		return;
 
 	device->updateState( engineState );
@@ -5742,14 +5704,14 @@ void QwtNullPaintDevice::PaintEngine::updateState(
 inline QwtNullPaintDevice* QwtNullPaintDevice::PaintEngine::nullDevice()
 {
 	if ( !isActive() )
-		return NULL;
+		return nullptr;
 
 	return static_cast< QwtNullPaintDevice* >( paintDevice() );
 }
 
 //! Constructor
 QwtNullPaintDevice::QwtNullPaintDevice():
-	m_engine( NULL )
+	m_engine( nullptr )
 {
 	m_data = new PrivateData;
 }
@@ -5784,7 +5746,7 @@ QwtNullPaintDevice::Mode QwtNullPaintDevice::mode() const
 //! See QPaintDevice::paintEngine()
 QPaintEngine* QwtNullPaintDevice::paintEngine() const
 {
-	if ( m_engine == NULL )
+	if ( m_engine == nullptr )
 	{
 		QwtNullPaintDevice* that =
 			const_cast< QwtNullPaintDevice* >( this );
@@ -6940,7 +6902,7 @@ qreal QwtGraphic::widthForHeight( qreal height ) const
  */
 void QwtGraphic::render( QPainter* painter ) const
 {
-	renderGraphic( painter, NULL );
+	renderGraphic( painter, nullptr );
 }
 
 void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform ) const
@@ -7060,7 +7022,7 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
 	}
 	else
 	{
-		renderGraphic( painter, NULL );
+		renderGraphic( painter, nullptr );
 	}
 
 	painter->setTransform( transform );
@@ -7301,7 +7263,7 @@ QImage QwtGraphic::toImage( qreal devicePixelRatio ) const
 void QwtGraphic::drawPath( const QPainterPath& path )
 {
 	const QPainter* painter = paintEngine()->painter();
-	if ( painter == NULL )
+	if ( painter == nullptr )
 		return;
 
 	m_data->commands += QwtPainterCommand( path );
@@ -7341,7 +7303,7 @@ void QwtGraphic::drawPixmap( const QRectF& rect,
 	const QPixmap& pixmap, const QRectF& subRect )
 {
 	const QPainter* painter = paintEngine()->painter();
-	if ( painter == NULL )
+	if ( painter == nullptr )
 		return;
 
 	m_data->commands += QwtPainterCommand( rect, pixmap, subRect );
@@ -7366,7 +7328,7 @@ void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
 	const QRectF& subRect, Qt::ImageConversionFlags flags )
 {
 	const QPainter* painter = paintEngine()->painter();
-	if ( painter == NULL )
+	if ( painter == nullptr )
 		return;
 
 	m_data->commands += QwtPainterCommand( rect, image, subRect, flags );
@@ -7463,7 +7425,7 @@ void QwtGraphic::setCommands( const QVector< QwtPainterCommand >& commands )
 
 	QPainter painter( this );
 	for ( int i = 0; i < numCommands; i++ )
-		qwtExecCommand( &painter, cmds[i], noRenderHints, noTransform, NULL );
+		qwtExecCommand( &painter, cmds[i], noRenderHints, noTransform, nullptr );
 
 	painter.end();
 }
@@ -7675,7 +7637,7 @@ bool QwtEventPattern::mouseMatch( MousePatternCode code,
 bool QwtEventPattern::mouseMatch( const MousePattern& pattern,
 	const QMouseEvent* event ) const
 {
-	if ( event == NULL )
+	if ( event == nullptr )
 		return false;
 
 	const MousePattern mousePattern( event->button(), event->modifiers() );
@@ -7721,7 +7683,7 @@ bool QwtEventPattern::keyMatch( KeyPatternCode code,
 bool QwtEventPattern::keyMatch(
 	const KeyPattern& pattern, const QKeyEvent* event ) const
 {
-	if ( event == NULL )
+	if ( event == nullptr )
 		return false;
 
 	const KeyPattern keyPattern( event->key(), event->modifiers() );
@@ -8616,10 +8578,8 @@ void QwtPainter::drawFrame(QPainter* painter,
 			painter->drawPath(path5);
 		} else {
 			const QRectF outerRect = rect.adjusted(0.0, 0.0, -1.0, -1.0);
-			const QRectF innerRect = outerRect.adjusted(frameWidth - 1.0,
-														frameWidth - 1.0,
-														-(frameWidth - 1.0),
-														-(frameWidth - 1.0));
+			const QRectF innerRect =
+				outerRect.adjusted(frameWidth - 1.0, frameWidth - 1.0, -(frameWidth - 1.0), -(frameWidth - 1.0));
 
 			QPainterPath path1;
 			path1.moveTo(outerRect.bottomLeft());
@@ -8930,8 +8890,8 @@ void QwtPainter::fillPixmap(const QWidget* widget, QPixmap& pixmap, const QPoint
 void QwtPainter::fillRegion(QPainter* painter, const QRegion& region)
 {
 #if QT_VERSION >= 0x050800
-	for (QRegion::const_iterator it = region.cbegin(); it != region.cend(); ++it) {
-		painter->drawRect(*it);
+	for (const QRect& r : region) {
+		painter->drawRect(r);
 	}
 #else
 	painter->drawRects(region.rects());
@@ -9103,11 +9063,8 @@ void QwtPainter::drawCanvasBackgound(QPainter* painter, QWidget* canvas)
 
 	QPainterPath borderClip;
 
-	(void)QMetaObject::invokeMethod(canvas,
-									"borderPath",
-									Qt::DirectConnection,
-									Q_RETURN_ARG(QPainterPath, borderClip),
-									Q_ARG(QRect, canvas->rect()));
+	(void)QMetaObject::invokeMethod(
+		canvas, "borderPath", Qt::DirectConnection, Q_RETURN_ARG(QPainterPath, borderClip), Q_ARG(QRect, canvas->rect()));
 
 	if (!borderClip.isEmpty()) {
 		painter->setClipPath(borderClip, Qt::IntersectClip);
@@ -9236,12 +9193,12 @@ QFont QwtPainter::scaledFont(const QFont& font, const QPaintDevice* paintDevice)
 #else
 		class PaintDevice : public QPaintDevice
 		{
-			virtual QPaintEngine* paintEngine() const QWT_OVERRIDE
+			virtual QPaintEngine* paintEngine() const override
 			{
 				return nullptr;
 			}
 
-			virtual int metric(PaintDeviceMetric metric) const QWT_OVERRIDE
+			virtual int metric(PaintDeviceMetric metric) const override
 			{
 				if (metric == PdmDpiY) {
 					QScreen* screen = QGuiApplication::primaryScreen();
@@ -9767,7 +9724,7 @@ private:
 	TextEngineDict();
 	~TextEngineDict();
 
-	typedef QMap< int, QwtTextEngine* > EngineMap;
+	using EngineMap = QMap< int, QwtTextEngine* >;
 
 	inline const QwtTextEngine* engine(EngineMap::const_iterator& it) const
 	{
@@ -9827,7 +9784,7 @@ void TextEngineDict::setTextEngine(QwtText::TextFormat format, QwtTextEngine* en
 	if (format == QwtText::AutoText)
 		return;
 
-	if (format == QwtText::PlainText && engine == NULL)
+	if (format == QwtText::PlainText && engine == nullptr)
 		return;
 
 	EngineMap::const_iterator it = m_map.constFind(format);
@@ -9836,13 +9793,13 @@ void TextEngineDict::setTextEngine(QwtText::TextFormat format, QwtTextEngine* en
 		m_map.remove(format);
 	}
 
-	if (engine != NULL)
+	if (engine != nullptr)
 		m_map.insert(format, engine);
 }
 
 const QwtTextEngine* TextEngineDict::textEngine(QwtText::TextFormat format) const
 {
-	const QwtTextEngine* e = NULL;
+	const QwtTextEngine* e = nullptr;
 
 	EngineMap::const_iterator it = m_map.find(format);
 	if (it != m_map.end())
@@ -9856,7 +9813,7 @@ class QwtText::PrivateData
 {
 public:
 	PrivateData()
-		: renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(NULL)
+		: renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
 	{
 	}
 
@@ -10376,7 +10333,7 @@ const QwtTextEngine* QwtText::textEngine(const QString& text, QwtText::TextForma
    With setTextEngine it is possible to extend Qwt with
    other types of text formats.
 
-   For QwtText::PlainText it is not allowed to assign a engine == NULL.
+   For QwtText::PlainText it is not allowed to assign a engine == nullptr.
 
    \param format Text format
    \param engine Text engine
@@ -10394,7 +10351,7 @@ void QwtText::setTextEngine(QwtText::TextFormat format, QwtTextEngine* engine)
    textEngine can be used to find out if a text format is supported.
 
    \param format Text format
-   \return The text engine, or NULL if no engine is available.
+   \return The text engine, or nullptr if no engine is available.
  */
 const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
 {
@@ -10742,13 +10699,13 @@ int QwtTextLabel::defaultIndent() const
 
 static QImage::Format qwtMaskImageFormat()
 {
-	if ( QwtPainter::isX11GraphicsSystem() )
+	if (QwtPainter::isX11GraphicsSystem())
 		return QImage::Format_ARGB32;
 
 	return QImage::Format_ARGB32_Premultiplied;
 }
 
-static QRegion qwtAlphaMask( const QImage& image, const QRegion& region )
+static QRegion qwtAlphaMask(const QImage& image, const QRegion& region)
 {
 	const int w = image.width();
 	const int h = image.height();
@@ -10757,43 +10714,32 @@ static QRegion qwtAlphaMask( const QImage& image, const QRegion& region )
 	QRect rect;
 
 #if QT_VERSION >= 0x050800
-	for ( QRegion::const_iterator it = region.cbegin();
-		it != region.cend(); ++it )
-	{
-		const QRect& r = *it;
+	for (const QRect& r : region) {
 #else
 	const QVector< QRect > rects = region.rects();
-	for ( int i = 0; i < rects.size(); i++ )
-	{
-		const QRect& r = rects[i];
+	for (int i = 0; i < rects.size(); i++) {
+		const QRect& r = rects[ i ];
 #endif
 		int x1, x2, y1, y2;
-		r.getCoords( &x1, &y1, &x2, &y2 );
+		r.getCoords(&x1, &y1, &x2, &y2);
 
-		x1 = qMax( x1, 0 );
-		x2 = qMin( x2, w - 1 );
-		y1 = qMax( y1, 0 );
-		y2 = qMin( y2, h - 1 );
+		x1 = qMax(x1, 0);
+		x2 = qMin(x2, w - 1);
+		y1 = qMax(y1, 0);
+		y2 = qMin(y2, h - 1);
 
-		for ( int y = y1; y <= y2; ++y )
-		{
+		for (int y = y1; y <= y2; ++y) {
 			bool inRect = false;
-			int rx0 = -1;
+			int rx0     = -1;
 
-			const uint* line =
-				reinterpret_cast< const uint* > ( image.scanLine( y ) ) + x1;
-			for ( int x = x1; x <= x2; x++ )
-			{
-				const bool on = ( ( *line++ >> 24 ) != 0 );
-				if ( on != inRect )
-				{
-					if ( inRect  )
-					{
-						rect.setCoords( rx0, y, x - 1, y );
+			const uint* line = reinterpret_cast< const uint* >(image.scanLine(y)) + x1;
+			for (int x = x1; x <= x2; x++) {
+				const bool on = ((*line++ >> 24) != 0);
+				if (on != inRect) {
+					if (inRect) {
+						rect.setCoords(rx0, y, x - 1, y);
 						mask += rect;
-					}
-					else
-					{
+					} else {
 						rx0 = x;
 					}
 
@@ -10801,10 +10747,9 @@ static QRegion qwtAlphaMask( const QImage& image, const QRegion& region )
 				}
 			}
 
-			if ( inRect )
-			{
-				rect.setCoords( rx0, y, x2, y );
-				mask = mask.united( rect );
+			if (inRect) {
+				rect.setCoords(rx0, y, x2, y);
+				mask = mask.united(rect);
 			}
 		}
 	}
@@ -10814,11 +10759,9 @@ static QRegion qwtAlphaMask( const QImage& image, const QRegion& region )
 
 class QwtWidgetOverlay::PrivateData
 {
-  public:
+public:
 	PrivateData()
-		: maskMode( QwtWidgetOverlay::MaskHint )
-		, renderMode( QwtWidgetOverlay::AutoRenderMode )
-		, rgbaBuffer( NULL )
+		: maskMode(QwtWidgetOverlay::MaskHint), renderMode(QwtWidgetOverlay::AutoRenderMode), rgbaBuffer(nullptr)
 	{
 	}
 
@@ -10829,10 +10772,9 @@ class QwtWidgetOverlay::PrivateData
 
 	void resetRgbaBuffer()
 	{
-		if ( rgbaBuffer )
-		{
-			std::free( rgbaBuffer );
-			rgbaBuffer = NULL;
+		if (rgbaBuffer) {
+			std::free(rgbaBuffer);
+			rgbaBuffer = nullptr;
 		}
 	}
 
@@ -10845,19 +10787,17 @@ class QwtWidgetOverlay::PrivateData
    \brief Constructor
    \param widget Parent widget, where the overlay is aligned to
  */
-QwtWidgetOverlay::QwtWidgetOverlay( QWidget* widget )
-	: QWidget( widget )
+QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 {
 	m_data = new PrivateData;
 
-	setAttribute( Qt::WA_TransparentForMouseEvents );
-	setAttribute( Qt::WA_NoSystemBackground );
-	setFocusPolicy( Qt::NoFocus );
+	setAttribute(Qt::WA_TransparentForMouseEvents);
+	setAttribute(Qt::WA_NoSystemBackground);
+	setFocusPolicy(Qt::NoFocus);
 
-	if ( widget )
-	{
-		resize( widget->size() );
-		widget->installEventFilter( this );
+	if (widget) {
+		resize(widget->size());
+		widget->installEventFilter(this);
 	}
 }
 
@@ -10873,10 +10813,9 @@ QwtWidgetOverlay::~QwtWidgetOverlay()
    \param mode New mode
    \sa maskMode()
  */
-void QwtWidgetOverlay::setMaskMode( MaskMode mode )
+void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 {
-	if ( mode != m_data->maskMode )
-	{
+	if (mode != m_data->maskMode) {
 		m_data->maskMode = mode;
 		m_data->resetRgbaBuffer();
 	}
@@ -10897,7 +10836,7 @@ QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 
    \sa RenderMode, renderMode()
  */
-void QwtWidgetOverlay::setRenderMode( RenderMode mode )
+void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
 	m_data->renderMode = mode;
 }
@@ -10926,36 +10865,31 @@ void QwtWidgetOverlay::updateMask()
 
 	QRegion mask;
 
-	if ( m_data->maskMode == QwtWidgetOverlay::MaskHint )
-	{
+	if (m_data->maskMode == QwtWidgetOverlay::MaskHint) {
 		mask = maskHint();
-	}
-	else if ( m_data->maskMode == QwtWidgetOverlay::AlphaMask )
-	{
+	} else if (m_data->maskMode == QwtWidgetOverlay::AlphaMask) {
 		// TODO: the image doesn't need to be larger than
 		//       the bounding rectangle of the hint !!
 
 		QRegion hint = maskHint();
-		if ( hint.isEmpty() )
-			hint += QRect( 0, 0, width(), height() );
+		if (hint.isEmpty())
+			hint += QRect(0, 0, width(), height());
 
 		// A fresh buffer from calloc() is usually faster
 		// than reinitializing an existing one with
 		// QImage::fill( 0 ) or memset()
 
-		m_data->rgbaBuffer = ( uchar* )::calloc( width() * height(), 4 );
+		m_data->rgbaBuffer = (uchar*)::calloc(width() * height(), 4);
 
-		QImage image( m_data->rgbaBuffer,
-			width(), height(), qwtMaskImageFormat() );
+		QImage image(m_data->rgbaBuffer, width(), height(), qwtMaskImageFormat());
 
-		QPainter painter( &image );
-		draw( &painter );
+		QPainter painter(&image);
+		draw(&painter);
 		painter.end();
 
-		mask = qwtAlphaMask( image, hint );
+		mask = qwtAlphaMask(image, hint);
 
-		if ( m_data->renderMode == QwtWidgetOverlay::DrawOverlay )
-		{
+		if (m_data->renderMode == QwtWidgetOverlay::DrawOverlay) {
 			// we don't need the buffer later
 			m_data->resetRgbaBuffer();
 		}
@@ -10964,14 +10898,14 @@ void QwtWidgetOverlay::updateMask()
 	// A bug in Qt initiates a full repaint of the widget
 	// when we change the mask, while we are visible !
 
-	setVisible( false );
+	setVisible(false);
 
-	if ( mask.isEmpty() )
+	if (mask.isEmpty())
 		clearMask();
 	else
-		setMask( mask );
+		setMask(mask);
 
-	setVisible( true );
+	setVisible(true);
 }
 
 /*!
@@ -10980,61 +10914,47 @@ void QwtWidgetOverlay::updateMask()
 
    \sa drawOverlay()
  */
-void QwtWidgetOverlay::paintEvent( QPaintEvent* event )
+void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 {
 	const QRegion& clipRegion = event->region();
 
-	QPainter painter( this );
+	QPainter painter(this);
 
 	bool useRgbaBuffer = false;
-	if ( m_data->renderMode == QwtWidgetOverlay::CopyAlphaMask )
-	{
+	if (m_data->renderMode == QwtWidgetOverlay::CopyAlphaMask) {
 		useRgbaBuffer = true;
-	}
-	else if ( m_data->renderMode == QwtWidgetOverlay::AutoRenderMode )
-	{
-		if ( painter.paintEngine()->type() == QPaintEngine::Raster )
+	} else if (m_data->renderMode == QwtWidgetOverlay::AutoRenderMode) {
+		if (painter.paintEngine()->type() == QPaintEngine::Raster)
 			useRgbaBuffer = true;
 	}
 
-	if ( m_data->rgbaBuffer && useRgbaBuffer )
-	{
-		const QImage image( m_data->rgbaBuffer,
-			width(), height(), qwtMaskImageFormat() );
+	if (m_data->rgbaBuffer && useRgbaBuffer) {
+		const QImage image(m_data->rgbaBuffer, width(), height(), qwtMaskImageFormat());
 
 		const int rectCount = clipRegion.rectCount();
 
-		if ( rectCount > 2000 )
-		{
+		if (rectCount > 2000) {
 			// the region is to complex
-			painter.setClipRegion( clipRegion );
+			painter.setClipRegion(clipRegion);
 
 			const QRect r = clipRegion.boundingRect();
-			painter.drawImage( r.topLeft(), image, r );
-		}
-		else
-		{
+			painter.drawImage(r.topLeft(), image, r);
+		} else {
 #if QT_VERSION >= 0x050800
-			for ( QRegion::const_iterator it = clipRegion.cbegin();
-				it != clipRegion.cend(); ++it )
-			{
-				const QRect& r = *it;
-				painter.drawImage( r.topLeft(), image, r );
+			for (const QRect& r : clipRegion) {
+				painter.drawImage(r.topLeft(), image, r);
 			}
 #else
 			const QVector< QRect > rects = clipRegion.rects();
-			for ( int i = 0; i < rects.size(); i++ )
-			{
-				const QRect& r = rects[i];
-				painter.drawImage( r.topLeft(), image, r );
+			for (int i = 0; i < rects.size(); i++) {
+				const QRect& r = rects[ i ];
+				painter.drawImage(r.topLeft(), image, r);
 			}
 #endif
 		}
-	}
-	else
-	{
-		painter.setClipRegion( clipRegion );
-		draw( &painter );
+	} else {
+		painter.setClipRegion(clipRegion);
+		draw(&painter);
 	}
 }
 
@@ -11042,36 +10962,33 @@ void QwtWidgetOverlay::paintEvent( QPaintEvent* event )
    Resize event
    \param event Resize event
  */
-void QwtWidgetOverlay::resizeEvent( QResizeEvent* event )
+void QwtWidgetOverlay::resizeEvent(QResizeEvent* event)
 {
-	Q_UNUSED( event );
+	Q_UNUSED(event);
 
 	m_data->resetRgbaBuffer();
 }
 
-void QwtWidgetOverlay::draw( QPainter* painter ) const
+void QwtWidgetOverlay::draw(QPainter* painter) const
 {
-	if ( QWidget* widget = parentWidget() )
-	{
-		painter->setClipRect( widget->contentsRect() );
+	if (QWidget* widget = parentWidget()) {
+		painter->setClipRect(widget->contentsRect());
 
 		// something special for the plot canvas
 
-		const int idx = widget->metaObject()->indexOfMethod( "borderPath(QRect)" );
-		if ( idx >= 0 )
-		{
+		const int idx = widget->metaObject()->indexOfMethod("borderPath(QRect)");
+		if (idx >= 0) {
 			QPainterPath clipPath;
 
-			( void )QMetaObject::invokeMethod(
-				widget, "borderPath", Qt::DirectConnection,
-				Q_RETURN_ARG( QPainterPath, clipPath ), Q_ARG( QRect, rect() ) );
+			(void)QMetaObject::invokeMethod(
+				widget, "borderPath", Qt::DirectConnection, Q_RETURN_ARG(QPainterPath, clipPath), Q_ARG(QRect, rect()));
 
-			if (!clipPath.isEmpty() )
-				painter->setClipPath( clipPath, Qt::IntersectClip );
+			if (!clipPath.isEmpty())
+				painter->setClipPath(clipPath, Qt::IntersectClip);
 		}
 	}
 
-	drawOverlay( painter );
+	drawOverlay(painter);
 }
 
 /*!
@@ -11108,15 +11025,14 @@ QRegion QwtWidgetOverlay::maskHint() const
    \return See QObject::eventFilter()
  */
 
-bool QwtWidgetOverlay::eventFilter( QObject* object, QEvent* event )
+bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)
 {
-	if ( object == parent() && event->type() == QEvent::Resize )
-	{
-		QResizeEvent* resizeEvent = static_cast< QResizeEvent* >( event );
-		resize( resizeEvent->size() );
+	if (object == parent() && event->type() == QEvent::Resize) {
+		QResizeEvent* resizeEvent = static_cast< QResizeEvent* >(event);
+		resize(resizeEvent->size());
 	}
 
-	return QObject::eventFilter( object, event );
+	return QObject::eventFilter(object, event);
 }
 
 /*** End of inlined file: qwt_widget_overlay.cpp ***/
@@ -11327,7 +11243,7 @@ QwtLegendLabel::QwtLegendLabel(QWidget* parent) : QwtTextLabel(parent)
 QwtLegendLabel::~QwtLegendLabel()
 {
 	delete m_data;
-	m_data = NULL;
+	m_data = nullptr;
 }
 
 /*!
@@ -11696,7 +11612,7 @@ void LegendMap::removeWidget(const QWidget* widget)
 
 QVariant LegendMap::itemInfo(const QWidget* widget) const
 {
-	if (widget != NULL) {
+	if (widget != nullptr) {
 		QWidget* w = const_cast< QWidget* >(widget);
 
 		for (int i = 0; i < m_entries.size(); i++) {
@@ -11726,7 +11642,7 @@ QList< QWidget* > LegendMap::legendWidgets(const QVariant& itemInfo) const
 class QwtLegend::PrivateData
 {
 public:
-	PrivateData() : itemMode(QwtLegendData::ReadOnly), view(NULL)
+	PrivateData() : itemMode(QwtLegendData::ReadOnly), view(nullptr)
 	{
 	}
 
@@ -11737,7 +11653,7 @@ public:
 	LegendView* view;
 };
 
-class QwtLegend::PrivateData::LegendView QWT_FINAL : public QScrollArea
+class QwtLegend::PrivateData::LegendView final : public QScrollArea
 {
 public:
 	explicit LegendView(QWidget* parent) : QScrollArea(parent)
@@ -11756,7 +11672,7 @@ public:
 		viewport()->setAutoFillBackground(false);
 	}
 
-	virtual bool event(QEvent* event) QWT_OVERRIDE
+	virtual bool event(QEvent* event) override
 	{
 		if (event->type() == QEvent::PolishRequest) {
 			setFocusPolicy(Qt::NoFocus);
@@ -11781,7 +11697,7 @@ public:
 		return QScrollArea::event(event);
 	}
 
-	virtual bool viewportEvent(QEvent* event) QWT_OVERRIDE
+	virtual bool viewportEvent(QEvent* event) override
 	{
 		bool ok = QScrollArea::viewportEvent(event);
 
@@ -11816,7 +11732,7 @@ public:
 	void layoutContents()
 	{
 		const QwtDynGridLayout* tl = qobject_cast< QwtDynGridLayout* >(contentsWidget->layout());
-		if (tl == NULL)
+		if (tl == nullptr)
 			return;
 
 		const QSize visibleSize = viewport()->contentsRect().size();
@@ -12082,7 +11998,7 @@ void QwtLegend::updateTabOrder()
 	if (contentsLayout) {
 		// set tab focus chain
 
-		QWidget* w = NULL;
+		QWidget* w = nullptr;
 
 		for (int i = 0; i < contentsLayout->count(); i++) {
 			QLayoutItem* item = contentsLayout->itemAt(i);
@@ -12148,7 +12064,7 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 		case QEvent::LayoutRequest: {
 			m_data->view->layoutContents();
 
-			if (parentWidget() && parentWidget()->layout() == NULL) {
+			if (parentWidget() && parentWidget()->layout() == nullptr) {
 				/*
 				   We want the parent widget ( usually QwtPlot ) to recalculate
 				   its layout, when the contentsWidget has changed. But
@@ -12231,7 +12147,7 @@ void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBac
 	}
 
 	const QwtDynGridLayout* legendLayout = qobject_cast< QwtDynGridLayout* >(contentsWidget()->layout());
-	if (legendLayout == NULL)
+	if (legendLayout == nullptr)
 		return;
 
 	const QMargins m = contentsMargins();
@@ -12331,7 +12247,7 @@ QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 {
 	const QList< QWidget* > list = m_data->itemMap.legendWidgets(itemInfo);
 	if (list.isEmpty())
-		return NULL;
+		return nullptr;
 
 	return list[ 0 ];
 }
@@ -12472,7 +12388,7 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
 QwtArrowButton::~QwtArrowButton()
 {
 	delete m_data;
-	m_data = NULL;
+	m_data = nullptr;
 }
 
 /*!
@@ -14431,8 +14347,8 @@ qreal QwtAbstractScaleDraw::penWidthF() const
 }
 
 /**
- * @brief 设置是否选中
- * @param on
+ * @brief Set whether the scale draw is selected
+ * @param on True to select, false to deselect
  */
 void QwtAbstractScaleDraw::setSelected(bool on)
 {
@@ -14440,8 +14356,8 @@ void QwtAbstractScaleDraw::setSelected(bool on)
 }
 
 /**
- * @brief 是否选中
- * @return
+ * @brief Check if the scale draw is selected
+ * @return True if selected, false otherwise
  */
 bool QwtAbstractScaleDraw::isSelected() const
 {
@@ -14449,13 +14365,14 @@ bool QwtAbstractScaleDraw::isSelected() const
 }
 
 /**
- * @brief 设置坐标轴在选中状态下的画笔宽度附加值
+ * @brief Set the pen width offset for the axis when it is in selected state
  *
- * 当一个坐标轴（例如 X 轴或 Y 轴）被用户选中时，其绘制的画笔宽度会
- * 在原始宽度的基础上增加这个附加值，从而实现视觉上的突出显示效果。
+ * When an axis (e.g., X-axis or Y-axis) is selected by the user, the pen width used for drawing
+ * will be increased by this offset value, thus achieving a visual highlighting effect.
  *
- * @param offset 选中时增加的宽度值（单位：像素）。
- *               该值应为非负数。如果为 0，则选中状态下的线宽与普通状态相同。
+ * @param offset The additional width value to be added when selected (unit: pixels).
+ *               This value should be non-negative. If it is 0, the line width in selected state
+ *               will be the same as in normal state.
  *
  * @sa selectedPenWidthOffset()
  */
@@ -14465,8 +14382,8 @@ void QwtAbstractScaleDraw::setSelectedPenWidthOffset(qreal offset)
 }
 
 /**
- * @brief 获取当前坐标轴在选中状态下的画笔宽度附加值
- * @return  当前的宽度附加值。
+ * @brief Get the current pen width offset for the axis when it is in selected state
+ * @return The current width offset value.
  * @sa setSelectedPenWidthOffset
  */
 qreal QwtAbstractScaleDraw::selectedPenWidthOffset() const
@@ -14490,7 +14407,6 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
 	pen.setWidthF(m_data->penWidthF);
 	if (isSelected()) {
 		if (qFuzzyIsNull(m_data->penWidthF)) {
-			// m_data->penWidthF可以为0，这时要加1
 			pen.setWidthF(1.0 + m_data->penWidthOffset);
 		} else {
 			pen.setWidthF(m_data->penWidthF + m_data->penWidthOffset);
@@ -15931,7 +15847,7 @@ public:
 		, upperMargin(0.0)
 		, referenceValue(0.0)
 		, base(10)
-		, transform(NULL)
+		, transform(nullptr)
 	{
 	}
 
@@ -15994,14 +15910,14 @@ void QwtScaleEngine::setTransformation(QwtTransform* transform)
 /*!
    Create and return a clone of the transformation
    of the engine. When the engine has no special transformation
-   NULL is returned, indicating no transformation.
+   nullptr is returned, indicating no transformation.
 
    \return A clone of the transformation
    \sa setTransformation()
  */
 QwtTransform* QwtScaleEngine::transformation() const
 {
-	QwtTransform* transform = NULL;
+	QwtTransform* transform = nullptr;
 	if (m_data->transform)
 		transform = m_data->transform->copy();
 
@@ -17102,14 +17018,14 @@ void QwtScaleWidget::setLabelRotation(double rotation)
 void QwtScaleWidget::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
 	const QwtScaleDraw* sd = m_data->scaleDraw.get();
-	if ((scaleDraw == NULL) || (scaleDraw == sd)) {
+	if ((scaleDraw == nullptr) || (scaleDraw == sd)) {
 		return;
 	}
 	if (sd) {
 		scaleDraw->setAlignment(sd->alignment());
 		scaleDraw->setScaleDiv(sd->scaleDiv());
 
-		QwtTransform* transform = NULL;
+		QwtTransform* transform = nullptr;
 		if (sd->scaleMap().transformation())
 			transform = sd->scaleMap().transformation()->copy();
 
@@ -17488,7 +17404,7 @@ void QwtScaleWidget::layoutScale(bool update_geometry)
 		 */
 
 		if (QWidget* w = parentWidget()) {
-			if (!w->isVisible() && w->layout() == NULL) {
+			if (!w->isVisible() && w->layout() == nullptr) {
 				if (w->testAttribute(Qt::WA_WState_Polished))
 					QApplication::postEvent(w, new QEvent(QEvent::LayoutRequest));
 			}
@@ -18347,10 +18263,10 @@ double QwtAbstractScale::scaleStepSize() const
  */
 void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
 {
-	if (scaleDraw == NULL || scaleDraw == m_data->scaleDraw)
+	if (scaleDraw == nullptr || scaleDraw == m_data->scaleDraw)
 		return;
 
-	if (m_data->scaleDraw != NULL)
+	if (m_data->scaleDraw != nullptr)
 		scaleDraw->setScaleDiv(m_data->scaleDraw->scaleDiv());
 
 	delete m_data->scaleDraw;
@@ -18386,7 +18302,7 @@ const QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw() const
  */
 void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
 {
-	if (scaleEngine != NULL && scaleEngine != m_data->scaleEngine) {
+	if (scaleEngine != nullptr && scaleEngine != m_data->scaleEngine) {
 		delete m_data->scaleEngine;
 		m_data->scaleEngine = scaleEngine;
 	}
@@ -19160,7 +19076,7 @@ double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
 
 	const QwtTransform* transformation = scaleMap().transformation();
 
-	if (transformation == NULL) {
+	if (transformation == nullptr) {
 		const double range = maximum() - minimum();
 		value += stepCount * range / m_data->totalSteps;
 	} else {
@@ -19229,7 +19145,7 @@ double QwtAbstractSlider::alignedValue(double value) const
 
 	double stepSize;
 
-	if (scaleMap().transformation() == NULL) {
+	if (scaleMap().transformation() == nullptr) {
 		stepSize = (maximum() - minimum()) / m_data->totalSteps;
 		if (stepSize > 0.0) {
 			value = lowerBound() + qRound((value - lowerBound()) / stepSize) * stepSize;
@@ -19606,7 +19522,7 @@ QSize QwtSlider::handleSize() const
 void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
 	const QwtScaleDraw* previousScaleDraw = this->scaleDraw();
-	if (scaleDraw == NULL || scaleDraw == previousScaleDraw)
+	if (scaleDraw == nullptr || scaleDraw == previousScaleDraw)
 		return;
 
 	if (previousScaleDraw)
@@ -19683,7 +19599,7 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
 		innerRect    = sliderRect.adjusted(bw, bw, -bw, -bw);
 
 		painter->fillRect(innerRect, palette().brush(QPalette::Mid));
-		qDrawShadePanel(painter, sliderRect, palette(), true, bw, NULL);
+		qDrawShadePanel(painter, sliderRect, palette(), true, bw, nullptr);
 	}
 
 	if (m_data->hasGroove) {
@@ -20291,7 +20207,7 @@ public:
 		, autoFillPipe(true)
 		, originMode(QwtThermo::OriginMinimum)
 		, origin(0.0)
-		, colorMap(NULL)
+		, colorMap(nullptr)
 		, value(0.0)
 	{
 		rangeFlags = QwtInterval::IncludeBorders;
@@ -20455,7 +20371,7 @@ void QwtThermo::paintEvent(QPaintEvent* event)
 	const int bw = m_data->borderWidth;
 
 	const QBrush brush = palette().brush(QPalette::Base);
-	qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, m_data->autoFillPipe ? &brush : NULL);
+	qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, m_data->autoFillPipe ? &brush : nullptr);
 
 	drawLiquid(&painter, tRect);
 }
@@ -20734,7 +20650,7 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 
 	QRect liquidRect = fillRect(pipeRect);
 
-	if (m_data->colorMap != NULL) {
+	if (m_data->colorMap != nullptr) {
 		const QwtInterval interval = scaleDiv().interval().normalized();
 
 		// Because the positions of the ticks are rounded
@@ -21280,7 +21196,7 @@ static inline void qwtDrawSvgSymbols( QPainter* painter,
 	const QPointF* points, int numPoints,
 	QSvgRenderer* renderer, const QwtSymbol& symbol )
 {
-	if ( renderer == NULL || !renderer->isValid() )
+	if ( renderer == nullptr || !renderer->isValid() )
 		return;
 
 	const QRectF viewBox = renderer->viewBoxF();
@@ -21954,7 +21870,7 @@ class QwtSymbol::PrivateData
 	{
 		cache.policy = QwtSymbol::AutoCache;
 #ifndef QWT_NO_SVG
-		svg.renderer = NULL;
+		svg.renderer = nullptr;
 #endif
 	}
 
@@ -22217,7 +22133,7 @@ const QwtGraphic& QwtSymbol::graphic() const
 void QwtSymbol::setSvgDocument( const QByteArray& svgDocument )
 {
 	m_data->style = QwtSymbol::SvgDocument;
-	if ( m_data->svg.renderer == NULL )
+	if ( m_data->svg.renderer == nullptr )
 		m_data->svg.renderer = new QSvgRenderer();
 
 	m_data->svg.renderer->load( svgDocument );
@@ -22562,7 +22478,7 @@ void QwtSymbol::drawSymbols( QPainter* painter,
 
 		if ( m_data->cache.pixmap.isNull() )
 		{
-			m_data->cache.pixmap = QwtPainter::backingStore( NULL, br.size() );
+			m_data->cache.pixmap = QwtPainter::backingStore( nullptr, br.size() );
 			m_data->cache.pixmap.fill( Qt::transparent );
 
 			QPainter p( &m_data->cache.pixmap );
@@ -25131,7 +25047,7 @@ namespace QwtSplinePleasingP
 	{
 	  public:
 		inline ControlPointsStore():
-			m_cp( NULL )
+			m_cp( nullptr )
 		{
 		}
 
@@ -25482,7 +25398,7 @@ namespace QwtSplineC1P
 	{
 	  public:
 		inline ControlPointsStore():
-			m_cp( NULL )
+			m_cp( nullptr )
 		{
 		}
 
@@ -25971,7 +25887,7 @@ void QwtSpline::setParametrization( int type )
  */
 void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
 {
-	if ( ( parametrization != NULL ) && ( m_data->parametrization != parametrization ) )
+	if ( ( parametrization != nullptr ) && ( m_data->parametrization != parametrization ) )
 	{
 		delete m_data->parametrization;
 		m_data->parametrization = parametrization;
@@ -32824,7 +32740,7 @@ static inline QRegion qwtMaskRegion(const QLine& l, int penWidth)
 
 namespace
 {
-class Rubberband QWT_FINAL : public QwtWidgetOverlay
+class Rubberband final : public QwtWidgetOverlay
 {
 public:
 	Rubberband(QwtPicker* picker, QWidget* parent) : QwtWidgetOverlay(parent), m_picker(picker)
@@ -32833,13 +32749,13 @@ public:
 	}
 
 protected:
-	virtual void drawOverlay(QPainter* painter) const QWT_OVERRIDE
+	virtual void drawOverlay(QPainter* painter) const override
 	{
 		painter->setPen(m_picker->rubberBandPen());
 		m_picker->drawRubberBand(painter);
 	}
 
-	virtual QRegion maskHint() const QWT_OVERRIDE
+	virtual QRegion maskHint() const override
 	{
 		return m_picker->rubberBandMask();
 	}
@@ -32847,7 +32763,7 @@ protected:
 	QwtPicker* m_picker;
 };
 
-class Tracker QWT_FINAL : public QwtWidgetOverlay
+class Tracker final : public QwtWidgetOverlay
 {
 public:
 	Tracker(QwtPicker* picker, QWidget* parent) : QwtWidgetOverlay(parent), m_picker(picker)
@@ -32856,13 +32772,13 @@ public:
 	}
 
 protected:
-	virtual void drawOverlay(QPainter* painter) const QWT_OVERRIDE
+	virtual void drawOverlay(QPainter* painter) const override
 	{
 		painter->setPen(m_picker->trackerPen());
 		m_picker->drawTracker(painter);
 	}
 
-	virtual QRegion maskHint() const QWT_OVERRIDE
+	virtual QRegion maskHint() const override
 	{
 		return m_picker->trackerMask();
 	}
@@ -33035,7 +32951,7 @@ QWidget* QwtPicker::parentWidget()
 	if (obj && obj->isWidgetType())
 		return static_cast< QWidget* >(obj);
 
-	return NULL;
+	return nullptr;
 }
 
 //! Return the parent widget, where the selection happens
@@ -33045,7 +32961,7 @@ const QWidget* QwtPicker::parentWidget() const
 	if (obj && obj->isWidgetType())
 		return static_cast< const QWidget* >(obj);
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -33634,7 +33550,7 @@ bool QwtPicker::eventFilter(QObject* object, QEvent* event)
 			   Adding/deleting additional event filters inside of an event filter
 			   is not safe dues to the implementation in Qt ( changing a list while iterating ).
 			   So we create the overlays in a way, that they don't install en event filter
-			   ( parent set to NULL ) and do the resizing here.
+			   ( parent set to nullptr ) and do the resizing here.
 			 */
 			if (m_data->trackerOverlay)
 				m_data->trackerOverlay->resize(re->size());
@@ -34198,7 +34114,7 @@ void QwtPicker::updateDisplay()
 	QPointer< Rubberband >& rw = m_data->rubberBandOverlay;
 	if (showRubberband) {
 		if (rw.isNull()) {
-			rw = new Rubberband(this, nullptr);  // NULL -> no extra event filter
+			rw = new Rubberband(this, nullptr);  // nullptr -> no extra event filter
 			rw->setObjectName("PickerRubberBand");
 			rw->setParent(w);
 			rw->resize(w->size());
@@ -34214,14 +34130,14 @@ void QwtPicker::updateDisplay()
 		if (rw) {
 			rw->hide();
 			rw->deleteLater();
-			rw = NULL;
+			rw = nullptr;
 		}
 	}
 
 	QPointer< Tracker >& tw = m_data->trackerOverlay;
 	if (showTracker) {
 		if (tw.isNull()) {
-			tw = new Tracker(this, NULL);  // NULL -> no extra event filter
+			tw = new Tracker(this, nullptr);  // nullptr -> no extra event filter
 			tw->setObjectName("PickerTracker");
 			tw->setParent(w);
 			tw->resize(w->size());
@@ -34232,7 +34148,7 @@ void QwtPicker::updateDisplay()
 		if (tw) {
 			tw->hide();
 			tw->deleteLater();
-			tw = NULL;
+			tw = nullptr;
 		}
 	}
 }
@@ -34326,8 +34242,8 @@ public:
 		, abortKey(Qt::Key_Escape)
 		, abortKeyModifiers(Qt::NoModifier)
 #ifndef QT_NO_CURSOR
-		, cursor(NULL)
-		, restoreCursor(NULL)
+		, cursor(nullptr)
+		, restoreCursor(nullptr)
 		, hasCursor(false)
 #endif
 		, isEnabled(false)
@@ -34601,7 +34517,7 @@ QPixmap QwtCachePanner::grab() const
  */
 bool QwtCachePanner::eventFilter(QObject* object, QEvent* event)
 {
-	if (object == NULL || object != parentWidget())
+	if (object == nullptr || object != parentWidget())
 		return false;
 
 	switch (event->type()) {
@@ -34650,7 +34566,7 @@ void QwtCachePanner::widgetMousePressEvent(QMouseEvent* mouseEvent)
 	}
 
 	QWidget* w = parentWidget();
-	if (w == NULL)
+	if (w == nullptr)
 		return;
 
 #ifndef QT_NO_CURSOR
@@ -34767,7 +34683,7 @@ void QwtCachePanner::showCursor(bool on)
 		return;
 
 	QWidget* w = parentWidget();
-	if (w == NULL || m_data->cursor == NULL)
+	if (w == nullptr || m_data->cursor == nullptr)
 		return;
 
 	m_data->hasCursor = on;
@@ -34782,7 +34698,7 @@ void QwtCachePanner::showCursor(bool on)
 		if (m_data->restoreCursor) {
 			w->setCursor(*m_data->restoreCursor);
 			delete m_data->restoreCursor;
-			m_data->restoreCursor = NULL;
+			m_data->restoreCursor = nullptr;
 		} else
 			w->unsetCursor();
 	}
@@ -34861,7 +34777,7 @@ class QwtPlotDict::PrivateData
 	  public:
 		void insertItem( QwtPlotItem* item )
 		{
-			if ( item == NULL )
+			if ( item == nullptr )
 				return;
 
 			QList< QwtPlotItem* >::iterator it =
@@ -34871,7 +34787,7 @@ class QwtPlotDict::PrivateData
 
 		void removeItem( QwtPlotItem* item )
 		{
-			if ( item == NULL )
+			if ( item == nullptr )
 				return;
 
 			QList< QwtPlotItem* >::iterator it =
@@ -34989,7 +34905,7 @@ void QwtPlotDict::detachItems( int rtti, bool autoDelete )
 
 		if ( rtti == QwtPlotItem::Rtti_PlotItem || item->rtti() == rtti )
 		{
-			item->attach( NULL );
+			item->attach( nullptr );
 			if ( autoDelete )
 				delete item;
 		}
@@ -35776,7 +35692,7 @@ void QwtPlotAbstractGLCanvas::draw(QPainter* painter)
 class QwtPlotCanvas::PrivateData
 {
 public:
-	PrivateData() : backingStore(NULL)
+	PrivateData() : backingStore(nullptr)
 	{
 	}
 
@@ -35835,7 +35751,7 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 	switch (attribute) {
 	case BackingStore: {
 		if (on) {
-			if (m_data->backingStore == NULL)
+			if (m_data->backingStore == nullptr)
 				m_data->backingStore = new QPixmap();
 
 			if (isVisible()) {
@@ -35847,7 +35763,7 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 			}
 		} else {
 			delete m_data->backingStore;
-			m_data->backingStore = NULL;
+			m_data->backingStore = nullptr;
 		}
 		break;
 	}
@@ -35922,7 +35838,7 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setClipRegion(event->region());
 
-	if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != NULL) {
+	if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != nullptr) {
 		QPixmap& bs = *m_data->backingStore;
 		if (bs.size() != size() * QwtPainter::devicePixelRatio(&bs)) {
 			bs = QwtPainter::backingStore(this, size());
@@ -36126,7 +36042,7 @@ QPainterPath QwtPlotTransparentCanvas::borderPath(const QRect& rect) const
 class QwtPlotOpenGLCanvas::PrivateData
 {
 public:
-	PrivateData() : isPolished(false), fboDirty(true), fbo(NULL)
+	PrivateData() : isPolished(false), fboDirty(true), fbo(nullptr)
 	{
 	}
 
@@ -36248,7 +36164,7 @@ void QwtPlotOpenGLCanvas::invalidateBackingStore()
 void QwtPlotOpenGLCanvas::clearBackingStore()
 {
 	delete m_data->fbo;
-	m_data->fbo = NULL;
+	m_data->fbo = nullptr;
 }
 
 /*!
@@ -36278,7 +36194,7 @@ void QwtPlotOpenGLCanvas::paintGL()
 	QPainter painter;
 
 	if (testPaintAttribute(QwtPlotOpenGLCanvas::BackingStore) && QOpenGLFramebufferObject::hasOpenGLFramebufferBlit()) {
-		const qreal pixelRatio = QwtPainter::devicePixelRatio(NULL);
+		const qreal pixelRatio = QwtPainter::devicePixelRatio(nullptr);
 		const QSize fboSize    = size() * pixelRatio;
 
 		if (hasFocusIndicator)
@@ -36297,11 +36213,11 @@ void QwtPlotOpenGLCanvas::paintGL()
 		if (m_data->fbo) {
 			if (m_data->fbo->size() != fboSize) {
 				delete m_data->fbo;
-				m_data->fbo = NULL;
+				m_data->fbo = nullptr;
 			}
 		}
 
-		if (m_data->fbo == NULL) {
+		if (m_data->fbo == nullptr) {
 			QOpenGLFramebufferObjectFormat fboFormat;
 			fboFormat.setSamples(m_data->numSamples);
 			fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -36323,7 +36239,7 @@ void QwtPlotOpenGLCanvas::paintGL()
 			m_data->fboDirty = false;
 		}
 
-		QOpenGLFramebufferObject::blitFramebuffer(NULL, m_data->fbo);
+		QOpenGLFramebufferObject::blitFramebuffer(nullptr, m_data->fbo);
 	} else {
 		painter.begin(this);
 		draw(&painter);
@@ -36349,7 +36265,7 @@ class QwtPlotItem::PrivateData
 {
   public:
 	PrivateData()
-		: plot( NULL )
+		: plot( nullptr )
 		, isVisible( true )
 		, renderThreadCount( 1 )
 		, z( 0.0 )
@@ -36409,7 +36325,7 @@ QwtPlotItem::QwtPlotItem( const QwtText& title )
 //! Destroy the QwtPlotItem
 QwtPlotItem::~QwtPlotItem()
 {
-	attach( NULL );
+	attach( nullptr );
 	delete m_data;
 }
 
@@ -36418,7 +36334,7 @@ QwtPlotItem::~QwtPlotItem()
 
    This method will attach a QwtPlotItem to the QwtPlot argument. It will first
    detach the QwtPlotItem from any plot from a previous call to attach (if
-   necessary). If a NULL argument is passed, it will detach from any QwtPlot it
+   necessary). If a nullptr argument is passed, it will detach from any QwtPlot it
    was attached to.
 
    \param plot Plot widget
@@ -36442,12 +36358,12 @@ void QwtPlotItem::attach( QwtPlot* plot )
    \brief This method detaches a QwtPlotItem from any
 		  QwtPlot it has been associated with.
 
-   detach() is equivalent to calling attach( NULL )
+   detach() is equivalent to calling attach( nullptr )
    \sa attach()
  */
 void QwtPlotItem::detach()
 {
-	attach( NULL );
+	attach( nullptr );
 }
 
 /*!
@@ -37066,7 +36982,7 @@ QRectF QwtPlotItem::paintRect( const QwtScaleMap& xMap,
 
 namespace
 {
-	class LayoutItem QWT_FINAL : public QLayoutItem
+	class LayoutItem final : public QLayoutItem
 	{
 	  public:
 		LayoutItem( const QwtPlotLegendItem*, const QwtPlotItem* );
@@ -37077,16 +36993,16 @@ namespace
 		void setData( const QwtLegendData& );
 		const QwtLegendData& data() const;
 
-		virtual Qt::Orientations expandingDirections() const QWT_OVERRIDE;
-		virtual QRect geometry() const QWT_OVERRIDE;
-		virtual bool hasHeightForWidth() const QWT_OVERRIDE;
-		virtual int heightForWidth( int ) const QWT_OVERRIDE;
-		virtual bool isEmpty() const QWT_OVERRIDE;
-		virtual QSize maximumSize() const QWT_OVERRIDE;
-		virtual int minimumHeightForWidth( int ) const QWT_OVERRIDE;
-		virtual QSize minimumSize() const QWT_OVERRIDE;
-		virtual void setGeometry( const QRect& ) QWT_OVERRIDE;
-		virtual QSize sizeHint() const QWT_OVERRIDE;
+		virtual Qt::Orientations expandingDirections() const override;
+		virtual QRect geometry() const override;
+		virtual bool hasHeightForWidth() const override;
+		virtual int heightForWidth( int ) const override;
+		virtual bool isEmpty() const override;
+		virtual QSize maximumSize() const override;
+		virtual int minimumHeightForWidth( int ) const override;
+		virtual QSize minimumSize() const override;
+		virtual void setGeometry( const QRect& ) override;
+		virtual QSize sizeHint() const override;
 
 	  private:
 
@@ -37325,7 +37241,7 @@ void QwtPlotLegendItem::setMargin( int margin )
 int QwtPlotLegendItem::margin() const
 {
 	int left;
-	m_data->layout->getContentsMargins( &left, NULL, NULL, NULL );
+	m_data->layout->getContentsMargins( &left, nullptr, nullptr, nullptr );
 
 	return left;
 }
@@ -37742,7 +37658,7 @@ QRect QwtPlotLegendItem::geometry( const QRectF& canvasRect ) const
 void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
 	const QList< QwtLegendData >& data )
 {
-	if ( plotItem == NULL )
+	if ( plotItem == nullptr )
 		return;
 
 	QList< LayoutItem* > layoutItems;
@@ -38534,7 +38450,7 @@ void QwtPlotBarChart::setSamples(QwtSeriesData< QPointF >* data)
 
    The bar chart will take the ownership of the symbol, hence the previously
    set symbol will be delete by setting a new one. If \p symbol is
-   \c NULL no symbol will be drawn.
+   \c nullptr no symbol will be drawn.
 
    \param symbol Symbol
    \sa symbol()
@@ -38551,7 +38467,7 @@ void QwtPlotBarChart::setSymbol(QwtColumnSymbol* symbol)
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtColumnSymbol* QwtPlotBarChart::symbol() const
@@ -38828,7 +38744,7 @@ void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF&
 	const QwtColumnSymbol* specialSym = specialSymbol(sampleIndex, sample);
 
 	const QwtColumnSymbol* sym = specialSym;
-	if (sym == NULL)
+	if (sym == nullptr)
 		sym = m_data->symbol;
 
 	if (sym) {
@@ -38851,14 +38767,14 @@ void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF&
    \param sampleIndex Index of the sample represented by the bar
    \param sample Value of the sample
 
-   \return NULL, indicating to use the default symbol
+   \return nullptr, indicating to use the default symbol
  */
 QwtColumnSymbol* QwtPlotBarChart::specialSymbol(int sampleIndex, const QPointF& sample) const
 {
 	Q_UNUSED(sampleIndex);
 	Q_UNUSED(sample);
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -38994,7 +38910,7 @@ public:
 	PrivateData()
 		: style(QwtPlotCurve::Lines)
 		, baseline(0.0)
-		, symbol(NULL)
+		, symbol(nullptr)
 		, pen(Qt::black)
 		, paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPoints)
 	{
@@ -39172,7 +39088,7 @@ QwtPlotCurve::CurveStyle QwtPlotCurve::style() const
 
    The curve will take the ownership of the symbol, hence the previously
    set symbol will be delete by setting a new one. If \p symbol is
-   \c NULL no symbol will be drawn.
+   \c nullptr no symbol will be drawn.
 
    \param symbol Symbol
    \sa symbol()
@@ -39191,7 +39107,7 @@ void QwtPlotCurve::setSymbol(QwtSymbol* symbol)
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtSymbol* QwtPlotCurve::symbol() const
@@ -39716,7 +39632,7 @@ bool QwtPlotCurve::testCurveAttribute(CurveAttribute attribute) const
    Assign a curve fitter
 
    The curve fitter "smooths" the curve points, when the Fitted
-   CurveAttribute is set. setCurveFitter(NULL) also disables curve fitting.
+   CurveAttribute is set. setCurveFitter(nullptr) also disables curve fitting.
 
    The curve fitter operates on the translated points ( = widget coordinates)
    to be functional for logarithmic scales. Obviously this is less performant
@@ -39738,7 +39654,7 @@ void QwtPlotCurve::setCurveFitter(QwtCurveFitter* curveFitter)
 }
 
 /*!
-   Get the curve fitter. If curve fitting is disabled NULL is returned.
+   Get the curve fitter. If curve fitting is disabled nullptr is returned.
 
    \return Curve fitter
    \sa setCurveFitter(), Fitted
@@ -39910,7 +39826,7 @@ double QwtPlotCurve::baseline() const
    Find the closest curve point for a specific position
 
    \param pos Position, where to look for the closest curve point
-   \param dist If dist != NULL, closestPoint() returns the distance between
+   \param dist If dist != nullptr, closestPoint() returns the distance between
 			  the position and the closest curve point
    \return Index of the closest curve point, or -1 if none can be found
 		  ( f.e when the curve has no points )
@@ -39921,7 +39837,7 @@ int QwtPlotCurve::closestPoint(const QPointF& pos, double* dist) const
 {
 	const size_t numSamples = dataSize();
 
-	if (plot() == NULL || numSamples <= 0)
+	if (plot() == nullptr || numSamples <= 0)
 		return -1;
 
 	const QwtSeriesData< QPointF >* series = data();
@@ -40869,7 +40785,7 @@ class QwtPlotDirectPainter::PrivateData
   public:
 	PrivateData()
 		: hasClipping( false )
-		, seriesItem( NULL )
+		, seriesItem( nullptr )
 		, from( 0 )
 		, to( 0 )
 	{
@@ -40997,7 +40913,7 @@ QRegion QwtPlotDirectPainter::clipRegion() const
 void QwtPlotDirectPainter::drawSeries(
 	QwtPlotSeriesItem* seriesItem, int from, int to )
 {
-	if ( seriesItem == NULL || seriesItem->plot() == NULL )
+	if ( seriesItem == nullptr || seriesItem->plot() == nullptr )
 		return;
 
 	QWidget* canvas = seriesItem->plot()->canvas();
@@ -41081,7 +40997,7 @@ void QwtPlotDirectPainter::drawSeries(
 		canvas->repaint(clipRegion);
 		canvas->removeEventFilter( this );
 
-		m_data->seriesItem = NULL;
+		m_data->seriesItem = nullptr;
 	}
 }
 
@@ -41175,7 +41091,7 @@ class QwtPlotHistogram::PrivateData
 	PrivateData()
 		: baseline( 0.0 )
 		, style( Columns )
-		, symbol( NULL )
+		, symbol( nullptr )
 	{
 	}
 
@@ -41353,7 +41269,7 @@ void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtColumnSymbol* QwtPlotHistogram::symbol() const
@@ -41864,7 +41780,7 @@ class QwtPlotIntervalCurve::PrivateData
   public:
 	PrivateData():
 		style( QwtPlotIntervalCurve::Tube ),
-		symbol( NULL ),
+		symbol( nullptr ),
 		pen( Qt::black ),
 		brush( Qt::white )
 	{
@@ -42029,7 +41945,7 @@ void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const
@@ -42590,7 +42506,7 @@ class QwtPlotMarker::PrivateData
 		: labelAlignment( Qt::AlignCenter )
 		, labelOrientation( Qt::Horizontal )
 		, spacing( 2 )
-		, symbol( NULL )
+		, symbol( nullptr )
 		, style( QwtPlotMarker::NoLine )
 		, xValue( 0.0 )
 		, yValue( 0.0 )
@@ -42769,7 +42685,7 @@ void QwtPlotMarker::drawLines( QPainter* painter,
 void QwtPlotMarker::drawSymbol( QPainter* painter,
 	const QRectF& canvasRect, const QPointF& pos ) const
 {
-	if ( m_data->symbol == NULL )
+	if ( m_data->symbol == nullptr )
 		return;
 
 	const QwtSymbol& symbol = *m_data->symbol;
@@ -43367,7 +43283,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 		m_data->symbolMap.find(valueIndex);
 	if ( it == m_data->symbolMap.end() )
 	{
-		if ( symbol != NULL )
+		if ( symbol != nullptr )
 		{
 			m_data->symbolMap.insert( valueIndex, symbol );
 
@@ -43381,7 +43297,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 		{
 			delete it.value();
 
-			if ( symbol == NULL )
+			if ( symbol == nullptr )
 			{
 				m_data->symbolMap.remove( valueIndex );
 			}
@@ -43400,7 +43316,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
    Find a symbol in the symbol map
 
    \param valueIndex Index of a value in a set
-   \return The symbol, that had been set by setSymbol() or NULL.
+   \return The symbol, that had been set by setSymbol() or nullptr.
 
    \sa setSymbol(), specialSymbol(), drawBar()
  */
@@ -43409,14 +43325,14 @@ const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
 	QMap< int, QwtColumnSymbol* >::const_iterator it =
 		m_data->symbolMap.constFind( valueIndex );
 
-	return ( it == m_data->symbolMap.constEnd() ) ? NULL : it.value();
+	return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /*!
    Find a symbol in the symbol map
 
    \param valueIndex Index of a value in a set
-   \return The symbol, that had been set by setSymbol() or NULL.
+   \return The symbol, that had been set by setSymbol() or nullptr.
 
    \sa setSymbol(), specialSymbol(), drawBar()
  */
@@ -43425,7 +43341,7 @@ QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
 	QMap< int, QwtColumnSymbol* >::const_iterator it =
 		m_data->symbolMap.constFind( valueIndex );
 
-	return ( it == m_data->symbolMap.constEnd() ) ? NULL : it.value();
+	return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /*!
@@ -43447,14 +43363,14 @@ void QwtPlotMultiBarChart::resetSymbolMap()
    The symbol has to be created by new each time specialSymbol() is
    called. As soon as the symbol is painted this symbol gets deleted.
 
-   When no symbol ( NULL ) is returned, the value will be displayed
+   When no symbol ( nullptr ) is returned, the value will be displayed
    with the standard symbol that is used for all symbols with the same
    valueIndex.
 
    \param sampleIndex Index of the sample
    \param valueIndex Index of the value in the set
 
-   \return NULL, meaning that the value is not special
+   \return nullptr, meaning that the value is not special
 
  */
 QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
@@ -43463,7 +43379,7 @@ QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
 	Q_UNUSED( sampleIndex );
 	Q_UNUSED( valueIndex );
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -43848,12 +43764,12 @@ void QwtPlotMultiBarChart::drawStackedBars( QPainter* painter,
 void QwtPlotMultiBarChart::drawBar( QPainter* painter,
 	int sampleIndex, int valueIndex, const QwtColumnRect& rect ) const
 {
-	const QwtColumnSymbol* specialSym = NULL;
+	const QwtColumnSymbol* specialSym = nullptr;
 	if ( sampleIndex >= 0 )
 		specialSym = specialSymbol( sampleIndex, valueIndex );
 
 	const QwtColumnSymbol* sym = specialSym;
-	if ( sym == NULL )
+	if ( sym == nullptr )
 		sym = symbol( valueIndex );
 
 	if ( sym )
@@ -44136,7 +44052,7 @@ void QwtPlotCachePanner::moveCanvas(int dx, int dy)
 		return;
 
 	QwtPlot* plot = this->plot();
-	if (plot == NULL)
+	if (plot == nullptr)
 		return;
 
 	plot->saveAutoReplotState();
@@ -44390,7 +44306,7 @@ QwtAxisId QwtPlotPicker::yAxis() const
  */
 QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 {
-	if (plot() == NULL)
+	if (plot() == nullptr)
 		return QwtText();
 
 	return trackerTextF(invTransform(pos));
@@ -47230,7 +47146,7 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution)
 {
-	if (plot == NULL || sizeMM.isEmpty() || resolution <= 0)
+	if (plot == nullptr || sizeMM.isEmpty() || resolution <= 0)
 		return;
 
 	QString title = plot->title().text();
@@ -47911,7 +47827,7 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
  */
 bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {
-	if (plot == NULL)
+	if (plot == nullptr)
 		return false;
 
 	QString fileName = documentName;
@@ -47946,11 +47862,11 @@ bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const
 		filter += imageFilter;
 	}
 
-	fileName = QFileDialog::getSaveFileName(NULL,
+	fileName = QFileDialog::getSaveFileName(nullptr,
 											tr("Export File Name"),
 											fileName,
 											filter.join(";;"),
-											NULL,
+											nullptr,
 											QFileDialog::DontConfirmOverwrite);
 #endif
 	if (fileName.isEmpty())
@@ -48163,7 +48079,7 @@ QFont QwtPlotScaleItem::font() const
  */
 void QwtPlotScaleItem::setScaleDraw( QwtScaleDraw* scaleDraw )
 {
-	if ( scaleDraw == NULL )
+	if ( scaleDraw == nullptr )
 		return;
 
 	if ( scaleDraw != m_data->scaleDraw )
@@ -48342,7 +48258,7 @@ void QwtPlotScaleItem::draw( QPainter* painter,
 		sd->move( canvasRect.left(), y );
 		sd->setLength( canvasRect.width() - 1 );
 
-		QwtTransform* transform = NULL;
+		QwtTransform* transform = nullptr;
 		if ( xMap.transformation() )
 			transform = xMap.transformation()->copy();
 
@@ -48370,7 +48286,7 @@ void QwtPlotScaleItem::draw( QPainter* painter,
 		sd->move( x, canvasRect.top() );
 		sd->setLength( canvasRect.height() - 1 );
 
-		QwtTransform* transform = NULL;
+		QwtTransform* transform = nullptr;
 		if ( yMap.transformation() )
 			transform = yMap.transformation()->copy();
 
@@ -48405,7 +48321,7 @@ void QwtPlotScaleItem::updateScaleDiv( const QwtScaleDiv& xScaleDiv,
 			scaleDraw->orientation() == Qt::Horizontal ? xScaleDiv : yScaleDiv;
 
 		const QwtPlot* plt = plot();
-		if ( plt != NULL )
+		if ( plt != nullptr )
 		{
 			const QRectF canvasRect = plt->canvas()->contentsRect();
 
@@ -49265,7 +49181,7 @@ static inline bool qwtIsNaN(double d)
 class QwtPlotSpectrogram::PrivateData
 {
 public:
-	PrivateData() : data(NULL), colorTableSize(0)
+	PrivateData() : data(nullptr), colorTableSize(0)
 	{
 		colorMap    = new QwtLinearColorMap();
 		displayMode = ImageMode;
@@ -49386,7 +49302,7 @@ bool QwtPlotSpectrogram::testDisplayMode(DisplayMode mode) const
  */
 void QwtPlotSpectrogram::setColorMap(QwtColorMap* colorMap)
 {
-	if (colorMap == NULL)
+	if (colorMap == nullptr)
 		return;
 
 	if (colorMap != m_data->colorMap) {
@@ -49507,7 +49423,7 @@ QPen QwtPlotSpectrogram::defaultContourPen() const
  */
 QPen QwtPlotSpectrogram::contourPen(double level) const
 {
-	if (m_data->data == NULL || m_data->colorMap == NULL)
+	if (m_data->data == nullptr || m_data->colorMap == nullptr)
 		return QPen();
 
 	const QwtInterval intensityRange = m_data->data->interval(Qt::ZAxis);
@@ -49634,7 +49550,7 @@ QwtRasterData* QwtPlotSpectrogram::data()
  */
 QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
 {
-	if (m_data->data == NULL)
+	if (m_data->data == nullptr)
 		return QwtInterval();
 
 	return m_data->data->interval(axis);
@@ -49658,7 +49574,7 @@ QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
  */
 QRectF QwtPlotSpectrogram::pixelHint(const QRectF& area) const
 {
-	if (m_data->data == NULL)
+	if (m_data->data == nullptr)
 		return QRectF();
 
 	return m_data->data->pixelHint(area);
@@ -49685,7 +49601,7 @@ QImage QwtPlotSpectrogram::renderImage(const QwtScaleMap& xMap,
 									   const QRectF& area,
 									   const QSize& imageSize) const
 {
-	if (imageSize.isEmpty() || m_data->data == NULL || m_data->colorMap == NULL) {
+	if (imageSize.isEmpty() || m_data->data == nullptr || m_data->colorMap == nullptr) {
 		return QImage();
 	}
 
@@ -49871,7 +49787,7 @@ QSize QwtPlotSpectrogram::contourRasterSize(const QRectF& area, const QRect& rec
  */
 QwtRasterData::ContourLines QwtPlotSpectrogram::renderContourLines(const QRectF& rect, const QSize& raster) const
 {
-	if (m_data->data == NULL)
+	if (m_data->data == nullptr)
 		return QwtRasterData::ContourLines();
 
 	return m_data->data->contourLines(rect, raster, m_data->contourLevels, m_data->conrecFlags);
@@ -49892,7 +49808,7 @@ void QwtPlotSpectrogram::drawContourLines(QPainter* painter,
 										  const QwtScaleMap& yMap,
 										  const QwtRasterData::ContourLines& contourLines) const
 {
-	if (m_data->data == NULL)
+	if (m_data->data == nullptr)
 		return;
 
 	const int numLevels = m_data->contourLevels.size();
@@ -51156,7 +51072,7 @@ namespace
 			m_y1 = m_y0 + m_numRows * m_dy;
 
 			m_entries = ( Entry* )::calloc( m_numRows * m_numColumns, sizeof( Entry ) );
-			if ( m_entries == NULL )
+			if ( m_entries == nullptr )
 			{
 				qWarning() << "QwtPlotVectorField: raster for filtering too fine - running out of memory";
 			}
@@ -51224,7 +51140,7 @@ class QwtPlotVectorField::PrivateData
 		, maxArrowLength( std::numeric_limits< short >::max() )
 		, magnitudeModes( MagnitudeAsLength )
 	{
-		colorMap = NULL;
+		colorMap = nullptr;
 		symbol = new QwtVectorFieldThinArrow();
 	}
 
@@ -51544,7 +51460,7 @@ void QwtPlotVectorField::setSamples( QwtVectorFieldData* data )
  */
 void QwtPlotVectorField::setColorMap( QwtColorMap* colorMap )
 {
-	if ( colorMap == NULL )
+	if ( colorMap == nullptr )
 		return;
 
 	if ( colorMap != m_data->colorMap )
@@ -51834,7 +51750,7 @@ void QwtPlotVectorField::drawSymbols( QPainter* painter,
 	{
 		// user input error, can't draw without color map
 		// TODO: Discuss! Without colormap, silently fall back to uniform colors?
-		if ( m_data->colorMap == NULL)
+		if ( m_data->colorMap == nullptr)
 			return;
 	}
 	else
@@ -52185,7 +52101,7 @@ void QwtPlotPanner::moveCanvas(int dx, int dy)
 	//! 这里有个问题要注意，对于寄生轴，如果这个轴是共享了宿主的某个轴，那么不应该响应pan，
 	//! 因此，这里要求确保宿主绘图最后pan,这样宿主绘图的更新会同步更新给寄生绘图的共享轴
 	const QList< QwtPlot* > allPlots = plt->plotList(true);  // 倒序获取，宿主最后更新
-	for (auto plot : allPlots) {
+	for (auto* plot : allPlots) {
 		// 移动过程位置要相反，视图才能正好跟随鼠标方向
 		plot->panCanvas(QPoint(dx, dy));
 	}
@@ -52725,7 +52641,7 @@ QRectF QwtPlotAxisZoomer::zoomBase() const
 void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 {
 	QwtPlot* plt = plot();
-	if (plt == NULL)
+	if (plt == nullptr)
 		return;
 
 	if (doReplot)
@@ -53534,7 +53450,7 @@ bool QwtPlotCanvasZoomer::end(bool ok)
 class QwtPolarCanvas::PrivateData
 {
 public:
-	PrivateData() : backingStore(NULL)
+	PrivateData() : backingStore(nullptr)
 	{
 	}
 
@@ -53601,7 +53517,7 @@ void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 	switch (attribute) {
 	case BackingStore: {
 		if (on) {
-			if (m_data->backingStore == NULL)
+			if (m_data->backingStore == nullptr)
 				m_data->backingStore = new QPixmap();
 
 			if (isVisible()) {
@@ -53614,7 +53530,7 @@ void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 			}
 		} else {
 			delete m_data->backingStore;
-			m_data->backingStore = NULL;
+			m_data->backingStore = nullptr;
 		}
 		break;
 	}
@@ -53655,7 +53571,7 @@ void QwtPolarCanvas::paintEvent(QPaintEvent* event)
 	QPainter painter(this);
 	painter.setClipRegion(event->region());
 
-	if ((m_data->paintAttributes & BackingStore) && m_data->backingStore != NULL) {
+	if ((m_data->paintAttributes & BackingStore) && m_data->backingStore != nullptr) {
 		QPixmap& bs = *m_data->backingStore;
 		if (bs.size() != size()) {
 			bs = QPixmap(size());
@@ -53785,7 +53701,7 @@ class QwtPolarItem::PrivateData
 {
   public:
 	PrivateData()
-		: plot( NULL )
+		: plot( nullptr )
 		, isVisible( true )
 		, renderThreadCount( 1 )
 		, z( 0.0 )
@@ -53822,7 +53738,7 @@ QwtPolarItem::QwtPolarItem( const QwtText& title )
 //! Destroy the QwtPolarItem
 QwtPolarItem::~QwtPolarItem()
 {
-	attach( NULL );
+	attach( nullptr );
 	delete m_data;
 }
 
@@ -53832,7 +53748,7 @@ QwtPolarItem::~QwtPolarItem()
    This method will attach a QwtPolarItem to the QwtPolarPlot argument.
    It will first detach the QwtPolarItem from any plot from a previous
    call to attach (if necessary).
-   If a NULL argument is passed, it will detach from any QwtPolarPlot it
+   If a nullptr argument is passed, it will detach from any QwtPolarPlot it
    was attached to.
 
    \param plot Plot widget
@@ -53857,12 +53773,12 @@ void QwtPolarItem::attach( QwtPolarPlot* plot )
    \brief This method detaches a QwtPolarItem from the QwtPolarPlot it
 		  has been associated with.
 
-   detach() is equivalent to calling attach( NULL )
+   detach() is equivalent to calling attach( nullptr )
    \sa attach()
  */
 void QwtPolarItem::detach()
 {
-	attach( NULL );
+	attach( nullptr );
 }
 
 /*!
@@ -54260,7 +54176,7 @@ class QwtPolarItemDict::PrivateData
 	  public:
 		void insertItem( QwtPolarItem* item )
 		{
-			if ( item == NULL )
+			if ( item == nullptr )
 				return;
 
 			// Unfortunately there is no inSort operation
@@ -54284,7 +54200,7 @@ class QwtPolarItemDict::PrivateData
 
 		void removeItem( QwtPolarItem* item )
 		{
-			if ( item == NULL )
+			if ( item == nullptr )
 				return;
 
 			int i = 0;
@@ -54393,7 +54309,7 @@ void QwtPolarItemDict::detachItems( int rtti, bool autoDelete )
 
 		if ( rtti == QwtPolarItem::Rtti_PolarItem || item->rtti() == rtti )
 		{
-			item->attach( NULL );
+			item->attach( nullptr );
 			if ( autoDelete )
 				delete item;
 		}
@@ -54428,7 +54344,7 @@ static inline bool qwtInsidePole(const QwtScaleMap& map, double radius)
 class QwtPolarCurve::PrivateData
 {
 public:
-	PrivateData() : style(QwtPolarCurve::Lines), curveFitter(NULL)
+	PrivateData() : style(QwtPolarCurve::Lines), curveFitter(nullptr)
 	{
 		symbol = new QwtSymbol();
 		pen    = QPen(Qt::black);
@@ -54483,7 +54399,7 @@ QwtPolarCurve::~QwtPolarCurve()
 void QwtPolarCurve::init()
 {
 	m_data   = new PrivateData;
-	m_series = NULL;
+	m_series = nullptr;
 
 	setItemAttribute(QwtPolarItem::AutoScale);
 	setItemAttribute(QwtPolarItem::Legend);
@@ -54618,7 +54534,7 @@ void QwtPolarCurve::setData(QwtSeriesData< QwtPointPolar >* data)
 
    A curve fitter interpolates the curve points. F.e QwtPolarFitter
    adds equidistant points so that the connection gets rounded instead
-   of having straight lines. If curveFitter is NULL fitting is disabled.
+   of having straight lines. If curveFitter is nullptr fitting is disabled.
 
    \sa curveFitter()
  */
@@ -55032,7 +54948,7 @@ QwtPolarPlot* QwtPolarMagnifier::plot()
 	if (c)
 		return c->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 //! \return observed plot
@@ -55042,7 +54958,7 @@ const QwtPolarPlot* QwtPolarMagnifier::plot() const
 	if (c)
 		return c->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -55074,7 +54990,7 @@ void QwtPolarMagnifier::rescale(double factor)
 		return;
 
 	QwtPolarPlot* plt = plot();
-	if (plt == NULL)
+	if (plt == nullptr)
 		return;
 
 	QwtPointPolar zoomPos;
@@ -55360,7 +55276,7 @@ QwtPolarPlot* QwtPolarCachePanner::plot()
 	if (c)
 		return c->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 //! \return observed plot
@@ -55370,7 +55286,7 @@ const QwtPolarPlot* QwtPolarCachePanner::plot() const
 	if (c)
 		return c->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -55384,7 +55300,7 @@ const QwtPolarPlot* QwtPolarCachePanner::plot() const
 void QwtPolarCachePanner::movePlot(int dx, int dy)
 {
 	QwtPolarPlot* plot = QwtPolarCachePanner::plot();
-	if (plot == NULL || (dx == 0 && dy == 0))
+	if (plot == nullptr || (dx == 0 && dy == 0))
 		return;
 
 	const QwtScaleMap map = plot->scaleMap(QwtPolar::Radius);
@@ -55481,7 +55397,7 @@ QwtPolarPlot* QwtPolarPicker::plot()
 	if (w)
 		return w->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 //! \return Plot widget, containing the observed plot canvas
@@ -55491,7 +55407,7 @@ const QwtPolarPlot* QwtPolarPicker::plot() const
 	if (w)
 		return w->plot();
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -55613,7 +55529,7 @@ bool QwtPolarPicker::end(bool ok)
 QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
 {
 	QwtPointPolar polarPos;
-	if (canvas() == NULL)
+	if (canvas() == nullptr)
 		return QwtPointPolar();
 
 	return canvas()->invTransform(pos);
@@ -55670,7 +55586,7 @@ class QwtPolarSpectrogram::PrivateData
 {
   public:
 	PrivateData()
-		: data( NULL )
+		: data( nullptr )
 	{
 		colorMap = new QwtLinearColorMap();
 	}
@@ -55869,7 +55785,7 @@ QImage QwtPolarSpectrogram::renderImage(
 	const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
 	const QPointF& pole, const QRect& rect ) const
 {
-	if ( m_data->data == NULL || m_data->colorMap == NULL )
+	if ( m_data->data == nullptr || m_data->colorMap == nullptr )
 		return QImage();
 
 	QImage image( rect.size(), m_data->colorMap->format() == QwtColorMap::RGB
@@ -56143,10 +56059,10 @@ static void qwtSetTabOrder(QWidget* first, QWidget* second, bool withChildren)
 		QWidget* proxy2 = to->focusProxy();
 
 		from->setFocusPolicy(Qt::TabFocus);
-		from->setFocusProxy(NULL);
+		from->setFocusProxy(nullptr);
 
 		to->setFocusPolicy(Qt::TabFocus);
-		to->setFocusProxy(NULL);
+		to->setFocusProxy(nullptr);
 
 		QWidget::setTabOrder(from, to);
 
@@ -56242,7 +56158,7 @@ void QwtPlot::initPlot(const QwtText& title)
 	m_data->footerLabel->setText(footer);
 
 	// legend
-	m_data->legend = NULL;
+	m_data->legend = nullptr;
 
 	// axes
 	initAxesData();
@@ -57107,7 +57023,7 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
 				}
 			}
 
-			QWidget* previousInChain = NULL;
+			QWidget* previousInChain = nullptr;
 			switch (m_data->layout->legendPosition()) {
 			case LeftLegend: {
 				const QwtAxisId axisId(QwtAxis::XTop);
@@ -57158,7 +57074,7 @@ void QwtPlot::updateLegend()
  */
 void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 {
-	if (plotItem == NULL)
+	if (plotItem == nullptr)
 		return;
 
 	QList< QwtLegendData > legendData;
@@ -58090,7 +58006,7 @@ QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
 		return qvariant_cast<QwtPlotItem *>( itemInfo );
    \endcode
    \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a NULL pointer.
+   \return A plot item, when successful, otherwise a nullptr pointer.
    \sa itemToInfo()
  */
 QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
@@ -58098,7 +58014,7 @@ QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
 	if (itemInfo.canConvert< QwtPlotItem* >())
 		return qvariant_cast< QwtPlotItem* >(itemInfo);
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -58293,7 +58209,7 @@ public:
 		, maxMinor(5)
 		, isValid(false)
 		, scaleEngine(new QwtLinearScaleEngine())
-		, scaleWidget(NULL)
+		, scaleWidget(nullptr)
 	{
 	}
 
@@ -58392,7 +58308,7 @@ void QwtPlot::initAxesData()
 void QwtPlot::deleteAxesData()
 {
 	delete m_scaleData;
-	m_scaleData = NULL;
+	m_scaleData = nullptr;
 }
 
 /*!
@@ -58416,20 +58332,20 @@ bool QwtPlot::isAxisValid(QwtAxisId axisId) const
 /*!
    \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
    \param axisId Axis/轴 ID
-   \return Scale widget, or NULL if axisId is invalid/刻度控件指针；轴无效时返回 NULL
+   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
  */
 const QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId) const
 {
 	if (isAxisValid(axisId))
 		return m_scaleData->axisData(axisId).scaleWidget;
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
    \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
    \param axisId Axis/轴 ID
-   \return Scale widget, or NULL if axisId is invalid/刻度控件指针；轴无效时返回 NULL
+   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
  */
 QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
 {
@@ -58517,7 +58433,7 @@ QwtAxisId QwtPlot::visibleYAxisId() const
  */
 void QwtPlot::setAxisScaleEngine(QwtAxisId axisId, QwtScaleEngine* scaleEngine)
 {
-	if (isAxisValid(axisId) && scaleEngine != NULL) {
+	if (isAxisValid(axisId) && scaleEngine != nullptr) {
 		AxisData& d = m_scaleData->axisData(axisId);
 
 		delete d.scaleEngine;
@@ -58541,7 +58457,7 @@ QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId)
 	if (isAxisValid(axisId))
 		return m_scaleData->axisData(axisId).scaleEngine;
 	else
-		return NULL;
+		return nullptr;
 }
 
 /*!
@@ -58554,7 +58470,7 @@ const QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId) const
 	if (isAxisValid(axisId))
 		return m_scaleData->axisData(axisId).scaleEngine;
 	else
-		return NULL;
+		return nullptr;
 }
 
 /*!
@@ -58645,12 +58561,12 @@ const QwtScaleDiv& QwtPlot::axisScaleDiv(QwtAxisId axisId) const
  * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
  *
  * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or NULL if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
  */
 const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
 {
 	if (!isAxisValid(axisId))
-		return NULL;
+		return nullptr;
 
 	return axisWidget(axisId)->scaleDraw();
 }
@@ -58659,7 +58575,7 @@ const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
  * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
  *
  * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or NULL if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
  */
 QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId)
 {
@@ -61702,7 +61618,7 @@ public:
 	QwtPlotRescaler::AxisData* axisData(QwtAxisId axisId)
 	{
 		if (!QwtAxis::isValid(axisId))
-			return NULL;
+			return nullptr;
 
 		return &m_axisData[ axisId ];
 	}
@@ -62275,7 +62191,7 @@ namespace
 class QwtPolarPlotScaleData
 {
 public:
-	QwtPolarPlotScaleData() : isValid(false), scaleEngine(NULL)
+	QwtPolarPlotScaleData() : isValid(false), scaleEngine(nullptr)
 	{
 	}
 
@@ -62488,7 +62404,7 @@ void QwtPolarPlot::updateLegend()
  */
 void QwtPolarPlot::updateLegend(const QwtPolarItem* plotItem)
 {
-	if (plotItem == NULL)
+	if (plotItem == nullptr)
 		return;
 
 	QList< QwtLegendData > legendData;
@@ -62696,7 +62612,7 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 		return;
 
 	QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
-	if (scaleEngine == NULL || scaleEngine == scaleData.scaleEngine)
+	if (scaleEngine == nullptr || scaleEngine == scaleData.scaleEngine)
 		return;
 
 	delete scaleData.scaleEngine;
@@ -62716,7 +62632,7 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 {
 	if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-		return NULL;
+		return nullptr;
 
 	return m_data->scaleData[ scaleId ].scaleEngine;
 }
@@ -62730,7 +62646,7 @@ QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
 {
 	if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-		return NULL;
+		return nullptr;
 
 	return m_data->scaleData[ scaleId ].scaleEngine;
 }
@@ -62795,7 +62711,7 @@ void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
 const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 {
 	if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-		return NULL;
+		return nullptr;
 
 	return &m_data->scaleData[ scaleId ].scaleDiv;
 }
@@ -62814,7 +62730,7 @@ const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
 {
 	if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-		return NULL;
+		return nullptr;
 
 	return &m_data->scaleData[ scaleId ].scaleDiv;
 }
@@ -63482,7 +63398,7 @@ QVariant QwtPolarPlot::itemToInfo(QwtPolarItem* plotItem) const
 		return qvariant_cast<QwtPlotItem *>( itemInfo );
    \endcode
    \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a NULL pointer.
+   \return A plot item, when successful, otherwise a nullptr pointer.
    \sa itemToInfo()
  */
 QwtPolarItem* QwtPolarPlot::infoToItem(const QVariant& itemInfo) const
@@ -63490,7 +63406,7 @@ QwtPolarItem* QwtPolarPlot::infoToItem(const QVariant& itemInfo) const
 	if (itemInfo.canConvert< QwtPolarItem* >())
 		return qvariant_cast< QwtPolarItem* >(itemInfo);
 
-	return NULL;
+	return nullptr;
 }
 
 /*** End of inlined file: qwt_polar_plot.cpp ***/
@@ -63511,7 +63427,7 @@ namespace
 class QwtPolarGrid_AxisData
 {
 public:
-	QwtPolarGrid_AxisData() : isVisible(false), scaleDraw(NULL)
+	QwtPolarGrid_AxisData() : isVisible(false), scaleDraw(nullptr)
 	{
 	}
 
@@ -64298,7 +64214,7 @@ void QwtPolarGrid::updateScaleDraws(const QwtScaleMap& azimuthMap,
 			if (transform)
 				scaleDraw->setTransformation(transform->copy());
 			else
-				scaleDraw->setTransformation(NULL);
+				scaleDraw->setTransformation(nullptr);
 		} else {
 			QwtScaleDraw* scaleDraw = static_cast< QwtScaleDraw* >(axis.scaleDraw);
 
@@ -64328,7 +64244,7 @@ void QwtPolarGrid::updateScaleDraws(const QwtScaleMap& azimuthMap,
 			if (transform)
 				scaleDraw->setTransformation(transform->copy());
 			else
-				scaleDraw->setTransformation(NULL);
+				scaleDraw->setTransformation(nullptr);
 		}
 	}
 }
@@ -64440,7 +64356,7 @@ int QwtPolarGrid::marginHint() const
    Returns the scale draw of a specified axis
 
    \param axisId axis index ( QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
-   \return specified scaleDraw for axis, or NULL if axis is invalid.
+   \return specified scaleDraw for axis, or nullptr if axis is invalid.
    \sa azimuthScaleDraw()
  */
 const QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId) const
@@ -64448,14 +64364,14 @@ const QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId) const
 	if (axisId >= QwtPolar::AxisLeft && axisId <= QwtPolar::AxisBottom)
 		return static_cast< QwtScaleDraw* >(m_data->axisData[ axisId ].scaleDraw);
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
    Returns the scale draw of a specified axis
 
    \param axisId axis index ( QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
-   \return specified scaleDraw for axis, or NULL if axis is invalid.
+   \return specified scaleDraw for axis, or nullptr if axis is invalid.
    \sa setScaleDraw(), azimuthScaleDraw()
  */
 QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId)
@@ -64463,7 +64379,7 @@ QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId)
 	if (axisId >= QwtPolar::AxisLeft && axisId <= QwtPolar::AxisBottom)
 		return static_cast< QwtScaleDraw* >(m_data->axisData[ axisId ].scaleDraw);
 
-	return NULL;
+	return nullptr;
 }
 
 /*!
@@ -64971,7 +64887,7 @@ void QwtPolarLayout::activate(const QwtPolarPlot* plot, const QRectF& boundingRe
 class QwtPolarRenderer::PrivateData
 {
 public:
-	PrivateData() : plot(NULL)
+	PrivateData() : plot(nullptr)
 	{
 	}
 
@@ -65033,7 +64949,7 @@ void QwtPolarRenderer::renderDocument(QwtPolarPlot* plot,
 									  const QSizeF& sizeMM,
 									  int resolution)
 {
-	if (plot == NULL || sizeMM.isEmpty() || resolution <= 0)
+	if (plot == nullptr || sizeMM.isEmpty() || resolution <= 0)
 		return;
 
 	QString title = plot->title().text();
@@ -65206,7 +65122,7 @@ void QwtPolarRenderer::renderTo(QwtPolarPlot* plot, QSvgGenerator& generator) co
  */
 void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {
-	if (plot == NULL || painter == NULL || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
+	if (plot == nullptr || painter == nullptr || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
 		return;
 	}
 
@@ -65254,7 +65170,7 @@ void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRect
 
 	layout->invalidate();
 
-	m_data->plot = NULL;
+	m_data->plot = nullptr;
 }
 
 /*!
@@ -65303,7 +65219,7 @@ void QwtPolarRenderer::renderLegend(const QwtPolarPlot* plot, QPainter* painter,
  */
 bool QwtPolarRenderer::exportTo(QwtPolarPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {
-	if (plot == NULL)
+	if (plot == nullptr)
 		return false;
 
 	QString fileName = documentName;
@@ -65338,11 +65254,11 @@ bool QwtPolarRenderer::exportTo(QwtPolarPlot* plot, const QString& documentName,
 		filter += imageFilter;
 	}
 
-	fileName = QFileDialog::getSaveFileName(NULL,
+	fileName = QFileDialog::getSaveFileName(nullptr,
 											tr("Export File Name"),
 											fileName,
 											filter.join(";;"),
-											NULL,
+											nullptr,
 											QFileDialog::DontConfirmOverwrite);
 #endif
 	if (fileName.isEmpty())
@@ -67376,7 +67292,6 @@ QwtFigureWidgetOverlay::QwtFigureWidgetOverlay(QwtFigure* fig) : QwtWidgetOverla
 	connect(fig, &QwtFigure::axesRemoved, this, &QwtFigureWidgetOverlay::onAxesRemove);
 	setMouseTracking(true);
 	setTransparentForMouseEvents(false);  // 这里对鼠标不透明，避免被绘图的坐标轴事件截取
-	hide();
 }
 
 QwtFigureWidgetOverlay::~QwtFigureWidgetOverlay()
@@ -67656,6 +67571,25 @@ void QwtFigureWidgetOverlay::showPercentText(bool on)
 }
 
 /**
+ * @brief 取消,此函数会发射finished(false)信号,重写应该显示调用
+ *
+ * @code
+ * bool MyFigureWidgetOverlay::cancel(){
+ *    ...
+ *    //显示调用，用以触发finished(true);
+ *    QwtFigureWidgetOverlay::cancel();
+ *    return true;
+ * }
+ * @endcode
+ * @return
+ */
+bool QwtFigureWidgetOverlay::cancel()
+{
+	Q_EMIT finished(true);
+	return true;
+}
+
+/**
  * @brief 设置当前激活的窗口
  * @param w 如果w和当前的activePlot一样，不做任何动作
  * @note 此函数会发射信号activeWidgetChanged
@@ -67680,7 +67614,7 @@ void QwtFigureWidgetOverlay::drawOverlay(QPainter* p) const
 	}
 	// 对于激活的窗口，绘制到四周的距离提示线
 	p->save();
-	if (m_data->mIsStartResize) {
+	if (m_data->mIsStartResize && m_data->mFuntion.testFlag(FunResizePlot)) {
 		// 在resize状态，绘制控制线
 		drawResizeingControlLine(p, m_data->mWillSetNormRect);
 	} else {
@@ -67806,11 +67740,13 @@ void QwtFigureWidgetOverlay::startResize(QwtFigureWidgetOverlay::ControlType con
 	//!
 	//! 如果没有这个函数，鼠标移动到了底层绘图窗口或其他子窗口上，鼠标事件可能被这些窗口截获
 	//! QwtFigureWidgetOverlay收不到 mouseReleaseEvent，导致状态卡在"调整中"
+	// 上面注释改为英文
 	grabMouse();
 }
 
 void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 {
+#if 0
 	if (me->button() != Qt::LeftButton) {  // 只关心左键
 		QwtWidgetOverlay::mousePressEvent(me);
 		return;
@@ -67857,8 +67793,28 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 			me->ignore();  // 让事件继续传递
 		}
 		return;
+	} else {
+		// 有激活的窗口，但点击的不是激活的窗口
+		// todo .这里是否会在resize过程中，点击控制点的时候，点击到另外一个窗口的边界，导致切换激活窗口从而导致
+		// 很难操作
+		if (hitPlot && (hitPlot != d->mActiveWidget)) {
+			// 把hitPlot切换为激活窗口
+			setActiveWidget(hitPlot);
+			updateOverlay();
+			if (!testBuiltInFunctions(FunResizePlot)) {
+				// 处理了此事件
+				me->accept();
+				return;
+			}
+		}
 	}
-	// 到这里，说明一定有激活的窗体
+	//到此说明点击的就是当前激活的窗口，或者有激活窗口，但没点击到激活窗口，一般这种是调节窗口大小的时候
+	//鼠标点击调节按钮，点击位置一般在激活窗口之外
+	if (!testBuiltInFunctions(FunResizePlot)) {
+		// 没有resize plot 功能，退出
+		return QwtWidgetOverlay::mousePressEvent(me);
+	}
+	// 到这里，说明一定有激活的窗体,且要进行resize操作
 	ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
 
 	// 情况2： 点击到了激活窗口的外围
@@ -67892,6 +67848,68 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 	}
 
 	QwtWidgetOverlay::mousePressEvent(me);
+#else
+	if (me->button() != Qt::LeftButton) {
+		QwtWidgetOverlay::mousePressEvent(me);
+		return;
+	}
+
+	QWT_D(d);
+	const QPoint pos = qwt::compat::eventPos(me);
+
+	// 获取点击位置的窗口（按z序）
+	const QList< QwtPlot* > plots = figure()->allAxes(true);
+	QWidget* hitPlot              = nullptr;
+	for (QWidget* w : plots) {
+		if (w->frameGeometry().contains(pos, true)) {
+			hitPlot = w;
+			break;
+		}
+	}
+
+	// 重置之前的调整状态
+	if (d->mIsStartResize) {
+		d->mIsStartResize   = false;
+		d->mWillSetNormRect = QRectF();
+		releaseMouse();  // 确保释放鼠标捕获
+	}
+
+	// ========== 步骤1：检查是否点击了激活窗口的控制点 ==========
+	if (d->mActiveWidget && testBuiltInFunctions(FunResizePlot)) {
+		ControlType ct = getPositionControlType(pos, d->mActiveWidget->frameGeometry(), 4);
+
+		// 只有点击到真正的控制点（边缘和角落）才启动resize
+		if (ct != OutSide && ct != Inner) {
+			startResize(ct, pos);
+			me->accept();
+			return;
+		}
+		// 如果是 Inner，继续执行后续逻辑（可能切换窗口）
+	}
+
+	// ========== 步骤2：处理窗口切换 ==========
+	if (hitPlot) {
+		// 点击了某个窗口
+		if (hitPlot != d->mActiveWidget) {
+			setActiveWidget(hitPlot);
+			updateOverlay();
+		}
+		// 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
+		me->accept();
+		return;
+	}
+
+	// ========== 步骤3：点击空白处 ==========
+	if (d->mActiveWidget) {
+		// 有激活窗口时点击空白，取消激活
+		setActiveWidget(nullptr);
+		updateOverlay();
+		me->accept();
+	} else {
+		// 无激活窗口时点击空白，让事件继续传递
+		me->ignore();
+	}
+#endif
 }
 
 void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
@@ -67899,7 +67917,10 @@ void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
 	QWT_D(d);
 
 	QWidget* activeW = d->mActiveWidget;
-
+	if (!testBuiltInFunctions(FunResizePlot)) {
+		// 没有resize plot 功能，退出
+		return QwtWidgetOverlay::mouseMoveEvent(me);
+	}
 	if (!activeW) {
 		// 没有激活窗口，更新光标并传递事件
 		unsetCursor();
@@ -68047,6 +68068,10 @@ void QwtFigureWidgetOverlay::mouseReleaseEvent(QMouseEvent* me)
 	qDebug() << "QwtFigureWidgetOverlay::onMouseReleaseEvent" << me->pos();
 #endif
 	QWT_D(d);
+	if (!testBuiltInFunctions(FunResizePlot)) {
+		// 没有resize plot 功能，退出
+		return QwtWidgetOverlay::mouseReleaseEvent(me);
+	}
 	if (me->button() == Qt::LeftButton && d->mIsStartResize) {
 		// 结束调整尺寸操作
 		d->mIsStartResize = false;
@@ -68086,6 +68111,11 @@ void QwtFigureWidgetOverlay::keyPressEvent(QKeyEvent* ke)
 	case Qt::Key_Down: {
 		selectNextWidget(false);
 		ke->accept();
+	case Qt::Key_Escape:
+		if (cancel()) {
+			hide();
+		}
+		ke->accept();
 	} break;
 
 	default:
@@ -68100,6 +68130,7 @@ void QwtFigureWidgetOverlay::onAxesRemove(QwtPlot* removedAxes)
 		m_data->mActiveWidget = nullptr;
 	}
 }
+
 /*** End of inlined file: qwt_figure_widget_overlay.cpp ***/
 
 // control
@@ -68589,7 +68620,7 @@ public:
 		, origin(90.0)
 		, minScaleArc(0.0)
 		, maxScaleArc(0.0)
-		, needle(NULL)
+		, needle(nullptr)
 		, arcOffset(0.0)
 		, mouseOffset(0.0)
 	{
@@ -68963,7 +68994,7 @@ void QwtDial::drawNeedle(QPainter* painter) const
 void QwtDial::drawScale(QPainter* painter, const QPointF& center, double radius) const
 {
 	QwtRoundScaleDraw* sd = const_cast< QwtRoundScaleDraw* >(scaleDraw());
-	if (sd == NULL)
+	if (sd == nullptr)
 		return;
 
 	sd->setRadius(radius);
@@ -69465,7 +69496,7 @@ QwtText QwtCompassScaleDraw::label(double value) const
 class QwtCompass::PrivateData
 {
 public:
-	PrivateData() : rose(NULL)
+	PrivateData() : rose(nullptr)
 	{
 	}
 
@@ -70432,7 +70463,7 @@ QSize QwtKnob::minimumSizeHint() const
 
 namespace
 {
-class QwtAnalogClockScaleDraw QWT_FINAL : public QwtRoundScaleDraw
+class QwtAnalogClockScaleDraw final : public QwtRoundScaleDraw
 {
 public:
 	QwtAnalogClockScaleDraw()
@@ -70448,7 +70479,7 @@ public:
 		setPenWidthF(1.0);
 	}
 
-	virtual QwtText label(double value) const QWT_OVERRIDE
+	virtual QwtText label(double value) const override
 	{
 		if (qFuzzyCompare(value + 1.0, 1.0))
 			value = 60.0 * 60.0 * 12.0;
@@ -70508,7 +70539,7 @@ QwtAnalogClock::QwtAnalogClock(QWidget* parent) : QwtDial(parent)
 		QwtDialSimpleNeedle* hand = new QwtDialSimpleNeedle(QwtDialSimpleNeedle::Arrow, true, handColor, knobColor);
 		hand->setWidth(width);
 
-		m_hand[ i ] = NULL;
+		m_hand[ i ] = nullptr;
 		setHand(static_cast< Hand >(i), hand);
 	}
 }
@@ -70552,7 +70583,7 @@ void QwtAnalogClock::setHand(Hand hand, QwtDialNeedle* needle)
 QwtDialNeedle* QwtAnalogClock::hand(Hand hd)
 {
 	if (hd < 0 || hd >= NHands)
-		return NULL;
+		return nullptr;
 
 	return m_hand[ hd ];
 }
@@ -70993,7 +71024,7 @@ bool QwtMagnifier::eventFilter(QObject* object, QEvent* event)
  */
 void QwtMagnifier::widgetMousePressEvent(QMouseEvent* mouseEvent)
 {
-	if (parentWidget() == NULL)
+	if (parentWidget() == nullptr)
 		return;
 
 	if ((mouseEvent->button() != m_data->mouseButton) || (mouseEvent->modifiers() != m_data->mouseButtonModifiers)) {
@@ -71360,6 +71391,8 @@ GL2PSDLL_API GLint gl2psSetTexScaling(GLfloat scaling);
 
 
 /*** Start of inlined file: gl2ps.c ***/
+#include "QwtPlot.h"
+
 #include <math.h>
 #include <string.h>
 #include <sys/types.h>
@@ -78378,7 +78411,7 @@ void Axis::setScale(Qwt3D::SCALETYPE val)
 /*** Start of inlined file: qwt3d_color.cpp ***/
 using namespace Qwt3D;
 
-StandardColor::StandardColor(Plot3D *data, unsigned size) : data_(data)
+StandardColor::StandardColor(Plot3D* data, unsigned size) : data_(data)
 {
 	Q_ASSERT(data_);
 
@@ -78393,18 +78426,18 @@ void StandardColor::reset(unsigned size)
 	double dsize = size;
 
 	for (unsigned int i = 0; i != size; ++i) {
-		elem.r = i / dsize;
-		elem.g = i / dsize / 4;
-		elem.b = 1 - i / dsize;
-		elem.a = 1.0;
-		colors_[i] = elem;
+		elem.r       = i / dsize;
+		elem.g       = i / dsize / 4;
+		elem.b       = 1 - i / dsize;
+		elem.a       = 1.0;
+		colors_[ i ] = elem;
 	}
 }
 
 /**
 		Assigns a new ColorVector (Also overwrites the constructors size argument)
 */
-void StandardColor::setColorVector(ColorVector const &cv)
+void StandardColor::setColorVector(ColorVector const& cv)
 {
 	colors_ = cv;
 }
@@ -78417,22 +78450,22 @@ void StandardColor::setAlpha(double a)
 	RGBA elem;
 
 	for (unsigned int i = 0; i != colors_.size(); ++i) {
-		elem = colors_[i];
-		elem.a = a;
-		colors_[i] = elem;
+		elem         = colors_[ i ];
+		elem.a       = a;
+		colors_[ i ] = elem;
 	}
 }
 
 RGBA StandardColor::operator()(double, double, double z) const
 {
 	Q_ASSERT(data_);
-	int index = (int)((colors_.size() - 1) * (z - data_->hull().minVertex.z)
-					  / (data_->hull().maxVertex.z - data_->hull().minVertex.z));
+	int index = static_cast< int >((colors_.size() - 1) * (z - data_->hull().minVertex.z)
+								   / (data_->hull().maxVertex.z - data_->hull().minVertex.z));
 	if (index < 0)
 		index = 0;
-	if ((unsigned int)index > colors_.size() - 1)
-		index = (int)(colors_.size() - 1);
-	return colors_[index];
+	if (static_cast< unsigned int >(index) > colors_.size() - 1)
+		index = static_cast< int >(colors_.size() - 1);
+	return colors_[ index ];
 }
 
 /*** End of inlined file: qwt3d_color.cpp ***/
@@ -78445,7 +78478,7 @@ using namespace Qwt3D;
 CoordinateSystem::CoordinateSystem(Triple first, Triple second, COORDSTYLE st)
 {
 	autodecoration_ = true;
-	axes = std::vector<Axis>(12);
+	axes            = std::vector< Axis >(12);
 	setStyle(st);
 	setLineSmooth(true);
 	init(first, second);
@@ -78466,7 +78499,7 @@ CoordinateSystem::~CoordinateSystem()
 void CoordinateSystem::destroy()
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setLabelString("");
+		axes[ i ].setLabelString("");
 
 	detachAll();
 }
@@ -78476,63 +78509,60 @@ void CoordinateSystem::init(Triple first, Triple second)
 	destroy();
 
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setScale(LINEARSCALE);
+		axes[ i ].setScale(LINEARSCALE);
 
 	Triple dv = second - first;
 
 	setPosition(first, second);
 
-	double majl = dv.length() / 100; // 1 %
+	double majl = dv.length() / 100;  // 1 %
 	setTicLength(majl, 0.6 * majl);
 
-	axes[X1].setPosition(first, first + Triple(dv.x, 0, 0)); // front bottom x
-	axes[Y1].setPosition(first, first + Triple(0, dv.y, 0)); // bottom left  y
-	axes[Z1].setPosition(first + Triple(0, dv.y, 0), first + Triple(0, dv.y, dv.z)); // back left z
-	axes[X1].setTicOrientation(0, -1, 0);
-	axes[Y1].setTicOrientation(-1, 0, 0);
-	axes[Z1].setTicOrientation(-1, 0, 0);
+	axes[ X1 ].setPosition(first, first + Triple(dv.x, 0, 0));                          // front bottom x
+	axes[ Y1 ].setPosition(first, first + Triple(0, dv.y, 0));                          // bottom left  y
+	axes[ Z1 ].setPosition(first + Triple(0, dv.y, 0), first + Triple(0, dv.y, dv.z));  // back left z
+	axes[ X1 ].setTicOrientation(0, -1, 0);
+	axes[ Y1 ].setTicOrientation(-1, 0, 0);
+	axes[ Z1 ].setTicOrientation(-1, 0, 0);
 
-	axes[X1].setLimits(first.x, second.x);
-	axes[X2].setLimits(first.x, second.x);
-	axes[X3].setLimits(first.x, second.x);
-	axes[X4].setLimits(first.x, second.x);
+	axes[ X1 ].setLimits(first.x, second.x);
+	axes[ X2 ].setLimits(first.x, second.x);
+	axes[ X3 ].setLimits(first.x, second.x);
+	axes[ X4 ].setLimits(first.x, second.x);
 
-	axes[Y1].setLimits(first.y, second.y);
-	axes[Y2].setLimits(first.y, second.y);
-	axes[Y3].setLimits(first.y, second.y);
-	axes[Y4].setLimits(first.y, second.y);
+	axes[ Y1 ].setLimits(first.y, second.y);
+	axes[ Y2 ].setLimits(first.y, second.y);
+	axes[ Y3 ].setLimits(first.y, second.y);
+	axes[ Y4 ].setLimits(first.y, second.y);
 
-	axes[Z1].setLimits(first.z, second.z);
-	axes[Z2].setLimits(first.z, second.z);
-	axes[Z3].setLimits(first.z, second.z);
-	axes[Z4].setLimits(first.z, second.z);
+	axes[ Z1 ].setLimits(first.z, second.z);
+	axes[ Z2 ].setLimits(first.z, second.z);
+	axes[ Z3 ].setLimits(first.z, second.z);
+	axes[ Z4 ].setLimits(first.z, second.z);
 
 	// remaining x axes
-	axes[X2].setPosition(first + Triple(0, 0, dv.z), first + Triple(dv.x, 0, dv.z)); // front top x
-	axes[X3].setPosition(first + Triple(0, dv.y, dv.z), second); // back top x
-	axes[X4].setPosition(first + Triple(0, dv.y, 0),
-						 first + Triple(dv.x, dv.y, 0)); // back bottom x
-	axes[X2].setTicOrientation(0, -1, 0);
-	axes[X3].setTicOrientation(0, 1, 0);
-	axes[X4].setTicOrientation(0, 1, 0);
+	axes[ X2 ].setPosition(first + Triple(0, 0, dv.z), first + Triple(dv.x, 0, dv.z));  // front top x
+	axes[ X3 ].setPosition(first + Triple(0, dv.y, dv.z), second);                      // back top x
+	axes[ X4 ].setPosition(first + Triple(0, dv.y, 0), first + Triple(dv.x, dv.y, 0));  // back bottom x
+	axes[ X2 ].setTicOrientation(0, -1, 0);
+	axes[ X3 ].setTicOrientation(0, 1, 0);
+	axes[ X4 ].setTicOrientation(0, 1, 0);
 
 	// remaining y axes
-	axes[Y2].setPosition(first + Triple(dv.x, 0, 0),
-						 first + Triple(dv.x, dv.y, 0)); // bottom right y
-	axes[Y3].setPosition(first + Triple(dv.x, 0, dv.z), second); // top right y
-	axes[Y4].setPosition(first + Triple(0, 0, dv.z), first + Triple(0, dv.y, dv.z)); // top left y
-	axes[Y2].setTicOrientation(1, 0, 0);
-	axes[Y3].setTicOrientation(1, 0, 0);
-	axes[Y4].setTicOrientation(-1, 0, 0);
+	axes[ Y2 ].setPosition(first + Triple(dv.x, 0, 0), first + Triple(dv.x, dv.y, 0));  // bottom right y
+	axes[ Y3 ].setPosition(first + Triple(dv.x, 0, dv.z), second);                      // top right y
+	axes[ Y4 ].setPosition(first + Triple(0, 0, dv.z), first + Triple(0, dv.y, dv.z));  // top left y
+	axes[ Y2 ].setTicOrientation(1, 0, 0);
+	axes[ Y3 ].setTicOrientation(1, 0, 0);
+	axes[ Y4 ].setTicOrientation(-1, 0, 0);
 
 	// remaining z axes
-	axes[Z2].setPosition(first, first + Triple(0, 0, dv.z)); // front left z
-	axes[Z4].setPosition(first + Triple(dv.x, dv.y, 0), second); // back right z
-	axes[Z3].setPosition(first + Triple(dv.x, 0, 0),
-						 first + Triple(dv.x, 0, dv.z)); // front right z
-	axes[Z2].setTicOrientation(-1, 0, 0);
-	axes[Z4].setTicOrientation(1, 0, 0);
-	axes[Z3].setTicOrientation(1, 0, 0);
+	axes[ Z2 ].setPosition(first, first + Triple(0, 0, dv.z));                          // front left z
+	axes[ Z4 ].setPosition(first + Triple(dv.x, dv.y, 0), second);                      // back right z
+	axes[ Z3 ].setPosition(first + Triple(dv.x, 0, 0), first + Triple(dv.x, 0, dv.z));  // front right z
+	axes[ Z2 ].setTicOrientation(-1, 0, 0);
+	axes[ Z4 ].setTicOrientation(1, 0, 0);
+	axes[ Z3 ].setTicOrientation(1, 0, 0);
 
 	setStyle(style_);
 }
@@ -78567,27 +78597,27 @@ void CoordinateSystem::draw()
 //! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.
 void CoordinateSystem::chooseAxes()
 {
-	vector<Triple> beg(axes.size());
-	vector<Triple> end(axes.size());
-	vector<Tuple> src(2 * axes.size());
+	vector< Triple > beg(axes.size());
+	vector< Triple > end(axes.size());
+	vector< Tuple > src(2 * axes.size());
 
 	unsigned i;
 	// collect axes viewport coordinates and initialize
 	for (i = 0; i != axes.size(); ++i) {
 		if (style() != NOCOORD)
-			attach(&axes[i]);
+			attach(&axes[ i ]);
 
-		beg[i] = World2ViewPort(axes[i].begin());
-		end[i] = World2ViewPort(axes[i].end());
-		src[i] = Tuple(beg[i].x, beg[i].y);
-		src[axes.size() + i] = Tuple(end[i].x, end[i].y);
+		beg[ i ]               = World2ViewPort(axes[ i ].begin());
+		end[ i ]               = World2ViewPort(axes[ i ].end());
+		src[ i ]               = Tuple(beg[ i ].x, beg[ i ].y);
+		src[ axes.size() + i ] = Tuple(end[ i ].x, end[ i ].y);
 
-		axes[i].setScaling(false);
-		axes[i].setNumbers(false);
-		axes[i].setLabel(false);
+		axes[ i ].setScaling(false);
+		axes[ i ].setNumbers(false);
+		axes[ i ].setLabel(false);
 	}
 
-	vector<unsigned> idx;
+	vector< unsigned > idx;
 	convexhull2d(idx, src);
 
 	int rem_x = -1;
@@ -78608,36 +78638,32 @@ void CoordinateSystem::chooseAxes()
 	for (unsigned k = 0; k != idx.size(); ++k) {
 		Triple one, two;
 
-		if (idx[k] >= axes.size()) // is end point
-			one = end[idx[k] - axes.size()];
-		else // is begin point
-			one = beg[idx[k]];
+		if (idx[ k ] >= axes.size())  // is end point
+			one = end[ idx[ k ] - axes.size() ];
+		else  // is begin point
+			one = beg[ idx[ k ] ];
 
-		unsigned int next =
-				idx[(k + 1) % idx.size()]; // next point in cv (considered as ring buffer of points)
+		unsigned int next = idx[ (k + 1) % idx.size() ];  // next point in cv (considered as ring buffer of points)
 
 		if (next >= axes.size())
-			two = end[next - axes.size()];
+			two = end[ next - axes.size() ];
 		else
-			two = beg[next];
+			two = beg[ next ];
 
 		for (i = 0; i != axes.size(); ++i) {
-			if ((one == beg[i] && two == end[i]) || (two == beg[i] && one == end[i])) {
-				if (i == X1 || i == X2 || i == X3 || i == X4) // x Achsen
+			if ((one == beg[ i ] && two == end[ i ]) || (two == beg[ i ] && one == end[ i ])) {
+				if (i == X1 || i == X2 || i == X3 || i == X4)  // x Achsen
 				{
-					if (rem_x >= 0) // schon zweite Achse der konvexen Huelle ?
+					if (rem_x >= 0)  // schon zweite Achse der konvexen Huelle ?
 					{
 						// untere der beiden x Achsen
-						double y = min(min(end[rem_x].y, end[i].y), min(beg[rem_x].y, beg[i].y));
-						choice_x = (y == beg[i].y || y == end[i].y) ? i : rem_x;
+						double y = min(min(end[ rem_x ].y, end[ i ].y), min(beg[ rem_x ].y, beg[ i ].y));
+						choice_x = (y == beg[ i ].y || y == end[ i ].y) ? i : rem_x;
 
-						other_x = (choice_x == (int)i) ? rem_x : (int)i;
-						left = (beg[choice_x].x < beg[other_x].x
-								|| end[choice_x].x < end[other_x].x)
-								? true
-								: false;
+						other_x = (choice_x == static_cast< int >(i)) ? rem_x : static_cast< int >(i);
+						left = (beg[ choice_x ].x < beg[ other_x ].x || end[ choice_x ].x < end[ other_x ].x) ? true : false;
 
-						autoDecorateExposedAxis(axes[choice_x], left);
+						autoDecorateExposedAxis(axes[ choice_x ], left);
 
 						rem_x = -1;
 					} else {
@@ -78646,15 +78672,12 @@ void CoordinateSystem::chooseAxes()
 				} else if (i == Y1 || i == Y2 || i == Y3 || i == Y4) {
 					if (rem_y >= 0) {
 						// untere der beiden y Achsen
-						double y = min(min(end[rem_y].y, end[i].y), min(beg[rem_y].y, beg[i].y));
-						choice_y = (y == beg[i].y || y == end[i].y) ? i : rem_y;
+						double y = min(min(end[ rem_y ].y, end[ i ].y), min(beg[ rem_y ].y, beg[ i ].y));
+						choice_y = (y == beg[ i ].y || y == end[ i ].y) ? i : rem_y;
 
-						other_y = (choice_y == (int)i) ? rem_y : (int)i;
-						left = (beg[choice_y].x < beg[other_y].x
-								|| end[choice_y].x < end[other_y].x)
-								? true
-								: false;
-						autoDecorateExposedAxis(axes[choice_y], left);
+						other_y = (choice_y == static_cast< int >(i)) ? rem_y : static_cast< int >(i);
+						left = (beg[ choice_y ].x < beg[ other_y ].x || end[ choice_y ].x < end[ other_y ].x) ? true : false;
+						autoDecorateExposedAxis(axes[ choice_y ], left);
 
 						rem_y = -1;
 					} else {
@@ -78663,10 +78686,10 @@ void CoordinateSystem::chooseAxes()
 				} else if (i == Z1 || i == Z2 || i == Z3 || i == Z4) {
 					if (rem_z >= 0) {
 						// hintere der beiden z Achsen
-						double z = max(max(end[rem_z].z, end[i].z), max(beg[rem_z].z, beg[i].z));
-						choice_z = (z == beg[i].z || z == end[i].z) ? i : rem_z;
+						double z = max(max(end[ rem_z ].z, end[ i ].z), max(beg[ rem_z ].z, beg[ i ].z));
+						choice_z = (z == beg[ i ].z || z == end[ i ].z) ? i : rem_z;
 
-						other_z = (choice_z == (int)i) ? rem_z : (int)i;
+						other_z = (choice_z == static_cast< int >(i)) ? rem_z : static_cast< int >(i);
 
 						rem_z = -1;
 
@@ -78675,47 +78698,42 @@ void CoordinateSystem::chooseAxes()
 					}
 				}
 			}
-		} // for axes
-	} // for idx
+		}  // for axes
+	}  // for idx
 
 	// fit z axis in - the onthewall axis if the decorated axes build a continous line, the opposite
 	// else
 	if (choice_x >= 0 && choice_y >= 0 && choice_z >= 0) {
-		left = (beg[choice_z].x < beg[other_z].x || end[choice_z].x < end[other_z].x) ? true
-																					  : false;
+		left = (beg[ choice_z ].x < beg[ other_z ].x || end[ choice_z ].x < end[ other_z ].x) ? true : false;
 
-		if (axes[choice_z].begin() == axes[choice_x].begin()
-			|| axes[choice_z].begin() == axes[choice_x].end()
-			|| axes[choice_z].begin() == axes[choice_y].begin()
-			|| axes[choice_z].begin() == axes[choice_y].end()
-			|| axes[choice_z].end() == axes[choice_x].begin()
-			|| axes[choice_z].end() == axes[choice_x].end()
-			|| axes[choice_z].end() == axes[choice_y].begin()
-			|| axes[choice_z].end() == axes[choice_y].end()
+		if (axes[ choice_z ].begin() == axes[ choice_x ].begin() || axes[ choice_z ].begin() == axes[ choice_x ].end()
+			|| axes[ choice_z ].begin() == axes[ choice_y ].begin() || axes[ choice_z ].begin() == axes[ choice_y ].end()
+			|| axes[ choice_z ].end() == axes[ choice_x ].begin() || axes[ choice_z ].end() == axes[ choice_x ].end()
+			|| axes[ choice_z ].end() == axes[ choice_y ].begin() || axes[ choice_z ].end() == axes[ choice_y ].end()
 
 		) {
-			autoDecorateExposedAxis(axes[choice_z], left);
+			autoDecorateExposedAxis(axes[ choice_z ], left);
 		}
 
 		else {
-			autoDecorateExposedAxis(axes[other_z], !left);
-			choice_z = other_z; // for FRAME
+			autoDecorateExposedAxis(axes[ other_z ], !left);
+			choice_z = other_z;  // for FRAME
 		}
 	}
 
 	if (style() == FRAME) {
 		for (i = 0; i != axes.size(); ++i) {
-			if ((int)i != choice_x && (int)i != choice_y && (int)i != choice_z)
-				detach(&axes[i]);
+			if (static_cast< int >(i) != choice_x && static_cast< int >(i) != choice_y && static_cast< int >(i) != choice_z)
+				detach(&axes[ i ]);
 		}
 	}
 }
 
-void CoordinateSystem::autoDecorateExposedAxis(Axis &ax, bool left)
+void CoordinateSystem::autoDecorateExposedAxis(Axis& ax, bool left)
 {
 	Triple diff = World2ViewPort(ax.end()) - World2ViewPort(ax.begin());
 
-	diff = Triple(diff.x, diff.y, 0); // projection
+	diff = Triple(diff.x, diff.y, 0);  // projection
 
 	double s = diff.length();
 
@@ -78727,37 +78745,37 @@ void CoordinateSystem::autoDecorateExposedAxis(Axis &ax, bool left)
 	ax.setLabel(true);
 
 	const double SQRT_2 = 0.7071067;
-	double sina = fabs(diff.y / s);
+	double sina         = fabs(diff.y / s);
 
-	if (left) // leftmost (compared with antagonist in CV)  axis -> draw decorations on the left
-			  // side
+	if (left)  // leftmost (compared with antagonist in CV)  axis -> draw decorations on the left
+			   // side
 	{
-		if (diff.x >= 0 && diff.y >= 0 && sina < SQRT_2) // 0..Pi/4
+		if (diff.x >= 0 && diff.y >= 0 && sina < SQRT_2)  // 0..Pi/4
 		{
 			ax.setNumberAnchor(BottomCenter);
-		} else if (diff.x >= 0 && diff.y >= 0 && !left) // octant 2
+		} else if (diff.x >= 0 && diff.y >= 0 && !left)  // octant 2
 		{
 			ax.setNumberAnchor(CenterRight);
-		} else if (diff.x <= 0 && diff.y >= 0 && sina >= SQRT_2) // octant 3
+		} else if (diff.x <= 0 && diff.y >= 0 && sina >= SQRT_2)  // octant 3
 		{
 			ax.setNumberAnchor(CenterRight);
-		} else if (diff.x <= 0 && diff.y >= 0) // octant 4
+		} else if (diff.x <= 0 && diff.y >= 0)  // octant 4
 		{
 			ax.setNumberAnchor(TopCenter);
-		} else if (diff.x <= 0 && diff.y <= 0 && sina <= SQRT_2) // octant 5
+		} else if (diff.x <= 0 && diff.y <= 0 && sina <= SQRT_2)  // octant 5
 		{
 			ax.setNumberAnchor(BottomCenter);
-		} else if (diff.x <= 0 && diff.y <= 0) // octant 6
+		} else if (diff.x <= 0 && diff.y <= 0)  // octant 6
 		{
 			ax.setNumberAnchor(CenterRight);
-		} else if (diff.x >= 0 && diff.y <= 0 && sina >= SQRT_2) // octant 7
+		} else if (diff.x >= 0 && diff.y <= 0 && sina >= SQRT_2)  // octant 7
 		{
 			ax.setNumberAnchor(CenterRight);
-		} else if (diff.x >= 0 && diff.y <= 0) // octant 8
+		} else if (diff.x >= 0 && diff.y <= 0)  // octant 8
 		{
 			ax.setNumberAnchor(TopCenter);
 		}
-	} else // rightmost axis
+	} else  // rightmost axis
 	{
 		if (diff.x >= 0 && diff.y >= 0 && sina <= SQRT_2) {
 			ax.setNumberAnchor(TopCenter);
@@ -78781,77 +78799,77 @@ void CoordinateSystem::autoDecorateExposedAxis(Axis &ax, bool left)
 
 void CoordinateSystem::setPosition(Triple first, Triple second)
 {
-	first_ = first;
+	first_  = first;
 	second_ = second;
 }
 
 void CoordinateSystem::setTicLength(double major, double minor)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setTicLength(major, minor);
+		axes[ i ].setTicLength(major, minor);
 }
 
 void CoordinateSystem::adjustNumbers(int val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].adjustNumbers(val);
+		axes[ i ].adjustNumbers(val);
 }
 
 void CoordinateSystem::adjustLabels(int val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].adjustLabel(val);
+		axes[ i ].adjustLabel(val);
 }
 
 void CoordinateSystem::setAutoScale(bool val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setAutoScale(val);
+		axes[ i ].setAutoScale(val);
 }
 
 void CoordinateSystem::setAxesColor(RGBA val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setColor(val);
+		axes[ i ].setColor(val);
 }
 
 void CoordinateSystem::recalculateAxesTics()
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].recalculateTics();
+		axes[ i ].recalculateTics();
 }
 
-void CoordinateSystem::setNumberFont(QString const &family, int pointSize, int weight, bool italic)
+void CoordinateSystem::setNumberFont(QString const& family, int pointSize, int weight, bool italic)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setNumberFont(family, pointSize, weight, italic);
+		axes[ i ].setNumberFont(family, pointSize, weight, italic);
 }
 
-void CoordinateSystem::setNumberFont(QFont const &font)
+void CoordinateSystem::setNumberFont(QFont const& font)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setNumberFont(font);
+		axes[ i ].setNumberFont(font);
 }
 
 void CoordinateSystem::setNumberColor(RGBA val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setNumberColor(val);
+		axes[ i ].setNumberColor(val);
 }
 
 void CoordinateSystem::setStandardScale()
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setScale(LINEARSCALE);
+		axes[ i ].setScale(LINEARSCALE);
 }
 
-void CoordinateSystem::setLabelFont(QFont const &font)
+void CoordinateSystem::setLabelFont(QFont const& font)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setLabelFont(font);
+		axes[ i ].setLabelFont(font);
 }
 
-void CoordinateSystem::setLabelFont(QString const &family, int pointSize, int weight, bool italic)
+void CoordinateSystem::setLabelFont(QString const& family, int pointSize, int weight, bool italic)
 {
 	setLabelFont(QFont(family, pointSize, weight, italic));
 }
@@ -78859,13 +78877,13 @@ void CoordinateSystem::setLabelFont(QString const &family, int pointSize, int we
 void CoordinateSystem::setLabelColor(RGBA val)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setLabelColor(val);
+		axes[ i ].setLabelColor(val);
 }
 
 void CoordinateSystem::setLineWidth(double val, double majfac, double minfac)
 {
 	for (unsigned i = 0; i != axes.size(); ++i)
-		axes[i].setLineWidth(val, majfac, minfac);
+		axes[ i ].setLineWidth(val, majfac, minfac);
 }
 
 void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS frame_3)
@@ -78875,19 +78893,19 @@ void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS f
 	switch (s) {
 	case NOCOORD: {
 		for (unsigned i = 0; i != axes.size(); ++i)
-			detach(&axes[i]);
+			detach(&axes[ i ]);
 	} break;
 	case BOX: {
 		for (unsigned i = 0; i != axes.size(); ++i)
-			attach(&axes[i]);
+			attach(&axes[ i ]);
 	} break;
 	case FRAME: {
 		for (unsigned i = 0; i != axes.size(); ++i)
-			detach(&axes[i]);
+			detach(&axes[ i ]);
 		if (!autoDecoration()) {
-			attach(&axes[frame_1]);
-			attach(&axes[frame_2]);
-			attach(&axes[frame_3]);
+			attach(&axes[ frame_1 ]);
+			attach(&axes[ frame_2 ]);
+			attach(&axes[ frame_3 ]);
 		}
 	} break;
 	default:
@@ -78904,7 +78922,7 @@ For most cases an identical tic distribution is therefore recommended.
 */
 void CoordinateSystem::setGridLines(bool majors, bool minors, int sides)
 {
-	sides_ = sides;
+	sides_          = sides;
 	majorgridlines_ = majors;
 	minorgridlines_ = minors;
 }
@@ -78913,32 +78931,32 @@ void CoordinateSystem::drawMajorGridLines()
 {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4d(gridlinecolor_.r, gridlinecolor_.g, gridlinecolor_.b, gridlinecolor_.a);
-	setDeviceLineWidth(axes[X1].majLineWidth());
+	setDeviceLineWidth(axes[ X1 ].majLineWidth());
 
 	glBegin(GL_LINES);
 	if (sides_ & Qwt3D::FLOOR) {
-		drawMajorGridLines(axes[X1], axes[X4]);
-		drawMajorGridLines(axes[Y1], axes[Y2]);
+		drawMajorGridLines(axes[ X1 ], axes[ X4 ]);
+		drawMajorGridLines(axes[ Y1 ], axes[ Y2 ]);
 	}
 	if (sides_ & Qwt3D::CEIL) {
-		drawMajorGridLines(axes[X2], axes[X3]);
-		drawMajorGridLines(axes[Y3], axes[Y4]);
+		drawMajorGridLines(axes[ X2 ], axes[ X3 ]);
+		drawMajorGridLines(axes[ Y3 ], axes[ Y4 ]);
 	}
 	if (sides_ & Qwt3D::LEFT) {
-		drawMajorGridLines(axes[Y1], axes[Y4]);
-		drawMajorGridLines(axes[Z1], axes[Z2]);
+		drawMajorGridLines(axes[ Y1 ], axes[ Y4 ]);
+		drawMajorGridLines(axes[ Z1 ], axes[ Z2 ]);
 	}
 	if (sides_ & Qwt3D::RIGHT) {
-		drawMajorGridLines(axes[Y2], axes[Y3]);
-		drawMajorGridLines(axes[Z3], axes[Z4]);
+		drawMajorGridLines(axes[ Y2 ], axes[ Y3 ]);
+		drawMajorGridLines(axes[ Z3 ], axes[ Z4 ]);
 	}
 	if (sides_ & Qwt3D::FRONT) {
-		drawMajorGridLines(axes[X1], axes[X2]);
-		drawMajorGridLines(axes[Z2], axes[Z3]);
+		drawMajorGridLines(axes[ X1 ], axes[ X2 ]);
+		drawMajorGridLines(axes[ Z2 ], axes[ Z3 ]);
 	}
 	if (sides_ & Qwt3D::BACK) {
-		drawMajorGridLines(axes[X3], axes[X4]);
-		drawMajorGridLines(axes[Z4], axes[Z1]);
+		drawMajorGridLines(axes[ X3 ], axes[ X4 ]);
+		drawMajorGridLines(axes[ Z4 ], axes[ Z1 ]);
 	}
 	glEnd();
 }
@@ -78947,55 +78965,53 @@ void CoordinateSystem::drawMinorGridLines()
 {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4d(gridlinecolor_.r, gridlinecolor_.g, gridlinecolor_.b, gridlinecolor_.a);
-	setDeviceLineWidth(axes[X1].minLineWidth());
+	setDeviceLineWidth(axes[ X1 ].minLineWidth());
 
 	glBegin(GL_LINES);
 	if (sides_ & Qwt3D::FLOOR) {
-		drawMinorGridLines(axes[X1], axes[X4]);
-		drawMinorGridLines(axes[Y1], axes[Y2]);
+		drawMinorGridLines(axes[ X1 ], axes[ X4 ]);
+		drawMinorGridLines(axes[ Y1 ], axes[ Y2 ]);
 	}
 	if (sides_ & Qwt3D::CEIL) {
-		drawMinorGridLines(axes[X2], axes[X3]);
-		drawMinorGridLines(axes[Y3], axes[Y4]);
+		drawMinorGridLines(axes[ X2 ], axes[ X3 ]);
+		drawMinorGridLines(axes[ Y3 ], axes[ Y4 ]);
 	}
 	if (sides_ & Qwt3D::LEFT) {
-		drawMinorGridLines(axes[Y1], axes[Y4]);
-		drawMinorGridLines(axes[Z1], axes[Z2]);
+		drawMinorGridLines(axes[ Y1 ], axes[ Y4 ]);
+		drawMinorGridLines(axes[ Z1 ], axes[ Z2 ]);
 	}
 	if (sides_ & Qwt3D::RIGHT) {
-		drawMinorGridLines(axes[Y2], axes[Y3]);
-		drawMinorGridLines(axes[Z3], axes[Z4]);
+		drawMinorGridLines(axes[ Y2 ], axes[ Y3 ]);
+		drawMinorGridLines(axes[ Z3 ], axes[ Z4 ]);
 	}
 	if (sides_ & Qwt3D::FRONT) {
-		drawMinorGridLines(axes[X1], axes[X2]);
-		drawMinorGridLines(axes[Z2], axes[Z3]);
+		drawMinorGridLines(axes[ X1 ], axes[ X2 ]);
+		drawMinorGridLines(axes[ Z2 ], axes[ Z3 ]);
 	}
 	if (sides_ & Qwt3D::BACK) {
-		drawMinorGridLines(axes[X3], axes[X4]);
-		drawMinorGridLines(axes[Z4], axes[Z1]);
+		drawMinorGridLines(axes[ X3 ], axes[ X4 ]);
+		drawMinorGridLines(axes[ Z4 ], axes[ Z1 ]);
 	}
 	glEnd();
 }
 
-void CoordinateSystem::drawMajorGridLines(Axis &a0, Axis &a1)
+void CoordinateSystem::drawMajorGridLines(Axis& a0, Axis& a1)
 {
 	Triple d = a1.begin() - a0.begin();
 
 	for (unsigned int i = 0; i != a0.majorPositions().size(); ++i) {
-		glVertex3d(a0.majorPositions()[i].x, a0.majorPositions()[i].y, a0.majorPositions()[i].z);
-		glVertex3d(a0.majorPositions()[i].x + d.x, a0.majorPositions()[i].y + d.y,
-				   a0.majorPositions()[i].z + d.z);
+		glVertex3d(a0.majorPositions()[ i ].x, a0.majorPositions()[ i ].y, a0.majorPositions()[ i ].z);
+		glVertex3d(a0.majorPositions()[ i ].x + d.x, a0.majorPositions()[ i ].y + d.y, a0.majorPositions()[ i ].z + d.z);
 	}
 }
 
-void CoordinateSystem::drawMinorGridLines(Axis &a0, Axis &a1)
+void CoordinateSystem::drawMinorGridLines(Axis& a0, Axis& a1)
 {
 	Triple d = a1.begin() - a0.begin();
 
 	for (unsigned int i = 0; i != a0.minorPositions().size(); ++i) {
-		glVertex3d(a0.minorPositions()[i].x, a0.minorPositions()[i].y, a0.minorPositions()[i].z);
-		glVertex3d(a0.minorPositions()[i].x + d.x, a0.minorPositions()[i].y + d.y,
-				   a0.minorPositions()[i].z + d.z);
+		glVertex3d(a0.minorPositions()[ i ].x, a0.minorPositions()[ i ].y, a0.minorPositions()[ i ].z);
+		glVertex3d(a0.minorPositions()[ i ].x + d.x, a0.minorPositions()[ i ].y + d.y, a0.minorPositions()[ i ].z + d.z);
 	}
 }
 
@@ -79024,8 +79040,8 @@ void Drawable::saveGLState()
 	glGetBooleanv(GL_TEXTURE_2D, &tex2d);
 	glGetIntegerv(GL_POLYGON_MODE, polmode);
 	glGetIntegerv(GL_MATRIX_MODE, &matrixmode);
-	glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &poloffs[0]);
-	glGetFloatv(GL_POLYGON_OFFSET_UNITS, &poloffs[1]);
+	glGetFloatv(GL_POLYGON_OFFSET_FACTOR, &poloffs[ 0 ]);
+	glGetFloatv(GL_POLYGON_OFFSET_UNITS, &poloffs[ 1 ]);
 	glGetBooleanv(GL_POLYGON_OFFSET_FILL, &poloffsfill);
 }
 
@@ -79041,10 +79057,10 @@ void Drawable::restoreGLState()
 	glLineStipple(factor, pattern);
 	Enable(GL_LINE_STIPPLE, sallowed);
 	Enable(GL_TEXTURE_2D, tex2d);
-	glPolygonMode(polmode[0], polmode[1]);
+	glPolygonMode(polmode[ 0 ], polmode[ 1 ]);
 	glMatrixMode(matrixmode);
-	glPolygonOffset(poloffs[0], poloffs[1]);
-	setDevicePolygonOffset(poloffs[0], poloffs[1]);
+	glPolygonOffset(poloffs[ 0 ], poloffs[ 1 ]);
+	setDevicePolygonOffset(poloffs[ 0 ], poloffs[ 1 ]);
 
 	Enable(GL_POLYGON_OFFSET_FILL, poloffsfill);
 }
@@ -79057,7 +79073,7 @@ void Drawable::Enable(GLenum what, GLboolean val)
 		glDisable(what);
 }
 
-void Drawable::attach(Drawable *dr)
+void Drawable::attach(Drawable* dr)
 {
 	if (dlist.end() == std::find(dlist.begin(), dlist.end(), dr))
 		if (dr) {
@@ -79065,9 +79081,9 @@ void Drawable::attach(Drawable *dr)
 		}
 }
 
-void Drawable::detach(Drawable *dr)
+void Drawable::detach(Drawable* dr)
 {
-	std::list<Drawable *>::iterator it = std::find(dlist.begin(), dlist.end(), dr);
+	std::list< Drawable* >::iterator it = std::find(dlist.begin(), dlist.end(), dr);
 
 	if (it != dlist.end()) {
 		dlist.erase(it);
@@ -79082,13 +79098,12 @@ void Drawable::detachAll()
 /**
 		Don't rely on (use) this in display lists !
 */
-Triple Drawable::ViewPort2World(Triple win, bool *err)
+Triple Drawable::ViewPort2World(Triple win, bool* err)
 {
 	Triple obj;
 
 	getMatrices(modelMatrix, projMatrix, viewport);
-	int res = gluUnProject(win.x, win.y, win.z, modelMatrix, projMatrix, viewport, &obj.x, &obj.y,
-						   &obj.z);
+	int res = gluUnProject(win.x, win.y, win.z, modelMatrix, projMatrix, viewport, &obj.x, &obj.y, &obj.z);
 
 	if (err)
 		*err = (res) ? false : true;
@@ -79099,13 +79114,12 @@ Triple Drawable::ViewPort2World(Triple win, bool *err)
 /**
 		Don't rely on (use) this in display lists !
 */
-Triple Drawable::World2ViewPort(Triple obj, bool *err)
+Triple Drawable::World2ViewPort(Triple obj, bool* err)
 {
 	Triple win;
 
 	getMatrices(modelMatrix, projMatrix, viewport);
-	int res = gluProject(obj.x, obj.y, obj.z, modelMatrix, projMatrix, viewport, &win.x, &win.y,
-						 &win.z);
+	int res = gluProject(obj.x, obj.y, obj.z, modelMatrix, projMatrix, viewport, &win.x, &win.y, &win.z);
 
 	if (err)
 		*err = (res) ? false : true;
@@ -79117,16 +79131,15 @@ Triple Drawable::World2ViewPort(Triple obj, bool *err)
 */
 Triple Drawable::relativePosition(Triple rel)
 {
-	return ViewPort2World(Triple((rel.x - viewport[0]) * viewport[2],
-								 (rel.y - viewport[1]) * viewport[3], rel.z));
+	return ViewPort2World(Triple((rel.x - viewport[ 0 ]) * viewport[ 2 ], (rel.y - viewport[ 1 ]) * viewport[ 3 ], rel.z));
 }
 
 void Drawable::draw()
 {
 	saveGLState();
 
-	for (std::list<Drawable *>::iterator it = dlist.begin(); it != dlist.end(); ++it) {
-		(*it)->draw();
+	for (auto* drawable : dlist) {
+		drawable->draw();
 	}
 	restoreGLState();
 }
@@ -79652,7 +79665,8 @@ void Plot3D::setZoom(double val)
 
 using namespace Qwt3D;
 
-namespace {
+namespace
+{
 inline GLenum lightEnum(unsigned idx)
 {
 	switch (idx) {
@@ -79714,7 +79728,7 @@ void Plot3D::illuminate(unsigned light)
 {
 	if (light > 7)
 		return;
-	lights_[light].unlit = false;
+	lights_[ light ].unlit = false;
 }
 /**
   \param light light number [0..7]
@@ -79724,7 +79738,7 @@ void Plot3D::blowout(unsigned light)
 {
 	if (light > 7)
 		return;
-	lights_[light].unlit = false;
+	lights_[ light ].unlit = false;
 }
 
 /**
@@ -79732,7 +79746,9 @@ void Plot3D::blowout(unsigned light)
 */
 void Plot3D::setMaterialComponent(GLenum property, double r, double g, double b, double a)
 {
-	GLfloat rgba[4] = { (GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a };
+	GLfloat rgba[ 4 ] = {
+		static_cast< GLfloat >(r), static_cast< GLfloat >(g), static_cast< GLfloat >(b), static_cast< GLfloat >(a)
+	};
 	makeCurrent();
 	glMaterialfv(GL_FRONT_AND_BACK, property, rgba);
 }
@@ -79758,10 +79774,11 @@ void Plot3D::setShininess(double exponent)
 /**
   Sets GL light properties for light 'light'
 */
-void Plot3D::setLightComponent(GLenum property, double r, double g, double b, double a,
-							   unsigned light)
+void Plot3D::setLightComponent(GLenum property, double r, double g, double b, double a, unsigned light)
 {
-	GLfloat rgba[4] = { (GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a };
+	GLfloat rgba[ 4 ] = {
+		static_cast< GLfloat >(r), static_cast< GLfloat >(g), static_cast< GLfloat >(b), static_cast< GLfloat >(a)
+	};
 	makeCurrent();
 	glLightfv(lightEnum(light), property, rgba);
 }
@@ -79786,9 +79803,9 @@ void Plot3D::setLightRotation(double xVal, double yVal, double zVal, unsigned li
 {
 	if (light > 7)
 		return;
-	lights_[light].rot.x = xVal;
-	lights_[light].rot.y = yVal;
-	lights_[light].rot.z = zVal;
+	lights_[ light ].rot.x = xVal;
+	lights_[ light ].rot.y = yVal;
+	lights_[ light ].rot.z = zVal;
 }
 
 /**
@@ -79803,27 +79820,26 @@ void Plot3D::setLightShift(double xVal, double yVal, double zVal, unsigned light
 {
 	if (light > 7)
 		return;
-	lights_[light].shift.x = xVal;
-	lights_[light].shift.y = yVal;
-	lights_[light].shift.z = zVal;
+	lights_[ light ].shift.x = xVal;
+	lights_[ light ].shift.y = yVal;
+	lights_[ light ].shift.z = zVal;
 }
 
 void Plot3D::applyLight(unsigned light)
 {
-	if (lights_[light].unlit)
+	if (lights_[ light ].unlit)
 		return;
 
 	glEnable(lightEnum(light));
 	glLoadIdentity();
 
-	glRotatef(lights_[light].rot.x - 90, 1.0, 0.0, 0.0);
-	glRotatef(lights_[light].rot.y, 0.0, 1.0, 0.0);
-	glRotatef(lights_[light].rot.z, 0.0, 0.0, 1.0);
-	double light4d[4] = { lights_[light].shift.x, lights_[light].shift.y, lights_[light].shift.z,
-						  1.0 };
-	GLfloat lightPos[4] {};
+	glRotatef(lights_[ light ].rot.x - 90, 1.0, 0.0, 0.0);
+	glRotatef(lights_[ light ].rot.y, 0.0, 1.0, 0.0);
+	glRotatef(lights_[ light ].rot.z, 0.0, 0.0, 1.0);
+	double light4d[ 4 ] = { lights_[ light ].shift.x, lights_[ light ].shift.y, lights_[ light ].shift.z, 1.0 };
+	GLfloat lightPos[ 4 ] {};
 	for (size_t i = 0; i < 4; i++) {
-		lightPos[i] = static_cast<GLfloat>(light4d[i]);
+		lightPos[ i ] = static_cast< GLfloat >(light4d[ i ]);
 	}
 	GLenum le = lightEnum(light);
 	glLightfv(le, GL_POSITION, lightPos);
@@ -80752,7 +80768,7 @@ double Label::height() const
 #pragma warning(disable : 4786)
 #endif
 
-#include <stdlib.h> // qsort
+#include <stdlib.h>  // qsort
 #include <algorithm>
 #include <float.h>
 
@@ -80760,26 +80776,27 @@ using namespace Qwt3D;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
-namespace {
+namespace
+{
 // convex hull
 
-typedef double coordinate_type;
+using coordinate_type = double;
 
-int ccw(coordinate_type **P, int i, int j, int k)
+int ccw(coordinate_type** P, int i, int j, int k)
 {
-	coordinate_type a = P[i][0] - P[j][0], b = P[i][1] - P[j][1], c = P[k][0] - P[j][0],
-					d = P[k][1] - P[j][1];
+	coordinate_type a = P[ i ][ 0 ] - P[ j ][ 0 ], b = P[ i ][ 1 ] - P[ j ][ 1 ], c = P[ k ][ 0 ] - P[ j ][ 0 ],
+					d = P[ k ][ 1 ] - P[ j ][ 1 ];
 	return a * d - b * c <= 0; /* true if points i, j, k counterclockwise */
 }
 
-#define CMPM(c, A, B)                                                                              \
-	v = (*(coordinate_type **)A)[c] - (*(coordinate_type **)B)[c];                                 \
-	if (v > 0)                                                                                     \
-		return 1;                                                                                  \
-	if (v < 0)                                                                                     \
+#define CMPM(c, A, B)                                                                                                  \
+	v = (*static_cast< coordinate_type* const* >(A))[ c ] - (*static_cast< coordinate_type* const* >(B))[ c ];         \
+	if (v > 0)                                                                                                         \
+		return 1;                                                                                                      \
+	if (v < 0)                                                                                                         \
 		return -1;
 
-int cmpl(const void *a, const void *b)
+int cmpl(const void* a, const void* b)
 {
 	double v;
 	CMPM(0, a, b);
@@ -80787,37 +80804,37 @@ int cmpl(const void *a, const void *b)
 	return 0;
 }
 
-int cmph(const void *a, const void *b)
+int cmph(const void* a, const void* b)
 {
 	return cmpl(b, a);
 }
 
-int make_chain(coordinate_type **V, int n, int (*cmp)(const void *, const void *))
+int make_chain(coordinate_type** V, int n, int (*cmp)(const void*, const void*))
 {
 	int i, j, s = 1;
-	coordinate_type *t;
+	coordinate_type* t;
 
-	qsort(V, n, sizeof(coordinate_type *), cmp);
+	qsort(V, n, sizeof(coordinate_type*), cmp);
 	for (i = 2; i < n; i++) {
 		for (j = s; j >= 1 && ccw(V, i, j, j - 1); j--) { }
-		s = j + 1;
-		t = V[s];
-		V[s] = V[i];
-		V[i] = t;
+		s      = j + 1;
+		t      = V[ s ];
+		V[ s ] = V[ i ];
+		V[ i ] = t;
 	}
 	return s;
 }
 
-int _ch2d(coordinate_type **P, int n)
+int _ch2d(coordinate_type** P, int n)
 {
 	int u = make_chain(P, n, cmpl); /* make lower hull */
 	if (!n)
 		return 0;
-	P[n] = P[0];
+	P[ n ] = P[ 0 ];
 	return u + make_chain(P + u, n - u + 1, cmph); /* make upper hull */
 }
 
-} // ns anon
+}  // ns anon
 
 GridData::GridData()
 {
@@ -80835,12 +80852,12 @@ GridData::GridData(unsigned int columns, unsigned int rows)
 
 int GridData::columns() const
 {
-	return (int)vertices.size();
+	return static_cast< int >(vertices.size());
 }
 
 int GridData::rows() const
 {
-	return (empty()) ? 0 : (int)vertices[0].size();
+	return (empty()) ? 0 : static_cast< int >(vertices[ 0 ].size());
 }
 
 void GridData::clear()
@@ -80848,10 +80865,10 @@ void GridData::clear()
 	setHull(ParallelEpiped());
 	{
 		for (unsigned i = 0; i != vertices.size(); ++i) {
-			for (unsigned j = 0; j != vertices[i].size(); ++j) {
-				delete[] vertices[i][j];
+			for (unsigned j = 0; j != vertices[ i ].size(); ++j) {
+				delete[] vertices[ i ][ j ];
 			}
-			vertices[i].clear();
+			vertices[ i ].clear();
 		}
 	}
 
@@ -80859,10 +80876,10 @@ void GridData::clear()
 
 	{
 		for (unsigned i = 0; i != normals.size(); ++i) {
-			for (unsigned j = 0; j != normals[i].size(); ++j) {
-				delete[] normals[i][j];
+			for (unsigned j = 0; j != normals[ i ].size(); ++j) {
+				delete[] normals[ i ][ j ];
 			}
-			normals[i].clear();
+			normals[ i ].clear();
 		}
 	}
 
@@ -80872,29 +80889,29 @@ void GridData::clear()
 void GridData::setSize(unsigned int columns, unsigned int rows)
 {
 	this->clear();
-	vertices = std::vector<DataRow>(columns);
+	vertices = std::vector< DataRow >(columns);
 	{
 		for (unsigned int i = 0; i != vertices.size(); ++i) {
-			vertices[i] = DataRow(rows);
-			for (unsigned int j = 0; j != vertices[i].size(); ++j) {
-				vertices[i][j] = new GLdouble[3];
+			vertices[ i ] = DataRow(rows);
+			for (unsigned int j = 0; j != vertices[ i ].size(); ++j) {
+				vertices[ i ][ j ] = new GLdouble[ 3 ];
 			}
 		}
 	}
-	normals = std::vector<DataRow>(columns);
+	normals = std::vector< DataRow >(columns);
 	{
 		for (unsigned int i = 0; i != normals.size(); ++i) {
-			normals[i] = DataRow(rows);
-			for (unsigned int j = 0; j != normals[i].size(); ++j) {
-				normals[i][j] = new GLdouble[3];
+			normals[ i ] = DataRow(rows);
+			for (unsigned int j = 0; j != normals[ i ].size(); ++j) {
+				normals[ i ][ j ] = new GLdouble[ 3 ];
 			}
 		}
 	}
 }
 
-Triple const &CellData::operator()(unsigned cellnumber, unsigned vertexnumber)
+Triple const& CellData::operator()(unsigned cellnumber, unsigned vertexnumber)
 {
-	return nodes[cells[cellnumber][vertexnumber]];
+	return nodes[ cells[ cellnumber ][ vertexnumber ] ];
 }
 
 void CellData::clear()
@@ -80921,7 +80938,7 @@ RGBA Qwt3D::Qt2GL(QColor col)
 	return rgba;
 }
 
-void Qwt3D::convexhull2d(std::vector<unsigned> &idx, const std::vector<Tuple> &src)
+void Qwt3D::convexhull2d(std::vector< unsigned >& idx, const std::vector< Tuple >& src)
 {
 	idx.clear();
 	if (src.empty())
@@ -80930,38 +80947,38 @@ void Qwt3D::convexhull2d(std::vector<unsigned> &idx, const std::vector<Tuple> &s
 		idx.push_back(0);
 		return;
 	}
-	coordinate_type **points = new coordinate_type *[src.size() + 1];
-	coordinate_type *P = new coordinate_type[src.size() * 2];
+	coordinate_type** points = new coordinate_type*[ src.size() + 1 ];
+	coordinate_type* P       = new coordinate_type[ src.size() * 2 ];
 
 	size_t i;
 	for (i = 0; i < src.size(); ++i) {
-		points[i] = &P[2 * i];
-		points[i][0] = src[i].x;
-		points[i][1] = src[i].y;
+		points[ i ]      = &P[ 2 * i ];
+		points[ i ][ 0 ] = src[ i ].x;
+		points[ i ][ 1 ] = src[ i ].y;
 	}
 
-	coordinate_type *start = points[0];
-	size_t m = _ch2d(points, static_cast<int>(src.size()));
+	coordinate_type* start = points[ 0 ];
+	size_t m               = _ch2d(points, static_cast< int >(src.size()));
 	idx.resize(m);
 
 	for (i = 0; i < m; ++i) {
-		idx[i] = (points[i] - start) / 2;
+		idx[ i ] = (points[ i ] - start) / 2;
 	}
 	delete[] points;
 	delete[] P;
 }
 
-unsigned Qwt3D::tesselationSize(CellField const &t)
+unsigned Qwt3D::tesselationSize(CellField const& t)
 {
 	size_t ret = 0;
 
 	for (size_t i = 0; i < t.size(); ++i)
-		ret += t[i].size();
+		ret += t[ i ].size();
 
-	return static_cast<unsigned>(ret);
+	return static_cast< unsigned >(ret);
 }
 
-#endif // QWT3D_NOT_FOR_DOXYGEN
+#endif  // QWT3D_NOT_FOR_DOXYGEN
 
 /*** End of inlined file: qwt3d_types.cpp ***/
 
@@ -81313,9 +81330,10 @@ double Arrow::calcRotation(Triple &axis, FreeVector const &vec)
 /*** Start of inlined file: qwt3d_autoscaler.cpp ***/
 using namespace Qwt3D;
 
-namespace {
+namespace
+{
 
-double floorExt(int &exponent, double x, std::vector<double> &sortedmantissi)
+double floorExt(int& exponent, double x, std::vector< double >& sortedmantissi)
 {
 	if (x == 0.0) {
 		exponent = 0;
@@ -81323,17 +81341,17 @@ double floorExt(int &exponent, double x, std::vector<double> &sortedmantissi)
 	}
 
 	double sign = (x > 0) ? 1.0 : -1.0;
-	double lx = log10(fabs(x));
-	exponent = (int)floor(lx);
+	double lx   = log10(fabs(x));
+	exponent    = static_cast< int >(floor(lx));
 
 	double fr = pow(10.0, lx - exponent);
 	if (fr >= 10.0) {
 		fr = 1.0;
 		++exponent;
 	} else {
-		for (int i = (int)sortedmantissi.size() - 1; i >= 0; --i) {
-			if (fr >= sortedmantissi[i]) {
-				fr = sortedmantissi[i];
+		for (int i = static_cast< int >(sortedmantissi.size()) - 1; i >= 0; --i) {
+			if (fr >= sortedmantissi[ i ]) {
+				fr = sortedmantissi[ i ];
 				break;
 			}
 		}
@@ -81348,39 +81366,39 @@ double floorExt(int &exponent, double x, std::vector<double> &sortedmantissi)
   \param x Input value
   \return Mantissa
 */
-[[maybe_unused]] double floor125(int &exponent, double x)
+[[maybe_unused]] double floor125(int& exponent, double x)
 {
-	std::vector<double> m(2);
-	m[0] = 1;
-	m[1] = 2;
-	m[2] = 5;
+	std::vector< double > m(2);
+	m[ 0 ] = 1;
+	m[ 1 ] = 2;
+	m[ 2 ] = 5;
 	return floorExt(exponent, x, m);
 }
 
-} // anon ns
+}  // anon ns
 
 //! Initializes with an {1,2,5} sequence of mantissas
 LinearAutoScaler::LinearAutoScaler()
 {
 	init(0, 1, 1);
-	mantissi_ = std::vector<double>(3);
-	mantissi_[0] = 1;
-	mantissi_[1] = 2;
-	mantissi_[2] = 5;
+	mantissi_      = std::vector< double >(3);
+	mantissi_[ 0 ] = 1;
+	mantissi_[ 1 ] = 2;
+	mantissi_[ 2 ] = 5;
 }
 //! Initialize with interval [0,1] and one requested interval
 /*!
 val mantisse A increasing ordered vector of values representing
 mantisse values between 1 and 9.
 */
-LinearAutoScaler::LinearAutoScaler(std::vector<double> &mantisse)
+LinearAutoScaler::LinearAutoScaler(std::vector< double >& mantisse)
 {
 	init(0, 1, 1);
 	if (mantisse.empty()) {
-		mantissi_ = std::vector<double>(3);
-		mantissi_[0] = 1;
-		mantissi_[1] = 2;
-		mantissi_[2] = 5;
+		mantissi_      = std::vector< double >(3);
+		mantissi_[ 0 ] = 1;
+		mantissi_[ 1 ] = 2;
+		mantissi_[ 2 ] = 5;
 		return;
 	}
 	mantissi_ = mantisse;
@@ -81392,14 +81410,14 @@ LinearAutoScaler::LinearAutoScaler(std::vector<double> &mantisse)
 */
 void LinearAutoScaler::init(double start, double stop, int ivals)
 {
-	start_ = start;
-	stop_ = stop;
+	start_     = start;
+	stop_      = stop;
 	intervals_ = ivals;
 
 	if (start_ > stop_) {
 		double tmp = start_;
-		start_ = stop_;
-		stop_ = tmp;
+		start_     = stop_;
+		stop_      = tmp;
 	}
 	if (intervals_ < 1)
 		intervals_ = 1;
@@ -81437,17 +81455,16 @@ double LinearAutoScaler::anchorvalue(double start, double m, int n)
 c 'minimal' (anchor-start < m*10^n)
 \endverbatim
 */
-int LinearAutoScaler::segments(int &l_intervals, int &r_intervals, double start, double stop,
-							   double anchor, double m, int n)
+int LinearAutoScaler::segments(int& l_intervals, int& r_intervals, double start, double stop, double anchor, double m, int n)
 {
-	double val = m * pow(10.0, n);
+	double val   = m * pow(10.0, n);
 	double delta = (stop - anchor) / val;
 
-	r_intervals = (int)floor(delta); // right side intervals
+	r_intervals = static_cast< int >(floor(delta));  // right side intervals
 
 	delta = (anchor - start) / val;
 
-	l_intervals = (int)floor(delta); // left side intervals
+	l_intervals = static_cast< int >(floor(delta));  // left side intervals
 
 	return r_intervals + l_intervals;
 }
@@ -81466,7 +81483,7 @@ int LinearAutoScaler::segments(int &l_intervals, int &r_intervals, double start,
 		If the given interval has zero length the function returns the current
 		interval number and a and b remain unchanged.
 */
-int LinearAutoScaler::execute(double &a, double &b, double start, double stop, int ivals)
+int LinearAutoScaler::execute(double& a, double& b, double start, double stop, int ivals)
 {
 	init(start, stop, ivals);
 
@@ -81483,11 +81500,11 @@ int LinearAutoScaler::execute(double &a, double &b, double start, double stop, i
 	int l_ival, r_ival;
 
 	double anchor = anchorvalue(start_, c, n);
-	int ival = segments(l_ival, r_ival, start_, stop_, anchor, c, n);
+	int ival      = segments(l_ival, r_ival, start_, stop_, anchor, c, n);
 
 	if (ival >= intervals_) {
-		a = anchor - l_ival * c * pow(10.0, n);
-		b = anchor + r_ival * c * pow(10.0, n);
+		a          = anchor - l_ival * c * pow(10.0, n);
+		b          = anchor + r_ival * c * pow(10.0, n);
 		intervals_ = ival;
 		return intervals_;
 	}
@@ -81498,10 +81515,10 @@ int LinearAutoScaler::execute(double &a, double &b, double start, double stop, i
 	int prev_n;
 
 	while (1) {
-		prev_c = c;
-		prev_n = n;
+		prev_c      = c;
+		prev_n      = n;
 		prev_anchor = anchor;
-		prev_ival = ival;
+		prev_ival   = ival;
 		prev_l_ival = l_ival;
 		prev_r_ival = r_ival;
 
@@ -81510,30 +81527,30 @@ int LinearAutoScaler::execute(double &a, double &b, double start, double stop, i
 			--n;
 		} else {
 			for (size_t i = mantissi_.size() - 1; i > 0; --i) {
-				if (int(c) == mantissi_[i]) {
-					c = mantissi_[i - 1];
+				if (int(c) == mantissi_[ i ]) {
+					c = mantissi_[ i - 1 ];
 					break;
 				}
 			}
 		}
 
 		anchor = anchorvalue(start_, c, n);
-		ival = segments(l_ival, r_ival, start_, stop_, anchor, c, n);
+		ival   = segments(l_ival, r_ival, start_, stop_, anchor, c, n);
 
-		int prev_diff = intervals_ - prev_ival;
+		int prev_diff   = intervals_ - prev_ival;
 		int actual_diff = ival - intervals_;
 
 		if (prev_diff >= 0 && actual_diff >= 0) {
 			if (prev_diff < actual_diff) {
-				c = prev_c;
-				n = prev_n;
+				c      = prev_c;
+				n      = prev_n;
 				anchor = prev_anchor;
-				ival = prev_ival;
+				ival   = prev_ival;
 				l_ival = prev_l_ival;
 				r_ival = prev_r_ival;
 			}
-			a = anchor - l_ival * c * pow(10.0, n);
-			b = anchor + r_ival * c * pow(10.0, n);
+			a          = anchor - l_ival * c * pow(10.0, n);
+			b          = anchor + r_ival * c * pow(10.0, n);
 			intervals_ = ival;
 			break;
 		}
@@ -81556,20 +81573,20 @@ int LinearAutoScaler::execute(double &a, double &b, double start, double stop, i
 using namespace std;
 using namespace Qwt3D;
 
-const char *NativeReader::magicstring = "jk:11051895-17021986";
+const char* NativeReader::magicstring = "jk:11051895-17021986";
 
-namespace {
-FILE *open(QString fname)
+namespace
 {
-	FILE *file = fopen(QWT3DLOCAL8BIT(fname), "r");
+FILE* open(QString fname)
+{
+	FILE* file = fopen(QWT3DLOCAL8BIT(fname), "r");
 	if (!file) {
-		fprintf(stderr, "NativeReader::read: cannot open data file \"%s\"\n",
-				QWT3DLOCAL8BIT(fname));
+		fprintf(stderr, "NativeReader::read: cannot open data file \"%s\"\n", QWT3DLOCAL8BIT(fname));
 	}
 	return file;
 }
 
-int read_char(FILE *fp, bool skipcomments = true)
+int read_char(FILE* fp, bool skipcomments = true)
 {
 	int c;
 
@@ -81586,38 +81603,37 @@ int read_char(FILE *fp, bool skipcomments = true)
 	return (c);
 }
 
-char *read_field(FILE *fp, bool skipcomments = true)
+char* read_field(FILE* fp, bool skipcomments = true)
 {
-	static char buf[71];
+	static char buf[ 71 ];
 	int c, i;
 
 	do {
 		if ((c = read_char(fp, skipcomments)) == EOF)
-			return (NULL);
+			return (nullptr);
 	} while (isspace(c));
 	for (i = 0; i < 70 && !isspace(c); ++i) {
-		buf[i] = c;
+		buf[ i ] = c;
 		if ((c = read_char(fp, skipcomments)) == EOF)
 			break;
 	}
-	buf[i] = '\0';
+	buf[ i ] = '\0';
 	return (buf);
 }
 
 //! set to data begin
-bool extract_info(FILE *fp, unsigned int &xmesh, unsigned int &ymesh, double &xmin, double &xmax,
-				  double &ymin, double &ymax)
+bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xmin, double& xmax, double& ymin, double& ymax)
 {
-	char *p;
+	char* p;
 
 	// find out the size
 	if ((p = read_field(fp)) == 0)
 		return false;
-	xmesh = (unsigned int)atoi(p);
+	xmesh = static_cast< unsigned int >(atoi(p));
 
 	if ((p = read_field(fp)) == 0)
 		return false;
-	ymesh = (unsigned int)atoi(p);
+	ymesh = static_cast< unsigned int >(atoi(p));
 
 	if (xmesh < 1 || ymesh < 1)
 		return false;
@@ -81646,9 +81662,9 @@ bool extract_info(FILE *fp, unsigned int &xmesh, unsigned int &ymesh, double &xm
 }
 
 //! find out what the magic string is and compare
-bool check_magic(FILE *fp, const char *val)
+bool check_magic(FILE* fp, const char* val)
 {
-	char *p;
+	char* p;
 	if ((p = read_field(fp, false)) == 0)
 		return false;
 
@@ -81658,9 +81674,9 @@ bool check_magic(FILE *fp, const char *val)
 }
 
 //! find out what the type is
-bool check_type(FILE *fp, const char *val)
+bool check_type(FILE* fp, const char* val)
 {
-	char *p;
+	char* p;
 	if ((p = read_field(fp)) == 0)
 		return false;
 
@@ -81669,29 +81685,37 @@ bool check_type(FILE *fp, const char *val)
 	return true;
 }
 
-double **allocateData(int columns, int rows)
+double** allocateData(int columns, int rows)
 {
-	double **data = new double *[columns];
+	double** data = new double*[ columns ];
 
 	for (int i = 0; i < columns; ++i) {
-		data[i] = new double[rows];
+		data[ i ] = new double[ rows ];
 	}
 	return data;
 }
 
-void deleteData(double **data, int columns)
+void deleteData(double** data, int columns)
 {
 	for (int i = 0; i < columns; i++) {
-		delete[] data[i];
+		delete[] data[ i ];
 	}
 	delete[] data;
 }
 }
 
-NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX) { }
+NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
+{
+}
 
-bool NativeReader::collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
-							   double &minx, double &maxx, double &miny, double &maxy)
+bool NativeReader::collectInfo(FILE*& file,
+							   QString const& fname,
+							   unsigned& xmesh,
+							   unsigned& ymesh,
+							   double& minx,
+							   double& maxx,
+							   double& miny,
+							   double& maxy)
 {
 	if (fname.isEmpty())
 		return false;
@@ -81710,10 +81734,10 @@ bool NativeReader::collectInfo(FILE *&file, QString const &fname, unsigned &xmes
 	return true;
 }
 
-bool NativeReader::operator()(Plot3D *plot, QString const &fname)
+bool NativeReader::operator()(Plot3D* plot, QString const& fname)
 {
 
-	FILE *file;
+	FILE* file;
 	unsigned int xmesh, ymesh;
 	double minx, maxx, miny, maxy;
 
@@ -81721,27 +81745,26 @@ bool NativeReader::operator()(Plot3D *plot, QString const &fname)
 		return false;
 
 	/* allocate some space for the mesh */
-	double **data = allocateData(xmesh, ymesh);
+	double** data = allocateData(xmesh, ymesh);
 
 	for (unsigned int j = 0; j < ymesh; j++) {
 		for (unsigned int i = 0; i < xmesh; i++) {
-			if (fscanf(file, "%lf", &data[i][j]) != 1) {
-				fprintf(stderr, "NativeReader::read: error in data file \"%s\"\n",
-						QWT3DLOCAL8BIT(fname));
+			if (fscanf(file, "%lf", &data[ i ][ j ]) != 1) {
+				fprintf(stderr, "NativeReader::read: error in data file \"%s\"\n", QWT3DLOCAL8BIT(fname));
 				return false;
 			}
 
-			if (data[i][j] > maxz_)
-				data[i][j] = maxz_;
-			else if (data[i][j] < minz_)
-				data[i][j] = minz_;
+			if (data[ i ][ j ] > maxz_)
+				data[ i ][ j ] = maxz_;
+			else if (data[ i ][ j ] < minz_)
+				data[ i ][ j ] = minz_;
 		}
 	}
 
 	/* close the file */
 	fclose(file);
 
-	((SurfacePlot *)plot)->loadFromData(data, xmesh, ymesh, minx, maxx, miny, maxy);
+	static_cast< SurfacePlot* >(plot)->loadFromData(data, xmesh, ymesh, minx, maxx, miny, maxy);
 	deleteData(data, xmesh);
 
 	return true;
@@ -81757,49 +81780,51 @@ bool NativeReader::operator()(Plot3D *plot, QString const &fname)
 
 using namespace Qwt3D;
 
-IO::Entry::Entry() : iofunc(0) { }
+IO::Entry::Entry() : iofunc(0)
+{
+}
 
 IO::Entry::~Entry()
 {
 	delete iofunc;
 }
 
-IO::Entry::Entry(IO::Entry const &e)
+IO::Entry::Entry(IO::Entry const& e)
 {
 	if (this == &e)
 		return;
 
-	fmt = e.fmt;
+	fmt    = e.fmt;
 	iofunc = e.iofunc->clone();
 }
 
-void IO::Entry::operator=(IO::Entry const &e)
+void IO::Entry::operator=(IO::Entry const& e)
 {
 	if (this == &e)
 		return;
 
 	delete iofunc;
-	fmt = e.fmt;
+	fmt    = e.fmt;
 	iofunc = e.iofunc->clone();
 }
 
-IO::Entry::Entry(QString const &s, Functor const &f) : fmt(s)
+IO::Entry::Entry(QString const& s, Functor const& f) : fmt(s)
 {
 	iofunc = f.clone();
 }
 
-IO::Entry::Entry(QString const &s, Function f) : fmt(s)
+IO::Entry::Entry(QString const& s, Function f) : fmt(s)
 {
 	Wrapper w(f);
 	iofunc = w.clone();
 }
 
-IO::FormatCompare::FormatCompare(IO::Entry const &e)
+IO::FormatCompare::FormatCompare(IO::Entry const& e)
 {
 	e_ = e;
 }
 
-bool IO::FormatCompare::operator()(IO::Entry const &e)
+bool IO::FormatCompare::operator()(IO::Entry const& e)
 {
 	return (e.fmt == e_.fmt);
 }
@@ -81809,12 +81834,12 @@ IO::FormatCompare2::FormatCompare2(QString s)
 	s_ = s;
 }
 
-bool IO::FormatCompare2::operator()(IO::Entry const &e)
+bool IO::FormatCompare2::operator()(IO::Entry const& e)
 {
 	return (e.fmt == s_);
 }
 
-bool IO::add_unique(Container &l, Entry const &e)
+bool IO::add_unique(Container& l, Entry const& e)
 {
 	FormatCompare comp(e);
 	l.erase(std::remove_if(l.begin(), l.end(), comp), l.end());
@@ -81823,16 +81848,16 @@ bool IO::add_unique(Container &l, Entry const &e)
 	return true;
 }
 
-IO::IT IO::find(Container &l, QString const &fmt)
+IO::IT IO::find(Container& l, QString const& fmt)
 {
 	FormatCompare2 comp(fmt);
 	return std::find_if(l.begin(), l.end(), comp);
 }
 
-IO::Container &IO::rlist()
+IO::Container& IO::rlist()
 {
 	static Container rl = Container();
-	static bool rfirst = true;
+	static bool rfirst  = true;
 	if (rfirst) {
 		rfirst = false;
 		setupHandler();
@@ -81840,10 +81865,10 @@ IO::Container &IO::rlist()
 	return rl;
 }
 
-IO::Container &IO::wlist()
+IO::Container& IO::wlist()
 {
 	static Container wl = Container();
-	static bool wfirst = true;
+	static bool wfirst  = true;
 	if (wfirst) {
 		wfirst = false;
 		setupHandler();
@@ -81856,7 +81881,7 @@ IO::Container &IO::wlist()
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineInputHandler(QString const &format, IO::Function func)
+bool IO::defineInputHandler(QString const& format, IO::Function func)
 {
 	return add_unique(rlist(), Entry(format, func));
 }
@@ -81866,7 +81891,7 @@ bool IO::defineInputHandler(QString const &format, IO::Function func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineInputHandler(QString const &format, IO::Functor const &func)
+bool IO::defineInputHandler(QString const& format, IO::Functor const& func)
 {
 	return add_unique(rlist(), Entry(format, func));
 }
@@ -81876,7 +81901,7 @@ bool IO::defineInputHandler(QString const &format, IO::Functor const &func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
  */
-bool IO::defineOutputHandler(QString const &format, IO::Function func)
+bool IO::defineOutputHandler(QString const& format, IO::Function func)
 {
 	return add_unique(wlist(), Entry(format, func));
 }
@@ -81886,7 +81911,7 @@ bool IO::defineOutputHandler(QString const &format, IO::Function func)
   Every call overwrites a formerly registered handler for the same format string
   (case sensitive).
 */
-bool IO::defineOutputHandler(QString const &format, IO::Functor const &func)
+bool IO::defineOutputHandler(QString const& format, IO::Functor const& func)
 {
 	return add_unique(wlist(), Entry(format, func));
 }
@@ -81899,7 +81924,7 @@ bool IO::defineOutputHandler(QString const &format, IO::Functor const &func)
   \return The return value from the called Function/Functor.
   The function returns false, if no registered handler could be found.
 */
-bool IO::load(Plot3D *plot, QString const &fname, QString const &format)
+bool IO::load(Plot3D* plot, QString const& fname, QString const& format)
 {
 	IT it = IO::find(rlist(), format);
 
@@ -81917,7 +81942,7 @@ bool IO::load(Plot3D *plot, QString const &fname, QString const &format)
   \return The return value from the called Function/Functor.
   The function returns false, if no registered handler could be found.
 */
-bool IO::save(Plot3D *plot, QString const &fname, QString const &format)
+bool IO::save(Plot3D* plot, QString const& fname, QString const& format)
 {
 	IT it = IO::find(wlist(), format);
 
@@ -81954,7 +81979,7 @@ QStringList IO::outputFormatList()
 /*!
   Returns the input functor in charge for format and 0 if non-existent.
 */
-IO::Functor *IO::inputHandler(QString const &format)
+IO::Functor* IO::inputHandler(QString const& format)
 {
 	IO::IT it = IO::find(rlist(), format);
 
@@ -81967,7 +81992,7 @@ IO::Functor *IO::inputHandler(QString const &format)
 /*!
   Returns the output functor in charge for format and 0 if non-existent.
 */
-IO::Functor *IO::outputHandler(QString const &format)
+IO::Functor* IO::outputHandler(QString const& format)
 {
 	IO::IT it = IO::find(wlist(), format);
 
@@ -81977,7 +82002,7 @@ IO::Functor *IO::outputHandler(QString const &format)
 	return it->iofunc;
 }
 
-bool PixmapWriter::operator()(Plot3D *plot, QString const &fname)
+bool PixmapWriter::operator()(Plot3D* plot, QString const& fname)
 {
 	QImage im = plot->grabFramebuffer();
 
@@ -81996,8 +82021,8 @@ void PixmapWriter::setQuality(int val)
 
 void IO::setupHandler()
 {
-	QList<QByteArray> list = QImageWriter::supportedImageFormats();
-	QList<QByteArray>::Iterator it = list.begin();
+	QList< QByteArray > list         = QImageWriter::supportedImageFormats();
+	QList< QByteArray >::Iterator it = list.begin();
 	PixmapWriter qtw;
 	while (it != list.end()) {
 		qtw.fmt_ = *it;
@@ -82037,12 +82062,11 @@ void IO::setupHandler()
 		\b Beware: BSPSORT turns out to behave very slowly and memory consuming, especially in cases
   where many polygons appear. It is still more exact than SIMPLESORT.
 */
-bool Plot3D::saveVector(QString const &fileName, QString const &format, VectorWriter::TEXTMODE text,
-						VectorWriter::SORTMODE sortmode)
+bool Plot3D::saveVector(QString const& fileName, QString const& format, VectorWriter::TEXTMODE text, VectorWriter::SORTMODE sortmode)
 {
-	if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ"
-		|| format == "PDF" || format == "SVG" || format == "PGF") {
-		VectorWriter *gl2ps = (VectorWriter *)IO::outputHandler(format);
+	if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ" || format == "PDF"
+		|| format == "SVG" || format == "PGF") {
+		VectorWriter* gl2ps = static_cast< VectorWriter* >(IO::outputHandler(format));
 		if (gl2ps) {
 			gl2ps->setSortMode(sortmode);
 			gl2ps->setTextMode(text);
@@ -82056,10 +82080,10 @@ bool Plot3D::saveVector(QString const &fileName, QString const &format, VectorWr
 
   Saves the framebuffer to the file fileName using one of the image file formats supported by Qt.
 */
-bool Plot3D::savePixmap(QString const &fileName, QString const &format)
+bool Plot3D::savePixmap(QString const& fileName, QString const& format)
 {
-	if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ"
-		|| format == "PDF" || format == "SVG" || format == "PGF")
+	if (format == "EPS" || format == "EPS_GZ" || format == "PS" || format == "PS_GZ" || format == "PDF"
+		|| format == "SVG" || format == "PGF")
 		return false;
 
 	return IO::save(this, fileName, format);
@@ -82069,7 +82093,7 @@ bool Plot3D::savePixmap(QString const &fileName, QString const &format)
   Saves content in one of the registered output formats. To modify the
   behaviour for more complex output handling use IO::outputHandler.
 */
-bool Plot3D::save(QString const &fileName, QString const &format)
+bool Plot3D::save(QString const& fileName, QString const& format)
 {
 	return IO::save(this, fileName, format);
 }
@@ -82399,20 +82423,22 @@ void GridMapping::restrictRange(Qwt3D::ParallelEpiped const &p)
 /*** Start of inlined file: qwt3d_parametricsurface.cpp ***/
 using namespace Qwt3D;
 
-ParametricSurface::ParametricSurface() : GridMapping() { }
-
-ParametricSurface::ParametricSurface(SurfacePlot &pw) : GridMapping()
+ParametricSurface::ParametricSurface() : GridMapping()
 {
-	plotwidget_p = &pw;
-	uperiodic_ = false;
-	vperiodic_ = false;
 }
 
-ParametricSurface::ParametricSurface(SurfacePlot *pw) : GridMapping()
+ParametricSurface::ParametricSurface(SurfacePlot& pw) : GridMapping()
+{
+	plotwidget_p = &pw;
+	uperiodic_   = false;
+	vperiodic_   = false;
+}
+
+ParametricSurface::ParametricSurface(SurfacePlot* pw) : GridMapping()
 {
 	plotwidget_p = pw;
-	uperiodic_ = false;
-	vperiodic_ = false;
+	uperiodic_   = false;
+	vperiodic_   = false;
 }
 
 void ParametricSurface::setPeriodic(bool u, bool v)
@@ -82421,13 +82447,13 @@ void ParametricSurface::setPeriodic(bool u, bool v)
 	vperiodic_ = v;
 }
 
-void ParametricSurface::assign(SurfacePlot &plotWidget)
+void ParametricSurface::assign(SurfacePlot& plotWidget)
 {
 	if (&plotWidget != plotwidget_p)
 		plotwidget_p = &plotWidget;
 }
 
-void ParametricSurface::assign(SurfacePlot *plotWidget)
+void ParametricSurface::assign(SurfacePlot* plotWidget)
 {
 	if (plotWidget != plotwidget_p)
 		plotwidget_p = plotWidget;
@@ -82443,11 +82469,11 @@ bool ParametricSurface::create()
 		return false;
 
 	/* allocate some space for the mesh */
-	Triple **data = new Triple *[umesh_p];
+	Triple** data = new Triple*[ umesh_p ];
 
 	unsigned i, j;
 	for (i = 0; i < umesh_p; i++) {
-		data[i] = new Triple[vmesh_p];
+		data[ i ] = new Triple[ vmesh_p ];
 	}
 
 	/* get the data */
@@ -82457,27 +82483,27 @@ bool ParametricSurface::create()
 
 	for (i = 0; i < umesh_p; ++i) {
 		for (j = 0; j < vmesh_p; ++j) {
-			data[i][j] = operator()(minu_p + i * du, minv_p + j * dv);
+			data[ i ][ j ] = operator()(minu_p + i * du, minv_p + j * dv);
 
-			if (data[i][j].x > range_p.maxVertex.x)
-				data[i][j].x = range_p.maxVertex.x;
-			else if (data[i][j].y > range_p.maxVertex.y)
-				data[i][j].y = range_p.maxVertex.y;
-			else if (data[i][j].z > range_p.maxVertex.z)
-				data[i][j].z = range_p.maxVertex.z;
-			else if (data[i][j].x < range_p.minVertex.x)
-				data[i][j].x = range_p.minVertex.x;
-			else if (data[i][j].y < range_p.minVertex.y)
-				data[i][j].y = range_p.minVertex.y;
-			else if (data[i][j].z < range_p.minVertex.z)
-				data[i][j].z = range_p.minVertex.z;
+			if (data[ i ][ j ].x > range_p.maxVertex.x)
+				data[ i ][ j ].x = range_p.maxVertex.x;
+			else if (data[ i ][ j ].y > range_p.maxVertex.y)
+				data[ i ][ j ].y = range_p.maxVertex.y;
+			else if (data[ i ][ j ].z > range_p.maxVertex.z)
+				data[ i ][ j ].z = range_p.maxVertex.z;
+			else if (data[ i ][ j ].x < range_p.minVertex.x)
+				data[ i ][ j ].x = range_p.minVertex.x;
+			else if (data[ i ][ j ].y < range_p.minVertex.y)
+				data[ i ][ j ].y = range_p.minVertex.y;
+			else if (data[ i ][ j ].z < range_p.minVertex.z)
+				data[ i ][ j ].z = range_p.minVertex.z;
 		}
 	}
 
-	((SurfacePlot *)plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, uperiodic_, vperiodic_);
+	static_cast< SurfacePlot* >(plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, uperiodic_, vperiodic_);
 
 	for (i = 0; i < umesh_p; i++) {
-		delete[] data[i];
+		delete[] data[ i ];
 	}
 
 	delete[] data;
@@ -82485,7 +82511,7 @@ bool ParametricSurface::create()
 	return true;
 }
 
-bool ParametricSurface::create(SurfacePlot &pl)
+bool ParametricSurface::create(SurfacePlot& pl)
 {
 	assign(pl);
 	return create();
@@ -82497,25 +82523,27 @@ bool ParametricSurface::create(SurfacePlot &pl)
 /*** Start of inlined file: qwt3d_function.cpp ***/
 using namespace Qwt3D;
 
-Function::Function() : GridMapping() { }
+Function::Function() : GridMapping()
+{
+}
 
-Function::Function(SurfacePlot &pw) : GridMapping()
+Function::Function(SurfacePlot& pw) : GridMapping()
 {
 	plotwidget_p = &pw;
 }
 
-Function::Function(SurfacePlot *pw) : GridMapping()
+Function::Function(SurfacePlot* pw) : GridMapping()
 {
 	plotwidget_p = pw;
 }
 
-void Function::assign(SurfacePlot &plotWidget)
+void Function::assign(SurfacePlot& plotWidget)
 {
 	if (&plotWidget != plotwidget_p)
 		plotwidget_p = &plotWidget;
 }
 
-void Function::assign(SurfacePlot *plotWidget)
+void Function::assign(SurfacePlot* plotWidget)
 {
 	if (plotWidget != plotwidget_p)
 		plotwidget_p = plotWidget;
@@ -82537,11 +82565,11 @@ bool Function::create()
 		return false;
 
 	/* allocate some space for the mesh */
-	double **data = new double *[umesh_p];
+	double** data = new double*[ umesh_p ];
 
 	unsigned i, j;
 	for (i = 0; i < umesh_p; i++) {
-		data[i] = new double[vmesh_p];
+		data[ i ] = new double[ vmesh_p ];
 	}
 
 	/* get the data */
@@ -82551,12 +82579,12 @@ bool Function::create()
 
 	for (i = 0; i < umesh_p; ++i) {
 		for (j = 0; j < vmesh_p; ++j) {
-			data[i][j] = operator()(minu_p + i * dx, minv_p + j * dy);
+			data[ i ][ j ] = operator()(minu_p + i * dx, minv_p + j * dy);
 
-			if (data[i][j] > range_p.maxVertex.z)
-				data[i][j] = range_p.maxVertex.z;
-			else if (data[i][j] < range_p.minVertex.z)
-				data[i][j] = range_p.minVertex.z;
+			if (data[ i ][ j ] > range_p.maxVertex.z)
+				data[ i ][ j ] = range_p.maxVertex.z;
+			else if (data[ i ][ j ] < range_p.minVertex.z)
+				data[ i ][ j ] = range_p.minVertex.z;
 		}
 	}
 
@@ -82564,12 +82592,11 @@ bool Function::create()
 	if (!plotwidget_p) {
 		fprintf(stderr, "Function: no valid Plot3D Widget assigned");
 	} else {
-		((SurfacePlot *)plotwidget_p)
-				->loadFromData(data, umesh_p, vmesh_p, minu_p, maxu_p, minv_p, maxv_p);
+		static_cast< SurfacePlot* >(plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, minu_p, maxu_p, minv_p, maxv_p);
 	}
 
 	for (i = 0; i < umesh_p; i++) {
-		delete[] data[i];
+		delete[] data[ i ];
 	}
 
 	delete[] data;
@@ -82577,7 +82604,7 @@ bool Function::create()
 	return true;
 }
 
-bool Function::create(SurfacePlot &pl)
+bool Function::create(SurfacePlot& pl)
 {
 	assign(pl);
 	return create();
@@ -82593,10 +82620,10 @@ using namespace Qwt3D;
 /**
 Initializes with dataNormals()==false, NOFLOOR, resolution() == 1
 */
-SurfacePlot::SurfacePlot(QWidget *parent) : Plot3D(parent)
+SurfacePlot::SurfacePlot(QWidget* parent) : Plot3D(parent)
 {
-	datanormals_p = false;
-	normalLength_p = 0.02;
+	datanormals_p   = false;
+	normalLength_p  = 0.02;
 	normalQuality_p = 3;
 
 	resolution_p = 1;
@@ -82673,13 +82700,13 @@ void SurfacePlot::setResolution(int res)
 
 void SurfacePlot::updateNormals()
 {
-	SaveGlDeleteLists(displaylists_p[NormalObject], 1);
+	SaveGlDeleteLists(displaylists_p[ NormalObject ], 1);
 
 	if ((plotStyle() == NOPLOT && !normals()) || !actualData_p)
 		return;
 
-	displaylists_p[NormalObject] = glGenLists(1);
-	glNewList(displaylists_p[NormalObject], GL_COMPILE);
+	displaylists_p[ NormalObject ] = glGenLists(1);
+	glNewList(displaylists_p[ NormalObject ], GL_COMPILE);
 
 	if (actualData_p->datatype == Qwt3D::POLYGON)
 		createNormalsC();
@@ -82713,17 +82740,17 @@ void SurfacePlot::createFloorData()
 		The returned value is not affected by resolution(). The pair gives (columns,rows) for grid
 data , (number of cells,1) for free formed data (datatype() == POLYGON) and (0,0) else
 */
-pair<int, int> SurfacePlot::facets() const
+pair< int, int > SurfacePlot::facets() const
 {
 	if (!hasData())
-		return pair<int, int>(0, 0);
+		return pair< int, int >(0, 0);
 
 	if (actualData_p->datatype == Qwt3D::POLYGON)
-		return pair<int, int>(int(actualDataC_->cells.size()), 1);
+		return pair< int, int >(int(actualDataC_->cells.size()), 1);
 	else if (actualData_p->datatype == Qwt3D::GRID)
-		return pair<int, int>(actualDataG_->columns(), actualDataG_->rows());
+		return pair< int, int >(actualDataG_->columns(), actualDataG_->rows());
 	else
-		return pair<int, int>(0, 0);
+		return pair< int, int >(0, 0);
 }
 
 void SurfacePlot::createPoints()
@@ -82732,7 +82759,7 @@ void SurfacePlot::createPoints()
 	createEnrichment(pt);
 }
 
-void SurfacePlot::createEnrichment(Enrichment &p)
+void SurfacePlot::createEnrichment(Enrichment& p)
 {
 	if (!actualData_p)
 		return;
@@ -82744,16 +82771,17 @@ void SurfacePlot::createEnrichment(Enrichment &p)
 	p.assign(*this);
 	p.drawBegin();
 
-	VertexEnrichment *ve = (VertexEnrichment *)&p;
+	VertexEnrichment* ve = static_cast< VertexEnrichment* >(&p);
 	if (actualData_p->datatype == Qwt3D::POLYGON) {
 		for (unsigned i = 0; i != actualDataC_->normals.size(); ++i)
-			ve->draw(actualDataC_->nodes[i]);
+			ve->draw(actualDataC_->nodes[ i ]);
 	} else if (actualData_p->datatype == Qwt3D::GRID) {
 		int step = resolution();
 		for (int i = 0; i <= actualDataG_->columns() - step; i += step)
 			for (int j = 0; j <= actualDataG_->rows() - step; j += step)
-				ve->draw(Triple(actualDataG_->vertices[i][j][0], actualDataG_->vertices[i][j][1],
-								actualDataG_->vertices[i][j][2]));
+				ve->draw(Triple(actualDataG_->vertices[ i ][ j ][ 0 ],
+								actualDataG_->vertices[ i ][ j ][ 1 ],
+								actualDataG_->vertices[ i ][ j ][ 2 ]));
 	}
 	p.drawEnd();
 }
@@ -83586,6 +83614,7 @@ bool SurfacePlot::loadFromData(TripleField const &data, CellField const &poly)
 
 #include <time.h>
 
+
 using namespace Qwt3D;
 
 //! Provides a new VectorWriter object.
@@ -83749,9 +83778,21 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 	}
 	while (state == GL2PS_OVERFLOW) {
 		bufsize += 2 * 1024 * 1024;
-		gl2psBeginPage(
-			"---", QWT3DLOCAL8BIT(producer), viewport, gl2ps_format_, sortmode, options, GL_RGBA, 0, NULL, 0, 0, 0, bufsize, fp, QWT3DLOCAL8BIT(fname)
-		);
+		gl2psBeginPage("---",
+					   QWT3DLOCAL8BIT(producer),
+					   viewport,
+					   gl2ps_format_,
+					   sortmode,
+					   options,
+					   GL_RGBA,
+					   0,
+					   nullptr,
+					   0,
+					   0,
+					   0,
+					   bufsize,
+					   fp,
+					   QWT3DLOCAL8BIT(fname));
 
 		plot->grabFramebuffer();
 		state = gl2psEndPage();
@@ -83772,9 +83813,21 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 		state = GL2PS_OVERFLOW;
 		while (state == GL2PS_OVERFLOW) {
 			bufsize += 2 * 1024 * 1024;
-			gl2psBeginPage(
-				"---", QWT3DLOCAL8BIT(producer), viewport, GL2PS_TEX, sortmode, options, GL_RGBA, 0, NULL, 0, 0, 0, bufsize, fp, QWT3DLOCAL8BIT(fn)
-			);
+			gl2psBeginPage("---",
+						   QWT3DLOCAL8BIT(producer),
+						   viewport,
+						   GL2PS_TEX,
+						   sortmode,
+						   options,
+						   GL_RGBA,
+						   0,
+						   nullptr,
+						   0,
+						   0,
+						   0,
+						   bufsize,
+						   fp,
+						   QWT3DLOCAL8BIT(fn));
 
 			plot->updateData();
 			plot->update();
@@ -83835,11 +83888,11 @@ GLint Qwt3D::drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLen
 	if (format != GL_RGBA || type != GL_UNSIGNED_BYTE)
 		return GL2PS_ERROR;
 
-	GLfloat* convertedpixel = (GLfloat*)malloc(3 * width * height * sizeof(GLfloat));
+	GLfloat* convertedpixel = static_cast< GLfloat* >(malloc(3 * width * height * sizeof(GLfloat)));
 	if (!convertedpixel)
 		return GL2PS_ERROR;
 
-	GLubyte* px = (GLubyte*)pixels;
+	const GLubyte* px = reinterpret_cast< const GLubyte* >(pixels);
 	for (int i = 0; i != 3 * width * height; i += 3) {
 		int pxi                 = (4 * i) / 3;
 		convertedpixel[ i ]     = px[ pxi ] / float(255);
@@ -83913,7 +83966,7 @@ GLint Qwt3D::drawDeviceText(const char* str, const char* fontname, int fontsize,
 	Triple adjpos(vp[ 0 ], vp[ 1 ], vp[ 2 ]);
 
 	glRasterPos3d(adjpos.x, adjpos.y, adjpos.z);
-	ret = gl2psTextOpt(str, fontname, (int)fontsize, a, 0);
+	ret = gl2psTextOpt(str, fontname, static_cast< int >(fontsize), a, 0);
 	glColor4dv(fcol);
 	glClearColor(bcol[ 0 ], bcol[ 1 ], bcol[ 2 ], bcol[ 3 ]);
 	return ret;

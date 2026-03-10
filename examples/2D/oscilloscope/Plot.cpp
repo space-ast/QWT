@@ -96,17 +96,17 @@ public:
         return SignalData::instance();
     }
 
-    virtual QPointF sample(size_t index) const QWT_OVERRIDE
+    virtual QPointF sample(size_t index) const override
     {
         return SignalData::instance().value(index);
     }
 
-    virtual size_t size() const QWT_OVERRIDE
+    virtual size_t size() const override
     {
         return SignalData::instance().size();
     }
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE
+    virtual QRectF boundingRect() const override
     {
         return SignalData::instance().boundingRect();
     }

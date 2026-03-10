@@ -6,10 +6,10 @@ using namespace Qwt3D;
 /**
 Initializes with dataNormals()==false, NOFLOOR, resolution() == 1
 */
-SurfacePlot::SurfacePlot(QWidget *parent) : Plot3D(parent)
+SurfacePlot::SurfacePlot(QWidget* parent) : Plot3D(parent)
 {
-    datanormals_p = false;
-    normalLength_p = 0.02;
+    datanormals_p   = false;
+    normalLength_p  = 0.02;
     normalQuality_p = 3;
 
     resolution_p = 1;
@@ -86,13 +86,13 @@ void SurfacePlot::setResolution(int res)
 
 void SurfacePlot::updateNormals()
 {
-    SaveGlDeleteLists(displaylists_p[NormalObject], 1);
+    SaveGlDeleteLists(displaylists_p[ NormalObject ], 1);
 
     if ((plotStyle() == NOPLOT && !normals()) || !actualData_p)
         return;
 
-    displaylists_p[NormalObject] = glGenLists(1);
-    glNewList(displaylists_p[NormalObject], GL_COMPILE);
+    displaylists_p[ NormalObject ] = glGenLists(1);
+    glNewList(displaylists_p[ NormalObject ], GL_COMPILE);
 
     if (actualData_p->datatype == Qwt3D::POLYGON)
         createNormalsC();
@@ -126,17 +126,17 @@ void SurfacePlot::createFloorData()
         The returned value is not affected by resolution(). The pair gives (columns,rows) for grid
 data , (number of cells,1) for free formed data (datatype() == POLYGON) and (0,0) else
 */
-pair<int, int> SurfacePlot::facets() const
+pair< int, int > SurfacePlot::facets() const
 {
     if (!hasData())
-        return pair<int, int>(0, 0);
+        return pair< int, int >(0, 0);
 
     if (actualData_p->datatype == Qwt3D::POLYGON)
-        return pair<int, int>(int(actualDataC_->cells.size()), 1);
+        return pair< int, int >(int(actualDataC_->cells.size()), 1);
     else if (actualData_p->datatype == Qwt3D::GRID)
-        return pair<int, int>(actualDataG_->columns(), actualDataG_->rows());
+        return pair< int, int >(actualDataG_->columns(), actualDataG_->rows());
     else
-        return pair<int, int>(0, 0);
+        return pair< int, int >(0, 0);
 }
 
 void SurfacePlot::createPoints()
@@ -145,7 +145,7 @@ void SurfacePlot::createPoints()
     createEnrichment(pt);
 }
 
-void SurfacePlot::createEnrichment(Enrichment &p)
+void SurfacePlot::createEnrichment(Enrichment& p)
 {
     if (!actualData_p)
         return;
@@ -157,16 +157,17 @@ void SurfacePlot::createEnrichment(Enrichment &p)
     p.assign(*this);
     p.drawBegin();
 
-    VertexEnrichment *ve = (VertexEnrichment *)&p;
+    VertexEnrichment* ve = static_cast< VertexEnrichment* >(&p);
     if (actualData_p->datatype == Qwt3D::POLYGON) {
         for (unsigned i = 0; i != actualDataC_->normals.size(); ++i)
-            ve->draw(actualDataC_->nodes[i]);
+            ve->draw(actualDataC_->nodes[ i ]);
     } else if (actualData_p->datatype == Qwt3D::GRID) {
         int step = resolution();
         for (int i = 0; i <= actualDataG_->columns() - step; i += step)
             for (int j = 0; j <= actualDataG_->rows() - step; j += step)
-                ve->draw(Triple(actualDataG_->vertices[i][j][0], actualDataG_->vertices[i][j][1],
-                                actualDataG_->vertices[i][j][2]));
+                ve->draw(Triple(actualDataG_->vertices[ i ][ j ][ 0 ],
+                                actualDataG_->vertices[ i ][ j ][ 1 ],
+                                actualDataG_->vertices[ i ][ j ][ 2 ]));
     }
     p.drawEnd();
 }

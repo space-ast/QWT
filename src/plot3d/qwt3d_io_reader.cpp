@@ -12,20 +12,20 @@
 using namespace std;
 using namespace Qwt3D;
 
-const char *NativeReader::magicstring = "jk:11051895-17021986";
+const char* NativeReader::magicstring = "jk:11051895-17021986";
 
-namespace {
-FILE *open(QString fname)
+namespace
 {
-    FILE *file = fopen(QWT3DLOCAL8BIT(fname), "r");
+FILE* open(QString fname)
+{
+    FILE* file = fopen(QWT3DLOCAL8BIT(fname), "r");
     if (!file) {
-        fprintf(stderr, "NativeReader::read: cannot open data file \"%s\"\n",
-                QWT3DLOCAL8BIT(fname));
+        fprintf(stderr, "NativeReader::read: cannot open data file \"%s\"\n", QWT3DLOCAL8BIT(fname));
     }
     return file;
 }
 
-int read_char(FILE *fp, bool skipcomments = true)
+int read_char(FILE* fp, bool skipcomments = true)
 {
     int c;
 
@@ -42,38 +42,37 @@ int read_char(FILE *fp, bool skipcomments = true)
     return (c);
 }
 
-char *read_field(FILE *fp, bool skipcomments = true)
+char* read_field(FILE* fp, bool skipcomments = true)
 {
-    static char buf[71];
+    static char buf[ 71 ];
     int c, i;
 
     do {
         if ((c = read_char(fp, skipcomments)) == EOF)
-            return (NULL);
+            return (nullptr);
     } while (isspace(c));
     for (i = 0; i < 70 && !isspace(c); ++i) {
-        buf[i] = c;
+        buf[ i ] = c;
         if ((c = read_char(fp, skipcomments)) == EOF)
             break;
     }
-    buf[i] = '\0';
+    buf[ i ] = '\0';
     return (buf);
 }
 
 //! set to data begin
-bool extract_info(FILE *fp, unsigned int &xmesh, unsigned int &ymesh, double &xmin, double &xmax,
-                  double &ymin, double &ymax)
+bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xmin, double& xmax, double& ymin, double& ymax)
 {
-    char *p;
+    char* p;
 
     // find out the size
     if ((p = read_field(fp)) == 0)
         return false;
-    xmesh = (unsigned int)atoi(p);
+    xmesh = static_cast< unsigned int >(atoi(p));
 
     if ((p = read_field(fp)) == 0)
         return false;
-    ymesh = (unsigned int)atoi(p);
+    ymesh = static_cast< unsigned int >(atoi(p));
 
     if (xmesh < 1 || ymesh < 1)
         return false;
@@ -102,9 +101,9 @@ bool extract_info(FILE *fp, unsigned int &xmesh, unsigned int &ymesh, double &xm
 }
 
 //! find out what the magic string is and compare
-bool check_magic(FILE *fp, const char *val)
+bool check_magic(FILE* fp, const char* val)
 {
-    char *p;
+    char* p;
     if ((p = read_field(fp, false)) == 0)
         return false;
 
@@ -114,9 +113,9 @@ bool check_magic(FILE *fp, const char *val)
 }
 
 //! find out what the type is
-bool check_type(FILE *fp, const char *val)
+bool check_type(FILE* fp, const char* val)
 {
-    char *p;
+    char* p;
     if ((p = read_field(fp)) == 0)
         return false;
 
@@ -125,29 +124,37 @@ bool check_type(FILE *fp, const char *val)
     return true;
 }
 
-double **allocateData(int columns, int rows)
+double** allocateData(int columns, int rows)
 {
-    double **data = new double *[columns];
+    double** data = new double*[ columns ];
 
     for (int i = 0; i < columns; ++i) {
-        data[i] = new double[rows];
+        data[ i ] = new double[ rows ];
     }
     return data;
 }
 
-void deleteData(double **data, int columns)
+void deleteData(double** data, int columns)
 {
     for (int i = 0; i < columns; i++) {
-        delete[] data[i];
+        delete[] data[ i ];
     }
     delete[] data;
 }
 }
 
-NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX) { }
+NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
+{
+}
 
-bool NativeReader::collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
-                               double &minx, double &maxx, double &miny, double &maxy)
+bool NativeReader::collectInfo(FILE*& file,
+                               QString const& fname,
+                               unsigned& xmesh,
+                               unsigned& ymesh,
+                               double& minx,
+                               double& maxx,
+                               double& miny,
+                               double& maxy)
 {
     if (fname.isEmpty())
         return false;
@@ -166,10 +173,10 @@ bool NativeReader::collectInfo(FILE *&file, QString const &fname, unsigned &xmes
     return true;
 }
 
-bool NativeReader::operator()(Plot3D *plot, QString const &fname)
+bool NativeReader::operator()(Plot3D* plot, QString const& fname)
 {
 
-    FILE *file;
+    FILE* file;
     unsigned int xmesh, ymesh;
     double minx, maxx, miny, maxy;
 
@@ -177,27 +184,26 @@ bool NativeReader::operator()(Plot3D *plot, QString const &fname)
         return false;
 
     /* allocate some space for the mesh */
-    double **data = allocateData(xmesh, ymesh);
+    double** data = allocateData(xmesh, ymesh);
 
     for (unsigned int j = 0; j < ymesh; j++) {
         for (unsigned int i = 0; i < xmesh; i++) {
-            if (fscanf(file, "%lf", &data[i][j]) != 1) {
-                fprintf(stderr, "NativeReader::read: error in data file \"%s\"\n",
-                        QWT3DLOCAL8BIT(fname));
+            if (fscanf(file, "%lf", &data[ i ][ j ]) != 1) {
+                fprintf(stderr, "NativeReader::read: error in data file \"%s\"\n", QWT3DLOCAL8BIT(fname));
                 return false;
             }
 
-            if (data[i][j] > maxz_)
-                data[i][j] = maxz_;
-            else if (data[i][j] < minz_)
-                data[i][j] = minz_;
+            if (data[ i ][ j ] > maxz_)
+                data[ i ][ j ] = maxz_;
+            else if (data[ i ][ j ] < minz_)
+                data[ i ][ j ] = minz_;
         }
     }
 
     /* close the file */
     fclose(file);
 
-    ((SurfacePlot *)plot)->loadFromData(data, xmesh, ymesh, minx, maxx, miny, maxy);
+    static_cast< SurfacePlot* >(plot)->loadFromData(data, xmesh, ymesh, minx, maxx, miny, maxy);
     deleteData(data, xmesh);
 
     return true;

@@ -14,15 +14,15 @@ class Plot : public QwtPlot
 {
     Q_OBJECT
 
-  public:
-    Plot( QWidget* parent, const QwtInterval& );
-    virtual void updateLayout() QWT_OVERRIDE;
+public:
+    Plot(QWidget* parent, const QwtInterval&);
+    virtual void updateLayout() override;
 
-    void setRectOfInterest( const QRectF& );
+    void setRectOfInterest(const QRectF&);
 
-  Q_SIGNALS:
-    void resized( double xRatio, double yRatio );
+Q_SIGNALS:
+    void resized(double xRatio, double yRatio);
 
-  private:
+private:
     RectItem* m_rectItem;
 };

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -103,8 +103,8 @@ public:
     };
     Q_DECLARE_FLAGS(BuiltinActionsFlags, BuiltinActions)
 public:
-    explicit QwtScaleWidget(QWidget* parent = NULL);
-    explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = NULL);
+    explicit QwtScaleWidget(QWidget* parent = nullptr);
+    explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = nullptr);
     virtual ~QwtScaleWidget();
 
 Q_SIGNALS:
@@ -186,8 +186,8 @@ public:
     QwtInterval colorBarInterval() const;
     const QwtColorMap* colorMap() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     int titleHeightForWidth(int width) const;
     int dimForLength(int length, const QFont& scaleFont) const;
@@ -248,9 +248,9 @@ public:
     bool isOnScale(const QPoint& pos) const;
 
 protected:
-    virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-    virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
-    virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+    virtual void paintEvent(QPaintEvent*) override;
+    virtual void resizeEvent(QResizeEvent*) override;
+    virtual void changeEvent(QEvent*) override;
 
     void draw(QPainter*) const;
 

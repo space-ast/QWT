@@ -110,7 +110,7 @@ namespace QwtSplinePleasingP
     {
       public:
         inline ControlPointsStore():
-            m_cp( NULL )
+            m_cp( nullptr )
         {
         }
 

@@ -177,10 +177,10 @@ public:
     explicit QwtLinearScaleEngine(uint base = 10);
     virtual ~QwtLinearScaleEngine();
 
-    virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const QWT_OVERRIDE;
+    virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
     virtual QwtScaleDiv
-    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const QWT_OVERRIDE;
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
     QwtInterval align(const QwtInterval&, double stepSize) const;
@@ -213,10 +213,10 @@ public:
     explicit QwtLogScaleEngine(uint base = 10);
     virtual ~QwtLogScaleEngine();
 
-    virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const QWT_OVERRIDE;
+    virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
     virtual QwtScaleDiv
-    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const QWT_OVERRIDE;
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
     QwtInterval align(const QwtInterval&, double stepSize) const;

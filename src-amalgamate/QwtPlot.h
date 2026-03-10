@@ -1,4 +1,4 @@
-﻿#ifndef QWTPLOT_AMALGAM_H
+#ifndef QWTPLOT_AMALGAM_H
 #define QWTPLOT_AMALGAM_H
 
 
@@ -25,7 +25,7 @@
  * @def Qwt numeric version MAJ.{MIN}.PAT
  */
 #ifndef QWT_VERSION_MIN
-#define QWT_VERSION_MIN 1
+#define QWT_VERSION_MIN 2
 #endif
 
 /**
@@ -39,12 +39,13 @@
  * @def Version string
  */
 #ifndef QWT_VERSION_STR
-#define QWT_VERSION_STR "7.1.0"
+#define QWT_VERSION_STR "7.2.0"
 #endif
 
-#endif  // QWT_VERSION_INFO_H
+#endif // QWT_VERSION_INFO_H
 
 /*** End of inlined file: qwt_version_info.h ***/
+
 
 
 /*** Start of inlined file: qwt_global.h ***/
@@ -76,24 +77,7 @@
 #define QWT_EXPORT
 #endif
 
-#define QWT_CONSTEXPR Q_DECL_CONSTEXPR
-
-#if QT_VERSION >= 0x050000
-#define QWT_OVERRIDE Q_DECL_OVERRIDE
-#define QWT_FINAL Q_DECL_FINAL
-#endif
-
-#ifndef QWT_CONSTEXPR
-#define QWT_CONSTEXPR
-#endif
-
-#ifndef QWT_OVERRIDE
-#define QWT_OVERRIDE
-#endif
-
-#ifndef QWT_FINAL
-#define QWT_FINAL
-#endif
+#define QWT_CONSTEXPR constexpr
 
 #ifndef QWT_DEBUG_DRAW
 #define QWT_DEBUG_DRAW 0
@@ -182,7 +166,7 @@
  * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
  */
 #ifndef QWT_PIMPL_CONSTRUCT
-#define QWT_PIMPL_CONSTRUCT m_data(std::make_unique< PrivateData >(this))
+#define QWT_PIMPL_CONSTRUCT m_data(qwt_make_unique< PrivateData >(this))
 #endif
 
 /**
@@ -193,7 +177,7 @@
 #ifndef QWT_PIMPL_CONSTRUCT_INIT
 #define QWT_PIMPL_CONSTRUCT_INIT()                                                                                     \
 	do {                                                                                                               \
-		m_data = std::make_unique< PrivateData >(this);                                                                \
+		m_data = qwt_make_unique< PrivateData >(this);                                                                 \
 	} while (0)
 #endif
 
@@ -284,72 +268,72 @@ std::unique_ptr< T > qwt_make_unique(std::size_t size)
 
 namespace QwtPolar
 {
-//! Unit of an angle
-enum AngleUnit
-{
-	//! 0.0 -> 2_M_PI
-	Radians,
+	//! Unit of an angle
+	enum AngleUnit
+	{
+		//! 0.0 -> 2_M_PI
+		Radians,
 
-	//! 0.0 -> 360.0
-	Degrees,
+		//! 0.0 -> 360.0
+		Degrees,
 
-	//! 0.0 - 400.0
-	Gradians,
+		//! 0.0 - 400.0
+		Gradians,
 
-	//! 0.0 - 1.0
-	Turns
-};
+		//! 0.0 - 1.0
+		Turns
+	};
 
-//! An enum, that identifies the type of a coordinate
-enum Coordinate
-{
-	//! Azimuth
-	Azimuth,
+	//! An enum, that identifies the type of a coordinate
+	enum Coordinate
+	{
+		//! Azimuth
+		Azimuth,
 
-	//! Radius
-	Radius
-};
+		//! Radius
+		Radius
+	};
 
-/*!
-   Indices used to identify an axis.
-   \sa Scale
- */
-enum Axis
-{
-	//! Azimuth axis
-	AxisAzimuth,
+	/*!
+	   Indices used to identify an axis.
+	   \sa Scale
+	 */
+	enum Axis
+	{
+		//! Azimuth axis
+		AxisAzimuth,
 
-	//! Left axis
-	AxisLeft,
+		//! Left axis
+		AxisLeft,
 
-	//! Right axis
-	AxisRight,
+		//! Right axis
+		AxisRight,
 
-	//! Top axis
-	AxisTop,
+		//! Top axis
+		AxisTop,
 
-	//! Bottom axis
-	AxisBottom,
+		//! Bottom axis
+		AxisBottom,
 
-	//! Number of available axis
-	AxesCount
-};
+		//! Number of available axis
+		AxesCount
+	};
 
-/*!
-   Indices used to identify a scale.
-   \sa Axis
- */
-enum Scale
-{
-	//! Azimuth scale
-	ScaleAzimuth = Azimuth,
+	/*!
+	   Indices used to identify a scale.
+	   \sa Axis
+	 */
+	enum Scale
+	{
+		//! Azimuth scale
+		ScaleAzimuth = Azimuth,
 
-	//! Radial scale
-	ScaleRadius = Radius,
+		//! Radial scale
+		ScaleRadius = Radius,
 
-	//! Number of scales
-	ScaleCount
-};
+		//! Number of scales
+		ScaleCount
+	};
 }
 
 #endif
@@ -457,49 +441,49 @@ QT_WARNING_DISABLE_GCC("-Wdouble-promotion")
  */
 
 //! \return Minimum of a and b.
-QWT_CONSTEXPR inline float qwtMinF(float a, float b)
+constexpr inline float qwtMinF(float a, float b)
 {
 	return (a < b) ? a : b;
 }
 
 //! \return Minimum of a and b.
-QWT_CONSTEXPR inline double qwtMinF(double a, double b)
+constexpr inline double qwtMinF(double a, double b)
 {
 	return (a < b) ? a : b;
 }
 
 //! \return Minimum of a and b.
-QWT_CONSTEXPR inline qreal qwtMinF(float a, double b)
+constexpr inline qreal qwtMinF(float a, double b)
 {
 	return (a < b) ? a : b;
 }
 
 //! \return Minimum of a and b.
-QWT_CONSTEXPR inline qreal qwtMinF(double a, float b)
+constexpr inline qreal qwtMinF(double a, float b)
 {
 	return (a < b) ? a : b;
 }
 
 //! \return Maximum of a and b.
-QWT_CONSTEXPR inline float qwtMaxF(float a, float b)
+constexpr inline float qwtMaxF(float a, float b)
 {
 	return (a < b) ? b : a;
 }
 
 //! \return Maximum of a and b.
-QWT_CONSTEXPR inline double qwtMaxF(double a, double b)
+constexpr inline double qwtMaxF(double a, double b)
 {
 	return (a < b) ? b : a;
 }
 
 //! \return Maximum of a and b.
-QWT_CONSTEXPR inline qreal qwtMaxF(float a, double b)
+constexpr inline qreal qwtMaxF(float a, double b)
 {
 	return (a < b) ? b : a;
 }
 
 //! \return Maximum of a and b.
-QWT_CONSTEXPR inline qreal qwtMaxF(double a, float b)
+constexpr inline qreal qwtMaxF(double a, float b)
 {
 	return (a < b) ? b : a;
 }
@@ -744,8 +728,8 @@ inline bool qwt_is_nan_or_inf(const QPointF& point)
 
 // 默认检查函数 - 用于其他类型
 template< typename T >
-typename std::enable_if< !std::is_floating_point< T >::value && !std::is_same< T, QPointF >::value, bool >::
-	type inline qwt_is_nan_or_inf(const T& /*value*/)
+typename std::enable_if< !std::is_floating_point< T >::value && !std::is_same< T, QPointF >::value,
+						 bool >::type inline qwt_is_nan_or_inf(const T& /*value*/)
 {
 	return false;
 }
@@ -833,9 +817,10 @@ inline Container qwtRemoveNanOrInfCopy(const Container& container)
 	result.reserve(container.size());  // 预分配空间以提高效率
 
 	// 只复制不是 NaN 或 Inf 的元素
-	std::copy_if(container.begin(), container.end(), std::back_inserter(result), [](const typename Container::value_type& value) {
-		return !qwt_is_nan_or_inf(value);
-	});
+	std::copy_if(container.begin(),
+				 container.end(),
+				 std::back_inserter(result),
+				 [](const typename Container::value_type& value) { return !qwt_is_nan_or_inf(value); });
 
 	return result;
 }
@@ -1498,9 +1483,9 @@ public:
 	QColor color1() const;
 	QColor color2() const;
 
-	virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
-	virtual uint colorIndex(int numColors, const QwtInterval&, double value) const QWT_OVERRIDE;
+	virtual uint colorIndex(int numColors, const QwtInterval&, double value) const override;
 
 	class ColorStops;
 
@@ -1526,7 +1511,7 @@ public:
 	void setColor(const QColor&);
 	QColor color() const;
 
-	virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
 	class PrivateData;
@@ -1561,7 +1546,7 @@ public:
 	int value() const;
 	int alpha() const;
 
-	virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
 	class PrivateData;
@@ -1595,7 +1580,7 @@ public:
 	int value2() const;
 	int alpha() const;
 
-	virtual QRgb rgb(const QwtInterval&, double value) const QWT_OVERRIDE;
+	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
 	class PrivateData;
@@ -1644,19 +1629,19 @@ inline QwtColorMap::Format QwtColorMap::format() const
  */
 class QWT_EXPORT QwtPixelMatrix : public QBitArray
 {
-public:
-	explicit QwtPixelMatrix(const QRect& rect);
+  public:
+	explicit QwtPixelMatrix( const QRect& rect );
 	~QwtPixelMatrix();
 
-	void setRect(const QRect& rect);
+	void setRect( const QRect& rect );
 	QRect rect() const;
 
-	bool testPixel(int x, int y) const;
-	bool testAndSetPixel(int x, int y, bool on);
+	bool testPixel( int x, int y ) const;
+	bool testAndSetPixel( int x, int y, bool on );
 
-	int index(int x, int y) const;
+	int index( int x, int y ) const;
 
-private:
+  private:
 	QRect m_rect;
 };
 
@@ -1669,10 +1654,10 @@ private:
    \return true, when pos is outside of rect(), or when the pixel
 		  has already been set.
  */
-inline bool QwtPixelMatrix::testPixel(int x, int y) const
+inline bool QwtPixelMatrix::testPixel( int x, int y ) const
 {
-	const int idx = index(x, y);
-	return (idx >= 0) ? testBit(idx) : true;
+	const int idx = index( x, y );
+	return ( idx >= 0 ) ? testBit( idx ) : true;
 }
 
 /*!
@@ -1685,14 +1670,14 @@ inline bool QwtPixelMatrix::testPixel(int x, int y) const
    \return true, when pos is outside of rect(), or when the pixel
 		  was set before.
  */
-inline bool QwtPixelMatrix::testAndSetPixel(int x, int y, bool on)
+inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
 {
-	const int idx = index(x, y);
-	if (idx < 0)
+	const int idx = index( x, y );
+	if ( idx < 0 )
 		return true;
 
-	const bool onBefore = testBit(idx);
-	setBit(idx, on);
+	const bool onBefore = testBit( idx );
+	setBit( idx, on );
 
 	return onBefore;
 }
@@ -1704,14 +1689,14 @@ inline bool QwtPixelMatrix::testAndSetPixel(int x, int y, bool on)
    \param y Y-coordinate
    \return Index, when rect() contains pos - otherwise -1.
  */
-inline int QwtPixelMatrix::index(int x, int y) const
+inline int QwtPixelMatrix::index( int x, int y ) const
 {
 	const int dx = x - m_rect.x();
-	if (dx < 0 || dx >= m_rect.width())
+	if ( dx < 0 || dx >= m_rect.width() )
 		return -1;
 
 	const int dy = y - m_rect.y();
-	if (dy < 0 || dy >= m_rect.height())
+	if ( dy < 0 || dy >= m_rect.height() )
 		return -1;
 
 	return dy * m_rect.width() + dx;
@@ -1748,7 +1733,7 @@ inline int QwtPixelMatrix::index(int x, int y) const
  */
 class QWT_EXPORT QwtTransform
 {
-public:
+  public:
 	QwtTransform();
 	virtual ~QwtTransform();
 
@@ -1756,7 +1741,7 @@ public:
 	   Modify value to be a valid value for the transformation.
 	   The default implementation does nothing.
 	 */
-	virtual double bounded(double value) const;
+	virtual double bounded( double value ) const;
 
 	/*!
 		Transformation function
@@ -1766,7 +1751,7 @@ public:
 
 		\sa invTransform()
 	 */
-	virtual double transform(double value) const = 0;
+	virtual double transform( double value ) const = 0;
 
 	/*!
 		Inverse transformation function
@@ -1776,12 +1761,12 @@ public:
 
 		\sa transform()
 	 */
-	virtual double invTransform(double value) const = 0;
+	virtual double invTransform( double value ) const = 0;
 
 	//! Virtualized copy operation
 	virtual QwtTransform* copy() const = 0;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtTransform)
 };
 
@@ -1793,14 +1778,14 @@ private:
  */
 class QWT_EXPORT QwtNullTransform : public QwtTransform
 {
-public:
+  public:
 	QwtNullTransform();
 	virtual ~QwtNullTransform();
 
-	virtual double transform(double value) const QWT_OVERRIDE;
-	virtual double invTransform(double value) const QWT_OVERRIDE;
+	virtual double transform( double value ) const override;
+	virtual double invTransform( double value ) const override;
 
-	virtual QwtTransform* copy() const QWT_OVERRIDE;
+	virtual QwtTransform* copy() const override;
 };
 /*!
    \brief Logarithmic transformation
@@ -1813,16 +1798,16 @@ public:
  */
 class QWT_EXPORT QwtLogTransform : public QwtTransform
 {
-public:
+  public:
 	QwtLogTransform();
 	virtual ~QwtLogTransform();
 
-	virtual double transform(double value) const QWT_OVERRIDE;
-	virtual double invTransform(double value) const QWT_OVERRIDE;
+	virtual double transform( double value ) const override;
+	virtual double invTransform( double value ) const override;
 
-	virtual double bounded(double value) const QWT_OVERRIDE;
+	virtual double bounded( double value ) const override;
 
-	virtual QwtTransform* copy() const QWT_OVERRIDE;
+	virtual QwtTransform* copy() const override;
 
 	static const double LogMin;
 	static const double LogMax;
@@ -1838,16 +1823,16 @@ public:
  */
 class QWT_EXPORT QwtPowerTransform : public QwtTransform
 {
-public:
-	explicit QwtPowerTransform(double exponent);
+  public:
+	explicit QwtPowerTransform( double exponent );
 	virtual ~QwtPowerTransform();
 
-	virtual double transform(double value) const QWT_OVERRIDE;
-	virtual double invTransform(double value) const QWT_OVERRIDE;
+	virtual double transform( double value ) const override;
+	virtual double invTransform( double value ) const override;
 
-	virtual QwtTransform* copy() const QWT_OVERRIDE;
+	virtual QwtTransform* copy() const override;
 
-private:
+  private:
 	const double m_exponent;
 };
 
@@ -2057,8 +2042,7 @@ QWT_EXPORT QSize qwtExpandedToGlobalStrut(const QSize&);
 
 #include <qlayout.h>
 
-template< typename T >
-class QList;
+template< typename T > class QList;
 
 /*!
    \brief The QwtDynGridLayout class lays out widgets in a grid,
@@ -2072,52 +2056,55 @@ class QList;
 class QWT_EXPORT QwtDynGridLayout : public QLayout
 {
 	Q_OBJECT
-public:
-	explicit QwtDynGridLayout(QWidget*, int margin = 0, int spacing = -1);
-	explicit QwtDynGridLayout(int spacing = -1);
+  public:
+	explicit QwtDynGridLayout( QWidget*, int margin = 0, int spacing = -1 );
+	explicit QwtDynGridLayout( int spacing = -1 );
 
 	virtual ~QwtDynGridLayout();
 
-	virtual void invalidate() QWT_OVERRIDE;
+	virtual void invalidate() override;
 
-	void setMaxColumns(uint maxColumns);
+	void setMaxColumns( uint maxColumns );
 	uint maxColumns() const;
 
-	uint numRows() const;
-	uint numColumns() const;
+	uint numRows () const;
+	uint numColumns () const;
 
-	virtual void addItem(QLayoutItem*) QWT_OVERRIDE;
+	virtual void addItem( QLayoutItem* ) override;
 
-	virtual QLayoutItem* itemAt(int index) const QWT_OVERRIDE;
-	virtual QLayoutItem* takeAt(int index) QWT_OVERRIDE;
-	virtual int count() const QWT_OVERRIDE;
+	virtual QLayoutItem* itemAt( int index ) const override;
+	virtual QLayoutItem* takeAt( int index ) override;
+	virtual int count() const override;
 
-	void setExpandingDirections(Qt::Orientations);
-	virtual Qt::Orientations expandingDirections() const QWT_OVERRIDE;
-	QList< QRect > layoutItems(const QRect&, uint numColumns) const;
+	void setExpandingDirections( Qt::Orientations );
+	virtual Qt::Orientations expandingDirections() const override;
+	QList< QRect > layoutItems( const QRect&, uint numColumns ) const;
 
 	virtual int maxItemWidth() const;
 
-	virtual void setGeometry(const QRect&) QWT_OVERRIDE;
+	virtual void setGeometry( const QRect& ) override;
 
-	virtual bool hasHeightForWidth() const QWT_OVERRIDE;
-	virtual int heightForWidth(int) const QWT_OVERRIDE;
+	virtual bool hasHeightForWidth() const override;
+	virtual int heightForWidth( int ) const override;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
 
-	virtual bool isEmpty() const QWT_OVERRIDE;
+	virtual bool isEmpty() const override;
 	uint itemCount() const;
 
-	virtual uint columnsForWidth(int width) const;
+	virtual uint columnsForWidth( int width ) const;
 
-protected:
-	void layoutGrid(uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const;
+  protected:
 
-	void stretchGrid(const QRect& rect, uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const;
+	void layoutGrid( uint numColumns,
+		QVector< int >& rowHeight, QVector< int >& colWidth ) const;
 
-private:
+	void stretchGrid( const QRect& rect, uint numColumns,
+		QVector< int >& rowHeight, QVector< int >& colWidth ) const;
+
+  private:
 	void init();
-	int maxRowWidth(int numColumns) const;
+	int maxRowWidth( int numColumns ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -2145,7 +2132,7 @@ class QPolygonF;
  */
 class QWT_EXPORT QwtCurveFitter
 {
-public:
+  public:
 	/*!
 	   \brief Preferred mode of the fitting algorithm
 
@@ -2185,7 +2172,7 @@ public:
 
 		\sa fitCurvePath()
 	 */
-	virtual QPolygonF fitCurve(const QPolygonF& polygon) const = 0;
+	virtual QPolygonF fitCurve( const QPolygonF& polygon ) const = 0;
 
 	/*!
 		Find a curve path which has the best fit to a series of data points
@@ -2195,12 +2182,12 @@ public:
 
 		\sa fitCurve()
 	 */
-	virtual QPainterPath fitCurvePath(const QPolygonF& polygon) const = 0;
+	virtual QPainterPath fitCurvePath( const QPolygonF& polygon ) const = 0;
 
-protected:
-	explicit QwtCurveFitter(Mode mode);
+  protected:
+	explicit QwtCurveFitter( Mode mode );
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtCurveFitter)
 
 	const Mode m_mode;
@@ -2235,21 +2222,21 @@ private:
  */
 class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 {
-public:
-	explicit QwtWeedingCurveFitter(double tolerance = 1.0);
+  public:
+	explicit QwtWeedingCurveFitter( double tolerance = 1.0 );
 	virtual ~QwtWeedingCurveFitter();
 
-	void setTolerance(double);
+	void setTolerance( double );
 	double tolerance() const;
 
-	void setChunkSize(uint);
+	void setChunkSize( uint );
 	uint chunkSize() const;
 
-	virtual QPolygonF fitCurve(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QPainterPath fitCurvePath(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+	virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
-private:
-	virtual QPolygonF simplify(const QPolygonF&) const;
+  private:
+	virtual QPolygonF simplify( const QPolygonF& ) const;
 
 	class Line;
 
@@ -2403,13 +2390,13 @@ inline int wheelEventDelta(QWheelEvent* e)
 //! \brief A sample of the types (x1-x2, y) or (x, y1-y2)
 class QWT_EXPORT QwtIntervalSample
 {
-public:
+  public:
 	QwtIntervalSample();
-	QwtIntervalSample(double, const QwtInterval&);
-	QwtIntervalSample(double value, double min, double max);
+	QwtIntervalSample( double, const QwtInterval& );
+	QwtIntervalSample( double value, double min, double max );
 
-	bool operator==(const QwtIntervalSample&) const;
-	bool operator!=(const QwtIntervalSample&) const;
+	bool operator==( const QwtIntervalSample& ) const;
+	bool operator!=( const QwtIntervalSample& ) const;
 
 	//! Value
 	double value;
@@ -2422,41 +2409,46 @@ public:
    Constructor
    The value is set to 0.0, the interval is invalid
  */
-inline QwtIntervalSample::QwtIntervalSample() : value(0.0)
+inline QwtIntervalSample::QwtIntervalSample()
+	: value( 0.0 )
 {
 }
 
 //! Constructor
-inline QwtIntervalSample::QwtIntervalSample(double v, const QwtInterval& intv) : value(v), interval(intv)
+inline QwtIntervalSample::QwtIntervalSample( double v, const QwtInterval& intv )
+	: value( v )
+	, interval( intv )
 {
 }
 
 //! Constructor
-inline QwtIntervalSample::QwtIntervalSample(double v, double min, double max) : value(v), interval(min, max)
+inline QwtIntervalSample::QwtIntervalSample( double v, double min, double max )
+	: value( v )
+	, interval( min, max )
 {
 }
 
 //! Compare operator
-inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
+inline bool QwtIntervalSample::operator==( const QwtIntervalSample& other ) const
 {
 	return value == other.value && interval == other.interval;
 }
 
 //! Compare operator
-inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
+inline bool QwtIntervalSample::operator!=( const QwtIntervalSample& other ) const
 {
-	return !(*this == other);
+	return !( *this == other );
 }
 
 //! \brief A sample of the types (x1...xn, y) or (x, y1..yn)
 class QWT_EXPORT QwtSetSample
 {
-public:
+  public:
 	QwtSetSample();
-	explicit QwtSetSample(double, const QVector< double >& = QVector< double >());
+	explicit QwtSetSample( double, const QVector< double >& = QVector< double >( ) );
 
-	bool operator==(const QwtSetSample& other) const;
-	bool operator!=(const QwtSetSample& other) const;
+	bool operator==( const QwtSetSample& other ) const;
+	bool operator!=( const QwtSetSample& other ) const;
 
 	double added() const;
 
@@ -2471,7 +2463,8 @@ public:
    Constructor
    The value is set to 0.0
  */
-inline QwtSetSample::QwtSetSample() : value(0.0)
+inline QwtSetSample::QwtSetSample()
+	: value( 0.0 )
 {
 }
 
@@ -2481,28 +2474,30 @@ inline QwtSetSample::QwtSetSample() : value(0.0)
    \param v Value
    \param s Set of values
  */
-inline QwtSetSample::QwtSetSample(double v, const QVector< double >& s) : value(v), set(s)
+inline QwtSetSample::QwtSetSample( double v, const QVector< double >& s )
+	: value( v )
+	, set( s )
 {
 }
 
 //! Compare operator
-inline bool QwtSetSample::operator==(const QwtSetSample& other) const
+inline bool QwtSetSample::operator==( const QwtSetSample& other ) const
 {
 	return value == other.value && set == other.set;
 }
 
 //! Compare operator
-inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
+inline bool QwtSetSample::operator!=( const QwtSetSample& other ) const
 {
-	return !(*this == other);
+	return !( *this == other );
 }
 
 //! \return All values of the set added
 inline double QwtSetSample::added() const
 {
 	double y = 0.0;
-	for (int i = 0; i < set.size(); i++)
-		y += set[ i ];
+	for ( int i = 0; i < set.size(); i++ )
+		y += set[i];
 
 	return y;
 }
@@ -2518,8 +2513,10 @@ inline double QwtSetSample::added() const
  */
 class QWT_EXPORT QwtOHLCSample
 {
-public:
-	QwtOHLCSample(double time = 0.0, double open = 0.0, double high = 0.0, double low = 0.0, double close = 0.0);
+  public:
+	QwtOHLCSample( double time = 0.0,
+		double open = 0.0, double high = 0.0,
+		double low = 0.0, double close = 0.0 );
 
 	QwtInterval boundingInterval() const;
 
@@ -2553,8 +2550,13 @@ public:
    \param l Low value
    \param c Close value
  */
-inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, double c)
-	: time(t), open(o), high(h), low(l), close(c)
+inline QwtOHLCSample::QwtOHLCSample(
+		double t, double o, double h, double l, double c )
+	: time( t )
+	, open( o )
+	, high( h )
+	, low( l )
+	, close( c )
 {
 }
 
@@ -2571,7 +2573,11 @@ inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, doub
  */
 inline bool QwtOHLCSample::isValid() const
 {
-	return (low <= high) && (open >= low) && (open <= high) && (close >= low) && (close <= high);
+	return ( low <= high )
+		   && ( open >= low )
+		   && ( open <= high )
+		   && ( close >= low )
+		   && ( close <= high );
 }
 
 /*!
@@ -2585,16 +2591,16 @@ inline bool QwtOHLCSample::isValid() const
 inline QwtInterval QwtOHLCSample::boundingInterval() const
 {
 	double minY = open;
-	minY        = qMin(minY, high);
-	minY        = qMin(minY, low);
-	minY        = qMin(minY, close);
+	minY = qMin( minY, high );
+	minY = qMin( minY, low );
+	minY = qMin( minY, close );
 
 	double maxY = open;
-	maxY        = qMax(maxY, high);
-	maxY        = qMax(maxY, low);
-	maxY        = qMax(maxY, close);
+	maxY = qMax( maxY, high );
+	maxY = qMax( maxY, low );
+	maxY = qMax( maxY, close );
 
-	return QwtInterval(minY, maxY);
+	return QwtInterval( minY, maxY );
 }
 
 /*!
@@ -2607,10 +2613,12 @@ inline QwtInterval QwtOHLCSample::boundingInterval() const
  */
 class QWT_EXPORT QwtVectorFieldSample
 {
-public:
-	QwtVectorFieldSample(double x = 0.0, double y = 0.0, double vx = 0.0, double vy = 0.0);
+  public:
+	QwtVectorFieldSample( double x = 0.0, double y = 0.0,
+		double vx = 0.0, double vy = 0.0 );
 
-	QwtVectorFieldSample(const QPointF& pos, double vx = 0.0, double vy = 0.0);
+	QwtVectorFieldSample( const QPointF& pos,
+		double vx = 0.0, double vy = 0.0 );
 
 	QPointF pos() const;
 
@@ -2637,8 +2645,12 @@ public:
    \param vectorX x coordinate of the vector
    \param vectorY y coordinate of the vector
  */
-inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, double vectorX, double vectorY)
-	: x(posX), y(posY), vx(vectorX), vy(vectorY)
+inline QwtVectorFieldSample::QwtVectorFieldSample(
+		double posX, double posY, double vectorX, double vectorY )
+	: x( posX )
+	, y( posY )
+	, vx( vectorX )
+	, vy( vectorY )
 {
 }
 
@@ -2649,21 +2661,25 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, doub
    \param vectorX x coordinate of the vector
    \param vectorY y coordinate of the vector
  */
-inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vectorX, double vectorY)
-	: x(pos.x()), y(pos.y()), vx(vectorX), vy(vectorY)
+inline QwtVectorFieldSample::QwtVectorFieldSample(
+		const QPointF& pos, double vectorX, double vectorY )
+	: x( pos.x() )
+	, y( pos.y() )
+	, vx( vectorX )
+	, vy( vectorY )
 {
 }
 
 //! \return x/y coordinates as QPointF
 inline QPointF QwtVectorFieldSample::pos() const
 {
-	return QPointF(x, y);
+	return QPointF( x, y );
 }
 
 //! \return true, if vx and vy are 0
 inline bool QwtVectorFieldSample::isNull() const
 {
-	return (vx == 0.0) && (vy == 0.0);
+	return ( vx == 0.0 ) && ( vy == 0.0 );
 }
 
 #endif
@@ -2685,12 +2701,12 @@ inline bool QwtVectorFieldSample::isNull() const
 
 class QWT_EXPORT QwtPoint3D
 {
-public:
+  public:
 	QwtPoint3D();
-	QwtPoint3D(double x, double y, double z);
-	QwtPoint3D(const QPointF&);
+	QwtPoint3D( double x, double y, double z );
+	QwtPoint3D( const QPointF& );
 
-	bool isNull() const;
+	bool isNull()    const;
 
 	double x() const;
 	double y() const;
@@ -2700,38 +2716,44 @@ public:
 	double& ry();
 	double& rz();
 
-	void setX(double x);
-	void setY(double y);
-	void setZ(double y);
+	void setX( double x );
+	void setY( double y );
+	void setZ( double y );
 
 	QPointF toPoint() const;
 
-	bool operator==(const QwtPoint3D&) const;
-	bool operator!=(const QwtPoint3D&) const;
+	bool operator==( const QwtPoint3D& ) const;
+	bool operator!=( const QwtPoint3D& ) const;
 
-private:
+  private:
 	double m_x;
 	double m_y;
 	double m_z;
 };
 
-Q_DECLARE_TYPEINFO(QwtPoint3D, Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QwtPoint3D);
+Q_DECLARE_TYPEINFO( QwtPoint3D, Q_MOVABLE_TYPE );
+Q_DECLARE_METATYPE( QwtPoint3D );
 
 #ifndef QT_NO_DEBUG_STREAM
-QWT_EXPORT QDebug operator<<(QDebug, const QwtPoint3D&);
+QWT_EXPORT QDebug operator<<( QDebug, const QwtPoint3D& );
 #endif
 
 /*!
 	Constructs a null point.
 	\sa isNull()
  */
-inline QwtPoint3D::QwtPoint3D() : m_x(0.0), m_y(0.0), m_z(0.0)
+inline QwtPoint3D::QwtPoint3D()
+	: m_x( 0.0 )
+	, m_y( 0.0 )
+	, m_z( 0.0 )
 {
 }
 
 //! Constructs a point with coordinates specified by x, y and z.
-inline QwtPoint3D::QwtPoint3D(double x, double y, double z = 0.0) : m_x(x), m_y(y), m_z(z)
+inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
+	: m_x( x )
+	, m_y( y )
+	, m_z( z )
 {
 }
 
@@ -2739,7 +2761,10 @@ inline QwtPoint3D::QwtPoint3D(double x, double y, double z = 0.0) : m_x(x), m_y(
 	Constructs a point with x and y coordinates from a 2D point,
 	and a z coordinate of 0.
  */
-inline QwtPoint3D::QwtPoint3D(const QPointF& other) : m_x(other.x()), m_y(other.y()), m_z(0.0)
+inline QwtPoint3D::QwtPoint3D( const QPointF& other )
+	: m_x( other.x() )
+	, m_y( other.y() )
+	, m_z( 0.0 )
 {
 }
 
@@ -2791,19 +2816,19 @@ inline double& QwtPoint3D::rz()
 }
 
 //! Sets the x-coordinate of the point to the value specified by x.
-inline void QwtPoint3D::setX(double x)
+inline void QwtPoint3D::setX( double x )
 {
 	m_x = x;
 }
 
 //! Sets the y-coordinate of the point to the value specified by y.
-inline void QwtPoint3D::setY(double y)
+inline void QwtPoint3D::setY( double y )
 {
 	m_y = y;
 }
 
 //! Sets the z-coordinate of the point to the value specified by z.
-inline void QwtPoint3D::setZ(double z)
+inline void QwtPoint3D::setZ( double z )
 {
 	m_z = z;
 }
@@ -2813,19 +2838,19 @@ inline void QwtPoint3D::setZ(double z)
  */
 inline QPointF QwtPoint3D::toPoint() const
 {
-	return QPointF(m_x, m_y);
+	return QPointF( m_x, m_y );
 }
 
 //! \return True, if this point and other are equal; otherwise returns false.
-inline bool QwtPoint3D::operator==(const QwtPoint3D& other) const
+inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const
 {
-	return (m_x == other.m_x) && (m_y == other.m_y) && (m_z == other.m_z);
+	return ( m_x == other.m_x ) && ( m_y == other.m_y ) && ( m_z == other.m_z );
 }
 
 //! \return True if this rect and other are different; otherwise returns false.
-inline bool QwtPoint3D::operator!=(const QwtPoint3D& other) const
+inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const
 {
-	return !operator==(other);
+	return !operator==( other );
 }
 
 #endif
@@ -2986,7 +3011,7 @@ public:
 	const QVector< T > samples() const;
 
 	//! \return Number of samples
-	virtual size_t size() const QWT_OVERRIDE;
+	virtual size_t size() const override;
 
 	/*!
 	   \return Sample at a specific position
@@ -2994,7 +3019,7 @@ public:
 	   \param index Index
 	   \return Sample at position index
 	 */
-	virtual T sample(size_t index) const QWT_OVERRIDE;
+	virtual T sample(size_t index) const override;
 
 protected:
 	//! Vector of samples
@@ -3055,7 +3080,7 @@ class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 public:
 	QwtPointSeriesData(const QVector< QPointF >& = QVector< QPointF >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of 3D points
@@ -3064,7 +3089,7 @@ class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 public:
 	QwtPoint3DSeriesData(const QVector< QwtPoint3D >& = QVector< QwtPoint3D >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of intervals
@@ -3073,7 +3098,7 @@ class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalS
 public:
 	QwtIntervalSeriesData(const QVector< QwtIntervalSample >& = QVector< QwtIntervalSample >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of samples
@@ -3082,7 +3107,7 @@ class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 public:
 	QwtSetSeriesData(const QVector< QwtSetSample >& = QVector< QwtSetSample >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of vector field samples
@@ -3091,7 +3116,7 @@ class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldS
 public:
 	QwtVectorFieldData(const QVector< QwtVectorFieldSample >& = QVector< QwtVectorFieldSample >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 /*!
@@ -3102,7 +3127,7 @@ class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample 
 public:
 	QwtTradingChartData(const QVector< QwtOHLCSample >& = QVector< QwtOHLCSample >());
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 };
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);
@@ -3281,7 +3306,7 @@ class QWT_EXPORT QwtRasterData
 {
 public:
 	//! Contour lines
-	typedef QMap< double, QPolygonF > ContourLines;
+	using ContourLines = QMap< double, QPolygonF >;
 
 	/*!
 	   \brief Raster data attributes
@@ -3452,12 +3477,11 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::Attributes)
  * @tparam DataColumn The container type for a single column in the data matrix (default: same as XContainer).
  * @tparam DataContainer The container type for the entire data matrix (default: same as XContainer).
  */
-template<
-	typename T,
-	typename XContainer    = std::vector< T >,
-	typename YContainer    = std::vector< T >,
-	typename DataColumn    = std::vector< T >,
-	typename DataContainer = std::vector< DataColumn > >
+template< typename T,
+		  typename XContainer    = std::vector< T >,
+		  typename YContainer    = std::vector< T >,
+		  typename DataColumn    = std::vector< T >,
+		  typename DataContainer = std::vector< DataColumn > >
 class QwtGridData
 {
 public:
@@ -3509,9 +3533,10 @@ public:
 	 * @param data The 2D data matrix. / 二维数据矩阵。
 	 * @param mode The resampling mode to use. / 要使用的抽样方法。
 	 */
-	QwtGridData(
-		const x_container_type& xAxis, const y_container_type& yAxis, const data_container_type& data, ResampleMode mode = NearestNeighbour
-	)
+	QwtGridData(const x_container_type& xAxis,
+				const y_container_type& yAxis,
+				const data_container_type& data,
+				ResampleMode mode = NearestNeighbour)
 		: m_xAxis(xAxis), m_yAxis(yAxis), m_data(data), m_mode(mode)
 	{
 		validate();
@@ -4126,7 +4151,7 @@ public:
 	void setResampleMode(ResampleMode mode);
 	ResampleMode resampleMode() const;
 
-	virtual QwtInterval interval(Qt::Axis axis) const QWT_OVERRIDE QWT_FINAL;
+	virtual QwtInterval interval(Qt::Axis axis) const override final;
 
 	/**
 	 * @brief Set new x-axis, y-axis, and data matrix.
@@ -4156,9 +4181,9 @@ public:
 	 * @param data The 2D data matrix. / 二维数据矩阵。
 	 */
 	void setValue(const QVector< double >& x, const QVector< double >& y, const QVector< QVector< double > >& v);
-	virtual double value(double x, double y) const QWT_OVERRIDE;
+	virtual double value(double x, double y) const override;
 
-	virtual QRectF pixelHint(const QRectF&) const QWT_OVERRIDE;
+	virtual QRectF pixelHint(const QRectF&) const override;
 
 	// 获取尺寸
 	int xSize() const;
@@ -4187,8 +4212,7 @@ private:
 #define QWT_MATRIX_RASTER_DATA_H
 
 #if QT_VERSION < 0x060000
-template< typename T >
-class QVector;
+template< typename T > class QVector;
 #endif
 
 /*!
@@ -4201,7 +4225,7 @@ class QVector;
  */
 class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
 {
-public:
+  public:
 	/*!
 	   \brief Resampling algorithm
 	   The default setting is NearestNeighbour;
@@ -4233,22 +4257,22 @@ public:
 	void setResampleMode(ResampleMode mode);
 	ResampleMode resampleMode() const;
 
-	void setInterval(Qt::Axis, const QwtInterval&);
-	virtual QwtInterval interval(Qt::Axis axis) const QWT_OVERRIDE QWT_FINAL;
+	void setInterval( Qt::Axis, const QwtInterval& );
+	virtual QwtInterval interval( Qt::Axis axis) const override final;
 
-	void setValueMatrix(const QVector< double >& values, int numColumns);
+	void setValueMatrix( const QVector< double >& values, int numColumns );
 	const QVector< double > valueMatrix() const;
 
-	void setValue(int row, int col, double value);
+	void setValue( int row, int col, double value );
 
 	int numColumns() const;
 	int numRows() const;
 
-	virtual QRectF pixelHint(const QRectF&) const QWT_OVERRIDE;
+	virtual QRectF pixelHint( const QRectF& ) const override;
 
-	virtual double value(double x, double y) const QWT_OVERRIDE;
+	virtual double value( double x, double y ) const override;
 
-private:
+  private:
 	void update();
 
 	class PrivateData;
@@ -4294,7 +4318,7 @@ private:
  */
 class QWT_EXPORT QwtDate
 {
-public:
+  public:
 	/*!
 	   How to identify the first week of year differs between
 	   countries.
@@ -4361,19 +4385,21 @@ public:
 	static QDate minDate();
 	static QDate maxDate();
 
-	static QDateTime toDateTime(double value, Qt::TimeSpec = Qt::UTC);
+	static QDateTime toDateTime( double value,
+		Qt::TimeSpec = Qt::UTC );
 
-	static double toDouble(const QDateTime&);
+	static double toDouble( const QDateTime& );
 
-	static QDateTime ceil(const QDateTime&, IntervalType);
-	static QDateTime floor(const QDateTime&, IntervalType);
+	static QDateTime ceil( const QDateTime&, IntervalType );
+	static QDateTime floor( const QDateTime&, IntervalType );
 
-	static QDate dateOfWeek0(int year, Week0Type);
-	static int weekNumber(const QDate&, Week0Type);
+	static QDate dateOfWeek0( int year, Week0Type );
+	static int weekNumber( const QDate&, Week0Type );
 
-	static int utcOffset(const QDateTime&);
+	static int utcOffset( const QDateTime& );
 
-	static QString toString(const QDateTime&, const QString& format, Week0Type);
+	static QString toString( const QDateTime&,
+		const QString& format, Week0Type );
 };
 
 #endif
@@ -4454,7 +4480,7 @@ inline bool QwtAxis::isYAxis(int axisPos)
 
 	\sa QwtAxis
  */
-typedef int QwtAxisId;
+using QwtAxisId = int;
 
 #endif
 
@@ -4481,20 +4507,23 @@ class QPolygonF;
  */
 class QWT_EXPORT QwtBezier
 {
-public:
-	QwtBezier(double tolerance = 0.5);
+  public:
+	QwtBezier( double tolerance = 0.5 );
 	~QwtBezier();
 
-	void setTolerance(double tolerance);
+	void setTolerance( double tolerance );
 	double tolerance() const;
 
-	QPolygonF toPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2) const;
+	QPolygonF toPolygon( const QPointF& p1, const QPointF& cp1,
+		const QPointF& cp2, const QPointF& p2 ) const;
 
-	void appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, QPolygonF& polygon) const;
+	void appendToPolygon( const QPointF& p1, const QPointF& cp1,
+		const QPointF& cp2, const QPointF& p2, QPolygonF& polygon ) const;
 
-	static QPointF pointAt(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t);
+	static QPointF pointAt( const QPointF& p1, const QPointF& cp1,
+		const QPointF& cp2, const QPointF& p2, double t );
 
-private:
+  private:
 	double m_tolerance;
 	double m_flatness;
 };
@@ -4531,12 +4560,12 @@ inline double QwtBezier::tolerance() const
 
 class QWT_EXPORT QwtPointPolar
 {
-public:
+  public:
 	QwtPointPolar();
-	QwtPointPolar(double azimuth, double radius);
-	QwtPointPolar(const QPointF&);
+	QwtPointPolar( double azimuth, double radius );
+	QwtPointPolar( const QPointF& );
 
-	void setPoint(const QPointF&);
+	void setPoint( const QPointF& );
 	QPointF toPoint() const;
 
 	bool isValid() const;
@@ -4548,31 +4577,33 @@ public:
 	double& rRadius();
 	double& rAzimuth();
 
-	void setRadius(double);
-	void setAzimuth(double);
+	void setRadius( double );
+	void setAzimuth( double );
 
-	bool operator==(const QwtPointPolar&) const;
-	bool operator!=(const QwtPointPolar&) const;
+	bool operator==( const QwtPointPolar& ) const;
+	bool operator!=( const QwtPointPolar& ) const;
 
 	QwtPointPolar normalized() const;
 
-private:
+  private:
 	double m_azimuth;
 	double m_radius;
 };
 
-Q_DECLARE_TYPEINFO(QwtPointPolar, Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QwtPointPolar);
+Q_DECLARE_TYPEINFO( QwtPointPolar, Q_MOVABLE_TYPE );
+Q_DECLARE_METATYPE( QwtPointPolar );
 
 #ifndef QT_NO_DEBUG_STREAM
-QWT_EXPORT QDebug operator<<(QDebug, const QwtPointPolar&);
+QWT_EXPORT QDebug operator<<( QDebug, const QwtPointPolar& );
 #endif
 
 /*!
 	Constructs a null point, with a radius and azimuth set to 0.0.
 	\sa QPointF::isNull()
  */
-inline QwtPointPolar::QwtPointPolar() : m_azimuth(0.0), m_radius(0.0)
+inline QwtPointPolar::QwtPointPolar()
+	: m_azimuth( 0.0 )
+	, m_radius( 0.0 )
 {
 }
 
@@ -4582,7 +4613,9 @@ inline QwtPointPolar::QwtPointPolar() : m_azimuth(0.0), m_radius(0.0)
    \param azimuth Azimuth
    \param radius Radius
  */
-inline QwtPointPolar::QwtPointPolar(double azimuth, double radius) : m_azimuth(azimuth), m_radius(radius)
+inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
+	: m_azimuth( azimuth )
+	, m_radius( radius )
 {
 }
 
@@ -4623,59 +4656,66 @@ inline double& QwtPointPolar::rAzimuth()
 }
 
 //! Sets the radius to radius.
-inline void QwtPointPolar::setRadius(double radius)
+inline void QwtPointPolar::setRadius( double radius )
 {
 	m_radius = radius;
 }
 
 //! Sets the azimuth to azimuth.
-inline void QwtPointPolar::setAzimuth(double azimuth)
+inline void QwtPointPolar::setAzimuth( double azimuth )
 {
 	m_azimuth = azimuth;
 }
 
-inline QPoint qwtPolar2Pos(const QPoint& pole, double radius, double angle)
+inline QPoint qwtPolar2Pos( const QPoint& pole,
+	double radius, double angle )
 {
-	const double x = pole.x() + radius * std::cos(angle);
-	const double y = pole.y() - radius * std::sin(angle);
+	const double x = pole.x() + radius * std::cos( angle );
+	const double y = pole.y() - radius * std::sin( angle );
 
-	return QPoint(qRound(x), qRound(y));
+	return QPoint( qRound( x ), qRound( y ) );
 }
 
-inline QPoint qwtDegree2Pos(const QPoint& pole, double radius, double angle)
+inline QPoint qwtDegree2Pos( const QPoint& pole,
+	double radius, double angle )
 {
-	return qwtPolar2Pos(pole, radius, angle / 180.0 * M_PI);
+	return qwtPolar2Pos( pole, radius, angle / 180.0 * M_PI );
 }
 
-inline QPointF qwtPolar2Pos(const QPointF& pole, double radius, double angle)
+inline QPointF qwtPolar2Pos( const QPointF& pole,
+	double radius, double angle )
 {
-	const double x = pole.x() + radius * std::cos(angle);
-	const double y = pole.y() - radius * std::sin(angle);
+	const double x = pole.x() + radius * std::cos( angle );
+	const double y = pole.y() - radius * std::sin( angle );
 
-	return QPointF(x, y);
+	return QPointF( x, y);
 }
 
-inline QPointF qwtDegree2Pos(const QPointF& pole, double radius, double angle)
+inline QPointF qwtDegree2Pos( const QPointF& pole,
+	double radius, double angle )
 {
-	return qwtPolar2Pos(pole, radius, angle / 180.0 * M_PI);
+	return qwtPolar2Pos( pole, radius, angle / 180.0 * M_PI );
 }
 
-inline QPointF qwtFastPolar2Pos(const QPointF& pole, double radius, double angle)
+inline QPointF qwtFastPolar2Pos( const QPointF& pole,
+	double radius, double angle )
 {
-	const double x = pole.x() + radius * qFastCos(angle);
-	const double y = pole.y() - radius * qFastSin(angle);
+	const double x = pole.x() + radius * qFastCos( angle );
+	const double y = pole.y() - radius * qFastSin( angle );
 
-	return QPointF(x, y);
+	return QPointF( x, y);
 }
 
-inline QPointF qwtFastDegree2Pos(const QPointF& pole, double radius, double angle)
+inline QPointF qwtFastDegree2Pos( const QPointF& pole,
+	double radius, double angle )
 {
-	return qwtFastPolar2Pos(pole, radius, angle / 180.0 * M_PI);
+	return qwtFastPolar2Pos( pole, radius, angle / 180.0 * M_PI );
 }
 
-inline QwtPointPolar qwtFastPos2Polar(const QPointF& pos)
+inline QwtPointPolar qwtFastPos2Polar( const QPointF& pos )
 {
-	return QwtPointPolar(qwtFastAtan2(pos.y(), pos.x()), qSqrt(qwtSqr(pos.x()) + qwtSqr(pos.y())));
+	return QwtPointPolar( qwtFastAtan2( pos.y(), pos.x() ),
+		qSqrt( qwtSqr( pos.x() ) + qwtSqr( pos.y() ) ) );
 }
 
 #endif
@@ -4695,8 +4735,7 @@ class QPolygon;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T >
-class QVector;
+template< typename T > class QVector;
 #endif
 
 /*!
@@ -4705,19 +4744,26 @@ class QVector;
 
 namespace QwtClipper
 {
-QWT_EXPORT void clipPolygon(const QRect&, QPolygon&, bool closePolygon = false);
+	QWT_EXPORT void clipPolygon( const QRect&,
+		QPolygon&, bool closePolygon = false );
 
-QWT_EXPORT void clipPolygon(const QRectF&, QPolygon&, bool closePolygon = false);
+	QWT_EXPORT void clipPolygon( const QRectF&,
+		QPolygon&, bool closePolygon = false );
 
-QWT_EXPORT void clipPolygonF(const QRectF&, QPolygonF&, bool closePolygon = false);
+	QWT_EXPORT void clipPolygonF( const QRectF&,
+		QPolygonF&, bool closePolygon = false );
 
-QWT_EXPORT QPolygon clippedPolygon(const QRect&, const QPolygon&, bool closePolygon = false);
+	QWT_EXPORT QPolygon clippedPolygon( const QRect&,
+		const QPolygon&, bool closePolygon = false );
 
-QWT_EXPORT QPolygon clippedPolygon(const QRectF&, const QPolygon&, bool closePolygon = false);
+	QWT_EXPORT QPolygon clippedPolygon( const QRectF&,
+		const QPolygon&, bool closePolygon = false );
 
-QWT_EXPORT QPolygonF clippedPolygonF(const QRectF&, const QPolygonF&, bool closePolygon = false);
+	QWT_EXPORT QPolygonF clippedPolygonF( const QRectF&,
+		const QPolygonF&, bool closePolygon = false );
 
-QWT_EXPORT QVector< QwtInterval > clipCircle(const QRectF&, const QPointF&, double radius);
+	QWT_EXPORT QVector< QwtInterval > clipCircle(
+		const QRectF&, const QPointF&, double radius );
 };
 
 #endif
@@ -4748,7 +4794,7 @@ QWT_EXPORT QVector< QwtInterval > clipCircle(const QRectF&, const QPointF&, doub
 
 class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 {
-public:
+  public:
 	/*!
 	   \brief Render mode
 
@@ -4789,46 +4835,51 @@ public:
 	QwtNullPaintDevice();
 	virtual ~QwtNullPaintDevice();
 
-	void setMode(Mode);
+	void setMode( Mode );
 	Mode mode() const;
 
-	virtual QPaintEngine* paintEngine() const QWT_OVERRIDE;
+	virtual QPaintEngine* paintEngine() const override;
 
-	virtual int metric(PaintDeviceMetric) const QWT_OVERRIDE;
+	virtual int metric( PaintDeviceMetric ) const override;
 
-	virtual void drawRects(const QRect*, int);
-	virtual void drawRects(const QRectF*, int);
+	virtual void drawRects(const QRect*, int );
+	virtual void drawRects(const QRectF*, int );
 
-	virtual void drawLines(const QLine*, int);
-	virtual void drawLines(const QLineF*, int);
+	virtual void drawLines(const QLine*, int );
+	virtual void drawLines(const QLineF*, int );
 
 	virtual void drawEllipse(const QRectF&);
 	virtual void drawEllipse(const QRect&);
 
 	virtual void drawPath(const QPainterPath&);
 
-	virtual void drawPoints(const QPointF*, int);
-	virtual void drawPoints(const QPoint*, int);
+	virtual void drawPoints(const QPointF*, int );
+	virtual void drawPoints(const QPoint*, int );
 
-	virtual void drawPolygon(const QPointF*, int, QPaintEngine::PolygonDrawMode);
+	virtual void drawPolygon( const QPointF*, int,
+		QPaintEngine::PolygonDrawMode );
 
-	virtual void drawPolygon(const QPoint*, int, QPaintEngine::PolygonDrawMode);
+	virtual void drawPolygon( const QPoint*, int,
+		QPaintEngine::PolygonDrawMode );
 
-	virtual void drawPixmap(const QRectF&, const QPixmap&, const QRectF&);
+	virtual void drawPixmap(const QRectF&,
+		const QPixmap&, const QRectF&);
 
 	virtual void drawTextItem(const QPointF&, const QTextItem&);
 
-	virtual void drawTiledPixmap(const QRectF&, const QPixmap&, const QPointF&);
+	virtual void drawTiledPixmap(const QRectF&,
+		const QPixmap&, const QPointF& );
 
-	virtual void drawImage(const QRectF&, const QImage&, const QRectF&, Qt::ImageConversionFlags);
+	virtual void drawImage(const QRectF&, const QImage&,
+		const QRectF&, Qt::ImageConversionFlags );
 
-	virtual void updateState(const QPaintEngineState&);
+	virtual void updateState( const QPaintEngineState& );
 
-protected:
+  protected:
 	//! \return Size needed to implement metric()
 	virtual QSize sizeMetrics() const = 0;
 
-private:
+  private:
 	class PaintEngine;
 	PaintEngine* m_engine;
 
@@ -4853,18 +4904,18 @@ private:
 #include <QBrush>
 #include <QPointF>
 
-class QWT_EXPORT QwtStyleSheetRecorder QWT_FINAL : public QwtNullPaintDevice
+class QWT_EXPORT QwtStyleSheetRecorder final : public QwtNullPaintDevice
 {
 public:
 	explicit QwtStyleSheetRecorder(const QSize& size);
-	virtual void updateState(const QPaintEngineState& state) QWT_OVERRIDE;
-	virtual void drawRects(const QRectF* rects, int count) QWT_OVERRIDE;
-	virtual void drawRects(const QRect* rects, int count) QWT_OVERRIDE;
-	virtual void drawPath(const QPainterPath& path) QWT_OVERRIDE;
+	virtual void updateState(const QPaintEngineState& state) override;
+	virtual void drawRects(const QRectF* rects, int count) override;
+	virtual void drawRects(const QRect* rects, int count) override;
+	virtual void drawPath(const QPainterPath& path) override;
 	void setCornerRects(const QPainterPath& path);
 
 protected:
-	virtual QSize sizeMetrics() const QWT_OVERRIDE;
+	virtual QSize sizeMetrics() const override;
 
 private:
 	void alignCornerRects(const QRectF& rect);
@@ -4922,7 +4973,7 @@ class QPainterPath;
 
 class QWT_EXPORT QwtPainterCommand
 {
-public:
+  public:
 	//! Type of the paint command
 	enum Type
 	{
@@ -4985,17 +5036,20 @@ public:
 	QwtPainterCommand();
 	QwtPainterCommand(const QwtPainterCommand&);
 
-	explicit QwtPainterCommand(const QPainterPath&);
+	explicit QwtPainterCommand( const QPainterPath& );
 
-	QwtPainterCommand(const QRectF& rect, const QPixmap&, const QRectF& subRect);
+	QwtPainterCommand( const QRectF& rect,
+		const QPixmap&, const QRectF& subRect );
 
-	QwtPainterCommand(const QRectF& rect, const QImage&, const QRectF& subRect, Qt::ImageConversionFlags);
+	QwtPainterCommand( const QRectF& rect,
+		const QImage&, const QRectF& subRect,
+		Qt::ImageConversionFlags );
 
-	explicit QwtPainterCommand(const QPaintEngineState&);
+	explicit QwtPainterCommand( const QPaintEngineState& );
 
 	~QwtPainterCommand();
 
-	QwtPainterCommand& operator=(const QwtPainterCommand&);
+	QwtPainterCommand& operator=(const QwtPainterCommand& );
 
 	Type type() const;
 
@@ -5011,13 +5065,14 @@ public:
 	StateData* stateData();
 	const StateData* stateData() const;
 
-private:
-	void copy(const QwtPainterCommand&);
+  private:
+	void copy( const QwtPainterCommand& );
 	void reset();
 
 	Type m_type;
 
-	union {
+	union
+	{
 		QPainterPath* m_path;
 		PixmapData* m_pixmapData;
 		ImageData* m_imageData;
@@ -5038,19 +5093,22 @@ inline const QPainterPath* QwtPainterCommand::path() const
 }
 
 //! \return Attributes how to paint a QPixmap
-inline const QwtPainterCommand::PixmapData* QwtPainterCommand::pixmapData() const
+inline const QwtPainterCommand::PixmapData*
+QwtPainterCommand::pixmapData() const
 {
 	return m_pixmapData;
 }
 
 //! \return Attributes how to paint a QImage
-inline const QwtPainterCommand::ImageData* QwtPainterCommand::imageData() const
+inline const QwtPainterCommand::ImageData*
+QwtPainterCommand::imageData() const
 {
 	return m_imageData;
 }
 
 //! \return Attributes of a state change
-inline const QwtPainterCommand::StateData* QwtPainterCommand::stateData() const
+inline const QwtPainterCommand::StateData*
+QwtPainterCommand::stateData() const
 {
 	return m_stateData;
 }
@@ -5125,7 +5183,7 @@ class QImage;
  */
 class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 {
-public:
+  public:
 	/*!
 		Hint how to render a graphic
 		\sa setRenderHint(), testRenderHint()
@@ -5147,7 +5205,7 @@ public:
 		RenderPensUnscaled = 0x1
 	};
 
-	Q_DECLARE_FLAGS(RenderHints, RenderHint)
+	Q_DECLARE_FLAGS( RenderHints, RenderHint )
 
 	/*!
 	   Indicator if the graphic contains a specific type of painter command
@@ -5156,23 +5214,23 @@ public:
 	enum CommandType
 	{
 		//! The graphic contains scalable vector data
-		VectorData = 1 << 0,
+		VectorData     = 1 << 0,
 
 		//! The graphic contains raster data ( QPixmap or QImage )
-		RasterData = 1 << 1,
+		RasterData     = 1 << 1,
 
 		//! The graphic contains transformations beyond simple translations
 		Transformation = 1 << 2
 	};
 
-	Q_DECLARE_FLAGS(CommandTypes, CommandType)
+	Q_DECLARE_FLAGS( CommandTypes, CommandType )
 
 	QwtGraphic();
-	QwtGraphic(const QwtGraphic&);
+	QwtGraphic( const QwtGraphic& );
 
 	virtual ~QwtGraphic();
 
-	QwtGraphic& operator=(const QwtGraphic&);
+	QwtGraphic& operator=( const QwtGraphic& );
 
 	void reset();
 
@@ -5181,57 +5239,66 @@ public:
 
 	CommandTypes commandTypes() const;
 
-	void render(QPainter*) const;
+	void render( QPainter* ) const;
 
-	void render(QPainter*, const QSizeF&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio) const;
+	void render( QPainter*, const QSizeF&,
+		Qt::AspectRatioMode = Qt::IgnoreAspectRatio ) const;
 
-	void render(QPainter*, const QPointF&, Qt::Alignment = Qt::AlignTop | Qt::AlignLeft) const;
+	void render( QPainter*, const QPointF&,
+		Qt::Alignment = Qt::AlignTop | Qt::AlignLeft ) const;
 
-	void render(QPainter*, const QRectF&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio) const;
+	void render( QPainter*, const QRectF&,
+		Qt::AspectRatioMode = Qt::IgnoreAspectRatio ) const;
 
-	QPixmap toPixmap(qreal devicePixelRatio = 0.0) const;
+	QPixmap toPixmap( qreal devicePixelRatio = 0.0 ) const;
 
-	QPixmap toPixmap(const QSize&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio, qreal devicePixelRatio = 0.0) const;
+	QPixmap toPixmap( const QSize&,
+		Qt::AspectRatioMode = Qt::IgnoreAspectRatio,
+		qreal devicePixelRatio = 0.0 ) const;
 
-	QImage toImage(qreal devicePixelRatio = 0.0) const;
+	QImage toImage( qreal devicePixelRatio = 0.0 ) const;
 
-	QImage toImage(const QSize&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio, qreal devicePixelRatio = 0.0) const;
+	QImage toImage( const QSize&,
+		Qt::AspectRatioMode = Qt::IgnoreAspectRatio,
+		qreal devicePixelRatio = 0.0 ) const;
 
-	QRectF scaledBoundingRect(qreal sx, qreal sy) const;
+	QRectF scaledBoundingRect( qreal sx, qreal sy ) const;
 
 	QRectF boundingRect() const;
 	QRectF controlPointRect() const;
 
 	const QVector< QwtPainterCommand >& commands() const;
-	void setCommands(const QVector< QwtPainterCommand >&);
+	void setCommands( const QVector< QwtPainterCommand >& );
 
-	void setDefaultSize(const QSizeF&);
+	void setDefaultSize( const QSizeF& );
 	QSizeF defaultSize() const;
 
-	qreal heightForWidth(qreal width) const;
-	qreal widthForHeight(qreal height) const;
+	qreal heightForWidth( qreal width ) const;
+	qreal widthForHeight( qreal height ) const;
 
-	void setRenderHint(RenderHint, bool on = true);
-	bool testRenderHint(RenderHint) const;
+	void setRenderHint( RenderHint, bool on = true );
+	bool testRenderHint( RenderHint ) const;
 
 	RenderHints renderHints() const;
 
-protected:
-	virtual QSize sizeMetrics() const QWT_OVERRIDE;
+  protected:
+	virtual QSize sizeMetrics() const override;
 
-	virtual void drawPath(const QPainterPath&) QWT_OVERRIDE;
+	virtual void drawPath( const QPainterPath& ) override;
 
-	virtual void drawPixmap(const QRectF&, const QPixmap&, const QRectF&) QWT_OVERRIDE;
+	virtual void drawPixmap( const QRectF&,
+		const QPixmap&, const QRectF& ) override;
 
-	virtual void drawImage(const QRectF&, const QImage&, const QRectF&, Qt::ImageConversionFlags) QWT_OVERRIDE;
+	virtual void drawImage( const QRectF&, const QImage&,
+		const QRectF&, Qt::ImageConversionFlags ) override;
 
-	virtual void updateState(const QPaintEngineState&) QWT_OVERRIDE;
+	virtual void updateState( const QPaintEngineState& ) override;
 
-private:
-	void renderGraphic(QPainter*, QTransform*) const;
+  private:
+	void renderGraphic( QPainter*, QTransform* ) const;
 
-	void updateBoundingRect(const QRectF&);
-	void updateControlPointRect(const QRectF&);
+	void updateBoundingRect( const QRectF& );
+	void updateControlPointRect( const QRectF& );
 
 	class PathInfo;
 
@@ -5239,9 +5306,9 @@ private:
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtGraphic::RenderHints)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtGraphic::CommandTypes)
-Q_DECLARE_METATYPE(QwtGraphic)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::RenderHints )
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::CommandTypes )
+Q_DECLARE_METATYPE( QwtGraphic )
 
 #endif
 
@@ -5269,7 +5336,7 @@ class QKeyEvent;
  */
 class QWT_EXPORT QwtEventPattern
 {
-public:
+  public:
 	/*!
 	   \brief Symbolic mouse input codes
 
@@ -5388,10 +5455,12 @@ public:
 	//! A pattern for mouse events
 	class MousePattern
 	{
-	public:
+	  public:
 		//! Constructor
-		MousePattern(Qt::MouseButton btn = Qt::NoButton, Qt::KeyboardModifiers modifierCodes = Qt::NoModifier)
-			: button(btn), modifiers(modifierCodes)
+		MousePattern( Qt::MouseButton btn = Qt::NoButton,
+			Qt::KeyboardModifiers modifierCodes = Qt::NoModifier ):
+			button( btn ),
+			modifiers( modifierCodes )
 		{
 		}
 
@@ -5405,10 +5474,12 @@ public:
 	//! A pattern for key events
 	class KeyPattern
 	{
-	public:
+	  public:
 		//! Constructor
-		KeyPattern(int keyCode = Qt::Key_unknown, Qt::KeyboardModifiers modifierCodes = Qt::NoModifier)
-			: key(keyCode), modifiers(modifierCodes)
+		KeyPattern( int keyCode = Qt::Key_unknown,
+			Qt::KeyboardModifiers modifierCodes = Qt::NoModifier ):
+			key( keyCode ),
+			modifiers( modifierCodes )
 		{
 		}
 
@@ -5422,15 +5493,17 @@ public:
 	QwtEventPattern();
 	virtual ~QwtEventPattern();
 
-	void initMousePattern(int numButtons);
+	void initMousePattern( int numButtons );
 	void initKeyPattern();
 
-	void setMousePattern(MousePatternCode, Qt::MouseButton button, Qt::KeyboardModifiers = Qt::NoModifier);
+	void setMousePattern( MousePatternCode, Qt::MouseButton button,
+		Qt::KeyboardModifiers = Qt::NoModifier );
 
-	void setKeyPattern(KeyPatternCode, int key, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
+	void setKeyPattern( KeyPatternCode, int key,
+		Qt::KeyboardModifiers modifiers = Qt::NoModifier );
 
-	void setMousePattern(const QVector< MousePattern >&);
-	void setKeyPattern(const QVector< KeyPattern >&);
+	void setMousePattern( const QVector< MousePattern >& );
+	void setKeyPattern( const QVector< KeyPattern >& );
 
 	const QVector< MousePattern >& mousePattern() const;
 	const QVector< KeyPattern >& keyPattern() const;
@@ -5438,33 +5511,36 @@ public:
 	QVector< MousePattern >& mousePattern();
 	QVector< KeyPattern >& keyPattern();
 
-	bool mouseMatch(MousePatternCode, const QMouseEvent*) const;
-	bool keyMatch(KeyPatternCode, const QKeyEvent*) const;
+	bool mouseMatch( MousePatternCode, const QMouseEvent* ) const;
+	bool keyMatch( KeyPatternCode, const QKeyEvent* ) const;
 
-protected:
-	virtual bool mouseMatch(const MousePattern&, const QMouseEvent*) const;
-	virtual bool keyMatch(const KeyPattern&, const QKeyEvent*) const;
+  protected:
+	virtual bool mouseMatch( const MousePattern&, const QMouseEvent* ) const;
+	virtual bool keyMatch( const KeyPattern&, const QKeyEvent* ) const;
 
-private:
-#if defined(_MSC_VER)
+  private:
+
+#if defined( _MSC_VER )
 #pragma warning(push)
-#pragma warning(disable : 4251)
+#pragma warning(disable: 4251)
 #endif
 	QVector< MousePattern > m_mousePattern;
 	QVector< KeyPattern > m_keyPattern;
-#if defined(_MSC_VER)
+#if defined( _MSC_VER )
 #pragma warning(pop)
 #endif
 };
 
 //! Compare operator
-inline bool operator==(QwtEventPattern::MousePattern b1, QwtEventPattern::MousePattern b2)
+inline bool operator==( QwtEventPattern::MousePattern b1,
+	QwtEventPattern::MousePattern b2 )
 {
 	return b1.button == b2.button && b1.modifiers == b2.modifiers;
 }
 
 //! Compare operator
-inline bool operator==(QwtEventPattern::KeyPattern b1, QwtEventPattern::KeyPattern b2)
+inline bool operator==( QwtEventPattern::KeyPattern b1,
+	QwtEventPattern::KeyPattern b2 )
 {
 	return b1.key == b2.key && b1.modifiers == b2.modifiers;
 }
@@ -5552,19 +5628,15 @@ public:
 
 	static void drawRoundFrame(QPainter*, const QRectF&, const QPalette&, int lineWidth, int frameStyle);
 
-	static void drawRoundedFrame(
-		QPainter*, const QRectF&, qreal xRadius, qreal yRadius, const QPalette&, int lineWidth, int frameStyle
-	);
+	static void drawRoundedFrame(QPainter*, const QRectF&, qreal xRadius, qreal yRadius, const QPalette&, int lineWidth, int frameStyle);
 
-	static void drawFrame(
-		QPainter*,
-		const QRectF& rect,
-		const QPalette& palette,
-		QPalette::ColorRole foregroundRole,
-		int lineWidth,
-		int midLineWidth,
-		int frameStyle
-	);
+	static void drawFrame(QPainter*,
+						  const QRectF& rect,
+						  const QPalette& palette,
+						  QPalette::ColorRole foregroundRole,
+						  int lineWidth,
+						  int midLineWidth,
+						  int frameStyle);
 
 	static void drawFocusRect(QPainter*, const QWidget*);
 	static void drawFocusRect(QPainter*, const QWidget*, const QRect&);
@@ -5703,7 +5775,7 @@ class QPainter;
 
 class QWT_EXPORT QwtTextEngine
 {
-public:
+  public:
 	virtual ~QwtTextEngine();
 
 	/*!
@@ -5716,7 +5788,8 @@ public:
 
 	   \return Calculated height
 	 */
-	virtual double heightForWidth(const QFont& font, int flags, const QString& text, double width) const = 0;
+	virtual double heightForWidth( const QFont& font, int flags,
+		const QString& text, double width ) const = 0;
 
 	/*!
 	   Returns the size, that is needed to render text
@@ -5727,7 +5800,8 @@ public:
 
 	   \return Calculated size
 	 */
-	virtual QSizeF textSize(const QFont& font, int flags, const QString& text) const = 0;
+	virtual QSizeF textSize( const QFont& font, int flags,
+		const QString& text ) const = 0;
 
 	/*!
 	   Test if a string can be rendered by this text engine
@@ -5735,7 +5809,7 @@ public:
 	   \param text Text to be tested
 	   \return true, if it can be rendered
 	 */
-	virtual bool mightRender(const QString& text) const = 0;
+	virtual bool mightRender( const QString& text ) const = 0;
 
 	/*!
 	   Return margins around the texts
@@ -5752,9 +5826,8 @@ public:
 	   \param top Return value for the top margin
 	   \param bottom Return value for the bottom margin
 	 */
-	virtual void textMargins(
-		const QFont& font, const QString& text, double& left, double& right, double& top, double& bottom
-	) const = 0;
+	virtual void textMargins( const QFont& font, const QString& text,
+		double& left, double& right, double& top, double& bottom ) const = 0;
 
 	/*!
 	   Draw the text in a clipping rectangle
@@ -5764,12 +5837,13 @@ public:
 	   \param flags Bitwise OR of the flags like in for QPainter::drawText()
 	   \param text Text to be rendered
 	 */
-	virtual void draw(QPainter* painter, const QRectF& rect, int flags, const QString& text) const = 0;
+	virtual void draw( QPainter* painter, const QRectF& rect,
+		int flags, const QString& text ) const = 0;
 
-protected:
+  protected:
 	QwtTextEngine();
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtTextEngine)
 };
 
@@ -5781,21 +5855,27 @@ private:
  */
 class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 {
-public:
+  public:
 	QwtPlainTextEngine();
 	virtual ~QwtPlainTextEngine();
 
-	virtual double heightForWidth(const QFont& font, int flags, const QString& text, double width) const QWT_OVERRIDE;
+	virtual double heightForWidth( const QFont& font, int flags,
+		const QString& text, double width ) const override;
 
-	virtual QSizeF textSize(const QFont& font, int flags, const QString& text) const QWT_OVERRIDE;
+	virtual QSizeF textSize( const QFont& font, int flags,
+		const QString& text ) const override;
 
-	virtual void draw(QPainter*, const QRectF& rect, int flags, const QString& text) const QWT_OVERRIDE;
+	virtual void draw( QPainter*, const QRectF& rect,
+		int flags, const QString& text ) const override;
 
-	virtual bool mightRender(const QString&) const QWT_OVERRIDE;
+	virtual bool mightRender( const QString& ) const override;
 
-	virtual void textMargins(const QFont&, const QString&, double& left, double& right, double& top, double& bottom) const QWT_OVERRIDE;
+	virtual void textMargins(
+		const QFont&, const QString&,
+		double& left, double& right,
+		double& top, double& bottom ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -5810,24 +5890,30 @@ private:
  */
 class QWT_EXPORT QwtRichTextEngine : public QwtTextEngine
 {
-public:
+  public:
 	QwtRichTextEngine();
 
-	virtual double heightForWidth(const QFont& font, int flags, const QString& text, double width) const QWT_OVERRIDE;
+	virtual double heightForWidth( const QFont& font, int flags,
+		const QString& text, double width ) const override;
 
-	virtual QSizeF textSize(const QFont& font, int flags, const QString& text) const QWT_OVERRIDE;
+	virtual QSizeF textSize( const QFont& font, int flags,
+		const QString& text ) const override;
 
-	virtual void draw(QPainter*, const QRectF& rect, int flags, const QString& text) const QWT_OVERRIDE;
+	virtual void draw( QPainter*, const QRectF& rect,
+		int flags, const QString& text ) const override;
 
-	virtual bool mightRender(const QString&) const QWT_OVERRIDE;
+	virtual bool mightRender( const QString& ) const override;
 
-	virtual void textMargins(const QFont&, const QString&, double& left, double& right, double& top, double& bottom) const QWT_OVERRIDE;
+	virtual void textMargins(
+		const QFont&, const QString&,
+		double& left, double& right,
+		double& top, double& bottom ) const override;
 
-private:
-	QString taggedText(const QString&, int flags) const;
+  private:
+	QString taggedText( const QString&, int flags ) const;
 };
 
-#endif  // !QT_NO_RICHTEXT
+#endif // !QT_NO_RICHTEXT
 
 #endif
 
@@ -6065,46 +6151,47 @@ class QWT_EXPORT QwtTextLabel : public QFrame
 {
 	Q_OBJECT
 
-	Q_PROPERTY(int indent READ indent WRITE setIndent)
-	Q_PROPERTY(int margin READ margin WRITE setMargin)
-	Q_PROPERTY(QString plainText READ plainText WRITE setPlainText)
+	Q_PROPERTY( int indent READ indent WRITE setIndent )
+	Q_PROPERTY( int margin READ margin WRITE setMargin )
+	Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
 
-public:
-	explicit QwtTextLabel(QWidget* parent = NULL);
-	explicit QwtTextLabel(const QwtText&, QWidget* parent = NULL);
+  public:
+	explicit QwtTextLabel( QWidget* parent = nullptr );
+	explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
 	virtual ~QwtTextLabel();
 
-	void setPlainText(const QString&);
+	void setPlainText( const QString& );
 	QString plainText() const;
 
-public Q_SLOTS:
-	void setText(const QString&, QwtText::TextFormat textFormat = QwtText::AutoText);
-	virtual void setText(const QwtText&);
+  public Q_SLOTS:
+	void setText( const QString&,
+		QwtText::TextFormat textFormat = QwtText::AutoText );
+	virtual void setText( const QwtText& );
 
 	void clear();
 
-public:
+  public:
 	const QwtText& text() const;
 
 	int indent() const;
-	void setIndent(int);
+	void setIndent( int );
 
 	int margin() const;
-	void setMargin(int);
+	void setMargin( int );
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
-	virtual int heightForWidth(int) const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
+	virtual int heightForWidth( int ) const override;
 
 	QRect textRect() const;
 
-	virtual void drawText(QPainter*, const QRectF&);
+	virtual void drawText( QPainter*, const QRectF& );
 
-protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void drawContents(QPainter*);
+  protected:
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void drawContents( QPainter* );
 
-private:
+  private:
 	void init();
 	int defaultIndent() const;
 
@@ -6231,14 +6318,14 @@ public:
 	void setRenderMode(RenderMode);
 	RenderMode renderMode() const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter(QObject*, QEvent*) override;
 
 public Q_SLOTS:
 	void updateOverlay();
 
 protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) override;
+	virtual void resizeEvent(QResizeEvent*) override;
 
 	virtual QRegion maskHint() const;
 
@@ -6289,7 +6376,7 @@ class QwtGraphic;
  */
 class QWT_EXPORT QwtLegendData
 {
-public:
+  public:
 	//! Mode defining how a legend entry interacts
 	enum Mode
 	{
@@ -6316,26 +6403,26 @@ public:
 		IconRole,
 
 		// Values < UserRole are reserved for internal use
-		UserRole = 32
+		UserRole  = 32
 	};
 
 	QwtLegendData();
 	~QwtLegendData();
 
-	void setValues(const QMap< int, QVariant >&);
+	void setValues( const QMap< int, QVariant >& );
 	const QMap< int, QVariant >& values() const;
 
-	void setValue(int role, const QVariant&);
-	QVariant value(int role) const;
+	void setValue( int role, const QVariant& );
+	QVariant value( int role ) const;
 
-	bool hasRole(int role) const;
+	bool hasRole( int role ) const;
 	bool isValid() const;
 
 	QwtGraphic icon() const;
 	QwtText title() const;
 	Mode mode() const;
 
-private:
+  private:
 	QMap< int, QVariant > m_map;
 };
 
@@ -6356,32 +6443,32 @@ class QwtText;
 class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 {
 	Q_OBJECT
-public:
-	explicit QwtLegendLabel(QWidget* parent = 0);
+  public:
+	explicit QwtLegendLabel( QWidget* parent = 0 );
 	virtual ~QwtLegendLabel();
 
-	void setData(const QwtLegendData&);
+	void setData( const QwtLegendData& );
 	const QwtLegendData& data() const;
 
-	void setItemMode(QwtLegendData::Mode);
+	void setItemMode( QwtLegendData::Mode );
 	QwtLegendData::Mode itemMode() const;
 
-	void setSpacing(int spacing);
+	void setSpacing( int spacing );
 	int spacing() const;
 
-	virtual void setText(const QwtText&) QWT_OVERRIDE;
+	virtual void setText( const QwtText& ) override;
 
-	void setIcon(const QPixmap&);
+	void setIcon( const QPixmap& );
 	QPixmap icon() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
 
 	bool isChecked() const;
 
-public Q_SLOTS:
-	void setChecked(bool on);
+  public Q_SLOTS:
+	void setChecked( bool on );
 
-Q_SIGNALS:
+  Q_SIGNALS:
 	//! Signal, when the legend item has been clicked
 	void clicked();
 
@@ -6392,19 +6479,19 @@ Q_SIGNALS:
 	void released();
 
 	//! Signal, when the legend item has been toggled
-	void checked(bool);
+	void checked( bool );
 
-protected:
-	void setDown(bool);
+  protected:
+	void setDown( bool );
 	bool isDown() const;
 
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void mousePressEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
-	virtual void keyReleaseEvent(QKeyEvent*) QWT_OVERRIDE;
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void mousePressEvent( QMouseEvent* ) override;
+	virtual void mouseReleaseEvent( QMouseEvent* ) override;
+	virtual void keyPressEvent( QKeyEvent* ) override;
+	virtual void keyReleaseEvent( QKeyEvent* ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -6442,37 +6529,37 @@ private:
  */
 class QWT_EXPORT QwtAbstractLegend : public QFrame
 {
-	Q_OBJECT
+		Q_OBJECT
 
 public:
-	explicit QwtAbstractLegend(QWidget* parent = NULL);
-	virtual ~QwtAbstractLegend();
+		explicit QwtAbstractLegend(QWidget* parent = nullptr);
+		virtual ~QwtAbstractLegend();
 
-	/*!
-	   Render the legend into a given rectangle.
+		/*!
+		   Render the legend into a given rectangle.
 
-	   \param painter Painter
-	   \param rect Bounding rectangle
-	   \param fillBackground When true, fill rect with the widget background
+		   \param painter Painter
+		   \param rect Bounding rectangle
+		   \param fillBackground When true, fill rect with the widget background
 
-	   \sa renderLegend() is used by QwtPlotRenderer
-	 */
-	virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
+		   \sa renderLegend() is used by QwtPlotRenderer
+		 */
+		virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
-	//! \return True, when no plot item is inserted
-	virtual bool isEmpty() const = 0;
+		//! \return True, when no plot item is inserted
+		virtual bool isEmpty() const = 0;
 
-	virtual int scrollExtent(Qt::Orientation) const;
+		virtual int scrollExtent(Qt::Orientation) const;
 
 public Q_SLOTS:
 
-	/*!
-	   \brief Update the entries for a plot item
+		/*!
+		   \brief Update the entries for a plot item
 
-	   \param itemInfo Info about an item
-	   \param data List of legend entry attributes for the  item
-	 */
-	virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
+		   \param itemInfo Info about an item
+		   \param data List of legend entry attributes for the  item
+		 */
+		virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
 };
 
 #endif
@@ -6497,40 +6584,42 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 {
 	Q_OBJECT
 
-public:
-	explicit QwtLegend(QWidget* parent = NULL);
+  public:
+	explicit QwtLegend( QWidget* parent = nullptr );
 	virtual ~QwtLegend();
 
-	void setMaxColumns(uint numColums);
+	void setMaxColumns( uint numColums );
 	uint maxColumns() const;
 
-	void setDefaultItemMode(QwtLegendData::Mode);
+	void setDefaultItemMode( QwtLegendData::Mode );
 	QwtLegendData::Mode defaultItemMode() const;
 
 	QWidget* contentsWidget();
 	const QWidget* contentsWidget() const;
 
-	QWidget* legendWidget(const QVariant&) const;
-	QList< QWidget* > legendWidgets(const QVariant&) const;
+	QWidget* legendWidget( const QVariant&  ) const;
+	QList< QWidget* > legendWidgets( const QVariant& ) const;
 
-	QVariant itemInfo(const QWidget*) const;
+	QVariant itemInfo( const QWidget* ) const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter( QObject*, QEvent* ) override;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual int heightForWidth(int w) const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual int heightForWidth( int w ) const override;
 
 	QScrollBar* horizontalScrollBar() const;
 	QScrollBar* verticalScrollBar() const;
 
-	virtual void renderLegend(QPainter*, const QRectF&, bool fillBackground) const QWT_OVERRIDE;
+	virtual void renderLegend( QPainter*,
+		const QRectF&, bool fillBackground ) const override;
 
-	virtual void renderItem(QPainter*, const QWidget*, const QRectF&, bool fillBackground) const;
+	virtual void renderItem( QPainter*,
+		const QWidget*, const QRectF&, bool fillBackground ) const;
 
-	virtual bool isEmpty() const QWT_OVERRIDE;
-	virtual int scrollExtent(Qt::Orientation) const QWT_OVERRIDE;
+	virtual bool isEmpty() const override;
+	virtual int scrollExtent( Qt::Orientation ) const override;
 
-Q_SIGNALS:
+  Q_SIGNALS:
 	/*!
 	   A signal which is emitted when the user has clicked on
 	   a legend label, which is in QwtLegendData::Clickable mode.
@@ -6543,7 +6632,7 @@ Q_SIGNALS:
 	   \note clicks are disabled as default
 	   \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
 	 */
-	void clicked(const QVariant& itemInfo, int index);
+	void clicked( const QVariant& itemInfo, int index );
 
 	/*!
 	   A signal which is emitted when the user has clicked on
@@ -6558,20 +6647,21 @@ Q_SIGNALS:
 	   \note clicks are disabled as default
 	   \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
 	 */
-	void checked(const QVariant& itemInfo, bool on, int index);
+	void checked( const QVariant& itemInfo, bool on, int index );
 
-public Q_SLOTS:
-	virtual void updateLegend(const QVariant&, const QList< QwtLegendData >&) QWT_OVERRIDE;
+  public Q_SLOTS:
+	virtual void updateLegend( const QVariant&,
+		const QList< QwtLegendData >& ) override;
 
-protected Q_SLOTS:
+  protected Q_SLOTS:
 	void itemClicked();
-	void itemChecked(bool);
+	void itemChecked( bool );
 
-protected:
-	virtual QWidget* createWidget(const QwtLegendData&) const;
-	virtual void updateWidget(QWidget*, const QwtLegendData&);
+  protected:
+	virtual QWidget* createWidget( const QwtLegendData& ) const;
+	virtual void updateWidget( QWidget*, const QwtLegendData& );
 
-private:
+  private:
 	void updateTabOrder();
 
 	class PrivateData;
@@ -6598,26 +6688,28 @@ private:
  */
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {
-public:
-	explicit QwtArrowButton(int num, Qt::ArrowType, QWidget* parent = NULL);
+  public:
+	explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
 	virtual ~QwtArrowButton();
 
 	Qt::ArrowType arrowType() const;
 	int num() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void paintEvent( QPaintEvent*) override;
+	virtual void keyPressEvent( QKeyEvent* ) override;
 
-	virtual void drawButtonLabel(QPainter*);
-	virtual void drawArrow(QPainter*, const QRect&, Qt::ArrowType) const;
+	virtual void drawButtonLabel( QPainter* );
+	virtual void drawArrow( QPainter*,
+		const QRect&, Qt::ArrowType ) const;
 	virtual QRect labelRect() const;
-	virtual QSize arrowSize(Qt::ArrowType, const QSize& boundingSize) const;
+	virtual QSize arrowSize( Qt::ArrowType,
+		const QSize& boundingSize ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -6640,11 +6732,11 @@ class QPainter;
  */
 class QWT_EXPORT QwtCompassRose
 {
-public:
+  public:
 	QwtCompassRose();
 	virtual ~QwtCompassRose();
 
-	virtual void setPalette(const QPalette&);
+	virtual void setPalette( const QPalette& );
 	const QPalette& palette() const;
 
 	/*!
@@ -6656,11 +6748,11 @@ public:
 		\param north Position
 		\param colorGroup Color group
 	 */
-	virtual void draw(
-		QPainter* painter, const QPointF& center, double radius, double north, QPalette::ColorGroup colorGroup = QPalette::Active
-	) const = 0;
+	virtual void draw( QPainter* painter,
+		const QPointF& center, double radius, double north,
+		QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtCompassRose)
 
 	QPalette m_palette;
@@ -6671,39 +6763,31 @@ private:
  */
 class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 {
-public:
-	QwtSimpleCompassRose(int numThorns = 8, int numThornLevels = -1);
+  public:
+	QwtSimpleCompassRose( int numThorns = 8, int numThornLevels = -1 );
 	virtual ~QwtSimpleCompassRose();
 
-	void setWidth(double);
+	void setWidth( double );
 	double width() const;
 
-	void setNumThorns(int);
+	void setNumThorns( int );
 	int numThorns() const;
 
-	void setNumThornLevels(int);
+	void setNumThornLevels( int );
 	int numThornLevels() const;
 
-	void setShrinkFactor(double factor);
+	void setShrinkFactor( double factor );
 	double shrinkFactor() const;
 
-	virtual void draw(
-		QPainter*, const QPointF& center, double radius, double north, QPalette::ColorGroup = QPalette::Active
-	) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QPointF& center, double radius, double north,
+		QPalette::ColorGroup = QPalette::Active ) const override;
 
-	static void drawRose(
-		QPainter*,
-		const QPalette&,
-		const QPointF& center,
-		double radius,
-		double north,
-		double width,
-		int numThorns,
-		int numThornLevels,
-		double shrinkFactor
-	);
+	static void drawRose( QPainter*, const QPalette&,
+		const QPointF& center, double radius, double north, double width,
+		int numThorns, int numThornLevels, double shrinkFactor );
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -6754,20 +6838,20 @@ class QWT_EXPORT QwtCounter : public QWidget
 {
 	Q_OBJECT
 
-	Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
-	Q_PROPERTY(double minimum READ minimum WRITE setMinimum)
-	Q_PROPERTY(double maximum READ maximum WRITE setMaximum)
-	Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep)
+	Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
+	Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
+	Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
+	Q_PROPERTY( double singleStep READ singleStep WRITE setSingleStep )
 
-	Q_PROPERTY(int numButtons READ numButtons WRITE setNumButtons)
-	Q_PROPERTY(int stepButton1 READ stepButton1 WRITE setStepButton1)
-	Q_PROPERTY(int stepButton2 READ stepButton2 WRITE setStepButton2)
-	Q_PROPERTY(int stepButton3 READ stepButton3 WRITE setStepButton3)
+	Q_PROPERTY( int numButtons READ numButtons WRITE setNumButtons )
+	Q_PROPERTY( int stepButton1 READ stepButton1 WRITE setStepButton1 )
+	Q_PROPERTY( int stepButton2 READ stepButton2 WRITE setStepButton2 )
+	Q_PROPERTY( int stepButton3 READ stepButton3 WRITE setStepButton3 )
 
-	Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
-	Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
+	Q_PROPERTY( bool readOnly READ isReadOnly WRITE setReadOnly )
+	Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
 
-public:
+  public:
 	//! Button index
 	enum Button
 	{
@@ -6784,79 +6868,79 @@ public:
 		ButtonCnt
 	};
 
-	explicit QwtCounter(QWidget* parent = NULL);
+	explicit QwtCounter( QWidget* parent = nullptr );
 	virtual ~QwtCounter();
 
-	void setValid(bool);
+	void setValid( bool );
 	bool isValid() const;
 
-	void setWrapping(bool);
+	void setWrapping( bool );
 	bool wrapping() const;
 
 	bool isReadOnly() const;
-	void setReadOnly(bool);
+	void setReadOnly( bool );
 
-	void setNumButtons(int);
+	void setNumButtons( int );
 	int numButtons() const;
 
-	void setIncSteps(QwtCounter::Button, int numSteps);
-	int incSteps(QwtCounter::Button) const;
+	void setIncSteps( QwtCounter::Button, int numSteps );
+	int incSteps( QwtCounter::Button ) const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
 
 	double singleStep() const;
-	void setSingleStep(double stepSize);
+	void setSingleStep( double stepSize );
 
-	void setRange(double min, double max);
+	void setRange( double min, double max );
 
 	double minimum() const;
-	void setMinimum(double);
+	void setMinimum( double );
 
 	double maximum() const;
-	void setMaximum(double);
+	void setMaximum( double );
 
-	void setStepButton1(int nSteps);
+	void setStepButton1( int nSteps );
 	int stepButton1() const;
 
-	void setStepButton2(int nSteps);
+	void setStepButton2( int nSteps );
 	int stepButton2() const;
 
-	void setStepButton3(int nSteps);
+	void setStepButton3( int nSteps );
 	int stepButton3() const;
 
 	double value() const;
 
-public Q_SLOTS:
-	void setValue(double);
+  public Q_SLOTS:
+	void setValue( double );
 
-Q_SIGNALS:
+  Q_SIGNALS:
 	/*!
 		This signal is emitted when a button has been released
 		\param value The new value
 	 */
-	void buttonReleased(double value);
+	void buttonReleased ( double value );
 
 	/*!
 		This signal is emitted when the counter's value has changed
 		\param value The new value
 	 */
-	void valueChanged(double value);
+	void valueChanged ( double value );
 
-protected:
-	virtual bool event(QEvent*) QWT_OVERRIDE;
-	virtual void wheelEvent(QWheelEvent*) QWT_OVERRIDE;
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+  protected:
+	virtual bool event( QEvent* ) override;
+	virtual void wheelEvent( QWheelEvent* ) override;
+	virtual void keyPressEvent( QKeyEvent* ) override;
 
-private Q_SLOTS:
+  private Q_SLOTS:
 	void btnReleased();
 	void btnClicked();
 	void textChanged();
 
-private:
-	void incrementValue(int numSteps);
+  private:
+	void incrementValue( int numSteps );
 	void initCounter();
 	void updateButtons();
-	void showNumber(double);
+	void showNumber( double );
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -6882,17 +6966,17 @@ private:
  */
 class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 {
-public:
-	QwtPolarFitter(int stepCount = 5);
+  public:
+	QwtPolarFitter( int stepCount = 5 );
 	virtual ~QwtPolarFitter();
 
-	void setStepCount(int size);
+	void setStepCount( int size );
 	int stepCount() const;
 
-	virtual QPolygonF fitCurve(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QPainterPath fitCurvePath(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+	virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -6924,20 +7008,20 @@ class QWT_EXPORT QwtSamplingThread : public QThread
 {
 	Q_OBJECT
 
-public:
+  public:
 	virtual ~QwtSamplingThread();
 
 	double interval() const;
 	double elapsed() const;
 
-public Q_SLOTS:
-	void setInterval(double interval);
+  public Q_SLOTS:
+	void setInterval( double interval );
 	void stop();
 
-protected:
-	explicit QwtSamplingThread(QObject* parent = NULL);
+  protected:
+	explicit QwtSamplingThread( QObject* parent = nullptr );
 
-	virtual void run() QWT_OVERRIDE;
+	virtual void run() override;
 
 	/*!
 	   Collect a sample
@@ -6947,9 +7031,9 @@ protected:
 			 seconds instead of miliseconds. To avoid breaking existing
 			 code we stay with seconds for now.
 	 */
-	virtual void sample(double elapsed) = 0;
+	virtual void sample( double elapsed ) = 0;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -7012,13 +7096,11 @@ public:
 
 	explicit QwtScaleDiv(double lowerBound, double upperBound, QList< double >[ NTickTypes ]);
 
-	explicit QwtScaleDiv(
-		double lowerBound,
-		double upperBound,
-		const QList< double >& minorTicks,
-		const QList< double >& mediumTicks,
-		const QList< double >& majorTicks
-	);
+	explicit QwtScaleDiv(double lowerBound,
+						 double upperBound,
+						 const QList< double >& minorTicks,
+						 const QList< double >& mediumTicks,
+						 const QList< double >& majorTicks);
 
 	bool operator==(const QwtScaleDiv&) const;
 	bool operator!=(const QwtScaleDiv&) const;
@@ -7134,11 +7216,12 @@ public:
 	void setPenWidthF(qreal width);
 	qreal penWidthF() const;
 
-	// 设置是否选中，选中状态的绘制会有一定差异
+	// Set whether the scale draw is selected
 	void setSelected(bool on);
+	// Check if the scale draw is selected
 	bool isSelected() const;
 
-	// 设置选中后画笔的宽度修正
+	// Set the pen width adjustment after selection
 	void setSelectedPenWidthOffset(qreal offset = 1);
 	qreal selectedPenWidthOffset() const;
 
@@ -7231,7 +7314,7 @@ class QRect;
  */
 class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
 {
-public:
+  public:
 	/*!
 		Alignment of the scale draw
 		\sa setAlignment(), alignment()
@@ -7254,49 +7337,50 @@ public:
 	QwtScaleDraw();
 	virtual ~QwtScaleDraw();
 
-	void getBorderDistHint(const QFont&, int& start, int& end) const;
-	int minLabelDist(const QFont&) const;
+	void getBorderDistHint( const QFont&, int& start, int& end ) const;
+	int minLabelDist( const QFont& ) const;
 
-	int minLength(const QFont&) const;
-	virtual double extent(const QFont&) const QWT_OVERRIDE;
+	int minLength( const QFont& ) const;
+	virtual double extent( const QFont& ) const override;
 
-	void move(double x, double y);
-	void move(const QPointF&);
-	void setLength(double length);
+	void move( double x, double y );
+	void move( const QPointF& );
+	void setLength( double length );
 
 	Alignment alignment() const;
-	void setAlignment(Alignment);
+	void setAlignment( Alignment );
 
 	Qt::Orientation orientation() const;
 
 	QPointF pos() const;
 	double length() const;
 
-	void setLabelAlignment(Qt::Alignment);
+	void setLabelAlignment( Qt::Alignment );
 	Qt::Alignment labelAlignment() const;
 
-	void setLabelRotation(double rotation);
+	void setLabelRotation( double rotation );
 	double labelRotation() const;
 
-	int maxLabelHeight(const QFont&) const;
-	int maxLabelWidth(const QFont&) const;
+	int maxLabelHeight( const QFont& ) const;
+	int maxLabelWidth( const QFont& ) const;
 
-	QPointF labelPosition(double value) const;
+	QPointF labelPosition( double value ) const;
 
-	QRectF labelRect(const QFont&, double value) const;
-	QSizeF labelSize(const QFont&, double value) const;
+	QRectF labelRect( const QFont&, double value ) const;
+	QSizeF labelSize( const QFont&, double value ) const;
 
-	QRect boundingLabelRect(const QFont&, double value) const;
+	QRect boundingLabelRect( const QFont&, double value ) const;
 
-protected:
-	QTransform labelTransformation(const QPointF&, const QSizeF&) const;
+  protected:
+	QTransform labelTransformation( const QPointF&, const QSizeF& ) const;
 
-	virtual void drawTick(QPainter*, double value, double len) const QWT_OVERRIDE;
+	virtual void drawTick( QPainter*,
+		double value, double len ) const override;
 
-	virtual void drawBackbone(QPainter*) const QWT_OVERRIDE;
-	virtual void drawLabel(QPainter*, double value) const QWT_OVERRIDE;
+	virtual void drawBackbone( QPainter* ) const override;
+	virtual void drawLabel( QPainter*, double value ) const override;
 
-private:
+  private:
 	void updateMap();
 
 	class PrivateData;
@@ -7311,9 +7395,9 @@ private:
 
    \sa move(const QPointF &)
  */
-inline void QwtScaleDraw::move(double x, double y)
+inline void QwtScaleDraw::move( double x, double y )
 {
-	move(QPointF(x, y));
+	move( QPointF( x, y ) );
 }
 
 #endif
@@ -7438,7 +7522,8 @@ public:
 
 	   \return Calculated scale division
 	 */
-	virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const = 0;
+	virtual QwtScaleDiv
+	divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const = 0;
 
 	void setTransformation(QwtTransform*);
 	QwtTransform* transformation() const;
@@ -7471,9 +7556,10 @@ public:
 	explicit QwtLinearScaleEngine(uint base = 10);
 	virtual ~QwtLinearScaleEngine();
 
-	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const QWT_OVERRIDE;
+	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
-	virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const QWT_OVERRIDE;
+	virtual QwtScaleDiv
+	divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
 	QwtInterval align(const QwtInterval&, double stepSize) const;
@@ -7482,9 +7568,11 @@ protected:
 
 	QList< double > buildMajorTicks(const QwtInterval& interval, double stepSize) const;
 
-	void buildMinorTicks(
-		const QList< double >& majorTicks, int maxMinorSteps, double stepSize, QList< double >& minorTicks, QList< double >& mediumTicks
-	) const;
+	void buildMinorTicks(const QList< double >& majorTicks,
+						 int maxMinorSteps,
+						 double stepSize,
+						 QList< double >& minorTicks,
+						 QList< double >& mediumTicks) const;
 };
 
 /*!
@@ -7504,9 +7592,10 @@ public:
 	explicit QwtLogScaleEngine(uint base = 10);
 	virtual ~QwtLogScaleEngine();
 
-	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const QWT_OVERRIDE;
+	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
-	virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const QWT_OVERRIDE;
+	virtual QwtScaleDiv
+	divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
 	QwtInterval align(const QwtInterval&, double stepSize) const;
@@ -7515,9 +7604,11 @@ protected:
 
 	QList< double > buildMajorTicks(const QwtInterval& interval, double stepSize) const;
 
-	void buildMinorTicks(
-		const QList< double >& majorTicks, int maxMinorSteps, double stepSize, QList< double >& minorTicks, QList< double >& mediumTicks
-	) const;
+	void buildMinorTicks(const QList< double >& majorTicks,
+						 int maxMinorSteps,
+						 double stepSize,
+						 QList< double >& minorTicks,
+						 QList< double >& mediumTicks) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtScaleEngine::Attributes)
@@ -7601,8 +7692,8 @@ public:
 	};
 	Q_DECLARE_FLAGS(BuiltinActionsFlags, BuiltinActions)
 public:
-	explicit QwtScaleWidget(QWidget* parent = NULL);
-	explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = NULL);
+	explicit QwtScaleWidget(QWidget* parent = nullptr);
+	explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = nullptr);
 	virtual ~QwtScaleWidget();
 
 Q_SIGNALS:
@@ -7684,8 +7775,8 @@ public:
 	QwtInterval colorBarInterval() const;
 	const QwtColorMap* colorMap() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
 	int titleHeightForWidth(int width) const;
 	int dimForLength(int length, const QFont& scaleFont) const;
@@ -7746,9 +7837,9 @@ public:
 	bool isOnScale(const QPoint& pos) const;
 
 protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) override;
+	virtual void resizeEvent(QResizeEvent*) override;
+	virtual void changeEvent(QEvent*) override;
 
 	void draw(QPainter*) const;
 
@@ -7795,45 +7886,45 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
 {
 	Q_OBJECT
 
-	Q_PROPERTY(double lowerBound READ lowerBound WRITE setLowerBound)
-	Q_PROPERTY(double upperBound READ upperBound WRITE setUpperBound)
+	Q_PROPERTY( double lowerBound READ lowerBound WRITE setLowerBound )
+	Q_PROPERTY( double upperBound READ upperBound WRITE setUpperBound )
 
-	Q_PROPERTY(int scaleMaxMajor READ scaleMaxMajor WRITE setScaleMaxMajor)
-	Q_PROPERTY(int scaleMaxMinor READ scaleMaxMinor WRITE setScaleMaxMinor)
+	Q_PROPERTY( int scaleMaxMajor READ scaleMaxMajor WRITE setScaleMaxMajor )
+	Q_PROPERTY( int scaleMaxMinor READ scaleMaxMinor WRITE setScaleMaxMinor )
 
-	Q_PROPERTY(double scaleStepSize READ scaleStepSize WRITE setScaleStepSize)
+	Q_PROPERTY( double scaleStepSize READ scaleStepSize WRITE setScaleStepSize )
 
-public:
-	explicit QwtAbstractScale(QWidget* parent = NULL);
+  public:
+	explicit QwtAbstractScale( QWidget* parent = nullptr );
 	virtual ~QwtAbstractScale();
 
-	void setScale(double lowerBound, double upperBound);
-	void setScale(const QwtInterval&);
-	void setScale(const QwtScaleDiv&);
+	void setScale( double lowerBound, double upperBound );
+	void setScale( const QwtInterval& );
+	void setScale( const QwtScaleDiv& );
 
 	const QwtScaleDiv& scaleDiv() const;
 
-	void setLowerBound(double value);
+	void setLowerBound( double value );
 	double lowerBound() const;
 
-	void setUpperBound(double value);
+	void setUpperBound( double value );
 	double upperBound() const;
 
-	void setScaleStepSize(double stepSize);
+	void setScaleStepSize( double stepSize );
 	double scaleStepSize() const;
 
-	void setScaleMaxMajor(int ticks);
+	void setScaleMaxMajor( int ticks );
 	int scaleMaxMinor() const;
 
-	void setScaleMaxMinor(int ticks);
+	void setScaleMaxMinor( int ticks );
 	int scaleMaxMajor() const;
 
-	void setScaleEngine(QwtScaleEngine*);
+	void setScaleEngine( QwtScaleEngine* );
 	const QwtScaleEngine* scaleEngine() const;
 	QwtScaleEngine* scaleEngine();
 
-	int transform(double) const;
-	double invTransform(int) const;
+	int transform( double ) const;
+	double invTransform( int ) const;
 
 	bool isInverted() const;
 
@@ -7842,12 +7933,13 @@ public:
 
 	const QwtScaleMap& scaleMap() const;
 
-protected:
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void changeEvent( QEvent* ) override;
 
-	void rescale(double lowerBound, double upperBound, double stepSize);
+	void rescale( double lowerBound,
+		double upperBound, double stepSize );
 
-	void setAbstractScaleDraw(QwtAbstractScaleDraw*);
+	void setAbstractScaleDraw( QwtAbstractScaleDraw* );
 
 	const QwtAbstractScaleDraw* abstractScaleDraw() const;
 	QwtAbstractScaleDraw* abstractScaleDraw();
@@ -7855,7 +7947,7 @@ protected:
 	void updateScaleDraw();
 	virtual void scaleChange();
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -7889,56 +7981,56 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 {
 	Q_OBJECT
 
-	Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
+	Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
 
-	Q_PROPERTY(uint totalSteps READ totalSteps WRITE setTotalSteps)
-	Q_PROPERTY(uint singleSteps READ singleSteps WRITE setSingleSteps)
-	Q_PROPERTY(uint pageSteps READ pageSteps WRITE setPageSteps)
-	Q_PROPERTY(bool stepAlignment READ stepAlignment WRITE setStepAlignment)
+	Q_PROPERTY( uint totalSteps READ totalSteps WRITE setTotalSteps )
+	Q_PROPERTY( uint singleSteps READ singleSteps WRITE setSingleSteps )
+	Q_PROPERTY( uint pageSteps READ pageSteps WRITE setPageSteps )
+	Q_PROPERTY( bool stepAlignment READ stepAlignment WRITE setStepAlignment )
 
-	Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
-	Q_PROPERTY(bool tracking READ isTracking WRITE setTracking)
-	Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
+	Q_PROPERTY( bool readOnly READ isReadOnly WRITE setReadOnly )
+	Q_PROPERTY( bool tracking READ isTracking WRITE setTracking )
+	Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
 
-	Q_PROPERTY(bool invertedControls READ invertedControls WRITE setInvertedControls)
+	Q_PROPERTY( bool invertedControls READ invertedControls WRITE setInvertedControls )
 
-public:
-	explicit QwtAbstractSlider(QWidget* parent = NULL);
+  public:
+	explicit QwtAbstractSlider( QWidget* parent = nullptr );
 	virtual ~QwtAbstractSlider();
 
-	void setValid(bool);
+	void setValid( bool );
 	bool isValid() const;
 
 	double value() const;
 
-	void setWrapping(bool);
+	void setWrapping( bool );
 	bool wrapping() const;
 
-	void setTotalSteps(uint);
+	void setTotalSteps( uint );
 	uint totalSteps() const;
 
-	void setSingleSteps(uint);
+	void setSingleSteps( uint );
 	uint singleSteps() const;
 
-	void setPageSteps(uint);
+	void setPageSteps( uint );
 	uint pageSteps() const;
 
-	void setStepAlignment(bool);
+	void setStepAlignment( bool );
 	bool stepAlignment() const;
 
-	void setTracking(bool);
+	void setTracking( bool );
 	bool isTracking() const;
 
-	void setReadOnly(bool);
+	void setReadOnly( bool );
 	bool isReadOnly() const;
 
-	void setInvertedControls(bool);
+	void setInvertedControls( bool );
 	bool invertedControls() const;
 
-public Q_SLOTS:
-	void setValue(double value);
+  public Q_SLOTS:
+	void setValue( double value );
 
-Q_SIGNALS:
+  Q_SIGNALS:
 
 	/*!
 	   \brief Notify a change of value.
@@ -7950,7 +8042,7 @@ Q_SIGNALS:
 
 	   \sa setTracking(), sliderMoved()
 	 */
-	void valueChanged(double value);
+	void valueChanged( double value );
 
 	/*!
 	   This signal is emitted when the user presses the
@@ -7972,14 +8064,14 @@ Q_SIGNALS:
 
 	   \sa valueChanged()
 	 */
-	void sliderMoved(double value);
+	void sliderMoved( double value );
 
-protected:
-	virtual void mousePressEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseMoveEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
-	virtual void wheelEvent(QWheelEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void mousePressEvent( QMouseEvent* ) override;
+	virtual void mouseReleaseEvent( QMouseEvent* ) override;
+	virtual void mouseMoveEvent( QMouseEvent* ) override;
+	virtual void keyPressEvent( QKeyEvent* ) override;
+	virtual void wheelEvent( QWheelEvent* ) override;
 
 	/*!
 	   \brief Determine what to do when the user presses a mouse button.
@@ -7989,7 +8081,7 @@ protected:
 	   \retval True, when pos is a valid scroll position
 	   \sa scrolledTo()
 	 */
-	virtual bool isScrollPosition(const QPoint& pos) const = 0;
+	virtual bool isScrollPosition( const QPoint& pos ) const = 0;
 
 	/*!
 	   \brief Determine the value for a new position of the
@@ -8000,20 +8092,21 @@ protected:
 	   \return Value for the mouse position
 	   \sa isScrollPosition()
 	 */
-	virtual double scrolledTo(const QPoint& pos) const = 0;
+	virtual double scrolledTo( const QPoint& pos ) const = 0;
 
-	void incrementValue(int stepCount);
+	void incrementValue( int stepCount );
 
-	virtual void scaleChange() QWT_OVERRIDE;
+	virtual void scaleChange() override;
 
-protected:
+  protected:
 	virtual void sliderChange();
 
-	double incrementedValue(double value, int stepCount) const;
+	double incrementedValue(
+		double value, int stepCount ) const;
 
-private:
-	double alignedValue(double) const;
-	double boundedValue(double) const;
+  private:
+	double alignedValue( double ) const;
+	double boundedValue( double ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -8046,19 +8139,22 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 {
 	Q_OBJECT
 
-	Q_ENUMS(ScalePosition BackgroundStyle)
+	Q_ENUMS( ScalePosition BackgroundStyle )
 
-	Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
-	Q_PROPERTY(ScalePosition scalePosition READ scalePosition WRITE setScalePosition)
+	Q_PROPERTY( Qt::Orientation orientation
+		READ orientation WRITE setOrientation )
+	Q_PROPERTY( ScalePosition scalePosition READ scalePosition
+		WRITE setScalePosition )
 
-	Q_PROPERTY(bool trough READ hasTrough WRITE setTrough)
-	Q_PROPERTY(bool groove READ hasGroove WRITE setGroove)
+	Q_PROPERTY( bool trough READ hasTrough WRITE setTrough )
+	Q_PROPERTY( bool groove READ hasGroove WRITE setGroove )
 
-	Q_PROPERTY(QSize handleSize READ handleSize WRITE setHandleSize)
-	Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
-	Q_PROPERTY(int spacing READ spacing WRITE setSpacing)
+	Q_PROPERTY( QSize handleSize READ handleSize WRITE setHandleSize )
+	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
+	Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
 
-public:
+  public:
+
 	/*!
 	   Position of the scale
 	   \sa QwtSlider(), setScalePosition(), setOrientation()
@@ -8075,67 +8171,67 @@ public:
 		TrailingScale
 	};
 
-	explicit QwtSlider(QWidget* parent = NULL);
-	explicit QwtSlider(Qt::Orientation, QWidget* parent = NULL);
+	explicit QwtSlider( QWidget* parent = nullptr );
+	explicit QwtSlider( Qt::Orientation, QWidget* parent = nullptr );
 
 	virtual ~QwtSlider();
 
-	void setOrientation(Qt::Orientation);
+	void setOrientation( Qt::Orientation );
 	Qt::Orientation orientation() const;
 
-	void setScalePosition(ScalePosition);
+	void setScalePosition( ScalePosition );
 	ScalePosition scalePosition() const;
 
-	void setTrough(bool);
+	void setTrough( bool );
 	bool hasTrough() const;
 
-	void setGroove(bool);
+	void setGroove( bool );
 	bool hasGroove() const;
 
-	void setHandleSize(const QSize&);
+	void setHandleSize( const QSize& );
 	QSize handleSize() const;
 
-	void setBorderWidth(int);
+	void setBorderWidth( int );
 	int borderWidth() const;
 
-	void setSpacing(int);
+	void setSpacing( int );
 	int spacing() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-	void setScaleDraw(QwtScaleDraw*);
+	void setScaleDraw( QwtScaleDraw* );
 	const QwtScaleDraw* scaleDraw() const;
 
-	void setUpdateInterval(int);
+	void setUpdateInterval( int );
 	int updateInterval() const;
 
-protected:
-	virtual double scrolledTo(const QPoint&) const QWT_OVERRIDE;
-	virtual bool isScrollPosition(const QPoint&) const QWT_OVERRIDE;
+  protected:
+	virtual double scrolledTo( const QPoint& ) const override;
+	virtual bool isScrollPosition( const QPoint& ) const override;
 
-	virtual void drawSlider(QPainter*, const QRect&) const;
-	virtual void drawHandle(QPainter*, const QRect&, int pos) const;
+	virtual void drawSlider ( QPainter*, const QRect& ) const;
+	virtual void drawHandle( QPainter*, const QRect&, int pos ) const;
 
-	virtual void mousePressEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
-	virtual void timerEvent(QTimerEvent*) QWT_OVERRIDE;
+	virtual void mousePressEvent( QMouseEvent* ) override;
+	virtual void mouseReleaseEvent( QMouseEvent* ) override;
+	virtual void resizeEvent( QResizeEvent* ) override;
+	virtual void paintEvent ( QPaintEvent* ) override;
+	virtual void changeEvent( QEvent* ) override;
+	virtual void timerEvent( QTimerEvent* ) override;
 
-	virtual bool event(QEvent*) QWT_OVERRIDE;
+	virtual bool event( QEvent* ) override;
 
-	virtual void scaleChange() QWT_OVERRIDE;
+	virtual void scaleChange() override;
 
 	QRect sliderRect() const;
 	QRect handleRect() const;
 
-private:
+  private:
 	QwtScaleDraw* scaleDraw();
 
-	void layoutSlider(bool);
-	void initSlider(Qt::Orientation);
+	void layoutSlider( bool );
+	void initSlider( Qt::Orientation );
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -8183,22 +8279,25 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 {
 	Q_OBJECT
 
-	Q_ENUMS(ScalePosition)
-	Q_ENUMS(OriginMode)
+	Q_ENUMS( ScalePosition )
+	Q_ENUMS( OriginMode )
 
-	Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
-	Q_PROPERTY(ScalePosition scalePosition READ scalePosition WRITE setScalePosition)
-	Q_PROPERTY(OriginMode originMode READ originMode WRITE setOriginMode)
+	Q_PROPERTY( Qt::Orientation orientation
+		READ orientation WRITE setOrientation )
+	Q_PROPERTY( ScalePosition scalePosition
+		READ scalePosition WRITE setScalePosition )
+	Q_PROPERTY( OriginMode originMode READ originMode WRITE setOriginMode )
 
-	Q_PROPERTY(bool alarmEnabled READ alarmEnabled WRITE setAlarmEnabled)
-	Q_PROPERTY(double alarmLevel READ alarmLevel WRITE setAlarmLevel)
-	Q_PROPERTY(double origin READ origin WRITE setOrigin)
-	Q_PROPERTY(int spacing READ spacing WRITE setSpacing)
-	Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
-	Q_PROPERTY(int pipeWidth READ pipeWidth WRITE setPipeWidth)
-	Q_PROPERTY(double value READ value WRITE setValue USER true)
+	Q_PROPERTY( bool alarmEnabled READ alarmEnabled WRITE setAlarmEnabled )
+	Q_PROPERTY( double alarmLevel READ alarmLevel WRITE setAlarmLevel )
+	Q_PROPERTY( double origin READ origin WRITE setOrigin )
+	Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
+	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
+	Q_PROPERTY( int pipeWidth READ pipeWidth WRITE setPipeWidth )
+	Q_PROPERTY( double value READ value WRITE setValue USER true )
 
-public:
+  public:
+
 	/*!
 	   Position of the scale
 	   \sa setScalePosition(), setOrientation()
@@ -8233,76 +8332,76 @@ public:
 		OriginCustom
 	};
 
-	explicit QwtThermo(QWidget* parent = NULL);
+	explicit QwtThermo( QWidget* parent = nullptr );
 	virtual ~QwtThermo();
 
-	void setOrientation(Qt::Orientation);
+	void setOrientation( Qt::Orientation );
 	Qt::Orientation orientation() const;
 
-	void setScalePosition(ScalePosition);
+	void setScalePosition( ScalePosition );
 	ScalePosition scalePosition() const;
 
-	void setSpacing(int);
+	void setSpacing( int );
 	int spacing() const;
 
-	void setBorderWidth(int);
+	void setBorderWidth( int );
 	int borderWidth() const;
 
-	void setOriginMode(OriginMode);
+	void setOriginMode( OriginMode );
 	OriginMode originMode() const;
 
-	void setOrigin(double);
+	void setOrigin( double );
 	double origin() const;
 
-	void setFillBrush(const QBrush&);
+	void setFillBrush( const QBrush& );
 	QBrush fillBrush() const;
 
-	void setAlarmBrush(const QBrush&);
+	void setAlarmBrush( const QBrush& );
 	QBrush alarmBrush() const;
 
-	void setAlarmLevel(double);
+	void setAlarmLevel( double );
 	double alarmLevel() const;
 
-	void setAlarmEnabled(bool);
+	void setAlarmEnabled( bool );
 	bool alarmEnabled() const;
 
-	void setColorMap(QwtColorMap*);
+	void setColorMap( QwtColorMap* );
 	QwtColorMap* colorMap();
 	const QwtColorMap* colorMap() const;
 
-	void setPipeWidth(int);
+	void setPipeWidth( int );
 	int pipeWidth() const;
 
-	void setRangeFlags(QwtInterval::BorderFlags);
+	void setRangeFlags( QwtInterval::BorderFlags );
 	QwtInterval::BorderFlags rangeFlags() const;
 
 	double value() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-	void setScaleDraw(QwtScaleDraw*);
+	void setScaleDraw( QwtScaleDraw* );
 	const QwtScaleDraw* scaleDraw() const;
 
-public Q_SLOTS:
-	virtual void setValue(double);
+  public Q_SLOTS:
+	virtual void setValue( double );
 
-protected:
-	virtual void drawLiquid(QPainter*, const QRect&) const;
-	virtual void scaleChange() QWT_OVERRIDE;
+  protected:
+	virtual void drawLiquid( QPainter*, const QRect& ) const;
+	virtual void scaleChange() override;
 
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void resizeEvent( QResizeEvent* ) override;
+	virtual void changeEvent( QEvent* ) override;
 
 	QwtScaleDraw* scaleDraw();
 
 	QRect pipeRect() const;
-	QRect fillRect(const QRect&) const;
-	QRect alarmRect(const QRect&) const;
+	QRect fillRect( const QRect& ) const;
+	QRect alarmRect( const QRect& ) const;
 
-private:
-	void layoutThermo(bool);
+  private:
+	void layoutThermo( bool );
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -8329,14 +8428,14 @@ private:
 
 class QWT_EXPORT QwtSystemClock
 {
-public:
+  public:
 	bool isNull() const;
 
 	void start();
 	double restart();
 	double elapsed() const;
 
-private:
+  private:
 	QElapsedTimer m_timer;
 };
 
@@ -8367,7 +8466,7 @@ class QwtGraphic;
 //! A class for drawing symbols
 class QWT_EXPORT QwtSymbol
 {
-public:
+  public:
 	/*!
 	   Symbol Style
 	   \sa setStyle(), style()
@@ -8501,63 +8600,65 @@ public:
 		AutoCache
 	};
 
-public:
-	explicit QwtSymbol(Style = NoSymbol);
-	QwtSymbol(Style, const QBrush&, const QPen&, const QSize&);
-	QwtSymbol(const QPainterPath&, const QBrush&, const QPen&);
+  public:
+	explicit QwtSymbol( Style = NoSymbol );
+	QwtSymbol( Style, const QBrush&, const QPen&, const QSize& );
+	QwtSymbol( const QPainterPath&, const QBrush&, const QPen& );
 
 	virtual ~QwtSymbol();
 
-	void setCachePolicy(CachePolicy);
+	void setCachePolicy( CachePolicy );
 	CachePolicy cachePolicy() const;
 
-	void setSize(const QSize&);
-	void setSize(int width, int height = -1);
+	void setSize( const QSize& );
+	void setSize( int width, int height = -1 );
 	const QSize& size() const;
 
-	void setPinPoint(const QPointF& pos, bool enable = true);
+	void setPinPoint( const QPointF& pos, bool enable = true );
 	QPointF pinPoint() const;
 
-	void setPinPointEnabled(bool);
+	void setPinPointEnabled( bool );
 	bool isPinPointEnabled() const;
 
-	virtual void setColor(const QColor&);
+	virtual void setColor( const QColor& );
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	const QBrush& brush() const;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setPen(const QPen&);
+	void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setStyle(Style);
+	void setStyle( Style );
 	Style style() const;
 
-	void setPath(const QPainterPath&);
+	void setPath( const QPainterPath& );
 	const QPainterPath& path() const;
 
-	void setPixmap(const QPixmap&);
+	void setPixmap( const QPixmap& );
 	const QPixmap& pixmap() const;
 
-	void setGraphic(const QwtGraphic&);
+	void setGraphic( const QwtGraphic& );
 	const QwtGraphic& graphic() const;
 
 #ifndef QWT_NO_SVG
-	void setSvgDocument(const QByteArray&);
+	void setSvgDocument( const QByteArray& );
 #endif
 
-	void drawSymbol(QPainter*, const QRectF&) const;
-	void drawSymbol(QPainter*, const QPointF&) const;
-	void drawSymbols(QPainter*, const QPolygonF&) const;
-	void drawSymbols(QPainter*, const QPointF*, int numPoints) const;
+	void drawSymbol( QPainter*, const QRectF& ) const;
+	void drawSymbol( QPainter*, const QPointF& ) const;
+	void drawSymbols( QPainter*, const QPolygonF& ) const;
+	void drawSymbols( QPainter*,
+		const QPointF*, int numPoints ) const;
 
 	virtual QRect boundingRect() const;
 	void invalidateCache();
 
-protected:
-	virtual void renderSymbols(QPainter*, const QPointF*, int numPoints) const;
+  protected:
+	virtual void renderSymbols( QPainter*,
+		const QPointF*, int numPoints ) const;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtSymbol)
 
 	class PrivateData;
@@ -8570,9 +8671,10 @@ private:
    \param painter Painter
    \param pos Position of the symbol in screen coordinates
  */
-inline void QwtSymbol::drawSymbol(QPainter* painter, const QPointF& pos) const
+inline void QwtSymbol::drawSymbol(
+	QPainter* painter, const QPointF& pos ) const
 {
-	drawSymbols(painter, &pos, 1);
+	drawSymbols( painter, &pos, 1 );
 }
 
 /*!
@@ -8582,9 +8684,10 @@ inline void QwtSymbol::drawSymbol(QPainter* painter, const QPointF& pos) const
    \param points Positions of the symbols in screen coordinates
  */
 
-inline void QwtSymbol::drawSymbols(QPainter* painter, const QPolygonF& points) const
+inline void QwtSymbol::drawSymbols(
+	QPainter* painter, const QPolygonF& points ) const
 {
-	drawSymbols(painter, points.data(), points.size());
+	drawSymbols( painter, points.data(), points.size() );
 }
 
 #endif
@@ -8611,7 +8714,7 @@ class QColor;
  */
 class QWT_EXPORT QwtIntervalSymbol
 {
-public:
+  public:
 	//! Symbol style
 	enum Style
 	{
@@ -8639,32 +8742,33 @@ public:
 		UserSymbol = 1000
 	};
 
-public:
-	explicit QwtIntervalSymbol(Style = NoSymbol);
-	QwtIntervalSymbol(const QwtIntervalSymbol&);
+  public:
+	explicit QwtIntervalSymbol( Style = NoSymbol );
+	QwtIntervalSymbol( const QwtIntervalSymbol& );
 
 	virtual ~QwtIntervalSymbol();
 
-	QwtIntervalSymbol& operator=(const QwtIntervalSymbol&);
-	bool operator==(const QwtIntervalSymbol&) const;
-	bool operator!=(const QwtIntervalSymbol&) const;
+	QwtIntervalSymbol& operator=( const QwtIntervalSymbol& );
+	bool operator==( const QwtIntervalSymbol& ) const;
+	bool operator!=( const QwtIntervalSymbol& ) const;
 
-	void setWidth(int);
+	void setWidth( int );
 	int width() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	const QBrush& brush() const;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setPen(const QPen&);
+	void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setStyle(Style);
+	void setStyle( Style );
 	Style style() const;
 
-	virtual void draw(QPainter*, Qt::Orientation, const QPointF& from, const QPointF& to) const;
+	virtual void draw( QPainter*, Qt::Orientation,
+		const QPointF& from, const QPointF& to ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -8834,93 +8938,94 @@ class QWT_EXPORT QwtWheel : public QWidget
 {
 	Q_OBJECT
 
-	Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
+	Q_PROPERTY( Qt::Orientation orientation
+		READ orientation WRITE setOrientation )
 
-	Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
+	Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true  )
 
-	Q_PROPERTY(double minimum READ minimum WRITE setMinimum)
-	Q_PROPERTY(double maximum READ maximum WRITE setMaximum)
+	Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
+	Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
 
-	Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep)
-	Q_PROPERTY(int pageStepCount READ pageStepCount WRITE setPageStepCount)
-	Q_PROPERTY(bool stepAlignment READ stepAlignment WRITE setStepAlignment)
+	Q_PROPERTY( double singleStep READ singleStep WRITE setSingleStep )
+	Q_PROPERTY( int pageStepCount READ pageStepCount WRITE setPageStepCount )
+	Q_PROPERTY( bool stepAlignment READ stepAlignment WRITE setStepAlignment )
 
-	Q_PROPERTY(bool tracking READ isTracking WRITE setTracking)
-	Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
-	Q_PROPERTY(bool inverted READ isInverted WRITE setInverted)
+	Q_PROPERTY( bool tracking READ isTracking WRITE setTracking )
+	Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
+	Q_PROPERTY( bool inverted READ isInverted WRITE setInverted )
 
-	Q_PROPERTY(double mass READ mass WRITE setMass)
-	Q_PROPERTY(int updateInterval READ updateInterval WRITE setUpdateInterval)
+	Q_PROPERTY( double mass READ mass WRITE setMass )
+	Q_PROPERTY( int updateInterval READ updateInterval WRITE setUpdateInterval )
 
-	Q_PROPERTY(double totalAngle READ totalAngle WRITE setTotalAngle)
-	Q_PROPERTY(double viewAngle READ viewAngle WRITE setViewAngle)
-	Q_PROPERTY(int tickCount READ tickCount WRITE setTickCount)
-	Q_PROPERTY(int wheelWidth READ wheelWidth WRITE setWheelWidth)
-	Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
-	Q_PROPERTY(int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth)
+	Q_PROPERTY( double totalAngle READ totalAngle WRITE setTotalAngle )
+	Q_PROPERTY( double viewAngle READ viewAngle WRITE setViewAngle )
+	Q_PROPERTY( int tickCount READ tickCount WRITE setTickCount )
+	Q_PROPERTY( int wheelWidth READ wheelWidth WRITE setWheelWidth )
+	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
+	Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
 
-public:
-	explicit QwtWheel(QWidget* parent = NULL);
+  public:
+	explicit QwtWheel( QWidget* parent = nullptr );
 	virtual ~QwtWheel();
 
 	double value() const;
 
-	void setOrientation(Qt::Orientation);
+	void setOrientation( Qt::Orientation );
 	Qt::Orientation orientation() const;
 
 	double totalAngle() const;
 	double viewAngle() const;
 
-	void setTickCount(int);
+	void setTickCount( int );
 	int tickCount() const;
 
-	void setWheelWidth(int);
+	void setWheelWidth( int );
 	int wheelWidth() const;
 
-	void setWheelBorderWidth(int);
+	void setWheelBorderWidth( int );
 	int wheelBorderWidth() const;
 
-	void setBorderWidth(int);
+	void setBorderWidth( int );
 	int borderWidth() const;
 
-	void setInverted(bool);
+	void setInverted( bool );
 	bool isInverted() const;
 
-	void setWrapping(bool);
+	void setWrapping( bool );
 	bool wrapping() const;
 
-	void setSingleStep(double);
+	void setSingleStep( double );
 	double singleStep() const;
 
-	void setPageStepCount(int);
+	void setPageStepCount( int );
 	int pageStepCount() const;
 
-	void setStepAlignment(bool on);
+	void setStepAlignment( bool on );
 	bool stepAlignment() const;
 
-	void setRange(double min, double max);
+	void setRange( double min, double max );
 
-	void setMinimum(double);
+	void setMinimum( double );
 	double minimum() const;
 
-	void setMaximum(double);
+	void setMaximum( double );
 	double maximum() const;
 
-	void setUpdateInterval(int);
+	void setUpdateInterval( int );
 	int updateInterval() const;
 
-	void setTracking(bool);
+	void setTracking( bool );
 	bool isTracking() const;
 
 	double mass() const;
 
-public Q_SLOTS:
-	void setValue(double);
-	void setTotalAngle(double);
-	void setViewAngle(double);
-	void setMass(double);
+  public Q_SLOTS:
+	void setValue( double );
+	void setTotalAngle ( double );
+	void setViewAngle( double );
+	void setMass( double );
 
-Q_SIGNALS:
+  Q_SIGNALS:
 
 	/*!
 	   \brief Notify a change of value.
@@ -8931,7 +9036,7 @@ Q_SIGNALS:
 	   \param value new value
 	   \sa setTracking()
 	 */
-	void valueChanged(double value);
+	void valueChanged( double value );
 
 	/*!
 	   This signal is emitted when the user presses the
@@ -8950,32 +9055,32 @@ Q_SIGNALS:
 
 	   \param value new value
 	 */
-	void wheelMoved(double value);
+	void wheelMoved( double value );
 
-protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void mousePressEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void mouseMoveEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
-	virtual void wheelEvent(QWheelEvent*) QWT_OVERRIDE;
-	virtual void timerEvent(QTimerEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void mousePressEvent( QMouseEvent* ) override;
+	virtual void mouseReleaseEvent( QMouseEvent* ) override;
+	virtual void mouseMoveEvent( QMouseEvent* ) override;
+	virtual void keyPressEvent( QKeyEvent* ) override;
+	virtual void wheelEvent( QWheelEvent* ) override;
+	virtual void timerEvent( QTimerEvent* ) override;
 
 	void stopFlying();
 
 	QRect wheelRect() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-	virtual void drawTicks(QPainter*, const QRectF&);
-	virtual void drawWheelBackground(QPainter*, const QRectF&);
+	virtual void drawTicks( QPainter*, const QRectF& );
+	virtual void drawWheelBackground( QPainter*, const QRectF& );
 
-	virtual double valueAt(const QPoint&) const;
+	virtual double valueAt( const QPoint& ) const;
 
-private:
-	double alignedValue(double) const;
-	double boundedValue(double) const;
+  private:
+	double alignedValue( double ) const;
+	double boundedValue( double ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -9009,7 +9114,7 @@ class QPainterPath;
  */
 class QWT_EXPORT QwtVectorFieldSymbol
 {
-public:
+  public:
 	QwtVectorFieldSymbol();
 	virtual ~QwtVectorFieldSymbol();
 
@@ -9017,7 +9122,7 @@ public:
 		Set the length of the symbol/arrow
 		\sa length()
 	 */
-	virtual void setLength(qreal length) = 0;
+	virtual void setLength( qreal length ) = 0;
 
 	/*!
 		\return length of the symbol/arrow
@@ -9026,9 +9131,9 @@ public:
 	virtual qreal length() const = 0;
 
 	//! Draw the symbol/arrow
-	virtual void paint(QPainter*) const = 0;
+	virtual void paint( QPainter* ) const = 0;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtVectorFieldSymbol)
 };
 
@@ -9038,16 +9143,16 @@ private:
  */
 class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
-public:
-	QwtVectorFieldArrow(qreal headWidth = 6.0, qreal tailWidth = 1.0);
-	virtual ~QwtVectorFieldArrow() QWT_OVERRIDE;
+  public:
+	QwtVectorFieldArrow( qreal headWidth = 6.0, qreal tailWidth = 1.0 );
+	virtual ~QwtVectorFieldArrow() override;
 
-	virtual void setLength(qreal length) QWT_OVERRIDE;
-	virtual qreal length() const QWT_OVERRIDE;
+	virtual void setLength( qreal length ) override;
+	virtual qreal length() const override;
 
-	virtual void paint(QPainter*) const QWT_OVERRIDE;
+	virtual void paint( QPainter* ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -9058,16 +9163,16 @@ private:
  */
 class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
-public:
-	QwtVectorFieldThinArrow(qreal headWidth = 6.0);
-	virtual ~QwtVectorFieldThinArrow() QWT_OVERRIDE;
+  public:
+	QwtVectorFieldThinArrow( qreal headWidth = 6.0 );
+	virtual ~QwtVectorFieldThinArrow() override;
 
-	virtual void setLength(qreal length) QWT_OVERRIDE;
-	virtual qreal length() const QWT_OVERRIDE;
+	virtual void setLength( qreal length ) override;
+	virtual qreal length() const override;
 
-	virtual void paint(QPainter*) const QWT_OVERRIDE;
+	virtual void paint( QPainter* ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -9098,25 +9203,31 @@ private:
  */
 class QWT_EXPORT QwtSplinePolynomial
 {
-public:
-	QwtSplinePolynomial(double c3 = 0.0, double c2 = 0.0, double c1 = 0.0);
+  public:
+	QwtSplinePolynomial( double c3 = 0.0, double c2 = 0.0, double c1 = 0.0 );
 
-	bool operator==(const QwtSplinePolynomial&) const;
-	bool operator!=(const QwtSplinePolynomial&) const;
+	bool operator==( const QwtSplinePolynomial& ) const;
+	bool operator!=( const QwtSplinePolynomial& ) const;
 
-	double valueAt(double x) const;
-	double slopeAt(double x) const;
-	double curvatureAt(double x) const;
+	double valueAt( double x ) const;
+	double slopeAt( double x ) const;
+	double curvatureAt( double x ) const;
 
-	static QwtSplinePolynomial fromSlopes(const QPointF& p1, double m1, const QPointF& p2, double m2);
+	static QwtSplinePolynomial fromSlopes(
+		const QPointF& p1, double m1,
+		const QPointF& p2, double m2 );
 
-	static QwtSplinePolynomial fromSlopes(double x, double y, double m1, double m2);
+	static QwtSplinePolynomial fromSlopes(
+		double x, double y, double m1, double m2 );
 
-	static QwtSplinePolynomial fromCurvatures(const QPointF& p1, double cv1, const QPointF& p2, double cv2);
+	static QwtSplinePolynomial fromCurvatures(
+		const QPointF& p1, double cv1,
+		const QPointF& p2, double cv2 );
 
-	static QwtSplinePolynomial fromCurvatures(double dx, double dy, double cv1, double cv2);
+	static QwtSplinePolynomial fromCurvatures(
+		double dx, double dy, double cv1, double cv2 );
 
-public:
+  public:
 	//! coefficient of the cubic summand
 	double c3;
 
@@ -9127,8 +9238,8 @@ public:
 	double c1;
 };
 
-Q_DECLARE_TYPEINFO(QwtSplinePolynomial, Q_MOVABLE_TYPE);
-Q_DECLARE_METATYPE(QwtSplinePolynomial)
+Q_DECLARE_TYPEINFO( QwtSplinePolynomial, Q_MOVABLE_TYPE );
+Q_DECLARE_METATYPE( QwtSplinePolynomial )
 
 /*!
    \brief Constructor
@@ -9137,7 +9248,10 @@ Q_DECLARE_METATYPE(QwtSplinePolynomial)
    \param a2 Coefficient of the quadratic summand
    \param a1 Coefficient of the linear summand
  */
-inline QwtSplinePolynomial::QwtSplinePolynomial(double a3, double a2, double a1) : c3(a3), c2(a2), c1(a1)
+inline QwtSplinePolynomial::QwtSplinePolynomial( double a3, double a2, double a1 )
+	: c3( a3 )
+	, c2( a2 )
+	, c1( a1 )
 {
 }
 
@@ -9145,18 +9259,18 @@ inline QwtSplinePolynomial::QwtSplinePolynomial(double a3, double a2, double a1)
    \param other Other polynomial
    \return true, when both polynomials have the same coefficients
  */
-inline bool QwtSplinePolynomial::operator==(const QwtSplinePolynomial& other) const
+inline bool QwtSplinePolynomial::operator==( const QwtSplinePolynomial& other ) const
 {
-	return (c3 == other.c3) && (c2 == other.c2) && (c1 == other.c1);
+	return ( c3 == other.c3 ) && ( c2 == other.c2 ) && ( c1 == other.c1 );
 }
 
 /*!
    \param other Other polynomial
    \return true, when the polynomials have different coefficients
  */
-inline bool QwtSplinePolynomial::operator!=(const QwtSplinePolynomial& other) const
+inline bool QwtSplinePolynomial::operator!=( const QwtSplinePolynomial& other ) const
 {
-	return (!(*this == other));
+	return ( !( *this == other ) );
 }
 
 /*!
@@ -9165,9 +9279,9 @@ inline bool QwtSplinePolynomial::operator!=(const QwtSplinePolynomial& other) co
    \param x Parameter
    \return Value at x
  */
-inline double QwtSplinePolynomial::valueAt(double x) const
+inline double QwtSplinePolynomial::valueAt( double x ) const
 {
-	return (((c3 * x) + c2) * x + c1) * x;
+	return ( ( ( c3 * x ) + c2 ) * x + c1 ) * x;
 }
 
 /*!
@@ -9176,9 +9290,9 @@ inline double QwtSplinePolynomial::valueAt(double x) const
    \param x Parameter
    \return Slope at x
  */
-inline double QwtSplinePolynomial::slopeAt(double x) const
+inline double QwtSplinePolynomial::slopeAt( double x ) const
 {
-	return (3.0 * c3 * x + 2.0 * c2) * x + c1;
+	return ( 3.0 * c3 * x + 2.0 * c2 ) * x + c1;
 }
 
 /*!
@@ -9187,7 +9301,7 @@ inline double QwtSplinePolynomial::slopeAt(double x) const
    \param x Parameter
    \return Curvature at x
  */
-inline double QwtSplinePolynomial::curvatureAt(double x) const
+inline double QwtSplinePolynomial::curvatureAt( double x ) const
 {
 	return 6.0 * c3 * x + 2.0 * c2;
 }
@@ -9204,9 +9318,10 @@ inline double QwtSplinePolynomial::curvatureAt(double x) const
    \return Coefficients of the polynomials
    \note The missing constant term of the polynomial is p1.y()
  */
-inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(const QPointF& p1, double m1, const QPointF& p2, double m2)
+inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
+	const QPointF& p1, double m1, const QPointF& p2, double m2 )
 {
-	return fromSlopes(p2.x() - p1.x(), p2.y() - p1.y(), m1, m2);
+	return fromSlopes( p2.x() - p1.x(), p2.y() - p1.y(), m1, m2 );
 }
 
 /*!
@@ -9220,12 +9335,13 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(const QPointF& p1, do
 
    \return Coefficients of the polynomials
  */
-inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(double dx, double dy, double m1, double m2)
+inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
+	double dx, double dy, double m1, double m2 )
 {
-	const double c2 = (3.0 * dy / dx - 2 * m1 - m2) / dx;
-	const double c3 = ((m2 - m1) / dx - 2.0 * c2) / (3.0 * dx);
+	const double c2 = ( 3.0 * dy / dx - 2 * m1 - m2 ) / dx;
+	const double c3 = ( ( m2 - m1 ) / dx - 2.0 * c2 ) / ( 3.0 * dx );
 
-	return QwtSplinePolynomial(c3, c2, m1);
+	return QwtSplinePolynomial( c3, c2, m1 );
 }
 
 /*!
@@ -9240,9 +9356,10 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(double dx, double dy,
    \return Coefficients of the polynomials
    \note The missing constant term of the polynomial is p1.y()
  */
-inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(const QPointF& p1, double cv1, const QPointF& p2, double cv2)
+inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
+	const QPointF& p1, double cv1, const QPointF& p2, double cv2 )
 {
-	return fromCurvatures(p2.x() - p1.x(), p2.y() - p1.y(), cv1, cv2);
+	return fromCurvatures( p2.x() - p1.x(), p2.y() - p1.y(), cv1, cv2 );
 }
 
 /*!
@@ -9256,19 +9373,20 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(const QPointF& p1
 
    \return Coefficients of the polynomials
  */
-inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(double dx, double dy, double cv1, double cv2)
+inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
+	double dx, double dy, double cv1, double cv2 )
 {
-	const double c3 = (cv2 - cv1) / (6.0 * dx);
+	const double c3 = ( cv2 - cv1 ) / ( 6.0 * dx );
 	const double c2 = 0.5 * cv1;
-	const double c1 = dy / dx - (c3 * dx + c2) * dx;
+	const double c1 = dy / dx - ( c3 * dx + c2 ) * dx;
 
-	return QwtSplinePolynomial(c3, c2, c1);
+	return QwtSplinePolynomial( c3, c2, c1 );
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 
 class QDebug;
-QWT_EXPORT QDebug operator<<(QDebug, const QwtSplinePolynomial&);
+QWT_EXPORT QDebug operator<<( QDebug, const QwtSplinePolynomial& );
 
 #endif
 
@@ -9311,7 +9429,7 @@ QWT_EXPORT QDebug operator<<(QDebug, const QwtSplinePolynomial&);
  */
 class QWT_EXPORT QwtSplineParametrization
 {
-public:
+  public:
 	//! Parametrization type
 	enum Type
 	{
@@ -9372,21 +9490,21 @@ public:
 		ParameterManhattan
 	};
 
-	explicit QwtSplineParametrization(int type);
+	explicit QwtSplineParametrization( int type );
 	virtual ~QwtSplineParametrization();
 
 	int type() const;
 
-	virtual double valueIncrement(const QPointF&, const QPointF&) const;
+	virtual double valueIncrement( const QPointF&, const QPointF& ) const;
 
-	static double valueIncrementX(const QPointF&, const QPointF&);
-	static double valueIncrementY(const QPointF&, const QPointF&);
-	static double valueIncrementUniform(const QPointF&, const QPointF&);
-	static double valueIncrementChordal(const QPointF&, const QPointF&);
-	static double valueIncrementCentripetal(const QPointF&, const QPointF&);
-	static double valueIncrementManhattan(const QPointF&, const QPointF&);
+	static double valueIncrementX( const QPointF&, const QPointF& );
+	static double valueIncrementY( const QPointF&, const QPointF& );
+	static double valueIncrementUniform( const QPointF&, const QPointF& );
+	static double valueIncrementChordal( const QPointF&, const QPointF& );
+	static double valueIncrementCentripetal( const QPointF&, const QPointF& );
+	static double valueIncrementManhattan( const QPointF&, const QPointF& );
 
-private:
+  private:
 	const int m_type;
 };
 
@@ -9398,7 +9516,8 @@ private:
 
    \return point2.x() - point1.x();
  */
-inline double QwtSplineParametrization::valueIncrementX(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementX(
+	const QPointF& point1, const QPointF& point2 )
 {
 	return point2.x() - point1.x();
 }
@@ -9411,7 +9530,8 @@ inline double QwtSplineParametrization::valueIncrementX(const QPointF& point1, c
 
    \return point2.y() - point1.y();
  */
-inline double QwtSplineParametrization::valueIncrementY(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementY(
+	const QPointF& point1, const QPointF& point2 )
 {
 	return point2.y() - point1.y();
 }
@@ -9424,10 +9544,11 @@ inline double QwtSplineParametrization::valueIncrementY(const QPointF& point1, c
 
    \return 1.0
  */
-inline double QwtSplineParametrization::valueIncrementUniform(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementUniform(
+	const QPointF& point1, const QPointF& point2 )
 {
-	Q_UNUSED(point1)
-	Q_UNUSED(point2)
+	Q_UNUSED( point1 )
+	Q_UNUSED( point2 )
 
 	return 1.0;
 }
@@ -9440,12 +9561,13 @@ inline double QwtSplineParametrization::valueIncrementUniform(const QPointF& poi
 
    \return qSqrt( dx * dx + dy * dy );
  */
-inline double QwtSplineParametrization::valueIncrementChordal(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementChordal(
+	const QPointF& point1, const QPointF& point2 )
 {
 	const double dx = point2.x() - point1.x();
 	const double dy = point2.y() - point1.y();
 
-	return std::sqrt(dx * dx + dy * dy);
+	return std::sqrt( dx * dx + dy * dy );
 }
 
 /*!
@@ -9456,9 +9578,10 @@ inline double QwtSplineParametrization::valueIncrementChordal(const QPointF& poi
 
    \return The square root of a chordal increment
  */
-inline double QwtSplineParametrization::valueIncrementCentripetal(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementCentripetal(
+	const QPointF& point1, const QPointF& point2 )
 {
-	return std::sqrt(valueIncrementChordal(point1, point2));
+	return std::sqrt( valueIncrementChordal( point1, point2 ) );
 }
 
 /*!
@@ -9469,9 +9592,10 @@ inline double QwtSplineParametrization::valueIncrementCentripetal(const QPointF&
 
    \return | point2.x() - point1.x() | + | point2.y() - point1.y() |
  */
-inline double QwtSplineParametrization::valueIncrementManhattan(const QPointF& point1, const QPointF& point2)
+inline double QwtSplineParametrization::valueIncrementManhattan(
+	const QPointF& point1, const QPointF& point2 )
 {
-	return qAbs(point2.x() - point1.x()) + qAbs(point2.y() - point1.y());
+	return qAbs( point2.x() - point1.x() ) + qAbs( point2.y() - point1.y() );
 }
 
 #endif
@@ -9495,8 +9619,7 @@ class QLineF;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T >
-class QVector;
+template< typename T > class QVector;
 #endif
 
 /*!
@@ -9532,7 +9655,7 @@ class QVector;
  */
 class QWT_EXPORT QwtSpline
 {
-public:
+  public:
 	/*!
 	   Boundary type specifying the spline at its endpoints
 
@@ -9632,27 +9755,28 @@ public:
 	QwtSpline();
 	virtual ~QwtSpline();
 
-	void setParametrization(int type);
-	void setParametrization(QwtSplineParametrization*);
+	void setParametrization( int type );
+	void setParametrization( QwtSplineParametrization* );
 	const QwtSplineParametrization* parametrization() const;
 
-	void setBoundaryType(BoundaryType);
+	void setBoundaryType( BoundaryType );
 	BoundaryType boundaryType() const;
 
-	void setBoundaryValue(BoundaryPosition, double value);
-	double boundaryValue(BoundaryPosition) const;
+	void setBoundaryValue( BoundaryPosition, double value );
+	double boundaryValue( BoundaryPosition ) const;
 
-	void setBoundaryCondition(BoundaryPosition, int condition);
-	int boundaryCondition(BoundaryPosition) const;
+	void setBoundaryCondition( BoundaryPosition, int condition );
+	int boundaryCondition( BoundaryPosition ) const;
 
-	void setBoundaryConditions(int condition, double valueBegin = 0.0, double valueEnd = 0.0);
+	void setBoundaryConditions( int condition,
+		double valueBegin = 0.0, double valueEnd = 0.0 );
 
-	virtual QPolygonF polygon(const QPolygonF&, double tolerance) const;
-	virtual QPainterPath painterPath(const QPolygonF&) const = 0;
+	virtual QPolygonF polygon( const QPolygonF&, double tolerance ) const;
+	virtual QPainterPath painterPath( const QPolygonF& ) const = 0;
 
 	virtual uint locality() const;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtSpline)
 
 	class PrivateData;
@@ -9667,18 +9791,20 @@ private:
  */
 class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 {
-public:
+  public:
 	QwtSplineInterpolating();
 	virtual ~QwtSplineInterpolating();
 
-	virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const;
+	virtual QPolygonF equidistantPolygon( const QPolygonF&,
+		double distance, bool withNodes ) const;
 
-	virtual QPolygonF polygon(const QPolygonF&, double tolerance) const QWT_OVERRIDE;
+	virtual QPolygonF polygon(
+		const QPolygonF&, double tolerance ) const override;
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const = 0;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const = 0;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtSplineInterpolating)
 };
 
@@ -9688,7 +9814,7 @@ private:
  */
 class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
 {
-public:
+  public:
 	QwtSplineG1();
 	virtual ~QwtSplineG1();
 };
@@ -9707,21 +9833,22 @@ public:
  */
 class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
-public:
+  public:
 	QwtSplineC1();
 	virtual ~QwtSplineC1();
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
-	virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const QWT_OVERRIDE;
+	virtual QPolygonF equidistantPolygon( const QPolygonF&,
+		double distance, bool withNodes ) const override;
 
 	// these methods are the non parametric part
-	virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const;
-	virtual QVector< double > slopes(const QPolygonF&) const = 0;
+	virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const;
+	virtual QVector< double > slopes( const QPolygonF& ) const = 0;
 
-	virtual double slopeAtBeginning(const QPolygonF&, double slopeNext) const;
-	virtual double slopeAtEnd(const QPolygonF&, double slopeBefore) const;
+	virtual double slopeAtBeginning( const QPolygonF&, double slopeNext ) const;
+	virtual double slopeAtEnd( const QPolygonF&, double slopeBefore ) const;
 };
 
 /*!
@@ -9738,7 +9865,7 @@ public:
  */
 class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 {
-public:
+  public:
 	/*!
 	   Boundary condition that requires C2 continuity
 
@@ -9767,15 +9894,16 @@ public:
 	QwtSplineC2();
 	virtual ~QwtSplineC2();
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
-	virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const QWT_OVERRIDE;
+	virtual QPolygonF equidistantPolygon( const QPolygonF&,
+		double distance, bool withNodes ) const override;
 
 	// calculating the parametric equations
-	virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< double > slopes(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< double > curvatures(const QPolygonF&) const = 0;
+	virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+	virtual QVector< double > slopes( const QPolygonF& ) const override;
+	virtual QVector< double > curvatures( const QPolygonF& ) const = 0;
 };
 
 #endif
@@ -9792,14 +9920,14 @@ public:
  */
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
-public:
+  public:
 	QwtSplinePleasing();
 	virtual ~QwtSplinePleasing();
 
-	virtual uint locality() const QWT_OVERRIDE;
+	virtual uint locality() const override;
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 };
 
 #endif
@@ -9821,12 +9949,12 @@ public:
  */
 class QWT_EXPORT QwtSplineBasis : public QwtSpline
 {
-public:
+  public:
 	QwtSplineBasis();
 	virtual ~QwtSplineBasis();
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual uint locality() const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual uint locality() const override;
 };
 
 #endif
@@ -9857,21 +9985,21 @@ public:
  */
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {
-public:
+  public:
 	QwtSplineCubic();
 	virtual ~QwtSplineCubic();
 
-	virtual uint locality() const QWT_OVERRIDE;
+	virtual uint locality() const override;
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF& points) const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const override;
 
 	// calculating the parametric equations
-	virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< double > slopes(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< double > curvatures(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+	virtual QVector< double > slopes( const QPolygonF& ) const override;
+	virtual QVector< double > curvatures( const QPolygonF& ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -9895,7 +10023,7 @@ private:
  */
 class QWT_EXPORT QwtSplineLocal : public QwtSplineC1
 {
-public:
+  public:
 	/*!
 		\brief Spline interpolation type
 
@@ -9934,21 +10062,21 @@ public:
 		PChip
 	};
 
-	QwtSplineLocal(Type type);
+	QwtSplineLocal( Type type );
 	virtual ~QwtSplineLocal();
 
 	Type type() const;
 
-	virtual uint locality() const QWT_OVERRIDE;
+	virtual uint locality() const override;
 
-	virtual QPainterPath painterPath(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPainterPath painterPath( const QPolygonF& ) const override;
+	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 
 	// calculating the parametric equations
-	virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QVector< double > slopes(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+	virtual QVector< double > slopes( const QPolygonF& ) const override;
 
-private:
+  private:
 	const Type m_type;
 };
 
@@ -9973,19 +10101,19 @@ class QwtSpline;
  */
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
-public:
+  public:
 	QwtSplineCurveFitter();
 	virtual ~QwtSplineCurveFitter();
 
-	void setSpline(QwtSpline*);
+	void setSpline( QwtSpline* );
 
 	const QwtSpline* spline() const;
 	QwtSpline* spline();
 
-	virtual QPolygonF fitCurve(const QPolygonF&) const QWT_OVERRIDE;
-	virtual QPainterPath fitCurvePath(const QPolygonF&) const QWT_OVERRIDE;
+	virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+	virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
-private:
+  private:
 	QwtSpline* m_spline;
 };
 
@@ -10051,7 +10179,7 @@ public:
 	void setWeek0Type(QwtDate::Week0Type);
 	QwtDate::Week0Type week0Type() const;
 
-	virtual QwtText label(double) const QWT_OVERRIDE;
+	virtual QwtText label(double) const override;
 
 	QDateTime toDateTime(double) const;
 
@@ -10101,37 +10229,46 @@ private:
  */
 class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 {
-public:
-	explicit QwtDateScaleEngine(Qt::TimeSpec = Qt::LocalTime);
+  public:
+	explicit QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
 	virtual ~QwtDateScaleEngine();
 
-	void setTimeSpec(Qt::TimeSpec);
+	void setTimeSpec( Qt::TimeSpec );
 	Qt::TimeSpec timeSpec() const;
 
-	void setUtcOffset(int seconds);
+	void setUtcOffset( int seconds );
 	int utcOffset() const;
 
-	void setWeek0Type(QwtDate::Week0Type);
+	void setWeek0Type( QwtDate::Week0Type );
 	QwtDate::Week0Type week0Type() const;
 
-	void setMaxWeeks(int);
+	void setMaxWeeks( int );
 	int maxWeeks() const;
 
-	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const QWT_OVERRIDE;
+	virtual void autoScale(
+		int maxNumSteps, double& x1, double& x2,
+		double& stepSize ) const override;
 
-	virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const QWT_OVERRIDE;
+	virtual QwtScaleDiv divideScale(
+		double x1, double x2,
+		int maxMajorSteps, int maxMinorSteps,
+		double stepSize = 0.0 ) const override;
 
-	virtual QwtDate::IntervalType intervalType(const QDateTime&, const QDateTime&, int maxSteps) const;
+	virtual QwtDate::IntervalType intervalType(
+		const QDateTime&, const QDateTime&, int maxSteps ) const;
 
-	QDateTime toDateTime(double) const;
+	QDateTime toDateTime( double ) const;
 
-protected:
-	virtual QDateTime alignDate(const QDateTime&, double stepSize, QwtDate::IntervalType, bool up) const;
+  protected:
+	virtual QDateTime alignDate( const QDateTime&, double stepSize,
+		QwtDate::IntervalType, bool up ) const;
 
-private:
-	QwtScaleDiv buildScaleDiv(const QDateTime&, const QDateTime&, int maxMajorSteps, int maxMinorSteps, QwtDate::IntervalType) const;
+  private:
+	QwtScaleDiv buildScaleDiv( const QDateTime&, const QDateTime&,
+		int maxMajorSteps, int maxMinorSteps,
+		QwtDate::IntervalType ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -10162,37 +10299,40 @@ private:
 
 class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
 {
-public:
+  public:
 	QwtRoundScaleDraw();
 	virtual ~QwtRoundScaleDraw();
 
-	void setRadius(double radius);
+	void setRadius( double radius );
 	double radius() const;
 
-	void moveCenter(double x, double y);
-	void moveCenter(const QPointF&);
+	void moveCenter( double x, double y );
+	void moveCenter( const QPointF& );
 	QPointF center() const;
 
-	void setAngleRange(double angle1, double angle2);
+	void setAngleRange( double angle1, double angle2 );
 
-	virtual double extent(const QFont&) const QWT_OVERRIDE;
+	virtual double extent( const QFont& ) const override;
 
-protected:
-	virtual void drawTick(QPainter*, double value, double len) const QWT_OVERRIDE;
+  protected:
+	virtual void drawTick( QPainter*,
+		double value, double len ) const override;
 
-	virtual void drawBackbone(QPainter*) const QWT_OVERRIDE;
+	virtual void drawBackbone(
+		QPainter* ) const override;
 
-	virtual void drawLabel(QPainter*, double value) const QWT_OVERRIDE;
+	virtual void drawLabel(
+		QPainter*, double value ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
 //! Move the center of the scale draw, leaving the radius unchanged
-inline void QwtRoundScaleDraw::moveCenter(double x, double y)
+inline void QwtRoundScaleDraw::moveCenter( double x, double y )
 {
-	moveCenter(QPointF(x, y));
+	moveCenter( QPointF( x, y ) );
 }
 
 #endif
@@ -10303,7 +10443,7 @@ public:
 	   \return Number of samples of the series
 	   \sa setData(), QwtSeriesData<T>::size()
 	 */
-	virtual size_t dataSize() const QWT_OVERRIDE;
+	virtual size_t dataSize() const override;
 
 	/*!
 	   \return Bounding rectangle of the series
@@ -10311,7 +10451,7 @@ public:
 
 	   \sa QwtSeriesData<T>::boundingRect()
 	 */
-	virtual QRectF dataRect() const QWT_OVERRIDE;
+	virtual QRectF dataRect() const override;
 
 	/*!
 	   Set a the "rect of interest" for the series
@@ -10319,7 +10459,7 @@ public:
 	   \param rect Rectangle of interest
 	   \sa QwtSeriesData<T>::setRectOfInterest()
 	 */
-	virtual void setRectOfInterest(const QRectF& rect) QWT_OVERRIDE;
+	virtual void setRectOfInterest(const QRectF& rect) override;
 
 	/*!
 	   Replace a series without deleting the previous one
@@ -10334,7 +10474,7 @@ private:
 };
 
 template< typename T >
-QwtSeriesStore< T >::QwtSeriesStore() : m_series(NULL)
+QwtSeriesStore< T >::QwtSeriesStore() : m_series(nullptr)
 {
 }
 
@@ -10375,7 +10515,7 @@ void QwtSeriesStore< T >::setData(QwtSeriesData< T >* series)
 template< typename T >
 size_t QwtSeriesStore< T >::dataSize() const
 {
-	if (m_series == NULL)
+	if (m_series == nullptr)
 		return 0;
 
 	return m_series->size();
@@ -10384,7 +10524,7 @@ size_t QwtSeriesStore< T >::dataSize() const
 template< typename T >
 QRectF QwtSeriesStore< T >::dataRect() const
 {
-	if (m_series == NULL)
+	if (m_series == nullptr)
 		return QRectF(1.0, 1.0, -2.0, -2.0);  // invalid
 
 	return m_series->boundingRect();
@@ -10428,8 +10568,8 @@ public:
 	QwtPointArrayData(QVector< T >&& x, QVector< T >&& y);
 	QwtPointArrayData(const T* x, const T* y, size_t size);
 
-	virtual size_t size() const QWT_OVERRIDE;
-	virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+	virtual size_t size() const override;
+	virtual QPointF sample(size_t index) const override;
 
 	const QVector< T >& xData() const;
 	const QVector< T >& yData() const;
@@ -10448,8 +10588,8 @@ class QwtCPointerData : public QwtPointSeriesData
 public:
 	QwtCPointerData(const T* x, const T* y, size_t size);
 
-	virtual size_t size() const QWT_OVERRIDE;
-	virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+	virtual size_t size() const override;
+	virtual QPointF sample(size_t index) const override;
 
 	const T* xData() const;
 	const T* yData() const;
@@ -10473,8 +10613,8 @@ public:
 	QwtValuePointData(const QVector< T >& y);
 	QwtValuePointData(const T* y, size_t size);
 
-	virtual size_t size() const QWT_OVERRIDE;
-	virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+	virtual size_t size() const override;
+	virtual QPointF sample(size_t index) const override;
 
 	const QVector< T >& yData() const;
 
@@ -10494,8 +10634,8 @@ class QwtCPointerValueData : public QwtPointSeriesData
 public:
 	QwtCPointerValueData(const T* y, size_t size);
 
-	virtual size_t size() const QWT_OVERRIDE;
-	virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+	virtual size_t size() const override;
+	virtual QPointF sample(size_t index) const override;
 
 	const T* yData() const;
 
@@ -10563,13 +10703,13 @@ public:
 	QwtSyntheticPointData(size_t size, const QwtInterval& = QwtInterval());
 
 	void setSize(size_t size);
-	virtual size_t size() const QWT_OVERRIDE;
+	virtual size_t size() const override;
 
 	void setInterval(const QwtInterval&);
 	QwtInterval interval() const;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
-	virtual QPointF sample(size_t index) const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
+	virtual QPointF sample(size_t index) const override;
 
 	/*!
 	   Calculate a y value for a x value
@@ -10580,7 +10720,7 @@ public:
 	virtual double y(double x) const = 0;
 	virtual double x(size_t index) const;
 
-	virtual void setRectOfInterest(const QRectF&) QWT_OVERRIDE;
+	virtual void setRectOfInterest(const QRectF&) override;
 	QRectF rectOfInterest() const;
 
 private:
@@ -10897,32 +11037,26 @@ public:
 	void setBoundingRect(const QRectF&);
 	QRectF boundingRect() const;
 
-	QPolygonF toPolygonF(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to
-	) const;
+	QPolygonF
+	toPolygonF(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to) const;
 
-	QPolygon toPolygon(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to
-	) const;
+	QPolygon
+	toPolygon(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to) const;
 
-	QPolygon toPoints(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to
-	) const;
+	QPolygon
+	toPoints(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to) const;
 
-	QPolygonF toPointsF(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to
-	) const;
+	QPolygonF
+	toPointsF(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to) const;
 
-	QImage toImage(
-		const QwtScaleMap& xMap,
-		const QwtScaleMap& yMap,
-		const QwtSeriesData< QPointF >* series,
-		int from,
-		int to,
-		const QPen&,
-		bool antialiased,
-		uint numThreads
-	) const;
+	QImage toImage(const QwtScaleMap& xMap,
+				   const QwtScaleMap& yMap,
+				   const QwtSeriesData< QPointF >* series,
+				   int from,
+				   int to,
+				   const QPen&,
+				   bool antialiased,
+				   uint numThreads) const;
 
 private:
 	Q_DISABLE_COPY(QwtPointMapper)
@@ -10957,18 +11091,18 @@ class QPainter;
 
 class QWT_EXPORT QwtDialNeedle
 {
-public:
+  public:
 	QwtDialNeedle();
 	virtual ~QwtDialNeedle();
 
-	virtual void setPalette(const QPalette&);
+	virtual void setPalette( const QPalette& );
 	const QPalette& palette() const;
 
-	virtual void draw(
-		QPainter*, const QPointF& center, double length, double direction, QPalette::ColorGroup = QPalette::Active
-	) const;
+	virtual void draw( QPainter*, const QPointF& center,
+		double length, double direction,
+		QPalette::ColorGroup = QPalette::Active ) const;
 
-protected:
+  protected:
 	/*!
 	   \brief Draw the needle
 
@@ -10984,11 +11118,13 @@ protected:
 
 	   \sa setPalette(), palette()
 	 */
-	virtual void drawNeedle(QPainter* painter, double length, QPalette::ColorGroup colorGroup) const = 0;
+	virtual void drawNeedle( QPainter* painter,
+		double length, QPalette::ColorGroup colorGroup ) const = 0;
 
-	virtual void drawKnob(QPainter*, double width, const QBrush&, bool sunken) const;
+	virtual void drawKnob( QPainter*, double width,
+		const QBrush&, bool sunken ) const;
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtDialNeedle)
 
 	QPalette m_palette;
@@ -11009,7 +11145,7 @@ private:
 
 class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
 {
-public:
+  public:
 	//! Style of the needle
 	enum Style
 	{
@@ -11020,15 +11156,17 @@ public:
 		Ray
 	};
 
-	QwtDialSimpleNeedle(Style, bool hasKnob = true, const QColor& mid = Qt::gray, const QColor& base = Qt::darkGray);
+	QwtDialSimpleNeedle( Style, bool hasKnob = true,
+		const QColor& mid = Qt::gray, const QColor& base = Qt::darkGray );
 
-	void setWidth(double width);
+	void setWidth( double width );
 	double width() const;
 
-protected:
-	virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const QWT_OVERRIDE;
+  protected:
+	virtual void drawNeedle( QPainter*, double length,
+		QPalette::ColorGroup ) const override;
 
-private:
+  private:
 	Style m_style;
 	bool m_hasKnob;
 	double m_width;
@@ -11053,7 +11191,7 @@ private:
 
 class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
 {
-public:
+  public:
 	//! Style of the needle
 	enum Style
 	{
@@ -11064,12 +11202,14 @@ public:
 		ThinStyle
 	};
 
-	QwtCompassMagnetNeedle(Style = TriangleStyle, const QColor& light = Qt::white, const QColor& dark = Qt::red);
+	QwtCompassMagnetNeedle( Style = TriangleStyle,
+		const QColor& light = Qt::white, const QColor& dark = Qt::red );
 
-protected:
-	virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const QWT_OVERRIDE;
+  protected:
+	virtual void drawNeedle( QPainter*,
+		double length, QPalette::ColorGroup ) const override;
 
-private:
+  private:
 	Style m_style;
 };
 
@@ -11088,7 +11228,7 @@ private:
 
 class QWT_EXPORT QwtCompassWindArrow : public QwtDialNeedle
 {
-public:
+  public:
 	//! Style of the arrow
 	enum Style
 	{
@@ -11099,12 +11239,14 @@ public:
 		Style2
 	};
 
-	QwtCompassWindArrow(Style, const QColor& light = Qt::white, const QColor& dark = Qt::gray);
+	QwtCompassWindArrow( Style, const QColor& light = Qt::white,
+		const QColor& dark = Qt::gray );
 
-protected:
-	virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const QWT_OVERRIDE;
+  protected:
+	virtual void drawNeedle( QPainter*,
+		double length, QPalette::ColorGroup ) const override;
 
-private:
+  private:
 	Style m_style;
 };
 
@@ -11155,16 +11297,17 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
 {
 	Q_OBJECT
 
-	Q_ENUMS(Shadow Mode Direction)
+	Q_ENUMS( Shadow Mode Direction )
 
-	Q_PROPERTY(int lineWidth READ lineWidth WRITE setLineWidth)
-	Q_PROPERTY(Shadow frameShadow READ frameShadow WRITE setFrameShadow)
-	Q_PROPERTY(Mode mode READ mode WRITE setMode)
-	Q_PROPERTY(double origin READ origin WRITE setOrigin)
-	Q_PROPERTY(double minScaleArc READ minScaleArc WRITE setMinScaleArc)
-	Q_PROPERTY(double maxScaleArc READ maxScaleArc WRITE setMaxScaleArc)
+	Q_PROPERTY( int lineWidth READ lineWidth WRITE setLineWidth )
+	Q_PROPERTY( Shadow frameShadow READ frameShadow WRITE setFrameShadow )
+	Q_PROPERTY( Mode mode READ mode WRITE setMode )
+	Q_PROPERTY( double origin READ origin WRITE setOrigin )
+	Q_PROPERTY( double minScaleArc READ minScaleArc WRITE setMinScaleArc )
+	Q_PROPERTY( double maxScaleArc READ maxScaleArc WRITE setMaxScaleArc )
 
-public:
+  public:
+
 	/*!
 		\brief Frame shadow
 
@@ -11195,30 +11338,30 @@ public:
 		RotateScale
 	};
 
-	explicit QwtDial(QWidget* parent = NULL);
+	explicit QwtDial( QWidget* parent = nullptr );
 	virtual ~QwtDial();
 
-	void setFrameShadow(Shadow);
+	void setFrameShadow( Shadow );
 	Shadow frameShadow() const;
 
-	void setLineWidth(int);
+	void setLineWidth( int );
 	int lineWidth() const;
 
-	void setMode(Mode);
+	void setMode( Mode );
 	Mode mode() const;
 
-	void setScaleArc(double minArc, double maxArc);
+	void setScaleArc( double minArc, double maxArc );
 
-	void setMinScaleArc(double);
+	void setMinScaleArc( double );
 	double minScaleArc() const;
 
-	void setMaxScaleArc(double);
+	void setMaxScaleArc( double );
 	double maxScaleArc() const;
 
-	virtual void setOrigin(double);
+	virtual void setOrigin( double );
 	double origin() const;
 
-	void setNeedle(QwtDialNeedle*);
+	void setNeedle( QwtDialNeedle* );
 	const QwtDialNeedle* needle() const;
 	QwtDialNeedle* needle();
 
@@ -11227,40 +11370,43 @@ public:
 
 	virtual QRect scaleInnerRect() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-	void setScaleDraw(QwtRoundScaleDraw*);
+	void setScaleDraw( QwtRoundScaleDraw* );
 
 	QwtRoundScaleDraw* scaleDraw();
 	const QwtRoundScaleDraw* scaleDraw() const;
 
-protected:
-	virtual void wheelEvent(QWheelEvent*) QWT_OVERRIDE;
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void wheelEvent( QWheelEvent* ) override;
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void changeEvent( QEvent* ) override;
 
-	virtual void drawFrame(QPainter*);
-	virtual void drawContents(QPainter*) const;
-	virtual void drawFocusIndicator(QPainter*) const;
+	virtual void drawFrame( QPainter* );
+	virtual void drawContents( QPainter* ) const;
+	virtual void drawFocusIndicator( QPainter* ) const;
 
 	void invalidateCache();
 
-	virtual void drawScale(QPainter*, const QPointF& center, double radius) const;
+	virtual void drawScale( QPainter*,
+		const QPointF& center, double radius ) const;
 
-	virtual void drawScaleContents(QPainter* painter, const QPointF& center, double radius) const;
+	virtual void drawScaleContents( QPainter* painter,
+		const QPointF& center, double radius ) const;
 
-	virtual void drawNeedle(QPainter*, const QPointF&, double radius, double direction, QPalette::ColorGroup) const;
+	virtual void drawNeedle( QPainter*, const QPointF&,
+		double radius, double direction, QPalette::ColorGroup ) const;
 
-	virtual double scrolledTo(const QPoint&) const QWT_OVERRIDE;
-	virtual bool isScrollPosition(const QPoint&) const QWT_OVERRIDE;
+	virtual double scrolledTo( const QPoint& ) const override;
+	virtual bool isScrollPosition( const QPoint& ) const override;
 
-	virtual void sliderChange() QWT_OVERRIDE;
-	virtual void scaleChange() QWT_OVERRIDE;
+	virtual void sliderChange() override;
+	virtual void scaleChange() override;
 
-private:
-	void setAngleRange(double angle, double span);
-	void drawNeedle(QPainter*) const;
+  private:
+	void setAngleRange( double angle, double span );
+	void drawNeedle( QPainter* ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -11277,8 +11423,7 @@ private:
 
 class QwtCompassRose;
 class QString;
-template< class Key, class T >
-class QMap;
+template< class Key, class T > class QMap;
 
 /*!
    \brief A special scale draw made for QwtCompass
@@ -11292,18 +11437,18 @@ class QMap;
  */
 class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 {
-public:
+  public:
 	explicit QwtCompassScaleDraw();
-	explicit QwtCompassScaleDraw(const QMap< double, QString >& map);
+	explicit QwtCompassScaleDraw( const QMap< double, QString >& map );
 
 	virtual ~QwtCompassScaleDraw();
 
-	void setLabelMap(const QMap< double, QString >& map);
+	void setLabelMap( const QMap< double, QString >& map );
 	QMap< double, QString > labelMap() const;
 
-	virtual QwtText label(double value) const QWT_OVERRIDE;
+	virtual QwtText label( double value ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -11323,22 +11468,24 @@ class QWT_EXPORT QwtCompass : public QwtDial
 {
 	Q_OBJECT
 
-public:
-	explicit QwtCompass(QWidget* parent = NULL);
+  public:
+	explicit QwtCompass( QWidget* parent = nullptr );
 	virtual ~QwtCompass();
 
-	void setRose(QwtCompassRose* rose);
+	void setRose( QwtCompassRose* rose );
 	const QwtCompassRose* rose() const;
 	QwtCompassRose* rose();
 
-protected:
-	virtual void drawRose(QPainter*, const QPointF& center, double radius, double north, QPalette::ColorGroup) const;
+  protected:
+	virtual void drawRose( QPainter*, const QPointF& center,
+		double radius, double north, QPalette::ColorGroup ) const;
 
-	virtual void drawScaleContents(QPainter*, const QPointF& center, double radius) const QWT_OVERRIDE;
+	virtual void drawScaleContents( QPainter*,
+		const QPointF& center, double radius ) const override;
 
-	virtual void keyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+	virtual void keyPressEvent( QKeyEvent* ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -11382,18 +11529,18 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
 {
 	Q_OBJECT
 
-	Q_ENUMS(KnobStyle MarkerStyle)
+	Q_ENUMS ( KnobStyle MarkerStyle )
 
-	Q_PROPERTY(KnobStyle knobStyle READ knobStyle WRITE setKnobStyle)
-	Q_PROPERTY(int knobWidth READ knobWidth WRITE setKnobWidth)
-	Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment)
-	Q_PROPERTY(double totalAngle READ totalAngle WRITE setTotalAngle)
-	Q_PROPERTY(int numTurns READ numTurns WRITE setNumTurns)
-	Q_PROPERTY(MarkerStyle markerStyle READ markerStyle WRITE setMarkerStyle)
-	Q_PROPERTY(int markerSize READ markerSize WRITE setMarkerSize)
-	Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
+	Q_PROPERTY( KnobStyle knobStyle READ knobStyle WRITE setKnobStyle )
+	Q_PROPERTY( int knobWidth READ knobWidth WRITE setKnobWidth )
+	Q_PROPERTY( Qt::Alignment alignment READ alignment WRITE setAlignment )
+	Q_PROPERTY( double totalAngle READ totalAngle WRITE setTotalAngle )
+	Q_PROPERTY( int numTurns READ numTurns WRITE setNumTurns )
+	Q_PROPERTY( MarkerStyle markerStyle READ markerStyle WRITE setMarkerStyle )
+	Q_PROPERTY( int markerSize READ markerSize WRITE setMarkerSize )
+	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
 
-public:
+  public:
 	/*!
 	   \brief Style of the knob surface
 
@@ -11458,57 +11605,58 @@ public:
 		Notch
 	};
 
-	explicit QwtKnob(QWidget* parent = NULL);
+	explicit QwtKnob( QWidget* parent = nullptr );
 	virtual ~QwtKnob();
 
-	void setAlignment(Qt::Alignment);
+	void setAlignment( Qt::Alignment );
 	Qt::Alignment alignment() const;
 
-	void setKnobWidth(int);
+	void setKnobWidth( int );
 	int knobWidth() const;
 
-	void setNumTurns(int);
+	void setNumTurns( int );
 	int numTurns() const;
 
-	void setTotalAngle(double angle);
+	void setTotalAngle ( double angle );
 	double totalAngle() const;
 
-	void setKnobStyle(KnobStyle);
+	void setKnobStyle( KnobStyle );
 	KnobStyle knobStyle() const;
 
-	void setBorderWidth(int);
+	void setBorderWidth( int );
 	int borderWidth() const;
 
-	void setMarkerStyle(MarkerStyle);
+	void setMarkerStyle( MarkerStyle );
 	MarkerStyle markerStyle() const;
 
-	void setMarkerSize(int);
+	void setMarkerSize( int );
 	int markerSize() const;
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
-	void setScaleDraw(QwtRoundScaleDraw*);
+	void setScaleDraw( QwtRoundScaleDraw* );
 
 	const QwtRoundScaleDraw* scaleDraw() const;
 	QwtRoundScaleDraw* scaleDraw();
 
 	QRect knobRect() const;
 
-protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void changeEvent(QEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void changeEvent( QEvent* ) override;
 
-	virtual void drawKnob(QPainter*, const QRectF&) const;
+	virtual void drawKnob( QPainter*, const QRectF& ) const;
 
-	virtual void drawFocusIndicator(QPainter*) const;
+	virtual void drawFocusIndicator( QPainter* ) const;
 
-	virtual void drawMarker(QPainter*, const QRectF&, double angle) const;
+	virtual void drawMarker( QPainter*,
+		const QRectF&, double angle ) const;
 
-	virtual double scrolledTo(const QPoint&) const QWT_OVERRIDE;
-	virtual bool isScrollPosition(const QPoint&) const QWT_OVERRIDE;
+	virtual double scrolledTo( const QPoint& ) const override;
+	virtual bool isScrollPosition( const QPoint& ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -11552,7 +11700,7 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 {
 	Q_OBJECT
 
-public:
+  public:
 	/*!
 		Hand type
 		\sa setHand(), hand()
@@ -11572,28 +11720,30 @@ public:
 		NHands
 	};
 
-	explicit QwtAnalogClock(QWidget* parent = NULL);
+	explicit QwtAnalogClock( QWidget* parent = nullptr );
 	virtual ~QwtAnalogClock();
 
-	void setHand(Hand, QwtDialNeedle*);
+	void setHand( Hand, QwtDialNeedle* );
 
-	const QwtDialNeedle* hand(Hand) const;
-	QwtDialNeedle* hand(Hand);
+	const QwtDialNeedle* hand( Hand ) const;
+	QwtDialNeedle* hand( Hand );
 
-public Q_SLOTS:
+  public Q_SLOTS:
 	void setCurrentTime();
-	void setTime(const QTime&);
+	void setTime( const QTime& );
 
-protected:
-	virtual void drawNeedle(QPainter*, const QPointF&, double radius, double direction, QPalette::ColorGroup) const QWT_OVERRIDE;
+  protected:
+	virtual void drawNeedle( QPainter*, const QPointF&, double radius,
+		double direction, QPalette::ColorGroup ) const override;
 
-	virtual void drawHand(QPainter*, Hand, const QPointF&, double radius, double direction, QPalette::ColorGroup) const;
+	virtual void drawHand( QPainter*, Hand, const QPointF&,
+		double radius, double direction, QPalette::ColorGroup ) const;
 
-private:
+  private:
 	// use setHand instead
-	void setNeedle(QwtDialNeedle*);
+	void setNeedle( QwtDialNeedle* );
 
-	QwtDialNeedle* m_hand[ NHands ];
+	QwtDialNeedle* m_hand[NHands];
 };
 
 #endif
@@ -11622,57 +11772,57 @@ class QWT_EXPORT QwtMagnifier : public QObject
 {
 	Q_OBJECT
 
-public:
-	explicit QwtMagnifier(QWidget*);
+  public:
+	explicit QwtMagnifier( QWidget* );
 	virtual ~QwtMagnifier();
 
 	QWidget* parentWidget();
 	const QWidget* parentWidget() const;
 
-	void setEnabled(bool);
+	void setEnabled( bool );
 	bool isEnabled() const;
 
 	// mouse
-	void setMouseFactor(double);
+	void setMouseFactor( double );
 	double mouseFactor() const;
 
-	void setMouseButton(Qt::MouseButton, Qt::KeyboardModifiers = Qt::NoModifier);
-	void getMouseButton(Qt::MouseButton&, Qt::KeyboardModifiers&) const;
+	void setMouseButton( Qt::MouseButton, Qt::KeyboardModifiers = Qt::NoModifier );
+	void getMouseButton( Qt::MouseButton&, Qt::KeyboardModifiers& ) const;
 
 	// mouse wheel
-	void setWheelFactor(double);
+	void setWheelFactor( double );
 	double wheelFactor() const;
 
-	void setWheelModifiers(Qt::KeyboardModifiers);
+	void setWheelModifiers( Qt::KeyboardModifiers );
 	Qt::KeyboardModifiers wheelModifiers() const;
 
 	// keyboard
-	void setKeyFactor(double);
+	void setKeyFactor( double );
 	double keyFactor() const;
 
-	void setZoomInKey(int key, Qt::KeyboardModifiers = Qt::NoModifier);
-	void getZoomInKey(int& key, Qt::KeyboardModifiers&) const;
+	void setZoomInKey( int key, Qt::KeyboardModifiers = Qt::NoModifier );
+	void getZoomInKey( int& key, Qt::KeyboardModifiers& ) const;
 
-	void setZoomOutKey(int key, Qt::KeyboardModifiers = Qt::NoModifier);
-	void getZoomOutKey(int& key, Qt::KeyboardModifiers&) const;
+	void setZoomOutKey( int key, Qt::KeyboardModifiers = Qt::NoModifier );
+	void getZoomOutKey( int& key, Qt::KeyboardModifiers& ) const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter( QObject*, QEvent* ) override;
 
-protected:
+  protected:
 	/*!
 	   Rescale the parent widget
 	   \param factor Scale factor
 	 */
-	virtual void rescale(double factor) = 0;
+	virtual void rescale( double factor ) = 0;
 
-	virtual void widgetMousePressEvent(QMouseEvent*);
-	virtual void widgetMouseReleaseEvent(QMouseEvent*);
-	virtual void widgetMouseMoveEvent(QMouseEvent*);
-	virtual void widgetWheelEvent(QWheelEvent*);
-	virtual void widgetKeyPressEvent(QKeyEvent*);
-	virtual void widgetKeyReleaseEvent(QKeyEvent*);
+	virtual void widgetMousePressEvent( QMouseEvent* );
+	virtual void widgetMouseReleaseEvent( QMouseEvent* );
+	virtual void widgetMouseMoveEvent( QMouseEvent* );
+	virtual void widgetWheelEvent( QWheelEvent* );
+	virtual void widgetKeyPressEvent( QKeyEvent* );
+	virtual void widgetKeyReleaseEvent( QKeyEvent* );
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -11688,8 +11838,7 @@ private:
 
 class QwtEventPattern;
 class QEvent;
-template< typename T >
-class QList;
+template< typename T > class QList;
 
 /*!
    \brief A state machine for QwtPicker selections
@@ -11702,7 +11851,7 @@ class QList;
 
 class QWT_EXPORT QwtPickerMachine
 {
-public:
+  public:
 	/*!
 	   Type of a selection.
 	   \sa selectionType()
@@ -11732,19 +11881,20 @@ public:
 		End
 	};
 
-	explicit QwtPickerMachine(SelectionType);
+	explicit QwtPickerMachine( SelectionType );
 	virtual ~QwtPickerMachine();
 
 	//! Transition
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) = 0;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) = 0;
 	void reset();
 
 	int state() const;
-	void setState(int);
+	void setState( int );
 
 	SelectionType selectionType() const;
 
-private:
+  private:
 	const SelectionType m_selectionType;
 	int m_state;
 };
@@ -11758,10 +11908,11 @@ private:
  */
 class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerTrackerMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11774,10 +11925,11 @@ public:
  */
 class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerClickPointMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11789,10 +11941,11 @@ public:
  */
 class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerDragPointMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11810,10 +11963,11 @@ public:
 
 class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerClickRectMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11830,10 +11984,11 @@ public:
 
 class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerDragRectMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11853,10 +12008,11 @@ public:
 
 class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerDragLineMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 /*!
@@ -11872,10 +12028,11 @@ public:
 
 class QWT_EXPORT QwtPickerPolygonMachine : public QwtPickerMachine
 {
-public:
+  public:
 	QwtPickerPolygonMachine();
 
-	virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) QWT_OVERRIDE;
+	virtual QList< Command > transition(
+		const QwtEventPattern&, const QEvent* ) override;
 };
 
 #endif
@@ -12121,7 +12278,7 @@ public:
 	bool isEnabled() const;
 	bool isActive() const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter(QObject*, QEvent*) override;
 
 	QWidget* parentWidget();
 	const QWidget* parentWidget() const;
@@ -12328,7 +12485,7 @@ public:
 
 	bool isOrientationEnabled(Qt::Orientation) const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter(QObject*, QEvent*) override;
 
 Q_SIGNALS:
 	/*!
@@ -12355,7 +12512,7 @@ protected:
 	virtual void widgetKeyPressEvent(QKeyEvent*);
 	virtual void widgetKeyReleaseEvent(QKeyEvent*);
 
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) override;
 
 	virtual QBitmap contentsMask() const;
 	virtual QPixmap grab() const;
@@ -12405,27 +12562,27 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 {
 	Q_OBJECT
 
-public:
+  public:
 	//! Discard flags
 	enum DiscardFlag
 	{
 		//! Render all components of the plot
-		DiscardNone = 0x00,
+		DiscardNone             = 0x00,
 
 		//! Don't render the background of the plot
-		DiscardBackground = 0x01,
+		DiscardBackground       = 0x01,
 
 		//! Don't render the title of the plot
-		DiscardTitle = 0x02,
+		DiscardTitle            = 0x02,
 
 		//! Don't render the legend of the plot
-		DiscardLegend = 0x04,
+		DiscardLegend           = 0x04,
 
 		//! Don't render the background of the canvas
 		DiscardCanvasBackground = 0x08,
 
 		//! Don't render the footer of the plot
-		DiscardFooter = 0x10,
+		DiscardFooter           = 0x10,
 
 		/*!
 			Don't render the frame of the canvas
@@ -12434,11 +12591,11 @@ public:
 				  style sheets, where the frame is part
 				  of the background
 		 */
-		DiscardCanvasFrame = 0x20
+		DiscardCanvasFrame           = 0x20
 
 	};
 
-	Q_DECLARE_FLAGS(DiscardFlags, DiscardFlag)
+	Q_DECLARE_FLAGS( DiscardFlags, DiscardFlag )
 
 	/*!
 	   \brief Layout flags
@@ -12447,7 +12604,7 @@ public:
 	enum LayoutFlag
 	{
 		//! Use the default layout as on screen
-		DefaultLayout = 0x00,
+		DefaultLayout   = 0x00,
 
 		/*!
 		   Instead of the scales a box is painted around the plot canvas,
@@ -12456,67 +12613,79 @@ public:
 		FrameWithScales = 0x01
 	};
 
-	Q_DECLARE_FLAGS(LayoutFlags, LayoutFlag)
+	Q_DECLARE_FLAGS( LayoutFlags, LayoutFlag )
 
-	explicit QwtPlotRenderer(QObject* = NULL);
+	explicit QwtPlotRenderer( QObject* = nullptr );
 	virtual ~QwtPlotRenderer();
 
-	void setDiscardFlag(DiscardFlag flag, bool on = true);
-	bool testDiscardFlag(DiscardFlag flag) const;
+	void setDiscardFlag( DiscardFlag flag, bool on = true );
+	bool testDiscardFlag( DiscardFlag flag ) const;
 
-	void setDiscardFlags(DiscardFlags flags);
+	void setDiscardFlags( DiscardFlags flags );
 	DiscardFlags discardFlags() const;
 
-	void setLayoutFlag(LayoutFlag flag, bool on = true);
-	bool testLayoutFlag(LayoutFlag flag) const;
+	void setLayoutFlag( LayoutFlag flag, bool on = true );
+	bool testLayoutFlag( LayoutFlag flag ) const;
 
-	void setLayoutFlags(LayoutFlags flags);
+	void setLayoutFlags( LayoutFlags flags );
 	LayoutFlags layoutFlags() const;
 
-	void renderDocument(QwtPlot*, const QString& fileName, const QSizeF& sizeMM, int resolution = 85);
+	void renderDocument( QwtPlot*, const QString& fileName,
+		const QSizeF& sizeMM, int resolution = 85 );
 
-	void renderDocument(QwtPlot*, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution = 85);
+	void renderDocument( QwtPlot*,
+		const QString& fileName, const QString& format,
+		const QSizeF& sizeMM, int resolution = 85 );
 
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
-	void renderTo(QwtPlot*, QSvgGenerator&) const;
+	void renderTo( QwtPlot*, QSvgGenerator& ) const;
 #endif
 #endif
 
 #ifndef QT_NO_PRINTER
-	void renderTo(QwtPlot*, QPrinter&) const;
+	void renderTo( QwtPlot*, QPrinter& ) const;
 #endif
 
-	void renderTo(QwtPlot*, QPaintDevice&) const;
+	void renderTo( QwtPlot*, QPaintDevice& ) const;
 
-	virtual void render(QwtPlot*, QPainter*, const QRectF& plotRect) const;
+	virtual void render( QwtPlot*,
+		QPainter*, const QRectF& plotRect ) const;
 
-	virtual void renderTitle(const QwtPlot*, QPainter*, const QRectF& titleRect) const;
+	virtual void renderTitle( const QwtPlot*,
+		QPainter*, const QRectF& titleRect ) const;
 
-	virtual void renderFooter(const QwtPlot*, QPainter*, const QRectF& footerRect) const;
+	virtual void renderFooter( const QwtPlot*,
+		QPainter*, const QRectF& footerRect ) const;
 
-	virtual void renderScale(
-		const QwtPlot*, QPainter*, QwtAxisId, int startDist, int endDist, int baseDist, const QRectF& scaleRect
-	) const;
+	virtual void renderScale( const QwtPlot*, QPainter*,
+		QwtAxisId, int startDist, int endDist,
+		int baseDist, const QRectF& scaleRect ) const;
 
-	virtual void renderCanvas(const QwtPlot*, QPainter*, const QRectF& canvasRect, const QwtScaleMap* maps) const;
+	virtual void renderCanvas( const QwtPlot*,
+		QPainter*, const QRectF& canvasRect,
+		const QwtScaleMap* maps ) const;
 
-	virtual void renderLegend(const QwtPlot*, QPainter*, const QRectF& legendRect) const;
+	virtual void renderLegend(
+		const QwtPlot*, QPainter*, const QRectF& legendRect ) const;
 
-	bool exportTo(QwtPlot*, const QString& documentName, const QSizeF& sizeMM = QSizeF(300, 200), int resolution = 85);
+	bool exportTo( QwtPlot*, const QString& documentName,
+		const QSizeF& sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
-private:
-	void buildCanvasMaps(const QwtPlot*, const QRectF&, QwtScaleMap maps[]) const;
+  private:
+	void buildCanvasMaps( const QwtPlot*,
+		const QRectF&, QwtScaleMap maps[] ) const;
 
-	bool updateCanvasMargins(QwtPlot*, const QRectF&, const QwtScaleMap maps[]) const;
+	bool updateCanvasMargins( QwtPlot*,
+		const QRectF&, const QwtScaleMap maps[] ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRenderer::DiscardFlags)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRenderer::LayoutFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::DiscardFlags )
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::LayoutFlags )
 
 #endif
 
@@ -12553,35 +12722,41 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
 {
 	Q_OBJECT
 
-public:
-	explicit QwtPolarRenderer(QObject* parent = NULL);
+  public:
+	explicit QwtPolarRenderer( QObject* parent = nullptr );
 	virtual ~QwtPolarRenderer();
 
-	void renderDocument(QwtPolarPlot*, const QString& format, const QSizeF& sizeMM, int resolution = 85);
+	void renderDocument( QwtPolarPlot*, const QString& format,
+		const QSizeF& sizeMM, int resolution = 85 );
 
-	void renderDocument(QwtPolarPlot*, const QString& title, const QString& format, const QSizeF& sizeMM, int resolution = 85);
+	void renderDocument( QwtPolarPlot*,
+		const QString& title, const QString& format,
+		const QSizeF& sizeMM, int resolution = 85 );
 
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
-	void renderTo(QwtPolarPlot*, QSvgGenerator&) const;
+	void renderTo( QwtPolarPlot*, QSvgGenerator& ) const;
 #endif
 #endif
 
 #ifndef QT_NO_PRINTER
-	void renderTo(QwtPolarPlot*, QPrinter&) const;
+	void renderTo( QwtPolarPlot*, QPrinter& ) const;
 #endif
 
-	void renderTo(QwtPolarPlot*, QPaintDevice&) const;
+	void renderTo( QwtPolarPlot*, QPaintDevice& ) const;
 
-	virtual void render(QwtPolarPlot*, QPainter*, const QRectF& rect) const;
+	virtual void render( QwtPolarPlot*,
+		QPainter*, const QRectF& rect ) const;
 
-	bool exportTo(QwtPolarPlot*, const QString& documentName, const QSizeF& sizeMM = QSizeF(200, 200), int resolution = 85);
+	bool exportTo( QwtPolarPlot*, const QString& documentName,
+		const QSizeF& sizeMM = QSizeF( 200, 200 ), int resolution = 85 );
 
-	virtual void renderTitle(QPainter*, const QRectF&) const;
+	virtual void renderTitle( QPainter*, const QRectF& ) const;
 
-	virtual void renderLegend(const QwtPolarPlot*, QPainter*, const QRectF&) const;
+	virtual void renderLegend(
+		const QwtPolarPlot*, QPainter*, const QRectF& ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -12605,7 +12780,7 @@ class QwtPlot;
  */
 class QWT_EXPORT QwtPlotAbstractCanvas
 {
-public:
+  public:
 	/*!
 	   \brief Focus indicator
 	   The default setting is NoFocusIndicator
@@ -12631,35 +12806,35 @@ public:
 		ItemFocusIndicator
 	};
 
-	explicit QwtPlotAbstractCanvas(QWidget* canvasWidget);
+	explicit QwtPlotAbstractCanvas( QWidget* canvasWidget );
 	virtual ~QwtPlotAbstractCanvas();
 
 	QwtPlot* plot();
 	const QwtPlot* plot() const;
 
-	void setFocusIndicator(FocusIndicator);
+	void setFocusIndicator( FocusIndicator );
 	FocusIndicator focusIndicator() const;
 
-	void setBorderRadius(double);
+	void setBorderRadius( double );
 	double borderRadius() const;
 
-protected:
+  protected:
 	QWidget* canvasWidget();
 	const QWidget* canvasWidget() const;
 
-	virtual void drawFocusIndicator(QPainter*);
-	virtual void drawBorder(QPainter*);
-	virtual void drawBackground(QPainter*);
+	virtual void drawFocusIndicator( QPainter* );
+	virtual void drawBorder( QPainter* );
+	virtual void drawBackground( QPainter* );
 
-	void fillBackground(QPainter*);
-	void drawCanvas(QPainter*);
-	void drawStyled(QPainter*, bool);
-	void drawUnstyled(QPainter*);
+	void fillBackground( QPainter* );
+	void drawCanvas( QPainter* );
+	void drawStyled( QPainter*, bool );
+	void drawUnstyled( QPainter* );
 
-	QPainterPath canvasBorderPath(const QRect& rect) const;
+	QPainterPath canvasBorderPath( const QRect& rect ) const;
 	void updateStyleSheetInfo();
 
-private:
+  private:
 	Q_DISABLE_COPY(QwtPlotAbstractCanvas)
 
 	class PrivateData;
@@ -12671,7 +12846,7 @@ private:
  */
 class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
 {
-public:
+  public:
 	/*!
 	   \brief Paint attributes
 
@@ -12704,27 +12879,27 @@ public:
 	};
 
 	//! Paint attributes
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPlotAbstractGLCanvas(QWidget* canvasWidget);
+	explicit QwtPlotAbstractGLCanvas( QWidget* canvasWidget );
 	virtual ~QwtPlotAbstractGLCanvas();
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setFrameStyle(int style);
+	void setFrameStyle( int style );
 	int frameStyle() const;
 
-	void setFrameShadow(QFrame::Shadow);
+	void setFrameShadow( QFrame::Shadow );
 	QFrame::Shadow frameShadow() const;
 
-	void setFrameShape(QFrame::Shape);
+	void setFrameShape( QFrame::Shape );
 	QFrame::Shape frameShape() const;
 
-	void setLineWidth(int);
+	void setLineWidth( int );
 	int lineWidth() const;
 
-	void setMidLineWidth(int);
+	void setMidLineWidth( int );
 	int midLineWidth() const;
 
 	int frameWidth() const;
@@ -12733,22 +12908,23 @@ public:
 	//! Invalidate the internal backing store
 	virtual void invalidateBackingStore() = 0;
 
-protected:
+  protected:
 	void replot();
-	void draw(QPainter*);
+	void draw( QPainter* );
 
-private:
+  private:
 	virtual void clearBackingStore() = 0;
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotAbstractGLCanvas::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotAbstractGLCanvas::PaintAttributes )
 
 #endif
 
 /*** End of inlined file: qwt_plot_abstract_canvas.h ***/
+
 
 
 /*** Start of inlined file: qwt_plot_canvas.h ***/
@@ -12861,7 +13037,7 @@ public:
 
 	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-	explicit QwtPlotCanvas(QwtPlot* = NULL);
+	explicit QwtPlotCanvas(QwtPlot* = nullptr);
 	virtual ~QwtPlotCanvas();
 
 	void setPaintAttribute(PaintAttribute, bool on = true);
@@ -12870,7 +13046,7 @@ public:
 	const QPixmap* backingStore() const;
 	Q_INVOKABLE void invalidateBackingStore();
 
-	virtual bool event(QEvent*) QWT_OVERRIDE;
+	virtual bool event(QEvent*) override;
 
 	Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
@@ -12878,10 +13054,10 @@ public Q_SLOTS:
 	void replot();
 
 protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) override;
+	virtual void resizeEvent(QResizeEvent*) override;
 
-	virtual void drawBorder(QPainter*) QWT_OVERRIDE;
+	virtual void drawBorder(QPainter*) override;
 
 private:
 	class PrivateData;
@@ -12962,28 +13138,28 @@ class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstr
 	Q_PROPERTY(double borderRadius READ borderRadius WRITE setBorderRadius)
 
 public:
-	explicit QwtPlotOpenGLCanvas(QwtPlot* = NULL);
-	explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = NULL);
+	explicit QwtPlotOpenGLCanvas(QwtPlot* = nullptr);
+	explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = nullptr);
 	virtual ~QwtPlotOpenGLCanvas();
 
-	Q_INVOKABLE virtual void invalidateBackingStore() QWT_OVERRIDE;
+	Q_INVOKABLE virtual void invalidateBackingStore() override;
 	Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
-	virtual bool event(QEvent*) QWT_OVERRIDE;
+	virtual bool event(QEvent*) override;
 
 public Q_SLOTS:
 	void replot();
 
 protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) override;
 
-	virtual void initializeGL() QWT_OVERRIDE;
-	virtual void paintGL() QWT_OVERRIDE;
-	virtual void resizeGL(int width, int height) QWT_OVERRIDE;
+	virtual void initializeGL() override;
+	virtual void paintGL() override;
+	virtual void resizeGL(int width, int height) override;
 
 private:
 	void init(const QSurfaceFormat&);
-	virtual void clearBackingStore() QWT_OVERRIDE;
+	virtual void clearBackingStore() override;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -13259,9 +13435,13 @@ public:
 
 	virtual QRectF boundingRect() const;
 
-	virtual void getCanvasMarginHint(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, double& left, double& top, double& right, double& bottom
-	) const;
+	virtual void getCanvasMarginHint(const QwtScaleMap& xMap,
+									 const QwtScaleMap& yMap,
+									 const QRectF& canvasRect,
+									 double& left,
+									 double& top,
+									 double& right,
+									 double& bottom) const;
 
 	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&);
 
@@ -13301,8 +13481,8 @@ Q_DECLARE_METATYPE(QwtPlotItem*)
 
 #include <qlist.h>
 
-typedef QList< QwtPlotItem* > QwtPlotItemList;
-typedef QList< QwtPlotItem* >::ConstIterator QwtPlotItemIterator;
+using QwtPlotItemList     = QList< QwtPlotItem* >;
+using QwtPlotItemIterator = QList< QwtPlotItem* >::ConstIterator;
 
 /*!
    \brief A dictionary for plot items
@@ -13374,7 +13554,7 @@ class QFont;
 
 class QWT_EXPORT QwtPlotLegendItem : public QwtPlotItem
 {
-public:
+  public:
 	/*!
 	   \brief Background mode
 
@@ -13397,67 +13577,71 @@ public:
 	explicit QwtPlotLegendItem();
 	virtual ~QwtPlotLegendItem();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setAlignmentInCanvas(Qt::Alignment);
+	void setAlignmentInCanvas( Qt::Alignment );
 	Qt::Alignment alignmentInCanvas() const;
 
-	void setOffsetInCanvas(Qt::Orientations, int numPixels);
-	int offsetInCanvas(Qt::Orientation) const;
+	void setOffsetInCanvas( Qt::Orientations, int numPixels );
+	int offsetInCanvas( Qt::Orientation ) const;
 
-	void setMaxColumns(uint);
+	void setMaxColumns( uint );
 	uint maxColumns() const;
 
-	void setMargin(int);
+	void setMargin( int );
 	int margin() const;
 
-	void setSpacing(int);
+	void setSpacing( int );
 	int spacing() const;
 
-	void setItemMargin(int);
+	void setItemMargin( int );
 	int itemMargin() const;
 
-	void setItemSpacing(int);
+	void setItemSpacing( int );
 	int itemSpacing() const;
 
-	void setFont(const QFont&);
+	void setFont( const QFont& );
 	QFont font() const;
 
-	void setBorderRadius(double);
+	void setBorderRadius( double );
 	double borderRadius() const;
 
-	void setBorderPen(const QPen&);
+	void setBorderPen( const QPen& );
 	QPen borderPen() const;
 
-	void setBackgroundBrush(const QBrush&);
+	void setBackgroundBrush( const QBrush& );
 	QBrush backgroundBrush() const;
 
-	void setBackgroundMode(BackgroundMode);
+	void setBackgroundMode( BackgroundMode );
 	BackgroundMode backgroundMode() const;
 
-	void setTextPen(const QPen&);
+	void setTextPen( const QPen& );
 	QPen textPen() const;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
 	void clearLegend();
 
-	virtual void updateLegend(const QwtPlotItem*, const QList< QwtLegendData >&) QWT_OVERRIDE;
+	virtual void updateLegend( const QwtPlotItem*,
+		const QList< QwtLegendData >& ) override;
 
-	virtual QRect geometry(const QRectF& canvasRect) const;
+	virtual QRect geometry( const QRectF& canvasRect ) const;
 
-	virtual QSize minimumSize(const QwtLegendData&) const;
-	virtual int heightForWidth(const QwtLegendData&, int width) const;
+	virtual QSize minimumSize( const QwtLegendData& ) const;
+	virtual int heightForWidth( const QwtLegendData&, int width ) const;
 
 	QList< const QwtPlotItem* > plotItems() const;
-	QList< QRect > legendGeometries(const QwtPlotItem*) const;
+	QList< QRect > legendGeometries( const QwtPlotItem* ) const;
 
-protected:
-	virtual void drawLegendData(QPainter*, const QwtPlotItem*, const QwtLegendData&, const QRectF&) const;
+  protected:
+	virtual void drawLegendData( QPainter*,
+		const QwtPlotItem*, const QwtLegendData&, const QRectF& ) const;
 
-	virtual void drawBackground(QPainter*, const QRectF& rect) const;
+	virtual void drawBackground( QPainter*, const QRectF& rect ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -13478,18 +13662,21 @@ class QwtScaleDiv;
 /*!
    \brief Base class for plot items representing a series of samples
  */
-class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem, public virtual QwtAbstractSeriesStore
+class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
+	public virtual QwtAbstractSeriesStore
 {
-public:
-	explicit QwtPlotSeriesItem(const QString& title = QString());
-	explicit QwtPlotSeriesItem(const QwtText& title);
+  public:
+	explicit QwtPlotSeriesItem( const QString& title = QString() );
+	explicit QwtPlotSeriesItem( const QwtText& title );
 
 	virtual ~QwtPlotSeriesItem();
 
-	void setOrientation(Qt::Orientation);
+	void setOrientation( Qt::Orientation );
 	Qt::Orientation orientation() const;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
 	/*!
 	   Draw a subset of the samples
@@ -13502,18 +13689,19 @@ public:
 	   \param to Index of the last point to be painted. If to < 0 the
 			 curve will be painted to its last point.
 	 */
-	virtual void drawSeries(
-		QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const = 0;
+	virtual void drawSeries( QPainter* painter,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const = 0;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) QWT_OVERRIDE;
+	virtual void updateScaleDiv(
+		const QwtScaleDiv&, const QwtScaleDiv& ) override;
 
-protected:
-	virtual void dataChanged() QWT_OVERRIDE;
+  protected:
+	virtual void dataChanged() override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -13537,7 +13725,7 @@ private:
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
-public:
+  public:
 	/*!
 		\brief Mode how to calculate the bar width
 
@@ -13573,32 +13761,35 @@ public:
 		FixedSampleSize
 	};
 
-	explicit QwtPlotAbstractBarChart(const QwtText& title);
+	explicit QwtPlotAbstractBarChart( const QwtText& title );
 	virtual ~QwtPlotAbstractBarChart();
 
-	void setLayoutPolicy(LayoutPolicy);
+	void setLayoutPolicy( LayoutPolicy );
 	LayoutPolicy layoutPolicy() const;
 
-	void setLayoutHint(double);
+	void setLayoutHint( double );
 	double layoutHint() const;
 
-	void setSpacing(int);
+	void setSpacing( int );
 	int spacing() const;
 
-	void setMargin(int);
+	void setMargin( int );
 	int margin() const;
 
-	void setBaseline(double);
+	void setBaseline( double );
 	double baseline() const;
 
 	virtual void getCanvasMarginHint(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, double& left, double& top, double& right, double& bottom
-	) const QWT_OVERRIDE;
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, double& left, double& top,
+		double& right, double& bottom) const override;
 
-protected:
-	double sampleWidth(const QwtScaleMap& map, double canvasSize, double boundingSize, double value) const;
+  protected:
+	double sampleWidth( const QwtScaleMap& map,
+		double canvasSize, double boundingSize,
+		double value ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -13670,7 +13861,7 @@ public:
 
 	virtual ~QwtPlotBarChart();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
 	void setSamples(const QVector< QPointF >&);
 	void setSamples(const QVector< double >&);
@@ -13691,39 +13882,38 @@ public:
 	void setLegendMode(LegendMode);
 	LegendMode legendMode() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries(QPainter*,
+							const QwtScaleMap& xMap,
+							const QwtScaleMap& yMap,
+							const QRectF& canvasRect,
+							int from,
+							int to) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
 	virtual QwtColumnSymbol* specialSymbol(int sampleIndex, const QPointF&) const;
 
 	virtual QwtText barTitle(int sampleIndex) const;
 
 protected:
-	virtual void drawSample(
-		QPainter* painter,
-		const QwtScaleMap& xMap,
-		const QwtScaleMap& yMap,
-		const QRectF& canvasRect,
-		const QwtInterval& boundingInterval,
-		int index,
-		const QPointF& sample
-	) const;
+	virtual void drawSample(QPainter* painter,
+							const QwtScaleMap& xMap,
+							const QwtScaleMap& yMap,
+							const QRectF& canvasRect,
+							const QwtInterval& boundingInterval,
+							int index,
+							const QPointF& sample) const;
 
 	virtual void drawBar(QPainter*, int sampleIndex, const QPointF& sample, const QwtColumnRect&) const;
 
-	QwtColumnRect columnRect(
-		const QwtScaleMap& xMap,
-		const QwtScaleMap& yMap,
-		const QRectF& canvasRect,
-		const QwtInterval& boundingInterval,
-		const QPointF& sample
-	) const;
+	QwtColumnRect columnRect(const QwtScaleMap& xMap,
+							 const QwtScaleMap& yMap,
+							 const QRectF& canvasRect,
+							 const QwtInterval& boundingInterval,
+							 const QPointF& sample) const;
 
-	QList< QwtLegendData > legendData() const QWT_OVERRIDE;
-	QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	QList< QwtLegendData > legendData() const override;
+	QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 private:
 	void init();
@@ -13965,7 +14155,7 @@ public:
 
 	virtual ~QwtPlotCurve();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
 	void setPaintAttribute(PaintAttribute, bool on = true);
 	bool testPaintAttribute(PaintAttribute) const;
@@ -14000,7 +14190,7 @@ public:
 	void setSamples(const QVector< QPointF >&);
 	void setSamples(QwtSeriesData< QPointF >*);
 
-	virtual int closestPoint(const QPointF& pos, double* dist = NULL) const;
+	virtual int closestPoint(const QPointF& pos, double* dist = nullptr) const;
 
 	double minXValue() const;
 	double maxXValue() const;
@@ -14029,38 +14219,45 @@ public:
 	void setCurveFitter(QwtCurveFitter*);
 	QwtCurveFitter* curveFitter() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries(QPainter*,
+							const QwtScaleMap& xMap,
+							const QwtScaleMap& yMap,
+							const QRectF& canvasRect,
+							int from,
+							int to) const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:
 	void init();
 
-	virtual void drawCurve(
-		QPainter*, int style, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void drawCurve(QPainter*,
+						   int style,
+						   const QwtScaleMap& xMap,
+						   const QwtScaleMap& yMap,
+						   const QRectF& canvasRect,
+						   int from,
+						   int to) const;
 
-	virtual void drawSymbols(
-		QPainter*, const QwtSymbol&, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void drawSymbols(QPainter*,
+							 const QwtSymbol&,
+							 const QwtScaleMap& xMap,
+							 const QwtScaleMap& yMap,
+							 const QRectF& canvasRect,
+							 int from,
+							 int to) const;
 
-	virtual void drawLines(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void
+	drawLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	virtual void drawSticks(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void
+	drawSticks(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	virtual void drawDots(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void
+	drawDots(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	virtual void drawSteps(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void
+	drawSteps(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
 	virtual void fillCurve(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect, QPolygonF&) const;
 
@@ -14123,22 +14320,24 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotCurve::CurveAttributes)
 
 class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
 {
-public:
-	explicit QwtPlotGraphicItem(const QString& title = QString());
-	explicit QwtPlotGraphicItem(const QwtText& title);
+  public:
+	explicit QwtPlotGraphicItem( const QString& title = QString() );
+	explicit QwtPlotGraphicItem( const QwtText& title );
 
 	virtual ~QwtPlotGraphicItem();
 
-	void setGraphic(const QRectF& rect, const QwtGraphic&);
+	void setGraphic( const QRectF& rect, const QwtGraphic& );
 	QwtGraphic graphic() const;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-private:
+  private:
 	void init();
 
 	class PrivateData;
@@ -14173,49 +14372,56 @@ class QwtScaleDiv;
 
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 {
-public:
+  public:
 	explicit QwtPlotGrid();
 	virtual ~QwtPlotGrid();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void enableX(bool);
+	void enableX( bool );
 	bool xEnabled() const;
 
-	void enableY(bool);
+	void enableY( bool );
 	bool yEnabled() const;
 
-	void enableXMin(bool);
+	void enableXMin( bool );
 	bool xMinEnabled() const;
 
-	void enableYMin(bool);
+	void enableYMin( bool );
 	bool yMinEnabled() const;
 
-	void setXDiv(const QwtScaleDiv&);
+	void setXDiv( const QwtScaleDiv& );
 	const QwtScaleDiv& xScaleDiv() const;
 
-	void setYDiv(const QwtScaleDiv&);
+	void setYDiv( const QwtScaleDiv& );
 	const QwtScaleDiv& yScaleDiv() const;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+	void setPen( const QColor&,
+		qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-	void setPen(const QPen&);
+	void setPen( const QPen& );
 
-	void setMajorPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+	void setMajorPen( const QColor&,
+		qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-	void setMajorPen(const QPen&);
+	void setMajorPen( const QPen& );
 	const QPen& majorPen() const;
 
-	void setMinorPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setMinorPen(const QPen&);
+	void setMinorPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setMinorPen( const QPen& );
 	const QPen& minorPen() const;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
-	virtual void updateScaleDiv(const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv) QWT_OVERRIDE;
+	virtual void updateScaleDiv(
+		const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) override;
 
-private:
-	void drawLines(QPainter*, const QRectF&, Qt::Orientation, const QwtScaleMap&, const QList< double >&) const;
+  private:
+	void drawLines( QPainter*, const QRectF&,
+		Qt::Orientation, const QwtScaleMap&,
+		const QList< double >& ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -14257,7 +14463,7 @@ class QwtPlotSeriesItem;
  */
 class QWT_EXPORT QwtPlotDirectPainter : public QObject
 {
-public:
+  public:
 	/*!
 	   \brief Paint attributes
 	   \sa setAttribute(), testAttribute(), drawSeries()
@@ -14289,31 +14495,31 @@ public:
 		CopyBackingStore = 0x04
 	};
 
-	Q_DECLARE_FLAGS(Attributes, Attribute)
+	Q_DECLARE_FLAGS( Attributes, Attribute )
 
-	explicit QwtPlotDirectPainter(QObject* parent = NULL);
+	explicit QwtPlotDirectPainter( QObject* parent = nullptr );
 	virtual ~QwtPlotDirectPainter();
 
-	void setAttribute(Attribute, bool on);
-	bool testAttribute(Attribute) const;
+	void setAttribute( Attribute, bool on );
+	bool testAttribute( Attribute ) const;
 
-	void setClipping(bool);
+	void setClipping( bool );
 	bool hasClipping() const;
 
-	void setClipRegion(const QRegion&);
+	void setClipRegion( const QRegion& );
 	QRegion clipRegion() const;
 
-	void drawSeries(QwtPlotSeriesItem*, int from, int to);
+	void drawSeries( QwtPlotSeriesItem*, int from, int to );
 	void reset();
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter( QObject*, QEvent* ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotDirectPainter::Attributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotDirectPainter::Attributes )
 
 #endif
 
@@ -14330,8 +14536,7 @@ class QColor;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T >
-class QVector;
+template< typename T > class QVector;
 #endif
 
 /*!
@@ -14350,9 +14555,11 @@ class QVector;
    \sa QwtPlotBarChart, QwtPlotMultiBarChart
  */
 
-class QWT_EXPORT QwtPlotHistogram : public QwtPlotSeriesItem, public QwtSeriesStore< QwtIntervalSample >
+class QWT_EXPORT QwtPlotHistogram
+	: public QwtPlotSeriesItem
+	, public QwtSeriesStore< QwtIntervalSample >
 {
-public:
+  public:
 	/*!
 		Histogram styles.
 		The default style is QwtPlotHistogram::Columns.
@@ -14389,54 +14596,64 @@ public:
 		UserStyle = 100
 	};
 
-	explicit QwtPlotHistogram(const QString& title = QString());
-	explicit QwtPlotHistogram(const QwtText& title);
+	explicit QwtPlotHistogram( const QString& title = QString() );
+	explicit QwtPlotHistogram( const QwtText& title );
 	virtual ~QwtPlotHistogram();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+	void setPen( const QColor&,
+		qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-	void setPen(const QPen&);
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	const QBrush& brush() const;
 
-	void setSamples(const QVector< QwtIntervalSample >&);
-	void setSamples(QwtSeriesData< QwtIntervalSample >*);
+	void setSamples( const QVector< QwtIntervalSample >& );
+	void setSamples( QwtSeriesData< QwtIntervalSample >* );
 
-	void setBaseline(double);
+	void setBaseline( double );
 	double baseline() const;
 
-	void setStyle(HistogramStyle style);
+	void setStyle( HistogramStyle style );
 	HistogramStyle style() const;
 
-	void setSymbol(const QwtColumnSymbol*);
+	void setSymbol( const QwtColumnSymbol* );
 	const QwtColumnSymbol* symbol() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-protected:
-	virtual QwtColumnRect columnRect(const QwtIntervalSample&, const QwtScaleMap&, const QwtScaleMap&) const;
+  protected:
+	virtual QwtColumnRect columnRect( const QwtIntervalSample&,
+		const QwtScaleMap&, const QwtScaleMap& ) const;
 
-	virtual void drawColumn(QPainter*, const QwtColumnRect&, const QwtIntervalSample&) const;
+	virtual void drawColumn( QPainter*, const QwtColumnRect&,
+		const QwtIntervalSample& ) const;
 
-	void drawColumns(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
+	void drawColumns( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		int from, int to ) const;
 
-	void drawOutline(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
+	void drawOutline( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		int from, int to ) const;
 
-	void drawLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
+	void drawLines( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		int from, int to ) const;
 
-private:
+  private:
 	void init();
-	void flushPolygon(QPainter*, double baseLine, QPolygonF&) const;
+	void flushPolygon( QPainter*, double baseLine, QPolygonF& ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -14452,8 +14669,7 @@ private:
 #define QWT_PLOT_INTERVAL_CURVE_H
 
 class QwtIntervalSymbol;
-template< typename T >
-class QwtSeriesData;
+template< typename T > class QwtSeriesData;
 
 /*!
    \brief QwtPlotIntervalCurve represents a series of samples, where each value
@@ -14463,9 +14679,11 @@ class QwtSeriesData;
    that is displayed for each interval. QwtPlotIntervalCurve might be used
    to display error bars or the area between 2 curves.
  */
-class QWT_EXPORT QwtPlotIntervalCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtIntervalSample >
+class QWT_EXPORT QwtPlotIntervalCurve
+	: public QwtPlotSeriesItem
+	, public QwtSeriesStore< QwtIntervalSample >
 {
-public:
+  public:
 	/*!
 		\brief Curve styles.
 		The default setting is QwtPlotIntervalCurve::Tube.
@@ -14508,63 +14726,66 @@ public:
 		ClipPolygons = 0x01,
 
 		//! Check if a symbol is on the plot canvas before painting it.
-		ClipSymbol = 0x02
+		ClipSymbol   = 0x02
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPlotIntervalCurve(const QString& title = QString());
-	explicit QwtPlotIntervalCurve(const QwtText& title);
+	explicit QwtPlotIntervalCurve( const QString& title = QString() );
+	explicit QwtPlotIntervalCurve( const QwtText& title );
 
 	virtual ~QwtPlotIntervalCurve();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setSamples(const QVector< QwtIntervalSample >&);
-	void setSamples(QwtSeriesData< QwtIntervalSample >*);
+	void setSamples( const QVector< QwtIntervalSample >& );
+	void setSamples( QwtSeriesData< QwtIntervalSample >* );
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+	void setPen( const QColor&,
+		qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-	void setPen(const QPen&);
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	const QBrush& brush() const;
 
-	void setStyle(CurveStyle style);
+	void setStyle( CurveStyle style );
 	CurveStyle style() const;
 
-	void setSymbol(const QwtIntervalSymbol*);
+	void setSymbol( const QwtIntervalSymbol* );
 	const QwtIntervalSymbol* symbol() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-protected:
+  protected:
+
 	void init();
 
-	virtual void drawTube(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void drawTube( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const;
 
-	virtual void drawSymbols(
-		QPainter*, const QwtIntervalSymbol&, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void drawSymbols( QPainter*, const QwtIntervalSymbol&,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotIntervalCurve::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotIntervalCurve::PaintAttributes )
 
 #endif
 
@@ -14592,12 +14813,12 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 {
 	Q_OBJECT
 
-public:
-	explicit QwtPlotMagnifier(QWidget*);
+  public:
+	explicit QwtPlotMagnifier( QWidget* );
 	virtual ~QwtPlotMagnifier();
 
-	void setAxisEnabled(QwtAxisId, bool on);
-	bool isAxisEnabled(QwtAxisId) const;
+	void setAxisEnabled( QwtAxisId, bool on );
+	bool isAxisEnabled( QwtAxisId ) const;
 
 	QWidget* canvas();
 	const QWidget* canvas() const;
@@ -14605,10 +14826,10 @@ public:
 	QwtPlot* plot();
 	const QwtPlot* plot() const;
 
-public Q_SLOTS:
-	virtual void rescale(double factor) QWT_OVERRIDE;
+  public Q_SLOTS:
+	virtual void rescale( double factor ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -14653,7 +14874,8 @@ class QwtSymbol;
 
 class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 {
-public:
+  public:
+
 	/*!
 		Line styles.
 		\sa setLineStyle(), lineStyle()
@@ -14674,58 +14896,65 @@ public:
 	};
 
 	explicit QwtPlotMarker();
-	explicit QwtPlotMarker(const QString& title);
-	explicit QwtPlotMarker(const QwtText& title);
+	explicit QwtPlotMarker( const QString& title );
+	explicit QwtPlotMarker( const QwtText& title );
 
 	virtual ~QwtPlotMarker();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
 	double xValue() const;
 	double yValue() const;
 	QPointF value() const;
 
-	void setXValue(double);
-	void setYValue(double);
-	void setValue(double, double);
-	void setValue(const QPointF&);
+	void setXValue( double );
+	void setYValue( double );
+	void setValue( double, double );
+	void setValue( const QPointF& );
 
-	void setLineStyle(LineStyle);
+	void setLineStyle( LineStyle );
 	LineStyle lineStyle() const;
 
-	void setLinePen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setLinePen(const QPen&);
+	void setLinePen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setLinePen( const QPen& );
 	const QPen& linePen() const;
 
-	void setSymbol(const QwtSymbol*);
+	void setSymbol( const QwtSymbol* );
 	const QwtSymbol* symbol() const;
 
-	void setLabel(const QwtText&);
+	void setLabel( const QwtText& );
 	QwtText label() const;
 
-	void setLabelAlignment(Qt::Alignment);
+	void setLabelAlignment( Qt::Alignment );
 	Qt::Alignment labelAlignment() const;
 
-	void setLabelOrientation(Qt::Orientation);
+	void setLabelOrientation( Qt::Orientation );
 	Qt::Orientation labelOrientation() const;
 
-	void setSpacing(int);
+	void setSpacing( int );
 	int spacing() const;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF&) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-protected:
-	virtual void drawLines(QPainter*, const QRectF&, const QPointF&) const;
+  protected:
+	virtual void drawLines( QPainter*,
+		const QRectF&, const QPointF& ) const;
 
-	virtual void drawSymbol(QPainter*, const QRectF&, const QPointF&) const;
+	virtual void drawSymbol( QPainter*,
+		const QRectF&, const QPointF& ) const;
 
-	virtual void drawLabel(QPainter*, const QRectF&, const QPointF&) const;
+	virtual void drawLabel( QPainter*,
+		const QRectF&, const QPointF& ) const;
 
-private:
+  private:
+
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -14741,8 +14970,7 @@ private:
 
 class QwtColumnRect;
 class QwtColumnSymbol;
-template< typename T >
-class QwtSeriesData;
+template< typename T > class QwtSeriesData;
 
 /*!
    \brief QwtPlotMultiBarChart displays a series of a samples that consist
@@ -14765,9 +14993,11 @@ class QwtSeriesData;
    \sa QwtPlotBarChart, QwtPlotHistogram
 	  QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
  */
-class QWT_EXPORT QwtPlotMultiBarChart : public QwtPlotAbstractBarChart, public QwtSeriesStore< QwtSetSample >
+class QWT_EXPORT QwtPlotMultiBarChart
+	: public QwtPlotAbstractBarChart
+	, public QwtSeriesStore< QwtSetSample >
 {
-public:
+  public:
 	/*!
 		\brief Chart styles.
 
@@ -14787,56 +15017,64 @@ public:
 		Stacked
 	};
 
-	explicit QwtPlotMultiBarChart(const QString& title = QString());
-	explicit QwtPlotMultiBarChart(const QwtText& title);
+	explicit QwtPlotMultiBarChart( const QString& title = QString() );
+	explicit QwtPlotMultiBarChart( const QwtText& title );
 
 	virtual ~QwtPlotMultiBarChart();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setBarTitles(const QList< QwtText >&);
+	void setBarTitles( const QList< QwtText >& );
 	QList< QwtText > barTitles() const;
 
-	void setSamples(const QVector< QwtSetSample >&);
-	void setSamples(const QVector< QVector< double > >&);
-	void setSamples(QwtSeriesData< QwtSetSample >*);
+	void setSamples( const QVector< QwtSetSample >& );
+	void setSamples( const QVector< QVector< double > >& );
+	void setSamples( QwtSeriesData< QwtSetSample >* );
 
-	void setStyle(ChartStyle style);
+	void setStyle( ChartStyle style );
 	ChartStyle style() const;
 
-	void setSymbol(int valueIndex, QwtColumnSymbol*);
-	const QwtColumnSymbol* symbol(int valueIndex) const;
+	void setSymbol( int valueIndex, QwtColumnSymbol* );
+	const QwtColumnSymbol* symbol( int valueIndex ) const;
 
 	void resetSymbolMap();
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual QList< QwtLegendData > legendData() const QWT_OVERRIDE;
+	virtual QList< QwtLegendData > legendData() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-protected:
-	QwtColumnSymbol* symbol(int valueIndex);
+  protected:
+	QwtColumnSymbol* symbol( int valueIndex );
 
-	virtual QwtColumnSymbol* specialSymbol(int sampleIndex, int valueIndex) const;
+	virtual QwtColumnSymbol* specialSymbol(
+		int sampleIndex, int valueIndex ) const;
 
-	virtual void
-	drawSample(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, const QwtInterval& boundingInterval, int index, const QwtSetSample&)
-		const;
+	virtual void drawSample( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, const QwtInterval& boundingInterval,
+		int index, const QwtSetSample& ) const;
 
-	virtual void drawBar(QPainter*, int sampleIndex, int valueIndex, const QwtColumnRect&) const;
+	virtual void drawBar( QPainter*, int sampleIndex,
+		int valueIndex, const QwtColumnRect& ) const;
 
-	void drawStackedBars(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int index, double sampleWidth, const QwtSetSample&)
-		const;
+	void drawStackedBars( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int index,
+		double sampleWidth, const QwtSetSample& ) const;
 
-	void drawGroupedBars(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int index, double sampleWidth, const QwtSetSample&)
-		const;
+	void drawGroupedBars( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int index,
+		double sampleWidth, const QwtSetSample& ) const;
 
-private:
+  private:
 	void init();
 
 	class PrivateData;
@@ -14888,8 +15126,8 @@ public Q_SLOTS:
 	virtual void moveCanvas(int dx, int dy);
 
 protected:
-	virtual QBitmap contentsMask() const QWT_OVERRIDE;
-	virtual QPixmap grab() const QWT_OVERRIDE;
+	virtual QBitmap contentsMask() const override;
+	virtual QPixmap grab() const override;
 
 private:
 	class PrivateData;
@@ -14994,12 +15232,12 @@ protected:
 	QPointF invTransform(const QPoint&) const;
 	QPoint transform(const QPointF&) const;
 
-	virtual QwtText trackerText(const QPoint&) const QWT_OVERRIDE;
+	virtual QwtText trackerText(const QPoint&) const override;
 	virtual QwtText trackerTextF(const QPointF&) const;
 
-	virtual void move(const QPoint&) QWT_OVERRIDE;
-	virtual void append(const QPoint&) QWT_OVERRIDE;
-	virtual bool end(bool ok = true) QWT_OVERRIDE;
+	virtual void move(const QPoint&) override;
+	virtual void append(const QPoint&) override;
+	virtual bool end(bool ok = true) override;
 
 private:
 	class PrivateData;
@@ -15116,16 +15354,16 @@ public:
 	QPoint textTrackerOffset() const;
 
 	// 顶部矩形文字
-	QwtText trackerText(const QPoint& pos) const QWT_OVERRIDE;
+	QwtText trackerText(const QPoint& pos) const override;
 
 	// 让矩形在最顶部
-	QRect trackerRect(const QFont& f) const QWT_OVERRIDE;
+	QRect trackerRect(const QFont& f) const override;
 
 	// 绘制rubberband
-	virtual void drawRubberBand(QPainter* painter) const QWT_OVERRIDE;
+	virtual void drawRubberBand(QPainter* painter) const override;
 
 	// 手动设置位置
-	virtual void setTrackerPosition(const QPoint& pos) QWT_OVERRIDE;
+	virtual void setTrackerPosition(const QPoint& pos) override;
 
 protected:
 	// 获取绘图区域屏幕坐标pos上，的所有可拾取的y值,返回获取的个数
@@ -15143,7 +15381,7 @@ protected:
 	// 绘制特征点
 	virtual void drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
 	// 鼠标移动
-	virtual void move(const QPoint& pos) QWT_OVERRIDE;
+	virtual void move(const QPoint& pos) override;
 	// 格式化为坐标轴对应的内容，针对时间轴，value是一个大浮点数，用户需要看到的是2024-10-01这样的数字
 	QString formatAxisValue(double value, int axisId, QwtPlot* plot) const;
 
@@ -15188,7 +15426,7 @@ class QwtInterval;
 
 class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 {
-public:
+  public:
 	/*!
 	   \brief Cache policy
 	   The default policy is NoCache
@@ -15232,31 +15470,33 @@ public:
 		PaintInDeviceResolution = 1
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPlotRasterItem(const QString& title = QString());
-	explicit QwtPlotRasterItem(const QwtText& title);
+	explicit QwtPlotRasterItem( const QString& title = QString() );
+	explicit QwtPlotRasterItem( const QwtText& title );
 	virtual ~QwtPlotRasterItem();
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setAlpha(int alpha);
+	void setAlpha( int alpha );
 	int alpha() const;
 
-	void setCachePolicy(CachePolicy);
+	void setCachePolicy( CachePolicy );
 	CachePolicy cachePolicy() const;
 
 	void invalidateCache();
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
-	virtual QRectF pixelHint(const QRectF&) const;
+	virtual QRectF pixelHint( const QRectF& ) const;
 
 	virtual QwtInterval interval(Qt::Axis) const;
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-protected:
+  protected:
 	/*!
 	   \brief Render an image
 
@@ -15273,29 +15513,29 @@ protected:
 
 	   \return Rendered image
 	 */
-	virtual QImage renderImage(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& area, const QSize& imageSize
-	) const = 0;
+	virtual QImage renderImage( const QwtScaleMap& xMap,
+		const QwtScaleMap& yMap, const QRectF& area,
+		const QSize& imageSize ) const = 0;
 
-	virtual QwtScaleMap imageMap(
-		Qt::Orientation, const QwtScaleMap& map, const QRectF& area, const QSize& imageSize, double pixelSize
-	) const;
+	virtual QwtScaleMap imageMap( Qt::Orientation,
+		const QwtScaleMap& map, const QRectF& area,
+		const QSize& imageSize, double pixelSize) const;
 
-private:
-	explicit QwtPlotRasterItem(const QwtPlotRasterItem&);
-	QwtPlotRasterItem& operator=(const QwtPlotRasterItem&);
+  private:
+	explicit QwtPlotRasterItem( const QwtPlotRasterItem& );
+	QwtPlotRasterItem& operator=( const QwtPlotRasterItem& );
 
 	void init();
 
-	QImage compose(
-		const QwtScaleMap&, const QwtScaleMap&, const QRectF& imageArea, const QRectF& paintRect, const QSize& imageSize, bool doCache
-	) const;
+	QImage compose( const QwtScaleMap&, const QwtScaleMap&,
+		const QRectF& imageArea, const QRectF& paintRect,
+		const QSize& imageSize, bool doCache) const;
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRasterItem::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRasterItem::PaintAttributes )
 
 #endif
 
@@ -15342,7 +15582,7 @@ public:
 
 	virtual ~QwtPlotScaleItem();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
 	void setScaleDiv(const QwtScaleDiv&);
 	const QwtScaleDiv& scaleDiv() const;
@@ -15369,9 +15609,9 @@ public:
 
 	void setAlignment(QwtScaleDraw::Alignment);
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) QWT_OVERRIDE;
+	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
 private:
 	class PrivateData;
@@ -15411,7 +15651,7 @@ class QPolygonF;
  */
 class QWT_EXPORT QwtPlotShapeItem : public QwtPlotItem
 {
-public:
+  public:
 	/*!
 		Attributes to modify the drawing algorithm.
 		The default disables all attributes
@@ -15432,7 +15672,7 @@ public:
 		ClipPolygons = 0x01,
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
 	//! Mode how to display the item on the legend
 	enum LegendMode
@@ -15444,42 +15684,45 @@ public:
 		LegendColor
 	};
 
-	explicit QwtPlotShapeItem(const QString& title = QString());
-	explicit QwtPlotShapeItem(const QwtText& title);
+	explicit QwtPlotShapeItem( const QString& title = QString() );
+	explicit QwtPlotShapeItem( const QwtText& title );
 
 	virtual ~QwtPlotShapeItem();
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setLegendMode(LegendMode);
+	void setLegendMode( LegendMode );
 	LegendMode legendMode() const;
 
-	void setRect(const QRectF&);
-	void setPolygon(const QPolygonF&);
+	void setRect( const QRectF& );
+	void setPolygon( const QPolygonF& );
 
-	void setShape(const QPainterPath&);
+	void setShape( const QPainterPath& );
 	QPainterPath shape() const;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setPen(const QPen&);
+	void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setPen( const QPen& );
 	QPen pen() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	QBrush brush() const;
 
-	void setRenderTolerance(double);
+	void setRenderTolerance( double );
 	double renderTolerance() const;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-private:
+  private:
 	void init();
 
 	class PrivateData;
@@ -15501,9 +15744,11 @@ class QwtColorMap;
 	\brief Curve that displays 3D points as dots, where the z coordinate is
 		   mapped to a color.
  */
-class QWT_EXPORT QwtPlotSpectroCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtPoint3D >
+class QWT_EXPORT QwtPlotSpectroCurve
+	: public QwtPlotSeriesItem
+	, public QwtSeriesStore< QwtPoint3D >
 {
-public:
+  public:
 	//! Paint attributes
 	enum PaintAttribute
 	{
@@ -15511,47 +15756,47 @@ public:
 		ClipPoints = 1
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPlotSpectroCurve(const QString& title = QString());
-	explicit QwtPlotSpectroCurve(const QwtText& title);
+	explicit QwtPlotSpectroCurve( const QString& title = QString() );
+	explicit QwtPlotSpectroCurve( const QwtText& title );
 
 	virtual ~QwtPlotSpectroCurve();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setSamples(const QVector< QwtPoint3D >&);
-	void setSamples(QwtSeriesData< QwtPoint3D >*);
+	void setSamples( const QVector< QwtPoint3D >& );
+	void setSamples( QwtSeriesData< QwtPoint3D >* );
 
-	void setColorMap(QwtColorMap*);
+	void setColorMap( QwtColorMap* );
 	const QwtColorMap* colorMap() const;
 
-	void setColorRange(const QwtInterval&);
+	void setColorRange( const QwtInterval& );
 	QwtInterval& colorRange() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	void setPenWidth(double);
+	void setPenWidth( double );
 	double penWidth() const;
 
-protected:
-	virtual void drawDots(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+  protected:
+	virtual void drawDots( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const;
 
-private:
+  private:
 	void init();
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectroCurve::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotSpectroCurve::PaintAttributes )
 
 #endif
 
@@ -15617,8 +15862,8 @@ public:
 	void setColorTableSize(int numColors);
 	int colorTableSize() const;
 
-	virtual QwtInterval interval(Qt::Axis) const QWT_OVERRIDE;
-	virtual QRectF pixelHint(const QRectF&) const QWT_OVERRIDE;
+	virtual QwtInterval interval(Qt::Axis) const override;
+	virtual QRectF pixelHint(const QRectF&) const override;
 
 	void setDefaultContourPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 	void setDefaultContourPen(const QPen&);
@@ -15632,20 +15877,22 @@ public:
 	void setContourLevels(const QList< double >&);
 	QList< double > contourLevels() const;
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
 protected:
-	virtual QImage renderImage(
-		const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& area, const QSize& imageSize
-	) const QWT_OVERRIDE;
+	virtual QImage renderImage(const QwtScaleMap& xMap,
+							   const QwtScaleMap& yMap,
+							   const QRectF& area,
+							   const QSize& imageSize) const override;
 
 	virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 
 	virtual QwtRasterData::ContourLines renderContourLines(const QRectF& rect, const QSize& raster) const;
 
-	virtual void drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
+	virtual void
+	drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
 
 	void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
@@ -15679,13 +15926,13 @@ class QByteArray;
 
 class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 {
-public:
-	explicit QwtPlotSvgItem(const QString& title = QString());
-	explicit QwtPlotSvgItem(const QwtText& title);
+  public:
+	explicit QwtPlotSvgItem( const QString& title = QString() );
+	explicit QwtPlotSvgItem( const QwtText& title );
 	virtual ~QwtPlotSvgItem();
 
-	bool loadFile(const QRectF&, const QString& fileName);
-	bool loadData(const QRectF&, const QByteArray&);
+	bool loadFile( const QRectF&, const QString& fileName );
+	bool loadData( const QRectF&, const QByteArray& );
 };
 
 #endif
@@ -15730,26 +15977,28 @@ class QwtText;
 
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 {
-public:
+  public:
 	QwtPlotTextLabel();
 	virtual ~QwtPlotTextLabel();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setText(const QwtText&);
+	void setText( const QwtText& );
 	QwtText text() const;
 
-	void setMargin(int margin);
+	void setMargin( int margin );
 	int margin() const;
 
-	virtual QRectF textRect(const QRectF&, const QSizeF&) const;
+	virtual QRectF textRect( const QRectF&, const QSizeF& ) const;
 
-protected:
-	virtual void draw(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF&) const QWT_OVERRIDE;
+  protected:
+	virtual void draw( QPainter*,
+		const QwtScaleMap&, const QwtScaleMap&,
+		const QRectF&) const override;
 
 	void invalidateCache();
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -15784,9 +16033,11 @@ private:
    When setting the minimum and maximum to the same value, the width of
    the symbol is fixed.
  */
-class QWT_EXPORT QwtPlotTradingCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtOHLCSample >
+class QWT_EXPORT QwtPlotTradingCurve
+	: public QwtPlotSeriesItem
+	, public QwtSeriesStore< QwtOHLCSample >
 {
-public:
+  public:
 	/*!
 		\brief Symbol styles.
 
@@ -15843,72 +16094,80 @@ public:
 	enum PaintAttribute
 	{
 		//! Check if a symbol is on the plot canvas before painting it.
-		ClipSymbols = 0x01
+		ClipSymbols   = 0x01
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPlotTradingCurve(const QString& title = QString());
-	explicit QwtPlotTradingCurve(const QwtText& title);
+	explicit QwtPlotTradingCurve( const QString& title = QString() );
+	explicit QwtPlotTradingCurve( const QwtText& title );
 
 	virtual ~QwtPlotTradingCurve();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setSamples(const QVector< QwtOHLCSample >&);
-	void setSamples(QwtSeriesData< QwtOHLCSample >*);
+	void setSamples( const QVector< QwtOHLCSample >& );
+	void setSamples( QwtSeriesData< QwtOHLCSample >* );
 
-	void setSymbolStyle(SymbolStyle style);
+	void setSymbolStyle( SymbolStyle style );
 	SymbolStyle symbolStyle() const;
 
-	void setSymbolPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setSymbolPen(const QPen&);
+	void setSymbolPen( const QColor&,
+		qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setSymbolPen( const QPen& );
 	QPen symbolPen() const;
 
-	void setSymbolBrush(Direction, const QBrush&);
-	QBrush symbolBrush(Direction) const;
+	void setSymbolBrush( Direction, const QBrush& );
+	QBrush symbolBrush( Direction ) const;
 
-	void setSymbolExtent(double);
+	void setSymbolExtent( double );
 	double symbolExtent() const;
 
-	void setMinSymbolWidth(double);
+	void setMinSymbolWidth( double );
 	double minSymbolWidth() const;
 
-	void setMaxSymbolWidth(double);
+	void setMaxSymbolWidth( double );
 	double maxSymbolWidth() const;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon( int index, const QSizeF& ) const override;
 
-protected:
+  protected:
+
 	void init();
 
-	virtual void drawSymbols(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+	virtual void drawSymbols( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const;
 
-	virtual void drawUserSymbol(QPainter*, SymbolStyle, const QwtOHLCSample&, Qt::Orientation, bool inverted, double symbolWidth) const;
+	virtual void drawUserSymbol( QPainter*,
+		SymbolStyle, const QwtOHLCSample&,
+		Qt::Orientation, bool inverted, double symbolWidth ) const;
 
-	void drawBar(QPainter*, const QwtOHLCSample&, Qt::Orientation, bool inverted, double width) const;
+	void drawBar( QPainter*, const QwtOHLCSample&,
+		Qt::Orientation, bool inverted, double width ) const;
 
-	void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double width) const;
+	void drawCandleStick( QPainter*, const QwtOHLCSample&,
+		Qt::Orientation, double width ) const;
 
-	virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
+	virtual double scaledSymbolWidth(
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotTradingCurve::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotTradingCurve::PaintAttributes )
 
 #endif
 
@@ -15933,9 +16192,11 @@ class QBrush;
 
 	\sa QwtVectorFieldSymbol, QwtVectorFieldSample
  */
-class QWT_EXPORT QwtPlotVectorField : public QwtPlotSeriesItem, public QwtSeriesStore< QwtVectorFieldSample >
+class QWT_EXPORT QwtPlotVectorField
+	: public QwtPlotSeriesItem
+	, public QwtSeriesStore< QwtVectorFieldSample >
 {
-public:
+  public:
 	/*!
 		Depending on the origin the indicator symbol ( usually an arrow )
 		will be to the position of the corresponding sample.
@@ -15965,10 +16226,10 @@ public:
 
 			\sa setRasterSize()
 		 */
-		FilterVectors = 0x01
+		FilterVectors        = 0x01
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
 	/*!
 		Depending on the MagnitudeMode the magnitude component will have
@@ -15991,82 +16252,84 @@ public:
 		MagnitudeAsLength = 0x02
 	};
 
-	Q_DECLARE_FLAGS(MagnitudeModes, MagnitudeMode)
+	Q_DECLARE_FLAGS( MagnitudeModes, MagnitudeMode )
 
-	explicit QwtPlotVectorField(const QString& title = QString());
-	explicit QwtPlotVectorField(const QwtText& title);
+	explicit QwtPlotVectorField( const QString& title = QString() );
+	explicit QwtPlotVectorField( const QwtText& title );
 
 	virtual ~QwtPlotVectorField();
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	void setMagnitudeMode(MagnitudeMode, bool on = true);
-	bool testMagnitudeMode(MagnitudeMode) const;
+	void setMagnitudeMode( MagnitudeMode, bool on = true );
+	bool testMagnitudeMode( MagnitudeMode ) const;
 
-	void setSymbol(QwtVectorFieldSymbol*);
+	void setSymbol( QwtVectorFieldSymbol* );
 	const QwtVectorFieldSymbol* symbol() const;
 
-	void setPen(const QPen&);
+	void setPen( const QPen& );
 	QPen pen() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	QBrush brush() const;
 
-	void setRasterSize(const QSizeF&);
+	void setRasterSize( const QSizeF& );
 	QSizeF rasterSize() const;
 
-	void setIndicatorOrigin(IndicatorOrigin);
+	void setIndicatorOrigin( IndicatorOrigin );
 	IndicatorOrigin indicatorOrigin() const;
 
-	void setSamples(const QVector< QwtVectorFieldSample >&);
-	void setSamples(QwtVectorFieldData*);
+	void setSamples( const QVector< QwtVectorFieldSample >& );
+	void setSamples( QwtVectorFieldData* );
 
-	void setColorMap(QwtColorMap*);
+	void setColorMap( QwtColorMap* );
 	const QwtColorMap* colorMap() const;
 
-	void setMagnitudeRange(const QwtInterval&);
+	void setMagnitudeRange( const QwtInterval& );
 	QwtInterval magnitudeRange() const;
 
-	void setMinArrowLength(double);
+	void setMinArrowLength( double );
 	double minArrowLength() const;
 
-	void setMaxArrowLength(double);
+	void setMaxArrowLength( double );
 	double maxArrowLength() const;
 
-	virtual double arrowLength(double magnitude) const;
+	virtual double arrowLength( double magnitude ) const;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-	virtual void drawSeries(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const QWT_OVERRIDE;
+	virtual void drawSeries( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const override;
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon(
+		int index, const QSizeF& ) const override;
 
-	void setMagnitudeScaleFactor(double factor);
+	void setMagnitudeScaleFactor( double factor );
 	double magnitudeScaleFactor() const;
 
-protected:
-	virtual void drawSymbols(
-		QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to
-	) const;
+  protected:
+	virtual void drawSymbols( QPainter*,
+		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+		const QRectF& canvasRect, int from, int to ) const;
 
-	virtual void drawSymbol(QPainter*, double x, double y, double vx, double vy) const;
+	virtual void drawSymbol( QPainter*,
+		double x, double y, double vx, double vy ) const;
 
-	virtual void dataChanged() QWT_OVERRIDE;
+	virtual void dataChanged() override;
 
-private:
+  private:
 	void init();
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotVectorField::PaintAttributes)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotVectorField::MagnitudeModes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotVectorField::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotVectorField::MagnitudeModes )
 
 #endif
 
@@ -16094,33 +16357,36 @@ class QBrush;
 		use QwtPlotShapeItem
  */
 
-class QWT_EXPORT QwtPlotZoneItem : public QwtPlotItem
+class QWT_EXPORT QwtPlotZoneItem :
+	public QwtPlotItem
 {
-public:
+  public:
 	explicit QwtPlotZoneItem();
 	virtual ~QwtPlotZoneItem();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setOrientation(Qt::Orientation);
+	void setOrientation( Qt::Orientation );
 	Qt::Orientation orientation() const;
 
-	void setInterval(double min, double max);
-	void setInterval(const QwtInterval&);
+	void setInterval( double min, double max );
+	void setInterval( const QwtInterval& );
 	QwtInterval interval() const;
 
-	void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-	void setPen(const QPen&);
+	void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setBrush(const QBrush&);
+	void setBrush( const QBrush& );
 	const QBrush& brush() const;
 
-	virtual void draw(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect) const QWT_OVERRIDE;
+	virtual void draw( QPainter*,
+		const QwtScaleMap&, const QwtScaleMap&,
+		const QRectF& canvasRect ) const override;
 
-	virtual QRectF boundingRect() const QWT_OVERRIDE;
+	virtual QRectF boundingRect() const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -16168,9 +16434,9 @@ Q_SIGNALS:
 	void panned(int dx, int dy);
 
 protected:
-	virtual void widgetMousePressEvent(QMouseEvent* mouseEvent) QWT_OVERRIDE;
-	virtual void move(const QPoint&) QWT_OVERRIDE;
-	virtual bool end(bool ok = true) QWT_OVERRIDE;
+	virtual void widgetMousePressEvent(QMouseEvent* mouseEvent) override;
+	virtual void move(const QPoint&) override;
+	virtual bool end(bool ok = true) override;
 
 private:
 	void init();
@@ -16295,7 +16561,7 @@ public:
 	QRectF zoomBase() const;
 	QRectF zoomRect() const;
 
-	virtual void setAxes(QwtAxisId xAxis, QwtAxisId yAxis) QWT_OVERRIDE;
+	virtual void setAxes(QwtAxisId xAxis, QwtAxisId yAxis) override;
 
 	void setMaxStackDepth(int);
 	int maxStackDepth() const;
@@ -16327,12 +16593,12 @@ protected:
 
 	virtual QSizeF minZoomSize() const;
 
-	virtual void widgetMouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void widgetKeyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+	virtual void widgetMouseReleaseEvent(QMouseEvent*) override;
+	virtual void widgetKeyPressEvent(QKeyEvent*) override;
 
-	virtual void begin() QWT_OVERRIDE;
-	virtual bool end(bool ok = true) QWT_OVERRIDE;
-	virtual bool accept(QPolygon&) const QWT_OVERRIDE;
+	virtual void begin() override;
+	virtual bool end(bool ok = true) override;
+	virtual bool accept(QPolygon&) const override;
 
 private:
 	void init(bool doReplot);
@@ -16365,9 +16631,11 @@ struct QWT_EXPORT QwtPlotCanvasZoomState
 {
 public:
 	QwtPlotCanvasZoomState();
-	QwtPlotCanvasZoomState(
-		QwtPlot* p, const QwtInterval& yLeft, const QwtInterval& yRight, const QwtInterval& xBottom, const QwtInterval& xTop
-	);
+	QwtPlotCanvasZoomState(QwtPlot* p,
+						   const QwtInterval& yLeft,
+						   const QwtInterval& yRight,
+						   const QwtInterval& xBottom,
+						   const QwtInterval& xTop);
 	// 从plot获取当前所有坐标轴的状态
 	static QwtPlotCanvasZoomState fromPlot(QwtPlot* plot);
 
@@ -16453,12 +16721,12 @@ Q_SIGNALS:
 protected:
 	virtual void rescale();
 
-	virtual void widgetMouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-	virtual void widgetKeyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+	virtual void widgetMouseReleaseEvent(QMouseEvent*) override;
+	virtual void widgetKeyPressEvent(QKeyEvent*) override;
 
-	virtual void begin() QWT_OVERRIDE;
-	virtual bool end(bool ok = true) QWT_OVERRIDE;
-	virtual bool accept(QPolygon&) const QWT_OVERRIDE;
+	virtual void begin() override;
+	virtual bool end(bool ok = true) override;
+	virtual bool accept(QPolygon&) const override;
 
 private:
 	void init(bool doReplot);
@@ -16498,7 +16766,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
 {
 	Q_OBJECT
 
-public:
+  public:
 	/*!
 	   \brief Paint attributes
 
@@ -16517,37 +16785,38 @@ public:
 		BackingStore = 0x01
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-	explicit QwtPolarCanvas(QwtPolarPlot*);
+	explicit QwtPolarCanvas( QwtPolarPlot* );
 	virtual ~QwtPolarCanvas();
 
 	QwtPolarPlot* plot();
 	const QwtPolarPlot* plot() const;
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
 	const QPixmap* backingStore() const;
 	void invalidateBackingStore();
 
-	QwtPointPolar invTransform(const QPoint&) const;
-	QPoint transform(const QwtPointPolar&) const;
+	QwtPointPolar invTransform( const QPoint& ) const;
+	QPoint transform( const QwtPointPolar& ) const;
 
-protected:
-	virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void paintEvent( QPaintEvent* ) override;
+	virtual void resizeEvent( QResizeEvent* ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarCanvas::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarCanvas::PaintAttributes )
 
 #endif
 
 /*** End of inlined file: qwt_polar_canvas.h ***/
+
 
 
 /*** Start of inlined file: qwt_polar_item.h ***/
@@ -16575,7 +16844,7 @@ class QwtScaleDiv;
  */
 class QWT_EXPORT QwtPolarItem
 {
-public:
+  public:
 	/*!
 		\brief Runtime type information
 
@@ -16613,7 +16882,7 @@ public:
 	enum ItemAttribute
 	{
 		//! The item is represented on the legend.
-		Legend = 0x01,
+		Legend    = 0x01,
 
 		/*!
 		   The boundingRect() of the item is included in the
@@ -16622,7 +16891,7 @@ public:
 		AutoScale = 0x02
 	};
 
-	Q_DECLARE_FLAGS(ItemAttributes, ItemAttribute)
+	Q_DECLARE_FLAGS( ItemAttributes, ItemAttribute )
 
 	/*!
 	   \brief Render hints
@@ -16634,38 +16903,38 @@ public:
 		RenderAntialiased = 0x01
 	};
 
-	Q_DECLARE_FLAGS(RenderHints, RenderHint)
+	Q_DECLARE_FLAGS( RenderHints, RenderHint )
 
-	explicit QwtPolarItem(const QwtText& title = QwtText());
+	explicit QwtPolarItem( const QwtText& title = QwtText() );
 	virtual ~QwtPolarItem();
 
-	void attach(QwtPolarPlot* plot);
+	void attach( QwtPolarPlot* plot );
 	void detach();
 
 	QwtPolarPlot* plot() const;
 
-	void setTitle(const QString& title);
-	void setTitle(const QwtText& title);
+	void setTitle( const QString& title );
+	void setTitle( const QwtText& title );
 	const QwtText& title() const;
 
 	virtual int rtti() const;
 
-	void setItemAttribute(ItemAttribute, bool on = true);
-	bool testItemAttribute(ItemAttribute) const;
+	void setItemAttribute( ItemAttribute, bool on = true );
+	bool testItemAttribute( ItemAttribute ) const;
 
-	void setRenderHint(RenderHint, bool on = true);
-	bool testRenderHint(RenderHint) const;
+	void setRenderHint( RenderHint, bool on = true );
+	bool testRenderHint( RenderHint ) const;
 
-	void setRenderThreadCount(uint numThreads);
+	void setRenderThreadCount( uint numThreads );
 	uint renderThreadCount() const;
 
 	double z() const;
-	void setZ(double z);
+	void setZ( double z );
 
 	void show();
 	void hide();
-	virtual void setVisible(bool);
-	bool isVisible() const;
+	virtual void setVisible( bool );
+	bool isVisible () const;
 
 	virtual void itemChanged();
 	virtual void legendChanged();
@@ -16680,38 +16949,35 @@ public:
 	   \param radius Radius of the complete plot area in painter coordinates
 	   \param canvasRect Contents rect of the canvas in painter coordinates
 	 */
-	virtual void draw(
-		QPainter* painter,
-		const QwtScaleMap& azimuthMap,
-		const QwtScaleMap& radialMap,
-		const QPointF& pole,
-		double radius,
-		const QRectF& canvasRect
-	) const = 0;
+	virtual void draw( QPainter* painter,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, double radius,
+		const QRectF& canvasRect ) const = 0;
 
-	virtual QwtInterval boundingInterval(int scaleId) const;
+	virtual QwtInterval boundingInterval( int scaleId ) const;
 
-	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&, const QwtInterval&);
+	virtual void updateScaleDiv( const QwtScaleDiv&,
+		const QwtScaleDiv&, const QwtInterval& );
 
 	virtual int marginHint() const;
 
-	void setLegendIconSize(const QSize&);
+	void setLegendIconSize( const QSize& );
 	QSize legendIconSize() const;
 
 	virtual QList< QwtLegendData > legendData() const;
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const;
+	virtual QwtGraphic legendIcon( int index, const QSizeF& ) const;
 
-private:
-	Q_DISABLE_COPY(QwtPolarItem)
+  private:
+	Q_DISABLE_COPY( QwtPolarItem )
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarItem::ItemAttributes)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarItem::RenderHints)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::ItemAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::RenderHints )
 
-Q_DECLARE_METATYPE(QwtPolarItem*)
+Q_DECLARE_METATYPE( QwtPolarItem* )
 
 #endif
 
@@ -16724,8 +16990,8 @@ Q_DECLARE_METATYPE(QwtPolarItem*)
 
 #include <qlist.h>
 
-typedef QList< QwtPolarItem* >::ConstIterator QwtPolarItemIterator;
-typedef QList< QwtPolarItem* > QwtPolarItemList;
+using QwtPolarItemIterator = QList< QwtPolarItem* >::ConstIterator;
+using QwtPolarItemList     = QList< QwtPolarItem* >;
 
 /*!
    \brief A dictionary for polar plot items
@@ -16782,7 +17048,7 @@ class QwtCurveFitter;
 
 class QWT_EXPORT QwtPolarCurve : public QwtPolarItem
 {
-public:
+  public:
 	/*!
 		Curve styles.
 		\sa setStyle(), style()
@@ -16825,65 +17091,67 @@ public:
 		LegendShowSymbol = 0x02
 	};
 
-	Q_DECLARE_FLAGS(LegendAttributes, LegendAttribute)
+	Q_DECLARE_FLAGS( LegendAttributes, LegendAttribute )
 
 	explicit QwtPolarCurve();
-	explicit QwtPolarCurve(const QwtText& title);
-	explicit QwtPolarCurve(const QString& title);
+	explicit QwtPolarCurve( const QwtText& title );
+	explicit QwtPolarCurve( const QString& title );
 
 	virtual ~QwtPolarCurve();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setLegendAttribute(LegendAttribute, bool on = true);
-	bool testLegendAttribute(LegendAttribute) const;
+	void setLegendAttribute( LegendAttribute, bool on = true );
+	bool testLegendAttribute( LegendAttribute ) const;
 
-	void setData(QwtSeriesData< QwtPointPolar >* data);
+	void setData( QwtSeriesData< QwtPointPolar >* data );
 	const QwtSeriesData< QwtPointPolar >* data() const;
 
 	size_t dataSize() const;
-	QwtPointPolar sample(int i) const;
+	QwtPointPolar sample( int i ) const;
 
-	void setPen(const QPen&);
+	void setPen( const QPen& );
 	const QPen& pen() const;
 
-	void setStyle(CurveStyle style);
+	void setStyle( CurveStyle style );
 	CurveStyle style() const;
 
-	void setSymbol(QwtSymbol*);
+	void setSymbol( QwtSymbol* );
 	const QwtSymbol* symbol() const;
 
-	void setCurveFitter(QwtCurveFitter*);
+	void setCurveFitter( QwtCurveFitter* );
 	QwtCurveFitter* curveFitter() const;
 
-	virtual void draw(
-		QPainter* p, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, double radius, const QRectF& canvasRect
-	) const QWT_OVERRIDE;
+	virtual void draw( QPainter* p,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, double radius,
+		const QRectF& canvasRect ) const override;
 
-	virtual void draw(
-		QPainter* p, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, int from, int to
-	) const;
+	virtual void draw( QPainter* p,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, int from, int to ) const;
 
-	virtual QwtInterval boundingInterval(int scaleId) const QWT_OVERRIDE;
+	virtual QwtInterval boundingInterval( int scaleId ) const override;
 
-	virtual QwtGraphic legendIcon(int index, const QSizeF&) const QWT_OVERRIDE;
+	virtual QwtGraphic legendIcon( int index, const QSizeF& ) const override;
 
-protected:
+  protected:
+
 	void init();
 
-	virtual void drawCurve(
-		QPainter*, int style, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, int from, int to
-	) const;
+	virtual void drawCurve( QPainter*, int style,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, int from, int to ) const;
 
-	virtual void drawSymbols(
-		QPainter*, const QwtSymbol&, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, int from, int to
-	) const;
+	virtual void drawSymbols( QPainter*, const QwtSymbol&,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, int from, int to ) const;
 
-	void drawLines(
-		QPainter*, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, int from, int to
-	) const;
+	void drawLines( QPainter*,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, int from, int to ) const;
 
-private:
+  private:
 	QwtSeriesData< QwtPointPolar >* m_series;
 
 	class PrivateData;
@@ -16900,12 +17168,12 @@ inline const QwtSeriesData< QwtPointPolar >* QwtPolarCurve::data() const
 	\param i index
 	\return point at position i
  */
-inline QwtPointPolar QwtPolarCurve::sample(int i) const
+inline QwtPointPolar QwtPolarCurve::sample( int i ) const
 {
-	return m_series->sample(i);
+	return m_series->sample( i );
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarCurve::LegendAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarCurve::LegendAttributes )
 
 #endif
 
@@ -16935,12 +17203,12 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
 {
 	Q_OBJECT
 
-public:
-	explicit QwtPolarMagnifier(QwtPolarCanvas*);
+  public:
+	explicit QwtPolarMagnifier( QwtPolarCanvas* );
 	virtual ~QwtPolarMagnifier();
 
-	void setUnzoomKey(int key, int modifiers);
-	void getUnzoomKey(int& key, int& modifiers) const;
+	void setUnzoomKey( int key, int modifiers );
+	void getUnzoomKey( int& key, int& modifiers ) const;
 
 	QwtPolarPlot* plot();
 	const QwtPolarPlot* plot() const;
@@ -16948,14 +17216,14 @@ public:
 	QwtPolarCanvas* canvas();
 	const QwtPolarCanvas* canvas() const;
 
-public Q_SLOTS:
-	virtual void rescale(double factor) QWT_OVERRIDE;
+  public Q_SLOTS:
+	virtual void rescale( double factor ) override;
 	void unzoom();
 
-protected:
-	virtual void widgetKeyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+  protected:
+	virtual void widgetKeyPressEvent( QKeyEvent* ) override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -16991,36 +17259,32 @@ class QwtSymbol;
  */
 class QWT_EXPORT QwtPolarMarker : public QwtPolarItem
 {
-public:
+  public:
 	explicit QwtPolarMarker();
 	virtual ~QwtPolarMarker();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setPosition(const QwtPointPolar&);
+	void setPosition( const QwtPointPolar& );
 	QwtPointPolar position() const;
 
-	void setSymbol(const QwtSymbol* s);
+	void setSymbol( const QwtSymbol* s );
 	const QwtSymbol* symbol() const;
 
-	void setLabel(const QwtText&);
+	void setLabel( const QwtText& );
 	QwtText label() const;
 
-	void setLabelAlignment(Qt::Alignment);
+	void setLabelAlignment( Qt::Alignment );
 	Qt::Alignment labelAlignment() const;
 
-	virtual void draw(
-		QPainter* painter,
-		const QwtScaleMap& azimuthMap,
-		const QwtScaleMap& radialMap,
-		const QPointF& pole,
-		double radius,
-		const QRectF& canvasRect
-	) const QWT_OVERRIDE;
+	virtual void draw( QPainter* painter,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, double radius,
+		const QRectF& canvasRect ) const override;
 
-	virtual QwtInterval boundingInterval(int scaleId) const QWT_OVERRIDE;
+	virtual QwtInterval boundingInterval( int scaleId ) const override;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
@@ -17067,7 +17331,7 @@ public Q_SLOTS:
 	virtual void movePlot(int dx, int dy);
 
 protected:
-	virtual void widgetMousePressEvent(QMouseEvent*) QWT_OVERRIDE;
+	virtual void widgetMousePressEvent(QMouseEvent*) override;
 };
 
 #endif
@@ -17096,11 +17360,13 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
 {
 	Q_OBJECT
 
-public:
-	explicit QwtPolarPicker(QwtPolarCanvas*);
+  public:
+	explicit QwtPolarPicker( QwtPolarCanvas* );
 	virtual ~QwtPolarPicker();
 
-	explicit QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPolarCanvas*);
+	explicit QwtPolarPicker(
+		RubberBand rubberBand, DisplayMode trackerMode,
+		QwtPolarCanvas* );
 
 	QwtPolarPlot* plot();
 	const QwtPolarPlot* plot() const;
@@ -17110,13 +17376,13 @@ public:
 
 	virtual QRect pickRect() const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
 
 	/*!
 	   A signal emitted in case of selectionFlags() & PointSelection.
 	   \param pos Selected point
 	 */
-	void selected(const QwtPointPolar& pos);
+	void selected( const QwtPointPolar& pos );
 
 	/*!
 	   A signal emitting the selected points,
@@ -17124,7 +17390,7 @@ Q_SIGNALS:
 
 	   \param points Selected points
 	 */
-	void selected(const QVector< QwtPointPolar >& points);
+	void selected( const QVector< QwtPointPolar >& points );
 
 	/*!
 	   A signal emitted when a point has been appended to the selection
@@ -17132,7 +17398,7 @@ Q_SIGNALS:
 	   \param pos Position of the appended point.
 	   \sa append(). moved()
 	 */
-	void appended(const QwtPointPolar& pos);
+	void appended( const QwtPointPolar& pos );
 
 	/*!
 	   A signal emitted whenever the last appended point of the
@@ -17141,20 +17407,20 @@ Q_SIGNALS:
 	   \param pos Position of the moved last point of the selection.
 	   \sa move(), appended()
 	 */
-	void moved(const QwtPointPolar& pos);
+	void moved( const QwtPointPolar& pos );
 
-protected:
-	QwtPointPolar invTransform(const QPoint&) const;
+  protected:
+	QwtPointPolar invTransform( const QPoint& ) const;
 
-	virtual QwtText trackerText(const QPoint&) const QWT_OVERRIDE;
-	virtual QwtText trackerTextPolar(const QwtPointPolar&) const;
+	virtual QwtText trackerText( const QPoint& ) const override;
+	virtual QwtText trackerTextPolar( const QwtPointPolar& ) const;
 
-	virtual void move(const QPoint&) QWT_OVERRIDE;
-	virtual void append(const QPoint&) QWT_OVERRIDE;
-	virtual bool end(bool ok = true) QWT_OVERRIDE;
+	virtual void move( const QPoint& ) override;
+	virtual void append( const QPoint& ) override;
+	virtual bool end( bool ok = true ) override;
 
-private:
-	virtual QPainterPath pickArea() const QWT_OVERRIDE;
+  private:
+	virtual QPainterPath pickArea() const override;
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -17185,7 +17451,7 @@ class QwtColorMap;
  */
 class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
 {
-public:
+  public:
 	/*!
 		Attributes to modify the drawing algorithm.
 		The default setting disables ApproximatedAtan
@@ -17202,56 +17468,49 @@ public:
 		ApproximatedAtan = 0x01
 	};
 
-	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
+	Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
 	explicit QwtPolarSpectrogram();
 	virtual ~QwtPolarSpectrogram();
 
-	void setData(QwtRasterData* data);
+	void setData( QwtRasterData* data );
 	const QwtRasterData* data() const;
 
-	void setColorMap(QwtColorMap*);
+	void setColorMap( QwtColorMap* );
 	const QwtColorMap* colorMap() const;
 
-	void setPaintAttribute(PaintAttribute, bool on = true);
-	bool testPaintAttribute(PaintAttribute) const;
+	void setPaintAttribute( PaintAttribute, bool on = true );
+	bool testPaintAttribute( PaintAttribute ) const;
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	virtual void draw(
-		QPainter* painter,
-		const QwtScaleMap& azimuthMap,
-		const QwtScaleMap& radialMap,
-		const QPointF& pole,
-		double radius,
-		const QRectF& canvasRect
-	) const QWT_OVERRIDE;
+	virtual void draw( QPainter* painter,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, double radius,
+		const QRectF& canvasRect ) const override;
 
-	virtual QwtInterval boundingInterval(int scaleId) const QWT_OVERRIDE;
+	virtual QwtInterval boundingInterval( int scaleId ) const override;
 
-protected:
+  protected:
 	virtual QImage renderImage(
-		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, const QRect& rect
-	) const;
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, const QRect& rect ) const;
 
 	virtual void renderTile(
-		const QwtScaleMap& azimuthMap,
-		const QwtScaleMap& radialMap,
-		const QPointF& pole,
-		const QPoint& imagePos,
-		const QRect& tile,
-		QImage* image
-	) const;
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, const QPoint& imagePos,
+		const QRect& tile, QImage* image ) const;
 
-private:
+  private:
 	class TileInfo;
-	void renderTileInfo(const QwtScaleMap&, const QwtScaleMap&, const QPointF& pole, TileInfo*) const;
+	void renderTileInfo( const QwtScaleMap&, const QwtScaleMap&,
+		const QPointF& pole, TileInfo* ) const;
 
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarSpectrogram::PaintAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarSpectrogram::PaintAttributes )
 
 #endif
 
@@ -17358,8 +17617,8 @@ public:
 		TopLegend
 	};
 
-	explicit QwtPlot(QWidget* = NULL);
-	explicit QwtPlot(const QwtText& title, QWidget* = NULL);
+	explicit QwtPlot(QWidget* = nullptr);
+	explicit QwtPlot(const QwtText& title, QWidget* = nullptr);
 
 	virtual ~QwtPlot();
 
@@ -17471,8 +17730,8 @@ public:
 
 	// Misc
 
-	virtual QSize sizeHint() const QWT_OVERRIDE;
-	virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+	virtual QSize sizeHint() const override;
+	virtual QSize minimumSizeHint() const override;
 
 	virtual void updateLayout();
 	virtual void drawCanvas(QPainter*);
@@ -17480,12 +17739,15 @@ public:
 	void updateAxes();
 	void updateCanvasMargins();
 
-	virtual void getCanvasMarginsHint(
-		const QwtScaleMap maps[], const QRectF& canvasRect, double& left, double& top, double& right, double& bottom
-	) const;
+	virtual void getCanvasMarginsHint(const QwtScaleMap maps[],
+									  const QRectF& canvasRect,
+									  double& left,
+									  double& top,
+									  double& right,
+									  double& bottom) const;
 
-	virtual bool event(QEvent*) QWT_OVERRIDE;
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool event(QEvent*) override;
+	virtual bool eventFilter(QObject*, QEvent*) override;
 
 	virtual void drawItems(QPainter*, const QRectF&, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const;
 
@@ -17533,9 +17795,10 @@ public:
 	// Synchronize the axis ranges of the corresponding plot/同步plot对应的坐标轴范围
 	void syncAxis(QwtAxisId axis, const QwtPlot* plot);
 	// Rescale the axes to encompass the full range of all data items./重新缩放坐标轴以适应所有数据项的范围
-	void rescaleAxes(
-		bool onlyVisibleItems = true, double marginPercent = 0.05, QwtAxisId xAxis = QwtPlot::xBottom, QwtAxisId yAxis = QwtPlot::yLeft
-	);
+	void rescaleAxes(bool onlyVisibleItems = true,
+					 double marginPercent  = 0.05,
+					 QwtAxisId xAxis       = QwtPlot::xBottom,
+					 QwtAxisId yAxis       = QwtPlot::yLeft);
 
 	// Set the specified axis to logarithmic scale / 将指定坐标轴设置为对数刻度
 	void setAxisToLogScale(QwtAxisId axisId);
@@ -17573,12 +17836,15 @@ public:
 	// 对坐标轴进行缩放，注意，需要手动replot
 	void zoomAxis(QwtAxisId axisId, double factor, const QPoint& centerPosPixels);
 #if QWT_AXIS_COMPAT
-	enum Axis { yLeft   = QwtAxis::YLeft,
-				yRight  = QwtAxis::YRight,
-				xBottom = QwtAxis::XBottom,
-				xTop    = QwtAxis::XTop,
+	enum Axis
+	{
+		yLeft   = QwtAxis::YLeft,
+		yRight  = QwtAxis::YRight,
+		xBottom = QwtAxis::XBottom,
+		xTop    = QwtAxis::XTop,
 
-				axisCnt = QwtAxis::AxisPositions };
+		axisCnt = QwtAxis::AxisPositions
+	};
 
 	void enableAxis(int axisId, bool on = true)
 	{
@@ -17626,7 +17892,7 @@ public Q_SLOTS:
 	void autoRefreshAll();
 
 protected:
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+	virtual void resizeEvent(QResizeEvent*) override;
 	// Add a parasite plot to this host plot/向此宿主绘图添加寄生绘图
 	void addParasitePlot(QwtPlot* parasite);
 	// 初始化寄生轴的基本属性
@@ -17659,6 +17925,7 @@ private:
 #endif
 
 /*** End of inlined file: qwt_plot.h ***/
+
 
 
 /*** Start of inlined file: qwt_plot_layout_engine.h ***/
@@ -17764,18 +18031,21 @@ public:
 public:
 	QwtPlotLayoutEngine();
 
-	QRectF layoutLegend(
-		int plotLayoutOptions, const LayoutData::LegendData& legendData, const QRectF& rect, const QSize& legendHint
-	) const;
+	QRectF layoutLegend(int plotLayoutOptions,
+						const LayoutData::LegendData& legendData,
+						const QRectF& rect,
+						const QSize& legendHint) const;
 
 	QRectF alignLegend(const QSize& legendHint, const QRectF& canvasRect, const QRectF& legendRect) const;
 
-	void alignScales(
-		int plotLayoutOptions, const LayoutData& layoutData, QRectF& canvasRect, QRectF scaleRect[ QwtAxis::AxisPositions ]
-	) const;
-	void alignScalesToCanvas(
-		int plotLayoutOptions, const LayoutData& layoutData, const QRectF& canvasRect, QRectF scaleRect[ QwtAxis::AxisPositions ]
-	) const;
+	void alignScales(int plotLayoutOptions,
+					 const LayoutData& layoutData,
+					 QRectF& canvasRect,
+					 QRectF scaleRect[ QwtAxis::AxisPositions ]) const;
+	void alignScalesToCanvas(int plotLayoutOptions,
+							 const LayoutData& layoutData,
+							 const QRectF& canvasRect,
+							 QRectF scaleRect[ QwtAxis::AxisPositions ]) const;
 
 	Dimensions layoutDimensions(int plotLayoutOptions, const LayoutData& layoutData, const QRectF& rect) const;
 
@@ -17795,9 +18065,11 @@ public:
 	double legendRatio() const;
 
 private:
-	int heightForWidth(
-		LayoutData::Label labelType, const LayoutData& layoutData, int plotLayoutOptions, double width, int axesWidth
-	) const;
+	int heightForWidth(LayoutData::Label labelType,
+					   const LayoutData& layoutData,
+					   int plotLayoutOptions,
+					   double width,
+					   int axesWidth) const;
 
 	QwtPlot::LegendPosition m_legendPos;
 	double m_legendRatio;
@@ -18019,7 +18291,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
 {
 	Q_OBJECT
 
-public:
+  public:
 	/*!
 	   The rescale policy defines how to rescale the reference axis and
 	   their depending axes.
@@ -18068,29 +18340,31 @@ public:
 		ExpandBoth
 	};
 
-	explicit QwtPlotRescaler(QWidget* canvas, QwtAxisId referenceAxis = QwtAxis::XBottom, RescalePolicy = Expanding);
+	explicit QwtPlotRescaler( QWidget* canvas,
+		QwtAxisId referenceAxis = QwtAxis::XBottom,
+		RescalePolicy = Expanding );
 
 	virtual ~QwtPlotRescaler();
 
-	void setEnabled(bool);
+	void setEnabled( bool );
 	bool isEnabled() const;
 
-	void setRescalePolicy(RescalePolicy);
+	void setRescalePolicy( RescalePolicy );
 	RescalePolicy rescalePolicy() const;
 
-	void setExpandingDirection(ExpandingDirection);
-	void setExpandingDirection(QwtAxisId, ExpandingDirection);
-	ExpandingDirection expandingDirection(QwtAxisId) const;
+	void setExpandingDirection( ExpandingDirection );
+	void setExpandingDirection( QwtAxisId, ExpandingDirection );
+	ExpandingDirection expandingDirection( QwtAxisId ) const;
 
-	void setReferenceAxis(QwtAxisId);
+	void setReferenceAxis( QwtAxisId );
 	QwtAxisId referenceAxis() const;
 
-	void setAspectRatio(double ratio);
-	void setAspectRatio(QwtAxisId, double ratio);
-	double aspectRatio(QwtAxisId) const;
+	void setAspectRatio( double ratio );
+	void setAspectRatio( QwtAxisId, double ratio );
+	double aspectRatio( QwtAxisId ) const;
 
-	void setIntervalHint(QwtAxisId, const QwtInterval&);
-	QwtInterval intervalHint(QwtAxisId) const;
+	void setIntervalHint( QwtAxisId, const QwtInterval& );
+	QwtInterval intervalHint( QwtAxisId ) const;
 
 	QWidget* canvas();
 	const QWidget* canvas() const;
@@ -18098,26 +18372,30 @@ public:
 	QwtPlot* plot();
 	const QwtPlot* plot() const;
 
-	virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+	virtual bool eventFilter( QObject*, QEvent* ) override;
 
 	void rescale() const;
 
-protected:
-	virtual void canvasResizeEvent(QResizeEvent*);
+  protected:
+	virtual void canvasResizeEvent( QResizeEvent* );
 
-	virtual void rescale(const QSize& oldSize, const QSize& newSize) const;
-	virtual QwtInterval expandScale(QwtAxisId, const QSize& oldSize, const QSize& newSize) const;
+	virtual void rescale( const QSize& oldSize, const QSize& newSize ) const;
+	virtual QwtInterval expandScale(
+		QwtAxisId, const QSize& oldSize, const QSize& newSize ) const;
 
-	virtual QwtInterval syncScale(QwtAxisId, const QwtInterval& reference, const QSize& size) const;
+	virtual QwtInterval syncScale(
+		QwtAxisId, const QwtInterval& reference, const QSize& size ) const;
 
-	virtual void updateScales(QwtInterval intervals[ QwtAxis::AxisPositions ]) const;
+	virtual void updateScales(
+		QwtInterval intervals[QwtAxis::AxisPositions] ) const;
 
-	Qt::Orientation orientation(QwtAxisId) const;
-	QwtInterval interval(QwtAxisId) const;
-	QwtInterval expandInterval(const QwtInterval&, double width, ExpandingDirection) const;
+	Qt::Orientation orientation( QwtAxisId ) const;
+	QwtInterval interval( QwtAxisId ) const;
+	QwtInterval expandInterval( const QwtInterval&,
+		double width, ExpandingDirection ) const;
 
-private:
-	double pixelDist(QwtAxisId, const QSize&) const;
+  private:
+	double pixelDist( QwtAxisId, const QSize& ) const;
 
 	class AxisData;
 	class PrivateData;
@@ -18165,10 +18443,10 @@ class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
 {
 	Q_OBJECT
 
-	Q_PROPERTY(QBrush plotBackground READ plotBackground WRITE setPlotBackground)
-	Q_PROPERTY(double azimuthOrigin READ azimuthOrigin WRITE setAzimuthOrigin)
+	Q_PROPERTY( QBrush plotBackground READ plotBackground WRITE setPlotBackground )
+	Q_PROPERTY( double azimuthOrigin READ azimuthOrigin WRITE setAzimuthOrigin )
 
-public:
+  public:
 	/*!
 		Position of the legend, relative to the canvas.
 		\sa insertLegend()
@@ -18198,49 +18476,49 @@ public:
 		ExternalLegend
 	};
 
-	explicit QwtPolarPlot(QWidget* parent = NULL);
-	QwtPolarPlot(const QwtText& title, QWidget* parent = NULL);
+	explicit QwtPolarPlot( QWidget* parent = nullptr );
+	QwtPolarPlot( const QwtText& title, QWidget* parent = nullptr );
 
 	virtual ~QwtPolarPlot();
 
-	void setTitle(const QString&);
-	void setTitle(const QwtText&);
+	void setTitle( const QString& );
+	void setTitle( const QwtText& );
 
 	QwtText title() const;
 
 	QwtTextLabel* titleLabel();
 	const QwtTextLabel* titleLabel() const;
 
-	void setAutoReplot(bool tf = true);
+	void setAutoReplot( bool tf = true );
 	bool autoReplot() const;
 
-	void setAutoScale(int scaleId);
-	bool hasAutoScale(int scaleId) const;
+	void setAutoScale( int scaleId );
+	bool hasAutoScale( int scaleId ) const;
 
-	void setScaleMaxMinor(int scaleId, int maxMinor);
-	int scaleMaxMinor(int scaleId) const;
+	void setScaleMaxMinor( int scaleId, int maxMinor );
+	int scaleMaxMinor( int scaleId ) const;
 
-	int scaleMaxMajor(int scaleId) const;
-	void setScaleMaxMajor(int scaleId, int maxMajor);
+	int scaleMaxMajor( int scaleId ) const;
+	void setScaleMaxMajor( int scaleId, int maxMajor );
 
-	QwtScaleEngine* scaleEngine(int scaleId);
-	const QwtScaleEngine* scaleEngine(int scaleId) const;
-	void setScaleEngine(int scaleId, QwtScaleEngine*);
+	QwtScaleEngine* scaleEngine( int scaleId );
+	const QwtScaleEngine* scaleEngine( int scaleId ) const;
+	void setScaleEngine( int scaleId, QwtScaleEngine* );
 
-	void setScale(int scaleId, double min, double max, double step = 0);
+	void setScale( int scaleId, double min, double max, double step = 0 );
 
-	void setScaleDiv(int scaleId, const QwtScaleDiv&);
-	const QwtScaleDiv* scaleDiv(int scaleId) const;
-	QwtScaleDiv* scaleDiv(int scaleId);
+	void setScaleDiv( int scaleId, const QwtScaleDiv& );
+	const QwtScaleDiv* scaleDiv( int scaleId ) const;
+	QwtScaleDiv* scaleDiv( int scaleId );
 
-	QwtScaleMap scaleMap(int scaleId, double radius) const;
-	QwtScaleMap scaleMap(int scaleId) const;
+	QwtScaleMap scaleMap( int scaleId, double radius ) const;
+	QwtScaleMap scaleMap( int scaleId ) const;
 
-	void updateScale(int scaleId);
+	void updateScale( int scaleId );
 
 	double azimuthOrigin() const;
 
-	void zoom(const QwtPointPolar&, double factor);
+	void zoom( const QwtPointPolar&, double factor );
 	void unzoom();
 
 	QwtPointPolar zoomPos() const;
@@ -18251,20 +18529,21 @@ public:
 	QwtPolarCanvas* canvas();
 	const QwtPolarCanvas* canvas() const;
 
-	void setPlotBackground(const QBrush& c);
+	void setPlotBackground ( const QBrush& c );
 	const QBrush& plotBackground() const;
 
-	virtual void drawCanvas(QPainter*, const QRectF&) const;
+	virtual void drawCanvas( QPainter*, const QRectF& ) const;
 
 	// Legend
 
-	void insertLegend(QwtAbstractLegend*, LegendPosition = RightLegend, double ratio = -1.0);
+	void insertLegend( QwtAbstractLegend*,
+		LegendPosition = RightLegend, double ratio = -1.0 );
 
 	QwtAbstractLegend* legend();
 	const QwtAbstractLegend* legend() const;
 
 	void updateLegend();
-	void updateLegend(const QwtPolarItem*);
+	void updateLegend( const QwtPolarItem* );
 
 	// Layout
 	QwtPolarLayout* plotLayout();
@@ -18272,21 +18551,21 @@ public:
 
 	QwtInterval visibleInterval() const;
 	QRectF plotRect() const;
-	QRectF plotRect(const QRectF&) const;
+	QRectF plotRect( const QRectF& ) const;
 
 	int plotMarginHint() const;
 
-	virtual QVariant itemToInfo(QwtPolarItem*) const;
-	virtual QwtPolarItem* infoToItem(const QVariant&) const;
+	virtual QVariant itemToInfo( QwtPolarItem* ) const;
+	virtual QwtPolarItem* infoToItem( const QVariant& ) const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
 	/*!
 	   A signal indicating, that an item has been attached/detached
 
 	   \param plotItem Plot item
 	   \param on Attached/Detached
 	 */
-	void itemAttached(QwtPolarItem* plotItem, bool on);
+	void itemAttached( QwtPolarItem* plotItem, bool on );
 
 	/*!
 	   A signal with the attributes how to update
@@ -18297,7 +18576,8 @@ Q_SIGNALS:
 
 	   \sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
 	 */
-	void legendDataChanged(const QVariant& itemInfo, const QList< QwtLegendData >& data);
+	void legendDataChanged( const QVariant& itemInfo,
+		const QList< QwtLegendData >& data );
 
 	/*!
 	   A signal that is emitted, whenever the layout of the plot
@@ -18305,31 +18585,27 @@ Q_SIGNALS:
 	 */
 	void layoutChanged();
 
-public Q_SLOTS:
+  public Q_SLOTS:
 	virtual void replot();
 	void autoRefresh();
-	void setAzimuthOrigin(double);
+	void setAzimuthOrigin( double );
 
-protected:
-	virtual bool event(QEvent*) QWT_OVERRIDE;
-	virtual void resizeEvent(QResizeEvent*) QWT_OVERRIDE;
+  protected:
+	virtual bool event( QEvent* ) override;
+	virtual void resizeEvent( QResizeEvent* ) override;
 
 	virtual void updateLayout();
 
-	virtual void drawItems(
-		QPainter* painter,
-		const QwtScaleMap& radialMap,
-		const QwtScaleMap& azimuthMap,
-		const QPointF& pole,
-		double radius,
-		const QRectF& canvasRect
-	) const;
+	virtual void drawItems( QPainter* painter,
+		const QwtScaleMap& radialMap, const QwtScaleMap& azimuthMap,
+		const QPointF& pole, double radius,
+		const QRectF& canvasRect ) const;
 
-private:
+  private:
 	friend class QwtPolarItem;
-	void attachItem(QwtPolarItem*, bool);
+	void attachItem( QwtPolarItem*, bool );
 
-	void initPlot(const QwtText&);
+	void initPlot( const QwtText& );
 
 	class PrivateData;
 	PrivateData* m_data;
@@ -18370,7 +18646,7 @@ class QwtScaleDraw;
 
 class QWT_EXPORT QwtPolarGrid : public QwtPolarItem
 {
-public:
+  public:
 	/*!
 	   Mysterious flags trying to avoid conflicts, when painting the
 	   scales and grid lines.
@@ -18415,7 +18691,7 @@ public:
 		ClipGridLines = 16
 	};
 
-	Q_DECLARE_FLAGS(DisplayFlags, DisplayFlag)
+	Q_DECLARE_FLAGS( DisplayFlags, DisplayFlag )
 
 	/*!
 	   \brief Grid attributes
@@ -18430,77 +18706,85 @@ public:
 		AutoScaling = 0x01
 	};
 
-	Q_DECLARE_FLAGS(GridAttributes, GridAttribute)
+	Q_DECLARE_FLAGS( GridAttributes, GridAttribute )
 
 	explicit QwtPolarGrid();
 	virtual ~QwtPolarGrid();
 
-	virtual int rtti() const QWT_OVERRIDE;
+	virtual int rtti() const override;
 
-	void setDisplayFlag(DisplayFlag, bool on = true);
-	bool testDisplayFlag(DisplayFlag) const;
+	void setDisplayFlag( DisplayFlag, bool on = true );
+	bool testDisplayFlag( DisplayFlag ) const;
 
-	void setGridAttribute(GridAttribute, bool on = true);
-	bool testGridAttribute(GridAttribute) const;
+	void setGridAttribute( GridAttribute, bool on = true );
+	bool testGridAttribute( GridAttribute ) const;
 
-	void showGrid(int scaleId, bool show = true);
-	bool isGridVisible(int scaleId) const;
+	void showGrid( int scaleId, bool show = true );
+	bool isGridVisible( int scaleId ) const;
 
-	void showMinorGrid(int scaleId, bool show = true);
-	bool isMinorGridVisible(int scaleId) const;
+	void showMinorGrid( int scaleId, bool show = true );
+	bool isMinorGridVisible( int scaleId ) const;
 
-	void showAxis(int axisId, bool show = true);
-	bool isAxisVisible(int axisId) const;
+	void showAxis( int axisId, bool show = true );
+	bool isAxisVisible( int axisId ) const;
 
-	void setPen(const QPen& p);
-	void setFont(const QFont&);
+	void setPen( const QPen& p );
+	void setFont( const QFont& );
 
-	void setMajorGridPen(const QPen& p);
-	void setMajorGridPen(int scaleId, const QPen& p);
-	QPen majorGridPen(int scaleId) const;
+	void setMajorGridPen( const QPen& p );
+	void setMajorGridPen( int scaleId, const QPen& p );
+	QPen majorGridPen( int scaleId ) const;
 
-	void setMinorGridPen(const QPen& p);
-	void setMinorGridPen(int scaleId, const QPen& p);
-	QPen minorGridPen(int scaleId) const;
+	void setMinorGridPen( const QPen& p );
+	void setMinorGridPen( int scaleId, const QPen& p );
+	QPen minorGridPen( int scaleId ) const;
 
-	void setAxisPen(int axisId, const QPen& p);
-	QPen axisPen(int axisId) const;
+	void setAxisPen( int axisId, const QPen& p );
+	QPen axisPen( int axisId ) const;
 
-	void setAxisFont(int axisId, const QFont& p);
-	QFont axisFont(int axisId) const;
+	void setAxisFont( int axisId, const QFont& p );
+	QFont axisFont( int axisId ) const;
 
-	void setScaleDraw(int axisId, QwtScaleDraw*);
-	const QwtScaleDraw* scaleDraw(int axisId) const;
-	QwtScaleDraw* scaleDraw(int axisId);
+	void setScaleDraw( int axisId, QwtScaleDraw* );
+	const QwtScaleDraw* scaleDraw( int axisId ) const;
+	QwtScaleDraw* scaleDraw( int axisId );
 
-	void setAzimuthScaleDraw(QwtRoundScaleDraw*);
+	void setAzimuthScaleDraw( QwtRoundScaleDraw* );
 	const QwtRoundScaleDraw* azimuthScaleDraw() const;
 	QwtRoundScaleDraw* azimuthScaleDraw();
 
-	virtual void draw(
-		QPainter* p, const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, double radius, const QRectF& rect
-	) const QWT_OVERRIDE;
+	virtual void draw( QPainter* p,
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, double radius,
+		const QRectF& rect ) const override;
 
-	virtual void updateScaleDiv(const QwtScaleDiv& azimuthMap, const QwtScaleDiv& radialMap, const QwtInterval&) QWT_OVERRIDE;
+	virtual void updateScaleDiv( const QwtScaleDiv& azimuthMap,
+		const QwtScaleDiv& radialMap, const QwtInterval& ) override;
 
-	virtual int marginHint() const QWT_OVERRIDE;
+	virtual int marginHint() const override;
 
-protected:
-	void drawRays(QPainter*, const QRectF&, const QPointF& pole, double radius, const QwtScaleMap& azimuthMap, const QList< double >&) const;
-	void drawCircles(QPainter*, const QRectF&, const QPointF& pole, const QwtScaleMap& radialMap, const QList< double >&) const;
+  protected:
+	void drawRays( QPainter*, const QRectF&,
+		const QPointF& pole, double radius,
+		const QwtScaleMap& azimuthMap, const QList< double >& ) const;
+	void drawCircles( QPainter*, const QRectF&,
+		const QPointF& pole, const QwtScaleMap& radialMap,
+		const QList< double >& ) const;
 
-	void drawAxis(QPainter*, int axisId) const;
+	void drawAxis( QPainter*, int axisId ) const;
 
-private:
-	void updateScaleDraws(const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, const double radius) const;
+  private:
+	void updateScaleDraws(
+		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
+		const QPointF& pole, const double radius ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::DisplayFlags)
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::GridAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarGrid::DisplayFlags )
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarGrid::GridAttributes )
 
 #endif
 
@@ -18521,7 +18805,8 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::GridAttributes)
  */
 class QWT_EXPORT QwtPolarLayout
 {
-public:
+  public:
+
 	//! \brief Options to configure the plot layout engine
 	enum Option
 	{
@@ -18529,28 +18814,29 @@ public:
 		IgnoreScrollbars = 0x01,
 
 		//! Ignore all frames.
-		IgnoreFrames = 0x02,
+		IgnoreFrames     = 0x02,
 
 		//! Ignore the title.
-		IgnoreTitle = 0x04,
+		IgnoreTitle      = 0x04,
 
 		//! Ignore the legend.
-		IgnoreLegend = 0x08
+		IgnoreLegend     = 0x08
 	};
 
-	Q_DECLARE_FLAGS(Options, Option)
+	Q_DECLARE_FLAGS( Options, Option )
 
 	explicit QwtPolarLayout();
 	virtual ~QwtPolarLayout();
 
-	void setLegendPosition(QwtPolarPlot::LegendPosition pos, double ratio);
-	void setLegendPosition(QwtPolarPlot::LegendPosition pos);
+	void setLegendPosition( QwtPolarPlot::LegendPosition pos, double ratio );
+	void setLegendPosition( QwtPolarPlot::LegendPosition pos );
 	QwtPolarPlot::LegendPosition legendPosition() const;
 
-	void setLegendRatio(double ratio);
+	void setLegendRatio( double ratio );
 	double legendRatio() const;
 
-	virtual void activate(const QwtPolarPlot*, const QRectF& rect, Options options = Options());
+	virtual void activate( const QwtPolarPlot*,
+		const QRectF& rect, Options options = Options() );
 
 	virtual void invalidate();
 
@@ -18560,15 +18846,15 @@ public:
 
 	class LayoutData;
 
-protected:
-	QRectF layoutLegend(Options options, QRectF&) const;
+  protected:
+	QRectF layoutLegend( Options options, QRectF& ) const;
 
-private:
+  private:
 	class PrivateData;
 	PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarLayout::Options)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )
 
 #endif
 
@@ -18616,9 +18902,15 @@ public:
 	void addAxes(QWidget* widget, qreal left, qreal top, qreal width, qreal height);
 
 	// Add a widget by grid layout/添加窗口部件到网格布局
-	void addGridAxes(
-		QWidget* widget, int rowCnt, int colCnt, int row, int col, int rowSpan = 1, int colSpan = 1, qreal wspace = 0.0, qreal hspace = 0.0
-	);
+	void addGridAxes(QWidget* widget,
+					 int rowCnt,
+					 int colCnt,
+					 int row,
+					 int col,
+					 int rowSpan  = 1,
+					 int colSpan  = 1,
+					 qreal wspace = 0.0,
+					 qreal hspace = 0.0);
 
 	// 改变已经添加的窗口的位置占比,如果窗口还没添加，此函数无效
 	void setAxesNormPos(QWidget* widget, const QRectF& rect);
@@ -18633,9 +18925,14 @@ public:
 
 protected:
 	// calc the normalized rectangle for a grid cell/获取网格单元格的归一化矩形
-	QRectF calcGridRect(
-		int rowCnt, int colCnt, int row, int col, int rowSpan = 1, int colSpan = 1, qreal wspace = 0.0, qreal hspace = 0.0
-	) const;
+	QRectF calcGridRect(int rowCnt,
+						int colCnt,
+						int row,
+						int col,
+						int rowSpan  = 1,
+						int colSpan  = 1,
+						qreal wspace = 0.0,
+						qreal hspace = 0.0) const;
 };
 
 #endif  // QWT_FIGURE_LAYOUT_H
@@ -18740,9 +19037,15 @@ public:
 	virtual ~QwtFigure();
 	// Add a widget with normalized coordinates/使用归一化坐标添加widget
 	void addWidget(QWidget* widget, qreal left, qreal top, qreal width, qreal height);
-	void addWidget(
-		QWidget* widget, int rowCnt, int colCnt, int row, int col, int rowSpan = 1, int colSpan = 1, qreal wspace = 0.0, qreal hspace = 0.0
-	);
+	void addWidget(QWidget* widget,
+				   int rowCnt,
+				   int colCnt,
+				   int row,
+				   int col,
+				   int rowSpan  = 1,
+				   int colSpan  = 1,
+				   qreal wspace = 0.0,
+				   qreal hspace = 0.0);
 	// Add a plot with normalized coordinates/使用归一化坐标添加绘图
 	void addAxes(QwtPlot* plot, const QRectF& rect);
 
@@ -18750,9 +19053,15 @@ public:
 	void addAxes(QwtPlot* plot, qreal left, qreal top, qreal width, qreal height);
 
 	// Add a plot by grid layout/添加窗口部件到网格布局
-	void addGridAxes(
-		QwtPlot* plot, int rowCnt, int colCnt, int row, int col, int rowSpan = 1, int colSpan = 1, qreal wspace = 0.0, qreal hspace = 0.0
-	);
+	void addGridAxes(QwtPlot* plot,
+					 int rowCnt,
+					 int colCnt,
+					 int row,
+					 int col,
+					 int rowSpan  = 1,
+					 int colSpan  = 1,
+					 qreal wspace = 0.0,
+					 qreal hspace = 0.0);
 
 	// 改变已经添加的窗口的位置占比,如果窗口还没添加，此函数无效
 	void setWidgetNormPos(QWidget* widget, const QRectF& rect);
@@ -18848,8 +19157,7 @@ public:
 	// 获取轴对齐信息数量，此函数用于获取当前有多少个轴对齐信息，调用addAxisAlignment多少次，就有多少个
 	int axisAligmentCount() const;
 	// 获取轴对齐信息
-	QPair< QList< QwtPlot* >, int > axisAligmentInfo(int index) const;
-
+	QPair<QList< QwtPlot* >,int> axisAligmentInfo(int index) const;
 public:
 	// QwtPlot轴对齐函数
 	static void alignAxes(QList< QwtPlot* > plots, int axisId, bool update = true);
@@ -18981,7 +19289,8 @@ public:
 	QwtPlot* currentActivePlot() const;
 	// 显示占比数值
 	void showPercentText(bool on = true);
-
+	// 取消,此函数会发射finished(false)信号，重写应该显示调用
+	virtual bool cancel();
 public Q_SLOTS:
 	// 改变激活窗口
 	void setActiveWidget(QWidget* w);
@@ -19018,7 +19327,11 @@ Q_SIGNALS:
 	 * @param newActive 如果没有新的激活窗口，此指针有可能是nullptr
 	 */
 	void activeWidgetChanged(QWidget* oldActive, QWidget* newActive);
-
+	/**
+	 * @brief 操作完成信号
+	 * @param isCancel 是否为取消操作
+	 */
+	void finished(bool isCancel);
 private Q_SLOTS:
 	void onAxesRemove(QwtPlot* removedAxes);
 };
@@ -19085,6 +19398,7 @@ private Q_SLOTS:
 /*** End of inlined file: qwt3d_global.h ***/
 
 
+
 /*** Start of inlined file: qwt3d_types.h ***/
 #if defined(_MSC_VER) /* MSVC Compiler */
 #pragma warning(disable : 4786)
@@ -19121,7 +19435,7 @@ private Q_SLOTS:
 namespace Qwt3D
 {
 
-#define QWT3DLOCAL8BIT(qstring) ((const char*)(qstring.toLocal8Bit()))
+#define QWT3DLOCAL8BIT(qstring) (qstring.toLocal8Bit().constData())
 
 const Qt::TextFlag SingleLine = Qt::TextSingleLine;
 
@@ -19190,16 +19504,14 @@ private:
 #include <vector>
 #include <algorithm>
 
-namespace
-{
+namespace {
 inline double Min_(double a, double b)
 {
 	return (a < b) ? a : b;
 }
 }
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 inline bool isPracticallyZero(double a, double b = 0)
 {
@@ -19214,7 +19526,7 @@ inline int round(double d)
 	return (d > 0) ? int(d + 0.5) : int(d - 0.5);
 }
 
-}  // ns
+} // ns
 
 #endif
 
@@ -19236,8 +19548,7 @@ inline int round(double d)
 #include <GL/glu.h>
 #endif
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
@@ -19246,7 +19557,7 @@ class GLStateBewarer
 public:
 	GLStateBewarer(GLenum what, bool on, bool persist = false)
 	{
-		state_    = what;
+		state_ = what;
 		stateval_ = glIsEnabled(what);
 		if (on)
 			turnOn(persist);
@@ -19281,10 +19592,10 @@ private:
 	bool stateval_;
 };
 
-inline const GLubyte* gl_error()
+inline const GLubyte *gl_error()
 {
 	GLenum errcode;
-	const GLubyte* err = 0;
+	const GLubyte *err = 0;
 
 	if ((errcode = glGetError()) != GL_NO_ERROR) {
 		err = gluErrorString(errcode);
@@ -19292,7 +19603,7 @@ inline const GLubyte* gl_error()
 	return err;
 }
 
-inline void SaveGlDeleteLists(GLuint& lstidx, GLsizei range)
+inline void SaveGlDeleteLists(GLuint &lstidx, GLsizei range)
 {
 	if (glIsList(lstidx))
 		glDeleteLists(lstidx, range);
@@ -19306,7 +19617,7 @@ inline void SaveGlDeleteLists(GLuint& lstidx, GLsizei range)
 		\param projMatrix should be a GLdouble[16]
 		\param viewport should be a GLint[4]
 */
-inline void getMatrices(GLdouble* modelMatrix, GLdouble* projMatrix, GLint* viewport)
+inline void getMatrices(GLdouble *modelMatrix, GLdouble *projMatrix, GLint *viewport)
 {
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
@@ -19317,14 +19628,16 @@ inline void getMatrices(GLdouble* modelMatrix, GLdouble* projMatrix, GLint* view
 /**
 		Don't rely on (use) this in display lists !
 */
-inline bool ViewPort2World(double& objx, double& objy, double& objz, double winx, double winy, double winz)
+inline bool ViewPort2World(double &objx, double &objy, double &objz, double winx, double winy,
+						   double winz)
 {
-	GLdouble modelMatrix[ 16 ];
-	GLdouble projMatrix[ 16 ];
-	GLint viewport[ 4 ];
+	GLdouble modelMatrix[16];
+	GLdouble projMatrix[16];
+	GLint viewport[4];
 
 	getMatrices(modelMatrix, projMatrix, viewport);
-	int res = gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, &objx, &objy, &objz);
+	int res =
+			gluUnProject(winx, winy, winz, modelMatrix, projMatrix, viewport, &objx, &objy, &objz);
 
 	return (res == GL_FALSE) ? false : true;
 }
@@ -19333,11 +19646,12 @@ inline bool ViewPort2World(double& objx, double& objy, double& objz, double winx
 /**
 		Don't rely on (use) this in display lists !
 */
-inline bool World2ViewPort(double& winx, double& winy, double& winz, double objx, double objy, double objz)
+inline bool World2ViewPort(double &winx, double &winy, double &winz, double objx, double objy,
+						   double objz)
 {
-	GLdouble modelMatrix[ 16 ];
-	GLdouble projMatrix[ 16 ];
-	GLint viewport[ 4 ];
+	GLdouble modelMatrix[16];
+	GLdouble projMatrix[16];
+	GLint viewport[4];
 
 	getMatrices(modelMatrix, projMatrix, viewport);
 	int res = gluProject(objx, objy, objz, modelMatrix, projMatrix, viewport, &winx, &winy, &winz);
@@ -19345,9 +19659,9 @@ inline bool World2ViewPort(double& winx, double& winy, double& winz, double objx
 	return (res == GL_FALSE) ? false : true;
 }
 
-#endif  // QWT3D_NOT_FOR_DOXYGEN
+#endif // QWT3D_NOT_FOR_DOXYGEN
 
-}  // ns
+} // ns
 
 #endif
 
@@ -19652,14 +19966,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -19676,16 +19990,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -19732,10 +20046,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -20147,14 +20459,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -20171,16 +20483,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -20227,10 +20539,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -20313,8 +20623,7 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 /*** End of inlined file: qwt3d_types.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! Abstract base class for color functors
 /*!
@@ -20327,26 +20636,18 @@ class QWT3D_EXPORT Color
 {
 public:
 	virtual Qwt3D::RGBA operator()(double x, double y,
-								   double z) const = 0;  //!< Implement your color model here
-	virtual Qwt3D::RGBA operator()(Qwt3D::Triple const& t) const
+								   double z) const = 0; //!< Implement your color model here
+	virtual Qwt3D::RGBA operator()(Qwt3D::Triple const &t) const
 	{
 		return this->operator()(t.x, t.y, t.z);
 	}
 	//! Should create a color vector usable by ColorLegend. The default implementation returns his argument
-	virtual Qwt3D::ColorVector& createVector(Qwt3D::ColorVector& vec)
-	{
-		return vec;
-	}
+	virtual Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) { return vec; }
 
-	void destroy() const
-	{
-		delete this;
-	}
+	void destroy() const { delete this; }
 
 protected:
-	virtual ~Color()
-	{
-	}  //!< Allow heap based objects only
+	virtual ~Color() { } //!< Allow heap based objects only
 };
 
 class Plot3D;
@@ -20359,19 +20660,19 @@ class QWT3D_EXPORT StandardColor : public Color
 {
 public:
 	//! Initializes with data and set up a ColorVector with a size of 100 z values (default);
-	explicit StandardColor(Qwt3D::Plot3D* data, unsigned size = 100);
+	explicit StandardColor(Qwt3D::Plot3D *data, unsigned size = 100);
 	Qwt3D::RGBA operator()(double x, double y,
-						   double z) const;  //!< Receives z-dependend color from ColorVector
-	void setColorVector(Qwt3D::ColorVector const& cv);
-	void reset(unsigned size = 100);  //!< Resets the standard colors;
-	void setAlpha(double a);          //!< Sets unitary alpha value for all colors
+						   double z) const; //!< Receives z-dependend color from ColorVector
+	void setColorVector(Qwt3D::ColorVector const &cv);
+	void reset(unsigned size = 100); //!< Resets the standard colors;
+	void setAlpha(double a); //!< Sets unitary alpha value for all colors
 	/**
 			\brief Creates color vector
 
 			Creates a color vector used by ColorLegend. This is essentially a copy from the internal
 	   used vector. \return The vector created
 	*/
-	Qwt3D::ColorVector& createVector(Qwt3D::ColorVector& vec)
+	Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec)
 	{
 		vec = colors_;
 		return vec;
@@ -20379,10 +20680,10 @@ public:
 
 protected:
 	Qwt3D::ColorVector colors_;
-	Qwt3D::Plot3D* data_;
+	Qwt3D::Plot3D *data_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -20398,8 +20699,7 @@ protected:
 #ifndef qwt3d_autoptr_h
 #define qwt3d_autoptr_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! Simple Auto pointer providing deep copies for raw pointer
 /*!
@@ -20411,28 +20711,20 @@ namespace Qwt3D
   The pointer requires also heap based objects with regard to the template
   argument in order to be able to get ownership and control over destruction.
   */
-template< typename T >
+template<typename T>
 class qwt3d_ptr
 {
 public:
 	//! Standard ctor
-	explicit qwt3d_ptr(T* ptr = 0) : rawptr_(ptr)
-	{
-	}
+	explicit qwt3d_ptr(T *ptr = 0) : rawptr_(ptr) { }
 	//! Dtor (calls T::destroy)
-	~qwt3d_ptr()
-	{
-		destroyRawPtr();
-	}
+	~qwt3d_ptr() { destroyRawPtr(); }
 
 	//! Copy ctor (calls (virtual) clone())
-	qwt3d_ptr(qwt3d_ptr const& val)
-	{
-		rawptr_ = val.rawptr_->clone();
-	}
+	qwt3d_ptr(qwt3d_ptr const &val) { rawptr_ = val.rawptr_->clone(); }
 
 	//! Assignment in the same spirit as copy ctor
-	qwt3d_ptr< T >& operator=(qwt3d_ptr const& val)
+	qwt3d_ptr<T> &operator=(qwt3d_ptr const &val)
 	{
 		if (this == &val)
 			return *this;
@@ -20444,19 +20736,13 @@ public:
 	}
 
 	//! It's a pointerlike object, isn't it ?
-	T* operator->() const
-	{
-		return rawptr_;
-	}
+	T *operator->() const { return rawptr_; }
 
 	//! Dereferencing
-	T& operator*() const
-	{
-		return *rawptr_;
-	}
+	T &operator*() const { return *rawptr_; }
 
 private:
-	T* rawptr_;
+	T *rawptr_;
 	void destroyRawPtr()
 	{
 		if (rawptr_)
@@ -20465,7 +20751,7 @@ private:
 	}
 };
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
@@ -20811,14 +21097,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -20835,16 +21121,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -20891,10 +21177,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -21306,14 +21590,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -21330,16 +21614,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -21386,10 +21670,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -21502,7 +21784,7 @@ public:
 	  The function type that can be processed by the define... members.
 	  An extension is the IO::Functor.
 	*/
-	typedef bool (*Function)(Plot3D*, QString const& fname);
+	using Function = bool (*)(Plot3D*, QString const& fname);
 
 	/*!
 	  This class gives more flexibility in implementing
@@ -21596,8 +21878,8 @@ private:
 		QString s_;
 	};
 
-	typedef std::vector< Entry > Container;
-	typedef Container::iterator IT;
+	using Container = std::vector< Entry >;
+	using IT        = Container::iterator;
 
 	static bool add_unique(Container& l, Entry const& e);
 	static IT find(Container& l, QString const& fmt);
@@ -21633,8 +21915,7 @@ private:
 
 /*** End of inlined file: qwt3d_io.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! Provides EPS, PS, PDF, SVG, PGF and TeX output
 /*!
@@ -21646,67 +21927,46 @@ class QWT3D_EXPORT VectorWriter : public IO::Functor
 
 public:
 	//! The possible output formats for the text parts of the scene
-	enum TEXTMODE
-	{
-		PIXEL,   //!< All text will be converted to pixmaps
-		NATIVE,  //!< Text output in the native output format
-		TEX      //!< Text output in additional LaTeX file as an overlay
+	enum TEXTMODE {
+		PIXEL, //!< All text will be converted to pixmaps
+		NATIVE, //!< Text output in the native output format
+		TEX //!< Text output in additional LaTeX file as an overlay
 	};
 	//! The possible behaviour for landscape settings
-	enum LANDSCAPEMODE
-	{
-		ON,   //!< Landscape mode on
-		OFF,  //!< Landscape mode off
-		AUTO  //!< The output orientation depends on the plot widgets aspect ratio (default)
+	enum LANDSCAPEMODE {
+		ON, //!< Landscape mode on
+		OFF, //!< Landscape mode off
+		AUTO //!< The output orientation depends on the plot widgets aspect ratio (default)
 	};
 
 	//! The possible sorting types which are translated in gl2ps types
-	enum SORTMODE
-	{
-		NOSORT,      //!< No sorting at all
-		SIMPLESORT,  //!< A more simple (yet quicker) algorithm (default)
-		BSPSORT      //!< BSP SORT (best and slow!)
+	enum SORTMODE {
+		NOSORT, //!< No sorting at all
+		SIMPLESORT, //!< A more simple (yet quicker) algorithm (default)
+		BSPSORT //!< BSP SORT (best and slow!)
 	};
 
 	VectorWriter();
 
-	void setLandscape(LANDSCAPEMODE val)
-	{
-		landscape_ = val;
-	}  //!< Sets landscape mode.
-	LANDSCAPEMODE landscape() const
-	{
-		return landscape_;
-	}  //!< Returns the current landscape mode
+	void setLandscape(LANDSCAPEMODE val) { landscape_ = val; } //!< Sets landscape mode.
+	LANDSCAPEMODE landscape() const { return landscape_; } //!< Returns the current landscape mode
 
 	void setTextMode(TEXTMODE val, QString fname = "");
-	TEXTMODE textMode() const
-	{
-		return textmode_;
-	}  //!< Return current text output mode.
+	TEXTMODE textMode() const { return textmode_; } //!< Return current text output mode.
 
 	//! Sets one of the SORTMODE sorting modes.
-	void setSortMode(SORTMODE val)
-	{
-		sortmode_ = val;
-	}
-	SORTMODE sortMode() const
-	{
-		return sortmode_;
-	}  //!< Returns gl2ps sorting type.
+	void setSortMode(SORTMODE val) { sortmode_ = val; }
+	SORTMODE sortMode() const { return sortmode_; } //!< Returns gl2ps sorting type.
 	//! Turns compressed output on or off (no effect if zlib support is not available)
 	void setCompressed(bool val);
 	//! Returns compression mode (always false if zlib support has not been set)
-	bool compressed() const
-	{
-		return compressed_;
-	}
+	bool compressed() const { return compressed_; }
 
-	bool setFormat(QString const& format);
+	bool setFormat(QString const &format);
 
 private:
-	IO::Functor* clone() const;
-	bool operator()(Plot3D* plot, QString const& fname);
+	IO::Functor *clone() const;
+	bool operator()(Plot3D *plot, QString const &fname);
 
 	GLint gl2ps_format_;
 	bool formaterror_;
@@ -21719,20 +21979,19 @@ private:
 
 GLint setDeviceLineWidth(GLfloat val);
 GLint setDevicePointSize(GLfloat val);
-GLint drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
-GLint drawDeviceText(
-	const char* str, const char* fontname, int fontsize, Qwt3D::Triple pos, Qwt3D::RGBA rgba, Qwt3D::ANCHOR align, double gap
-);
+GLint drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLenum type,
+					   const void *pixels);
+GLint drawDeviceText(const char *str, const char *fontname, int fontsize, Qwt3D::Triple pos,
+					 Qwt3D::RGBA rgba, Qwt3D::ANCHOR align, double gap);
 void setDevicePolygonOffset(GLfloat factor, GLfloat units);
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
 /*** End of inlined file: qwt3d_io_gl2ps.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! ABC for Drawables
 class QWT3D_EXPORT Drawable
@@ -21746,8 +22005,8 @@ public:
 	virtual void saveGLState();
 	virtual void restoreGLState();
 
-	void attach(Drawable*);
-	void detach(Drawable*);
+	void attach(Drawable *);
+	void detach(Drawable *);
 	void detachAll();
 
 	virtual void setColor(double r, double g, double b, double a = 1);
@@ -21757,38 +22016,37 @@ public:
 protected:
 	Qwt3D::RGBA color;
 	void Enable(GLenum what, GLboolean val);
-	Qwt3D::Triple ViewPort2World(Qwt3D::Triple win, bool* err = 0);
-	Qwt3D::Triple World2ViewPort(Qwt3D::Triple obj, bool* err = 0);
+	Qwt3D::Triple ViewPort2World(Qwt3D::Triple win, bool *err = 0);
+	Qwt3D::Triple World2ViewPort(Qwt3D::Triple obj, bool *err = 0);
 
-	GLdouble modelMatrix[ 16 ];
-	GLdouble projMatrix[ 16 ];
-	GLint viewport[ 4 ];
+	GLdouble modelMatrix[16];
+	GLdouble projMatrix[16];
+	GLint viewport[4];
 
 private:
 	GLboolean ls;
 	GLboolean pols;
-	GLint polmode[ 2 ];
+	GLint polmode[2];
 	GLfloat lw;
 	GLint blsrc, bldst;
-	GLdouble col[ 4 ];
+	GLdouble col[4];
 	GLint pattern, factor;
 	GLboolean sallowed;
 	GLboolean tex2d;
 	GLint matrixmode;
-	GLfloat poloffs[ 2 ];
+	GLfloat poloffs[2];
 	GLboolean poloffsfill;
 
-	std::list< Drawable* > dlist;
+	std::list<Drawable *> dlist;
 };
 
-}  // ns
+} // ns
 
 #endif
 
 /*** End of inlined file: qwt3d_drawable.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! A Qt string or an output device dependent string
 class QWT3D_EXPORT Label : public Drawable
@@ -21797,30 +22055,22 @@ class QWT3D_EXPORT Label : public Drawable
 public:
 	Label();
 	//! Construct label and initialize with font
-	Label(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+	Label(const QString &family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
 	//! Sets the labels font
-	void setFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+	void setFont(QString const &family, int pointSize, int weight = QFont::Normal,
+				 bool italic = false);
 
-	void adjust(int gap);  //!< Fine tunes label;
-	double gap() const
-	{
-		return gap_;
-	}                                                            //!< Returns the gap caused by adjust();
-	void setPosition(Qwt3D::Triple pos, ANCHOR a = BottomLeft);  //!< Sets the labels position
-	void setRelPosition(Tuple rpos, ANCHOR a);                   //!< Sets the labels position relative to screen
-	Qwt3D::Triple first() const
-	{
-		return beg_;
-	}  //!< Receives bottom left label position
-	Qwt3D::Triple second() const
-	{
-		return end_;
-	}  //!< Receives top right label position
+	void adjust(int gap); //!< Fine tunes label;
+	double gap() const { return gap_; } //!< Returns the gap caused by adjust();
+	void setPosition(Qwt3D::Triple pos, ANCHOR a = BottomLeft); //!< Sets the labels position
+	void setRelPosition(Tuple rpos, ANCHOR a); //!< Sets the labels position relative to screen
+	Qwt3D::Triple first() const { return beg_; } //!< Receives bottom left label position
+	Qwt3D::Triple second() const { return end_; } //!< Receives top right label position
 	ANCHOR anchor() const
 	{
 		return anchor_;
-	}  //!< Defines an anchor point for the labels surrounding rectangle
+	} //!< Defines an anchor point for the labels surrounding rectangle
 	virtual void setColor(double r, double g, double b, double a = 1);
 	virtual void setColor(Qwt3D::RGBA rgba);
 
@@ -21829,8 +22079,8 @@ public:
 	For unicode labeling (<tt> QChar(0x3c0) </tt> etc.) please look at <a
 	href="http://www.unicode.org/charts/">www.unicode.org</a>.
 	*/
-	void setString(QString const& s);
-	void draw();  //!< Actual drawing
+	void setString(QString const &s);
+	void draw(); //!< Actual drawing
 
 	/**
 			\brief Decides about use of PDF standard fonts for PDF output
@@ -21849,8 +22099,9 @@ private:
 	ANCHOR anchor_;
 
 	void init();
-	void init(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
-	void update();  //!< Enforces an update of the internal pixmap
+	void init(const QString &family, int pointSize, int weight = QFont::Normal,
+			  bool italic = false);
+	void update(); //!< Enforces an update of the internal pixmap
 	void convert2screen();
 	double width() const;
 	double height() const;
@@ -21862,7 +22113,7 @@ private:
 	static bool devicefonts_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -22196,14 +22447,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -22220,16 +22471,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -22276,10 +22527,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -22363,34 +22612,29 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 /*** End of inlined file: qwt3d_types.h ***/
 
 
+
 /*** Start of inlined file: qwt3d_autoscaler.h ***/
 #ifndef __qwt3d_autoscaler__
 #define __qwt3d_autoscaler__
 
 #include <vector>
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! ABC for autoscaler
 class QWT3D_EXPORT AutoScaler
 {
-	friend class qwt3d_ptr< AutoScaler >;
+	friend class qwt3d_ptr<AutoScaler>;
 
 protected:
 	//! Returns a new heap based object of the derived class.
-	virtual AutoScaler* clone() const = 0;
+	virtual AutoScaler *clone() const = 0;
 	//! To implement from subclasses
-	virtual int execute(double& a, double& b, double start, double stop, int ivals) = 0;
-	virtual ~AutoScaler()
-	{
-	}
+	virtual int execute(double &a, double &b, double start, double stop, int ivals) = 0;
+	virtual ~AutoScaler() { }
 
 private:
-	void destroy() const
-	{
-		delete this;
-	}  //!< Used by qwt3d_ptr
+	void destroy() const { delete this; } //!< Used by qwt3d_ptr
 };
 
 //! Automatic beautifying of linear scales
@@ -22400,13 +22644,10 @@ class QWT3D_EXPORT LinearAutoScaler : public AutoScaler
 
 protected:
 	LinearAutoScaler();
-	explicit LinearAutoScaler(std::vector< double >& mantisses);
+	explicit LinearAutoScaler(std::vector<double> &mantisses);
 	//! Returns a new heap based object utilized from qwt3d_ptr
-	AutoScaler* clone() const
-	{
-		return new LinearAutoScaler(*this);
-	}
-	int execute(double& a, double& b, double start, double stop, int ivals);
+	AutoScaler *clone() const { return new LinearAutoScaler(*this); }
+	int execute(double &a, double &b, double start, double stop, int ivals);
 
 private:
 	double start_, stop_;
@@ -22414,18 +22655,18 @@ private:
 
 	void init(double start, double stop, int ivals);
 	double anchorvalue(double start, double mantisse, int exponent);
-	int segments(int& l_intervals, int& r_intervals, double start, double stop, double anchor, double mantissa, int exponent);
-	std::vector< double > mantissi_;
+	int segments(int &l_intervals, int &r_intervals, double start, double stop, double anchor,
+				 double mantissa, int exponent);
+	std::vector<double> mantissi_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
 /*** End of inlined file: qwt3d_autoscaler.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 /*!
 The class encapsulates non-visual scales.
@@ -22439,66 +22680,49 @@ interface. User-defined axes can be derived from Scale, LinearScale et al.
 class QWT3D_EXPORT Scale
 {
 	friend class Axis;
-	friend class qwt3d_ptr< Scale >;
+	friend class qwt3d_ptr<Scale>;
 
 protected:
 	Scale();
-	virtual ~Scale()
-	{
-	}
+	virtual ~Scale() { }
 	virtual QString ticLabel(unsigned int idx) const;
 
 	virtual void setLimits(double start, double stop);
-	virtual void setMajors(int val)
-	{
-		majorintervals_p = val;
-	}  //!< Sets number of major intervals
+	virtual void setMajors(int val) { majorintervals_p = val; } //!< Sets number of major intervals
 	virtual void setMinors(int val)
 	{
 		minorintervals_p = val;
-	}  //!< Sets number of minor intervals per major interval
+	} //!< Sets number of minor intervals per major interval
 	virtual void setMajorLimits(double start, double stop);
 
-	int majors() const
-	{
-		return majorintervals_p;
-	}  //!< Returns major intervals
-	int minors() const
-	{
-		return minorintervals_p;
-	}  //!< Returns minor intervals
+	int majors() const { return majorintervals_p; } //!< Returns major intervals
+	int minors() const { return minorintervals_p; } //!< Returns minor intervals
 
 	//! Derived classes should return a new heap based object here.
-	virtual Scale* clone() const = 0;
+	virtual Scale *clone() const = 0;
 	//! This function should setup the 2 vectors for major and minor positions;
 	virtual void calculate() = 0;
-	virtual int autoscale(double& a, double& b, double start, double stop, int ivals);
+	virtual int autoscale(double &a, double &b, double start, double stop, int ivals);
 
-	std::vector< double > majors_p, minors_p;
+	std::vector<double> majors_p, minors_p;
 	double start_p, stop_p;
 	int majorintervals_p, minorintervals_p;
 	double mstart_p, mstop_p;
 
 private:
-	void destroy() const
-	{
-		delete this;
-	}  //!< Used by qwt3d_ptr
+	void destroy() const { delete this; } //!< Used by qwt3d_ptr
 };
 
 //! The standard (1:1) mapping class for axis numbering
 class QWT3D_EXPORT LinearScale : public Scale
 {
 	friend class Axis;
-	friend class qwt3d_ptr< Scale >;
+	friend class qwt3d_ptr<Scale>;
 
 protected:
-	int autoscale(double& a, double& b, double start, double stop, int ivals);
+	int autoscale(double &a, double &b, double start, double stop, int ivals);
 	//! Returns a new heap based object utilized from qwt3d_ptr
-	Scale* clone() const
-	{
-		return new LinearScale(*this);
-	}
+	Scale *clone() const { return new LinearScale(*this); }
 	void calculate();
 	LinearAutoScaler autoscaler_p;
 };
@@ -22507,7 +22731,7 @@ protected:
 class QWT3D_EXPORT LogScale : public Scale
 {
 	friend class Axis;
-	friend class qwt3d_ptr< Scale >;
+	friend class qwt3d_ptr<Scale>;
 
 protected:
 	QString ticLabel(unsigned int idx) const;
@@ -22515,17 +22739,14 @@ protected:
 	//! Standard ctor
 	LogScale();
 	//! Returns a new heap based object utilized from qwt3d_ptr
-	Scale* clone() const
-	{
-		return new LogScale;
-	}
+	Scale *clone() const { return new LogScale; }
 	void calculate();
 
 private:
-	void setupCounter(double& k, int& step);
+	void setupCounter(double &k, int &step);
 };
 
-}  // namespace Qwt3D
+} // namespace Qwt3D
 
 #endif /* include guarded */
 
@@ -22623,7 +22844,7 @@ public:
 	bool numbers() const
 	{
 		return drawNumbers_;
-	}  //!< Returns, if number drawing is on or off
+	}                                      //!< Returns, if number drawing is on or off
 	void setNumberColor(Qwt3D::RGBA col);  //!< Sets the color for axes numbers
 	Qwt3D::RGBA numberColor() const
 	{
@@ -22754,8 +22975,7 @@ private:
 #ifndef __PLANE_H__
 #define __PLANE_H__
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! A flat color legend
 /**
@@ -22767,58 +22987,51 @@ class QWT3D_EXPORT ColorLegend : public Drawable
 
 public:
 	//! Possible anchor points for caption and axis
-	enum SCALEPOSITION
-	{
-		Top,     //!< scale on top
-		Bottom,  //!< scale on bottom
-		Left,    //!< scale left
-		Right    //!< scale right
+	enum SCALEPOSITION {
+		Top, //!< scale on top
+		Bottom, //!< scale on bottom
+		Left, //!< scale left
+		Right //!< scale right
 	};
 
 	//! Orientation of the legend
-	enum ORIENTATION
-	{
-		BottomTop,  //!< Positionate the legend vertically, the lowest color index is on the bottom
-		LeftRight   //!< Positionate the legend horizontally, the lowest color index is on left side
+	enum ORIENTATION {
+		BottomTop, //!< Positionate the legend vertically, the lowest color index is on the bottom
+		LeftRight //!< Positionate the legend horizontally, the lowest color index is on left side
 	};
 
-	ColorLegend();  //!< Standard constructor
+	ColorLegend(); //!< Standard constructor
 
-	void draw();  //!< Draws the object. You should not use this explicitely - the function is called by updateGL().
+	void
+	draw(); //!< Draws the object. You should not use this explicitely - the function is called by updateGL().
 
-	void setRelPosition(
-		Qwt3D::Tuple relMin,
-		Qwt3D::Tuple relMax
-	);                                                //!< Sets the relative position of the legend inside widget
-	void setOrientation(ORIENTATION, SCALEPOSITION);  //!< Sets legend orientation and scale position
-	void setLimits(double start, double stop);        //!< Sets the limit of the scale.
-	void setMajors(int);                              //!< Sets scale major tics.
-	void setMinors(int);                              //!< Sets scale minor tics.
-	void drawScale(bool val)
-	{
-		showaxis_ = val;
-	}  //!< Sets whether a scale will be drawn.
+	void
+	setRelPosition(Qwt3D::Tuple relMin,
+				   Qwt3D::Tuple relMax); //!< Sets the relative position of the legend inside widget
+	void setOrientation(ORIENTATION, SCALEPOSITION); //!< Sets legend orientation and scale position
+	void setLimits(double start, double stop); //!< Sets the limit of the scale.
+	void setMajors(int); //!< Sets scale major tics.
+	void setMinors(int); //!< Sets scale minor tics.
+	void drawScale(bool val) { showaxis_ = val; } //!< Sets whether a scale will be drawn.
 	void drawNumbers(bool val)
 	{
 		axis_.setNumbers(val);
-	}  //!< Sets whether the scale will have scale numbers.
-	void setAutoScale(bool val);         //!< Sets, whether the axis is autoscaled or not.
-	void setScale(Qwt3D::Scale* scale);  //!< Sets another scale
-	void setScale(Qwt3D::SCALETYPE);     //!< Sets one of the predefined scale types
+	} //!< Sets whether the scale will have scale numbers.
+	void setAutoScale(bool val); //!< Sets, whether the axis is autoscaled or not.
+	void setScale(Qwt3D::Scale *scale); //!< Sets another scale
+	void setScale(Qwt3D::SCALETYPE); //!< Sets one of the predefined scale types
 
-	void setTitleString(QString const& s);  //!< Sets the legends caption string.
+	void setTitleString(QString const &s); //!< Sets the legends caption string.
 
 	//! Sets the legends caption font.
-	void setTitleFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+	void setTitleFont(QString const &family, int pointSize, int weight = QFont::Normal,
+					  bool italic = false);
 
-	Qwt3D::ColorVector colors;  //!< The color vector
+	Qwt3D::ColorVector colors; //!< The color vector
 
 private:
 	Qwt3D::Label caption_;
-	Qwt3D::ParallelEpiped geometry() const
-	{
-		return pe_;
-	}
+	Qwt3D::ParallelEpiped geometry() const { return pe_; }
 	void setGeometryInternal();
 
 	Qwt3D::ParallelEpiped pe_;
@@ -22830,61 +23043,55 @@ private:
 	bool showaxis_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
 /*** End of inlined file: qwt3d_colorlegend.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! A coordinate system with different styles (BOX, FRAME)
 class QWT3D_EXPORT CoordinateSystem : public Drawable
 {
 
 public:
-	explicit CoordinateSystem(
-		Qwt3D::Triple blb = Qwt3D::Triple(0, 0, 0), Qwt3D::Triple ftr = Qwt3D::Triple(0, 0, 0), Qwt3D::COORDSTYLE = Qwt3D::BOX
-	);
+	explicit CoordinateSystem(Qwt3D::Triple blb = Qwt3D::Triple(0, 0, 0),
+							  Qwt3D::Triple ftr = Qwt3D::Triple(0, 0, 0),
+							  Qwt3D::COORDSTYLE = Qwt3D::BOX);
 	~CoordinateSystem();
 
-	void init(Qwt3D::Triple beg = Qwt3D::Triple(0, 0, 0), Qwt3D::Triple end = Qwt3D::Triple(0, 0, 0));
+	void init(Qwt3D::Triple beg = Qwt3D::Triple(0, 0, 0),
+			  Qwt3D::Triple end = Qwt3D::Triple(0, 0, 0));
 	//! Set style for the coordinate system (NOCOORD, FRAME or BOX)
-	void setStyle(
-		Qwt3D::COORDSTYLE s, Qwt3D::AXIS frame_1 = Qwt3D::X1, Qwt3D::AXIS frame_2 = Qwt3D::Y1, Qwt3D::AXIS frame_3 = Qwt3D::Z1
-	);
-	Qwt3D::COORDSTYLE style() const
-	{
-		return style_;
-	}  //!< Return style oft the coordinate system
-	void setPosition(
-		Qwt3D::Triple first,
-		Qwt3D::Triple second
-	);  //!< first == front_left_bottom, second == back_right_top
+	void setStyle(Qwt3D::COORDSTYLE s, Qwt3D::AXIS frame_1 = Qwt3D::X1,
+				  Qwt3D::AXIS frame_2 = Qwt3D::Y1, Qwt3D::AXIS frame_3 = Qwt3D::Z1);
+	Qwt3D::COORDSTYLE style() const { return style_; } //!< Return style oft the coordinate system
+	void
+	setPosition(Qwt3D::Triple first,
+				Qwt3D::Triple second); //!< first == front_left_bottom, second == back_right_top
 
-	void setAxesColor(Qwt3D::RGBA val);  //!< Set common color for all axes
+	void setAxesColor(Qwt3D::RGBA val); //!< Set common color for all axes
 	//! Set common font for all axis numberings
-	void setNumberFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+	void setNumberFont(QString const &family, int pointSize, int weight = QFont::Normal,
+					   bool italic = false);
 	//! Set common font for all axis numberings
-	void setNumberFont(QFont const& font);
+	void setNumberFont(QFont const &font);
 	//! Set common color for all axis numberings
 	void setNumberColor(Qwt3D::RGBA val);
-	void setStandardScale();  //!< Sets an linear axis with real number items
+	void setStandardScale(); //!< Sets an linear axis with real number items
 
-	void adjustNumbers(int val);  //!< Fine tunes distance between axis numbering and axis body
-	void adjustLabels(int val);   //!< Fine tunes distance between axis label and axis body
+	void adjustNumbers(int val); //!< Fine tunes distance between axis numbering and axis body
+	void adjustLabels(int val); //!< Fine tunes distance between axis label and axis body
 
 	//! Sets color for the grid lines
-	void setGridLinesColor(Qwt3D::RGBA val)
-	{
-		gridlinecolor_ = val;
-	}
+	void setGridLinesColor(Qwt3D::RGBA val) { gridlinecolor_ = val; }
 
 	//! Set common font for all axis labels
-	void setLabelFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+	void setLabelFont(QString const &family, int pointSize, int weight = QFont::Normal,
+					  bool italic = false);
 	//! Set common font for all axis labels
-	void setLabelFont(QFont const& font);
+	void setLabelFont(QFont const &font);
 	//! Set common color for all axis labels
 	void setLabelColor(Qwt3D::RGBA val);
 
@@ -22896,44 +23103,23 @@ public:
 	//! Switch autoscaling of axes
 	void setAutoScale(bool val = true);
 
-	Qwt3D::Triple first() const
-	{
-		return first_;
-	}
-	Qwt3D::Triple second() const
-	{
-		return second_;
-	}
+	Qwt3D::Triple first() const { return first_; }
+	Qwt3D::Triple second() const { return second_; }
 
-	void setAutoDecoration(bool val = true)
-	{
-		autodecoration_ = val;
-	}
-	bool autoDecoration() const
-	{
-		return autodecoration_;
-	}
+	void setAutoDecoration(bool val = true) { autodecoration_ = val; }
+	bool autoDecoration() const { return autodecoration_; }
 
-	void setLineSmooth(bool val = true)
-	{
-		smooth_ = val;
-	}  //!< draw smooth axes
-	bool lineSmooth() const
-	{
-		return smooth_;
-	}  //!< smooth axes ?
+	void setLineSmooth(bool val = true) { smooth_ = val; } //!< draw smooth axes
+	bool lineSmooth() const { return smooth_; } //!< smooth axes ?
 
 	void draw();
 
 	//! Defines whether a grid between the major and/or minor tics should be drawn
 	void setGridLines(bool majors, bool minors, int sides = Qwt3D::NOSIDEGRID);
-	int grids() const
-	{
-		return sides_;
-	}  //!< Returns grids switched on
+	int grids() const { return sides_; } //!< Returns grids switched on
 
 	//! The vector of all12 axes - use them to set axis properties individually.
-	std::vector< Axis > axes;
+	std::vector<Axis> axes;
 
 private:
 	void destroy();
@@ -22946,11 +23132,11 @@ private:
 	bool smooth_;
 
 	void chooseAxes();
-	void autoDecorateExposedAxis(Axis& ax, bool left);
-	void drawMajorGridLines();                            //!< Draws a grid between the major tics on the site
-	void drawMinorGridLines();                            //!< Draws a grid between the minor tics on the site
-	void drawMajorGridLines(Qwt3D::Axis&, Qwt3D::Axis&);  //! Helper
-	void drawMinorGridLines(Qwt3D::Axis&, Qwt3D::Axis&);  //! Helper
+	void autoDecorateExposedAxis(Axis &ax, bool left);
+	void drawMajorGridLines(); //!< Draws a grid between the major tics on the site
+	void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
+	void drawMajorGridLines(Qwt3D::Axis &, Qwt3D::Axis &); //! Helper
+	void drawMinorGridLines(Qwt3D::Axis &, Qwt3D::Axis &); //! Helper
 	void recalculateAxesTics();
 
 	bool autodecoration_;
@@ -22958,7 +23144,7 @@ private:
 	int sides_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -23303,14 +23489,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -23327,16 +23513,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -23383,10 +23569,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -23469,8 +23653,7 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 /*** End of inlined file: qwt3d_types.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! Abstract base class for general mappings
 /**
@@ -23480,23 +23663,17 @@ class QWT3D_EXPORT Mapping
 {
 
 public:
-	virtual ~Mapping()
-	{
-	}  //!< Destructor.
-	virtual QString name() const
-	{
-		return QString("");
-	}  //!< Descriptive String.
+	virtual ~Mapping() { } //!< Destructor.
+	virtual QString name() const { return QString(""); } //!< Descriptive String.
 };
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
 /*** End of inlined file: qwt3d_mapping.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 class SurfacePlot;
 
@@ -23507,28 +23684,28 @@ class SurfacePlot;
 class QWT3D_EXPORT GridMapping : public Mapping
 {
 public:
-	GridMapping();  //!< Constructs GridMapping object w/o assigned SurfacePlot.
+	GridMapping(); //!< Constructs GridMapping object w/o assigned SurfacePlot.
 
-	void setMesh(unsigned int columns, unsigned int rows);  //!< Sets number of rows and columns.
+	void setMesh(unsigned int columns, unsigned int rows); //!< Sets number of rows and columns.
 	void setDomain(double minu, double maxu, double minv,
-				   double maxv);                       //!< Sets u-v domain boundaries.
-	void restrictRange(Qwt3D::ParallelEpiped const&);  //!< Restrict the mappings range to the parallelepiped
+				   double maxv); //!< Sets u-v domain boundaries.
+	void restrictRange(
+			Qwt3D::ParallelEpiped const &); //!< Restrict the mappings range to the parallelepiped
 
 protected:
 	Qwt3D::ParallelEpiped range_p;
-	Qwt3D::SurfacePlot* plotwidget_p;
+	Qwt3D::SurfacePlot *plotwidget_p;
 	unsigned int umesh_p, vmesh_p;
 	double minu_p, maxu_p, minv_p, maxv_p;
 };
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
 /*** End of inlined file: qwt3d_gridmapping.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 class SurfacePlot;
 
@@ -23542,25 +23719,27 @@ class QWT3D_EXPORT Function : public GridMapping
 {
 
 public:
-	Function();                                         //!< Constructs Function object w/o assigned SurfacePlot.
-	explicit Function(Qwt3D::SurfacePlot& plotWidget);  //!< Constructs Function object and assigns a SurfacePlot
-	explicit Function(Qwt3D::SurfacePlot* plotWidget);  //!< Constructs Function object and assigns a SurfacePlot
-	virtual double operator()(double x, double y) = 0;  //!< Overwrite this.
+	Function(); //!< Constructs Function object w/o assigned SurfacePlot.
+	explicit Function(Qwt3D::SurfacePlot &
+							  plotWidget); //!< Constructs Function object and assigns a SurfacePlot
+	explicit Function(Qwt3D::SurfacePlot *
+							  plotWidget); //!< Constructs Function object and assigns a SurfacePlot
+	virtual double operator()(double x, double y) = 0; //!< Overwrite this.
 
-	void setMinZ(double val);  //!< Sets minimal z value.
-	void setMaxZ(double val);  //!< Sets maximal z value.
+	void setMinZ(double val); //!< Sets minimal z value.
+	void setMaxZ(double val); //!< Sets maximal z value.
 
 	//! Assigns a new SurfacePlot and creates a data representation for it.
-	virtual bool create(Qwt3D::SurfacePlot& plotWidget);
+	virtual bool create(Qwt3D::SurfacePlot &plotWidget);
 	//! Creates data representation for the actual assigned SurfacePlot.
 	virtual bool create();
 	//! Assigns the object to another widget. To see the changes, you have to call this function before create().
-	void assign(Qwt3D::SurfacePlot& plotWidget);
+	void assign(Qwt3D::SurfacePlot &plotWidget);
 	//! Assigns the object to another widget. To see the changes, you have to call this function before create().
-	void assign(Qwt3D::SurfacePlot* plotWidget);
+	void assign(Qwt3D::SurfacePlot *plotWidget);
 };
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
@@ -23893,14 +24072,14 @@ struct QWT3D_EXPORT FreeVector
 };
 
 //! A free vector field in R^3
-typedef std::vector< FreeVector > FreeVectorField;
+using FreeVectorField = std::vector< FreeVector >;
 
 //! A point field in R^3
-typedef std::vector< Triple > TripleField;
+using TripleField = std::vector< Triple >;
 //! Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
-typedef std::vector< unsigned > Cell;
+using Cell = std::vector< unsigned >;
 //! Vector of convex polygons. You need a TripleField as base for the node data
-typedef std::vector< Cell > CellField;
+using CellField = std::vector< Cell >;
 //! Returns the sum over the sizes of the single cells
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
@@ -23917,16 +24096,16 @@ struct QWT3D_EXPORT RGBA
 };
 
 //! A Color field
-typedef std::vector< RGBA > ColorVector;
+using ColorVector = std::vector< RGBA >;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 QWT3D_EXPORT QColor GL2Qt(GLdouble r, GLdouble g, GLdouble b);  //!< RGB -> QColor
 QWT3D_EXPORT Qwt3D::RGBA Qt2GL(QColor col);                     //!< QColor -> RGBA
 
-typedef double* Vertex;
-typedef std::vector< Vertex > DataRow;
-typedef std::vector< DataRow > DataMatrix;
+using Vertex     = double*;
+using DataRow    = std::vector< Vertex >;
+using DataMatrix = std::vector< DataRow >;
 
 class Data
 {
@@ -23973,10 +24152,8 @@ public:
 	{
 		return vertices.empty();
 	}
-	void setSize(
-		unsigned int columns,
-		unsigned int rows
-	);  //!< destroys content and set new size, elements are uninitialized
+	void setSize(unsigned int columns,
+				 unsigned int rows);  //!< destroys content and set new size, elements are uninitialized
 
 	DataMatrix vertices;  //!< mesh vertices
 	DataMatrix normals;   //!< mesh normals
@@ -24059,8 +24236,7 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 /*** End of inlined file: qwt3d_types.h ***/
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 class Plot3D;
 
@@ -24074,31 +24250,24 @@ depending on the related primitive.
 class QWT3D_EXPORT Enrichment
 {
 public:
-	enum TYPE
-	{
+	enum TYPE {
 		VERTEXENRICHMENT,
 		EDGEENRICHMENT,
 		FACEENRICHMENT,
 		VOXELENRICHMENT
-	};  //!< Type of the Enrichment - only VERTEXENRICHMENT's are defined at this moment.
+	}; //!< Type of the Enrichment - only VERTEXENRICHMENT's are defined at this moment.
 
-	Enrichment() : plot(0)
-	{
-	}
-	virtual ~Enrichment()
-	{
-	}
-	virtual Enrichment* clone() const = 0;  //!< The derived class should give back a new Derived(something) here
-	virtual void drawBegin() {};            //!< Empty per default. Can be overwritten.
-	virtual void drawEnd() {};              //!< Empty per default. Can be overwritten.
-	virtual void assign(Plot3D const& pl)
-	{
-		plot = &pl;
-	}                               //!< Assign to existent plot;
-	virtual TYPE type() const = 0;  //!< Overwrite
+	Enrichment() : plot(0) { }
+	virtual ~Enrichment() { }
+	virtual Enrichment *
+	clone() const = 0; //!< The derived class should give back a new Derived(something) here
+	virtual void drawBegin() {}; //!< Empty per default. Can be overwritten.
+	virtual void drawEnd() {}; //!< Empty per default. Can be overwritten.
+	virtual void assign(Plot3D const &pl) { plot = &pl; } //!< Assign to existent plot;
+	virtual TYPE type() const = 0; //!< Overwrite
 
 protected:
-	const Plot3D* plot;
+	const Plot3D *plot;
 };
 
 //! Abstract base class for vertex dependent visible user objects
@@ -24110,20 +24279,19 @@ for every Vertex associated to his argument.
 class QWT3D_EXPORT VertexEnrichment : public Enrichment
 {
 public:
-	VertexEnrichment() : Qwt3D::Enrichment()
-	{
-	}
-	virtual Enrichment* clone() const       = 0;  //!< The derived class should give back a new Derived(something) here
-	virtual void draw(Qwt3D::Triple const&) = 0;  //!< Overwrite this
+	VertexEnrichment() : Qwt3D::Enrichment() { }
+	virtual Enrichment *
+	clone() const = 0; //!< The derived class should give back a new Derived(something) here
+	virtual void draw(Qwt3D::Triple const &) = 0; //!< Overwrite this
 	virtual TYPE type() const
 	{
 		return Qwt3D::Enrichment::VERTEXENRICHMENT;
-	}  //!< This gives VERTEXENRICHMENT
+	} //!< This gives VERTEXENRICHMENT
 };
 
 // todo EdgeEnrichment, FaceEnrichment, VoxelEnrichment etc.
 
-}  // ns
+} // ns
 
 #endif
 
@@ -24134,8 +24302,7 @@ public:
 #ifndef qwt3d_enrichment_std_h
 #define qwt3d_enrichment_std_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 class Plot3D;
 
@@ -24146,15 +24313,12 @@ public:
 	CrossHair();
 	CrossHair(double rad, double linewidth, bool smooth, bool boxed);
 
-	Qwt3D::Enrichment* clone() const
-	{
-		return new CrossHair(*this);
-	}
+	Qwt3D::Enrichment *clone() const { return new CrossHair(*this); }
 
 	void configure(double rad, double linewidth, bool smooth, bool boxed);
 	void drawBegin();
 	void drawEnd();
-	void draw(Qwt3D::Triple const&);
+	void draw(Qwt3D::Triple const &);
 
 private:
 	bool boxed_, smooth_;
@@ -24169,15 +24333,12 @@ public:
 	Dot();
 	Dot(double pointsize, bool smooth);
 
-	Qwt3D::Enrichment* clone() const
-	{
-		return new Dot(*this);
-	}
+	Qwt3D::Enrichment *clone() const { return new Dot(*this); }
 
 	void configure(double pointsize, bool smooth);
 	void drawBegin();
 	void drawEnd();
-	void draw(Qwt3D::Triple const&);
+	void draw(Qwt3D::Triple const &);
 
 private:
 	bool smooth_;
@@ -24193,17 +24354,14 @@ public:
 	Cone(double rad, unsigned quality);
 	~Cone();
 
-	Qwt3D::Enrichment* clone() const
-	{
-		return new Cone(*this);
-	}
+	Qwt3D::Enrichment *clone() const { return new Cone(*this); }
 
 	void configure(double rad, unsigned quality);
-	void draw(Qwt3D::Triple const&);
+	void draw(Qwt3D::Triple const &);
 
 private:
-	GLUquadricObj* hat;
-	GLUquadricObj* disk;
+	GLUquadricObj *hat;
+	GLUquadricObj *disk;
 	unsigned quality_;
 	double radius_;
 	GLboolean oldstate_;
@@ -24221,35 +24379,23 @@ public:
 	Arrow();
 	~Arrow();
 
-	Qwt3D::Enrichment* clone() const
-	{
-		return new Arrow(*this);
-	}
+	Qwt3D::Enrichment *clone() const { return new Arrow(*this); }
 
 	void configure(int segs, double relconelength, double relconerad, double relstemrad);
-	void setQuality(int val)
-	{
-		segments_ = val;
-	}  //!< Set the number of faces for the arrow
-	void draw(Qwt3D::Triple const&);
+	void setQuality(int val) { segments_ = val; } //!< Set the number of faces for the arrow
+	void draw(Qwt3D::Triple const &);
 
-	void setTop(Qwt3D::Triple t)
-	{
-		top_ = t;
-	}
-	void setColor(Qwt3D::RGBA rgba)
-	{
-		rgba_ = rgba;
-	}
+	void setTop(Qwt3D::Triple t) { top_ = t; }
+	void setColor(Qwt3D::RGBA rgba) { rgba_ = rgba; }
 
 private:
-	GLUquadricObj* hat;
-	GLUquadricObj* disk;
-	GLUquadricObj* base;
-	GLUquadricObj* bottom;
+	GLUquadricObj *hat;
+	GLUquadricObj *disk;
+	GLUquadricObj *base;
+	GLUquadricObj *bottom;
 	GLboolean oldstate_;
 
-	double calcRotation(Qwt3D::Triple& axis, Qwt3D::FreeVector const& vec);
+	double calcRotation(Qwt3D::Triple &axis, Qwt3D::FreeVector const &vec);
 
 	int segments_;
 	double rel_cone_length;
@@ -24261,7 +24407,7 @@ private:
 	Qwt3D::RGBA rgba_;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -24272,8 +24418,7 @@ private:
 #ifndef qwt3d_reader_h
 #define qwt3d_reader_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 /*!
 Functor for reading of native files containing grid data.
@@ -24289,20 +24434,16 @@ public:
 
 private:
 	//! Provides new NativeReader object.
-	IO::Functor* clone() const
-	{
-		return new NativeReader(*this);
-	}
+	IO::Functor *clone() const { return new NativeReader(*this); }
 	//! Performs actual input
-	bool operator()(Plot3D* plot, QString const& fname);
-	static const char* magicstring;
+	bool operator()(Plot3D *plot, QString const &fname);
+	static const char *magicstring;
 	double minz_, maxz_;
-	bool collectInfo(
-		FILE*& file, QString const& fname, unsigned& xmesh, unsigned& ymesh, double& minx, double& maxx, double& miny, double& maxy
-	);
+	bool collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
+					 double &minx, double &maxx, double &miny, double &maxy);
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -24313,8 +24454,7 @@ private:
 #ifndef qwt3d_parametricsurface_h
 #define qwt3d_parametricsurface_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 class SurfacePlot;
 
@@ -24326,21 +24466,21 @@ class QWT3D_EXPORT ParametricSurface : public GridMapping
 {
 
 public:
-	ParametricSurface();  //!< Constructs ParametricSurface object w/o assigned SurfacePlot.
+	ParametricSurface(); //!< Constructs ParametricSurface object w/o assigned SurfacePlot.
 	//! Constructs ParametricSurface object and assigns a SurfacePlot
-	explicit ParametricSurface(Qwt3D::SurfacePlot& plotWidget);
+	explicit ParametricSurface(Qwt3D::SurfacePlot &plotWidget);
 	//! Constructs ParametricSurface object and assigns a SurfacePlot
-	explicit ParametricSurface(Qwt3D::SurfacePlot* plotWidget);
+	explicit ParametricSurface(Qwt3D::SurfacePlot *plotWidget);
 	//! Overwrite this
 	virtual Qwt3D::Triple operator()(double u, double v) = 0;
 	//! Assigns a new SurfacePlot and creates a data representation for it.
-	virtual bool create(Qwt3D::SurfacePlot& plotWidget);
+	virtual bool create(Qwt3D::SurfacePlot &plotWidget);
 	//! Creates data representation for the actual assigned SurfacePlot.
 	virtual bool create();
 	//! Assigns the object to another widget. To see the changes, you have to call this function before create().
-	void assign(Qwt3D::SurfacePlot& plotWidget);
+	void assign(Qwt3D::SurfacePlot &plotWidget);
 	//! Assigns the object to another widget. To see the changes, you have to call this function before create().
-	void assign(Qwt3D::SurfacePlot* plotWidget);
+	void assign(Qwt3D::SurfacePlot *plotWidget);
 	//! Provide information about periodicity of the 'u' resp. 'v' domains.
 	void setPeriodic(bool u, bool v);
 
@@ -24348,7 +24488,7 @@ private:
 	bool uperiodic_, vperiodic_;
 };
 
-}  // ns
+} // ns
 
 #endif /* include guarded */
 
@@ -24527,39 +24667,35 @@ public:
 		title_.setString(title);
 	}  //!< Set caption text (one row only)
 
-	void assignMouse(
-		MouseState xrot,
-		MouseState yrot,
-		MouseState zrot,
-		MouseState xscale,
-		MouseState yscale,
-		MouseState zscale,
-		MouseState zoom,
-		MouseState xshift,
-		MouseState yshift
-	);
+	void assignMouse(MouseState xrot,
+					 MouseState yrot,
+					 MouseState zrot,
+					 MouseState xscale,
+					 MouseState yscale,
+					 MouseState zscale,
+					 MouseState zoom,
+					 MouseState xshift,
+					 MouseState yshift);
 
 	bool mouseEnabled() const;  //!< Returns true, if the widget accept mouse input from the user
-	void assignKeyboard(
-		KeyboardState xrot_n,
-		KeyboardState xrot_p,
-		KeyboardState yrot_n,
-		KeyboardState yrot_p,
-		KeyboardState zrot_n,
-		KeyboardState zrot_p,
-		KeyboardState xscale_n,
-		KeyboardState xscale_p,
-		KeyboardState yscale_n,
-		KeyboardState yscale_p,
-		KeyboardState zscale_n,
-		KeyboardState zscale_p,
-		KeyboardState zoom_n,
-		KeyboardState zoom_p,
-		KeyboardState xshift_n,
-		KeyboardState xshift_p,
-		KeyboardState yshift_n,
-		KeyboardState yshift_p
-	);
+	void assignKeyboard(KeyboardState xrot_n,
+						KeyboardState xrot_p,
+						KeyboardState yrot_n,
+						KeyboardState yrot_p,
+						KeyboardState zrot_n,
+						KeyboardState zrot_p,
+						KeyboardState xscale_n,
+						KeyboardState xscale_p,
+						KeyboardState yscale_n,
+						KeyboardState yscale_p,
+						KeyboardState zscale_n,
+						KeyboardState zscale_p,
+						KeyboardState zoom_n,
+						KeyboardState zoom_p,
+						KeyboardState xshift_n,
+						KeyboardState xshift_p,
+						KeyboardState yshift_n,
+						KeyboardState yshift_p);
 
 	bool keyboardEnabled() const;  //!< Returns true, if the widget accept keyboard input from the user
 	//! Sets speed for keyboard driven transformations
@@ -24655,14 +24791,15 @@ public Q_SLOTS:
 	virtual bool savePixmap(QString const& fileName,
 							QString const& format);  //!<  Saves content to pixmap format
 	//!  Saves content to vector format
-	virtual bool saveVector(
-		QString const& fileName, QString const& format, VectorWriter::TEXTMODE text, VectorWriter::SORTMODE sortmode
-	);
+	virtual bool saveVector(QString const& fileName,
+							QString const& format,
+							VectorWriter::TEXTMODE text,
+							VectorWriter::SORTMODE sortmode);
 	virtual bool save(QString const& fileName, QString const& format);  //!<  Saves content
 
 protected:
-	typedef std::list< Qwt3D::Enrichment* > EnrichmentList;
-	typedef EnrichmentList::iterator ELIT;
+	using EnrichmentList = std::list< Qwt3D::Enrichment* >;
+	using ELIT           = EnrichmentList::iterator;
 
 	void initializeGL();
 	void paintGL();
@@ -24789,8 +24926,7 @@ private:
 #ifndef qwt3d_SurfacePlot_h
 #define qwt3d_SurfacePlot_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 //! A class representing  Surfaces
 /**
 		A SurfacePlot ...
@@ -24801,25 +24937,23 @@ class QWT3D_EXPORT SurfacePlot : public Plot3D
 	Q_OBJECT
 
 public:
-	SurfacePlot(QWidget* parent = 0);
+	SurfacePlot(QWidget *parent = 0);
 	~SurfacePlot();
-	void updateNormals();  //!< Recalculates surface normals;
-	int resolution() const
-	{
-		return resolution_p;
-	}                                      //!< Returns data resolution (1 means all data)
-	std::pair< int, int > facets() const;  //!< Returns the number of mesh cells for the ORIGINAL data
-	bool loadFromData(Qwt3D::Triple** data, unsigned int columns, unsigned int rows, bool uperiodic = false, bool vperiodic = false);
-	bool loadFromData(double** data, unsigned int columns, unsigned int rows, double minx, double maxx, double miny, double maxy);
-	bool loadFromData(Qwt3D::TripleField const& data, Qwt3D::CellField const& poly);
+	void updateNormals(); //!< Recalculates surface normals;
+	int resolution() const { return resolution_p; } //!< Returns data resolution (1 means all data)
+	std::pair<int, int> facets() const; //!< Returns the number of mesh cells for the ORIGINAL data
+	bool loadFromData(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
+					  bool uperiodic = false, bool vperiodic = false);
+	bool loadFromData(double **data, unsigned int columns, unsigned int rows, double minx,
+					  double maxx, double miny, double maxy);
+	bool loadFromData(Qwt3D::TripleField const &data, Qwt3D::CellField const &poly);
 
 	//! Equivalent to loadFromData();
 	/**
 	\deprecated  Use loadFromData instead
 	*/
-	bool createDataRepresentation(
-		Qwt3D::Triple** data, unsigned int columns, unsigned int rows, bool uperiodic = false, bool vperiodic = false
-	)
+	bool createDataRepresentation(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
+								  bool uperiodic = false, bool vperiodic = false)
 	{
 		return loadFromData(data, columns, rows, uperiodic, vperiodic);
 	}
@@ -24827,9 +24961,8 @@ public:
 	/**
 	\deprecated  Use loadFromData instead
 	*/
-	bool createDataRepresentation(
-		double** data, unsigned int columns, unsigned int rows, double minx, double maxx, double miny, double maxy
-	)
+	bool createDataRepresentation(double **data, unsigned int columns, unsigned int rows,
+								  double minx, double maxx, double miny, double maxy)
 	{
 		return loadFromData(data, columns, rows, minx, maxx, miny, maxy);
 	}
@@ -24837,35 +24970,23 @@ public:
 	/**
 	\deprecated  Use loadFromData instead
 	*/
-	bool createDataRepresentation(Qwt3D::TripleField const& data, Qwt3D::CellField const& poly)
+	bool createDataRepresentation(Qwt3D::TripleField const &data, Qwt3D::CellField const &poly)
 	{
 		return loadFromData(data, poly);
 	}
 
-	Qwt3D::FLOORSTYLE floorStyle() const
-	{
-		return floorstyle_;
-	}  //!< Return floor style
-	void setFloorStyle(Qwt3D::FLOORSTYLE val)
-	{
-		floorstyle_ = val;
-	}                        //!< Sets floor style
-	void showNormals(bool);  //!< Draw normals to every vertex
-	bool normals() const
-	{
-		return datanormals_p;
-	}  //!< Returns \c true, if normal drawing is on
+	Qwt3D::FLOORSTYLE floorStyle() const { return floorstyle_; } //!< Return floor style
+	void setFloorStyle(Qwt3D::FLOORSTYLE val) { floorstyle_ = val; } //!< Sets floor style
+	void showNormals(bool); //!< Draw normals to every vertex
+	bool normals() const { return datanormals_p; } //!< Returns \c true, if normal drawing is on
 
-	void setNormalLength(double val);  //!< Sets length of normals in percent per hull diagonale
-	double normalLength() const
-	{
-		return normalLength_p;
-	}                                //!< Returns relative length of normals
-	void setNormalQuality(int val);  //!< Increases plotting quality of normal arrows
+	void setNormalLength(double val); //!< Sets length of normals in percent per hull diagonale
+	double normalLength() const { return normalLength_p; } //!< Returns relative length of normals
+	void setNormalQuality(int val); //!< Increases plotting quality of normal arrows
 	int normalQuality() const
 	{
 		return normalQuality_p;
-	}  //!< Returns plotting quality of normal arrows
+	} //!< Returns plotting quality of normal arrows
 
 Q_SIGNALS:
 	void resolutionChanged(int);
@@ -24880,19 +25001,18 @@ protected:
 
 	virtual void calculateHull();
 	virtual void createData();
-	virtual void createEnrichment(Qwt3D::Enrichment& p);
+	virtual void createEnrichment(Qwt3D::Enrichment &p);
 	virtual void createFloorData();
 	void createNormals();
 	void createPoints();
 
 	int resolution_p;
 
-	void readIn(Qwt3D::GridData& gdata, Triple** data, unsigned int columns, unsigned int rows);
-	void readIn(
-		Qwt3D::GridData& gdata, double** data, unsigned int columns, unsigned int rows, double minx, double maxx, double miny, double maxy
-	);
-	void calcNormals(GridData& gdata);
-	void sewPeriodic(GridData& gdata);
+	void readIn(Qwt3D::GridData &gdata, Triple **data, unsigned int columns, unsigned int rows);
+	void readIn(Qwt3D::GridData &gdata, double **data, unsigned int columns, unsigned int rows,
+				double minx, double maxx, double miny, double maxy);
+	void calcNormals(GridData &gdata);
+	void sewPeriodic(GridData &gdata);
 
 	// void calcLowResolution();
 private:
@@ -24903,7 +25023,7 @@ private:
 
 	// grid plot
 
-	Qwt3D::GridData* actualDataG_;
+	Qwt3D::GridData *actualDataG_;
 	virtual void createDataG();
 	virtual void createFloorDataG();
 	void createNormalsG();
@@ -24913,7 +25033,7 @@ private:
 
 	// mesh plot
 
-	Qwt3D::CellData* actualDataC_;
+	Qwt3D::CellData *actualDataC_;
 	virtual void createDataC();
 	virtual void createFloorDataC();
 	void createNormalsC();
@@ -24922,7 +25042,7 @@ private:
 	void setColorFromVertexC(int node, bool skip = false);
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -24960,8 +25080,7 @@ protected:
 #ifndef qwt3d_graphplot_h
 #define qwt3d_graphplot_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! TODO
 class QWT3D_EXPORT GraphPlot : public Plot3D
@@ -24969,13 +25088,13 @@ class QWT3D_EXPORT GraphPlot : public Plot3D
 	//    Q_OBJECT
 
 public:
-	GraphPlot(QWidget* parent = 0, const char* name = 0);
+	GraphPlot(QWidget *parent = 0, const char *name = 0);
 
 protected:
 	virtual void createData() = 0;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -24986,8 +25105,7 @@ protected:
 #ifndef qwt3d_multiplot_h
 #define qwt3d_multiplot_h
 
-namespace Qwt3D
-{
+namespace Qwt3D {
 
 //! TODO
 class QWT3D_EXPORT MultiPlot : public Plot3D
@@ -24995,15 +25113,13 @@ class QWT3D_EXPORT MultiPlot : public Plot3D
 	//    Q_OBJECT
 
 public:
-	MultiPlot(QWidget* parent = 0, const char* name = 0)
-	{
-	}
+	MultiPlot(QWidget *parent = 0, const char *name = 0) { }
 
 protected:
 	virtual void createData() = 0;
 };
 
-}  // ns
+} // ns
 
 #endif
 
@@ -25011,6 +25127,6 @@ protected:
 
 /*** End of inlined file: QWTAmalgamTemplatePublicHeaders.h ***/
 
-// #include "gl2psPublicHeaders.h"
+//#include "gl2psPublicHeaders.h"
 
-#endif  // QWTPLOT_AMALGAM_H
+#endif // QWTPLOT_AMALGAM_H

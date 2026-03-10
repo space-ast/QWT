@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -229,7 +229,7 @@ void QwtPlotCachePanner::moveCanvas(int dx, int dy)
         return;
 
     QwtPlot* plot = this->plot();
-    if (plot == NULL)
+    if (plot == nullptr)
         return;
 
     plot->saveAutoReplotState();

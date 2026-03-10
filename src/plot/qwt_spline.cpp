@@ -119,7 +119,7 @@ namespace QwtSplineC1P
     {
       public:
         inline ControlPointsStore():
-            m_cp( NULL )
+            m_cp( nullptr )
         {
         }
 
@@ -608,7 +608,7 @@ void QwtSpline::setParametrization( int type )
  */
 void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
 {
-    if ( ( parametrization != NULL ) && ( m_data->parametrization != parametrization ) )
+    if ( ( parametrization != nullptr ) && ( m_data->parametrization != parametrization ) )
     {
         delete m_data->parametrization;
         m_data->parametrization = parametrization;

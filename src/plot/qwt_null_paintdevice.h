@@ -92,9 +92,9 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     void setMode( Mode );
     Mode mode() const;
 
-    virtual QPaintEngine* paintEngine() const QWT_OVERRIDE;
+    virtual QPaintEngine* paintEngine() const override;
 
-    virtual int metric( PaintDeviceMetric ) const QWT_OVERRIDE;
+    virtual int metric( PaintDeviceMetric ) const override;
 
     virtual void drawRects(const QRect*, int );
     virtual void drawRects(const QRectF*, int );

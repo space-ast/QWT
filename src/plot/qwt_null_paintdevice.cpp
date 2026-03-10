@@ -39,48 +39,48 @@ class QwtNullPaintDevice::PrivateData
     QwtNullPaintDevice::Mode mode;
 };
 
-class QwtNullPaintDevice::PaintEngine QWT_FINAL : public QPaintEngine
+class QwtNullPaintDevice::PaintEngine final : public QPaintEngine
 {
   public:
     PaintEngine();
 
-    virtual bool begin( QPaintDevice* ) QWT_OVERRIDE;
-    virtual bool end() QWT_OVERRIDE;
+    virtual bool begin( QPaintDevice* ) override;
+    virtual bool end() override;
 
-    virtual Type type () const QWT_OVERRIDE;
-    virtual void updateState(const QPaintEngineState&) QWT_OVERRIDE;
+    virtual Type type () const override;
+    virtual void updateState(const QPaintEngineState&) override;
 
-    virtual void drawRects(const QRect*, int ) QWT_OVERRIDE;
-    virtual void drawRects(const QRectF*, int ) QWT_OVERRIDE;
+    virtual void drawRects(const QRect*, int ) override;
+    virtual void drawRects(const QRectF*, int ) override;
 
-    virtual void drawLines(const QLine*, int ) QWT_OVERRIDE;
-    virtual void drawLines(const QLineF*, int ) QWT_OVERRIDE;
+    virtual void drawLines(const QLine*, int ) override;
+    virtual void drawLines(const QLineF*, int ) override;
 
-    virtual void drawEllipse(const QRectF&) QWT_OVERRIDE;
-    virtual void drawEllipse(const QRect&) QWT_OVERRIDE;
+    virtual void drawEllipse(const QRectF&) override;
+    virtual void drawEllipse(const QRect&) override;
 
-    virtual void drawPath(const QPainterPath&) QWT_OVERRIDE;
+    virtual void drawPath(const QPainterPath&) override;
 
-    virtual void drawPoints(const QPointF*, int ) QWT_OVERRIDE;
-    virtual void drawPoints(const QPoint*, int ) QWT_OVERRIDE;
-
-    virtual void drawPolygon(
-        const QPointF*, int, PolygonDrawMode ) QWT_OVERRIDE;
+    virtual void drawPoints(const QPointF*, int ) override;
+    virtual void drawPoints(const QPoint*, int ) override;
 
     virtual void drawPolygon(
-        const QPoint*, int, PolygonDrawMode ) QWT_OVERRIDE;
+        const QPointF*, int, PolygonDrawMode ) override;
+
+    virtual void drawPolygon(
+        const QPoint*, int, PolygonDrawMode ) override;
 
     virtual void drawPixmap(const QRectF&,
-        const QPixmap&, const QRectF&) QWT_OVERRIDE;
+        const QPixmap&, const QRectF&) override;
 
     virtual void drawTextItem(
-        const QPointF&, const QTextItem&) QWT_OVERRIDE;
+        const QPointF&, const QTextItem&) override;
 
     virtual void drawTiledPixmap(const QRectF&,
-        const QPixmap&, const QPointF& s) QWT_OVERRIDE;
+        const QPixmap&, const QPointF& s) override;
 
     virtual void drawImage(const QRectF&, const QImage&,
-        const QRectF&, Qt::ImageConversionFlags ) QWT_OVERRIDE;
+        const QRectF&, Qt::ImageConversionFlags ) override;
 
   private:
     QwtNullPaintDevice* nullDevice();
@@ -117,7 +117,7 @@ void QwtNullPaintDevice::PaintEngine::drawRects(
     const QRect* rects, int rectCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -133,7 +133,7 @@ void QwtNullPaintDevice::PaintEngine::drawRects(
     const QRectF* rects, int rectCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -149,7 +149,7 @@ void QwtNullPaintDevice::PaintEngine::drawLines(
     const QLine* lines, int lineCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -165,7 +165,7 @@ void QwtNullPaintDevice::PaintEngine::drawLines(
     const QLineF* lines, int lineCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -181,7 +181,7 @@ void QwtNullPaintDevice::PaintEngine::drawEllipse(
     const QRectF& rect)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -197,7 +197,7 @@ void QwtNullPaintDevice::PaintEngine::drawEllipse(
     const QRect& rect)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -214,7 +214,7 @@ void QwtNullPaintDevice::PaintEngine::drawPath(
     const QPainterPath& path)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     device->drawPath( path );
@@ -224,7 +224,7 @@ void QwtNullPaintDevice::PaintEngine::drawPoints(
     const QPointF* points, int pointCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -240,7 +240,7 @@ void QwtNullPaintDevice::PaintEngine::drawPoints(
     const QPoint* points, int pointCount)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -256,7 +256,7 @@ void QwtNullPaintDevice::PaintEngine::drawPolygon(
     const QPointF* points, int pointCount, PolygonDrawMode mode)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() == QwtNullPaintDevice::PathMode )
@@ -284,7 +284,7 @@ void QwtNullPaintDevice::PaintEngine::drawPolygon(
     const QPoint* points, int pointCount, PolygonDrawMode mode)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() == QwtNullPaintDevice::PathMode )
@@ -312,7 +312,7 @@ void QwtNullPaintDevice::PaintEngine::drawPixmap(
     const QRectF& rect, const QPixmap& pm, const QRectF& subRect )
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     device->drawPixmap( rect, pm, subRect );
@@ -322,7 +322,7 @@ void QwtNullPaintDevice::PaintEngine::drawTextItem(
     const QPointF& pos, const QTextItem& textItem)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -339,7 +339,7 @@ void QwtNullPaintDevice::PaintEngine::drawTiledPixmap(
     const QPointF& subRect)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     if ( device->mode() != QwtNullPaintDevice::NormalMode )
@@ -356,7 +356,7 @@ void QwtNullPaintDevice::PaintEngine::drawImage(
     const QRectF& subRect, Qt::ImageConversionFlags flags)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     device->drawImage( rect, image, subRect, flags );
@@ -366,7 +366,7 @@ void QwtNullPaintDevice::PaintEngine::updateState(
     const QPaintEngineState& engineState)
 {
     QwtNullPaintDevice* device = nullDevice();
-    if ( device == NULL )
+    if ( device == nullptr )
         return;
 
     device->updateState( engineState );
@@ -375,14 +375,14 @@ void QwtNullPaintDevice::PaintEngine::updateState(
 inline QwtNullPaintDevice* QwtNullPaintDevice::PaintEngine::nullDevice()
 {
     if ( !isActive() )
-        return NULL;
+        return nullptr;
 
     return static_cast< QwtNullPaintDevice* >( paintDevice() );
 }
 
 //! Constructor
 QwtNullPaintDevice::QwtNullPaintDevice():
-    m_engine( NULL )
+    m_engine( nullptr )
 {
     m_data = new PrivateData;
 }
@@ -417,7 +417,7 @@ QwtNullPaintDevice::Mode QwtNullPaintDevice::mode() const
 //! See QPaintDevice::paintEngine()
 QPaintEngine* QwtNullPaintDevice::paintEngine() const
 {
-    if ( m_engine == NULL )
+    if ( m_engine == nullptr )
     {
         QwtNullPaintDevice* that =
             const_cast< QwtNullPaintDevice* >( this );

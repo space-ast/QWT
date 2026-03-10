@@ -64,8 +64,8 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
     void setChunkSize( uint );
     uint chunkSize() const;
 
-    virtual QPolygonF fitCurve( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QPainterPath fitCurvePath( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
     virtual QPolygonF simplify( const QPolygonF& ) const;

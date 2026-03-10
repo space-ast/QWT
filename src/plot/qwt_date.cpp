@@ -34,7 +34,7 @@
 
 #if QT_VERSION >= 0x050000
 
-typedef qint64 QwtJulianDay;
+using QwtJulianDay                              = qint64;
 static const QwtJulianDay cs_date_minJulianDayD = Q_INT64_C(-784350574879);
 static const QwtJulianDay cs_date_maxJulianDayD = Q_INT64_C(784354017364);
 
@@ -44,7 +44,7 @@ static const QwtJulianDay cs_date_maxJulianDayD = Q_INT64_C(784354017364);
 // there is QDate::fromJulianDay( int ). That's why
 // we have the range [ 1, INT_MAX ]
 
-typedef int QwtJulianDay;
+using QwtJulianDay                              = int;
 static const QwtJulianDay cs_date_minJulianDayD = 1;
 static const QwtJulianDay cs_date_maxJulianDayD = std::numeric_limits< int >::max();
 

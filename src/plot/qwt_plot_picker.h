@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 2024   ChenZongYan <czy.t@163.com>
  *****************************************************************************/
@@ -99,12 +99,12 @@ protected:
     QPointF invTransform(const QPoint&) const;
     QPoint transform(const QPointF&) const;
 
-    virtual QwtText trackerText(const QPoint&) const QWT_OVERRIDE;
+    virtual QwtText trackerText(const QPoint&) const override;
     virtual QwtText trackerTextF(const QPointF&) const;
 
-    virtual void move(const QPoint&) QWT_OVERRIDE;
-    virtual void append(const QPoint&) QWT_OVERRIDE;
-    virtual bool end(bool ok = true) QWT_OVERRIDE;
+    virtual void move(const QPoint&) override;
+    virtual void append(const QPoint&) override;
+    virtual bool end(bool ok = true) override;
 
 private:
     class PrivateData;

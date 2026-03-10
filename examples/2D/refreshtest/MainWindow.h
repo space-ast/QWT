@@ -16,14 +16,14 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-  public:
-    MainWindow( QWidget* parent = NULL );
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+public:
+    MainWindow(QWidget* parent = NULL);
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-  private Q_SLOTS:
-    void applySettings( const Settings& );
+private Q_SLOTS:
+    void applySettings(const Settings&);
 
-  private:
+private:
     Plot* m_plot;
     QLabel* m_frameCount;
 };

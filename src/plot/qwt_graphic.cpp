@@ -640,7 +640,7 @@ qreal QwtGraphic::widthForHeight( qreal height ) const
  */
 void QwtGraphic::render( QPainter* painter ) const
 {
-    renderGraphic( painter, NULL );
+    renderGraphic( painter, nullptr );
 }
 
 void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform ) const
@@ -760,7 +760,7 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     }
     else
     {
-        renderGraphic( painter, NULL );
+        renderGraphic( painter, nullptr );
     }
 
     painter->setTransform( transform );
@@ -1001,7 +1001,7 @@ QImage QwtGraphic::toImage( qreal devicePixelRatio ) const
 void QwtGraphic::drawPath( const QPainterPath& path )
 {
     const QPainter* painter = paintEngine()->painter();
-    if ( painter == NULL )
+    if ( painter == nullptr )
         return;
 
     m_data->commands += QwtPainterCommand( path );
@@ -1041,7 +1041,7 @@ void QwtGraphic::drawPixmap( const QRectF& rect,
     const QPixmap& pixmap, const QRectF& subRect )
 {
     const QPainter* painter = paintEngine()->painter();
-    if ( painter == NULL )
+    if ( painter == nullptr )
         return;
 
     m_data->commands += QwtPainterCommand( rect, pixmap, subRect );
@@ -1066,7 +1066,7 @@ void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
     const QRectF& subRect, Qt::ImageConversionFlags flags )
 {
     const QPainter* painter = paintEngine()->painter();
-    if ( painter == NULL )
+    if ( painter == nullptr )
         return;
 
     m_data->commands += QwtPainterCommand( rect, image, subRect, flags );
@@ -1163,7 +1163,7 @@ void QwtGraphic::setCommands( const QVector< QwtPainterCommand >& commands )
 
     QPainter painter( this );
     for ( int i = 0; i < numCommands; i++ )
-        qwtExecCommand( &painter, cmds[i], noRenderHints, noTransform, NULL );
+        qwtExecCommand( &painter, cmds[i], noRenderHints, noTransform, nullptr );
 
     painter.end();
 }

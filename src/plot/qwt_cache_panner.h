@@ -74,7 +74,7 @@ public:
 
     bool isOrientationEnabled(Qt::Orientation) const;
 
-    virtual bool eventFilter(QObject*, QEvent*) QWT_OVERRIDE;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
 Q_SIGNALS:
     /*!
@@ -101,7 +101,7 @@ protected:
     virtual void widgetKeyPressEvent(QKeyEvent*);
     virtual void widgetKeyReleaseEvent(QKeyEvent*);
 
-    virtual void paintEvent(QPaintEvent*) QWT_OVERRIDE;
+    virtual void paintEvent(QPaintEvent*) override;
 
     virtual QBitmap contentsMask() const;
     virtual QPixmap grab() const;

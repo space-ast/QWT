@@ -8,7 +8,8 @@
 
 using namespace Qwt3D;
 
-namespace {
+namespace
+{
 inline GLenum lightEnum(unsigned idx)
 {
     switch (idx) {
@@ -70,7 +71,7 @@ void Plot3D::illuminate(unsigned light)
 {
     if (light > 7)
         return;
-    lights_[light].unlit = false;
+    lights_[ light ].unlit = false;
 }
 /**
   \param light light number [0..7]
@@ -80,7 +81,7 @@ void Plot3D::blowout(unsigned light)
 {
     if (light > 7)
         return;
-    lights_[light].unlit = false;
+    lights_[ light ].unlit = false;
 }
 
 /**
@@ -88,7 +89,9 @@ void Plot3D::blowout(unsigned light)
 */
 void Plot3D::setMaterialComponent(GLenum property, double r, double g, double b, double a)
 {
-    GLfloat rgba[4] = { (GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a };
+    GLfloat rgba[ 4 ] = {
+        static_cast< GLfloat >(r), static_cast< GLfloat >(g), static_cast< GLfloat >(b), static_cast< GLfloat >(a)
+    };
     makeCurrent();
     glMaterialfv(GL_FRONT_AND_BACK, property, rgba);
 }
@@ -114,10 +117,11 @@ void Plot3D::setShininess(double exponent)
 /**
   Sets GL light properties for light 'light'
 */
-void Plot3D::setLightComponent(GLenum property, double r, double g, double b, double a,
-                               unsigned light)
+void Plot3D::setLightComponent(GLenum property, double r, double g, double b, double a, unsigned light)
 {
-    GLfloat rgba[4] = { (GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a };
+    GLfloat rgba[ 4 ] = {
+        static_cast< GLfloat >(r), static_cast< GLfloat >(g), static_cast< GLfloat >(b), static_cast< GLfloat >(a)
+    };
     makeCurrent();
     glLightfv(lightEnum(light), property, rgba);
 }
@@ -142,9 +146,9 @@ void Plot3D::setLightRotation(double xVal, double yVal, double zVal, unsigned li
 {
     if (light > 7)
         return;
-    lights_[light].rot.x = xVal;
-    lights_[light].rot.y = yVal;
-    lights_[light].rot.z = zVal;
+    lights_[ light ].rot.x = xVal;
+    lights_[ light ].rot.y = yVal;
+    lights_[ light ].rot.z = zVal;
 }
 
 /**
@@ -159,27 +163,26 @@ void Plot3D::setLightShift(double xVal, double yVal, double zVal, unsigned light
 {
     if (light > 7)
         return;
-    lights_[light].shift.x = xVal;
-    lights_[light].shift.y = yVal;
-    lights_[light].shift.z = zVal;
+    lights_[ light ].shift.x = xVal;
+    lights_[ light ].shift.y = yVal;
+    lights_[ light ].shift.z = zVal;
 }
 
 void Plot3D::applyLight(unsigned light)
 {
-    if (lights_[light].unlit)
+    if (lights_[ light ].unlit)
         return;
 
     glEnable(lightEnum(light));
     glLoadIdentity();
 
-    glRotatef(lights_[light].rot.x - 90, 1.0, 0.0, 0.0);
-    glRotatef(lights_[light].rot.y, 0.0, 1.0, 0.0);
-    glRotatef(lights_[light].rot.z, 0.0, 0.0, 1.0);
-    double light4d[4] = { lights_[light].shift.x, lights_[light].shift.y, lights_[light].shift.z,
-                          1.0 };
-    GLfloat lightPos[4] {};
+    glRotatef(lights_[ light ].rot.x - 90, 1.0, 0.0, 0.0);
+    glRotatef(lights_[ light ].rot.y, 0.0, 1.0, 0.0);
+    glRotatef(lights_[ light ].rot.z, 0.0, 0.0, 1.0);
+    double light4d[ 4 ] = { lights_[ light ].shift.x, lights_[ light ].shift.y, lights_[ light ].shift.z, 1.0 };
+    GLfloat lightPos[ 4 ] {};
     for (size_t i = 0; i < 4; i++) {
-        lightPos[i] = static_cast<GLfloat>(light4d[i]);
+        lightPos[ i ] = static_cast< GLfloat >(light4d[ i ]);
     }
     GLenum le = lightEnum(light);
     glLightfv(le, GL_POSITION, lightPos);

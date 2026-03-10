@@ -65,8 +65,8 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
     QPoint transform( const QwtPointPolar& ) const;
 
   protected:
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void resizeEvent( QResizeEvent* ) override;
 
   private:
     class PrivateData;

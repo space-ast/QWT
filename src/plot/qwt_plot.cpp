@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -98,10 +98,10 @@ static void qwtSetTabOrder(QWidget* first, QWidget* second, bool withChildren)
         QWidget* proxy2 = to->focusProxy();
 
         from->setFocusPolicy(Qt::TabFocus);
-        from->setFocusProxy(NULL);
+        from->setFocusProxy(nullptr);
 
         to->setFocusPolicy(Qt::TabFocus);
-        to->setFocusProxy(NULL);
+        to->setFocusProxy(nullptr);
 
         QWidget::setTabOrder(from, to);
 
@@ -197,7 +197,7 @@ void QwtPlot::initPlot(const QwtText& title)
     m_data->footerLabel->setText(footer);
 
     // legend
-    m_data->legend = NULL;
+    m_data->legend = nullptr;
 
     // axes
     initAxesData();
@@ -1062,7 +1062,7 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
                 }
             }
 
-            QWidget* previousInChain = NULL;
+            QWidget* previousInChain = nullptr;
             switch (m_data->layout->legendPosition()) {
             case LeftLegend: {
                 const QwtAxisId axisId(QwtAxis::XTop);
@@ -1113,7 +1113,7 @@ void QwtPlot::updateLegend()
  */
 void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 {
-    if (plotItem == NULL)
+    if (plotItem == nullptr)
         return;
 
     QList< QwtLegendData > legendData;
@@ -2045,7 +2045,7 @@ QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
         return qvariant_cast<QwtPlotItem *>( itemInfo );
    \endcode
    \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a NULL pointer.
+   \return A plot item, when successful, otherwise a nullptr pointer.
    \sa itemToInfo()
  */
 QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
@@ -2053,7 +2053,7 @@ QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
     if (itemInfo.canConvert< QwtPlotItem* >())
         return qvariant_cast< QwtPlotItem* >(itemInfo);
 
-    return NULL;
+    return nullptr;
 }
 
 /**

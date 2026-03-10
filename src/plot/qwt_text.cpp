@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -77,7 +77,7 @@ private:
     TextEngineDict();
     ~TextEngineDict();
 
-    typedef QMap< int, QwtTextEngine* > EngineMap;
+    using EngineMap = QMap< int, QwtTextEngine* >;
 
     inline const QwtTextEngine* engine(EngineMap::const_iterator& it) const
     {
@@ -137,7 +137,7 @@ void TextEngineDict::setTextEngine(QwtText::TextFormat format, QwtTextEngine* en
     if (format == QwtText::AutoText)
         return;
 
-    if (format == QwtText::PlainText && engine == NULL)
+    if (format == QwtText::PlainText && engine == nullptr)
         return;
 
     EngineMap::const_iterator it = m_map.constFind(format);
@@ -146,13 +146,13 @@ void TextEngineDict::setTextEngine(QwtText::TextFormat format, QwtTextEngine* en
         m_map.remove(format);
     }
 
-    if (engine != NULL)
+    if (engine != nullptr)
         m_map.insert(format, engine);
 }
 
 const QwtTextEngine* TextEngineDict::textEngine(QwtText::TextFormat format) const
 {
-    const QwtTextEngine* e = NULL;
+    const QwtTextEngine* e = nullptr;
 
     EngineMap::const_iterator it = m_map.find(format);
     if (it != m_map.end())
@@ -166,7 +166,7 @@ class QwtText::PrivateData
 {
 public:
     PrivateData()
-        : renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(NULL)
+        : renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
     {
     }
 
@@ -686,7 +686,7 @@ const QwtTextEngine* QwtText::textEngine(const QString& text, QwtText::TextForma
    With setTextEngine it is possible to extend Qwt with
    other types of text formats.
 
-   For QwtText::PlainText it is not allowed to assign a engine == NULL.
+   For QwtText::PlainText it is not allowed to assign a engine == nullptr.
 
    \param format Text format
    \param engine Text engine
@@ -704,7 +704,7 @@ void QwtText::setTextEngine(QwtText::TextFormat format, QwtTextEngine* engine)
    textEngine can be used to find out if a text format is supported.
 
    \param format Text format
-   \return The text engine, or NULL if no engine is available.
+   \return The text engine, or nullptr if no engine is available.
  */
 const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
 {

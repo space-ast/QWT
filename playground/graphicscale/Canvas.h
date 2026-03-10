@@ -13,27 +13,26 @@ class QwtGraphic;
 
 class Canvas : public QWidget
 {
-  public:
+public:
     enum Mode
     {
         Svg,
         VectorGraphic
     };
 
-    Canvas( Mode, QWidget* parent = NULL );
+    Canvas(Mode, QWidget* parent = NULL);
     virtual ~Canvas();
 
-    void setSvg( const QByteArray& );
+    void setSvg(const QByteArray&);
 
-  protected:
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
+protected:
+    virtual void paintEvent(QPaintEvent*) override;
 
-  private:
-    void render( QPainter*, const QRect& ) const;
+private:
+    void render(QPainter*, const QRect&) const;
 
     const Mode m_mode;
-    union
-    {
+    union {
         QSvgRenderer* m_renderer;
         QwtGraphic* m_graphic;
     };

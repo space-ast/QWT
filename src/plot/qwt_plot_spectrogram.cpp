@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -62,7 +62,7 @@ static inline bool qwtIsNaN(double d)
 class QwtPlotSpectrogram::PrivateData
 {
 public:
-    PrivateData() : data(NULL), colorTableSize(0)
+    PrivateData() : data(nullptr), colorTableSize(0)
     {
         colorMap    = new QwtLinearColorMap();
         displayMode = ImageMode;
@@ -183,7 +183,7 @@ bool QwtPlotSpectrogram::testDisplayMode(DisplayMode mode) const
  */
 void QwtPlotSpectrogram::setColorMap(QwtColorMap* colorMap)
 {
-    if (colorMap == NULL)
+    if (colorMap == nullptr)
         return;
 
     if (colorMap != m_data->colorMap) {
@@ -305,7 +305,7 @@ QPen QwtPlotSpectrogram::defaultContourPen() const
  */
 QPen QwtPlotSpectrogram::contourPen(double level) const
 {
-    if (m_data->data == NULL || m_data->colorMap == NULL)
+    if (m_data->data == nullptr || m_data->colorMap == nullptr)
         return QPen();
 
     const QwtInterval intensityRange = m_data->data->interval(Qt::ZAxis);
@@ -432,7 +432,7 @@ QwtRasterData* QwtPlotSpectrogram::data()
  */
 QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
 {
-    if (m_data->data == NULL)
+    if (m_data->data == nullptr)
         return QwtInterval();
 
     return m_data->data->interval(axis);
@@ -456,7 +456,7 @@ QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
  */
 QRectF QwtPlotSpectrogram::pixelHint(const QRectF& area) const
 {
-    if (m_data->data == NULL)
+    if (m_data->data == nullptr)
         return QRectF();
 
     return m_data->data->pixelHint(area);
@@ -483,7 +483,7 @@ QImage QwtPlotSpectrogram::renderImage(const QwtScaleMap& xMap,
                                        const QRectF& area,
                                        const QSize& imageSize) const
 {
-    if (imageSize.isEmpty() || m_data->data == NULL || m_data->colorMap == NULL) {
+    if (imageSize.isEmpty() || m_data->data == nullptr || m_data->colorMap == nullptr) {
         return QImage();
     }
 
@@ -669,7 +669,7 @@ QSize QwtPlotSpectrogram::contourRasterSize(const QRectF& area, const QRect& rec
  */
 QwtRasterData::ContourLines QwtPlotSpectrogram::renderContourLines(const QRectF& rect, const QSize& raster) const
 {
-    if (m_data->data == NULL)
+    if (m_data->data == nullptr)
         return QwtRasterData::ContourLines();
 
     return m_data->data->contourLines(rect, raster, m_data->contourLevels, m_data->conrecFlags);
@@ -690,7 +690,7 @@ void QwtPlotSpectrogram::drawContourLines(QPainter* painter,
                                           const QwtScaleMap& yMap,
                                           const QwtRasterData::ContourLines& contourLines) const
 {
-    if (m_data->data == NULL)
+    if (m_data->data == nullptr)
         return;
 
     const int numLevels = m_data->contourLevels.size();

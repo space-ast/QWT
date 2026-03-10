@@ -45,11 +45,11 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
     const QwtPolarCanvas* canvas() const;
 
   public Q_SLOTS:
-    virtual void rescale( double factor ) QWT_OVERRIDE;
+    virtual void rescale( double factor ) override;
     void unzoom();
 
   protected:
-    virtual void widgetKeyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
+    virtual void widgetKeyPressEvent( QKeyEvent* ) override;
 
   private:
     class PrivateData;

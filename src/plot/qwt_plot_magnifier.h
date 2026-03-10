@@ -62,7 +62,7 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
     const QwtPlot* plot() const;
 
   public Q_SLOTS:
-    virtual void rescale( double factor ) QWT_OVERRIDE;
+    virtual void rescale( double factor ) override;
 
   private:
     class PrivateData;

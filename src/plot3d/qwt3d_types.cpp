@@ -2,7 +2,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <stdlib.h> // qsort
+#include <stdlib.h>  // qsort
 #include <algorithm>
 #include <float.h>
 #include "qwt3d_types.h"
@@ -11,26 +11,27 @@ using namespace Qwt3D;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
-namespace {
+namespace
+{
 // convex hull
 
-typedef double coordinate_type;
+using coordinate_type = double;
 
-int ccw(coordinate_type **P, int i, int j, int k)
+int ccw(coordinate_type** P, int i, int j, int k)
 {
-    coordinate_type a = P[i][0] - P[j][0], b = P[i][1] - P[j][1], c = P[k][0] - P[j][0],
-                    d = P[k][1] - P[j][1];
+    coordinate_type a = P[ i ][ 0 ] - P[ j ][ 0 ], b = P[ i ][ 1 ] - P[ j ][ 1 ], c = P[ k ][ 0 ] - P[ j ][ 0 ],
+                    d = P[ k ][ 1 ] - P[ j ][ 1 ];
     return a * d - b * c <= 0; /* true if points i, j, k counterclockwise */
 }
 
-#define CMPM(c, A, B)                                                                              \
-    v = (*(coordinate_type **)A)[c] - (*(coordinate_type **)B)[c];                                 \
-    if (v > 0)                                                                                     \
-        return 1;                                                                                  \
-    if (v < 0)                                                                                     \
+#define CMPM(c, A, B)                                                                                                  \
+    v = (*static_cast< coordinate_type* const* >(A))[ c ] - (*static_cast< coordinate_type* const* >(B))[ c ];         \
+    if (v > 0)                                                                                                         \
+        return 1;                                                                                                      \
+    if (v < 0)                                                                                                         \
         return -1;
 
-int cmpl(const void *a, const void *b)
+int cmpl(const void* a, const void* b)
 {
     double v;
     CMPM(0, a, b);
@@ -38,37 +39,37 @@ int cmpl(const void *a, const void *b)
     return 0;
 }
 
-int cmph(const void *a, const void *b)
+int cmph(const void* a, const void* b)
 {
     return cmpl(b, a);
 }
 
-int make_chain(coordinate_type **V, int n, int (*cmp)(const void *, const void *))
+int make_chain(coordinate_type** V, int n, int (*cmp)(const void*, const void*))
 {
     int i, j, s = 1;
-    coordinate_type *t;
+    coordinate_type* t;
 
-    qsort(V, n, sizeof(coordinate_type *), cmp);
+    qsort(V, n, sizeof(coordinate_type*), cmp);
     for (i = 2; i < n; i++) {
         for (j = s; j >= 1 && ccw(V, i, j, j - 1); j--) { }
-        s = j + 1;
-        t = V[s];
-        V[s] = V[i];
-        V[i] = t;
+        s      = j + 1;
+        t      = V[ s ];
+        V[ s ] = V[ i ];
+        V[ i ] = t;
     }
     return s;
 }
 
-int _ch2d(coordinate_type **P, int n)
+int _ch2d(coordinate_type** P, int n)
 {
     int u = make_chain(P, n, cmpl); /* make lower hull */
     if (!n)
         return 0;
-    P[n] = P[0];
+    P[ n ] = P[ 0 ];
     return u + make_chain(P + u, n - u + 1, cmph); /* make upper hull */
 }
 
-} // ns anon
+}  // ns anon
 
 GridData::GridData()
 {
@@ -86,12 +87,12 @@ GridData::GridData(unsigned int columns, unsigned int rows)
 
 int GridData::columns() const
 {
-    return (int)vertices.size();
+    return static_cast< int >(vertices.size());
 }
 
 int GridData::rows() const
 {
-    return (empty()) ? 0 : (int)vertices[0].size();
+    return (empty()) ? 0 : static_cast< int >(vertices[ 0 ].size());
 }
 
 void GridData::clear()
@@ -99,10 +100,10 @@ void GridData::clear()
     setHull(ParallelEpiped());
     {
         for (unsigned i = 0; i != vertices.size(); ++i) {
-            for (unsigned j = 0; j != vertices[i].size(); ++j) {
-                delete[] vertices[i][j];
+            for (unsigned j = 0; j != vertices[ i ].size(); ++j) {
+                delete[] vertices[ i ][ j ];
             }
-            vertices[i].clear();
+            vertices[ i ].clear();
         }
     }
 
@@ -110,10 +111,10 @@ void GridData::clear()
 
     {
         for (unsigned i = 0; i != normals.size(); ++i) {
-            for (unsigned j = 0; j != normals[i].size(); ++j) {
-                delete[] normals[i][j];
+            for (unsigned j = 0; j != normals[ i ].size(); ++j) {
+                delete[] normals[ i ][ j ];
             }
-            normals[i].clear();
+            normals[ i ].clear();
         }
     }
 
@@ -123,29 +124,29 @@ void GridData::clear()
 void GridData::setSize(unsigned int columns, unsigned int rows)
 {
     this->clear();
-    vertices = std::vector<DataRow>(columns);
+    vertices = std::vector< DataRow >(columns);
     {
         for (unsigned int i = 0; i != vertices.size(); ++i) {
-            vertices[i] = DataRow(rows);
-            for (unsigned int j = 0; j != vertices[i].size(); ++j) {
-                vertices[i][j] = new GLdouble[3];
+            vertices[ i ] = DataRow(rows);
+            for (unsigned int j = 0; j != vertices[ i ].size(); ++j) {
+                vertices[ i ][ j ] = new GLdouble[ 3 ];
             }
         }
     }
-    normals = std::vector<DataRow>(columns);
+    normals = std::vector< DataRow >(columns);
     {
         for (unsigned int i = 0; i != normals.size(); ++i) {
-            normals[i] = DataRow(rows);
-            for (unsigned int j = 0; j != normals[i].size(); ++j) {
-                normals[i][j] = new GLdouble[3];
+            normals[ i ] = DataRow(rows);
+            for (unsigned int j = 0; j != normals[ i ].size(); ++j) {
+                normals[ i ][ j ] = new GLdouble[ 3 ];
             }
         }
     }
 }
 
-Triple const &CellData::operator()(unsigned cellnumber, unsigned vertexnumber)
+Triple const& CellData::operator()(unsigned cellnumber, unsigned vertexnumber)
 {
-    return nodes[cells[cellnumber][vertexnumber]];
+    return nodes[ cells[ cellnumber ][ vertexnumber ] ];
 }
 
 void CellData::clear()
@@ -172,7 +173,7 @@ RGBA Qwt3D::Qt2GL(QColor col)
     return rgba;
 }
 
-void Qwt3D::convexhull2d(std::vector<unsigned> &idx, const std::vector<Tuple> &src)
+void Qwt3D::convexhull2d(std::vector< unsigned >& idx, const std::vector< Tuple >& src)
 {
     idx.clear();
     if (src.empty())
@@ -181,35 +182,35 @@ void Qwt3D::convexhull2d(std::vector<unsigned> &idx, const std::vector<Tuple> &s
         idx.push_back(0);
         return;
     }
-    coordinate_type **points = new coordinate_type *[src.size() + 1];
-    coordinate_type *P = new coordinate_type[src.size() * 2];
+    coordinate_type** points = new coordinate_type*[ src.size() + 1 ];
+    coordinate_type* P       = new coordinate_type[ src.size() * 2 ];
 
     size_t i;
     for (i = 0; i < src.size(); ++i) {
-        points[i] = &P[2 * i];
-        points[i][0] = src[i].x;
-        points[i][1] = src[i].y;
+        points[ i ]      = &P[ 2 * i ];
+        points[ i ][ 0 ] = src[ i ].x;
+        points[ i ][ 1 ] = src[ i ].y;
     }
 
-    coordinate_type *start = points[0];
-    size_t m = _ch2d(points, static_cast<int>(src.size()));
+    coordinate_type* start = points[ 0 ];
+    size_t m               = _ch2d(points, static_cast< int >(src.size()));
     idx.resize(m);
 
     for (i = 0; i < m; ++i) {
-        idx[i] = (points[i] - start) / 2;
+        idx[ i ] = (points[ i ] - start) / 2;
     }
     delete[] points;
     delete[] P;
 }
 
-unsigned Qwt3D::tesselationSize(CellField const &t)
+unsigned Qwt3D::tesselationSize(CellField const& t)
 {
     size_t ret = 0;
 
     for (size_t i = 0; i < t.size(); ++i)
-        ret += t[i].size();
+        ret += t[ i ].size();
 
-    return static_cast<unsigned>(ret);
+    return static_cast< unsigned >(ret);
 }
 
-#endif // QWT3D_NOT_FOR_DOXYGEN
+#endif  // QWT3D_NOT_FOR_DOXYGEN

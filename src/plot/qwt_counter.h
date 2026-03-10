@@ -96,7 +96,7 @@ class QWT_EXPORT QwtCounter : public QWidget
         ButtonCnt
     };
 
-    explicit QwtCounter( QWidget* parent = NULL );
+    explicit QwtCounter( QWidget* parent = nullptr );
     virtual ~QwtCounter();
 
     void setValid( bool );
@@ -114,7 +114,7 @@ class QWT_EXPORT QwtCounter : public QWidget
     void setIncSteps( QwtCounter::Button, int numSteps );
     int incSteps( QwtCounter::Button ) const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
 
     double singleStep() const;
     void setSingleStep( double stepSize );
@@ -156,9 +156,9 @@ class QWT_EXPORT QwtCounter : public QWidget
     void valueChanged ( double value );
 
   protected:
-    virtual bool event( QEvent* ) QWT_OVERRIDE;
-    virtual void wheelEvent( QWheelEvent* ) QWT_OVERRIDE;
-    virtual void keyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
+    virtual bool event( QEvent* ) override;
+    virtual void wheelEvent( QWheelEvent* ) override;
+    virtual void keyPressEvent( QKeyEvent* ) override;
 
   private Q_SLOTS:
     void btnReleased();

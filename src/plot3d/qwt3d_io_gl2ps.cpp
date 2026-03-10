@@ -172,9 +172,21 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
     }
     while (state == GL2PS_OVERFLOW) {
         bufsize += 2 * 1024 * 1024;
-        gl2psBeginPage(
-            "---", QWT3DLOCAL8BIT(producer), viewport, gl2ps_format_, sortmode, options, GL_RGBA, 0, NULL, 0, 0, 0, bufsize, fp, QWT3DLOCAL8BIT(fname)
-        );
+        gl2psBeginPage("---",
+                       QWT3DLOCAL8BIT(producer),
+                       viewport,
+                       gl2ps_format_,
+                       sortmode,
+                       options,
+                       GL_RGBA,
+                       0,
+                       nullptr,
+                       0,
+                       0,
+                       0,
+                       bufsize,
+                       fp,
+                       QWT3DLOCAL8BIT(fname));
 
         plot->grabFramebuffer();
         state = gl2psEndPage();
@@ -195,9 +207,21 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
         state = GL2PS_OVERFLOW;
         while (state == GL2PS_OVERFLOW) {
             bufsize += 2 * 1024 * 1024;
-            gl2psBeginPage(
-                "---", QWT3DLOCAL8BIT(producer), viewport, GL2PS_TEX, sortmode, options, GL_RGBA, 0, NULL, 0, 0, 0, bufsize, fp, QWT3DLOCAL8BIT(fn)
-            );
+            gl2psBeginPage("---",
+                           QWT3DLOCAL8BIT(producer),
+                           viewport,
+                           GL2PS_TEX,
+                           sortmode,
+                           options,
+                           GL_RGBA,
+                           0,
+                           nullptr,
+                           0,
+                           0,
+                           0,
+                           bufsize,
+                           fp,
+                           QWT3DLOCAL8BIT(fn));
 
             plot->updateData();
             plot->update();
@@ -258,11 +282,11 @@ GLint Qwt3D::drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLen
     if (format != GL_RGBA || type != GL_UNSIGNED_BYTE)
         return GL2PS_ERROR;
 
-    GLfloat* convertedpixel = (GLfloat*)malloc(3 * width * height * sizeof(GLfloat));
+    GLfloat* convertedpixel = static_cast< GLfloat* >(malloc(3 * width * height * sizeof(GLfloat)));
     if (!convertedpixel)
         return GL2PS_ERROR;
 
-    GLubyte* px = (GLubyte*)pixels;
+    const GLubyte* px = reinterpret_cast< const GLubyte* >(pixels);
     for (int i = 0; i != 3 * width * height; i += 3) {
         int pxi                 = (4 * i) / 3;
         convertedpixel[ i ]     = px[ pxi ] / float(255);
@@ -336,7 +360,7 @@ GLint Qwt3D::drawDeviceText(const char* str, const char* fontname, int fontsize,
     Triple adjpos(vp[ 0 ], vp[ 1 ], vp[ 2 ]);
 
     glRasterPos3d(adjpos.x, adjpos.y, adjpos.z);
-    ret = gl2psTextOpt(str, fontname, (int)fontsize, a, 0);
+    ret = gl2psTextOpt(str, fontname, static_cast< int >(fontsize), a, 0);
     glColor4dv(fcol);
     glClearColor(bcol[ 0 ], bcol[ 1 ], bcol[ 2 ], bcol[ 3 ]);
     return ret;

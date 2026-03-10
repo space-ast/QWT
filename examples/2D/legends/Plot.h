@@ -15,17 +15,17 @@ class Plot : public QwtPlot
 {
     Q_OBJECT
 
-  public:
-    Plot( QWidget* parent = NULL );
+public:
+    Plot(QWidget* parent = NULL);
     virtual ~Plot();
 
-  public Q_SLOTS:
-    void applySettings( const Settings& );
+public Q_SLOTS:
+    void applySettings(const Settings&);
 
-  public:
-    virtual void replot() QWT_OVERRIDE;
+public:
+    virtual void replot() override;
 
-  private:
+private:
     void insertCurve();
 
     QwtLegend* m_externalLegend;

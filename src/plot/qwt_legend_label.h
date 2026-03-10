@@ -52,12 +52,12 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
     void setSpacing( int spacing );
     int spacing() const;
 
-    virtual void setText( const QwtText& ) QWT_OVERRIDE;
+    virtual void setText( const QwtText& ) override;
 
     void setIcon( const QPixmap& );
     QPixmap icon() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
 
     bool isChecked() const;
 
@@ -81,11 +81,11 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
     void setDown( bool );
     bool isDown() const;
 
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void mousePressEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void mouseReleaseEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void keyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
-    virtual void keyReleaseEvent( QKeyEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void mousePressEvent( QMouseEvent* ) override;
+    virtual void mouseReleaseEvent( QMouseEvent* ) override;
+    virtual void keyPressEvent( QKeyEvent* ) override;
+    virtual void keyReleaseEvent( QKeyEvent* ) override;
 
   private:
     class PrivateData;

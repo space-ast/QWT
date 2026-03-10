@@ -283,10 +283,10 @@ double QwtAbstractScale::scaleStepSize() const
  */
 void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
 {
-    if (scaleDraw == NULL || scaleDraw == m_data->scaleDraw)
+    if (scaleDraw == nullptr || scaleDraw == m_data->scaleDraw)
         return;
 
-    if (m_data->scaleDraw != NULL)
+    if (m_data->scaleDraw != nullptr)
         scaleDraw->setScaleDiv(m_data->scaleDraw->scaleDiv());
 
     delete m_data->scaleDraw;
@@ -322,7 +322,7 @@ const QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw() const
  */
 void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
 {
-    if (scaleEngine != NULL && scaleEngine != m_data->scaleEngine) {
+    if (scaleEngine != nullptr && scaleEngine != m_data->scaleEngine) {
         delete m_data->scaleEngine;
         m_data->scaleEngine = scaleEngine;
     }

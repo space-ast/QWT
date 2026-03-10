@@ -97,7 +97,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
     virtual void getCanvasMarginHint(
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, double& left, double& top,
-        double& right, double& bottom) const QWT_OVERRIDE;
+        double& right, double& bottom) const override;
 
 
   protected:

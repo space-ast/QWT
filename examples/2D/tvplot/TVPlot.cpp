@@ -13,8 +13,7 @@
 #include <QwtPlotGrid>
 #include <QwtPlotHistogram>
 #include <QwtColumnSymbol>
-#include <QwtSeriesData>
-
+#include "qwt_series_data.h"
 #include <QPen>
 #include <cstdlib>
 

@@ -80,8 +80,8 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
         TrailingScale
     };
 
-    explicit QwtSlider( QWidget* parent = NULL );
-    explicit QwtSlider( Qt::Orientation, QWidget* parent = NULL );
+    explicit QwtSlider( QWidget* parent = nullptr );
+    explicit QwtSlider( Qt::Orientation, QWidget* parent = nullptr );
 
     virtual ~QwtSlider();
 
@@ -106,8 +106,8 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     void setSpacing( int );
     int spacing() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     void setScaleDraw( QwtScaleDraw* );
     const QwtScaleDraw* scaleDraw() const;
@@ -116,22 +116,22 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     int updateInterval() const;
 
   protected:
-    virtual double scrolledTo( const QPoint& ) const QWT_OVERRIDE;
-    virtual bool isScrollPosition( const QPoint& ) const QWT_OVERRIDE;
+    virtual double scrolledTo( const QPoint& ) const override;
+    virtual bool isScrollPosition( const QPoint& ) const override;
 
     virtual void drawSlider ( QPainter*, const QRect& ) const;
     virtual void drawHandle( QPainter*, const QRect&, int pos ) const;
 
-    virtual void mousePressEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void mouseReleaseEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void resizeEvent( QResizeEvent* ) QWT_OVERRIDE;
-    virtual void paintEvent ( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void changeEvent( QEvent* ) QWT_OVERRIDE;
-    virtual void timerEvent( QTimerEvent* ) QWT_OVERRIDE;
+    virtual void mousePressEvent( QMouseEvent* ) override;
+    virtual void mouseReleaseEvent( QMouseEvent* ) override;
+    virtual void resizeEvent( QResizeEvent* ) override;
+    virtual void paintEvent ( QPaintEvent* ) override;
+    virtual void changeEvent( QEvent* ) override;
+    virtual void timerEvent( QTimerEvent* ) override;
 
-    virtual bool event( QEvent* ) QWT_OVERRIDE;
+    virtual bool event( QEvent* ) override;
 
-    virtual void scaleChange() QWT_OVERRIDE;
+    virtual void scaleChange() override;
 
     QRect sliderRect() const;
     QRect handleRect() const;

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -78,7 +78,7 @@ static inline QRegion qwtMaskRegion(const QLine& l, int penWidth)
 
 namespace
 {
-class Rubberband QWT_FINAL : public QwtWidgetOverlay
+class Rubberband final : public QwtWidgetOverlay
 {
 public:
     Rubberband(QwtPicker* picker, QWidget* parent) : QwtWidgetOverlay(parent), m_picker(picker)
@@ -87,13 +87,13 @@ public:
     }
 
 protected:
-    virtual void drawOverlay(QPainter* painter) const QWT_OVERRIDE
+    virtual void drawOverlay(QPainter* painter) const override
     {
         painter->setPen(m_picker->rubberBandPen());
         m_picker->drawRubberBand(painter);
     }
 
-    virtual QRegion maskHint() const QWT_OVERRIDE
+    virtual QRegion maskHint() const override
     {
         return m_picker->rubberBandMask();
     }
@@ -101,7 +101,7 @@ protected:
     QwtPicker* m_picker;
 };
 
-class Tracker QWT_FINAL : public QwtWidgetOverlay
+class Tracker final : public QwtWidgetOverlay
 {
 public:
     Tracker(QwtPicker* picker, QWidget* parent) : QwtWidgetOverlay(parent), m_picker(picker)
@@ -110,13 +110,13 @@ public:
     }
 
 protected:
-    virtual void drawOverlay(QPainter* painter) const QWT_OVERRIDE
+    virtual void drawOverlay(QPainter* painter) const override
     {
         painter->setPen(m_picker->trackerPen());
         m_picker->drawTracker(painter);
     }
 
-    virtual QRegion maskHint() const QWT_OVERRIDE
+    virtual QRegion maskHint() const override
     {
         return m_picker->trackerMask();
     }
@@ -289,7 +289,7 @@ QWidget* QwtPicker::parentWidget()
     if (obj && obj->isWidgetType())
         return static_cast< QWidget* >(obj);
 
-    return NULL;
+    return nullptr;
 }
 
 //! Return the parent widget, where the selection happens
@@ -299,7 +299,7 @@ const QWidget* QwtPicker::parentWidget() const
     if (obj && obj->isWidgetType())
         return static_cast< const QWidget* >(obj);
 
-    return NULL;
+    return nullptr;
 }
 
 /*!
@@ -888,7 +888,7 @@ bool QwtPicker::eventFilter(QObject* object, QEvent* event)
                Adding/deleting additional event filters inside of an event filter
                is not safe dues to the implementation in Qt ( changing a list while iterating ).
                So we create the overlays in a way, that they don't install en event filter
-               ( parent set to NULL ) and do the resizing here.
+               ( parent set to nullptr ) and do the resizing here.
              */
             if (m_data->trackerOverlay)
                 m_data->trackerOverlay->resize(re->size());
@@ -1452,7 +1452,7 @@ void QwtPicker::updateDisplay()
     QPointer< Rubberband >& rw = m_data->rubberBandOverlay;
     if (showRubberband) {
         if (rw.isNull()) {
-            rw = new Rubberband(this, nullptr);  // NULL -> no extra event filter
+            rw = new Rubberband(this, nullptr);  // nullptr -> no extra event filter
             rw->setObjectName("PickerRubberBand");
             rw->setParent(w);
             rw->resize(w->size());
@@ -1468,14 +1468,14 @@ void QwtPicker::updateDisplay()
         if (rw) {
             rw->hide();
             rw->deleteLater();
-            rw = NULL;
+            rw = nullptr;
         }
     }
 
     QPointer< Tracker >& tw = m_data->trackerOverlay;
     if (showTracker) {
         if (tw.isNull()) {
-            tw = new Tracker(this, NULL);  // NULL -> no extra event filter
+            tw = new Tracker(this, nullptr);  // nullptr -> no extra event filter
             tw->setObjectName("PickerTracker");
             tw->setParent(w);
             tw->resize(w->size());
@@ -1486,7 +1486,7 @@ void QwtPicker::updateDisplay()
         if (tw) {
             tw->hide();
             tw->deleteLater();
-            tw = NULL;
+            tw = nullptr;
         }
     }
 }

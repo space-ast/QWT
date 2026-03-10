@@ -67,7 +67,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
     QwtPlotTextLabel();
     virtual ~QwtPlotTextLabel();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setText( const QwtText& );
     QwtText text() const;
@@ -80,7 +80,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
   protected:
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
-        const QRectF&) const QWT_OVERRIDE;
+        const QRectF&) const override;
 
     void invalidateCache();
 

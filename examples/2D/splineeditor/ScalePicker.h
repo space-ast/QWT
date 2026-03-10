@@ -16,15 +16,15 @@ class QwtScaleWidget;
 class ScalePicker : public QObject
 {
     Q_OBJECT
-  public:
-    ScalePicker( QwtPlot* plot );
+public:
+    ScalePicker(QwtPlot* plot);
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-  Q_SIGNALS:
-    void clicked( int axis, double value );
+Q_SIGNALS:
+    void clicked(int axis, double value);
 
-  private:
-    void mouseClicked( const QwtScaleWidget*, const QPoint& );
-    QRect scaleRect( const QwtScaleWidget* ) const;
+private:
+    void mouseClicked(const QwtScaleWidget*, const QPoint&);
+    QRect scaleRect(const QwtScaleWidget*) const;
 };

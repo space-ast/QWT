@@ -38,7 +38,7 @@
 
 namespace
 {
-    class LayoutItem QWT_FINAL : public QLayoutItem
+    class LayoutItem final : public QLayoutItem
     {
       public:
         LayoutItem( const QwtPlotLegendItem*, const QwtPlotItem* );
@@ -49,16 +49,16 @@ namespace
         void setData( const QwtLegendData& );
         const QwtLegendData& data() const;
 
-        virtual Qt::Orientations expandingDirections() const QWT_OVERRIDE;
-        virtual QRect geometry() const QWT_OVERRIDE;
-        virtual bool hasHeightForWidth() const QWT_OVERRIDE;
-        virtual int heightForWidth( int ) const QWT_OVERRIDE;
-        virtual bool isEmpty() const QWT_OVERRIDE;
-        virtual QSize maximumSize() const QWT_OVERRIDE;
-        virtual int minimumHeightForWidth( int ) const QWT_OVERRIDE;
-        virtual QSize minimumSize() const QWT_OVERRIDE;
-        virtual void setGeometry( const QRect& ) QWT_OVERRIDE;
-        virtual QSize sizeHint() const QWT_OVERRIDE;
+        virtual Qt::Orientations expandingDirections() const override;
+        virtual QRect geometry() const override;
+        virtual bool hasHeightForWidth() const override;
+        virtual int heightForWidth( int ) const override;
+        virtual bool isEmpty() const override;
+        virtual QSize maximumSize() const override;
+        virtual int minimumHeightForWidth( int ) const override;
+        virtual QSize minimumSize() const override;
+        virtual void setGeometry( const QRect& ) override;
+        virtual QSize sizeHint() const override;
 
       private:
 
@@ -297,7 +297,7 @@ void QwtPlotLegendItem::setMargin( int margin )
 int QwtPlotLegendItem::margin() const
 {
     int left;
-    m_data->layout->getContentsMargins( &left, NULL, NULL, NULL );
+    m_data->layout->getContentsMargins( &left, nullptr, nullptr, nullptr );
 
     return left;
 }
@@ -714,7 +714,7 @@ QRect QwtPlotLegendItem::geometry( const QRectF& canvasRect ) const
 void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
     const QList< QwtLegendData >& data )
 {
-    if ( plotItem == NULL )
+    if ( plotItem == nullptr )
         return;
 
     QList< LayoutItem* > layoutItems;

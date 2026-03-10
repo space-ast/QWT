@@ -136,7 +136,7 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
         Notch
     };
 
-    explicit QwtKnob( QWidget* parent = NULL );
+    explicit QwtKnob( QWidget* parent = nullptr );
     virtual ~QwtKnob();
 
     void setAlignment( Qt::Alignment );
@@ -163,8 +163,8 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
     void setMarkerSize( int );
     int markerSize() const;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual QSize minimumSizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual QSize minimumSizeHint() const override;
 
     void setScaleDraw( QwtRoundScaleDraw* );
 
@@ -174,8 +174,8 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
     QRect knobRect() const;
 
   protected:
-    virtual void paintEvent( QPaintEvent* ) QWT_OVERRIDE;
-    virtual void changeEvent( QEvent* ) QWT_OVERRIDE;
+    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void changeEvent( QEvent* ) override;
 
     virtual void drawKnob( QPainter*, const QRectF& ) const;
 
@@ -184,8 +184,8 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
     virtual void drawMarker( QPainter*,
         const QRectF&, double angle ) const;
 
-    virtual double scrolledTo( const QPoint& ) const QWT_OVERRIDE;
-    virtual bool isScrollPosition( const QPoint& ) const QWT_OVERRIDE;
+    virtual double scrolledTo( const QPoint& ) const override;
+    virtual bool isScrollPosition( const QPoint& ) const override;
 
   private:
     class PrivateData;

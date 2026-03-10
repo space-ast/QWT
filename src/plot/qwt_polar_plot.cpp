@@ -27,7 +27,7 @@ namespace
 class QwtPolarPlotScaleData
 {
 public:
-    QwtPolarPlotScaleData() : isValid(false), scaleEngine(NULL)
+    QwtPolarPlotScaleData() : isValid(false), scaleEngine(nullptr)
     {
     }
 
@@ -240,7 +240,7 @@ void QwtPolarPlot::updateLegend()
  */
 void QwtPolarPlot::updateLegend(const QwtPolarItem* plotItem)
 {
-    if (plotItem == NULL)
+    if (plotItem == nullptr)
         return;
 
     QList< QwtLegendData > legendData;
@@ -448,7 +448,7 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
         return;
 
     QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
-    if (scaleEngine == NULL || scaleEngine == scaleData.scaleEngine)
+    if (scaleEngine == nullptr || scaleEngine == scaleData.scaleEngine)
         return;
 
     delete scaleData.scaleEngine;
@@ -468,7 +468,7 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 {
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-        return NULL;
+        return nullptr;
 
     return m_data->scaleData[ scaleId ].scaleEngine;
 }
@@ -482,7 +482,7 @@ QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
 {
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-        return NULL;
+        return nullptr;
 
     return m_data->scaleData[ scaleId ].scaleEngine;
 }
@@ -547,7 +547,7 @@ void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
 const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 {
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-        return NULL;
+        return nullptr;
 
     return &m_data->scaleData[ scaleId ].scaleDiv;
 }
@@ -566,7 +566,7 @@ const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
 {
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
-        return NULL;
+        return nullptr;
 
     return &m_data->scaleData[ scaleId ].scaleDiv;
 }
@@ -1234,7 +1234,7 @@ QVariant QwtPolarPlot::itemToInfo(QwtPolarItem* plotItem) const
         return qvariant_cast<QwtPlotItem *>( itemInfo );
    \endcode
    \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a NULL pointer.
+   \return A plot item, when successful, otherwise a nullptr pointer.
    \sa itemToInfo()
  */
 QwtPolarItem* QwtPolarPlot::infoToItem(const QVariant& itemInfo) const
@@ -1242,5 +1242,5 @@ QwtPolarItem* QwtPolarPlot::infoToItem(const QVariant& itemInfo) const
     if (itemInfo.canConvert< QwtPolarItem* >())
         return qvariant_cast< QwtPolarItem* >(itemInfo);
 
-    return NULL;
+    return nullptr;
 }

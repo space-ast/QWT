@@ -149,16 +149,16 @@ class QWT_EXPORT QwtPlotVectorField
 
     virtual double arrowLength( double magnitude ) const;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual void drawSeries( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const QWT_OVERRIDE;
+        const QRectF& canvasRect, int from, int to ) const override;
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const QWT_OVERRIDE;
+        int index, const QSizeF& ) const override;
 
     void setMagnitudeScaleFactor( double factor );
     double magnitudeScaleFactor() const;
@@ -171,7 +171,7 @@ class QWT_EXPORT QwtPlotVectorField
     virtual void drawSymbol( QPainter*,
         double x, double y, double vx, double vy ) const;
 
-    virtual void dataChanged() QWT_OVERRIDE;
+    virtual void dataChanged() override;
 
   private:
     void init();

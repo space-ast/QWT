@@ -122,7 +122,7 @@ static inline void qwtDrawSvgSymbols( QPainter* painter,
     const QPointF* points, int numPoints,
     QSvgRenderer* renderer, const QwtSymbol& symbol )
 {
-    if ( renderer == NULL || !renderer->isValid() )
+    if ( renderer == nullptr || !renderer->isValid() )
         return;
 
     const QRectF viewBox = renderer->viewBoxF();
@@ -797,7 +797,7 @@ class QwtSymbol::PrivateData
     {
         cache.policy = QwtSymbol::AutoCache;
 #ifndef QWT_NO_SVG
-        svg.renderer = NULL;
+        svg.renderer = nullptr;
 #endif
     }
 
@@ -1061,7 +1061,7 @@ const QwtGraphic& QwtSymbol::graphic() const
 void QwtSymbol::setSvgDocument( const QByteArray& svgDocument )
 {
     m_data->style = QwtSymbol::SvgDocument;
-    if ( m_data->svg.renderer == NULL )
+    if ( m_data->svg.renderer == nullptr )
         m_data->svg.renderer = new QSvgRenderer();
 
     m_data->svg.renderer->load( svgDocument );
@@ -1406,7 +1406,7 @@ void QwtSymbol::drawSymbols( QPainter* painter,
 
         if ( m_data->cache.pixmap.isNull() )
         {
-            m_data->cache.pixmap = QwtPainter::backingStore( NULL, br.size() );
+            m_data->cache.pixmap = QwtPainter::backingStore( nullptr, br.size() );
             m_data->cache.pixmap.fill( Qt::transparent );
 
             QPainter p( &m_data->cache.pixmap );

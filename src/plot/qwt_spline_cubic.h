@@ -53,15 +53,15 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
     QwtSplineCubic();
     virtual ~QwtSplineCubic();
 
-    virtual uint locality() const QWT_OVERRIDE;
+    virtual uint locality() const override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const QWT_OVERRIDE;
+    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const override;
 
     // calculating the parametric equations
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< double > slopes( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QVector< double > curvatures( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+    virtual QVector< double > slopes( const QPolygonF& ) const override;
+    virtual QVector< double > curvatures( const QPolygonF& ) const override;
 
   private:
     class PrivateData;

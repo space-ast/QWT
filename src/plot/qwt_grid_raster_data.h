@@ -1,4 +1,4 @@
-﻿#ifndef QWT_GRID_RASTER_DATA_H
+#ifndef QWT_GRID_RASTER_DATA_H
 #define QWT_GRID_RASTER_DATA_H
 #include "qwt_global.h"
 #include "qwt_raster_data.h"
@@ -53,7 +53,7 @@ public:
     void setResampleMode(ResampleMode mode);
     ResampleMode resampleMode() const;
 
-    virtual QwtInterval interval(Qt::Axis axis) const QWT_OVERRIDE QWT_FINAL;
+    virtual QwtInterval interval(Qt::Axis axis) const override final;
 
     /**
      * @brief Set new x-axis, y-axis, and data matrix.
@@ -83,9 +83,9 @@ public:
      * @param data The 2D data matrix. / 二维数据矩阵。
      */
     void setValue(const QVector< double >& x, const QVector< double >& y, const QVector< QVector< double > >& v);
-    virtual double value(double x, double y) const QWT_OVERRIDE;
+    virtual double value(double x, double y) const override;
 
-    virtual QRectF pixelHint(const QRectF&) const QWT_OVERRIDE;
+    virtual QRectF pixelHint(const QRectF&) const override;
 
     // 获取尺寸
     int xSize() const;

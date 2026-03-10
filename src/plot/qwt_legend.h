@@ -50,7 +50,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     Q_OBJECT
 
   public:
-    explicit QwtLegend( QWidget* parent = NULL );
+    explicit QwtLegend( QWidget* parent = nullptr );
     virtual ~QwtLegend();
 
     void setMaxColumns( uint numColums );
@@ -67,22 +67,22 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 
     QVariant itemInfo( const QWidget* ) const;
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+    virtual bool eventFilter( QObject*, QEvent* ) override;
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
-    virtual int heightForWidth( int w ) const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
+    virtual int heightForWidth( int w ) const override;
 
     QScrollBar* horizontalScrollBar() const;
     QScrollBar* verticalScrollBar() const;
 
     virtual void renderLegend( QPainter*,
-        const QRectF&, bool fillBackground ) const QWT_OVERRIDE;
+        const QRectF&, bool fillBackground ) const override;
 
     virtual void renderItem( QPainter*,
         const QWidget*, const QRectF&, bool fillBackground ) const;
 
-    virtual bool isEmpty() const QWT_OVERRIDE;
-    virtual int scrollExtent( Qt::Orientation ) const QWT_OVERRIDE;
+    virtual bool isEmpty() const override;
+    virtual int scrollExtent( Qt::Orientation ) const override;
 
   Q_SIGNALS:
     /*!
@@ -116,7 +116,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 
   public Q_SLOTS:
     virtual void updateLegend( const QVariant&,
-        const QList< QwtLegendData >& ) QWT_OVERRIDE;
+        const QList< QwtLegendData >& ) override;
 
   protected Q_SLOTS:
     void itemClicked();

@@ -57,7 +57,7 @@ class QwtPlotHistogram::PrivateData
     PrivateData()
         : baseline( 0.0 )
         , style( Columns )
-        , symbol( NULL )
+        , symbol( nullptr )
     {
     }
 
@@ -235,7 +235,7 @@ void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
 }
 
 /*!
-   \return Current symbol or NULL, when no symbol has been assigned
+   \return Current symbol or nullptr, when no symbol has been assigned
    \sa setSymbol()
  */
 const QwtColumnSymbol* QwtPlotHistogram::symbol() const

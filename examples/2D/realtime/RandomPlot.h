@@ -14,24 +14,24 @@ class RandomPlot : public IncrementalPlot
 {
     Q_OBJECT
 
-  public:
-    RandomPlot( QWidget* parent = NULL );
+public:
+    RandomPlot(QWidget* parent = NULL);
 
-    virtual QSize sizeHint() const QWT_OVERRIDE;
+    virtual QSize sizeHint() const override;
 
-  Q_SIGNALS:
-    void running( bool );
-    void elapsed( int ms );
+Q_SIGNALS:
+    void running(bool);
+    void elapsed(int ms);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void clear();
     void stop();
-    void append( int timeout, int count );
+    void append(int timeout, int count);
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void appendPoint();
 
-  private:
+private:
     void initCurve();
 
     QTimer* m_timer;

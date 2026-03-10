@@ -22,7 +22,7 @@ class Editor : public QObject
 {
     Q_OBJECT
 
-  public:
+public:
     enum Mode
     {
         NoMask,
@@ -32,33 +32,33 @@ class Editor : public QObject
         AlphaMaskCopyMask
     };
 
-    Editor( QwtPlot* );
+    Editor(QwtPlot*);
     virtual ~Editor();
 
     const QwtPlot* plot() const;
     QwtPlot* plot();
 
-    virtual void setEnabled( bool on );
+    virtual void setEnabled(bool on);
     bool isEnabled() const;
 
-    void drawOverlay( QPainter* ) const;
+    void drawOverlay(QPainter*) const;
     QRegion maskHint() const;
 
-    virtual bool eventFilter( QObject*, QEvent*) QWT_OVERRIDE;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-    void setMode( Mode mode );
+    void setMode(Mode mode);
     Mode mode() const;
 
-  private:
-    bool pressed( const QPoint& );
-    bool moved( const QPoint& );
-    void released( const QPoint& );
+private:
+    bool pressed(const QPoint&);
+    bool moved(const QPoint&);
+    void released(const QPoint&);
 
-    QwtPlotShapeItem* itemAt( const QPoint& ) const;
-    void raiseItem( QwtPlotShapeItem* );
+    QwtPlotShapeItem* itemAt(const QPoint&) const;
+    void raiseItem(QwtPlotShapeItem*);
 
-    QRegion maskHint( QwtPlotShapeItem* ) const;
-    void setItemVisible( QwtPlotShapeItem*, bool on );
+    QRegion maskHint(QwtPlotShapeItem*) const;
+    void setItemVisible(QwtPlotShapeItem*, bool on);
 
     bool m_isEnabled;
     QPointer< QwtWidgetOverlay > m_overlay;

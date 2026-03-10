@@ -197,7 +197,7 @@ public:
         , upperMargin(0.0)
         , referenceValue(0.0)
         , base(10)
-        , transform(NULL)
+        , transform(nullptr)
     {
     }
 
@@ -260,14 +260,14 @@ void QwtScaleEngine::setTransformation(QwtTransform* transform)
 /*!
    Create and return a clone of the transformation
    of the engine. When the engine has no special transformation
-   NULL is returned, indicating no transformation.
+   nullptr is returned, indicating no transformation.
 
    \return A clone of the transformation
    \sa setTransformation()
  */
 QwtTransform* QwtScaleEngine::transformation() const
 {
-    QwtTransform* transform = NULL;
+    QwtTransform* transform = nullptr;
     if (m_data->transform)
         transform = m_data->transform->copy();
 

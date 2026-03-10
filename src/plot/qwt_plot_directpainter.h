@@ -89,7 +89,7 @@ class QWT_EXPORT QwtPlotDirectPainter : public QObject
 
     Q_DECLARE_FLAGS( Attributes, Attribute )
 
-    explicit QwtPlotDirectPainter( QObject* parent = NULL );
+    explicit QwtPlotDirectPainter( QObject* parent = nullptr );
     virtual ~QwtPlotDirectPainter();
 
     void setAttribute( Attribute, bool on );
@@ -104,7 +104,7 @@ class QWT_EXPORT QwtPlotDirectPainter : public QObject
     void drawSeries( QwtPlotSeriesItem*, int from, int to );
     void reset();
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+    virtual bool eventFilter( QObject*, QEvent* ) override;
 
   private:
     class PrivateData;

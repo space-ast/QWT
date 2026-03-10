@@ -50,8 +50,8 @@ class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
     const QwtSpline* spline() const;
     QwtSpline* spline();
 
-    virtual QPolygonF fitCurve( const QPolygonF& ) const QWT_OVERRIDE;
-    virtual QPainterPath fitCurvePath( const QPolygonF& ) const QWT_OVERRIDE;
+    virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
     QwtSpline* m_spline;

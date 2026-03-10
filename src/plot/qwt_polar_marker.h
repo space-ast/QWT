@@ -39,7 +39,7 @@ class QWT_EXPORT QwtPolarMarker : public QwtPolarItem
     explicit QwtPolarMarker();
     virtual ~QwtPolarMarker();
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     void setPosition( const QwtPointPolar& );
     QwtPointPolar position() const;
@@ -56,9 +56,9 @@ class QWT_EXPORT QwtPolarMarker : public QwtPolarItem
     virtual void draw( QPainter* painter,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
         const QPointF& pole, double radius,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
-    virtual QwtInterval boundingInterval( int scaleId ) const QWT_OVERRIDE;
+    virtual QwtInterval boundingInterval( int scaleId ) const override;
 
   private:
     class PrivateData;

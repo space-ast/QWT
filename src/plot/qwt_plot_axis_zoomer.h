@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -143,7 +143,7 @@ public:
     QRectF zoomBase() const;
     QRectF zoomRect() const;
 
-    virtual void setAxes(QwtAxisId xAxis, QwtAxisId yAxis) QWT_OVERRIDE;
+    virtual void setAxes(QwtAxisId xAxis, QwtAxisId yAxis) override;
 
     void setMaxStackDepth(int);
     int maxStackDepth() const;
@@ -175,12 +175,12 @@ protected:
 
     virtual QSizeF minZoomSize() const;
 
-    virtual void widgetMouseReleaseEvent(QMouseEvent*) QWT_OVERRIDE;
-    virtual void widgetKeyPressEvent(QKeyEvent*) QWT_OVERRIDE;
+    virtual void widgetMouseReleaseEvent(QMouseEvent*) override;
+    virtual void widgetKeyPressEvent(QKeyEvent*) override;
 
-    virtual void begin() QWT_OVERRIDE;
-    virtual bool end(bool ok = true) QWT_OVERRIDE;
-    virtual bool accept(QPolygon&) const QWT_OVERRIDE;
+    virtual void begin() override;
+    virtual bool end(bool ok = true) override;
+    virtual bool accept(QPolygon&) const override;
 
 private:
     void init(bool doReplot);

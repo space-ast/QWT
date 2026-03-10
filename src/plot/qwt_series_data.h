@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -180,7 +180,7 @@ public:
     const QVector< T > samples() const;
 
     //! \return Number of samples
-    virtual size_t size() const QWT_OVERRIDE;
+    virtual size_t size() const override;
 
     /*!
        \return Sample at a specific position
@@ -188,7 +188,7 @@ public:
        \param index Index
        \return Sample at position index
      */
-    virtual T sample(size_t index) const QWT_OVERRIDE;
+    virtual T sample(size_t index) const override;
 
 protected:
     //! Vector of samples
@@ -249,7 +249,7 @@ class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 public:
     QwtPointSeriesData(const QVector< QPointF >& = QVector< QPointF >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of 3D points
@@ -258,7 +258,7 @@ class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 public:
     QwtPoint3DSeriesData(const QVector< QwtPoint3D >& = QVector< QwtPoint3D >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of intervals
@@ -267,7 +267,7 @@ class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalS
 public:
     QwtIntervalSeriesData(const QVector< QwtIntervalSample >& = QVector< QwtIntervalSample >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of samples
@@ -276,7 +276,7 @@ class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 public:
     QwtSetSeriesData(const QVector< QwtSetSample >& = QVector< QwtSetSample >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 //! Interface for iterating over an array of vector field samples
@@ -285,7 +285,7 @@ class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldS
 public:
     QwtVectorFieldData(const QVector< QwtVectorFieldSample >& = QVector< QwtVectorFieldSample >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 /*!
@@ -296,7 +296,7 @@ class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample 
 public:
     QwtTradingChartData(const QVector< QwtOHLCSample >& = QVector< QwtOHLCSample >());
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 };
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);

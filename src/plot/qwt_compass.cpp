@@ -149,7 +149,7 @@ QwtText QwtCompassScaleDraw::label(double value) const
 class QwtCompass::PrivateData
 {
 public:
-    PrivateData() : rose(NULL)
+    PrivateData() : rose(nullptr)
     {
     }
 

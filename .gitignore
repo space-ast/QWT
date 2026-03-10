@@ -20,7 +20,8 @@ tmp-file
 .$*
 .vs
 out
-
+.qoderignore
+.qoder
 #文档目录
 site
 site-doxygen

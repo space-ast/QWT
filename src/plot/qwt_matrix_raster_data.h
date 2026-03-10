@@ -77,7 +77,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
     ResampleMode resampleMode() const;
 
     void setInterval( Qt::Axis, const QwtInterval& );
-    virtual QwtInterval interval( Qt::Axis axis) const QWT_OVERRIDE QWT_FINAL;
+    virtual QwtInterval interval( Qt::Axis axis) const override final;
 
     void setValueMatrix( const QVector< double >& values, int numColumns );
     const QVector< double > valueMatrix() const;
@@ -87,9 +87,9 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
     int numColumns() const;
     int numRows() const;
 
-    virtual QRectF pixelHint( const QRectF& ) const QWT_OVERRIDE;
+    virtual QRectF pixelHint( const QRectF& ) const override;
 
-    virtual double value( double x, double y ) const QWT_OVERRIDE;
+    virtual double value( double x, double y ) const override;
 
   private:
     void update();

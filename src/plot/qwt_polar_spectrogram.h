@@ -58,14 +58,14 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
     void setPaintAttribute( PaintAttribute, bool on = true );
     bool testPaintAttribute( PaintAttribute ) const;
 
-    virtual int rtti() const QWT_OVERRIDE;
+    virtual int rtti() const override;
 
     virtual void draw( QPainter* painter,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
         const QPointF& pole, double radius,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
-    virtual QwtInterval boundingInterval( int scaleId ) const QWT_OVERRIDE;
+    virtual QwtInterval boundingInterval( int scaleId ) const override;
 
   protected:
     virtual QImage renderImage(

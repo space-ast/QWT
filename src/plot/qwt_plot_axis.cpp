@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -47,7 +47,7 @@ public:
         , maxMinor(5)
         , isValid(false)
         , scaleEngine(new QwtLinearScaleEngine())
-        , scaleWidget(NULL)
+        , scaleWidget(nullptr)
     {
     }
 
@@ -146,7 +146,7 @@ void QwtPlot::initAxesData()
 void QwtPlot::deleteAxesData()
 {
     delete m_scaleData;
-    m_scaleData = NULL;
+    m_scaleData = nullptr;
 }
 
 /*!
@@ -170,20 +170,20 @@ bool QwtPlot::isAxisValid(QwtAxisId axisId) const
 /*!
    \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
    \param axisId Axis/轴 ID
-   \return Scale widget, or NULL if axisId is invalid/刻度控件指针；轴无效时返回 NULL
+   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
  */
 const QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId) const
 {
     if (isAxisValid(axisId))
         return m_scaleData->axisData(axisId).scaleWidget;
 
-    return NULL;
+    return nullptr;
 }
 
 /*!
    \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
    \param axisId Axis/轴 ID
-   \return Scale widget, or NULL if axisId is invalid/刻度控件指针；轴无效时返回 NULL
+   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
  */
 QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
 {
@@ -271,7 +271,7 @@ QwtAxisId QwtPlot::visibleYAxisId() const
  */
 void QwtPlot::setAxisScaleEngine(QwtAxisId axisId, QwtScaleEngine* scaleEngine)
 {
-    if (isAxisValid(axisId) && scaleEngine != NULL) {
+    if (isAxisValid(axisId) && scaleEngine != nullptr) {
         AxisData& d = m_scaleData->axisData(axisId);
 
         delete d.scaleEngine;
@@ -295,7 +295,7 @@ QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId)
     if (isAxisValid(axisId))
         return m_scaleData->axisData(axisId).scaleEngine;
     else
-        return NULL;
+        return nullptr;
 }
 
 /*!
@@ -308,7 +308,7 @@ const QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId) const
     if (isAxisValid(axisId))
         return m_scaleData->axisData(axisId).scaleEngine;
     else
-        return NULL;
+        return nullptr;
 }
 
 /*!
@@ -399,12 +399,12 @@ const QwtScaleDiv& QwtPlot::axisScaleDiv(QwtAxisId axisId) const
  * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
  *
  * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or NULL if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
  */
 const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
 {
     if (!isAxisValid(axisId))
-        return NULL;
+        return nullptr;
 
     return axisWidget(axisId)->scaleDraw();
 }
@@ -413,7 +413,7 @@ const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
  * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
  *
  * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or NULL if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
  */
 QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId)
 {

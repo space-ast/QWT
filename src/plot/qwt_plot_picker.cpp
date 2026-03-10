@@ -190,7 +190,7 @@ QwtAxisId QwtPlotPicker::yAxis() const
  */
 QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 {
-    if (plot() == NULL)
+    if (plot() == nullptr)
         return QwtText();
 
     return trackerTextF(invTransform(pos));

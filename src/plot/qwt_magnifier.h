@@ -79,7 +79,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
     void setZoomOutKey( int key, Qt::KeyboardModifiers = Qt::NoModifier );
     void getZoomOutKey( int& key, Qt::KeyboardModifiers& ) const;
 
-    virtual bool eventFilter( QObject*, QEvent* ) QWT_OVERRIDE;
+    virtual bool eventFilter( QObject*, QEvent* ) override;
 
   protected:
     /*!

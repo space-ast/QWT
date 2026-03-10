@@ -52,7 +52,7 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const QWT_OVERRIDE;
+        const QRectF& canvasRect ) const override;
 
     /*!
        Draw a subset of the samples
@@ -69,13 +69,13 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, int from, int to ) const = 0;
 
-    virtual QRectF boundingRect() const QWT_OVERRIDE;
+    virtual QRectF boundingRect() const override;
 
     virtual void updateScaleDiv(
-        const QwtScaleDiv&, const QwtScaleDiv& ) QWT_OVERRIDE;
+        const QwtScaleDiv&, const QwtScaleDiv& ) override;
 
   protected:
-    virtual void dataChanged() QWT_OVERRIDE;
+    virtual void dataChanged() override;
 
   private:
     class PrivateData;

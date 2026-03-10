@@ -64,7 +64,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     Q_PROPERTY( bool invertedControls READ invertedControls WRITE setInvertedControls )
 
   public:
-    explicit QwtAbstractSlider( QWidget* parent = NULL );
+    explicit QwtAbstractSlider( QWidget* parent = nullptr );
     virtual ~QwtAbstractSlider();
 
     void setValid( bool );
@@ -136,11 +136,11 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     void sliderMoved( double value );
 
   protected:
-    virtual void mousePressEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void mouseReleaseEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void mouseMoveEvent( QMouseEvent* ) QWT_OVERRIDE;
-    virtual void keyPressEvent( QKeyEvent* ) QWT_OVERRIDE;
-    virtual void wheelEvent( QWheelEvent* ) QWT_OVERRIDE;
+    virtual void mousePressEvent( QMouseEvent* ) override;
+    virtual void mouseReleaseEvent( QMouseEvent* ) override;
+    virtual void mouseMoveEvent( QMouseEvent* ) override;
+    virtual void keyPressEvent( QKeyEvent* ) override;
+    virtual void wheelEvent( QWheelEvent* ) override;
 
     /*!
        \brief Determine what to do when the user presses a mouse button.
@@ -165,7 +165,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 
     void incrementValue( int stepCount );
 
-    virtual void scaleChange() QWT_OVERRIDE;
+    virtual void scaleChange() override;
 
   protected:
     virtual void sliderChange();

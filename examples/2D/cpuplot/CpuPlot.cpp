@@ -25,7 +25,7 @@ public:
     TimeScaleDraw(const QTime& base) : baseTime(base)
     {
     }
-    virtual QwtText label(double v) const QWT_OVERRIDE
+    virtual QwtText label(double v) const override
     {
         QTime upTime = baseTime.addSecs(static_cast< int >(v));
         return upTime.toString();
@@ -43,12 +43,12 @@ public:
         setZ(0.0);
     }
 
-    virtual int rtti() const QWT_OVERRIDE
+    virtual int rtti() const override
     {
         return QwtPlotItem::Rtti_PlotUserItem;
     }
 
-    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap& yMap, const QRectF& canvasRect) const QWT_OVERRIDE
+    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap& yMap, const QRectF& canvasRect) const override
     {
         QColor c(Qt::white);
         QRectF r = canvasRect;

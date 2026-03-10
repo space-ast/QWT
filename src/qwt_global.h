@@ -53,24 +53,7 @@
 #define QWT_EXPORT
 #endif
 
-#define QWT_CONSTEXPR Q_DECL_CONSTEXPR
-
-#if QT_VERSION >= 0x050000
-#define QWT_OVERRIDE Q_DECL_OVERRIDE
-#define QWT_FINAL Q_DECL_FINAL
-#endif
-
-#ifndef QWT_CONSTEXPR
-#define QWT_CONSTEXPR
-#endif
-
-#ifndef QWT_OVERRIDE
-#define QWT_OVERRIDE
-#endif
-
-#ifndef QWT_FINAL
-#define QWT_FINAL
-#endif
+#define QWT_CONSTEXPR constexpr
 
 #ifndef QWT_DEBUG_DRAW
 #define QWT_DEBUG_DRAW 0
@@ -159,7 +142,7 @@
  * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
  */
 #ifndef QWT_PIMPL_CONSTRUCT
-#define QWT_PIMPL_CONSTRUCT m_data(std::make_unique< PrivateData >(this))
+#define QWT_PIMPL_CONSTRUCT m_data(qwt_make_unique< PrivateData >(this))
 #endif
 
 /**
@@ -168,9 +151,9 @@
  * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
  */
 #ifndef QWT_PIMPL_CONSTRUCT_INIT
-#define QWT_PIMPL_CONSTRUCT_INIT() \
-do {                                                                                                               \
-        m_data = std::make_unique< PrivateData >(this);                                                                \
+#define QWT_PIMPL_CONSTRUCT_INIT()                                                                                     \
+    do {                                                                                                               \
+        m_data = qwt_make_unique< PrivateData >(this);                                                                 \
     } while (0)
 #endif
 
@@ -249,6 +232,5 @@ std::unique_ptr< T > qwt_make_unique(std::size_t size)
 #define qwt_as_const qAsConst
 #endif
 #endif
-
 
 #endif

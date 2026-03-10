@@ -17,16 +17,16 @@ class Plot : public QwtPlot
 {
     Q_OBJECT
 
-  public:
-    Plot( QWidget* = NULL );
+public:
+    Plot(QWidget* = NULL);
 
-  public Q_SLOTS:
-    void setSettings( const Settings& );
+public Q_SLOTS:
+    void setSettings(const Settings&);
 
-  protected:
-    virtual void timerEvent( QTimerEvent* ) QWT_OVERRIDE;
+protected:
+    virtual void timerEvent(QTimerEvent*) override;
 
-  private:
+private:
     void alignScales();
 
     QwtPlotGrid* m_grid;

@@ -45,7 +45,7 @@ public Q_SLOTS:
     virtual void movePlot(int dx, int dy);
 
 protected:
-    virtual void widgetMousePressEvent(QMouseEvent*) QWT_OVERRIDE;
+    virtual void widgetMousePressEvent(QMouseEvent*) override;
 };
 
 #endif
