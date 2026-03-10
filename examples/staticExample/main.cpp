@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
     // 创建主窗口
     QMainWindow mainWindow;
-    mainWindow.setWindowTitle("QwtFigure Layout Example");
+    mainWindow.setWindowTitle("Static Example");
     mainWindow.resize(1200, 800);
 
     // 创建中央部件
