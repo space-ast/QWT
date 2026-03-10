@@ -5,7 +5,7 @@
 class QwtFigure;
 class QwtPlot;
 class QwtFigureWidgetOverlay;
-class PickLinker;
+class QwtPlotSeriesDataPickerGroup;
 
 namespace Ui
 {
@@ -39,12 +39,14 @@ private:
     void setupPlotStyle(QwtPlot* plot, const QString& title, const QColor& color);
     // 创建寄生绘图
     QwtPlot* createParasitePlot();
+private Q_SLOTS:
+    void onActionResizeTriggered(bool on);
 
 private:
     Ui::MainWindow* ui;
     QwtFigure* m_figure { nullptr };
     QwtFigureWidgetOverlay* m_figureOverlay { nullptr };
-    PickLinker* m_pickerLinker { nullptr };
+    QwtPlotSeriesDataPickerGroup* m_pickerLinker { nullptr };
 };
 
 #endif  // MAINWINDOW_H

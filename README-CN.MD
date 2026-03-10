@@ -26,21 +26,22 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
 
 下面是我的目标以及目前我已经完成的一些工作：
 
-- [x] CMake支持 
+- [x] CMake支持
 - [x] 支持Qt6
-- [x] 合并为单一文件，简化引入
+- [x] 合并为单一文件QwtPlot.h/cpp，简化引入
 - [x] 美化控件，坐标轴和画布默认紧贴不再有间隔
 - [x] 提供Figure实现绘图的布局
 - [x] 增加寄生轴的支持，实现n个坐标轴
-- [ ] C++11优化(进行中)
+- [x] C++11优化
 - [x] 提供一些集成的交互方法，让使用更简单
-    - [x] 提供一个通用的数据拾取功能
-    - [x] 调整QwtPanner的实现，使其拖动时能实时渲染，并使其能支持多坐标轴
-    - [x] 调整zoomer的实现，使其支持多坐标轴
+  - [x] 提供一个通用的数据拾取功能
+  - [x] 调整QwtPanner的实现，使其拖动时能实时渲染，并使其能支持多坐标轴
+  - [x] 调整zoomer的实现，使其支持多坐标轴
+- [x] 集成3D绘图
 
 总之，我将继续维护`Qwt`，让其成为一个协议友好，性能优越，方便使用的Qt绘图库
 
-## Qwt7.0的新特性
+## Qwt7的新特性
 
 ### Cmake支持
 
@@ -58,7 +59,7 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 
 ### 单一头文件和源文件
 
-参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用
+参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用2D和3D绘图
 
 具体参阅:[QWT库的引入](https://czyt1988.github.io/QWT/zh/use-guide/import-qwt)
 
@@ -78,7 +79,7 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 
 ![figure-widget-overlay](./docs/assets/screenshots/figure-widget-overlay.gif)
 
-`QwtFigure`提供了子图坐标轴对齐功能
+`QwtFigure`提供了子图坐标轴对齐功能，可以让多个绘图的坐标轴对齐
 
 ![figure-widget-overlay](./docs/assets/picture/figure-scale-aligment.png)
 
@@ -138,7 +139,6 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 
 详细的日志请参阅[CHANGES.MD](./CHANGES.md)
 
-
 ## Copyright
 
 ---------
@@ -189,7 +189,7 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 
 |  |  |  |
 |:---:|:---:|:---:|
-|![Vector Field](./docs/assets/screenshots/vectorfield.png)|![Stock Chart](./docs/assets/screenshots/stockchart.png)|![Bode Plot](./docs/assets/screenshots/bode.png)| 
+|![Vector Field](./docs/assets/screenshots/vectorfield.png)|![Stock Chart](./docs/assets/screenshots/stockchart.png)|![Bode Plot](./docs/assets/screenshots/bode.png)|
 |`playground/vectorfield`|`examples/stockchart`|`examples/bode`|
 
 |  |  |  |
@@ -232,7 +232,7 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 |:---:|:---:|:---:|
 |![Dial Controls](./docs/assets/screenshots/controls-dial.png)|![Knob Controls](./docs/assets/screenshots/controls-knob.png)|![Slider Controls](./docs/assets/screenshots/controls-sliders.png)|
 |`examples/controls`|`examples/controls`|`examples/controls`|
- 
+
 |  |  |  |
 |:---:|:---:|:---:|
 |![Wheel & Thermo](./docs/assets/screenshots/controls-wheel-thermo.png)|![Radio Buttons](./docs/assets/screenshots/radio.png)|![Time Scale Demo](./docs/assets/screenshots/timescale.png)|
@@ -244,6 +244,3 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 |:---:|:---:|:---:|
 |![Compass Dial](./docs/assets/screenshots/dials-compass.png)|![Cockpit Dials](./docs/assets/screenshots/dials-cockpit.png)||
 |`examples/dials`|`examples/dials`||
-
-  
-  

@@ -58,6 +58,7 @@ public:
     ~QwtFigureWidgetOverlay();
     QwtFigure* figure() const;
     void setTransparentForMouseEvents(bool on);
+    bool isTransparentForMouseEvents() const;
 
 public:
     // 根据点和矩形的关系，返回图标的样式

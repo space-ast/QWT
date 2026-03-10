@@ -18,7 +18,7 @@
 #include "qwt_qt5qt6_compat.hpp"
 
 #ifndef QwtFigureWidgetOverlay_DEBUG_PRINT
-#define QwtFigureWidgetOverlay_DEBUG_PRINT 0
+#define QwtFigureWidgetOverlay_DEBUG_PRINT 1
 #endif
 
 class QwtFigureWidgetOverlay::PrivateData
@@ -88,6 +88,11 @@ QwtFigure* QwtFigureWidgetOverlay::figure() const
 void QwtFigureWidgetOverlay::setTransparentForMouseEvents(bool on)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents, on);
+}
+
+bool QwtFigureWidgetOverlay::isTransparentForMouseEvents() const
+{
+    return testAttribute(Qt::WA_TransparentForMouseEvents);
 }
 
 /**
@@ -569,68 +574,59 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         if (hitPlot) {
             // 点击了某个窗口，设置为激活
             setActiveWidget(hitPlot);
-            updateOverlay();
             me->accept();  // 我们处理了这个事件
         } else {
             me->ignore();  // 让事件继续传递
         }
         return;
-    } else {
-        // 有激活的窗口，但点击的不是激活的窗口
-        // todo .这里是否会在resize过程中，点击控制点的时候，点击到另外一个窗口的边界，导致切换激活窗口从而导致
-        // 很难操作
-        if (hitPlot && (hitPlot != d->mActiveWidget)) {
-            // 把hitPlot切换为激活窗口
-            setActiveWidget(hitPlot);
-            updateOverlay();
-            if (!testBuiltInFunctions(FunResizePlot)) {
-                // 处理了此事件
-                me->accept();
-                return;
+    }//这里先不处理没有激活窗口，但点击到了窗口情况，优先处理
+
+    // 到此说明点击的就是当前激活的窗口，或者有激活窗口，但没点击到激活窗口，一般这种是调节窗口大小的时候
+    // 鼠标点击调节按钮，点击位置一般在激活窗口之外
+
+    // 情况3：有激活窗口，检查是否点击了控制点（resize功能开启时）
+    if (testBuiltInFunctions(FunResizePlot)) {
+        ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
+
+        // 情况1：开始调整激活窗口的尺寸
+        if (ct != OutSide && ct != Inner) {
+            startResize(ct, pos);
+            me->accept();
+            return;
+        }
+        // 情况2: 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
+        if (ct == Inner) {
+            if (hitPlot && hitPlot != d->mActiveWidget) {
+                setActiveWidget(hitPlot);
             }
+            me->accept();
+            return;
         }
-    }
-    //到此说明点击的就是当前激活的窗口，或者有激活窗口，但没点击到激活窗口，一般这种是调节窗口大小的时候
-    //鼠标点击调节按钮，点击位置一般在激活窗口之外
-    if (!testBuiltInFunctions(FunResizePlot)) {
-        // 没有resize plot 功能，退出
-        return QwtWidgetOverlay::mousePressEvent(me);
-    }
-    // 到这里，说明一定有激活的窗体,且要进行resize操作
-    ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
-
-    // 情况2： 点击到了激活窗口的外围
-    if (ct == OutSide) {
-        // 点击在了激活窗体外围
-        if (hitPlot) {
-            // 点击到了其它窗体,切换激活窗体
-            setActiveWidget(hitPlot);
-        } else {
-            // 点击到了纯空白处，把鼠标事件传递下去
-            setActiveWidget(nullptr);
+        // 情况3： 点击到了激活窗口的外围
+        if (ct == OutSide) {
+            // 点击在了激活窗体外围
+            if (hitPlot) {
+                // 点击到了其它窗体,切换激活窗体
+                setActiveWidget(hitPlot);
+            } else {
+                // 点击到了纯空白处，把鼠标事件传递下去
+                setActiveWidget(nullptr);
+            }
+            updateOverlay();
+            me->accept();
+            return;
         }
-        updateOverlay();
-        me->accept();
-        return;
-    }
 
-    // 情况3: 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
-    if (ct == Inner && hitPlot && hitPlot != d->mActiveWidget) {
-        setActiveWidget(hitPlot);
-        updateOverlay();
-        me->accept();
-        return;
-    }
 
-    // 情况4：开始调整激活窗口的尺寸
-    if (ct != OutSide) {
-        startResize(ct, pos);
-        me->accept();
-        return;
+
+
     }
 
     QwtWidgetOverlay::mousePressEvent(me);
 #else
+#if QwtFigureWidgetOverlay_DEBUG_PRINT
+    qDebug() << "QwtFigureWidgetOverlay::mousePressEvent(" << qwt::compat::eventPos(me) << ")";
+#endif
     if (me->button() != Qt::LeftButton) {
         QwtWidgetOverlay::mousePressEvent(me);
         return;
@@ -657,6 +653,7 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
     }
 
     // ========== 步骤1：检查是否点击了激活窗口的控制点 ==========
+    // 这里放在第一步，避免点击控制点改变尺寸会被判断为切换窗口
     if (d->mActiveWidget && testBuiltInFunctions(FunResizePlot)) {
         ControlType ct = getPositionControlType(pos, d->mActiveWidget->frameGeometry(), 4);
 
@@ -674,7 +671,6 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         // 点击了某个窗口
         if (hitPlot != d->mActiveWidget) {
             setActiveWidget(hitPlot);
-            updateOverlay();
         }
         // 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
         me->accept();
@@ -697,7 +693,9 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
 {
     QWT_D(d);
-
+#if QwtFigureWidgetOverlay_DEBUG_PRINT
+    qDebug() << "QwtFigureWidgetOverlay::mouseMoveEvent(" << qwt::compat::eventPos(me) << ")";
+#endif
     QWidget* activeW = d->mActiveWidget;
     if (!testBuiltInFunctions(FunResizePlot)) {
         // 没有resize plot 功能，退出
