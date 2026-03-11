@@ -69,7 +69,9 @@ public:
     void setBuiltInFunctionsEnable(BuiltInFunctionsFlag flag, bool on = true);
     bool testBuiltInFunctions(BuiltInFunctionsFlag flag) const;
     // 判断当前是否有激活的窗口
-    bool isHaveActiveWidget() const;
+    bool hasActiveWidget() const;
+    //判断是否真正改变尺寸
+    bool isResizing() const;
     // 设置边框的画笔
     void setBorderPen(const QPen& p);
     QPen borderPen() const;
