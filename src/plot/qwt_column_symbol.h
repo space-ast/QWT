@@ -36,38 +36,49 @@ class QPainter;
 class QPalette;
 class QRectF;
 
-/*!
-    \brief Directed rectangle representing bounding rectangle and orientation
-    of a column.
+/**
+ * \if ENGLISH
+ * @brief Directed rectangle representing bounding rectangle and orientation of a column
+ * \endif
+ * \if CHINESE
+ * @brief 表示柱的边界矩形和方向的方向矩形
+ * \endif
  */
 class QWT_EXPORT QwtColumnRect
 {
 public:
-    //! Direction of the column
+    //! \if ENGLISH Direction of the column \endif \if CHINESE 柱的方向 \endif
     enum Direction
     {
-        //! From left to right
+        //! \if ENGLISH From left to right \endif \if CHINESE 从左到右 \endif
         LeftToRight,
 
-        //! From right to left
+        //! \if ENGLISH From right to left \endif \if CHINESE 从右到左 \endif
         RightToLeft,
 
-        //! From bottom to top
+        //! \if ENGLISH From bottom to top \endif \if CHINESE 从下到上 \endif
         BottomToTop,
 
-        //! From top to bottom
+        //! \if ENGLISH From top to bottom \endif \if CHINESE 从上到下 \endif
         TopToBottom
     };
 
-    //! Build an rectangle with invalid intervals directed BottomToTop.
+    /**
+     * \if ENGLISH
+     * @brief Build a rectangle with invalid intervals directed BottomToTop
+     * \endif
+     * \if CHINESE
+     * @brief 构建一个具有无效区间、方向为 BottomToTop 的矩形
+     * \endif
+     */
     QwtColumnRect() : direction(BottomToTop)
     {
     }
 
-    //! \return A normalized QRect built from the intervals
+    //! \if ENGLISH Return a normalized QRect built from the intervals \endif \if CHINESE 返回从区间构建的标准化 QRect \endif
     QRectF toRect() const;
 
-    //! \return Orientation
+    //! \if ENGLISH Return Orientation \endif \if CHINESE 返回方向 \endif
     Qt::Orientation orientation() const
     {
         if (direction == LeftToRight || direction == RightToLeft)
@@ -76,56 +87,77 @@ public:
         return Qt::Vertical;
     }
 
-    //! Interval for the horizontal coordinates
+    //! \if ENGLISH Interval for the horizontal coordinates \endif \if CHINESE 水平坐标的区间 \endif
     QwtInterval hInterval;
 
-    //! Interval for the vertical coordinates
+    //! \if ENGLISH Interval for the vertical coordinates \endif \if CHINESE 垂直坐标的区间 \endif
     QwtInterval vInterval;
 
-    //! Direction
+    //! \if ENGLISH Direction \endif \if CHINESE 方向 \endif
     Direction direction;
 };
 
-//! A drawing primitive for columns
+//! \if ENGLISH A drawing primitive for columns \endif \if CHINESE 柱的绘图基元 \endif
 class QWT_EXPORT QwtColumnSymbol
 {
 public:
     /*!
-       Style
+       \if ENGLISH
+       \brief Style
        \sa setStyle(), style()
+       \endif
+       \if CHINESE
+       \brief 样式
+       \sa setStyle(), style()
+       \endif
      */
     enum Style
     {
-        //! No Style, the symbol draws nothing
+        //! \if ENGLISH No Style, the symbol draws nothing \endif \if CHINESE 无样式，符号不绘制任何内容 \endif
         NoStyle = -1,
 
         /*!
-           The column is painted with a frame depending on the frameStyle()
-           and lineWidth() using the palette().
+           \if ENGLISH
+           The column is painted with a frame depending on the frameStyle() and lineWidth() using the palette().
+           \endif
+           \if CHINESE
+           柱根据 frameStyle() 和 lineWidth() 使用 palette() 绘制一个框架。
+           \endif
          */
         Box,
 
         /*!
-           Styles >= QwtColumnSymbol::UserStyle are reserved for derived
-           classes of QwtColumnSymbol that overload draw() with
-           additional application specific symbol types.
+           \if ENGLISH
+           Styles >= QwtColumnSymbol::UserStyle are reserved for derived classes of QwtColumnSymbol
+           that overload draw() with additional application specific symbol types.
+           \endif
+           \if CHINESE
+           样式 >= QwtColumnSymbol::UserStyle 保留给 QwtColumnSymbol 的派生类，
+           这些类重载 draw() 以添加特定于应用程序的符号类型。
+           \endif
          */
         UserStyle = 1000
     };
 
     /*!
-       Frame Style used in Box style().
+       \if ENGLISH
+       \brief Frame Style used in Box style()
        \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
+       \endif
+       \if CHINESE
+       \brief Box 样式中使用的框架样式
+       \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
+       \endif
      */
     enum FrameStyle
     {
-        //! No frame
+        //! \if ENGLISH No frame \endif \if CHINESE 无框架 \endif
         NoFrame,
 
-        //! A plain frame style
+        //! \if ENGLISH A plain frame style \endif \if CHINESE 普通框架样式 \endif
         Plain,
 
-        //! A raised frame style
+        //! \if ENGLISH A raised frame style \endif \if CHINESE 凸起框架样式 \endif
         Raised
     };
 
