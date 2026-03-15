@@ -299,12 +299,17 @@ class QwtScaleDraw::PrivateData
     double labelRotation;
 };
 
-/*!
-   \brief Constructor
-
-   The range of the scale is initialized to [0, 100],
-   The position is at (0, 0) with a length of 100.
-   The orientation is QwtAbstractScaleDraw::Bottom.
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details The range of the scale is initialized to [0, 100], the position is at (0, 0)
+ *          with a length of 100. The orientation is QwtAbstractScaleDraw::Bottom.
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 刻度范围初始化为 [0, 100]，位置在 (0, 0)，长度为 100。
+ *          方向为 QwtAbstractScaleDraw::Bottom。
+ * \endif
  */
 QwtScaleDraw::QwtScaleDraw()
 {
@@ -318,38 +323,57 @@ QwtScaleDraw::~QwtScaleDraw()
     delete m_data;
 }
 
-/*!
-   Return alignment of the scale
-   \sa setAlignment()
-   \return Alignment of the scale
+/**
+ * \if ENGLISH
+ * @brief Return alignment of the scale
+ * @return Alignment of the scale
+ * \sa setAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度的对齐方式
+ * @return 刻度的对齐方式
+ * \sa setAlignment()
+ * \endif
  */
 QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 {
     return m_data->alignment;
 }
 
-/*!
-   Set the alignment of the scale
-
-   \param align Alignment of the scale
-
-   The default alignment is QwtScaleDraw::BottomScale
-   \sa alignment()
+/**
+ * \if ENGLISH
+ * @brief Set the alignment of the scale
+ * @param align Alignment of the scale
+ * @details The default alignment is QwtScaleDraw::BottomScale
+ * \sa alignment()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度的对齐方式
+ * @param align 刻度的对齐方式
+ * @details 默认对齐方式是 QwtScaleDraw::BottomScale
+ * \sa alignment()
+ * \endif
  */
 void QwtScaleDraw::setAlignment( Alignment align )
 {
     m_data->alignment = align;
 }
 
-/*!
-   Return the orientation
-
-   TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
-   LeftScale, RightScale are vertical (Qt::Vertical) scales.
-
-   \return Orientation of the scale
-
-   \sa alignment()
+/**
+ * \if ENGLISH
+ * @brief Return the orientation
+ * @details TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
+ *          LeftScale, RightScale are vertical (Qt::Vertical) scales.
+ * @return Orientation of the scale
+ * \sa alignment()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * @details TopScale, BottomScale 是水平 (Qt::Horizontal) 刻度，
+ *          LeftScale, RightScale 是垂直 (Qt::Vertical) 刻度。
+ * @return 刻度的方向
+ * \sa alignment()
+ * \endif
  */
 Qt::Orientation QwtScaleDraw::orientation() const
 {
