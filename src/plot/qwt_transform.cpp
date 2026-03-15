@@ -164,42 +164,86 @@ QwtLogTransform::~QwtLogTransform()
 {
 }
 
-/*!
-   \param value Value to be transformed
-   \return log( value )
+/**
+ * \if ENGLISH
+ * @brief Transform function
+ * @param value Value to be transformed
+ * @return log( value )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换函数
+ * @param value 要变换的值
+ * @return log( value )
+ * \endif
  */
 double QwtLogTransform::transform( double value ) const
 {
     return std::log( value );
 }
 
-/*!
-   \param value Value to be transformed
-   \return exp( value )
+/**
+ * \if ENGLISH
+ * @brief Inverse transform function
+ * @param value Value to be transformed
+ * @return exp( value )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 反变换函数
+ * @param value 要变换的值
+ * @return exp( value )
+ * \endif
  */
 double QwtLogTransform::invTransform( double value ) const
 {
     return std::exp( value );
 }
 
-/*!
-   \param value Value to be bounded
-   \return qBound( LogMin, value, LogMax )
+/**
+ * \if ENGLISH
+ * @brief Bounded function
+ * @param value Value to be bounded
+ * @return qBound( LogMin, value, LogMax )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 边界函数
+ * @param value 要限制的值
+ * @return qBound( LogMin, value, LogMax )
+ * \endif
  */
 double QwtLogTransform::bounded( double value ) const
 {
     return qBound( LogMin, value, LogMax );
 }
 
-//! \return Clone of the transformation
+/**
+ * \if ENGLISH
+ * @brief Clone of the transformation
+ * @return New QwtLogTransform instance
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换的克隆
+ * @return 新的 QwtLogTransform 实例
+ * \endif
+ */
 QwtTransform* QwtLogTransform::copy() const
 {
     return new QwtLogTransform();
 }
 
-/*!
-   Constructor
-   \param exponent Exponent
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param exponent Exponent
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param exponent 指数
+ * \endif
  */
 QwtPowerTransform::QwtPowerTransform( double exponent ):
     QwtTransform(),
@@ -207,14 +251,31 @@ QwtPowerTransform::QwtPowerTransform( double exponent ):
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPowerTransform::~QwtPowerTransform()
 {
 }
 
-/*!
-   \param value Value to be transformed
-   \return Exponentiation preserving the sign
+/**
+ * \if ENGLISH
+ * @brief Transform function
+ * @param value Value to be transformed
+ * @return Exponentiation preserving the sign
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换函数
+ * @param value 要变换的值
+ * @return 保持符号的幂运算
+ * \endif
  */
 double QwtPowerTransform::transform( double value ) const
 {
@@ -225,9 +286,18 @@ double QwtPowerTransform::transform( double value ) const
 
 }
 
-/*!
-   \param value Value to be transformed
-   \return Inverse exponentiation preserving the sign
+/**
+ * \if ENGLISH
+ * @brief Inverse transform function
+ * @param value Value to be transformed
+ * @return Inverse exponentiation preserving the sign
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 反变换函数
+ * @param value 要变换的值
+ * @return 保持符号的反幂运算
+ * \endif
  */
 double QwtPowerTransform::invTransform( double value ) const
 {
@@ -237,7 +307,17 @@ double QwtPowerTransform::invTransform( double value ) const
         return std::pow( value, m_exponent );
 }
 
-//! \return Clone of the transformation
+/**
+ * \if ENGLISH
+ * @brief Clone of the transformation
+ * @return New QwtPowerTransform instance
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换的克隆
+ * @return 新的 QwtPowerTransform 实例
+ * \endif
+ */
 QwtTransform* QwtPowerTransform::copy() const
 {
     return new QwtPowerTransform( m_exponent );
