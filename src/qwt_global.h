@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -63,6 +63,47 @@
 #define QWT_DEBUG_PRINT 0
 #endif
 /**
+ * \if ENGLISH
+ * @def QWT_DECLARE_PRIVATE
+ * @brief Imitates Q_DECLARE_PRIVATE but uses an inner class instead of forward declaration
+ *
+ * For example:
+ *
+ * @code
+ * //header
+ * class A
+ * {
+ *  QWT_DECLARE_PRIVATE(A)
+ * };
+ * @endcode
+ *
+ * It expands to:
+ *
+ * @code
+ * class A{
+ *  class PrivateData;
+ *  friend class A::PrivateData;
+ *  std::unique_ptr< PrivateData > m_data;
+ * }
+ * @endcode
+ *
+ * This forward declares an inner PrivateData class, which is implemented in the cpp file
+ *
+ * @code
+ * //cpp
+ * class A::PrivateData{
+ *  QWT_DECLARE_PUBLIC(A)
+ *  PrivateData(A* p):m_data(p){
+ *  }
+ * };
+ *
+ * A::A():m_data(new PrivateData(this)){
+ * }
+ * @endcode
+ *
+ * \endif
+ *
+ * \if CHINESE
  * @def QWT_DECLARE_PRIVATE
  * @brief 模仿Q_DECLARE_PRIVATE，但不用前置声明而是作为一个内部类
  *
@@ -100,6 +141,7 @@
  * }
  * @endcode
  *
+ * \endif
  */
 #ifndef QWT_DECLARE_PRIVATE
 #define QWT_DECLARE_PRIVATE(classname)                                                                                 \
@@ -117,10 +159,19 @@
 #endif
 
 /**
+ * \if ENGLISH
+ * @def QWT_DECLARE_PUBLIC
+ * @brief Imitates Q_DECLARE_PUBLIC
+ *
+ * Used with QWT_DECLARE_PRIVATE
+ * \endif
+ *
+ * \if CHINESE
  * @def QWT_DECLARE_PUBLIC
  * @brief 模仿Q_DECLARE_PUBLIC
  *
  * 配套QWT_DECLARE_PRIVATE使用
+ * \endif
  */
 #ifndef QWT_DECLARE_PUBLIC
 #define QWT_DECLARE_PUBLIC(classname)                                                                                  \
@@ -137,18 +188,34 @@
 #endif
 
 /**
+ * \if ENGLISH
+ * @def  QWT_PIMPL_CONSTRUCT
+ *
+ * Used with QWT_DECLARE_PRIVATE to construct private data in constructor
+ * \endif
+ *
+ * \if CHINESE
  * @def  QWT_PIMPL_CONSTRUCT
  *
  * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
+ * \endif
  */
 #ifndef QWT_PIMPL_CONSTRUCT
 #define QWT_PIMPL_CONSTRUCT m_data(qwt_make_unique< PrivateData >(this))
 #endif
 
 /**
- * @def  QWT_PIMPL_CONSTRUCT
+ * \if ENGLISH
+ * @def  QWT_PIMPL_CONSTRUCT_INIT
+ *
+ * Used with QWT_DECLARE_PRIVATE to construct private data in constructor (alternative form)
+ * \endif
+ *
+ * \if CHINESE
+ * @def  QWT_PIMPL_CONSTRUCT_INIT
  *
  * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
+ * \endif
  */
 #ifndef QWT_PIMPL_CONSTRUCT_INIT
 #define QWT_PIMPL_CONSTRUCT_INIT()                                                                                     \
@@ -158,32 +225,60 @@
 #endif
 
 /**
- *@def QWT_D
- *@brief impl获取指针，参考Q_D
+ * \if ENGLISH
+ * @def QWT_D
+ * @brief Get private implementation pointer, similar to Q_D
+ * \endif
+ *
+ * \if CHINESE
+ * @def QWT_D
+ * @brief impl获取指针，参考Q_D
+ * \endif
  */
 #ifndef QWT_D
 #define QWT_D(pointerName) PrivateData* pointerName = d_func()
 #endif
 
 /**
- *@def QWT_DC
- *@brief impl获取指针，参考Q_D
+ * \if ENGLISH
+ * @def QWT_DC
+ * @brief Get const private implementation pointer, similar to Q_D
+ * \endif
+ *
+ * \if CHINESE
+ * @def QWT_DC
+ * @brief impl获取指针，参考Q_D
+ * \endif
  */
 #ifndef QWT_DC
 #define QWT_DC(pointerName) const PrivateData* pointerName = d_func()
 #endif
 
 /**
- *@def QWT_Q
- *@brief impl获取指针，参考Q_Q
+ * \if ENGLISH
+ * @def QWT_Q
+ * @brief Get public class pointer from private implementation, similar to Q_Q
+ * \endif
+ *
+ * \if CHINESE
+ * @def QWT_Q
+ * @brief impl获取指针，参考Q_Q
+ * \endif
  */
 #ifndef QWT_Q
 #define QWT_Q(classname, pointerName) classname* pointerName = q_func()
 #endif
 
 /**
- *@def QWT_QC
- *@brief impl获取指针，参考Q_Q
+ * \if ENGLISH
+ * @def QWT_QC
+ * @brief Get const public class pointer from private implementation, similar to Q_Q
+ * \endif
+ *
+ * \if CHINESE
+ * @def QWT_QC
+ * @brief impl获取指针，参考Q_Q
+ * \endif
  */
 #ifndef QWT_QC
 #define QWT_QC(classname, pointerName) const classname* pointerName = q_func()

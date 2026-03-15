@@ -46,12 +46,21 @@
 - src/plot/qwt_point_3d.h - QwtPoint3D 类及其所有内联函数的双语注释
 - src/plot/qwt_point_polar.h - QwtPointPolar 类及其所有内联函数的双语注释
 
+**源文件 (.cpp):**
+
+#### 第五批 (2026-03-15)
+**头文件 (.h):**
+- src/qwt_global.h - 宏定义的双语 Doxygen 注释
+- src/plot/qwt_axis.h - 坐标轴枚举和方法的双语注释
+- src/plot/qwt_axis_id.h - 坐标轴ID的双语注释
+
+**源文件 (.cpp):**
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
 ```
 src/qwt_version_info.h
-src/qwt_global.h
 src/plot3d/qwt3d_types.h
 src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
@@ -151,7 +160,6 @@ src/plot/qwt_counter.h
 src/plot/qwt_compass.h
 src/plot/qwt_color_map.h
 src/plot/qwt_cache_panner.h
-src/plot/qwt_axis_id.h
 src/plot/qwt_arrow_button.h
 src/plot/qwt_analog_clock.h
 src/plot/qwt_abstract_slider.h
@@ -221,7 +229,6 @@ src/plot/qwt_column_symbol.h
 src/plot/qwt_clipper.h
 src/plot/qwt_canvas_picker.h
 src/plot/qwt_bezier.h
-src/plot/qwt_axis.h
 ```
 
 #### 源文件 (.cpp) - src 目录
