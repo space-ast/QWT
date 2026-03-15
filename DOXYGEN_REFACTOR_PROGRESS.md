@@ -136,6 +136,13 @@
 **源文件 (.cpp):**
 - src/plot/qwt_text_engine.cpp - 所有方法的双语 Doxygen 注释（QwtTextEngine 构造函数/析构函数、QwtPlainTextEngine 所有方法、QwtRichTextEngine 所有方法）
 
+#### 第十七批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_thermo.h - 添加类的双语 Doxygen 注释、枚举的双语注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_thermo.cpp - 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
