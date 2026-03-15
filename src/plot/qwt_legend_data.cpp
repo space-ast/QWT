@@ -28,64 +28,118 @@
 #include "qwt_text.h"
 #include "qwt_graphic.h"
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtLegendData::QwtLegendData()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtLegendData::~QwtLegendData()
 {
 }
 
-/*!
-   Set the legend attributes
-
-   QwtLegendData actually is a QMap<int, QVariant> with some
-   convenience interfaces
-
-   \param map Values
-   \sa values()
+/**
+ * \if ENGLISH
+ * @brief Set the legend attributes
+ * @details QwtLegendData actually is a QMap<int, QVariant> with some
+ *          convenience interfaces
+ * @param map Values
+ * \sa values()
+ * \endif
+ * \if CHINESE
+ * @brief 设置图例属性
+ * @details QwtLegendData 实际上是一个带有便捷接口的 QMap<int, QVariant>
+ * @param map 值
+ * \sa values()
+ * \endif
  */
 void QwtLegendData::setValues( const QMap< int, QVariant >& map )
 {
     m_map = map;
 }
 
-/*!
-   \return Legend attributes
-   \sa setValues()
+/**
+ * \if ENGLISH
+ * @brief Return the legend attributes
+ * @return Legend attributes
+ * \sa setValues()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图例属性
+ * @return 图例属性
+ * \sa setValues()
+ * \endif
  */
 const QMap< int, QVariant >& QwtLegendData::values() const
 {
     return m_map;
 }
 
-/*!
-   \param role Attribute role
-   \return True, when the internal map has an entry for role
+/**
+ * \if ENGLISH
+ * @brief Check if a value exists for a specific role
+ * @param role Attribute role
+ * @return True, when the internal map has an entry for role
+ * \sa setValue(), value()
+ * \endif
+ * \if CHINESE
+ * @brief 检查特定角色是否有值
+ * @param role 属性角色
+ * @return 当内部映射包含该角色时返回 true
+ * \sa setValue(), value()
+ * \endif
  */
 bool QwtLegendData::hasRole( int role ) const
 {
     return m_map.contains( role );
 }
 
-/*!
-   Set an attribute value
-
-   \param role Attribute role
-   \param data Attribute value
-
-   \sa value()
+/**
+ * \if ENGLISH
+ * @brief Set an attribute value
+ * @param role Attribute role
+ * @param data Attribute value
+ * \sa value()
+ * \endif
+ * \if CHINESE
+ * @brief 设置属性值
+ * @param role 属性角色
+ * @param data 属性值
+ * \sa value()
+ * \endif
  */
 void QwtLegendData::setValue( int role, const QVariant& data )
 {
     m_map[role] = data;
 }
 
-/*!
-   \param role Attribute role
-   \return Attribute value for a specific role
+/**
+ * \if ENGLISH
+ * @brief Return the attribute value for a specific role
+ * @param role Attribute role
+ * @return Attribute value for a specific role
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回特定角色的属性值
+ * @param role 属性角色
+ * @return 特定角色的属性值
+ * \sa setValue()
+ * \endif
  */
 QVariant QwtLegendData::value( int role ) const
 {
@@ -95,13 +149,35 @@ QVariant QwtLegendData::value( int role ) const
     return m_map[role];
 }
 
-//! \return True, when the internal map is empty
+/**
+ * \if ENGLISH
+ * @brief Check if the legend data is valid
+ * @return True, when the internal map is empty
+ * \sa setValues(), setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 检查图例数据是否有效
+ * @return 当内部映射为空时返回 true
+ * \sa setValues(), setValue()
+ * \endif
+ */
 bool QwtLegendData::isValid() const
 {
     return !m_map.isEmpty();
 }
 
-//! \return Value of the TitleRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the title
+ * @return Value of the TitleRole attribute
+ * \sa icon(), mode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标题
+ * @return TitleRole 属性的值
+ * \sa icon(), mode()
+ * \endif
+ */
 QwtText QwtLegendData::title() const
 {
     QwtText text;
@@ -119,7 +195,18 @@ QwtText QwtLegendData::title() const
     return text;
 }
 
-//! \return Value of the IconRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the icon
+ * @return Value of the IconRole attribute
+ * \sa title(), mode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图标
+ * @return IconRole 属性的值
+ * \sa title(), mode()
+ * \endif
+ */
 QwtGraphic QwtLegendData::icon() const
 {
     const QVariant iconValue = value( QwtLegendData::IconRole );
@@ -133,7 +220,20 @@ QwtGraphic QwtLegendData::icon() const
     return graphic;
 }
 
-//! \return Value of the ModeRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the mode
+ * @return Value of the ModeRole attribute
+ * @return ReadOnly when no mode is set
+ * \sa title(), icon()
+ * \endif
+ * \if CHINESE
+ * @brief 返回模式
+ * @return ModeRole 属性的值
+ * @return 如果未设置模式则返回 ReadOnly
+ * \sa title(), icon()
+ * \endif
+ */
 QwtLegendData::Mode QwtLegendData::mode() const
 {
     const QVariant modeValue = value( QwtLegendData::ModeRole );

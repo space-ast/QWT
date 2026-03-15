@@ -113,6 +113,13 @@
 **源文件 (.cpp):**
 - src/plot/qwt_abstract_slider.cpp - 完成剩余方法的双语 Doxygen 注释（setPageSteps、pageSteps、setStepAlignment、stepAlignment、setValue、value、setWrapping、wrapping、setInvertedControls、invertedControls、incrementValue、incrementedValue、boundedValue、alignedValue、scaleChange、sliderChange）
 
+#### 第十三批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_legend.h - 为所有 public 函数添加英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_legend.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setMaxColumns、maxColumns、setDefaultItemMode、defaultItemMode、contentsWidget、legendWidget、legendWidgets、itemInfo、eventFilter、sizeHint、heightForWidth、horizontalScrollBar、verticalScrollBar、updateLegend、createWidget、updateWidget、itemClicked、itemChecked、renderLegend、renderItem、isEmpty、scrollExtent）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录

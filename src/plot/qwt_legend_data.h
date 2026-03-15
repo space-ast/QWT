@@ -59,49 +59,123 @@ class QwtGraphic;
 class QWT_EXPORT QwtLegendData
 {
   public:
-    //! \if ENGLISH Mode defining how a legend entry interacts \endif \if CHINESE 定义图例条目如何交互的模式 \endif
+    /**
+     * \if ENGLISH
+     * @brief Mode defining how a legend entry interacts
+     * \endif
+     * \if CHINESE
+     * @brief 定义图例条目如何交互的模式
+     * \endif
+     */
     enum Mode
     {
-        //! \if ENGLISH The legend item is not interactive, like a label \endif \if CHINESE 图例项不可交互，如标签 \endif
+        /**
+         * \if ENGLISH
+         * @brief The legend item is not interactive, like a label
+         * \endif
+         * \if CHINESE
+         * @brief 图例项不可交互，如标签
+         * \endif
+         */
         ReadOnly,
 
-        //! \if ENGLISH The legend item is clickable, like a push button \endif \if CHINESE 图例项可点击，如按钮 \endif
+        /**
+         * \if ENGLISH
+         * @brief The legend item is clickable, like a push button
+         * \endif
+         * \if CHINESE
+         * @brief 图例项可点击，如按钮
+         * \endif
+         */
         Clickable,
 
-        //! \if ENGLISH The legend item is checkable, like a checkable button \endif \if CHINESE 图例项可检查，如复选框 \endif
+        /**
+         * \if ENGLISH
+         * @brief The legend item is checkable, like a checkable button
+         * \endif
+         * \if CHINESE
+         * @brief 图例项可检查，如复选框
+         * \endif
+         */
         Checkable
     };
 
-    //! \if ENGLISH Identifier how to interpret a QVariant \endif \if CHINESE 如何解释 QVariant 的标识符 \endif
+    /**
+     * \if ENGLISH
+     * @brief Identifier how to interpret a QVariant
+     * \endif
+     * \if CHINESE
+     * @brief 如何解释 QVariant 的标识符
+     * \endif
+     */
     enum Role
     {
-        // \if ENGLISH The value is a Mode \endif \if CHINESE 值是 Mode \endif
+        /**
+         * \if ENGLISH
+         * @brief The value is a Mode
+         * \endif
+         * \if CHINESE
+         * @brief 值是 Mode
+         * \endif
+         */
         ModeRole,
 
-        // \if ENGLISH The value is a title \endif \if CHINESE 值是标题 \endif
+        /**
+         * \if ENGLISH
+         * @brief The value is a title
+         * \endif
+         * \if CHINESE
+         * @brief 值是标题
+         * \endif
+         */
         TitleRole,
 
-        // \if ENGLISH The value is an icon \endif \if CHINESE 值是图标 \endif
+        /**
+         * \if ENGLISH
+         * @brief The value is an icon
+         * \endif
+         * \if CHINESE
+         * @brief 值是图标
+         * \endif
+         */
         IconRole,
 
-        // \if ENGLISH Values < UserRole are reserved for internal use \endif \if CHINESE 值 < UserRole 保留给内部使用 \endif
+        /**
+         * \if ENGLISH
+         * @brief Values < UserRole are reserved for internal use
+         * \endif
+         * \if CHINESE
+         * @brief 值 < UserRole 保留给内部使用
+         * \endif
+         */
         UserRole  = 32
     };
 
+    /// Constructor
     QwtLegendData();
+    /// Destructor
     ~QwtLegendData();
 
+    /// Set all values
     void setValues( const QMap< int, QVariant >& );
+    /// Return all values
     const QMap< int, QVariant >& values() const;
 
+    /// Set a value for a specific role
     void setValue( int role, const QVariant& );
+    /// Return the value for a specific role
     QVariant value( int role ) const;
 
+    /// Check if a value exists for a specific role
     bool hasRole( int role ) const;
+    /// Check if the legend data is valid
     bool isValid() const;
 
+    /// Return the icon
     QwtGraphic icon() const;
+    /// Return the title
     QwtText title() const;
+    /// Return the mode
     Mode mode() const;
 
   private:
