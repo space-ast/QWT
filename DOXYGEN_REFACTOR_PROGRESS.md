@@ -122,12 +122,19 @@
 - src/plot/qwt_legend.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setMaxColumns、maxColumns、setDefaultItemMode、defaultItemMode、contentsWidget、legendWidget、legendWidgets、itemInfo、eventFilter、sizeHint、heightForWidth、horizontalScrollBar、verticalScrollBar、updateLegend、createWidget、updateWidget、itemClicked、itemChecked、renderLegend、renderItem、isEmpty、scrollExtent）
 - src/plot/qwt_legend_data.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setValues、values、setValue、value、hasRole、isValid、icon、title、mode）
 
-#### 第十四批 (2026-03-15)
+#### 第十五批 (2026-03-15)
 **头文件 (.h):**
 - src/plot/qwt_text_label.h - 添加类的双语 Doxygen 注释和所有函数的英文简要注释
 
 **源文件 (.cpp):**
 - src/plot/qwt_text_label.cpp - 所有方法的双语 Doxygen 注释（构造函数 x2、析构函数、setPlainText、plainText、setText x2、clear、text、indent、setIndent、margin、setMargin、sizeHint、minimumSizeHint、heightForWidth、textRect、drawText、paintEvent、drawContents、init、defaultIndent）
+
+#### 第十六批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_text_engine.h - 添加 3 个类（QwtTextEngine、QwtPlainTextEngine、QwtRichTextEngine）的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_text_engine.cpp - 所有方法的双语 Doxygen 注释（QwtTextEngine 构造函数/析构函数、QwtPlainTextEngine 所有方法、QwtRichTextEngine 所有方法）
 
 ### 未处理文件
 
