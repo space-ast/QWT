@@ -26,21 +26,41 @@
 
 #include "qwt_curve_fitter.h"
 
-/*!
-   Constructor
-   \param mode Preferred fitting mode
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param mode Preferred fitting mode
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param mode 首选拟合模式
+ * \endif
  */
 QwtCurveFitter::QwtCurveFitter( Mode mode )
     : m_mode( mode )
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtCurveFitter::~QwtCurveFitter()
 {
 }
 
-//! \return Preferred fitting mode
+/**
+ * \if ENGLISH
+ * @return Preferred fitting mode
+ * \endif
+ * \if CHINESE
+ * @return 首选拟合模式
+ * \endif
+ */
 QwtCurveFitter::Mode QwtCurveFitter::mode() const
 {
     return m_mode;

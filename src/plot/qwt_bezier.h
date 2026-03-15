@@ -32,43 +32,49 @@
 class QPointF;
 class QPolygonF;
 
-/*!
-   \brief An implementation of the de Casteljau’s Algorithm for interpolating
-         Bézier curves
-
-   The flatness criterion for terminating the subdivision is based on
-   "Piecewise Linear Approximation of Bézier Curves" by
-   Roger Willcocks ( http://www.rops.org )
-
-   This article explains the maths behind in a very nice way:
-   https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
+/**
+ * \if ENGLISH
+ * @brief An implementation of the de Casteljau's Algorithm for interpolating Bézier curves
+ * @details The flatness criterion for terminating the subdivision is based on
+ *          "Piecewise Linear Approximation of Bézier Curves" by Roger Willcocks.
+ *          See: https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
+ * \endif
+ * \if CHINESE
+ * @brief de Casteljau 算法的 Bézier 曲线插值实现
+ * @details 细分终止的平坦度判据基于 Roger Willcocks 的
+ *          "Piecewise Linear Approximation of Bézier Curves"。
+ *          参见：https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
+ * \endif
  */
 class QWT_EXPORT QwtBezier
 {
-  public:
-    QwtBezier( double tolerance = 0.5 );
+public:
+    QwtBezier(double tolerance = 0.5);
     ~QwtBezier();
 
-    void setTolerance( double tolerance );
+    void setTolerance(double tolerance);
     double tolerance() const;
 
-    QPolygonF toPolygon( const QPointF& p1, const QPointF& cp1,
-        const QPointF& cp2, const QPointF& p2 ) const;
+    QPolygonF toPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2) const;
 
-    void appendToPolygon( const QPointF& p1, const QPointF& cp1,
-        const QPointF& cp2, const QPointF& p2, QPolygonF& polygon ) const;
+    void appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, QPolygonF& polygon) const;
 
-    static QPointF pointAt( const QPointF& p1, const QPointF& cp1,
-        const QPointF& cp2, const QPointF& p2, double t );
+    static QPointF pointAt(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t);
 
-  private:
+private:
     double m_tolerance;
     double m_flatness;
 };
 
-/*!
-   \return Tolerance, that is used as criterion for the subdivision
-   \sa setTolerance()
+/**
+ * \if ENGLISH
+ * @return Tolerance used as criterion for the subdivision
+ * \sa setTolerance()
+ * \endif
+ * \if CHINESE
+ * @return 用作细分判据的容差值
+ * \sa setTolerance()
+ * \endif
  */
 inline double QwtBezier::tolerance() const
 {
