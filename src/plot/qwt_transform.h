@@ -29,101 +29,141 @@
 
 #include "qwt_global.h"
 
-/*!
-   \brief A transformation between coordinate systems
-
-   QwtTransform manipulates values, when being mapped between
-   the scale and the paint device coordinate system.
-
-   A transformation consists of 2 methods:
-
-   - transform
-   - invTransform
-
-   where one is is the inverse function of the other.
-
-   When p1, p2 are the boundaries of the paint device coordinates
-   and s1, s2 the boundaries of the scale, QwtScaleMap uses the
-   following calculations:
-
-   - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
-   - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
+/**
+ * \if ENGLISH
+ * @brief A transformation between coordinate systems
+ * @details QwtTransform manipulates values when being mapped between
+ *          the scale and the paint device coordinate system.
+ *          A transformation consists of 2 methods:
+ *          - transform
+ *          - invTransform
+ *          where one is the inverse function of the other.
+ *          When p1, p2 are the boundaries of the paint device coordinates
+ *          and s1, s2 the boundaries of the scale, QwtScaleMap uses the
+ *          following calculations:
+ *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
+ *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
+ * \endif
+ * \if CHINESE
+ * @brief 坐标系之间的变换
+ * @details QwtTransform 在值和绘制设备坐标系之间映射时操作值。
+ *          变换由 2 个方法组成:
+ *          - transform
+ *          - invTransform
+ *          其中一个是另一个的反函数。
+ *          当 p1, p2 是绘制设备坐标的边界，s1, s2 是刻度的边界时，
+ *          QwtScaleMap 使用以下计算:
+ *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
+ *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
+ * \endif
  */
 class QWT_EXPORT QwtTransform
 {
-  public:
+public:
     QwtTransform();
     virtual ~QwtTransform();
 
     /*!
-       Modify value to be a valid value for the transformation.
-       The default implementation does nothing.
+       \if ENGLISH
+       \brief Modify value to be a valid value for the transformation
+       \details The default implementation does nothing.
+       \param value Value to modify
+       \return Modified value
+       \endif
+       \if CHINESE
+       \brief 修改值为变换的有效值
+       \details 默认实现不执行任何操作。
+       \param value 要修改的值
+       \return 修改后的值
+       \endif
      */
-    virtual double bounded( double value ) const;
+    virtual double bounded(double value) const;
 
     /*!
-        Transformation function
-
-        \param value Value
-        \return Modified value
-
-        \sa invTransform()
+       \if ENGLISH
+       \brief Transformation function
+       \param value Value to transform
+       \return Transformed value
+       \sa invTransform()
+       \endif
+       \if CHINESE
+       \brief 变换函数
+       \param value 要变换的值
+       \return 变换后的值
+       \sa invTransform()
+       \endif
      */
-    virtual double transform( double value ) const = 0;
+    virtual double transform(double value) const = 0;
 
     /*!
-        Inverse transformation function
-
-        \param value Value
-        \return Modified value
-
-        \sa transform()
+       \if ENGLISH
+       \brief Inverse transformation function
+       \param value Value to transform
+       \return Inverse transformed value
+       \sa transform()
+       \endif
+       \if CHINESE
+       \brief 反变换函数
+       \param value 要变换的值
+       \return 反变换后的值
+       \sa transform()
+       \endif
      */
-    virtual double invTransform( double value ) const = 0;
+    virtual double invTransform(double value) const = 0;
 
-    //! Virtualized copy operation
+    //! \if ENGLISH Virtualized copy operation \endif \if CHINESE 虚拷贝操作 \endif
     virtual QwtTransform* copy() const = 0;
 
-  private:
+private:
     Q_DISABLE_COPY(QwtTransform)
 };
 
-/*!
-   \brief Null transformation
-
-   QwtNullTransform returns the values unmodified.
-
+/**
+ * \if ENGLISH
+ * @brief Null transformation
+ * @details QwtNullTransform returns the values unmodified.
+ * \endif
+ * \if CHINESE
+ * @brief 空变换
+ * @details QwtNullTransform 返回未修改的值。
+ * \endif
  */
 class QWT_EXPORT QwtNullTransform : public QwtTransform
 {
-  public:
+public:
     QwtNullTransform();
     virtual ~QwtNullTransform();
 
-    virtual double transform( double value ) const override;
-    virtual double invTransform( double value ) const override;
+    virtual double transform(double value) const override;
+    virtual double invTransform(double value) const override;
 
     virtual QwtTransform* copy() const override;
 };
-/*!
-   \brief Logarithmic transformation
-
-   QwtLogTransform modifies the values using log() and exp().
-
-   \note In the calculations of QwtScaleMap the base of the log function
-         has no effect on the mapping. So QwtLogTransform can be used
-         for log2(), log10() or any other logarithmic scale.
+/**
+ * \if ENGLISH
+ * @brief Logarithmic transformation
+ * @details QwtLogTransform modifies the values using log() and exp().
+ * \note In the calculations of QwtScaleMap the base of the log function
+ *       has no effect on the mapping. So QwtLogTransform can be used
+ *       for log2(), log10() or any other logarithmic scale.
+ * \endif
+ * \if CHINESE
+ * @brief 对数变换
+ * @details QwtLogTransform 使用 log() 和 exp() 修改值。
+ * \note 在 QwtScaleMap 的计算中，对数函数的底数对映射没有影响。
+ *       因此 QwtLogTransform 可以用于 log2()、log10() 或任何其他对数刻度。
+ * \endif
  */
 class QWT_EXPORT QwtLogTransform : public QwtTransform
 {
-  public:
+public:
     QwtLogTransform();
     virtual ~QwtLogTransform();
 
-    virtual double transform( double value ) const override;
-    virtual double invTransform( double value ) const override;
+    virtual double transform(double value) const override;
+    virtual double invTransform(double value) const override;
 
-    virtual double bounded( double value ) const override;
+    virtual double bounded(double value) const override;
 
     virtual QwtTransform* copy() const override;
 
@@ -131,26 +171,33 @@ class QWT_EXPORT QwtLogTransform : public QwtTransform
     static const double LogMax;
 };
 
-/*!
-   \brief A transformation using pow()
-
-   QwtPowerTransform preserves the sign of a value.
-   F.e. a transformation with a factor of 2
-   transforms a value of -3 to -9 and v.v. Thus QwtPowerTransform
-   can be used for scales including negative values.
+/**
+ * \if ENGLISH
+ * @brief A transformation using pow()
+ * @details QwtPowerTransform preserves the sign of a value.
+ *          F.e. a transformation with a factor of 2
+ *          transforms a value of -3 to -9 and v.v. Thus QwtPowerTransform
+ *          can be used for scales including negative values.
+ * \endif
+ * \if CHINESE
+ * @brief 使用 pow() 的变换
+ * @details QwtPowerTransform 保持值的符号。
+ *          例如，因子为 2 的变换将 -3 变换为 -9，反之亦然。
+ *          因此 QwtPowerTransform 可以用于包含负值的刻度。
+ * \endif
  */
 class QWT_EXPORT QwtPowerTransform : public QwtTransform
 {
-  public:
-    explicit QwtPowerTransform( double exponent );
+public:
+    explicit QwtPowerTransform(double exponent);
     virtual ~QwtPowerTransform();
 
-    virtual double transform( double value ) const override;
-    virtual double invTransform( double value ) const override;
+    virtual double transform(double value) const override;
+    virtual double invTransform(double value) const override;
 
     virtual QwtTransform* copy() const override;
 
-  private:
+private:
     const double m_exponent;
 };
 
