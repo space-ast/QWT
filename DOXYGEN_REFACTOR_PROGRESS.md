@@ -161,6 +161,15 @@
 **源文件 (.cpp):**
 - src/plot/qwt_series_data.cpp - 所有 qwtBoundingRect 函数的双语 Doxygen 注释，所有数据类构造函数和 boundingRect 方法的双语注释
 
+#### 第二十一批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_scale_widget.h - 添加类的双语 Doxygen 注释、BuiltinActions 枚举的双语注释和所有函数的英文简要注释
+- src/plot/qwt_scale_engine.h - 添加 QwtScaleArithmetic、QwtScaleEngine、QwtLinearScaleEngine、QwtLogScaleEngine 类的双语 Doxygen 注释和所有方法的英文简要注释
+- src/plot/qwt_scale_draw.h - 添加类的双语 Doxygen 注释、Alignment 枚举的双语注释和所有方法的英文简要注释
+
+**源文件 (.cpp):**
+- (待处理)
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
