@@ -37,30 +37,42 @@ class QFont;
 class QwtTransform;
 class QwtScaleMap;
 
-/*!
-   \brief A abstract base class for drawing scales
-
-   QwtAbstractScaleDraw can be used to draw linear or logarithmic scales.
-
-   After a scale division has been specified as a QwtScaleDiv object
-   using setScaleDiv(), the scale can be drawn with the draw() member.
+/**
+ * \if ENGLISH
+ * @brief An abstract base class for drawing scales
+ * @details QwtAbstractScaleDraw can be used to draw linear or logarithmic scales.
+ *          After a scale division has been specified as a QwtScaleDiv object
+ *          using setScaleDiv(), the scale can be drawn with the draw() member.
+ * \endif
+ * \if CHINESE
+ * @brief 绘制刻度的抽象基类
+ * @details QwtAbstractScaleDraw 可用于绘制线性或对数刻度。
+ *          在使用 setScaleDiv() 指定刻度划分为 QwtScaleDiv 对象后，
+ *          可以使用 draw() 成员绘制刻度。
+ * \endif
  */
 class QWT_EXPORT QwtAbstractScaleDraw
 {
 public:
-    /*!
-       Components of a scale
-       \sa enableComponent(), hasComponent
+    /**
+     * \if ENGLISH
+     * @brief Components of a scale
+     * \sa enableComponent(), hasComponent
+     * \endif
+     * \if CHINESE
+     * @brief 刻度的组件
+     * \sa enableComponent(), hasComponent
+     * \endif
      */
     enum ScaleComponent
     {
-        //! Backbone = the line where the ticks are located
+        //! \if ENGLISH Backbone = the line where the ticks are located \endif \if CHINESE 主干 = 刻度线所在的位置 \endif
         Backbone = 0x01,
 
-        //! Ticks
+        //! \if ENGLISH Ticks \endif \if CHINESE 刻度线 \endif
         Ticks = 0x02,
 
-        //! Labels
+        //! \if ENGLISH Labels \endif \if CHINESE 标签 \endif
         Labels = 0x04
     };
 
@@ -102,17 +114,24 @@ public:
 
     virtual QwtText label(double) const;
 
-    /*!
-       Calculate the extent
-
-       The extent is the distance from the baseline to the outermost
-       pixel of the scale draw in opposite to its orientation.
-       It is at least minimumExtent() pixels.
-
-       \param font Font used for drawing the tick labels
-       \return Number of pixels
-
-       \sa setMinimumExtent(), minimumExtent()
+    /**
+     * \if ENGLISH
+     * @brief Calculate the extent
+     * @details The extent is the distance from the baseline to the outermost
+     *          pixel of the scale draw in opposite to its orientation.
+     *          It is at least minimumExtent() pixels.
+     * @param font Font used for drawing the tick labels
+     * @return Number of pixels
+     * \sa setMinimumExtent(), minimumExtent()
+     * \endif
+     * \if CHINESE
+     * @brief 计算范围
+     * @details 范围是从基线到刻度绘制相反方向最外侧像素的距离。
+     *          它至少为 minimumExtent() 像素。
+     * @param font 用于绘制刻度标签的字体
+     * @return 像素数量
+     * \sa setMinimumExtent(), minimumExtent()
+     * \endif
      */
     virtual double extent(const QFont& font) const = 0;
 
@@ -122,32 +141,51 @@ public:
     void invalidateCache();
 
 protected:
-    /*!
-       Draw a tick
-
-       \param painter Painter
-       \param value Value of the tick
-       \param len Length of the tick
-
-       \sa drawBackbone(), drawLabel()
+    /**
+     * \if ENGLISH
+     * @brief Draw a tick
+     * @param painter Painter
+     * @param value Value of the tick
+     * @param len Length of the tick
+     * \sa drawBackbone(), drawLabel()
+     * \endif
+     * \if CHINESE
+     * @brief 绘制刻度线
+     * @param painter 绘制器
+     * @param value 刻度值
+     * @param len 刻度线长度
+     * \sa drawBackbone(), drawLabel()
+     * \endif
      */
     virtual void drawTick(QPainter* painter, double value, double len) const = 0;
 
-    /*!
-       Draws the baseline of the scale
-       \param painter Painter
-
-       \sa drawTick(), drawLabel()
+    /**
+     * \if ENGLISH
+     * @brief Draws the baseline of the scale
+     * @param painter Painter
+     * \sa drawTick(), drawLabel()
+     * \endif
+     * \if CHINESE
+     * @brief 绘制刻度的基线
+     * @param painter 绘制器
+     * \sa drawTick(), drawLabel()
+     * \endif
      */
     virtual void drawBackbone(QPainter* painter) const = 0;
 
-    /*!
-        Draws the label for a major scale tick
-
-        \param painter Painter
-        \param value Value
-
-        \sa drawTick(), drawBackbone()
+    /**
+     * \if ENGLISH
+     * @brief Draws the label for a major scale tick
+     * @param painter Painter
+     * @param value Value
+     * \sa drawTick(), drawBackbone()
+     * \endif
+     * \if CHINESE
+     * @brief 绘制主刻度标签
+     * @param painter 绘制器
+     * @param value 值
+     * \sa drawTick(), drawBackbone()
+     * \endif
      */
     virtual void drawLabel(QPainter* painter, double value) const = 0;
 

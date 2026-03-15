@@ -58,46 +58,49 @@ class QWT_EXPORT QwtAbstractLegend : public QFrame
         Q_OBJECT
 
 public:
+        /// Constructor for QwtAbstractLegend (English only)
         explicit QwtAbstractLegend(QWidget* parent = nullptr);
+        
+        /// Destructor for QwtAbstractLegend (English only)
         virtual ~QwtAbstractLegend();
 
-        /*!
-           \if ENGLISH
-           \brief Render the legend into a given rectangle
-           \param painter Painter
-           \param rect Bounding rectangle
-           \param fillBackground When true, fill rect with the widget background
-           \sa renderLegend() is used by QwtPlotRenderer
-           \endif
-           \if CHINESE
-           \brief 将图例渲染到给定的矩形中
-           \param painter 绘制器
-           \param rect 边界矩形
-           \param fillBackground 如果为 true，用控件背景填充矩形
-           \sa renderLegend() 由 QwtPlotRenderer 使用
-           \endif
+        /**
+         * \if ENGLISH
+         * @brief Render the legend into a given rectangle
+         * @param painter Painter
+         * @param rect Bounding rectangle
+         * @param fillBackground When true, fill rect with the widget background
+         * \sa renderLegend() is used by QwtPlotRenderer
+         * \endif
+         * \if CHINESE
+         * @brief 将图例渲染到给定的矩形中
+         * @param painter 绘制器
+         * @param rect 边界矩形
+         * @param fillBackground 如果为 true，用控件背景填充矩形
+         * \sa renderLegend() 由 QwtPlotRenderer 使用
+         * \endif
          */
         virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
-        //! \if ENGLISH Return true when no plot item is inserted \endif \if CHINESE 当没有插入绘图项时返回 true \endif
+        /// \if ENGLISH Return true when no plot item is inserted \endif \if CHINESE 当没有插入绘图项时返回 true \endif
         virtual bool isEmpty() const = 0;
 
-        //! \if ENGLISH Return scroll extent \endif \if CHINESE 返回滚动范围 \endif
+        /// \if ENGLISH Return scroll extent \endif \if CHINESE 返回滚动范围 \endif
         virtual int scrollExtent(Qt::Orientation) const;
 
 public Q_SLOTS:
 
-        /*!
-           \if ENGLISH
-           \brief Update the entries for a plot item
-           \param itemInfo Info about an item
-           \param data List of legend entry attributes for the item
-           \endif
-           \if CHINESE
-           \brief 更新绘图项的条目
-           \param itemInfo 关于项的信息
-           \param data 该项的图例条目属性列表
-           \endif
+        /**
+         * \if ENGLISH
+         * @brief Update the entries for a plot item
+         * @param itemInfo Info about an item
+         * @param data List of legend entry attributes for the item
+         * \endif
+         * \if CHINESE
+         * @brief 更新绘图项的条目
+         * @param itemInfo 关于项的信息
+         * @param data 该项的图例条目属性列表
+         * \endif
          */
         virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
 };

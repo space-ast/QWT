@@ -85,6 +85,17 @@
 - src/plot/qwt_weeding_curve_fitter.cpp - 所有函数的双语 Doxygen 注释
 - src/plot/qwt_vectorfield_symbol.cpp - 所有函数的双语 Doxygen 注释
 
+#### 第九批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_abstract_legend.h - QwtAbstractLegend 类的双语注释，public 函数英文简要注释
+- src/plot/qwt_abstract_scale.h - QwtAbstractScale 类的双语注释，public/protected 函数英文简要注释
+- src/plot/qwt_abstract_scale_draw.h - QwtAbstractScaleDraw 类及枚举的双语 Doxygen 注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_abstract_legend.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、scrollExtent）
+- src/plot/qwt_abstract_scale.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setScale 系列、transform 系列等）
+- src/plot/qwt_abstract_scale_draw.cpp - 部分方法的双语 Doxygen 注释（构造函数、析构函数、enableComponent、setScaleDiv 等）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -187,9 +198,6 @@ src/plot/qwt_cache_panner.h
 src/plot/qwt_arrow_button.h
 src/plot/qwt_analog_clock.h
 src/plot/qwt_abstract_slider.h
-src/plot/qwt_abstract_scale.h
-src/plot/qwt_abstract_legend.h
-src/plot/qwt_abstract_scale_draw.h
 src/plot/qwt_plot_series_data_picker_group.h
 src/plot3d/qwt3d_volumeplot.h
 src/plot3d/qwt3d_surfaceplot.h
@@ -327,8 +335,6 @@ src/plot/qwt_cache_panner.cpp
 src/plot/qwt_arrow_button.cpp
 src/plot/qwt_analog_clock.cpp
 src/plot/qwt_abstract_slider.cpp
-src/plot/qwt_abstract_scale.cpp
-src/plot/qwt_abstract_scale_draw.cpp
 src/plot/qwt_plot_series_data_picker_group.cpp
 src/plot3d/qwt3d_scale.cpp
 src/plot3d/qwt3d_plot.cpp
@@ -403,7 +409,6 @@ src/plot/qwt_column_symbol.cpp
 src/plot/qwt_color_map.cpp
 src/plot/qwt_canvas_picker.cpp
 src/plot/qwt_bezier.cpp
-src/plot/qwt_abstract_legend.cpp
 ```
 
 ## 批次处理策略
