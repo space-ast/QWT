@@ -35,14 +35,20 @@
 
 class QScrollBar;
 
-/*!
-   \brief The legend widget
-
-   The QwtLegend widget is a tabular arrangement of legend items. Legend
-   items might be any type of widget, but in general they will be
-   a QwtLegendLabel.
-
-   \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+/**
+ * \if ENGLISH
+ * @brief The legend widget
+ * @details The QwtLegend widget is a tabular arrangement of legend items. Legend
+ *          items might be any type of widget, but in general they will be
+ *          a QwtLegendLabel.
+ * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+ * \endif
+ * \if CHINESE
+ * @brief 图例控件
+ * @details QwtLegend 控件是图例条目的表格排列。图例条目可以是任何类型的控件，
+ *          但通常它们是 QwtLegendLabel。
+ * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+ * \endif
  */
 
 class QWT_EXPORT QwtLegend : public QwtAbstractLegend
@@ -85,32 +91,41 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     virtual int scrollExtent( Qt::Orientation ) const override;
 
   Q_SIGNALS:
-    /*!
-       A signal which is emitted when the user has clicked on
-       a legend label, which is in QwtLegendData::Clickable mode.
-
-       \param itemInfo Info for the item item of the
-                      selected legend item
-       \param index Index of the legend label in the list of widgets
-                   that are associated with the plot item
-
-       \note clicks are disabled as default
-       \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user clicks on a legend label in Clickable mode
+     * @param itemInfo Info for the item of the selected legend item
+     * @param index Index of the legend label in the list of widgets associated with the plot item
+     * @note Clicks are disabled as default
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
+     * \if CHINESE
+     * @brief 当用户点击 Clickable 模式的图例标签时发出的信号
+     * @param itemInfo 选中图例项的项信息
+     * @param index 图例标签在与绘图项关联的控件列表中的索引
+     * @note 默认禁用点击
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
      */
     void clicked( const QVariant& itemInfo, int index );
 
-    /*!
-       A signal which is emitted when the user has clicked on
-       a legend label, which is in QwtLegendData::Checkable mode
-
-       \param itemInfo Info for the item of the
-                      selected legend label
-       \param index Index of the legend label in the list of widgets
-                   that are associated with the plot item
-       \param on True when the legend label is checked
-
-       \note clicks are disabled as default
-       \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user clicks on a legend label in Checkable mode
+     * @param itemInfo Info for the item of the selected legend label
+     * @param on True when the legend label is checked
+     * @param index Index of the legend label in the list of widgets associated with the plot item
+     * @note Clicks are disabled as default
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
+     * \if CHINESE
+     * @brief 当用户点击 Checkable 模式的图例标签时发出的信号
+     * @param itemInfo 选中图例标签的项信息
+     * @param on 图例标签被选中时为 true
+     * @param index 图例标签在与绘图项关联的控件列表中的索引
+     * @note 默认禁用点击
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
      */
     void checked( const QVariant& itemInfo, bool on, int index );
 
