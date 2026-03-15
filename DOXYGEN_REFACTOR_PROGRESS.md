@@ -67,6 +67,15 @@
 - src/plot/qwt_system_clock.cpp - QwtSystemClock 方法的详细双语注释
 - src/plot/qwt_transform.cpp - QwtTransform 类的详细双语注释
 
+#### 第七批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_widget_overlay.h - QwtWidgetOverlay 类的双语注释
+- src/plot/qwt_wheel.h - QwtWheel 类的双语注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_widget_overlay.cpp - 所有函数的双语 Doxygen 注释
+- src/plot/qwt_wheel.cpp - 所有函数的双语 Doxygen 注释
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -77,8 +86,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_widget_overlay.h
-src/plot/qwt_wheel.h
 src/plot/qwt_weeding_curve_fitter.h
 src/plot/qwt_vectorfield_symbol.h
 src/plot/qwt_thermo.h
@@ -253,7 +260,6 @@ src/plot3d/qwt3d_drawable.cpp
 src/plot3d/qwt3d_coordsys.cpp
 src/plot3d/qwt3d_color.cpp
 src/plot3d/qwt3d_autoscaler.cpp
-src/plot/qwt_widget_overlay.cpp
 src/plot/qwt_thermo.cpp
 src/plot/qwt_text.cpp
 src/plot/qwt_symbol.cpp
@@ -331,7 +337,6 @@ src/plot3d/qwt3d_enrichment_std.cpp
 src/plot3d/qwt3d_dataviews.cpp
 src/plot3d/qwt3d_colorlegend.cpp
 src/plot3d/qwt3d_axis.cpp
-src/plot/qwt_wheel.cpp
 src/plot/qwt_weeding_curve_fitter.cpp
 src/plot/qwt_vectorfield_symbol.cpp
 src/plot/qwt_text_label.cpp

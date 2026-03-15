@@ -121,9 +121,16 @@ public:
     uchar* rgbaBuffer;
 };
 
-/*!
-   \brief Constructor
-   \param widget Parent widget, where the overlay is aligned to
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param widget Parent widget, where the overlay is aligned to
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param widget 父控件，覆盖层与其对齐
+ * \endif
  */
 QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 {
@@ -145,11 +152,18 @@ QwtWidgetOverlay::~QwtWidgetOverlay()
     delete m_data;
 }
 
-/*!
-   \brief Specify how to find the mask for the overlay
-
-   \param mode New mode
-   \sa maskMode()
+/**
+ * \if ENGLISH
+ * @brief Specify how to find the mask for the overlay
+ * @param mode New mode
+ * \sa maskMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定如何为覆盖层查找掩码
+ * @param mode 新模式
+ * \sa maskMode()
+ * \endif
  */
 void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 {
@@ -160,8 +174,15 @@ void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 }
 
 /*!
-   \return Mode how to find the mask for the overlay
+   \if ENGLISH
+   @return Mode how to find the mask for the overlay
    \sa setMaskMode()
+   \endif
+   *
+   \if CHINESE
+   @return 如何为覆盖层查找掩码的模式
+   \sa setMaskMode()
+   \endif
  */
 QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 {
@@ -169,10 +190,17 @@ QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 }
 
 /*!
+   \if ENGLISH
    Set the render mode
-   \param mode Render mode
-
+   @param mode Render mode
    \sa RenderMode, renderMode()
+   \endif
+   *
+   \if CHINESE
+   设置渲染模式
+   @param mode 渲染模式
+   \sa RenderMode, renderMode()
+   \endif
  */
 void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
@@ -180,8 +208,15 @@ void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 }
 
 /*!
-   \return Render mode
+   \if ENGLISH
+   @return Render mode
    \sa RenderMode, setRenderMode()
+   \endif
+   *
+   \if CHINESE
+   @return 渲染模式
+   \sa RenderMode, setRenderMode()
+   \endif
  */
 QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 {
@@ -189,7 +224,13 @@ QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 }
 
 /*!
+   \if ENGLISH
    Recalculate the mask and repaint the overlay
+   \endif
+   *
+   \if CHINESE
+   重新计算掩码并重绘覆盖层
+   \endif
  */
 void QwtWidgetOverlay::updateOverlay()
 {
@@ -247,10 +288,17 @@ void QwtWidgetOverlay::updateMask()
 }
 
 /*!
+   \if ENGLISH
    Paint event
-   \param event Paint event
-
+   @param event Paint event
    \sa drawOverlay()
+   \endif
+   *
+   \if CHINESE
+   绘制事件
+   @param event 绘制事件
+   \sa drawOverlay()
+   \endif
  */
 void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 {
@@ -297,8 +345,15 @@ void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 }
 
 /*!
+   \if ENGLISH
    Resize event
-   \param event Resize event
+   @param event Resize event
+   \endif
+   *
+   \if CHINESE
+   调整大小事件
+   @param event 调整大小事件
+   \endif
  */
 void QwtWidgetOverlay::resizeEvent(QResizeEvent* event)
 {
@@ -353,14 +408,27 @@ QRegion QwtWidgetOverlay::maskHint() const
 }
 
 /*!
-   \brief Event filter
+   \if ENGLISH
+   @brief Event filter
 
    Resize the overlay according to the size of the parent widget.
 
-   \param object Object to be filtered
-   \param event Event
+   @param object Object to be filtered
+   @param event Event
 
    \return See QObject::eventFilter()
+   \endif
+   *
+   \if CHINESE
+   @brief 事件过滤器
+
+   根据父控件的大小调整覆盖层的大小。
+
+   @param object 要过滤的对象
+   @param event 事件
+
+   \return 参见 QObject::eventFilter()
+   \endif
  */
 
 bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)

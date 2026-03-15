@@ -31,6 +31,7 @@
 #include <qwidget.h>
 
 /*!
+   \if ENGLISH
    \brief The Wheel Widget
 
    The wheel widget can be used to change values over a very large range
@@ -40,6 +41,18 @@
    The default range of the wheel is [0.0, 100.0]
 
    \sa The radio example.
+   \endif
+   *
+   \if CHINESE
+   \brief 轮式控件
+
+   轮式控件可用于在非常大的范围内以非常小的步长改变值。
+   使用 setMass() 成员，可以将其配置为飞轮。
+
+   轮的默认范围是 [0.0, 100.0]
+
+   \sa 收音机示例。
+   \endif
  */
 class QWT_EXPORT QwtWheel : public QWidget
 {
@@ -135,6 +148,7 @@ class QWT_EXPORT QwtWheel : public QWidget
   Q_SIGNALS:
 
     /*!
+       \if ENGLISH
        \brief Notify a change of value.
 
        When tracking is enabled this signal will be emitted every
@@ -142,25 +156,55 @@ class QWT_EXPORT QwtWheel : public QWidget
 
        \param value new value
        \sa setTracking()
+       \endif
+       *
+       \if CHINESE
+       \brief 通知值变化。
+
+       当启用跟踪时，每次值变化时都会发出此信号。
+
+       \param value 新值
+       \sa setTracking()
+       \endif
      */
     void valueChanged( double value );
 
     /*!
+       \if ENGLISH
        This signal is emitted when the user presses the
        the wheel with the mouse
+       \endif
+       *
+       \if CHINESE
+       当用户用鼠标按下轮时发出此信号
+       \endif
      */
     void wheelPressed();
 
     /*!
+       \if ENGLISH
        This signal is emitted when the user releases the mouse
+       \endif
+       *
+       \if CHINESE
+       当用户释放鼠标时发出此信号
+       \endif
      */
     void wheelReleased();
 
     /*!
+       \if ENGLISH
        This signal is emitted when the user moves the
        wheel with the mouse.
 
        \param value new value
+       \endif
+       *
+       \if CHINESE
+       当用户用鼠标移动轮时发出此信号。
+
+       \param value 新值
+       \endif
      */
     void wheelMoved( double value );
 
