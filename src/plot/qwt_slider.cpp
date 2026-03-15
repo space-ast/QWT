@@ -640,14 +640,19 @@ bool QwtSlider::isScrollPosition(const QPoint& pos) const
     return false;
 }
 
-/*!
-   \brief Determine the value for a new position of the
-         slider handle.
-
-   \param pos Mouse position
-
-   \return Value for the mouse position
-   \sa isScrollPosition()
+/**
+ * \if ENGLISH
+ * @brief Determine the value for a new position of the slider handle
+ * @param pos Mouse position
+ * @returns Value for the mouse position
+ * \sa isScrollPosition()
+ * \endif
+ * \if CHINESE
+ * @brief 确定滑块手柄新位置的值
+ * @param pos 鼠标位置
+ * @returns 鼠标位置对应的值
+ * \sa isScrollPosition()
+ * \endif
  */
 double QwtSlider::scrolledTo(const QPoint& pos) const
 {
@@ -665,9 +670,17 @@ double QwtSlider::scrolledTo(const QPoint& pos) const
     return scaleMap().invTransform(p);
 }
 
-/*!
-   Mouse press event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Mouse press event handler
+ * @param event Mouse event
+ * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 鼠标按下事件处理器
+ * @param event 鼠标事件
+ * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
+ * \endif
  */
 void QwtSlider::mousePressEvent(QMouseEvent* event)
 {
@@ -717,9 +730,17 @@ void QwtSlider::mousePressEvent(QMouseEvent* event)
     QwtAbstractSlider::mousePressEvent(event);
 }
 
-/*!
-   Mouse release event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Mouse release event handler
+ * @param event Mouse event
+ * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 鼠标释放事件处理器
+ * @param event 鼠标事件
+ * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
+ * \endif
  */
 void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -738,13 +759,19 @@ void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
     QwtAbstractSlider::mouseReleaseEvent(event);
 }
 
-/*!
-   Timer event handler
-
-   Handles the timer, when the mouse stays pressed
-   inside the sliderRect().
-
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Timer event handler
+ * @details Handles the timer when the mouse stays pressed inside the sliderRect().
+ * @param event Timer event
+ * \sa timerEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 定时器事件处理器
+ * @details 当鼠标保持在 sliderRect() 内按下时处理定时器。
+ * @param event 定时器事件
+ * \sa timerEvent()
+ * \endif
  */
 void QwtSlider::timerEvent(QTimerEvent* event)
 {
@@ -780,9 +807,17 @@ void QwtSlider::timerEvent(QTimerEvent* event)
     }
 }
 
-/*!
-   Qt paint event handler
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Qt paint event handler
+ * @param event Paint event
+ * \sa resizeEvent(), changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 绘制事件处理器
+ * @param event 绘制事件
+ * \sa resizeEvent(), changeEvent()
+ * \endif
  */
 void QwtSlider::paintEvent(QPaintEvent* event)
 {
@@ -804,9 +839,17 @@ void QwtSlider::paintEvent(QPaintEvent* event)
         QwtPainter::drawFocusRect(&painter, this, m_data->sliderRect);
 }
 
-/*!
-   Qt resize event handler
-   \param event Resize event
+/**
+ * \if ENGLISH
+ * @brief Qt resize event handler
+ * @param event Resize event
+ * \sa paintEvent(), layoutSlider()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 调整大小事件处理器
+ * @param event 调整大小事件
+ * \sa paintEvent(), layoutSlider()
+ * \endif
  */
 void QwtSlider::resizeEvent(QResizeEvent* event)
 {
@@ -814,11 +857,19 @@ void QwtSlider::resizeEvent(QResizeEvent* event)
     QwtAbstractSlider::resizeEvent(event);
 }
 
-/*!
-   Qt event handler
-   \param event Event
-
-   \return true, if event was recognized and processed
+/**
+ * \if ENGLISH
+ * @brief Qt event handler
+ * @param event Event
+ * @returns True if event was recognized and processed
+ * \sa QwtAbstractSlider::event()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 事件处理器
+ * @param event 事件
+ * @returns 如果事件被识别和处理则返回 true
+ * \sa QwtAbstractSlider::event()
+ * \endif
  */
 bool QwtSlider::event(QEvent* event)
 {
@@ -828,9 +879,17 @@ bool QwtSlider::event(QEvent* event)
     return QwtAbstractSlider::event(event);
 }
 
-/*!
-   Handles QEvent::StyleChange and QEvent::FontChange events
-   \param event Change event
+/**
+ * \if ENGLISH
+ * @brief Handles QEvent::StyleChange and QEvent::FontChange events
+ * @param event Change event
+ * \sa QwtAbstractSlider::changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理 QEvent::StyleChange 和 QEvent::FontChange 事件
+ * @param event 变更事件
+ * \sa QwtAbstractSlider::changeEvent()
+ * \endif
  */
 void QwtSlider::changeEvent(QEvent* event)
 {
@@ -842,12 +901,19 @@ void QwtSlider::changeEvent(QEvent* event)
     QwtAbstractSlider::changeEvent(event);
 }
 
-/*!
-   Recalculate the slider's geometry and layout based on
-   the current geometry and fonts.
-
-   \param update_geometry  notify the layout system and call update
-         to redraw the scale
+/**
+ * \if ENGLISH
+ * @brief Recalculate the slider's geometry and layout
+ * @details Recalculates the slider's geometry and layout based on the current geometry and fonts.
+ * @param update_geometry Notify the layout system and call update to redraw the scale
+ * \sa layoutSlider()
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算滑块的几何布局和布局
+ * @details 基于当前几何和字体重新计算滑块的几何和布局。
+ * @param update_geometry 通知布局系统并调用 update 重新绘制刻度
+ * \sa layoutSlider()
+ * \endif
  */
 void QwtSlider::layoutSlider(bool update_geometry)
 {
@@ -941,14 +1007,19 @@ void QwtSlider::layoutSlider(bool update_geometry)
     }
 }
 
-/*!
-   En/Disable the trough
-
-   The slider can be customized by showing a trough for the
-   handle.
-
-   \param on When true, the groove is visible
-   \sa hasTrough(), setGroove()
+/**
+ * \if ENGLISH
+ * @brief En/Disable the trough
+ * @details The slider can be customized by showing a trough for the handle.
+ * @param on When true, the trough is visible
+ * \sa hasTrough(), setGroove()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用槽
+ * @details 滑块可以通过显示手柄的槽来自定义。
+ * @param on 当 true 时，槽可见
+ * \sa hasTrough(), setGroove()
+ * \endif
  */
 void QwtSlider::setTrough(bool on)
 {
@@ -960,23 +1031,34 @@ void QwtSlider::setTrough(bool on)
     }
 }
 
-/*!
-   \return True, when the trough is visible
-   \sa setTrough(), hasGroove()
+/**
+ * \if ENGLISH
+ * @brief Return true when the trough is visible
+ * \sa setTrough(), hasGroove()
+ * \endif
+ * \if CHINESE
+ * @brief 当槽可见时返回 true
+ * \sa setTrough(), hasGroove()
+ * \endif
  */
 bool QwtSlider::hasTrough() const
 {
     return m_data->hasTrough;
 }
 
-/*!
-   En/Disable the groove
-
-   The slider can be customized by showing a groove for the
-   handle.
-
-   \param on When true, the groove is visible
-   \sa hasGroove(), setThrough()
+/**
+ * \if ENGLISH
+ * @brief En/Disable the groove
+ * @details The slider can be customized by showing a groove for the handle.
+ * @param on When true, the groove is visible
+ * \sa hasGroove(), setTrough()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用凹槽
+ * @details 滑块可以通过显示手柄的凹槽来自定义。
+ * @param on 当 true 时，凹槽可见
+ * \sa hasGroove(), setTrough()
+ * \endif
  */
 void QwtSlider::setGroove(bool on)
 {
@@ -988,17 +1070,32 @@ void QwtSlider::setGroove(bool on)
     }
 }
 
-/*!
-   \return True, when the groove is visible
-   \sa setGroove(), hasTrough()
+/**
+ * \if ENGLISH
+ * @brief Return true when the groove is visible
+ * \sa setGroove(), hasTrough()
+ * \endif
+ * \if CHINESE
+ * @brief 当凹槽可见时返回 true
+ * \sa setGroove(), hasTrough()
+ * \endif
  */
 bool QwtSlider::hasGroove() const
 {
     return m_data->hasGroove;
 }
 
-/*!
-   \return minimumSizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return size hint
+ * @returns minimumSizeHint()
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @returns minimumSizeHint()
+ * \sa minimumSizeHint()
+ * \endif
  */
 QSize QwtSlider::sizeHint() const
 {
@@ -1006,9 +1103,15 @@ QSize QwtSlider::sizeHint() const
     return qwtExpandedToGlobalStrut(hint);
 }
 
-/*!
-   \return Minimum size hint
-   \sa sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return minimum size hint
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * \sa sizeHint()
+ * \endif
  */
 QSize QwtSlider::minimumSizeHint() const
 {
@@ -1069,8 +1172,15 @@ QSize QwtSlider::minimumSizeHint() const
     return m_data->sizeHintCache;
 }
 
-/*!
-   \return Bounding rectangle of the slider handle
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the slider handle
+ * \sa sliderRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块手柄的边界矩形
+ * \sa sliderRect()
+ * \endif
  */
 QRect QwtSlider::handleRect() const
 {
@@ -1092,8 +1202,15 @@ QRect QwtSlider::handleRect() const
     return rect;
 }
 
-/*!
-   \return Bounding rectangle of the slider - without the scale
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the slider - without the scale
+ * \sa handleRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块的边界矩形 - 不含刻度
+ * \sa handleRect()
+ * \endif
  */
 QRect QwtSlider::sliderRect() const
 {
