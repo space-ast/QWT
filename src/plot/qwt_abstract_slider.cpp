@@ -167,16 +167,22 @@ bool QwtAbstractSlider::isValid() const
     return m_data->isValid;
 }
 
-/*!
-   En/Disable read only mode
-
-   In read only mode the slider can't be controlled by mouse
-   or keyboard.
-
-   \param on Enables in case of true
-   \sa isReadOnly()
-
-   \warning The focus policy is set to Qt::StrongFocus or Qt::NoFocus
+/**
+ * \if ENGLISH
+ * @brief Enable or disable read-only mode
+ * @details In read-only mode the slider can't be controlled by mouse
+ *          or keyboard.
+ * @param on Enables read-only mode if true
+ * \sa isReadOnly()
+ * \warning The focus policy is set to Qt::StrongFocus or Qt::NoFocus
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用只读模式
+ * @details 在只读模式下，滑块不能通过鼠标或键盘控制。
+ * @param on 如果为 true 则启用只读模式
+ * \sa isReadOnly()
+ * \warning 焦点策略会被设置为 Qt::StrongFocus 或 Qt::NoFocus
+ * \endif
  */
 void QwtAbstractSlider::setReadOnly(bool on)
 {
@@ -188,48 +194,78 @@ void QwtAbstractSlider::setReadOnly(bool on)
     }
 }
 
-/*!
-   In read only mode the slider can't be controlled by mouse
-   or keyboard.
-
-   \return true if read only
-   \sa setReadOnly()
+/**
+ * \if ENGLISH
+ * @brief Check if read-only mode is enabled
+ * @return True if read-only mode is enabled
+ * \sa setReadOnly()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了只读模式
+ * @return 如果启用了只读模式则返回 true
+ * \sa setReadOnly()
+ * \endif
  */
 bool QwtAbstractSlider::isReadOnly() const
 {
     return m_data->readOnly;
 }
 
-/*!
-   \brief Enables or disables tracking.
-
-   If tracking is enabled, the slider emits the valueChanged()
-   signal while the movable part of the slider is being dragged.
-   If tracking is disabled, the slider emits the valueChanged() signal
-   only when the user releases the slider.
-
-   Tracking is enabled by default.
-   \param on \c true (enable) or \c false (disable) tracking.
-
-   \sa isTracking(), sliderMoved()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable tracking
+ * @details If tracking is enabled, the slider emits the valueChanged()
+ *          signal while the movable part of the slider is being dragged.
+ *          If tracking is disabled, the slider emits the valueChanged() signal
+ *          only when the user releases the slider.
+ *          Tracking is enabled by default.
+ * @param on True to enable tracking, false to disable
+ * \sa isTracking(), sliderMoved()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用跟踪
+ * @details 如果启用跟踪，滑块在被拖动时会发出 valueChanged() 信号。
+ *          如果禁用跟踪，滑块仅在用户释放时发出 valueChanged() 信号。
+ *          跟踪默认启用。
+ * @param on true 启用跟踪，false 禁用
+ * \sa isTracking(), sliderMoved()
+ * \endif
  */
 void QwtAbstractSlider::setTracking(bool on)
 {
     m_data->isTracking = on;
 }
 
-/*!
-   \return True, when tracking has been enabled
-   \sa setTracking()
+/**
+ * \if ENGLISH
+ * @brief Check if tracking is enabled
+ * @return True if tracking is enabled
+ * \sa setTracking()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了跟踪
+ * @return 如果启用了跟踪则返回 true
+ * \sa setTracking()
+ * \endif
  */
 bool QwtAbstractSlider::isTracking() const
 {
     return m_data->isTracking;
 }
 
-/*!
-   Mouse press event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse press events
+ * @param event Mouse event
+ * \details Initiates scrolling if the position is valid.
+ * \sa mouseMoveEvent(), mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标按下事件
+ * @param event 鼠标事件
+ * \details 如果位置有效则开始滚动。
+ * \sa mouseMoveEvent(), mouseReleaseEvent()
+ * \endif
  */
 void QwtAbstractSlider::mousePressEvent(QMouseEvent* event)
 {
@@ -250,9 +286,19 @@ void QwtAbstractSlider::mousePressEvent(QMouseEvent* event)
     }
 }
 
-/*!
-   Mouse Move Event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse move events
+ * @param event Mouse event
+ * \details Updates the slider value while scrolling.
+ * \sa mousePressEvent(), mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标移动事件
+ * @param event 鼠标事件
+ * \details 滚动时更新滑块值。
+ * \sa mousePressEvent(), mouseReleaseEvent()
+ * \endif
  */
 void QwtAbstractSlider::mouseMoveEvent(QMouseEvent* event)
 {
@@ -288,9 +334,19 @@ void QwtAbstractSlider::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
-/*!
-   Mouse Release Event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse release events
+ * @param event Mouse event
+ * \details Ends scrolling and emits valueChanged() if needed.
+ * \sa mousePressEvent(), mouseMoveEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标释放事件
+ * @param event 鼠标事件
+ * \details 结束滚动，如有需要则发出 valueChanged() 信号。
+ * \sa mousePressEvent(), mouseMoveEvent()
+ * \endif
  */
 void QwtAbstractSlider::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -309,17 +365,25 @@ void QwtAbstractSlider::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
-/*!
-   Wheel Event handler
-
-   In/decreases the value by s number of steps. The direction
-   depends on the invertedControls() property.
-
-   When the control or shift modifier is pressed the wheel delta
-   ( divided by 120 ) is mapped to an increment according to
-   pageSteps(). Otherwise it is mapped to singleSteps().
-
-   \param event Wheel event
+/**
+ * \if ENGLISH
+ * @brief Handle wheel events
+ * @details In/decreases the value by a number of steps. The direction
+ *          depends on the invertedControls() property.
+ *          When the control or shift modifier is pressed the wheel delta
+ *          (divided by 120) is mapped to an increment according to
+ *          pageSteps(). Otherwise it is mapped to singleSteps().
+ * @param event Wheel event
+ * \sa keyPressEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理滚轮事件
+ * @details 按步数增加/减少值。方向取决于 invertedControls() 属性。
+ *          当按下 Ctrl 或 Shift 修饰键时，滚轮增量（除以 120）根据
+ *          pageSteps() 映射。否则根据 singleSteps() 映射。
+ * @param event 滚轮事件
+ * \sa keyPressEvent()
+ * \endif
  */
 void QwtAbstractSlider::wheelEvent(QWheelEvent* event)
 {
@@ -363,30 +427,35 @@ void QwtAbstractSlider::wheelEvent(QWheelEvent* event)
     }
 }
 
-/*!
-   Handles key events
-
-   QwtAbstractSlider handles the following keys:
-
-   - Qt::Key_Left\n
-    Add/Subtract singleSteps() in direction to lowerBound();
-   - Qt::Key_Right\n
-    Add/Subtract singleSteps() in direction to upperBound();
-   - Qt::Key_Down\n
-    Subtract singleSteps(), when invertedControls() is false
-   - Qt::Key_Up\n
-    Add singleSteps(), when invertedControls() is false
-   - Qt::Key_PageDown\n
-    Subtract pageSteps(), when invertedControls() is false
-   - Qt::Key_PageUp\n
-    Add pageSteps(), when invertedControls() is false
-   - Qt::Key_Home\n
-    Set the value to the minimum()
-   - Qt::Key_End\n
-    Set the value to the maximum()
-
-   \param event Key event
-   \sa isReadOnly()
+/**
+ * \if ENGLISH
+ * @brief Handle key press events
+ * @details QwtAbstractSlider handles the following keys:
+ *          - Qt::Key_Left: Add/Subtract singleSteps() in direction to lowerBound()
+ *          - Qt::Key_Right: Add/Subtract singleSteps() in direction to upperBound()
+ *          - Qt::Key_Down: Subtract singleSteps(), when invertedControls() is false
+ *          - Qt::Key_Up: Add singleSteps(), when invertedControls() is false
+ *          - Qt::Key_PageDown: Subtract pageSteps(), when invertedControls() is false
+ *          - Qt::Key_PageUp: Add pageSteps(), when invertedControls() is false
+ *          - Qt::Key_Home: Set the value to the minimum()
+ *          - Qt::Key_End: Set the value to the maximum()
+ * @param event Key event
+ * \sa isReadOnly(), wheelEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理键盘按下事件
+ * @details QwtAbstractSlider 处理以下按键：
+ *          - Qt::Key_Left: 朝下界方向增加/减少 singleSteps()
+ *          - Qt::Key_Right: 朝上界方向增加/减少 singleSteps()
+ *          - Qt::Key_Down: 当 invertedControls() 为 false 时减少 singleSteps()
+ *          - Qt::Key_Up: 当 invertedControls() 为 false 时增加 singleSteps()
+ *          - Qt::Key_PageDown: 当 invertedControls() 为 false 时减少 pageSteps()
+ *          - Qt::Key_PageUp: 当 invertedControls() 为 false 时增加 pageSteps()
+ *          - Qt::Key_Home: 将值设置为 minimum()
+ *          - Qt::Key_End: 将值设置为 maximum()
+ * @param event 键盘事件
+ * \sa isReadOnly(), wheelEvent()
+ * \endif
  */
 void QwtAbstractSlider::keyPressEvent(QKeyEvent* event)
 {

@@ -105,6 +105,10 @@
 **源文件 (.cpp):**
 - src/plot/qwt_abstract_slider.cpp - 部分方法的双语 Doxygen 注释（构造函数、析构函数、setValid、isValid 等）
 
+#### 第十一批 (2026-03-15)
+**源文件 (.cpp):**
+- src/plot/qwt_abstract_slider.cpp - 继续添加双语 Doxygen 注释（setReadOnly、isReadOnly、setTracking、isTracking、mousePressEvent、mouseMoveEvent、mouseReleaseEvent、wheelEvent、keyPressEvent 等）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
