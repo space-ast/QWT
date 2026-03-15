@@ -168,7 +168,8 @@
 - src/plot/qwt_scale_draw.h - 添加类的双语 Doxygen 注释、Alignment 枚举的双语注释和所有方法的英文简要注释
 
 **源文件 (.cpp):**
-- (待处理)
+- src/plot/qwt_scale_engine.cpp - 所有方法的双语 Doxygen 注释（QwtScaleArithmetic 的 4 个静态方法、QwtScaleEngine 的 16 个方法、QwtLinearScaleEngine 的 8 个方法、QwtLogScaleEngine 的 8 个方法）
+- src/plot/qwt_scale_draw.cpp - 部分方法的双语注释（构造函数、析构函数、alignment、setAlignment、orientation，其余方法将在后续批次继续）
 
 ### 未处理文件
 
