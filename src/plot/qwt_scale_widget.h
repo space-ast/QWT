@@ -49,11 +49,11 @@ class QwtTransform;
 class QwtColorMap;
 
 /**
- *  @brief A Widget which contains a scale
+ * \if ENGLISH
+ * @brief A Widget which contains a scale
+ * @details This Widget can be used to decorate composite widgets with a scale.
  *
- *  This Widget can be used to decorate composite widgets with
- *  a scale.
- *
+ * Layout diagram:
  * │<----------------------------- plot yleft edge
  * │      │       │      │tick ┌       ┌-----------------------------------
  * │      │       │      │label│       │
@@ -68,6 +68,27 @@ class QwtColorMap;
  * │      │       │      │ 2  -│       │
  * │      │       │      │     │       │
  * │      │       │      │ 1  -│       │_________________________________
+ * \endif
+ * \if CHINESE
+ * @brief 包含刻度的控件
+ * @details 此控件可用于为复合控件添加刻度装饰。
+ *
+ * 布局示意图：
+ * │<----------------------------- plot yleft edge
+ * │      │       │      │tick ┌       ┌-----------------------------------
+ * │      │       │      │label│       │
+ * │edge  │YLeft  │space │ 6  -│margin │
+ * │margin│Title  │      │     │       │
+ * │      │       │      │ 5  -│       │
+ * │      │       │      │     │       │
+ * │      │       │      │ 4  -│       │ plot cavans
+ * │      │       │      │     │       │
+ * │      │       │      │ 3  -│       │
+ * │      │       │      │     │       │
+ * │      │       │      │ 2  -│       │
+ * │      │       │      │     │       │
+ * │      │       │      │ 1  -│       │_________________________________
+ * \endif
  */
 
 class QWT_EXPORT QwtScaleWidget : public QWidget
@@ -75,36 +96,41 @@ class QWT_EXPORT QwtScaleWidget : public QWidget
     Q_OBJECT
     QWT_DECLARE_PRIVATE(QwtScaleWidget)
 public:
-    //! Layout flags of the title
+    /// Layout flags of the title
     enum LayoutFlag
     {
-        /*!
-           The title of vertical scales is painted from top to bottom.
-           Otherwise it is painted from bottom to top.
-         */
+        /// The title of vertical scales is painted from top to bottom. Otherwise it is painted from bottom to top.
         TitleInverted = 1
     };
 
     Q_DECLARE_FLAGS(LayoutFlags, LayoutFlag)
 
     /**
+     * \if ENGLISH
+     * @brief Built-in actions
+     * \endif
+     * \if CHINESE
      * @brief 内置的动作
+     * \endif
      */
     enum BuiltinActions
     {
-        //! @brief 无任何动作
+        /// @brief No action
         ActionNone = 0x00,
-        //! @brief 鼠标滚轮缩放(鼠标点击激活坐标轴后，通过滚动滚轮可以实现当前坐标轴的缩放)
+        /// @brief Mouse wheel zoom (after clicking to activate the axis, scrolling the wheel zooms the current axis)
         ActionWheelZoom = 0x01,
-        //! @brief 鼠标点击拖动(鼠标点击激活坐标轴后，通过鼠标拖动坐标轴实现坐标轴的左右移动)
+        /// @brief Mouse click and drag (after clicking to activate the axis, dragging moves the axis left/right)
         ActionClickPan = 0x02,
-        //! @brief 所有动作
+        /// @brief All actions
         ActionAll = 0xFF
     };
     Q_DECLARE_FLAGS(BuiltinActionsFlags, BuiltinActions)
 public:
+    /// Constructor
     explicit QwtScaleWidget(QWidget* parent = nullptr);
+    /// Constructor with alignment
     explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = nullptr);
+    /// Destructor
     virtual ~QwtScaleWidget();
 
 Q_SIGNALS:
@@ -136,115 +162,161 @@ Q_SIGNALS:
     void selectionChanged(bool selected);
 
 public:
+    /// Set the title
     void setTitle(const QString& title);
+    /// Set the title
     void setTitle(const QwtText& title);
+    /// \return the title
     QwtText title() const;
 
+    /// Set a layout flag
     void setLayoutFlag(LayoutFlag, bool on);
+    /// \return true if a layout flag is set
     bool testLayoutFlag(LayoutFlag) const;
 
+    /// Set the border distances
     void setBorderDist(int dist1, int dist2);
+    /// \return the start border distance
     int startBorderDist() const;
+    /// \return the end border distance
     int endBorderDist() const;
 
+    /// Get the border distance hint
     void getBorderDistHint(int& start, int& end) const;
 
+    /// Get the minimum border distances
     void getMinBorderDist(int& start, int& end) const;
+    /// Set the minimum border distances
     void setMinBorderDist(int start, int end);
+    /// \return the start minimum border distance
     int startMinBorderDist() const;
+    /// \return the end minimum border distance
     int endMinBorderDist() const;
 
+    /// Set the margin
     void setMargin(int);
+    /// \return the margin
     int margin() const;
 
+    /// Set the spacing
     void setSpacing(int);
+    /// \return the spacing
     int spacing() const;
 
-    // 坐标轴和绘图边距的偏移，这个值实际和contentMargin类似，但qwt的contentMargin只用于minimumSizeHint
-    // 对于寄生轴，需要宿主轴有很大的空白位能让寄生轴显示，这个edgeOffset主要就是让坐标轴留出一个空白位
+    /// Set the edge margin (offset between axis and plot canvas)
     void setEdgeMargin(int offset);
+    /// \return the edge margin
     int edgeMargin() const;
 
+    /// Set the scale division
     void setScaleDiv(const QwtScaleDiv&);
+    /// Set the transformation
     void setTransformation(QwtTransform*);
 
+    /// Set the scale draw
     void setScaleDraw(QwtScaleDraw*);
+    /// \return the scale draw (const version)
     const QwtScaleDraw* scaleDraw() const;
+    /// \return the scale draw
     QwtScaleDraw* scaleDraw();
 
+    /// Set the label alignment
     void setLabelAlignment(Qt::Alignment);
+    /// Set the label rotation
     void setLabelRotation(double rotation);
 
+    /// Enable/disable the color bar
     void setColorBarEnabled(bool);
+    /// \return true if color bar is enabled
     bool isColorBarEnabled() const;
 
+    /// Set the color bar width
     void setColorBarWidth(int);
+    /// \return the color bar width
     int colorBarWidth() const;
 
+    /// Set the color map
     void setColorMap(const QwtInterval&, QwtColorMap*);
 
+    /// \return the color bar interval
     QwtInterval colorBarInterval() const;
+    /// \return the color map
     const QwtColorMap* colorMap() const;
 
     virtual QSize sizeHint() const override;
     virtual QSize minimumSizeHint() const override;
 
+    /// \return the height required for the title for a given width
     int titleHeightForWidth(int width) const;
+    /// \return the dimension required for a given length
     int dimForLength(int length, const QFont& scaleFont) const;
 
+    /// Draw the color bar
     void drawColorBar(QPainter*, const QRectF&) const;
+    /// Draw the title
     void drawTitle(QPainter*, QwtScaleDraw::Alignment, const QRectF& rect) const;
 
+    /// Set the alignment
     void setAlignment(QwtScaleDraw::Alignment);
+    /// \return the alignment
     QwtScaleDraw::Alignment alignment() const;
 
+    /// \return the rectangle for the color bar
     QRectF colorBarRect(const QRectF&) const;
 
-    // 去除了colorBar,margin,edgeMargin,BorderDistHint这些区域的矩形，也就是用来绘制刻度的区域
+    /// \return the scale rectangle (excluding color bar, margin, edge margin, border distances)
     QRect scaleRect() const;
-    // font color of the coordinate axis/设置坐标轴的字体颜色
+    /// Set the text color (font color of the coordinate axis)
     void setTextColor(const QColor& c);
+    /// \return the text color
     QColor textColor() const;
 
-    // color of the coordinate axis/坐标轴的颜色
+    /// Set the scale color (color of the coordinate axis)
     void setScaleColor(const QColor& c);
+    /// \return the scale color
     QColor scaleColor() const;
 
+    /// Layout the scale
     void layoutScale(bool update_geometry = true);
 
-    // 获取此轴窗口对应的axisID
+    /// \return the axis ID for this scale widget
     QwtAxisId axisID() const;
-    // 是否是x坐标轴
+    /// \return true if this is an X axis
     bool isXAxis() const;
-    // 是否是y坐标轴
+    /// \return true if this is a Y axis
     bool isYAxis() const;
     //===============================================
-    // 以下接口用于内置动作
+    // Built-in action methods
     //===============================================
 
-    // 启用/禁用内置交互动作
+    /// Enable/disable built-in actions
     void setBuildinActions(BuiltinActionsFlags acts);
+    /// \return the built-in actions flags
     BuiltinActionsFlags buildinActions() const;
-    // 检测内置动作是否激活
+    /// \return true if a built-in action is active
     bool testBuildinActions(BuiltinActions ba) const;
 
-    // 设置坐标轴选中状态
+    /// Set the selected state
     void setSelected(bool selected);
+    /// \return true if selected
     bool isSelected() const;
 
-    // 设置选中状态的颜色
+    /// Set the selection color
     void setSelectionColor(const QColor& color);
+    /// \return the selection color
     QColor selectionColor() const;
 
-    // 设置缩放因子(默认1.2)
+    /// Set the zoom factor (default 1.2)
     void setZoomFactor(double factor);
+    /// \return the zoom factor
     double zoomFactor() const;
 
-    // 设置选中后画笔的宽度修正
+    /// Set the selected pen width offset
     void setSelectedPenWidthOffset(qreal offset = 1);
+    /// \return the selected pen width offset
     qreal selectedPenWidthOffset() const;
 
-    // 判断点是否在刻度区域
+    /// Check if a point is on the scale area
     bool isOnScale(const QPoint& pos) const;
 
 protected:
