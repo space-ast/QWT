@@ -26,6 +26,13 @@
 - src/plot/qwt_clipper.cpp - 所有函数的双语 Doxygen 注释
 - src/plot/qwt_curve_fitter.cpp - 所有函数的双语 Doxygen 注释
 
+#### 第二批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_math.h - 数学函数的双语注释（qwtFuzzyCompare, qwtSign, qwtSqr, qwtFastAtan, qwtRadians, qwtDegrees, qwtCeil, qwtFloor, qwtVerifyRange, qwtDistance, qwt_is_nan_or_inf 等）
+
+**源文件 (.cpp):**
+- src/plot/qwt_math.cpp - qwtNormalizeRadians, qwtNormalizeDegrees, qwtRand 的双语注释
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
