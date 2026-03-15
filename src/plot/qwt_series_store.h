@@ -30,37 +30,41 @@
 #include "qwt_global.h"
 #include "qwt_series_data.h"
 
-/*!
-   \brief Bridge between QwtSeriesStore and QwtPlotSeriesItem
-
-   QwtAbstractSeriesStore is an abstract interface only
-   to make it possible to isolate the template based methods ( QwtSeriesStore )
-   from the regular methods ( QwtPlotSeriesItem ) to make it possible
-   to derive from QwtPlotSeriesItem without any hassle with templates.
+/**
+ * \if ENGLISH
+ * @brief Bridge between QwtSeriesStore and QwtPlotSeriesItem
+ * @details QwtAbstractSeriesStore is an abstract interface only
+ *          to make it possible to isolate the template based methods (QwtSeriesStore)
+ *          from the regular methods (QwtPlotSeriesItem) to make it possible
+ *          to derive from QwtPlotSeriesItem without any hassle with templates.
+ * \endif
+ * \if CHINESE
+ * @brief QwtSeriesStore 和 QwtPlotSeriesItem 之间的桥梁
+ * @details QwtAbstractSeriesStore 仅是一个抽象接口，用于将基于模板的方法 (QwtSeriesStore)
+ *          与常规方法 (QwtPlotSeriesItem) 隔离，使得可以从 QwtPlotSeriesItem 派生
+ *          而无需处理模板的麻烦。
+ * \endif
  */
 class QwtAbstractSeriesStore
 {
 public:
-    //! Destructor
+    /// Destructor
     virtual ~QwtAbstractSeriesStore()
     {
     }
 
 protected:
 #ifndef QWT_PYTHON_WRAPPER
-    //! dataChanged() indicates, that the series has been changed.
+    /// dataChanged() indicates, that the series has been changed.
     virtual void dataChanged() = 0;
 
-    /*!
-       Set a the "rectangle of interest" for the stored series
-       \sa QwtSeriesData<T>::setRectOfInterest()
-     */
+    /// Set a the "rectangle of interest" for the stored series
     virtual void setRectOfInterest(const QRectF&) = 0;
 
-    //! \return Bounding rectangle of the stored series
+    /// \return Bounding rectangle of the stored series
     virtual QRectF dataRect() const = 0;
 
-    //! \return Number of samples
+    /// \return Number of samples
     virtual size_t dataSize() const = 0;
 #else
     // Needed for generating the python bindings, but not for using them !
@@ -81,78 +85,57 @@ protected:
 #endif
 };
 
-/*!
-   \brief Class storing a QwtSeriesData object
-
-   QwtSeriesStore and QwtPlotSeriesItem are intended as base classes for all
-   plot items iterating over a series of samples. Both classes share
-   a virtual base class ( QwtAbstractSeriesStore ) to bridge between them.
-
-   QwtSeriesStore offers the template based part for the plot item API, so
-   that QwtPlotSeriesItem can be derived without any hassle with templates.
+/**
+ * \if ENGLISH
+ * @brief Class storing a QwtSeriesData object
+ * @details QwtSeriesStore and QwtPlotSeriesItem are intended as base classes for all
+ *          plot items iterating over a series of samples. Both classes share
+ *          a virtual base class (QwtAbstractSeriesStore) to bridge between them.
+ *
+ *          QwtSeriesStore offers the template based part for the plot item API, so
+ *          that QwtPlotSeriesItem can be derived without any hassle with templates.
+ * \endif
+ * \if CHINESE
+ * @brief 存储 QwtSeriesData 对象的类
+ * @details QwtSeriesStore 和 QwtPlotSeriesItem 旨在作为所有遍历样本系列的绘图项的基类。
+ *          这两个类共享一个虚拟基类 (QwtAbstractSeriesStore) 来在它们之间建立桥梁。
+ *
+ *          QwtSeriesStore 为绘图项 API 提供基于模板的部分，因此可以从 QwtPlotSeriesItem
+ *          派生而无需处理模板的麻烦。
+ * \endif
  */
 template< typename T >
 class QwtSeriesStore : public virtual QwtAbstractSeriesStore
 {
 public:
-    /*!
-       \brief Constructor
-       The store contains no series
-     */
+    /// Constructor - The store contains no series
     explicit QwtSeriesStore();
 
-    //! Destructor
+    /// Destructor
     ~QwtSeriesStore();
 
-    /*!
-       Assign a series of samples
-
-       \param series Data
-       \warning The item takes ownership of the data object, deleting
-               it when its not used anymore.
-     */
+    /// Assign a series of samples
     void setData(QwtSeriesData< T >* series);
 
-    //! \return the the series data
+    /// \return the the series data
     QwtSeriesData< T >* data();
 
-    //! \return the the series data
+    /// \return the the series data
     const QwtSeriesData< T >* data() const;
 
-    /*!
-        \param index Index
-        \return Sample at position index
-     */
+    /// \return Sample at position index
     T sample(size_t index) const;
 
-    /*!
-       \return Number of samples of the series
-       \sa setData(), QwtSeriesData<T>::size()
-     */
+    /// \return Number of samples of the series
     virtual size_t dataSize() const override;
 
-    /*!
-       \return Bounding rectangle of the series
-              or an invalid rectangle, when no series is stored
-
-       \sa QwtSeriesData<T>::boundingRect()
-     */
+    /// \return Bounding rectangle of the series or an invalid rectangle, when no series is stored
     virtual QRectF dataRect() const override;
 
-    /*!
-       Set a the "rect of interest" for the series
-
-       \param rect Rectangle of interest
-       \sa QwtSeriesData<T>::setRectOfInterest()
-     */
+    /// Set a the "rect of interest" for the series
     virtual void setRectOfInterest(const QRectF& rect) override;
 
-    /*!
-       Replace a series without deleting the previous one
-
-       \param series New series
-       \return Previously assigned series
-     */
+    /// Replace a series without deleting the previous one
     QwtSeriesData< T >* swapData(QwtSeriesData< T >* series);
 
 private:
