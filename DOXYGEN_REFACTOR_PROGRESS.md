@@ -141,7 +141,11 @@
 - src/plot/qwt_thermo.h - 添加类的双语 Doxygen 注释、枚举的双语注释和所有函数的英文简要注释
 
 **源文件 (.cpp):**
-- src/plot/qwt_thermo.cpp - 待处理
+- src/plot/qwt_thermo.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setRangeFlags、rangeFlags、setValue、value、setScaleDraw、scaleDraw x2、paintEvent、resizeEvent、changeEvent、layoutThermo、pipeRect、setOrientation、orientation、setOriginMode、originMode、setOrigin、origin、setScalePosition、scalePosition、scaleChange、drawLiquid、setSpacing、spacing、setBorderWidth、borderWidth、setColorMap、colorMap x2、setFillBrush、fillBrush、setAlarmBrush、alarmBrush、setAlarmLevel、alarmLevel、setPipeWidth、pipeWidth、setAlarmEnabled、alarmEnabled、sizeHint、minimumSizeHint、fillRect、alarmRect）
+
+#### 第十八批 (2026-03-15)
+**源文件 (.cpp):**
+
 
 ### 未处理文件
 
