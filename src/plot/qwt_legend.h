@@ -56,38 +56,58 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     Q_OBJECT
 
   public:
+    /// Constructor for QwtLegend
     explicit QwtLegend( QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtLegend();
 
+    /// Set the maximum number of columns
     void setMaxColumns( uint numColums );
+    /// Return the maximum number of columns
     uint maxColumns() const;
 
+    /// Set the default mode for legend items
     void setDefaultItemMode( QwtLegendData::Mode );
+    /// Return the default mode for legend items
     QwtLegendData::Mode defaultItemMode() const;
 
+    /// Return the contents widget
     QWidget* contentsWidget();
+    /// Return the contents widget (const version)
     const QWidget* contentsWidget() const;
 
+    /// Return the legend widget for a specific item
     QWidget* legendWidget( const QVariant&  ) const;
+    /// Return all legend widgets for a specific item
     QList< QWidget* > legendWidgets( const QVariant& ) const;
 
+    /// Return the item info for a specific widget
     QVariant itemInfo( const QWidget* ) const;
 
+    /// Event filter for event handling
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
+    /// Return the size hint
     virtual QSize sizeHint() const override;
+    /// Return the height for a given width
     virtual int heightForWidth( int w ) const override;
 
+    /// Return the horizontal scroll bar
     QScrollBar* horizontalScrollBar() const;
+    /// Return the vertical scroll bar
     QScrollBar* verticalScrollBar() const;
 
+    /// Render the legend to a painter
     virtual void renderLegend( QPainter*,
         const QRectF&, bool fillBackground ) const override;
 
+    /// Render a single legend item
     virtual void renderItem( QPainter*,
         const QWidget*, const QRectF&, bool fillBackground ) const;
 
+    /// Check if the legend is empty
     virtual bool isEmpty() const override;
+    /// Return the scroll extent for a specific orientation
     virtual int scrollExtent( Qt::Orientation ) const override;
 
   Q_SIGNALS:
