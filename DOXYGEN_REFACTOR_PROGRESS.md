@@ -153,6 +153,14 @@
 **源文件 (.cpp):**
 - src/plot/qwt_slider.cpp - 所有方法的双语 Doxygen 注释（构造函数 x2、析构函数、setOrientation、orientation、setScalePosition、scalePosition、setBorderWidth、borderWidth、setSpacing、spacing、setHandleSize、handleSize、setScaleDraw、scaleDraw x2、scaleChange、setUpdateInterval、updateInterval、drawSlider、drawHandle、isScrollPosition、scrolledTo、mousePressEvent、mouseReleaseEvent、timerEvent、paintEvent、resizeEvent、changeEvent、event、layoutSlider、setTrough、hasTrough、setGroove、hasGroove、sizeHint、minimumSizeHint、handleRect、sliderRect）
 
+#### 第二十批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_series_store.h - 添加 QwtAbstractSeriesStore 和 QwtSeriesStore 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_series_data.h - 添加 QwtSeriesData 和 QwtArraySeriesData 类的双语 Doxygen 注释，所有数据接口类的英文简要注释，qwtUpperSampleIndex 模板函数的双语详细注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_series_data.cpp - 所有 qwtBoundingRect 函数的双语 Doxygen 注释，所有数据类构造函数和 boundingRect 方法的双语注释
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
