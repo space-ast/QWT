@@ -102,15 +102,21 @@ static double qwtStepSize(double intervalSize, int maxSteps, uint base)
 
 static const double cs_eps_ = 1.0e-6;
 
-/*!
-   Ceil a value, relative to an interval
-
-   \param value Value to be ceiled
-   \param intervalSize Interval size
-
-   \return Rounded value
-
-   \sa floorEps()
+/**
+ * \if ENGLISH
+ * @brief Ceil a value, relative to an interval
+ * @param value Value to be ceiled
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * \sa floorEps()
+ * \endif
+ * \if CHINESE
+ * @brief 相对于区间对值向上取整
+ * @param value 要向上取整的值
+ * @param intervalSize 区间大小
+ * @return 舍入后的值
+ * \sa floorEps()
+ * \endif
  */
 double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
 {
@@ -120,14 +126,21 @@ double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
     return std::ceil(value) * intervalSize;
 }
 
-/*!
-   Floor a value, relative to an interval
-
-   \param value Value to be floored
-   \param intervalSize Interval size
-
-   \return Rounded value
-   \sa floorEps()
+/**
+ * \if ENGLISH
+ * @brief Floor a value, relative to an interval
+ * @param value Value to be floored
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * \sa ceilEps()
+ * \endif
+ * \if CHINESE
+ * @brief 相对于区间对值向下取整
+ * @param value 要向下取整的值
+ * @param intervalSize 区间大小
+ * @return 舍入后的值
+ * \sa ceilEps()
+ * \endif
  */
 double QwtScaleArithmetic::floorEps(double value, double intervalSize)
 {
@@ -137,14 +150,21 @@ double QwtScaleArithmetic::floorEps(double value, double intervalSize)
     return std::floor(value) * intervalSize;
 }
 
-/*!
-   \brief Divide an interval into steps
-
-   \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-   \return Step size
+/**
+ * \if ENGLISH
+ * @brief Divide an interval into steps
+ * @details Formula: \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ * \endif
+ * \if CHINESE
+ * @brief 将区间划分为步长
+ * @details 公式：\f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @return 步长
+ * \endif
  */
 double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
 {
@@ -154,14 +174,21 @@ double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
     return (intervalSize - (cs_eps_ * intervalSize)) / numSteps;
 }
 
-/*!
-   Calculate a step size for a given interval
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-   \param base Base for the division ( usually 10 )
-
-   \return Calculated step size
+/**
+ * \if ENGLISH
+ * @brief Calculate a step size for a given interval
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @param base Base for the division (usually 10)
+ * @return Calculated step size
+ * \endif
+ * \if CHINESE
+ * @brief 计算给定区间的步长
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @param base 除法基数（通常为 10）
+ * @return 计算出的步长
+ * \endif
  */
 double QwtScaleArithmetic::divideInterval(double intervalSize, int numSteps, uint base)
 {
@@ -218,11 +245,17 @@ public:
     QwtTransform* transform;
 };
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtScaleEngine::QwtScaleEngine(uint base)
 {
@@ -236,18 +269,21 @@ QwtScaleEngine::~QwtScaleEngine()
     delete m_data;
 }
 
-/*!
-   Assign a transformation
-
-   \param transform Transformation
-
-   The transformation object is used as factory for clones
-   that are returned by transformation()
-
-   The scale engine takes ownership of the transformation.
-
-   \sa QwtTransform::copy(), transformation()
-
+/**
+ * \if ENGLISH
+ * @brief Assign a transformation
+ * @param transform Transformation
+ * @details The transformation object is used as factory for clones that are returned by transformation().
+ *          The scale engine takes ownership of the transformation.
+ * \sa QwtTransform::copy(), transformation()
+ * \endif
+ * \if CHINESE
+ * @brief 设置变换
+ * @param transform 变换对象
+ * @details 变换对象用作工厂，用于生成 transformation() 返回的克隆。
+ *          刻度引擎拥有变换对象的所有权。
+ * \sa QwtTransform::copy(), transformation()
+ * \endif
  */
 void QwtScaleEngine::setTransformation(QwtTransform* transform)
 {
@@ -257,13 +293,19 @@ void QwtScaleEngine::setTransformation(QwtTransform* transform)
     }
 }
 
-/*!
-   Create and return a clone of the transformation
-   of the engine. When the engine has no special transformation
-   nullptr is returned, indicating no transformation.
-
-   \return A clone of the transformation
-   \sa setTransformation()
+/**
+ * \if ENGLISH
+ * @brief Create and return a clone of the transformation of the engine
+ * @details When the engine has no special transformation nullptr is returned, indicating no transformation.
+ * @return A clone of the transformation
+ * \sa setTransformation()
+ * \endif
+ * \if CHINESE
+ * @brief 创建并返回引擎变换的克隆
+ * @details 当引擎没有特殊变换时，返回 nullptr，表示无变换。
+ * @return 变换的克隆
+ * \sa setTransformation()
+ * \endif
  */
 QwtTransform* QwtScaleEngine::transformation() const
 {
@@ -274,70 +316,100 @@ QwtTransform* QwtScaleEngine::transformation() const
     return transform;
 }
 
-/*!
-    \return the margin at the lower end of the scale
-    The default margin is 0.
-
-    \sa setMargins()
+/**
+ * \if ENGLISH
+ * @brief Return the margin at the lower end of the scale
+ * @return The margin at the lower end
+ * @details The default margin is 0.
+ * \sa setMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度下端的边距
+ * @return 下端的边距
+ * @details 默认边距为 0。
+ * \sa setMargins()
+ * \endif
  */
 double QwtScaleEngine::lowerMargin() const
 {
     return m_data->lowerMargin;
 }
 
-/*!
-    \return the margin at the upper end of the scale
-    The default margin is 0.
-
-    \sa setMargins()
+/**
+ * \if ENGLISH
+ * @brief Return the margin at the upper end of the scale
+ * @return The margin at the upper end
+ * @details The default margin is 0.
+ * \sa setMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度上端的边距
+ * @return 上端的边距
+ * @details 默认边距为 0。
+ * \sa setMargins()
+ * \endif
  */
 double QwtScaleEngine::upperMargin() const
 {
     return m_data->upperMargin;
 }
 
-/*!
-   \brief Specify margins at the scale's endpoints
-   \param lower minimum distance between the scale's lower boundary and the
-             smallest enclosed value
-   \param upper minimum distance between the scale's upper boundary and the
-             greatest enclosed value
-
-   Margins can be used to leave a minimum amount of space between
-   the enclosed intervals and the boundaries of the scale.
-
-   \warning
-   \li QwtLogScaleEngine measures the margins in decades.
-
-   \sa upperMargin(), lowerMargin()
+/**
+ * \if ENGLISH
+ * @brief Specify margins at the scale's endpoints
+ * @param lower Minimum distance between the scale's lower boundary and the smallest enclosed value
+ * @param upper Minimum distance between the scale's upper boundary and the greatest enclosed value
+ * @details Margins can be used to leave a minimum amount of space between the enclosed intervals and the boundaries of the scale.
+ * @warning QwtLogScaleEngine measures the margins in decades.
+ * \sa upperMargin(), lowerMargin()
+ * \endif
+ * \if CHINESE
+ * @brief 指定刻度端点的边距
+ * @param lower 刻度下边界与最小包含值之间的最小距离
+ * @param upper 刻度上边界与最大包含值之间的最小距离
+ * @details 边距可用于在包含的区间和刻度边界之间留出最小空间。
+ * @warning QwtLogScaleEngine 以十倍为单位测量边距。
+ * \sa upperMargin(), lowerMargin()
+ * \endif
  */
-
 void QwtScaleEngine::setMargins(double lower, double upper)
 {
     m_data->lowerMargin = qwtMaxF(lower, 0.0);
     m_data->upperMargin = qwtMaxF(upper, 0.0);
 }
 
-/*!
-   Calculate a step size for an interval size
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-
-   \return Step size
+/**
+ * \if ENGLISH
+ * @brief Calculate a step size for an interval size
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间大小的步长
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @return 步长
+ * \endif
  */
 double QwtScaleEngine::divideInterval(double intervalSize, int numSteps) const
 {
     return QwtScaleArithmetic::divideInterval(intervalSize, numSteps, m_data->base);
 }
 
-/*!
-   Check if an interval "contains" a value
-
-   \param interval Interval
-   \param value Value
-
-   \return True, when the value is inside the interval
+/**
+ * \if ENGLISH
+ * @brief Check if an interval "contains" a value
+ * @param interval Interval
+ * @param value Value
+ * @return True, when the value is inside the interval
+ * \endif
+ * \if CHINESE
+ * @brief 检查区间是否"包含"一个值
+ * @param interval 区间
+ * @param value 值
+ * @return 当值在区间内时返回 true
+ * \endif
  */
 bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
 {
@@ -353,13 +425,19 @@ bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
     return true;
 }
 
-/*!
-   Remove ticks from a list, that are not inside an interval
-
-   \param ticks Tick list
-   \param interval Interval
-
-   \return Stripped tick list
+/**
+ * \if ENGLISH
+ * @brief Remove ticks from a list, that are not inside an interval
+ * @param ticks Tick list
+ * @param interval Interval
+ * @return Stripped tick list
+ * \endif
+ * \if CHINESE
+ * @brief 从列表中移除不在区间内的刻度
+ * @param ticks 刻度列表
+ * @param interval 区间
+ * @return 过滤后的刻度列表
+ * \endif
  */
 QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInterval& interval) const
 {
@@ -378,16 +456,20 @@ QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInt
     return strippedTicks;
 }
 
-/*!
-   \brief Build an interval around a value
-
-   In case of v == 0.0 the interval is [-0.5, 0.5],
-   otherwise it is [0.5 * v, 1.5 * v]
-
-   \param value Initial value
-   \return Calculated interval
+/**
+ * \if ENGLISH
+ * @brief Build an interval around a value
+ * @details In case of v == 0.0 the interval is [-0.5, 0.5], otherwise it is [0.5 * v, 1.5 * v]
+ * @param value Initial value
+ * @return Calculated interval
+ * \endif
+ * \if CHINESE
+ * @brief 围绕值构建区间
+ * @details 当 v == 0.0 时，区间为 [-0.5, 0.5]，否则为 [0.5 * v, 1.5 * v]
+ * @param value 初始值
+ * @return 计算出的区间
+ * \endif
  */
-
 QwtInterval QwtScaleEngine::buildInterval(double value) const
 {
     const double delta = (value == 0.0) ? 0.5 : qAbs(0.5 * value);
@@ -402,13 +484,19 @@ QwtInterval QwtScaleEngine::buildInterval(double value) const
     return QwtInterval(value - delta, value + delta);
 }
 
-/*!
-   Change a scale attribute
-
-   \param attribute Attribute to change
-   \param on On/Off
-
-   \sa Attribute, testAttribute()
+/**
+ * \if ENGLISH
+ * @brief Change a scale attribute
+ * @param attribute Attribute to change
+ * @param on On/Off
+ * \sa Attribute, testAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度属性
+ * @param attribute 要更改的属性
+ * @param on 开/关
+ * \sa Attribute, testAttribute()
+ * \endif
  */
 void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
 {
@@ -418,91 +506,144 @@ void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
         m_data->attributes &= ~attribute;
 }
 
-/*!
-   \return True, if attribute is enabled.
-
-   \param attribute Attribute to be tested
-   \sa Attribute, setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test if an attribute is enabled
+ * @param attribute Attribute to be tested
+ * @return True, if attribute is enabled
+ * \sa Attribute, setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 测试属性是否启用
+ * @param attribute 要测试的属性
+ * @return 如果属性已启用则返回 true
+ * \sa Attribute, setAttribute()
+ * \endif
  */
 bool QwtScaleEngine::testAttribute(Attribute attribute) const
 {
     return (m_data->attributes & attribute);
 }
 
-/*!
-   Change the scale attribute
-
-   \param attributes Set scale attributes
-   \sa Attribute, attributes()
+/**
+ * \if ENGLISH
+ * @brief Change the scale attribute
+ * @param attributes Set scale attributes
+ * \sa Attribute, attributes()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度属性
+ * @param attributes 设置刻度属性
+ * \sa Attribute, attributes()
+ * \endif
  */
 void QwtScaleEngine::setAttributes(Attributes attributes)
 {
     m_data->attributes = attributes;
 }
 
-/*!
-   \return Scale attributes
-   \sa Attribute, setAttributes(), testAttribute()
+/**
+ * \if ENGLISH
+ * @brief Return scale attributes
+ * @return Scale attributes
+ * \sa Attribute, setAttributes(), testAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度属性
+ * @return 刻度属性
+ * \sa Attribute, setAttributes(), testAttribute()
+ * \endif
  */
 QwtScaleEngine::Attributes QwtScaleEngine::attributes() const
 {
     return m_data->attributes;
 }
 
-/*!
-   \brief Specify a reference point
-   \param reference New reference value
-
-   The reference point is needed if options IncludeReference or
-   Symmetric are active. Its default value is 0.0.
-
-   \sa Attribute
+/**
+ * \if ENGLISH
+ * @brief Specify a reference point
+ * @param reference New reference value
+ * @details The reference point is needed if options IncludeReference or Symmetric are active. Its default value is 0.0.
+ * \sa Attribute
+ * \endif
+ * \if CHINESE
+ * @brief 指定参考点
+ * @param reference 新的参考值
+ * @details 如果启用了 IncludeReference 或 Symmetric 选项，则需要参考点。默认值为 0.0。
+ * \sa Attribute
+ * \endif
  */
 void QwtScaleEngine::setReference(double reference)
 {
     m_data->referenceValue = reference;
 }
 
-/*!
-   \return the reference value
-   \sa setReference(), setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Return the reference value
+ * @return The reference value
+ * \sa setReference(), setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 返回参考值
+ * @return 参考值
+ * \sa setReference(), setAttribute()
+ * \endif
  */
 double QwtScaleEngine::reference() const
 {
     return m_data->referenceValue;
 }
 
-/*!
-   Set the base of the scale engine
-
-   While a base of 10 is what 99.9% of all applications need
-   certain scales might need a different base: f.e 2
-
-   The default setting is 10
-
-   \param base Base of the engine
-
-   \sa base()
+/**
+ * \if ENGLISH
+ * @brief Set the base of the scale engine
+ * @param base Base of the engine
+ * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base: f.e 2.
+ *          The default setting is 10.
+ * \sa base()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度引擎的基数
+ * @param base 引擎的基数
+ * @details 虽然 99.9% 的应用都需要基数 10，但某些刻度可能需要不同的基数：例如 2。
+ *          默认设置为 10。
+ * \sa base()
+ * \endif
  */
 void QwtScaleEngine::setBase(uint base)
 {
     m_data->base = qMax(base, 2U);
 }
 
-/*!
-   \return base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Return base of the scale engine
+ * @return Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度引擎的基数
+ * @return 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 uint QwtScaleEngine::base() const
 {
     return m_data->base;
 }
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtLinearScaleEngine::QwtLinearScaleEngine(uint base) : QwtScaleEngine(base)
 {
@@ -513,15 +654,23 @@ QwtLinearScaleEngine::~QwtLinearScaleEngine()
 {
 }
 
-/*!
-   Align and divide an interval
-
-   \param maxNumSteps Max. number of steps
-   \param x1 First limit of the interval (In/Out)
-   \param x2 Second limit of the interval (In/Out)
-   \param stepSize Step size (Out)
-
-   \sa setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * \sa setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 对齐并划分区间
+ * @param maxNumSteps 最大步数
+ * @param x1 区间的第一个限制（输入/输出）
+ * @param x2 区间的第二个限制（输入/输出）
+ * @param stepSize 步长（输出）
+ * \sa setAttribute()
+ * \endif
  */
 void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
 {
@@ -554,17 +703,25 @@ void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, do
     }
 }
 
-/*!
-   \brief Calculate a scale division for an interval
-
-   \param x1 First interval limit
-   \param x2 Second interval limit
-   \param maxMajorSteps Maximum for the number of major steps
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the engine
-                   calculates one.
-
-   \return Calculated scale division
+/**
+ * \if ENGLISH
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度划分
+ * @param x1 第一个区间限制
+ * @param x2 第二个区间限制
+ * @param maxMajorSteps 主刻度的最大步数
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长。如果 stepSize == 0，引擎会自动计算一个。
+ * @return 计算出的刻度划分
+ * \endif
  */
 QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
 {
@@ -601,15 +758,23 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajor
     return scaleDiv;
 }
 
-/*!
-   \brief Calculate ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-   \param maxMinorSteps Maximum number of minor steps
-   \param ticks Arrays to be filled with the calculated ticks
-
-   \sa buildMajorTicks(), buildMinorTicks
+/**
+ * \if ENGLISH
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param ticks 用于填充计算出的刻度的数组
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
  */
 void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
                                       double stepSize,
@@ -640,13 +805,19 @@ void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
     }
 }
 
-/*!
-   \brief Calculate major ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Calculated ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的主刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 计算出的刻度
+ * \endif
  */
 QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
 {
@@ -665,15 +836,23 @@ QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interva
     return ticks;
 }
 
-/*!
-   \brief Calculate minor/medium ticks for major ticks
-
-   \param majorTicks Major ticks
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param minorTicks Array to be filled with the calculated minor ticks
-   \param mediumTicks Array to be filled with the calculated medium ticks
-
+/**
+ * \if ENGLISH
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算主刻度的次刻度/中刻度
+ * @param majorTicks 主刻度
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长
+ * @param minorTicks 用于填充计算出的次刻度的数组
+ * @param mediumTicks 用于填充计算出的中刻度的数组
+ * \endif
  */
 void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
                                            int maxMinorSteps,
@@ -711,16 +890,21 @@ void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
     }
 }
 
-/*!
-   \brief Align an interval to a step size
-
-   The limits of an interval are aligned that both are integer
-   multiples of the step size.
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Aligned interval
+/**
+ * \if ENGLISH
+ * @brief Align an interval to a step size
+ * @details The limits of an interval are aligned that both are integer multiples of the step size.
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ * \endif
+ * \if CHINESE
+ * @brief 将区间对齐到步长
+ * @details 区间的限制都对齐为步长的整数倍。
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 对齐后的区间
+ * \endif
  */
 QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double stepSize) const
 {
@@ -748,11 +932,17 @@ QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double step
     return QwtInterval(x1, x2);
 }
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtLogScaleEngine::QwtLogScaleEngine(uint base) : QwtScaleEngine(base)
 {
@@ -764,15 +954,23 @@ QwtLogScaleEngine::~QwtLogScaleEngine()
 {
 }
 
-/*!
-    Align and divide an interval
-
-   \param maxNumSteps Max. number of steps
-   \param x1 First limit of the interval (In/Out)
-   \param x2 Second limit of the interval (In/Out)
-   \param stepSize Step size (Out)
-
-   \sa QwtScaleEngine::setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * @sa QwtScaleEngine::setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 对齐并划分区间
+ * @param maxNumSteps 最大步数
+ * @param x1 区间的第一个限制（输入/输出）
+ * @param x2 区间的第二个限制（输入/输出）
+ * @param stepSize 步长（输出）
+ * @sa QwtScaleEngine::setAttribute()
+ * \endif
  */
 void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
 {
@@ -835,17 +1033,25 @@ void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, doubl
     }
 }
 
-/*!
-   \brief Calculate a scale division for an interval
-
-   \param x1 First interval limit
-   \param x2 Second interval limit
-   \param maxMajorSteps Maximum for the number of major steps
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the engine
-                   calculates one.
-
-   \return Calculated scale division
+/**
+ * \if ENGLISH
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度划分
+ * @param x1 第一个区间限制
+ * @param x2 第二个区间限制
+ * @param maxMajorSteps 主刻度的最大步数
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长。如果 stepSize == 0，引擎会自动计算一个。
+ * @return 计算出的刻度划分
+ * \endif
  */
 QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
 {
@@ -892,15 +1098,23 @@ QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSte
     return scaleDiv;
 }
 
-/*!
-   \brief Calculate ticks for an interval
-
-   \param interval Interval
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param ticks Arrays to be filled with the calculated ticks
-
-   \sa buildMajorTicks(), buildMinorTicks
+/**
+ * \if ENGLISH
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param ticks 用于填充计算出的刻度的数组
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
  */
 void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
                                    double stepSize,
@@ -923,13 +1137,19 @@ void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
         ticks[ i ] = strip(ticks[ i ], interval);
 }
 
-/*!
-   \brief Calculate major ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Calculated ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的主刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 计算出的刻度
+ * \endif
  */
 QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
 {
@@ -956,14 +1176,23 @@ QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, 
     return ticks;
 }
 
-/*!
-   \brief Calculate minor/medium ticks for major ticks
-
-   \param majorTicks Major ticks
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param minorTicks Array to be filled with the calculated minor ticks
-   \param mediumTicks Array to be filled with the calculated medium ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算主刻度的次刻度/中刻度
+ * @param majorTicks 主刻度
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长
+ * @param minorTicks 用于填充计算出的次刻度的数组
+ * @param mediumTicks 用于填充计算出的中刻度的数组
+ * \endif
  */
 void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
                                         int maxMinorSteps,
@@ -1046,16 +1275,19 @@ void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
     }
 }
 
-/*!
-   \brief Align an interval to a step size
-
-   The limits of an interval are aligned that both are integer
-   multiples of the step size.
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Aligned interval
+/**
+ * \if ENGLISH
+ * @brief Align an interval to a step size
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ * \endif
+ * \if CHINESE
+ * @brief 将区间对齐到步长
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 对齐后的区间
+ * \endif
  */
 QwtInterval QwtLogScaleEngine::align(const QwtInterval& interval, double stepSize) const
 {
