@@ -36,8 +36,19 @@ class QString;
 class QPaintEvent;
 class QPainter;
 
-/*!
-   \brief A Widget which displays a QwtText
+/**
+ * \if ENGLISH
+ * @brief A Widget which displays a QwtText
+ * @details QwtTextLabel displays a text label supporting rich text formatting
+ *          and rotated text. The text can be aligned horizontally and vertically.
+ * \sa QwtText
+ * \endif
+ * \if CHINESE
+ * @brief 显示 QwtText 的控件
+ * @details QwtTextLabel 显示支持富文本格式和旋转文本的文本标签。
+ *          文本可以水平和垂直对齐。
+ * \sa QwtText
+ * \endif
  */
 
 class QWT_EXPORT QwtTextLabel : public QFrame
@@ -49,43 +60,65 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
 
   public:
+    /// Constructor with parent
     explicit QwtTextLabel( QWidget* parent = nullptr );
+    /// Constructor with text and parent
     explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtTextLabel();
 
+    /// Set the text as plain text
     void setPlainText( const QString& );
+    /// Return the text as plain text
     QString plainText() const;
 
   public Q_SLOTS:
+    /// Set the text with auto format detection
     void setText( const QString&,
         QwtText::TextFormat textFormat = QwtText::AutoText );
+    /// Set the text
     virtual void setText( const QwtText& );
 
+    /// Clear the text
     void clear();
 
   public:
+    /// Return the text
     const QwtText& text() const;
 
+    /// Return the indent
     int indent() const;
+    /// Set the indent
     void setIndent( int );
 
+    /// Return the margin
     int margin() const;
+    /// Set the margin
     void setMargin( int );
 
+    /// Return the size hint
     virtual QSize sizeHint() const override;
+    /// Return the minimum size hint
     virtual QSize minimumSizeHint() const override;
+    /// Return the height for a given width
     virtual int heightForWidth( int ) const override;
 
+    /// Return the rectangle for the text
     QRect textRect() const;
 
+    /// Draw the text
     virtual void drawText( QPainter*, const QRectF& );
 
   protected:
+    /// Paint event handler
     virtual void paintEvent( QPaintEvent* ) override;
+    /// Draw the contents
     virtual void drawContents( QPainter* );
 
   private:
+    /// Initialize the label
     void init();
+    /// Return the default indent
     int defaultIndent() const;
 
     class PrivateData;

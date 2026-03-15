@@ -35,14 +35,20 @@
 
 class QScrollBar;
 
-/*!
-   \brief The legend widget
-
-   The QwtLegend widget is a tabular arrangement of legend items. Legend
-   items might be any type of widget, but in general they will be
-   a QwtLegendLabel.
-
-   \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+/**
+ * \if ENGLISH
+ * @brief The legend widget
+ * @details The QwtLegend widget is a tabular arrangement of legend items. Legend
+ *          items might be any type of widget, but in general they will be
+ *          a QwtLegendLabel.
+ * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+ * \endif
+ * \if CHINESE
+ * @brief 图例控件
+ * @details QwtLegend 控件是图例条目的表格排列。图例条目可以是任何类型的控件，
+ *          但通常它们是 QwtLegendLabel。
+ * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
+ * \endif
  */
 
 class QWT_EXPORT QwtLegend : public QwtAbstractLegend
@@ -50,67 +56,96 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     Q_OBJECT
 
   public:
+    /// Constructor for QwtLegend
     explicit QwtLegend( QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtLegend();
 
+    /// Set the maximum number of columns
     void setMaxColumns( uint numColums );
+    /// Return the maximum number of columns
     uint maxColumns() const;
 
+    /// Set the default mode for legend items
     void setDefaultItemMode( QwtLegendData::Mode );
+    /// Return the default mode for legend items
     QwtLegendData::Mode defaultItemMode() const;
 
+    /// Return the contents widget
     QWidget* contentsWidget();
+    /// Return the contents widget (const version)
     const QWidget* contentsWidget() const;
 
+    /// Return the legend widget for a specific item
     QWidget* legendWidget( const QVariant&  ) const;
+    /// Return all legend widgets for a specific item
     QList< QWidget* > legendWidgets( const QVariant& ) const;
 
+    /// Return the item info for a specific widget
     QVariant itemInfo( const QWidget* ) const;
 
+    /// Event filter for event handling
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
+    /// Return the size hint
     virtual QSize sizeHint() const override;
+    /// Return the height for a given width
     virtual int heightForWidth( int w ) const override;
 
+    /// Return the horizontal scroll bar
     QScrollBar* horizontalScrollBar() const;
+    /// Return the vertical scroll bar
     QScrollBar* verticalScrollBar() const;
 
+    /// Render the legend to a painter
     virtual void renderLegend( QPainter*,
         const QRectF&, bool fillBackground ) const override;
 
+    /// Render a single legend item
     virtual void renderItem( QPainter*,
         const QWidget*, const QRectF&, bool fillBackground ) const;
 
+    /// Check if the legend is empty
     virtual bool isEmpty() const override;
+    /// Return the scroll extent for a specific orientation
     virtual int scrollExtent( Qt::Orientation ) const override;
 
   Q_SIGNALS:
-    /*!
-       A signal which is emitted when the user has clicked on
-       a legend label, which is in QwtLegendData::Clickable mode.
-
-       \param itemInfo Info for the item item of the
-                      selected legend item
-       \param index Index of the legend label in the list of widgets
-                   that are associated with the plot item
-
-       \note clicks are disabled as default
-       \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user clicks on a legend label in Clickable mode
+     * @param itemInfo Info for the item of the selected legend item
+     * @param index Index of the legend label in the list of widgets associated with the plot item
+     * @note Clicks are disabled as default
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
+     * \if CHINESE
+     * @brief 当用户点击 Clickable 模式的图例标签时发出的信号
+     * @param itemInfo 选中图例项的项信息
+     * @param index 图例标签在与绘图项关联的控件列表中的索引
+     * @note 默认禁用点击
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
      */
     void clicked( const QVariant& itemInfo, int index );
 
-    /*!
-       A signal which is emitted when the user has clicked on
-       a legend label, which is in QwtLegendData::Checkable mode
-
-       \param itemInfo Info for the item of the
-                      selected legend label
-       \param index Index of the legend label in the list of widgets
-                   that are associated with the plot item
-       \param on True when the legend label is checked
-
-       \note clicks are disabled as default
-       \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user clicks on a legend label in Checkable mode
+     * @param itemInfo Info for the item of the selected legend label
+     * @param on True when the legend label is checked
+     * @param index Index of the legend label in the list of widgets associated with the plot item
+     * @note Clicks are disabled as default
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
+     * \if CHINESE
+     * @brief 当用户点击 Checkable 模式的图例标签时发出的信号
+     * @param itemInfo 选中图例标签的项信息
+     * @param on 图例标签被选中时为 true
+     * @param index 图例标签在与绘图项关联的控件列表中的索引
+     * @note 默认禁用点击
+     * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
+     * \endif
      */
     void checked( const QVariant& itemInfo, bool on, int index );
 

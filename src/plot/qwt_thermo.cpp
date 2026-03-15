@@ -128,9 +128,17 @@ public:
     double value;
 };
 
-/*!
-   Constructor
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param parent Parent widget
+ * \sa ~QwtThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param parent 父控件
+ * \sa ~QwtThermo()
+ * \endif
  */
 QwtThermo::QwtThermo(QWidget* parent) : QwtAbstractScale(parent)
 {
@@ -146,26 +154,40 @@ QwtThermo::QwtThermo(QWidget* parent) : QwtAbstractScale(parent)
     layoutThermo(true);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \sa QwtThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \sa QwtThermo()
+ * \endif
+ */
 QwtThermo::~QwtThermo()
 {
     delete m_data;
 }
 
-/*!
-   \brief Exclude/Include min/max values
-
-   According to the flags minValue() and maxValue()
-   are included/excluded from the pipe. In case of an
-   excluded value the corresponding tick is painted
-   1 pixel off of the pipeRect().
-
-   F.e. when a minimum
-   of 0.0 has to be displayed as an empty pipe the minValue()
-   needs to be excluded.
-
-   \param flags Range flags
-   \sa rangeFlags()
+/**
+ * \if ENGLISH
+ * @brief Exclude/Include min/max values
+ * @details According to the flags minValue() and maxValue() are included/excluded
+ *          from the pipe. In case of an excluded value the corresponding tick
+ *          is painted 1 pixel off of the pipeRect().
+ *          For example, when a minimum of 0.0 has to be displayed as an empty pipe,
+ *          the minValue() needs to be excluded.
+ * @param flags Range flags
+ * \sa rangeFlags()
+ * \endif
+ * \if CHINESE
+ * @brief 排除/包含最小/最大值
+ * @details 根据标志，minValue() 和 maxValue() 从管道中排除/包含。
+ *          对于排除的值，对应的刻度绘制在 pipeRect() 外 1 像素处。
+ *          例如，当最小值 0.0 需要显示为空管道时，需要排除 minValue()。
+ * @param flags 范围标志
+ * \sa rangeFlags()
+ * \endif
  */
 void QwtThermo::setRangeFlags(QwtInterval::BorderFlags flags)
 {
@@ -175,20 +197,32 @@ void QwtThermo::setRangeFlags(QwtInterval::BorderFlags flags)
     }
 }
 
-/*!
-   \return Range flags
-   \sa setRangeFlags()
+/**
+ * \if ENGLISH
+ * @brief Return range flags
+ * \sa setRangeFlags()
+ * \endif
+ * \if CHINESE
+ * @brief 返回范围标志
+ * \sa setRangeFlags()
+ * \endif
  */
 QwtInterval::BorderFlags QwtThermo::rangeFlags() const
 {
     return m_data->rangeFlags;
 }
 
-/*!
-   Set the current value.
-
-   \param value New Value
-   \sa value()
+/**
+ * \if ENGLISH
+ * @brief Set the current value
+ * @param value New value
+ * \sa value()
+ * \endif
+ * \if CHINESE
+ * @brief 设置当前值
+ * @param value 新值
+ * \sa value()
+ * \endif
  */
 void QwtThermo::setValue(double value)
 {
@@ -198,22 +232,37 @@ void QwtThermo::setValue(double value)
     }
 }
 
-//! Return the value.
+/**
+ * \if ENGLISH
+ * @brief Return the value
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回当前值
+ * \sa setValue()
+ * \endif
+ */
 double QwtThermo::value() const
 {
     return m_data->value;
 }
 
-/*!
-   \brief Set a scale draw
-
-   For changing the labels of the scales, it
-   is necessary to derive from QwtScaleDraw and
-   overload QwtScaleDraw::label().
-
-   \param scaleDraw ScaleDraw object, that has to be created with
-                   new and will be deleted in ~QwtThermo() or the next
-                   call of setScaleDraw().
+/**
+ * \if ENGLISH
+ * @brief Set a scale draw
+ * @details For changing the labels of the scales, it is necessary to derive
+ *          from QwtScaleDraw and overload QwtScaleDraw::label().
+ * @param scaleDraw ScaleDraw object that has to be created with new and will be
+ *                  deleted in ~QwtThermo() or the next call of setScaleDraw()
+ * \sa scaleDraw(), QwtScaleDraw
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度绘制器
+ * @details 要更改刻度标签，需要从 QwtScaleDraw 派生并重载 QwtScaleDraw::label()。
+ * @param scaleDraw 刻度绘制对象，必须用 new 创建，将在 ~QwtThermo() 或下次调用
+ *                  setScaleDraw() 时删除
+ * \sa scaleDraw(), QwtScaleDraw
+ * \endif
  */
 void QwtThermo::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
@@ -221,27 +270,47 @@ void QwtThermo::setScaleDraw(QwtScaleDraw* scaleDraw)
     layoutThermo(true);
 }
 
-/*!
-   \return the scale draw of the thermo
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the thermometer (const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计的刻度绘制器 (const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 const QwtScaleDraw* QwtThermo::scaleDraw() const
 {
     return static_cast< const QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   \return the scale draw of the thermo
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the thermometer (non-const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计的刻度绘制器 (非 const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 QwtScaleDraw* QwtThermo::scaleDraw()
 {
     return static_cast< QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   Paint event handler
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Paint event handler
+ * @param event Paint event
+ * \sa resizeEvent(), changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 绘制事件处理器
+ * @param event 绘制事件
+ * \sa resizeEvent(), changeEvent()
+ * \endif
  */
 void QwtThermo::paintEvent(QPaintEvent* event)
 {
@@ -267,9 +336,17 @@ void QwtThermo::paintEvent(QPaintEvent* event)
     drawLiquid(&painter, tRect);
 }
 
-/*!
-   Resize event handler
-   \param event Resize event
+/**
+ * \if ENGLISH
+ * @brief Resize event handler
+ * @param event Resize event
+ * \sa paintEvent(), layoutThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 调整大小事件处理器
+ * @param event 调整大小事件
+ * \sa paintEvent(), layoutThermo()
+ * \endif
  */
 void QwtThermo::resizeEvent(QResizeEvent* event)
 {
@@ -277,9 +354,17 @@ void QwtThermo::resizeEvent(QResizeEvent* event)
     layoutThermo(false);
 }
 
-/*!
-   Qt change event handler
-   \param event Event
+/**
+ * \if ENGLISH
+ * @brief Qt change event handler
+ * @param event Event
+ * \sa paintEvent(), resizeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 变更事件处理器
+ * @param event 事件
+ * \sa paintEvent(), resizeEvent()
+ * \endif
  */
 void QwtThermo::changeEvent(QEvent* event)
 {
@@ -294,12 +379,19 @@ void QwtThermo::changeEvent(QEvent* event)
     }
 }
 
-/*!
-   Recalculate the QwtThermo geometry and layout based on
-   pipeRect() and the fonts.
-
-   \param update_geometry notify the layout system and call update
-         to redraw the scale
+/**
+ * \if ENGLISH
+ * @brief Recalculate the QwtThermo geometry and layout
+ * @details Recalculates geometry and layout based on pipeRect() and the fonts.
+ * @param update_geometry Notify the layout system and call update to redraw the scale
+ * \sa pipeRect(), layoutThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算 QwtThermo 几何布局和布局
+ * @details 基于 pipeRect() 和字体重新计算几何和布局。
+ * @param update_geometry 通知布局系统并调用 update 重新绘制刻度
+ * \sa pipeRect(), layoutThermo()
+ * \endif
  */
 void QwtThermo::layoutThermo(bool update_geometry)
 {
@@ -370,9 +462,17 @@ void QwtThermo::layoutThermo(bool update_geometry)
     }
 }
 
-/*!
-   \return Bounding rectangle of the pipe ( without borders )
-          in widget coordinates
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the pipe
+ * @returns Bounding rectangle of the pipe (without borders) in widget coordinates
+ * \sa fillRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道的边界矩形
+ * @returns 管道边界矩形 (不含边框),坐标为控件坐标
+ * \sa fillRect(), alarmRect()
+ * \endif
  */
 QRect QwtThermo::pipeRect() const
 {
@@ -412,11 +512,17 @@ QRect QwtThermo::pipeRect() const
     return pipeRect;
 }
 
-/*!
-   \brief Set the orientation.
-   \param orientation Allowed values are Qt::Horizontal and Qt::Vertical.
-
-   \sa orientation(), scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Set the orientation
+ * @param orientation Allowed values are Qt::Horizontal and Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 设置方向
+ * @param orientation 允许的值为 Qt::Horizontal 和 Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
  */
 void QwtThermo::setOrientation(Qt::Orientation orientation)
 {
@@ -436,18 +542,30 @@ void QwtThermo::setOrientation(Qt::Orientation orientation)
     layoutThermo(true);
 }
 
-/*!
-   \return Orientation
-   \sa setOrientation()
+/**
+ * \if ENGLISH
+ * @brief Return orientation
+ * \sa setOrientation()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * \sa setOrientation()
+ * \endif
  */
 Qt::Orientation QwtThermo::orientation() const
 {
     return m_data->orientation;
 }
 
-/*!
-   \brief Change how the origin is determined.
-   \sa originMode(), serOrigin(), origin()
+/**
+ * \if ENGLISH
+ * @brief Change how the origin is determined
+ * \sa originMode(), setOrigin(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 更改如何确定原点
+ * \sa originMode(), setOrigin(), origin()
+ * \endif
  */
 void QwtThermo::setOriginMode(OriginMode m)
 {
@@ -458,23 +576,34 @@ void QwtThermo::setOriginMode(OriginMode m)
     update();
 }
 
-/*!
-   \return Mode, how the origin is determined.
-   \sa setOriginMode(), serOrigin(), origin()
+/**
+ * \if ENGLISH
+ * @brief Return mode how the origin is determined
+ * \sa setOriginMode(), setOrigin(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 返回如何确定原点的模式
+ * \sa setOriginMode(), setOrigin(), origin()
+ * \endif
  */
 QwtThermo::OriginMode QwtThermo::originMode() const
 {
     return m_data->originMode;
 }
 
-/*!
-   \brief Specifies the custom origin.
-
-   If originMode is set to OriginCustom this property controls where the
-   liquid starts.
-
-   \param origin New origin level
-   \sa setOriginMode(), originMode(), origin()
+/**
+ * \if ENGLISH
+ * @brief Specify the custom origin
+ * @details If originMode is set to OriginCustom this property controls where the liquid starts.
+ * @param origin New origin level
+ * \sa setOriginMode(), originMode(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 指定自定义原点
+ * @details 如果 originMode 设置为 OriginCustom，此属性控制液体从哪里开始。
+ * @param origin 新原点水平
+ * \sa setOriginMode(), originMode(), origin()
+ * \endif
  */
 void QwtThermo::setOrigin(double origin)
 {
@@ -485,20 +614,32 @@ void QwtThermo::setOrigin(double origin)
     update();
 }
 
-/*!
-   \return Origin of the thermo, when OriginCustom is enabled
-   \sa setOrigin(), setOriginMode(), originMode()
+/**
+ * \if ENGLISH
+ * @brief Return origin of the thermometer when OriginCustom is enabled
+ * \sa setOrigin(), setOriginMode(), originMode()
+ * \endif
+ * \if CHINESE
+ * @brief 当启用 OriginCustom 时返回温度计的原点
+ * \sa setOrigin(), setOriginMode(), originMode()
+ * \endif
  */
 double QwtThermo::origin() const
 {
     return m_data->origin;
 }
 
-/*!
-   \brief Change the position of the scale
-   \param scalePosition Position of the scale.
-
-   \sa ScalePosition, scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Change the position of the scale
+ * @param scalePosition Position of the scale
+ * \sa ScalePosition, scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度位置
+ * @param scalePosition 刻度位置
+ * \sa ScalePosition, scalePosition()
+ * \endif
  */
 void QwtThermo::setScalePosition(ScalePosition scalePosition)
 {
@@ -511,25 +652,49 @@ void QwtThermo::setScalePosition(ScalePosition scalePosition)
         layoutThermo(true);
 }
 
-/*!
-   \return Scale position.
-   \sa setScalePosition()
+/**
+ * \if ENGLISH
+ * @brief Return scale position
+ * \sa setScalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度位置
+ * \sa setScalePosition()
+ * \endif
  */
 QwtThermo::ScalePosition QwtThermo::scalePosition() const
 {
     return m_data->scalePosition;
 }
 
-//! Notify a scale change.
+/**
+ * \if ENGLISH
+ * @brief Notify a scale change
+ * \sa scaleChange()
+ * \endif
+ * \if CHINESE
+ * @brief 通知刻度变更
+ * \sa scaleChange()
+ * \endif
+ */
 void QwtThermo::scaleChange()
 {
     layoutThermo(true);
 }
 
-/*!
-   Redraw the liquid in thermometer pipe.
-   \param painter Painter
-   \param pipeRect Bounding rectangle of the pipe without borders
+/**
+ * \if ENGLISH
+ * @brief Redraw the liquid in thermometer pipe
+ * @param painter Painter
+ * @param pipeRect Bounding rectangle of the pipe without borders
+ * \sa pipeRect(), fillRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 重新绘制温度计管道中的液体
+ * @param painter 绘制器
+ * @param pipeRect 管道边界矩形 (不含边框)
+ * \sa pipeRect(), fillRect(), alarmRect()
+ * \endif
  */
 void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 {
@@ -588,16 +753,20 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
     painter->restore();
 }
 
-/*!
-   \brief Change the spacing between pipe and scale
-
-   A spacing of 0 means, that the backbone of the scale is below
-   the pipe.
-
-   The default setting is 3 pixels.
-
-   \param spacing Number of pixels
-   \sa spacing();
+/**
+ * \if ENGLISH
+ * @brief Change the spacing between pipe and scale
+ * @details A spacing of 0 means that the backbone of the scale is below the pipe.
+ *          The default setting is 3 pixels.
+ * @param spacing Number of pixels
+ * \sa spacing()
+ * \endif
+ * \if CHINESE
+ * @brief 更改管道和刻度之间的间距
+ * @details 间距为 0 表示刻度的主干线在管道下方。默认设置为 3 像素。
+ * @param spacing 像素数
+ * \sa spacing()
+ * \endif
  */
 void QwtThermo::setSpacing(int spacing)
 {
@@ -610,19 +779,32 @@ void QwtThermo::setSpacing(int spacing)
     }
 }
 
-/*!
-   \return Number of pixels between pipe and scale
-   \sa setSpacing()
+/**
+ * \if ENGLISH
+ * @brief Return number of pixels between pipe and scale
+ * \sa setSpacing()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道和刻度之间的像素数
+ * \sa setSpacing()
+ * \endif
  */
 int QwtThermo::spacing() const
 {
     return m_data->spacing;
 }
 
-/*!
-   Set the border width of the pipe.
-   \param width Border width
-   \sa borderWidth()
+/**
+ * \if ENGLISH
+ * @brief Set the border width of the pipe
+ * @param width Border width
+ * \sa borderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 设置管道的边框宽度
+ * @param width 边框宽度
+ * \sa borderWidth()
+ * \endif
  */
 void QwtThermo::setBorderWidth(int width)
 {
@@ -635,21 +817,34 @@ void QwtThermo::setBorderWidth(int width)
     }
 }
 
-/*!
-   \return Border width of the thermometer pipe.
-   \sa setBorderWidth()
+/**
+ * \if ENGLISH
+ * @brief Return border width of the thermometer pipe
+ * \sa setBorderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计管道的边框宽度
+ * \sa setBorderWidth()
+ * \endif
  */
 int QwtThermo::borderWidth() const
 {
     return m_data->borderWidth;
 }
 
-/*!
-   \brief Assign a color map for the fill color
-
-   \param colorMap Color map
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Assign a color map for the fill color
+ * @param colorMap Color map
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa colorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 为填充颜色分配颜色映射
+ * @param colorMap 颜色映射
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa colorMap()
+ * \endif
  */
 void QwtThermo::setColorMap(QwtColorMap* colorMap)
 {
@@ -659,33 +854,53 @@ void QwtThermo::setColorMap(QwtColorMap* colorMap)
     }
 }
 
-/*!
-   \return Color map for the fill color
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return color map for the fill color
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa setColorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 返回填充颜色的颜色映射
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa setColorMap()
+ * \endif
  */
 QwtColorMap* QwtThermo::colorMap()
 {
     return m_data->colorMap;
 }
 
-/*!
-   \return Color map for the fill color
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return color map for the fill color (const version)
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa setColorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 返回填充颜色的颜色映射 (const 版本)
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa setColorMap()
+ * \endif
  */
 const QwtColorMap* QwtThermo::colorMap() const
 {
     return m_data->colorMap;
 }
 
-/*!
-   \brief Change the brush of the liquid.
-
-   Changes the QPalette::ButtonText brush of the palette.
-
-   \param brush New brush.
-   \sa fillBrush(), QWidget::setPalette()
+/**
+ * \if ENGLISH
+ * @brief Change the brush of the liquid
+ * @details Changes the QPalette::ButtonText brush of the palette.
+ * @param brush New brush
+ * \sa fillBrush(), QWidget::setPalette()
+ * \endif
+ * \if CHINESE
+ * @brief 更改液体的刷子
+ * @details 更改调色板的 QPalette::ButtonText 刷子。
+ * @param brush 新刷子
+ * \sa fillBrush(), QWidget::setPalette()
+ * \endif
  */
 void QwtThermo::setFillBrush(const QBrush& brush)
 {
@@ -694,25 +909,36 @@ void QwtThermo::setFillBrush(const QBrush& brush)
     setPalette(pal);
 }
 
-/*!
-   \return Liquid ( QPalette::ButtonText ) brush.
-   \sa setFillBrush(), QWidget::palette()
+/**
+ * \if ENGLISH
+ * @brief Return liquid (QPalette::ButtonText) brush
+ * \sa setFillBrush(), QWidget::palette()
+ * \endif
+ * \if CHINESE
+ * @brief 返回液体 (QPalette::ButtonText) 刷子
+ * \sa setFillBrush(), QWidget::palette()
+ * \endif
  */
 QBrush QwtThermo::fillBrush() const
 {
     return palette().brush(QPalette::ButtonText);
 }
 
-/*!
-   \brief Specify the liquid brush above the alarm threshold
-
-   Changes the QPalette::Highlight brush of the palette.
-
-   \param brush New brush.
-   \sa alarmBrush(), QWidget::setPalette()
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Specify the liquid brush above the alarm threshold
+ * @details Changes the QPalette::Highlight brush of the palette.
+ * @param brush New brush
+ * \sa alarmBrush(), QWidget::setPalette()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 指定报警阈值以上的液体刷子
+ * @details 更改调色板的 QPalette::Highlight 刷子。
+ * @param brush 新刷子
+ * \sa alarmBrush(), QWidget::setPalette()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmBrush(const QBrush& brush)
 {
@@ -721,26 +947,36 @@ void QwtThermo::setAlarmBrush(const QBrush& brush)
     setPalette(pal);
 }
 
-/*!
-   \return Liquid brush ( QPalette::Highlight ) above the alarm threshold.
-   \sa setAlarmBrush(), QWidget::palette()
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return liquid brush (QPalette::Highlight) above the alarm threshold
+ * \sa setAlarmBrush(), QWidget::palette()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 返回报警阈值以上的液体刷子 (QPalette::Highlight)
+ * \sa setAlarmBrush(), QWidget::palette()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 QBrush QwtThermo::alarmBrush() const
 {
     return palette().brush(QPalette::Highlight);
 }
 
-/*!
-   Specify the alarm threshold.
-
-   \param level Alarm threshold
-   \sa alarmLevel()
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Specify the alarm threshold
+ * @param level Alarm threshold
+ * \sa alarmLevel()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 指定报警阈值
+ * @param level 报警阈值
+ * \sa alarmLevel()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmLevel(double level)
 {
@@ -749,23 +985,34 @@ void QwtThermo::setAlarmLevel(double level)
     update();
 }
 
-/*!
-   \return Alarm threshold.
-   \sa setAlarmLevel()
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return alarm threshold
+ * \sa setAlarmLevel()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 返回报警阈值
+ * \sa setAlarmLevel()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 double QwtThermo::alarmLevel() const
 {
     return m_data->alarmLevel;
 }
 
-/*!
-   Change the width of the pipe.
-
-   \param width Width of the pipe
-   \sa pipeWidth()
+/**
+ * \if ENGLISH
+ * @brief Change the width of the pipe
+ * @param width Width of the pipe
+ * \sa pipeWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 更改管道的宽度
+ * @param width 管道宽度
+ * \sa pipeWidth()
+ * \endif
  */
 void QwtThermo::setPipeWidth(int width)
 {
@@ -775,21 +1022,34 @@ void QwtThermo::setPipeWidth(int width)
     }
 }
 
-/*!
-   \return Width of the pipe.
-   \sa setPipeWidth()
+/**
+ * \if ENGLISH
+ * @brief Return width of the pipe
+ * \sa setPipeWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道的宽度
+ * \sa setPipeWidth()
+ * \endif
  */
 int QwtThermo::pipeWidth() const
 {
     return m_data->pipeWidth;
 }
 
-/*!
-   \brief Enable or disable the alarm threshold
-   \param on true (disabled) or false (enabled)
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Enable or disable the alarm threshold
+ * @param on True to enable, false to disable
+ * \sa alarmEnabled()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用报警阈值
+ * @param on true 启用，false 禁用
+ * \sa alarmEnabled()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmEnabled(bool on)
 {
@@ -797,30 +1057,49 @@ void QwtThermo::setAlarmEnabled(bool on)
     update();
 }
 
-/*!
-   \return True, when the alarm threshold is enabled.
-
-   \warning The alarm threshold has no effect, when
-           a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return true when the alarm threshold is enabled
+ * \sa setAlarmEnabled()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 当启用报警阈值时返回 true
+ * \sa setAlarmEnabled()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 bool QwtThermo::alarmEnabled() const
 {
     return m_data->alarmEnabled;
 }
 
-/*!
-   \return the minimum size hint
-   \sa minimumSizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return the minimum size hint
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小尺寸提示
+ * \sa minimumSizeHint()
+ * \endif
  */
 QSize QwtThermo::sizeHint() const
 {
     return minimumSizeHint();
 }
 
-/*!
-   \return Minimum size hint
-   \warning The return value depends on the font and the scale.
-   \sa sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return minimum size hint
+ * @details The return value depends on the font and the scale.
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小尺寸提示
+ * @details 返回值取决于字体和刻度。
+ * \sa sizeHint()
+ * \endif
  */
 QSize QwtThermo::minimumSizeHint() const
 {
@@ -853,13 +1132,19 @@ QSize QwtThermo::minimumSizeHint() const
     return QSize(w, h);
 }
 
-/*!
-   \brief Calculate the filled rectangle of the pipe
-
-   \param pipeRect Rectangle of the pipe
-   \return Rectangle to be filled ( fill and alarm brush )
-
-   \sa pipeRect(), alarmRect()
+/**
+ * \if ENGLISH
+ * @brief Calculate the filled rectangle of the pipe
+ * @param pipeRect Rectangle of the pipe
+ * @returns Rectangle to be filled (fill and alarm brush)
+ * \sa pipeRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 计算管道的填充矩形
+ * @param pipeRect 管道矩形
+ * @returns 要填充的矩形 (填充和报警刷子)
+ * \sa pipeRect(), alarmRect()
+ * \endif
  */
 QRect QwtThermo::fillRect(const QRect& pipeRect) const
 {
@@ -894,13 +1179,19 @@ QRect QwtThermo::fillRect(const QRect& pipeRect) const
     return fillRect.normalized();
 }
 
-/*!
-   \brief Calculate the alarm rectangle of the pipe
-
-   \param fillRect Filled rectangle in the pipe
-   \return Rectangle to be filled with the alarm brush
-
-   \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+/**
+ * \if ENGLISH
+ * @brief Calculate the alarm rectangle of the pipe
+ * @param fillRect Filled rectangle in the pipe
+ * @returns Rectangle to be filled with the alarm brush
+ * \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+ * \endif
+ * \if CHINESE
+ * @brief 计算管道的报警矩形
+ * @param fillRect 管道中的填充矩形
+ * @returns 要用报警刷子填充的矩形
+ * \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+ * \endif
  */
 QRect QwtThermo::alarmRect(const QRect& fillRect) const
 {

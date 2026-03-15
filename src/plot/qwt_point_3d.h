@@ -32,18 +32,23 @@
 #include <qpoint.h>
 #include <qmetatype.h>
 
-/*!
-   \brief QwtPoint3D class defines a 3D point in double coordinates
+/**
+ * \if ENGLISH
+ * @brief QwtPoint3D class defines a 3D point in double coordinates
+ * \endif
+ * \if CHINESE
+ * @brief QwtPoint3D 类定义双精度坐标的 3D 点
+ * \endif
  */
 
 class QWT_EXPORT QwtPoint3D
 {
-  public:
+public:
     QwtPoint3D();
-    QwtPoint3D( double x, double y, double z );
-    QwtPoint3D( const QPointF& );
+    QwtPoint3D(double x, double y, double z);
+    QwtPoint3D(const QPointF&);
 
-    bool isNull()    const;
+    bool isNull() const;
 
     double x() const;
     double y() const;
@@ -53,31 +58,37 @@ class QWT_EXPORT QwtPoint3D
     double& ry();
     double& rz();
 
-    void setX( double x );
-    void setY( double y );
-    void setZ( double y );
+    void setX(double x);
+    void setY(double y);
+    void setZ(double y);
 
     QPointF toPoint() const;
 
-    bool operator==( const QwtPoint3D& ) const;
-    bool operator!=( const QwtPoint3D& ) const;
+    bool operator==(const QwtPoint3D&) const;
+    bool operator!=(const QwtPoint3D&) const;
 
-  private:
+private:
     double m_x;
     double m_y;
     double m_z;
 };
 
-Q_DECLARE_TYPEINFO( QwtPoint3D, Q_MOVABLE_TYPE );
-Q_DECLARE_METATYPE( QwtPoint3D );
+Q_DECLARE_TYPEINFO(QwtPoint3D, Q_MOVABLE_TYPE);
+Q_DECLARE_METATYPE(QwtPoint3D);
 
 #ifndef QT_NO_DEBUG_STREAM
-QWT_EXPORT QDebug operator<<( QDebug, const QwtPoint3D& );
+QWT_EXPORT QDebug operator<<(QDebug, const QwtPoint3D&);
 #endif
 
-/*!
-    Constructs a null point.
-    \sa isNull()
+/**
+ * \if ENGLISH
+ * @brief Default constructor - constructs a null point
+ * \sa isNull()
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数 - 构造一个空点
+ * \sa isNull()
+ * \endif
  */
 inline QwtPoint3D::QwtPoint3D()
     : m_x( 0.0 )
@@ -86,7 +97,20 @@ inline QwtPoint3D::QwtPoint3D()
 {
 }
 
-//! Constructs a point with coordinates specified by x, y and z.
+/**
+ * \if ENGLISH
+ * @brief Constructs a point with coordinates specified by x, y and z
+ * @param x X coordinate
+ * @param y Y coordinate
+ * @param z Z coordinate (default 0.0)
+ * \endif
+ * \if CHINESE
+ * @brief 构造一个具有指定 x, y, z 坐标的点
+ * @param x X 坐标
+ * @param y Y 坐标
+ * @param z Z 坐标 (默认 0.0)
+ * \endif
+ */
 inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
     : m_x( x )
     , m_y( y )
@@ -94,9 +118,15 @@ inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
 {
 }
 
-/*!
-    Constructs a point with x and y coordinates from a 2D point,
-    and a z coordinate of 0.
+/**
+ * \if ENGLISH
+ * @brief Constructs a point with x and y coordinates from a 2D point, and z coordinate of 0
+ * @param other 2D point
+ * \endif
+ * \if CHINESE
+ * @brief 从 2D 点构造一个点，x 和 y 坐标来自 2D 点，z 坐标为 0
+ * @param other 2D 点
+ * \endif
  */
 inline QwtPoint3D::QwtPoint3D( const QPointF& other )
     : m_x( other.x() )
@@ -105,86 +135,93 @@ inline QwtPoint3D::QwtPoint3D( const QPointF& other )
 {
 }
 
-/*!
-    \return True if the point is null; otherwise returns false.
-
-    A point is considered to be null if x, y and z-coordinates
-    are equal to zero.
+/**
+ * \if ENGLISH
+ * @return True if the point is null (x, y, z all equal to zero); otherwise false
+ * \endif
+ * \if CHINESE
+ * @return 如果点是空的（x, y, z 都等于零）则为 true；否则为 false
+ * \endif
  */
 inline bool QwtPoint3D::isNull() const
 {
     return m_x == 0.0 && m_y == 0.0 && m_z == 0.0;
 }
 
-//! \return The x-coordinate of the point.
+//! \if ENGLISH Return the x-coordinate of the point \endif \if CHINESE 返回点的 X 坐标 \endif
 inline double QwtPoint3D::x() const
 {
     return m_x;
 }
 
-//! \return The y-coordinate of the point.
+//! \if ENGLISH Return the y-coordinate of the point \endif \if CHINESE 返回点的 Y 坐标 \endif
 inline double QwtPoint3D::y() const
 {
     return m_y;
 }
 
-//! \return The z-coordinate of the point.
+//! \if ENGLISH Return the z-coordinate of the point \endif \if CHINESE 返回点的 Z 坐标 \endif
 inline double QwtPoint3D::z() const
 {
     return m_z;
 }
 
-//! \return A reference to the x-coordinate of the point.
+//! \if ENGLISH Return a reference to the x-coordinate of the point \endif \if CHINESE 返回点 X 坐标的引用 \endif
 inline double& QwtPoint3D::rx()
 {
     return m_x;
 }
 
-//! \return A reference to the y-coordinate of the point.
+//! \if ENGLISH Return a reference to the y-coordinate of the point \endif \if CHINESE 返回点 Y 坐标的引用 \endif
 inline double& QwtPoint3D::ry()
 {
     return m_y;
 }
 
-//! \return A reference to the z-coordinate of the point.
+//! \if ENGLISH Return a reference to the z-coordinate of the point \endif \if CHINESE 返回点 Z 坐标的引用 \endif
 inline double& QwtPoint3D::rz()
 {
     return m_z;
 }
 
-//! Sets the x-coordinate of the point to the value specified by x.
+//! \if ENGLISH Set the x-coordinate of the point to x \endif \if CHINESE 将点的 X 坐标设置为 x \endif
 inline void QwtPoint3D::setX( double x )
 {
     m_x = x;
 }
 
-//! Sets the y-coordinate of the point to the value specified by y.
+//! \if ENGLISH Set the y-coordinate of the point to y \endif \if CHINESE 将点的 Y 坐标设置为 y \endif
 inline void QwtPoint3D::setY( double y )
 {
     m_y = y;
 }
 
-//! Sets the z-coordinate of the point to the value specified by z.
+//! \if ENGLISH Set the z-coordinate of the point to z \endif \if CHINESE 将点的 Z 坐标设置为 z \endif
 inline void QwtPoint3D::setZ( double z )
 {
     m_z = z;
 }
 
-/*!
-   \return 2D point, where the z coordinate is dropped.
+/**
+ * \if ENGLISH
+ * @return 2D point with the z coordinate dropped
+ * \endif
+ * \if CHINESE
+ * @return 去掉 z 坐标的 2D 点
+ * \endif
  */
 inline QPointF QwtPoint3D::toPoint() const
 {
     return QPointF( m_x, m_y );
 }
 
-//! \return True, if this point and other are equal; otherwise returns false.
+//! \if ENGLISH Return true if this point and other are equal \endif \if CHINESE 如果此点与另一点相等则返回 true \endif
 inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const
 {
     return ( m_x == other.m_x ) && ( m_y == other.m_y ) && ( m_z == other.m_z );
 }
 
-//! \return True if this rect and other are different; otherwise returns false.
+//! \if ENGLISH Return true if this point and other are different \endif \if CHINESE 如果此点与另一点不同则返回 true \endif
 inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const
 {
     return !operator==( other );

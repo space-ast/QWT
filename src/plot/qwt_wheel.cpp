@@ -122,6 +122,7 @@ QwtWheel::~QwtWheel()
 }
 
 /*!
+   \if ENGLISH
    \brief En/Disable tracking
 
    If tracking is enabled (the default), the wheel emits the valueChanged()
@@ -132,6 +133,19 @@ QwtWheel::~QwtWheel()
 
    \param enable On/Off
    \sa isTracking()
+   \endif
+   *
+   \if CHINESE
+   \brief 启用/禁用跟踪
+
+   如果启用了跟踪（默认），轮在移动时会发出 valueChanged() 信号。
+   如果禁用了跟踪，轮只在移动终止时才发出 valueChanged() 信号。
+
+   wheelMoved() 信号无论是否启用跟踪都会发出。
+
+   \param enable 开/关
+   \sa isTracking()
+   \endif
  */
 void QwtWheel::setTracking(bool enable)
 {
@@ -139,8 +153,15 @@ void QwtWheel::setTracking(bool enable)
 }
 
 /*!
+   \if ENGLISH
    \return True, when tracking is enabled
    \sa setTracking(), valueChanged(), wheelMoved()
+   \endif
+   *
+   \if CHINESE
+   \return 当启用跟踪时返回 true
+   \sa setTracking(), valueChanged(), wheelMoved()
+   \endif
  */
 bool QwtWheel::isTracking() const
 {
@@ -148,12 +169,23 @@ bool QwtWheel::isTracking() const
 }
 
 /*!
+   \if ENGLISH
    \brief Specify the update interval when the wheel is flying
 
    Default and minimum value is 50 ms.
 
    \param interval Interval in milliseconds
    \sa updateInterval(), setMass(), setTracking()
+   \endif
+   *
+   \if CHINESE
+   \brief 指定轮飞行时的更新间隔
+
+   默认值和最小值是 50 毫秒。
+
+   \param interval 间隔（毫秒）
+   \sa updateInterval(), setMass(), setTracking()
+   \endif
  */
 void QwtWheel::setUpdateInterval(int interval)
 {
@@ -161,8 +193,15 @@ void QwtWheel::setUpdateInterval(int interval)
 }
 
 /*!
+   \if ENGLISH
    \return Update interval when the wheel is flying
    \sa setUpdateInterval(), mass(), isTracking()
+   \endif
+   *
+   \if CHINESE
+   \return 轮飞行时的更新间隔
+   \sa setUpdateInterval(), mass(), isTracking()
+   \endif
  */
 int QwtWheel::updateInterval() const
 {
@@ -170,11 +209,21 @@ int QwtWheel::updateInterval() const
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse press event handler
 
    Start movement of the wheel.
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标按下事件处理程序
+
+   开始轮的移动。
+
+   \param event 鼠标事件
+   \endif
  */
 void QwtWheel::mousePressEvent(QMouseEvent* event)
 {
@@ -194,11 +243,21 @@ void QwtWheel::mousePressEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse Move Event handler
 
    Turn the wheel according to the mouse position
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标移动事件处理程序
+
+   根据鼠标位置转动轮
+
+   \param event 鼠标事件
+   \endif
  */
 void QwtWheel::mouseMoveEvent(QMouseEvent* event)
 {
@@ -239,12 +298,22 @@ void QwtWheel::mouseMoveEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse Release Event handler
 
    When the wheel has no mass the movement of the wheel stops, otherwise
    it starts flying.
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标释放事件处理程序
+
+   当轮没有质量时，轮的移动停止，否则开始飞行。
+
+   \param event 鼠标事件
+   \endif
  */
 
 void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
@@ -280,6 +349,7 @@ void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Qt timer event
 
    The flying wheel effect is implemented using a timer
@@ -287,6 +357,17 @@ void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
    \param event Timer event
 
    \sa updateInterval()
+   \endif
+   *
+   \if CHINESE
+   \brief Qt 定时器事件
+
+   飞轮效果使用定时器实现
+
+   \param event 定时器事件
+
+   \sa updateInterval()
+   \endif
  */
 void QwtWheel::timerEvent(QTimerEvent* event)
 {
@@ -319,11 +400,21 @@ void QwtWheel::timerEvent(QTimerEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Handle wheel events
 
    In/Decrement the value
 
    \param event Wheel event
+   \endif
+   *
+   \if CHINESE
+   \brief 处理轮事件
+
+   增加/减少值
+
+   \param event 轮事件
+   \endif
  */
 void QwtWheel::wheelEvent(QWheelEvent* event)
 {
@@ -377,6 +468,7 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
 }
 
 /*!
+   \if ENGLISH
    Handle key events
 
    - Qt::Key_Home\n
@@ -402,6 +494,33 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
     The value will be decremented by pageStepSize() * singleStepSize().
 
    \param event Key event
+   \endif
+   *
+   \if CHINESE
+   处理键盘事件
+
+   - Qt::Key_Home\n
+    步进到 minimum()
+
+   - Qt::Key_End\n
+    步进到 maximum()
+
+   - Qt::Key_Up\n
+    对于水平或非反向的垂直轮，值将增加步长。
+    对于反向的垂直轮，值将减少步长。
+
+   - Qt::Key_Down\n
+    对于水平或非反向的垂直轮，值将减少步长。
+    对于反向的垂直轮，值将增加步长。
+
+   - Qt::Key_PageUp\n
+    值将增加 pageStepSize() * singleStepSize()。
+
+   - Qt::Key_PageDown\n
+    值将减少 pageStepSize() * singleStepSize()。
+
+   \param event 键盘事件
+   \endif
  */
 void QwtWheel::keyPressEvent(QKeyEvent* event)
 {
@@ -490,6 +609,7 @@ void QwtWheel::keyPressEvent(QKeyEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Adjust the number of grooves in the wheel's surface.
 
    The number of grooves is limited to 6 <= count <= 50.
@@ -498,6 +618,18 @@ void QwtWheel::keyPressEvent(QKeyEvent* event)
 
    \param count Number of grooves per 360 degrees
    \sa tickCount()
+   \endif
+   *
+   \if CHINESE
+   \brief 调整轮表面凹槽的数量。
+
+   凹槽数量限制为 6 <= count <= 50。
+   超出此范围的值将被裁剪。
+   默认值为 10。
+
+   \param count 每 360 度的凹槽数
+   \sa tickCount()
+   \endif
  */
 void QwtWheel::setTickCount(int count)
 {
@@ -510,8 +642,15 @@ void QwtWheel::setTickCount(int count)
 }
 
 /*!
+   \if ENGLISH
    \return Number of grooves in the wheel's surface.
    \sa setTickCnt()
+   \endif
+   *
+   \if CHINESE
+   \return 轮表面凹槽的数量。
+   \sa setTickCnt()
+   \endif
  */
 int QwtWheel::tickCount() const
 {
@@ -519,6 +658,7 @@ int QwtWheel::tickCount() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the wheel border width of the wheel.
 
    The wheel border must not be smaller than 1
@@ -529,6 +669,20 @@ int QwtWheel::tickCount() const
 
    \param borderWidth Border width
    \sa internalBorder()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置轮的边框宽度。
+
+   轮边框不能小于 1，
+   并且根据轮的大小有限制。
+   超出允许范围的值将被裁剪。
+
+   轮边框默认为 2。
+
+   \param borderWidth 边框宽度
+   \sa internalBorder()
+   \endif
  */
 void QwtWheel::setWheelBorderWidth(int borderWidth)
 {
@@ -539,8 +693,15 @@ void QwtWheel::setWheelBorderWidth(int borderWidth)
 }
 
 /*!
+   \if ENGLISH
    \return Wheel border width
    \sa setWheelBorderWidth()
+   \endif
+   *
+   \if CHINESE
+   \return 轮边框宽度
+   \sa setWheelBorderWidth()
+   \endif
  */
 int QwtWheel::wheelBorderWidth() const
 {
@@ -548,12 +709,23 @@ int QwtWheel::wheelBorderWidth() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the border width
 
    The border defaults to 2.
 
    \param width Border width
    \sa borderWidth()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置边框宽度
+
+   边框默认为 2。
+
+   \param width 边框宽度
+   \sa borderWidth()
+   \endif
  */
 void QwtWheel::setBorderWidth(int width)
 {
@@ -562,8 +734,15 @@ void QwtWheel::setBorderWidth(int width)
 }
 
 /*!
+   \if ENGLISH
    \return Border width
    \sa setBorderWidth()
+   \endif
+   *
+   \if CHINESE
+   \return 边框宽度
+   \sa setBorderWidth()
+   \endif
  */
 int QwtWheel::borderWidth() const
 {
@@ -580,6 +759,7 @@ QRect QwtWheel::wheelRect() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the total angle which the wheel can be turned.
 
    One full turn of the wheel corresponds to an angle of
@@ -591,6 +771,20 @@ QRect QwtWheel::wheelRect() const
 
    \param angle total angle in degrees
    \sa totalAngle()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置轮可以转动的总角度。
+
+   轮的一整圈对应 360 度。
+   n*360 度的总角度意味着轮必须绕其轴转动 n 圈
+   才能从最小值到最大值。
+
+   总角度的默认设置是 360 度。
+
+   \param angle 总角度（度）
+   \sa totalAngle()
+   \endif
  */
 void QwtWheel::setTotalAngle(double angle)
 {
@@ -602,8 +796,15 @@ void QwtWheel::setTotalAngle(double angle)
 }
 
 /*!
+   \if ENGLISH
    \return Total angle which the wheel can be turned.
    \sa setTotalAngle()
+   \endif
+   *
+   \if CHINESE
+   \return 轮可以转动的总角度。
+   \sa setTotalAngle()
+   \endif
  */
 double QwtWheel::totalAngle() const
 {
@@ -707,8 +908,15 @@ double QwtWheel::valueAt(const QPoint& pos) const
 }
 
 /*!
+   \if ENGLISH
    \brief Qt Paint Event
    \param event Paint event
+   \endif
+   *
+   \if CHINESE
+   \brief Qt 绘制事件
+   \param event 绘制事件
+   \endif
  */
 void QwtWheel::paintEvent(QPaintEvent* event)
 {
@@ -1183,7 +1391,15 @@ double QwtWheel::mass() const
     return m_data->mass;
 }
 
-//!  Stop the flying movement of the wheel
+/*!
+   \if ENGLISH
+   \brief Stop the flying movement of the wheel
+   \endif
+   *
+   \if CHINESE
+   \brief 停止轮的飞行移动
+   \endif
+ */
 void QwtWheel::stopFlying()
 {
     if (m_data->timerId != 0) {

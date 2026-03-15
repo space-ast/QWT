@@ -58,6 +58,7 @@ public:
     ~QwtFigureWidgetOverlay();
     QwtFigure* figure() const;
     void setTransparentForMouseEvents(bool on);
+    bool isTransparentForMouseEvents() const;
 
 public:
     // 根据点和矩形的关系，返回图标的样式
@@ -68,7 +69,9 @@ public:
     void setBuiltInFunctionsEnable(BuiltInFunctionsFlag flag, bool on = true);
     bool testBuiltInFunctions(BuiltInFunctionsFlag flag) const;
     // 判断当前是否有激活的窗口
-    bool isHaveActiveWidget() const;
+    bool hasActiveWidget() const;
+    //判断是否真正改变尺寸
+    bool isResizing() const;
     // 设置边框的画笔
     void setBorderPen(const QPen& p);
     QPen borderPen() const;

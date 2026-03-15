@@ -47,19 +47,32 @@ public:
     QwtText text;
 };
 
-/*!
-   Constructs an empty label.
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructs an empty label
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief 构造一个空标签
+ * @param parent 父控件
+ * \endif
  */
 QwtTextLabel::QwtTextLabel(QWidget* parent) : QFrame(parent)
 {
     init();
 }
 
-/*!
-   Constructs a label that displays the text, text
-   \param parent Parent widget
-   \param text Text
+/**
+ * \if ENGLISH
+ * @brief Constructs a label that displays the text
+ * @param parent Parent widget
+ * @param text Text to display
+ * \endif
+ * \if CHINESE
+ * @brief 构造一个显示文本的标签
+ * @param parent 父控件
+ * @param text 要显示的文本
+ * \endif
  */
 QwtTextLabel::QwtTextLabel(const QwtText& text, QWidget* parent) : QFrame(parent)
 {
@@ -67,7 +80,14 @@ QwtTextLabel::QwtTextLabel(const QwtText& text, QWidget* parent) : QFrame(parent
     m_data->text = text;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtTextLabel::~QwtTextLabel()
 {
     delete m_data;
@@ -79,32 +99,53 @@ void QwtTextLabel::init()
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
-/*!
-   Interface for the designer plugin - does the same as setText()
-   \sa plainText()
+/**
+ * \if ENGLISH
+ * @brief Interface for the designer plugin - does the same as setText()
+ * @param text Plain text to set
+ * \sa plainText()
+ * \endif
+ * \if CHINESE
+ * @brief 设计师插件接口 - 与 setText() 功能相同
+ * @param text 要设置的纯文本
+ * \sa plainText()
+ * \endif
  */
 void QwtTextLabel::setPlainText(const QString& text)
 {
     setText(QwtText(text));
 }
 
-/*!
-   Interface for the designer plugin
-
-   \return Text as plain text
-   \sa setPlainText(), text()
+/**
+ * \if ENGLISH
+ * @brief Interface for the designer plugin
+ * @return Text as plain text
+ * \sa setPlainText(), text()
+ * \endif
+ * \if CHINESE
+ * @brief 设计师插件接口
+ * @return 纯文本形式的文本
+ * \sa setPlainText(), text()
+ * \endif
  */
 QString QwtTextLabel::plainText() const
 {
     return m_data->text.text();
 }
 
-/*!
-   Change the label's text, keeping all other QwtText attributes
-   \param text New text
-   \param textFormat Format of text
-
-   \sa QwtText
+/**
+ * \if ENGLISH
+ * @brief Change the label's text, keeping all other QwtText attributes
+ * @param text New text
+ * @param textFormat Format of text
+ * \sa QwtText
+ * \endif
+ * \if CHINESE
+ * @brief 更改标签的文本，保留所有其他 QwtText 属性
+ * @param text 新文本
+ * @param textFormat 文本格式
+ * \sa QwtText
+ * \endif
  */
 void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -114,9 +155,17 @@ void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
     updateGeometry();
 }
 
-/*!
-   Change the label's text
-   \param text New text
+/**
+ * \if ENGLISH
+ * @brief Change the label's text
+ * @param text New text
+ * \sa setText(), clear()
+ * \endif
+ * \if CHINESE
+ * @brief 更改标签的文本
+ * @param text 新文本
+ * \sa setText(), clear()
+ * \endif
  */
 void QwtTextLabel::setText(const QwtText& text)
 {
@@ -126,13 +175,33 @@ void QwtTextLabel::setText(const QwtText& text)
     updateGeometry();
 }
 
-//! Return the text
+/**
+ * \if ENGLISH
+ * @brief Return the text
+ * @return Current text
+ * \sa setText(), plainText()
+ * \endif
+ * \if CHINESE
+ * @brief 返回文本
+ * @return 当前文本
+ * \sa setText(), plainText()
+ * \endif
+ */
 const QwtText& QwtTextLabel::text() const
 {
     return m_data->text;
 }
 
-//! Clear the text and all QwtText attributes
+/**
+ * \if ENGLISH
+ * @brief Clear the text and all QwtText attributes
+ * \sa setText()
+ * \endif
+ * \if CHINESE
+ * @brief 清除文本和所有 QwtText 属性
+ * \sa setText()
+ * \endif
+ */
 void QwtTextLabel::clear()
 {
     m_data->text = QwtText();
@@ -141,15 +210,34 @@ void QwtTextLabel::clear()
     updateGeometry();
 }
 
-//! Return label's text indent in pixels
+/**
+ * \if ENGLISH
+ * @brief Return label's text indent in pixels
+ * @return Indent in pixels
+ * \sa setIndent()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标签的文本缩进（像素）
+ * @return 缩进像素数
+ * \sa setIndent()
+ * \endif
+ */
 int QwtTextLabel::indent() const
 {
     return m_data->indent;
 }
 
-/*!
-   Set label's text indent in pixels
-   \param indent Indentation in pixels
+/**
+ * \if ENGLISH
+ * @brief Set label's text indent in pixels
+ * @param indent Indentation in pixels
+ * \sa indent()
+ * \endif
+ * \if CHINESE
+ * @brief 设置标签的文本缩进（像素）
+ * @param indent 缩进像素数
+ * \sa indent()
+ * \endif
  */
 void QwtTextLabel::setIndent(int indent)
 {
@@ -162,15 +250,34 @@ void QwtTextLabel::setIndent(int indent)
     updateGeometry();
 }
 
-//! Return label's text margin in pixels
+/**
+ * \if ENGLISH
+ * @brief Return label's margin in pixels
+ * @return Margin in pixels
+ * \sa setMargin()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标签的边距（像素）
+ * @return 边距像素数
+ * \sa setMargin()
+ * \endif
+ */
 int QwtTextLabel::margin() const
 {
     return m_data->margin;
 }
 
-/*!
-   Set label's margin in pixels
-   \param margin Margin in pixels
+/**
+ * \if ENGLISH
+ * @brief Set label's margin in pixels
+ * @param margin Margin in pixels
+ * \sa margin()
+ * \endif
+ * \if CHINESE
+ * @brief 设置标签的边距（像素）
+ * @param margin 边距像素数
+ * \sa margin()
+ * \endif
  */
 void QwtTextLabel::setMargin(int margin)
 {
@@ -180,13 +287,35 @@ void QwtTextLabel::setMargin(int margin)
     updateGeometry();
 }
 
-//! Return a size hint
+/**
+ * \if ENGLISH
+ * @brief Return a size hint
+ * @return Size hint
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \sa minimumSizeHint()
+ * \endif
+ */
 QSize QwtTextLabel::sizeHint() const
 {
     return minimumSizeHint();
 }
 
-//! Return a minimum size hint
+/**
+ * \if ENGLISH
+ * @brief Return a minimum size hint
+ * @return Minimum size hint
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * @return 最小大小提示
+ * \sa sizeHint()
+ * \endif
+ */
 QSize QwtTextLabel::minimumSizeHint() const
 {
     QSizeF sz = m_data->text.textSize(font());
@@ -213,9 +342,19 @@ QSize QwtTextLabel::minimumSizeHint() const
     return QSize(qwtCeil(sz.width()), qwtCeil(sz.height()));
 }
 
-/*!
-   \param width Width
-   \return Preferred height for this widget, given the width.
+/**
+ * \if ENGLISH
+ * @brief Return the preferred height for a given width
+ * @param width Given width
+ * @return Preferred height for this widget, given the width
+ * \sa sizeHint(), minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回给定宽度的首选高度
+ * @param width 给定宽度
+ * @return 给定宽度下控件的首选高度
+ * \sa sizeHint(), minimumSizeHint()
+ * \endif
  */
 int QwtTextLabel::heightForWidth(int width) const
 {
@@ -240,9 +379,17 @@ int QwtTextLabel::heightForWidth(int width) const
     return height;
 }
 
-/*!
-   Qt paint event
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Qt paint event handler
+ * @param event Paint event
+ * \sa drawContents(), paintEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 绘制事件处理器
+ * @param event 绘制事件
+ * \sa drawContents(), paintEvent()
+ * \endif
  */
 void QwtTextLabel::paintEvent(QPaintEvent* event)
 {
@@ -284,15 +431,36 @@ void QwtTextLabel::drawContents(QPainter* painter)
     }
 }
 
-//! Redraw the text
+/**
+ * \if ENGLISH
+ * @brief Redraw the text
+ * @param painter Painter used for drawing
+ * @param textRect Rectangle where to draw the text
+ * \sa drawContents()
+ * \endif
+ * \if CHINESE
+ * @brief 重绘文本
+ * @param painter 用于绘制的绘制器
+ * @param textRect 绘制文本的矩形区域
+ * \sa drawContents()
+ * \endif
+ */
 void QwtTextLabel::drawText(QPainter* painter, const QRectF& textRect)
 {
     m_data->text.draw(painter, textRect);
 }
 
-/*!
-   Calculate geometry for the text in widget coordinates
-   \return Geometry for the text
+/**
+ * \if ENGLISH
+ * @brief Calculate geometry for the text in widget coordinates
+ * @return Geometry for the text
+ * \sa drawText(), drawContents()
+ * \endif
+ * \if CHINESE
+ * @brief 计算控件坐标中文本的几何区域
+ * @return 文本的几何区域
+ * \sa drawText(), drawContents()
+ * \endif
  */
 QRect QwtTextLabel::textRect() const
 {
@@ -326,6 +494,18 @@ QRect QwtTextLabel::textRect() const
     return r;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Calculate the default indent based on font
+ * @return Default indent in pixels
+ * \sa indent(), setIndent()
+ * \endif
+ * \if CHINESE
+ * @brief 根据字体计算默认缩进
+ * @return 默认缩进像素数
+ * \sa indent(), setIndent()
+ * \endif
+ */
 int QwtTextLabel::defaultIndent() const
 {
     if (frameWidth() <= 0)

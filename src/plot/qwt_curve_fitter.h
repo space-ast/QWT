@@ -32,35 +32,58 @@
 class QPainterPath;
 class QPolygonF;
 
-/*!
-   \brief Abstract base class for a curve fitter
+/**
+ * \if ENGLISH
+ * @brief Abstract base class for curve fitting algorithms
+ * \endif
+ * \if CHINESE
+ * @brief 曲线拟合算法的抽象基类
+ * \endif
  */
 class QWT_EXPORT QwtCurveFitter
 {
   public:
     /*!
+       \if ENGLISH
        \brief Preferred mode of the fitting algorithm
-
-       Even if a QPainterPath can always be created from a QPolygonF
-       the overhead of the conversion can be avoided by indicating
-       the preference of the implementation to the application
-       code.
+       \details Even if a QPainterPath can always be created from a QPolygonF,
+                the overhead of the conversion can be avoided by indicating
+                the preference of the implementation to the application code.
+       \endif
+       \if CHINESE
+       \brief 拟合算法的首选模式
+       \details 即使总是可以从 QPolygonF 创建 QPainterPath，
+                但通过向应用程序代码指示实现的首选项，
+                可以避免转换的开销。
+       \endif
      */
     enum Mode
     {
         /*!
+           \if ENGLISH
            The fitting algorithm creates a polygon - the implementation
            of fitCurvePath() simply wraps the polygon into a path.
-
            \sa QwtWeedingCurveFitter
+           \endif
+           \if CHINESE
+           拟合算法创建多边形 - fitCurvePath() 的实现
+           只是将多边形包装到路径中。
+           \sa QwtWeedingCurveFitter
+           \endif
          */
         Polygon,
 
         /*!
+           \if ENGLISH
            The fitting algorithm creates a painter path - the implementation
            of fitCurve() extracts a polygon from the path.
-
            \sa QwtSplineCurveFitter
+           \endif
+           \if CHINESE
+           拟合算法创建绘制器路径 - fitCurve() 的实现
+           从路径中提取多边形。
+           \sa QwtSplineCurveFitter
+           \endif
          */
         Path
     };
@@ -70,22 +93,34 @@ class QWT_EXPORT QwtCurveFitter
     Mode mode() const;
 
     /*!
-        Find a curve which has the best fit to a series of data points
-
+        \if ENGLISH
+        \brief Find a curve which has the best fit to a series of data points
         \param polygon Series of data points
         \return Curve points
-
         \sa fitCurvePath()
+        \endif
+        \if CHINESE
+        \brief 查找与一系列数据点最佳拟合的曲线
+        \param polygon 数据点序列
+        \return 曲线点
+        \sa fitCurvePath()
+        \endif
      */
     virtual QPolygonF fitCurve( const QPolygonF& polygon ) const = 0;
 
     /*!
-        Find a curve path which has the best fit to a series of data points
-
+        \if ENGLISH
+        \brief Find a curve path which has the best fit to a series of data points
         \param polygon Series of data points
         \return Curve path
-
         \sa fitCurve()
+        \endif
+        \if CHINESE
+        \brief 查找与一系列数据点最佳拟合的曲线路径
+        \param polygon 数据点序列
+        \return 曲线路径
+        \sa fitCurve()
+        \endif
      */
     virtual QPainterPath fitCurvePath( const QPolygonF& polygon ) const = 0;
 

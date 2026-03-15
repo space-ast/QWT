@@ -30,24 +30,31 @@
 #include <qrect.h>
 #include <qdebug.h>
 
-/*!
-   \brief Constructor
-
-   The scale and paint device intervals are both set to [0,1].
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * @details The scale and paint device intervals are both set to [0,1].
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @details 刻度和绘制设备区间都设置为 [0,1]。
+ * \endif
  */
-QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
+QwtScaleMap::QwtScaleMap()
+    : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
 {
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ * \endif
+ * \if CHINESE
+ * @brief 复制构造函数
+ * \endif
+ */
 QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
-    : m_s1(other.m_s1)
-    , m_s2(other.m_s2)
-    , m_p1(other.m_p1)
-    , m_p2(other.m_p2)
-    , m_cnv(other.m_cnv)
-    , m_ts1(other.m_ts1)
-    , m_transform(nullptr)
+    : m_s1(other.m_s1), m_s2(other.m_s2), m_p1(other.m_p1), m_p2(other.m_p2), m_cnv(other.m_cnv), m_ts1(other.m_ts1), m_transform(nullptr)
 {
     if (other.m_transform)
         m_transform = other.m_transform->copy();
@@ -58,15 +65,27 @@ QwtScaleMap::QwtScaleMap(QwtScaleMap&& other) : QwtScaleMap()
     swap(other);
 }
 
-/*!
-   Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
  */
 QwtScaleMap::~QwtScaleMap()
 {
     delete m_transform;
 }
 
-//! Assignment operator
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ * \endif
+ * \if CHINESE
+ * @brief 赋值运算符
+ * \endif
+ */
 QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
 {
     m_s1  = other.m_s1;
@@ -91,8 +110,15 @@ QwtScaleMap& QwtScaleMap::operator=(QwtScaleMap&& other)
     swap(other);
     return *this;
 }
-/*!
-   Initialize the map with a transformation
+/**
+ * \if ENGLISH
+ * @brief Initialize the map with a transformation
+ * @param transform Transformation object (takes ownership)
+ * \endif
+ * \if CHINESE
+ * @brief 使用变换初始化映射
+ * @param transform 变换对象（获取所有权）
+ * \endif
  */
 void QwtScaleMap::setTransformation(QwtTransform* transform)
 {
@@ -104,18 +130,34 @@ void QwtScaleMap::setTransformation(QwtTransform* transform)
     setScaleInterval(m_s1, m_s2);
 }
 
-//! Get the transformation
+/**
+ * \if ENGLISH
+ * @brief Get the transformation
+ * @return Transformation object
+ * \endif
+ * \if CHINESE
+ * @brief 获取变换
+ * @return 变换对象
+ * \endif
+ */
 const QwtTransform* QwtScaleMap::transformation() const
 {
     return m_transform;
 }
 
-/*!
-   \brief Specify the borders of the scale interval
-   \param s1 first border
-   \param s2 second border
-   \warning scales might be aligned to
-           transformation depending boundaries
+/**
+ * \if ENGLISH
+ * @brief Specify the borders of the scale interval
+ * @details Scales might be aligned to transformation depending boundaries
+ * @param s1 First border
+ * @param s2 Second border
+ * \endif
+ * \if CHINESE
+ * @brief 指定刻度区间的边界
+ * @details 刻度可能会根据变换的依赖边界进行对齐
+ * @param s1 第一个边界
+ * @param s2 第二个边界
+ * \endif
  */
 void QwtScaleMap::setScaleInterval(double s1, double s2)
 {
@@ -130,10 +172,17 @@ void QwtScaleMap::setScaleInterval(double s1, double s2)
     updateFactor();
 }
 
-/*!
-   \brief Specify the borders of the paint device interval
-   \param p1 first border
-   \param p2 second border
+/**
+ * \if ENGLISH
+ * @brief Specify the borders of the paint device interval
+ * @param p1 First border
+ * @param p2 Second border
+ * \endif
+ * \if CHINESE
+ * @brief 指定绘制设备区间的边界
+ * @param p1 第一个边界
+ * @param p2 第二个边界
+ * \endif
  */
 void QwtScaleMap::setPaintInterval(double p1, double p2)
 {

@@ -30,21 +30,35 @@
 #include "qwt_global.h"
 #include <qelapsedtimer.h>
 
-/*!
-   \brief QwtSystemClock provides high resolution clock time functions.
-
-   Precision and time intervals are multiples of milliseconds (ms).
-
-   ( QwtSystemClock is deprecated as QElapsedTimer offers the same precision )
+/**
+ * \if ENGLISH
+ * @brief QwtSystemClock provides high resolution clock time functions.
+ *
+ * Precision and time intervals are multiples of milliseconds (ms).
+ *
+ * ( QwtSystemClock is deprecated as QElapsedTimer offers the same precision )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QwtSystemClock 提供高分辨率时钟时间函数。
+ *
+ * 精度和时间间隔以毫秒 (ms) 为单位。
+ *
+ * ( QwtSystemClock 已弃用，因为 QElapsedTimer 提供相同的精度 )
+ * \endif
  */
 
 class QWT_EXPORT QwtSystemClock
 {
   public:
+    //! Check if the clock has been started
     bool isNull() const;
 
+    //! Start or restart the clock
     void start();
+    //! Restart the clock and return the elapsed time
     double restart();
+    //! Return the elapsed time since the clock was started
     double elapsed() const;
 
   private:

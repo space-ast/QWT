@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -33,15 +33,22 @@
 class QSize;
 class QwtPlotItem;
 
-/*!
-   Some constants for use within Qwt.
+/**
+ * \if ENGLISH
+ * @brief Some constants and utility functions for use within Qwt.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief Qwt中使用的一些常量和实用函数。
+ * \endif
  */
 namespace Qwt
 {
-// 获取item的颜色
+//! Get the color of a plot item
 QColor QWT_EXPORT plotItemColor(const QwtPlotItem* item, const QColor& defaultColor = QColor());
 }
 
+//! Expand a size to the global strut
 QWT_EXPORT QSize qwtExpandedToGlobalStrut(const QSize&);
 
 #endif

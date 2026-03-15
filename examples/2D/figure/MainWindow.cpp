@@ -16,7 +16,7 @@
 #include "qwt_plot_series_data_picker.h"
 #include "qwt_plot_scaleitem.h"
 //
-#include "PickLinker.h"
+#include "qwt_plot_series_data_picker_group.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -99,7 +99,7 @@ void MainWindow::initFigure(QwtFigure* figure)
     // 示例4: 双对数坐标
     QwtPlot* plot4                   = new QwtPlot();
     QwtPlotSeriesDataPicker* picker4 = new QwtPlotSeriesDataPicker(plot4->canvas());
-    // 设置双对数坐标
+    //  设置双对数坐标
     plot4->setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine);
     plot4->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
 
@@ -131,7 +131,7 @@ void MainWindow::initFigure(QwtFigure* figure)
     figure->addAxisAlignment({ plot1, plot3, hostPlot }, QwtAxis::YLeft);
     figure->addAxisAlignment({ plot2, plot4 }, QwtAxis::YLeft);
 
-    m_pickerLinker = new PickLinker(this);
+    m_pickerLinker = new QwtPlotSeriesDataPickerGroup(this);
     m_pickerLinker->addPicker(picker1);
     m_pickerLinker->addPicker(picker2);
     m_pickerLinker->addPicker(picker3);
@@ -210,6 +210,40 @@ QwtPlot* MainWindow::createParasitePlot()
     return hostPlot;
 }
 
+void MainWindow::onActionResizeTriggered(bool on)
+{
+    if (!m_figureOverlay) {
+        m_figureOverlay = new QwtFigureWidgetOverlay(m_figure);
+        connect(m_figureOverlay,
+                &QwtFigureWidgetOverlay::widgetNormGeometryChanged,
+                this,
+                [ this ](QWidget* w, const QRectF& oldNormGeo, const QRectF& newNormGeo) {
+                    Q_UNUSED(oldNormGeo);
+                    m_figure->setWidgetNormPos(w, newNormGeo);
+                });
+        connect(m_figureOverlay, &QwtFigureWidgetOverlay::activeWidgetChanged, this, [ this ](QWidget* oldWid, QWidget* newWid) {
+            m_figure->setCurrentAxes(qobject_cast< QwtPlot* >(newWid));
+        });
+    }
+    m_figureOverlay->setEnabled(on);
+    auto active = m_figure->currentAxes();
+    if (active) {
+        qDebug() << "active plot is " << active->title().text();
+    } else {
+        qDebug() << "no active plot";
+    }
+    m_figureOverlay->setActiveWidget(m_figure->currentAxes());
+    if (on) {
+        m_figureOverlay->show();
+        m_figureOverlay->raise();
+    } else {
+        m_figureOverlay->hide();
+    }
+    qDebug() << "enable figure overlay:" << on << "geo = " << m_figureOverlay->geometry()
+             << ",isTransparentForMouseEvents:" << m_figureOverlay->isTransparentForMouseEvents()
+             << ",isVisible:" << m_figureOverlay->isVisible() << ",isEnable:" << m_figureOverlay->isEnabled();
+}
+
 void MainWindow::createToolBar()
 {
     QAction* actionSave = new QAction(tr("Save"), this);
@@ -224,30 +258,9 @@ void MainWindow::createToolBar()
         qDebug() << "All plots cleared";
     });
 
-    m_figureOverlay = new QwtFigureWidgetOverlay(m_figure);
-    connect(
-        m_figureOverlay,
-        &QwtFigureWidgetOverlay::widgetNormGeometryChanged,
-        this,
-        [ this ](QWidget* w, const QRectF& oldNormGeo, const QRectF& newNormGeo) {
-            Q_UNUSED(oldNormGeo);
-            qDebug() << "setWidgetNormPos:" << newNormGeo;
-            m_figure->setWidgetNormPos(w, newNormGeo);
-        }
-    );
     QAction* actionResize = new QAction(tr("Resize"), this);
     actionResize->setCheckable(true);
-    connect(actionResize, &QAction::triggered, this, [ this ](bool on) {
-        if (on) {
-            m_figureOverlay->show();
-            m_figureOverlay->raise();
-        } else {
-            if (m_figureOverlay) {
-                m_figureOverlay->hide();
-            }
-        }
-        qDebug() << "enable figure overlay:" << on;
-    });
+    connect(actionResize, &QAction::triggered, this, &MainWindow::onActionResizeTriggered);
 
     ui->toolBar->addAction(actionSave);
     ui->toolBar->addAction(actionClear);

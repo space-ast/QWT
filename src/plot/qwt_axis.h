@@ -29,12 +29,26 @@
 
 #include "qwt_global.h"
 
-/*!
-   Enums and methods for axes
+/**
+ * \if ENGLISH
+ * @brief Enums and methods for axes
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 坐标轴的枚举和方法
+ * \endif
  */
 namespace QwtAxis
 {
-//! \brief Axis position
+/**
+ * \if ENGLISH
+ * @brief Axis position
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 坐标轴位置
+ * \endif
+ */
 enum Position
 {
     //! Y axis left of the canvas
@@ -50,7 +64,15 @@ enum Position
     XTop = 3
 };
 
-//! \brief Number of axis positions
+/**
+ * \if ENGLISH
+ * @brief Number of axis positions
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 坐标轴位置数量
+ * \endif
+ */
 enum
 {
     AxisPositions = XTop + 1
@@ -61,19 +83,19 @@ bool isYAxis(int axisPos);
 bool isXAxis(int axisPos);
 }
 
-//! \return true, when axisPos is in the valid range [ YLeft, XTop ]
+//! Return true, when axisPos is in the valid range [ YLeft, XTop ]
 inline bool QwtAxis::isValid(int axisPos)
 {
     return (axisPos >= 0 && axisPos < AxisPositions);
 }
 
-//! \return true, when axisPos is XBottom or XTop
+//! Return true, when axisPos is XBottom or XTop
 inline bool QwtAxis::isXAxis(int axisPos)
 {
     return (axisPos == XBottom) || (axisPos == XTop);
 }
 
-//! \return true, when axisPos is YLeft or YRight
+//! Return true, when axisPos is YLeft or YRight
 inline bool QwtAxis::isYAxis(int axisPos)
 {
     return (axisPos == YLeft) || (axisPos == YRight);

@@ -30,15 +30,28 @@
 #include "qwt_global.h"
 #include "qwt_axis.h"
 
-/*!
-    \brief Axis identifier
-
-    An axis id is one of values of QwtAxis::Position.
-
-    QwtAxisId is a placeholder for future releases ( -> multiaxes branch ),
-    where it is possible to have more than one axis at each side of a plot.
-
-    \sa QwtAxis
+/**
+ * \if ENGLISH
+ * @brief Axis identifier
+ *
+ * An axis id is one of values of QwtAxis::Position.
+ *
+ * QwtAxisId is a placeholder for future releases ( -> multiaxes branch ),
+ * where it is possible to have more than one axis at each side of a plot.
+ *
+ * @sa QwtAxis
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 坐标轴标识符
+ *
+ * 坐标轴ID是QwtAxis::Position的值之一。
+ *
+ * QwtAxisId是未来版本（-> multiaxes分支）的占位符，
+ * 其中可以在绘图的每一侧有多个坐标轴。
+ *
+ * @sa QwtAxis
+ * \endif
  */
 using QwtAxisId = int;
 

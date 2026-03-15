@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -65,31 +65,51 @@ public:
     QMap< double, QwtText > labelCache;
 };
 
-/*!
-   \brief Constructor
-
-   The range of the scale is initialized to [0, 100],
-   The spacing (distance between ticks and labels) is
-   set to 4, the tick lengths are set to 4,6 and 8 pixels
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractScaleDraw
+ * @details The range of the scale is initialized to [0, 100],
+ *          the spacing (distance between ticks and labels) is set to 4,
+ *          the tick lengths are set to 4, 6 and 8 pixels.
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScaleDraw 构造函数
+ * @details 刻度范围初始化为 [0, 100]，
+ *          间距（刻度线和标签之间的距离）设置为 4，
+ *          刻度线长度设置为 4、6 和 8 像素。
+ * \endif
  */
 QwtAbstractScaleDraw::QwtAbstractScaleDraw()
 {
     m_data = new QwtAbstractScaleDraw::PrivateData;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractScaleDraw
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScaleDraw 析构函数
+ * \endif
+ */
 QwtAbstractScaleDraw::~QwtAbstractScaleDraw()
 {
     delete m_data;
 }
 
-/*!
-   En/Disable a component of the scale
-
-   \param component Scale component
-   \param enable On/Off
-
-   \sa hasComponent()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable a scale component
+ * @param component Scale component (Backbone, Ticks, or Labels)
+ * @param enable True to enable, false to disable
+ * \sa hasComponent()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用刻度组件
+ * @param component 刻度组件（主干、刻度线或标签）
+ * @param enable true 启用，false 禁用
+ * \sa hasComponent()
+ * \endif
  */
 void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable)
 {
@@ -99,21 +119,36 @@ void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable
         m_data->components &= ~component;
 }
 
-/*!
-   Check if a component is enabled
-
-   \param component Component type
-   \return true, when component is enabled
-   \sa enableComponent()
+/**
+ * \if ENGLISH
+ * @brief Check if a component is enabled
+ * @param component Component type
+ * @return True if component is enabled
+ * \sa enableComponent()
+ * \endif
+ * \if CHINESE
+ * @brief 检查组件是否已启用
+ * @param component 组件类型
+ * @return 如果组件已启用则返回 true
+ * \sa enableComponent()
+ * \endif
  */
 bool QwtAbstractScaleDraw::hasComponent(ScaleComponent component) const
 {
     return (m_data->components & component);
 }
 
-/*!
-   Change the scale division
-   \param scaleDiv New scale division
+/**
+ * \if ENGLISH
+ * @brief Set the scale division
+ * @param scaleDiv New scale division object
+ * @details This also updates the scale map and clears the label cache.
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度划分
+ * @param scaleDiv 新的刻度划分对象
+ * @details 这还会更新刻度映射并清空标签缓存。
+ * \endif
  */
 void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
 {
@@ -122,28 +157,61 @@ void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
     m_data->labelCache.clear();
 }
 
-/*!
-   Change the transformation of the scale
-   \param transformation New scale transformation
+/**
+ * \if ENGLISH
+ * @brief Set the scale transformation
+ * @param transformation New scale transformation object
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度变换
+ * @param transformation 新的刻度变换对象
+ * \endif
  */
 void QwtAbstractScaleDraw::setTransformation(QwtTransform* transformation)
 {
     m_data->map.setTransformation(transformation);
 }
 
-//! \return Map how to translate between scale and pixel values
+/**
+ * \if ENGLISH
+ * @brief Return the scale map (const version)
+ * @return Map for translating between scale and pixel values
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度映射（常量版本）
+ * @return 用于在刻度和像素值之间转换的映射
+ * \endif
+ */
 const QwtScaleMap& QwtAbstractScaleDraw::scaleMap() const
 {
     return m_data->map;
 }
 
-//! \return Map how to translate between scale and pixel values
+/**
+ * \if ENGLISH
+ * @brief Return the scale map (non-const version)
+ * @return Map for translating between scale and pixel values
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度映射（非常量版本）
+ * @return 用于在刻度和像素值之间转换的映射
+ * \endif
+ */
 QwtScaleMap& QwtAbstractScaleDraw::scaleMap()
 {
     return m_data->map;
 }
 
-//! \return scale division
+/**
+ * \if ENGLISH
+ * @brief Return the scale division
+ * @return Current scale division object
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度划分
+ * @return 当前刻度划分对象
+ * \endif
+ */
 const QwtScaleDiv& QwtAbstractScaleDraw::scaleDiv() const
 {
     return m_data->scaleDiv;

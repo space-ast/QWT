@@ -90,6 +90,11 @@ void QwtFigureWidgetOverlay::setTransparentForMouseEvents(bool on)
     setAttribute(Qt::WA_TransparentForMouseEvents, on);
 }
 
+bool QwtFigureWidgetOverlay::isTransparentForMouseEvents() const
+{
+    return testAttribute(Qt::WA_TransparentForMouseEvents);
+}
+
 /**
  * @brief根据范围获取鼠标图标
  * @param rr
@@ -217,9 +222,18 @@ bool QwtFigureWidgetOverlay::testBuiltInFunctions(BuiltInFunctionsFlag flag) con
  * @brief 判断当前是否有激活的窗口
  * @return
  */
-bool QwtFigureWidgetOverlay::isHaveActiveWidget() const
+bool QwtFigureWidgetOverlay::hasActiveWidget() const
 {
     return (m_data->mActiveWidget != nullptr);
+}
+
+/**
+ * @brief 正在改变尺寸
+ * @return
+ */
+bool QwtFigureWidgetOverlay::isResizing() const
+{
+    return m_data->mIsStartResize;
 }
 
 /**
@@ -391,7 +405,7 @@ void QwtFigureWidgetOverlay::setActiveWidget(QWidget* w)
 
 void QwtFigureWidgetOverlay::drawOverlay(QPainter* p) const
 {
-    if (!isHaveActiveWidget()) {
+    if (!hasActiveWidget()) {
         return;
     }
     // 对于激活的窗口，绘制到四周的距离提示线
@@ -528,109 +542,9 @@ void QwtFigureWidgetOverlay::startResize(QwtFigureWidgetOverlay::ControlType con
 
 void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 {
-#if 0
-    if (me->button() != Qt::LeftButton) {  // 只关心左键
-        QwtWidgetOverlay::mousePressEvent(me);
-        return;
-    }
-
-    // 左键点击
-    const QList< QwtPlot* > plots = figure()->allAxes(true);  // 传入true，按z序列最高到低排序
-    if (plots.empty()) {
-        QwtWidgetOverlay::mousePressEvent(me);
-        return;
-    }
-
-    // 注意，hitplot有可能是nullptr，因为点击变换边缘时，会判断为外围
-    const QPoint pos = qwt::compat::eventPos(me);
-    QWidget* hitPlot = nullptr;
-    for (QWidget* w : plots) {
-        if (w->frameGeometry().contains(pos, true)) {
-            hitPlot = w;
-            break;
-        }
-    }
 #if QwtFigureWidgetOverlay_DEBUG_PRINT
-    qDebug() << "QwtFigureWidgetOverlay::onMousePressedEvent:" << pos;
+    qDebug() << "QwtFigureWidgetOverlay::mousePressEvent(" << qwt::compat::eventPos(me) << ")";
 #endif
-    QWT_D(d);
-    // 重置之前的调整状态
-    if (d->mIsStartResize) {
-        d->mIsStartResize   = false;
-        d->mWillSetNormRect = QRectF();
-    }
-
-    // 如果还没激活任何窗口，或者点到新窗口，直接切换激活
-    // 注意，这里不能直接判断有hitPlot就切换activeWidget，因为实际在变换的时候，点击的位置会找active的外围一点
-    // 通过getPositionControlType可以真实反映出是否超过了activeWidget的变换范围
-
-    // 情况1: 当前没有激活窗口
-    if (!d->mActiveWidget) {
-        if (hitPlot) {
-            // 点击了某个窗口，设置为激活
-            setActiveWidget(hitPlot);
-            updateOverlay();
-            me->accept();  // 我们处理了这个事件
-        } else {
-            me->ignore();  // 让事件继续传递
-        }
-        return;
-    } else {
-        // 有激活的窗口，但点击的不是激活的窗口
-        // todo .这里是否会在resize过程中，点击控制点的时候，点击到另外一个窗口的边界，导致切换激活窗口从而导致
-        // 很难操作
-        if (hitPlot && (hitPlot != d->mActiveWidget)) {
-            // 把hitPlot切换为激活窗口
-            setActiveWidget(hitPlot);
-            updateOverlay();
-            if (!testBuiltInFunctions(FunResizePlot)) {
-                // 处理了此事件
-                me->accept();
-                return;
-            }
-        }
-    }
-    //到此说明点击的就是当前激活的窗口，或者有激活窗口，但没点击到激活窗口，一般这种是调节窗口大小的时候
-    //鼠标点击调节按钮，点击位置一般在激活窗口之外
-    if (!testBuiltInFunctions(FunResizePlot)) {
-        // 没有resize plot 功能，退出
-        return QwtWidgetOverlay::mousePressEvent(me);
-    }
-    // 到这里，说明一定有激活的窗体,且要进行resize操作
-    ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
-
-    // 情况2： 点击到了激活窗口的外围
-    if (ct == OutSide) {
-        // 点击在了激活窗体外围
-        if (hitPlot) {
-            // 点击到了其它窗体,切换激活窗体
-            setActiveWidget(hitPlot);
-        } else {
-            // 点击到了纯空白处，把鼠标事件传递下去
-            setActiveWidget(nullptr);
-        }
-        updateOverlay();
-        me->accept();
-        return;
-    }
-
-    // 情况3: 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
-    if (ct == Inner && hitPlot && hitPlot != d->mActiveWidget) {
-        setActiveWidget(hitPlot);
-        updateOverlay();
-        me->accept();
-        return;
-    }
-
-    // 情况4：开始调整激活窗口的尺寸
-    if (ct != OutSide) {
-        startResize(ct, pos);
-        me->accept();
-        return;
-    }
-
-    QwtWidgetOverlay::mousePressEvent(me);
-#else
     if (me->button() != Qt::LeftButton) {
         QwtWidgetOverlay::mousePressEvent(me);
         return;
@@ -657,11 +571,20 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
     }
 
     // ========== 步骤1：检查是否点击了激活窗口的控制点 ==========
+    // 这里放在第一步，避免点击控制点改变尺寸会被判断为切换窗口
     if (d->mActiveWidget && testBuiltInFunctions(FunResizePlot)) {
         ControlType ct = getPositionControlType(pos, d->mActiveWidget->frameGeometry(), 4);
 
         // 只有点击到真正的控制点（边缘和角落）才启动resize
-        if (ct != OutSide && ct != Inner) {
+        if (ct != OutSide) {
+            // 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
+            if (ct == Inner) {
+                if (hitPlot && hitPlot != d->mActiveWidget) {
+                    setActiveWidget(hitPlot);
+                    me->accept();
+                    return;
+                }
+            }
             startResize(ct, pos);
             me->accept();
             return;
@@ -674,11 +597,14 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         // 点击了某个窗口
         if (hitPlot != d->mActiveWidget) {
             setActiveWidget(hitPlot);
-            updateOverlay();
+            // 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
+            me->accept();
+            return;
+        } else {
+            // 点击就是激活的窗口,这里不处理，下放
+            me->ignore();
+            return;
         }
-        // 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
-        me->accept();
-        return;
     }
 
     // ========== 步骤3：点击空白处 ==========
@@ -691,13 +617,16 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
         // 无激活窗口时点击空白，让事件继续传递
         me->ignore();
     }
-#endif
 }
 
 void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
 {
     QWT_D(d);
-
+#if QwtFigureWidgetOverlay_DEBUG_PRINT
+    qDebug() << "QwtFigureWidgetOverlay::mouseMoveEvent(" << qwt::compat::eventPos(me) << "),have active widget"
+             << (d->mActiveWidget != nullptr) << ",have FunResizePlot=" << testBuiltInFunctions(FunResizePlot)
+             << ",ControlType=" << d->mControlType;
+#endif
     QWidget* activeW = d->mActiveWidget;
     if (!testBuiltInFunctions(FunResizePlot)) {
         // 没有resize plot 功能，退出
@@ -819,14 +748,12 @@ void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
             QRectF normRect     = oldNormRect.adjusted(dw, dh, dw, dh);
             d->mWillSetNormRect = normRect;
             Q_EMIT widgetNormGeometryChanged(d->mActiveWidget, d->mOldNormRect, d->mWillSetNormRect);
-            // d->mOldNormRect = normRect;
             break;
         }
 
         default:
             break;
         }
-        qDebug() << "mouse move updateOverlay:offset=" << offset;
         updateOverlay();
     } else {
         // 没开始变换，则更新光标

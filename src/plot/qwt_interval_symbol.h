@@ -36,37 +36,58 @@ class QBrush;
 class QPointF;
 class QColor;
 
-/*!
-   \brief A drawing primitive for displaying an interval like an error bar
-
-   \sa QwtPlotIntervalCurve
+/**
+ * \if ENGLISH
+ * @brief A drawing primitive for displaying an interval like an error bar
+ * \sa QwtPlotIntervalCurve
+ * \endif
+ * \if CHINESE
+ * @brief 用于显示区间（如误差条）的绘图基元
+ * \sa QwtPlotIntervalCurve
+ * \endif
  */
 class QWT_EXPORT QwtIntervalSymbol
 {
   public:
-    //! Symbol style
+    //! \if ENGLISH Symbol style \endif \if CHINESE 符号样式 \endif
     enum Style
     {
-        //! No Style. The symbol cannot be drawn.
+        //! \if ENGLISH No Style. The symbol cannot be drawn. \endif \if CHINESE 无样式。符号无法绘制。 \endif
         NoSymbol = -1,
 
         /*!
+           \if ENGLISH
            The symbol displays a line with caps at the beginning/end.
            The size of the caps depends on the symbol width().
+           \endif
+           \if CHINESE
+           符号显示一条线，两端有帽盖。
+           帽盖的大小取决于符号的宽度。
+           \endif
          */
         Bar,
 
         /*!
+           \if ENGLISH
            The symbol displays a plain rectangle using pen() and brush().
-           The size of the rectangle depends on the translated interval and
-           the width(),
+           The size of the rectangle depends on the translated interval and the width().
+           \endif
+           \if CHINESE
+           符号使用 pen() 和 brush() 显示一个简单的矩形。
+           矩形的大小取决于转换后的区间和宽度。
+           \endif
          */
         Box,
 
         /*!
-           Styles >= UserSymbol are reserved for derived
-           classes of QwtIntervalSymbol that overload draw() with
-           additional application specific symbol types.
+           \if ENGLISH
+           Styles >= UserSymbol are reserved for derived classes of QwtIntervalSymbol
+           that overload draw() with additional application specific symbol types.
+           \endif
+           \if CHINESE
+           样式 >= UserSymbol 保留给 QwtIntervalSymbol 的派生类，
+           这些类重载 draw() 以添加特定于应用程序的符号类型。
+           \endif
          */
         UserSymbol = 1000
     };

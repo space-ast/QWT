@@ -33,16 +33,16 @@
 #include <qvector.h>
 #include <qrect.h>
 
-//! \brief A sample of the types (x1-x2, y) or (x, y1-y2)
+/// \if ENGLISH A sample of the types (x1-x2, y) or (x, y1-y2) \endif \if CHINESE 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本 \endif
 class QWT_EXPORT QwtIntervalSample
 {
-  public:
+public:
     QwtIntervalSample();
-    QwtIntervalSample( double, const QwtInterval& );
-    QwtIntervalSample( double value, double min, double max );
+    QwtIntervalSample(double, const QwtInterval&);
+    QwtIntervalSample(double value, double min, double max);
 
-    bool operator==( const QwtIntervalSample& ) const;
-    bool operator!=( const QwtIntervalSample& ) const;
+    bool operator==(const QwtIntervalSample&) const;
+    bool operator!=(const QwtIntervalSample&) const;
 
     //! Value
     double value;
@@ -51,50 +51,89 @@ class QWT_EXPORT QwtIntervalSample
     QwtInterval interval;
 };
 
-/*!
-   Constructor
-   The value is set to 0.0, the interval is invalid
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * @details The value is set to 0.0, the interval is invalid
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @details 值设置为 0.0，区间无效
+ * \endif
  */
-inline QwtIntervalSample::QwtIntervalSample()
-    : value( 0.0 )
+inline QwtIntervalSample::QwtIntervalSample() : value(0.0)
 {
 }
 
-//! Constructor
-inline QwtIntervalSample::QwtIntervalSample( double v, const QwtInterval& intv )
-    : value( v )
-    , interval( intv )
+/**
+ * \if ENGLISH
+ * @brief Constructor with value and interval
+ * @param v Value
+ * @param intv Interval
+ * \endif
+ * \if CHINESE
+ * @brief 带值和区间的构造函数
+ * @param v 值
+ * @param intv 区间
+ * \endif
+ */
+inline QwtIntervalSample::QwtIntervalSample(double v, const QwtInterval& intv) : value(v), interval(intv)
 {
 }
 
-//! Constructor
-inline QwtIntervalSample::QwtIntervalSample( double v, double min, double max )
-    : value( v )
-    , interval( min, max )
+/**
+ * \if ENGLISH
+ * @brief Constructor with value and min/max
+ * @param v Value
+ * @param min Minimum value
+ * @param max Maximum value
+ * \endif
+ * \if CHINESE
+ * @brief 带值、最小值和最大值的构造函数
+ * @param v 值
+ * @param min 最小值
+ * @param max 最大值
+ * \endif
+ */
+inline QwtIntervalSample::QwtIntervalSample(double v, double min, double max) : value(v), interval(min, max)
 {
 }
 
-//! Compare operator
-inline bool QwtIntervalSample::operator==( const QwtIntervalSample& other ) const
+/**
+ * \if ENGLISH
+ * @brief Equality comparison operator
+ * \endif
+ * \if CHINESE
+ * @brief 相等比较运算符
+ * \endif
+ */
+inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
 {
     return value == other.value && interval == other.interval;
 }
 
-//! Compare operator
-inline bool QwtIntervalSample::operator!=( const QwtIntervalSample& other ) const
+/**
+ * \if ENGLISH
+ * @brief Inequality comparison operator
+ * \endif
+ * \if CHINESE
+ * @brief 不相等比较运算符
+ * \endif
+ */
+inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
 {
-    return !( *this == other );
+    return !(*this == other);
 }
 
 //! \brief A sample of the types (x1...xn, y) or (x, y1..yn)
 class QWT_EXPORT QwtSetSample
 {
-  public:
+public:
     QwtSetSample();
-    explicit QwtSetSample( double, const QVector< double >& = QVector< double >( ) );
+    explicit QwtSetSample(double, const QVector< double >& = QVector< double >());
 
-    bool operator==( const QwtSetSample& other ) const;
-    bool operator!=( const QwtSetSample& other ) const;
+    bool operator==(const QwtSetSample& other) const;
+    bool operator!=(const QwtSetSample& other) const;
 
     double added() const;
 
@@ -109,8 +148,7 @@ class QWT_EXPORT QwtSetSample
    Constructor
    The value is set to 0.0
  */
-inline QwtSetSample::QwtSetSample()
-    : value( 0.0 )
+inline QwtSetSample::QwtSetSample() : value(0.0)
 {
 }
 
@@ -120,30 +158,28 @@ inline QwtSetSample::QwtSetSample()
    \param v Value
    \param s Set of values
  */
-inline QwtSetSample::QwtSetSample( double v, const QVector< double >& s )
-    : value( v )
-    , set( s )
+inline QwtSetSample::QwtSetSample(double v, const QVector< double >& s) : value(v), set(s)
 {
 }
 
 //! Compare operator
-inline bool QwtSetSample::operator==( const QwtSetSample& other ) const
+inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 {
     return value == other.value && set == other.set;
 }
 
 //! Compare operator
-inline bool QwtSetSample::operator!=( const QwtSetSample& other ) const
+inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 {
-    return !( *this == other );
+    return !(*this == other);
 }
 
 //! \return All values of the set added
 inline double QwtSetSample::added() const
 {
     double y = 0.0;
-    for ( int i = 0; i < set.size(); i++ )
-        y += set[i];
+    for (int i = 0; i < set.size(); i++)
+        y += set[ i ];
 
     return y;
 }
@@ -159,10 +195,8 @@ inline double QwtSetSample::added() const
  */
 class QWT_EXPORT QwtOHLCSample
 {
-  public:
-    QwtOHLCSample( double time = 0.0,
-        double open = 0.0, double high = 0.0,
-        double low = 0.0, double close = 0.0 );
+public:
+    QwtOHLCSample(double time = 0.0, double open = 0.0, double high = 0.0, double low = 0.0, double close = 0.0);
 
     QwtInterval boundingInterval() const;
 
@@ -196,13 +230,8 @@ class QWT_EXPORT QwtOHLCSample
    \param l Low value
    \param c Close value
  */
-inline QwtOHLCSample::QwtOHLCSample(
-        double t, double o, double h, double l, double c )
-    : time( t )
-    , open( o )
-    , high( h )
-    , low( l )
-    , close( c )
+inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, double c)
+    : time(t), open(o), high(h), low(l), close(c)
 {
 }
 
@@ -219,11 +248,7 @@ inline QwtOHLCSample::QwtOHLCSample(
  */
 inline bool QwtOHLCSample::isValid() const
 {
-    return ( low <= high )
-           && ( open >= low )
-           && ( open <= high )
-           && ( close >= low )
-           && ( close <= high );
+    return (low <= high) && (open >= low) && (open <= high) && (close >= low) && (close <= high);
 }
 
 /*!
@@ -237,16 +262,16 @@ inline bool QwtOHLCSample::isValid() const
 inline QwtInterval QwtOHLCSample::boundingInterval() const
 {
     double minY = open;
-    minY = qMin( minY, high );
-    minY = qMin( minY, low );
-    minY = qMin( minY, close );
+    minY        = qMin(minY, high);
+    minY        = qMin(minY, low);
+    minY        = qMin(minY, close);
 
     double maxY = open;
-    maxY = qMax( maxY, high );
-    maxY = qMax( maxY, low );
-    maxY = qMax( maxY, close );
+    maxY        = qMax(maxY, high);
+    maxY        = qMax(maxY, low);
+    maxY        = qMax(maxY, close);
 
-    return QwtInterval( minY, maxY );
+    return QwtInterval(minY, maxY);
 }
 
 /*!
@@ -259,12 +284,10 @@ inline QwtInterval QwtOHLCSample::boundingInterval() const
  */
 class QWT_EXPORT QwtVectorFieldSample
 {
-  public:
-    QwtVectorFieldSample( double x = 0.0, double y = 0.0,
-        double vx = 0.0, double vy = 0.0 );
+public:
+    QwtVectorFieldSample(double x = 0.0, double y = 0.0, double vx = 0.0, double vy = 0.0);
 
-    QwtVectorFieldSample( const QPointF& pos,
-        double vx = 0.0, double vy = 0.0 );
+    QwtVectorFieldSample(const QPointF& pos, double vx = 0.0, double vy = 0.0);
 
     QPointF pos() const;
 
@@ -291,12 +314,8 @@ class QWT_EXPORT QwtVectorFieldSample
    \param vectorX x coordinate of the vector
    \param vectorY y coordinate of the vector
  */
-inline QwtVectorFieldSample::QwtVectorFieldSample(
-        double posX, double posY, double vectorX, double vectorY )
-    : x( posX )
-    , y( posY )
-    , vx( vectorX )
-    , vy( vectorY )
+inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, double vectorX, double vectorY)
+    : x(posX), y(posY), vx(vectorX), vy(vectorY)
 {
 }
 
@@ -307,25 +326,21 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(
    \param vectorX x coordinate of the vector
    \param vectorY y coordinate of the vector
  */
-inline QwtVectorFieldSample::QwtVectorFieldSample(
-        const QPointF& pos, double vectorX, double vectorY )
-    : x( pos.x() )
-    , y( pos.y() )
-    , vx( vectorX )
-    , vy( vectorY )
+inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vectorX, double vectorY)
+    : x(pos.x()), y(pos.y()), vx(vectorX), vy(vectorY)
 {
 }
 
 //! \return x/y coordinates as QPointF
 inline QPointF QwtVectorFieldSample::pos() const
 {
-    return QPointF( x, y );
+    return QPointF(x, y);
 }
 
 //! \return true, if vx and vy are 0
 inline bool QwtVectorFieldSample::isNull() const
 {
-    return ( vx == 0.0 ) && ( vy == 0.0 );
+    return (vx == 0.0) && (vy == 0.0);
 }
 
 #endif

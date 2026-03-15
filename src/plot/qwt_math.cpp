@@ -29,10 +29,17 @@
 #include <qrandom.h>
 #endif
 
-/*!
-   \brief Normalize an angle to be int the range [0.0, 2 * PI[
-   \param radians Angle in radians
-   \return Normalized angle in radians
+/**
+ * \if ENGLISH
+ * @brief Normalize an angle to be in the range [0.0, 2π[
+ * @param radians Angle in radians
+ * @return Normalized angle in radians
+ * \endif
+ * \if CHINESE
+ * @brief 将角度标准化到范围 [0.0, 2π[
+ * @param radians 弧度角度
+ * @return 标准化后的弧度角度
+ * \endif
  */
 double qwtNormalizeRadians( double radians )
 {
@@ -44,10 +51,17 @@ double qwtNormalizeRadians( double radians )
 
 }
 
-/*!
-   \brief Normalize an angle to be int the range [0.0, 360.0[
-   \param radians Angle in degrees
-   \return Normalized angle in degrees
+/**
+ * \if ENGLISH
+ * @brief Normalize an angle to be in the range [0.0, 360.0[
+ * @param degrees Angle in degrees
+ * @return Normalized angle in degrees
+ * \endif
+ * \if CHINESE
+ * @brief 将角度标准化到范围 [0.0, 360.0[
+ * @param degrees 度数角度
+ * @return 标准化后的度数角度
+ * \endif
  */
 double qwtNormalizeDegrees( double degrees )
 {
@@ -58,9 +72,17 @@ double qwtNormalizeDegrees( double degrees )
     return a;
 }
 
-/*!
-   \brief Uses QRandomGenerator for Qt >= 5.10 and qRand() otherwise
-   \return A 32-bit random quantity
+/**
+ * \if ENGLISH
+ * @brief Generate a random 32-bit number
+ * @details Uses QRandomGenerator for Qt >= 5.10 and qRand() otherwise
+ * @return A 32-bit random quantity
+ * \endif
+ * \if CHINESE
+ * @brief 生成随机 32 位数字
+ * @details Qt >= 5.10 使用 QRandomGenerator，否则使用 qRand()
+ * @return 32 位随机数
+ * \endif
  */
 quint32 qwtRand()
 {

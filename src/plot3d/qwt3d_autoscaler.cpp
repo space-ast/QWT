@@ -1,4 +1,4 @@
-#include "qwt3d_helper.h"
+﻿#include "qwt3d_helper.h"
 #include "qwt3d_autoscaler.h"
 
 using namespace Qwt3D;
@@ -39,7 +39,7 @@ double floorExt(int& exponent, double x, std::vector< double >& sortedmantissi)
   \param x Input value
   \return Mantissa
 */
-[[maybe_unused]] double floor125(int& exponent, double x)
+double floor125(int& exponent, double x)
 {
     std::vector< double > m(2);
     m[ 0 ] = 1;
