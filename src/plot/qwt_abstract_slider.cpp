@@ -598,28 +598,54 @@ uint QwtAbstractSlider::singleSteps() const
    \sa pageSteps(), setTotalSteps(), setSingleSteps()
  */
 
+/**
+ * \if ENGLISH
+ * @brief Set the number of page steps
+ * @param stepCount Number of steps
+ * \sa pageSteps(), totalSteps(), singleSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 设置页步数
+ * @param stepCount 步数
+ * \sa pageSteps(), totalSteps(), singleSteps()
+ * \endif
+ */
 void QwtAbstractSlider::setPageSteps(uint stepCount)
 {
     m_data->pageSteps = stepCount;
 }
 
-/*!
-   \return Number of steps
-   \sa setPageSteps(), totalSteps(), singleSteps()
+/**
+ * \if ENGLISH
+ * @brief Return the number of page steps
+ * @return Number of steps
+ * \sa setPageSteps(), totalSteps(), singleSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 返回页步数
+ * @return 步数
+ * \sa setPageSteps(), totalSteps(), singleSteps()
+ * \endif
  */
 uint QwtAbstractSlider::pageSteps() const
 {
     return m_data->pageSteps;
 }
 
-/*!
-   \brief Enable step alignment
-
-   When step alignment is enabled values resulting from slider
-   movements are aligned to the step size.
-
-   \param on Enable step alignment when true
-   \sa stepAlignment()
+/**
+ * \if ENGLISH
+ * @brief Enable step alignment
+ * @details When step alignment is enabled values resulting from slider
+ *          movements are aligned to the step size.
+ * @param on Enable step alignment when true
+ * \sa stepAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 启用步对齐
+ * @details 当启用步对齐时，滑块移动产生的值将对齐到步长。
+ * @param on true 启用步对齐
+ * \sa stepAlignment()
+ * \endif
  */
 void QwtAbstractSlider::setStepAlignment(bool on)
 {
@@ -628,20 +654,34 @@ void QwtAbstractSlider::setStepAlignment(bool on)
     }
 }
 
-/*!
-   \return True, when step alignment is enabled
-   \sa setStepAlignment()
+/**
+ * \if ENGLISH
+ * @brief Check if step alignment is enabled
+ * @return True, when step alignment is enabled
+ * \sa setStepAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了步对齐
+ * @return 如果启用了步对齐返回 true
+ * \sa setStepAlignment()
+ * \endif
  */
 bool QwtAbstractSlider::stepAlignment() const
 {
     return m_data->stepAlignment;
 }
 
-/*!
-   Set the slider to the specified value
-
-   \param value New value
-   \sa setValid(), sliderChange(), valueChanged()
+/**
+ * \if ENGLISH
+ * @brief Set the slider to the specified value
+ * @param value New value
+ * \sa setValid(), sliderChange(), valueChanged()
+ * \endif
+ * \if CHINESE
+ * @brief 将滑块设置为指定值
+ * @param value 新值
+ * \sa setValid(), sliderChange(), valueChanged()
+ * \endif
  */
 void QwtAbstractSlider::setValue(double value)
 {
@@ -658,69 +698,116 @@ void QwtAbstractSlider::setValue(double value)
     }
 }
 
-//! Returns the current value.
+/**
+ * \if ENGLISH
+ * @brief Return the current value
+ * @return Current slider value
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回当前值
+ * @return 当前滑块值
+ * \sa setValue()
+ * \endif
+ */
 double QwtAbstractSlider::value() const
 {
     return m_data->value;
 }
 
-/*!
-   If wrapping is true stepping up from upperBound() value will
-   take you to the minimum() value and vice versa.
-
-   \param on En/Disable wrapping
-   \sa wrapping()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable wrapping
+ * @details If wrapping is true stepping up from upperBound() value will
+ *          take you to the minimum() value and vice versa.
+ * @param on Enable wrapping when true
+ * \sa wrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用环绕
+ * @details 如果启用环绕，从 upperBound() 值向上步进会到达 minimum() 值，反之亦然。
+ * @param on true 启用环绕
+ * \sa wrapping()
+ * \endif
  */
 void QwtAbstractSlider::setWrapping(bool on)
 {
     m_data->wrapping = on;
 }
 
-/*!
-   \return True, when wrapping is set
-   \sa setWrapping()
+/**
+ * \if ENGLISH
+ * @brief Check if wrapping is enabled
+ * @return True, when wrapping is set
+ * \sa setWrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了环绕
+ * @return 如果启用了环绕返回 true
+ * \sa setWrapping()
+ * \endif
  */
 bool QwtAbstractSlider::wrapping() const
 {
     return m_data->wrapping;
 }
 
-/*!
-   Invert wheel and key events
-
-   Usually scrolling the mouse wheel "up" and using keys like page
-   up will increase the slider's value towards its maximum.
-   When invertedControls() is enabled the value is scrolled
-   towards its minimum.
-
-   Inverting the controls might be f.e. useful for a vertical slider
-   with an inverted scale ( decreasing from top to bottom ).
-
-   \param on Invert controls, when true
-
-   \sa invertedControls(), keyEvent(), wheelEvent()
+/**
+ * \if ENGLISH
+ * @brief Invert wheel and key events
+ * @details Usually scrolling the mouse wheel "up" and using keys like page
+ *          up will increase the slider's value towards its maximum.
+ *          When invertedControls() is enabled the value is scrolled
+ *          towards its minimum.
+ *          Inverting the controls might be f.e. useful for a vertical slider
+ *          with an inverted scale (decreasing from top to bottom).
+ * @param on Invert controls when true
+ * \sa invertedControls(), keyEvent(), wheelEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 反转滚轮和键盘事件
+ * @details 通常向上滚动鼠标滚轮或使用 Page Up 等键会增加滑块值到最大值。
+ *          当启用 invertedControls() 时，值会向最小值滚动。
+ *          反转控制可能对于垂直滑块（从上到下递减）很有用。
+ * @param on true 反转控制
+ * \sa invertedControls(), keyEvent(), wheelEvent()
+ * \endif
  */
 void QwtAbstractSlider::setInvertedControls(bool on)
 {
     m_data->invertedControls = on;
 }
 
-/*!
-   \return True, when the controls are inverted
-   \sa setInvertedControls()
+/**
+ * \if ENGLISH
+ * @brief Check if controls are inverted
+ * @return True, when the controls are inverted
+ * \sa setInvertedControls()
+ * \endif
+ * \if CHINESE
+ * @brief 检查控制是否被反转
+ * @return 如果控制被反转返回 true
+ * \sa setInvertedControls()
+ * \endif
  */
 bool QwtAbstractSlider::invertedControls() const
 {
     return m_data->invertedControls;
 }
 
-/*!
-   Increment the slider
-
-   The step size depends on the number of totalSteps()
-
-   \param stepCount Number of steps
-   \sa setTotalSteps(), incrementedValue()
+/**
+ * \if ENGLISH
+ * @brief Increment the slider
+ * @details The step size depends on the number of totalSteps()
+ * @param stepCount Number of steps
+ * \sa setTotalSteps(), incrementedValue()
+ * \endif
+ * \if CHINESE
+ * @brief 增量滑块
+ * @details 步长取决于 totalSteps() 的数量
+ * @param stepCount 步数
+ * \sa setTotalSteps(), incrementedValue()
+ * \endif
  */
 void QwtAbstractSlider::incrementValue(int stepCount)
 {
@@ -732,13 +819,21 @@ void QwtAbstractSlider::incrementValue(int stepCount)
     }
 }
 
-/*!
-   Increment a value
-
-   \param value Value
-   \param stepCount Number of steps
-
-   \return Incremented value
+/**
+ * \if ENGLISH
+ * @brief Increment a value
+ * @param value Value to increment
+ * @param stepCount Number of steps
+ * @return Incremented value
+ * \sa incrementValue(), setTotalSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 增量一个值
+ * @param value 要增量的值
+ * @param stepCount 步数
+ * @return 增量后的值
+ * \sa incrementValue(), setTotalSteps()
+ * \endif
  */
 double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
 {
@@ -776,6 +871,22 @@ double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
     return value;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Bound a value to the valid range
+ * @details Handles wrapping for circular scales
+ * @param value Value to bound
+ * @return Bounded value
+ * \sa wrapping(), minimum(), maximum()
+ * \endif
+ * \if CHINESE
+ * @brief 将值限制在有效范围内
+ * @details 处理圆形刻度的环绕
+ * @param value 要限制的值
+ * @return 限制后的值
+ * \sa wrapping(), minimum(), maximum()
+ * \endif
+ */
 double QwtAbstractSlider::boundedValue(double value) const
 {
     const double vmin = minimum();
@@ -809,6 +920,20 @@ double QwtAbstractSlider::boundedValue(double value) const
     return value;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Align a value to the step size
+ * @param value Value to align
+ * @return Aligned value
+ * \sa stepAlignment(), totalSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 将值对齐到步长
+ * @param value 要对齐的值
+ * @return 对齐后的值
+ * \sa stepAlignment(), totalSteps()
+ * \endif
+ */
 double QwtAbstractSlider::alignedValue(double value) const
 {
     if (m_data->totalSteps == 0)
@@ -849,8 +974,18 @@ double QwtAbstractSlider::alignedValue(double value) const
     return value;
 }
 
-/*!
-   Update the slider according to modifications of the scale
+/**
+ * \if ENGLISH
+ * @brief Update the slider according to modifications of the scale
+ * @details Updates the current value to stay within the new scale range
+ *          and emits valueChanged() if the value was adjusted.
+ * \sa sliderChange(), valueChanged()
+ * \endif
+ * \if CHINESE
+ * @brief 根据刻度修改更新滑块
+ * @details 更新当前值以保持在新的刻度范围内，如果值被调整则发出 valueChanged()。
+ * \sa sliderChange(), valueChanged()
+ * \endif
  */
 void QwtAbstractSlider::scaleChange()
 {
@@ -868,7 +1003,19 @@ void QwtAbstractSlider::scaleChange()
     update();
 }
 
-//! Calling update()
+/**
+ * \if ENGLISH
+ * @brief Handle slider changes
+ * @details Called when the slider needs to update its appearance.
+ *          The default implementation calls update().
+ * \sa setValue(), incrementValue()
+ * \endif
+ * \if CHINESE
+ * @brief 处理滑块变化
+ * @details 当滑块需要更新外观时调用。默认实现调用 update()。
+ * \sa setValue(), incrementValue()
+ * \endif
+ */
 void QwtAbstractSlider::sliderChange()
 {
     update();

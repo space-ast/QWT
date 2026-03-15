@@ -49,6 +49,28 @@ public:
 - 但有些特例，例如qt的信号（头文件中Q_SIGNALS关键字下面的函数），它没有在cpp中的定义，这些函数的doxygen注释需要在头文件中按上面中英文要求添加，你需要把信号的doxygen注释转换为中英双语。
 - 另外类的doxygen注释也需要在头文件中按上面中英文要求添加。
 
+**3. 类的doxygen注释规范：**
+
+- 类的doxygen注释需要在头文件中按上面中英文要求添加。
+- 示例：
+```cpp
+/**
+ * \if ENGLISH
+ * @brief [English description]
+ * \endif
+ *
+ * \if CHINESE
+ * @brief [中文说明]
+ * \endif
+ */
+class MyClass {
+public:
+    // Constructor for MyClass (English only)
+    MyClass(); 
+};
+```
+- 对于功能性较强的类，类的注释中应该加入使用示例，以便使用者了解如何使用
+
 **3. 代码完整性约束（重要）：**
 - **只改注释：** 禁止修改任何函数体、变量名、逻辑判断或代码结构。
 - **格式保持：** 保持原有的代码缩进和格式化风格，仅替换或插入注释块。

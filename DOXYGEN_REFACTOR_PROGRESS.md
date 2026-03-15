@@ -109,6 +109,10 @@
 **源文件 (.cpp):**
 - src/plot/qwt_abstract_slider.cpp - 继续添加双语 Doxygen 注释（setReadOnly、isReadOnly、setTracking、isTracking、mousePressEvent、mouseMoveEvent、mouseReleaseEvent、wheelEvent、keyPressEvent 等）
 
+#### 第十二批 (2026-03-15)
+**源文件 (.cpp):**
+- src/plot/qwt_abstract_slider.cpp - 完成剩余方法的双语 Doxygen 注释（setPageSteps、pageSteps、setStepAlignment、stepAlignment、setValue、value、setWrapping、wrapping、setInvertedControls、invertedControls、incrementValue、incrementedValue、boundedValue、alignedValue、scaleChange、sliderChange）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
