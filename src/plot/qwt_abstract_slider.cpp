@@ -91,16 +91,23 @@ public:
     bool invertedControls;
 };
 
-/*!
-   \brief Constructor
-
-   The scale is initialized to [0.0, 100.0], the
-   number of steps is set to 100 with 1 and 10 and single
-   an page step sizes. Step alignment is enabled.
-
-   The initial value is invalid.
-
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractSlider
+ * @details The scale is initialized to [0.0, 100.0], the
+ *          number of steps is set to 100 with 1 and 10 as single
+ *          and page step sizes. Step alignment is enabled.
+ *          The initial value is invalid.
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractSlider 构造函数
+ * @details 刻度初始化为 [0.0, 100.0]，
+ *          步数设置为 100，单步和页步大小分别为 1 和 10。
+ *          步对齐已启用。
+ *          初始值无效。
+ * @param parent 父控件
+ * \endif
  */
 QwtAbstractSlider::QwtAbstractSlider(QWidget* parent) : QwtAbstractScale(parent)
 {
@@ -110,18 +117,30 @@ QwtAbstractSlider::QwtAbstractSlider(QWidget* parent) : QwtAbstractScale(parent)
     setFocusPolicy(Qt::StrongFocus);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractSlider
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractSlider 析构函数
+ * \endif
+ */
 QwtAbstractSlider::~QwtAbstractSlider()
 {
     delete m_data;
 }
 
-/*!
-   Set the value to be valid/invalid
-
-   \param on When true, the value is invalidated
-
-   \sa setValue()
+/**
+ * \if ENGLISH
+ * @brief Set the value to be valid or invalid
+ * @param on When true, the value is invalidated
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 设置值为有效或无效
+ * @param on 如果为 true，值变为无效
+ * \sa setValue()
+ * \endif
  */
 void QwtAbstractSlider::setValid(bool on)
 {
@@ -133,7 +152,16 @@ void QwtAbstractSlider::setValid(bool on)
     }
 }
 
-//! \return True, when the value is invalid
+/**
+ * \if ENGLISH
+ * @brief Check if the value is valid
+ * @return True if the value is invalid
+ * \endif
+ * \if CHINESE
+ * @brief 检查值是否有效
+ * @return 如果值无效则返回 true
+ * \endif
+ */
 bool QwtAbstractSlider::isValid() const
 {
     return m_data->isValid;

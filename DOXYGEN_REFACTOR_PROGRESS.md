@@ -96,6 +96,15 @@
 - src/plot/qwt_abstract_scale.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setScale 系列、transform 系列等）
 - src/plot/qwt_abstract_scale_draw.cpp - 部分方法的双语 Doxygen 注释（构造函数、析构函数、enableComponent、setScaleDiv 等）
 
+#### 第十批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_abstract_slider.h - QwtAbstractSlider 类的双语注释，public/protected 函数英文简要注释，signals 双语注释
+- src/plot/qwt_magnifier.h - QwtMagnifier 类的双语注释，public/protected 函数英文简要注释
+- src/plot/qwt_legend_label.h - QwtLegendLabel 类的双语注释，public 函数英文简要注释，signals 双语注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_abstract_slider.cpp - 部分方法的双语 Doxygen 注释（构造函数、析构函数、setValid、isValid 等）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -178,8 +187,6 @@ src/plot/qwt_picker.h
 src/plot/qwt_matrix_raster_data.h
 src/plot/qwt_null_paintdevice.h
 src/plot/qwt_math.h
-src/plot/qwt_magnifier.h
-src/plot/qwt_legend_label.h
 src/plot/qwt_legend.h
 src/plot/qwt_grid_raster_data.h
 src/plot/qwt_knob.h
@@ -197,7 +204,6 @@ src/plot/qwt_color_map.h
 src/plot/qwt_cache_panner.h
 src/plot/qwt_arrow_button.h
 src/plot/qwt_analog_clock.h
-src/plot/qwt_abstract_slider.h
 src/plot/qwt_plot_series_data_picker_group.h
 src/plot3d/qwt3d_volumeplot.h
 src/plot3d/qwt3d_surfaceplot.h
@@ -334,7 +340,6 @@ src/plot/qwt_clipper.cpp
 src/plot/qwt_cache_panner.cpp
 src/plot/qwt_arrow_button.cpp
 src/plot/qwt_analog_clock.cpp
-src/plot/qwt_abstract_slider.cpp
 src/plot/qwt_plot_series_data_picker_group.cpp
 src/plot3d/qwt3d_scale.cpp
 src/plot3d/qwt3d_plot.cpp
