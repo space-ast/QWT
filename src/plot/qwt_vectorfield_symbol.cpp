@@ -29,12 +29,28 @@
 #include <qpainter.h>
 #include <qpainterpath.h>
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtVectorFieldSymbol::QwtVectorFieldSymbol()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldSymbol::~QwtVectorFieldSymbol()
 {
 }
@@ -79,21 +95,42 @@ class QwtVectorFieldArrow::PrivateData
 };
 
 /*!
-    \brief Constructor
+    \if ENGLISH
+    @brief Constructor
 
     The length is initialized by headWidth + 4
 
-    \param headWidth Width of the triangular head
-    \param tailWidth Width of the arrow tail
+    @param headWidth Width of the triangular head
+    @param tailWidth Width of the arrow tail
 
     \sa setLength()
+    \endif
+    *
+    \if CHINESE
+    @brief 构造函数
+
+    长度初始化为 headWidth + 4
+
+    @param headWidth 三角形头部的宽度
+    @param tailWidth 箭头尾部的宽度
+
+    \sa setLength()
+    \endif
  */
 QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
 {
     m_data = new PrivateData( headWidth, tailWidth );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldArrow::~QwtVectorFieldArrow()
 {
     delete m_data;
@@ -135,19 +172,38 @@ class QwtVectorFieldThinArrow::PrivateData
 };
 
 /*!
-    \brief Constructor
+    \if ENGLISH
+    @brief Constructor
 
     The length is initialized by headWidth + 4
 
-    \param headWidth Width of the triangular head
+    @param headWidth Width of the triangular head
     \sa setLength()
+    \endif
+    *
+    \if CHINESE
+    @brief 构造函数
+
+    长度初始化为 headWidth + 4
+
+    @param headWidth 三角形头部的宽度
+    \sa setLength()
+    \endif
  */
 QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
 {
     m_data = new PrivateData( headWidth );
 }
 
-//! \brief Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
 {
     delete m_data;
