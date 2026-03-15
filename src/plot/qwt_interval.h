@@ -30,31 +30,42 @@
 #include "qwt_global.h"
 #include <qmetatype.h>
 
-/*!
-   \brief A class representing an interval
-
-   The interval is represented by 2 doubles, the lower and the upper limit.
+/**
+ * \if ENGLISH
+ * @brief A class representing an interval
+ * @details The interval is represented by 2 doubles, the lower and the upper limit.
+ * \endif
+ * \if CHINESE
+ * @brief 表示区间的类
+ * @details 区间由两个双精度数表示，下限和上限。
+ * \endif
  */
 
 class QWT_EXPORT QwtInterval
 {
 public:
     /*!
-       Flag indicating if a border is included or excluded
+       \if ENGLISH
+       \brief Flag indicating if a border is included or excluded
        \sa setBorderFlags(), borderFlags()
+       \endif
+       \if CHINESE
+       \brief 标志位，指示边界是否包含或排除
+       \sa setBorderFlags(), borderFlags()
+       \endif
      */
     enum BorderFlag
     {
-        //! Min/Max values are inside the interval
+        //! \if ENGLISH Min/Max values are inside the interval \endif \if CHINESE 最小值/最大值在区间内 \endif
         IncludeBorders = 0x00,
 
-        //! Min value is not included in the interval
+        //! \if ENGLISH Min value is not included in the interval \endif \if CHINESE 最小值不包含在区间内 \endif
         ExcludeMinimum = 0x01,
 
-        //! Max value is not included in the interval
+        //! \if ENGLISH Max value is not included in the interval \endif \if CHINESE 最大值不包含在区间内 \endif
         ExcludeMaximum = 0x02,
 
-        //! Min/Max values are not included in the interval
+        //! \if ENGLISH Min/Max values are not included in the interval \endif \if CHINESE 最小值/最大值都不包含在区间内 \endif
         ExcludeBorders = ExcludeMinimum | ExcludeMaximum
     };
 
@@ -119,36 +130,54 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtInterval::BorderFlags)
 Q_DECLARE_METATYPE(QwtInterval)
 Q_DECLARE_TYPEINFO(QwtInterval, Q_MOVABLE_TYPE);
 
-/*!
-   \brief Default Constructor
-
-   Creates an invalid interval [0.0, -1.0]
-   \sa setInterval(), isValid()
+/**
+ * \if ENGLISH
+ * @brief Default Constructor
+ * @details Creates an invalid interval [0.0, -1.0]
+ * \sa setInterval(), isValid()
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @details 创建一个无效区间 [0.0, -1.0]
+ * \sa setInterval(), isValid()
+ * \endif
  */
 inline QwtInterval::QwtInterval() : m_minValue(0.0), m_maxValue(-1.0), m_borderFlags(IncludeBorders)
 {
 }
 
-/*!
-   Constructor
-
-   Build an interval with from min/max values
-
-   \param minValue Minimum value
-   \param maxValue Maximum value
-   \param borderFlags Include/Exclude borders
+/**
+ * \if ENGLISH
+ * @brief Constructor with min/max values
+ * @param minValue Minimum value
+ * @param maxValue Maximum value
+ * @param borderFlags Include/Exclude borders
+ * \endif
+ * \if CHINESE
+ * @brief 带最小/最大值的构造函数
+ * @param minValue 最小值
+ * @param maxValue 最大值
+ * @param borderFlags 包含/排除边界
+ * \endif
  */
 inline QwtInterval::QwtInterval(double minValue, double maxValue, BorderFlags borderFlags)
     : m_minValue(minValue), m_maxValue(maxValue), m_borderFlags(borderFlags)
 {
 }
 
-/*!
-   Assign the limits of the interval
-
-   \param minValue Minimum value
-   \param maxValue Maximum value
-   \param borderFlags Include/Exclude borders
+/**
+ * \if ENGLISH
+ * @brief Assign the limits of the interval
+ * @param minValue Minimum value
+ * @param maxValue Maximum value
+ * @param borderFlags Include/Exclude borders
+ * \endif
+ * \if CHINESE
+ * @brief 设置区间的界限
+ * @param minValue 最小值
+ * @param maxValue 最大值
+ * @param borderFlags 包含/排除边界
+ * \endif
  */
 inline void QwtInterval::setInterval(double minValue, double maxValue, BorderFlags borderFlags)
 {
@@ -157,69 +186,128 @@ inline void QwtInterval::setInterval(double minValue, double maxValue, BorderFla
     m_borderFlags = borderFlags;
 }
 
-/*!
-   Change the border flags
-
-   \param borderFlags Or'd BorderMode flags
-   \sa borderFlags()
+/**
+ * \if ENGLISH
+ * @brief Change the border flags
+ * @param borderFlags Or'd BorderMode flags
+ * \sa borderFlags()
+ * \endif
+ * \if CHINESE
+ * @brief 更改边界标志
+ * @param borderFlags 边界模式标志的或运算结果
+ * \sa borderFlags()
+ * \endif
  */
 inline void QwtInterval::setBorderFlags(BorderFlags borderFlags)
 {
     m_borderFlags = borderFlags;
 }
 
-/*!
-   \return Border flags
-   \sa setBorderFlags()
+/**
+ * \if ENGLISH
+ * @return Border flags
+ * \sa setBorderFlags()
+ * \endif
+ * \if CHINESE
+ * @return 边界标志
+ * \sa setBorderFlags()
+ * \endif
  */
 inline QwtInterval::BorderFlags QwtInterval::borderFlags() const
 {
     return m_borderFlags;
 }
 
-/*!
-   Assign the lower limit of the interval
-
-   \param minValue Minimum value
+/**
+ * \if ENGLISH
+ * @brief Assign the lower limit of the interval
+ * @param minValue Minimum value
+ * \endif
+ * \if CHINESE
+ * @brief 设置区间的下限
+ * @param minValue 最小值
+ * \endif
  */
 inline void QwtInterval::setMinValue(double minValue)
 {
     m_minValue = minValue;
 }
 
-/*!
-   Assign the upper limit of the interval
-
-   \param maxValue Maximum value
+/**
+ * \if ENGLISH
+ * @brief Assign the upper limit of the interval
+ * @param maxValue Maximum value
+ * \endif
+ * \if CHINESE
+ * @brief 设置区间的上限
+ * @param maxValue 最大值
+ * \endif
  */
 inline void QwtInterval::setMaxValue(double maxValue)
 {
     m_maxValue = maxValue;
 }
 
-//! \return Lower limit of the interval
+/**
+ * \if ENGLISH
+ * @return Minimum value of the interval
+ * \sa setMinValue()
+ * \endif
+ * \if CHINESE
+ * @return 区间的最小值
+ * \sa setMinValue()
+ * \endif
+ */
 inline double QwtInterval::minValue() const
 {
     return m_minValue;
 }
 
-//! \return Upper limit of the interval
+/**
+ * \if ENGLISH
+ * @return Maximum value of the interval
+ * \sa setMaxValue()
+ * \endif
+ * \if CHINESE
+ * @return 区间的最大值
+ * \sa setMaxValue()
+ * \endif
+ */
 inline double QwtInterval::maxValue() const
 {
     return m_maxValue;
 }
 
-//! \return center the interval
+/**
+ * \if ENGLISH
+ * @return Center of the interval
+ * \sa width()
+ * \endif
+ * \if CHINESE
+ * @return 区间的中心
+ * \sa width()
+ * \endif
+ */
 inline double QwtInterval::centerValue() const
 {
     return isValid() ? (m_minValue + (m_maxValue - m_minValue) * 0.5) : 0.0;
 }
-/*!
-   A interval is valid when minValue() <= maxValue().
-   In case of QwtInterval::ExcludeBorders it is true
-   when minValue() < maxValue()
-
-   \return True, when the interval is valid
+/**
+ * \if ENGLISH
+ * @brief Check if the interval is valid
+ * @details A interval is valid when minValue() <= maxValue().
+ * In case of QwtInterval::ExcludeBorders it is true
+ * when minValue() < maxValue()
+ * @return True, if the interval is valid
+ * \sa isValid()
+ * \endif
+ * \if CHINESE
+ * @brief 检查区间是否有效
+ * @details 当 minValue() <= maxValue() 时区间有效。
+ * 对于 QwtInterval::ExcludeBorders，当 minValue() < maxValue() 时为 true
+ * @return 如果区间有效则为 true
+ * \sa isValid()
+ * \endif
  */
 inline bool QwtInterval::isValid() const
 {
@@ -229,14 +317,19 @@ inline bool QwtInterval::isValid() const
         return m_minValue < m_maxValue;
 }
 
-/*!
-   \brief Return the width of an interval
-
-   The width of invalid intervals is 0.0, otherwise the result is
-   maxValue() - minValue().
-
-   \return Interval width
-   \sa isValid()
+/**
+ * \if ENGLISH
+ * @brief Return the width of an interval
+ * @details The width of invalid intervals is 0.0, otherwise the result is maxValue() - minValue().
+ * @return Interval width
+ * \sa isValid()
+ * \endif
+ * \if CHINESE
+ * @brief 返回区间的宽度
+ * @details 无效区间的宽度为 0.0，否则结果为 maxValue() - minValue()。
+ * @return 区间宽度
+ * \sa isValid()
+ * \endif
  */
 inline double QwtInterval::width() const
 {

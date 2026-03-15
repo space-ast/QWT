@@ -38,13 +38,15 @@ static const struct RegisterQwtInterval
 } qwtRegisterQwtInterval;
 }
 
-/*!
-   \brief Normalize the limits of the interval
-
-   If maxValue() < minValue() the limits will be inverted.
-   \return Normalized interval
-
-   \sa isValid(), inverted()
+/**
+ * \if ENGLISH
+ * @brief Normalize the limits of the interval
+ * @details If maxValue() < minValue() the limits will be inverted.
+ * \endif
+ * \if CHINESE
+ * @brief 标准化区间的界限
+ * @details 如果 maxValue() < minValue()，则界限将被反转。
+ * \endif
  */
 QwtInterval QwtInterval::normalized() const
 {
@@ -58,10 +60,15 @@ QwtInterval QwtInterval::normalized() const
     return *this;
 }
 
-/*!
-   Invert the limits of the interval
-   \return Inverted interval
-   \sa normalized()
+/**
+ * \if ENGLISH
+ * @brief Invert the interval
+ * @details minValue() and maxValue() are swapped, border flags remain unchanged.
+ * \endif
+ * \if CHINESE
+ * @brief 反转区间
+ * @details 交换 minValue() 和 maxValue()，边界标志保持不变。
+ * \endif
  */
 QwtInterval QwtInterval::inverted() const
 {

@@ -33,6 +33,19 @@
 **源文件 (.cpp):**
 - src/plot/qwt_math.cpp - qwtNormalizeRadians, qwtNormalizeDegrees, qwtRand 的双语注释
 
+#### 第三批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_interval.h - QwtInterval 类及其所有内联函数的双语注释
+- src/plot/qwt_samples.h - QwtIntervalSample 类的双语注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_interval.cpp - QwtInterval 方法的详细双语注释 (normalize, normalized, inverted)
+
+#### 第四批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_point_3d.h - QwtPoint3D 类及其所有内联函数的双语注释
+- src/plot/qwt_point_polar.h - QwtPointPolar 类及其所有内联函数的双语注释
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
