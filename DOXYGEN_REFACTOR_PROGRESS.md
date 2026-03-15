@@ -146,6 +146,12 @@
 #### 第十八批 (2026-03-15)
 **源文件 (.cpp):**
 
+#### 第十九批 (2026-03-15)
+**头文件 (.h):**
+- src/plot/qwt_slider.h - 添加类的双语 Doxygen 注释、ScalePosition 枚举的双语注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_slider.cpp - 所有方法的双语 Doxygen 注释（构造函数 x2、析构函数、setOrientation、orientation、setScalePosition、scalePosition、setBorderWidth、borderWidth、setSpacing、spacing、setHandleSize、handleSize、setScaleDraw、scaleDraw x2、scaleChange、setUpdateInterval、updateInterval、drawSlider、drawHandle、isScrollPosition、scrolledTo、mousePressEvent、mouseReleaseEvent、timerEvent、paintEvent、resizeEvent、changeEvent、event、layoutSlider、setTrough、hasTrough、setGroove、hasGroove、sizeHint、minimumSizeHint、handleRect、sliderRect）
 
 ### 未处理文件
 
