@@ -32,21 +32,34 @@
 
 #include <cstring>
 
-/*!
-   \brief Interface for iterating over two QVector<T> objects.
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over two QVector<T> objects.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用于遍历两个 QVector<T> 对象的接口
+ * \endif
  */
 template< typename T >
 class QwtPointArrayData : public QwtPointSeriesData
 {
 public:
+    /// Constructor with QVector references
     QwtPointArrayData(const QVector< T >& x, const QVector< T >& y);
+    /// Constructor with rvalue references
     QwtPointArrayData(QVector< T >&& x, QVector< T >&& y);
+    /// Constructor with C-style arrays
     QwtPointArrayData(const T* x, const T* y, size_t size);
 
+    /// Get the size of the data set
     virtual size_t size() const override;
+    /// Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
+    /// Get the x-data vector
     const QVector< T >& xData() const;
+    /// Get the y-data vector
     const QVector< T >& yData() const;
 
 private:
@@ -54,19 +67,30 @@ private:
     QVector< T > m_y;
 };
 
-/*!
-   \brief Data class containing two pointers to memory blocks of T.
+/**
+ * \if ENGLISH
+ * @brief Data class containing two pointers to memory blocks of T.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 包含两个指向 T 类型内存块的指针的数据类
+ * \endif
  */
 template< typename T >
 class QwtCPointerData : public QwtPointSeriesData
 {
 public:
+    /// Constructor with C-style arrays
     QwtCPointerData(const T* x, const T* y, size_t size);
 
+    /// Get the size of the data set
     virtual size_t size() const override;
+    /// Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
+    /// Get the x-data pointer
     const T* xData() const;
+    /// Get the y-data pointer
     const T* yData() const;
 
 private:
@@ -75,43 +99,68 @@ private:
     size_t m_size;
 };
 
-/*!
-   \brief Interface for iterating over a QVector<T>.
-
-   The memory contains the y coordinates, while the index is
-   interpreted as x coordinate.
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over a QVector<T>.
+ *
+ * The memory contains the y coordinates, while the index is
+ * interpreted as x coordinate.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用于遍历 QVector<T> 的接口
+ *
+ * 内存包含 y 坐标，而索引被解释为 x 坐标。
+ * \endif
  */
 template< typename T >
 class QwtValuePointData : public QwtPointSeriesData
 {
 public:
+    /// Constructor with QVector reference
     QwtValuePointData(const QVector< T >& y);
+    /// Constructor with C-style array
     QwtValuePointData(const T* y, size_t size);
 
+    /// Get the size of the data set
     virtual size_t size() const override;
+    /// Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
+    /// Get the y-data vector
     const QVector< T >& yData() const;
 
 private:
     QVector< T > m_y;
 };
 
-/*!
-   \brief Data class containing a pointer to memory of y coordinates
-
-   The memory contains the y coordinates, while the index is
-   interpreted as x coordinate.
+/**
+ * \if ENGLISH
+ * @brief Data class containing a pointer to memory of y coordinates
+ *
+ * The memory contains the y coordinates, while the index is
+ * interpreted as x coordinate.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 包含指向 y 坐标内存的指针的数据类
+ *
+ * 内存包含 y 坐标，而索引被解释为 x 坐标。
+ * \endif
  */
 template< typename T >
 class QwtCPointerValueData : public QwtPointSeriesData
 {
 public:
+    /// Constructor with C-style array
     QwtCPointerValueData(const T* y, size_t size);
 
+    /// Get the size of the data set
     virtual size_t size() const override;
+    /// Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
+    /// Get the y-data pointer
     const T* yData() const;
 
 private:
@@ -120,82 +169,155 @@ private:
 };
 
 /**
- *   @brief Synthetic point data
+ * \if ENGLISH
+ * @brief Synthetic point data
  *
- *   QwtSyntheticPointData provides a fixed number of points for an interval.
- *   The points are calculated in equidistant steps in x-direction.
+ * QwtSyntheticPointData provides a fixed number of points for an interval.
+ * The points are calculated in equidistant steps in x-direction.
  *
- *   If the interval is invalid, the points are calculated for
- *   the "rectangle of interest", what normally is the displayed area on the
- *   plot canvas. In this mode you get different levels of detail, when
- *   zooming in/out.
+ * If the interval is invalid, the points are calculated for
+ * the "rectangle of interest", what normally is the displayed area on the
+ * plot canvas. In this mode you get different levels of detail, when
+ * zooming in/out.
  *
- *   @par Example
+ * @par Example
  *
- *   The following example shows how to implement a sinus curve.
+ * The following example shows how to implement a sinus curve.
  *
- *   @code
- *   #include <cmath>
- *   #include <qwt_series_data.h>
- *   #include <qwt_plot_curve.h>
- *   #include <qwt_plot.h>
- *   #include <qapplication.h>
+ * @code
+ * #include <cmath>
+ * #include <qwt_series_data.h>
+ * #include <qwt_plot_curve.h>
+ * #include <qwt_plot.h>
+ * #include <qapplication.h>
  *
- *   class SinusData: public QwtSyntheticPointData
- *   {
- *   public:
- *    SinusData():
- *        QwtSyntheticPointData( 100 )
- *    {
- *    }
+ * class SinusData: public QwtSyntheticPointData
+ * {
+ * public:
+ *  SinusData():
+ *      QwtSyntheticPointData( 100 )
+ *  {
+ *  }
  *
- *    virtual double y( double x ) const
- *    {
- *        return qSin( x );
- *    }
- *   };
+ *  virtual double y( double x ) const
+ *  {
+ *      return qSin( x );
+ *  }
+ * };
  *
- *   int main(int argc, char **argv)
- *   {
- *    QApplication a( argc, argv );
+ * int main(int argc, char **argv)
+ * {
+ *  QApplication a( argc, argv );
  *
- *    QwtPlot plot;
- *    plot.setAxisScale( QwtAxis::XBottom, 0.0, 10.0 );
- *    plot.setAxisScale( QwtAxis::YLeft, -1.0, 1.0 );
+ *  QwtPlot plot;
+ *  plot.setAxisScale( QwtAxis::XBottom, 0.0, 10.0 );
+ *  plot.setAxisScale( QwtAxis::YLeft, -1.0, 1.0 );
  *
- *    QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
- *    curve->setData( new SinusData() );
- *    curve->attach( &plot );
+ *  QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
+ *  curve->setData( new SinusData() );
+ *  curve->attach( &plot );
  *
- *    plot.show();
- *    return a.exec();
- *   }
- *   @endcode
+ *  plot.show();
+ *  return a.exec();
+ * }
+ * @endcode
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 合成点数据
+ *
+ * QwtSyntheticPointData 为一个区间提供固定数量的点。
+ * 这些点在 x 方向上等距计算。
+ *
+ * 如果区间无效，点将为"感兴趣的矩形"计算，通常是绘图画布上的显示区域。
+ * 在这种模式下，当放大/缩小时，您会获得不同级别的细节。
+ *
+ * @par 示例
+ *
+ * 以下示例显示如何实现正弦曲线。
+ *
+ * @code
+ * #include <cmath>
+ * #include <qwt_series_data.h>
+ * #include <qwt_plot_curve.h>
+ * #include <qwt_plot.h>
+ * #include <qapplication.h>
+ *
+ * class SinusData: public QwtSyntheticPointData
+ * {
+ * public:
+ *  SinusData():
+ *      QwtSyntheticPointData( 100 )
+ *  {
+ *  }
+ *
+ *  virtual double y( double x ) const
+ *  {
+ *      return qSin( x );
+ *  }
+ * };
+ *
+ * int main(int argc, char **argv)
+ * {
+ *  QApplication a( argc, argv );
+ *
+ *  QwtPlot plot;
+ *  plot.setAxisScale( QwtAxis::XBottom, 0.0, 10.0 );
+ *  plot.setAxisScale( QwtAxis::YLeft, -1.0, 1.0 );
+ *
+ *  QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
+ *  curve->setData( new SinusData() );
+ *  curve->attach( &plot );
+ *
+ *  plot.show();
+ *  return a.exec();
+ * }
+ * @endcode
+ * \endif
  */
 class QWT_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
 {
 public:
+    /// Constructor
     QwtSyntheticPointData(size_t size, const QwtInterval& = QwtInterval());
 
+    /// Set the number of points
     void setSize(size_t size);
+    /// Get the number of points
     virtual size_t size() const override;
 
+    /// Set the interval
     void setInterval(const QwtInterval&);
+    /// Get the interval
     QwtInterval interval() const;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
+    /// Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
-    /*!
-       Calculate a y value for a x value
-
-       \param x x value
-       \return Corresponding y value
+    /**
+     * \if ENGLISH
+     * @brief Calculate a y value for a x value
+     *
+     * @param x x value
+     * @return Corresponding y value
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 计算 x 值对应的 y 值
+     *
+     * @param x x 值
+     * @return 对应的 y 值
+     * \endif
      */
     virtual double y(double x) const = 0;
+    /// Calculate the x value for a given index
     virtual double x(size_t index) const;
 
+    /// Set the rectangle of interest
     virtual void setRectOfInterest(const QRectF&) override;
+    /// Get the rectangle of interest
     QRectF rectOfInterest() const;
 
 private:
@@ -205,27 +327,13 @@ private:
     QwtInterval m_intervalOfInterest;
 };
 
-/*!
-   Constructor
-
-   \param x Array of x values
-   \param y Array of y values
-
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setSamples()
- */
+/// Constructor with QVector references
 template< typename T >
 QwtPointArrayData< T >::QwtPointArrayData(const QVector< T >& x, const QVector< T >& y) : m_x(x), m_y(y)
 {
 }
 
-/*!
-   Constructor
-
-   \param x Array of x values
-   \param y Array of y values
-
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setSamples()
- */
+/// Constructor with rvalue references
 template< typename T >
 QwtPointArrayData< T >::QwtPointArrayData(QVector< T >&& x, QVector< T >&& y)
 {
@@ -233,14 +341,7 @@ QwtPointArrayData< T >::QwtPointArrayData(QVector< T >&& x, QVector< T >&& y)
     m_y = std::move(y);
 }
 
-/*!
-   Constructor
-
-   \param x Array of x values
-   \param y Array of y values
-   \param size Size of the x and y arrays
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setSamples()
- */
+/// Constructor with C-style arrays
 template< typename T >
 QwtPointArrayData< T >::QwtPointArrayData(const T* x, const T* y, size_t size)
 {
@@ -251,58 +352,41 @@ QwtPointArrayData< T >::QwtPointArrayData(const T* x, const T* y, size_t size)
     std::memcpy(m_y.data(), y, size * sizeof(T));
 }
 
-//! \return Size of the data set
+/// Get the size of the data set
 template< typename T >
 size_t QwtPointArrayData< T >::size() const
 {
     return qMin(m_x.size(), m_y.size());
 }
 
-/*!
-   Return the sample at position i
-
-   \param index Index
-   \return Sample at position i
- */
+/// Get the sample at a specific index
 template< typename T >
 QPointF QwtPointArrayData< T >::sample(size_t index) const
 {
     return QPointF(m_x[ int(index) ], m_y[ int(index) ]);
 }
 
-//! \return Array of the x-values
+/// Get the x-data vector
 template< typename T >
 const QVector< T >& QwtPointArrayData< T >::xData() const
 {
     return m_x;
 }
 
-//! \return Array of the y-values
+/// Get the y-data vector
 template< typename T >
 const QVector< T >& QwtPointArrayData< T >::yData() const
 {
     return m_y;
 }
 
-/*!
-   Constructor
-
-   \param y Array of y values
-
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setSamples()
- */
+/// Constructor with QVector reference
 template< typename T >
 QwtValuePointData< T >::QwtValuePointData(const QVector< T >& y) : m_y(y)
 {
 }
 
-/*!
-   Constructor
-
-   \param y Array of y values
-   \param size Size of the x and y arrays
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setSamples()
- */
+/// Constructor with C-style array
 template< typename T >
 QwtValuePointData< T >::QwtValuePointData(const T* y, size_t size)
 {
@@ -310,122 +394,82 @@ QwtValuePointData< T >::QwtValuePointData(const T* y, size_t size)
     std::memcpy(m_y.data(), y, size * sizeof(T));
 }
 
-//! \return Size of the data set
+/// Get the size of the data set
 template< typename T >
 size_t QwtValuePointData< T >::size() const
 {
     return m_y.size();
 }
 
-/*!
-   Return the sample at position i
-
-   \param index Index
-   \return Sample at position i
- */
+/// Get the sample at a specific index
 template< typename T >
 QPointF QwtValuePointData< T >::sample(size_t index) const
 {
     return QPointF(index, m_y[ int(index) ]);
 }
 
-//! \return Array of the y-values
+/// Get the y-data vector
 template< typename T >
 const QVector< T >& QwtValuePointData< T >::yData() const
 {
     return m_y;
 }
 
-/*!
-   Constructor
-
-   \param x Array of x values
-   \param y Array of y values
-   \param size Size of the x and y arrays
-
-   \warning The programmer must assure that the memory blocks referenced
-           by the pointers remain valid during the lifetime of the
-           QwtPlotCPointer object.
-
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setRawSamples()
- */
-
+/// Constructor with C-style arrays
 template< typename T >
 QwtCPointerData< T >::QwtCPointerData(const T* x, const T* y, size_t size) : m_x(x), m_y(y), m_size(size)
 {
 }
 
-//! \return Size of the data set
+/// Get the size of the data set
 template< typename T >
 size_t QwtCPointerData< T >::size() const
 {
     return m_size;
 }
 
-/*!
-   Return the sample at position i
-
-   \param index Index
-   \return Sample at position i
- */
+/// Get the sample at a specific index
 template< typename T >
 QPointF QwtCPointerData< T >::sample(size_t index) const
 {
     return QPointF(m_x[ int(index) ], m_y[ int(index) ]);
 }
 
-//! \return Array of the x-values
+/// Get the x-data pointer
 template< typename T >
 const T* QwtCPointerData< T >::xData() const
 {
     return m_x;
 }
 
-//! \return Array of the y-values
+/// Get the y-data pointer
 template< typename T >
 const T* QwtCPointerData< T >::yData() const
 {
     return m_y;
 }
 
-/*!
-   Constructor
-
-   \param y Array of y values
-   \param size Size of the x and y arrays
-
-   \warning The programmer must assure that the memory blocks referenced
-           by the pointers remain valid during the lifetime of the
-           QwtCPointerValueData object.
-
-   \sa QwtPlotCurve::setData(), QwtPlotCurve::setRawSamples()
- */
-
+/// Constructor with C-style array
 template< typename T >
 QwtCPointerValueData< T >::QwtCPointerValueData(const T* y, size_t size) : m_y(y), m_size(size)
 {
 }
 
-//! \return Size of the data set
+/// Get the size of the data set
 template< typename T >
 size_t QwtCPointerValueData< T >::size() const
 {
     return m_size;
 }
 
-/*!
-   Return the sample at position i
-
-   \param index Index
-   \return Sample at position i
- */
+/// Get the sample at a specific index
 template< typename T >
 QPointF QwtCPointerValueData< T >::sample(size_t index) const
 {
     return QPointF(index, m_y[ int(index) ]);
 }
 
-//! \return Array of the y-values
+/// Get the y-data pointer
 template< typename T >
 const T* QwtCPointerValueData< T >::yData() const
 {

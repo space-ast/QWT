@@ -35,33 +35,54 @@
 using QwtPlotItemList     = QList< QwtPlotItem* >;
 using QwtPlotItemIterator = QList< QwtPlotItem* >::ConstIterator;
 
-/*!
-   \brief A dictionary for plot items
-
-   QwtPlotDict organizes plot items in increasing z-order.
-   If autoDelete() is enabled, all attached items will be deleted
-   in the destructor of the dictionary.
-   QwtPlotDict can be used to get access to all QwtPlotItem items - or all
-   items of a specific type -  that are currently on the plot.
-
-   \sa QwtPlotItem::attach(), QwtPlotItem::detach(), QwtPlotItem::z()
+/**
+ * \if ENGLISH
+ * @brief A dictionary for plot items
+ * 
+ * QwtPlotDict organizes plot items in increasing z-order.
+ * If autoDelete() is enabled, all attached items will be deleted
+ * in the destructor of the dictionary.
+ * QwtPlotDict can be used to get access to all QwtPlotItem items - or all
+ * items of a specific type -  that are currently on the plot.
+ * 
+ * @sa QwtPlotItem::attach(), QwtPlotItem::detach(), QwtPlotItem::z()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 绘图项的字典
+ * 
+ * QwtPlotDict 按递增的 z 顺序组织绘图项。
+ * 如果启用了 autoDelete()，所有附加的项目将在字典的析构函数中被删除。
+ * QwtPlotDict 可用于访问所有 QwtPlotItem 项目 - 或所有特定类型的项目 - 当前在绘图上的项目。
+ * 
+ * @sa QwtPlotItem::attach(), QwtPlotItem::detach(), QwtPlotItem::z()
+ * \endif
  */
 class QWT_EXPORT QwtPlotDict
 {
 public:
+    /// Constructor
     explicit QwtPlotDict();
+    /// Destructor
     virtual ~QwtPlotDict();
 
+    /// Set the auto-delete mode
     void setAutoDelete(bool);
+    /// Get the auto-delete mode
     bool autoDelete() const;
 
+    /// Get the list of all items
     const QwtPlotItemList& itemList() const;
+    /// Get the list of items with a specific RTTI value
     QwtPlotItemList itemList(int rtti) const;
 
+    /// Detach items from the dictionary
     void detachItems(int rtti = QwtPlotItem::Rtti_PlotItem, bool autoDelete = true);
 
 protected:
+    /// Insert an item into the dictionary
     void insertItem(QwtPlotItem*);
+    /// Remove an item from the dictionary
     void removeItem(QwtPlotItem*);
 
 private:

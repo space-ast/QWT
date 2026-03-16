@@ -34,25 +34,55 @@ public:
     double msecsInterval;
 };
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param parent Parent object
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param parent 父对象
+ * \endif
+ */
 QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent)
 {
     m_data                = new PrivateData;
     m_data->msecsInterval = 1e3;  // 1 second
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSamplingThread::~QwtSamplingThread()
 {
     delete m_data;
 }
 
-/*!
-   Change the interval (in ms), when sample() is called.
-   The default interval is 1000.0 ( = 1s )
-
-   \param msecs Interval
-   \sa interval()
+/**
+ * \if ENGLISH
+ * @brief Change the interval (in ms), when sample() is called.
+ * 
+ * The default interval is 1000.0 ( = 1s )
+ * 
+ * @param msecs Interval
+ * @sa interval()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 更改调用 sample() 的间隔（毫秒）
+ * 
+ * 默认间隔为 1000.0（= 1秒）
+ * 
+ * @param msecs 间隔
+ * @sa interval()
+ * \endif
  */
 void QwtSamplingThread::setInterval(double msecs)
 {
@@ -62,18 +92,36 @@ void QwtSamplingThread::setInterval(double msecs)
     m_data->msecsInterval = msecs;
 }
 
-/*!
-   \return Interval (in ms), between 2 calls of sample()
-   \sa setInterval()
+/**
+ * \if ENGLISH
+ * @brief Get the interval (in ms), between 2 calls of sample()
+ * @return Interval in milliseconds
+ * @sa setInterval()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取两次调用 sample() 之间的间隔（毫秒）
+ * @return 间隔（毫秒）
+ * @sa setInterval()
+ * \endif
  */
 double QwtSamplingThread::interval() const
 {
     return m_data->msecsInterval;
 }
 
-/*!
-   \return Time (in ms) since the thread was started
-   \sa QThread::start(), run()
+/**
+ * \if ENGLISH
+ * @brief Get the time (in ms) since the thread was started
+ * @return Elapsed time in milliseconds
+ * @sa QThread::start(), run()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取线程启动以来的时间（毫秒）
+ * @return 经过的时间（毫秒）
+ * @sa QThread::start(), run()
+ * \endif
  */
 double QwtSamplingThread::elapsed() const
 {
@@ -83,18 +131,32 @@ double QwtSamplingThread::elapsed() const
     return 0.0;
 }
 
-/*!
-   Terminate the collecting thread
-   \sa QThread::start(), run()
+/**
+ * \if ENGLISH
+ * @brief Terminate the collecting thread
+ * @sa QThread::start(), run()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 终止收集线程
+ * @sa QThread::start(), run()
+ * \endif
  */
 void QwtSamplingThread::stop()
 {
     m_data->timer.invalidate();
 }
 
-/*!
-   Loop collecting samples started from QThread::start()
-   \sa stop()
+/**
+ * \if ENGLISH
+ * @brief Loop collecting samples started from QThread::start()
+ * @sa stop()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从 QThread::start() 开始的样本收集循环
+ * @sa stop()
+ * \endif
  */
 void QwtSamplingThread::run()
 {
