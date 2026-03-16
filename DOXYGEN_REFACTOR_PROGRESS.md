@@ -215,6 +215,16 @@
 - src/plot/qwt_spline_local.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、type、painterPath、bezierControlLines、slopes、polynomials）
 - src/plot/qwt_spline_curve_fitter.cpp - 已有注释，无需修改
 
+#### 第二十六批 (2026-03-16)
+**头文件 (.h):**
+- src/plot/qwt_thermo.h - 已有双语注释，无需修改
+- src/plot/qwt_text_label.h - 已有双语注释，无需修改
+- src/plot/qwt_text_engine.h - 已有双语注释，无需修改
+- src/plot/qwt_series_data.h - 已有双语注释，无需修改
+
+**源文件 (.cpp):**
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -225,19 +235,12 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_thermo.h
-src/plot/qwt_text_label.h
-src/plot/qwt_text_engine.h
 src/plot/qwt_stylesheet_recorder.h
-src/plot/qwt_spline_pleasing.h
-src/plot/qwt_spline_local.h
-src/plot/qwt_spline_curve_fitter.h
 src/plot/qwt_spline_pleasing.h
 src/plot/qwt_spline_local.h
 src/plot/qwt_spline_curve_fitter.h
 src/plot/qwt_slider.h
 src/plot/qwt_series_store.h
-src/plot/qwt_series_data.h
 src/plot/qwt_scale_widget.h
 src/plot/qwt_scale_engine.h
 src/plot/qwt_scale_draw.h
