@@ -29,6 +29,21 @@
 
 #include <qpainterpath.h>
 
+/**
+ * \if ENGLISH
+ * @brief Calculate chordal length between two points
+ * @param point1 First point
+ * @param point2 Second point
+ * @return Distance between points
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算两点之间的弦长
+ * @param point1 第一个点
+ * @param point2 第二个点
+ * @return 点之间的距离
+ * \endif
+ */
 static inline double qwtChordalLength( const QPointF& point1, const QPointF& point2 )
 {
     const double dx = point2.x() - point1.x();
@@ -279,17 +294,56 @@ static SplineStore qwtSplinePathPleasing( const QPolygonF& points,
 
    \sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
  */
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The default setting is a non closing spline with uniform parametrization.
+ * ( QwtSplineParametrization::ParameterUniform ).
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 默认设置是非闭合样条，具有均匀参数化
+ * ( QwtSplineParametrization::ParameterUniform )。
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ */
 QwtSplinePleasing::QwtSplinePleasing()
 {
     setParametrization( QwtSplineParametrization::ParameterUniform );
 }
 
 //! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplinePleasing::~QwtSplinePleasing()
 {
 }
 
 //! \return 2
+/**
+ * \if ENGLISH
+ * @brief Get locality
+ * @return 2 (looks 2 points ahead/behind)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取局部性
+ * @return 2（向前/向后查看 2 个点）
+ * \endif
+ */
 uint QwtSplinePleasing::locality() const
 {
     return 2;
@@ -303,6 +357,26 @@ uint QwtSplinePleasing::locality() const
 
    \param points Control points
    \return QPainterPath Painter path, that can be rendered by QPainter
+ */
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * @param points Control points
+ * @return QPainterPath Painter path, that can be rendered by QPainter
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 分段使用三次贝塞尔曲线插值多边形，并返回 QPainterPath。
+ *
+ * @param points 控制点
+ * @return QPainterPath 可由 QPainter 渲染的绘制路径
+ * \endif
  */
 QPainterPath QwtSplinePleasing::painterPath( const QPolygonF& points ) const
 {

@@ -211,7 +211,9 @@
 - src/plot/qwt_slider.h - 已有双语注释，无需修改
 
 **源文件 (.cpp):**
-- 待处理
+- src/plot/qwt_spline_pleasing.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、locality、painterPath、bezierControlLines）
+- src/plot/qwt_spline_local.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、type、painterPath、bezierControlLines、slopes、polynomials）
+- src/plot/qwt_spline_curve_fitter.cpp - 已有注释，无需修改
 
 ### 未处理文件
 
