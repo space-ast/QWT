@@ -850,12 +850,21 @@ class QwtSymbol::PrivateData
     } cache;
 };
 
-/*!
-   Default Constructor
-   \param style Symbol Style
-
-   The symbol is constructed with gray interior,
-   black outline with zero width, no size and style 'NoSymbol'.
+/**
+ * \if ENGLISH
+ * @brief Default Constructor
+ * @param style Symbol Style
+ *
+ * The symbol is constructed with gray interior,
+ * black outline with zero width, no size and style 'NoSymbol'.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @param style 符号样式
+ *
+ * 符号使用灰色内部、零宽度的黑色轮廓、无大小和 'NoSymbol' 样式构造。
+ * \endif
  */
 QwtSymbol::QwtSymbol( Style style )
 {
@@ -863,14 +872,26 @@ QwtSymbol::QwtSymbol( Style style )
         QPen( Qt::black, 0 ), QSize() );
 }
 
-/*!
-   \brief Constructor
-   \param style Symbol Style
-   \param brush brush to fill the interior
-   \param pen outline pen
-   \param size size
-
-   \sa setStyle(), setBrush(), setPen(), setSize()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param style Symbol Style
+ * @param brush brush to fill the interior
+ * @param pen outline pen
+ * @param size size
+ *
+ * @sa setStyle(), setBrush(), setPen(), setSize()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param style 符号样式
+ * @param brush 填充内部的画刷
+ * @param pen 轮廓画笔
+ * @param size 大小
+ *
+ * @sa setStyle(), setBrush(), setPen(), setSize()
+ * \endif
  */
 QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
     const QPen& pen, const QSize& size )
@@ -878,20 +899,34 @@ QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
     m_data = new PrivateData( style, brush, pen, size );
 }
 
-/*!
-   \brief Constructor
-
-   The symbol gets initialized by a painter path. The style is
-   set to QwtSymbol::Path, the size is set to empty ( the path
-   is displayed unscaled ).
-
-   \param path painter path
-   \param brush brush to fill the interior
-   \param pen outline pen
-
-   \sa setPath(), setBrush(), setPen(), setSize()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The symbol gets initialized by a painter path. The style is
+ * set to QwtSymbol::Path, the size is set to empty ( the path
+ * is displayed unscaled ).
+ *
+ * @param path painter path
+ * @param brush brush to fill the interior
+ * @param pen outline pen
+ *
+ * @sa setPath(), setBrush(), setPen(), setSize()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 符号通过绘图路径初始化。样式设置为 QwtSymbol::Path，
+ * 大小设置为空（路径显示时不缩放）。
+ *
+ * @param path 绘图路径
+ * @param brush 填充内部的画刷
+ * @param pen 轮廓画笔
+ *
+ * @sa setPath(), setBrush(), setPen(), setSize()
+ * \endif
  */
-
 QwtSymbol::QwtSymbol( const QPainterPath& path,
     const QBrush& brush, const QPen& pen )
 {
@@ -899,7 +934,15 @@ QwtSymbol::QwtSymbol( const QPainterPath& path,
     setPath( path );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSymbol::~QwtSymbol()
 {
     delete m_data;
@@ -1021,15 +1064,28 @@ const QPixmap& QwtSymbol::pixmap() const
     return m_data->pixmap.pixmap;
 }
 
-/*!
-   Set a graphic as symbol
-
-   \param graphic Graphic
-
-   \sa graphic(), setPixmap()
-
-   \note the style() is set to QwtSymbol::Graphic
-   \note brush() and pen() have no effect
+/**
+ * \if ENGLISH
+ * @brief Set a graphic as symbol
+ *
+ * @param graphic Graphic
+ *
+ * @sa graphic(), setPixmap()
+ *
+ * @note the style() is set to QwtSymbol::Graphic
+ * @note brush() and pen() have no effect
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置图形作为符号
+ *
+ * @param graphic 图形
+ *
+ * @sa graphic(), setPixmap()
+ *
+ * @note style() 被设置为 QwtSymbol::Graphic
+ * @note brush() 和 pen() 无效
+ * \endif
  */
 void QwtSymbol::setGraphic( const QwtGraphic& graphic )
 {

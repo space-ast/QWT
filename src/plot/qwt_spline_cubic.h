@@ -30,35 +30,58 @@
 #include "qwt_global.h"
 #include "qwt_spline.h"
 
-/*!
-   \brief A cubic spline
-
-   A cubic spline is a spline with C2 continuity at all control points.
-   It is a non local spline, what means that all polynomials are changing
-   when one control point has changed.
-
-   The implementation is based on the fact, that the continuity condition
-   means an equation with 3 unknowns for 3 adjacent points. The equation
-   system can be resolved by defining start/end conditions, that allow
-   substituting of one of the unknowns for the start/end equations.
-
-   Resolving the equation system is a 2 pass algorithm, requiring more CPU costs
-   than all other implemented type of splines.
-
-   \todo The implementation is not numerical stable
+/**
+ * \if ENGLISH
+ * @brief A cubic spline
+ *
+ * A cubic spline is a spline with C2 continuity at all control points.
+ * It is a non local spline, where a modification of one control point
+ * affects the whole spline.
+ *
+ * The implementation is based on the equation system of the
+ * second derivatives M(x) of the control points P(x).
+ *
+ * QwtSplineCubic offers several algorithms for finding M(x), that
+ * are selected by setBoundaryType().
+ *
+ * The default setting is a "natural spline" having M(x0) = M(xn) = 0.
+ *
+ * @sa QwtSpline::BoundaryType
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 三次样条
+ *
+ * 三次样条是在所有控制点处具有 C2 连续性的样条。
+ * 它是一种非局部样条，其中一个控制点的修改会影响整个样条。
+ *
+ * 该实现基于控制点 P(x) 的二阶导数 M(x) 的方程组。
+ *
+ * QwtSplineCubic 提供了几种查找 M(x) 的算法，
+ * 这些算法通过 setBoundaryType() 选择。
+ *
+ * 默认设置是"自然样条"，具有 M(x0) = M(xn) = 0。
+ *
+ * @sa QwtSpline::BoundaryType
+ * \endif
  */
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {
   public:
+    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
     QwtSplineCubic();
+    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
     virtual ~QwtSplineCubic();
 
+    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
     virtual uint locality() const override;
 
+    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const override;
 
     // calculating the parametric equations
+    /// \if ENGLISH Get polynomials from polygon \endif \if CHINESE 从多边形获取多项式 \endif
     virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
     virtual QVector< double > slopes( const QPolygonF& ) const override;
     virtual QVector< double > curvatures( const QPolygonF& ) const override;

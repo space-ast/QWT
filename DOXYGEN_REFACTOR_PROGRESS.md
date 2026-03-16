@@ -185,10 +185,23 @@
 - src/plot/qwt_text.h - 添加类的双语 Doxygen 注释，TextFormat、PaintAttribute、LayoutAttribute 枚举的双语注释，所有方法的英文简要注释
 
 **源文件 (.cpp):**
-- src/plot/qwt_scale_draw.cpp - 完成剩余方法的双语 Doxygen 注释（getBorderDistHint、minLabelDist、extent、minLength、labelPosition、drawTick、drawBackbone、move、pos、setLength、length、drawLabel、boundingLabelRect、labelTransformation、labelRect、labelSize、setLabelRotation、labelRotation、setLabelAlignment、labelAlignment、maxLabelWidth、maxLabelHeight、updateMap）
+- src/plot/qwt_scale_draw.cpp - 完成剩余方法的双语 Doxygen 注释（构造函数、析构函数、alignment、setAlignment、orientation、getBorderDistHint、minLabelDist、extent、minLength、labelPosition、drawTick、drawBackbone、move、pos、setLength、length、drawLabel、boundingLabelRect、labelTransformation、labelRect、labelSize、setLabelRotation、labelRotation、setLabelAlignment、labelAlignment、maxLabelWidth、maxLabelHeight、updateMap）
 - src/plot/qwt_scale_div.cpp - 所有方法的双语 Doxygen 注释（4个构造函数、setInterval x2、interval、setLowerBound、lowerBound、setUpperBound、upperBound、range、operator==、operator!=、fuzzyCompare、isEmpty、isIncreasing、contains、invert、inverted、bounded、setTicks、ticks）
 - src/plot/qwt_date.cpp - 所有方法的双语 Doxygen 注释（toDateTime、toDouble、ceil、floor、minDate、maxDate、dateOfWeek0、weekNumber、utcOffset、toString）
 - src/plot/qwt_text.cpp - 主要方法的双语 Doxygen 注释（构造函数 x3、析构函数、operator=、operator==、operator!=、setText、text、setRenderFlags、isNull、isEmpty）
+
+#### 第二十四批 (2026-03-16)
+**头文件 (.h):**
+- src/plot/qwt_symbol.h - 添加类的双语 Doxygen 注释，Style 和 CachePolicy 枚举的双语注释，所有方法的英文简要注释
+- src/plot/qwt_spline.h - 添加类的双语 Doxygen 注释，BoundaryType、BoundaryPosition、BoundaryCondition 枚举的双语注释，所有方法的英文简要注释
+- src/plot/qwt_spline_basis.h - 添加类的双语 Doxygen 注释，所有方法的英文简要注释
+- src/plot/qwt_spline_cubic.h - 添加类的双语 Doxygen 注释，所有方法的英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_symbol.cpp - 主要方法的双语 Doxygen 注释（构造函数 x3、析构函数、setCachePolicy、cachePolicy、setPath、path、setGraphic、graphic、setSize、size、setBrush、brush、setPen、pen、setStyle、style、setColor、drawSymbol、drawSymbols、boundingRect）
+- src/plot/qwt_spline.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、setParametrization、parametrization、setBoundaryType、boundaryType、setBoundaryCondition、boundaryCondition、setBoundaryValue、boundaryValue、painterPath、polygon、locality）
+- src/plot/qwt_spline_basis.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、setDegree、degree、painterPath、polynomials、locality、isValid）
+- src/plot/qwt_spline_cubic.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、painterPath、polynomials、locality、bezierControlLines）
 
 ### 未处理文件
 
@@ -207,9 +220,6 @@ src/plot/qwt_stylesheet_recorder.h
 src/plot/qwt_spline_pleasing.h
 src/plot/qwt_spline_local.h
 src/plot/qwt_spline_curve_fitter.h
-src/plot/qwt_spline_cubic.h
-src/plot/qwt_spline_basis.h
-src/plot/qwt_spline.h
 src/plot/qwt_slider.h
 src/plot/qwt_series_store.h
 src/plot/qwt_series_data.h
@@ -364,9 +374,7 @@ src/plot3d/qwt3d_drawable.cpp
 src/plot3d/qwt3d_coordsys.cpp
 src/plot3d/qwt3d_color.cpp
 src/plot3d/qwt3d_autoscaler.cpp
-src/plot/qwt_symbol.cpp
 src/plot/qwt_spline_pleasing.cpp
-src/plot/qwt_spline.cpp
 src/plot/qwt_slider.cpp
 src/plot/qwt_scale_widget.cpp
 src/plot/qwt_scale_map.cpp
@@ -440,8 +448,7 @@ src/plot/qwt_spline_polynomial.cpp
 src/plot/qwt_spline_parametrization.cpp
 src/plot/qwt_spline_local.cpp
 src/plot/qwt_spline_curve_fitter.cpp
-src/plot/qwt_spline_cubic.cpp
-src/plot/qwt_spline_basis.cpp
+
 src/plot/qwt_series_data.cpp
 src/plot/qwt_sampling_thread.cpp
 src/plot/qwt_round_scale_draw.cpp
