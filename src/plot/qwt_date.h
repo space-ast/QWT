@@ -30,116 +30,164 @@
 #include "qwt_global.h"
 #include <qdatetime.h>
 
-/*!
-   \brief A collection of methods around date/time values
-
-   Qt offers convenient classes for dealing with date/time values,
-   but Qwt uses coordinate systems that are based on doubles.
-   QwtDate offers methods to translate from QDateTime to double and v.v.
-
-   A double is interpreted as the number of milliseconds since
-   1970-01-01T00:00:00 Universal Coordinated Time - also known
-   as "The Epoch".
-
-   While the range of the Julian day in Qt4 is limited to [0, MAX_INT],
-   Qt5 stores it as qint64 offering a huge range of valid dates.
-   As the significance of a double is below this ( assuming a
-   fraction of 52 bits ) the translation is not
-   bijective with rounding errors for dates very far from Epoch.
-   For a resolution of 1 ms those start to happen for dates above the
-   year 144683.
-
-   An axis for a date/time interval is expected to be aligned
-   and divided in time/date units like seconds, minutes, ...
-   QwtDate offers several algorithms that are needed to
-   calculate these axes.
-
-   \sa QwtDateScaleEngine, QwtDateScaleDraw, QDate, QTime
+/**
+ * \if ENGLISH
+ * @brief A collection of methods around date/time values
+ *
+ * Qt offers convenient classes for dealing with date/time values,
+ * but Qwt uses coordinate systems that are based on doubles.
+ * QwtDate offers methods to translate from QDateTime to double and v.v.
+ *
+ * A double is interpreted as the number of milliseconds since
+ * 1970-01-01T00:00:00 Universal Coordinated Time - also known
+ * as "The Epoch".
+ *
+ * While the range of the Julian day in Qt4 is limited to [0, MAX_INT],
+ * Qt5 stores it as qint64 offering a huge range of valid dates.
+ * As the significance of a double is below this ( assuming a
+ * fraction of 52 bits ) the translation is not
+ * bijective with rounding errors for dates very far from Epoch.
+ * For a resolution of 1 ms those start to happen for dates above the
+ * year 144683.
+ *
+ * An axis for a date/time interval is expected to be aligned
+ * and divided in time/date units like seconds, minutes, ...
+ * QwtDate offers several algorithms that are needed to
+ * calculate these axes.
+ *
+ * @sa QwtDateScaleEngine, QwtDateScaleDraw, QDate, QTime
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 日期/时间值相关方法的集合
+ *
+ * Qt 提供了处理日期/时间值的便捷类，但 Qwt 使用基于双精度浮点数的坐标系统。
+ * QwtDate 提供了在 QDateTime 和 double 之间相互转换的方法。
+ *
+ * 双精度浮点数被解释为自 1970-01-01T00:00:00 世界协调时间（也称为"纪元"）以来的毫秒数。
+ *
+ * Qt4 中儒略日的范围限制为 [0, MAX_INT]，而 Qt5 将其存储为 qint64，提供了巨大的有效日期范围。
+ * 由于双精度浮点数的有效位数低于此值（假设小数部分为 52 位），对于远离纪元的日期，
+ * 转换不是双射的，会出现舍入误差。对于 1 毫秒的分辨率，这些误差从公元 144683 年开始出现。
+ *
+ * 日期/时间间隔的坐标轴需要按秒、分钟等时间/日期单位对齐和划分。
+ * QwtDate 提供了计算这些坐标轴所需的几种算法。
+ *
+ * @sa QwtDateScaleEngine, QwtDateScaleDraw, QDate, QTime
+ * \endif
  */
 class QWT_EXPORT QwtDate
 {
-  public:
-    /*!
-       How to identify the first week of year differs between
-       countries.
+public:
+    /**
+     * \if ENGLISH
+     * @brief How to identify the first week of year differs between countries
+     * \endif
+     * \if CHINESE
+     * @brief 如何确定一年的第一周（不同国家标准不同）
+     * \endif
      */
     enum Week0Type
     {
-        /*!
-           According to ISO 8601 the first week of a year is defined
-           as "the week with the year's first Thursday in it".
-
-           FirstThursday corresponds to the numbering that is
-           implemented in QDate::weekNumber().
+        /**
+         * \if ENGLISH
+         * According to ISO 8601 the first week of a year is defined
+         * as "the week with the year's first Thursday in it".
+         * FirstThursday corresponds to the numbering that is
+         * implemented in QDate::weekNumber().
+         * \endif
+         * \if CHINESE
+         * 根据 ISO 8601，一年的第一周定义为"包含该年第一个星期四的周"。
+         * FirstThursday 对应于 QDate::weekNumber() 中实现的编号方式。
+         * \endif
          */
         FirstThursday,
 
-        /*!
-            "The week with January 1.1 in it."
-
-            In the U.S. this definition is more common than
-            FirstThursday.
+        /**
+         * \if ENGLISH
+         * "The week with January 1 in it."
+         * In the U.S. this definition is more common than FirstThursday.
+         * \endif
+         * \if CHINESE
+         * "包含1月1日的周"。
+         * 在美国，这种定义比 FirstThursday 更常见。
+         * \endif
          */
         FirstDay
     };
 
-    /*!
-       Classification of an time interval
-
-       Time intervals needs to be classified to decide how to
-       align and divide it.
+    /**
+     * \if ENGLISH
+     * @brief Classification of a time interval
+     *
+     * Time intervals need to be classified to decide how to
+     * align and divide it.
+     * \endif
+     * \if CHINESE
+     * @brief 时间间隔的分类
+     *
+     * 需要对时间间隔进行分类以决定如何对齐和划分它。
+     * \endif
      */
     enum IntervalType
     {
-        //! The interval is related to milliseconds
+        //! \if ENGLISH Millisecond \endif \if CHINESE 毫秒 \endif
         Millisecond,
 
-        //! The interval is related to seconds
+        //! \if ENGLISH Second \endif \if CHINESE 秒 \endif
         Second,
 
-        //! The interval is related to minutes
+        //! \if ENGLISH Minute \endif \if CHINESE 分钟 \endif
         Minute,
 
-        //! The interval is related to hours
+        //! \if ENGLISH Hour \endif \if CHINESE 小时 \endif
         Hour,
 
-        //! The interval is related to days
+        //! \if ENGLISH Day \endif \if CHINESE 天 \endif
         Day,
 
-        //! The interval is related to weeks
+        //! \if ENGLISH Week \endif \if CHINESE 周 \endif
         Week,
 
-        //! The interval is related to months
+        //! \if ENGLISH Month \endif \if CHINESE 月 \endif
         Month,
 
-        //! The interval is related to years
+        //! \if ENGLISH Year \endif \if CHINESE 年 \endif
         Year
     };
 
     enum
     {
-        //! The Julian day of "The Epoch"
+        //! \if ENGLISH The Julian day of "The Epoch" \endif \if CHINESE "纪元"的儒略日 \endif
         JulianDayForEpoch = 2440588
     };
 
+    /// \if ENGLISH Get minimum date \endif \if CHINESE 获取最小日期 \endif
     static QDate minDate();
+    /// \if ENGLISH Get maximum date \endif \if CHINESE 获取最大日期 \endif
     static QDate maxDate();
 
-    static QDateTime toDateTime( double value,
-        Qt::TimeSpec = Qt::UTC );
+    /// \if ENGLISH Convert double to QDateTime \endif \if CHINESE 将 double 转换为 QDateTime \endif
+    static QDateTime toDateTime(double value, Qt::TimeSpec = Qt::UTC);
 
-    static double toDouble( const QDateTime& );
+    /// \if ENGLISH Convert QDateTime to double \endif \if CHINESE 将 QDateTime 转换为 double \endif
+    static double toDouble(const QDateTime&);
 
-    static QDateTime ceil( const QDateTime&, IntervalType );
-    static QDateTime floor( const QDateTime&, IntervalType );
+    /// \if ENGLISH Ceil datetime to interval type \endif \if CHINESE 按间隔类型向上取整日期时间 \endif
+    static QDateTime ceil(const QDateTime&, IntervalType);
+    /// \if ENGLISH Floor datetime to interval type \endif \if CHINESE 按间隔类型向下取整日期时间 \endif
+    static QDateTime floor(const QDateTime&, IntervalType);
 
-    static QDate dateOfWeek0( int year, Week0Type );
-    static int weekNumber( const QDate&, Week0Type );
+    /// \if ENGLISH Get date of week 0 \endif \if CHINESE 获取第0周的日期 \endif
+    static QDate dateOfWeek0(int year, Week0Type);
+    /// \if ENGLISH Get week number \endif \if CHINESE 获取周数 \endif
+    static int weekNumber(const QDate&, Week0Type);
 
-    static int utcOffset( const QDateTime& );
+    /// \if ENGLISH Get UTC offset in seconds \endif \if CHINESE 获取 UTC 偏移量（秒） \endif
+    static int utcOffset(const QDateTime&);
 
-    static QString toString( const QDateTime&,
-        const QString& format, Week0Type );
+    /// \if ENGLISH Format datetime to string \endif \if CHINESE 将日期时间格式化为字符串 \endif
+    static QString toString(const QDateTime&, const QString& format, Week0Type);
 };
 
 #endif

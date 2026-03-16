@@ -197,8 +197,14 @@ public:
     QSizeF textSize;
 };
 
-/*!
-   Constructor
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
  */
 QwtText::QwtText()
 {
@@ -208,11 +214,20 @@ QwtText::QwtText()
     m_layoutCache = new LayoutCache;
 }
 
-/*!
-   Constructor
-
-   \param text Text content
-   \param textFormat Text format
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * @param text Text content
+ * @param textFormat Text format
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * @param text 文本内容
+ * @param textFormat 文本格式
+ * \endif
  */
 QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -224,7 +239,17 @@ QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
     m_layoutCache = new LayoutCache;
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ * @param other Other QwtText to copy from
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 拷贝构造函数
+ * @param other 要复制的其他 QwtText
+ * \endif
+ */
 QwtText::QwtText(const QwtText& other)
 {
     m_data  = new PrivateData;
@@ -234,14 +259,34 @@ QwtText::QwtText(const QwtText& other)
     *m_layoutCache = *other.m_layoutCache;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtText::~QwtText()
 {
     delete m_data;
     delete m_layoutCache;
 }
 
-//! Assignment operator
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ * @param other Other QwtText to assign from
+ * @return Reference to this QwtText
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 赋值运算符
+ * @param other 要赋值的其他 QwtText
+ * @return 对此 QwtText 的引用
+ * \endif
+ */
 QwtText& QwtText::operator=(const QwtText& other)
 {
     *m_data        = *other.m_data;
@@ -249,7 +294,19 @@ QwtText& QwtText::operator=(const QwtText& other)
     return *this;
 }
 
-//! Relational operator
+/**
+ * \if ENGLISH
+ * @brief Equality operator
+ * @param other Other QwtText to compare with
+ * @return true if equal
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 相等运算符
+ * @param other 要比较的其他 QwtText
+ * @return 如果相等则返回 true
+ * \endif
+ */
 bool QwtText::operator==(const QwtText& other) const
 {
     return m_data->renderFlags == other.m_data->renderFlags && m_data->text == other.m_data->text
@@ -259,19 +316,42 @@ bool QwtText::operator==(const QwtText& other) const
            && m_data->paintAttributes == other.m_data->paintAttributes && m_data->textEngine == other.m_data->textEngine;
 }
 
-//! Relational operator
-bool QwtText::operator!=(const QwtText& other) const  // invalidate
+/**
+ * \if ENGLISH
+ * @brief Inequality operator
+ * @param other Other QwtText to compare with
+ * @return true if not equal
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 不等运算符
+ * @param other 要比较的其他 QwtText
+ * @return 如果不相等则返回 true
+ * \endif
+ */
+bool QwtText::operator!=(const QwtText& other) const
 {
     return !(other == *this);
 }
 
-/*!
-   Assign a new text content
-
-   \param text Text content
-   \param textFormat Text format
-
-   \sa text()
+/**
+ * \if ENGLISH
+ * @brief Assign a new text content
+ *
+ * @param text Text content
+ * @param textFormat Text format
+ *
+ * @sa text()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配新的文本内容
+ *
+ * @param text 文本内容
+ * @param textFormat 文本格式
+ *
+ * @sa text()
+ * \endif
  */
 void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -281,24 +361,46 @@ void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
     m_layoutCache->invalidate();
 }
 
-/*!
-   \return Text as QString.
-   \sa setText()
+/**
+ * \if ENGLISH
+ * @brief Get text as QString
+ * @return Text as QString
+ * @sa setText()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取文本作为 QString
+ * @return 文本作为 QString
+ * @sa setText()
+ * \endif
  */
 QString QwtText::text() const
 {
     return m_data->text;
 }
 
-/*!
-   \brief Change the render flags
-
-   The default setting is Qt::AlignCenter
-
-   \param renderFlags Bitwise OR of the flags used like in QPainter::drawText()
-
-   \sa renderFlags(), QwtTextEngine::draw()
-   \note Some renderFlags might have no effect, depending on the text format.
+/**
+ * \if ENGLISH
+ * @brief Change the render flags
+ *
+ * The default setting is Qt::AlignCenter
+ *
+ * @param renderFlags Bitwise OR of the flags used like in QPainter::drawText()
+ *
+ * @sa renderFlags(), QwtTextEngine::draw()
+ * @note Some renderFlags might have no effect, depending on the text format.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改渲染标志
+ *
+ * 默认设置是 Qt::AlignCenter
+ *
+ * @param renderFlags 标志的按位或，用法类似于 QPainter::drawText()
+ *
+ * @sa renderFlags(), QwtTextEngine::draw()
+ * @note 某些 renderFlags 可能没有效果，取决于文本格式。
+ * \endif
  */
 void QwtText::setRenderFlags(int renderFlags)
 {
@@ -711,13 +813,33 @@ const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
     return TextEngineDict::dict().textEngine(format);
 }
 
-//! \return text().isNull()
+/**
+ * \if ENGLISH
+ * @brief Check if text is null
+ * @return text().isNull()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查文本是否为空
+ * @return text().isNull()
+ * \endif
+ */
 bool QwtText::isNull() const
 {
     return m_data->text.isNull();
 }
 
-//! \return text().isEmpty()
+/**
+ * \if ENGLISH
+ * @brief Check if text is empty
+ * @return text().isEmpty()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查文本是否为空字符串
+ * @return text().isEmpty()
+ * \endif
+ */
 bool QwtText::isEmpty() const
 {
     return m_data->text.isEmpty();

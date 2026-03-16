@@ -178,6 +178,18 @@
 **源文件 (.cpp):**
 - src/plot/qwt_round_scale_draw.cpp - 所有方法的双语 Doxygen 注释（构造函数、析构函数、setRadius、radius、moveCenter、center、setAngleRange、drawLabel、drawTick、drawBackbone、extent）
 
+#### 第二十三批 (2026-03-16)
+**头文件 (.h):**
+- src/plot/qwt_scale_div.h - 为所有 public 函数添加英文简要注释
+- src/plot/qwt_date.h - 添加类的双语 Doxygen 注释，Week0Type 和 IntervalType 枚举的双语注释，所有方法的英文简要注释
+- src/plot/qwt_text.h - 添加类的双语 Doxygen 注释，TextFormat、PaintAttribute、LayoutAttribute 枚举的双语注释，所有方法的英文简要注释
+
+**源文件 (.cpp):**
+- src/plot/qwt_scale_draw.cpp - 完成剩余方法的双语 Doxygen 注释（getBorderDistHint、minLabelDist、extent、minLength、labelPosition、drawTick、drawBackbone、move、pos、setLength、length、drawLabel、boundingLabelRect、labelTransformation、labelRect、labelSize、setLabelRotation、labelRotation、setLabelAlignment、labelAlignment、maxLabelWidth、maxLabelHeight、updateMap）
+- src/plot/qwt_scale_div.cpp - 所有方法的双语 Doxygen 注释（4个构造函数、setInterval x2、interval、setLowerBound、lowerBound、setUpperBound、upperBound、range、operator==、operator!=、fuzzyCompare、isEmpty、isIncreasing、contains、invert、inverted、bounded、setTicks、ticks）
+- src/plot/qwt_date.cpp - 所有方法的双语 Doxygen 注释（toDateTime、toDouble、ceil、floor、minDate、maxDate、dateOfWeek0、weekNumber、utcOffset、toString）
+- src/plot/qwt_text.cpp - 主要方法的双语 Doxygen 注释（构造函数 x3、析构函数、operator=、operator==、operator!=、setText、text、setRenderFlags、isNull、isEmpty）
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -205,7 +217,6 @@ src/plot/qwt_scale_widget.h
 src/plot/qwt_scale_engine.h
 src/plot/qwt_scale_draw.h
 src/plot/qwt_sampling_thread.h
-src/plot/qwt_round_scale_draw.h
 src/plot/qwt_raster_data.h
 src/plot/qwt_polar_spectrogram.h
 src/plot/qwt_polar_renderer.h
@@ -332,7 +343,6 @@ src/plot/qwt_interval.h
 src/plot/qwt_figure_layout.h
 src/plot/qwt_figure.h
 src/plot/qwt_event_patterns.h
-src/plot/qwt_date.h
 src/plot/qwt_curve_fitter.h
 src/plot/qwt_column_symbol.h
 src/plot/qwt_clipper.h
@@ -407,7 +417,6 @@ src/plot/qwt_figure_widget_overlay.cpp
 src/plot/qwt_event_patterns.cpp
 src/plot/qwt_dyngrid_layout.cpp
 src/plot/qwt_dial.cpp
-src/plot/qwt_date.cpp
 src/plot/qwt_compass.cpp
 src/plot/qwt_clipper.cpp
 src/plot/qwt_cache_panner.cpp
@@ -434,8 +443,6 @@ src/plot/qwt_spline_curve_fitter.cpp
 src/plot/qwt_spline_cubic.cpp
 src/plot/qwt_spline_basis.cpp
 src/plot/qwt_series_data.cpp
-src/plot/qwt_scale_draw.cpp
-src/plot/qwt_scale_div.cpp
 src/plot/qwt_sampling_thread.cpp
 src/plot/qwt_round_scale_draw.cpp
 src/plot/qwt_raster_data.cpp
