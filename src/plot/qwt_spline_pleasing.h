@@ -29,23 +29,39 @@
 
 #include "qwt_spline.h"
 
-/*!
-   \brief A spline with G1 continuity
-
-   QwtSplinePleasing is some sort of cardinal spline, with
-   non C1 continuous extra rules for narrow angles. It has a locality of 2.
-
-   \note The algorithm is the one offered by a popular office package.
+/**
+ * \if ENGLISH
+ * @brief A spline with G1 continuity
+ *
+ * QwtSplinePleasing is some sort of cardinal spline, with
+ * non C1 continuous extra rules for narrow angles. It has a locality of 2.
+ *
+ * @note The algorithm is the one offered by a popular office package.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 具有 G1 连续性的样条
+ *
+ * QwtSplinePleasing 是某种基数样条，对于窄角具有非 C1 连续的额外规则。
+ * 它的局部性为 2。
+ *
+ * @note 该算法是由一个流行的办公软件包提供的。
+ * \endif
  */
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
   public:
+    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
     QwtSplinePleasing();
+    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
     virtual ~QwtSplinePleasing();
 
+    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
     virtual uint locality() const override;
 
+    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    /// \if ENGLISH Get Bezier control lines \endif \if CHINESE 获取贝塞尔控制线 \endif
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
 };
 

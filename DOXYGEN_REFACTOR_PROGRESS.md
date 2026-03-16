@@ -203,6 +203,16 @@
 - src/plot/qwt_spline_basis.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、setDegree、degree、painterPath、polynomials、locality、isValid）
 - src/plot/qwt_spline_cubic.cpp - 主要方法的双语 Doxygen 注释（构造函数、析构函数、painterPath、polynomials、locality、bezierControlLines）
 
+#### 第二十五批 (2026-03-16)
+**头文件 (.h):**
+- src/plot/qwt_spline_pleasing.h - 添加类的双语 Doxygen 注释，所有方法的英文简要注释
+- src/plot/qwt_spline_local.h - 添加类的双语 Doxygen 注释，Type 枚举的双语注释，所有方法的英文简要注释
+- src/plot/qwt_spline_curve_fitter.h - 添加类的双语 Doxygen 注释，所有方法的英文简要注释
+- src/plot/qwt_slider.h - 已有双语注释，无需修改
+
+**源文件 (.cpp):**
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -217,6 +227,9 @@ src/plot/qwt_thermo.h
 src/plot/qwt_text_label.h
 src/plot/qwt_text_engine.h
 src/plot/qwt_stylesheet_recorder.h
+src/plot/qwt_spline_pleasing.h
+src/plot/qwt_spline_local.h
+src/plot/qwt_spline_curve_fitter.h
 src/plot/qwt_spline_pleasing.h
 src/plot/qwt_spline_local.h
 src/plot/qwt_spline_curve_fitter.h

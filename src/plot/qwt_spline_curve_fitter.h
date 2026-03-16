@@ -31,26 +31,43 @@
 
 class QwtSpline;
 
-/*!
-   \brief A curve fitter using a spline interpolation
-
-   The default setting for the spline is a cardinal spline with
-   uniform parametrization.
-
-   \sa QwtSpline, QwtSplineLocal
+/**
+ * \if ENGLISH
+ * @brief A curve fitter using a spline interpolation
+ *
+ * The default setting for the spline is a cardinal spline with
+ * uniform parametrization.
+ *
+ * @sa QwtSpline, QwtSplineLocal
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用样条插值的曲线拟合器
+ *
+ * 样条的默认设置是具有均匀参数化的基数样条。
+ *
+ * @sa QwtSpline, QwtSplineLocal
+ * \endif
  */
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
   public:
+    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
     QwtSplineCurveFitter();
+    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
     virtual ~QwtSplineCurveFitter();
 
+    /// \if ENGLISH Set spline \endif \if CHINESE 设置样条 \endif
     void setSpline( QwtSpline* );
 
+    /// \if ENGLISH Get spline (const version) \endif \if CHINESE 获取样条（const 版本） \endif
     const QwtSpline* spline() const;
+    /// \if ENGLISH Get spline (non-const version) \endif \if CHINESE 获取样条（非 const 版本） \endif
     QwtSpline* spline();
 
+    /// \if ENGLISH Fit curve to polygon \endif \if CHINESE 将曲线拟合到多边形 \endif
     virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    /// \if ENGLISH Fit curve path to polygon \endif \if CHINESE 将曲线路径拟合到多边形 \endif
     virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
