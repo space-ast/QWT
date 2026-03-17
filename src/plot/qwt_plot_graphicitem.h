@@ -32,37 +32,54 @@
 
 #include <qstring.h>
 
-/*!
-   \brief A plot item, which displays
-         a recorded sequence of QPainter commands
-
-   QwtPlotGraphicItem renders a sequence of recorded painter commands
-   into a specific plot area. Recording of painter commands can be
-   done manually by QPainter or e.g. QSvgRenderer.
-
-   \sa QwtPlotShapeItem, QwtPlotSvgItem
+/**
+ * \if ENGLISH
+ * @brief A plot item, which displays a recorded sequence of QPainter commands
+ * @details QwtPlotGraphicItem renders a sequence of recorded painter commands
+ *          into a specific plot area. Recording of painter commands can be
+ *          done manually by QPainter or e.g. QSvgRenderer.
+ * 
+ * @sa QwtPlotShapeItem, QwtPlotSvgItem
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 显示记录的 QPainter 命令序列的绘图项
+ * @details QwtPlotGraphicItem 将记录的绘制命令序列渲染到特定的绘图区域。
+ *          绘制命令的记录可以通过 QPainter 或 QSvgRenderer 等手动完成。
+ * 
+ * @sa QwtPlotShapeItem, QwtPlotSvgItem
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
 {
   public:
+    /// Constructor
     explicit QwtPlotGraphicItem( const QString& title = QString() );
+    /// Constructor with QwtText title
     explicit QwtPlotGraphicItem( const QwtText& title );
 
+    /// Destructor
     virtual ~QwtPlotGraphicItem();
 
+    /// Set graphic with its bounding rectangle
     void setGraphic( const QRectF& rect, const QwtGraphic& );
+    /// Get graphic
     QwtGraphic graphic() const;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
+    /// Draw the graphic
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
   private:
+    /// Initialize the item
     void init();
 
     class PrivateData;
