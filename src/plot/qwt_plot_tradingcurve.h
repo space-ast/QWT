@@ -177,60 +177,148 @@ public:
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotTradingCurve(const QString& title = QString());
-    /// Constructor with title
+    /**
+     * \if ENGLISH
+     * @brief Constructor with title
+     * \endif
+     */
     explicit QwtPlotTradingCurve(const QwtText& title);
 
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotTradingCurve();
 
-    /// Get the runtime type information
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
     virtual int rtti() const override;
 
-    /// Set a paint attribute
+    /**
+     * \if ENGLISH
+     * @brief Set a paint attribute
+     * \endif
+     */
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /// Test a paint attribute
+    /**
+     * \if ENGLISH
+     * @brief Test a paint attribute
+     * \endif
+     */
     bool testPaintAttribute(PaintAttribute) const;
 
-    /// Set the samples
+    /**
+     * \if ENGLISH
+     * @brief Set the samples
+     * \endif
+     */
     void setSamples(const QVector< QwtOHLCSample >&);
-    /// Set the samples
+    /**
+     * \if ENGLISH
+     * @brief Set the samples
+     * \endif
+     */
     void setSamples(QwtSeriesData< QwtOHLCSample >*);
 
-    /// Set the symbol style
+    /**
+     * \if ENGLISH
+     * @brief Set the symbol style
+     * \endif
+     */
     void setSymbolStyle(SymbolStyle style);
-    /// Get the symbol style
+    /**
+     * \if ENGLISH
+     * @brief Get the symbol style
+     * \endif
+     */
     SymbolStyle symbolStyle() const;
 
-    /// Set the symbol pen
+    /**
+     * \if ENGLISH
+     * @brief Set the symbol pen
+     * \endif
+     */
     void setSymbolPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-    /// Set the symbol pen
+    /**
+     * \if ENGLISH
+     * @brief Set the symbol pen
+     * \endif
+     */
     void setSymbolPen(const QPen&);
-    /// Get the symbol pen
+    /**
+     * \if ENGLISH
+     * @brief Get the symbol pen
+     * \endif
+     */
     QPen symbolPen() const;
 
-    /// Set the symbol brush
+    /**
+     * \if ENGLISH
+     * @brief Set the symbol brush
+     * \endif
+     */
     void setSymbolBrush(Direction, const QBrush&);
-    /// Get the symbol brush
+    /**
+     * \if ENGLISH
+     * @brief Get the symbol brush
+     * \endif
+     */
     QBrush symbolBrush(Direction) const;
 
-    /// Set the symbol extent
+    /**
+     * \if ENGLISH
+     * @brief Set the symbol extent
+     * \endif
+     */
     void setSymbolExtent(double);
-    /// Get the symbol extent
+    /**
+     * \if ENGLISH
+     * @brief Get the symbol extent
+     * \endif
+     */
     double symbolExtent() const;
 
-    /// Set the minimum symbol width
+    /**
+     * \if ENGLISH
+     * @brief Set the minimum symbol width
+     * \endif
+     */
     void setMinSymbolWidth(double);
-    /// Get the minimum symbol width
+    /**
+     * \if ENGLISH
+     * @brief Get the minimum symbol width
+     * \endif
+     */
     double minSymbolWidth() const;
 
-    /// Set the maximum symbol width
+    /**
+     * \if ENGLISH
+     * @brief Set the maximum symbol width
+     * \endif
+     */
     void setMaxSymbolWidth(double);
-    /// Get the maximum symbol width
+    /**
+     * \if ENGLISH
+     * @brief Get the maximum symbol width
+     * \endif
+     */
     double maxSymbolWidth() const;
 
-    /// Draw the series
+    /**
+     * \if ENGLISH
+     * @brief Draw the series
+     * \endif
+     */
     virtual void drawSeries(QPainter*,
                             const QwtScaleMap& xMap,
                             const QwtScaleMap& yMap,
@@ -238,31 +326,63 @@ public:
                             int from,
                             int to) const override;
 
-    /// Get the bounding rectangle
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
     virtual QRectF boundingRect() const override;
 
-    /// Get the legend icon
+    /**
+     * \if ENGLISH
+     * @brief Get the legend icon
+     * \endif
+     */
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:
-    /// Initialize the trading curve
+    /**
+     * \if ENGLISH
+     * @brief Initialize the trading curve
+     * \endif
+     */
     void init();
 
-    /// Draw the symbols
+    /**
+     * \if ENGLISH
+     * @brief Draw the symbols
+     * \endif
+     */
     virtual void
     drawSymbols(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-    /// Draw a user symbol
+    /**
+     * \if ENGLISH
+     * @brief Draw a user symbol
+     * \endif
+     */
     virtual void
     drawUserSymbol(QPainter*, SymbolStyle, const QwtOHLCSample&, Qt::Orientation, bool inverted, double symbolWidth) const;
 
-    /// Draw a bar
+    /**
+     * \if ENGLISH
+     * @brief Draw a bar
+     * \endif
+     */
     void drawBar(QPainter*, const QwtOHLCSample&, Qt::Orientation, bool inverted, double width) const;
 
-    /// Draw a candlestick
+    /**
+     * \if ENGLISH
+     * @brief Draw a candlestick
+     * \endif
+     */
     void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double width) const;
 
-    /// Calculate the scaled symbol width
+    /**
+     * \if ENGLISH
+     * @brief Calculate the scaled symbol width
+     * \endif
+     */
     virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
 private:

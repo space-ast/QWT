@@ -55,44 +55,104 @@ class QWT_EXPORT QwtPlotZoneItem :
     public QwtPlotItem
 {
   public:
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotZoneItem();
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotZoneItem();
 
-    /// Get the runtime type information
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
     virtual int rtti() const override;
 
-    /// Set the orientation
+    /**
+     * \if ENGLISH
+     * @brief Set the orientation
+     * \endif
+     */
     void setOrientation( Qt::Orientation );
-    /// Get the orientation
+    /**
+     * \if ENGLISH
+     * @brief Get the orientation
+     * \endif
+     */
     Qt::Orientation orientation() const;
 
-    /// Set the interval
+    /**
+     * \if ENGLISH
+     * @brief Set the interval
+     * \endif
+     */
     void setInterval( double min, double max );
-    /// Set the interval
+    /**
+     * \if ENGLISH
+     * @brief Set the interval
+     * \endif
+     */
     void setInterval( const QwtInterval& );
-    /// Get the interval
+    /**
+     * \if ENGLISH
+     * @brief Get the interval
+     * \endif
+     */
     QwtInterval interval() const;
 
-    /// Set the pen
+    /**
+     * \if ENGLISH
+     * @brief Set the pen
+     * \endif
+     */
     void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
-    /// Set the pen
+    /**
+     * \if ENGLISH
+     * @brief Set the pen
+     * \endif
+     */
     void setPen( const QPen& );
-    /// Get the pen
+    /**
+     * \if ENGLISH
+     * @brief Get the pen
+     * \endif
+     */
     const QPen& pen() const;
 
-    /// Set the brush
+    /**
+     * \if ENGLISH
+     * @brief Set the brush
+     * \endif
+     */
     void setBrush( const QBrush& );
-    /// Get the brush
+    /**
+     * \if ENGLISH
+     * @brief Get the brush
+     * \endif
+     */
     const QBrush& brush() const;
 
-    /// Draw the zone
+    /**
+     * \if ENGLISH
+     * @brief Draw the zone
+     * \endif
+     */
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
         const QRectF& canvasRect ) const override;
 
-    /// Get the bounding rectangle
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
     virtual QRectF boundingRect() const override;
 
   private:
