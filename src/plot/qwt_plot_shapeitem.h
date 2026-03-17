@@ -128,65 +128,157 @@ public:
         LegendColor
     };
 
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotShapeItem(const QString& title = QString());
-    /// Constructor with title
+    /**
+     * \if ENGLISH
+     * @brief Constructor with title
+     * \endif
+     */
     explicit QwtPlotShapeItem(const QwtText& title);
 
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotShapeItem();
 
-    /// Set a paint attribute
+    /**
+     * \if ENGLISH
+     * @brief Set a paint attribute
+     * \endif
+     */
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /// Test a paint attribute
+    /**
+     * \if ENGLISH
+     * @brief Test a paint attribute
+     * \endif
+     */
     bool testPaintAttribute(PaintAttribute) const;
 
-    /// Set the legend mode
+    /**
+     * \if ENGLISH
+     * @brief Set the legend mode
+     * \endif
+     */
     void setLegendMode(LegendMode);
-    /// Get the legend mode
+    /**
+     * \if ENGLISH
+     * @brief Get the legend mode
+     * \endif
+     */
     LegendMode legendMode() const;
 
-    /// Set the shape as a rectangle
+    /**
+     * \if ENGLISH
+     * @brief Set the shape as a rectangle
+     * \endif
+     */
     void setRect(const QRectF&);
-    /// Set the shape as a polygon
+    /**
+     * \if ENGLISH
+     * @brief Set the shape as a polygon
+     * \endif
+     */
     void setPolygon(const QPolygonF&);
 
-    /// Set the shape
+    /**
+     * \if ENGLISH
+     * @brief Set the shape
+     * \endif
+     */
     void setShape(const QPainterPath&);
-    /// Get the shape
+    /**
+     * \if ENGLISH
+     * @brief Get the shape
+     * \endif
+     */
     QPainterPath shape() const;
 
-    /// Set the pen
+    /**
+     * \if ENGLISH
+     * @brief Set the pen
+     * \endif
+     */
     void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-    /// Set the pen
+    /**
+     * \if ENGLISH
+     * @brief Set the pen
+     * \endif
+     */
     void setPen(const QPen&);
-    /// Get the pen
+    /**
+     * \if ENGLISH
+     * @brief Get the pen
+     * \endif
+     */
     QPen pen() const;
 
-    /// Set the brush
+    /**
+     * \if ENGLISH
+     * @brief Set the brush
+     * \endif
+     */
     void setBrush(const QBrush&);
-    /// Get the brush
+    /**
+     * \if ENGLISH
+     * @brief Get the brush
+     * \endif
+     */
     QBrush brush() const;
 
-    /// Set the render tolerance
+    /**
+     * \if ENGLISH
+     * @brief Set the render tolerance
+     * \endif
+     */
     void setRenderTolerance(double);
-    /// Get the render tolerance
+    /**
+     * \if ENGLISH
+     * @brief Get the render tolerance
+     * \endif
+     */
     double renderTolerance() const;
 
-    /// Get the bounding rectangle
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
     virtual QRectF boundingRect() const override;
 
-    /// Draw the shape item
+    /**
+     * \if ENGLISH
+     * @brief Draw the shape item
+     * \endif
+     */
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-    /// Get the legend icon
+    /**
+     * \if ENGLISH
+     * @brief Get the legend icon
+     * \endif
+     */
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-    /// Get the runtime type information
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
     virtual int rtti() const override;
 
 private:
-    /// Initialize the shape item
+    /**
+     * \if ENGLISH
+     * @brief Initialize the shape item
+     * \endif
+     */
     void init();
 
     class PrivateData;
