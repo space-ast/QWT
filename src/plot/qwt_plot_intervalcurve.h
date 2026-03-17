@@ -141,77 +141,176 @@ class QWT_EXPORT QwtPlotIntervalCurve
 
     Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-    /// Constructor
-    explicit QwtPlotIntervalCurve( const QString& title = QString() );
-    /// Constructor with QwtText title
-    explicit QwtPlotIntervalCurve( const QwtText& title );
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotIntervalCurve( const QString& title = QString() );
 
-    /// Destructor
-    virtual ~QwtPlotIntervalCurve();
+    /**
+     * \if ENGLISH
+     * @brief Constructor with QwtText title
+     * \endif
+     */
+explicit QwtPlotIntervalCurve( const QwtText& title );
 
-    /// Get the runtime type information
-    virtual int rtti() const override;
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotIntervalCurve();
 
-    /// Set paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
-    /// Test paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
+virtual int rtti() const override;
 
-    /// Set samples from a vector
-    void setSamples( const QVector< QwtIntervalSample >& );
-    /// Set samples from a series data
-    void setSamples( QwtSeriesData< QwtIntervalSample >* );
+    /**
+     * \if ENGLISH
+     * @brief Set paint attribute
+     * \endif
+     */
+void setPaintAttribute( PaintAttribute, bool on = true );
 
-    /// Set pen
-    void setPen( const QColor&,
-        qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    /**
+     * \if ENGLISH
+     * @brief Test paint attribute
+     * \endif
+     */
+bool testPaintAttribute( PaintAttribute ) const;
 
-    /// Set pen
-    void setPen( const QPen& );
-    /// Get pen
-    const QPen& pen() const;
+    /**
+     * \if ENGLISH
+     * @brief Set samples from a vector
+     * \endif
+     */
+void setSamples( const QVector< QwtIntervalSample >& );
 
-    /// Set brush
-    void setBrush( const QBrush& );
-    /// Get brush
-    const QBrush& brush() const;
+    /**
+     * \if ENGLISH
+     * @brief Set samples from a series data
+     * \endif
+     */
+void setSamples( QwtSeriesData< QwtIntervalSample >* );
 
-    /// Set curve style
-    void setStyle( CurveStyle style );
-    /// Get curve style
-    CurveStyle style() const;
+    /**
+     * \if ENGLISH
+     * @brief Set pen
+     * \endif
+     */
+void setPen( const QColor&,
+    qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /// Set symbol
-    void setSymbol( const QwtIntervalSymbol* );
-    /// Get symbol
-    const QwtIntervalSymbol* symbol() const;
+    /**
+     * \if ENGLISH
+     * @brief Set pen
+     * \endif
+     */
+void setPen( const QPen& );
 
-    /// Draw the series
-    virtual void drawSeries( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const override;
+    /**
+     * \if ENGLISH
+     * @brief Get pen
+     * \endif
+     */
+const QPen& pen() const;
 
-    /// Get the bounding rectangle
-    virtual QRectF boundingRect() const override;
+    /**
+     * \if ENGLISH
+     * @brief Set brush
+     * \endif
+     */
+void setBrush( const QBrush& );
 
-    /// Get the legend icon
-    virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const override;
+    /**
+     * \if ENGLISH
+     * @brief Get brush
+     * \endif
+     */
+const QBrush& brush() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set curve style
+     * \endif
+     */
+void setStyle( CurveStyle style );
+
+    /**
+     * \if ENGLISH
+     * @brief Get curve style
+     * \endif
+     */
+CurveStyle style() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set symbol
+     * \endif
+     */
+void setSymbol( const QwtIntervalSymbol* );
+
+    /**
+     * \if ENGLISH
+     * @brief Get symbol
+     * \endif
+     */
+const QwtIntervalSymbol* symbol() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Draw the series
+     * \endif
+     */
+virtual void drawSeries( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    const QRectF& canvasRect, int from, int to ) const override;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
+virtual QRectF boundingRect() const override;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the legend icon
+     * \endif
+     */
+virtual QwtGraphic legendIcon(
+    int index, const QSizeF& ) const override;
 
   protected:
 
-    /// Initialize the curve
-    void init();
+    /**
+     * \if ENGLISH
+     * @brief Initialize the curve
+     * \endif
+     */
+void init();
 
-    /// Draw the tube
-    virtual void drawTube( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw the tube
+     * \endif
+     */
+virtual void drawTube( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    const QRectF& canvasRect, int from, int to ) const;
 
-    /// Draw the symbols
-    virtual void drawSymbols( QPainter*, const QwtIntervalSymbol&,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw the symbols
+     * \endif
+     */
+virtual void drawSymbols( QPainter*, const QwtIntervalSymbol&,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    const QRectF& canvasRect, int from, int to ) const;
 
   private:
     class PrivateData;

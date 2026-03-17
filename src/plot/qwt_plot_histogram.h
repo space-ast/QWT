@@ -142,91 +142,208 @@ class QWT_EXPORT QwtPlotHistogram
         UserStyle = 100
     };
 
-    /// Constructor
-    explicit QwtPlotHistogram( const QString& title = QString() );
-    /// Constructor with QwtText title
-    explicit QwtPlotHistogram( const QwtText& title );
-    /// Destructor
-    virtual ~QwtPlotHistogram();
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotHistogram( const QString& title = QString() );
 
-    /// Get the runtime type information
-    virtual int rtti() const override;
+    /**
+     * \if ENGLISH
+     * @brief Constructor with QwtText title
+     * \endif
+     */
+explicit QwtPlotHistogram( const QwtText& title );
 
-    /// Set pen
-    void setPen( const QColor&,
-        qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotHistogram();
 
-    /// Set pen
-    void setPen( const QPen& );
-    /// Get pen
-    const QPen& pen() const;
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
+virtual int rtti() const override;
 
-    /// Set brush
-    void setBrush( const QBrush& );
-    /// Get brush
-    const QBrush& brush() const;
+    /**
+     * \if ENGLISH
+     * @brief Set pen
+     * \endif
+     */
+void setPen( const QColor&,
+    qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /// Set samples from a vector
-    void setSamples( const QVector< QwtIntervalSample >& );
-    /// Set samples from a series data
-    void setSamples( QwtSeriesData< QwtIntervalSample >* );
+    /**
+     * \if ENGLISH
+     * @brief Set pen
+     * \endif
+     */
+void setPen( const QPen& );
 
-    /// Set baseline
-    void setBaseline( double );
-    /// Get baseline
-    double baseline() const;
+    /**
+     * \if ENGLISH
+     * @brief Get pen
+     * \endif
+     */
+const QPen& pen() const;
 
-    /// Set histogram style
-    void setStyle( HistogramStyle style );
-    /// Get histogram style
-    HistogramStyle style() const;
+    /**
+     * \if ENGLISH
+     * @brief Set brush
+     * \endif
+     */
+void setBrush( const QBrush& );
 
-    /// Set symbol
-    void setSymbol( const QwtColumnSymbol* );
-    /// Get symbol
-    const QwtColumnSymbol* symbol() const;
+    /**
+     * \if ENGLISH
+     * @brief Get brush
+     * \endif
+     */
+const QBrush& brush() const;
 
-    /// Draw the series
-    virtual void drawSeries( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const override;
+    /**
+     * \if ENGLISH
+     * @brief Set samples from a vector
+     * \endif
+     */
+void setSamples( const QVector< QwtIntervalSample >& );
 
-    /// Get the bounding rectangle
-    virtual QRectF boundingRect() const override;
+    /**
+     * \if ENGLISH
+     * @brief Set samples from a series data
+     * \endif
+     */
+void setSamples( QwtSeriesData< QwtIntervalSample >* );
 
-    /// Get the legend icon
-    virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const override;
+    /**
+     * \if ENGLISH
+     * @brief Set baseline
+     * \endif
+     */
+void setBaseline( double );
+
+    /**
+     * \if ENGLISH
+     * @brief Get baseline
+     * \endif
+     */
+double baseline() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set histogram style
+     * \endif
+     */
+void setStyle( HistogramStyle style );
+
+    /**
+     * \if ENGLISH
+     * @brief Get histogram style
+     * \endif
+     */
+HistogramStyle style() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set symbol
+     * \endif
+     */
+void setSymbol( const QwtColumnSymbol* );
+
+    /**
+     * \if ENGLISH
+     * @brief Get symbol
+     * \endif
+     */
+const QwtColumnSymbol* symbol() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Draw the series
+     * \endif
+     */
+virtual void drawSeries( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    const QRectF& canvasRect, int from, int to ) const override;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
+virtual QRectF boundingRect() const override;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the legend icon
+     * \endif
+     */
+virtual QwtGraphic legendIcon(
+    int index, const QSizeF& ) const override;
 
   protected:
-    /// Get the column rectangle
-    virtual QwtColumnRect columnRect( const QwtIntervalSample&,
-        const QwtScaleMap&, const QwtScaleMap& ) const;
+    /**
+     * \if ENGLISH
+     * @brief Get the column rectangle
+     * \endif
+     */
+virtual QwtColumnRect columnRect( const QwtIntervalSample&,
+    const QwtScaleMap&, const QwtScaleMap& ) const;
 
-    /// Draw a column
-    virtual void drawColumn( QPainter*, const QwtColumnRect&,
-        const QwtIntervalSample& ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw a column
+     * \endif
+     */
+virtual void drawColumn( QPainter*, const QwtColumnRect&,
+    const QwtIntervalSample& ) const;
 
-    /// Draw columns
-    void drawColumns( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        int from, int to ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw columns
+     * \endif
+     */
+void drawColumns( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    int from, int to ) const;
 
-    /// Draw outline
-    void drawOutline( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        int from, int to ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw outline
+     * \endif
+     */
+void drawOutline( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    int from, int to ) const;
 
-    /// Draw lines
-    void drawLines( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        int from, int to ) const;
+    /**
+     * \if ENGLISH
+     * @brief Draw lines
+     * \endif
+     */
+void drawLines( QPainter*,
+    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+    int from, int to ) const;
 
   private:
-    /// Initialize the histogram
-    void init();
-    /// Flush polygon
-    void flushPolygon( QPainter*, double baseLine, QPolygonF& ) const;
+    /**
+     * \if ENGLISH
+     * @brief Initialize the histogram
+     * \endif
+     */
+void init();
+
+    /**
+     * \if ENGLISH
+     * @brief Flush polygon
+     * \endif
+     */
+void flushPolygon( QPainter*, double baseLine, QPolygonF& ) const;
 
     class PrivateData;
     PrivateData* m_data;
