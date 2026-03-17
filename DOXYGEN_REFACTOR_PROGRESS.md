@@ -381,6 +381,20 @@
 
 - 待处理
 
+#### 第三十三批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_textlabel.h - 添加 QwtPlotTextLabel 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_spectrogram.h - 添加 QwtPlotSpectrogram 类的双语 Doxygen 注释、DisplayMode 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_spectrocurve.h - 添加 QwtPlotSpectroCurve 类的双语 Doxygen 注释、PaintAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_seriesitem.h - 添加 QwtPlotSeriesItem 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_series_data_picker.h - 添加 QwtPlotSeriesDataPicker 类的双语 Doxygen 注释、PickSeriesMode、TextPlacement 和 InterpolationMode 枚举的双语注释以及所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -392,11 +406,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_plot_textlabel.h
-src/plot/qwt_plot_spectrogram.h
-src/plot/qwt_plot_spectrocurve.h
-src/plot/qwt_plot_seriesitem.h
-src/plot/qwt_plot_series_data_picker.h
 src/plot/qwt_plot_shapeitem.h
 src/plot/qwt_plot_rescaler.h
 src/plot/qwt_plot_scaleitem.h

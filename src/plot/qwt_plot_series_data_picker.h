@@ -10,8 +10,19 @@
 #include "qwt_text.h"
 class QwtPlot;
 class QwtPlotItem;
+
 /**
+ * \if ENGLISH
+ * @brief A plot data picker class for displaying current y-values or nearest points
+ * @details QwtPlotSeriesDataPicker is a plot data picker class that displays current y-values
+ *          or the nearest points to the mouse cursor position.
+ * \endif
+ * 
+ * \if CHINESE
  * @brief 这是一个绘图数据拾取显示类，用于显示当前的y值，或者显示最近点
+ * @details QwtPlotSeriesDataPicker 是一个绘图数据拾取显示类，用于显示当前的y值，
+ *          或者显示最接近鼠标光标位置的点。
+ * \endif
  */
 class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
 {
@@ -19,83 +30,120 @@ class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
     QWT_DECLARE_PRIVATE(QwtPlotSeriesDataPicker)
 public:
     /**
+     * \if ENGLISH
+     * @brief Pick modes
+     * \endif
+     * 
+     * \if CHINESE
      * @brief 拾取模式
+     * \endif
      */
     enum PickSeriesMode
     {
-        PickYValue,  ///< 拾取y值（默认）
-        PickNearestPoint  ///< 拾取最接近鼠标光标位置的点（此模式会比较耗时，曲线点非常多的时候谨慎使用）
+        PickYValue,  ///< Pick y-value (default)
+        PickNearestPoint  ///< Pick the nearest point to the mouse cursor position (this mode may be time-consuming, use with caution when there are many curve points)
     };
 
     /**
-     * @brief The TextArea enum
+     * \if ENGLISH
+     * @brief Text placement options
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 文本放置选项
+     * \endif
      */
     enum TextPlacement
     {
-        TextPlaceAuto,         ///< 自动放置（pick y的时候放置在顶部，pick nearest的时候跟随鼠标）
-        TextFollowOnTop,       ///< 放在绘图区的顶部(默认）
-        TextFollowOnBottom,    ///< 放在绘图区的底部
-        TextFollowMouse,       ///< 跟随鼠标指针
-        TextOnCanvasTopRight,  ///< 文字在画布的右上角
-        TextOnCanvasTopLeft,   ///< 文字在画布的左上角
-        TextOnCanvasBottomRight,  ///< 文字在画布的右下角
-        TextOnCanvasBottomLeft,   ///< 文字在画布的左下角
-        TextOnCanvasTopAuto,  ///< 文字在画布的上边，具体是左是右根据鼠标位置来自动识别，尽量避免不影响鼠标位置
-        TextOnCanvasBottomAuto  ///< 文字在画布的下边，具体是左是右根据鼠标位置来自动识别，尽量避免不影响鼠标位置
+        TextPlaceAuto,         ///< Auto placement (top for pick y, follow mouse for pick nearest)
+        TextFollowOnTop,       ///< On top of the plot area (default)
+        TextFollowOnBottom,    ///< On bottom of the plot area
+        TextFollowMouse,       ///< Follow mouse pointer
+        TextOnCanvasTopRight,  ///< Text on canvas top right
+        TextOnCanvasTopLeft,   ///< Text on canvas top left
+        TextOnCanvasBottomRight,  ///< Text on canvas bottom right
+        TextOnCanvasBottomLeft,   ///< Text on canvas bottom left
+        TextOnCanvasTopAuto,  ///< Text on canvas top, left or right auto-detected based on mouse position
+        TextOnCanvasBottomAuto  ///< Text on canvas bottom, left or right auto-detected based on mouse position
     };
 
     /**
-     * @brief 插值模式枚举
+     * \if ENGLISH
+     * @brief Interpolation modes
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 插值模式
+     * \endif
      */
     enum InterpolationMode
     {
-        NoInterpolation,     ///< 不进行插值，使用最近的数据点
-        LinearInterpolation  ///< 线性插值，在相邻数据点之间进行插值计算
+        NoInterpolation,     ///< No interpolation, use nearest data point
+        LinearInterpolation  ///< Linear interpolation between adjacent data points
     };
 
+    /**
+     * \if ENGLISH
+     * @brief Feature point structure
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 特征点结构
+     * \endif
+     */
     struct FeaturePoint
     {
-        QwtPlotItem* item { nullptr };  ///< 对应的item
-        QPointF feature { 0, 0 };       ///< 特征点
-        size_t index { 0 };             ///< 在item里的索引
+        QwtPlotItem* item { nullptr };  ///< Corresponding item
+        QPointF feature { 0, 0 };       ///< Feature point
+        size_t index { 0 };             ///< Index in the item
     };
 
 public:
+    /// Constructor
     explicit QwtPlotSeriesDataPicker(QWidget* canvas);
+    /// Destructor
     ~QwtPlotSeriesDataPicker();
 
-    // 拾取模式
+    /// Set pick mode
     void setPickMode(PickSeriesMode mode);
+    /// Get pick mode
     PickSeriesMode pickMode() const;
 
-    // 设置文字显示的位置
+    /// Set text placement
     void setTextArea(TextPlacement t);
+    /// Get text placement
     TextPlacement textArea() const;
 
-    // 插值模式
+    /// Set interpolation mode
     void setInterpolationMode(InterpolationMode mode);
+    /// Get interpolation mode
     InterpolationMode interpolationMode() const;
-    // 判断是否插值
+    /// Check if interpolation is enabled
     bool isInterpolation() const;
 
-    // 临近点搜索窗口大小，窗口大小决定了临近点搜索的范围，避免全曲线遍历
+    /// Set nearest search window size
     void setNearestSearchWindowSize(int windowSize);
+    /// Get nearest search window size
     int nearestSearchWindowSize() const;
 
-    // 是否绘制特征点,如果是，picker会把捕获的特征点绘制在曲线上
+    /// Enable/disable feature point drawing
     void setEnableDrawFeaturePoint(bool on = true);
+    /// Check if feature point drawing is enabled
     bool isEnableDrawFeaturePoint() const;
 
-    // 设置绘制的特征点的大小
+    /// Set feature point size
     void setDrawFeaturePointSize(int px);
+    /// Get feature point size
     int drawFeaturePointSize() const;
 
-    // 设置文字的背景颜色
+    /// Set text background brush
     void setTextBackgroundBrush(const QBrush& br);
+    /// Get text background brush
     QBrush textBackgroundBrush() const;
 
-    // 文字的对其方式
+    /// Set text alignment
     void setTextAlignment(Qt::Alignment al);
+    /// Get text alignment
     Qt::Alignment textAlignment() const;
 
     // 是否显示x值

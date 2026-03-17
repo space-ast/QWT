@@ -35,46 +35,76 @@
 
 class QwtScaleDiv;
 
-/*!
-   \brief Base class for plot items representing a series of samples
+/**
+ * \if ENGLISH
+ * @brief Base class for plot items representing a series of samples
+ * @details QwtPlotSeriesItem is the base class for plot items that represent a series of samples,
+ *          such as curves, bars, and other data visualization elements.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 表示一系列样本的绘图项的基类
+ * @details QwtPlotSeriesItem 是表示一系列样本的绘图项的基类，
+ *          例如曲线、条形图和其他数据可视化元素。
+ * \endif
  */
 class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
     public virtual QwtAbstractSeriesStore
 {
   public:
+    /// Constructor
     explicit QwtPlotSeriesItem( const QString& title = QString() );
+    /// Constructor with title
     explicit QwtPlotSeriesItem( const QwtText& title );
 
+    /// Destructor
     virtual ~QwtPlotSeriesItem();
 
+    /// Set the orientation
     void setOrientation( Qt::Orientation );
+    /// Get the orientation
     Qt::Orientation orientation() const;
 
+    /// Draw the series item
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
 
-    /*!
-       Draw a subset of the samples
-
-       \param painter Painter
-       \param xMap Maps x-values into pixel coordinates.
-       \param yMap Maps y-values into pixel coordinates.
-       \param canvasRect Contents rectangle of the canvas
-       \param from Index of the first point to be painted
-       \param to Index of the last point to be painted. If to < 0 the
-             curve will be painted to its last point.
+    /**
+     * \if ENGLISH
+     * @brief Draw a subset of the samples
+     * @param painter Painter
+     * @param xMap Maps x-values into pixel coordinates.
+     * @param yMap Maps y-values into pixel coordinates.
+     * @param canvasRect Contents rectangle of the canvas
+     * @param from Index of the first point to be painted
+     * @param to Index of the last point to be painted. If to < 0 the
+     *           curve will be painted to its last point.
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 绘制样本的子集
+     * @param painter 绘图器
+     * @param xMap 将 x 值映射到像素坐标。
+     * @param yMap 将 y 值映射到像素坐标。
+     * @param canvasRect 画布的内容矩形
+     * @param from 要绘制的第一个点的索引
+     * @param to 要绘制的最后一个点的索引。如果 to < 0，则曲线将绘制到其最后一个点。
+     * \endif
      */
     virtual void drawSeries( QPainter* painter,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, int from, int to ) const = 0;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
+    /// Update the scale divisions
     virtual void updateScaleDiv(
         const QwtScaleDiv&, const QwtScaleDiv& ) override;
 
   protected:
+    /// Called when the data has changed
     virtual void dataChanged() override;
 
   private:

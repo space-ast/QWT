@@ -32,56 +32,93 @@
 
 class QwtText;
 
-/*!
-   \brief A plot item, which displays a text label
-
-   QwtPlotTextLabel displays a text label aligned to the plot canvas.
-
-   In opposite to QwtPlotMarker the position of the label is unrelated to
-   plot coordinates.
-
-   As drawing a text is an expensive operation the label is cached
-   in a pixmap to speed up replots.
-
-   \par Example
-    The following code shows how to add a title.
-    \code
-      QwtText title( "Plot Title" );
-      title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
-
-      QFont font;
-      font.setBold( true );
-      title.setFont( font );
-
-      QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
-      titleItem->setText( title );
-      titleItem->attach( plot );
-    \endcode
-
-   \sa QwtPlotMarker
+/**
+ * \if ENGLISH
+ * @brief A plot item, which displays a text label
+ * @details QwtPlotTextLabel displays a text label aligned to the plot canvas.
+ * 
+ *          In opposite to QwtPlotMarker the position of the label is unrelated to
+ *          plot coordinates.
+ * 
+ *          As drawing a text is an expensive operation the label is cached
+ *          in a pixmap to speed up replots.
+ * 
+ * @par Example
+ *  The following code shows how to add a title.
+ *  \code
+ *    QwtText title( "Plot Title" );
+ *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+ * 
+ *    QFont font;
+ *    font.setBold( true );
+ *    title.setFont( font );
+ * 
+ *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
+ *    titleItem->setText( title );
+ *    titleItem->attach( plot );
+ *  \endcode
+ * 
+ * @sa QwtPlotMarker
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 显示文本标签的绘图项
+ * @details QwtPlotTextLabel 显示一个与绘图画布对齐的文本标签。
+ * 
+ *          与 QwtPlotMarker 不同，标签的位置与绘图坐标无关。
+ * 
+ *          由于绘制文本是一项昂贵的操作，标签会被缓存在 pixmap 中以加快重绘速度。
+ * 
+ * @par 示例
+ *  以下代码显示如何添加标题。
+ *  \code
+ *    QwtText title( "Plot Title" );
+ *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
+ * 
+ *    QFont font;
+ *    font.setBold( true );
+ *    title.setFont( font );
+ * 
+ *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
+ *    titleItem->setText( title );
+ *    titleItem->attach( plot );
+ *  \endcode
+ * 
+ * @sa QwtPlotMarker
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 {
   public:
+    /// Constructor
     QwtPlotTextLabel();
+    /// Destructor
     virtual ~QwtPlotTextLabel();
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Set the text
     void setText( const QwtText& );
+    /// Get the text
     QwtText text() const;
 
+    /// Set the margin
     void setMargin( int margin );
+    /// Get the margin
     int margin() const;
 
+    /// Calculate the text rectangle
     virtual QRectF textRect( const QRectF&, const QSizeF& ) const;
 
   protected:
+    /// Draw the text label
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
         const QRectF&) const override;
 
+    /// Invalidate the cached pixmap
     void invalidateCache();
 
   private:

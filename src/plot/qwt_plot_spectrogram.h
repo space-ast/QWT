@@ -35,89 +35,139 @@ class QwtColorMap;
 template< typename T >
 class QList;
 
-/*!
-   \brief A plot item, which displays a spectrogram
-
-   A spectrogram displays 3-dimensional data, where the 3rd dimension
-   ( the intensity ) is displayed using colors. The colors are calculated
-   from the values using a color map.
-
-   On multi-core systems the performance of the image composition
-   can often be improved by dividing the area into tiles - each of them
-   rendered in a different thread ( see QwtPlotItem::setRenderThreadCount() ).
-
-   In ContourMode contour lines are painted for the contour levels.
-
-   \sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
+/**
+ * \if ENGLISH
+ * @brief A plot item, which displays a spectrogram
+ * @details A spectrogram displays 3-dimensional data, where the 3rd dimension
+ *          ( the intensity ) is displayed using colors. The colors are calculated
+ *          from the values using a color map.
+ * 
+ *          On multi-core systems the performance of the image composition
+ *          can often be improved by dividing the area into tiles - each of them
+ *          rendered in a different thread ( see QwtPlotItem::setRenderThreadCount() ).
+ * 
+ *          In ContourMode contour lines are painted for the contour levels.
+ * 
+ * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 显示频谱图的绘图项
+ * @details 频谱图显示三维数据，其中第三维（强度）使用颜色显示。颜色是通过颜色映射从值计算得到的。
+ * 
+ *          在多核系统上，通过将区域划分为多个瓦片（每个瓦片在不同的线程中渲染），
+ *          通常可以提高图像合成的性能（参见 QwtPlotItem::setRenderThreadCount()）。
+ * 
+ *          在 ContourMode 中，会为等高线级别绘制等高线。
+ * 
+ * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotSpectrogram : public QwtPlotRasterItem
 {
 public:
-    /*!
-       The display mode controls how the raster data will be represented.
-       \sa setDisplayMode(), testDisplayMode()
+    /**
+     * \if ENGLISH
+     * @brief Display modes
+     * @details The display mode controls how the raster data will be represented.
+     * @sa setDisplayMode(), testDisplayMode()
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 显示模式
+     * @details 显示模式控制栅格数据的表示方式。
+     * @sa setDisplayMode(), testDisplayMode()
+     * \endif
      */
 
     enum DisplayMode
     {
-        //! The values are mapped to colors using a color map.
+        /// The values are mapped to colors using a color map.
         ImageMode = 0x01,
 
-        //! The data is displayed using contour lines
+        /// The data is displayed using contour lines
         ContourMode = 0x02
     };
 
     Q_DECLARE_FLAGS(DisplayModes, DisplayMode)
 
+    /// Constructor
     explicit QwtPlotSpectrogram(const QString& title = QString());
+    /// Destructor
     virtual ~QwtPlotSpectrogram();
 
+    /// Set a display mode
     void setDisplayMode(DisplayMode, bool on = true);
+    /// Test a display mode
     bool testDisplayMode(DisplayMode) const;
 
+    /// Set the raster data
     void setData(QwtRasterData* data);
+    /// Get the raster data
     const QwtRasterData* data() const;
+    /// Get the raster data
     QwtRasterData* data();
 
+    /// Set the color map
     void setColorMap(QwtColorMap*);
+    /// Get the color map
     const QwtColorMap* colorMap() const;
 
+    /// Set the color table size
     void setColorTableSize(int numColors);
+    /// Get the color table size
     int colorTableSize() const;
 
+    /// Get the interval for an axis
     virtual QwtInterval interval(Qt::Axis) const override;
+    /// Get the pixel hint
     virtual QRectF pixelHint(const QRectF&) const override;
 
+    /// Set the default contour pen
     void setDefaultContourPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+    /// Set the default contour pen
     void setDefaultContourPen(const QPen&);
+    /// Get the default contour pen
     QPen defaultContourPen() const;
 
+    /// Get the contour pen for a specific level
     virtual QPen contourPen(double level) const;
 
+    /// Set a conrec flag
     void setConrecFlag(QwtRasterData::ConrecFlag, bool on);
+    /// Test a conrec flag
     bool testConrecFlag(QwtRasterData::ConrecFlag) const;
 
+    /// Set the contour levels
     void setContourLevels(const QList< double >&);
+    /// Get the contour levels
     QList< double > contourLevels() const;
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Draw the spectrogram
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
 protected:
+    /// Render the image
     virtual QImage renderImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,
                                const QRectF& area,
                                const QSize& imageSize) const override;
 
+    /// Calculate the contour raster size
     virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 
+    /// Render the contour lines
     virtual QwtRasterData::ContourLines renderContourLines(const QRectF& rect, const QSize& raster) const;
 
+    /// Draw the contour lines
     virtual void
     drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
 
+    /// Render a tile
     void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
 private:
