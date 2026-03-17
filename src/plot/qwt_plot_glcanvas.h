@@ -95,40 +95,92 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     Q_PROPERTY( double borderRadius READ borderRadius WRITE setBorderRadius )
 
   public:
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotGLCanvas( QwtPlot* = nullptr );
-    /// Constructor with QGLFormat
+    /**
+     * \if ENGLISH
+     * @brief Constructor with QGLFormat
+     * \endif
+     */
     explicit QwtPlotGLCanvas( const QGLFormat&, QwtPlot* = nullptr );
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotGLCanvas();
 
-    /// Invalidate the backing store
+    /**
+     * \if ENGLISH
+     * @brief Invalidate the backing store
+     * \endif
+     */
     Q_INVOKABLE virtual void invalidateBackingStore() override;
-    /// Get the border path
+    /**
+     * \if ENGLISH
+     * @brief Get the border path
+     * \endif
+     */
     Q_INVOKABLE QPainterPath borderPath( const QRect& ) const;
 
-    /// Handle events
+    /**
+     * \if ENGLISH
+     * @brief Handle events
+     * \endif
+     */
     virtual bool event( QEvent* ) override;
 
   public Q_SLOTS:
-    /// Replot the canvas
+    /**
+     * \if ENGLISH
+     * @brief Replot the canvas
+     * \endif
+     */
     void replot();
 
   protected:
-    /// Paint event handler
+    /**
+     * \if ENGLISH
+     * @brief Paint event handler
+     * \endif
+     */
     virtual void paintEvent( QPaintEvent* ) override;
 
-    /// Initialize OpenGL
+    /**
+     * \if ENGLISH
+     * @brief Initialize OpenGL
+     * \endif
+     */
     virtual void initializeGL() override;
-    /// Paint OpenGL scene
+    /**
+     * \if ENGLISH
+     * @brief Paint OpenGL scene
+     * \endif
+     */
     virtual void paintGL() override;
-    /// Resize OpenGL view
+    /**
+     * \if ENGLISH
+     * @brief Resize OpenGL view
+     * \endif
+     */
     virtual void resizeGL( int width, int height ) override;
 
   private:
-    /// Initialize the canvas
+    /**
+     * \if ENGLISH
+     * @brief Initialize the canvas
+     * \endif
+     */
     void init();
-    /// Clear the backing store
+    /**
+     * \if ENGLISH
+     * @brief Clear the backing store
+     * \endif
+     */
     virtual void clearBackingStore() override;
 
     class PrivateData;
