@@ -423,6 +423,20 @@
 
 - 待处理
 
+### 第三十六批处理完成
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_legenditem.h - 添加 QwtPlotLegendItem 类的双语 Doxygen 注释、BackgroundMode 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_magnifier.h - 添加 QwtPlotMagnifier 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_intervalcurve.h - 添加 QwtPlotIntervalCurve 类的双语 Doxygen 注释、CurveStyle 和 PaintAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_histogram.h - 添加 QwtPlotHistogram 类的双语 Doxygen 注释、HistogramStyle 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_grid.h - 添加 QwtPlotGrid 类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -434,11 +448,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_plot_legenditem.h
-src/plot/qwt_plot_magnifier.h
-src/plot/qwt_plot_intervalcurve.h
-src/plot/qwt_plot_histogram.h
-src/plot/qwt_plot_grid.h
 src/plot/qwt_plot_graphicitem.h
 src/plot/qwt_plot_glcanvas.h
 src/plot/qwt_plot_directpainter.h

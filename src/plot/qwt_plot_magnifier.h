@@ -33,35 +33,54 @@
 
 class QwtPlot;
 
-/*!
-   \brief QwtPlotMagnifier provides zooming, by magnifying in steps.
-
-   Using QwtPlotMagnifier a plot can be zoomed in/out in steps using
-   keys, the mouse wheel or moving a mouse button in vertical direction.
-
-   Together with QwtPlotZoomer and QwtPlotPanner it is possible to implement
-   individual and powerful navigation of the plot canvas.
-
-   \sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
+/**
+ * \if ENGLISH
+ * @brief QwtPlotMagnifier provides zooming, by magnifying in steps
+ * @details Using QwtPlotMagnifier a plot can be zoomed in/out in steps using
+ *          keys, the mouse wheel or moving a mouse button in vertical direction.
+ * 
+ *          Together with QwtPlotZoomer and QwtPlotPanner it is possible to implement
+ *          individual and powerful navigation of the plot canvas.
+ * 
+ * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief QwtPlotMagnifier 通过逐步放大提供缩放功能
+ * @details 使用 QwtPlotMagnifier，可以使用按键、鼠标滚轮或在垂直方向移动鼠标按钮来逐步放大/缩小绘图。
+ * 
+ *          与 QwtPlotZoomer 和 QwtPlotPanner 一起，可以实现绘图画布的个性化和强大导航。
+ * 
+ * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
+ * \endif
  */
 class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 {
     Q_OBJECT
 
   public:
+    /// Constructor
     explicit QwtPlotMagnifier( QWidget* );
+    /// Destructor
     virtual ~QwtPlotMagnifier();
 
+    /// Set axis enabled state
     void setAxisEnabled( QwtAxisId, bool on );
+    /// Check if axis is enabled
     bool isAxisEnabled( QwtAxisId ) const;
 
+    /// Get the canvas
     QWidget* canvas();
+    /// Get the canvas (const version)
     const QWidget* canvas() const;
 
+    /// Get the plot
     QwtPlot* plot();
+    /// Get the plot (const version)
     const QwtPlot* plot() const;
 
   public Q_SLOTS:
+    /// Rescale the plot
     virtual void rescale( double factor ) override;
 
   private:

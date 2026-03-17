@@ -35,67 +35,103 @@ class QPen;
 class QwtScaleMap;
 class QwtScaleDiv;
 
-/*!
-   \brief A class which draws a coordinate grid
-
-   The QwtPlotGrid class can be used to draw a coordinate grid.
-   A coordinate grid consists of major and minor vertical
-   and horizontal grid lines. The locations of the grid lines
-   are determined by the X and Y scale divisions which can
-   be assigned with setXDiv() and setYDiv().
-   The draw() member draws the grid within a bounding
-   rectangle.
+/**
+ * \if ENGLISH
+ * @brief A class which draws a coordinate grid
+ * @details The QwtPlotGrid class can be used to draw a coordinate grid.
+ *          A coordinate grid consists of major and minor vertical
+ *          and horizontal grid lines. The locations of the grid lines
+ *          are determined by the X and Y scale divisions which can
+ *          be assigned with setXDiv() and setYDiv().
+ *          The draw() member draws the grid within a bounding
+ *          rectangle.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 绘制坐标网格的类
+ * @details QwtPlotGrid 类可用于绘制坐标网格。
+ *          坐标网格由主要和次要的垂直和水平网格线组成。
+ *          网格线的位置由 X 和 Y 比例尺划分决定，
+ *          可以通过 setXDiv() 和 setYDiv() 分配。
+ *          draw() 成员在边界矩形内绘制网格。
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 {
   public:
+    /// Constructor
     explicit QwtPlotGrid();
+    /// Destructor
     virtual ~QwtPlotGrid();
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Enable/disable x-axis grid
     void enableX( bool );
+    /// Check if x-axis grid is enabled
     bool xEnabled() const;
 
+    /// Enable/disable y-axis grid
     void enableY( bool );
+    /// Check if y-axis grid is enabled
     bool yEnabled() const;
 
+    /// Enable/disable minor x-axis grid
     void enableXMin( bool );
+    /// Check if minor x-axis grid is enabled
     bool xMinEnabled() const;
 
+    /// Enable/disable minor y-axis grid
     void enableYMin( bool );
+    /// Check if minor y-axis grid is enabled
     bool yMinEnabled() const;
 
+    /// Set x-axis scale division
     void setXDiv( const QwtScaleDiv& );
+    /// Get x-axis scale division
     const QwtScaleDiv& xScaleDiv() const;
 
+    /// Set y-axis scale division
     void setYDiv( const QwtScaleDiv& );
+    /// Get y-axis scale division
     const QwtScaleDiv& yScaleDiv() const;
 
+    /// Set pen for both major and minor grid lines
     void setPen( const QColor&,
         qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
+    /// Set pen for both major and minor grid lines
     void setPen( const QPen& );
 
+    /// Set pen for major grid lines
     void setMajorPen( const QColor&,
         qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
+    /// Set pen for major grid lines
     void setMajorPen( const QPen& );
+    /// Get pen for major grid lines
     const QPen& majorPen() const;
 
+    /// Set pen for minor grid lines
     void setMinorPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    /// Set pen for minor grid lines
     void setMinorPen( const QPen& );
+    /// Get pen for minor grid lines
     const QPen& minorPen() const;
 
+    /// Draw the grid
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
 
+    /// Update scale divisions
     virtual void updateScaleDiv(
         const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) override;
 
   private:
+    /// Draw grid lines
     void drawLines( QPainter*, const QRectF&,
         Qt::Orientation, const QwtScaleMap&,
         const QList< double >& ) const;
