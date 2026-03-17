@@ -35,108 +35,164 @@ class QRectF;
 class QwtText;
 class QwtSymbol;
 
-/*!
-   \brief A class for drawing markers
-
-   A marker can be a horizontal line, a vertical line,
-   a symbol, a label or any combination of them, which can
-   be drawn around a center point inside a bounding rectangle.
-
-   The setSymbol() member assigns a symbol to the marker.
-   The symbol is drawn at the specified point.
-
-   With setLabel(), a label can be assigned to the marker.
-   The setLabelAlignment() member specifies where the label is
-   drawn. All the Align*-constants in Qt::AlignmentFlags (see Qt documentation)
-   are valid. The interpretation of the alignment depends on the marker's
-   line style. The alignment refers to the center point of
-   the marker, which means, for example, that the label would be printed
-   left above the center point if the alignment was set to
-   Qt::AlignLeft | Qt::AlignTop.
-
-   \note QwtPlotTextLabel is intended to align a text label
-        according to the geometry of canvas
-        ( unrelated to plot coordinates )
+/**
+ * \if ENGLISH
+ * @brief A class for drawing markers
+ * @details A marker can be a horizontal line, a vertical line,
+ *          a symbol, a label or any combination of them, which can
+ *          be drawn around a center point inside a bounding rectangle.
+ * 
+ *          The setSymbol() member assigns a symbol to the marker.
+ *          The symbol is drawn at the specified point.
+ * 
+ *          With setLabel(), a label can be assigned to the marker.
+ *          The setLabelAlignment() member specifies where the label is
+ *          drawn. All the Align*-constants in Qt::AlignmentFlags (see Qt documentation)
+ *          are valid. The interpretation of the alignment depends on the marker's
+ *          line style. The alignment refers to the center point of
+ *          the marker, which means, for example, that the label would be printed
+ *          left above the center point if the alignment was set to
+ *          Qt::AlignLeft | Qt::AlignTop.
+ * 
+ * @note QwtPlotTextLabel is intended to align a text label
+ *       according to the geometry of canvas
+ *       ( unrelated to plot coordinates )
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 用于绘制标记的类
+ * @details 标记可以是水平线、垂直线、符号、标签或它们的任意组合，可以在边界矩形内的中心点周围绘制。
+ * 
+ *          setSymbol() 成员为标记分配一个符号。符号绘制在指定点。
+ * 
+ *          通过 setLabel()，可以为标记分配标签。setLabelAlignment() 成员指定标签的绘制位置。
+ *          Qt::AlignmentFlags 中的所有 Align* 常量（见 Qt 文档）都有效。
+ *          对齐的解释取决于标记的线条样式。对齐是指标记的中心点，
+ *          例如，如果对齐设置为 Qt::AlignLeft | Qt::AlignTop，标签将打印在中心点的左上方。
+ * 
+ * @note QwtPlotTextLabel 用于根据画布的几何形状对齐文本标签
+ *       （与绘图坐标无关）
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 {
   public:
 
-    /*!
-        Line styles.
-        \sa setLineStyle(), lineStyle()
+    /**
+     * \if ENGLISH
+     * @brief Line styles
+     * @sa setLineStyle(), lineStyle()
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 线条样式
+     * @sa setLineStyle(), lineStyle()
+     * \endif
      */
     enum LineStyle
     {
-        //! No line
+        /// No line
         NoLine,
 
-        //! A horizontal line
+        /// A horizontal line
         HLine,
 
-        //! A vertical line
+        /// A vertical line
         VLine,
 
-        //! A crosshair
+        /// A crosshair
         Cross
     };
 
+    /// Constructor
     explicit QwtPlotMarker();
+    /// Constructor with title
     explicit QwtPlotMarker( const QString& title );
+    /// Constructor with QwtText title
     explicit QwtPlotMarker( const QwtText& title );
 
+    /// Destructor
     virtual ~QwtPlotMarker();
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Get the x-value
     double xValue() const;
+    /// Get the y-value
     double yValue() const;
+    /// Get the value as a point
     QPointF value() const;
 
+    /// Set the x-value
     void setXValue( double );
+    /// Set the y-value
     void setYValue( double );
+    /// Set the value
     void setValue( double, double );
+    /// Set the value from a point
     void setValue( const QPointF& );
 
+    /// Set the line style
     void setLineStyle( LineStyle );
+    /// Get the line style
     LineStyle lineStyle() const;
 
+    /// Set the line pen
     void setLinePen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    /// Set the line pen
     void setLinePen( const QPen& );
+    /// Get the line pen
     const QPen& linePen() const;
 
+    /// Set the symbol
     void setSymbol( const QwtSymbol* );
+    /// Get the symbol
     const QwtSymbol* symbol() const;
 
+    /// Set the label
     void setLabel( const QwtText& );
+    /// Get the label
     QwtText label() const;
 
+    /// Set the label alignment
     void setLabelAlignment( Qt::Alignment );
+    /// Get the label alignment
     Qt::Alignment labelAlignment() const;
 
+    /// Set the label orientation
     void setLabelOrientation( Qt::Orientation );
+    /// Get the label orientation
     Qt::Orientation labelOrientation() const;
 
+    /// Set the spacing
     void setSpacing( int );
+    /// Get the spacing
     int spacing() const;
 
+    /// Draw the marker
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& ) const override;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
+    /// Get the legend icon
     virtual QwtGraphic legendIcon(
         int index, const QSizeF& ) const override;
 
   protected:
+    /// Draw the lines
     virtual void drawLines( QPainter*,
         const QRectF&, const QPointF& ) const;
 
+    /// Draw the symbol
     virtual void drawSymbol( QPainter*,
         const QRectF&, const QPointF& ) const;
 
+    /// Draw the label
     virtual void drawLabel( QPainter*,
         const QRectF&, const QPointF& ) const;
 

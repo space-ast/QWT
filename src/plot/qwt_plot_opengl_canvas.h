@@ -38,19 +38,31 @@
 
 class QwtPlot;
 
-/*!
-   \brief An alternative canvas for a QwtPlot derived from QOpenGLWidget
-
-   Even if QwtPlotOpenGLCanvas is not derived from QFrame it imitates
-   its API. When using style sheets it supports the box model - beside
-   backgrounds with rounded borders.
-
-   \sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
-
-   \note Another way for getting hardware accelerated graphics is using
-        an OpenGL offscreen buffer ( QwtPlotCanvas::OpenGLBuffer ) with QwtPlotCanvas.
-        Performance is worse, than rendering straight to a QOpenGLWidget, but is usually
-        better integrated into a desktop application.
+/**
+ * \if ENGLISH
+ * @brief An alternative canvas for a QwtPlot derived from QOpenGLWidget
+ * @details Even if QwtPlotOpenGLCanvas is not derived from QFrame it imitates
+ *          its API. When using style sheets it supports the box model - beside
+ *          backgrounds with rounded borders.
+ * 
+ * @sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
+ * 
+ * @note Another way for getting hardware accelerated graphics is using
+ *       an OpenGL offscreen buffer ( QwtPlotCanvas::OpenGLBuffer ) with QwtPlotCanvas.
+ *       Performance is worse, than rendering straight to a QOpenGLWidget, but is usually
+ *       better integrated into a desktop application.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief QwtPlot 的替代画布，派生自 QOpenGLWidget
+ * @details 即使 QwtPlotOpenGLCanvas 不是从 QFrame 派生的，它也模仿了其 API。
+ *          使用样式表时，它支持盒模型 - 包括带有圆角边框的背景。
+ * 
+ * @sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
+ * 
+ * @note 获取硬件加速图形的另一种方法是使用 QwtPlotCanvas::OpenGLBuffer 与 QwtPlotCanvas。
+ *       性能比直接渲染到 QOpenGLWidget 差，但通常更好地集成到桌面应用程序中。
+ * \endif
  */
 class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstractGLCanvas
 {
@@ -66,27 +78,40 @@ class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstr
     Q_PROPERTY(double borderRadius READ borderRadius WRITE setBorderRadius)
 
 public:
+    /// Constructor
     explicit QwtPlotOpenGLCanvas(QwtPlot* = nullptr);
+    /// Constructor with surface format
     explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = nullptr);
+    /// Destructor
     virtual ~QwtPlotOpenGLCanvas();
 
+    /// Invalidate the backing store
     Q_INVOKABLE virtual void invalidateBackingStore() override;
+    /// Get the border path
     Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
+    /// Handle events
     virtual bool event(QEvent*) override;
 
 public Q_SLOTS:
+    /// Replot the canvas
     void replot();
 
 protected:
+    /// Handle paint events
     virtual void paintEvent(QPaintEvent*) override;
 
+    /// Initialize OpenGL
     virtual void initializeGL() override;
+    /// Paint OpenGL
     virtual void paintGL() override;
+    /// Resize OpenGL
     virtual void resizeGL(int width, int height) override;
 
 private:
+    /// Initialize the canvas
     void init(const QSurfaceFormat&);
+    /// Clear the backing store
     virtual void clearBackingStore() override;
 
     class PrivateData;

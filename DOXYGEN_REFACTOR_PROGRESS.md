@@ -409,6 +409,20 @@
 
 - 待处理
 
+### 第三十五批处理完成
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_picker.h - 添加 QwtPlotPicker 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_panner.h - 添加 QwtPlotPanner 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_multi_barchart.h - 添加 QwtPlotMultiBarChart 类的双语 Doxygen 注释、ChartStyle 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_opengl_canvas.h - 添加 QwtPlotOpenGLCanvas 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_marker.h - 添加 QwtPlotMarker 类的双语 Doxygen 注释、LineStyle 枚举的双语注释以及所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -420,11 +434,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_plot_picker.h
-src/plot/qwt_plot_panner.h
-src/plot/qwt_plot_multi_barchart.h
-src/plot/qwt_plot_opengl_canvas.h
-src/plot/qwt_plot_marker.h
 src/plot/qwt_plot_legenditem.h
 src/plot/qwt_plot_magnifier.h
 src/plot/qwt_plot_intervalcurve.h
