@@ -437,6 +437,18 @@
 
 - 待处理
 
+### 第三十九批处理完成
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_renderer.h - 添加 QwtPlotRenderer 类的双语 Doxygen 注释、DiscardFlag 和 LayoutFlag 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_spectrogram.h - 添加 QwtPlotSpectrogram 类的双语 Doxygen 注释、DisplayMode 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_textlabel.h - 添加 QwtPlotTextLabel 类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录

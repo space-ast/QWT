@@ -91,34 +91,74 @@ class QwtText;
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 {
   public:
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     QwtPlotTextLabel();
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotTextLabel();
 
-    /// Get the runtime type information
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
     virtual int rtti() const override;
 
-    /// Set the text
+    /**
+     * \if ENGLISH
+     * @brief Set the text
+     * \endif
+     */
     void setText( const QwtText& );
-    /// Get the text
+    /**
+     * \if ENGLISH
+     * @brief Get the text
+     * \endif
+     */
     QwtText text() const;
 
-    /// Set the margin
+    /**
+     * \if ENGLISH
+     * @brief Set the margin
+     * \endif
+     */
     void setMargin( int margin );
-    /// Get the margin
+    /**
+     * \if ENGLISH
+     * @brief Get the margin
+     * \endif
+     */
     int margin() const;
 
-    /// Calculate the text rectangle
+    /**
+     * \if ENGLISH
+     * @brief Calculate the text rectangle
+     * \endif
+     */
     virtual QRectF textRect( const QRectF&, const QSizeF& ) const;
 
   protected:
-    /// Draw the text label
+    /**
+     * \if ENGLISH
+     * @brief Draw the text label
+     * \endif
+     */
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
         const QRectF&) const override;
 
-    /// Invalidate the cached pixmap
+    /**
+     * \if ENGLISH
+     * @brief Invalidate the cached pixmap
+     * \endif
+     */
     void invalidateCache();
 
   private:

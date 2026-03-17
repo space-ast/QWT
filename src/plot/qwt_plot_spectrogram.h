@@ -92,82 +92,194 @@ public:
 
     Q_DECLARE_FLAGS(DisplayModes, DisplayMode)
 
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotSpectrogram(const QString& title = QString());
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotSpectrogram();
 
-    /// Set a display mode
+    /**
+     * \if ENGLISH
+     * @brief Set a display mode
+     * \endif
+     */
     void setDisplayMode(DisplayMode, bool on = true);
-    /// Test a display mode
+    /**
+     * \if ENGLISH
+     * @brief Test a display mode
+     * \endif
+     */
     bool testDisplayMode(DisplayMode) const;
 
-    /// Set the raster data
+    /**
+     * \if ENGLISH
+     * @brief Set the raster data
+     * \endif
+     */
     void setData(QwtRasterData* data);
-    /// Get the raster data
+    /**
+     * \if ENGLISH
+     * @brief Get the raster data
+     * \endif
+     */
     const QwtRasterData* data() const;
-    /// Get the raster data
+    /**
+     * \if ENGLISH
+     * @brief Get the raster data
+     * \endif
+     */
     QwtRasterData* data();
 
-    /// Set the color map
+    /**
+     * \if ENGLISH
+     * @brief Set the color map
+     * \endif
+     */
     void setColorMap(QwtColorMap*);
-    /// Get the color map
+    /**
+     * \if ENGLISH
+     * @brief Get the color map
+     * \endif
+     */
     const QwtColorMap* colorMap() const;
 
-    /// Set the color table size
+    /**
+     * \if ENGLISH
+     * @brief Set the color table size
+     * \endif
+     */
     void setColorTableSize(int numColors);
-    /// Get the color table size
+    /**
+     * \if ENGLISH
+     * @brief Get the color table size
+     * \endif
+     */
     int colorTableSize() const;
 
-    /// Get the interval for an axis
+    /**
+     * \if ENGLISH
+     * @brief Get the interval for an axis
+     * \endif
+     */
     virtual QwtInterval interval(Qt::Axis) const override;
-    /// Get the pixel hint
+    /**
+     * \if ENGLISH
+     * @brief Get the pixel hint
+     * \endif
+     */
     virtual QRectF pixelHint(const QRectF&) const override;
 
-    /// Set the default contour pen
+    /**
+     * \if ENGLISH
+     * @brief Set the default contour pen
+     * \endif
+     */
     void setDefaultContourPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-    /// Set the default contour pen
+    /**
+     * \if ENGLISH
+     * @brief Set the default contour pen
+     * \endif
+     */
     void setDefaultContourPen(const QPen&);
-    /// Get the default contour pen
+    /**
+     * \if ENGLISH
+     * @brief Get the default contour pen
+     * \endif
+     */
     QPen defaultContourPen() const;
 
-    /// Get the contour pen for a specific level
+    /**
+     * \if ENGLISH
+     * @brief Get the contour pen for a specific level
+     * \endif
+     */
     virtual QPen contourPen(double level) const;
 
-    /// Set a conrec flag
+    /**
+     * \if ENGLISH
+     * @brief Set a conrec flag
+     * \endif
+     */
     void setConrecFlag(QwtRasterData::ConrecFlag, bool on);
-    /// Test a conrec flag
+    /**
+     * \if ENGLISH
+     * @brief Test a conrec flag
+     * \endif
+     */
     bool testConrecFlag(QwtRasterData::ConrecFlag) const;
 
-    /// Set the contour levels
+    /**
+     * \if ENGLISH
+     * @brief Set the contour levels
+     * \endif
+     */
     void setContourLevels(const QList< double >&);
-    /// Get the contour levels
+    /**
+     * \if ENGLISH
+     * @brief Get the contour levels
+     * \endif
+     */
     QList< double > contourLevels() const;
 
-    /// Get the runtime type information
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
     virtual int rtti() const override;
 
-    /// Draw the spectrogram
+    /**
+     * \if ENGLISH
+     * @brief Draw the spectrogram
+     * \endif
+     */
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
 protected:
-    /// Render the image
+    /**
+     * \if ENGLISH
+     * @brief Render the image
+     * \endif
+     */
     virtual QImage renderImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,
                                const QRectF& area,
                                const QSize& imageSize) const override;
 
-    /// Calculate the contour raster size
+    /**
+     * \if ENGLISH
+     * @brief Calculate the contour raster size
+     * \endif
+     */
     virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 
-    /// Render the contour lines
+    /**
+     * \if ENGLISH
+     * @brief Render the contour lines
+     * \endif
+     */
     virtual QwtRasterData::ContourLines renderContourLines(const QRectF& rect, const QSize& raster) const;
 
-    /// Draw the contour lines
+    /**
+     * \if ENGLISH
+     * @brief Draw the contour lines
+     * \endif
+     */
     virtual void
     drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
 
-    /// Render a tile
+    /**
+     * \if ENGLISH
+     * @brief Render a tile
+     * \endif
+     */
     void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
 private:

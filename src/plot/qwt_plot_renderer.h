@@ -149,91 +149,187 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 
     Q_DECLARE_FLAGS( LayoutFlags, LayoutFlag )
 
-    /// Constructor
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
     explicit QwtPlotRenderer( QObject* = nullptr );
-    /// Destructor
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
     virtual ~QwtPlotRenderer();
 
-    /// Set a discard flag
+    /**
+     * \if ENGLISH
+     * @brief Set a discard flag
+     * \endif
+     */
     void setDiscardFlag( DiscardFlag flag, bool on = true );
-    /// Test a discard flag
+    /**
+     * \if ENGLISH
+     * @brief Test a discard flag
+     * \endif
+     */
     bool testDiscardFlag( DiscardFlag flag ) const;
 
-    /// Set discard flags
+    /**
+     * \if ENGLISH
+     * @brief Set discard flags
+     * \endif
+     */
     void setDiscardFlags( DiscardFlags flags );
-    /// Get discard flags
+    /**
+     * \if ENGLISH
+     * @brief Get discard flags
+     * \endif
+     */
     DiscardFlags discardFlags() const;
 
-    /// Set a layout flag
+    /**
+     * \if ENGLISH
+     * @brief Set a layout flag
+     * \endif
+     */
     void setLayoutFlag( LayoutFlag flag, bool on = true );
-    /// Test a layout flag
+    /**
+     * \if ENGLISH
+     * @brief Test a layout flag
+     * \endif
+     */
     bool testLayoutFlag( LayoutFlag flag ) const;
 
-    /// Set layout flags
+    /**
+     * \if ENGLISH
+     * @brief Set layout flags
+     * \endif
+     */
     void setLayoutFlags( LayoutFlags flags );
-    /// Get layout flags
+    /**
+     * \if ENGLISH
+     * @brief Get layout flags
+     * \endif
+     */
     LayoutFlags layoutFlags() const;
 
-    /// Render the plot to a document
+    /**
+     * \if ENGLISH
+     * @brief Render the plot to a document
+     * \endif
+     */
     void renderDocument( QwtPlot*, const QString& fileName,
         const QSizeF& sizeMM, int resolution = 85 );
 
-    /// Render the plot to a document with specified format
+    /**
+     * \if ENGLISH
+     * @brief Render the plot to a document with specified format
+     * \endif
+     */
     void renderDocument( QwtPlot*, 
         const QString& fileName, const QString& format, 
         const QSizeF& sizeMM, int resolution = 85 );
 
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
-    /// Render the plot to an SVG generator
+    /**
+     * \if ENGLISH
+     * @brief Render the plot to an SVG generator
+     * \endif
+     */
     void renderTo( QwtPlot*, QSvgGenerator& ) const;
 #endif
 #endif
 
 #ifndef QT_NO_PRINTER
-    /// Render the plot to a printer
+    /**
+     * \if ENGLISH
+     * @brief Render the plot to a printer
+     * \endif
+     */
     void renderTo( QwtPlot*, QPrinter& ) const;
 #endif
 
-    /// Render the plot to a paint device
+    /**
+     * \if ENGLISH
+     * @brief Render the plot to a paint device
+     * \endif
+     */
     void renderTo( QwtPlot*, QPaintDevice& ) const;
 
-    /// Render the plot
+    /**
+     * \if ENGLISH
+     * @brief Render the plot
+     * \endif
+     */
     virtual void render( QwtPlot*,
         QPainter*, const QRectF& plotRect ) const;
 
-    /// Render the title
+    /**
+     * \if ENGLISH
+     * @brief Render the title
+     * \endif
+     */
     virtual void renderTitle( const QwtPlot*,
         QPainter*, const QRectF& titleRect ) const;
 
-    /// Render the footer
+    /**
+     * \if ENGLISH
+     * @brief Render the footer
+     * \endif
+     */
     virtual void renderFooter( const QwtPlot*,
         QPainter*, const QRectF& footerRect ) const;
 
-    /// Render a scale
+    /**
+     * \if ENGLISH
+     * @brief Render a scale
+     * \endif
+     */
     virtual void renderScale( const QwtPlot*, QPainter*,
         QwtAxisId, int startDist, int endDist,
         int baseDist, const QRectF& scaleRect ) const;
 
-    /// Render the canvas
+    /**
+     * \if ENGLISH
+     * @brief Render the canvas
+     * \endif
+     */
     virtual void renderCanvas( const QwtPlot*,
         QPainter*, const QRectF& canvasRect,
         const QwtScaleMap* maps ) const;
 
-    /// Render the legend
+    /**
+     * \if ENGLISH
+     * @brief Render the legend
+     * \endif
+     */
     virtual void renderLegend(
         const QwtPlot*, QPainter*, const QRectF& legendRect ) const;
 
-    /// Export the plot to a document
+    /**
+     * \if ENGLISH
+     * @brief Export the plot to a document
+     * \endif
+     */
     bool exportTo( QwtPlot*, const QString& documentName,
         const QSizeF& sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
   private:
-    /// Build canvas maps
+    /**
+     * \if ENGLISH
+     * @brief Build canvas maps
+     * \endif
+     */
     void buildCanvasMaps( const QwtPlot*,
         const QRectF&, QwtScaleMap maps[] ) const;
 
-    /// Update canvas margins
+    /**
+     * \if ENGLISH
+     * @brief Update canvas margins
+     * \endif
+     */
     bool updateCanvasMargins( QwtPlot*,
         const QRectF&, const QwtScaleMap maps[] ) const;
 
