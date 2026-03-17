@@ -31,89 +31,167 @@
 #include <qpolygon.h>
 #include <qpainterpath.h>
 
-//! Constructor
-QwtSplineCurveFitter::QwtSplineCurveFitter()
-    : QwtCurveFitter( QwtCurveFitter::Path )
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * Creates a spline curve fitter with a cardinal spline using uniform parametrization.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 创建一个使用均匀参数化的基数样条的样条曲线拟合器。
+ * \endif
+ */
+QwtSplineCurveFitter::QwtSplineCurveFitter() : QwtCurveFitter(QwtCurveFitter::Path)
 {
-    m_spline = new QwtSplineLocal( QwtSplineLocal::Cardinal );
-    m_spline->setParametrization( QwtSplineParametrization::ParameterUniform );
+    m_spline = new QwtSplineLocal(QwtSplineLocal::Cardinal);
+    m_spline->setParametrization(QwtSplineParametrization::ParameterUniform);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ *
+ * Deletes the internal spline object.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ *
+ * 删除内部样条对象。
+ * \endif
+ */
 QwtSplineCurveFitter::~QwtSplineCurveFitter()
 {
     delete m_spline;
 }
 
-/*!
-   Assign a spline
-
-   The spline needs to be allocated by new and will be deleted
-   in the destructor of the fitter.
-
-   \param spline Spline
-   \sa spline()
+/**
+ * \if ENGLISH
+ * @brief Assign a spline
+ *
+ * The spline needs to be allocated by new and will be deleted
+ * in the destructor of the fitter.
+ *
+ * @param spline Spline
+ * @sa spline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配样条
+ *
+ * 样条需要使用 new 分配，并将在拟合器的析构函数中被删除。
+ *
+ * @param spline 样条
+ * @sa spline()
+ * \endif
  */
-void QwtSplineCurveFitter::setSpline( QwtSpline* spline )
+void QwtSplineCurveFitter::setSpline(QwtSpline* spline)
 {
-    if ( m_spline == spline )
+    if (m_spline == spline)
         return;
 
     delete m_spline;
     m_spline = spline;
 }
 
-/*!
-   \return Spline
-   \sa setSpline()
+/**
+ * \if ENGLISH
+ * @brief Get the spline (const version)
+ *
+ * @return Spline
+ * @sa setSpline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条（const 版本）
+ *
+ * @return 样条
+ * @sa setSpline()
+ * \endif
  */
 const QwtSpline* QwtSplineCurveFitter::spline() const
 {
     return m_spline;
 }
 
-/*!
-   \return Spline
-   \sa setSpline()
+/**
+ * \if ENGLISH
+ * @brief Get the spline (non-const version)
+ *
+ * @return Spline
+ * @sa setSpline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条（非 const 版本）
+ *
+ * @return 样条
+ * @sa setSpline()
+ * \endif
  */
 QwtSpline* QwtSplineCurveFitter::spline()
 {
     return m_spline;
 }
 
-/*!
-   Find a curve which has the best fit to a series of data points
-
-   \param points Series of data points
-   \return Fitted Curve
-
-   \sa fitCurvePath()
+/**
+ * \if ENGLISH
+ * @brief Find a curve which has the best fit to a series of data points
+ *
+ * @param points Series of data points
+ * @return Fitted Curve
+ *
+ * @sa fitCurvePath()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 找到最适合一系列数据点的曲线
+ *
+ * @param points 数据点系列
+ * @return 拟合曲线
+ *
+ * @sa fitCurvePath()
+ * \endif
  */
-QPolygonF QwtSplineCurveFitter::fitCurve( const QPolygonF& points ) const
+QPolygonF QwtSplineCurveFitter::fitCurve(const QPolygonF& points) const
 {
-    const QPainterPath path = fitCurvePath( points );
+    const QPainterPath path = fitCurvePath(points);
 
     const QList< QPolygonF > subPaths = path.toSubpathPolygons();
-    if ( subPaths.size() == 1 )
+    if (subPaths.size() == 1)
         subPaths.first();
 
     return QPolygonF();
 }
 
-/*!
-   Find a curve path which has the best fit to a series of data points
-
-   \param points Series of data points
-   \return Fitted Curve
-
-   \sa fitCurve()
+/**
+ * \if ENGLISH
+ * @brief Find a curve path which has the best fit to a series of data points
+ *
+ * @param points Series of data points
+ * @return Fitted Curve
+ *
+ * @sa fitCurve()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 找到最适合一系列数据点的曲线路径
+ *
+ * @param points 数据点系列
+ * @return 拟合曲线
+ *
+ * @sa fitCurve()
+ * \endif
  */
-QPainterPath QwtSplineCurveFitter::fitCurvePath( const QPolygonF& points ) const
+QPainterPath QwtSplineCurveFitter::fitCurvePath(const QPolygonF& points) const
 {
     QPainterPath path;
 
-    if ( m_spline )
-        path = m_spline->painterPath( points );
+    if (m_spline)
+        path = m_spline->painterPath(points);
 
     return path;
 }

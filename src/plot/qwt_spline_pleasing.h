@@ -50,19 +50,19 @@
  */
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
-  public:
-    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
+public:
+    /// Constructor
     QwtSplinePleasing();
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    /// Destructor
     virtual ~QwtSplinePleasing();
 
-    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
+    /// Get locality (number of points used for calculation)
     virtual uint locality() const override;
 
-    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    /// \if ENGLISH Get Bezier control lines \endif \if CHINESE 获取贝塞尔控制线 \endif
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
+    /// Get painter path from polygon
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
+    /// Get Bezier control lines
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 };
 
 #endif

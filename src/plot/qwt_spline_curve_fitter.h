@@ -51,26 +51,26 @@ class QwtSpline;
  */
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
-  public:
-    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
+public:
+    /// Constructor
     QwtSplineCurveFitter();
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    /// Destructor
     virtual ~QwtSplineCurveFitter();
 
-    /// \if ENGLISH Set spline \endif \if CHINESE 设置样条 \endif
-    void setSpline( QwtSpline* );
+    /// Set spline
+    void setSpline(QwtSpline*);
 
-    /// \if ENGLISH Get spline (const version) \endif \if CHINESE 获取样条（const 版本） \endif
+    /// Get spline (const version)
     const QwtSpline* spline() const;
-    /// \if ENGLISH Get spline (non-const version) \endif \if CHINESE 获取样条（非 const 版本） \endif
+    /// Get spline (non-const version)
     QwtSpline* spline();
 
-    /// \if ENGLISH Fit curve to polygon \endif \if CHINESE 将曲线拟合到多边形 \endif
-    virtual QPolygonF fitCurve( const QPolygonF& ) const override;
-    /// \if ENGLISH Fit curve path to polygon \endif \if CHINESE 将曲线路径拟合到多边形 \endif
-    virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
+    /// Fit curve to polygon
+    virtual QPolygonF fitCurve(const QPolygonF&) const override;
+    /// Fit curve path to polygon
+    virtual QPainterPath fitCurvePath(const QPolygonF&) const override;
 
-  private:
+private:
     QwtSpline* m_spline;
 };
 

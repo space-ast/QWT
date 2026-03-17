@@ -50,7 +50,7 @@
  */
 class QWT_EXPORT QwtSplineLocal : public QwtSplineC1
 {
-  public:
+public:
     /**
      * \if ENGLISH
      * @brief Spline interpolation type
@@ -122,29 +122,29 @@ class QWT_EXPORT QwtSplineLocal : public QwtSplineC1
         PChip
     };
 
-    /// \if ENGLISH Constructor with type \endif \if CHINESE 带类型的构造函数 \endif
-    QwtSplineLocal( Type type );
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    /// Constructor with type
+    QwtSplineLocal(Type type);
+    /// Destructor
     virtual ~QwtSplineLocal();
 
-    /// \if ENGLISH Get type \endif \if CHINESE 获取类型 \endif
+    /// Get type
     Type type() const;
 
-    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
+    /// Get locality (number of points used for calculation)
     virtual uint locality() const override;
 
-    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    /// \if ENGLISH Get Bezier control lines \endif \if CHINESE 获取贝塞尔控制线 \endif
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
+    /// Get painter path from polygon
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
+    /// Get Bezier control lines
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 
     // calculating the parametric equations
-    /// \if ENGLISH Get polynomials from polygon \endif \if CHINESE 从多边形获取多项式 \endif
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
-    /// \if ENGLISH Get slopes \endif \if CHINESE 获取斜率 \endif
-    virtual QVector< double > slopes( const QPolygonF& ) const override;
+    /// Get polynomials from polygon
+    virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const override;
+    /// Get slopes
+    virtual QVector< double > slopes(const QPolygonF&) const override;
 
-  private:
+private:
     const Type m_type;
 };
 

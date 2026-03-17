@@ -310,6 +310,22 @@
 
 - src/plot/qwt_sampling_thread.cpp - 所有方法的双语 Doxygen 注释
 
+#### 第二十八批 (2026-03-16)
+
+**头文件 (.h):**
+
+- src/plot/qwt_stylesheet_recorder.h - 添加类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_spline_pleasing.h - 已有双语注释，更新函数注释为英文简要注释
+- src/plot/qwt_spline_local.h - 已有双语注释，更新函数注释为英文简要注释
+- src/plot/qwt_spline_curve_fitter.h - 已有双语注释，更新函数注释为英文简要注释
+- src/plot/qwt_slider.h - 已有双语注释，符合规范无需修改
+
+**源文件 (.cpp):**
+
+- src/plot/qwt_spline_pleasing.cpp - 添加所有方法的双语 Doxygen 注释
+- src/plot/qwt_spline_local.cpp - 添加所有方法的双语 Doxygen 注释
+- src/plot/qwt_spline_curve_fitter.cpp - 添加所有方法的双语 Doxygen 注释
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -321,11 +337,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_stylesheet_recorder.h
-src/plot/qwt_spline_pleasing.h
-src/plot/qwt_spline_local.h
-src/plot/qwt_spline_curve_fitter.h
-src/plot/qwt_slider.h
 src/plot/qwt_series_store.h
 src/plot/qwt_scale_widget.h
 src/plot/qwt_scale_engine.h
@@ -474,7 +485,6 @@ src/plot3d/qwt3d_drawable.cpp
 src/plot3d/qwt3d_coordsys.cpp
 src/plot3d/qwt3d_color.cpp
 src/plot3d/qwt3d_autoscaler.cpp
-src/plot/qwt_spline_pleasing.cpp
 src/plot/qwt_slider.cpp
 src/plot/qwt_scale_widget.cpp
 src/plot/qwt_scale_map.cpp
@@ -546,8 +556,6 @@ src/plot3d/qwt3d_axis.cpp
 src/plot/qwt_text_label.cpp
 src/plot/qwt_spline_polynomial.cpp
 src/plot/qwt_spline_parametrization.cpp
-src/plot/qwt_spline_local.cpp
-src/plot/qwt_spline_curve_fitter.cpp
 src/plot/qwt_series_data.cpp
 src/plot/qwt_round_scale_draw.cpp
 src/plot/qwt_raster_data.cpp
