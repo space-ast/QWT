@@ -32,48 +32,67 @@
 
 #include <qnamespace.h>
 
-class QwtInterval;
-class QPen;
-class QBrush;
-
-/*!
-   \brief A plot item, which displays a zone
-
-   A horizontal zone highlights an interval of the y axis - a vertical
-   zone an interval of the x axis - and is unbounded in the opposite direction.
-   It is filled with a brush and its border lines are optionally displayed with a pen.
-
-   \note For displaying an area that is bounded for x and y coordinates
-        use QwtPlotShapeItem
+/**
+ * \if ENGLISH
+ * @brief A plot item, which displays a zone
+ * @details A horizontal zone highlights an interval of the y axis - a vertical
+ *          zone an interval of the x axis - and is unbounded in the opposite direction.
+ *          It is filled with a brush and its border lines are optionally displayed with a pen.
+ * 
+ * @note For displaying an area that is bounded for x and y coordinates
+ *       use QwtPlotShapeItem
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 显示区域的绘图项
+ * @details 水平区域高亮显示 y 轴的一个区间，垂直区域高亮显示 x 轴的一个区间，
+ *          并在相反方向上无限延伸。它用画刷填充，其边界线可以选择用画笔显示。
+ * 
+ * @note 要显示 x 和 y 坐标都有边界的区域，请使用 QwtPlotShapeItem
+ * \endif
  */
-
 class QWT_EXPORT QwtPlotZoneItem :
     public QwtPlotItem
 {
   public:
+    /// Constructor
     explicit QwtPlotZoneItem();
+    /// Destructor
     virtual ~QwtPlotZoneItem();
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Set the orientation
     void setOrientation( Qt::Orientation );
+    /// Get the orientation
     Qt::Orientation orientation() const;
 
+    /// Set the interval
     void setInterval( double min, double max );
+    /// Set the interval
     void setInterval( const QwtInterval& );
+    /// Get the interval
     QwtInterval interval() const;
 
+    /// Set the pen
     void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    /// Set the pen
     void setPen( const QPen& );
+    /// Get the pen
     const QPen& pen() const;
 
+    /// Set the brush
     void setBrush( const QBrush& );
+    /// Get the brush
     const QBrush& brush() const;
 
+    /// Draw the zone
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
         const QRectF& canvasRect ) const override;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
   private:

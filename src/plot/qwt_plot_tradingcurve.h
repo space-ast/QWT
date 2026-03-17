@@ -30,161 +30,246 @@
 #include "qwt_global.h"
 #include "qwt_plot_seriesitem.h"
 
-/*!
-   \brief QwtPlotTradingCurve illustrates movements in the price of a
-         financial instrument over time.
-
-   QwtPlotTradingCurve supports candlestick or bar ( OHLC ) charts
-   that are used in the domain of technical analysis.
-
-   While the length ( height or width depending on orientation() )
-   of each symbol depends on the corresponding OHLC sample the size
-   of the other dimension can be controlled using:
-
-   - setSymbolExtent()
-   - setSymbolMinWidth()
-   - setSymbolMaxWidth()
-
-   The extent is a size in scale coordinates, so that the symbol width
-   is increasing when the plot is zoomed in. Minimum/Maximum width
-   is in widget coordinates independent from the zoom level.
-   When setting the minimum and maximum to the same value, the width of
-   the symbol is fixed.
+/**
+ * \if ENGLISH
+ * @brief QwtPlotTradingCurve illustrates movements in the price of a financial instrument over time
+ * @details QwtPlotTradingCurve supports candlestick or bar ( OHLC ) charts
+ *          that are used in the domain of technical analysis.
+ *
+ *          While the length ( height or width depending on orientation() )
+ *          of each symbol depends on the corresponding OHLC sample the size
+ *          of the other dimension can be controlled using:
+ *
+ *          - setSymbolExtent()
+ *          - setSymbolMinWidth()
+ *          - setSymbolMaxWidth()
+ *
+ *          The extent is a size in scale coordinates, so that the symbol width
+ *          is increasing when the plot is zoomed in. Minimum/Maximum width
+ *          is in widget coordinates independent from the zoom level.
+ *          When setting the minimum and maximum to the same value, the width of
+ *          the symbol is fixed.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QwtPlotTradingCurve 展示金融工具价格随时间的变化
+ * @details QwtPlotTradingCurve 支持烛台图或柱状图（OHLC），
+ *          这些图表用于技术分析领域。
+ *
+ *          每个符号的长度（高度或宽度，取决于方向）取决于相应的 OHLC 样本，
+ *          另一个维度的大小可以通过以下方式控制：
+ *
+ *          - setSymbolExtent()
+ *          - setSymbolMinWidth()
+ *          - setSymbolMaxWidth()
+ *
+ *          范围是缩放坐标中的大小，因此当绘图放大时，符号宽度会增加。
+ *          最小/最大宽度是在小部件坐标中，与缩放级别无关。
+ *          当将最小值和最大值设置为相同值时，符号的宽度是固定的。
+ * \endif
  */
-class QWT_EXPORT QwtPlotTradingCurve
-    : public QwtPlotSeriesItem
-    , public QwtSeriesStore< QwtOHLCSample >
+class QWT_EXPORT QwtPlotTradingCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtOHLCSample >
 {
-  public:
-    /*!
-        \brief Symbol styles.
-
-        The default setting is QwtPlotSeriesItem::CandleStick.
-        \sa setSymbolStyle(), symbolStyle()
+public:
+    /**
+     * \if ENGLISH
+     * @brief Symbol styles
+     * @details The default setting is QwtPlotSeriesItem::CandleStick.
+     * @sa setSymbolStyle(), symbolStyle()
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 符号样式
+     * @details 默认设置是 QwtPlotSeriesItem::CandleStick。
+     * @sa setSymbolStyle(), symbolStyle()
+     * \endif
      */
     enum SymbolStyle
     {
-        //! Nothing is displayed
+        /// Nothing is displayed
         NoSymbol = -1,
 
-        /*!
-           A line on the chart shows the price range (the highest and lowest
-           prices) over one unit of time, e.g. one day or one hour.
-           Tick marks project from each side of the line indicating the
-           opening and closing price.
+        /**
+         * \if ENGLISH
+         * A line on the chart shows the price range (the highest and lowest
+         * prices) over one unit of time, e.g. one day or one hour.
+         * Tick marks project from each side of the line indicating the
+         * opening and closing price.
+         * \endif
+         *
+         * \if CHINESE
+         * 图表上的一条线显示一个时间单位（例如一天或一小时）内的价格范围（最高和最低价格）。
+         * 从线的两侧伸出的刻度标记表示开盘价和收盘价。
+         * \endif
          */
         Bar,
 
-        /*!
-           The range between opening/closing price are displayed as
-           a filled box. The fill brush depends on the direction of the
-           price movement. The box is connected to the highest/lowest
-           values by lines.
+        /**
+         * \if ENGLISH
+         * The range between opening/closing price are displayed as
+         * a filled box. The fill brush depends on the direction of the
+         * price movement. The box is connected to the highest/lowest
+         * values by lines.
+         * \endif
+         *
+         * \if CHINESE
+         * 开盘/收盘价之间的范围显示为填充框。填充画刷取决于价格变动的方向。
+         * 该框通过线条连接到最高/最低值。
+         * \endif
          */
         CandleStick,
 
-        /*!
-           SymbolTypes >= UserSymbol are displayed by drawUserSymbol(),
-           that needs to be overloaded and implemented in derived
-           curve classes.
-
-           \sa drawUserSymbol()
+        /**
+         * \if ENGLISH
+         * SymbolTypes >= UserSymbol are displayed by drawUserSymbol(),
+         * that needs to be overloaded and implemented in derived
+         * curve classes.
+         *
+         * @sa drawUserSymbol()
+         * \endif
+         *
+         * \if CHINESE
+         * SymbolTypes >= UserSymbol 通过 drawUserSymbol() 显示，
+         * 需要在派生的曲线类中重载和实现。
+         *
+         * @sa drawUserSymbol()
+         * \endif
          */
         UserSymbol = 100
     };
 
-    /*!
-        \brief Direction of a price movement
+    /**
+     * \if ENGLISH
+     * @brief Direction of a price movement
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 价格变动的方向
+     * \endif
      */
     enum Direction
     {
-        //! The closing price is higher than the opening price
+        /// The closing price is higher than the opening price
         Increasing,
 
-        //! The closing price is lower than the opening price
+        /// The closing price is lower than the opening price
         Decreasing
     };
 
-    /*!
-        Attributes to modify the drawing algorithm.
-        \sa setPaintAttribute(), testPaintAttribute()
+    /**
+     * \if ENGLISH
+     * @brief Paint attributes
+     * @details Attributes to modify the drawing algorithm.
+     * @sa setPaintAttribute(), testPaintAttribute()
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 绘制属性
+     * @details 用于修改绘制算法的属性。
+     * @sa setPaintAttribute(), testPaintAttribute()
+     * \endif
      */
     enum PaintAttribute
     {
-        //! Check if a symbol is on the plot canvas before painting it.
-        ClipSymbols   = 0x01
+        /// Check if a symbol is on the plot canvas before painting it.
+        ClipSymbols = 0x01
     };
 
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-    explicit QwtPlotTradingCurve( const QString& title = QString() );
-    explicit QwtPlotTradingCurve( const QwtText& title );
+    /// Constructor
+    explicit QwtPlotTradingCurve(const QString& title = QString());
+    /// Constructor with title
+    explicit QwtPlotTradingCurve(const QwtText& title);
 
+    /// Destructor
     virtual ~QwtPlotTradingCurve();
 
+    /// Get the runtime type information
     virtual int rtti() const override;
 
-    void setPaintAttribute( PaintAttribute, bool on = true );
-    bool testPaintAttribute( PaintAttribute ) const;
+    /// Set a paint attribute
+    void setPaintAttribute(PaintAttribute, bool on = true);
+    /// Test a paint attribute
+    bool testPaintAttribute(PaintAttribute) const;
 
-    void setSamples( const QVector< QwtOHLCSample >& );
-    void setSamples( QwtSeriesData< QwtOHLCSample >* );
+    /// Set the samples
+    void setSamples(const QVector< QwtOHLCSample >&);
+    /// Set the samples
+    void setSamples(QwtSeriesData< QwtOHLCSample >*);
 
-    void setSymbolStyle( SymbolStyle style );
+    /// Set the symbol style
+    void setSymbolStyle(SymbolStyle style);
+    /// Get the symbol style
     SymbolStyle symbolStyle() const;
 
-    void setSymbolPen( const QColor&,
-        qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
-    void setSymbolPen( const QPen& );
+    /// Set the symbol pen
+    void setSymbolPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
+    /// Set the symbol pen
+    void setSymbolPen(const QPen&);
+    /// Get the symbol pen
     QPen symbolPen() const;
 
-    void setSymbolBrush( Direction, const QBrush& );
-    QBrush symbolBrush( Direction ) const;
+    /// Set the symbol brush
+    void setSymbolBrush(Direction, const QBrush&);
+    /// Get the symbol brush
+    QBrush symbolBrush(Direction) const;
 
-    void setSymbolExtent( double );
+    /// Set the symbol extent
+    void setSymbolExtent(double);
+    /// Get the symbol extent
     double symbolExtent() const;
 
-    void setMinSymbolWidth( double );
+    /// Set the minimum symbol width
+    void setMinSymbolWidth(double);
+    /// Get the minimum symbol width
     double minSymbolWidth() const;
 
-    void setMaxSymbolWidth( double );
+    /// Set the maximum symbol width
+    void setMaxSymbolWidth(double);
+    /// Get the maximum symbol width
     double maxSymbolWidth() const;
 
-    virtual void drawSeries( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const override;
+    /// Draw the series
+    virtual void drawSeries(QPainter*,
+                            const QwtScaleMap& xMap,
+                            const QwtScaleMap& yMap,
+                            const QRectF& canvasRect,
+                            int from,
+                            int to) const override;
 
+    /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    virtual QwtGraphic legendIcon( int index, const QSizeF& ) const override;
+    /// Get the legend icon
+    virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-  protected:
-
+protected:
+    /// Initialize the trading curve
     void init();
 
-    virtual void drawSymbols( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const;
+    /// Draw the symbols
+    virtual void
+    drawSymbols(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-    virtual void drawUserSymbol( QPainter*,
-        SymbolStyle, const QwtOHLCSample&,
-        Qt::Orientation, bool inverted, double symbolWidth ) const;
+    /// Draw a user symbol
+    virtual void
+    drawUserSymbol(QPainter*, SymbolStyle, const QwtOHLCSample&, Qt::Orientation, bool inverted, double symbolWidth) const;
 
-    void drawBar( QPainter*, const QwtOHLCSample&,
-        Qt::Orientation, bool inverted, double width ) const;
+    /// Draw a bar
+    void drawBar(QPainter*, const QwtOHLCSample&, Qt::Orientation, bool inverted, double width) const;
 
-    void drawCandleStick( QPainter*, const QwtOHLCSample&,
-        Qt::Orientation, double width ) const;
+    /// Draw a candlestick
+    void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double width) const;
 
-    virtual double scaledSymbolWidth(
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const;
+    /// Calculate the scaled symbol width
+    virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
-  private:
+private:
     class PrivateData;
     PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotTradingCurve::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotTradingCurve::PaintAttributes)
 
 #endif

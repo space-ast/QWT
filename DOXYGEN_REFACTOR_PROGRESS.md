@@ -367,6 +367,20 @@
 
 - 待处理
 
+#### 第三十二批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_polar_canvas.h - 添加 QwtPolarCanvas 类的双语 Doxygen 注释、PaintAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_polar_cache_panner.h - 添加 QwtPolarCachePanner 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_zoneitem.h - 添加 QwtPlotZoneItem 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_vectorfield.h - 添加 QwtPlotVectorField 类的双语 Doxygen 注释、IndicatorOrigin、PaintAttribute 和 MagnitudeMode 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_tradingcurve.h - 添加 QwtPlotTradingCurve 类的双语 Doxygen 注释、SymbolStyle、Direction 和 PaintAttribute 枚举的双语注释以及所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -378,11 +392,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_polar_canvas.h
-src/plot/qwt_polar_cache_panner.h
-src/plot/qwt_plot_zoneitem.h
-src/plot/qwt_plot_vectorfield.h
-src/plot/qwt_plot_tradingcurve.h
 src/plot/qwt_plot_textlabel.h
 src/plot/qwt_plot_spectrogram.h
 src/plot/qwt_plot_spectrocurve.h
