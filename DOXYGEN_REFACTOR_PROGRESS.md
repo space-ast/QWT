@@ -353,6 +353,20 @@
 
 - 待处理
 
+#### 第三十一批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_polar_magnifier.h - 添加 QwtPolarMagnifier 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_polar_itemdict.h - 添加 QwtPolarItemDict 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_polar_grid.h - 添加 QwtPolarGrid 类的双语 Doxygen 注释、DisplayFlag 和 GridAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_polar_curve.h - 添加 QwtPolarCurve 类的双语 Doxygen 注释、CurveStyle 和 LegendAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_polar_fitter.h - 添加 QwtPolarFitter 类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -364,11 +378,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_polar_magnifier.h
-src/plot/qwt_polar_itemdict.h
-src/plot/qwt_polar_grid.h
-src/plot/qwt_polar_curve.h
-src/plot/qwt_polar_fitter.h
 src/plot/qwt_polar_canvas.h
 src/plot/qwt_polar_cache_panner.h
 src/plot/qwt_plot_zoneitem.h

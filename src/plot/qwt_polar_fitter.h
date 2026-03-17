@@ -12,25 +12,40 @@
 #include "qwt_global.h"
 #include "qwt_curve_fitter.h"
 
-/*!
-   \brief A simple curve fitter for polar points
-
-   QwtPolarFitter adds equidistant points between 2 curve points,
-   so that the connection gets rounded according to the nature of
-   a polar plot.
-
-   \sa QwtPolarCurve::setCurveFitter()
+/**
+ * \if ENGLISH
+ * @brief A simple curve fitter for polar points
+ * @details QwtPolarFitter adds equidistant points between 2 curve points,
+ *          so that the connection gets rounded according to the nature of
+ *          a polar plot.
+ * 
+ * @sa QwtPolarCurve::setCurveFitter()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 极坐标点的简单曲线拟合器
+ * @details QwtPolarFitter 在两个曲线点之间添加等距点，
+ *          使连接根据极坐标图的特性变得圆滑。
+ * 
+ * @sa QwtPolarCurve::setCurveFitter()
+ * \endif
  */
 class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 {
   public:
+    /// Constructor
     QwtPolarFitter( int stepCount = 5 );
+    /// Destructor
     virtual ~QwtPolarFitter();
 
+    /// Set the step count
     void setStepCount( int size );
+    /// Get the step count
     int stepCount() const;
 
+    /// Fit a curve
     virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    /// Fit a curve path
     virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
