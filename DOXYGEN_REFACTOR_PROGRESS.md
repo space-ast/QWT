@@ -339,6 +339,20 @@
 
 - 待处理
 
+#### 第三十批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_polar_spectrogram.h - 添加类的双语 Doxygen 注释、枚举的双语注释和所有函数的英文简要注释
+- src/plot/qwt_polar_renderer.h - 添加类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_polar_plot.h - 添加类的双语 Doxygen 注释、枚举的双语注释和所有函数的英文简要注释
+- src/plot/qwt_polar_picker.h - 添加类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_polar_marker.h - 添加类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -350,11 +364,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_polar_spectrogram.h
-src/plot/qwt_polar_renderer.h
-src/plot/qwt_polar_plot.h
-src/plot/qwt_polar_picker.h
-src/plot/qwt_polar_marker.h
 src/plot/qwt_polar_magnifier.h
 src/plot/qwt_polar_itemdict.h
 src/plot/qwt_polar_grid.h
