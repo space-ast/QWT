@@ -117,19 +117,19 @@ public:
     /// Assign a series of samples
     void setData(QwtSeriesData< T >* series);
 
-    /// \return the the series data
+    /// Get the series data
     QwtSeriesData< T >* data();
 
-    /// \return the the series data
+    /// Get the series data (const version)
     const QwtSeriesData< T >* data() const;
 
-    /// \return Sample at position index
+    /// Get sample at position index
     T sample(size_t index) const;
 
-    /// \return Number of samples of the series
+    /// Get number of samples of the series
     virtual size_t dataSize() const override;
 
-    /// \return Bounding rectangle of the series or an invalid rectangle, when no series is stored
+    /// Get bounding rectangle of the series or an invalid rectangle, when no series is stored
     virtual QRectF dataRect() const override;
 
     /// Set a the "rect of interest" for the series

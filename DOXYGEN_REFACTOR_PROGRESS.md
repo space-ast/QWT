@@ -326,6 +326,19 @@
 - src/plot/qwt_spline_local.cpp - 添加所有方法的双语 Doxygen 注释
 - src/plot/qwt_spline_curve_fitter.cpp - 添加所有方法的双语 Doxygen 注释
 
+#### 第二十九批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_series_store.h - 已有双语注释，更新函数注释为英文简要注释
+- src/plot/qwt_scale_widget.h - 已有双语注释，符合规范无需修改
+- src/plot/qwt_scale_engine.h - 已有双语注释，符合规范无需修改
+- src/plot/qwt_scale_draw.h - 已有双语注释，符合规范无需修改
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -337,10 +350,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_series_store.h
-src/plot/qwt_scale_widget.h
-src/plot/qwt_scale_engine.h
-src/plot/qwt_scale_draw.h
 src/plot/qwt_polar_spectrogram.h
 src/plot/qwt_polar_renderer.h
 src/plot/qwt_polar_plot.h
