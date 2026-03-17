@@ -36,11 +36,17 @@ class QwtPlot;
 class QwtInterval;
 class QResizeEvent;
 
-/*!
-    \brief QwtPlotRescaler takes care of fixed aspect ratios for plot scales
-
-    QwtPlotRescaler auto adjusts the axes of a QwtPlot according
-    to fixed aspect ratios.
+/**
+ * \if ENGLISH
+ * @brief QwtPlotRescaler takes care of fixed aspect ratios for plot scales
+ * @details QwtPlotRescaler auto adjusts the axes of a QwtPlot according
+ *          to fixed aspect ratios.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief QwtPlotRescaler 负责处理绘图比例尺的固定宽高比
+ * @details QwtPlotRescaler 根据固定的宽高比自动调整 QwtPlot 的坐标轴。
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotRescaler : public QObject
@@ -48,109 +54,177 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
     Q_OBJECT
 
   public:
-    /*!
-       The rescale policy defines how to rescale the reference axis and
-       their depending axes.
-
-       \sa ExpandingDirection, setIntervalHint()
+    /**
+     * \if ENGLISH
+     * @brief Rescale policies
+     * @details The rescale policy defines how to rescale the reference axis and
+     *          their depending axes.
+     * @sa ExpandingDirection, setIntervalHint()
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 重缩放策略
+     * @details 重缩放策略定义了如何重缩放参考轴及其依赖轴。
+     * @sa ExpandingDirection, setIntervalHint()
+     * \endif
      */
     enum RescalePolicy
     {
-        /*!
-           The interval of the reference axis remains unchanged, when the
-           geometry of the canvas changes. All other axes
-           will be adjusted according to their aspect ratio.
+        /**
+         * \if ENGLISH
+         * The interval of the reference axis remains unchanged, when the
+         * geometry of the canvas changes. All other axes
+         * will be adjusted according to their aspect ratio.
+         * \endif
+         * 
+         * \if CHINESE
+         * 当画布的几何形状改变时，参考轴的区间保持不变。所有其他轴
+         * 将根据其宽高比进行调整。
+         * \endif
          */
         Fixed,
 
-        /*!
-           The interval of the reference axis will be shrunk/expanded,
-           when the geometry of the canvas changes. All other axes
-           will be adjusted according to their aspect ratio.
-
-           The interval, that is represented by one pixel is fixed.
-
+        /**
+         * \if ENGLISH
+         * The interval of the reference axis will be shrunk/expanded,
+         * when the geometry of the canvas changes. All other axes
+         * will be adjusted according to their aspect ratio.
+         * 
+         * The interval, that is represented by one pixel is fixed.
+         * \endif
+         * 
+         * \if CHINESE
+         * 当画布的几何形状改变时，参考轴的区间将收缩/扩展。所有其他轴
+         * 将根据其宽高比进行调整。
+         * 
+         * 由一个像素表示的区间是固定的。
+         * \endif
          */
         Expanding,
 
-        /*!
-           The intervals of the axes are calculated, so that all axes include
-           their interval hint.
+        /**
+         * \if ENGLISH
+         * The intervals of the axes are calculated, so that all axes include
+         * their interval hint.
+         * \endif
+         * 
+         * \if CHINESE
+         * 计算轴的区间，使所有轴都包含它们的区间提示。
+         * \endif
          */
         Fitting
     };
 
-    /*!
-       When rescalePolicy() is set to Expanding its direction depends
-       on ExpandingDirection
+    /**
+     * \if ENGLISH
+     * @brief Expanding directions
+     * @details When rescalePolicy() is set to Expanding its direction depends
+     *          on ExpandingDirection
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 扩展方向
+     * @details 当 rescalePolicy() 设置为 Expanding 时，其方向取决于 ExpandingDirection
+     * \endif
      */
     enum ExpandingDirection
     {
-        //! The upper limit of the scale is adjusted
+        /// The upper limit of the scale is adjusted
         ExpandUp,
 
-        //! The lower limit of the scale is adjusted
+        /// The lower limit of the scale is adjusted
         ExpandDown,
 
-        //! Both limits of the scale are adjusted
+        /// Both limits of the scale are adjusted
         ExpandBoth
     };
 
+    /// Constructor
     explicit QwtPlotRescaler( QWidget* canvas,
         QwtAxisId referenceAxis = QwtAxis::XBottom,
         RescalePolicy = Expanding );
 
+    /// Destructor
     virtual ~QwtPlotRescaler();
 
+    /// Enable/disable the rescaler
     void setEnabled( bool );
+    /// Check if the rescaler is enabled
     bool isEnabled() const;
 
+    /// Set the rescale policy
     void setRescalePolicy( RescalePolicy );
+    /// Get the rescale policy
     RescalePolicy rescalePolicy() const;
 
+    /// Set the expanding direction for all axes
     void setExpandingDirection( ExpandingDirection );
+    /// Set the expanding direction for a specific axis
     void setExpandingDirection( QwtAxisId, ExpandingDirection );
+    /// Get the expanding direction for a specific axis
     ExpandingDirection expandingDirection( QwtAxisId ) const;
 
+    /// Set the reference axis
     void setReferenceAxis( QwtAxisId );
+    /// Get the reference axis
     QwtAxisId referenceAxis() const;
 
+    /// Set the aspect ratio for all axes
     void setAspectRatio( double ratio );
+    /// Set the aspect ratio for a specific axis
     void setAspectRatio( QwtAxisId, double ratio );
+    /// Get the aspect ratio for a specific axis
     double aspectRatio( QwtAxisId ) const;
 
+    /// Set the interval hint for a specific axis
     void setIntervalHint( QwtAxisId, const QwtInterval& );
+    /// Get the interval hint for a specific axis
     QwtInterval intervalHint( QwtAxisId ) const;
 
+    /// Get the canvas
     QWidget* canvas();
+    /// Get the canvas (const version)
     const QWidget* canvas() const;
 
+    /// Get the plot
     QwtPlot* plot();
+    /// Get the plot (const version)
     const QwtPlot* plot() const;
 
+    /// Event filter
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
+    /// Rescale the axes
     void rescale() const;
 
   protected:
+    /// Handle canvas resize events
     virtual void canvasResizeEvent( QResizeEvent* );
 
+    /// Rescale the axes
     virtual void rescale( const QSize& oldSize, const QSize& newSize ) const;
+    /// Expand a scale
     virtual QwtInterval expandScale(
         QwtAxisId, const QSize& oldSize, const QSize& newSize ) const;
 
+    /// Sync a scale to the reference axis
     virtual QwtInterval syncScale(
         QwtAxisId, const QwtInterval& reference, const QSize& size ) const;
 
+    /// Update the scales
     virtual void updateScales(
         QwtInterval intervals[QwtAxis::AxisPositions] ) const;
 
+    /// Get the orientation of an axis
     Qt::Orientation orientation( QwtAxisId ) const;
+    /// Get the interval of an axis
     QwtInterval interval( QwtAxisId ) const;
+    /// Expand an interval
     QwtInterval expandInterval( const QwtInterval&,
         double width, ExpandingDirection ) const;
 
   private:
+    /// Calculate the pixel distance for an axis
     double pixelDist( QwtAxisId, const QSize& ) const;
 
     class AxisData;

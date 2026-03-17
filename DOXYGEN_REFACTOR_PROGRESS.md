@@ -395,6 +395,20 @@
 
 - 待处理
 
+#### 第三十四批 (2026-03-17)
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_shapeitem.h - 添加 QwtPlotShapeItem 类的双语 Doxygen 注释、PaintAttribute 和 LegendMode 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_rescaler.h - 添加 QwtPlotRescaler 类的双语 Doxygen 注释、RescalePolicy 和 ExpandingDirection 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_scaleitem.h - 添加 QwtPlotScaleItem 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_rasteritem.h - 添加 QwtPlotRasterItem 类的双语 Doxygen 注释、CachePolicy 和 PaintAttribute 枚举的双语注释以及所有函数的英文简要注释
+- src/plot/qwt_plot_renderer.h - 添加 QwtPlotRenderer 类的双语 Doxygen 注释、DiscardFlag 和 LayoutFlag 枚举的双语注释以及所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
@@ -406,11 +420,6 @@ src/plot3d/qwt3d_portability.h
 src/plot3d/qwt3d_plot.h
 src/plot3d/qwt3d_io.h
 src/plot3d/qwt3d_global.h
-src/plot/qwt_plot_shapeitem.h
-src/plot/qwt_plot_rescaler.h
-src/plot/qwt_plot_scaleitem.h
-src/plot/qwt_plot_rasteritem.h
-src/plot/qwt_plot_renderer.h
 src/plot/qwt_plot_picker.h
 src/plot/qwt_plot_panner.h
 src/plot/qwt_plot_multi_barchart.h
