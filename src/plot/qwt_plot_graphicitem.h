@@ -54,33 +54,71 @@
 class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
 {
   public:
-    /// Constructor
-    explicit QwtPlotGraphicItem( const QString& title = QString() );
-    /// Constructor with QwtText title
-    explicit QwtPlotGraphicItem( const QwtText& title );
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotGraphicItem( const QString& title = QString() );
 
-    /// Destructor
-    virtual ~QwtPlotGraphicItem();
+    /**
+     * \if ENGLISH
+     * @brief Constructor with QwtText title
+     * \endif
+     */
+explicit QwtPlotGraphicItem( const QwtText& title );
 
-    /// Set graphic with its bounding rectangle
-    void setGraphic( const QRectF& rect, const QwtGraphic& );
-    /// Get graphic
-    QwtGraphic graphic() const;
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotGraphicItem();
 
-    /// Get the bounding rectangle
-    virtual QRectF boundingRect() const override;
+    /**
+     * \if ENGLISH
+     * @brief Set graphic with its bounding rectangle
+     * \endif
+     */
+void setGraphic( const QRectF& rect, const QwtGraphic& );
 
-    /// Draw the graphic
-    virtual void draw( QPainter*,
+    /**
+     * \if ENGLISH
+     * @brief Get graphic
+     * \endif
+     */
+QwtGraphic graphic() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the bounding rectangle
+     * \endif
+     */
+virtual QRectF boundingRect() const override;
+
+    /**
+     * \if ENGLISH
+     * @brief Draw the graphic
+     * \endif
+     */
+virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
 
-    /// Get the runtime type information
-    virtual int rtti() const override;
+    /**
+     * \if ENGLISH
+     * @brief Get the runtime type information
+     * \endif
+     */
+virtual int rtti() const override;
 
   private:
-    /// Initialize the item
-    void init();
+    /**
+     * \if ENGLISH
+     * @brief Initialize the item
+     * \endif
+     */
+void init();
 
     class PrivateData;
     PrivateData* m_data;

@@ -497,6 +497,18 @@
 
 - 待处理
 
+### 第四十四批处理完成
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_curve.h - 添加 QwtPlotCurve 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_directpainter.h - 添加 QwtPlotDirectPainter 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_graphicitem.h - 添加 QwtPlotGraphicItem 类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录

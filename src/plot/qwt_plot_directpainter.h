@@ -138,33 +138,82 @@ class QWT_EXPORT QwtPlotDirectPainter : public QObject
 
     Q_DECLARE_FLAGS( Attributes, Attribute )
 
-    /// Constructor
-    explicit QwtPlotDirectPainter( QObject* parent = nullptr );
-    /// Destructor
-    virtual ~QwtPlotDirectPainter();
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotDirectPainter( QObject* parent = nullptr );
 
-    /// Set attribute
-    void setAttribute( Attribute, bool on );
-    /// Test attribute
-    bool testAttribute( Attribute ) const;
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotDirectPainter();
 
-    /// Set clipping
-    void setClipping( bool );
-    /// Check if clipping is enabled
-    bool hasClipping() const;
+    /**
+     * \if ENGLISH
+     * @brief Set attribute
+     * \endif
+     */
+void setAttribute( Attribute, bool on );
 
-    /// Set clip region
-    void setClipRegion( const QRegion& );
-    /// Get clip region
-    QRegion clipRegion() const;
+    /**
+     * \if ENGLISH
+     * @brief Test attribute
+     * \endif
+     */
+bool testAttribute( Attribute ) const;
 
-    /// Draw series
-    void drawSeries( QwtPlotSeriesItem*, int from, int to );
-    /// Reset the painter
-    void reset();
+    /**
+     * \if ENGLISH
+     * @brief Set clipping
+     * \endif
+     */
+void setClipping( bool );
 
-    /// Event filter
-    virtual bool eventFilter( QObject*, QEvent* ) override;
+    /**
+     * \if ENGLISH
+     * @brief Check if clipping is enabled
+     * \endif
+     */
+bool hasClipping() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set clip region
+     * \endif
+     */
+void setClipRegion( const QRegion& );
+
+    /**
+     * \if ENGLISH
+     * @brief Get clip region
+     * \endif
+     */
+QRegion clipRegion() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Draw series
+     * \endif
+     */
+void drawSeries( QwtPlotSeriesItem*, int from, int to );
+
+    /**
+     * \if ENGLISH
+     * @brief Reset the painter
+     * \endif
+     */
+void reset();
+
+    /**
+     * \if ENGLISH
+     * @brief Event filter
+     * \endif
+     */
+virtual bool eventFilter( QObject*, QEvent* ) override;
 
   private:
     class PrivateData;
