@@ -31,14 +31,22 @@
 #include "qwt_plot.h"
 #include "qwt_axis_id.h"
 class QwtPlotLayoutEngine;
-/*!
-   \brief Layout engine for QwtPlot.
-
-   It is used by the QwtPlot widget to organize its internal widgets
-   or by QwtPlot::print() to render its content to a QPaintDevice like
-   a QPrinter, QPixmap/QImage or QSvgRenderer.
-
-   \sa QwtPlot::setPlotLayout()
+/**
+ * \if ENGLISH
+ * @brief Layout engine for QwtPlot
+ * @details It is used by the QwtPlot widget to organize its internal widgets
+ *          or by QwtPlot::print() to render its content to a QPaintDevice like
+ *          a QPrinter, QPixmap/QImage or QSvgRenderer.
+ * @sa QwtPlot::setPlotLayout()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief QwtPlot 的布局引擎
+ * @details 它被 QwtPlot 部件用于组织其内部部件，
+ *          或被 QwtPlot::print() 用于将其内容渲染到 QPaintDevice 上，
+ *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
+ * @sa QwtPlot::setPlotLayout()
+ * \endif
  */
 
 class QWT_EXPORT QwtPlotLayout
@@ -74,49 +82,209 @@ public:
 
     Q_DECLARE_FLAGS(Options, Option)
 
-    explicit QwtPlotLayout();
-    virtual ~QwtPlotLayout();
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotLayout();
 
-    void setCanvasMargin(int margin, int axis = -1);
-    int canvasMargin(int axisId) const;
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotLayout();
 
-    void setAlignCanvasToScales(bool);
+    /**
+     * \if ENGLISH
+     * @brief Set canvas margin
+     * \endif
+     */
+void setCanvasMargin(int margin, int axis = -1);
 
-    void setAlignCanvasToScale(int axisId, bool);
-    bool alignCanvasToScale(int axisId) const;
+    /**
+     * \if ENGLISH
+     * @brief Get canvas margin
+     * \endif
+     */
+int canvasMargin(int axisId) const;
 
-    void setSpacing(int);
-    int spacing() const;
+    /**
+     * \if ENGLISH
+     * @brief Set align canvas to scales
+     * \endif
+     */
+void setAlignCanvasToScales(bool);
 
-    void setLegendPosition(QwtPlot::LegendPosition pos, double ratio);
-    void setLegendPosition(QwtPlot::LegendPosition pos);
-    QwtPlot::LegendPosition legendPosition() const;
+    /**
+     * \if ENGLISH
+     * @brief Set align canvas to scale
+     * \endif
+     */
+void setAlignCanvasToScale(int axisId, bool);
 
-    void setLegendRatio(double ratio);
-    double legendRatio() const;
+    /**
+     * \if ENGLISH
+     * @brief Check if canvas is aligned to scale
+     * \endif
+     */
+bool alignCanvasToScale(int axisId) const;
 
-    virtual QSize minimumSizeHint(const QwtPlot*) const;
+    /**
+     * \if ENGLISH
+     * @brief Set spacing
+     * \endif
+     */
+void setSpacing(int);
 
-    virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
+    /**
+     * \if ENGLISH
+     * @brief Get spacing
+     * \endif
+     */
+int spacing() const;
 
-    virtual void invalidate();
+    /**
+     * \if ENGLISH
+     * @brief Set legend position
+     * \endif
+     */
+void setLegendPosition(QwtPlot::LegendPosition pos, double ratio);
 
-    QRectF titleRect() const;
-    QRectF footerRect() const;
-    QRectF legendRect() const;
-    QRectF scaleRect(QwtAxisId) const;
-    QRectF canvasRect() const;
+    /**
+     * \if ENGLISH
+     * @brief Set legend position
+     * \endif
+     */
+void setLegendPosition(QwtPlot::LegendPosition pos);
+
+    /**
+     * \if ENGLISH
+     * @brief Get legend position
+     * \endif
+     */
+QwtPlot::LegendPosition legendPosition() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Set legend ratio
+     * \endif
+     */
+void setLegendRatio(double ratio);
+
+    /**
+     * \if ENGLISH
+     * @brief Get legend ratio
+     * \endif
+     */
+double legendRatio() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get minimum size hint
+     * \endif
+     */
+virtual QSize minimumSizeHint(const QwtPlot*) const;
+
+    /**
+     * \if ENGLISH
+     * @brief Activate the layout
+     * \endif
+     */
+virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
+
+    /**
+     * \if ENGLISH
+     * @brief Invalidate the layout
+     * \endif
+     */
+virtual void invalidate();
+
+    /**
+     * \if ENGLISH
+     * @brief Get title rect
+     * \endif
+     */
+QRectF titleRect() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get footer rect
+     * \endif
+     */
+QRectF footerRect() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get legend rect
+     * \endif
+     */
+QRectF legendRect() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get scale rect
+     * \endif
+     */
+QRectF scaleRect(QwtAxisId) const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get canvas rect
+     * \endif
+     */
+QRectF canvasRect() const;
 
 protected:
-    void setTitleRect(const QRectF&);
-    void setFooterRect(const QRectF&);
-    void setLegendRect(const QRectF&);
-    void setScaleRect(QwtAxisId, const QRectF&);
-    void setCanvasRect(const QRectF&);
+    /**
+     * \if ENGLISH
+     * @brief Set title rect
+     * \endif
+     */
+void setTitleRect(const QRectF&);
 
-    QwtPlotLayoutEngine* layoutEngine();
+    /**
+     * \if ENGLISH
+     * @brief Set footer rect
+     * \endif
+     */
+void setFooterRect(const QRectF&);
 
-    void doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
+    /**
+     * \if ENGLISH
+     * @brief Set legend rect
+     * \endif
+     */
+void setLegendRect(const QRectF&);
+
+    /**
+     * \if ENGLISH
+     * @brief Set scale rect
+     * \endif
+     */
+void setScaleRect(QwtAxisId, const QRectF&);
+
+    /**
+     * \if ENGLISH
+     * @brief Set canvas rect
+     * \endif
+     */
+void setCanvasRect(const QRectF&);
+
+    /**
+     * \if ENGLISH
+     * @brief Get layout engine
+     * \endif
+     */
+QwtPlotLayoutEngine* layoutEngine();
+
+    /**
+     * \if ENGLISH
+     * @brief Do activate the layout
+     * \endif
+     */
+void doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
 
 private:
     Q_DISABLE_COPY(QwtPlotLayout)

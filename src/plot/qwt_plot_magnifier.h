@@ -59,29 +59,69 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
     Q_OBJECT
 
   public:
-    /// Constructor
-    explicit QwtPlotMagnifier( QWidget* );
-    /// Destructor
-    virtual ~QwtPlotMagnifier();
+    /**
+     * \if ENGLISH
+     * @brief Constructor
+     * \endif
+     */
+explicit QwtPlotMagnifier( QWidget* );
 
-    /// Set axis enabled state
-    void setAxisEnabled( QwtAxisId, bool on );
-    /// Check if axis is enabled
-    bool isAxisEnabled( QwtAxisId ) const;
+    /**
+     * \if ENGLISH
+     * @brief Destructor
+     * \endif
+     */
+virtual ~QwtPlotMagnifier();
 
-    /// Get the canvas
-    QWidget* canvas();
-    /// Get the canvas (const version)
-    const QWidget* canvas() const;
+    /**
+     * \if ENGLISH
+     * @brief Set axis enabled state
+     * \endif
+     */
+void setAxisEnabled( QwtAxisId, bool on );
 
-    /// Get the plot
-    QwtPlot* plot();
-    /// Get the plot (const version)
-    const QwtPlot* plot() const;
+    /**
+     * \if ENGLISH
+     * @brief Check if axis is enabled
+     * \endif
+     */
+bool isAxisEnabled( QwtAxisId ) const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the canvas
+     * \endif
+     */
+QWidget* canvas();
+
+    /**
+     * \if ENGLISH
+     * @brief Get the canvas (const version)
+     * \endif
+     */
+const QWidget* canvas() const;
+
+    /**
+     * \if ENGLISH
+     * @brief Get the plot
+     * \endif
+     */
+QwtPlot* plot();
+
+    /**
+     * \if ENGLISH
+     * @brief Get the plot (const version)
+     * \endif
+     */
+const QwtPlot* plot() const;
 
   public Q_SLOTS:
-    /// Rescale the plot
-    virtual void rescale( double factor ) override;
+    /**
+     * \if ENGLISH
+     * @brief Rescale the plot
+     * \endif
+     */
+virtual void rescale( double factor ) override;
 
   private:
     class PrivateData;

@@ -509,6 +509,18 @@
 
 - 待处理
 
+### 第四十五批处理完成
+
+**头文件 (.h):**
+
+- src/plot/qwt_plot_magnifier.h - 添加 QwtPlotMagnifier 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_layout.h - 添加 QwtPlotLayout 类的双语 Doxygen 注释和所有函数的英文简要注释
+- src/plot/qwt_plot_layout_engine.h - 添加 QwtPlotLayoutEngine 类的双语 Doxygen 注释和所有函数的英文简要注释
+
+**源文件 (.cpp):**
+
+- 待处理
+
 ### 未处理文件
 
 #### 头文件 (.h) - src 目录
