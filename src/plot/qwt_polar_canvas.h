@@ -12,6 +12,8 @@
 #include "qwt_global.h"
 #include "qwt_point_polar.h"
 #include <qframe.h>
+class QPainter;
+class QwtPolarPlot;
 
 /**
  * \if ENGLISH

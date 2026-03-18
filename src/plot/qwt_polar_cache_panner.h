@@ -11,7 +11,8 @@
 
 #include "qwt_global.h"
 #include "qwt_cache_panner.h"
-
+class QwtPolarPlot;
+class QwtPolarCanvas;
 /**
  * \if ENGLISH
  * @brief QwtPolarCachePanner provides panning of a polar plot canvas

@@ -5,6 +5,7 @@
 
 #include <QwtPlot>
 #include <QwtPlotMarker>
+#include "qwt_plot_arrowmarker.h"
 #include <QwtPlotCurve>
 #include <QwtLegend>
 #include <QwtSyntheticPointData>
@@ -18,7 +19,8 @@
 #include <QApplication>
 #include <QPainterPath>
 #include <QLayout>
-
+#include "qwt_legend.h"
+#include "qwt_plot_legenditem.h"
 //-----------------------------------------------------------------
 //      A simple example which shows how to use QwtPlot connected
 //      to a data class without any storage, calculating each values
@@ -174,6 +176,88 @@ void Plot::populate()
     mPos->setLabel(QString("x = %1").arg(x));
     mPos->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
     mPos->attach(this);
+
+    // Insert QwtPlotArrowMarker examples
+    // Example 1: Simple arrow with explicit start and end points
+    QwtPlotArrowMarker* arrow1 = new QwtPlotArrowMarker("Arrow 1");
+    arrow1->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+    arrow1->setItemAttribute(QwtPlotItem::Legend, true);
+    arrow1->setPoints(QPointF(1.0, 0.5), QPointF(3.0, 0.8));
+    arrow1->setLinePen(Qt::darkGreen, 2.0);
+    arrow1->setHeadStyle(QwtPlotArrowMarker::ArrowHead);
+    arrow1->setHeadSize(12.0);
+    arrow1->setHeadBrush(Qt::green);
+    arrow1->setTailStyle(QwtPlotArrowMarker::Circle);
+    arrow1->setTailSize(8.0);
+    arrow1->setTailBrush(Qt::yellow);
+    arrow1->attach(this);
+
+    // Example 2: Arrow using length and angle
+    QwtPlotArrowMarker* arrow2 = new QwtPlotArrowMarker("Arrow 2");
+    arrow2->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+    arrow2->setItemAttribute(QwtPlotItem::Legend, true);
+    arrow2->setStartPoint(QPointF(5.0, -0.5));
+    arrow2->setPositionMode(QwtPlotArrowMarker::StartLengthAngle);
+    arrow2->setLength(80.0);  // pixels
+    arrow2->setAngle(135.0);  // degrees
+    arrow2->setLinePen(QColor(255, 128, 0), 3.0, Qt::DashLine);
+    arrow2->setHeadStyle(QwtPlotArrowMarker::Diamond);
+    arrow2->setHeadSize(QSizeF(10.0, 15.0));
+    arrow2->setHeadBrush(QColor(255, 200, 0));
+    arrow2->setHeadPen(QPen(Qt::darkRed, 1.5));
+    arrow2->attach(this);
+
+    // Example 3: Arrow with custom endpoint styles
+    QwtPlotArrowMarker* arrow3 = new QwtPlotArrowMarker("Arrow 3");
+    arrow3->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+    arrow3->setItemAttribute(QwtPlotItem::Legend, true);
+    arrow3->setPoints(QPointF(6.0, 0.0), QPointF(8.0, -0.7));
+    arrow3->setLinePen(Qt::magenta, 2.5);
+
+    // Custom head path (star shape)
+    QPainterPath starPath;
+    starPath.moveTo(0, -5);
+    for (int i = 1; i < 5; ++i) {
+        double angle = i * 4 * M_PI / 5;
+        starPath.lineTo(5 * sin(angle), -5 * cos(angle));
+    }
+    starPath.closeSubpath();
+
+    arrow3->setHeadStyle(QwtPlotArrowMarker::CustomPath);
+    arrow3->setHeadCustomPath(starPath);
+    arrow3->setHeadSize(15.0);
+    arrow3->setHeadBrush(QColor(255, 105, 180));  // Hot pink
+    arrow3->setHeadPen(QPen(Qt::darkMagenta, 1.0));
+
+    arrow3->setTailStyle(QwtPlotArrowMarker::Square);
+    arrow3->setTailSize(10.0);
+    arrow3->setTailBrush(Qt::cyan);
+    arrow3->setTailPen(QPen(Qt::darkBlue, 1.0));
+    arrow3->attach(this);
+
+    // Example 4: Vertical arrow with triangle endpoints
+    QwtPlotArrowMarker* arrow4 = new QwtPlotArrowMarker("Arrow 4");
+    arrow4->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+    arrow4->setItemAttribute(QwtPlotItem::Legend, true);
+    arrow4->setPoints(QPointF(9.0, 0.8), QPointF(9.0, 0.2));
+    arrow4->setLinePen(Qt::darkBlue, 2.0);
+    arrow4->setHeadStyle(QwtPlotArrowMarker::Triangle);
+    arrow4->setHeadSize(12.0);
+    arrow4->setHeadBrush(Qt::blue);
+    arrow4->setTailStyle(QwtPlotArrowMarker::Triangle);
+    arrow4->setTailSize(12.0);
+    arrow4->setTailBrush(Qt::red);
+    arrow4->attach(this);
+
+    QwtPlotLegendItem* legItem = new QwtPlotLegendItem();
+    legItem->attach(this);
+
+    // show legend
+    QwtLegend* leg = qobject_cast< QwtLegend* >(legend());
+    if (leg) {
+        leg->setVisible(true);
+        leg->setDefaultItemMode(QwtLegendData::Checkable);
+    }
 }
 
 void Plot::updateGradient()

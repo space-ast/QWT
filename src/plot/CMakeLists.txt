@@ -1,4 +1,4 @@
-﻿# qwt
+# qwt
 cmake_minimum_required(VERSION 3.5)
 
 set(QWTPLOT_LIB_NAME "plot")
@@ -148,6 +148,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_parasite_plot_layout.h
         qwt_plot_scale_event_dispatcher.h
         qwt_plot_marker.h
+        qwt_plot_arrowmarker.h
         qwt_plot_zoneitem.h
         qwt_plot_textlabel.h
         qwt_plot_rasteritem.h
@@ -219,6 +220,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_shapeitem.cpp
         qwt_plot_vectorfield.cpp
         qwt_plot_marker.cpp
+        qwt_plot_arrowmarker.cpp
         qwt_plot_textlabel.cpp
         qwt_plot_layout_engine.cpp
         qwt_plot_layout.cpp

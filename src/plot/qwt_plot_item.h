@@ -188,6 +188,9 @@ public:
         //! For QwtPlotVectorField
         Rtti_PlotVectorField,
 
+        //! For QwtPlotArrowMarker
+        Rtti_PlotArrowMarker,
+
         /*!
            Values >= Rtti_PlotUserItem are reserved for plot items
            not implemented in the Qwt library.

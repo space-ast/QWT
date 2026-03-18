@@ -31,6 +31,9 @@
 #include "qwt_plot_item.h"
 
 #include <qnamespace.h>
+class QwtInterval;
+class QPen;
+class QBrush;
 
 /**
  * \if ENGLISH
@@ -38,23 +41,22 @@
  * @details A horizontal zone highlights an interval of the y axis - a vertical
  *          zone an interval of the x axis - and is unbounded in the opposite direction.
  *          It is filled with a brush and its border lines are optionally displayed with a pen.
- * 
+ *
  * @note For displaying an area that is bounded for x and y coordinates
  *       use QwtPlotShapeItem
  * \endif
- * 
+ *
  * \if CHINESE
  * @brief 显示区域的绘图项
  * @details 水平区域高亮显示 y 轴的一个区间，垂直区域高亮显示 x 轴的一个区间，
  *          并在相反方向上无限延伸。它用画刷填充，其边界线可以选择用画笔显示。
- * 
+ *
  * @note 要显示 x 和 y 坐标都有边界的区域，请使用 QwtPlotShapeItem
  * \endif
  */
-class QWT_EXPORT QwtPlotZoneItem :
-    public QwtPlotItem
+class QWT_EXPORT QwtPlotZoneItem : public QwtPlotItem
 {
-  public:
+public:
     /**
      * \if ENGLISH
      * @brief Constructor
@@ -80,7 +82,7 @@ class QWT_EXPORT QwtPlotZoneItem :
      * @brief Set the orientation
      * \endif
      */
-    void setOrientation( Qt::Orientation );
+    void setOrientation(Qt::Orientation);
     /**
      * \if ENGLISH
      * @brief Get the orientation
@@ -93,13 +95,13 @@ class QWT_EXPORT QwtPlotZoneItem :
      * @brief Set the interval
      * \endif
      */
-    void setInterval( double min, double max );
+    void setInterval(double min, double max);
     /**
      * \if ENGLISH
      * @brief Set the interval
      * \endif
      */
-    void setInterval( const QwtInterval& );
+    void setInterval(const QwtInterval&);
     /**
      * \if ENGLISH
      * @brief Get the interval
@@ -112,13 +114,13 @@ class QWT_EXPORT QwtPlotZoneItem :
      * @brief Set the pen
      * \endif
      */
-    void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     /**
      * \if ENGLISH
      * @brief Set the pen
      * \endif
      */
-    void setPen( const QPen& );
+    void setPen(const QPen&);
     /**
      * \if ENGLISH
      * @brief Get the pen
@@ -131,7 +133,7 @@ class QWT_EXPORT QwtPlotZoneItem :
      * @brief Set the brush
      * \endif
      */
-    void setBrush( const QBrush& );
+    void setBrush(const QBrush&);
     /**
      * \if ENGLISH
      * @brief Get the brush
@@ -144,9 +146,7 @@ class QWT_EXPORT QwtPlotZoneItem :
      * @brief Draw the zone
      * \endif
      */
-    virtual void draw( QPainter*,
-        const QwtScaleMap&, const QwtScaleMap&,
-        const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect) const override;
 
     /**
      * \if ENGLISH
@@ -155,7 +155,7 @@ class QWT_EXPORT QwtPlotZoneItem :
      */
     virtual QRectF boundingRect() const override;
 
-  private:
+private:
     class PrivateData;
     PrivateData* m_data;
 };
