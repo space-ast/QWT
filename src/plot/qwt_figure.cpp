@@ -1398,7 +1398,7 @@ void QwtFigure::alignAxes(QList< QwtPlot* > plots, int axisId, bool update)
     // ========== 步骤4：强制更新轴和重绘，确保设置生效 ==========
     if (update) {
         for (QwtPlot* plot : qwt_as_const(plots)) {
-            plot->updateAxes();  // 更新轴布局
+            plot->updateLayout();
             plot->replot();      // 重绘Plot
         }
     }
