@@ -480,6 +480,28 @@ int QwtNullPaintDevice::metric( PaintDeviceMetric deviceMetric ) const
             value = qRound( metric( PdmHeight ) * 25.4 / metric( PdmDpiY ) );
             break;
         }
+#if QT_VERSION >= 0x050000
+        case PdmDevicePixelRatio:
+        {
+            /*
+             * Qt6 uses devicePixelRatioF() (→ metric(PdmDevicePixelRatioScaled))
+             * to set up the painter's initial transform.  If we return 0 here,
+             * QPainter builds a degenerate scale(0,0) transform which maps every
+             * path to a zero-size bounding rect, leaving QwtGraphic::isEmpty()
+             * permanently true and the legend icon blank.  Always return 1 for a
+             * logical / virtual device.
+             */
+            value = 1;
+            break;
+        }
+#endif
+#if QT_VERSION >= 0x050400
+        case PdmDevicePixelRatioScaled:
+        {
+            value = static_cast< int >( 1.0 * QPaintDevice::devicePixelRatioFScale() );
+            break;
+        }
+#endif
         default:
             value = 0;
     }

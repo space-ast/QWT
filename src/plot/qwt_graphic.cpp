@@ -35,6 +35,13 @@
 #include <qpixmap.h>
 #include <qpainterpath.h>
 
+// Define QWT_GRAPHIC_DEBUG at compile time (e.g. -DQWT_GRAPHIC_DEBUG)
+// or uncomment the next line to enable verbose diagnostics for Qt6 icon issues.
+// #define QWT_GRAPHIC_DEBUG
+#ifdef QWT_GRAPHIC_DEBUG
+#  include <qdebug.h>
+#endif
+
 #if QT_VERSION >= 0x050000
 
 #include <qguiapplication.h>
@@ -694,7 +701,17 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     Qt::AspectRatioMode aspectRatioMode ) const
 {
     if ( isEmpty() || rect.isEmpty() )
+    {
+#ifdef QWT_GRAPHIC_DEBUG
+        qDebug() << "[QwtGraphic::render] SKIPPED"
+                 << "isEmpty()=" << isEmpty()
+                 << "rect.isEmpty()=" << rect.isEmpty()
+                 << "boundingRect()=" << boundingRect()
+                 << "commands count=" << m_data->commands.size()
+                 << "defaultSize()=" << defaultSize();
+#endif
         return;
+    }
 
     double sx = 1.0;
     double sy = 1.0;
@@ -1013,6 +1030,14 @@ void QwtGraphic::drawPath( const QPainterPath& path )
 
         QRectF pointRect = scaledPath.boundingRect();
         QRectF boundingRect = pointRect;
+
+#ifdef QWT_GRAPHIC_DEBUG
+        qDebug() << "[QwtGraphic::drawPath]"
+                 << "painter->transform()=" << painter->transform()
+                 << "path.boundingRect()=" << path.boundingRect()
+                 << "scaledPath.boundingRect()=" << pointRect
+                 << "devicePixelRatioF=" << paintEngine()->paintDevice()->devicePixelRatioF();
+#endif
 
         if ( painter->pen().style() != Qt::NoPen
             && painter->pen().brush().style() != Qt::NoBrush )
