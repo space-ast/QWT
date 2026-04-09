@@ -20,10 +20,17 @@
 #include <qrandom.h>
 #endif
 
-/*!
-   \brief Normalize an angle to be int the range [0.0, 2 * PI[
-   \param radians Angle in radians
-   \return Normalized angle in radians
+/**
+ * \if ENGLISH
+ * @brief Normalize an angle to be in the range [0.0, 2π[
+ * @param radians Angle in radians
+ * @return Normalized angle in radians
+ * \endif
+ * \if CHINESE
+ * @brief 将角度标准化到范围 [0.0, 2π[
+ * @param radians 弧度角度
+ * @return 标准化后的弧度角度
+ * \endif
  */
 double qwtNormalizeRadians( double radians )
 {
@@ -35,10 +42,17 @@ double qwtNormalizeRadians( double radians )
 
 }
 
-/*!
-   \brief Normalize an angle to be int the range [0.0, 360.0[
-   \param radians Angle in degrees
-   \return Normalized angle in degrees
+/**
+ * \if ENGLISH
+ * @brief Normalize an angle to be in the range [0.0, 360.0[
+ * @param degrees Angle in degrees
+ * @return Normalized angle in degrees
+ * \endif
+ * \if CHINESE
+ * @brief 将角度标准化到范围 [0.0, 360.0[
+ * @param degrees 度数角度
+ * @return 标准化后的度数角度
+ * \endif
  */
 double qwtNormalizeDegrees( double degrees )
 {
@@ -49,9 +63,17 @@ double qwtNormalizeDegrees( double degrees )
 	return a;
 }
 
-/*!
-   \brief Uses QRandomGenerator for Qt >= 5.10 and qRand() otherwise
-   \return A 32-bit random quantity
+/**
+ * \if ENGLISH
+ * @brief Generate a random 32-bit number
+ * @details Uses QRandomGenerator for Qt >= 5.10 and qRand() otherwise
+ * @return A 32-bit random quantity
+ * \endif
+ * \if CHINESE
+ * @brief 生成随机 32 位数字
+ * @details Qt >= 5.10 使用 QRandomGenerator，否则使用 qRand()
+ * @return 32 位随机数
+ * \endif
  */
 quint32 qwtRand()
 {
@@ -79,13 +101,15 @@ static const struct RegisterQwtInterval
 } qwtRegisterQwtInterval;
 }
 
-/*!
-   \brief Normalize the limits of the interval
-
-   If maxValue() < minValue() the limits will be inverted.
-   \return Normalized interval
-
-   \sa isValid(), inverted()
+/**
+ * \if ENGLISH
+ * @brief Normalize the limits of the interval
+ * @details If maxValue() < minValue() the limits will be inverted.
+ * \endif
+ * \if CHINESE
+ * @brief 标准化区间的界限
+ * @details 如果 maxValue() < minValue()，则界限将被反转。
+ * \endif
  */
 QwtInterval QwtInterval::normalized() const
 {
@@ -99,10 +123,15 @@ QwtInterval QwtInterval::normalized() const
 	return *this;
 }
 
-/*!
-   Invert the limits of the interval
-   \return Inverted interval
-   \sa normalized()
+/**
+ * \if ENGLISH
+ * @brief Invert the interval
+ * @details minValue() and maxValue() are swapped, border flags remain unchanged.
+ * \endif
+ * \if CHINESE
+ * @brief 反转区间
+ * @details 交换 minValue() 和 maxValue()，边界标志保持不变。
+ * \endif
  */
 QwtInterval QwtInterval::inverted() const
 {
@@ -1595,113 +1624,223 @@ QRect QwtPixelMatrix::rect() const
 
 
 /*** Start of inlined file: qwt_transform.cpp ***/
-//! Smallest allowed value for logarithmic scales: 1.0e-150
+//! \if ENGLISH Smallest allowed value for logarithmic scales: 1.0e-150 \endif \if CHINESE 对数刻度允许的最小值：1.0e-150 \endif
 const double QwtLogTransform::LogMin = 1.0e-150;
 
-//! Largest allowed value for logarithmic scales: 1.0e150
+//! \if ENGLISH Largest allowed value for logarithmic scales: 1.0e150 \endif \if CHINESE 对数刻度允许的最大值：1.0e150 \endif
 const double QwtLogTransform::LogMax = 1.0e150;
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 QwtTransform::QwtTransform()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtTransform::~QwtTransform()
 {
 }
 
-/*!
-   \param value Value to be bounded
-   \return value unmodified
+/**
+ * \if ENGLISH
+ * @brief Bounded function - returns value unmodified
+ * @param value Value to be bounded
+ * @return Value unmodified
+ * \endif
+ * \if CHINESE
+ * @brief 边界函数 - 返回未修改的值
+ * @param value 要限制的值
+ * @return 未修改的值
+ * \endif
  */
 double QwtTransform::bounded( double value ) const
 {
 	return value;
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 QwtNullTransform::QwtNullTransform():
 	QwtTransform()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtNullTransform::~QwtNullTransform()
 {
 }
 
-/*!
-   \param value Value to be transformed
-   \return value unmodified
+/**
+ * \if ENGLISH
+ * @brief Transform function - returns value unmodified
+ * @param value Value to be transformed
+ * @return Value unmodified
+ * \endif
+ * \if CHINESE
+ * @brief 变换函数 - 返回未修改的值
+ * @param value 要变换的值
+ * @return 未修改的值
+ * \endif
  */
 double QwtNullTransform::transform( double value ) const
 {
 	return value;
 }
 
-/*!
-   \param value Value to be transformed
-   \return value unmodified
+/**
+ * \if ENGLISH
+ * @brief Inverse transform function - returns value unmodified
+ * @param value Value to be transformed
+ * @return Value unmodified
+ * \endif
+ * \if CHINESE
+ * @brief 反变换函数 - 返回未修改的值
+ * @param value 要变换的值
+ * @return 未修改的值
+ * \endif
  */
 double QwtNullTransform::invTransform( double value ) const
 {
 	return value;
 }
 
-//! \return Clone of the transformation
+//! \if ENGLISH Clone of the transformation \endif \if CHINESE 变换的克隆 \endif
 QwtTransform* QwtNullTransform::copy() const
 {
 	return new QwtNullTransform();
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 QwtLogTransform::QwtLogTransform():
 	QwtTransform()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtLogTransform::~QwtLogTransform()
 {
 }
 
-/*!
-   \param value Value to be transformed
-   \return log( value )
+/**
+ * \if ENGLISH
+ * @brief Transform function
+ * @param value Value to be transformed
+ * @return log( value )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换函数
+ * @param value 要变换的值
+ * @return log( value )
+ * \endif
  */
 double QwtLogTransform::transform( double value ) const
 {
 	return std::log( value );
 }
 
-/*!
-   \param value Value to be transformed
-   \return exp( value )
+/**
+ * \if ENGLISH
+ * @brief Inverse transform function
+ * @param value Value to be transformed
+ * @return exp( value )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 反变换函数
+ * @param value 要变换的值
+ * @return exp( value )
+ * \endif
  */
 double QwtLogTransform::invTransform( double value ) const
 {
 	return std::exp( value );
 }
 
-/*!
-   \param value Value to be bounded
-   \return qBound( LogMin, value, LogMax )
+/**
+ * \if ENGLISH
+ * @brief Bounded function
+ * @param value Value to be bounded
+ * @return qBound( LogMin, value, LogMax )
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 边界函数
+ * @param value 要限制的值
+ * @return qBound( LogMin, value, LogMax )
+ * \endif
  */
 double QwtLogTransform::bounded( double value ) const
 {
 	return qBound( LogMin, value, LogMax );
 }
 
-//! \return Clone of the transformation
+/**
+ * \if ENGLISH
+ * @brief Clone of the transformation
+ * @return New QwtLogTransform instance
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换的克隆
+ * @return 新的 QwtLogTransform 实例
+ * \endif
+ */
 QwtTransform* QwtLogTransform::copy() const
 {
 	return new QwtLogTransform();
 }
 
-/*!
-   Constructor
-   \param exponent Exponent
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param exponent Exponent
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param exponent 指数
+ * \endif
  */
 QwtPowerTransform::QwtPowerTransform( double exponent ):
 	QwtTransform(),
@@ -1709,14 +1848,31 @@ QwtPowerTransform::QwtPowerTransform( double exponent ):
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPowerTransform::~QwtPowerTransform()
 {
 }
 
-/*!
-   \param value Value to be transformed
-   \return Exponentiation preserving the sign
+/**
+ * \if ENGLISH
+ * @brief Transform function
+ * @param value Value to be transformed
+ * @return Exponentiation preserving the sign
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换函数
+ * @param value 要变换的值
+ * @return 保持符号的幂运算
+ * \endif
  */
 double QwtPowerTransform::transform( double value ) const
 {
@@ -1727,9 +1883,18 @@ double QwtPowerTransform::transform( double value ) const
 
 }
 
-/*!
-   \param value Value to be transformed
-   \return Inverse exponentiation preserving the sign
+/**
+ * \if ENGLISH
+ * @brief Inverse transform function
+ * @param value Value to be transformed
+ * @return Inverse exponentiation preserving the sign
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 反变换函数
+ * @param value 要变换的值
+ * @return 保持符号的反幂运算
+ * \endif
  */
 double QwtPowerTransform::invTransform( double value ) const
 {
@@ -1739,7 +1904,17 @@ double QwtPowerTransform::invTransform( double value ) const
 		return std::pow( value, m_exponent );
 }
 
-//! \return Clone of the transformation
+/**
+ * \if ENGLISH
+ * @brief Clone of the transformation
+ * @return New QwtPowerTransform instance
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 变换的克隆
+ * @return 新的 QwtPowerTransform 实例
+ * \endif
+ */
 QwtTransform* QwtPowerTransform::copy() const
 {
 	return new QwtPowerTransform( m_exponent );
@@ -1752,24 +1927,31 @@ QwtTransform* QwtPowerTransform::copy() const
 #include <qrect.h>
 #include <qdebug.h>
 
-/*!
-   \brief Constructor
-
-   The scale and paint device intervals are both set to [0,1].
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * @details The scale and paint device intervals are both set to [0,1].
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @details 刻度和绘制设备区间都设置为 [0,1]。
+ * \endif
  */
-QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
+QwtScaleMap::QwtScaleMap()
+	: m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
 {
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ * \endif
+ * \if CHINESE
+ * @brief 复制构造函数
+ * \endif
+ */
 QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
-	: m_s1(other.m_s1)
-	, m_s2(other.m_s2)
-	, m_p1(other.m_p1)
-	, m_p2(other.m_p2)
-	, m_cnv(other.m_cnv)
-	, m_ts1(other.m_ts1)
-	, m_transform(nullptr)
+	: m_s1(other.m_s1), m_s2(other.m_s2), m_p1(other.m_p1), m_p2(other.m_p2), m_cnv(other.m_cnv), m_ts1(other.m_ts1), m_transform(nullptr)
 {
 	if (other.m_transform)
 		m_transform = other.m_transform->copy();
@@ -1780,15 +1962,27 @@ QwtScaleMap::QwtScaleMap(QwtScaleMap&& other) : QwtScaleMap()
 	swap(other);
 }
 
-/*!
-   Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
  */
 QwtScaleMap::~QwtScaleMap()
 {
 	delete m_transform;
 }
 
-//! Assignment operator
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ * \endif
+ * \if CHINESE
+ * @brief 赋值运算符
+ * \endif
+ */
 QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
 {
 	m_s1  = other.m_s1;
@@ -1813,8 +2007,15 @@ QwtScaleMap& QwtScaleMap::operator=(QwtScaleMap&& other)
 	swap(other);
 	return *this;
 }
-/*!
-   Initialize the map with a transformation
+/**
+ * \if ENGLISH
+ * @brief Initialize the map with a transformation
+ * @param transform Transformation object (takes ownership)
+ * \endif
+ * \if CHINESE
+ * @brief 使用变换初始化映射
+ * @param transform 变换对象（获取所有权）
+ * \endif
  */
 void QwtScaleMap::setTransformation(QwtTransform* transform)
 {
@@ -1826,18 +2027,34 @@ void QwtScaleMap::setTransformation(QwtTransform* transform)
 	setScaleInterval(m_s1, m_s2);
 }
 
-//! Get the transformation
+/**
+ * \if ENGLISH
+ * @brief Get the transformation
+ * @return Transformation object
+ * \endif
+ * \if CHINESE
+ * @brief 获取变换
+ * @return 变换对象
+ * \endif
+ */
 const QwtTransform* QwtScaleMap::transformation() const
 {
 	return m_transform;
 }
 
-/*!
-   \brief Specify the borders of the scale interval
-   \param s1 first border
-   \param s2 second border
-   \warning scales might be aligned to
-		   transformation depending boundaries
+/**
+ * \if ENGLISH
+ * @brief Specify the borders of the scale interval
+ * @details Scales might be aligned to transformation depending boundaries
+ * @param s1 First border
+ * @param s2 Second border
+ * \endif
+ * \if CHINESE
+ * @brief 指定刻度区间的边界
+ * @details 刻度可能会根据变换的依赖边界进行对齐
+ * @param s1 第一个边界
+ * @param s2 第二个边界
+ * \endif
  */
 void QwtScaleMap::setScaleInterval(double s1, double s2)
 {
@@ -1852,10 +2069,17 @@ void QwtScaleMap::setScaleInterval(double s1, double s2)
 	updateFactor();
 }
 
-/*!
-   \brief Specify the borders of the paint device interval
-   \param p1 first border
-   \param p2 second border
+/**
+ * \if ENGLISH
+ * @brief Specify the borders of the paint device interval
+ * @param p1 First border
+ * @param p2 Second border
+ * \endif
+ * \if CHINESE
+ * @brief 指定绘制设备区间的边界
+ * @param p1 第一个边界
+ * @param p2 第二个边界
+ * \endif
  */
 void QwtScaleMap::setPaintInterval(double p1, double p2)
 {
@@ -2600,11 +2824,18 @@ class QwtWeedingCurveFitter::Line
 	int to;
 };
 
-/*!
-   Constructor
-
-   \param tolerance Tolerance
-   \sa setTolerance(), tolerance()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param tolerance Tolerance
+ * \sa setTolerance(), tolerance()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param tolerance 容差
+ * \sa setTolerance(), tolerance()
+ * \endif
  */
 QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
 	: QwtCurveFitter( QwtCurveFitter::Polygon )
@@ -2620,6 +2851,7 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 }
 
 /*!
+   \if ENGLISH
    Assign the tolerance
 
    The tolerance is the maximum distance, that is acceptable
@@ -2631,6 +2863,19 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
    \param tolerance Tolerance
 
    \sa tolerance()
+   \endif
+   *
+   \if CHINESE
+   设置容差
+
+   容差是原始曲线和平滑曲线之间可接受的最大距离。
+
+   增加容差将减少结果点的数量。
+
+   \param tolerance 容差
+
+   \sa tolerance()
+   \endif
  */
 void QwtWeedingCurveFitter::setTolerance( double tolerance )
 {
@@ -2638,8 +2883,15 @@ void QwtWeedingCurveFitter::setTolerance( double tolerance )
 }
 
 /*!
+   \if ENGLISH
    \return Tolerance
    \sa setTolerance()
+   \endif
+   *
+   \if CHINESE
+   \return 容差
+   \sa setTolerance()
+   \endif
  */
 double QwtWeedingCurveFitter::tolerance() const
 {
@@ -2647,6 +2899,7 @@ double QwtWeedingCurveFitter::tolerance() const
 }
 
 /*!
+   \if ENGLISH
    Limit the number of points passed to a run of the algorithm
 
    The runtime of the Douglas Peucker algorithm increases non linear
@@ -2656,6 +2909,18 @@ double QwtWeedingCurveFitter::tolerance() const
    \param numPoints Maximum for the number of points passed to the algorithm
 
    \sa chunkSize()
+   \endif
+   *
+   \if CHINESE
+   限制传递给算法运行的点数
+
+   Douglas Peucker 算法的运行时间随点数非线性增长。
+   对于块大小 > 0，多边形被拆分成块，逐个传递给算法。
+
+   \param numPoints 传递给算法的点数最大值
+
+   \sa chunkSize()
+   \endif
  */
 void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 {
@@ -2666,9 +2931,16 @@ void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 }
 
 /*!
+   \if ENGLISH
    \return Maximum for the number of points passed to a run
 		  of the algorithm - or 0, when unlimited
    \sa setChunkSize()
+   \endif
+   *
+   \if CHINESE
+   \return 传递给算法运行的点数最大值 - 如果无限制则为 0
+   \sa setChunkSize()
+   \endif
  */
 uint QwtWeedingCurveFitter::chunkSize() const
 {
@@ -2676,9 +2948,17 @@ uint QwtWeedingCurveFitter::chunkSize() const
 }
 
 /*!
-   \param points Series of data points
-   \return Curve points
+   \if ENGLISH
+   @param points Series of data points
+   @return Curve points
    \sa fitCurvePath()
+   \endif
+   *
+   \if CHINESE
+   @param points 数据点序列
+   @return 曲线点
+   \sa fitCurvePath()
+   \endif
  */
 QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 {
@@ -2703,9 +2983,17 @@ QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 }
 
 /*!
-   \param points Series of data points
-   \return Curve path
+   \if ENGLISH
+   @param points Series of data points
+   @return Curve path
    \sa fitCurve()
+   \endif
+   *
+   \if CHINESE
+   @param points 数据点序列
+   @return 曲线路径
+   \sa fitCurve()
+   \endif
  */
 QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
 {
@@ -4121,16 +4409,29 @@ static inline QDate qwtToDate(int year, int month = 1, int day = 1)
 #endif
 }
 
-/*!
-   Translate from double to QDateTime
-
-   \param value Number of milliseconds since the epoch,
-			   1970-01-01T00:00:00 UTC
-   \param timeSpec Time specification
-   \return Datetime value
-
-   \sa toDouble(), QDateTime::setMSecsSinceEpoch()
-   \note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+/**
+ * \if ENGLISH
+ * @brief Translate from double to QDateTime
+ *
+ * @param value Number of milliseconds since the epoch,
+ *              1970-01-01T00:00:00 UTC
+ * @param timeSpec Time specification
+ * @return Datetime value
+ *
+ * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
+ * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将 double 转换为 QDateTime
+ *
+ * @param value 自纪元 1970-01-01T00:00:00 UTC 以来的毫秒数
+ * @param timeSpec 时间规范
+ * @return 日期时间值
+ *
+ * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
+ * @note Qt::OffsetFromUTC 的返回日期时间将是 Qt::UTC
+ * \endif
  */
 QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 {
@@ -4158,15 +4459,28 @@ QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 	return dt;
 }
 
-/*!
-   Translate from QDateTime to double
-
-   \param dateTime Datetime value
-   \return Number of milliseconds since 1970-01-01T00:00:00 UTC has passed.
-
-   \sa toDateTime(), QDateTime::toMSecsSinceEpoch()
-   \warning For values very far below or above 1970-01-01 UTC rounding errors
-		   will happen due to the limited significance of a double.
+/**
+ * \if ENGLISH
+ * @brief Translate from QDateTime to double
+ *
+ * @param dateTime Datetime value
+ * @return Number of milliseconds since 1970-01-01T00:00:00 UTC has passed.
+ *
+ * @sa toDateTime(), QDateTime::toMSecsSinceEpoch()
+ * @warning For values very far below or above 1970-01-01 UTC rounding errors
+ *          will happen due to the limited significance of a double.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将 QDateTime 转换为 double
+ *
+ * @param dateTime 日期时间值
+ * @return 自 1970-01-01T00:00:00 UTC 以来经过的毫秒数。
+ *
+ * @sa toDateTime(), QDateTime::toMSecsSinceEpoch()
+ * @warning 对于远低于或远高于 1970-01-01 UTC 的值，由于双精度浮点数的有限精度，
+ *          会出现舍入误差。
+ * \endif
  */
 double QwtDate::toDouble(const QDateTime& dateTime)
 {
@@ -4182,15 +4496,28 @@ double QwtDate::toDouble(const QDateTime& dateTime)
 	return days * msecsPerDay + time.msec() + 1000.0 * secs;
 }
 
-/*!
-   Ceil a datetime according the interval type
-
-   \param dateTime Datetime value
-   \param intervalType Interval type, how to ceil.
-					  F.e. when intervalType = QwtDate::Months, the result
-					  will be ceiled to the next beginning of a month
-   \return Ceiled datetime
-   \sa floor()
+/**
+ * \if ENGLISH
+ * @brief Ceil a datetime according the interval type
+ *
+ * @param dateTime Datetime value
+ * @param intervalType Interval type, how to ceil.
+ *                     F.e. when intervalType = QwtDate::Months, the result
+ *                     will be ceiled to the next beginning of a month
+ * @return Ceiled datetime
+ * @sa floor()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 根据间隔类型向上取整日期时间
+ *
+ * @param dateTime 日期时间值
+ * @param intervalType 间隔类型，如何向上取整。
+ *                     例如，当 intervalType = QwtDate::Months 时，
+ *                     结果将向上取整到下个月的开始
+ * @return 向上取整后的日期时间
+ * @sa floor()
+ * \endif
  */
 QDateTime QwtDate::ceil(const QDateTime& dateTime, IntervalType intervalType)
 {
@@ -4273,16 +4600,28 @@ QDateTime QwtDate::ceil(const QDateTime& dateTime, IntervalType intervalType)
 	return dt;
 }
 
-/*!
-   Floor a datetime according the interval type
-
-   \param dateTime Datetime value
-   \param intervalType Interval type, how to ceil.
-					  F.e. when intervalType = QwtDate::Months,
-					  the result will be ceiled to the next
-					  beginning of a month
-   \return Floored datetime
-   \sa floor()
+/**
+ * \if ENGLISH
+ * @brief Floor a datetime according the interval type
+ *
+ * @param dateTime Datetime value
+ * @param intervalType Interval type, how to floor.
+ *                     F.e. when intervalType = QwtDate::Months,
+ *                     the result will be floored to the beginning of a month
+ * @return Floored datetime
+ * @sa ceil()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 根据间隔类型向下取整日期时间
+ *
+ * @param dateTime 日期时间值
+ * @param intervalType 间隔类型，如何向下取整。
+ *                     例如，当 intervalType = QwtDate::Months 时，
+ *                     结果将向下取整到当月的开始
+ * @return 向下取整后的日期时间
+ * @sa ceil()
+ * \endif
  */
 QDateTime QwtDate::floor(const QDateTime& dateTime, IntervalType intervalType)
 {
@@ -4337,17 +4676,31 @@ QDateTime QwtDate::floor(const QDateTime& dateTime, IntervalType intervalType)
 	return dt;
 }
 
-/*!
-   Minimum for the supported date range
-
-   The range of valid dates depends on how QDate stores the
-   Julian day internally.
-
-   - For Qt4 it is "Tue Jan 2 -4713"
-   - For Qt5 it is "Thu Jan 1 -2147483648"
-
-   \return minimum of the date range
-   \sa maxDate()
+/**
+ * \if ENGLISH
+ * @brief Minimum for the supported date range
+ *
+ * The range of valid dates depends on how QDate stores the
+ * Julian day internally.
+ *
+ * - For Qt4 it is "Tue Jan 2 -4713"
+ * - For Qt5 it is "Thu Jan 1 -2147483648"
+ *
+ * @return minimum of the date range
+ * @sa maxDate()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 支持的日期范围的最小值
+ *
+ * 有效日期的范围取决于 QDate 内部存储儒略日的方式。
+ *
+ * - 对于 Qt4 是 "Tue Jan 2 -4713"
+ * - 对于 Qt5 是 "Thu Jan 1 -2147483648"
+ *
+ * @return 日期范围的最小值
+ * @sa maxDate()
+ * \endif
  */
 QDate QwtDate::minDate()
 {
@@ -4358,18 +4711,33 @@ QDate QwtDate::minDate()
 	return date;
 }
 
-/*!
-   Maximum for the supported date range
-
-   The range of valid dates depends on how QDate stores the
-   Julian day internally.
-
-   - For Qt4 it is "Tue Jun 3 5874898"
-   - For Qt5 it is "Tue Dec 31 2147483647"
-
-   \return maximum of the date range
-   \sa minDate()
-   \note The maximum differs between Qt4 and Qt5
+/**
+ * \if ENGLISH
+ * @brief Maximum for the supported date range
+ *
+ * The range of valid dates depends on how QDate stores the
+ * Julian day internally.
+ *
+ * - For Qt4 it is "Tue Jun 3 5874898"
+ * - For Qt5 it is "Tue Dec 31 2147483647"
+ *
+ * @return maximum of the date range
+ * @sa minDate()
+ * @note The maximum differs between Qt4 and Qt5
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 支持的日期范围的最大值
+ *
+ * 有效日期的范围取决于 QDate 内部存储儒略日的方式。
+ *
+ * - 对于 Qt4 是 "Tue Jun 3 5874898"
+ * - 对于 Qt5 是 "Tue Dec 31 2147483647"
+ *
+ * @return 日期范围的最大值
+ * @sa minDate()
+ * @note 最大值在 Qt4 和 Qt5 之间有所不同
+ * \endif
  */
 QDate QwtDate::maxDate()
 {
@@ -4380,17 +4748,31 @@ QDate QwtDate::maxDate()
 	return date;
 }
 
-/*!
-   \brief Date of the first day of the first week for a year
-
-   The first day of a week depends on the current locale
-   ( QLocale::firstDayOfWeek() ).
-
-   \param year Year
-   \param type Option how to identify the first week
-   \return First day of week 0
-
-   \sa QLocale::firstDayOfWeek(), weekNumber()
+/**
+ * \if ENGLISH
+ * @brief Date of the first day of the first week for a year
+ *
+ * The first day of a week depends on the current locale
+ * ( QLocale::firstDayOfWeek() ).
+ *
+ * @param year Year
+ * @param type Option how to identify the first week
+ * @return First day of week 0
+ *
+ * @sa QLocale::firstDayOfWeek(), weekNumber()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 一年中第一周第一天的日期
+ *
+ * 一周的第一天取决于当前区域设置 ( QLocale::firstDayOfWeek() )。
+ *
+ * @param year 年份
+ * @param type 如何确定第一周的选项
+ * @return 第0周的第一天
+ *
+ * @sa QLocale::firstDayOfWeek(), weekNumber()
+ * \endif
  */
 QDate QwtDate::dateOfWeek0(int year, Week0Type type)
 {
@@ -4420,19 +4802,30 @@ QDate QwtDate::dateOfWeek0(int year, Week0Type type)
 	return dt0;
 }
 
-/*!
-   Find the week number of a date
-
-   - QwtDate::FirstThursday\n
-	Corresponding to ISO 8601 ( see QDate::weekNumber() ).
-
-   - QwtDate::FirstDay\n
-	Number of weeks that have begun since dateOfWeek0().
-
-   \param date Date
-   \param type Option how to identify the first week
-
-   \return Week number, starting with 1
+/**
+ * \if ENGLISH
+ * @brief Find the week number of a date
+ *
+ * - QwtDate::FirstThursday: Corresponding to ISO 8601 ( see QDate::weekNumber() ).
+ * - QwtDate::FirstDay: Number of weeks that have begun since dateOfWeek0().
+ *
+ * @param date Date
+ * @param type Option how to identify the first week
+ *
+ * @return Week number, starting with 1
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找日期的周数
+ *
+ * - QwtDate::FirstThursday: 对应于 ISO 8601 (参见 QDate::weekNumber() )。
+ * - QwtDate::FirstDay: 自 dateOfWeek0() 以来开始的周数。
+ *
+ * @param date 日期
+ * @param type 如何确定第一周的选项
+ *
+ * @return 周数，从1开始
+ * \endif
  */
 int QwtDate::weekNumber(const QDate& date, Week0Type type)
 {
@@ -4460,23 +4853,37 @@ int QwtDate::weekNumber(const QDate& date, Week0Type type)
 	return weekNo;
 }
 
-/*!
-   Offset in seconds from Coordinated Universal Time
-
-   The offset depends on the time specification of dateTime:
-
-   - Qt::UTC
-	 0, dateTime has no offset
-   - Qt::OffsetFromUTC
-	 returns dateTime.offsetFromUtc()
-   - Qt::LocalTime:
-	 number of seconds from the UTC
-
-   For Qt::LocalTime the offset depends on the timezone and
-   daylight savings.
-
-   \param dateTime Datetime value
-   \return Offset in seconds
+/**
+ * \if ENGLISH
+ * @brief Offset in seconds from Coordinated Universal Time
+ *
+ * The offset depends on the time specification of dateTime:
+ *
+ * - Qt::UTC: 0, dateTime has no offset
+ * - Qt::OffsetFromUTC: returns dateTime.offsetFromUtc()
+ * - Qt::LocalTime: number of seconds from the UTC
+ *
+ * For Qt::LocalTime the offset depends on the timezone and
+ * daylight savings.
+ *
+ * @param dateTime Datetime value
+ * @return Offset in seconds
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 与世界协调时间的偏移量（秒）
+ *
+ * 偏移量取决于 dateTime 的时间规范：
+ *
+ * - Qt::UTC: 0，dateTime 没有偏移
+ * - Qt::OffsetFromUTC: 返回 dateTime.offsetFromUtc()
+ * - Qt::LocalTime: 与 UTC 的秒数差
+ *
+ * 对于 Qt::LocalTime，偏移量取决于时区和夏令时。
+ *
+ * @param dateTime 日期时间值
+ * @return 偏移量（秒）
+ * \endif
  */
 int QwtDate::utcOffset(const QDateTime& dateTime)
 {
@@ -4503,27 +4910,46 @@ int QwtDate::utcOffset(const QDateTime& dateTime)
 	return seconds;
 }
 
-/*!
-   Translate a datetime into a string
-
-   Beside the format expressions documented in QDateTime::toString()
-   the following expressions are supported:
-
-   - w\n
-	week number: ( 1 - 53 )
-   - ww\n
-	week number with a leading zero ( 01 - 53 )
-
-   As week 1 usually starts in the previous year a special rule
-   is applied for formats, where the year is expected to match the
-   week number - even if the date belongs to the previous year.
-
-   \param dateTime Datetime value
-   \param format Format string
-   \param week0Type Specification of week 0
-
-   \return Datetime string
-   \sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
+/**
+ * \if ENGLISH
+ * @brief Translate a datetime into a string
+ *
+ * Beside the format expressions documented in QDateTime::toString()
+ * the following expressions are supported:
+ *
+ * - w: week number ( 1 - 53 )
+ * - ww: week number with a leading zero ( 01 - 53 )
+ *
+ * As week 1 usually starts in the previous year a special rule
+ * is applied for formats, where the year is expected to match the
+ * week number - even if the date belongs to the previous year.
+ *
+ * @param dateTime Datetime value
+ * @param format Format string
+ * @param week0Type Specification of week 0
+ *
+ * @return Datetime string
+ * @sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将日期时间转换为字符串
+ *
+ * 除了 QDateTime::toString() 中记录的格式表达式外，还支持以下表达式：
+ *
+ * - w: 周数 ( 1 - 53 )
+ * - ww: 带前导零的周数 ( 01 - 53 )
+ *
+ * 由于第1周通常从前一年开始，因此对于期望年份与周数匹配的格式，
+ * 会应用特殊规则 - 即使日期属于前一年。
+ *
+ * @param dateTime 日期时间值
+ * @param format 格式字符串
+ * @param week0Type 第0周的规范
+ *
+ * @return 日期时间字符串
+ * @sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
+ * \endif
  */
 QString QwtDate::toString(const QDateTime& dateTime, const QString& format, Week0Type week0Type)
 {
@@ -4544,184 +4970,208 @@ QString QwtDate::toString(const QDateTime& dateTime, const QString& format, Week
 
 namespace
 {
-	class BezierData
+class BezierData
+{
+public:
+	inline BezierData()
 	{
-	  public:
-		inline BezierData()
-		{
-			// default constructor with uninitialized points
-		}
+		// default constructor with uninitialized points
+	}
 
-		inline BezierData( const QPointF& p1, const QPointF& cp1,
-				const QPointF& cp2, const QPointF& p2 ):
-			m_x1( p1.x() ),
-			m_y1( p1.y() ),
-			m_cx1( cp1.x() ),
-			m_cy1( cp1.y() ),
-			m_cx2( cp2.x() ),
-			m_cy2( cp2.y() ),
-			m_x2( p2.x() ),
-			m_y2( p2.y() )
-		{
-		}
+	inline BezierData(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2)
+		: m_x1(p1.x()), m_y1(p1.y()), m_cx1(cp1.x()), m_cy1(cp1.y()), m_cx2(cp2.x()), m_cy2(cp2.y()), m_x2(p2.x()), m_y2(p2.y())
+	{
+	}
 
-		static inline double minFlatness( double tolerance )
-		{
-			// we can simplify the tolerance criterion check in
-			// the subdivision loop, by precalculating some
-			// flatness value.
+	static inline double minFlatness(double tolerance)
+	{
+		// we can simplify the tolerance criterion check in
+		// the subdivision loop, by precalculating some
+		// flatness value.
 
-			return 16 * ( tolerance * tolerance );
-		}
+		return 16 * (tolerance * tolerance);
+	}
 
-		inline double flatness() const
-		{
-			// algo by Roger Willcocks ( http://www.rops.org )
+	inline double flatness() const
+	{
+		// algo by Roger Willcocks ( http://www.rops.org )
 
-			const double ux = 3.0 * m_cx1 - 2.0 * m_x1 - m_x2;
-			const double uy = 3.0 * m_cy1 - 2.0 * m_y1 - m_y2;
-			const double vx = 3.0 * m_cx2 - 2.0 * m_x2 - m_x1;
-			const double vy = 3.0 * m_cy2 - 2.0 * m_y2 - m_y1;
+		const double ux = 3.0 * m_cx1 - 2.0 * m_x1 - m_x2;
+		const double uy = 3.0 * m_cy1 - 2.0 * m_y1 - m_y2;
+		const double vx = 3.0 * m_cx2 - 2.0 * m_x2 - m_x1;
+		const double vy = 3.0 * m_cy2 - 2.0 * m_y2 - m_y1;
 
-			const double ux2 = ux * ux;
-			const double uy2 = uy * uy;
+		const double ux2 = ux * ux;
+		const double uy2 = uy * uy;
 
-			const double vx2 = vx * vx;
-			const double vy2 = vy * vy;
+		const double vx2 = vx * vx;
+		const double vy2 = vy * vy;
 
-			return qwtMaxF( ux2, vx2 ) + qwtMaxF( uy2, vy2 );
-		}
+		return qwtMaxF(ux2, vx2) + qwtMaxF(uy2, vy2);
+	}
 
-		inline BezierData subdivided()
-		{
-			BezierData bz;
+	inline BezierData subdivided()
+	{
+		BezierData bz;
 
-			const double c1 = midValue( m_cx1, m_cx2 );
+		const double c1 = midValue(m_cx1, m_cx2);
 
-			bz.m_cx1 = midValue( m_x1, m_cx1 );
-			m_cx2 = midValue( m_cx2, m_x2 );
-			bz.m_x1 = m_x1;
-			bz.m_cx2 = midValue( bz.m_cx1, c1 );
-			m_cx1 = midValue( c1, m_cx2 );
-			bz.m_x2 = m_x1 = midValue( bz.m_cx2, m_cx1 );
+		bz.m_cx1 = midValue(m_x1, m_cx1);
+		m_cx2    = midValue(m_cx2, m_x2);
+		bz.m_x1  = m_x1;
+		bz.m_cx2 = midValue(bz.m_cx1, c1);
+		m_cx1    = midValue(c1, m_cx2);
+		bz.m_x2 = m_x1 = midValue(bz.m_cx2, m_cx1);
 
-			const double c2 = midValue( m_cy1, m_cy2 );
+		const double c2 = midValue(m_cy1, m_cy2);
 
-			bz.m_cy1 = midValue( m_y1, m_cy1 );
-			m_cy2 = midValue( m_cy2, m_y2 );
-			bz.m_y1 = m_y1;
-			bz.m_cy2 = midValue( bz.m_cy1, c2 );
-			m_cy1 = midValue( m_cy2, c2 );
-			bz.m_y2 = m_y1 = midValue( bz.m_cy2, m_cy1 );
+		bz.m_cy1 = midValue(m_y1, m_cy1);
+		m_cy2    = midValue(m_cy2, m_y2);
+		bz.m_y1  = m_y1;
+		bz.m_cy2 = midValue(bz.m_cy1, c2);
+		m_cy1    = midValue(m_cy2, c2);
+		bz.m_y2 = m_y1 = midValue(bz.m_cy2, m_cy1);
 
-			return bz;
-		}
+		return bz;
+	}
 
-		inline QPointF p2() const
-		{
-			return QPointF( m_x2, m_y2 );
-		}
+	inline QPointF p2() const
+	{
+		return QPointF(m_x2, m_y2);
+	}
 
-	  private:
-		inline double midValue( double v1, double v2 )
-		{
-			return 0.5 * ( v1 + v2 );
-		}
+private:
+	inline double midValue(double v1, double v2)
+	{
+		return 0.5 * (v1 + v2);
+	}
 
-		double m_x1, m_y1;
-		double m_cx1, m_cy1;
-		double m_cx2, m_cy2;
-		double m_x2, m_y2;
-	};
+	double m_x1, m_y1;
+	double m_cx1, m_cy1;
+	double m_cx2, m_cy2;
+	double m_x2, m_y2;
+};
 }
 
-/*!
-   \brief Constructor
-
-   \param tolerance Termination criterion for the subdivision
-   \sa setTolerance()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param tolerance Termination criterion for the subdivision
+ * \sa setTolerance()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param tolerance 细分的终止判据
+ * \sa setTolerance()
+ * \endif
  */
-
-QwtBezier::QwtBezier( double tolerance )
-	: m_tolerance( qwtMaxF( tolerance, 0.0 ) )
-	, m_flatness( BezierData::minFlatness( m_tolerance ) )
+QwtBezier::QwtBezier(double tolerance)
+	: m_tolerance(qwtMaxF(tolerance, 0.0)), m_flatness(BezierData::minFlatness(m_tolerance))
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtBezier::~QwtBezier()
 {
 }
 
-/*!
-   Set the tolerance
-
-   The tolerance is a measurement for the flatness of a curve.
-   A curve with a flatness below the tolerance is considered as being flat
-   terminating the subdivision algorithm.
-
-   When interpolating a Bezier curve to render it as a sequence of lines
-   to some sort of raster ( f.e to screen ) a value of 0.5 of the pixel size
-   is a good value for the tolerance.
-
-   \param tolerance Termination criterion for the subdivision
-   \sa tolerance()
+/**
+ * \if ENGLISH
+ * @brief Set the tolerance for curve subdivision
+ * @details The tolerance is a measurement for the flatness of a curve.
+ *          A curve with a flatness below the tolerance is considered as being flat,
+ *          terminating the subdivision algorithm.
+ *          When interpolating a Bezier curve to render it as a sequence of lines
+ *          to some sort of raster (e.g., to screen), a value of 0.5 of the pixel size
+ *          is a good value for the tolerance.
+ * @param tolerance Termination criterion for the subdivision
+ * \sa tolerance()
+ * \endif
+ * \if CHINESE
+ * @brief 设置曲线细分的容差
+ * @details 容差是曲线平坦度的度量。
+ *          平坦度低于容差的曲线被认为是平坦的，从而终止细分算法。
+ *          当插值 Bézier 曲线并将其渲染为一系列线条到某种光栅（例如屏幕）时，
+ *          像素大小的 0.5 倍是容差的良好值。
+ * @param tolerance 细分的终止判据
+ * \sa tolerance()
+ * \endif
  */
-void QwtBezier::setTolerance( double tolerance )
+void QwtBezier::setTolerance(double tolerance)
 {
-	m_tolerance = qwtMaxF( tolerance, 0.0 );
-	m_flatness = BezierData::minFlatness( m_tolerance );
+	m_tolerance = qwtMaxF(tolerance, 0.0);
+	m_flatness  = BezierData::minFlatness(m_tolerance);
 }
 
-/*!
-   \brief Interpolate a Bézier curve by a polygon
-
-   \param p1 Start point
-   \param cp1 First control point
-   \param cp2 Second control point
-   \param p2 End point
-
-   \return Interpolating polygon
+/**
+ * \if ENGLISH
+ * @brief Interpolate a Bézier curve by a polygon
+ * @param p1 Start point
+ * @param cp1 First control point
+ * @param cp2 Second control point
+ * @param p2 End point
+ * @return Interpolating polygon
+ * \endif
+ * \if CHINESE
+ * @brief 用多边形插值 Bézier 曲线
+ * @param p1 起点
+ * @param cp1 第一个控制点
+ * @param cp2 第二个控制点
+ * @param p2 终点
+ * @return 插值多边形
+ * \endif
  */
-QPolygonF QwtBezier::toPolygon( const QPointF& p1,
-	const QPointF& cp1, const QPointF& cp2, const QPointF& p2 ) const
+QPolygonF QwtBezier::toPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2) const
 {
 	QPolygonF polygon;
 
-	if ( m_flatness > 0.0 )
-	{
+	if (m_flatness > 0.0) {
 		// a flatness of 0.0 is not achievable
-		appendToPolygon( p1, cp1, cp2, p2, polygon );
+		appendToPolygon(p1, cp1, cp2, p2, polygon);
 	}
 
 	return polygon;
 }
 
-/*!
-   \brief Interpolate a Bézier curve by a polygon
-
-   appendToPolygon() is tailored for cumulating points from a sequence
-   of bezier curves like being created by a spline interpolation.
-
-   \param p1 Start point
-   \param cp1 First control point
-   \param cp2 Second control point
-   \param p2 End point
-   \param polygon Polygon, where the interpolating points are added
-
-   \note If the last point of the incoming polygon matches p1 it won't be
-		inserted a second time.
+/**
+ * \if ENGLISH
+ * @brief Interpolate a Bézier curve by adding points to a polygon
+ * @details appendToPolygon() is tailored for accumulating points from a sequence
+ *          of Bézier curves, such as those created by spline interpolation.
+ * @param p1 Start point
+ * @param cp1 First control point
+ * @param cp2 Second control point
+ * @param p2 End point
+ * @param polygon Polygon where the interpolating points are added
+ * @note If the last point of the incoming polygon matches p1, it won't be inserted a second time.
+ * \endif
+ * \if CHINESE
+ * @brief 通过将点添加到多边形来插值 Bézier 曲线
+ * @details appendToPolygon() 专为累积一系列 Bézier 曲线的点而定制，
+ *          例如由样条插值创建的曲线。
+ * @param p1 起点
+ * @param cp1 第一个控制点
+ * @param cp2 第二个控制点
+ * @param p2 终点
+ * @param polygon 添加插值点的多边形
+ * @note 如果输入多边形的最后一个点与 p1 匹配，则不会再次插入它。
+ * \endif
  */
-void QwtBezier::appendToPolygon( const QPointF& p1, const QPointF& cp1,
-	const QPointF& cp2, const QPointF& p2, QPolygonF& polygon ) const
+void QwtBezier::appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, QPolygonF& polygon) const
 {
-	if ( m_flatness <= 0.0 )
-	{
+	if (m_flatness <= 0.0) {
 		// a flatness of 0.0 is not achievable
 		return;
 	}
 
-	if ( polygon.isEmpty() || polygon.last() != p1 )
+	if (polygon.isEmpty() || polygon.last() != p1)
 		polygon += p1;
 
 	// to avoid deep stacks we convert the recursive algo
@@ -4729,54 +5179,56 @@ void QwtBezier::appendToPolygon( const QPointF& p1, const QPointF& cp1,
 	// recursive class are pushed to a stack instead
 
 	QStack< BezierData > stack;
-	stack.push( BezierData( p1, cp1, cp2, p2 ) );
+	stack.push(BezierData(p1, cp1, cp2, p2));
 
-	while( true )
-	{
+	while (true) {
 		BezierData& bz = stack.top();
 
-		if ( bz.flatness() < m_flatness )
-		{
-			if ( stack.size() == 1 )
-			{
+		if (bz.flatness() < m_flatness) {
+			if (stack.size() == 1) {
 				polygon += p2;
 				return;
 			}
 
 			polygon += bz.p2();
 			stack.pop();
-		}
-		else
-		{
-			stack.push( bz.subdivided() );
+		} else {
+			stack.push(bz.subdivided());
 		}
 	}
-
 }
 
-/*!
-   Find a point on a Bézier Curve
-
-   \param p1 Start point
-   \param cp1 First control point
-   \param cp2 Second control point
-   \param p2 End point
-   \param t Parameter value, something between [0,1]
-
-   \return Point on the curve
+/**
+ * \if ENGLISH
+ * @brief Find a point on a Bézier curve
+ * @param p1 Start point
+ * @param cp1 First control point
+ * @param cp2 Second control point
+ * @param p2 End point
+ * @param t Parameter value in range [0,1]
+ * @return Point on the curve
+ * \endif
+ * \if CHINESE
+ * @brief 查找 Bézier 曲线上的点
+ * @param p1 起点
+ * @param cp1 第一个控制点
+ * @param cp2 第二个控制点
+ * @param p2 终点
+ * @param t 参数值，范围 [0,1]
+ * @return 曲线上的点
+ * \endif
  */
-QPointF QwtBezier::pointAt( const QPointF& p1,
-	const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t )
+QPointF QwtBezier::pointAt(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t)
 {
 	const double d1 = 3.0 * t;
 	const double d2 = 3.0 * t * t;
 	const double d3 = t * t * t;
-	const double s = 1.0 - t;
+	const double s  = 1.0 - t;
 
-	const double x = ( ( s * p1.x() + d1 * cp1.x() ) * s + d2 * cp2.x() ) * s + d3 * p2.x();
-	const double y = ( ( s * p1.y() + d1 * cp1.y() ) * s + d2 * cp2.y() ) * s + d3 * p2.y();
+	const double x = ((s * p1.x() + d1 * cp1.x()) * s + d2 * cp2.x()) * s + d3 * p2.x();
+	const double y = ((s * p1.y() + d1 * cp1.y()) * s + d2 * cp2.y()) * s + d3 * p2.y();
 
-	return QPointF( x, y );
+	return QPointF(x, y);
 }
 
 /*** End of inlined file: qwt_bezier.cpp ***/
@@ -5236,12 +5688,19 @@ QVector< QPointF > QwtCircleClipper::cuttingPoints(Edge edge, const QPointF& pos
 	return points;
 }
 
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon IN/OUT
-   \param closePolygon True, when the polygon is closed
+/**
+ * \if ENGLISH
+ * @brief Sutherland-Hodgman polygon clipping algorithm
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to be clipped (modified in place)
+ * @param closePolygon True if the polygon is closed
+ * \endif
+ * \if CHINESE
+ * @brief Sutherland-Hodgman 多边形裁剪算法
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形（原地修改）
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * \endif
  */
 void QwtClipper::clipPolygon(const QRectF& clipRect, QPolygon& polygon, bool closePolygon)
 {
@@ -5256,12 +5715,19 @@ void QwtClipper::clipPolygon(const QRectF& clipRect, QPolygon& polygon, bool clo
 	clipper.clipPolygon(polygon, closePolygon);
 }
 
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon IN/OUT
-   \param closePolygon True, when the polygon is closed
+/**
+ * \if ENGLISH
+ * @brief Sutherland-Hodgman polygon clipping algorithm (integer coordinates)
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to be clipped (modified in place)
+ * @param closePolygon True if the polygon is closed
+ * \endif
+ * \if CHINESE
+ * @brief Sutherland-Hodgman 多边形裁剪算法（整数坐标）
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形（原地修改）
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * \endif
  */
 void QwtClipper::clipPolygon(const QRect& clipRect, QPolygon& polygon, bool closePolygon)
 {
@@ -5269,12 +5735,19 @@ void QwtClipper::clipPolygon(const QRect& clipRect, QPolygon& polygon, bool clos
 	clipper.clipPolygon(polygon, closePolygon);
 }
 
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon IN/OUT
-   \param closePolygon True, when the polygon is closed
+/**
+ * \if ENGLISH
+ * @brief Sutherland-Hodgman polygon clipping algorithm (float coordinates)
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to be clipped (modified in place)
+ * @param closePolygon True if the polygon is closed
+ * \endif
+ * \if CHINESE
+ * @brief Sutherland-Hodgman 多边形裁剪算法（浮点坐标）
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形（原地修改）
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * \endif
  */
 void QwtClipper::clipPolygonF(const QRectF& clipRect, QPolygonF& polygon, bool closePolygon)
 {
@@ -5282,14 +5755,21 @@ void QwtClipper::clipPolygonF(const QRectF& clipRect, QPolygonF& polygon, bool c
 	clipper.clipPolygon(polygon, closePolygon);
 }
 
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon
-   \param closePolygon True, when the polygon is closed
-
-   \return Clipped polygon
+/**
+ * \if ENGLISH
+ * @brief Return clipped polygon (float rectangle)
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to clip
+ * @param closePolygon True if the polygon is closed
+ * @return Clipped polygon
+ * \endif
+ * \if CHINESE
+ * @brief 返回裁剪后的多边形（浮点矩形）
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * @return 裁剪后的多边形
+ * \endif
  */
 QPolygon QwtClipper::clippedPolygon(const QRectF& clipRect, const QPolygon& polygon, bool closePolygon)
 {
@@ -5298,14 +5778,21 @@ QPolygon QwtClipper::clippedPolygon(const QRectF& clipRect, const QPolygon& poly
 
 	return points;
 }
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon
-   \param closePolygon True, when the polygon is closed
-
-   \return Clipped polygon
+/**
+ * \if ENGLISH
+ * @brief Return clipped polygon (integer rectangle)
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to clip
+ * @param closePolygon True if the polygon is closed
+ * @return Clipped polygon
+ * \endif
+ * \if CHINESE
+ * @brief 返回裁剪后的多边形（整数矩形）
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * @return 裁剪后的多边形
+ * \endif
  */
 QPolygon QwtClipper::clippedPolygon(const QRect& clipRect, const QPolygon& polygon, bool closePolygon)
 {
@@ -5315,14 +5802,21 @@ QPolygon QwtClipper::clippedPolygon(const QRect& clipRect, const QPolygon& polyg
 	return points;
 }
 
-/*!
-   Sutherland-Hodgman polygon clipping
-
-   \param clipRect Clip rectangle
-   \param polygon Polygon
-   \param closePolygon True, when the polygon is closed
-
-   \return Clipped polygon
+/**
+ * \if ENGLISH
+ * @brief Return clipped float polygon
+ * @param clipRect Clip rectangle
+ * @param polygon Polygon to clip
+ * @param closePolygon True if the polygon is closed
+ * @return Clipped polygon
+ * \endif
+ * \if CHINESE
+ * @brief 返回裁剪后的浮点多边形
+ * @param clipRect 裁剪矩形
+ * @param polygon 要裁剪的多边形
+ * @param closePolygon 如果多边形是闭合的则为 true
+ * @return 裁剪后的多边形
+ * \endif
  */
 QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& polygon, bool closePolygon)
 {
@@ -5332,18 +5826,26 @@ QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& p
 	return points;
 }
 
-/*!
-   Circle clipping
-
-   clipCircle() divides a circle into intervals of angles representing arcs
-   of the circle. When the circle is completely inside the clip rectangle
-   an interval [0.0, 2 * M_PI] is returned.
-
-   \param clipRect Clip rectangle
-   \param center Center of the circle
-   \param radius Radius of the circle
-
-   \return Arcs of the circle
+/**
+ * \if ENGLISH
+ * @brief Clip circle and return arcs as intervals
+ * @details clipCircle() divides a circle into intervals of angles representing arcs
+ *          of the circle. When the circle is completely inside the clip rectangle,
+ *          an interval [0.0, 2π] is returned.
+ * @param clipRect Clip rectangle
+ * @param center Center of the circle
+ * @param radius Radius of the circle
+ * @return Arcs of the circle as angle intervals
+ * \endif
+ * \if CHINESE
+ * @brief 裁剪圆形并返回弧段区间
+ * @details clipCircle() 将圆形分割成表示圆弧的角度区间。
+ *          当圆形完全在裁剪矩形内时，返回区间 [0.0, 2π]。
+ * @param clipRect 裁剪矩形
+ * @param center 圆心
+ * @param radius 圆半径
+ * @return 圆弧的角度区间
+ * \endif
  */
 QVector< QwtInterval > QwtClipper::clipCircle(const QRectF& clipRect, const QPointF& center, double radius)
 {
@@ -5809,6 +6311,28 @@ int QwtNullPaintDevice::metric( PaintDeviceMetric deviceMetric ) const
 			value = qRound( metric( PdmHeight ) * 25.4 / metric( PdmDpiY ) );
 			break;
 		}
+#if QT_VERSION >= 0x050000
+		case PdmDevicePixelRatio:
+		{
+			/*
+			 * Qt6 uses devicePixelRatioF() (→ metric(PdmDevicePixelRatioScaled))
+			 * to set up the painter's initial transform.  If we return 0 here,
+			 * QPainter builds a degenerate scale(0,0) transform which maps every
+			 * path to a zero-size bounding rect, leaving QwtGraphic::isEmpty()
+			 * permanently true and the legend icon blank.  Always return 1 for a
+			 * logical / virtual device.
+			 */
+			value = 1;
+			break;
+		}
+#endif
+#if QT_VERSION >= 0x050400
+		case PdmDevicePixelRatioScaled:
+		{
+			value = static_cast< int >( 1.0 * QPaintDevice::devicePixelRatioFScale() );
+			break;
+		}
+#endif
 		default:
 			value = 0;
 	}
@@ -6296,6 +6820,13 @@ QwtPainterCommand::StateData* QwtPainterCommand::stateData()
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qpainterpath.h>
+
+// Define QWT_GRAPHIC_DEBUG at compile time (e.g. -DQWT_GRAPHIC_DEBUG)
+// or uncomment the next line to enable verbose diagnostics for Qt6 icon issues.
+// #define QWT_GRAPHIC_DEBUG
+#ifdef QWT_GRAPHIC_DEBUG
+#  include <qdebug.h>
+#endif
 
 #if QT_VERSION >= 0x050000
 
@@ -6956,7 +7487,17 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
 	Qt::AspectRatioMode aspectRatioMode ) const
 {
 	if ( isEmpty() || rect.isEmpty() )
+	{
+#ifdef QWT_GRAPHIC_DEBUG
+		qDebug() << "[QwtGraphic::render] SKIPPED"
+				 << "isEmpty()=" << isEmpty()
+				 << "rect.isEmpty()=" << rect.isEmpty()
+				 << "boundingRect()=" << boundingRect()
+				 << "commands count=" << m_data->commands.size()
+				 << "defaultSize()=" << defaultSize();
+#endif
 		return;
+	}
 
 	double sx = 1.0;
 	double sy = 1.0;
@@ -7275,6 +7816,14 @@ void QwtGraphic::drawPath( const QPainterPath& path )
 
 		QRectF pointRect = scaledPath.boundingRect();
 		QRectF boundingRect = pointRect;
+
+#ifdef QWT_GRAPHIC_DEBUG
+		qDebug() << "[QwtGraphic::drawPath]"
+				 << "painter->transform()=" << painter->transform()
+				 << "path.boundingRect()=" << path.boundingRect()
+				 << "scaledPath.boundingRect()=" << pointRect
+				 << "devicePixelRatioF=" << paintEngine()->paintDevice()->devicePixelRatioF();
+#endif
 
 		if ( painter->pen().style() != Qt::NoPen
 			&& painter->pen().brush().style() != Qt::NoBrush )
@@ -9460,37 +10009,75 @@ class QwtPlainTextEngine::PrivateData
 	mutable QMap< QString, int > m_ascentCache;
 };
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtTextEngine::QwtTextEngine()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtTextEngine::~QwtTextEngine()
 {
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtPlainTextEngine::QwtPlainTextEngine()
 {
 	m_data = new PrivateData;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlainTextEngine::~QwtPlainTextEngine()
 {
 	delete m_data;
 }
 
-/*!
-   Find the height for a given width
-
-   \param font Font of the text
-   \param flags Bitwise OR of the flags used like in QPainter::drawText
-   \param text Text to be rendered
-   \param width Width
-
-   \return Calculated height
+/**
+ * \if ENGLISH
+ * @brief Find the height for a given width
+ * @param font Font of the text
+ * @param flags Bitwise OR of the flags used like in QPainter::drawText
+ * @param text Text to be rendered
+ * @param width Width
+ * @return Calculated height
+ * \sa textSize()
+ * \endif
+ * \if CHINESE
+ * @brief 计算给定宽度的高度
+ * @param font 文本字体
+ * @param flags 标志的按位或，如 QPainter::drawText 中使用
+ * @param text 要渲染的文本
+ * @param width 宽度
+ * @return 计算的高度
+ * \sa textSize()
+ * \endif
  */
 double QwtPlainTextEngine::heightForWidth( const QFont& font, int flags,
 	const QString& text, double width ) const
@@ -9502,14 +10089,23 @@ double QwtPlainTextEngine::heightForWidth( const QFont& font, int flags,
 	return rect.height();
 }
 
-/*!
-   Returns the size, that is needed to render text
-
-   \param font Font of the text
-   \param flags Bitwise OR of the flags used like in QPainter::drawText
-   \param text Text to be rendered
-
-   \return Calculated size
+/**
+ * \if ENGLISH
+ * @brief Return the size needed to render text
+ * @param font Font of the text
+ * @param flags Bitwise OR of the flags used like in QPainter::drawText
+ * @param text Text to be rendered
+ * @return Calculated size
+ * \sa heightForWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回渲染文本所需的尺寸
+ * @param font 文本字体
+ * @param flags 标志的按位或，如 QPainter::drawText 中使用
+ * @param text 要渲染的文本
+ * @return 计算的尺寸
+ * \sa heightForWidth()
+ * \endif
  */
 QSizeF QwtPlainTextEngine::textSize( const QFont& font,
 	int flags, const QString& text ) const
@@ -9521,14 +10117,25 @@ QSizeF QwtPlainTextEngine::textSize( const QFont& font,
 	return rect.size();
 }
 
-/*!
-   Return margins around the texts
-
-   \param font Font of the text
-   \param left Return 0
-   \param right Return 0
-   \param top Return value for the top margin
-   \param bottom Return value for the bottom margin
+/**
+ * \if ENGLISH
+ * @brief Return margins around the texts
+ * @param font Font of the text
+ * @param left Return 0
+ * @param right Return 0
+ * @param top Return value for the top margin
+ * @param bottom Return value for the bottom margin
+ * \sa textMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回文本周围的边距
+ * @param font 文本字体
+ * @param left 返回 0
+ * @param right 返回 0
+ * @param top 上边距返回值
+ * @param bottom 下边距返回值
+ * \sa textMargins()
+ * \endif
  */
 void QwtPlainTextEngine::textMargins( const QFont& font, const QString&,
 	double& left, double& right, double& top, double& bottom ) const
@@ -9540,15 +10147,25 @@ void QwtPlainTextEngine::textMargins( const QFont& font, const QString&,
 	bottom = fm.descent();
 }
 
-/*!
-   \brief Draw the text in a clipping rectangle
-
-   A wrapper for QPainter::drawText.
-
-   \param painter Painter
-   \param rect Clipping rectangle
-   \param flags Bitwise OR of the flags used like in QPainter::drawText
-   \param text Text to be rendered
+/**
+ * \if ENGLISH
+ * @brief Draw the text in a clipping rectangle
+ * @details A wrapper for QPainter::drawText.
+ * @param painter Painter
+ * @param rect Clipping rectangle
+ * @param flags Bitwise OR of the flags used like in QPainter::drawText
+ * @param text Text to be rendered
+ * \sa draw()
+ * \endif
+ * \if CHINESE
+ * @brief 在裁剪矩形中绘制文本
+ * @details QPainter::drawText 的包装器。
+ * @param painter 绘制器
+ * @param rect 裁剪矩形
+ * @param flags 标志的按位或，如 QPainter::drawText 中使用
+ * @param text 要渲染的文本
+ * \sa draw()
+ * \endif
  */
 void QwtPlainTextEngine::draw( QPainter* painter, const QRectF& rect,
 	int flags, const QString& text ) const
@@ -9556,9 +10173,17 @@ void QwtPlainTextEngine::draw( QPainter* painter, const QRectF& rect,
 	QwtPainter::drawText( painter, rect, flags, text );
 }
 
-/*!
-   Test if a string can be rendered by this text engine.
-   \return Always true. All texts can be rendered by QwtPlainTextEngine
+/**
+ * \if ENGLISH
+ * @brief Test if a string can be rendered by this text engine
+ * @return Always true. All texts can be rendered by QwtPlainTextEngine
+ * \sa mightRender()
+ * \endif
+ * \if CHINESE
+ * @brief 测试字符串是否可以被此文本引擎渲染
+ * @return 总是返回 true。所有文本都可以被 QwtPlainTextEngine 渲染
+ * \sa mightRender()
+ * \endif
  */
 bool QwtPlainTextEngine::mightRender( const QString& ) const
 {
@@ -9567,20 +10192,37 @@ bool QwtPlainTextEngine::mightRender( const QString& ) const
 
 #ifndef QT_NO_RICHTEXT
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtRichTextEngine::QwtRichTextEngine()
 {
 }
 
-/*!
-   Find the height for a given width
-
-   \param font Font of the text
-   \param flags Bitwise OR of the flags used like in QPainter::drawText()
-   \param text Text to be rendered
-   \param width Width
-
-   \return Calculated height
+/**
+ * \if ENGLISH
+ * @brief Find the height for a given width
+ * @param font Font of the text
+ * @param flags Bitwise OR of the flags used like in QPainter::drawText()
+ * @param text Text to be rendered
+ * @param width Width
+ * @return Calculated height
+ * \sa textSize()
+ * \endif
+ * \if CHINESE
+ * @brief 计算给定宽度的高度
+ * @param font 文本字体
+ * @param flags 标志的按位或，如 QPainter::drawText() 中使用
+ * @param text 要渲染的文本
+ * @param width 宽度
+ * @return 计算的高度
+ * \sa textSize()
+ * \endif
  */
 double QwtRichTextEngine::heightForWidth( const QFont& font, int flags,
 	const QString& text, double width ) const
@@ -9591,16 +10233,24 @@ double QwtRichTextEngine::heightForWidth( const QFont& font, int flags,
 	return doc.documentLayout()->documentSize().height();
 }
 
-/*!
-   Returns the size, that is needed to render text
-
-   \param font Font of the text
-   \param flags Bitwise OR of the flags used like in QPainter::drawText()
-   \param text Text to be rendered
-
-   \return Calculated size
+/**
+ * \if ENGLISH
+ * @brief Return the size needed to render text
+ * @param font Font of the text
+ * @param flags Bitwise OR of the flags used like in QPainter::drawText()
+ * @param text Text to be rendered
+ * @return Calculated size
+ * \sa heightForWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回渲染文本所需的尺寸
+ * @param font 文本字体
+ * @param flags 标志的按位或，如 QPainter::drawText() 中使用
+ * @param text 要渲染的文本
+ * @return 计算的尺寸
+ * \sa heightForWidth()
+ * \endif
  */
-
 QSizeF QwtRichTextEngine::textSize( const QFont& font,
 	int flags, const QString& text ) const
 {
@@ -9617,13 +10267,23 @@ QSizeF QwtRichTextEngine::textSize( const QFont& font,
 	return doc.size();
 }
 
-/*!
-   Draw the text in a clipping rectangle
-
-   \param painter Painter
-   \param rect Clipping rectangle
-   \param flags Bitwise OR of the flags like in for QPainter::drawText()
-   \param text Text to be rendered
+/**
+ * \if ENGLISH
+ * @brief Draw the text in a clipping rectangle
+ * @param painter Painter
+ * @param rect Clipping rectangle
+ * @param flags Bitwise OR of the flags like in QPainter::drawText()
+ * @param text Text to be rendered
+ * \sa draw()
+ * \endif
+ * \if CHINESE
+ * @brief 在裁剪矩形中绘制文本
+ * @param painter 绘制器
+ * @param rect 裁剪矩形
+ * @param flags 标志的按位或，如 QPainter::drawText() 中使用
+ * @param text 要渲染的文本
+ * \sa draw()
+ * \endif
  */
 void QwtRichTextEngine::draw( QPainter* painter, const QRectF& rect,
 	int flags, const QString& text ) const
@@ -9632,37 +10292,63 @@ void QwtRichTextEngine::draw( QPainter* painter, const QRectF& rect,
 	QwtPainter::drawSimpleRichText( painter, rect, flags, doc );
 }
 
-/*!
-   Wrap text into <div align=...> </div> tags according flags
-
-   \param text Text
-   \param flags Bitwise OR of the flags like in for QPainter::drawText()
-
-   \return Tagged text
+/**
+ * \if ENGLISH
+ * @brief Wrap text into &lt;div align=...&gt; &lt;/div&gt; tags according to flags
+ * @param text Text
+ * @param flags Bitwise OR of the flags like in QPainter::drawText()
+ * @return Tagged text
+ * \sa taggedRichText()
+ * \endif
+ * \if CHINESE
+ * @brief 根据 flags 将文本包装到 &lt;div align=...&gt; &lt;/div&gt; 标签中
+ * @param text 文本
+ * @param flags 标志的按位或，如 QPainter::drawText() 中使用
+ * @return 带标签的文本
+ * \sa taggedRichText()
+ * \endif
  */
 QString QwtRichTextEngine::taggedText( const QString& text, int flags ) const
 {
 	return taggedRichText( text, flags );
 }
 
-/*!
-   Test if a string can be rendered by this text engine
-
-   \param text Text to be tested
-   \return Qt::mightBeRichText(text);
+/**
+ * \if ENGLISH
+ * @brief Test if a string can be rendered by this text engine
+ * @param text Text to be tested
+ * @return Qt::mightBeRichText(text)
+ * \sa mightRender()
+ * \endif
+ * \if CHINESE
+ * @brief 测试字符串是否可以被此文本引擎渲染
+ * @param text 要测试的文本
+ * @return Qt::mightBeRichText(text)
+ * \sa mightRender()
+ * \endif
  */
 bool QwtRichTextEngine::mightRender( const QString& text ) const
 {
 	return Qt::mightBeRichText( text );
 }
 
-/*!
-   Return margins around the texts
-
-   \param left Return 0
-   \param right Return 0
-   \param top Return 0
-   \param bottom Return 0
+/**
+ * \if ENGLISH
+ * @brief Return margins around the texts
+ * @param left Return 0
+ * @param right Return 0
+ * @param top Return 0
+ * @param bottom Return 0
+ * \sa textMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回文本周围的边距
+ * @param left 返回 0
+ * @param right 返回 0
+ * @param top 返回 0
+ * @param bottom 返回 0
+ * \sa textMargins()
+ * \endif
  */
 void QwtRichTextEngine::textMargins( const QFont&, const QString&,
 	double& left, double& right, double& top, double& bottom ) const
@@ -9844,8 +10530,14 @@ public:
 	QSizeF textSize;
 };
 
-/*!
-   Constructor
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
  */
 QwtText::QwtText()
 {
@@ -9855,11 +10547,20 @@ QwtText::QwtText()
 	m_layoutCache = new LayoutCache;
 }
 
-/*!
-   Constructor
-
-   \param text Text content
-   \param textFormat Text format
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * @param text Text content
+ * @param textFormat Text format
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * @param text 文本内容
+ * @param textFormat 文本格式
+ * \endif
  */
 QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -9871,7 +10572,17 @@ QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
 	m_layoutCache = new LayoutCache;
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ * @param other Other QwtText to copy from
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 拷贝构造函数
+ * @param other 要复制的其他 QwtText
+ * \endif
+ */
 QwtText::QwtText(const QwtText& other)
 {
 	m_data  = new PrivateData;
@@ -9881,14 +10592,34 @@ QwtText::QwtText(const QwtText& other)
 	*m_layoutCache = *other.m_layoutCache;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtText::~QwtText()
 {
 	delete m_data;
 	delete m_layoutCache;
 }
 
-//! Assignment operator
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ * @param other Other QwtText to assign from
+ * @return Reference to this QwtText
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 赋值运算符
+ * @param other 要赋值的其他 QwtText
+ * @return 对此 QwtText 的引用
+ * \endif
+ */
 QwtText& QwtText::operator=(const QwtText& other)
 {
 	*m_data        = *other.m_data;
@@ -9896,7 +10627,19 @@ QwtText& QwtText::operator=(const QwtText& other)
 	return *this;
 }
 
-//! Relational operator
+/**
+ * \if ENGLISH
+ * @brief Equality operator
+ * @param other Other QwtText to compare with
+ * @return true if equal
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 相等运算符
+ * @param other 要比较的其他 QwtText
+ * @return 如果相等则返回 true
+ * \endif
+ */
 bool QwtText::operator==(const QwtText& other) const
 {
 	return m_data->renderFlags == other.m_data->renderFlags && m_data->text == other.m_data->text
@@ -9906,19 +10649,42 @@ bool QwtText::operator==(const QwtText& other) const
 		   && m_data->paintAttributes == other.m_data->paintAttributes && m_data->textEngine == other.m_data->textEngine;
 }
 
-//! Relational operator
-bool QwtText::operator!=(const QwtText& other) const  // invalidate
+/**
+ * \if ENGLISH
+ * @brief Inequality operator
+ * @param other Other QwtText to compare with
+ * @return true if not equal
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 不等运算符
+ * @param other 要比较的其他 QwtText
+ * @return 如果不相等则返回 true
+ * \endif
+ */
+bool QwtText::operator!=(const QwtText& other) const
 {
 	return !(other == *this);
 }
 
-/*!
-   Assign a new text content
-
-   \param text Text content
-   \param textFormat Text format
-
-   \sa text()
+/**
+ * \if ENGLISH
+ * @brief Assign a new text content
+ *
+ * @param text Text content
+ * @param textFormat Text format
+ *
+ * @sa text()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配新的文本内容
+ *
+ * @param text 文本内容
+ * @param textFormat 文本格式
+ *
+ * @sa text()
+ * \endif
  */
 void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -9928,24 +10694,46 @@ void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
 	m_layoutCache->invalidate();
 }
 
-/*!
-   \return Text as QString.
-   \sa setText()
+/**
+ * \if ENGLISH
+ * @brief Get text as QString
+ * @return Text as QString
+ * @sa setText()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取文本作为 QString
+ * @return 文本作为 QString
+ * @sa setText()
+ * \endif
  */
 QString QwtText::text() const
 {
 	return m_data->text;
 }
 
-/*!
-   \brief Change the render flags
-
-   The default setting is Qt::AlignCenter
-
-   \param renderFlags Bitwise OR of the flags used like in QPainter::drawText()
-
-   \sa renderFlags(), QwtTextEngine::draw()
-   \note Some renderFlags might have no effect, depending on the text format.
+/**
+ * \if ENGLISH
+ * @brief Change the render flags
+ *
+ * The default setting is Qt::AlignCenter
+ *
+ * @param renderFlags Bitwise OR of the flags used like in QPainter::drawText()
+ *
+ * @sa renderFlags(), QwtTextEngine::draw()
+ * @note Some renderFlags might have no effect, depending on the text format.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改渲染标志
+ *
+ * 默认设置是 Qt::AlignCenter
+ *
+ * @param renderFlags 标志的按位或，用法类似于 QPainter::drawText()
+ *
+ * @sa renderFlags(), QwtTextEngine::draw()
+ * @note 某些 renderFlags 可能没有效果，取决于文本格式。
+ * \endif
  */
 void QwtText::setRenderFlags(int renderFlags)
 {
@@ -10358,13 +11146,33 @@ const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
 	return TextEngineDict::dict().textEngine(format);
 }
 
-//! \return text().isNull()
+/**
+ * \if ENGLISH
+ * @brief Check if text is null
+ * @return text().isNull()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查文本是否为空
+ * @return text().isNull()
+ * \endif
+ */
 bool QwtText::isNull() const
 {
 	return m_data->text.isNull();
 }
 
-//! \return text().isEmpty()
+/**
+ * \if ENGLISH
+ * @brief Check if text is empty
+ * @return text().isEmpty()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查文本是否为空字符串
+ * @return text().isEmpty()
+ * \endif
+ */
 bool QwtText::isEmpty() const
 {
 	return m_data->text.isEmpty();
@@ -10392,19 +11200,32 @@ public:
 	QwtText text;
 };
 
-/*!
-   Constructs an empty label.
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructs an empty label
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief 构造一个空标签
+ * @param parent 父控件
+ * \endif
  */
 QwtTextLabel::QwtTextLabel(QWidget* parent) : QFrame(parent)
 {
 	init();
 }
 
-/*!
-   Constructs a label that displays the text, text
-   \param parent Parent widget
-   \param text Text
+/**
+ * \if ENGLISH
+ * @brief Constructs a label that displays the text
+ * @param parent Parent widget
+ * @param text Text to display
+ * \endif
+ * \if CHINESE
+ * @brief 构造一个显示文本的标签
+ * @param parent 父控件
+ * @param text 要显示的文本
+ * \endif
  */
 QwtTextLabel::QwtTextLabel(const QwtText& text, QWidget* parent) : QFrame(parent)
 {
@@ -10412,7 +11233,14 @@ QwtTextLabel::QwtTextLabel(const QwtText& text, QWidget* parent) : QFrame(parent
 	m_data->text = text;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtTextLabel::~QwtTextLabel()
 {
 	delete m_data;
@@ -10424,32 +11252,53 @@ void QwtTextLabel::init()
 	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
-/*!
-   Interface for the designer plugin - does the same as setText()
-   \sa plainText()
+/**
+ * \if ENGLISH
+ * @brief Interface for the designer plugin - does the same as setText()
+ * @param text Plain text to set
+ * \sa plainText()
+ * \endif
+ * \if CHINESE
+ * @brief 设计师插件接口 - 与 setText() 功能相同
+ * @param text 要设置的纯文本
+ * \sa plainText()
+ * \endif
  */
 void QwtTextLabel::setPlainText(const QString& text)
 {
 	setText(QwtText(text));
 }
 
-/*!
-   Interface for the designer plugin
-
-   \return Text as plain text
-   \sa setPlainText(), text()
+/**
+ * \if ENGLISH
+ * @brief Interface for the designer plugin
+ * @return Text as plain text
+ * \sa setPlainText(), text()
+ * \endif
+ * \if CHINESE
+ * @brief 设计师插件接口
+ * @return 纯文本形式的文本
+ * \sa setPlainText(), text()
+ * \endif
  */
 QString QwtTextLabel::plainText() const
 {
 	return m_data->text.text();
 }
 
-/*!
-   Change the label's text, keeping all other QwtText attributes
-   \param text New text
-   \param textFormat Format of text
-
-   \sa QwtText
+/**
+ * \if ENGLISH
+ * @brief Change the label's text, keeping all other QwtText attributes
+ * @param text New text
+ * @param textFormat Format of text
+ * \sa QwtText
+ * \endif
+ * \if CHINESE
+ * @brief 更改标签的文本，保留所有其他 QwtText 属性
+ * @param text 新文本
+ * @param textFormat 文本格式
+ * \sa QwtText
+ * \endif
  */
 void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
 {
@@ -10459,9 +11308,17 @@ void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
 	updateGeometry();
 }
 
-/*!
-   Change the label's text
-   \param text New text
+/**
+ * \if ENGLISH
+ * @brief Change the label's text
+ * @param text New text
+ * \sa setText(), clear()
+ * \endif
+ * \if CHINESE
+ * @brief 更改标签的文本
+ * @param text 新文本
+ * \sa setText(), clear()
+ * \endif
  */
 void QwtTextLabel::setText(const QwtText& text)
 {
@@ -10471,13 +11328,33 @@ void QwtTextLabel::setText(const QwtText& text)
 	updateGeometry();
 }
 
-//! Return the text
+/**
+ * \if ENGLISH
+ * @brief Return the text
+ * @return Current text
+ * \sa setText(), plainText()
+ * \endif
+ * \if CHINESE
+ * @brief 返回文本
+ * @return 当前文本
+ * \sa setText(), plainText()
+ * \endif
+ */
 const QwtText& QwtTextLabel::text() const
 {
 	return m_data->text;
 }
 
-//! Clear the text and all QwtText attributes
+/**
+ * \if ENGLISH
+ * @brief Clear the text and all QwtText attributes
+ * \sa setText()
+ * \endif
+ * \if CHINESE
+ * @brief 清除文本和所有 QwtText 属性
+ * \sa setText()
+ * \endif
+ */
 void QwtTextLabel::clear()
 {
 	m_data->text = QwtText();
@@ -10486,15 +11363,34 @@ void QwtTextLabel::clear()
 	updateGeometry();
 }
 
-//! Return label's text indent in pixels
+/**
+ * \if ENGLISH
+ * @brief Return label's text indent in pixels
+ * @return Indent in pixels
+ * \sa setIndent()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标签的文本缩进（像素）
+ * @return 缩进像素数
+ * \sa setIndent()
+ * \endif
+ */
 int QwtTextLabel::indent() const
 {
 	return m_data->indent;
 }
 
-/*!
-   Set label's text indent in pixels
-   \param indent Indentation in pixels
+/**
+ * \if ENGLISH
+ * @brief Set label's text indent in pixels
+ * @param indent Indentation in pixels
+ * \sa indent()
+ * \endif
+ * \if CHINESE
+ * @brief 设置标签的文本缩进（像素）
+ * @param indent 缩进像素数
+ * \sa indent()
+ * \endif
  */
 void QwtTextLabel::setIndent(int indent)
 {
@@ -10507,15 +11403,34 @@ void QwtTextLabel::setIndent(int indent)
 	updateGeometry();
 }
 
-//! Return label's text margin in pixels
+/**
+ * \if ENGLISH
+ * @brief Return label's margin in pixels
+ * @return Margin in pixels
+ * \sa setMargin()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标签的边距（像素）
+ * @return 边距像素数
+ * \sa setMargin()
+ * \endif
+ */
 int QwtTextLabel::margin() const
 {
 	return m_data->margin;
 }
 
-/*!
-   Set label's margin in pixels
-   \param margin Margin in pixels
+/**
+ * \if ENGLISH
+ * @brief Set label's margin in pixels
+ * @param margin Margin in pixels
+ * \sa margin()
+ * \endif
+ * \if CHINESE
+ * @brief 设置标签的边距（像素）
+ * @param margin 边距像素数
+ * \sa margin()
+ * \endif
  */
 void QwtTextLabel::setMargin(int margin)
 {
@@ -10525,13 +11440,35 @@ void QwtTextLabel::setMargin(int margin)
 	updateGeometry();
 }
 
-//! Return a size hint
+/**
+ * \if ENGLISH
+ * @brief Return a size hint
+ * @return Size hint
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \sa minimumSizeHint()
+ * \endif
+ */
 QSize QwtTextLabel::sizeHint() const
 {
 	return minimumSizeHint();
 }
 
-//! Return a minimum size hint
+/**
+ * \if ENGLISH
+ * @brief Return a minimum size hint
+ * @return Minimum size hint
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * @return 最小大小提示
+ * \sa sizeHint()
+ * \endif
+ */
 QSize QwtTextLabel::minimumSizeHint() const
 {
 	QSizeF sz = m_data->text.textSize(font());
@@ -10558,9 +11495,19 @@ QSize QwtTextLabel::minimumSizeHint() const
 	return QSize(qwtCeil(sz.width()), qwtCeil(sz.height()));
 }
 
-/*!
-   \param width Width
-   \return Preferred height for this widget, given the width.
+/**
+ * \if ENGLISH
+ * @brief Return the preferred height for a given width
+ * @param width Given width
+ * @return Preferred height for this widget, given the width
+ * \sa sizeHint(), minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回给定宽度的首选高度
+ * @param width 给定宽度
+ * @return 给定宽度下控件的首选高度
+ * \sa sizeHint(), minimumSizeHint()
+ * \endif
  */
 int QwtTextLabel::heightForWidth(int width) const
 {
@@ -10585,9 +11532,17 @@ int QwtTextLabel::heightForWidth(int width) const
 	return height;
 }
 
-/*!
-   Qt paint event
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Qt paint event handler
+ * @param event Paint event
+ * \sa drawContents(), paintEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 绘制事件处理器
+ * @param event 绘制事件
+ * \sa drawContents(), paintEvent()
+ * \endif
  */
 void QwtTextLabel::paintEvent(QPaintEvent* event)
 {
@@ -10629,15 +11584,36 @@ void QwtTextLabel::drawContents(QPainter* painter)
 	}
 }
 
-//! Redraw the text
+/**
+ * \if ENGLISH
+ * @brief Redraw the text
+ * @param painter Painter used for drawing
+ * @param textRect Rectangle where to draw the text
+ * \sa drawContents()
+ * \endif
+ * \if CHINESE
+ * @brief 重绘文本
+ * @param painter 用于绘制的绘制器
+ * @param textRect 绘制文本的矩形区域
+ * \sa drawContents()
+ * \endif
+ */
 void QwtTextLabel::drawText(QPainter* painter, const QRectF& textRect)
 {
 	m_data->text.draw(painter, textRect);
 }
 
-/*!
-   Calculate geometry for the text in widget coordinates
-   \return Geometry for the text
+/**
+ * \if ENGLISH
+ * @brief Calculate geometry for the text in widget coordinates
+ * @return Geometry for the text
+ * \sa drawText(), drawContents()
+ * \endif
+ * \if CHINESE
+ * @brief 计算控件坐标中文本的几何区域
+ * @return 文本的几何区域
+ * \sa drawText(), drawContents()
+ * \endif
  */
 QRect QwtTextLabel::textRect() const
 {
@@ -10671,6 +11647,18 @@ QRect QwtTextLabel::textRect() const
 	return r;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Calculate the default indent based on font
+ * @return Default indent in pixels
+ * \sa indent(), setIndent()
+ * \endif
+ * \if CHINESE
+ * @brief 根据字体计算默认缩进
+ * @return 默认缩进像素数
+ * \sa indent(), setIndent()
+ * \endif
+ */
 int QwtTextLabel::defaultIndent() const
 {
 	if (frameWidth() <= 0)
@@ -10783,9 +11771,16 @@ public:
 	uchar* rgbaBuffer;
 };
 
-/*!
-   \brief Constructor
-   \param widget Parent widget, where the overlay is aligned to
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param widget Parent widget, where the overlay is aligned to
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param widget 父控件，覆盖层与其对齐
+ * \endif
  */
 QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 {
@@ -10807,11 +11802,18 @@ QwtWidgetOverlay::~QwtWidgetOverlay()
 	delete m_data;
 }
 
-/*!
-   \brief Specify how to find the mask for the overlay
-
-   \param mode New mode
-   \sa maskMode()
+/**
+ * \if ENGLISH
+ * @brief Specify how to find the mask for the overlay
+ * @param mode New mode
+ * \sa maskMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定如何为覆盖层查找掩码
+ * @param mode 新模式
+ * \sa maskMode()
+ * \endif
  */
 void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 {
@@ -10822,8 +11824,15 @@ void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 }
 
 /*!
-   \return Mode how to find the mask for the overlay
+   \if ENGLISH
+   @return Mode how to find the mask for the overlay
    \sa setMaskMode()
+   \endif
+   *
+   \if CHINESE
+   @return 如何为覆盖层查找掩码的模式
+   \sa setMaskMode()
+   \endif
  */
 QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 {
@@ -10831,10 +11840,17 @@ QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 }
 
 /*!
+   \if ENGLISH
    Set the render mode
-   \param mode Render mode
-
+   @param mode Render mode
    \sa RenderMode, renderMode()
+   \endif
+   *
+   \if CHINESE
+   设置渲染模式
+   @param mode 渲染模式
+   \sa RenderMode, renderMode()
+   \endif
  */
 void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
@@ -10842,8 +11858,15 @@ void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 }
 
 /*!
-   \return Render mode
+   \if ENGLISH
+   @return Render mode
    \sa RenderMode, setRenderMode()
+   \endif
+   *
+   \if CHINESE
+   @return 渲染模式
+   \sa RenderMode, setRenderMode()
+   \endif
  */
 QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 {
@@ -10851,7 +11874,13 @@ QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 }
 
 /*!
+   \if ENGLISH
    Recalculate the mask and repaint the overlay
+   \endif
+   *
+   \if CHINESE
+   重新计算掩码并重绘覆盖层
+   \endif
  */
 void QwtWidgetOverlay::updateOverlay()
 {
@@ -10909,10 +11938,17 @@ void QwtWidgetOverlay::updateMask()
 }
 
 /*!
+   \if ENGLISH
    Paint event
-   \param event Paint event
-
+   @param event Paint event
    \sa drawOverlay()
+   \endif
+   *
+   \if CHINESE
+   绘制事件
+   @param event 绘制事件
+   \sa drawOverlay()
+   \endif
  */
 void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 {
@@ -10959,8 +11995,15 @@ void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 }
 
 /*!
+   \if ENGLISH
    Resize event
-   \param event Resize event
+   @param event Resize event
+   \endif
+   *
+   \if CHINESE
+   调整大小事件
+   @param event 调整大小事件
+   \endif
  */
 void QwtWidgetOverlay::resizeEvent(QResizeEvent* event)
 {
@@ -11015,14 +12058,27 @@ QRegion QwtWidgetOverlay::maskHint() const
 }
 
 /*!
-   \brief Event filter
+   \if ENGLISH
+   @brief Event filter
 
    Resize the overlay according to the size of the parent widget.
 
-   \param object Object to be filtered
-   \param event Event
+   @param object Object to be filtered
+   @param event Event
 
    \return See QObject::eventFilter()
+   \endif
+   *
+   \if CHINESE
+   @brief 事件过滤器
+
+   根据父控件的大小调整覆盖层的大小。
+
+   @param object 要过滤的对象
+   @param event 事件
+
+   \return 参见 QObject::eventFilter()
+   \endif
  */
 
 bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)
@@ -11039,64 +12095,118 @@ bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)
 
 
 /*** Start of inlined file: qwt_legend_data.cpp ***/
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtLegendData::QwtLegendData()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtLegendData::~QwtLegendData()
 {
 }
 
-/*!
-   Set the legend attributes
-
-   QwtLegendData actually is a QMap<int, QVariant> with some
-   convenience interfaces
-
-   \param map Values
-   \sa values()
+/**
+ * \if ENGLISH
+ * @brief Set the legend attributes
+ * @details QwtLegendData actually is a QMap<int, QVariant> with some
+ *          convenience interfaces
+ * @param map Values
+ * \sa values()
+ * \endif
+ * \if CHINESE
+ * @brief 设置图例属性
+ * @details QwtLegendData 实际上是一个带有便捷接口的 QMap<int, QVariant>
+ * @param map 值
+ * \sa values()
+ * \endif
  */
 void QwtLegendData::setValues( const QMap< int, QVariant >& map )
 {
 	m_map = map;
 }
 
-/*!
-   \return Legend attributes
-   \sa setValues()
+/**
+ * \if ENGLISH
+ * @brief Return the legend attributes
+ * @return Legend attributes
+ * \sa setValues()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图例属性
+ * @return 图例属性
+ * \sa setValues()
+ * \endif
  */
 const QMap< int, QVariant >& QwtLegendData::values() const
 {
 	return m_map;
 }
 
-/*!
-   \param role Attribute role
-   \return True, when the internal map has an entry for role
+/**
+ * \if ENGLISH
+ * @brief Check if a value exists for a specific role
+ * @param role Attribute role
+ * @return True, when the internal map has an entry for role
+ * \sa setValue(), value()
+ * \endif
+ * \if CHINESE
+ * @brief 检查特定角色是否有值
+ * @param role 属性角色
+ * @return 当内部映射包含该角色时返回 true
+ * \sa setValue(), value()
+ * \endif
  */
 bool QwtLegendData::hasRole( int role ) const
 {
 	return m_map.contains( role );
 }
 
-/*!
-   Set an attribute value
-
-   \param role Attribute role
-   \param data Attribute value
-
-   \sa value()
+/**
+ * \if ENGLISH
+ * @brief Set an attribute value
+ * @param role Attribute role
+ * @param data Attribute value
+ * \sa value()
+ * \endif
+ * \if CHINESE
+ * @brief 设置属性值
+ * @param role 属性角色
+ * @param data 属性值
+ * \sa value()
+ * \endif
  */
 void QwtLegendData::setValue( int role, const QVariant& data )
 {
 	m_map[role] = data;
 }
 
-/*!
-   \param role Attribute role
-   \return Attribute value for a specific role
+/**
+ * \if ENGLISH
+ * @brief Return the attribute value for a specific role
+ * @param role Attribute role
+ * @return Attribute value for a specific role
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回特定角色的属性值
+ * @param role 属性角色
+ * @return 特定角色的属性值
+ * \sa setValue()
+ * \endif
  */
 QVariant QwtLegendData::value( int role ) const
 {
@@ -11106,13 +12216,35 @@ QVariant QwtLegendData::value( int role ) const
 	return m_map[role];
 }
 
-//! \return True, when the internal map is empty
+/**
+ * \if ENGLISH
+ * @brief Check if the legend data is valid
+ * @return True, when the internal map is empty
+ * \sa setValues(), setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 检查图例数据是否有效
+ * @return 当内部映射为空时返回 true
+ * \sa setValues(), setValue()
+ * \endif
+ */
 bool QwtLegendData::isValid() const
 {
 	return !m_map.isEmpty();
 }
 
-//! \return Value of the TitleRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the title
+ * @return Value of the TitleRole attribute
+ * \sa icon(), mode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标题
+ * @return TitleRole 属性的值
+ * \sa icon(), mode()
+ * \endif
+ */
 QwtText QwtLegendData::title() const
 {
 	QwtText text;
@@ -11130,7 +12262,18 @@ QwtText QwtLegendData::title() const
 	return text;
 }
 
-//! \return Value of the IconRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the icon
+ * @return Value of the IconRole attribute
+ * \sa title(), mode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图标
+ * @return IconRole 属性的值
+ * \sa title(), mode()
+ * \endif
+ */
 QwtGraphic QwtLegendData::icon() const
 {
 	const QVariant iconValue = value( QwtLegendData::IconRole );
@@ -11144,7 +12287,20 @@ QwtGraphic QwtLegendData::icon() const
 	return graphic;
 }
 
-//! \return Value of the ModeRole attribute
+/**
+ * \if ENGLISH
+ * @brief Return the mode
+ * @return Value of the ModeRole attribute
+ * @return ReadOnly when no mode is set
+ * \sa title(), icon()
+ * \endif
+ * \if CHINESE
+ * @brief 返回模式
+ * @return ModeRole 属性的值
+ * @return 如果未设置模式则返回 ReadOnly
+ * \sa title(), icon()
+ * \endif
+ */
 QwtLegendData::Mode QwtLegendData::mode() const
 {
 	const QVariant modeValue = value( QwtLegendData::ModeRole );
@@ -11759,6 +12915,16 @@ public:
    Constructor
    \param parent Parent widget
  */
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtLegend
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief QwtLegend 构造函数
+ * @param parent 父控件
+ * \endif
+ */
 QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
 {
 	setFrameStyle(NoFrame);
@@ -11779,21 +12945,33 @@ QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
 	layout->addWidget(m_data->view);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtLegend::~QwtLegend()
 {
 	delete m_data;
 }
 
-/*!
-   \brief Set the maximum number of entries in a row
-
-   F.e when the maximum is set to 1 all items are aligned
-   vertically. 0 means unlimited
-
-   \param numColums Maximum number of entries in a row
-
-   \sa maxColumns(), QwtDynGridLayout::setMaxColumns()
+/**
+ * \if ENGLISH
+ * @brief Set the maximum number of entries in a row
+ * @details F.e when the maximum is set to 1 all items are aligned
+ *          vertically. 0 means unlimited
+ * @param numColums Maximum number of entries in a row
+ * \sa maxColumns(), QwtDynGridLayout::setMaxColumns()
+ * \endif
+ * \if CHINESE
+ * @brief 设置每行的最大条目数
+ * @details 例如，当最大值设置为 1 时，所有条目垂直排列。0 表示无限制
+ * @param numColums 每行最大条目数
+ * \sa maxColumns(), QwtDynGridLayout::setMaxColumns()
+ * \endif
  */
 void QwtLegend::setMaxColumns(uint numColums)
 {
@@ -11804,9 +12982,17 @@ void QwtLegend::setMaxColumns(uint numColums)
 	updateGeometry();
 }
 
-/*!
-   \return Maximum number of entries in a row
-   \sa setMaxColumns(), QwtDynGridLayout::maxColumns()
+/**
+ * \if ENGLISH
+ * @brief Return the maximum number of entries in a row
+ * @return Maximum number of entries in a row
+ * \sa setMaxColumns(), QwtDynGridLayout::maxColumns()
+ * \endif
+ * \if CHINESE
+ * @brief 返回每行的最大条目数
+ * @return 每行最大条目数
+ * \sa setMaxColumns(), QwtDynGridLayout::maxColumns()
+ * \endif
  */
 uint QwtLegend::maxColumns() const
 {
@@ -11819,79 +13005,134 @@ uint QwtLegend::maxColumns() const
 	return maxCols;
 }
 
-/*!
-   \brief Set the default mode for legend labels
-
-   Legend labels will be constructed according to the
-   attributes in a QwtLegendData object. When it doesn't
-   contain a value for the QwtLegendData::ModeRole the
-   label will be initialized with the default mode of the legend.
-
-   \param mode Default item mode
-
-   \sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
-   \note Changing the mode doesn't have any effect on existing labels.
+/**
+ * \if ENGLISH
+ * @brief Set the default mode for legend labels
+ * @details Legend labels will be constructed according to the
+ *          attributes in a QwtLegendData object. When it doesn't
+ *          contain a value for the QwtLegendData::ModeRole the
+ *          label will be initialized with the default mode of the legend.
+ * @param mode Default item mode
+ * \sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
+ * @note Changing the mode doesn't have any effect on existing labels.
+ * \endif
+ * \if CHINESE
+ * @brief 设置图例标签的默认模式
+ * @details 图例标签将根据 QwtLegendData 对象中的属性构建。
+ *          当它不包含 QwtLegendData::ModeRole 的值时，
+ *          标签将使用图例的默认模式初始化。
+ * @param mode 默认条目模式
+ * \sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
+ * @note 更改模式不会对现有标签产生任何影响
+ * \endif
  */
 void QwtLegend::setDefaultItemMode(QwtLegendData::Mode mode)
 {
 	m_data->itemMode = mode;
 }
 
-/*!
-   \return Default item mode
-   \sa setDefaultItemMode()
+/**
+ * \if ENGLISH
+ * @brief Return the default item mode
+ * @return Default item mode
+ * \sa setDefaultItemMode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回默认条目模式
+ * @return 默认条目模式
+ * \sa setDefaultItemMode()
+ * \endif
  */
 QwtLegendData::Mode QwtLegend::defaultItemMode() const
 {
 	return m_data->itemMode;
 }
 
-/*!
-   The contents widget is the only child of the viewport of
-   the internal QScrollArea and the parent widget of all legend items.
-
-   \return Container widget of the legend items
+/**
+ * \if ENGLISH
+ * @brief Return the contents widget
+ * @details The contents widget is the only child of the viewport of
+ *          the internal QScrollArea and the parent widget of all legend items.
+ * @return Container widget of the legend items
+ * \endif
+ * \if CHINESE
+ * @brief 返回内容控件
+ * @details 内容控件是内部 QScrollArea 视口的唯一子控件，
+ *          也是所有图例条目的父控件。
+ * @return 图例条目的容器控件
+ * \endif
  */
 QWidget* QwtLegend::contentsWidget()
 {
 	return m_data->view->contentsWidget;
 }
 
-/*!
-   \return Horizontal scrollbar
-   \sa verticalScrollBar()
+/**
+ * \if ENGLISH
+ * @brief Return the horizontal scrollbar
+ * @return Horizontal scrollbar
+ * \sa verticalScrollBar()
+ * \endif
+ * \if CHINESE
+ * @brief 返回水平滚动条
+ * @return 水平滚动条
+ * \sa verticalScrollBar()
+ * \endif
  */
 QScrollBar* QwtLegend::horizontalScrollBar() const
 {
 	return m_data->view->horizontalScrollBar();
 }
 
-/*!
-   \return Vertical scrollbar
-   \sa horizontalScrollBar()
+/**
+ * \if ENGLISH
+ * @brief Return the vertical scrollbar
+ * @return Vertical scrollbar
+ * \sa horizontalScrollBar()
+ * \endif
+ * \if CHINESE
+ * @brief 返回垂直滚动条
+ * @return 垂直滚动条
+ * \sa horizontalScrollBar()
+ * \endif
  */
 QScrollBar* QwtLegend::verticalScrollBar() const
 {
 	return m_data->view->verticalScrollBar();
 }
 
-/*!
-   The contents widget is the only child of the viewport of
-   the internal QScrollArea and the parent widget of all legend items.
-
-   \return Container widget of the legend items
-
+/**
+ * \if ENGLISH
+ * @brief Return the contents widget (const version)
+ * @details The contents widget is the only child of the viewport of
+ *          the internal QScrollArea and the parent widget of all legend items.
+ * @return Container widget of the legend items
+ * \endif
+ * \if CHINESE
+ * @brief 返回内容控件（const 版本）
+ * @details 内容控件是内部 QScrollArea 视口的唯一子控件，
+ *          也是所有图例条目的父控件。
+ * @return 图例条目的容器控件
+ * \endif
  */
 const QWidget* QwtLegend::contentsWidget() const
 {
 	return m_data->view->contentsWidget;
 }
 
-/*!
-   \brief Update the entries for an item
-
-   \param itemInfo Info for an item
-   \param legendData List of legend entry attributes for the item
+/**
+ * \if ENGLISH
+ * @brief Update the entries for an item
+ * @param itemInfo Info for an item
+ * @param legendData List of legend entry attributes for the item
+ * \sa updateWidget(), createWidget()
+ * \endif
+ * \if CHINESE
+ * @brief 更新项的条目
+ * @param itemInfo 项的信息
+ * @param legendData 项的图例条目属性列表
+ * \sa updateWidget(), createWidget()
+ * \endif
  */
 void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& legendData)
 {
@@ -11945,16 +13186,24 @@ void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendDat
 		updateWidget(widgetList[ i ], legendData[ i ]);
 }
 
-/*!
-   \brief Create a widget to be inserted into the legend
-
-   The default implementation returns a QwtLegendLabel.
-
-   \param legendData Attributes of the legend entry
-   \return Widget representing data on the legend
-
-   \note updateWidget() will called soon after createWidget()
-		with the same attributes.
+/**
+ * \if ENGLISH
+ * @brief Create a widget to be inserted into the legend
+ * @details The default implementation returns a QwtLegendLabel.
+ * @param legendData Attributes of the legend entry
+ * @return Widget representing data on the legend
+ * @note updateWidget() will called soon after createWidget()
+ *       with the same attributes.
+ * \sa updateWidget()
+ * \endif
+ * \if CHINESE
+ * @brief 创建要插入到图例中的控件
+ * @details 默认实现返回一个 QwtLegendLabel。
+ * @param legendData 图例条目的属性
+ * @return 在图例上表示数据的控件
+ * @note updateWidget() 将在 createWidget() 后不久使用相同的属性调用
+ * \sa updateWidget()
+ * \endif
  */
 QWidget* QwtLegend::createWidget(const QwtLegendData& legendData) const
 {
@@ -11969,14 +13218,21 @@ QWidget* QwtLegend::createWidget(const QwtLegendData& legendData) const
 	return label;
 }
 
-/*!
-   \brief Update the widget
-
-   \param widget Usually a QwtLegendLabel
-   \param legendData Attributes to be displayed
-
-   \sa createWidget()
-   \note When widget is no QwtLegendLabel updateWidget() does nothing.
+/**
+ * \if ENGLISH
+ * @brief Update the widget
+ * @param widget Usually a QwtLegendLabel
+ * @param legendData Attributes to be displayed
+ * \sa createWidget()
+ * @note When widget is no QwtLegendLabel updateWidget() does nothing.
+ * \endif
+ * \if CHINESE
+ * @brief 更新控件
+ * @param widget 通常是 QwtLegendLabel
+ * @param legendData 要显示的属性
+ * \sa createWidget()
+ * @note 当 widget 不是 QwtLegendLabel 时 updateWidget() 不执行任何操作
+ * \endif
  */
 void QwtLegend::updateWidget(QWidget* widget, const QwtLegendData& legendData)
 {
@@ -12010,7 +13266,18 @@ void QwtLegend::updateTabOrder()
 	}
 }
 
-//! Return a size hint.
+/**
+ * \if ENGLISH
+ * @brief Return a size hint
+ * @return Size hint
+ * \sa heightForWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \sa heightForWidth()
+ * \endif
+ */
 QSize QwtLegend::sizeHint() const
 {
 	QSize hint = m_data->view->contentsWidget->sizeHint();
@@ -12019,9 +13286,19 @@ QSize QwtLegend::sizeHint() const
 	return hint;
 }
 
-/*!
-   \return The preferred height, for a width.
-   \param width Width
+/**
+ * \if ENGLISH
+ * @brief Return the preferred height for a given width
+ * @param width Width
+ * @return Preferred height
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回给定宽度的首选高度
+ * @param width 宽度
+ * @return 首选高度
+ * \sa sizeHint()
+ * \endif
  */
 int QwtLegend::heightForWidth(int width) const
 {
@@ -12034,14 +13311,22 @@ int QwtLegend::heightForWidth(int width) const
 	return h;
 }
 
-/*!
-   Handle QEvent::ChildRemoved and QEvent::LayoutRequest events
-   for the contentsWidget().
-
-   \param object Object to be filtered
-   \param event Event
-
-   \return Forwarded to QwtAbstractLegend::eventFilter()
+/**
+ * \if ENGLISH
+ * @brief Handle QEvent::ChildRemoved and QEvent::LayoutRequest events
+ * @details Handle QEvent::ChildRemoved and QEvent::LayoutRequest events
+ *          for the contentsWidget().
+ * @param object Object to be filtered
+ * @param event Event
+ * @return Forwarded to QwtAbstractLegend::eventFilter()
+ * \endif
+ * \if CHINESE
+ * @brief 处理 QEvent::ChildRemoved 和 QEvent::LayoutRequest 事件
+ * @details 处理 contentsWidget() 的 QEvent::ChildRemoved 和 QEvent::LayoutRequest 事件。
+ * @param object 要过滤的对象
+ * @param event 事件
+ * @return 转发到 QwtAbstractLegend::eventFilter()
+ * \endif
  */
 bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 {
@@ -12088,9 +13373,17 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 	return QwtAbstractLegend::eventFilter(object, event);
 }
 
-/*!
-   Called internally when the legend has been clicked on.
-   Emits a clicked() signal.
+/**
+ * \if ENGLISH
+ * @brief Called internally when the legend has been clicked on
+ * @details Emits a clicked() signal.
+ * \sa clicked(), itemChecked()
+ * \endif
+ * \if CHINESE
+ * @brief 当图例被点击时在内部调用
+ * @details 发出 clicked() 信号。
+ * \sa clicked(), itemChecked()
+ * \endif
  */
 void QwtLegend::itemClicked()
 {
@@ -12107,9 +13400,17 @@ void QwtLegend::itemClicked()
 	}
 }
 
-/*!
-   Called internally when the legend has been checked
-   Emits a checked() signal.
+/**
+ * \if ENGLISH
+ * @brief Called internally when the legend has been checked
+ * @details Emits a checked() signal.
+ * \sa checked(), itemClicked()
+ * \endif
+ * \if CHINESE
+ * @brief 当图例被选中时在内部调用
+ * @details 发出 checked() 信号。
+ * \sa checked(), itemClicked()
+ * \endif
  */
 void QwtLegend::itemChecked(bool on)
 {
@@ -12126,14 +13427,21 @@ void QwtLegend::itemChecked(bool on)
 	}
 }
 
-/*!
-   Render the legend into a given rectangle.
-
-   \param painter Painter
-   \param rect Bounding rectangle
-   \param fillBackground When true, fill rect with the widget background
-
-   \sa renderLegend() is used by QwtPlotRenderer - not by QwtLegend itself
+/**
+ * \if ENGLISH
+ * @brief Render the legend into a given rectangle
+ * @param painter Painter
+ * @param rect Bounding rectangle
+ * @param fillBackground When true, fill rect with the widget background
+ * \sa renderLegend() is used by QwtPlotRenderer - not by QwtLegend itself
+ * \endif
+ * \if CHINESE
+ * @brief 将图例渲染到给定的矩形中
+ * @param painter 绘制器
+ * @param rect 边界矩形
+ * @param fillBackground 为 true 时用控件背景填充矩形
+ * \sa renderLegend() 被 QwtPlotRenderer 使用 - 而不是 QwtLegend 本身
+ * \endif
  */
 void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const
 {
@@ -12178,16 +13486,25 @@ void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBac
 	}
 }
 
-/*!
-   Render a legend entry into a given rectangle.
-
-   \param painter Painter
-   \param widget Widget representing a legend entry
-   \param rect Bounding rectangle
-   \param fillBackground When true, fill rect with the widget background
-
-   \note When widget is not derived from QwtLegendLabel renderItem
-		does nothing beside the background
+/**
+ * \if ENGLISH
+ * @brief Render a legend entry into a given rectangle
+ * @param painter Painter
+ * @param widget Widget representing a legend entry
+ * @param rect Bounding rectangle
+ * @param fillBackground When true, fill rect with the widget background
+ * @note When widget is not derived from QwtLegendLabel renderItem
+ *       does nothing beside the background
+ * \endif
+ * \if CHINESE
+ * @brief 将图例条目渲染到给定的矩形中
+ * @param painter 绘制器
+ * @param widget 表示图例条目的控件
+ * @param rect 边界矩形
+ * @param fillBackground 为 true 时用控件背景填充矩形
+ * @note 当 widget 不是从 QwtLegendLabel 派生时 renderItem
+ *       除了背景外不执行任何操作
+ * \endif
  */
 void QwtLegend::renderItem(QPainter* painter, const QWidget* widget, const QRectF& rect, bool fillBackground) const
 {
@@ -12227,21 +13544,40 @@ void QwtLegend::renderItem(QPainter* painter, const QWidget* widget, const QRect
 	}
 }
 
-/*!
-   \return List of widgets associated to a item
-   \param itemInfo Info about an item
-   \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
+/**
+ * \if ENGLISH
+ * @brief Return list of widgets associated to an item
+ * @param itemInfo Info about an item
+ * @return List of widgets associated to an item
+ * \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
+ * \endif
+ * \if CHINESE
+ * @brief 返回与项关联的控件列表
+ * @param itemInfo 项的信息
+ * @return 与项关联的控件列表
+ * \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
+ * \endif
  */
 QList< QWidget* > QwtLegend::legendWidgets(const QVariant& itemInfo) const
 {
 	return m_data->itemMap.legendWidgets(itemInfo);
 }
 
-/*!
-   \return First widget in the list of widgets associated to an item
-   \param itemInfo Info about an item
-   \sa itemInfo(), QwtPlot::itemToInfo()
-   \note Almost all types of items have only one widget
+/**
+ * \if ENGLISH
+ * @brief Return first widget in the list of widgets associated to an item
+ * @param itemInfo Info about an item
+ * @return First widget in the list of widgets associated to an item
+ * \sa itemInfo(), QwtPlot::itemToInfo()
+ * @note Almost all types of items have only one widget
+ * \endif
+ * \if CHINESE
+ * @brief 返回与项关联的控件列表中的第一个控件
+ * @param itemInfo 项的信息
+ * @return 与项关联的控件列表中的第一个控件
+ * \sa itemInfo(), QwtPlot::itemToInfo()
+ * @note 几乎所有类型的项都只有一个控件
+ * \endif
  */
 QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 {
@@ -12252,29 +13588,51 @@ QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 	return list[ 0 ];
 }
 
-/*!
-   Find the item that is associated to a widget
-
-   \param widget Widget on the legend
-   \return Associated item info
-   \sa legendWidget()
+/**
+ * \if ENGLISH
+ * @brief Find the item that is associated to a widget
+ * @param widget Widget on the legend
+ * @return Associated item info
+ * \sa legendWidget()
+ * \endif
+ * \if CHINESE
+ * @brief 查找与控件关联的项
+ * @param widget 图例上的控件
+ * @return 关联的项信息
+ * \sa legendWidget()
+ * \endif
  */
 QVariant QwtLegend::itemInfo(const QWidget* widget) const
 {
 	return m_data->itemMap.itemInfo(widget);
 }
 
-//! \return True, when no item is inserted
+/**
+ * \if ENGLISH
+ * @brief Check if the legend is empty
+ * @return True, when no item is inserted
+ * \endif
+ * \if CHINESE
+ * @brief 检查图例是否为空
+ * @return 当没有条目插入时返回 true
+ * \endif
+ */
 bool QwtLegend::isEmpty() const
 {
 	return m_data->itemMap.isEmpty();
 }
 
-/*!
-	Return the extent, that is needed for the scrollbars
-
-	\param orientation Orientation
-	\return The width of the vertical scrollbar for Qt::Horizontal and v.v.
+/**
+ * \if ENGLISH
+ * @brief Return the extent that is needed for the scrollbars
+ * @param orientation Orientation
+ * @return The width of the vertical scrollbar for Qt::Horizontal and v.v.
+ * \endif
+ * \if CHINESE
+ * @brief 返回滚动条所需的范围
+ * @param orientation 方向
+ * @return Qt::Horizontal 时返回垂直滚动条的宽度，反之亦然
+ * \endif
  */
 int QwtLegend::scrollExtent(Qt::Orientation orientation) const
 {
@@ -12292,26 +13650,45 @@ int QwtLegend::scrollExtent(Qt::Orientation orientation) const
 
 
 /*** Start of inlined file: qwt_abstract_legend.cpp ***/
-/*!
-   Constructor
-
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractLegend
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractLegend 构造函数
+ * @param parent 父控件
+ * \endif
  */
 QwtAbstractLegend::QwtAbstractLegend(QWidget* parent) : QFrame(parent)
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractLegend
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractLegend 析构函数
+ * \endif
+ */
 QwtAbstractLegend::~QwtAbstractLegend()
 {
 }
 
-/*!
-   Return the extent, that is needed for elements to scroll
-   the legend ( usually scrollbars ),
-
-   \param orientation Orientation
-   \return Extent of the corresponding scroll element
+/**
+ * \if ENGLISH
+ * @brief Return the extent needed for scroll elements
+ * @details Returns the space needed for elements to scroll the legend (usually scrollbars).
+ * @param orientation Orientation (Horizontal or Vertical)
+ * @return Extent of the corresponding scroll element (0 by default)
+ * \endif
+ * \if CHINESE
+ * @brief 返回滚动元素所需的空间范围
+ * @details 返回滚动图例所需元素（通常是滚动条）的空间。
+ * @param orientation 方向（水平或垂直）
+ * @return 对应滚动元素的范围（默认为 0）
+ * \endif
  */
 int QwtAbstractLegend::scrollExtent(Qt::Orientation orientation) const
 {
@@ -13631,21 +15008,41 @@ QSize QwtCounter::sizeHint() const
 
 
 /*** Start of inlined file: qwt_curve_fitter.cpp ***/
-/*!
-   Constructor
-   \param mode Preferred fitting mode
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param mode Preferred fitting mode
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param mode 首选拟合模式
+ * \endif
  */
 QwtCurveFitter::QwtCurveFitter( Mode mode )
 	: m_mode( mode )
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtCurveFitter::~QwtCurveFitter()
 {
 }
 
-//! \return Preferred fitting mode
+/**
+ * \if ENGLISH
+ * @return Preferred fitting mode
+ * \endif
+ * \if CHINESE
+ * @return 首选拟合模式
+ * \endif
+ */
 QwtCurveFitter::Mode QwtCurveFitter::mode() const
 {
 	return m_mode;
@@ -13775,25 +15172,55 @@ public:
 	double msecsInterval;
 };
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param parent Parent object
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param parent 父对象
+ * \endif
+ */
 QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent)
 {
 	m_data                = new PrivateData;
 	m_data->msecsInterval = 1e3;  // 1 second
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSamplingThread::~QwtSamplingThread()
 {
 	delete m_data;
 }
 
-/*!
-   Change the interval (in ms), when sample() is called.
-   The default interval is 1000.0 ( = 1s )
-
-   \param msecs Interval
-   \sa interval()
+/**
+ * \if ENGLISH
+ * @brief Change the interval (in ms), when sample() is called.
+ *
+ * The default interval is 1000.0 ( = 1s )
+ *
+ * @param msecs Interval
+ * @sa interval()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改调用 sample() 的间隔（毫秒）
+ *
+ * 默认间隔为 1000.0（= 1秒）
+ *
+ * @param msecs 间隔
+ * @sa interval()
+ * \endif
  */
 void QwtSamplingThread::setInterval(double msecs)
 {
@@ -13803,18 +15230,36 @@ void QwtSamplingThread::setInterval(double msecs)
 	m_data->msecsInterval = msecs;
 }
 
-/*!
-   \return Interval (in ms), between 2 calls of sample()
-   \sa setInterval()
+/**
+ * \if ENGLISH
+ * @brief Get the interval (in ms), between 2 calls of sample()
+ * @return Interval in milliseconds
+ * @sa setInterval()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取两次调用 sample() 之间的间隔（毫秒）
+ * @return 间隔（毫秒）
+ * @sa setInterval()
+ * \endif
  */
 double QwtSamplingThread::interval() const
 {
 	return m_data->msecsInterval;
 }
 
-/*!
-   \return Time (in ms) since the thread was started
-   \sa QThread::start(), run()
+/**
+ * \if ENGLISH
+ * @brief Get the time (in ms) since the thread was started
+ * @return Elapsed time in milliseconds
+ * @sa QThread::start(), run()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取线程启动以来的时间（毫秒）
+ * @return 经过的时间（毫秒）
+ * @sa QThread::start(), run()
+ * \endif
  */
 double QwtSamplingThread::elapsed() const
 {
@@ -13824,18 +15269,32 @@ double QwtSamplingThread::elapsed() const
 	return 0.0;
 }
 
-/*!
-   Terminate the collecting thread
-   \sa QThread::start(), run()
+/**
+ * \if ENGLISH
+ * @brief Terminate the collecting thread
+ * @sa QThread::start(), run()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 终止收集线程
+ * @sa QThread::start(), run()
+ * \endif
  */
 void QwtSamplingThread::stop()
 {
 	m_data->timer.invalidate();
 }
 
-/*!
-   Loop collecting samples started from QThread::start()
-   \sa stop()
+/**
+ * \if ENGLISH
+ * @brief Loop collecting samples started from QThread::start()
+ * @sa stop()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 从 QThread::start() 开始的样本收集循环
+ * @sa stop()
+ * \endif
  */
 void QwtSamplingThread::run()
 {
@@ -13866,187 +15325,322 @@ void QwtSamplingThread::run()
 
 
 /*** Start of inlined file: qwt_scale_div.cpp ***/
-/*!
-   Construct a division without ticks
-
-   \param lowerBound First boundary
-   \param upperBound Second boundary
-
-   \note lowerBound might be greater than upperBound for inverted scales
+/**
+ * \if ENGLISH
+ * @brief Construct a division without ticks
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造一个没有刻度的刻度划分
+ *
+ * @param lowerBound 第一个边界
+ * @param upperBound 第二个边界
+ *
+ * @note 对于反向刻度，lowerBound 可能大于 upperBound
+ * \endif
  */
-QwtScaleDiv::QwtScaleDiv( double lowerBound, double upperBound )
-	: m_lowerBound( lowerBound )
-	, m_upperBound( upperBound )
+QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound) : m_lowerBound(lowerBound), m_upperBound(upperBound)
 {
 }
 
-/*!
-   Construct a scale division
-
-   \param interval Interval
-   \param ticks List of major, medium and minor ticks
+/**
+ * \if ENGLISH
+ * @brief Construct a scale division
+ *
+ * @param interval Interval
+ * @param ticks List of major, medium and minor ticks
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造一个刻度划分
+ *
+ * @param interval 间隔
+ * @param ticks 主刻度、中刻度和次刻度列表
+ * \endif
  */
-QwtScaleDiv::QwtScaleDiv( const QwtInterval& interval,
-		QList< double > ticks[NTickTypes] )
-	: m_lowerBound( interval.minValue() )
-	, m_upperBound( interval.maxValue() )
+QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTickTypes ])
+	: m_lowerBound(interval.minValue()), m_upperBound(interval.maxValue())
 {
-	for ( int i = 0; i < NTickTypes; i++ )
-		m_ticks[i] = ticks[i];
+	for (int i = 0; i < NTickTypes; i++)
+		m_ticks[ i ] = ticks[ i ];
 }
 
-/*!
-   Construct a scale division
-
-   \param lowerBound First boundary
-   \param upperBound Second boundary
-   \param ticks List of major, medium and minor ticks
-
-   \note lowerBound might be greater than upperBound for inverted scales
+/**
+ * \if ENGLISH
+ * @brief Construct a scale division
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ * @param ticks List of major, medium and minor ticks
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造一个刻度划分
+ *
+ * @param lowerBound 第一个边界
+ * @param upperBound 第二个边界
+ * @param ticks 主刻度、中刻度和次刻度列表
+ *
+ * @note 对于反向刻度，lowerBound 可能大于 upperBound
+ * \endif
  */
-QwtScaleDiv::QwtScaleDiv( double lowerBound, double upperBound,
-		QList< double > ticks[NTickTypes] )
-	: m_lowerBound( lowerBound )
-	, m_upperBound( upperBound )
+QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > ticks[ NTickTypes ])
+	: m_lowerBound(lowerBound), m_upperBound(upperBound)
 {
-	for ( int i = 0; i < NTickTypes; i++ )
-		m_ticks[i] = ticks[i];
+	for (int i = 0; i < NTickTypes; i++)
+		m_ticks[ i ] = ticks[ i ];
 }
 
-/*!
-   Construct a scale division
-
-   \param lowerBound First boundary
-   \param upperBound Second boundary
-   \param minorTicks List of minor ticks
-   \param mediumTicks List medium ticks
-   \param majorTicks List of major ticks
-
-   \note lowerBound might be greater than upperBound for inverted scales
+/**
+ * \if ENGLISH
+ * @brief Construct a scale division
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ * @param minorTicks List of minor ticks
+ * @param mediumTicks List of medium ticks
+ * @param majorTicks List of major ticks
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造一个刻度划分
+ *
+ * @param lowerBound 第一个边界
+ * @param upperBound 第二个边界
+ * @param minorTicks 次刻度列表
+ * @param mediumTicks 中刻度列表
+ * @param majorTicks 主刻度列表
+ *
+ * @note 对于反向刻度，lowerBound 可能大于 upperBound
+ * \endif
  */
-QwtScaleDiv::QwtScaleDiv( double lowerBound, double upperBound,
-		const QList< double >& minorTicks,
-		const QList< double >& mediumTicks,
-		const QList< double >& majorTicks )
-	: m_lowerBound( lowerBound )
-	, m_upperBound( upperBound )
+QwtScaleDiv::QwtScaleDiv(double lowerBound,
+						 double upperBound,
+						 const QList< double >& minorTicks,
+						 const QList< double >& mediumTicks,
+						 const QList< double >& majorTicks)
+	: m_lowerBound(lowerBound), m_upperBound(upperBound)
 {
-	m_ticks[ MinorTick ] = minorTicks;
+	m_ticks[ MinorTick ]  = minorTicks;
 	m_ticks[ MediumTick ] = mediumTicks;
-	m_ticks[ MajorTick ] = majorTicks;
+	m_ticks[ MajorTick ]  = majorTicks;
 }
 
-/*!
-   Change the interval
-
-   \param lowerBound First boundary
-   \param upperBound Second boundary
-
-   \note lowerBound might be greater than upperBound for inverted scales
+/**
+ * \if ENGLISH
+ * @brief Change the interval
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改间隔
+ *
+ * @param lowerBound 第一个边界
+ * @param upperBound 第二个边界
+ *
+ * @note 对于反向刻度，lowerBound 可能大于 upperBound
+ * \endif
  */
-void QwtScaleDiv::setInterval( double lowerBound, double upperBound )
+void QwtScaleDiv::setInterval(double lowerBound, double upperBound)
 {
 	m_lowerBound = lowerBound;
 	m_upperBound = upperBound;
 }
 
-/*!
-   Change the interval
-
-   \param interval Interval
+/**
+ * \if ENGLISH
+ * @brief Change the interval
+ *
+ * @param interval Interval
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改间隔
+ *
+ * @param interval 间隔
+ * \endif
  */
-void QwtScaleDiv::setInterval( const QwtInterval& interval )
+void QwtScaleDiv::setInterval(const QwtInterval& interval)
 {
 	m_lowerBound = interval.minValue();
 	m_upperBound = interval.maxValue();
 }
 
-/*!
-   \return lowerBound -> upperBound
+/**
+ * \if ENGLISH
+ * @brief Get the interval from lowerBound to upperBound
+ * @return Interval from lowerBound to upperBound
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取从 lowerBound 到 upperBound 的间隔
+ * @return 从 lowerBound 到 upperBound 的间隔
+ * \endif
  */
 QwtInterval QwtScaleDiv::interval() const
 {
-	return QwtInterval( m_lowerBound, m_upperBound );
+	return QwtInterval(m_lowerBound, m_upperBound);
 }
 
-/*!
-   Set the first boundary
-
-   \param lowerBound First boundary
-   \sa lowerBound(), setUpperBound()
+/**
+ * \if ENGLISH
+ * @brief Set the first boundary
+ *
+ * @param lowerBound First boundary
+ * @sa lowerBound(), setUpperBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置第一个边界
+ *
+ * @param lowerBound 第一个边界
+ * @sa lowerBound(), setUpperBound()
+ * \endif
  */
-void QwtScaleDiv::setLowerBound( double lowerBound  )
+void QwtScaleDiv::setLowerBound(double lowerBound)
 {
 	m_lowerBound = lowerBound;
 }
 
-/*!
-   \return First boundary
-   \sa upperBound()
+/**
+ * \if ENGLISH
+ * @brief Get the first boundary
+ * @return First boundary
+ * @sa upperBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取第一个边界
+ * @return 第一个边界
+ * @sa upperBound()
+ * \endif
  */
 double QwtScaleDiv::lowerBound() const
 {
 	return m_lowerBound;
 }
 
-/*!
-   Set the second boundary
-
-   \param upperBound Second boundary
-   \sa upperBound(), setLowerBound()
+/**
+ * \if ENGLISH
+ * @brief Set the second boundary
+ *
+ * @param upperBound Second boundary
+ * @sa upperBound(), setLowerBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置第二个边界
+ *
+ * @param upperBound 第二个边界
+ * @sa upperBound(), setLowerBound()
+ * \endif
  */
-void QwtScaleDiv::setUpperBound( double upperBound  )
+void QwtScaleDiv::setUpperBound(double upperBound)
 {
 	m_upperBound = upperBound;
 }
 
-/*!
-   \return upper bound
-   \sa lowerBound()
+/**
+ * \if ENGLISH
+ * @brief Get the upper bound
+ * @return Upper bound
+ * @sa lowerBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取上边界
+ * @return 上边界
+ * @sa lowerBound()
+ * \endif
  */
 double QwtScaleDiv::upperBound() const
 {
 	return m_upperBound;
 }
 
-/*!
-   \return upperBound() - lowerBound()
+/**
+ * \if ENGLISH
+ * @brief Get the range (upperBound - lowerBound)
+ * @return upperBound() - lowerBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取范围（上边界 - 下边界）
+ * @return upperBound() - lowerBound()
+ * \endif
  */
 double QwtScaleDiv::range() const
 {
 	return m_upperBound - m_lowerBound;
 }
 
-/*!
-   \brief Equality operator
-   \return true if this instance is equal to other
+/**
+ * \if ENGLISH
+ * @brief Equality operator
+ * @return true if this instance is equal to other
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 相等运算符
+ * @return 如果此实例等于 other 则返回 true
+ * \endif
  */
-bool QwtScaleDiv::operator==( const QwtScaleDiv& other ) const
+bool QwtScaleDiv::operator==(const QwtScaleDiv& other) const
 {
-	if ( m_lowerBound != other.m_lowerBound ||
-		m_upperBound != other.m_upperBound )
-	{
+	if (m_lowerBound != other.m_lowerBound || m_upperBound != other.m_upperBound) {
 		return false;
 	}
 
-	for ( int i = 0; i < NTickTypes; i++ )
-	{
-		if ( m_ticks[i] != other.m_ticks[i] )
+	for (int i = 0; i < NTickTypes; i++) {
+		if (m_ticks[ i ] != other.m_ticks[ i ])
 			return false;
 	}
 
 	return true;
 }
 
-/*!
-   \brief Inequality
-   \return true if this instance is not equal to other
+/**
+ * \if ENGLISH
+ * @brief Inequality operator
+ * @return true if this instance is not equal to other
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 不等运算符
+ * @return 如果此实例不等于 other 则返回 true
+ * \endif
  */
-bool QwtScaleDiv::operator!=( const QwtScaleDiv& other ) const
+bool QwtScaleDiv::operator!=(const QwtScaleDiv& other) const
 {
 	return (!(*this == other));
 }
 
+/**
+ * \if ENGLISH
+ * @brief Fuzzy comparison
+ * @param other Other scale division
+ * @return true if this instance is approximately equal to other
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 模糊比较
+ * @param other 其他刻度划分
+ * @return 如果此实例近似等于 other 则返回 true
+ * \endif
+ */
 bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
 {
 	if (qFuzzyCompare(m_lowerBound, other.m_lowerBound) && qFuzzyCompare(m_upperBound, other.m_upperBound)) {
@@ -14061,55 +15655,99 @@ bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
 	return false;
 }
 
-//! Check if the scale division is empty( lowerBound() == upperBound() )
+/**
+ * \if ENGLISH
+ * @brief Check if the scale division is empty
+ * @return true if lowerBound() == upperBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查刻度划分是否为空
+ * @return 如果 lowerBound() == upperBound() 则返回 true
+ * \endif
+ */
 bool QwtScaleDiv::isEmpty() const
 {
-	return ( m_lowerBound == m_upperBound );
+	return (m_lowerBound == m_upperBound);
 }
 
-//! Check if the scale division is increasing( lowerBound() <= upperBound() )
+/**
+ * \if ENGLISH
+ * @brief Check if the scale division is increasing
+ * @return true if lowerBound() <= upperBound()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查刻度划分是否是递增的
+ * @return 如果 lowerBound() <= upperBound() 则返回 true
+ * \endif
+ */
 bool QwtScaleDiv::isIncreasing() const
 {
 	return m_lowerBound <= m_upperBound;
 }
 
-/*!
-   Return if a value is between lowerBound() and upperBound()
-
-   \param value Value
-   \return true/false
+/**
+ * \if ENGLISH
+ * @brief Check if a value is between lowerBound() and upperBound()
+ *
+ * @param value Value
+ * @return true if value is within bounds
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查值是否在 lowerBound() 和 upperBound() 之间
+ *
+ * @param value 值
+ * @return 如果值在范围内则返回 true
+ * \endif
  */
-bool QwtScaleDiv::contains( double value ) const
+bool QwtScaleDiv::contains(double value) const
 {
-	const double min = qMin( m_lowerBound, m_upperBound );
-	const double max = qMax( m_lowerBound, m_upperBound );
+	const double min = qMin(m_lowerBound, m_upperBound);
+	const double max = qMax(m_lowerBound, m_upperBound);
 
 	return value >= min && value <= max;
 }
 
-/*!
-   Invert the scale division
-   \sa inverted()
+/**
+ * \if ENGLISH
+ * @brief Invert the scale division
+ * @sa inverted()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 反转刻度划分
+ * @sa inverted()
+ * \endif
  */
 void QwtScaleDiv::invert()
 {
-	qSwap( m_lowerBound, m_upperBound );
+	qSwap(m_lowerBound, m_upperBound);
 
-	for ( int i = 0; i < NTickTypes; i++ )
-	{
-		QList< double >& ticks = m_ticks[i];
+	for (int i = 0; i < NTickTypes; i++) {
+		QList< double >& ticks = m_ticks[ i ];
 
-		const int size = ticks.count();
+		const int size  = ticks.count();
 		const int size2 = size / 2;
 
-		for ( int j = 0; j < size2; j++ )
-			qSwap( ticks[j], ticks[size - 1 - j] );
+		for (int j = 0; j < size2; j++)
+			qSwap(ticks[ j ], ticks[ size - 1 - j ]);
 	}
 }
 
-/*!
-   \return A scale division with inverted boundaries and ticks
-   \sa invert()
+/**
+ * \if ENGLISH
+ * @brief Get a scale division with inverted boundaries and ticks
+ * @return A scale division with inverted boundaries and ticks
+ * @sa invert()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界和刻度反转的刻度划分
+ * @return 边界和刻度反转的刻度划分
+ * @sa invert()
+ * \endif
  */
 QwtScaleDiv QwtScaleDiv::inverted() const
 {
@@ -14119,67 +15757,95 @@ QwtScaleDiv QwtScaleDiv::inverted() const
 	return other;
 }
 
-/*!
-   Return a scale division with an interval [lowerBound, upperBound]
-   where all ticks outside this interval are removed
-
-   \param lowerBound Lower bound
-   \param upperBound Upper bound
-
-   \return Scale division with all ticks inside of the given interval
-
-   \note lowerBound might be greater than upperBound for inverted scales
+/**
+ * \if ENGLISH
+ * @brief Return a scale division with an interval [lowerBound, upperBound]
+ *        where all ticks outside this interval are removed
+ *
+ * @param lowerBound Lower bound
+ * @param upperBound Upper bound
+ *
+ * @return Scale division with all ticks inside of the given interval
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 返回一个间隔为 [lowerBound, upperBound] 的刻度划分，
+ *        其中所有在此间隔外的刻度都被移除
+ *
+ * @param lowerBound 下边界
+ * @param upperBound 上边界
+ *
+ * @return 所有刻度都在给定间隔内的刻度划分
+ *
+ * @note 对于反向刻度，lowerBound 可能大于 upperBound
+ * \endif
  */
-QwtScaleDiv QwtScaleDiv::bounded(
-	double lowerBound, double upperBound ) const
+QwtScaleDiv QwtScaleDiv::bounded(double lowerBound, double upperBound) const
 {
-	const double min = qMin( lowerBound, upperBound );
-	const double max = qMax( lowerBound, upperBound );
+	const double min = qMin(lowerBound, upperBound);
+	const double max = qMax(lowerBound, upperBound);
 
 	QwtScaleDiv sd;
-	sd.setInterval( lowerBound, upperBound );
+	sd.setInterval(lowerBound, upperBound);
 
-	for ( int tickType = 0; tickType < QwtScaleDiv::NTickTypes; tickType++ )
-	{
+	for (int tickType = 0; tickType < QwtScaleDiv::NTickTypes; tickType++) {
 		const QList< double >& ticks = m_ticks[ tickType ];
 
 		QList< double > boundedTicks;
-		for ( int i = 0; i < ticks.size(); i++ )
-		{
-			const double tick = ticks[i];
-			if ( tick >= min && tick <= max )
+		for (int i = 0; i < ticks.size(); i++) {
+			const double tick = ticks[ i ];
+			if (tick >= min && tick <= max)
 				boundedTicks += tick;
 		}
 
-		sd.setTicks( tickType, boundedTicks );
+		sd.setTicks(tickType, boundedTicks);
 	}
 
 	return sd;
-
 }
 
-/*!
-	Assign ticks
-
-   \param tickType MinorTick, MediumTick or MajorTick
-   \param ticks Values of the tick positions
+/**
+ * \if ENGLISH
+ * @brief Assign ticks
+ *
+ * @param tickType MinorTick, MediumTick or MajorTick
+ * @param ticks Values of the tick positions
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配刻度
+ *
+ * @param tickType MinorTick、MediumTick 或 MajorTick
+ * @param ticks 刻度位置的值
+ * \endif
  */
-void QwtScaleDiv::setTicks( int tickType, const QList< double >& ticks )
+void QwtScaleDiv::setTicks(int tickType, const QList< double >& ticks)
 {
-	if ( tickType >= 0 && tickType < NTickTypes )
-		m_ticks[tickType] = ticks;
+	if (tickType >= 0 && tickType < NTickTypes)
+		m_ticks[ tickType ] = ticks;
 }
 
-/*!
-   Return a list of ticks
-
-   \param tickType MinorTick, MediumTick or MajorTick
-   \return Tick list
+/**
+ * \if ENGLISH
+ * @brief Return a list of ticks
+ *
+ * @param tickType MinorTick, MediumTick or MajorTick
+ * @return Tick list
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 返回刻度列表
+ *
+ * @param tickType MinorTick、MediumTick 或 MajorTick
+ * @return 刻度列表
+ * \endif
  */
-QList< double > QwtScaleDiv::ticks( int tickType ) const
+QList< double > QwtScaleDiv::ticks(int tickType) const
 {
-	if ( tickType >= 0 && tickType < NTickTypes )
-		return m_ticks[tickType];
+	if (tickType >= 0 && tickType < NTickTypes)
+		return m_ticks[ tickType ];
 
 	return QList< double >();
 }
@@ -14188,12 +15854,12 @@ QList< double > QwtScaleDiv::ticks( int tickType ) const
 
 #include <qdebug.h>
 
-QDebug operator<<( QDebug debug, const QwtScaleDiv& scaleDiv )
+QDebug operator<<(QDebug debug, const QwtScaleDiv& scaleDiv)
 {
 	debug << scaleDiv.lowerBound() << "<->" << scaleDiv.upperBound();
-	debug << "Major: " << scaleDiv.ticks( QwtScaleDiv::MajorTick );
-	debug << "Medium: " << scaleDiv.ticks( QwtScaleDiv::MediumTick );
-	debug << "Minor: " << scaleDiv.ticks( QwtScaleDiv::MinorTick );
+	debug << "Major: " << scaleDiv.ticks(QwtScaleDiv::MajorTick);
+	debug << "Medium: " << scaleDiv.ticks(QwtScaleDiv::MediumTick);
+	debug << "Minor: " << scaleDiv.ticks(QwtScaleDiv::MinorTick);
 
 	return debug;
 }
@@ -14239,31 +15905,51 @@ public:
 	QMap< double, QwtText > labelCache;
 };
 
-/*!
-   \brief Constructor
-
-   The range of the scale is initialized to [0, 100],
-   The spacing (distance between ticks and labels) is
-   set to 4, the tick lengths are set to 4,6 and 8 pixels
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractScaleDraw
+ * @details The range of the scale is initialized to [0, 100],
+ *          the spacing (distance between ticks and labels) is set to 4,
+ *          the tick lengths are set to 4, 6 and 8 pixels.
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScaleDraw 构造函数
+ * @details 刻度范围初始化为 [0, 100]，
+ *          间距（刻度线和标签之间的距离）设置为 4，
+ *          刻度线长度设置为 4、6 和 8 像素。
+ * \endif
  */
 QwtAbstractScaleDraw::QwtAbstractScaleDraw()
 {
 	m_data = new QwtAbstractScaleDraw::PrivateData;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractScaleDraw
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScaleDraw 析构函数
+ * \endif
+ */
 QwtAbstractScaleDraw::~QwtAbstractScaleDraw()
 {
 	delete m_data;
 }
 
-/*!
-   En/Disable a component of the scale
-
-   \param component Scale component
-   \param enable On/Off
-
-   \sa hasComponent()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable a scale component
+ * @param component Scale component (Backbone, Ticks, or Labels)
+ * @param enable True to enable, false to disable
+ * \sa hasComponent()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用刻度组件
+ * @param component 刻度组件（主干、刻度线或标签）
+ * @param enable true 启用，false 禁用
+ * \sa hasComponent()
+ * \endif
  */
 void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable)
 {
@@ -14273,21 +15959,36 @@ void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable
 		m_data->components &= ~component;
 }
 
-/*!
-   Check if a component is enabled
-
-   \param component Component type
-   \return true, when component is enabled
-   \sa enableComponent()
+/**
+ * \if ENGLISH
+ * @brief Check if a component is enabled
+ * @param component Component type
+ * @return True if component is enabled
+ * \sa enableComponent()
+ * \endif
+ * \if CHINESE
+ * @brief 检查组件是否已启用
+ * @param component 组件类型
+ * @return 如果组件已启用则返回 true
+ * \sa enableComponent()
+ * \endif
  */
 bool QwtAbstractScaleDraw::hasComponent(ScaleComponent component) const
 {
 	return (m_data->components & component);
 }
 
-/*!
-   Change the scale division
-   \param scaleDiv New scale division
+/**
+ * \if ENGLISH
+ * @brief Set the scale division
+ * @param scaleDiv New scale division object
+ * @details This also updates the scale map and clears the label cache.
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度划分
+ * @param scaleDiv 新的刻度划分对象
+ * @details 这还会更新刻度映射并清空标签缓存。
+ * \endif
  */
 void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
 {
@@ -14296,28 +15997,61 @@ void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
 	m_data->labelCache.clear();
 }
 
-/*!
-   Change the transformation of the scale
-   \param transformation New scale transformation
+/**
+ * \if ENGLISH
+ * @brief Set the scale transformation
+ * @param transformation New scale transformation object
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度变换
+ * @param transformation 新的刻度变换对象
+ * \endif
  */
 void QwtAbstractScaleDraw::setTransformation(QwtTransform* transformation)
 {
 	m_data->map.setTransformation(transformation);
 }
 
-//! \return Map how to translate between scale and pixel values
+/**
+ * \if ENGLISH
+ * @brief Return the scale map (const version)
+ * @return Map for translating between scale and pixel values
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度映射（常量版本）
+ * @return 用于在刻度和像素值之间转换的映射
+ * \endif
+ */
 const QwtScaleMap& QwtAbstractScaleDraw::scaleMap() const
 {
 	return m_data->map;
 }
 
-//! \return Map how to translate between scale and pixel values
+/**
+ * \if ENGLISH
+ * @brief Return the scale map (non-const version)
+ * @return Map for translating between scale and pixel values
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度映射（非常量版本）
+ * @return 用于在刻度和像素值之间转换的映射
+ * \endif
+ */
 QwtScaleMap& QwtAbstractScaleDraw::scaleMap()
 {
 	return m_data->map;
 }
 
-//! \return scale division
+/**
+ * \if ENGLISH
+ * @brief Return the scale division
+ * @return Current scale division object
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度划分
+ * @return 当前刻度划分对象
+ * \endif
+ */
 const QwtScaleDiv& QwtAbstractScaleDraw::scaleDiv() const
 {
 	return m_data->scaleDiv;
@@ -14651,258 +16385,227 @@ void QwtAbstractScaleDraw::invalidateCache()
 #include <qpaintengine.h>
 #include <qmath.h>
 
-static inline double qwtEffectivePenWidth( const QwtAbstractScaleDraw* scaleDraw )
+static inline double qwtEffectivePenWidth(const QwtAbstractScaleDraw* scaleDraw)
 {
-	return qwtMaxF( scaleDraw->penWidthF(), 1.0 );
+	return qwtMaxF(scaleDraw->penWidthF(), 1.0);
 }
 
 namespace QwtScaleRendererReal
 {
-	inline qreal penWidth( const QPainter* painter, const QwtScaleDraw* scaleDraw )
-	{
-		qreal width = scaleDraw->penWidthF();
+inline qreal penWidth(const QPainter* painter, const QwtScaleDraw* scaleDraw)
+{
+	qreal width = scaleDraw->penWidthF();
 #if 1
-		if ( width <= 0.0 )
-			width = 1.0;
+	if (width <= 0.0)
+		width = 1.0;
 #endif
 
-		if ( painter->pen().isCosmetic() )
-		{
-			const QTransform& transform = painter->transform();
+	if (painter->pen().isCosmetic()) {
+		const QTransform& transform = painter->transform();
 
-			switch ( scaleDraw->alignment() )
-			{
-				case QwtScaleDraw::LeftScale:
-				case QwtScaleDraw::RightScale:
-				{
-					width /= transform.m11();
-					break;
-				}
-				case QwtScaleDraw::TopScale:
-				case QwtScaleDraw::BottomScale:
-				{
-					width /= transform.m22();
-					break;
-				}
-			}
+		switch (scaleDraw->alignment()) {
+		case QwtScaleDraw::LeftScale:
+		case QwtScaleDraw::RightScale: {
+			width /= transform.m11();
+			break;
 		}
-
-		return width;
-	}
-
-	inline void drawBackbone( QPainter* painter, const QwtScaleDraw* scaleDraw )
-	{
-		const qreal pw2 = 0.5 * penWidth( painter, scaleDraw );
-
-		const QPointF pos = scaleDraw->pos();
-		const qreal length = scaleDraw->length();
-
-		switch ( scaleDraw->alignment() )
-		{
-			case QwtScaleDraw::LeftScale:
-			{
-				const qreal x = pos.x() + 1.0 - pw2;
-				QwtPainter::drawLine( painter, x, pos.y(), x, pos.y() + length );
-
-				break;
-			}
-			case QwtScaleDraw::RightScale:
-			{
-				const qreal x = pos.x() - 1.0 + pw2;
-				QwtPainter::drawLine( painter, x, pos.y(), x, pos.y() + length );
-
-				break;
-			}
-			case QwtScaleDraw::TopScale:
-			{
-				const qreal y = pos.y() + 1.0 - pw2;
-				QwtPainter::drawLine( painter, pos.x(), y, pos.x() + length, y );
-
-				break;
-			}
-			case QwtScaleDraw::BottomScale:
-			{
-				const qreal y = pos.y() - 1.0 + pw2;
-				QwtPainter::drawLine( painter, pos.x(), y, pos.x() + length, y );
-
-				break;
-			}
+		case QwtScaleDraw::TopScale:
+		case QwtScaleDraw::BottomScale: {
+			width /= transform.m22();
+			break;
+		}
 		}
 	}
 
-	inline void drawTick( QPainter* painter,
-		const QwtScaleDraw* scaleDraw, qreal tickPos, qreal tickLength )
-	{
-		const QPointF pos = scaleDraw->pos();
+	return width;
+}
 
-		qreal pw = 0.0;
+inline void drawBackbone(QPainter* painter, const QwtScaleDraw* scaleDraw)
+{
+	const qreal pw2 = 0.5 * penWidth(painter, scaleDraw);
 
-		if ( scaleDraw->hasComponent( QwtScaleDraw::Backbone ) )
-			pw = penWidth( painter, scaleDraw );
+	const QPointF pos  = scaleDraw->pos();
+	const qreal length = scaleDraw->length();
 
-		const qreal length = tickLength + pw;
+	switch (scaleDraw->alignment()) {
+	case QwtScaleDraw::LeftScale: {
+		const qreal x = pos.x() + 1.0 - pw2;
+		QwtPainter::drawLine(painter, x, pos.y(), x, pos.y() + length);
 
-		/*
-			Those correction offsets have been found by try and error.
-			They need to be understood and replaced by a calculation,
-			that makes sense. TODO ...
-		 */
-		const qreal off1 = 1.0;
-		const qreal off2 = ( scaleDraw->penWidthF() <= 0.0 ) ? 0.5 : 0.0;
-
-		switch ( scaleDraw->alignment() )
-		{
-			case QwtScaleDraw::LeftScale:
-			{
-				const qreal x = pos.x() + off1 - off2;
-				QwtPainter::drawLine( painter, x, tickPos, x - length, tickPos );
-
-				break;
-			}
-			case QwtScaleDraw::RightScale:
-			{
-				const qreal x = pos.x() - off1 + off2;
-				QwtPainter::drawLine( painter, x, tickPos, x + length, tickPos );
-				break;
-			}
-			case QwtScaleDraw::TopScale:
-			{
-				const qreal y = pos.y() + off1 - 2 * off2;
-				QwtPainter::drawLine( painter, tickPos, y, tickPos, y - length );
-
-				break;
-			}
-			case QwtScaleDraw::BottomScale:
-			{
-				const qreal y = pos.y() - off1 + off2;
-				QwtPainter::drawLine( painter, tickPos, y, tickPos, y + length );
-
-				break;
-			}
-		}
+		break;
 	}
+	case QwtScaleDraw::RightScale: {
+		const qreal x = pos.x() - 1.0 + pw2;
+		QwtPainter::drawLine(painter, x, pos.y(), x, pos.y() + length);
+
+		break;
+	}
+	case QwtScaleDraw::TopScale: {
+		const qreal y = pos.y() + 1.0 - pw2;
+		QwtPainter::drawLine(painter, pos.x(), y, pos.x() + length, y);
+
+		break;
+	}
+	case QwtScaleDraw::BottomScale: {
+		const qreal y = pos.y() - 1.0 + pw2;
+		QwtPainter::drawLine(painter, pos.x(), y, pos.x() + length, y);
+
+		break;
+	}
+	}
+}
+
+inline void drawTick(QPainter* painter, const QwtScaleDraw* scaleDraw, qreal tickPos, qreal tickLength)
+{
+	const QPointF pos = scaleDraw->pos();
+
+	qreal pw = 0.0;
+
+	if (scaleDraw->hasComponent(QwtScaleDraw::Backbone))
+		pw = penWidth(painter, scaleDraw);
+
+	const qreal length = tickLength + pw;
+
+	/*
+		Those correction offsets have been found by try and error.
+		They need to be understood and replaced by a calculation,
+		that makes sense. TODO ...
+	 */
+	const qreal off1 = 1.0;
+	const qreal off2 = (scaleDraw->penWidthF() <= 0.0) ? 0.5 : 0.0;
+
+	switch (scaleDraw->alignment()) {
+	case QwtScaleDraw::LeftScale: {
+		const qreal x = pos.x() + off1 - off2;
+		QwtPainter::drawLine(painter, x, tickPos, x - length, tickPos);
+
+		break;
+	}
+	case QwtScaleDraw::RightScale: {
+		const qreal x = pos.x() - off1 + off2;
+		QwtPainter::drawLine(painter, x, tickPos, x + length, tickPos);
+		break;
+	}
+	case QwtScaleDraw::TopScale: {
+		const qreal y = pos.y() + off1 - 2 * off2;
+		QwtPainter::drawLine(painter, tickPos, y, tickPos, y - length);
+
+		break;
+	}
+	case QwtScaleDraw::BottomScale: {
+		const qreal y = pos.y() - off1 + off2;
+		QwtPainter::drawLine(painter, tickPos, y, tickPos, y + length);
+
+		break;
+	}
+	}
+}
 }
 
 namespace QwtScaleRendererInt
 {
-	inline void drawBackbone( QPainter* painter, const QwtScaleDraw* scaleDraw )
-	{
-		const int pw = qMax( qRound( scaleDraw->penWidthF() ), 1 );
+inline void drawBackbone(QPainter* painter, const QwtScaleDraw* scaleDraw)
+{
+	const int pw = qMax(qRound(scaleDraw->penWidthF()), 1);
 
-		const qreal length = scaleDraw->length();
-		const QPointF pos = scaleDraw->pos();
+	const qreal length = scaleDraw->length();
+	const QPointF pos  = scaleDraw->pos();
 
-		switch ( scaleDraw->alignment() )
-		{
-			case QwtScaleDraw::LeftScale:
-			{
-				const qreal x = qRound( pos.x() - ( pw - 1 ) / 2 );
-				QwtPainter::drawLine( painter, x, pos.y(), x, pos.y() + length );
+	switch (scaleDraw->alignment()) {
+	case QwtScaleDraw::LeftScale: {
+		const qreal x = qRound(pos.x() - (pw - 1) / 2);
+		QwtPainter::drawLine(painter, x, pos.y(), x, pos.y() + length);
 
-				break;
-			}
-			case QwtScaleDraw::RightScale:
-			{
-				const qreal x = qRound( pos.x() + pw / 2 );
-				QwtPainter::drawLine( painter, x, pos.y(), x, pos.y() + length );
+		break;
+	}
+	case QwtScaleDraw::RightScale: {
+		const qreal x = qRound(pos.x() + pw / 2);
+		QwtPainter::drawLine(painter, x, pos.y(), x, pos.y() + length);
 
-				break;
-			}
-			case QwtScaleDraw::TopScale:
-			{
-				const qreal y = qRound( pos.y() - ( pw - 1 ) / 2 );
-				QwtPainter::drawLine( painter, pos.x(), y, pos.x() + length, y );
+		break;
+	}
+	case QwtScaleDraw::TopScale: {
+		const qreal y = qRound(pos.y() - (pw - 1) / 2);
+		QwtPainter::drawLine(painter, pos.x(), y, pos.x() + length, y);
 
-				break;
-			}
-			case QwtScaleDraw::BottomScale:
-			{
-				const qreal y = qRound( pos.y() + pw / 2 );
-				QwtPainter::drawLine( painter, pos.x(), y, pos.x() + length, y );
+		break;
+	}
+	case QwtScaleDraw::BottomScale: {
+		const qreal y = qRound(pos.y() + pw / 2);
+		QwtPainter::drawLine(painter, pos.x(), y, pos.x() + length, y);
 
-				break;
-			}
+		break;
+	}
+	}
+}
+
+inline void drawTick(QPainter* painter, const QwtScaleDraw* scaleDraw, qreal tickPos, qreal tickLength)
+{
+	const QPointF pos = scaleDraw->pos();
+	tickPos           = qRound(tickPos);
+
+	int pw = 0;
+	if (scaleDraw->hasComponent(QwtScaleDraw::Backbone))
+		pw = qMax(qRound(scaleDraw->penWidthF()), 1);
+
+	int len = qMax(qRound(tickLength), 1);
+
+	// the width of ticks at the borders might extent the backbone
+	len += pw;
+
+	if (painter->pen().capStyle() == Qt::FlatCap)
+		len++;  // the end point is not rendered
+
+	qreal off = 0.0;
+
+	if (painter->paintEngine()->type() == QPaintEngine::X11) {
+		if (pw == 1) {
+			// In opposite to raster, X11 paints the end point
+			off = 1.0;
 		}
 	}
 
-	inline void drawTick( QPainter* painter,
-		const QwtScaleDraw* scaleDraw, qreal tickPos, qreal tickLength )
-	{
-		const QPointF pos = scaleDraw->pos();
-		tickPos = qRound( tickPos );
+	switch (scaleDraw->alignment()) {
+	case QwtScaleDraw::LeftScale: {
+		const qreal x1 = qRound(pos.x()) + 1;
+		const qreal x2 = x1 - len + 1;
 
-		int pw = 0;
-		if ( scaleDraw->hasComponent( QwtScaleDraw::Backbone ) )
-			pw = qMax( qRound( scaleDraw->penWidthF() ), 1 );
+		QwtPainter::drawLine(painter, x2, tickPos, x1 - off, tickPos);
 
-		int len = qMax( qRound( tickLength ), 1 );
-
-		// the width of ticks at the borders might extent the backbone
-		len += pw;
-
-		if ( painter->pen().capStyle() == Qt::FlatCap )
-			len++; // the end point is not rendered
-
-		qreal off = 0.0;
-
-		if ( painter->paintEngine()->type() == QPaintEngine::X11 )
-		{
-			if ( pw == 1 )
-			{
-				// In opposite to raster, X11 paints the end point
-				off = 1.0;
-			}
-		}
-
-		switch ( scaleDraw->alignment() )
-		{
-			case QwtScaleDraw::LeftScale:
-			{
-				const qreal x1 = qRound( pos.x() ) + 1;
-				const qreal x2 = x1 - len + 1;
-
-				QwtPainter::drawLine( painter, x2, tickPos, x1 - off, tickPos );
-
-				break;
-			}
-			case QwtScaleDraw::RightScale:
-			{
-				const qreal x1 = qRound( pos.x() );
-				const qreal x2 = x1 + len - 1;
-
-				QwtPainter::drawLine( painter, x1, tickPos, x2 - off, tickPos );
-
-				break;
-			}
-			case QwtScaleDraw::BottomScale:
-			{
-				const qreal y1 = qRound( pos.y() );
-				const qreal y2 = y1 + len - 1;
-
-				QwtPainter::drawLine( painter, tickPos, y1, tickPos, y2 - off );
-
-				break;
-			}
-			case QwtScaleDraw::TopScale:
-			{
-				const qreal y1 = qRound( pos.y() );
-				const qreal y2 = y1 - len + 1;
-
-				QwtPainter::drawLine( painter, tickPos, y2 + 1, tickPos, y1 + 1 - off );
-
-				break;
-			}
-		}
+		break;
 	}
+	case QwtScaleDraw::RightScale: {
+		const qreal x1 = qRound(pos.x());
+		const qreal x2 = x1 + len - 1;
+
+		QwtPainter::drawLine(painter, x1, tickPos, x2 - off, tickPos);
+
+		break;
+	}
+	case QwtScaleDraw::BottomScale: {
+		const qreal y1 = qRound(pos.y());
+		const qreal y2 = y1 + len - 1;
+
+		QwtPainter::drawLine(painter, tickPos, y1, tickPos, y2 - off);
+
+		break;
+	}
+	case QwtScaleDraw::TopScale: {
+		const qreal y1 = qRound(pos.y());
+		const qreal y2 = y1 - len + 1;
+
+		QwtPainter::drawLine(painter, tickPos, y2 + 1, tickPos, y1 + 1 - off);
+
+		break;
+	}
+	}
+}
 }
 
 class QwtScaleDraw::PrivateData
 {
-  public:
-	PrivateData()
-		: len( 0 )
-		, alignment( QwtScaleDraw::BottomScale )
-		, labelRotation( 0.0 )
+public:
+	PrivateData() : len(0), alignment(QwtScaleDraw::BottomScale), labelRotation(0.0)
 	{
 	}
 
@@ -14915,17 +16618,22 @@ class QwtScaleDraw::PrivateData
 	double labelRotation;
 };
 
-/*!
-   \brief Constructor
-
-   The range of the scale is initialized to [0, 100],
-   The position is at (0, 0) with a length of 100.
-   The orientation is QwtAbstractScaleDraw::Bottom.
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details The range of the scale is initialized to [0, 100], the position is at (0, 0)
+ *          with a length of 100. The orientation is QwtAbstractScaleDraw::Bottom.
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 刻度范围初始化为 [0, 100]，位置在 (0, 0)，长度为 100。
+ *          方向为 QwtAbstractScaleDraw::Bottom。
+ * \endif
  */
 QwtScaleDraw::QwtScaleDraw()
 {
 	m_data = new QwtScaleDraw::PrivateData;
-	setLength( 100 );
+	setLength(100);
 }
 
 //! Destructor
@@ -14934,187 +16642,221 @@ QwtScaleDraw::~QwtScaleDraw()
 	delete m_data;
 }
 
-/*!
-   Return alignment of the scale
-   \sa setAlignment()
-   \return Alignment of the scale
+/**
+ * \if ENGLISH
+ * @brief Return alignment of the scale
+ * @return Alignment of the scale
+ * \sa setAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度的对齐方式
+ * @return 刻度的对齐方式
+ * \sa setAlignment()
+ * \endif
  */
 QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 {
 	return m_data->alignment;
 }
 
-/*!
-   Set the alignment of the scale
-
-   \param align Alignment of the scale
-
-   The default alignment is QwtScaleDraw::BottomScale
-   \sa alignment()
+/**
+ * \if ENGLISH
+ * @brief Set the alignment of the scale
+ * @param align Alignment of the scale
+ * @details The default alignment is QwtScaleDraw::BottomScale
+ * \sa alignment()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度的对齐方式
+ * @param align 刻度的对齐方式
+ * @details 默认对齐方式是 QwtScaleDraw::BottomScale
+ * \sa alignment()
+ * \endif
  */
-void QwtScaleDraw::setAlignment( Alignment align )
+void QwtScaleDraw::setAlignment(Alignment align)
 {
 	m_data->alignment = align;
 }
 
-/*!
-   Return the orientation
-
-   TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
-   LeftScale, RightScale are vertical (Qt::Vertical) scales.
-
-   \return Orientation of the scale
-
-   \sa alignment()
+/**
+ * \if ENGLISH
+ * @brief Return the orientation
+ * @details TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
+ *          LeftScale, RightScale are vertical (Qt::Vertical) scales.
+ * @return Orientation of the scale
+ * \sa alignment()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * @details TopScale, BottomScale 是水平 (Qt::Horizontal) 刻度，
+ *          LeftScale, RightScale 是垂直 (Qt::Vertical) 刻度。
+ * @return 刻度的方向
+ * \sa alignment()
+ * \endif
  */
 Qt::Orientation QwtScaleDraw::orientation() const
 {
-	switch ( m_data->alignment )
-	{
-		case TopScale:
-		case BottomScale:
-			return Qt::Horizontal;
-		case LeftScale:
-		case RightScale:
-		default:
-			return Qt::Vertical;
+	switch (m_data->alignment) {
+	case TopScale:
+	case BottomScale:
+		return Qt::Horizontal;
+	case LeftScale:
+	case RightScale:
+	default:
+		return Qt::Vertical;
 	}
 }
 
-/*!
-   \brief Determine the minimum border distance
-
-   This member function returns the minimum space
-   needed to draw the mark labels at the scale's endpoints.
-
-   \param font Font
-   \param start Start border distance
-   \param end End border distance
+/**
+ * \if ENGLISH
+ * @brief Determine the minimum border distance
+ *
+ * This member function returns the minimum space
+ * needed to draw the mark labels at the scale's endpoints.
+ *
+ * @param font Font
+ * @param start Start border distance
+ * @param end End border distance
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 确定最小边距
+ *
+ * 该成员函数返回在刻度端点绘制标记标签所需的最小空间。
+ *
+ * @param font 字体
+ * @param start 起始边距
+ * @param end 结束边距
+ * \endif
  */
-void QwtScaleDraw::getBorderDistHint(
-	const QFont& font, int& start, int& end ) const
+void QwtScaleDraw::getBorderDistHint(const QFont& font, int& start, int& end) const
 {
 	start = 0;
-	end = 1.0;
+	end   = 1.0;
 
-	if ( !hasComponent( QwtAbstractScaleDraw::Labels ) )
+	if (!hasComponent(QwtAbstractScaleDraw::Labels))
 		return;
 
-	const QList< double >& ticks = scaleDiv().ticks( QwtScaleDiv::MajorTick );
-	if ( ticks.count() == 0 )
+	const QList< double >& ticks = scaleDiv().ticks(QwtScaleDiv::MajorTick);
+	if (ticks.count() == 0)
 		return;
 
 	// Find the ticks, that are mapped to the borders.
 	// minTick is the tick, that is mapped to the top/left-most position
 	// in widget coordinates.
 
-	double minTick = ticks[0];
-	double minPos = scaleMap().transform( minTick );
+	double minTick = ticks[ 0 ];
+	double minPos  = scaleMap().transform(minTick);
 	double maxTick = minTick;
-	double maxPos = minPos;
+	double maxPos  = minPos;
 
-	for ( int i = 1; i < ticks.count(); i++ )
-	{
-		const double tickPos = scaleMap().transform( ticks[i] );
-		if ( tickPos < minPos )
-		{
-			minTick = ticks[i];
-			minPos = tickPos;
+	for (int i = 1; i < ticks.count(); i++) {
+		const double tickPos = scaleMap().transform(ticks[ i ]);
+		if (tickPos < minPos) {
+			minTick = ticks[ i ];
+			minPos  = tickPos;
 		}
-		if ( tickPos > scaleMap().transform( maxTick ) )
-		{
-			maxTick = ticks[i];
-			maxPos = tickPos;
+		if (tickPos > scaleMap().transform(maxTick)) {
+			maxTick = ticks[ i ];
+			maxPos  = tickPos;
 		}
 	}
 
 	double e = 0.0;
 	double s = 0.0;
-	if ( orientation() == Qt::Vertical )
-	{
-		s = -labelRect( font, minTick ).top();
-		s -= qAbs( minPos - qRound( scaleMap().p2() ) );
+	if (orientation() == Qt::Vertical) {
+		s = -labelRect(font, minTick).top();
+		s -= qAbs(minPos - qRound(scaleMap().p2()));
 
-		e = labelRect( font, maxTick ).bottom();
-		e -= qAbs( maxPos - scaleMap().p1() );
-	}
-	else
-	{
-		s = -labelRect( font, minTick ).left();
-		s -= qAbs( minPos - scaleMap().p1() );
+		e = labelRect(font, maxTick).bottom();
+		e -= qAbs(maxPos - scaleMap().p1());
+	} else {
+		s = -labelRect(font, minTick).left();
+		s -= qAbs(minPos - scaleMap().p1());
 
-		e = labelRect( font, maxTick ).right();
-		e -= qAbs( maxPos - scaleMap().p2() );
+		e = labelRect(font, maxTick).right();
+		e -= qAbs(maxPos - scaleMap().p2());
 	}
 
-	if ( s < 0.0 )
+	if (s < 0.0)
 		s = 0.0;
-	if ( e < 0.0 )
+	if (e < 0.0)
 		e = 0.0;
 
-	start = qwtCeil( s );
-	end = qwtCeil( e );
+	start = qwtCeil(s);
+	end   = qwtCeil(e);
 }
 
-/*!
-   Determine the minimum distance between two labels, that is necessary
-   that the texts don't overlap.
-
-   \param font Font
-   \return The maximum width of a label
-
-   \sa getBorderDistHint()
+/**
+ * \if ENGLISH
+ * @brief Determine the minimum distance between two labels
+ *
+ * Determine the minimum distance between two labels, that is necessary
+ * that the texts don't overlap.
+ *
+ * @param font Font
+ * @return The maximum width of a label
+ *
+ * @sa getBorderDistHint()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 确定两个标签之间的最小距离
+ *
+ * 确定两个标签之间的最小距离，以防止文本重叠。
+ *
+ * @param font 字体
+ * @return 标签的最大宽度
+ *
+ * @sa getBorderDistHint()
+ * \endif
  */
 
-int QwtScaleDraw::minLabelDist( const QFont& font ) const
+int QwtScaleDraw::minLabelDist(const QFont& font) const
 {
-	if ( !hasComponent( QwtAbstractScaleDraw::Labels ) )
+	if (!hasComponent(QwtAbstractScaleDraw::Labels))
 		return 0;
 
-	const QList< double >& ticks = scaleDiv().ticks( QwtScaleDiv::MajorTick );
-	if ( ticks.isEmpty() )
+	const QList< double >& ticks = scaleDiv().ticks(QwtScaleDiv::MajorTick);
+	if (ticks.isEmpty())
 		return 0;
 
-	const QFontMetrics fm( font );
+	const QFontMetrics fm(font);
 
-	const bool vertical = ( orientation() == Qt::Vertical );
+	const bool vertical = (orientation() == Qt::Vertical);
 
 	QRectF bRect1;
-	QRectF bRect2 = labelRect( font, ticks[0] );
-	if ( vertical )
-	{
-		bRect2.setRect( -bRect2.bottom(), 0.0, bRect2.height(), bRect2.width() );
+	QRectF bRect2 = labelRect(font, ticks[ 0 ]);
+	if (vertical) {
+		bRect2.setRect(-bRect2.bottom(), 0.0, bRect2.height(), bRect2.width());
 	}
 
 	double maxDist = 0.0;
 
-	for ( int i = 1; i < ticks.count(); i++ )
-	{
+	for (int i = 1; i < ticks.count(); i++) {
 		bRect1 = bRect2;
-		bRect2 = labelRect( font, ticks[i] );
-		if ( vertical )
-		{
-			bRect2.setRect( -bRect2.bottom(), 0.0,
-				bRect2.height(), bRect2.width() );
+		bRect2 = labelRect(font, ticks[ i ]);
+		if (vertical) {
+			bRect2.setRect(-bRect2.bottom(), 0.0, bRect2.height(), bRect2.width());
 		}
 
-		double dist = fm.leading(); // space between the labels
-		if ( bRect1.right() > 0 )
+		double dist = fm.leading();  // space between the labels
+		if (bRect1.right() > 0)
 			dist += bRect1.right();
-		if ( bRect2.left() < 0 )
+		if (bRect2.left() < 0)
 			dist += -bRect2.left();
 
-		if ( dist > maxDist )
+		if (dist > maxDist)
 			maxDist = dist;
 	}
 
-	double angle = qwtRadians( labelRotation() );
-	if ( vertical )
+	double angle = qwtRadians(labelRotation());
+	if (vertical)
 		angle += M_PI / 2;
 
-	const double sinA = qFastSin( angle ); // qreal -> double
-	if ( qFuzzyCompare( sinA + 1.0, 1.0 ) )
-		return qCeil( maxDist );
+	const double sinA = qFastSin(angle);  // qreal -> double
+	if (qFuzzyCompare(sinA + 1.0, 1.0))
+		return qCeil(maxDist);
 
 	const int fmHeight = fm.ascent() - 2;
 
@@ -15122,247 +16864,323 @@ int QwtScaleDraw::minLabelDist( const QFont& font ) const
 	// the height of the label font. This height is needed
 	// for the neighbored label.
 
-	double labelDist = fmHeight / qFastSin( angle ) * qFastCos( angle );
-	if ( labelDist < 0 )
+	double labelDist = fmHeight / qFastSin(angle) * qFastCos(angle);
+	if (labelDist < 0)
 		labelDist = -labelDist;
 
 	// For text orientations close to the scale orientation
 
-	if ( labelDist > maxDist )
+	if (labelDist > maxDist)
 		labelDist = maxDist;
 
 	// For text orientations close to the opposite of the
 	// scale orientation
 
-	if ( labelDist < fmHeight )
+	if (labelDist < fmHeight)
 		labelDist = fmHeight;
 
-	return qCeil( labelDist );
+	return qCeil(labelDist);
 }
 
-/*!
-   Calculate the width/height that is needed for a
-   vertical/horizontal scale.
-
-   The extent is calculated from the pen width of the backbone,
-   the major tick length, the spacing and the maximum width/height
-   of the labels.
-
-   \param font Font used for painting the labels
-   \return Extent
-
-   \sa minLength()
+/**
+ * \if ENGLISH
+ * @brief Calculate the width/height that is needed for a vertical/horizontal scale
+ *
+ * The extent is calculated from the pen width of the backbone,
+ * the major tick length, the spacing and the maximum width/height
+ * of the labels.
+ *
+ * @param font Font used for painting the labels
+ * @return Extent
+ *
+ * @sa minLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算垂直/水平刻度所需的宽度/高度
+ *
+ * 范围是根据主干的画笔宽度、主刻度长度、间距和标签的最大宽度/高度计算的。
+ *
+ * @param font 用于绘制标签的字体
+ * @return 范围
+ *
+ * @sa minLength()
+ * \endif
  */
-double QwtScaleDraw::extent( const QFont& font ) const
+double QwtScaleDraw::extent(const QFont& font) const
 {
 	double d = 0;
 
-	if ( hasComponent( QwtAbstractScaleDraw::Labels ) )
-	{
-		if ( orientation() == Qt::Vertical )
-			d = maxLabelWidth( font );
+	if (hasComponent(QwtAbstractScaleDraw::Labels)) {
+		if (orientation() == Qt::Vertical)
+			d = maxLabelWidth(font);
 		else
-			d = maxLabelHeight( font );
+			d = maxLabelHeight(font);
 
-		if ( d > 0 )
+		if (d > 0)
 			d += spacing();
 	}
 
-	if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
-	{
+	if (hasComponent(QwtAbstractScaleDraw::Ticks)) {
 		d += maxTickLength();
 	}
 
-	if ( hasComponent( QwtAbstractScaleDraw::Backbone ) )
-	{
-		d += qwtEffectivePenWidth( this );
+	if (hasComponent(QwtAbstractScaleDraw::Backbone)) {
+		d += qwtEffectivePenWidth(this);
 	}
 
-	d = qwtMaxF( d, minimumExtent() );
+	d = qwtMaxF(d, minimumExtent());
 	return d;
 }
 
-/*!
-   Calculate the minimum length that is needed to draw the scale
-
-   \param font Font used for painting the labels
-   \return Minimum length that is needed to draw the scale
-
-   \sa extent()
+/**
+ * \if ENGLISH
+ * @brief Calculate the minimum length that is needed to draw the scale
+ *
+ * @param font Font used for painting the labels
+ * @return Minimum length that is needed to draw the scale
+ *
+ * @sa extent()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算绘制刻度所需的最小长度
+ *
+ * @param font 用于绘制标签的字体
+ * @return 绘制刻度所需的最小长度
+ *
+ * @sa extent()
+ * \endif
  */
-int QwtScaleDraw::minLength( const QFont& font ) const
+int QwtScaleDraw::minLength(const QFont& font) const
 {
 	int startDist, endDist;
-	getBorderDistHint( font, startDist, endDist );
+	getBorderDistHint(font, startDist, endDist);
 
 	const QwtScaleDiv& sd = scaleDiv();
 
-	const uint minorCount =
-		sd.ticks( QwtScaleDiv::MinorTick ).count() +
-		sd.ticks( QwtScaleDiv::MediumTick ).count();
-	const uint majorCount =
-		sd.ticks( QwtScaleDiv::MajorTick ).count();
+	const uint minorCount = sd.ticks(QwtScaleDiv::MinorTick).count() + sd.ticks(QwtScaleDiv::MediumTick).count();
+	const uint majorCount = sd.ticks(QwtScaleDiv::MajorTick).count();
 
 	int lengthForLabels = 0;
-	if ( hasComponent( QwtAbstractScaleDraw::Labels ) )
-		lengthForLabels = minLabelDist( font ) * majorCount;
+	if (hasComponent(QwtAbstractScaleDraw::Labels))
+		lengthForLabels = minLabelDist(font) * majorCount;
 
 	int lengthForTicks = 0;
-	if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
-	{
-		const double pw = qwtEffectivePenWidth( this );
-		lengthForTicks = qCeil( ( majorCount + minorCount ) * ( pw + 1.0 ) );
+	if (hasComponent(QwtAbstractScaleDraw::Ticks)) {
+		const double pw = qwtEffectivePenWidth(this);
+		lengthForTicks  = qCeil((majorCount + minorCount) * (pw + 1.0));
 	}
 
-	return startDist + endDist + qMax( lengthForLabels, lengthForTicks );
+	return startDist + endDist + qMax(lengthForLabels, lengthForTicks);
 }
 
-/*!
-   Find the position, where to paint a label
-
-   The position has a distance that depends on the length of the ticks
-   in direction of the alignment().
-
-   \param value Value
-   \return Position, where to paint a label
+/**
+ * \if ENGLISH
+ * @brief Find the position, where to paint a label
+ *
+ * The position has a distance that depends on the length of the ticks
+ * in direction of the alignment().
+ *
+ * @param value Value
+ * @return Position, where to paint a label
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找绘制标签的位置
+ *
+ * 该位置与刻度长度有关，距离取决于 alignment() 的方向。
+ *
+ * @param value 值
+ * @return 绘制标签的位置
+ * \endif
  */
-QPointF QwtScaleDraw::labelPosition( double value ) const
+QPointF QwtScaleDraw::labelPosition(double value) const
 {
-	const double tval = scaleMap().transform( value );
-	double dist = spacing();
-	if ( hasComponent( QwtAbstractScaleDraw::Backbone ) )
-		dist += qwtEffectivePenWidth( this );
+	const double tval = scaleMap().transform(value);
+	double dist       = spacing();
+	if (hasComponent(QwtAbstractScaleDraw::Backbone))
+		dist += qwtEffectivePenWidth(this);
 
-	if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
-		dist += tickLength( QwtScaleDiv::MajorTick );
+	if (hasComponent(QwtAbstractScaleDraw::Ticks))
+		dist += tickLength(QwtScaleDiv::MajorTick);
 
 	double px = 0;
 	double py = 0;
 
-	switch ( alignment() )
-	{
-		case RightScale:
-		{
-			px = m_data->pos.x() + dist;
-			py = tval;
-			break;
-		}
-		case LeftScale:
-		{
-			px = m_data->pos.x() - dist;
-			py = tval;
-			break;
-		}
-		case BottomScale:
-		{
-			px = tval;
-			py = m_data->pos.y() + dist;
-			break;
-		}
-		case TopScale:
-		{
-			px = tval;
-			py = m_data->pos.y() - dist;
-			break;
-		}
+	switch (alignment()) {
+	case RightScale: {
+		px = m_data->pos.x() + dist;
+		py = tval;
+		break;
+	}
+	case LeftScale: {
+		px = m_data->pos.x() - dist;
+		py = tval;
+		break;
+	}
+	case BottomScale: {
+		px = tval;
+		py = m_data->pos.y() + dist;
+		break;
+	}
+	case TopScale: {
+		px = tval;
+		py = m_data->pos.y() - dist;
+		break;
+	}
 	}
 
-	return QPointF( px, py );
+	return QPointF(px, py);
 }
 
-/*!
-   Draw a tick
-
-   \param painter Painter
-   \param value Value of the tick
-   \param len Length of the tick
-
-   \sa drawBackbone(), drawLabel()
+/**
+ * \if ENGLISH
+ * @brief Draw a tick
+ *
+ * @param painter Painter
+ * @param value Value of the tick
+ * @param len Length of the tick
+ *
+ * @sa drawBackbone(), drawLabel()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制刻度线
+ *
+ * @param painter 绘制器
+ * @param value 刻度值
+ * @param len 刻度长度
+ *
+ * @sa drawBackbone(), drawLabel()
+ * \endif
  */
-void QwtScaleDraw::drawTick( QPainter* painter, double value, double len ) const
+void QwtScaleDraw::drawTick(QPainter* painter, double value, double len) const
 {
-	if ( len <= 0 )
+	if (len <= 0)
 		return;
 
-	const double tval = scaleMap().transform( value );
+	const double tval = scaleMap().transform(value);
 
-	if ( QwtPainter::roundingAlignment( painter ) )
-		QwtScaleRendererInt::drawTick( painter, this, tval, len );
+	if (QwtPainter::roundingAlignment(painter))
+		QwtScaleRendererInt::drawTick(painter, this, tval, len);
 	else
-		QwtScaleRendererReal::drawTick( painter, this, tval, len );
+		QwtScaleRendererReal::drawTick(painter, this, tval, len);
 }
 
-/*!
-   Draws the baseline of the scale
-   \param painter Painter
-
-   \sa drawTick(), drawLabel()
+/**
+ * \if ENGLISH
+ * @brief Draws the baseline of the scale
+ *
+ * @param painter Painter
+ *
+ * @sa drawTick(), drawLabel()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制刻度的基线
+ *
+ * @param painter 绘制器
+ *
+ * @sa drawTick(), drawLabel()
+ * \endif
  */
-void QwtScaleDraw::drawBackbone( QPainter* painter ) const
+void QwtScaleDraw::drawBackbone(QPainter* painter) const
 {
-	if ( QwtPainter::roundingAlignment( painter ) )
-		QwtScaleRendererInt::drawBackbone( painter, this );
+	if (QwtPainter::roundingAlignment(painter))
+		QwtScaleRendererInt::drawBackbone(painter, this);
 	else
-		QwtScaleRendererReal::drawBackbone( painter, this );
+		QwtScaleRendererReal::drawBackbone(painter, this);
 }
 
-/*!
-   \brief Move the position of the scale
-
-   The meaning of the parameter pos depends on the alignment:
-   <dl>
-   <dt>QwtScaleDraw::LeftScale
-   <dd>The origin is the topmost point of the
-	  backbone. The backbone is a vertical line.
-	  Scale marks and labels are drawn
-	  at the left of the backbone.
-   <dt>QwtScaleDraw::RightScale
-   <dd>The origin is the topmost point of the
-	  backbone. The backbone is a vertical line.
-	  Scale marks and labels are drawn
-	  at the right of the backbone.
-   <dt>QwtScaleDraw::TopScale
-   <dd>The origin is the leftmost point of the
-	  backbone. The backbone is a horizontal line.
-	  Scale marks and labels are drawn
-	  above the backbone.
-   <dt>QwtScaleDraw::BottomScale
-   <dd>The origin is the leftmost point of the
-	  backbone. The backbone is a horizontal line
-	  Scale marks and labels are drawn
-	  below the backbone.
-   </dl>
-
-   \param pos Origin of the scale
-
-   \sa pos(), setLength()
+/**
+ * \if ENGLISH
+ * @brief Move the position of the scale
+ *
+ * The meaning of the parameter pos depends on the alignment:
+ * - QwtScaleDraw::LeftScale: The origin is the topmost point of the
+ *   backbone. The backbone is a vertical line.
+ *   Scale marks and labels are drawn at the left of the backbone.
+ * - QwtScaleDraw::RightScale: The origin is the topmost point of the
+ *   backbone. The backbone is a vertical line.
+ *   Scale marks and labels are drawn at the right of the backbone.
+ * - QwtScaleDraw::TopScale: The origin is the leftmost point of the
+ *   backbone. The backbone is a horizontal line.
+ *   Scale marks and labels are drawn above the backbone.
+ * - QwtScaleDraw::BottomScale: The origin is the leftmost point of the
+ *   backbone. The backbone is a horizontal line.
+ *   Scale marks and labels are drawn below the backbone.
+ *
+ * @param pos Origin of the scale
+ *
+ * @sa pos(), setLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 移动刻度的位置
+ *
+ * 参数 pos 的含义取决于对齐方式：
+ * - QwtScaleDraw::LeftScale: 原点是主干的最顶端点。主干是垂直线。
+ *   刻度标记和标签绘制在主干的左侧。
+ * - QwtScaleDraw::RightScale: 原点是主干的最顶端点。主干是垂直线。
+ *   刻度标记和标签绘制在主干的右侧。
+ * - QwtScaleDraw::TopScale: 原点是主干的最左端点。主干是水平线。
+ *   刻度标记和标签绘制在主干的上方。
+ * - QwtScaleDraw::BottomScale: 原点是主干的最左端点。主干是水平线。
+ *   刻度标记和标签绘制在主干的下方。
+ *
+ * @param pos 刻度的原点
+ *
+ * @sa pos(), setLength()
+ * \endif
  */
-void QwtScaleDraw::move( const QPointF& pos )
+void QwtScaleDraw::move(const QPointF& pos)
 {
 	m_data->pos = pos;
 	updateMap();
 }
 
-/*!
-   \return Origin of the scale
-   \sa move(), length()
+/**
+ * \if ENGLISH
+ * @brief Get origin of the scale
+ * @return Origin of the scale
+ * @sa move(), length()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取刻度的原点
+ * @return 刻度的原点
+ * @sa move(), length()
+ * \endif
  */
 QPointF QwtScaleDraw::pos() const
 {
 	return m_data->pos;
 }
 
-/*!
-   Set the length of the backbone.
-
-   The length doesn't include the space needed for
-   overlapping labels.
-
-   \param length Length of the backbone
-
-   \sa move(), minLabelDist()
+/**
+ * \if ENGLISH
+ * @brief Set the length of the backbone
+ *
+ * The length doesn't include the space needed for
+ * overlapping labels.
+ *
+ * @param length Length of the backbone
+ *
+ * @sa move(), minLabelDist()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置主干的长度
+ *
+ * 长度不包括重叠标签所需的空间。
+ *
+ * @param length 主干的长度
+ *
+ * @sa move(), minLabelDist()
+ * \endif
  */
-void QwtScaleDraw::setLength( double length )
+void QwtScaleDraw::setLength(double length)
 {
 #if 0
 	if ( length >= 0 && length < 10 )
@@ -15372,307 +17190,452 @@ void QwtScaleDraw::setLength( double length )
 	if ( length < 0 && length > -10 )
 		length = -10;
 #else
-	length = qwtMaxF( length, 10.0 );
+	length = qwtMaxF(length, 10.0);
 #endif
 
 	m_data->len = length;
 	updateMap();
 }
 
-/*!
-   \return the length of the backbone
-   \sa setLength(), pos()
+/**
+ * \if ENGLISH
+ * @brief Get the length of the backbone
+ * @return the length of the backbone
+ * @sa setLength(), pos()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取主干的长度
+ * @return 主干的长度
+ * @sa setLength(), pos()
+ * \endif
  */
 double QwtScaleDraw::length() const
 {
 	return m_data->len;
 }
 
-/*!
-   Draws the label for a major scale tick
-
-   \param painter Painter
-   \param value Value
-
-   \sa drawTick(), drawBackbone(), boundingLabelRect()
+/**
+ * \if ENGLISH
+ * @brief Draws the label for a major scale tick
+ *
+ * @param painter Painter
+ * @param value Value
+ *
+ * @sa drawTick(), drawBackbone(), boundingLabelRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制主刻度标签
+ *
+ * @param painter 绘制器
+ * @param value 值
+ *
+ * @sa drawTick(), drawBackbone(), boundingLabelRect()
+ * \endif
  */
-void QwtScaleDraw::drawLabel( QPainter* painter, double value ) const
+void QwtScaleDraw::drawLabel(QPainter* painter, double value) const
 {
-	QwtText lbl = tickLabel( painter->font(), value );
-	if ( lbl.isEmpty() )
+	QwtText lbl = tickLabel(painter->font(), value);
+	if (lbl.isEmpty())
 		return;
 
-	QPointF pos = labelPosition( value );
+	QPointF pos = labelPosition(value);
 
-	QSizeF labelSize = lbl.textSize( painter->font() );
+	QSizeF labelSize = lbl.textSize(painter->font());
 
-	const QTransform transform = labelTransformation( pos, labelSize );
+	const QTransform transform = labelTransformation(pos, labelSize);
 
 	painter->save();
-	painter->setWorldTransform( transform, true );
+	painter->setWorldTransform(transform, true);
 
-	lbl.draw ( painter, QRect( QPoint( 0, 0 ), labelSize.toSize() ) );
+	lbl.draw(painter, QRect(QPoint(0, 0), labelSize.toSize()));
 
 	painter->restore();
 }
 
-/*!
-   \brief Find the bounding rectangle for the label.
-
-   The coordinates of the rectangle are absolute ( calculated from pos() ).
-   in direction of the tick.
-
-   \param font Font used for painting
-   \param value Value
-
-   \return Bounding rectangle
-   \sa labelRect()
+/**
+ * \if ENGLISH
+ * @brief Find the bounding rectangle for the label
+ *
+ * The coordinates of the rectangle are absolute ( calculated from pos() )
+ * in direction of the tick.
+ *
+ * @param font Font used for painting
+ * @param value Value
+ *
+ * @return Bounding rectangle
+ * @sa labelRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找标签的边界矩形
+ *
+ * 矩形的坐标是绝对的（从 pos() 计算得出），沿刻度方向。
+ *
+ * @param font 用于绘制的字体
+ * @param value 值
+ *
+ * @return 边界矩形
+ * @sa labelRect()
+ * \endif
  */
-QRect QwtScaleDraw::boundingLabelRect( const QFont& font, double value ) const
+QRect QwtScaleDraw::boundingLabelRect(const QFont& font, double value) const
 {
-	QwtText lbl = tickLabel( font, value );
-	if ( lbl.isEmpty() )
+	QwtText lbl = tickLabel(font, value);
+	if (lbl.isEmpty())
 		return QRect();
 
-	const QPointF pos = labelPosition( value );
-	QSizeF labelSize = lbl.textSize( font );
+	const QPointF pos = labelPosition(value);
+	QSizeF labelSize  = lbl.textSize(font);
 
-	const QTransform transform = labelTransformation( pos, labelSize );
-	return transform.mapRect( QRect( QPoint( 0, 0 ), labelSize.toSize() ) );
+	const QTransform transform = labelTransformation(pos, labelSize);
+	return transform.mapRect(QRect(QPoint(0, 0), labelSize.toSize()));
 }
 
-/*!
-   Calculate the transformation that is needed to paint a label
-   depending on its alignment and rotation.
-
-   \param pos Position where to paint the label
-   \param size Size of the label
-
-   \return Transformation matrix
-   \sa setLabelAlignment(), setLabelRotation()
+/**
+ * \if ENGLISH
+ * @brief Calculate the transformation that is needed to paint a label
+ *
+ * Calculate the transformation that is needed to paint a label
+ * depending on its alignment and rotation.
+ *
+ * @param pos Position where to paint the label
+ * @param size Size of the label
+ *
+ * @return Transformation matrix
+ * @sa setLabelAlignment(), setLabelRotation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算绘制标签所需的变换
+ *
+ * 根据对齐方式和旋转角度计算绘制标签所需的变换。
+ *
+ * @param pos 绘制标签的位置
+ * @param size 标签的大小
+ *
+ * @return 变换矩阵
+ * @sa setLabelAlignment(), setLabelRotation()
+ * \endif
  */
-QTransform QwtScaleDraw::labelTransformation(
-	const QPointF& pos, const QSizeF& size ) const
+QTransform QwtScaleDraw::labelTransformation(const QPointF& pos, const QSizeF& size) const
 {
 	QTransform transform;
-	transform.translate( pos.x(), pos.y() );
-	transform.rotate( labelRotation() );
+	transform.translate(pos.x(), pos.y());
+	transform.rotate(labelRotation());
 
 	int flags = labelAlignment();
-	if ( flags == 0 )
-	{
-		switch ( alignment() )
-		{
-			case RightScale:
-			{
-				if ( flags == 0 )
-					flags = Qt::AlignRight | Qt::AlignVCenter;
-				break;
-			}
-			case LeftScale:
-			{
-				if ( flags == 0 )
-					flags = Qt::AlignLeft | Qt::AlignVCenter;
-				break;
-			}
-			case BottomScale:
-			{
-				if ( flags == 0 )
-					flags = Qt::AlignHCenter | Qt::AlignBottom;
-				break;
-			}
-			case TopScale:
-			{
-				if ( flags == 0 )
-					flags = Qt::AlignHCenter | Qt::AlignTop;
-				break;
-			}
+	if (flags == 0) {
+		switch (alignment()) {
+		case RightScale: {
+			if (flags == 0)
+				flags = Qt::AlignRight | Qt::AlignVCenter;
+			break;
+		}
+		case LeftScale: {
+			if (flags == 0)
+				flags = Qt::AlignLeft | Qt::AlignVCenter;
+			break;
+		}
+		case BottomScale: {
+			if (flags == 0)
+				flags = Qt::AlignHCenter | Qt::AlignBottom;
+			break;
+		}
+		case TopScale: {
+			if (flags == 0)
+				flags = Qt::AlignHCenter | Qt::AlignTop;
+			break;
+		}
 		}
 	}
 
 	double x, y;
 
-	if ( flags & Qt::AlignLeft )
+	if (flags & Qt::AlignLeft)
 		x = -size.width();
-	else if ( flags & Qt::AlignRight )
+	else if (flags & Qt::AlignRight)
 		x = 0.0;
-	else // Qt::AlignHCenter
-		x = -( 0.5 * size.width() );
+	else  // Qt::AlignHCenter
+		x = -(0.5 * size.width());
 
-	if ( flags & Qt::AlignTop )
+	if (flags & Qt::AlignTop)
 		y = -size.height();
-	else if ( flags & Qt::AlignBottom )
+	else if (flags & Qt::AlignBottom)
 		y = 0;
-	else // Qt::AlignVCenter
-		y = -( 0.5 * size.height() );
+	else  // Qt::AlignVCenter
+		y = -(0.5 * size.height());
 
-	transform.translate( x, y );
+	transform.translate(x, y);
 
 	return transform;
 }
 
-/*!
-   Find the bounding rectangle for the label. The coordinates of
-   the rectangle are relative to spacing + tick length from the backbone
-   in direction of the tick.
-
-   \param font Font used for painting
-   \param value Value
-
-   \return Bounding rectangle that is needed to draw a label
+/**
+ * \if ENGLISH
+ * @brief Find the bounding rectangle for the label
+ *
+ * The coordinates of the rectangle are relative to spacing + tick length
+ * from the backbone in direction of the tick.
+ *
+ * @param font Font used for painting
+ * @param value Value
+ *
+ * @return Bounding rectangle that is needed to draw a label
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找标签的边界矩形
+ *
+ * 矩形的坐标相对于主干沿刻度方向的间距 + 刻度长度。
+ *
+ * @param font 用于绘制的字体
+ * @param value 值
+ *
+ * @return 绘制标签所需的边界矩形
+ * \endif
  */
-QRectF QwtScaleDraw::labelRect( const QFont& font, double value ) const
+QRectF QwtScaleDraw::labelRect(const QFont& font, double value) const
 {
-	QwtText lbl = tickLabel( font, value );
-	if ( lbl.isEmpty() )
-		return QRectF( 0.0, 0.0, 0.0, 0.0 );
+	QwtText lbl = tickLabel(font, value);
+	if (lbl.isEmpty())
+		return QRectF(0.0, 0.0, 0.0, 0.0);
 
-	const QPointF pos = labelPosition( value );
+	const QPointF pos = labelPosition(value);
 
-	const QSizeF labelSize = lbl.textSize( font );
-	const QTransform transform = labelTransformation( pos, labelSize );
+	const QSizeF labelSize     = lbl.textSize(font);
+	const QTransform transform = labelTransformation(pos, labelSize);
 
-	QRectF br = transform.mapRect( QRectF( QPointF( 0, 0 ), labelSize ) );
-	br.translate( -pos.x(), -pos.y() );
+	QRectF br = transform.mapRect(QRectF(QPointF(0, 0), labelSize));
+	br.translate(-pos.x(), -pos.y());
 
 	return br;
 }
 
-/*!
-   Calculate the size that is needed to draw a label
-
-   \param font Label font
-   \param value Value
-
-   \return Size that is needed to draw a label
+/**
+ * \if ENGLISH
+ * @brief Calculate the size that is needed to draw a label
+ *
+ * @param font Label font
+ * @param value Value
+ *
+ * @return Size that is needed to draw a label
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算绘制标签所需的大小
+ *
+ * @param font 标签字体
+ * @param value 值
+ *
+ * @return 绘制标签所需的大小
+ * \endif
  */
-QSizeF QwtScaleDraw::labelSize( const QFont& font, double value ) const
+QSizeF QwtScaleDraw::labelSize(const QFont& font, double value) const
 {
-	return labelRect( font, value ).size();
+	return labelRect(font, value).size();
 }
 
-/*!
-   Rotate all labels.
-
-   When changing the rotation, it might be necessary to
-   adjust the label flags too. Finding a useful combination is
-   often the result of try and error.
-
-   \param rotation Angle in degrees. When changing the label rotation,
-				  the label flags often needs to be adjusted too.
-
-   \sa setLabelAlignment(), labelRotation(), labelAlignment().
-
+/**
+ * \if ENGLISH
+ * @brief Rotate all labels
+ *
+ * When changing the rotation, it might be necessary to
+ * adjust the label flags too. Finding a useful combination is
+ * often the result of try and error.
+ *
+ * @param rotation Angle in degrees. When changing the label rotation,
+ *                 the label flags often needs to be adjusted too.
+ *
+ * @sa setLabelAlignment(), labelRotation(), labelAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 旋转所有标签
+ *
+ * 更改旋转角度时，可能还需要调整标签标志。找到有用的组合通常是反复试验的结果。
+ *
+ * @param rotation 角度（度）。更改标签旋转时，通常还需要调整标签标志。
+ *
+ * @sa setLabelAlignment(), labelRotation(), labelAlignment()
+ * \endif
  */
-void QwtScaleDraw::setLabelRotation( double rotation )
+void QwtScaleDraw::setLabelRotation(double rotation)
 {
 	m_data->labelRotation = rotation;
 }
 
-/*!
-   \return the label rotation
-   \sa setLabelRotation(), labelAlignment()
+/**
+ * \if ENGLISH
+ * @brief Get the label rotation
+ * @return the label rotation
+ * @sa setLabelRotation(), labelAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签旋转角度
+ * @return 标签旋转角度
+ * @sa setLabelRotation(), labelAlignment()
+ * \endif
  */
 double QwtScaleDraw::labelRotation() const
 {
 	return m_data->labelRotation;
 }
 
-/*!
-   \brief Change the label flags
-
-   Labels are aligned to the point tick length + spacing away from the backbone.
-
-   The alignment is relative to the orientation of the label text.
-   In case of an flags of 0 the label will be aligned
-   depending on the orientation of the scale:
-
-	  QwtScaleDraw::TopScale: Qt::AlignHCenter | Qt::AlignTop\n
-	  QwtScaleDraw::BottomScale: Qt::AlignHCenter | Qt::AlignBottom\n
-	  QwtScaleDraw::LeftScale: Qt::AlignLeft | Qt::AlignVCenter\n
-	  QwtScaleDraw::RightScale: Qt::AlignRight | Qt::AlignVCenter\n
-
-   Changing the alignment is often necessary for rotated labels.
-
-   \param alignment Or'd Qt::AlignmentFlags see <qnamespace.h>
-
-   \sa setLabelRotation(), labelRotation(), labelAlignment()
-   \warning The various alignments might be confusing.
-		   The alignment of the label is not the alignment
-		   of the scale and is not the alignment of the flags
-		   ( QwtText::flags() ) returned from QwtAbstractScaleDraw::label().
+/**
+ * \if ENGLISH
+ * @brief Change the label flags
+ *
+ * Labels are aligned to the point tick length + spacing away from the backbone.
+ *
+ * The alignment is relative to the orientation of the label text.
+ * In case of an flags of 0 the label will be aligned
+ * depending on the orientation of the scale:
+ *
+ * - QwtScaleDraw::TopScale: Qt::AlignHCenter | Qt::AlignTop
+ * - QwtScaleDraw::BottomScale: Qt::AlignHCenter | Qt::AlignBottom
+ * - QwtScaleDraw::LeftScale: Qt::AlignLeft | Qt::AlignVCenter
+ * - QwtScaleDraw::RightScale: Qt::AlignRight | Qt::AlignVCenter
+ *
+ * Changing the alignment is often necessary for rotated labels.
+ *
+ * @param alignment Or'd Qt::AlignmentFlags see <qnamespace.h>
+ *
+ * @sa setLabelRotation(), labelRotation(), labelAlignment()
+ * @warning The various alignments might be confusing.
+ *          The alignment of the label is not the alignment
+ *          of the scale and is not the alignment of the flags
+ *          ( QwtText::flags() ) returned from QwtAbstractScaleDraw::label().
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改标签标志
+ *
+ * 标签对齐到距离主干刻度长度 + 间距的位置。
+ *
+ * 对齐是相对于标签文本的方向。如果标志为 0，
+ * 标签将根据刻度的方向对齐：
+ *
+ * - QwtScaleDraw::TopScale: Qt::AlignHCenter | Qt::AlignTop
+ * - QwtScaleDraw::BottomScale: Qt::AlignHCenter | Qt::AlignBottom
+ * - QwtScaleDraw::LeftScale: Qt::AlignLeft | Qt::AlignVCenter
+ * - QwtScaleDraw::RightScale: Qt::AlignRight | Qt::AlignVCenter
+ *
+ * 对于旋转的标签，通常需要更改对齐方式。
+ *
+ * @param alignment 组合的 Qt::AlignmentFlags，参见 <qnamespace.h>
+ *
+ * @sa setLabelRotation(), labelRotation(), labelAlignment()
+ * @warning 各种对齐方式可能会令人困惑。
+ *          标签的对齐不是刻度的对齐，也不是
+ *          QwtAbstractScaleDraw::label() 返回的标志 ( QwtText::flags() ) 的对齐。
+ * \endif
  */
 
-void QwtScaleDraw::setLabelAlignment( Qt::Alignment alignment )
+void QwtScaleDraw::setLabelAlignment(Qt::Alignment alignment)
 {
 	m_data->labelAlignment = alignment;
 }
 
-/*!
-   \return the label flags
-   \sa setLabelAlignment(), labelRotation()
+/**
+ * \if ENGLISH
+ * @brief Get the label flags
+ * @return the label flags
+ * @sa setLabelAlignment(), labelRotation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签标志
+ * @return 标签标志
+ * @sa setLabelAlignment(), labelRotation()
+ * \endif
  */
 Qt::Alignment QwtScaleDraw::labelAlignment() const
 {
 	return m_data->labelAlignment;
 }
 
-/*!
-   \param font Font
-   \return the maximum width of a label
+/**
+ * \if ENGLISH
+ * @brief Get the maximum width of a label
+ * @param font Font
+ * @return the maximum width of a label
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签的最大宽度
+ * @param font 字体
+ * @return 标签的最大宽度
+ * \endif
  */
-int QwtScaleDraw::maxLabelWidth( const QFont& font ) const
+int QwtScaleDraw::maxLabelWidth(const QFont& font) const
 {
 	double maxWidth = 0.0;
 
-	const QList< double >& ticks = scaleDiv().ticks( QwtScaleDiv::MajorTick );
-	for ( int i = 0; i < ticks.count(); i++ )
-	{
-		const double v = ticks[i];
-		if ( scaleDiv().contains( v ) )
-		{
-			const double w = labelSize( font, ticks[i] ).width();
-			if ( w > maxWidth )
+	const QList< double >& ticks = scaleDiv().ticks(QwtScaleDiv::MajorTick);
+	for (int i = 0; i < ticks.count(); i++) {
+		const double v = ticks[ i ];
+		if (scaleDiv().contains(v)) {
+			const double w = labelSize(font, ticks[ i ]).width();
+			if (w > maxWidth)
 				maxWidth = w;
 		}
 	}
 
-	return qCeil( maxWidth );
+	return qCeil(maxWidth);
 }
 
-/*!
-   \param font Font
-   \return the maximum height of a label
+/**
+ * \if ENGLISH
+ * @brief Get the maximum height of a label
+ * @param font Font
+ * @return the maximum height of a label
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签的最大高度
+ * @param font 字体
+ * @return 标签的最大高度
+ * \endif
  */
-int QwtScaleDraw::maxLabelHeight( const QFont& font ) const
+int QwtScaleDraw::maxLabelHeight(const QFont& font) const
 {
 	double maxHeight = 0.0;
 
-	const QList< double >& ticks = scaleDiv().ticks( QwtScaleDiv::MajorTick );
-	for ( int i = 0; i < ticks.count(); i++ )
-	{
-		const double v = ticks[i];
-		if ( scaleDiv().contains( v ) )
-		{
-			const double h = labelSize( font, ticks[i] ).height();
-			if ( h > maxHeight )
+	const QList< double >& ticks = scaleDiv().ticks(QwtScaleDiv::MajorTick);
+	for (int i = 0; i < ticks.count(); i++) {
+		const double v = ticks[ i ];
+		if (scaleDiv().contains(v)) {
+			const double h = labelSize(font, ticks[ i ]).height();
+			if (h > maxHeight)
 				maxHeight = h;
 		}
 	}
 
-	return qCeil( maxHeight );
+	return qCeil(maxHeight);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Update the scale map
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更新刻度映射
+ * \endif
+ */
 void QwtScaleDraw::updateMap()
 {
 	const QPointF pos = m_data->pos;
-	double len = m_data->len;
+	double len        = m_data->len;
 
 	QwtScaleMap& sm = scaleMap();
-	if ( orientation() == Qt::Vertical )
-		sm.setPaintInterval( pos.y() + len, pos.y() );
+	if (orientation() == Qt::Vertical)
+		sm.setPaintInterval(pos.y() + len, pos.y());
 	else
-		sm.setPaintInterval( pos.x(), pos.x() + len );
+		sm.setPaintInterval(pos.x(), pos.x() + len);
 }
 
 /*** End of inlined file: qwt_scale_draw.cpp ***/
@@ -15752,15 +17715,21 @@ static double qwtStepSize(double intervalSize, int maxSteps, uint base)
 
 static const double cs_eps_ = 1.0e-6;
 
-/*!
-   Ceil a value, relative to an interval
-
-   \param value Value to be ceiled
-   \param intervalSize Interval size
-
-   \return Rounded value
-
-   \sa floorEps()
+/**
+ * \if ENGLISH
+ * @brief Ceil a value, relative to an interval
+ * @param value Value to be ceiled
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * \sa floorEps()
+ * \endif
+ * \if CHINESE
+ * @brief 相对于区间对值向上取整
+ * @param value 要向上取整的值
+ * @param intervalSize 区间大小
+ * @return 舍入后的值
+ * \sa floorEps()
+ * \endif
  */
 double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
 {
@@ -15770,14 +17739,21 @@ double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
 	return std::ceil(value) * intervalSize;
 }
 
-/*!
-   Floor a value, relative to an interval
-
-   \param value Value to be floored
-   \param intervalSize Interval size
-
-   \return Rounded value
-   \sa floorEps()
+/**
+ * \if ENGLISH
+ * @brief Floor a value, relative to an interval
+ * @param value Value to be floored
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * \sa ceilEps()
+ * \endif
+ * \if CHINESE
+ * @brief 相对于区间对值向下取整
+ * @param value 要向下取整的值
+ * @param intervalSize 区间大小
+ * @return 舍入后的值
+ * \sa ceilEps()
+ * \endif
  */
 double QwtScaleArithmetic::floorEps(double value, double intervalSize)
 {
@@ -15787,14 +17763,21 @@ double QwtScaleArithmetic::floorEps(double value, double intervalSize)
 	return std::floor(value) * intervalSize;
 }
 
-/*!
-   \brief Divide an interval into steps
-
-   \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-   \return Step size
+/**
+ * \if ENGLISH
+ * @brief Divide an interval into steps
+ * @details Formula: \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ * \endif
+ * \if CHINESE
+ * @brief 将区间划分为步长
+ * @details 公式：\f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @return 步长
+ * \endif
  */
 double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
 {
@@ -15804,14 +17787,21 @@ double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
 	return (intervalSize - (cs_eps_ * intervalSize)) / numSteps;
 }
 
-/*!
-   Calculate a step size for a given interval
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-   \param base Base for the division ( usually 10 )
-
-   \return Calculated step size
+/**
+ * \if ENGLISH
+ * @brief Calculate a step size for a given interval
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @param base Base for the division (usually 10)
+ * @return Calculated step size
+ * \endif
+ * \if CHINESE
+ * @brief 计算给定区间的步长
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @param base 除法基数（通常为 10）
+ * @return 计算出的步长
+ * \endif
  */
 double QwtScaleArithmetic::divideInterval(double intervalSize, int numSteps, uint base)
 {
@@ -15868,11 +17858,17 @@ public:
 	QwtTransform* transform;
 };
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtScaleEngine::QwtScaleEngine(uint base)
 {
@@ -15886,18 +17882,21 @@ QwtScaleEngine::~QwtScaleEngine()
 	delete m_data;
 }
 
-/*!
-   Assign a transformation
-
-   \param transform Transformation
-
-   The transformation object is used as factory for clones
-   that are returned by transformation()
-
-   The scale engine takes ownership of the transformation.
-
-   \sa QwtTransform::copy(), transformation()
-
+/**
+ * \if ENGLISH
+ * @brief Assign a transformation
+ * @param transform Transformation
+ * @details The transformation object is used as factory for clones that are returned by transformation().
+ *          The scale engine takes ownership of the transformation.
+ * \sa QwtTransform::copy(), transformation()
+ * \endif
+ * \if CHINESE
+ * @brief 设置变换
+ * @param transform 变换对象
+ * @details 变换对象用作工厂，用于生成 transformation() 返回的克隆。
+ *          刻度引擎拥有变换对象的所有权。
+ * \sa QwtTransform::copy(), transformation()
+ * \endif
  */
 void QwtScaleEngine::setTransformation(QwtTransform* transform)
 {
@@ -15907,13 +17906,19 @@ void QwtScaleEngine::setTransformation(QwtTransform* transform)
 	}
 }
 
-/*!
-   Create and return a clone of the transformation
-   of the engine. When the engine has no special transformation
-   nullptr is returned, indicating no transformation.
-
-   \return A clone of the transformation
-   \sa setTransformation()
+/**
+ * \if ENGLISH
+ * @brief Create and return a clone of the transformation of the engine
+ * @details When the engine has no special transformation nullptr is returned, indicating no transformation.
+ * @return A clone of the transformation
+ * \sa setTransformation()
+ * \endif
+ * \if CHINESE
+ * @brief 创建并返回引擎变换的克隆
+ * @details 当引擎没有特殊变换时，返回 nullptr，表示无变换。
+ * @return 变换的克隆
+ * \sa setTransformation()
+ * \endif
  */
 QwtTransform* QwtScaleEngine::transformation() const
 {
@@ -15924,70 +17929,100 @@ QwtTransform* QwtScaleEngine::transformation() const
 	return transform;
 }
 
-/*!
-	\return the margin at the lower end of the scale
-	The default margin is 0.
-
-	\sa setMargins()
+/**
+ * \if ENGLISH
+ * @brief Return the margin at the lower end of the scale
+ * @return The margin at the lower end
+ * @details The default margin is 0.
+ * \sa setMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度下端的边距
+ * @return 下端的边距
+ * @details 默认边距为 0。
+ * \sa setMargins()
+ * \endif
  */
 double QwtScaleEngine::lowerMargin() const
 {
 	return m_data->lowerMargin;
 }
 
-/*!
-	\return the margin at the upper end of the scale
-	The default margin is 0.
-
-	\sa setMargins()
+/**
+ * \if ENGLISH
+ * @brief Return the margin at the upper end of the scale
+ * @return The margin at the upper end
+ * @details The default margin is 0.
+ * \sa setMargins()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度上端的边距
+ * @return 上端的边距
+ * @details 默认边距为 0。
+ * \sa setMargins()
+ * \endif
  */
 double QwtScaleEngine::upperMargin() const
 {
 	return m_data->upperMargin;
 }
 
-/*!
-   \brief Specify margins at the scale's endpoints
-   \param lower minimum distance between the scale's lower boundary and the
-			 smallest enclosed value
-   \param upper minimum distance between the scale's upper boundary and the
-			 greatest enclosed value
-
-   Margins can be used to leave a minimum amount of space between
-   the enclosed intervals and the boundaries of the scale.
-
-   \warning
-   \li QwtLogScaleEngine measures the margins in decades.
-
-   \sa upperMargin(), lowerMargin()
+/**
+ * \if ENGLISH
+ * @brief Specify margins at the scale's endpoints
+ * @param lower Minimum distance between the scale's lower boundary and the smallest enclosed value
+ * @param upper Minimum distance between the scale's upper boundary and the greatest enclosed value
+ * @details Margins can be used to leave a minimum amount of space between the enclosed intervals and the boundaries of the scale.
+ * @warning QwtLogScaleEngine measures the margins in decades.
+ * \sa upperMargin(), lowerMargin()
+ * \endif
+ * \if CHINESE
+ * @brief 指定刻度端点的边距
+ * @param lower 刻度下边界与最小包含值之间的最小距离
+ * @param upper 刻度上边界与最大包含值之间的最小距离
+ * @details 边距可用于在包含的区间和刻度边界之间留出最小空间。
+ * @warning QwtLogScaleEngine 以十倍为单位测量边距。
+ * \sa upperMargin(), lowerMargin()
+ * \endif
  */
-
 void QwtScaleEngine::setMargins(double lower, double upper)
 {
 	m_data->lowerMargin = qwtMaxF(lower, 0.0);
 	m_data->upperMargin = qwtMaxF(upper, 0.0);
 }
 
-/*!
-   Calculate a step size for an interval size
-
-   \param intervalSize Interval size
-   \param numSteps Number of steps
-
-   \return Step size
+/**
+ * \if ENGLISH
+ * @brief Calculate a step size for an interval size
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间大小的步长
+ * @param intervalSize 区间大小
+ * @param numSteps 步数
+ * @return 步长
+ * \endif
  */
 double QwtScaleEngine::divideInterval(double intervalSize, int numSteps) const
 {
 	return QwtScaleArithmetic::divideInterval(intervalSize, numSteps, m_data->base);
 }
 
-/*!
-   Check if an interval "contains" a value
-
-   \param interval Interval
-   \param value Value
-
-   \return True, when the value is inside the interval
+/**
+ * \if ENGLISH
+ * @brief Check if an interval "contains" a value
+ * @param interval Interval
+ * @param value Value
+ * @return True, when the value is inside the interval
+ * \endif
+ * \if CHINESE
+ * @brief 检查区间是否"包含"一个值
+ * @param interval 区间
+ * @param value 值
+ * @return 当值在区间内时返回 true
+ * \endif
  */
 bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
 {
@@ -16003,13 +18038,19 @@ bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
 	return true;
 }
 
-/*!
-   Remove ticks from a list, that are not inside an interval
-
-   \param ticks Tick list
-   \param interval Interval
-
-   \return Stripped tick list
+/**
+ * \if ENGLISH
+ * @brief Remove ticks from a list, that are not inside an interval
+ * @param ticks Tick list
+ * @param interval Interval
+ * @return Stripped tick list
+ * \endif
+ * \if CHINESE
+ * @brief 从列表中移除不在区间内的刻度
+ * @param ticks 刻度列表
+ * @param interval 区间
+ * @return 过滤后的刻度列表
+ * \endif
  */
 QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInterval& interval) const
 {
@@ -16028,16 +18069,20 @@ QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInt
 	return strippedTicks;
 }
 
-/*!
-   \brief Build an interval around a value
-
-   In case of v == 0.0 the interval is [-0.5, 0.5],
-   otherwise it is [0.5 * v, 1.5 * v]
-
-   \param value Initial value
-   \return Calculated interval
+/**
+ * \if ENGLISH
+ * @brief Build an interval around a value
+ * @details In case of v == 0.0 the interval is [-0.5, 0.5], otherwise it is [0.5 * v, 1.5 * v]
+ * @param value Initial value
+ * @return Calculated interval
+ * \endif
+ * \if CHINESE
+ * @brief 围绕值构建区间
+ * @details 当 v == 0.0 时，区间为 [-0.5, 0.5]，否则为 [0.5 * v, 1.5 * v]
+ * @param value 初始值
+ * @return 计算出的区间
+ * \endif
  */
-
 QwtInterval QwtScaleEngine::buildInterval(double value) const
 {
 	const double delta = (value == 0.0) ? 0.5 : qAbs(0.5 * value);
@@ -16052,13 +18097,19 @@ QwtInterval QwtScaleEngine::buildInterval(double value) const
 	return QwtInterval(value - delta, value + delta);
 }
 
-/*!
-   Change a scale attribute
-
-   \param attribute Attribute to change
-   \param on On/Off
-
-   \sa Attribute, testAttribute()
+/**
+ * \if ENGLISH
+ * @brief Change a scale attribute
+ * @param attribute Attribute to change
+ * @param on On/Off
+ * \sa Attribute, testAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度属性
+ * @param attribute 要更改的属性
+ * @param on 开/关
+ * \sa Attribute, testAttribute()
+ * \endif
  */
 void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
 {
@@ -16068,91 +18119,144 @@ void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
 		m_data->attributes &= ~attribute;
 }
 
-/*!
-   \return True, if attribute is enabled.
-
-   \param attribute Attribute to be tested
-   \sa Attribute, setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test if an attribute is enabled
+ * @param attribute Attribute to be tested
+ * @return True, if attribute is enabled
+ * \sa Attribute, setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 测试属性是否启用
+ * @param attribute 要测试的属性
+ * @return 如果属性已启用则返回 true
+ * \sa Attribute, setAttribute()
+ * \endif
  */
 bool QwtScaleEngine::testAttribute(Attribute attribute) const
 {
 	return (m_data->attributes & attribute);
 }
 
-/*!
-   Change the scale attribute
-
-   \param attributes Set scale attributes
-   \sa Attribute, attributes()
+/**
+ * \if ENGLISH
+ * @brief Change the scale attribute
+ * @param attributes Set scale attributes
+ * \sa Attribute, attributes()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度属性
+ * @param attributes 设置刻度属性
+ * \sa Attribute, attributes()
+ * \endif
  */
 void QwtScaleEngine::setAttributes(Attributes attributes)
 {
 	m_data->attributes = attributes;
 }
 
-/*!
-   \return Scale attributes
-   \sa Attribute, setAttributes(), testAttribute()
+/**
+ * \if ENGLISH
+ * @brief Return scale attributes
+ * @return Scale attributes
+ * \sa Attribute, setAttributes(), testAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度属性
+ * @return 刻度属性
+ * \sa Attribute, setAttributes(), testAttribute()
+ * \endif
  */
 QwtScaleEngine::Attributes QwtScaleEngine::attributes() const
 {
 	return m_data->attributes;
 }
 
-/*!
-   \brief Specify a reference point
-   \param reference New reference value
-
-   The reference point is needed if options IncludeReference or
-   Symmetric are active. Its default value is 0.0.
-
-   \sa Attribute
+/**
+ * \if ENGLISH
+ * @brief Specify a reference point
+ * @param reference New reference value
+ * @details The reference point is needed if options IncludeReference or Symmetric are active. Its default value is 0.0.
+ * \sa Attribute
+ * \endif
+ * \if CHINESE
+ * @brief 指定参考点
+ * @param reference 新的参考值
+ * @details 如果启用了 IncludeReference 或 Symmetric 选项，则需要参考点。默认值为 0.0。
+ * \sa Attribute
+ * \endif
  */
 void QwtScaleEngine::setReference(double reference)
 {
 	m_data->referenceValue = reference;
 }
 
-/*!
-   \return the reference value
-   \sa setReference(), setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Return the reference value
+ * @return The reference value
+ * \sa setReference(), setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 返回参考值
+ * @return 参考值
+ * \sa setReference(), setAttribute()
+ * \endif
  */
 double QwtScaleEngine::reference() const
 {
 	return m_data->referenceValue;
 }
 
-/*!
-   Set the base of the scale engine
-
-   While a base of 10 is what 99.9% of all applications need
-   certain scales might need a different base: f.e 2
-
-   The default setting is 10
-
-   \param base Base of the engine
-
-   \sa base()
+/**
+ * \if ENGLISH
+ * @brief Set the base of the scale engine
+ * @param base Base of the engine
+ * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base: f.e 2.
+ *          The default setting is 10.
+ * \sa base()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度引擎的基数
+ * @param base 引擎的基数
+ * @details 虽然 99.9% 的应用都需要基数 10，但某些刻度可能需要不同的基数：例如 2。
+ *          默认设置为 10。
+ * \sa base()
+ * \endif
  */
 void QwtScaleEngine::setBase(uint base)
 {
 	m_data->base = qMax(base, 2U);
 }
 
-/*!
-   \return base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Return base of the scale engine
+ * @return Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度引擎的基数
+ * @return 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 uint QwtScaleEngine::base() const
 {
 	return m_data->base;
 }
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtLinearScaleEngine::QwtLinearScaleEngine(uint base) : QwtScaleEngine(base)
 {
@@ -16163,15 +18267,23 @@ QwtLinearScaleEngine::~QwtLinearScaleEngine()
 {
 }
 
-/*!
-   Align and divide an interval
-
-   \param maxNumSteps Max. number of steps
-   \param x1 First limit of the interval (In/Out)
-   \param x2 Second limit of the interval (In/Out)
-   \param stepSize Step size (Out)
-
-   \sa setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * \sa setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 对齐并划分区间
+ * @param maxNumSteps 最大步数
+ * @param x1 区间的第一个限制（输入/输出）
+ * @param x2 区间的第二个限制（输入/输出）
+ * @param stepSize 步长（输出）
+ * \sa setAttribute()
+ * \endif
  */
 void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
 {
@@ -16204,17 +18316,25 @@ void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, do
 	}
 }
 
-/*!
-   \brief Calculate a scale division for an interval
-
-   \param x1 First interval limit
-   \param x2 Second interval limit
-   \param maxMajorSteps Maximum for the number of major steps
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the engine
-				   calculates one.
-
-   \return Calculated scale division
+/**
+ * \if ENGLISH
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度划分
+ * @param x1 第一个区间限制
+ * @param x2 第二个区间限制
+ * @param maxMajorSteps 主刻度的最大步数
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长。如果 stepSize == 0，引擎会自动计算一个。
+ * @return 计算出的刻度划分
+ * \endif
  */
 QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
 {
@@ -16251,15 +18371,23 @@ QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajor
 	return scaleDiv;
 }
 
-/*!
-   \brief Calculate ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-   \param maxMinorSteps Maximum number of minor steps
-   \param ticks Arrays to be filled with the calculated ticks
-
-   \sa buildMajorTicks(), buildMinorTicks
+/**
+ * \if ENGLISH
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param ticks 用于填充计算出的刻度的数组
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
  */
 void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
 									  double stepSize,
@@ -16290,13 +18418,19 @@ void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
 	}
 }
 
-/*!
-   \brief Calculate major ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Calculated ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的主刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 计算出的刻度
+ * \endif
  */
 QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
 {
@@ -16315,15 +18449,23 @@ QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interva
 	return ticks;
 }
 
-/*!
-   \brief Calculate minor/medium ticks for major ticks
-
-   \param majorTicks Major ticks
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param minorTicks Array to be filled with the calculated minor ticks
-   \param mediumTicks Array to be filled with the calculated medium ticks
-
+/**
+ * \if ENGLISH
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算主刻度的次刻度/中刻度
+ * @param majorTicks 主刻度
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长
+ * @param minorTicks 用于填充计算出的次刻度的数组
+ * @param mediumTicks 用于填充计算出的中刻度的数组
+ * \endif
  */
 void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
 										   int maxMinorSteps,
@@ -16361,16 +18503,21 @@ void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
 	}
 }
 
-/*!
-   \brief Align an interval to a step size
-
-   The limits of an interval are aligned that both are integer
-   multiples of the step size.
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Aligned interval
+/**
+ * \if ENGLISH
+ * @brief Align an interval to a step size
+ * @details The limits of an interval are aligned that both are integer multiples of the step size.
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ * \endif
+ * \if CHINESE
+ * @brief 将区间对齐到步长
+ * @details 区间的限制都对齐为步长的整数倍。
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 对齐后的区间
+ * \endif
  */
 QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double stepSize) const
 {
@@ -16398,11 +18545,17 @@ QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double step
 	return QwtInterval(x1, x2);
 }
 
-/*!
-   Constructor
-
-   \param base Base of the scale engine
-   \sa setBase()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * \sa setBase()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param base 刻度引擎的基数
+ * \sa setBase()
+ * \endif
  */
 QwtLogScaleEngine::QwtLogScaleEngine(uint base) : QwtScaleEngine(base)
 {
@@ -16414,15 +18567,23 @@ QwtLogScaleEngine::~QwtLogScaleEngine()
 {
 }
 
-/*!
-	Align and divide an interval
-
-   \param maxNumSteps Max. number of steps
-   \param x1 First limit of the interval (In/Out)
-   \param x2 Second limit of the interval (In/Out)
-   \param stepSize Step size (Out)
-
-   \sa QwtScaleEngine::setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * @sa QwtScaleEngine::setAttribute()
+ * \endif
+ * \if CHINESE
+ * @brief 对齐并划分区间
+ * @param maxNumSteps 最大步数
+ * @param x1 区间的第一个限制（输入/输出）
+ * @param x2 区间的第二个限制（输入/输出）
+ * @param stepSize 步长（输出）
+ * @sa QwtScaleEngine::setAttribute()
+ * \endif
  */
 void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
 {
@@ -16485,17 +18646,25 @@ void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, doubl
 	}
 }
 
-/*!
-   \brief Calculate a scale division for an interval
-
-   \param x1 First interval limit
-   \param x2 Second interval limit
-   \param maxMajorSteps Maximum for the number of major steps
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size. If stepSize == 0, the engine
-				   calculates one.
-
-   \return Calculated scale division
+/**
+ * \if ENGLISH
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度划分
+ * @param x1 第一个区间限制
+ * @param x2 第二个区间限制
+ * @param maxMajorSteps 主刻度的最大步数
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长。如果 stepSize == 0，引擎会自动计算一个。
+ * @return 计算出的刻度划分
+ * \endif
  */
 QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
 {
@@ -16542,15 +18711,23 @@ QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSte
 	return scaleDiv;
 }
 
-/*!
-   \brief Calculate ticks for an interval
-
-   \param interval Interval
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param ticks Arrays to be filled with the calculated ticks
-
-   \sa buildMajorTicks(), buildMinorTicks
+/**
+ * \if ENGLISH
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param ticks 用于填充计算出的刻度的数组
+ * \sa buildMajorTicks(), buildMinorTicks()
+ * \endif
  */
 void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
 								   double stepSize,
@@ -16573,13 +18750,19 @@ void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
 		ticks[ i ] = strip(ticks[ i ], interval);
 }
 
-/*!
-   \brief Calculate major ticks for an interval
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Calculated ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算区间的主刻度
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 计算出的刻度
+ * \endif
  */
 QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
 {
@@ -16606,14 +18789,23 @@ QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, 
 	return ticks;
 }
 
-/*!
-   \brief Calculate minor/medium ticks for major ticks
-
-   \param majorTicks Major ticks
-   \param maxMinorSteps Maximum number of minor steps
-   \param stepSize Step size
-   \param minorTicks Array to be filled with the calculated minor ticks
-   \param mediumTicks Array to be filled with the calculated medium ticks
+/**
+ * \if ENGLISH
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ * \endif
+ * \if CHINESE
+ * @brief 计算主刻度的次刻度/中刻度
+ * @param majorTicks 主刻度
+ * @param maxMinorSteps 次刻度的最大步数
+ * @param stepSize 步长
+ * @param minorTicks 用于填充计算出的次刻度的数组
+ * @param mediumTicks 用于填充计算出的中刻度的数组
+ * \endif
  */
 void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
 										int maxMinorSteps,
@@ -16696,16 +18888,19 @@ void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
 	}
 }
 
-/*!
-   \brief Align an interval to a step size
-
-   The limits of an interval are aligned that both are integer
-   multiples of the step size.
-
-   \param interval Interval
-   \param stepSize Step size
-
-   \return Aligned interval
+/**
+ * \if ENGLISH
+ * @brief Align an interval to a step size
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ * \endif
+ * \if CHINESE
+ * @brief 将区间对齐到步长
+ * @param interval 区间
+ * @param stepSize 步长
+ * @return 对齐后的区间
+ * \endif
  */
 QwtInterval QwtLogScaleEngine::align(const QwtInterval& interval, double stepSize) const
 {
@@ -18036,117 +20231,173 @@ public:
 	double stepSize;
 };
 
-/*!
-   Constructor
-
-   \param parent Parent widget
-
-   Creates a default QwtScaleDraw and a QwtLinearScaleEngine.
-   The initial scale boundaries are set to [ 0.0, 100.0 ]
-
-   The scaleStepSize() is initialized to 0.0, scaleMaxMajor() to 5
-   and scaleMaxMajor to 3.
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractScale
+ * @param parent Parent widget
+ * @details Creates a default QwtScaleDraw and a QwtLinearScaleEngine.
+ *          The initial scale boundaries are set to [ 0.0, 100.0 ]
+ *          The scaleStepSize() is initialized to 0.0, scaleMaxMajor() to 5
+ *          and scaleMaxMinor to 3.
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScale 构造函数
+ * @param parent 父控件
+ * @details 创建默认的 QwtScaleDraw 和 QwtLinearScaleEngine。
+ *          初始刻度边界设置为 [ 0.0, 100.0 ]
+ *          scaleStepSize() 初始化为 0.0，scaleMaxMajor() 为 5，
+ *          scaleMaxMinor 为 3。
+ * \endif
  */
-
 QwtAbstractScale::QwtAbstractScale(QWidget* parent) : QWidget(parent)
 {
 	m_data = new PrivateData;
 	rescale(0.0, 100.0, m_data->stepSize);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractScale
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractScale 析构函数
+ * \endif
+ */
 QwtAbstractScale::~QwtAbstractScale()
 {
 	delete m_data;
 }
 
-/*!
-   Set the lower bound of the scale
-
-   \param value Lower bound
-
-   \sa lowerBound(), setScale(), setUpperBound()
-   \note For inverted scales the lower bound
-		is greater than the upper bound
+/**
+ * \if ENGLISH
+ * @brief Set the lower bound of the scale
+ * @param value Lower bound value
+ * \sa lowerBound(), setScale(), setUpperBound()
+ * \note For inverted scales, the lower bound is greater than the upper bound
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度的下界
+ * @param value 下界值
+ * \sa lowerBound(), setScale(), setUpperBound()
+ * \note 对于反向刻度，下界大于上界
+ * \endif
  */
 void QwtAbstractScale::setLowerBound(double value)
 {
 	setScale(value, upperBound());
 }
 
-/*!
-   \return Lower bound of the scale
-   \sa setLowerBound(), setScale(), upperBound()
+/**
+ * \if ENGLISH
+ * @brief Return the lower bound of the scale
+ * @return Lower bound value
+ * \sa setLowerBound(), setScale(), upperBound()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度的下界
+ * @return 下界值
+ * \sa setLowerBound(), setScale(), upperBound()
+ * \endif
  */
 double QwtAbstractScale::lowerBound() const
 {
 	return m_data->scaleDraw->scaleDiv().lowerBound();
 }
 
-/*!
-   Set the upper bound of the scale
-
-   \param value Upper bound
-
-   \sa upperBound(), setScale(), setLowerBound()
-   \note For inverted scales the lower bound
-		is greater than the upper bound
+/**
+ * \if ENGLISH
+ * @brief Set the upper bound of the scale
+ * @param value Upper bound value
+ * \sa upperBound(), setScale(), setLowerBound()
+ * \note For inverted scales, the lower bound is greater than the upper bound
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度的上界
+ * @param value 上界值
+ * \sa upperBound(), setScale(), setLowerBound()
+ * \note 对于反向刻度，下界大于上界
+ * \endif
  */
 void QwtAbstractScale::setUpperBound(double value)
 {
 	setScale(lowerBound(), value);
 }
 
-/*!
-   \return Upper bound of the scale
-   \sa setUpperBound(), setScale(), lowerBound()
+/**
+ * \if ENGLISH
+ * @brief Return the upper bound of the scale
+ * @return Upper bound value
+ * \sa setUpperBound(), setScale(), lowerBound()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度的上界
+ * @return 上界值
+ * \sa setUpperBound(), setScale(), lowerBound()
+ * \endif
  */
 double QwtAbstractScale::upperBound() const
 {
 	return m_data->scaleDraw->scaleDiv().upperBound();
 }
 
-/*!
-   \brief Specify a scale.
-
-   Define a scale by an interval
-
-   The ticks are calculated using scaleMaxMinor(),
-   scaleMaxMajor() and scaleStepSize().
-
-   \param lowerBound lower limit of the scale interval
-   \param upperBound upper limit of the scale interval
-
-   \note For inverted scales the lower bound
-		is greater than the upper bound
+/**
+ * \if ENGLISH
+ * @brief Specify a scale by interval bounds
+ * @details Define a scale by an interval.
+ *          The ticks are calculated using scaleMaxMinor(),
+ *          scaleMaxMajor() and scaleStepSize().
+ * @param lowerBound Lower limit of the scale interval
+ * @param upperBound Upper limit of the scale interval
+ * \note For inverted scales, the lower bound is greater than the upper bound
+ * \endif
+ * \if CHINESE
+ * @brief 通过区间边界指定刻度
+ * @details 通过区间定义刻度。
+ *          刻度使用 scaleMaxMinor()、scaleMaxMajor() 和 scaleStepSize() 计算。
+ * @param lowerBound 刻度区间的下界
+ * @param upperBound 刻度区间的上界
+ * \note 对于反向刻度，下界大于上界
+ * \endif
  */
 void QwtAbstractScale::setScale(double lowerBound, double upperBound)
 {
 	rescale(lowerBound, upperBound, m_data->stepSize);
 }
 
-/*!
-   \brief Specify a scale.
-
-   Define a scale by an interval
-
-   The ticks are calculated using scaleMaxMinor(),
-   scaleMaxMajor() and scaleStepSize().
-
-   \param interval Interval
+/**
+ * \if ENGLISH
+ * @brief Specify a scale by interval
+ * @details Define a scale by an interval.
+ *          The ticks are calculated using scaleMaxMinor(),
+ *          scaleMaxMajor() and scaleStepSize().
+ * @param interval Interval object
+ * \endif
+ * \if CHINESE
+ * @brief 通过区间对象指定刻度
+ * @details 通过区间定义刻度。
+ *          刻度使用 scaleMaxMinor()、scaleMaxMajor() 和 scaleStepSize() 计算。
+ * @param interval 区间对象
+ * \endif
  */
 void QwtAbstractScale::setScale(const QwtInterval& interval)
 {
 	setScale(interval.minValue(), interval.maxValue());
 }
 
-/*!
-   \brief Specify a scale.
-
-   scaleMaxMinor(), scaleMaxMajor() and scaleStepSize() and have no effect.
-
-   \param scaleDiv Scale division
-   \sa setAutoScale()
+/**
+ * \if ENGLISH
+ * @brief Specify a scale by scale division
+ * @details When using this method, scaleMaxMinor(), scaleMaxMajor() and
+ *          scaleStepSize() have no effect.
+ * @param scaleDiv Scale division object
+ * \sa setAutoScale()
+ * \endif
+ * \if CHINESE
+ * @brief 通过刻度划分指定刻度
+ * @details 使用此方法时，scaleMaxMinor()、scaleMaxMajor() 和 scaleStepSize() 不起作用。
+ * @param scaleDiv 刻度划分对象
+ * \sa setAutoScale()
+ * \endif
  */
 void QwtAbstractScale::setScale(const QwtScaleDiv& scaleDiv)
 {
@@ -18163,18 +20414,22 @@ void QwtAbstractScale::setScale(const QwtScaleDiv& scaleDiv)
 	}
 }
 
-/*!
-   \brief Set the maximum number of major tick intervals.
-
-   The scale's major ticks are calculated automatically such that
-   the number of major intervals does not exceed ticks.
-
-   The default value is 5.
-
-   \param ticks Maximal number of major ticks.
-
-   \sa scaleMaxMajor(), setScaleMaxMinor(),
-	  setScaleStepSize(), QwtScaleEngine::divideInterval()
+/**
+ * \if ENGLISH
+ * @brief Set the maximum number of major tick intervals
+ * @details The scale's major ticks are calculated automatically such that
+ *          the number of major intervals does not exceed ticks.
+ *          The default value is 5.
+ * @param ticks Maximal number of major ticks
+ * \sa scaleMaxMajor(), setScaleMaxMinor(), setScaleStepSize(), QwtScaleEngine::divideInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 设置主刻度间隔的最大数量
+ * @details 刻度的主刻度会自动计算，使得主刻度间隔数量不超过 ticks。
+ *          默认值为 5。
+ * @param ticks 主刻度的最大数量
+ * \sa scaleMaxMajor(), setScaleMaxMinor(), setScaleStepSize(), QwtScaleEngine::divideInterval()
+ * \endif
  */
 void QwtAbstractScale::setScaleMaxMajor(int ticks)
 {
@@ -18184,26 +20439,39 @@ void QwtAbstractScale::setScaleMaxMajor(int ticks)
 	}
 }
 
-/*!
-   \return Maximal number of major tick intervals
-   \sa setScaleMaxMajor(), scaleMaxMinor()
+/**
+ * \if ENGLISH
+ * @brief Return the maximum number of major tick intervals
+ * @return Maximal number of major tick intervals
+ * \sa setScaleMaxMajor(), scaleMaxMinor()
+ * \endif
+ * \if CHINESE
+ * @brief 返回主刻度间隔的最大数量
+ * @return 主刻度间隔的最大数量
+ * \sa setScaleMaxMajor(), scaleMaxMinor()
+ * \endif
  */
 int QwtAbstractScale::scaleMaxMajor() const
 {
 	return m_data->maxMajor;
 }
 
-/*!
-   \brief Set the maximum number of minor tick intervals
-
-   The scale's minor ticks are calculated automatically such that
-   the number of minor intervals does not exceed ticks.
-   The default value is 3.
-
-   \param ticks Maximal number of minor ticks.
-
-   \sa scaleMaxMajor(), setScaleMaxMinor(),
-	  setScaleStepSize(), QwtScaleEngine::divideInterval()
+/**
+ * \if ENGLISH
+ * @brief Set the maximum number of minor tick intervals
+ * @details The scale's minor ticks are calculated automatically such that
+ *          the number of minor intervals does not exceed ticks.
+ *          The default value is 3.
+ * @param ticks Maximal number of minor ticks
+ * \sa scaleMaxMajor(), setScaleMaxMinor(), setScaleStepSize(), QwtScaleEngine::divideInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 设置次刻度间隔的最大数量
+ * @details 刻度的次刻度会自动计算，使得次刻度间隔数量不超过 ticks。
+ *          默认值为 3。
+ * @param ticks 次刻度的最大数量
+ * \sa scaleMaxMajor(), setScaleMaxMinor(), setScaleStepSize(), QwtScaleEngine::divideInterval()
+ * \endif
  */
 void QwtAbstractScale::setScaleMaxMinor(int ticks)
 {
@@ -18213,28 +20481,40 @@ void QwtAbstractScale::setScaleMaxMinor(int ticks)
 	}
 }
 
-/*!
-   \return Maximal number of minor tick intervals
-   \sa setScaleMaxMinor(), scaleMaxMajor()
+/**
+ * \if ENGLISH
+ * @brief Return the maximum number of minor tick intervals
+ * @return Maximal number of minor tick intervals
+ * \sa setScaleMaxMinor(), scaleMaxMajor()
+ * \endif
+ * \if CHINESE
+ * @brief 返回次刻度间隔的最大数量
+ * @return 次刻度间隔的最大数量
+ * \sa setScaleMaxMinor(), scaleMaxMajor()
+ * \endif
  */
 int QwtAbstractScale::scaleMaxMinor() const
 {
 	return m_data->maxMinor;
 }
 
-/*!
-   \brief Set the step size used for calculating a scale division
-
-   The step size is hint for calculating the intervals for
-   the major ticks of the scale. A value of 0.0 is interpreted
-   as no hint.
-
-   \param stepSize Hint for the step size of the scale
-
-   \sa scaleStepSize(), QwtScaleEngine::divideScale()
-
-   \note Position and distance between the major ticks also
-		 depends on scaleMaxMajor().
+/**
+ * \if ENGLISH
+ * @brief Set the step size used for calculating scale division
+ * @details The step size is a hint for calculating the intervals for
+ *          the major ticks of the scale. A value of 0.0 is interpreted
+ *          as no hint.
+ * @param stepSize Hint for the step size of the scale
+ * \sa scaleStepSize(), QwtScaleEngine::divideScale()
+ * \note Position and distance between major ticks also depends on scaleMaxMajor()
+ * \endif
+ * \if CHINESE
+ * @brief 设置用于计算刻度划分的步长
+ * @details 步长是计算刻度主刻度间隔的提示。值 0.0 表示无提示。
+ * @param stepSize 刻度步长的提示值
+ * \sa scaleStepSize(), QwtScaleEngine::divideScale()
+ * \note 主刻度线的位置和距离还取决于 scaleMaxMajor()
+ * \endif
  */
 void QwtAbstractScale::setScaleStepSize(double stepSize)
 {
@@ -18244,22 +20524,36 @@ void QwtAbstractScale::setScaleStepSize(double stepSize)
 	}
 }
 
-/*!
-   \return Hint for the step size of the scale
-   \sa setScaleStepSize(), QwtScaleEngine::divideScale()
+/**
+ * \if ENGLISH
+ * @brief Return the step size hint
+ * @return Hint for the step size of the scale
+ * \sa setScaleStepSize(), QwtScaleEngine::divideScale()
+ * \endif
+ * \if CHINESE
+ * @brief 返回步长提示值
+ * @return 刻度步长的提示值
+ * \sa setScaleStepSize(), QwtScaleEngine::divideScale()
+ * \endif
  */
 double QwtAbstractScale::scaleStepSize() const
 {
 	return m_data->stepSize;
 }
 
-/*!
-   \brief Set a scale draw
-
-   scaleDraw has to be created with new and will be deleted in
-   the destructor or the next call of setAbstractScaleDraw().
-
-   \sa abstractScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Set the scale draw object
+ * @details scaleDraw must be created with new and will be deleted in
+ *          the destructor or the next call of setAbstractScaleDraw().
+ * \sa abstractScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度绘制对象
+ * @details scaleDraw 必须使用 new 创建，并将在析构函数或下次调用
+ *          setAbstractScaleDraw() 时删除。
+ * \sa abstractScaleDraw()
+ * \endif
  */
 void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
 {
@@ -18273,32 +20567,56 @@ void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
 	m_data->scaleDraw = scaleDraw;
 }
 
-/*!
-	\return Scale draw
-	\sa setAbstractScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw object (non-const)
+ * @return Scale draw object
+ * \sa setAbstractScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度绘制对象（非常量版本）
+ * @return 刻度绘制对象
+ * \sa setAbstractScaleDraw()
+ * \endif
  */
 QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw()
 {
 	return m_data->scaleDraw;
 }
 
-/*!
-	\return Scale draw
-	\sa setAbstractScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw object (const)
+ * @return Scale draw object
+ * \sa setAbstractScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度绘制对象（常量版本）
+ * @return 刻度绘制对象
+ * \sa setAbstractScaleDraw()
+ * \endif
  */
 const QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw() const
 {
 	return m_data->scaleDraw;
 }
 
-/*!
-   \brief Set a scale engine
-
-   The scale engine is responsible for calculating the scale division
-   and provides a transformation between scale and widget coordinates.
-
-   scaleEngine has to be created with new and will be deleted in
-   the destructor or the next call of setScaleEngine.
+/**
+ * \if ENGLISH
+ * @brief Set the scale engine
+ * @details The scale engine is responsible for calculating the scale division
+ *          and provides a transformation between scale and widget coordinates.
+ *          scaleEngine must be created with new and will be deleted in
+ *          the destructor or the next call of setScaleEngine().
+ * @param scaleEngine Scale engine object
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度引擎
+ * @details 刻度引擎负责计算刻度划分，并提供刻度和控件坐标之间的变换。
+ *          scaleEngine 必须使用 new 创建，并将在析构函数或下次调用
+ *          setScaleEngine() 时删除。
+ * @param scaleEngine 刻度引擎对象
+ * \endif
  */
 void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
 {
@@ -18308,107 +20626,191 @@ void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
 	}
 }
 
-/*!
-   \return Scale engine
-   \sa setScaleEngine()
+/**
+ * \if ENGLISH
+ * @brief Return the scale engine (const version)
+ * @return Scale engine object
+ * \sa setScaleEngine()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度引擎（常量版本）
+ * @return 刻度引擎对象
+ * \sa setScaleEngine()
+ * \endif
  */
 const QwtScaleEngine* QwtAbstractScale::scaleEngine() const
 {
 	return m_data->scaleEngine;
 }
 
-/*!
-   \return Scale engine
-   \sa setScaleEngine()
+/**
+ * \if ENGLISH
+ * @brief Return the scale engine (non-const version)
+ * @return Scale engine object
+ * \sa setScaleEngine()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度引擎（非常量版本）
+ * @return 刻度引擎对象
+ * \sa setScaleEngine()
+ * \endif
  */
 QwtScaleEngine* QwtAbstractScale::scaleEngine()
 {
 	return m_data->scaleEngine;
 }
 
-/*!
-   \return Scale boundaries and positions of the ticks
-
-   The scale division might have been assigned explicitly
-   or calculated implicitly by rescale().
+/**
+ * \if ENGLISH
+ * @brief Return the scale division
+ * @return Scale boundaries and positions of the ticks
+ * @details The scale division might have been assigned explicitly
+ *          or calculated implicitly by rescale().
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度划分
+ * @return 刻度边界和刻度线位置
+ * @details 刻度划分可能是显式分配的，也可能是通过 rescale() 隐式计算的。
+ * \endif
  */
 const QwtScaleDiv& QwtAbstractScale::scaleDiv() const
 {
 	return m_data->scaleDraw->scaleDiv();
 }
 
-/*!
-   \return Map to translate between scale and widget coordinates
+/**
+ * \if ENGLISH
+ * @brief Return the scale map
+ * @return Map to translate between scale and widget coordinates
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度映射
+ * @return 用于在刻度和控件坐标之间转换的映射
+ * \endif
  */
 const QwtScaleMap& QwtAbstractScale::scaleMap() const
 {
 	return m_data->scaleDraw->scaleMap();
 }
 
-/*!
-   Translate a scale value into a widget coordinate
-
-   \param value Scale value
-   \return Corresponding widget coordinate for value
-   \sa scaleMap(), invTransform()
+/**
+ * \if ENGLISH
+ * @brief Transform a scale value to widget coordinates
+ * @param value Scale value
+ * @return Corresponding widget coordinate for value
+ * \sa scaleMap(), invTransform()
+ * \endif
+ * \if CHINESE
+ * @brief 将刻度值转换为控件坐标
+ * @param value 刻度值
+ * @return 对应的控件坐标
+ * \sa scaleMap(), invTransform()
+ * \endif
  */
 int QwtAbstractScale::transform(double value) const
 {
 	return qRound(m_data->scaleDraw->scaleMap().transform(value));
 }
 
-/*!
-   Translate a widget coordinate into a scale value
-
-   \param value Widget coordinate
-   \return Corresponding scale coordinate for value
-   \sa scaleMap(), transform()
+/**
+ * \if ENGLISH
+ * @brief Transform a widget coordinate to scale value
+ * @param value Widget coordinate
+ * @return Corresponding scale coordinate for value
+ * \sa scaleMap(), transform()
+ * \endif
+ * \if CHINESE
+ * @brief 将控件坐标转换为刻度值
+ * @param value 控件坐标
+ * @return 对应的刻度坐标
+ * \sa scaleMap(), transform()
+ * \endif
  */
 double QwtAbstractScale::invTransform(int value) const
 {
 	return m_data->scaleDraw->scaleMap().invTransform(value);
 }
 
-/*!
-   \return True, when the scale is increasing in opposite direction
-		  to the widget coordinates
+/**
+ * \if ENGLISH
+ * @brief Check if scale is inverted
+ * @return True if scale is increasing in opposite direction to widget coordinates
+ * \endif
+ * \if CHINESE
+ * @brief 检查刻度是否反向
+ * @return 如果刻度增长方向与控件坐标方向相反则返回 true
+ * \endif
  */
 bool QwtAbstractScale::isInverted() const
 {
 	return m_data->scaleDraw->scaleMap().isInverting();
 }
 
-/*!
-   \return The boundary with the smaller value
-   \sa maximum(), lowerBound(), upperBound()
+/**
+ * \if ENGLISH
+ * @brief Return the minimum boundary
+ * @return The boundary with the smaller value
+ * \sa maximum(), lowerBound(), upperBound()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小边界
+ * @return 较小的边界值
+ * \sa maximum(), lowerBound(), upperBound()
+ * \endif
  */
 double QwtAbstractScale::minimum() const
 {
 	return qMin(m_data->scaleDraw->scaleDiv().lowerBound(), m_data->scaleDraw->scaleDiv().upperBound());
 }
 
-/*!
-   \return The boundary with the larger value
-   \sa minimum(), lowerBound(), upperBound()
+/**
+ * \if ENGLISH
+ * @brief Return the maximum boundary
+ * @return The boundary with the larger value
+ * \sa minimum(), lowerBound(), upperBound()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最大边界
+ * @return 较大的边界值
+ * \sa minimum(), lowerBound(), upperBound()
+ * \endif
  */
 double QwtAbstractScale::maximum() const
 {
 	return qMax(m_data->scaleDraw->scaleDiv().lowerBound(), m_data->scaleDraw->scaleDiv().upperBound());
 }
 
-//! Notify changed scale
+/**
+ * \if ENGLISH
+ * @brief Notify about scale changes
+ * @details This virtual function is called when the scale changes.
+ *          Override this function in derived classes to handle scale changes.
+ * \endif
+ * \if CHINESE
+ * @brief 通知刻度变化
+ * @details 当刻度变化时调用此虚函数。
+ *          在派生类中重写此函数以处理刻度变化。
+ * \endif
+ */
 void QwtAbstractScale::scaleChange()
 {
 }
 
-/*!
-   Recalculate the scale division and update the scale.
-
-   \param lowerBound Lower limit of the scale interval
-   \param upperBound Upper limit of the scale interval
-   \param stepSize Major step size
-
-   \sa scaleChange()
+/**
+ * \if ENGLISH
+ * @brief Recalculate scale division and update scale
+ * @param lowerBound Lower limit of the scale interval
+ * @param upperBound Upper limit of the scale interval
+ * @param stepSize Major step size
+ * \sa scaleChange()
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算刻度划分并更新刻度
+ * @param lowerBound 刻度区间的下界
+ * @param upperBound 刻度区间的上界
+ * @param stepSize 主刻度步长
+ * \sa scaleChange()
+ * \endif
  */
 void QwtAbstractScale::rescale(double lowerBound, double upperBound, double stepSize)
 {
@@ -18428,11 +20830,17 @@ void QwtAbstractScale::rescale(double lowerBound, double upperBound, double step
 	}
 }
 
-/*!
-   Change Event handler
-   \param event Change event
-
-   Invalidates internal caches if necessary
+/**
+ * \if ENGLISH
+ * @brief Handle change events
+ * @param event Change event
+ * @details Invalidates internal caches if necessary (e.g., on locale change).
+ * \endif
+ * \if CHINESE
+ * @brief 处理变化事件
+ * @param event 变化事件
+ * @details 如有必要会失效内部缓存（例如，在区域设置变化时）。
+ * \endif
  */
 void QwtAbstractScale::changeEvent(QEvent* event)
 {
@@ -18443,8 +20851,16 @@ void QwtAbstractScale::changeEvent(QEvent* event)
 	QWidget::changeEvent(event);
 }
 
-/*!
-   Recalculate ticks and scale boundaries.
+/**
+ * \if ENGLISH
+ * @brief Recalculate ticks and scale boundaries
+ * @details Updates the scale draw by recalculating ticks and boundaries
+ *          based on the current scale division.
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算刻度线和刻度边界
+ * @details 通过基于当前刻度划分重新计算刻度线和边界来更新刻度绘制。
+ * \endif
  */
 void QwtAbstractScale::updateScaleDraw()
 {
@@ -18517,16 +20933,23 @@ public:
 	bool invertedControls;
 };
 
-/*!
-   \brief Constructor
-
-   The scale is initialized to [0.0, 100.0], the
-   number of steps is set to 100 with 1 and 10 and single
-   an page step sizes. Step alignment is enabled.
-
-   The initial value is invalid.
-
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtAbstractSlider
+ * @details The scale is initialized to [0.0, 100.0], the
+ *          number of steps is set to 100 with 1 and 10 as single
+ *          and page step sizes. Step alignment is enabled.
+ *          The initial value is invalid.
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractSlider 构造函数
+ * @details 刻度初始化为 [0.0, 100.0]，
+ *          步数设置为 100，单步和页步大小分别为 1 和 10。
+ *          步对齐已启用。
+ *          初始值无效。
+ * @param parent 父控件
+ * \endif
  */
 QwtAbstractSlider::QwtAbstractSlider(QWidget* parent) : QwtAbstractScale(parent)
 {
@@ -18536,18 +20959,30 @@ QwtAbstractSlider::QwtAbstractSlider(QWidget* parent) : QwtAbstractScale(parent)
 	setFocusPolicy(Qt::StrongFocus);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor for QwtAbstractSlider
+ * \endif
+ * \if CHINESE
+ * @brief QwtAbstractSlider 析构函数
+ * \endif
+ */
 QwtAbstractSlider::~QwtAbstractSlider()
 {
 	delete m_data;
 }
 
-/*!
-   Set the value to be valid/invalid
-
-   \param on When true, the value is invalidated
-
-   \sa setValue()
+/**
+ * \if ENGLISH
+ * @brief Set the value to be valid or invalid
+ * @param on When true, the value is invalidated
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 设置值为有效或无效
+ * @param on 如果为 true，值变为无效
+ * \sa setValue()
+ * \endif
  */
 void QwtAbstractSlider::setValid(bool on)
 {
@@ -18559,22 +20994,37 @@ void QwtAbstractSlider::setValid(bool on)
 	}
 }
 
-//! \return True, when the value is invalid
+/**
+ * \if ENGLISH
+ * @brief Check if the value is valid
+ * @return True if the value is invalid
+ * \endif
+ * \if CHINESE
+ * @brief 检查值是否有效
+ * @return 如果值无效则返回 true
+ * \endif
+ */
 bool QwtAbstractSlider::isValid() const
 {
 	return m_data->isValid;
 }
 
-/*!
-   En/Disable read only mode
-
-   In read only mode the slider can't be controlled by mouse
-   or keyboard.
-
-   \param on Enables in case of true
-   \sa isReadOnly()
-
-   \warning The focus policy is set to Qt::StrongFocus or Qt::NoFocus
+/**
+ * \if ENGLISH
+ * @brief Enable or disable read-only mode
+ * @details In read-only mode the slider can't be controlled by mouse
+ *          or keyboard.
+ * @param on Enables read-only mode if true
+ * \sa isReadOnly()
+ * \warning The focus policy is set to Qt::StrongFocus or Qt::NoFocus
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用只读模式
+ * @details 在只读模式下，滑块不能通过鼠标或键盘控制。
+ * @param on 如果为 true 则启用只读模式
+ * \sa isReadOnly()
+ * \warning 焦点策略会被设置为 Qt::StrongFocus 或 Qt::NoFocus
+ * \endif
  */
 void QwtAbstractSlider::setReadOnly(bool on)
 {
@@ -18586,48 +21036,78 @@ void QwtAbstractSlider::setReadOnly(bool on)
 	}
 }
 
-/*!
-   In read only mode the slider can't be controlled by mouse
-   or keyboard.
-
-   \return true if read only
-   \sa setReadOnly()
+/**
+ * \if ENGLISH
+ * @brief Check if read-only mode is enabled
+ * @return True if read-only mode is enabled
+ * \sa setReadOnly()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了只读模式
+ * @return 如果启用了只读模式则返回 true
+ * \sa setReadOnly()
+ * \endif
  */
 bool QwtAbstractSlider::isReadOnly() const
 {
 	return m_data->readOnly;
 }
 
-/*!
-   \brief Enables or disables tracking.
-
-   If tracking is enabled, the slider emits the valueChanged()
-   signal while the movable part of the slider is being dragged.
-   If tracking is disabled, the slider emits the valueChanged() signal
-   only when the user releases the slider.
-
-   Tracking is enabled by default.
-   \param on \c true (enable) or \c false (disable) tracking.
-
-   \sa isTracking(), sliderMoved()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable tracking
+ * @details If tracking is enabled, the slider emits the valueChanged()
+ *          signal while the movable part of the slider is being dragged.
+ *          If tracking is disabled, the slider emits the valueChanged() signal
+ *          only when the user releases the slider.
+ *          Tracking is enabled by default.
+ * @param on True to enable tracking, false to disable
+ * \sa isTracking(), sliderMoved()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用跟踪
+ * @details 如果启用跟踪，滑块在被拖动时会发出 valueChanged() 信号。
+ *          如果禁用跟踪，滑块仅在用户释放时发出 valueChanged() 信号。
+ *          跟踪默认启用。
+ * @param on true 启用跟踪，false 禁用
+ * \sa isTracking(), sliderMoved()
+ * \endif
  */
 void QwtAbstractSlider::setTracking(bool on)
 {
 	m_data->isTracking = on;
 }
 
-/*!
-   \return True, when tracking has been enabled
-   \sa setTracking()
+/**
+ * \if ENGLISH
+ * @brief Check if tracking is enabled
+ * @return True if tracking is enabled
+ * \sa setTracking()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了跟踪
+ * @return 如果启用了跟踪则返回 true
+ * \sa setTracking()
+ * \endif
  */
 bool QwtAbstractSlider::isTracking() const
 {
 	return m_data->isTracking;
 }
 
-/*!
-   Mouse press event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse press events
+ * @param event Mouse event
+ * \details Initiates scrolling if the position is valid.
+ * \sa mouseMoveEvent(), mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标按下事件
+ * @param event 鼠标事件
+ * \details 如果位置有效则开始滚动。
+ * \sa mouseMoveEvent(), mouseReleaseEvent()
+ * \endif
  */
 void QwtAbstractSlider::mousePressEvent(QMouseEvent* event)
 {
@@ -18648,9 +21128,19 @@ void QwtAbstractSlider::mousePressEvent(QMouseEvent* event)
 	}
 }
 
-/*!
-   Mouse Move Event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse move events
+ * @param event Mouse event
+ * \details Updates the slider value while scrolling.
+ * \sa mousePressEvent(), mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标移动事件
+ * @param event 鼠标事件
+ * \details 滚动时更新滑块值。
+ * \sa mousePressEvent(), mouseReleaseEvent()
+ * \endif
  */
 void QwtAbstractSlider::mouseMoveEvent(QMouseEvent* event)
 {
@@ -18686,9 +21176,19 @@ void QwtAbstractSlider::mouseMoveEvent(QMouseEvent* event)
 	}
 }
 
-/*!
-   Mouse Release Event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Handle mouse release events
+ * @param event Mouse event
+ * \details Ends scrolling and emits valueChanged() if needed.
+ * \sa mousePressEvent(), mouseMoveEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理鼠标释放事件
+ * @param event 鼠标事件
+ * \details 结束滚动，如有需要则发出 valueChanged() 信号。
+ * \sa mousePressEvent(), mouseMoveEvent()
+ * \endif
  */
 void QwtAbstractSlider::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -18707,17 +21207,25 @@ void QwtAbstractSlider::mouseReleaseEvent(QMouseEvent* event)
 	}
 }
 
-/*!
-   Wheel Event handler
-
-   In/decreases the value by s number of steps. The direction
-   depends on the invertedControls() property.
-
-   When the control or shift modifier is pressed the wheel delta
-   ( divided by 120 ) is mapped to an increment according to
-   pageSteps(). Otherwise it is mapped to singleSteps().
-
-   \param event Wheel event
+/**
+ * \if ENGLISH
+ * @brief Handle wheel events
+ * @details In/decreases the value by a number of steps. The direction
+ *          depends on the invertedControls() property.
+ *          When the control or shift modifier is pressed the wheel delta
+ *          (divided by 120) is mapped to an increment according to
+ *          pageSteps(). Otherwise it is mapped to singleSteps().
+ * @param event Wheel event
+ * \sa keyPressEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理滚轮事件
+ * @details 按步数增加/减少值。方向取决于 invertedControls() 属性。
+ *          当按下 Ctrl 或 Shift 修饰键时，滚轮增量（除以 120）根据
+ *          pageSteps() 映射。否则根据 singleSteps() 映射。
+ * @param event 滚轮事件
+ * \sa keyPressEvent()
+ * \endif
  */
 void QwtAbstractSlider::wheelEvent(QWheelEvent* event)
 {
@@ -18761,30 +21269,35 @@ void QwtAbstractSlider::wheelEvent(QWheelEvent* event)
 	}
 }
 
-/*!
-   Handles key events
-
-   QwtAbstractSlider handles the following keys:
-
-   - Qt::Key_Left\n
-	Add/Subtract singleSteps() in direction to lowerBound();
-   - Qt::Key_Right\n
-	Add/Subtract singleSteps() in direction to upperBound();
-   - Qt::Key_Down\n
-	Subtract singleSteps(), when invertedControls() is false
-   - Qt::Key_Up\n
-	Add singleSteps(), when invertedControls() is false
-   - Qt::Key_PageDown\n
-	Subtract pageSteps(), when invertedControls() is false
-   - Qt::Key_PageUp\n
-	Add pageSteps(), when invertedControls() is false
-   - Qt::Key_Home\n
-	Set the value to the minimum()
-   - Qt::Key_End\n
-	Set the value to the maximum()
-
-   \param event Key event
-   \sa isReadOnly()
+/**
+ * \if ENGLISH
+ * @brief Handle key press events
+ * @details QwtAbstractSlider handles the following keys:
+ *          - Qt::Key_Left: Add/Subtract singleSteps() in direction to lowerBound()
+ *          - Qt::Key_Right: Add/Subtract singleSteps() in direction to upperBound()
+ *          - Qt::Key_Down: Subtract singleSteps(), when invertedControls() is false
+ *          - Qt::Key_Up: Add singleSteps(), when invertedControls() is false
+ *          - Qt::Key_PageDown: Subtract pageSteps(), when invertedControls() is false
+ *          - Qt::Key_PageUp: Add pageSteps(), when invertedControls() is false
+ *          - Qt::Key_Home: Set the value to the minimum()
+ *          - Qt::Key_End: Set the value to the maximum()
+ * @param event Key event
+ * \sa isReadOnly(), wheelEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理键盘按下事件
+ * @details QwtAbstractSlider 处理以下按键：
+ *          - Qt::Key_Left: 朝下界方向增加/减少 singleSteps()
+ *          - Qt::Key_Right: 朝上界方向增加/减少 singleSteps()
+ *          - Qt::Key_Down: 当 invertedControls() 为 false 时减少 singleSteps()
+ *          - Qt::Key_Up: 当 invertedControls() 为 false 时增加 singleSteps()
+ *          - Qt::Key_PageDown: 当 invertedControls() 为 false 时减少 pageSteps()
+ *          - Qt::Key_PageUp: 当 invertedControls() 为 false 时增加 pageSteps()
+ *          - Qt::Key_Home: 将值设置为 minimum()
+ *          - Qt::Key_End: 将值设置为 maximum()
+ * @param event 键盘事件
+ * \sa isReadOnly(), wheelEvent()
+ * \endif
  */
 void QwtAbstractSlider::keyPressEvent(QKeyEvent* event)
 {
@@ -18927,28 +21440,54 @@ uint QwtAbstractSlider::singleSteps() const
    \sa pageSteps(), setTotalSteps(), setSingleSteps()
  */
 
+/**
+ * \if ENGLISH
+ * @brief Set the number of page steps
+ * @param stepCount Number of steps
+ * \sa pageSteps(), totalSteps(), singleSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 设置页步数
+ * @param stepCount 步数
+ * \sa pageSteps(), totalSteps(), singleSteps()
+ * \endif
+ */
 void QwtAbstractSlider::setPageSteps(uint stepCount)
 {
 	m_data->pageSteps = stepCount;
 }
 
-/*!
-   \return Number of steps
-   \sa setPageSteps(), totalSteps(), singleSteps()
+/**
+ * \if ENGLISH
+ * @brief Return the number of page steps
+ * @return Number of steps
+ * \sa setPageSteps(), totalSteps(), singleSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 返回页步数
+ * @return 步数
+ * \sa setPageSteps(), totalSteps(), singleSteps()
+ * \endif
  */
 uint QwtAbstractSlider::pageSteps() const
 {
 	return m_data->pageSteps;
 }
 
-/*!
-   \brief Enable step alignment
-
-   When step alignment is enabled values resulting from slider
-   movements are aligned to the step size.
-
-   \param on Enable step alignment when true
-   \sa stepAlignment()
+/**
+ * \if ENGLISH
+ * @brief Enable step alignment
+ * @details When step alignment is enabled values resulting from slider
+ *          movements are aligned to the step size.
+ * @param on Enable step alignment when true
+ * \sa stepAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 启用步对齐
+ * @details 当启用步对齐时，滑块移动产生的值将对齐到步长。
+ * @param on true 启用步对齐
+ * \sa stepAlignment()
+ * \endif
  */
 void QwtAbstractSlider::setStepAlignment(bool on)
 {
@@ -18957,20 +21496,34 @@ void QwtAbstractSlider::setStepAlignment(bool on)
 	}
 }
 
-/*!
-   \return True, when step alignment is enabled
-   \sa setStepAlignment()
+/**
+ * \if ENGLISH
+ * @brief Check if step alignment is enabled
+ * @return True, when step alignment is enabled
+ * \sa setStepAlignment()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了步对齐
+ * @return 如果启用了步对齐返回 true
+ * \sa setStepAlignment()
+ * \endif
  */
 bool QwtAbstractSlider::stepAlignment() const
 {
 	return m_data->stepAlignment;
 }
 
-/*!
-   Set the slider to the specified value
-
-   \param value New value
-   \sa setValid(), sliderChange(), valueChanged()
+/**
+ * \if ENGLISH
+ * @brief Set the slider to the specified value
+ * @param value New value
+ * \sa setValid(), sliderChange(), valueChanged()
+ * \endif
+ * \if CHINESE
+ * @brief 将滑块设置为指定值
+ * @param value 新值
+ * \sa setValid(), sliderChange(), valueChanged()
+ * \endif
  */
 void QwtAbstractSlider::setValue(double value)
 {
@@ -18987,69 +21540,116 @@ void QwtAbstractSlider::setValue(double value)
 	}
 }
 
-//! Returns the current value.
+/**
+ * \if ENGLISH
+ * @brief Return the current value
+ * @return Current slider value
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回当前值
+ * @return 当前滑块值
+ * \sa setValue()
+ * \endif
+ */
 double QwtAbstractSlider::value() const
 {
 	return m_data->value;
 }
 
-/*!
-   If wrapping is true stepping up from upperBound() value will
-   take you to the minimum() value and vice versa.
-
-   \param on En/Disable wrapping
-   \sa wrapping()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable wrapping
+ * @details If wrapping is true stepping up from upperBound() value will
+ *          take you to the minimum() value and vice versa.
+ * @param on Enable wrapping when true
+ * \sa wrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用环绕
+ * @details 如果启用环绕，从 upperBound() 值向上步进会到达 minimum() 值，反之亦然。
+ * @param on true 启用环绕
+ * \sa wrapping()
+ * \endif
  */
 void QwtAbstractSlider::setWrapping(bool on)
 {
 	m_data->wrapping = on;
 }
 
-/*!
-   \return True, when wrapping is set
-   \sa setWrapping()
+/**
+ * \if ENGLISH
+ * @brief Check if wrapping is enabled
+ * @return True, when wrapping is set
+ * \sa setWrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 检查是否启用了环绕
+ * @return 如果启用了环绕返回 true
+ * \sa setWrapping()
+ * \endif
  */
 bool QwtAbstractSlider::wrapping() const
 {
 	return m_data->wrapping;
 }
 
-/*!
-   Invert wheel and key events
-
-   Usually scrolling the mouse wheel "up" and using keys like page
-   up will increase the slider's value towards its maximum.
-   When invertedControls() is enabled the value is scrolled
-   towards its minimum.
-
-   Inverting the controls might be f.e. useful for a vertical slider
-   with an inverted scale ( decreasing from top to bottom ).
-
-   \param on Invert controls, when true
-
-   \sa invertedControls(), keyEvent(), wheelEvent()
+/**
+ * \if ENGLISH
+ * @brief Invert wheel and key events
+ * @details Usually scrolling the mouse wheel "up" and using keys like page
+ *          up will increase the slider's value towards its maximum.
+ *          When invertedControls() is enabled the value is scrolled
+ *          towards its minimum.
+ *          Inverting the controls might be f.e. useful for a vertical slider
+ *          with an inverted scale (decreasing from top to bottom).
+ * @param on Invert controls when true
+ * \sa invertedControls(), keyEvent(), wheelEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 反转滚轮和键盘事件
+ * @details 通常向上滚动鼠标滚轮或使用 Page Up 等键会增加滑块值到最大值。
+ *          当启用 invertedControls() 时，值会向最小值滚动。
+ *          反转控制可能对于垂直滑块（从上到下递减）很有用。
+ * @param on true 反转控制
+ * \sa invertedControls(), keyEvent(), wheelEvent()
+ * \endif
  */
 void QwtAbstractSlider::setInvertedControls(bool on)
 {
 	m_data->invertedControls = on;
 }
 
-/*!
-   \return True, when the controls are inverted
-   \sa setInvertedControls()
+/**
+ * \if ENGLISH
+ * @brief Check if controls are inverted
+ * @return True, when the controls are inverted
+ * \sa setInvertedControls()
+ * \endif
+ * \if CHINESE
+ * @brief 检查控制是否被反转
+ * @return 如果控制被反转返回 true
+ * \sa setInvertedControls()
+ * \endif
  */
 bool QwtAbstractSlider::invertedControls() const
 {
 	return m_data->invertedControls;
 }
 
-/*!
-   Increment the slider
-
-   The step size depends on the number of totalSteps()
-
-   \param stepCount Number of steps
-   \sa setTotalSteps(), incrementedValue()
+/**
+ * \if ENGLISH
+ * @brief Increment the slider
+ * @details The step size depends on the number of totalSteps()
+ * @param stepCount Number of steps
+ * \sa setTotalSteps(), incrementedValue()
+ * \endif
+ * \if CHINESE
+ * @brief 增量滑块
+ * @details 步长取决于 totalSteps() 的数量
+ * @param stepCount 步数
+ * \sa setTotalSteps(), incrementedValue()
+ * \endif
  */
 void QwtAbstractSlider::incrementValue(int stepCount)
 {
@@ -19061,13 +21661,21 @@ void QwtAbstractSlider::incrementValue(int stepCount)
 	}
 }
 
-/*!
-   Increment a value
-
-   \param value Value
-   \param stepCount Number of steps
-
-   \return Incremented value
+/**
+ * \if ENGLISH
+ * @brief Increment a value
+ * @param value Value to increment
+ * @param stepCount Number of steps
+ * @return Incremented value
+ * \sa incrementValue(), setTotalSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 增量一个值
+ * @param value 要增量的值
+ * @param stepCount 步数
+ * @return 增量后的值
+ * \sa incrementValue(), setTotalSteps()
+ * \endif
  */
 double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
 {
@@ -19105,6 +21713,22 @@ double QwtAbstractSlider::incrementedValue(double value, int stepCount) const
 	return value;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Bound a value to the valid range
+ * @details Handles wrapping for circular scales
+ * @param value Value to bound
+ * @return Bounded value
+ * \sa wrapping(), minimum(), maximum()
+ * \endif
+ * \if CHINESE
+ * @brief 将值限制在有效范围内
+ * @details 处理圆形刻度的环绕
+ * @param value 要限制的值
+ * @return 限制后的值
+ * \sa wrapping(), minimum(), maximum()
+ * \endif
+ */
 double QwtAbstractSlider::boundedValue(double value) const
 {
 	const double vmin = minimum();
@@ -19138,6 +21762,20 @@ double QwtAbstractSlider::boundedValue(double value) const
 	return value;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Align a value to the step size
+ * @param value Value to align
+ * @return Aligned value
+ * \sa stepAlignment(), totalSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 将值对齐到步长
+ * @param value 要对齐的值
+ * @return 对齐后的值
+ * \sa stepAlignment(), totalSteps()
+ * \endif
+ */
 double QwtAbstractSlider::alignedValue(double value) const
 {
 	if (m_data->totalSteps == 0)
@@ -19178,8 +21816,18 @@ double QwtAbstractSlider::alignedValue(double value) const
 	return value;
 }
 
-/*!
-   Update the slider according to modifications of the scale
+/**
+ * \if ENGLISH
+ * @brief Update the slider according to modifications of the scale
+ * @details Updates the current value to stay within the new scale range
+ *          and emits valueChanged() if the value was adjusted.
+ * \sa sliderChange(), valueChanged()
+ * \endif
+ * \if CHINESE
+ * @brief 根据刻度修改更新滑块
+ * @details 更新当前值以保持在新的刻度范围内，如果值被调整则发出 valueChanged()。
+ * \sa sliderChange(), valueChanged()
+ * \endif
  */
 void QwtAbstractSlider::scaleChange()
 {
@@ -19197,7 +21845,19 @@ void QwtAbstractSlider::scaleChange()
 	update();
 }
 
-//! Calling update()
+/**
+ * \if ENGLISH
+ * @brief Handle slider changes
+ * @details Called when the slider needs to update its appearance.
+ *          The default implementation calls update().
+ * \sa setValue(), incrementValue()
+ * \endif
+ * \if CHINESE
+ * @brief 处理滑块变化
+ * @details 当滑块需要更新外观时调用。默认实现调用 update()。
+ * \sa setValue(), incrementValue()
+ * \endif
+ */
 void QwtAbstractSlider::sliderChange()
 {
 	update();
@@ -19293,38 +21953,63 @@ public:
 
 	mutable QSize sizeHintCache;
 };
-/*!
-   Construct vertical slider in QwtSlider::Trough style
-   with a scale to the left.
-
-   The scale is initialized to [0.0, 100.0] and the value set to 0.0.
-
-   \param parent Parent widget
-
-   \sa setOrientation(), setScalePosition(), setBackgroundStyle()
+/**
+ * \if ENGLISH
+ * @brief Construct vertical slider in QwtSlider::Trough style
+ * @details Construct vertical slider in QwtSlider::Trough style with a scale to the left.
+ *          The scale is initialized to [0.0, 100.0] and the value set to 0.0.
+ * @param parent Parent widget
+ * \sa setOrientation(), setScalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 构造垂直滑块 (QwtSlider::Trough 样式)
+ * @details 构造左侧带刻度的 QwtSlider::Trough 样式垂直滑块。
+ *          刻度初始化为 [0.0, 100.0]，值设置为 0.0。
+ * @param parent 父控件
+ * \sa setOrientation(), setScalePosition()
+ * \endif
  */
 QwtSlider::QwtSlider(QWidget* parent) : QwtAbstractSlider(parent)
 {
 	initSlider(Qt::Vertical);
 }
 
-/*!
-   Construct a slider in QwtSlider::Trough style
-
-   When orientation is Qt::Vertical the scale will be aligned to
-   the left - otherwise at the the top of the slider.
-
-   The scale is initialized to [0.0, 100.0] and the value set to 0.0.
-
-   \param parent Parent widget
-   \param orientation Orientation of the slider.
+/**
+ * \if ENGLISH
+ * @brief Construct a slider in QwtSlider::Trough style
+ * @details Construct a slider in QwtSlider::Trough style.
+ *          When orientation is Qt::Vertical the scale will be aligned to the left,
+ *          otherwise at the top of the slider.
+ *          The scale is initialized to [0.0, 100.0] and the value set to 0.0.
+ * @param parent Parent widget
+ * @param orientation Orientation of the slider
+ * \sa setOrientation(), setScalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 构造滑块 (QwtSlider::Trough 样式)
+ * @details 构造 QwtSlider::Trough 样式的滑块。
+ *          当方向为 Qt::Vertical时刻度对齐到左侧，否则在滑块顶部。
+ *          刻度初始化为 [0.0, 100.0]，值设置为 0.0。
+ * @param parent 父控件
+ * @param orientation 滑块方向
+ * \sa setOrientation(), setScalePosition()
+ * \endif
  */
 QwtSlider::QwtSlider(Qt::Orientation orientation, QWidget* parent) : QwtAbstractSlider(parent)
 {
 	initSlider(orientation);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \sa QwtSlider()
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \sa QwtSlider()
+ * \endif
+ */
 QwtSlider::~QwtSlider()
 {
 	delete m_data;
@@ -19350,11 +22035,17 @@ void QwtSlider::initSlider(Qt::Orientation orientation)
 	setValue(0.0);
 }
 
-/*!
-   \brief Set the orientation.
-   \param orientation Allowed values are Qt::Horizontal and Qt::Vertical.
-
-   \sa orientation(), scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Set the orientation
+ * @param orientation Allowed values are Qt::Horizontal and Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 设置方向
+ * @param orientation 允许的值为 Qt::Horizontal 和 Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
  */
 void QwtSlider::setOrientation(Qt::Orientation orientation)
 {
@@ -19377,20 +22068,32 @@ void QwtSlider::setOrientation(Qt::Orientation orientation)
 		layoutSlider(true);
 }
 
-/*!
-   \return Orientation
-   \sa setOrientation()
+/**
+ * \if ENGLISH
+ * @brief Return orientation
+ * \sa setOrientation()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * \sa setOrientation()
+ * \endif
  */
 Qt::Orientation QwtSlider::orientation() const
 {
 	return m_data->orientation;
 }
 
-/*!
-   \brief Change the position of the scale
-   \param scalePosition Position of the scale.
-
-   \sa ScalePosition, scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Change the position of the scale
+ * @param scalePosition Position of the scale
+ * \sa ScalePosition, scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度位置
+ * @param scalePosition 刻度位置
+ * \sa ScalePosition, scalePosition()
+ * \endif
  */
 void QwtSlider::setScalePosition(ScalePosition scalePosition)
 {
@@ -19404,23 +22107,34 @@ void QwtSlider::setScalePosition(ScalePosition scalePosition)
 		layoutSlider(true);
 }
 
-/*!
-   \return Position of the scale
-   \sa setScalePosition()
+/**
+ * \if ENGLISH
+ * @brief Return position of the scale
+ * \sa setScalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度位置
+ * \sa setScalePosition()
+ * \endif
  */
 QwtSlider::ScalePosition QwtSlider::scalePosition() const
 {
 	return m_data->scalePosition;
 }
 
-/*!
-   \brief Change the slider's border width
-
-   The border width is used for drawing the slider handle and the
-   trough.
-
-   \param width Border width
-   \sa borderWidth()
+/**
+ * \if ENGLISH
+ * @brief Change the slider's border width
+ * @details The border width is used for drawing the slider handle and the trough.
+ * @param width Border width
+ * \sa borderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 更改滑块的边框宽度
+ * @details 边框宽度用于绘制滑块手柄和槽。
+ * @param width 边框宽度
+ * \sa borderWidth()
+ * \endif
  */
 void QwtSlider::setBorderWidth(int width)
 {
@@ -19435,25 +22149,35 @@ void QwtSlider::setBorderWidth(int width)
 	}
 }
 
-/*!
-   \return the border width.
-   \sa setBorderWidth()
+/**
+ * \if ENGLISH
+ * @brief Return the border width
+ * \sa setBorderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回边框宽度
+ * \sa setBorderWidth()
+ * \endif
  */
 int QwtSlider::borderWidth() const
 {
 	return m_data->borderWidth;
 }
 
-/*!
-   \brief Change the spacing between trough and scale
-
-   A spacing of 0 means, that the backbone of the scale is covered
-   by the trough.
-
-   The default setting is 4 pixels.
-
-   \param spacing Number of pixels
-   \sa spacing();
+/**
+ * \if ENGLISH
+ * @brief Change the spacing between trough and scale
+ * @details A spacing of 0 means that the backbone of the scale is covered by the trough.
+ *          The default setting is 4 pixels.
+ * @param spacing Number of pixels
+ * \sa spacing()
+ * \endif
+ * \if CHINESE
+ * @brief 更改槽和刻度之间的间距
+ * @details 间距为 0 表示刻度的主干线被槽覆盖。默认设置为 4 像素。
+ * @param spacing 像素数
+ * \sa spacing()
+ * \endif
  */
 void QwtSlider::setSpacing(int spacing)
 {
@@ -19468,24 +22192,36 @@ void QwtSlider::setSpacing(int spacing)
 	}
 }
 
-/*!
-   \return Number of pixels between slider and scale
-   \sa setSpacing()
+/**
+ * \if ENGLISH
+ * @brief Return number of pixels between slider and scale
+ * \sa setSpacing()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块和刻度之间的像素数
+ * \sa setSpacing()
+ * \endif
  */
 int QwtSlider::spacing() const
 {
 	return m_data->spacing;
 }
 
-/*!
-   \brief Set the slider's handle size
-
-   When the size is empty the slider handle will be painted with a
-   default size depending on its orientation() and backgroundStyle().
-
-   \param size New size
-
-   \sa handleSize()
+/**
+ * \if ENGLISH
+ * @brief Set the slider's handle size
+ * @details When the size is empty the slider handle will be painted with a
+ *          default size depending on its orientation() and backgroundStyle().
+ * @param size New size
+ * \sa handleSize()
+ * \endif
+ * \if CHINESE
+ * @brief 设置滑块手柄大小
+ * @details 当大小为 empty 时，滑块手柄将根据其 orientation() 和 backgroundStyle()
+ *          使用默认大小绘制。
+ * @param size 新大小
+ * \sa handleSize()
+ * \endif
  */
 void QwtSlider::setHandleSize(const QSize& size)
 {
@@ -19497,27 +22233,37 @@ void QwtSlider::setHandleSize(const QSize& size)
 	}
 }
 
-/*!
-   \return Size of the handle.
-   \sa setHandleSize()
+/**
+ * \if ENGLISH
+ * @brief Return size of the handle
+ * \sa setHandleSize()
+ * \endif
+ * \if CHINESE
+ * @brief 返回手柄大小
+ * \sa setHandleSize()
+ * \endif
  */
 QSize QwtSlider::handleSize() const
 {
 	return m_data->handleSize;
 }
 
-/*!
-   \brief Set a scale draw
-
-   For changing the labels of the scales, it
-   is necessary to derive from QwtScaleDraw and
-   overload QwtScaleDraw::label().
-
-   \param scaleDraw ScaleDraw object, that has to be created with
-				   new and will be deleted in ~QwtSlider() or the next
-				   call of setScaleDraw().
-
-   \sa scaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Set a scale draw
+ * @details For changing the labels of the scales, it is necessary to derive
+ *          from QwtScaleDraw and overload QwtScaleDraw::label().
+ * @param scaleDraw ScaleDraw object that has to be created with new and will be
+ *                  deleted in ~QwtSlider() or the next call of setScaleDraw()
+ * \sa scaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度绘制器
+ * @details 要更改刻度标签，需要从 QwtScaleDraw 派生并重载 QwtScaleDraw::label()。
+ * @param scaleDraw 刻度绘制对象，必须用 new 创建，将在 ~QwtSlider() 或下次调用
+ *                  setScaleDraw() 时删除
+ * \sa scaleDraw()
+ * \endif
  */
 void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
@@ -19534,25 +22280,46 @@ void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 		layoutSlider(true);
 }
 
-/*!
-   \return the scale draw of the slider
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the slider (const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块的刻度绘制器 (const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 const QwtScaleDraw* QwtSlider::scaleDraw() const
 {
 	return static_cast< const QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   \return the scale draw of the slider
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the slider (non-const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块的刻度绘制器 (非 const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 QwtScaleDraw* QwtSlider::scaleDraw()
 {
 	return static_cast< QwtScaleDraw* >(abstractScaleDraw());
 }
 
-//! Notify changed scale
+/**
+ * \if ENGLISH
+ * @brief Notify changed scale
+ * \sa scaleChange()
+ * \endif
+ * \if CHINESE
+ * @brief 通知刻度变更
+ * \sa scaleChange()
+ * \endif
+ */
 void QwtSlider::scaleChange()
 {
 	QwtAbstractSlider::scaleChange();
@@ -19561,34 +22328,53 @@ void QwtSlider::scaleChange()
 		layoutSlider(true);
 }
 
-/*!
-   \brief Specify the update interval for automatic scrolling
-
-   The minimal accepted value is 50 ms.
-
-   \param interval Update interval in milliseconds
-
-   \sa setUpdateInterval()
+/**
+ * \if ENGLISH
+ * @brief Specify the update interval for automatic scrolling
+ * @details The minimal accepted value is 50 ms.
+ * @param interval Update interval in milliseconds
+ * \sa updateInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 指定自动刷新的更新间隔
+ * @details 最小接受值为 50 毫秒。
+ * @param interval 更新间隔 (毫秒)
+ * \sa updateInterval()
+ * \endif
  */
 void QwtSlider::setUpdateInterval(int interval)
 {
 	m_data->updateInterval = qMax(interval, 50);
 }
 
-/*!
-   \return Update interval in milliseconds for automatic scrolling
-   \sa setUpdateInterval()
+/**
+ * \if ENGLISH
+ * @brief Return update interval in milliseconds for automatic scrolling
+ * \sa setUpdateInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 返回自动刷新的更新间隔 (毫秒)
+ * \sa setUpdateInterval()
+ * \endif
  */
 int QwtSlider::updateInterval() const
 {
 	return m_data->updateInterval;
 }
 
-/*!
-   Draw the slider into the specified rectangle.
-
-   \param painter Painter
-   \param sliderRect Bounding rectangle of the slider
+/**
+ * \if ENGLISH
+ * @brief Draw the slider into the specified rectangle
+ * @param painter Painter
+ * @param sliderRect Bounding rectangle of the slider
+ * \sa drawHandle()
+ * \endif
+ * \if CHINESE
+ * @brief 在指定矩形中绘制滑块
+ * @param painter 绘制器
+ * @param sliderRect 滑块的边界矩形
+ * \sa drawHandle()
+ * \endif
  */
 void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
 {
@@ -19633,12 +22419,21 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
 		drawHandle(painter, handleRect(), transform(value()));
 }
 
-/*!
-   Draw the thumb at a position
-
-   \param painter Painter
-   \param handleRect Bounding rectangle of the handle
-   \param pos Position of the handle marker in widget coordinates
+/**
+ * \if ENGLISH
+ * @brief Draw the thumb at a position
+ * @param painter Painter
+ * @param handleRect Bounding rectangle of the handle
+ * @param pos Position of the handle marker in widget coordinates
+ * \sa drawSlider()
+ * \endif
+ * \if CHINESE
+ * @brief 在指定位置绘制滑块手柄
+ * @param painter 绘制器
+ * @param handleRect 手柄的边界矩形
+ * @param pos 手柄标记在控件坐标中的位置
+ * \sa drawSlider()
+ * \endif
  */
 void QwtSlider::drawHandle(QPainter* painter, const QRect& handleRect, int pos) const
 {
@@ -19655,13 +22450,19 @@ void QwtSlider::drawHandle(QPainter* painter, const QRect& handleRect, int pos) 
 	}
 }
 
-/*!
-   \brief Determine what to do when the user presses a mouse button.
-
-   \param pos Mouse position
-
-   \retval True, when handleRect() contains pos
-   \sa scrolledTo()
+/**
+ * \if ENGLISH
+ * @brief Determine what to do when the user presses a mouse button
+ * @param pos Mouse position
+ * @returns True when handleRect() contains pos
+ * \sa scrolledTo()
+ * \endif
+ * \if CHINESE
+ * @brief 确定当用户按下鼠标按钮时该做什么
+ * @param pos 鼠标位置
+ * @returns 当 handleRect() 包含 pos 时为 true
+ * \sa scrolledTo()
+ * \endif
  */
 bool QwtSlider::isScrollPosition(const QPoint& pos) const
 {
@@ -19675,14 +22476,19 @@ bool QwtSlider::isScrollPosition(const QPoint& pos) const
 	return false;
 }
 
-/*!
-   \brief Determine the value for a new position of the
-		 slider handle.
-
-   \param pos Mouse position
-
-   \return Value for the mouse position
-   \sa isScrollPosition()
+/**
+ * \if ENGLISH
+ * @brief Determine the value for a new position of the slider handle
+ * @param pos Mouse position
+ * @returns Value for the mouse position
+ * \sa isScrollPosition()
+ * \endif
+ * \if CHINESE
+ * @brief 确定滑块手柄新位置的值
+ * @param pos 鼠标位置
+ * @returns 鼠标位置对应的值
+ * \sa isScrollPosition()
+ * \endif
  */
 double QwtSlider::scrolledTo(const QPoint& pos) const
 {
@@ -19700,9 +22506,17 @@ double QwtSlider::scrolledTo(const QPoint& pos) const
 	return scaleMap().invTransform(p);
 }
 
-/*!
-   Mouse press event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Mouse press event handler
+ * @param event Mouse event
+ * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 鼠标按下事件处理器
+ * @param event 鼠标事件
+ * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
+ * \endif
  */
 void QwtSlider::mousePressEvent(QMouseEvent* event)
 {
@@ -19752,9 +22566,17 @@ void QwtSlider::mousePressEvent(QMouseEvent* event)
 	QwtAbstractSlider::mousePressEvent(event);
 }
 
-/*!
-   Mouse release event handler
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Mouse release event handler
+ * @param event Mouse event
+ * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 鼠标释放事件处理器
+ * @param event 鼠标事件
+ * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
+ * \endif
  */
 void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
 {
@@ -19773,13 +22595,19 @@ void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
 	QwtAbstractSlider::mouseReleaseEvent(event);
 }
 
-/*!
-   Timer event handler
-
-   Handles the timer, when the mouse stays pressed
-   inside the sliderRect().
-
-   \param event Mouse event
+/**
+ * \if ENGLISH
+ * @brief Timer event handler
+ * @details Handles the timer when the mouse stays pressed inside the sliderRect().
+ * @param event Timer event
+ * \sa timerEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 定时器事件处理器
+ * @details 当鼠标保持在 sliderRect() 内按下时处理定时器。
+ * @param event 定时器事件
+ * \sa timerEvent()
+ * \endif
  */
 void QwtSlider::timerEvent(QTimerEvent* event)
 {
@@ -19815,9 +22643,17 @@ void QwtSlider::timerEvent(QTimerEvent* event)
 	}
 }
 
-/*!
-   Qt paint event handler
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Qt paint event handler
+ * @param event Paint event
+ * \sa resizeEvent(), changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 绘制事件处理器
+ * @param event 绘制事件
+ * \sa resizeEvent(), changeEvent()
+ * \endif
  */
 void QwtSlider::paintEvent(QPaintEvent* event)
 {
@@ -19839,9 +22675,17 @@ void QwtSlider::paintEvent(QPaintEvent* event)
 		QwtPainter::drawFocusRect(&painter, this, m_data->sliderRect);
 }
 
-/*!
-   Qt resize event handler
-   \param event Resize event
+/**
+ * \if ENGLISH
+ * @brief Qt resize event handler
+ * @param event Resize event
+ * \sa paintEvent(), layoutSlider()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 调整大小事件处理器
+ * @param event 调整大小事件
+ * \sa paintEvent(), layoutSlider()
+ * \endif
  */
 void QwtSlider::resizeEvent(QResizeEvent* event)
 {
@@ -19849,11 +22693,19 @@ void QwtSlider::resizeEvent(QResizeEvent* event)
 	QwtAbstractSlider::resizeEvent(event);
 }
 
-/*!
-   Qt event handler
-   \param event Event
-
-   \return true, if event was recognized and processed
+/**
+ * \if ENGLISH
+ * @brief Qt event handler
+ * @param event Event
+ * @returns True if event was recognized and processed
+ * \sa QwtAbstractSlider::event()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 事件处理器
+ * @param event 事件
+ * @returns 如果事件被识别和处理则返回 true
+ * \sa QwtAbstractSlider::event()
+ * \endif
  */
 bool QwtSlider::event(QEvent* event)
 {
@@ -19863,9 +22715,17 @@ bool QwtSlider::event(QEvent* event)
 	return QwtAbstractSlider::event(event);
 }
 
-/*!
-   Handles QEvent::StyleChange and QEvent::FontChange events
-   \param event Change event
+/**
+ * \if ENGLISH
+ * @brief Handles QEvent::StyleChange and QEvent::FontChange events
+ * @param event Change event
+ * \sa QwtAbstractSlider::changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 处理 QEvent::StyleChange 和 QEvent::FontChange 事件
+ * @param event 变更事件
+ * \sa QwtAbstractSlider::changeEvent()
+ * \endif
  */
 void QwtSlider::changeEvent(QEvent* event)
 {
@@ -19877,12 +22737,19 @@ void QwtSlider::changeEvent(QEvent* event)
 	QwtAbstractSlider::changeEvent(event);
 }
 
-/*!
-   Recalculate the slider's geometry and layout based on
-   the current geometry and fonts.
-
-   \param update_geometry  notify the layout system and call update
-		 to redraw the scale
+/**
+ * \if ENGLISH
+ * @brief Recalculate the slider's geometry and layout
+ * @details Recalculates the slider's geometry and layout based on the current geometry and fonts.
+ * @param update_geometry Notify the layout system and call update to redraw the scale
+ * \sa layoutSlider()
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算滑块的几何布局和布局
+ * @details 基于当前几何和字体重新计算滑块的几何和布局。
+ * @param update_geometry 通知布局系统并调用 update 重新绘制刻度
+ * \sa layoutSlider()
+ * \endif
  */
 void QwtSlider::layoutSlider(bool update_geometry)
 {
@@ -19976,14 +22843,19 @@ void QwtSlider::layoutSlider(bool update_geometry)
 	}
 }
 
-/*!
-   En/Disable the trough
-
-   The slider can be customized by showing a trough for the
-   handle.
-
-   \param on When true, the groove is visible
-   \sa hasTrough(), setGroove()
+/**
+ * \if ENGLISH
+ * @brief En/Disable the trough
+ * @details The slider can be customized by showing a trough for the handle.
+ * @param on When true, the trough is visible
+ * \sa hasTrough(), setGroove()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用槽
+ * @details 滑块可以通过显示手柄的槽来自定义。
+ * @param on 当 true 时，槽可见
+ * \sa hasTrough(), setGroove()
+ * \endif
  */
 void QwtSlider::setTrough(bool on)
 {
@@ -19995,23 +22867,34 @@ void QwtSlider::setTrough(bool on)
 	}
 }
 
-/*!
-   \return True, when the trough is visible
-   \sa setTrough(), hasGroove()
+/**
+ * \if ENGLISH
+ * @brief Return true when the trough is visible
+ * \sa setTrough(), hasGroove()
+ * \endif
+ * \if CHINESE
+ * @brief 当槽可见时返回 true
+ * \sa setTrough(), hasGroove()
+ * \endif
  */
 bool QwtSlider::hasTrough() const
 {
 	return m_data->hasTrough;
 }
 
-/*!
-   En/Disable the groove
-
-   The slider can be customized by showing a groove for the
-   handle.
-
-   \param on When true, the groove is visible
-   \sa hasGroove(), setThrough()
+/**
+ * \if ENGLISH
+ * @brief En/Disable the groove
+ * @details The slider can be customized by showing a groove for the handle.
+ * @param on When true, the groove is visible
+ * \sa hasGroove(), setTrough()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用凹槽
+ * @details 滑块可以通过显示手柄的凹槽来自定义。
+ * @param on 当 true 时，凹槽可见
+ * \sa hasGroove(), setTrough()
+ * \endif
  */
 void QwtSlider::setGroove(bool on)
 {
@@ -20023,17 +22906,32 @@ void QwtSlider::setGroove(bool on)
 	}
 }
 
-/*!
-   \return True, when the groove is visible
-   \sa setGroove(), hasTrough()
+/**
+ * \if ENGLISH
+ * @brief Return true when the groove is visible
+ * \sa setGroove(), hasTrough()
+ * \endif
+ * \if CHINESE
+ * @brief 当凹槽可见时返回 true
+ * \sa setGroove(), hasTrough()
+ * \endif
  */
 bool QwtSlider::hasGroove() const
 {
 	return m_data->hasGroove;
 }
 
-/*!
-   \return minimumSizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return size hint
+ * @returns minimumSizeHint()
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @returns minimumSizeHint()
+ * \sa minimumSizeHint()
+ * \endif
  */
 QSize QwtSlider::sizeHint() const
 {
@@ -20041,9 +22939,15 @@ QSize QwtSlider::sizeHint() const
 	return qwtExpandedToGlobalStrut(hint);
 }
 
-/*!
-   \return Minimum size hint
-   \sa sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return minimum size hint
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * \sa sizeHint()
+ * \endif
  */
 QSize QwtSlider::minimumSizeHint() const
 {
@@ -20104,8 +23008,15 @@ QSize QwtSlider::minimumSizeHint() const
 	return m_data->sizeHintCache;
 }
 
-/*!
-   \return Bounding rectangle of the slider handle
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the slider handle
+ * \sa sliderRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块手柄的边界矩形
+ * \sa sliderRect()
+ * \endif
  */
 QRect QwtSlider::handleRect() const
 {
@@ -20127,8 +23038,15 @@ QRect QwtSlider::handleRect() const
 	return rect;
 }
 
-/*!
-   \return Bounding rectangle of the slider - without the scale
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the slider - without the scale
+ * \sa handleRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滑块的边界矩形 - 不含刻度
+ * \sa handleRect()
+ * \endif
  */
 QRect QwtSlider::sliderRect() const
 {
@@ -20237,9 +23155,17 @@ public:
 	double value;
 };
 
-/*!
-   Constructor
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param parent Parent widget
+ * \sa ~QwtThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param parent 父控件
+ * \sa ~QwtThermo()
+ * \endif
  */
 QwtThermo::QwtThermo(QWidget* parent) : QwtAbstractScale(parent)
 {
@@ -20255,26 +23181,40 @@ QwtThermo::QwtThermo(QWidget* parent) : QwtAbstractScale(parent)
 	layoutThermo(true);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \sa QwtThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \sa QwtThermo()
+ * \endif
+ */
 QwtThermo::~QwtThermo()
 {
 	delete m_data;
 }
 
-/*!
-   \brief Exclude/Include min/max values
-
-   According to the flags minValue() and maxValue()
-   are included/excluded from the pipe. In case of an
-   excluded value the corresponding tick is painted
-   1 pixel off of the pipeRect().
-
-   F.e. when a minimum
-   of 0.0 has to be displayed as an empty pipe the minValue()
-   needs to be excluded.
-
-   \param flags Range flags
-   \sa rangeFlags()
+/**
+ * \if ENGLISH
+ * @brief Exclude/Include min/max values
+ * @details According to the flags minValue() and maxValue() are included/excluded
+ *          from the pipe. In case of an excluded value the corresponding tick
+ *          is painted 1 pixel off of the pipeRect().
+ *          For example, when a minimum of 0.0 has to be displayed as an empty pipe,
+ *          the minValue() needs to be excluded.
+ * @param flags Range flags
+ * \sa rangeFlags()
+ * \endif
+ * \if CHINESE
+ * @brief 排除/包含最小/最大值
+ * @details 根据标志，minValue() 和 maxValue() 从管道中排除/包含。
+ *          对于排除的值，对应的刻度绘制在 pipeRect() 外 1 像素处。
+ *          例如，当最小值 0.0 需要显示为空管道时，需要排除 minValue()。
+ * @param flags 范围标志
+ * \sa rangeFlags()
+ * \endif
  */
 void QwtThermo::setRangeFlags(QwtInterval::BorderFlags flags)
 {
@@ -20284,20 +23224,32 @@ void QwtThermo::setRangeFlags(QwtInterval::BorderFlags flags)
 	}
 }
 
-/*!
-   \return Range flags
-   \sa setRangeFlags()
+/**
+ * \if ENGLISH
+ * @brief Return range flags
+ * \sa setRangeFlags()
+ * \endif
+ * \if CHINESE
+ * @brief 返回范围标志
+ * \sa setRangeFlags()
+ * \endif
  */
 QwtInterval::BorderFlags QwtThermo::rangeFlags() const
 {
 	return m_data->rangeFlags;
 }
 
-/*!
-   Set the current value.
-
-   \param value New Value
-   \sa value()
+/**
+ * \if ENGLISH
+ * @brief Set the current value
+ * @param value New value
+ * \sa value()
+ * \endif
+ * \if CHINESE
+ * @brief 设置当前值
+ * @param value 新值
+ * \sa value()
+ * \endif
  */
 void QwtThermo::setValue(double value)
 {
@@ -20307,22 +23259,37 @@ void QwtThermo::setValue(double value)
 	}
 }
 
-//! Return the value.
+/**
+ * \if ENGLISH
+ * @brief Return the value
+ * \sa setValue()
+ * \endif
+ * \if CHINESE
+ * @brief 返回当前值
+ * \sa setValue()
+ * \endif
+ */
 double QwtThermo::value() const
 {
 	return m_data->value;
 }
 
-/*!
-   \brief Set a scale draw
-
-   For changing the labels of the scales, it
-   is necessary to derive from QwtScaleDraw and
-   overload QwtScaleDraw::label().
-
-   \param scaleDraw ScaleDraw object, that has to be created with
-				   new and will be deleted in ~QwtThermo() or the next
-				   call of setScaleDraw().
+/**
+ * \if ENGLISH
+ * @brief Set a scale draw
+ * @details For changing the labels of the scales, it is necessary to derive
+ *          from QwtScaleDraw and overload QwtScaleDraw::label().
+ * @param scaleDraw ScaleDraw object that has to be created with new and will be
+ *                  deleted in ~QwtThermo() or the next call of setScaleDraw()
+ * \sa scaleDraw(), QwtScaleDraw
+ * \endif
+ * \if CHINESE
+ * @brief 设置刻度绘制器
+ * @details 要更改刻度标签，需要从 QwtScaleDraw 派生并重载 QwtScaleDraw::label()。
+ * @param scaleDraw 刻度绘制对象，必须用 new 创建，将在 ~QwtThermo() 或下次调用
+ *                  setScaleDraw() 时删除
+ * \sa scaleDraw(), QwtScaleDraw
+ * \endif
  */
 void QwtThermo::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
@@ -20330,27 +23297,47 @@ void QwtThermo::setScaleDraw(QwtScaleDraw* scaleDraw)
 	layoutThermo(true);
 }
 
-/*!
-   \return the scale draw of the thermo
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the thermometer (const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计的刻度绘制器 (const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 const QwtScaleDraw* QwtThermo::scaleDraw() const
 {
 	return static_cast< const QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   \return the scale draw of the thermo
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the thermometer (non-const version)
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计的刻度绘制器 (非 const 版本)
+ * \sa setScaleDraw()
+ * \endif
  */
 QwtScaleDraw* QwtThermo::scaleDraw()
 {
 	return static_cast< QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   Paint event handler
-   \param event Paint event
+/**
+ * \if ENGLISH
+ * @brief Paint event handler
+ * @param event Paint event
+ * \sa resizeEvent(), changeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 绘制事件处理器
+ * @param event 绘制事件
+ * \sa resizeEvent(), changeEvent()
+ * \endif
  */
 void QwtThermo::paintEvent(QPaintEvent* event)
 {
@@ -20376,9 +23363,17 @@ void QwtThermo::paintEvent(QPaintEvent* event)
 	drawLiquid(&painter, tRect);
 }
 
-/*!
-   Resize event handler
-   \param event Resize event
+/**
+ * \if ENGLISH
+ * @brief Resize event handler
+ * @param event Resize event
+ * \sa paintEvent(), layoutThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 调整大小事件处理器
+ * @param event 调整大小事件
+ * \sa paintEvent(), layoutThermo()
+ * \endif
  */
 void QwtThermo::resizeEvent(QResizeEvent* event)
 {
@@ -20386,9 +23381,17 @@ void QwtThermo::resizeEvent(QResizeEvent* event)
 	layoutThermo(false);
 }
 
-/*!
-   Qt change event handler
-   \param event Event
+/**
+ * \if ENGLISH
+ * @brief Qt change event handler
+ * @param event Event
+ * \sa paintEvent(), resizeEvent()
+ * \endif
+ * \if CHINESE
+ * @brief Qt 变更事件处理器
+ * @param event 事件
+ * \sa paintEvent(), resizeEvent()
+ * \endif
  */
 void QwtThermo::changeEvent(QEvent* event)
 {
@@ -20403,12 +23406,19 @@ void QwtThermo::changeEvent(QEvent* event)
 	}
 }
 
-/*!
-   Recalculate the QwtThermo geometry and layout based on
-   pipeRect() and the fonts.
-
-   \param update_geometry notify the layout system and call update
-		 to redraw the scale
+/**
+ * \if ENGLISH
+ * @brief Recalculate the QwtThermo geometry and layout
+ * @details Recalculates geometry and layout based on pipeRect() and the fonts.
+ * @param update_geometry Notify the layout system and call update to redraw the scale
+ * \sa pipeRect(), layoutThermo()
+ * \endif
+ * \if CHINESE
+ * @brief 重新计算 QwtThermo 几何布局和布局
+ * @details 基于 pipeRect() 和字体重新计算几何和布局。
+ * @param update_geometry 通知布局系统并调用 update 重新绘制刻度
+ * \sa pipeRect(), layoutThermo()
+ * \endif
  */
 void QwtThermo::layoutThermo(bool update_geometry)
 {
@@ -20479,9 +23489,17 @@ void QwtThermo::layoutThermo(bool update_geometry)
 	}
 }
 
-/*!
-   \return Bounding rectangle of the pipe ( without borders )
-		  in widget coordinates
+/**
+ * \if ENGLISH
+ * @brief Return bounding rectangle of the pipe
+ * @returns Bounding rectangle of the pipe (without borders) in widget coordinates
+ * \sa fillRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道的边界矩形
+ * @returns 管道边界矩形 (不含边框),坐标为控件坐标
+ * \sa fillRect(), alarmRect()
+ * \endif
  */
 QRect QwtThermo::pipeRect() const
 {
@@ -20521,11 +23539,17 @@ QRect QwtThermo::pipeRect() const
 	return pipeRect;
 }
 
-/*!
-   \brief Set the orientation.
-   \param orientation Allowed values are Qt::Horizontal and Qt::Vertical.
-
-   \sa orientation(), scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Set the orientation
+ * @param orientation Allowed values are Qt::Horizontal and Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 设置方向
+ * @param orientation 允许的值为 Qt::Horizontal 和 Qt::Vertical
+ * \sa orientation(), scalePosition()
+ * \endif
  */
 void QwtThermo::setOrientation(Qt::Orientation orientation)
 {
@@ -20545,18 +23569,30 @@ void QwtThermo::setOrientation(Qt::Orientation orientation)
 	layoutThermo(true);
 }
 
-/*!
-   \return Orientation
-   \sa setOrientation()
+/**
+ * \if ENGLISH
+ * @brief Return orientation
+ * \sa setOrientation()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * \sa setOrientation()
+ * \endif
  */
 Qt::Orientation QwtThermo::orientation() const
 {
 	return m_data->orientation;
 }
 
-/*!
-   \brief Change how the origin is determined.
-   \sa originMode(), serOrigin(), origin()
+/**
+ * \if ENGLISH
+ * @brief Change how the origin is determined
+ * \sa originMode(), setOrigin(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 更改如何确定原点
+ * \sa originMode(), setOrigin(), origin()
+ * \endif
  */
 void QwtThermo::setOriginMode(OriginMode m)
 {
@@ -20567,23 +23603,34 @@ void QwtThermo::setOriginMode(OriginMode m)
 	update();
 }
 
-/*!
-   \return Mode, how the origin is determined.
-   \sa setOriginMode(), serOrigin(), origin()
+/**
+ * \if ENGLISH
+ * @brief Return mode how the origin is determined
+ * \sa setOriginMode(), setOrigin(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 返回如何确定原点的模式
+ * \sa setOriginMode(), setOrigin(), origin()
+ * \endif
  */
 QwtThermo::OriginMode QwtThermo::originMode() const
 {
 	return m_data->originMode;
 }
 
-/*!
-   \brief Specifies the custom origin.
-
-   If originMode is set to OriginCustom this property controls where the
-   liquid starts.
-
-   \param origin New origin level
-   \sa setOriginMode(), originMode(), origin()
+/**
+ * \if ENGLISH
+ * @brief Specify the custom origin
+ * @details If originMode is set to OriginCustom this property controls where the liquid starts.
+ * @param origin New origin level
+ * \sa setOriginMode(), originMode(), origin()
+ * \endif
+ * \if CHINESE
+ * @brief 指定自定义原点
+ * @details 如果 originMode 设置为 OriginCustom，此属性控制液体从哪里开始。
+ * @param origin 新原点水平
+ * \sa setOriginMode(), originMode(), origin()
+ * \endif
  */
 void QwtThermo::setOrigin(double origin)
 {
@@ -20594,20 +23641,32 @@ void QwtThermo::setOrigin(double origin)
 	update();
 }
 
-/*!
-   \return Origin of the thermo, when OriginCustom is enabled
-   \sa setOrigin(), setOriginMode(), originMode()
+/**
+ * \if ENGLISH
+ * @brief Return origin of the thermometer when OriginCustom is enabled
+ * \sa setOrigin(), setOriginMode(), originMode()
+ * \endif
+ * \if CHINESE
+ * @brief 当启用 OriginCustom 时返回温度计的原点
+ * \sa setOrigin(), setOriginMode(), originMode()
+ * \endif
  */
 double QwtThermo::origin() const
 {
 	return m_data->origin;
 }
 
-/*!
-   \brief Change the position of the scale
-   \param scalePosition Position of the scale.
-
-   \sa ScalePosition, scalePosition()
+/**
+ * \if ENGLISH
+ * @brief Change the position of the scale
+ * @param scalePosition Position of the scale
+ * \sa ScalePosition, scalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度位置
+ * @param scalePosition 刻度位置
+ * \sa ScalePosition, scalePosition()
+ * \endif
  */
 void QwtThermo::setScalePosition(ScalePosition scalePosition)
 {
@@ -20620,25 +23679,49 @@ void QwtThermo::setScalePosition(ScalePosition scalePosition)
 		layoutThermo(true);
 }
 
-/*!
-   \return Scale position.
-   \sa setScalePosition()
+/**
+ * \if ENGLISH
+ * @brief Return scale position
+ * \sa setScalePosition()
+ * \endif
+ * \if CHINESE
+ * @brief 返回刻度位置
+ * \sa setScalePosition()
+ * \endif
  */
 QwtThermo::ScalePosition QwtThermo::scalePosition() const
 {
 	return m_data->scalePosition;
 }
 
-//! Notify a scale change.
+/**
+ * \if ENGLISH
+ * @brief Notify a scale change
+ * \sa scaleChange()
+ * \endif
+ * \if CHINESE
+ * @brief 通知刻度变更
+ * \sa scaleChange()
+ * \endif
+ */
 void QwtThermo::scaleChange()
 {
 	layoutThermo(true);
 }
 
-/*!
-   Redraw the liquid in thermometer pipe.
-   \param painter Painter
-   \param pipeRect Bounding rectangle of the pipe without borders
+/**
+ * \if ENGLISH
+ * @brief Redraw the liquid in thermometer pipe
+ * @param painter Painter
+ * @param pipeRect Bounding rectangle of the pipe without borders
+ * \sa pipeRect(), fillRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 重新绘制温度计管道中的液体
+ * @param painter 绘制器
+ * @param pipeRect 管道边界矩形 (不含边框)
+ * \sa pipeRect(), fillRect(), alarmRect()
+ * \endif
  */
 void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 {
@@ -20697,16 +23780,20 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 	painter->restore();
 }
 
-/*!
-   \brief Change the spacing between pipe and scale
-
-   A spacing of 0 means, that the backbone of the scale is below
-   the pipe.
-
-   The default setting is 3 pixels.
-
-   \param spacing Number of pixels
-   \sa spacing();
+/**
+ * \if ENGLISH
+ * @brief Change the spacing between pipe and scale
+ * @details A spacing of 0 means that the backbone of the scale is below the pipe.
+ *          The default setting is 3 pixels.
+ * @param spacing Number of pixels
+ * \sa spacing()
+ * \endif
+ * \if CHINESE
+ * @brief 更改管道和刻度之间的间距
+ * @details 间距为 0 表示刻度的主干线在管道下方。默认设置为 3 像素。
+ * @param spacing 像素数
+ * \sa spacing()
+ * \endif
  */
 void QwtThermo::setSpacing(int spacing)
 {
@@ -20719,19 +23806,32 @@ void QwtThermo::setSpacing(int spacing)
 	}
 }
 
-/*!
-   \return Number of pixels between pipe and scale
-   \sa setSpacing()
+/**
+ * \if ENGLISH
+ * @brief Return number of pixels between pipe and scale
+ * \sa setSpacing()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道和刻度之间的像素数
+ * \sa setSpacing()
+ * \endif
  */
 int QwtThermo::spacing() const
 {
 	return m_data->spacing;
 }
 
-/*!
-   Set the border width of the pipe.
-   \param width Border width
-   \sa borderWidth()
+/**
+ * \if ENGLISH
+ * @brief Set the border width of the pipe
+ * @param width Border width
+ * \sa borderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 设置管道的边框宽度
+ * @param width 边框宽度
+ * \sa borderWidth()
+ * \endif
  */
 void QwtThermo::setBorderWidth(int width)
 {
@@ -20744,21 +23844,34 @@ void QwtThermo::setBorderWidth(int width)
 	}
 }
 
-/*!
-   \return Border width of the thermometer pipe.
-   \sa setBorderWidth()
+/**
+ * \if ENGLISH
+ * @brief Return border width of the thermometer pipe
+ * \sa setBorderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回温度计管道的边框宽度
+ * \sa setBorderWidth()
+ * \endif
  */
 int QwtThermo::borderWidth() const
 {
 	return m_data->borderWidth;
 }
 
-/*!
-   \brief Assign a color map for the fill color
-
-   \param colorMap Color map
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Assign a color map for the fill color
+ * @param colorMap Color map
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa colorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 为填充颜色分配颜色映射
+ * @param colorMap 颜色映射
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa colorMap()
+ * \endif
  */
 void QwtThermo::setColorMap(QwtColorMap* colorMap)
 {
@@ -20768,33 +23881,53 @@ void QwtThermo::setColorMap(QwtColorMap* colorMap)
 	}
 }
 
-/*!
-   \return Color map for the fill color
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return color map for the fill color
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa setColorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 返回填充颜色的颜色映射
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa setColorMap()
+ * \endif
  */
 QwtColorMap* QwtThermo::colorMap()
 {
 	return m_data->colorMap;
 }
 
-/*!
-   \return Color map for the fill color
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return color map for the fill color (const version)
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \sa setColorMap()
+ * \endif
+ * \if CHINESE
+ * @brief 返回填充颜色的颜色映射 (const 版本)
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \sa setColorMap()
+ * \endif
  */
 const QwtColorMap* QwtThermo::colorMap() const
 {
 	return m_data->colorMap;
 }
 
-/*!
-   \brief Change the brush of the liquid.
-
-   Changes the QPalette::ButtonText brush of the palette.
-
-   \param brush New brush.
-   \sa fillBrush(), QWidget::setPalette()
+/**
+ * \if ENGLISH
+ * @brief Change the brush of the liquid
+ * @details Changes the QPalette::ButtonText brush of the palette.
+ * @param brush New brush
+ * \sa fillBrush(), QWidget::setPalette()
+ * \endif
+ * \if CHINESE
+ * @brief 更改液体的刷子
+ * @details 更改调色板的 QPalette::ButtonText 刷子。
+ * @param brush 新刷子
+ * \sa fillBrush(), QWidget::setPalette()
+ * \endif
  */
 void QwtThermo::setFillBrush(const QBrush& brush)
 {
@@ -20803,25 +23936,36 @@ void QwtThermo::setFillBrush(const QBrush& brush)
 	setPalette(pal);
 }
 
-/*!
-   \return Liquid ( QPalette::ButtonText ) brush.
-   \sa setFillBrush(), QWidget::palette()
+/**
+ * \if ENGLISH
+ * @brief Return liquid (QPalette::ButtonText) brush
+ * \sa setFillBrush(), QWidget::palette()
+ * \endif
+ * \if CHINESE
+ * @brief 返回液体 (QPalette::ButtonText) 刷子
+ * \sa setFillBrush(), QWidget::palette()
+ * \endif
  */
 QBrush QwtThermo::fillBrush() const
 {
 	return palette().brush(QPalette::ButtonText);
 }
 
-/*!
-   \brief Specify the liquid brush above the alarm threshold
-
-   Changes the QPalette::Highlight brush of the palette.
-
-   \param brush New brush.
-   \sa alarmBrush(), QWidget::setPalette()
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Specify the liquid brush above the alarm threshold
+ * @details Changes the QPalette::Highlight brush of the palette.
+ * @param brush New brush
+ * \sa alarmBrush(), QWidget::setPalette()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 指定报警阈值以上的液体刷子
+ * @details 更改调色板的 QPalette::Highlight 刷子。
+ * @param brush 新刷子
+ * \sa alarmBrush(), QWidget::setPalette()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmBrush(const QBrush& brush)
 {
@@ -20830,26 +23974,36 @@ void QwtThermo::setAlarmBrush(const QBrush& brush)
 	setPalette(pal);
 }
 
-/*!
-   \return Liquid brush ( QPalette::Highlight ) above the alarm threshold.
-   \sa setAlarmBrush(), QWidget::palette()
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return liquid brush (QPalette::Highlight) above the alarm threshold
+ * \sa setAlarmBrush(), QWidget::palette()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 返回报警阈值以上的液体刷子 (QPalette::Highlight)
+ * \sa setAlarmBrush(), QWidget::palette()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 QBrush QwtThermo::alarmBrush() const
 {
 	return palette().brush(QPalette::Highlight);
 }
 
-/*!
-   Specify the alarm threshold.
-
-   \param level Alarm threshold
-   \sa alarmLevel()
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Specify the alarm threshold
+ * @param level Alarm threshold
+ * \sa alarmLevel()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 指定报警阈值
+ * @param level 报警阈值
+ * \sa alarmLevel()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmLevel(double level)
 {
@@ -20858,23 +24012,34 @@ void QwtThermo::setAlarmLevel(double level)
 	update();
 }
 
-/*!
-   \return Alarm threshold.
-   \sa setAlarmLevel()
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return alarm threshold
+ * \sa setAlarmLevel()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 返回报警阈值
+ * \sa setAlarmLevel()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 double QwtThermo::alarmLevel() const
 {
 	return m_data->alarmLevel;
 }
 
-/*!
-   Change the width of the pipe.
-
-   \param width Width of the pipe
-   \sa pipeWidth()
+/**
+ * \if ENGLISH
+ * @brief Change the width of the pipe
+ * @param width Width of the pipe
+ * \sa pipeWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 更改管道的宽度
+ * @param width 管道宽度
+ * \sa pipeWidth()
+ * \endif
  */
 void QwtThermo::setPipeWidth(int width)
 {
@@ -20884,21 +24049,34 @@ void QwtThermo::setPipeWidth(int width)
 	}
 }
 
-/*!
-   \return Width of the pipe.
-   \sa setPipeWidth()
+/**
+ * \if ENGLISH
+ * @brief Return width of the pipe
+ * \sa setPipeWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回管道的宽度
+ * \sa setPipeWidth()
+ * \endif
  */
 int QwtThermo::pipeWidth() const
 {
 	return m_data->pipeWidth;
 }
 
-/*!
-   \brief Enable or disable the alarm threshold
-   \param on true (disabled) or false (enabled)
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Enable or disable the alarm threshold
+ * @param on True to enable, false to disable
+ * \sa alarmEnabled()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 启用或禁用报警阈值
+ * @param on true 启用，false 禁用
+ * \sa alarmEnabled()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 void QwtThermo::setAlarmEnabled(bool on)
 {
@@ -20906,30 +24084,49 @@ void QwtThermo::setAlarmEnabled(bool on)
 	update();
 }
 
-/*!
-   \return True, when the alarm threshold is enabled.
-
-   \warning The alarm threshold has no effect, when
-		   a color map has been assigned
+/**
+ * \if ENGLISH
+ * @brief Return true when the alarm threshold is enabled
+ * \sa setAlarmEnabled()
+ * @warning The alarm threshold has no effect when a color map has been assigned
+ * \endif
+ * \if CHINESE
+ * @brief 当启用报警阈值时返回 true
+ * \sa setAlarmEnabled()
+ * @warning 分配颜色映射后，报警阈值将不起作用
+ * \endif
  */
 bool QwtThermo::alarmEnabled() const
 {
 	return m_data->alarmEnabled;
 }
 
-/*!
-   \return the minimum size hint
-   \sa minimumSizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return the minimum size hint
+ * \sa minimumSizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小尺寸提示
+ * \sa minimumSizeHint()
+ * \endif
  */
 QSize QwtThermo::sizeHint() const
 {
 	return minimumSizeHint();
 }
 
-/*!
-   \return Minimum size hint
-   \warning The return value depends on the font and the scale.
-   \sa sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return minimum size hint
+ * @details The return value depends on the font and the scale.
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小尺寸提示
+ * @details 返回值取决于字体和刻度。
+ * \sa sizeHint()
+ * \endif
  */
 QSize QwtThermo::minimumSizeHint() const
 {
@@ -20962,13 +24159,19 @@ QSize QwtThermo::minimumSizeHint() const
 	return QSize(w, h);
 }
 
-/*!
-   \brief Calculate the filled rectangle of the pipe
-
-   \param pipeRect Rectangle of the pipe
-   \return Rectangle to be filled ( fill and alarm brush )
-
-   \sa pipeRect(), alarmRect()
+/**
+ * \if ENGLISH
+ * @brief Calculate the filled rectangle of the pipe
+ * @param pipeRect Rectangle of the pipe
+ * @returns Rectangle to be filled (fill and alarm brush)
+ * \sa pipeRect(), alarmRect()
+ * \endif
+ * \if CHINESE
+ * @brief 计算管道的填充矩形
+ * @param pipeRect 管道矩形
+ * @returns 要填充的矩形 (填充和报警刷子)
+ * \sa pipeRect(), alarmRect()
+ * \endif
  */
 QRect QwtThermo::fillRect(const QRect& pipeRect) const
 {
@@ -21003,13 +24206,19 @@ QRect QwtThermo::fillRect(const QRect& pipeRect) const
 	return fillRect.normalized();
 }
 
-/*!
-   \brief Calculate the alarm rectangle of the pipe
-
-   \param fillRect Filled rectangle in the pipe
-   \return Rectangle to be filled with the alarm brush
-
-   \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+/**
+ * \if ENGLISH
+ * @brief Calculate the alarm rectangle of the pipe
+ * @param fillRect Filled rectangle in the pipe
+ * @returns Rectangle to be filled with the alarm brush
+ * \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+ * \endif
+ * \if CHINESE
+ * @brief 计算管道的报警矩形
+ * @param fillRect 管道中的填充矩形
+ * @returns 要用报警刷子填充的矩形
+ * \sa pipeRect(), fillRect(), alarmLevel(), alarmBrush()
+ * \endif
  */
 QRect QwtThermo::alarmRect(const QRect& fillRect) const
 {
@@ -21070,21 +24279,46 @@ QRect QwtThermo::alarmRect(const QRect& fillRect) const
 /*** Start of inlined file: qwt_system_clock.cpp ***/
 #include <qelapsedtimer.h>
 
-//! \return true, if the elapsed timer is valid
+/**
+ * \if ENGLISH
+ * @brief Check if the elapsed timer is valid
+ * @return true if the timer is valid, false otherwise
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查计时器是否有效
+ * @return 如果计时器有效返回 true，否则返回 false
+ * \endif
+ */
 bool QwtSystemClock::isNull() const
 {
 	return m_timer.isValid();
 }
 
-//! Start the elapsed timer
+/**
+ * \if ENGLISH
+ * @brief Start the elapsed timer
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 启动计时器
+ * \endif
+ */
 void QwtSystemClock::start()
 {
 	m_timer.start();
 }
 
-/*!
-	Restart the elapsed timer
-	\return elapsed time in multiples of milliseconds
+/**
+ * \if ENGLISH
+ * @brief Restart the elapsed timer
+ * @return Elapsed time in multiples of milliseconds
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 重启计时器
+ * @return 经过的时间，以毫秒为单位
+ * \endif
  */
 double QwtSystemClock::restart()
 {
@@ -21092,7 +24326,17 @@ double QwtSystemClock::restart()
 	return nsecs / 1e6;
 }
 
-//! \return elapsed time in multiples of milliseconds
+/**
+ * \if ENGLISH
+ * @brief Get elapsed time in multiples of milliseconds
+ * @return Elapsed time since the timer was started
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取经过的时间，以毫秒为单位
+ * @return 自计时器启动以来经过的时间
+ * \endif
+ */
 double QwtSystemClock::elapsed() const
 {
 	const qint64 nsecs = m_timer.nsecsElapsed();
@@ -21923,12 +25167,21 @@ class QwtSymbol::PrivateData
 	} cache;
 };
 
-/*!
-   Default Constructor
-   \param style Symbol Style
-
-   The symbol is constructed with gray interior,
-   black outline with zero width, no size and style 'NoSymbol'.
+/**
+ * \if ENGLISH
+ * @brief Default Constructor
+ * @param style Symbol Style
+ *
+ * The symbol is constructed with gray interior,
+ * black outline with zero width, no size and style 'NoSymbol'.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @param style 符号样式
+ *
+ * 符号使用灰色内部、零宽度的黑色轮廓、无大小和 'NoSymbol' 样式构造。
+ * \endif
  */
 QwtSymbol::QwtSymbol( Style style )
 {
@@ -21936,14 +25189,26 @@ QwtSymbol::QwtSymbol( Style style )
 		QPen( Qt::black, 0 ), QSize() );
 }
 
-/*!
-   \brief Constructor
-   \param style Symbol Style
-   \param brush brush to fill the interior
-   \param pen outline pen
-   \param size size
-
-   \sa setStyle(), setBrush(), setPen(), setSize()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param style Symbol Style
+ * @param brush brush to fill the interior
+ * @param pen outline pen
+ * @param size size
+ *
+ * @sa setStyle(), setBrush(), setPen(), setSize()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param style 符号样式
+ * @param brush 填充内部的画刷
+ * @param pen 轮廓画笔
+ * @param size 大小
+ *
+ * @sa setStyle(), setBrush(), setPen(), setSize()
+ * \endif
  */
 QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
 	const QPen& pen, const QSize& size )
@@ -21951,20 +25216,34 @@ QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
 	m_data = new PrivateData( style, brush, pen, size );
 }
 
-/*!
-   \brief Constructor
-
-   The symbol gets initialized by a painter path. The style is
-   set to QwtSymbol::Path, the size is set to empty ( the path
-   is displayed unscaled ).
-
-   \param path painter path
-   \param brush brush to fill the interior
-   \param pen outline pen
-
-   \sa setPath(), setBrush(), setPen(), setSize()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The symbol gets initialized by a painter path. The style is
+ * set to QwtSymbol::Path, the size is set to empty ( the path
+ * is displayed unscaled ).
+ *
+ * @param path painter path
+ * @param brush brush to fill the interior
+ * @param pen outline pen
+ *
+ * @sa setPath(), setBrush(), setPen(), setSize()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 符号通过绘图路径初始化。样式设置为 QwtSymbol::Path，
+ * 大小设置为空（路径显示时不缩放）。
+ *
+ * @param path 绘图路径
+ * @param brush 填充内部的画刷
+ * @param pen 轮廓画笔
+ *
+ * @sa setPath(), setBrush(), setPen(), setSize()
+ * \endif
  */
-
 QwtSymbol::QwtSymbol( const QPainterPath& path,
 	const QBrush& brush, const QPen& pen )
 {
@@ -21972,7 +25251,15 @@ QwtSymbol::QwtSymbol( const QPainterPath& path,
 	setPath( path );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSymbol::~QwtSymbol()
 {
 	delete m_data;
@@ -22093,15 +25380,28 @@ const QPixmap& QwtSymbol::pixmap() const
 	return m_data->pixmap.pixmap;
 }
 
-/*!
-   Set a graphic as symbol
-
-   \param graphic Graphic
-
-   \sa graphic(), setPixmap()
-
-   \note the style() is set to QwtSymbol::Graphic
-   \note brush() and pen() have no effect
+/**
+ * \if ENGLISH
+ * @brief Set a graphic as symbol
+ *
+ * @param graphic Graphic
+ *
+ * @sa graphic(), setPixmap()
+ *
+ * @note the style() is set to QwtSymbol::Graphic
+ * @note brush() and pen() have no effect
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置图形作为符号
+ *
+ * @param graphic 图形
+ *
+ * @sa graphic(), setPixmap()
+ *
+ * @note style() 被设置为 QwtSymbol::Graphic
+ * @note brush() 和 pen() 无效
+ * \endif
  */
 void QwtSymbol::setGraphic( const QwtGraphic& graphic )
 {
@@ -23601,6 +26901,7 @@ QwtWheel::~QwtWheel()
 }
 
 /*!
+   \if ENGLISH
    \brief En/Disable tracking
 
    If tracking is enabled (the default), the wheel emits the valueChanged()
@@ -23611,6 +26912,19 @@ QwtWheel::~QwtWheel()
 
    \param enable On/Off
    \sa isTracking()
+   \endif
+   *
+   \if CHINESE
+   \brief 启用/禁用跟踪
+
+   如果启用了跟踪（默认），轮在移动时会发出 valueChanged() 信号。
+   如果禁用了跟踪，轮只在移动终止时才发出 valueChanged() 信号。
+
+   wheelMoved() 信号无论是否启用跟踪都会发出。
+
+   \param enable 开/关
+   \sa isTracking()
+   \endif
  */
 void QwtWheel::setTracking(bool enable)
 {
@@ -23618,8 +26932,15 @@ void QwtWheel::setTracking(bool enable)
 }
 
 /*!
+   \if ENGLISH
    \return True, when tracking is enabled
    \sa setTracking(), valueChanged(), wheelMoved()
+   \endif
+   *
+   \if CHINESE
+   \return 当启用跟踪时返回 true
+   \sa setTracking(), valueChanged(), wheelMoved()
+   \endif
  */
 bool QwtWheel::isTracking() const
 {
@@ -23627,12 +26948,23 @@ bool QwtWheel::isTracking() const
 }
 
 /*!
+   \if ENGLISH
    \brief Specify the update interval when the wheel is flying
 
    Default and minimum value is 50 ms.
 
    \param interval Interval in milliseconds
    \sa updateInterval(), setMass(), setTracking()
+   \endif
+   *
+   \if CHINESE
+   \brief 指定轮飞行时的更新间隔
+
+   默认值和最小值是 50 毫秒。
+
+   \param interval 间隔（毫秒）
+   \sa updateInterval(), setMass(), setTracking()
+   \endif
  */
 void QwtWheel::setUpdateInterval(int interval)
 {
@@ -23640,8 +26972,15 @@ void QwtWheel::setUpdateInterval(int interval)
 }
 
 /*!
+   \if ENGLISH
    \return Update interval when the wheel is flying
    \sa setUpdateInterval(), mass(), isTracking()
+   \endif
+   *
+   \if CHINESE
+   \return 轮飞行时的更新间隔
+   \sa setUpdateInterval(), mass(), isTracking()
+   \endif
  */
 int QwtWheel::updateInterval() const
 {
@@ -23649,11 +26988,21 @@ int QwtWheel::updateInterval() const
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse press event handler
 
    Start movement of the wheel.
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标按下事件处理程序
+
+   开始轮的移动。
+
+   \param event 鼠标事件
+   \endif
  */
 void QwtWheel::mousePressEvent(QMouseEvent* event)
 {
@@ -23673,11 +27022,21 @@ void QwtWheel::mousePressEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse Move Event handler
 
    Turn the wheel according to the mouse position
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标移动事件处理程序
+
+   根据鼠标位置转动轮
+
+   \param event 鼠标事件
+   \endif
  */
 void QwtWheel::mouseMoveEvent(QMouseEvent* event)
 {
@@ -23718,12 +27077,22 @@ void QwtWheel::mouseMoveEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Mouse Release Event handler
 
    When the wheel has no mass the movement of the wheel stops, otherwise
    it starts flying.
 
    \param event Mouse event
+   \endif
+   *
+   \if CHINESE
+   \brief 鼠标释放事件处理程序
+
+   当轮没有质量时，轮的移动停止，否则开始飞行。
+
+   \param event 鼠标事件
+   \endif
  */
 
 void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
@@ -23759,6 +27128,7 @@ void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Qt timer event
 
    The flying wheel effect is implemented using a timer
@@ -23766,6 +27136,17 @@ void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
    \param event Timer event
 
    \sa updateInterval()
+   \endif
+   *
+   \if CHINESE
+   \brief Qt 定时器事件
+
+   飞轮效果使用定时器实现
+
+   \param event 定时器事件
+
+   \sa updateInterval()
+   \endif
  */
 void QwtWheel::timerEvent(QTimerEvent* event)
 {
@@ -23798,11 +27179,21 @@ void QwtWheel::timerEvent(QTimerEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Handle wheel events
 
    In/Decrement the value
 
    \param event Wheel event
+   \endif
+   *
+   \if CHINESE
+   \brief 处理轮事件
+
+   增加/减少值
+
+   \param event 轮事件
+   \endif
  */
 void QwtWheel::wheelEvent(QWheelEvent* event)
 {
@@ -23856,6 +27247,7 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
 }
 
 /*!
+   \if ENGLISH
    Handle key events
 
    - Qt::Key_Home\n
@@ -23881,6 +27273,33 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
 	The value will be decremented by pageStepSize() * singleStepSize().
 
    \param event Key event
+   \endif
+   *
+   \if CHINESE
+   处理键盘事件
+
+   - Qt::Key_Home\n
+	步进到 minimum()
+
+   - Qt::Key_End\n
+	步进到 maximum()
+
+   - Qt::Key_Up\n
+	对于水平或非反向的垂直轮，值将增加步长。
+	对于反向的垂直轮，值将减少步长。
+
+   - Qt::Key_Down\n
+	对于水平或非反向的垂直轮，值将减少步长。
+	对于反向的垂直轮，值将增加步长。
+
+   - Qt::Key_PageUp\n
+	值将增加 pageStepSize() * singleStepSize()。
+
+   - Qt::Key_PageDown\n
+	值将减少 pageStepSize() * singleStepSize()。
+
+   \param event 键盘事件
+   \endif
  */
 void QwtWheel::keyPressEvent(QKeyEvent* event)
 {
@@ -23969,6 +27388,7 @@ void QwtWheel::keyPressEvent(QKeyEvent* event)
 }
 
 /*!
+   \if ENGLISH
    \brief Adjust the number of grooves in the wheel's surface.
 
    The number of grooves is limited to 6 <= count <= 50.
@@ -23977,6 +27397,18 @@ void QwtWheel::keyPressEvent(QKeyEvent* event)
 
    \param count Number of grooves per 360 degrees
    \sa tickCount()
+   \endif
+   *
+   \if CHINESE
+   \brief 调整轮表面凹槽的数量。
+
+   凹槽数量限制为 6 <= count <= 50。
+   超出此范围的值将被裁剪。
+   默认值为 10。
+
+   \param count 每 360 度的凹槽数
+   \sa tickCount()
+   \endif
  */
 void QwtWheel::setTickCount(int count)
 {
@@ -23989,8 +27421,15 @@ void QwtWheel::setTickCount(int count)
 }
 
 /*!
+   \if ENGLISH
    \return Number of grooves in the wheel's surface.
    \sa setTickCnt()
+   \endif
+   *
+   \if CHINESE
+   \return 轮表面凹槽的数量。
+   \sa setTickCnt()
+   \endif
  */
 int QwtWheel::tickCount() const
 {
@@ -23998,6 +27437,7 @@ int QwtWheel::tickCount() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the wheel border width of the wheel.
 
    The wheel border must not be smaller than 1
@@ -24008,6 +27448,20 @@ int QwtWheel::tickCount() const
 
    \param borderWidth Border width
    \sa internalBorder()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置轮的边框宽度。
+
+   轮边框不能小于 1，
+   并且根据轮的大小有限制。
+   超出允许范围的值将被裁剪。
+
+   轮边框默认为 2。
+
+   \param borderWidth 边框宽度
+   \sa internalBorder()
+   \endif
  */
 void QwtWheel::setWheelBorderWidth(int borderWidth)
 {
@@ -24018,8 +27472,15 @@ void QwtWheel::setWheelBorderWidth(int borderWidth)
 }
 
 /*!
+   \if ENGLISH
    \return Wheel border width
    \sa setWheelBorderWidth()
+   \endif
+   *
+   \if CHINESE
+   \return 轮边框宽度
+   \sa setWheelBorderWidth()
+   \endif
  */
 int QwtWheel::wheelBorderWidth() const
 {
@@ -24027,12 +27488,23 @@ int QwtWheel::wheelBorderWidth() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the border width
 
    The border defaults to 2.
 
    \param width Border width
    \sa borderWidth()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置边框宽度
+
+   边框默认为 2。
+
+   \param width 边框宽度
+   \sa borderWidth()
+   \endif
  */
 void QwtWheel::setBorderWidth(int width)
 {
@@ -24041,8 +27513,15 @@ void QwtWheel::setBorderWidth(int width)
 }
 
 /*!
+   \if ENGLISH
    \return Border width
    \sa setBorderWidth()
+   \endif
+   *
+   \if CHINESE
+   \return 边框宽度
+   \sa setBorderWidth()
+   \endif
  */
 int QwtWheel::borderWidth() const
 {
@@ -24059,6 +27538,7 @@ QRect QwtWheel::wheelRect() const
 }
 
 /*!
+   \if ENGLISH
    \brief Set the total angle which the wheel can be turned.
 
    One full turn of the wheel corresponds to an angle of
@@ -24070,6 +27550,20 @@ QRect QwtWheel::wheelRect() const
 
    \param angle total angle in degrees
    \sa totalAngle()
+   \endif
+   *
+   \if CHINESE
+   \brief 设置轮可以转动的总角度。
+
+   轮的一整圈对应 360 度。
+   n*360 度的总角度意味着轮必须绕其轴转动 n 圈
+   才能从最小值到最大值。
+
+   总角度的默认设置是 360 度。
+
+   \param angle 总角度（度）
+   \sa totalAngle()
+   \endif
  */
 void QwtWheel::setTotalAngle(double angle)
 {
@@ -24081,8 +27575,15 @@ void QwtWheel::setTotalAngle(double angle)
 }
 
 /*!
+   \if ENGLISH
    \return Total angle which the wheel can be turned.
    \sa setTotalAngle()
+   \endif
+   *
+   \if CHINESE
+   \return 轮可以转动的总角度。
+   \sa setTotalAngle()
+   \endif
  */
 double QwtWheel::totalAngle() const
 {
@@ -24186,8 +27687,15 @@ double QwtWheel::valueAt(const QPoint& pos) const
 }
 
 /*!
+   \if ENGLISH
    \brief Qt Paint Event
    \param event Paint event
+   \endif
+   *
+   \if CHINESE
+   \brief Qt 绘制事件
+   \param event 绘制事件
+   \endif
  */
 void QwtWheel::paintEvent(QPaintEvent* event)
 {
@@ -24662,7 +28170,15 @@ double QwtWheel::mass() const
 	return m_data->mass;
 }
 
-//!  Stop the flying movement of the wheel
+/*!
+   \if ENGLISH
+   \brief Stop the flying movement of the wheel
+   \endif
+   *
+   \if CHINESE
+   \brief 停止轮的飞行移动
+   \endif
+ */
 void QwtWheel::stopFlying()
 {
 	if (m_data->timerId != 0) {
@@ -24717,12 +28233,28 @@ double QwtWheel::alignedValue(double value) const
 #include <qpainter.h>
 #include <qpainterpath.h>
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtVectorFieldSymbol::QwtVectorFieldSymbol()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldSymbol::~QwtVectorFieldSymbol()
 {
 }
@@ -24767,21 +28299,42 @@ class QwtVectorFieldArrow::PrivateData
 };
 
 /*!
-	\brief Constructor
+	\if ENGLISH
+	@brief Constructor
 
 	The length is initialized by headWidth + 4
 
-	\param headWidth Width of the triangular head
-	\param tailWidth Width of the arrow tail
+	@param headWidth Width of the triangular head
+	@param tailWidth Width of the arrow tail
 
 	\sa setLength()
+	\endif
+	*
+	\if CHINESE
+	@brief 构造函数
+
+	长度初始化为 headWidth + 4
+
+	@param headWidth 三角形头部的宽度
+	@param tailWidth 箭头尾部的宽度
+
+	\sa setLength()
+	\endif
  */
 QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
 {
 	m_data = new PrivateData( headWidth, tailWidth );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldArrow::~QwtVectorFieldArrow()
 {
 	delete m_data;
@@ -24823,19 +28376,38 @@ class QwtVectorFieldThinArrow::PrivateData
 };
 
 /*!
-	\brief Constructor
+	\if ENGLISH
+	@brief Constructor
 
 	The length is initialized by headWidth + 4
 
-	\param headWidth Width of the triangular head
+	@param headWidth Width of the triangular head
 	\sa setLength()
+	\endif
+	*
+	\if CHINESE
+	@brief 构造函数
+
+	长度初始化为 headWidth + 4
+
+	@param headWidth 三角形头部的宽度
+	\sa setLength()
+	\endif
  */
 QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
 {
 	m_data = new PrivateData( headWidth );
 }
 
-//! \brief Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
 {
 	delete m_data;
@@ -24966,145 +28538,143 @@ int QwtSplineParametrization::type() const
 /*** Start of inlined file: qwt_spline_pleasing.cpp ***/
 #include <qpainterpath.h>
 
-static inline double qwtChordalLength( const QPointF& point1, const QPointF& point2 )
+/**
+ * \if ENGLISH
+ * @brief Calculate chordal length between two points
+ * @param point1 First point
+ * @param point2 Second point
+ * @return Distance between points
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算两点之间的弦长
+ * @param point1 第一个点
+ * @param point2 第二个点
+ * @return 点之间的距离
+ * \endif
+ */
+static inline double qwtChordalLength(const QPointF& point1, const QPointF& point2)
 {
 	const double dx = point2.x() - point1.x();
 	const double dy = point2.y() - point1.y();
 
-	return std::sqrt( dx * dx + dy * dy );
+	return std::sqrt(dx * dx + dy * dy);
 }
 
 template< class Param >
-static QPointF qwtVector( Param param,
-	const QPointF& p1, const QPointF& p2 )
+static QPointF qwtVector(Param param, const QPointF& p1, const QPointF& p2)
 {
-	return ( p2 - p1 ) / param( p1, p2 );
+	return (p2 - p1) / param(p1, p2);
 }
 
 template< class Param >
-static QPointF qwtVectorCardinal( Param param,
-	const QPointF& p1, const QPointF& p2, const QPointF& p3 )
+static QPointF qwtVectorCardinal(Param param, const QPointF& p1, const QPointF& p2, const QPointF& p3)
 {
-	const double t1 = param( p1, p2 );
-	const double t2 = param( p2, p3 );
+	const double t1 = param(p1, p2);
+	const double t2 = param(p2, p3);
 
-	return t2 * ( p3 - p1 ) / ( t1 + t2 );
+	return t2 * (p3 - p1) / (t1 + t2);
 }
 
 namespace QwtSplinePleasingP
 {
-	struct Tension
+struct Tension
+{
+	double t1;
+	double t2;
+};
+
+struct param
+{
+	param(const QwtSplineParametrization* p) : parameter(p)
 	{
-		double t1;
-		double t2;
-	};
+	}
 
-	struct param
+	inline double operator()(const QPointF& p1, const QPointF& p2) const
 	{
-		param( const QwtSplineParametrization* p ):
-			parameter( p )
-		{
-		}
+		return parameter->valueIncrement(p1, p2);
+	}
 
-		inline double operator()( const QPointF& p1, const QPointF& p2 ) const
-		{
-			return parameter->valueIncrement( p1, p2 );
-		}
+	const QwtSplineParametrization* parameter;
+};
 
-		const QwtSplineParametrization* parameter;
-	};
-
-	struct paramUniform
+struct paramUniform
+{
+	inline double operator()(const QPointF& p1, const QPointF& p2) const
 	{
-		inline double operator()( const QPointF& p1, const QPointF& p2 ) const
-		{
-			return QwtSplineParametrization::valueIncrementUniform( p1, p2 );
-		}
-	};
+		return QwtSplineParametrization::valueIncrementUniform(p1, p2);
+	}
+};
 
-	class PathStore
+class PathStore
+{
+public:
+	inline void init(int)
 	{
-	  public:
-		inline void init( int )
-		{
-		}
+	}
 
-		inline void start( const QPointF& p0 )
-		{
-			path.moveTo( p0 );
-		}
-
-		inline void addCubic( const QPointF& cp1,
-			const QPointF& cp2, const QPointF& p2 )
-		{
-			path.cubicTo( cp1, cp2, p2 );
-		}
-
-		QPainterPath path;
-	};
-
-	class ControlPointsStore
+	inline void start(const QPointF& p0)
 	{
-	  public:
-		inline ControlPointsStore():
-			m_cp( nullptr )
-		{
-		}
+		path.moveTo(p0);
+	}
 
-		inline void init( int size )
-		{
-			controlPoints.resize( size );
-			m_cp = controlPoints.data();
-		}
+	inline void addCubic(const QPointF& cp1, const QPointF& cp2, const QPointF& p2)
+	{
+		path.cubicTo(cp1, cp2, p2);
+	}
 
-		inline void start( const QPointF& )
-		{
-		}
+	QPainterPath path;
+};
 
-		inline void addCubic( const QPointF& cp1,
-			const QPointF& cp2, const QPointF& )
-		{
-			QLineF& l = *m_cp++;
-			l.setPoints( cp1, cp2 );
-		}
+class ControlPointsStore
+{
+public:
+	inline ControlPointsStore() : m_cp(nullptr)
+	{
+	}
 
-		QVector< QLineF > controlPoints;
+	inline void init(int size)
+	{
+		controlPoints.resize(size);
+		m_cp = controlPoints.data();
+	}
 
-	  private:
-		QLineF* m_cp;
-	};
+	inline void start(const QPointF&)
+	{
+	}
+
+	inline void addCubic(const QPointF& cp1, const QPointF& cp2, const QPointF&)
+	{
+		QLineF& l = *m_cp++;
+		l.setPoints(cp1, cp2);
+	}
+
+	QVector< QLineF > controlPoints;
+
+private:
+	QLineF* m_cp;
+};
 }
 
-static inline QwtSplinePleasingP::Tension qwtTensionPleasing(
-	double d13, double d23, double d24,
-	const QPointF& p1, const QPointF& p2,
-	const QPointF& p3, const QPointF& p4 )
+static inline QwtSplinePleasingP::Tension
+qwtTensionPleasing(double d13, double d23, double d24, const QPointF& p1, const QPointF& p2, const QPointF& p3, const QPointF& p4)
 {
 	QwtSplinePleasingP::Tension tension;
 
-	const bool b1 = ( d13 / 3.0 ) < d23;
-	const bool b2 = ( d24 / 3.0 ) < d23;
+	const bool b1 = (d13 / 3.0) < d23;
+	const bool b2 = (d24 / 3.0) < d23;
 
-	if ( b1 )
-	{
-		if ( b2 )
-		{
-			tension.t1 = ( p1 != p2 ) ? ( 1.0 / 3.0 ) : ( 2.0 / 3.0 );
-			tension.t2 = ( p3 != p4 ) ? ( 1.0 / 3.0 ) : ( 2.0 / 3.0 );
-		}
-		else
-		{
+	if (b1) {
+		if (b2) {
+			tension.t1 = (p1 != p2) ? (1.0 / 3.0) : (2.0 / 3.0);
+			tension.t2 = (p3 != p4) ? (1.0 / 3.0) : (2.0 / 3.0);
+		} else {
 			tension.t1 = tension.t2 = d23 / d24;
 		}
-	}
-	else
-	{
-		if ( b2 )
-		{
+	} else {
+		if (b2) {
 			tension.t1 = tension.t2 = d23 / d13;
-		}
-		else
-		{
+		} else {
 			tension.t1 = d23 / d13;
 			tension.t2 = d23 / d24;
 		}
@@ -25114,8 +28684,7 @@ static inline QwtSplinePleasingP::Tension qwtTensionPleasing(
 }
 
 template< class SplineStore, class Param >
-static SplineStore qwtSplinePathPleasing( const QPolygonF& points,
-	bool isClosed, Param param )
+static SplineStore qwtSplinePathPleasing(const QPolygonF& points, bool isClosed, Param param)
 {
 	using namespace QwtSplinePleasingP;
 
@@ -25124,85 +28693,78 @@ static SplineStore qwtSplinePathPleasing( const QPolygonF& points,
 	const QPointF* p = points.constData();
 
 	SplineStore store;
-	store.init( isClosed ? size : size - 1 );
-	store.start( p[0] );
+	store.init(isClosed ? size : size - 1);
+	store.start(p[ 0 ]);
 
 	double d13;
 	QPointF vec1;
 
-	if ( isClosed )
-	{
-		d13 = qwtChordalLength(p[0], p[2]);
+	if (isClosed) {
+		d13 = qwtChordalLength(p[ 0 ], p[ 2 ]);
+
+		const Tension t0 = qwtTensionPleasing(qwtChordalLength(p[ size - 1 ], p[ 1 ]),
+											  qwtChordalLength(p[ 0 ], p[ 1 ]),
+											  d13,
+											  p[ size - 1 ],
+											  p[ 0 ],
+											  p[ 1 ],
+											  p[ 2 ]);
+
+		const QPointF vec0 = qwtVectorCardinal< Param >(param, p[ size - 1 ], p[ 0 ], p[ 1 ]);
+		vec1               = qwtVectorCardinal< Param >(param, p[ 0 ], p[ 1 ], p[ 2 ]);
+
+		store.addCubic(p[ 0 ] + vec0 * t0.t1, p[ 1 ] - vec1 * t0.t2, p[ 1 ]);
+	} else {
+		d13 = qwtChordalLength(p[ 0 ], p[ 2 ]);
 
 		const Tension t0 = qwtTensionPleasing(
-			qwtChordalLength( p[size - 1], p[1]), qwtChordalLength(p[0], p[1]),
-			d13, p[size - 1], p[0], p[1], p[2] );
+			qwtChordalLength(p[ 0 ], p[ 1 ]), qwtChordalLength(p[ 0 ], p[ 1 ]), d13, p[ 0 ], p[ 0 ], p[ 1 ], p[ 2 ]);
 
-		const QPointF vec0 = qwtVectorCardinal< Param >( param, p[size - 1], p[0], p[1] );
-		vec1 = qwtVectorCardinal< Param >( param, p[0], p[1], p[2] );
+		const QPointF vec0 = 0.5 * qwtVector< Param >(param, p[ 0 ], p[ 1 ]);
+		vec1               = qwtVectorCardinal< Param >(param, p[ 0 ], p[ 1 ], p[ 2 ]);
 
-		store.addCubic( p[0] + vec0 * t0.t1, p[1] - vec1 * t0.t2, p[1] );
-	}
-	else
-	{
-		d13 = qwtChordalLength(p[0], p[2]);
-
-		const Tension t0 = qwtTensionPleasing(
-			qwtChordalLength( p[0], p[1]), qwtChordalLength(p[0], p[1]),
-			d13,  p[0], p[0], p[1], p[2] );
-
-		const QPointF vec0 = 0.5 * qwtVector< Param >( param, p[0], p[1] );
-		vec1 = qwtVectorCardinal< Param >( param, p[0], p[1], p[2] );
-
-		store.addCubic( p[0] + vec0 * t0.t1, p[1] - vec1 * t0.t2, p[1] );
+		store.addCubic(p[ 0 ] + vec0 * t0.t1, p[ 1 ] - vec1 * t0.t2, p[ 1 ]);
 	}
 
-	for ( int i = 1; i < size - 2; i++ )
-	{
-		const double d23 = qwtChordalLength( p[i], p[i + 1] );
-		const double d24 = qwtChordalLength( p[i], p[i + 2] );
+	for (int i = 1; i < size - 2; i++) {
+		const double d23 = qwtChordalLength(p[ i ], p[ i + 1 ]);
+		const double d24 = qwtChordalLength(p[ i ], p[ i + 2 ]);
 
-		const QPointF vec2 = qwtVectorCardinal< Param >( param, p[i], p[i + 1], p[i + 2] );
+		const QPointF vec2 = qwtVectorCardinal< Param >(param, p[ i ], p[ i + 1 ], p[ i + 2 ]);
 
-		const Tension t = qwtTensionPleasing(
-			d13, d23, d24, p[i - 1], p[i], p[i + 1], p[i + 2] );
+		const Tension t = qwtTensionPleasing(d13, d23, d24, p[ i - 1 ], p[ i ], p[ i + 1 ], p[ i + 2 ]);
 
-		store.addCubic( p[i] + vec1 * t.t1, p[i + 1] - vec2 * t.t2, p[i + 1] );
+		store.addCubic(p[ i ] + vec1 * t.t1, p[ i + 1 ] - vec2 * t.t2, p[ i + 1 ]);
 
-		d13 = d24;
+		d13  = d24;
 		vec1 = vec2;
 	}
 
-	if ( isClosed )
-	{
-		const double d24 = qwtChordalLength( p[size - 2], p[0] );
+	if (isClosed) {
+		const double d24 = qwtChordalLength(p[ size - 2 ], p[ 0 ]);
 
 		const Tension tn = qwtTensionPleasing(
-			d13, qwtChordalLength( p[size - 2], p[size - 1] ), d24,
-			p[size - 3], p[size - 2], p[size - 1], p[0] );
+			d13, qwtChordalLength(p[ size - 2 ], p[ size - 1 ]), d24, p[ size - 3 ], p[ size - 2 ], p[ size - 1 ], p[ 0 ]);
 
-		const QPointF vec2 = qwtVectorCardinal< Param >( param, p[size - 2], p[size - 1], p[0] );
-		store.addCubic( p[size - 2] + vec1 * tn.t1, p[size - 1] - vec2 * tn.t2, p[size - 1] );
+		const QPointF vec2 = qwtVectorCardinal< Param >(param, p[ size - 2 ], p[ size - 1 ], p[ 0 ]);
+		store.addCubic(p[ size - 2 ] + vec1 * tn.t1, p[ size - 1 ] - vec2 * tn.t2, p[ size - 1 ]);
 
-		const double d34 = qwtChordalLength( p[size - 1], p[0] );
-		const double d35 = qwtChordalLength( p[size - 1], p[1] );
+		const double d34 = qwtChordalLength(p[ size - 1 ], p[ 0 ]);
+		const double d35 = qwtChordalLength(p[ size - 1 ], p[ 1 ]);
 
-		const Tension tc = qwtTensionPleasing( d24, d34, d35, p[size - 2], p[size - 1], p[0], p[1] );
+		const Tension tc = qwtTensionPleasing(d24, d34, d35, p[ size - 2 ], p[ size - 1 ], p[ 0 ], p[ 1 ]);
 
-		const QPointF vec3 = qwtVectorCardinal< Param >( param, p[size - 1], p[0], p[1] );
+		const QPointF vec3 = qwtVectorCardinal< Param >(param, p[ size - 1 ], p[ 0 ], p[ 1 ]);
 
-		store.addCubic( p[size - 1] + vec2 * tc.t1, p[0] - vec3 * tc.t2, p[0] );
-	}
-	else
-	{
-		const double d24 = qwtChordalLength( p[size - 2], p[size - 1] );
+		store.addCubic(p[ size - 1 ] + vec2 * tc.t1, p[ 0 ] - vec3 * tc.t2, p[ 0 ]);
+	} else {
+		const double d24 = qwtChordalLength(p[ size - 2 ], p[ size - 1 ]);
 
 		const Tension tn = qwtTensionPleasing(
-			d13, qwtChordalLength( p[size - 2], p[size - 1] ), d24,
-			p[size - 3], p[size - 2], p[size - 1], p[size - 1] );
+			d13, qwtChordalLength(p[ size - 2 ], p[ size - 1 ]), d24, p[ size - 3 ], p[ size - 2 ], p[ size - 1 ], p[ size - 1 ]);
 
-		const QPointF vec2 = 0.5 * qwtVector< Param >( param, p[size - 2], p[size - 1] );
-		store.addCubic( p[size - 2] + vec1 * tn.t1, p[size - 1] - vec2 * tn.t2, p[size - 1] );
+		const QPointF vec2 = 0.5 * qwtVector< Param >(param, p[ size - 2 ], p[ size - 1 ]);
+		store.addCubic(p[ size - 2 ] + vec1 * tn.t1, p[ size - 1 ] - vec2 * tn.t2, p[ size - 1 ]);
 	}
 
 	return store;
@@ -25216,17 +28778,56 @@ static SplineStore qwtSplinePathPleasing( const QPolygonF& points,
 
    \sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
  */
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The default setting is a non closing spline with uniform parametrization.
+ * ( QwtSplineParametrization::ParameterUniform ).
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 默认设置是非闭合样条，具有均匀参数化
+ * ( QwtSplineParametrization::ParameterUniform )。
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ */
 QwtSplinePleasing::QwtSplinePleasing()
 {
-	setParametrization( QwtSplineParametrization::ParameterUniform );
+	setParametrization(QwtSplineParametrization::ParameterUniform);
 }
 
 //! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplinePleasing::~QwtSplinePleasing()
 {
 }
 
 //! \return 2
+/**
+ * \if ENGLISH
+ * @brief Get locality
+ * @return 2 (looks 2 points ahead/behind)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取局部性
+ * @return 2（向前/向后查看 2 个点）
+ * \endif
+ */
 uint QwtSplinePleasing::locality() const
 {
 	return 2;
@@ -25241,64 +28842,84 @@ uint QwtSplinePleasing::locality() const
    \param points Control points
    \return QPainterPath Painter path, that can be rendered by QPainter
  */
-QPainterPath QwtSplinePleasing::painterPath( const QPolygonF& points ) const
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * @param points Control points
+ * @return QPainterPath Painter path, that can be rendered by QPainter
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
+ *
+ * @param points 控制点
+ * @return QPainterPath 绘制路径，可由 QPainter 渲染
+ * \endif
+ */
+QPainterPath QwtSplinePleasing::painterPath(const QPolygonF& points) const
 {
 	const int size = points.size();
-	if ( size <= 2 )
-		return QwtSplineG1::painterPath( points );
+	if (size <= 2)
+		return QwtSplineG1::painterPath(points);
 
-	const bool isClosing = ( boundaryType() == QwtSpline::ClosedPolygon );
+	const bool isClosing = (boundaryType() == QwtSpline::ClosedPolygon);
 
 	using namespace QwtSplinePleasingP;
 
 	PathStore store;
-	if ( parametrization()->type() == QwtSplineParametrization::ParameterUniform )
-	{
-		store = qwtSplinePathPleasing< PathStore >( points,
-			isClosing, paramUniform() );
-	}
-	else
-	{
-		store = qwtSplinePathPleasing< PathStore >( points,
-			isClosing, param( parametrization() ) );
+	if (parametrization()->type() == QwtSplineParametrization::ParameterUniform) {
+		store = qwtSplinePathPleasing< PathStore >(points, isClosing, paramUniform());
+	} else {
+		store = qwtSplinePathPleasing< PathStore >(points, isClosing, param(parametrization()));
 	}
 
-	if ( isClosing )
+	if (isClosing)
 		store.path.closeSubpath();
 
 	return store.path;
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns the 2 control points of each curve as QLineF.
-
-   \param points Control points
-   \return Control points of the interpolating Bezier curves
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns the 2 control points of each curve as QLineF.
+ *
+ * @param points Control points
+ * @return Control points of the interpolating Bezier curves
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
+ *
+ * @param points 控制点
+ * @return 插值贝塞尔曲线的控制点
+ * \endif
  */
-QVector< QLineF > QwtSplinePleasing::bezierControlLines(
-	const QPolygonF& points ) const
+QVector< QLineF > QwtSplinePleasing::bezierControlLines(const QPolygonF& points) const
 {
 	const int size = points.size();
-	if ( size <= 2 )
+	if (size <= 2)
 		return QVector< QLineF >();
 
-	const bool isClosing = ( boundaryType() == QwtSpline::ClosedPolygon );
+	const bool isClosing = (boundaryType() == QwtSpline::ClosedPolygon);
 
 	using namespace QwtSplinePleasingP;
 
 	ControlPointsStore store;
-	if ( parametrization()->type() == QwtSplineParametrization::ParameterUniform )
-	{
-		store = qwtSplinePathPleasing< ControlPointsStore >( points,
-			isClosing, paramUniform() );
-	}
-	else
-	{
-		store = qwtSplinePathPleasing< ControlPointsStore >( points,
-			isClosing, param( parametrization() ) );
+	if (parametrization()->type() == QwtSplineParametrization::ParameterUniform) {
+		store = qwtSplinePathPleasing< ControlPointsStore >(points, isClosing, paramUniform());
+	} else {
+		store = qwtSplinePathPleasing< ControlPointsStore >(points, isClosing, param(parametrization()));
 	}
 
 	return store.controlPoints;
@@ -28125,44 +31746,40 @@ QVector< QwtSplinePolynomial > QwtSplineCubic::polynomials( const QPolygonF& poi
 /*** Start of inlined file: qwt_spline_local.cpp ***/
 #include <qpainterpath.h>
 
-static inline bool qwtIsStrictlyMonotonic( double dy1, double dy2 )
+static inline bool qwtIsStrictlyMonotonic(double dy1, double dy2)
 {
-	if ( dy1 == 0.0 || dy2 == 0.0 )
+	if (dy1 == 0.0 || dy2 == 0.0)
 		return false;
 
-	return ( dy1 > 0.0 ) == ( dy2 > 0.0 );
+	return (dy1 > 0.0) == (dy2 > 0.0);
 }
 
-static inline double qwtSlopeLine( const QPointF& p1, const QPointF& p2 )
+static inline double qwtSlopeLine(const QPointF& p1, const QPointF& p2)
 {
 	// ???
 	const double dx = p2.x() - p1.x();
-	return dx ? ( p2.y() - p1.y() ) / dx : 0.0;
+	return dx ? (p2.y() - p1.y()) / dx : 0.0;
 }
 
-static inline double qwtSlopeCardinal(
-	double dx1, double dy1, double s1, double dx2, double dy2, double s2 )
+static inline double qwtSlopeCardinal(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
 {
 	Q_UNUSED(s1)
 	Q_UNUSED(s2)
 
-	return ( dy1 + dy2 ) / ( dx1 + dx2 );
+	return (dy1 + dy2) / (dx1 + dx2);
 }
 
-static inline double qwtSlopeParabolicBlending(
-	double dx1, double dy1, double s1, double dx2, double dy2, double s2 )
+static inline double qwtSlopeParabolicBlending(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
 {
-	Q_UNUSED( dy1 )
-	Q_UNUSED( dy2 )
+	Q_UNUSED(dy1)
+	Q_UNUSED(dy2)
 
-	return ( dx2 * s1 + dx1 * s2 ) / ( dx1 + dx2 );
+	return (dx2 * s1 + dx1 * s2) / (dx1 + dx2);
 }
 
-static inline double qwtSlopePChip(
-	double dx1, double dy1, double s1, double dx2, double dy2, double s2 )
+static inline double qwtSlopePChip(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
 {
-	if ( qwtIsStrictlyMonotonic( dy1, dy2 ) )
-	{
+	if (qwtIsStrictlyMonotonic(dy1, dy2)) {
 #if 0
 		// weighting the slopes by the dx1/dx2
 		const double w1 = ( 3 * dx1 + 3 * dx2 ) / ( 2 * dx1 + 4 * dx2 );
@@ -28176,8 +31793,8 @@ static inline double qwtSlopePChip(
 #endif
 		// the same as above - but faster
 
-		const double s12 = ( dy1 + dy2 ) / ( dx1 + dx2 );
-		return 3.0 * ( s1 * s2 ) / ( s1 + s2 + s12 );
+		const double s12 = (dy1 + dy2) / (dx1 + dx2);
+		return 3.0 * (s1 * s2) / (s1 + s2 + s12);
 	}
 
 	return 0.0;
@@ -28185,303 +31802,278 @@ static inline double qwtSlopePChip(
 
 namespace QwtSplineLocalP
 {
-	class PathStore
+class PathStore
+{
+public:
+	inline void init(const QVector< QPointF >&)
 	{
-	  public:
-		inline void init( const QVector< QPointF >& )
-		{
-		}
+	}
 
-		inline void start( const QPointF& p0, double )
-		{
-			path.moveTo( p0 );
-		}
-
-		inline void addCubic( const QPointF& p1, double m1,
-			const QPointF& p2, double m2 )
-		{
-			const double dx3 = ( p2.x() - p1.x() ) / 3.0;
-
-			path.cubicTo( p1.x() + dx3, p1.y() + m1 * dx3,
-				p2.x() - dx3, p2.y() - m2 * dx3,
-				p2.x(), p2.y() );
-		}
-
-		QPainterPath path;
-	};
-
-	class ControlPointsStore
+	inline void start(const QPointF& p0, double)
 	{
-	  public:
-		inline void init( const QVector< QPointF >& points )
-		{
-			if ( points.size() > 0 )
-				controlPoints.resize( points.size() - 1 );
-			m_cp = controlPoints.data();
-		}
+		path.moveTo(p0);
+	}
 
-		inline void start( const QPointF&, double )
-		{
-		}
-
-		inline void addCubic( const QPointF& p1, double m1,
-			const QPointF& p2, double m2 )
-		{
-			const double dx3 = ( p2.x() - p1.x() ) / 3.0;
-
-			QLineF& l = *m_cp++;
-			l.setLine( p1.x() + dx3, p1.y() + m1 * dx3,
-				p2.x() - dx3, p2.y() - m2 * dx3 );
-		}
-
-		QVector< QLineF > controlPoints;
-
-	  private:
-		QLineF* m_cp;
-	};
-
-	class SlopeStore
+	inline void addCubic(const QPointF& p1, double m1, const QPointF& p2, double m2)
 	{
-	  public:
-		void init( const QVector< QPointF >& points )
-		{
-			slopes.resize( points.size() );
-			m_m = slopes.data();
-		}
+		const double dx3 = (p2.x() - p1.x()) / 3.0;
 
-		inline void start( const QPointF&, double m0 )
-		{
-			*m_m++ = m0;
-		}
+		path.cubicTo(p1.x() + dx3, p1.y() + m1 * dx3, p2.x() - dx3, p2.y() - m2 * dx3, p2.x(), p2.y());
+	}
 
-		inline void addCubic( const QPointF&, double,
-			const QPointF&, double m2 )
-		{
-			*m_m++ = m2;
-		}
+	QPainterPath path;
+};
 
-		QVector< double > slopes;
-
-	  private:
-		double* m_m;
-	};
-
-	struct slopeCardinal
+class ControlPointsStore
+{
+public:
+	inline void init(const QVector< QPointF >& points)
 	{
-		static inline double value( double dx1, double dy1, double s1,
-			double dx2, double dy2, double s2 )
-		{
-			return qwtSlopeCardinal( dx1, dy1, s1, dx2, dy2, s2 );
-		}
-	};
+		if (points.size() > 0)
+			controlPoints.resize(points.size() - 1);
+		m_cp = controlPoints.data();
+	}
 
-	struct slopeParabolicBlending
+	inline void start(const QPointF&, double)
 	{
-		static inline double value( double dx1, double dy1, double s1,
-			double dx2, double dy2, double s2 )
-		{
-			return qwtSlopeParabolicBlending( dx1, dy1, s1, dx2, dy2, s2 );
-		}
-	};
+	}
 
-	struct slopePChip
+	inline void addCubic(const QPointF& p1, double m1, const QPointF& p2, double m2)
 	{
-		static inline double value( double dx1, double dy1, double s1,
-			double dx2, double dy2, double s2 )
-		{
-			return qwtSlopePChip( dx1, dy1, s1, dx2, dy2, s2 );
-		}
-	};
+		const double dx3 = (p2.x() - p1.x()) / 3.0;
+
+		QLineF& l = *m_cp++;
+		l.setLine(p1.x() + dx3, p1.y() + m1 * dx3, p2.x() - dx3, p2.y() - m2 * dx3);
+	}
+
+	QVector< QLineF > controlPoints;
+
+private:
+	QLineF* m_cp;
+};
+
+class SlopeStore
+{
+public:
+	void init(const QVector< QPointF >& points)
+	{
+		slopes.resize(points.size());
+		m_m = slopes.data();
+	}
+
+	inline void start(const QPointF&, double m0)
+	{
+		*m_m++ = m0;
+	}
+
+	inline void addCubic(const QPointF&, double, const QPointF&, double m2)
+	{
+		*m_m++ = m2;
+	}
+
+	QVector< double > slopes;
+
+private:
+	double* m_m;
+};
+
+struct slopeCardinal
+{
+	static inline double value(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
+	{
+		return qwtSlopeCardinal(dx1, dy1, s1, dx2, dy2, s2);
+	}
+};
+
+struct slopeParabolicBlending
+{
+	static inline double value(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
+	{
+		return qwtSlopeParabolicBlending(dx1, dy1, s1, dx2, dy2, s2);
+	}
+};
+
+struct slopePChip
+{
+	static inline double value(double dx1, double dy1, double s1, double dx2, double dy2, double s2)
+	{
+		return qwtSlopePChip(dx1, dy1, s1, dx2, dy2, s2);
+	}
+};
 }
 
 template< class Slope >
-static inline double qwtSlopeP3(
-	const QPointF& p1, const QPointF& p2, const QPointF& p3 )
+static inline double qwtSlopeP3(const QPointF& p1, const QPointF& p2, const QPointF& p3)
 {
 	const double dx1 = p2.x() - p1.x();
 	const double dy1 = p2.y() - p1.y();
 	const double dx2 = p3.x() - p2.x();
 	const double dy2 = p3.y() - p2.y();
 
-	return Slope::value( dx1, dy1, dy1 / dx1, dx2, dy2, dy2 / dx2 );
+	return Slope::value(dx1, dy1, dy1 / dx1, dx2, dy2, dy2 / dx2);
 }
 
-static inline double qwtSlopeAkima( double s1, double s2, double s3, double s4 )
+static inline double qwtSlopeAkima(double s1, double s2, double s3, double s4)
 {
-	if ( ( s1 == s2 ) && ( s3 == s4 ) )
-	{
-		return 0.5 * ( s2 + s3 );
+	if ((s1 == s2) && (s3 == s4)) {
+		return 0.5 * (s2 + s3);
 	}
 
-	const double ds12 = qAbs( s2 - s1 );
-	const double ds34 = qAbs( s4 - s3 );
+	const double ds12 = qAbs(s2 - s1);
+	const double ds34 = qAbs(s4 - s3);
 
-	return ( s2 * ds34 + s3 * ds12 ) / ( ds12 + ds34 );
+	return (s2 * ds34 + s3 * ds12) / (ds12 + ds34);
 }
 
-static inline double qwtSlopeAkima( const QPointF& p1, const QPointF& p2,
-	const QPointF& p3, const QPointF& p4, const QPointF& p5 )
+static inline double
+qwtSlopeAkima(const QPointF& p1, const QPointF& p2, const QPointF& p3, const QPointF& p4, const QPointF& p5)
 {
-	const double s1 = qwtSlopeLine( p1, p2 );
-	const double s2 = qwtSlopeLine( p2, p3 );
-	const double s3 = qwtSlopeLine( p3, p4 );
-	const double s4 = qwtSlopeLine( p4, p5 );
+	const double s1 = qwtSlopeLine(p1, p2);
+	const double s2 = qwtSlopeLine(p2, p3);
+	const double s3 = qwtSlopeLine(p3, p4);
+	const double s4 = qwtSlopeLine(p4, p5);
 
-	return qwtSlopeAkima( s1, s2, s3, s4 );
+	return qwtSlopeAkima(s1, s2, s3, s4);
 }
 
 template< class Slope >
-static void qwtSplineBoundariesL1(
-	const QwtSplineLocal* spline, const QVector< QPointF >& points,
-	double& slopeBegin, double& slopeEnd )
+static void
+qwtSplineBoundariesL1(const QwtSplineLocal* spline, const QVector< QPointF >& points, double& slopeBegin, double& slopeEnd)
 {
-	const int n = points.size();
+	const int n      = points.size();
 	const QPointF* p = points.constData();
 
-	if ( ( spline->boundaryType() == QwtSpline::PeriodicPolygon )
-		|| ( spline->boundaryType() == QwtSpline::ClosedPolygon ) )
-	{
-		const QPointF pn = p[0] - ( p[n - 1] - p[n - 2] );
-		slopeBegin = slopeEnd = qwtSlopeP3< Slope >( pn, p[0], p[1] );
-	}
-	else
-	{
-		const double m2 = qwtSlopeP3< Slope >( p[0], p[1], p[2] );
-		slopeBegin = spline->slopeAtBeginning( points, m2 );
+	if ((spline->boundaryType() == QwtSpline::PeriodicPolygon) || (spline->boundaryType() == QwtSpline::ClosedPolygon)) {
+		const QPointF pn = p[ 0 ] - (p[ n - 1 ] - p[ n - 2 ]);
+		slopeBegin = slopeEnd = qwtSlopeP3< Slope >(pn, p[ 0 ], p[ 1 ]);
+	} else {
+		const double m2 = qwtSlopeP3< Slope >(p[ 0 ], p[ 1 ], p[ 2 ]);
+		slopeBegin      = spline->slopeAtBeginning(points, m2);
 
-		const double mn2 = qwtSlopeP3< Slope >( p[n - 3], p[n - 2], p[n - 1] );
-		slopeEnd = spline->slopeAtEnd( points, mn2 );
+		const double mn2 = qwtSlopeP3< Slope >(p[ n - 3 ], p[ n - 2 ], p[ n - 1 ]);
+		slopeEnd         = spline->slopeAtEnd(points, mn2);
 	}
 }
 
 template< class SplineStore, class Slope >
-static inline SplineStore qwtSplineL1(
-	const QwtSplineLocal* spline, const QVector< QPointF >& points )
+static inline SplineStore qwtSplineL1(const QwtSplineLocal* spline, const QVector< QPointF >& points)
 {
-	const int size = points.size();
+	const int size   = points.size();
 	const QPointF* p = points.constData();
 
 	double slopeBegin, slopeEnd;
-	qwtSplineBoundariesL1< Slope >( spline, points, slopeBegin, slopeEnd );
+	qwtSplineBoundariesL1< Slope >(spline, points, slopeBegin, slopeEnd);
 
 	double m1 = slopeBegin;
 
 	SplineStore store;
-	store.init( points );
-	store.start( p[0], m1 );
+	store.init(points);
+	store.start(p[ 0 ], m1);
 
-	double dx1 = p[1].x() - p[0].x();
-	double dy1 = p[1].y() - p[0].y();
-	double s1 = dy1 / dx1;
+	double dx1 = p[ 1 ].x() - p[ 0 ].x();
+	double dy1 = p[ 1 ].y() - p[ 0 ].y();
+	double s1  = dy1 / dx1;
 
-	for ( int i = 1; i < size - 1; i++ )
-	{
-		const double dx2 = p[i + 1].x() - p[i].x();
-		const double dy2 = p[i + 1].y() - p[i].y();
+	for (int i = 1; i < size - 1; i++) {
+		const double dx2 = p[ i + 1 ].x() - p[ i ].x();
+		const double dy2 = p[ i + 1 ].y() - p[ i ].y();
 
 		// cardinal spline doesn't need the line slopes, but
 		// the compiler will eliminate pointless calculations
 		const double s2 = dy2 / dx2;
 
-		const double m2 = Slope::value( dx1, dy1, s1, dx2, dy2, s2 );
+		const double m2 = Slope::value(dx1, dy1, s1, dx2, dy2, s2);
 
-		store.addCubic( p[i - 1], m1, p[i], m2 );
+		store.addCubic(p[ i - 1 ], m1, p[ i ], m2);
 
 		dx1 = dx2;
 		dy1 = dy2;
-		s1 = s2;
-		m1 = m2;
+		s1  = s2;
+		m1  = m2;
 	}
 
-	store.addCubic( p[size - 2], m1, p[size - 1], slopeEnd );
+	store.addCubic(p[ size - 2 ], m1, p[ size - 1 ], slopeEnd);
 
 	return store;
 }
 
-static inline void qwtSplineAkimaBoundaries(
-	const QwtSplineLocal* spline, const QVector< QPointF >& points,
-	double& slopeBegin, double& slopeEnd )
+static inline void qwtSplineAkimaBoundaries(const QwtSplineLocal* spline,
+											const QVector< QPointF >& points,
+											double& slopeBegin,
+											double& slopeEnd)
 {
-	const int n = points.size();
+	const int n      = points.size();
 	const QPointF* p = points.constData();
 
-	if ( ( spline->boundaryType() == QwtSpline::PeriodicPolygon )
-		|| ( spline->boundaryType() == QwtSpline::ClosedPolygon ) )
-	{
-		const QPointF p2 = p[0] - ( p[n - 1] - p[n - 2] );
-		const QPointF p1 = p2 - ( p[n - 2] - p[n - 3] );
+	if ((spline->boundaryType() == QwtSpline::PeriodicPolygon) || (spline->boundaryType() == QwtSpline::ClosedPolygon)) {
+		const QPointF p2 = p[ 0 ] - (p[ n - 1 ] - p[ n - 2 ]);
+		const QPointF p1 = p2 - (p[ n - 2 ] - p[ n - 3 ]);
 
-		slopeBegin = slopeEnd = qwtSlopeAkima( p1, p2, p[0], p[1], p[2] );
+		slopeBegin = slopeEnd = qwtSlopeAkima(p1, p2, p[ 0 ], p[ 1 ], p[ 2 ]);
 
 		return;
 	}
 
-	if ( spline->boundaryCondition( QwtSpline::AtBeginning ) == QwtSpline::Clamped1
-		&& spline->boundaryCondition( QwtSpline::AtEnd ) == QwtSpline::Clamped1 )
-	{
-		slopeBegin = spline->boundaryValue( QwtSpline::AtBeginning);
-		slopeEnd = spline->boundaryValue( QwtSpline::AtEnd );
+	if (spline->boundaryCondition(QwtSpline::AtBeginning) == QwtSpline::Clamped1
+		&& spline->boundaryCondition(QwtSpline::AtEnd) == QwtSpline::Clamped1) {
+		slopeBegin = spline->boundaryValue(QwtSpline::AtBeginning);
+		slopeEnd   = spline->boundaryValue(QwtSpline::AtEnd);
 
 		return;
 	}
 
-	if ( n == 3 )
-	{
-		const double s1 = qwtSlopeLine( p[0], p[1] );
-		const double s2 = qwtSlopeLine( p[1], p[2] );
-		const double m = qwtSlopeAkima( 0.5 * s1, s1, s2, 0.5 * s2 );
+	if (n == 3) {
+		const double s1 = qwtSlopeLine(p[ 0 ], p[ 1 ]);
+		const double s2 = qwtSlopeLine(p[ 1 ], p[ 2 ]);
+		const double m  = qwtSlopeAkima(0.5 * s1, s1, s2, 0.5 * s2);
 
-		slopeBegin = spline->slopeAtBeginning( points, m );
-		slopeEnd = spline->slopeAtEnd( points, m );
-	}
-	else
-	{
-		double s[3];
+		slopeBegin = spline->slopeAtBeginning(points, m);
+		slopeEnd   = spline->slopeAtEnd(points, m);
+	} else {
+		double s[ 3 ];
 
-		s[0] = qwtSlopeLine( p[0], p[1] );
-		s[1] = qwtSlopeLine( p[1], p[2] );
-		s[2] = qwtSlopeLine( p[2], p[3] );
+		s[ 0 ] = qwtSlopeLine(p[ 0 ], p[ 1 ]);
+		s[ 1 ] = qwtSlopeLine(p[ 1 ], p[ 2 ]);
+		s[ 2 ] = qwtSlopeLine(p[ 2 ], p[ 3 ]);
 
-		const double m2 = qwtSlopeAkima( 0.5 * s[0], s[0], s[1], s[2] );
+		const double m2 = qwtSlopeAkima(0.5 * s[ 0 ], s[ 0 ], s[ 1 ], s[ 2 ]);
 
-		slopeBegin = spline->slopeAtBeginning( points, m2 );
+		slopeBegin = spline->slopeAtBeginning(points, m2);
 
-		s[0] = qwtSlopeLine( p[n - 4], p[n - 3] );
-		s[1] = qwtSlopeLine( p[n - 3], p[n - 2] );
-		s[2] = qwtSlopeLine( p[n - 2], p[n - 1] );
+		s[ 0 ] = qwtSlopeLine(p[ n - 4 ], p[ n - 3 ]);
+		s[ 1 ] = qwtSlopeLine(p[ n - 3 ], p[ n - 2 ]);
+		s[ 2 ] = qwtSlopeLine(p[ n - 2 ], p[ n - 1 ]);
 
-		const double mn2 = qwtSlopeAkima( s[0], s[1], s[2], 0.5 * s[2] );
+		const double mn2 = qwtSlopeAkima(s[ 0 ], s[ 1 ], s[ 2 ], 0.5 * s[ 2 ]);
 
-		slopeEnd = spline->slopeAtEnd( points, mn2 );
+		slopeEnd = spline->slopeAtEnd(points, mn2);
 	}
 }
 
 template< class SplineStore >
-static inline SplineStore qwtSplineAkima(
-	const QwtSplineLocal* spline, const QVector< QPointF >& points )
+static inline SplineStore qwtSplineAkima(const QwtSplineLocal* spline, const QVector< QPointF >& points)
 {
-	const int size = points.size();
+	const int size   = points.size();
 	const QPointF* p = points.constData();
 
 	double slopeBegin, slopeEnd;
-	qwtSplineAkimaBoundaries( spline, points, slopeBegin, slopeEnd );
+	qwtSplineAkimaBoundaries(spline, points, slopeBegin, slopeEnd);
 
 	double m1 = slopeBegin;
 
 	SplineStore store;
-	store.init( points );
-	store.start( p[0], m1 );
+	store.init(points);
+	store.start(p[ 0 ], m1);
 
-	double s2 = qwtSlopeLine( p[0], p[1] );
-	double s3 = qwtSlopeLine( p[1], p[2] );
+	double s2 = qwtSlopeLine(p[ 0 ], p[ 1 ]);
+	double s3 = qwtSlopeLine(p[ 1 ], p[ 2 ]);
 	double s1 = 0.5 * s2;
 
-	for ( int i = 0; i < size - 3; i++ )
-	{
-		const double s4 = qwtSlopeLine( p[i + 2],  p[i + 3] );
+	for (int i = 0; i < size - 3; i++) {
+		const double s4 = qwtSlopeLine(p[ i + 2 ], p[ i + 3 ]);
 
-		const double m2 = qwtSlopeAkima( s1, s2, s3, s4 );
-		store.addCubic( p[i], m1, p[i + 1], m2 );
+		const double m2 = qwtSlopeAkima(s1, s2, s3, s4);
+		store.addCubic(p[ i ], m1, p[ i + 1 ], m2);
 
 		s1 = s2;
 		s2 = s3;
@@ -28490,64 +32082,57 @@ static inline SplineStore qwtSplineAkima(
 		m1 = m2;
 	}
 
-	const double m2 = qwtSlopeAkima( s1, s2, s3, 0.5 * s3 );
+	const double m2 = qwtSlopeAkima(s1, s2, s3, 0.5 * s3);
 
-	store.addCubic( p[size - 3], m1, p[size - 2], m2 );
-	store.addCubic( p[size - 2], m2, p[size - 1], slopeEnd );
+	store.addCubic(p[ size - 3 ], m1, p[ size - 2 ], m2);
+	store.addCubic(p[ size - 2 ], m2, p[ size - 1 ], slopeEnd);
 
 	return store;
 }
 
 template< class SplineStore >
-static inline SplineStore qwtSplineLocal(
-	const QwtSplineLocal* spline, const QVector< QPointF >& points )
+static inline SplineStore qwtSplineLocal(const QwtSplineLocal* spline, const QVector< QPointF >& points)
 {
 	SplineStore store;
 
 	const int size = points.size();
-	if ( size <= 1 )
+	if (size <= 1)
 		return store;
 
-	if ( size == 2 )
-	{
-		const double s0 = qwtSlopeLine( points[0], points[1] );
-		const double m1 = spline->slopeAtBeginning( points, s0 );
-		const double m2 = spline->slopeAtEnd( points, s0 );
+	if (size == 2) {
+		const double s0 = qwtSlopeLine(points[ 0 ], points[ 1 ]);
+		const double m1 = spline->slopeAtBeginning(points, s0);
+		const double m2 = spline->slopeAtEnd(points, s0);
 
-		store.init( points );
-		store.start( points[0], m1 );
-		store.addCubic( points[0], m1, points[1], m2 );
+		store.init(points);
+		store.start(points[ 0 ], m1);
+		store.addCubic(points[ 0 ], m1, points[ 1 ], m2);
 
 		return store;
 	}
 
-	switch( spline->type() )
-	{
-		case QwtSplineLocal::Cardinal:
-		{
-			using namespace QwtSplineLocalP;
-			store = qwtSplineL1< SplineStore, slopeCardinal >( spline, points );
-			break;
-		}
-		case QwtSplineLocal::ParabolicBlending:
-		{
-			using namespace QwtSplineLocalP;
-			store = qwtSplineL1< SplineStore, slopeParabolicBlending >( spline, points );
-			break;
-		}
-		case QwtSplineLocal::PChip:
-		{
-			using namespace QwtSplineLocalP;
-			store = qwtSplineL1< SplineStore, slopePChip >( spline, points );
-			break;
-		}
-		case QwtSplineLocal::Akima:
-		{
-			store = qwtSplineAkima< SplineStore >( spline, points );
-			break;
-		}
-		default:
-			break;
+	switch (spline->type()) {
+	case QwtSplineLocal::Cardinal: {
+		using namespace QwtSplineLocalP;
+		store = qwtSplineL1< SplineStore, slopeCardinal >(spline, points);
+		break;
+	}
+	case QwtSplineLocal::ParabolicBlending: {
+		using namespace QwtSplineLocalP;
+		store = qwtSplineL1< SplineStore, slopeParabolicBlending >(spline, points);
+		break;
+	}
+	case QwtSplineLocal::PChip: {
+		using namespace QwtSplineLocalP;
+		store = qwtSplineL1< SplineStore, slopePChip >(spline, points);
+		break;
+	}
+	case QwtSplineLocal::Akima: {
+		store = qwtSplineAkima< SplineStore >(spline, points);
+		break;
+	}
+	default:
+		break;
 	}
 
 	return store;
@@ -28559,17 +32144,40 @@ static inline SplineStore qwtSplineLocal(
    \param type Spline type, specifying the type of interpolation
    \sa type()
  */
-QwtSplineLocal::QwtSplineLocal( Type type )
-	: m_type( type )
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * @param type Spline type, specifying the type of interpolation
+ * @sa type()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * @param type 样条类型，指定插值类型
+ * @sa type()
+ * \endif
+ */
+QwtSplineLocal::QwtSplineLocal(Type type) : m_type(type)
 {
-	setBoundaryCondition( QwtSpline::AtBeginning, QwtSpline::LinearRunout );
-	setBoundaryValue( QwtSpline::AtBeginning, 0.0 );
+	setBoundaryCondition(QwtSpline::AtBeginning, QwtSpline::LinearRunout);
+	setBoundaryValue(QwtSpline::AtBeginning, 0.0);
 
-	setBoundaryCondition( QwtSpline::AtEnd, QwtSpline::LinearRunout );
-	setBoundaryValue( QwtSpline::AtEnd, 0.0 );
+	setBoundaryCondition(QwtSpline::AtEnd, QwtSpline::LinearRunout);
+	setBoundaryValue(QwtSpline::AtEnd, 0.0);
 }
 
 //! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplineLocal::~QwtSplineLocal()
 {
 }
@@ -28577,106 +32185,172 @@ QwtSplineLocal::~QwtSplineLocal()
 /*!
    \return Spline type, specifying the type of interpolation
  */
+/**
+ * \if ENGLISH
+ * @brief Get spline type
+ * @return Spline type, specifying the type of interpolation
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条类型
+ * @return 样条类型，指定插值类型
+ * \endif
+ */
 QwtSplineLocal::Type QwtSplineLocal::type() const
 {
 	return m_type;
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns them as QPainterPath.
-
-   \param points Control points
-   \return Painter path, that can be rendered by QPainter
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * @param points Control points
+ * @return Painter path, that can be rendered by QPainter
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
+ *
+ * @param points 控制点
+ * @return 绘制路径，可由 QPainter 渲染
+ * \endif
  */
-QPainterPath QwtSplineLocal::painterPath( const QPolygonF& points ) const
+QPainterPath QwtSplineLocal::painterPath(const QPolygonF& points) const
 {
-	if ( parametrization()->type() == QwtSplineParametrization::ParameterX )
-	{
+	if (parametrization()->type() == QwtSplineParametrization::ParameterX) {
 		using namespace QwtSplineLocalP;
-		return qwtSplineLocal< PathStore >( this, points).path;
+		return qwtSplineLocal< PathStore >(this, points).path;
 	}
 
-	return QwtSplineC1::painterPath( points );
+	return QwtSplineC1::painterPath(points);
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns the 2 control points of each curve as QLineF.
-
-   \param points Control points
-   \return Control points of the interpolating Bezier curves
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns the 2 control points of each curve as QLineF.
+ *
+ * @param points Control points
+ * @return Control points of the interpolating Bezier curves
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
+ *
+ * @param points 控制点
+ * @return 插值贝塞尔曲线的控制点
+ * \endif
  */
-QVector< QLineF > QwtSplineLocal::bezierControlLines( const QPolygonF& points ) const
+QVector< QLineF > QwtSplineLocal::bezierControlLines(const QPolygonF& points) const
 {
-	if ( parametrization()->type() == QwtSplineParametrization::ParameterX )
-	{
+	if (parametrization()->type() == QwtSplineParametrization::ParameterX) {
 		using namespace QwtSplineLocalP;
-		return qwtSplineLocal< ControlPointsStore >( this, points ).controlPoints;
+		return qwtSplineLocal< ControlPointsStore >(this, points).controlPoints;
 	}
 
-	return QwtSplineC1::bezierControlLines( points );
+	return QwtSplineC1::bezierControlLines(points);
 }
 
-/*!
-   \brief Find the first derivative at the control points
-
-   \param points Control nodes of the spline
-   \return Vector with the values of the 2nd derivate at the control points
-
-   \note The x coordinates need to be increasing or decreasing
+/**
+ * \if ENGLISH
+ * @brief Find the first derivative at the control points
+ *
+ * @param points Control nodes of the spline
+ * @return Vector with the values of the 2nd derivate at the control points
+ *
+ * @note The x coordinates need to be increasing or decreasing
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 在控制点处找到一阶导数
+ *
+ * @param points 样条的控制节点
+ * @return 控制点处二阶导数值的向量
+ *
+ * @note x 坐标需要递增或递减
+ * \endif
  */
-QVector< double > QwtSplineLocal::slopes( const QPolygonF& points ) const
+QVector< double > QwtSplineLocal::slopes(const QPolygonF& points) const
 {
 	using namespace QwtSplineLocalP;
-	return qwtSplineLocal< SlopeStore >( this, points ).slopes;
+	return qwtSplineLocal< SlopeStore >(this, points).slopes;
 }
 
-/*!
-   \brief Calculate the interpolating polynomials for a non parametric spline
-
-   \param points Control points
-   \return Interpolating polynomials
-
-   \note The x coordinates need to be increasing or decreasing
-   \note The implementation simply calls QwtSplineC1::polynomials(), but is
-		intended to be replaced by a one pass calculation some day.
+/**
+ * \if ENGLISH
+ * @brief Calculate the interpolating polynomials for a non parametric spline
+ *
+ * @param points Control points
+ * @return Interpolating polynomials
+ *
+ * @note The x coordinates need to be increasing or decreasing
+ * @note The implementation simply calls QwtSplineC1::polynomials(), but is
+ *       intended to be replaced by a one pass calculation some day.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算非参数样条的插值多项式
+ *
+ * @param points 控制点
+ * @return 插值多项式
+ *
+ * @note x 坐标需要递增或递减
+ * @note 实现只是调用 QwtSplineC1::polynomials()，但打算将来替换为一次计算。
+ * \endif
  */
-QVector< QwtSplinePolynomial > QwtSplineLocal::polynomials( const QPolygonF& points ) const
+QVector< QwtSplinePolynomial > QwtSplineLocal::polynomials(const QPolygonF& points) const
 {
 	// Polynomial store -> TODO
-	return QwtSplineC1::polynomials( points );
+	return QwtSplineC1::polynomials(points);
 }
 
-/*!
-   The locality of an spline interpolation identifies how many adjacent
-   polynomials are affected, when changing the position of one point.
-
-   The Cardinal, ParabolicBlending and PChip algorithms have a locality of 1,
-   while the Akima interpolation has a locality of 2.
-
-   \return 1 or 2.
+/**
+ * \if ENGLISH
+ * @brief Get the locality of the spline interpolation
+ *
+ * The locality of an spline interpolation identifies how many adjacent
+ * polynomials are affected, when changing the position of one point.
+ *
+ * The Cardinal, ParabolicBlending and PChip algorithms have a locality of 1,
+ * while the Akima interpolation has a locality of 2.
+ *
+ * @return 1 or 2.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条插值的局部性
+ *
+ * 样条插值的局部性标识当改变一个点的位置时，有多少相邻的多项式会受到影响。
+ *
+ * Cardinal、ParabolicBlending 和 PChip 算法的局部性为 1，
+ * 而 Akima 插值的局部性为 2。
+ *
+ * @return 1 或 2
+ * \endif
  */
 uint QwtSplineLocal::locality() const
 {
-	switch ( m_type )
-	{
-		case Akima:
-		{
-			// polynomials: 2 left, 2 right
-			return 2;
-		}
-		case Cardinal:
-		case ParabolicBlending:
-		case PChip:
-		{
-			// polynomials: 1 left, 1 right
-			return 1;
-		}
+	switch (m_type) {
+	case Akima: {
+		// polynomials: 2 left, 2 right
+		return 2;
+	}
+	case Cardinal:
+	case ParabolicBlending:
+	case PChip: {
+		// polynomials: 1 left, 1 right
+		return 1;
+	}
 	}
 
 	return QwtSplineC1::locality();
@@ -28689,89 +32363,167 @@ uint QwtSplineLocal::locality() const
 #include <qpolygon.h>
 #include <qpainterpath.h>
 
-//! Constructor
-QwtSplineCurveFitter::QwtSplineCurveFitter()
-	: QwtCurveFitter( QwtCurveFitter::Path )
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * Creates a spline curve fitter with a cardinal spline using uniform parametrization.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 创建一个使用均匀参数化的基数样条的样条曲线拟合器。
+ * \endif
+ */
+QwtSplineCurveFitter::QwtSplineCurveFitter() : QwtCurveFitter(QwtCurveFitter::Path)
 {
-	m_spline = new QwtSplineLocal( QwtSplineLocal::Cardinal );
-	m_spline->setParametrization( QwtSplineParametrization::ParameterUniform );
+	m_spline = new QwtSplineLocal(QwtSplineLocal::Cardinal);
+	m_spline->setParametrization(QwtSplineParametrization::ParameterUniform);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ *
+ * Deletes the internal spline object.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ *
+ * 删除内部样条对象。
+ * \endif
+ */
 QwtSplineCurveFitter::~QwtSplineCurveFitter()
 {
 	delete m_spline;
 }
 
-/*!
-   Assign a spline
-
-   The spline needs to be allocated by new and will be deleted
-   in the destructor of the fitter.
-
-   \param spline Spline
-   \sa spline()
+/**
+ * \if ENGLISH
+ * @brief Assign a spline
+ *
+ * The spline needs to be allocated by new and will be deleted
+ * in the destructor of the fitter.
+ *
+ * @param spline Spline
+ * @sa spline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配样条
+ *
+ * 样条需要使用 new 分配，并将在拟合器的析构函数中被删除。
+ *
+ * @param spline 样条
+ * @sa spline()
+ * \endif
  */
-void QwtSplineCurveFitter::setSpline( QwtSpline* spline )
+void QwtSplineCurveFitter::setSpline(QwtSpline* spline)
 {
-	if ( m_spline == spline )
+	if (m_spline == spline)
 		return;
 
 	delete m_spline;
 	m_spline = spline;
 }
 
-/*!
-   \return Spline
-   \sa setSpline()
+/**
+ * \if ENGLISH
+ * @brief Get the spline (const version)
+ *
+ * @return Spline
+ * @sa setSpline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条（const 版本）
+ *
+ * @return 样条
+ * @sa setSpline()
+ * \endif
  */
 const QwtSpline* QwtSplineCurveFitter::spline() const
 {
 	return m_spline;
 }
 
-/*!
-   \return Spline
-   \sa setSpline()
+/**
+ * \if ENGLISH
+ * @brief Get the spline (non-const version)
+ *
+ * @return Spline
+ * @sa setSpline()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条（非 const 版本）
+ *
+ * @return 样条
+ * @sa setSpline()
+ * \endif
  */
 QwtSpline* QwtSplineCurveFitter::spline()
 {
 	return m_spline;
 }
 
-/*!
-   Find a curve which has the best fit to a series of data points
-
-   \param points Series of data points
-   \return Fitted Curve
-
-   \sa fitCurvePath()
+/**
+ * \if ENGLISH
+ * @brief Find a curve which has the best fit to a series of data points
+ *
+ * @param points Series of data points
+ * @return Fitted Curve
+ *
+ * @sa fitCurvePath()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 找到最适合一系列数据点的曲线
+ *
+ * @param points 数据点系列
+ * @return 拟合曲线
+ *
+ * @sa fitCurvePath()
+ * \endif
  */
-QPolygonF QwtSplineCurveFitter::fitCurve( const QPolygonF& points ) const
+QPolygonF QwtSplineCurveFitter::fitCurve(const QPolygonF& points) const
 {
-	const QPainterPath path = fitCurvePath( points );
+	const QPainterPath path = fitCurvePath(points);
 
 	const QList< QPolygonF > subPaths = path.toSubpathPolygons();
-	if ( subPaths.size() == 1 )
+	if (subPaths.size() == 1)
 		subPaths.first();
 
 	return QPolygonF();
 }
 
-/*!
-   Find a curve path which has the best fit to a series of data points
-
-   \param points Series of data points
-   \return Fitted Curve
-
-   \sa fitCurve()
+/**
+ * \if ENGLISH
+ * @brief Find a curve path which has the best fit to a series of data points
+ *
+ * @param points Series of data points
+ * @return Fitted Curve
+ *
+ * @sa fitCurve()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 找到最适合一系列数据点的曲线路径
+ *
+ * @param points 数据点系列
+ * @return 拟合曲线
+ *
+ * @sa fitCurve()
+ * \endif
  */
-QPainterPath QwtSplineCurveFitter::fitCurvePath( const QPolygonF& points ) const
+QPainterPath QwtSplineCurveFitter::fitCurvePath(const QPolygonF& points) const
 {
 	QPainterPath path;
 
-	if ( m_spline )
-		path = m_spline->painterPath( points );
+	if (m_spline)
+		path = m_spline->painterPath(points);
 
 	return path;
 }
@@ -30376,12 +34128,17 @@ class QwtRoundScaleDraw::PrivateData
 	double endAngle;
 };
 
-/*!
-   \brief Constructor
-
-   The range of the scale is initialized to [0, 100],
-   The center is set to (50, 50) with a radius of 50.
-   The angle range is set to [-135, 135].
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details The range of the scale is initialized to [0, 100], the center is set to (50, 50)
+ *          with a radius of 50. The angle range is set to [-135, 135].
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 刻度范围初始化为 [0, 100]，中心设置在 (50, 50)，半径为 50。
+ *          角度范围设置为 [-135, 135]。
+ * \endif
  */
 QwtRoundScaleDraw::QwtRoundScaleDraw()
 {
@@ -30397,65 +34154,93 @@ QwtRoundScaleDraw::~QwtRoundScaleDraw()
 	delete m_data;
 }
 
-/*!
-   Change of radius the scale
-
-   Radius is the radius of the backbone without ticks and labels.
-
-   \param radius New Radius
-   \sa moveCenter()
+/**
+ * \if ENGLISH
+ * @brief Change the radius of the scale
+ * @param radius New radius
+ * @details Radius is the radius of the backbone without ticks and labels.
+ * \sa moveCenter()
+ * \endif
+ * \if CHINESE
+ * @brief 更改刻度的半径
+ * @param radius 新的半径
+ * @details 半径是不含刻度和标签的主干半径。
+ * \sa moveCenter()
+ * \endif
  */
 void QwtRoundScaleDraw::setRadius( double radius )
 {
 	m_data->radius = radius;
 }
 
-/*!
-   Get the radius
-
-   Radius is the radius of the backbone without ticks and labels.
-
-   \return Radius of the scale
-   \sa setRadius(), extent()
+/**
+ * \if ENGLISH
+ * @brief Get the radius
+ * @return Radius of the scale
+ * @details Radius is the radius of the backbone without ticks and labels.
+ * \sa setRadius(), extent()
+ * \endif
+ * \if CHINESE
+ * @brief 获取半径
+ * @return 刻度的半径
+ * @details 半径是不含刻度和标签的主干半径。
+ * \sa setRadius(), extent()
+ * \endif
  */
 double QwtRoundScaleDraw::radius() const
 {
 	return m_data->radius;
 }
 
-/*!
-   Move the center of the scale draw, leaving the radius unchanged
-
-   \param center New center
-   \sa setRadius()
+/**
+ * \if ENGLISH
+ * @brief Move the center of the scale draw, leaving the radius unchanged
+ * @param center New center
+ * \sa setRadius()
+ * \endif
+ * \if CHINESE
+ * @brief 移动刻度绘制的中心，保持半径不变
+ * @param center 新的中心
+ * \sa setRadius()
+ * \endif
  */
 void QwtRoundScaleDraw::moveCenter( const QPointF& center )
 {
 	m_data->center = center;
 }
 
-//! Get the center of the scale
+/// Get the center of the scale
 QPointF QwtRoundScaleDraw::center() const
 {
 	return m_data->center;
 }
 
-/*!
-   \brief Adjust the baseline circle segment for round scales.
-
-   The baseline will be drawn from min(angle1,angle2) to max(angle1, angle2).
-   The default setting is [ -135, 135 ].
-   An angle of 0 degrees corresponds to the 12 o'clock position,
-   and positive angles count in a clockwise direction.
-   \param angle1
-   \param angle2 boundaries of the angle interval in degrees.
-   \warning <ul>
-   <li>The angle range is limited to [-360, 360] degrees. Angles exceeding
-	  this range will be clipped.
-   <li>For angles more or equal than 360 degrees above or below min(angle1, angle2),
-	  scale marks will not be drawn.
-   <li>If you need a counterclockwise scale, use QwtScaleDiv::setInterval()
-   </ul>
+/**
+ * \if ENGLISH
+ * @brief Adjust the baseline circle segment for round scales
+ * @param angle1 First boundary of the angle interval in degrees
+ * @param angle2 Second boundary of the angle interval in degrees
+ * @details The baseline will be drawn from min(angle1,angle2) to max(angle1, angle2).
+ *          The default setting is [ -135, 135 ]. An angle of 0 degrees corresponds to
+ *          the 12 o'clock position, and positive angles count in a clockwise direction.
+ *
+ * @warning
+ * - The angle range is limited to [-360, 360] degrees. Angles exceeding this range will be clipped.
+ * - For angles more or equal than 360 degrees above or below min(angle1, angle2), scale marks will not be drawn.
+ * - If you need a counterclockwise scale, use QwtScaleDiv::setInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 调整圆形刻度的基线圆弧段
+ * @param angle1 角度区间的第一个边界（度）
+ * @param angle2 角度区间的第二个边界（度）
+ * @details 基线将从 min(angle1,angle2) 绘制到 max(angle1, angle2)。
+ *          默认设置为 [ -135, 135 ]。0 度角对应于 12 点钟位置，正角度按顺时针方向计算。
+ *
+ * @warning
+ * - 角度范围限制在 [-360, 360] 度。超出此范围的角度将被裁剪。
+ * - 对于大于或等于 min(angle1, angle2) 上下 360 度的角度，将不绘制刻度标记。
+ * - 如果需要逆时针刻度，请使用 QwtScaleDiv::setInterval()
+ * \endif
  */
 void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
 {
@@ -30476,13 +34261,19 @@ void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
 	scaleMap().setPaintInterval( m_data->startAngle, m_data->endAngle );
 }
 
-/*!
-   Draws the label for a major scale tick
-
-   \param painter Painter
-   \param value Value
-
-   \sa drawTick(), drawBackbone()
+/**
+ * \if ENGLISH
+ * @brief Draws the label for a major scale tick
+ * @param painter Painter
+ * @param value Value
+ * \sa drawTick(), drawBackbone()
+ * \endif
+ * \if CHINESE
+ * @brief 绘制主刻度标签
+ * @param painter 绘制器
+ * @param value 值
+ * \sa drawTick(), drawBackbone()
+ * \endif
  */
 void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
 {
@@ -30520,14 +34311,21 @@ void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
 	label.draw( painter, r );
 }
 
-/*!
-   Draw a tick
-
-   \param painter Painter
-   \param value Value of the tick
-   \param len Length of the tick
-
-   \sa drawBackbone(), drawLabel()
+/**
+ * \if ENGLISH
+ * @brief Draw a tick
+ * @param painter Painter
+ * @param value Value of the tick
+ * @param len Length of the tick
+ * \sa drawBackbone(), drawLabel()
+ * \endif
+ * \if CHINESE
+ * @brief 绘制刻度线
+ * @param painter 绘制器
+ * @param value 刻度值
+ * @param len 刻度线长度
+ * \sa drawBackbone(), drawLabel()
+ * \endif
  */
 void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) const
 {
@@ -30557,11 +34355,17 @@ void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) 
 	}
 }
 
-/*!
-   Draws the baseline of the scale
-   \param painter Painter
-
-   \sa drawTick(), drawLabel()
+/**
+ * \if ENGLISH
+ * @brief Draws the baseline of the scale
+ * @param painter Painter
+ * \sa drawTick(), drawLabel()
+ * \endif
+ * \if CHINESE
+ * @brief 绘制刻度的基线
+ * @param painter 绘制器
+ * \sa drawTick(), drawLabel()
+ * \endif
  */
 void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
 {
@@ -30579,20 +34383,28 @@ void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
 		-a2 * 16, ( a2 - a1 + 1 ) * 16 );          // counterclockwise
 }
 
-/*!
-   Calculate the extent of the scale
-
-   The extent is the distance between the baseline to the outermost
-   pixel of the scale draw. radius() + extent() is an upper limit
-   for the radius of the bounding circle.
-
-   \param font Font used for painting the labels
-   \return Calculated extent
-
-   \sa setMinimumExtent(), minimumExtent()
-   \warning The implemented algorithm is not too smart and
-			calculates only an upper limit, that might be a
-			few pixels too large
+/**
+ * \if ENGLISH
+ * @brief Calculate the extent of the scale
+ * @param font Font used for painting the labels
+ * @return Calculated extent
+ * @details The extent is the distance between the baseline to the outermost pixel of the scale draw.
+ *          radius() + extent() is an upper limit for the radius of the bounding circle.
+ *
+ * @warning The implemented algorithm is not too smart and calculates only an upper limit,
+ *          that might be a few pixels too large.
+ * \sa setMinimumExtent(), minimumExtent()
+ * \endif
+ * \if CHINESE
+ * @brief 计算刻度的范围
+ * @param font 用于绘制标签的字体
+ * @return 计算出的范围
+ * @details 范围是基线到刻度绘制最外层像素的距离。
+ *          radius() + extent() 是边界圆半径的上限。
+ *
+ * @warning 实现的算法不够智能，只计算上限，可能会大几个像素。
+ * \sa setMinimumExtent(), minimumExtent()
+ * \endif
  */
 double QwtRoundScaleDraw::extent( const QFont& font ) const
 {
@@ -31836,16 +35648,27 @@ static inline QRectF qwtBoundingRect(const QwtVectorFieldSample& sample)
 	return QRectF(sample.x, sample.y, 0, 0);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 
 template< class T >
@@ -31891,136 +35714,227 @@ QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to
 	return boundingRect;
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QPointF >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QPointF >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtPoint3D >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   The horizontal coordinates represent the azimuth, the
-   vertical coordinates the radius.
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details The horizontal coordinates represent the azimuth, the vertical coordinates the radius.
+ *
+ *          Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 水平坐标表示方位角，垂直坐标表示半径。
+ *
+ *          缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtPointPolar >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtPointPolar >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtIntervalSample >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtIntervalSample >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtOHLCSample >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtSetSample >(series, from, to);
 }
 
-/*!
-   \brief Calculate the bounding rectangle of a series subset
-
-   Slow implementation, that iterates over the series.
-
-   \param series Series
-   \param from Index of the first sample, <= 0 means from the beginning
-   \param to Index of the last sample, < 0 means to the end
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >& series, size_t from, size_t to)
 {
 	return qwtBoundingRectT< QwtVectorFieldSample >(series, from, to);
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtPointSeriesData::QwtPointSeriesData(const QVector< QPointF >& samples) : QwtArraySeriesData< QPointF >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtPointSeriesData::boundingRect() const
 {
@@ -32030,22 +35944,35 @@ QRectF QwtPointSeriesData::boundingRect() const
 	return cachedBoundingRect;
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtPoint3DSeriesData::QwtPoint3DSeriesData(const QVector< QwtPoint3D >& samples)
 	: QwtArraySeriesData< QwtPoint3D >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtPoint3DSeriesData::boundingRect() const
 {
@@ -32055,22 +35982,35 @@ QRectF QwtPoint3DSeriesData::boundingRect() const
 	return cachedBoundingRect;
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtIntervalSeriesData::QwtIntervalSeriesData(const QVector< QwtIntervalSample >& samples)
 	: QwtArraySeriesData< QwtIntervalSample >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtIntervalSeriesData::boundingRect() const
 {
@@ -32080,22 +36020,35 @@ QRectF QwtIntervalSeriesData::boundingRect() const
 	return cachedBoundingRect;
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtVectorFieldData::QwtVectorFieldData(const QVector< QwtVectorFieldSample >& samples)
 	: QwtArraySeriesData< QwtVectorFieldSample >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtVectorFieldData::boundingRect() const
 {
@@ -32105,21 +36058,34 @@ QRectF QwtVectorFieldData::boundingRect() const
 	return cachedBoundingRect;
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtSetSeriesData::QwtSetSeriesData(const QVector< QwtSetSample >& samples) : QwtArraySeriesData< QwtSetSample >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtSetSeriesData::boundingRect() const
 {
@@ -32129,22 +36095,35 @@ QRectF QwtSetSeriesData::boundingRect() const
 	return cachedBoundingRect;
 }
 
-/*!
-   Constructor
-   \param samples Samples
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
  */
 QwtTradingChartData::QwtTradingChartData(const QVector< QwtOHLCSample >& samples)
 	: QwtArraySeriesData< QwtOHLCSample >(samples)
 {
 }
 
-/*!
-   \brief Calculate the bounding rectangle
-
-   The bounding rectangle is calculated once by iterating over all
-   points and is stored for all following requests.
-
-   \return Bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
  */
 QRectF QwtTradingChartData::boundingRect() const
 {
@@ -34725,12 +38704,23 @@ namespace Qwt
 {
 
 /**
+ * \if ENGLISH
+ * @brief Get the color of a plot item
+ *
+ * @note This function uses dynamic_cast
+ * @param item Plot item
+ * @param defaultColor Default color to return if the item's color cannot be obtained
+ * @return Color of the plot item or defaultColor if not available
+ * \endif
+ *
+ * \if CHINESE
  * @brief 获取item的颜色
  *
  * @note 此函数使用dynamic_cast
- * @param item
+ * @param item 绘图项
  * @param defaultColor 默认颜色，无法获取时返回
- * @return
+ * @return 绘图项的颜色或默认颜色
+ * \endif
  */
 QColor plotItemColor(const QwtPlotItem* item, const QColor& defaultColor)
 {
@@ -34752,6 +38742,21 @@ QColor plotItemColor(const QwtPlotItem* item, const QColor& defaultColor)
 
 }  // end namespace qwt
 
+/**
+ * \if ENGLISH
+ * @brief Expand a size to the global strut
+ *
+ * @param size Original size
+ * @return Size expanded to the global strut if QWT_GLOBAL_STRUT is defined
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 扩展大小到全局支撑
+ *
+ * @param size 原始大小
+ * @return 如果定义了QWT_GLOBAL_STRUT，则扩展到全局支撑的大小
+ * \endif
+ */
 QSize qwtExpandedToGlobalStrut(const QSize& size)
 {
 #ifdef QWT_GLOBAL_STRUT
@@ -67190,7 +71195,7 @@ void QwtFigure::alignAxes(QList< QwtPlot* > plots, int axisId, bool update)
 	// ========== 步骤4：强制更新轴和重绘，确保设置生效 ==========
 	if (update) {
 		for (QwtPlot* plot : qwt_as_const(plots)) {
-			plot->updateAxes();  // 更新轴布局
+			plot->updateLayout();
 			plot->replot();      // 重绘Plot
 		}
 	}
@@ -67306,6 +71311,11 @@ QwtFigure* QwtFigureWidgetOverlay::figure() const
 void QwtFigureWidgetOverlay::setTransparentForMouseEvents(bool on)
 {
 	setAttribute(Qt::WA_TransparentForMouseEvents, on);
+}
+
+bool QwtFigureWidgetOverlay::isTransparentForMouseEvents() const
+{
+	return testAttribute(Qt::WA_TransparentForMouseEvents);
 }
 
 /**
@@ -67435,9 +71445,18 @@ bool QwtFigureWidgetOverlay::testBuiltInFunctions(BuiltInFunctionsFlag flag) con
  * @brief 判断当前是否有激活的窗口
  * @return
  */
-bool QwtFigureWidgetOverlay::isHaveActiveWidget() const
+bool QwtFigureWidgetOverlay::hasActiveWidget() const
 {
 	return (m_data->mActiveWidget != nullptr);
+}
+
+/**
+ * @brief 正在改变尺寸
+ * @return
+ */
+bool QwtFigureWidgetOverlay::isResizing() const
+{
+	return m_data->mIsStartResize;
 }
 
 /**
@@ -67609,7 +71628,7 @@ void QwtFigureWidgetOverlay::setActiveWidget(QWidget* w)
 
 void QwtFigureWidgetOverlay::drawOverlay(QPainter* p) const
 {
-	if (!isHaveActiveWidget()) {
+	if (!hasActiveWidget()) {
 		return;
 	}
 	// 对于激活的窗口，绘制到四周的距离提示线
@@ -67746,109 +71765,9 @@ void QwtFigureWidgetOverlay::startResize(QwtFigureWidgetOverlay::ControlType con
 
 void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 {
-#if 0
-	if (me->button() != Qt::LeftButton) {  // 只关心左键
-		QwtWidgetOverlay::mousePressEvent(me);
-		return;
-	}
-
-	// 左键点击
-	const QList< QwtPlot* > plots = figure()->allAxes(true);  // 传入true，按z序列最高到低排序
-	if (plots.empty()) {
-		QwtWidgetOverlay::mousePressEvent(me);
-		return;
-	}
-
-	// 注意，hitplot有可能是nullptr，因为点击变换边缘时，会判断为外围
-	const QPoint pos = qwt::compat::eventPos(me);
-	QWidget* hitPlot = nullptr;
-	for (QWidget* w : plots) {
-		if (w->frameGeometry().contains(pos, true)) {
-			hitPlot = w;
-			break;
-		}
-	}
 #if QwtFigureWidgetOverlay_DEBUG_PRINT
-	qDebug() << "QwtFigureWidgetOverlay::onMousePressedEvent:" << pos;
+	qDebug() << "QwtFigureWidgetOverlay::mousePressEvent(" << qwt::compat::eventPos(me) << ")";
 #endif
-	QWT_D(d);
-	// 重置之前的调整状态
-	if (d->mIsStartResize) {
-		d->mIsStartResize   = false;
-		d->mWillSetNormRect = QRectF();
-	}
-
-	// 如果还没激活任何窗口，或者点到新窗口，直接切换激活
-	// 注意，这里不能直接判断有hitPlot就切换activeWidget，因为实际在变换的时候，点击的位置会找active的外围一点
-	// 通过getPositionControlType可以真实反映出是否超过了activeWidget的变换范围
-
-	// 情况1: 当前没有激活窗口
-	if (!d->mActiveWidget) {
-		if (hitPlot) {
-			// 点击了某个窗口，设置为激活
-			setActiveWidget(hitPlot);
-			updateOverlay();
-			me->accept();  // 我们处理了这个事件
-		} else {
-			me->ignore();  // 让事件继续传递
-		}
-		return;
-	} else {
-		// 有激活的窗口，但点击的不是激活的窗口
-		// todo .这里是否会在resize过程中，点击控制点的时候，点击到另外一个窗口的边界，导致切换激活窗口从而导致
-		// 很难操作
-		if (hitPlot && (hitPlot != d->mActiveWidget)) {
-			// 把hitPlot切换为激活窗口
-			setActiveWidget(hitPlot);
-			updateOverlay();
-			if (!testBuiltInFunctions(FunResizePlot)) {
-				// 处理了此事件
-				me->accept();
-				return;
-			}
-		}
-	}
-	//到此说明点击的就是当前激活的窗口，或者有激活窗口，但没点击到激活窗口，一般这种是调节窗口大小的时候
-	//鼠标点击调节按钮，点击位置一般在激活窗口之外
-	if (!testBuiltInFunctions(FunResizePlot)) {
-		// 没有resize plot 功能，退出
-		return QwtWidgetOverlay::mousePressEvent(me);
-	}
-	// 到这里，说明一定有激活的窗体,且要进行resize操作
-	ControlType ct = getPositionControlType(qwt::compat::eventPos(me), d->mActiveWidget->frameGeometry(), 4);
-
-	// 情况2： 点击到了激活窗口的外围
-	if (ct == OutSide) {
-		// 点击在了激活窗体外围
-		if (hitPlot) {
-			// 点击到了其它窗体,切换激活窗体
-			setActiveWidget(hitPlot);
-		} else {
-			// 点击到了纯空白处，把鼠标事件传递下去
-			setActiveWidget(nullptr);
-		}
-		updateOverlay();
-		me->accept();
-		return;
-	}
-
-	// 情况3: 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
-	if (ct == Inner && hitPlot && hitPlot != d->mActiveWidget) {
-		setActiveWidget(hitPlot);
-		updateOverlay();
-		me->accept();
-		return;
-	}
-
-	// 情况4：开始调整激活窗口的尺寸
-	if (ct != OutSide) {
-		startResize(ct, pos);
-		me->accept();
-		return;
-	}
-
-	QwtWidgetOverlay::mousePressEvent(me);
-#else
 	if (me->button() != Qt::LeftButton) {
 		QwtWidgetOverlay::mousePressEvent(me);
 		return;
@@ -67875,11 +71794,20 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 	}
 
 	// ========== 步骤1：检查是否点击了激活窗口的控制点 ==========
+	// 这里放在第一步，避免点击控制点改变尺寸会被判断为切换窗口
 	if (d->mActiveWidget && testBuiltInFunctions(FunResizePlot)) {
 		ControlType ct = getPositionControlType(pos, d->mActiveWidget->frameGeometry(), 4);
 
 		// 只有点击到真正的控制点（边缘和角落）才启动resize
-		if (ct != OutSide && ct != Inner) {
+		if (ct != OutSide) {
+			// 点击了激活窗口的内部，但hitplot也存在，这种就是点击到了图中图，激活窗口是大图，hitplot是大图里的小图
+			if (ct == Inner) {
+				if (hitPlot && hitPlot != d->mActiveWidget) {
+					setActiveWidget(hitPlot);
+					me->accept();
+					return;
+				}
+			}
 			startResize(ct, pos);
 			me->accept();
 			return;
@@ -67892,11 +71820,14 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 		// 点击了某个窗口
 		if (hitPlot != d->mActiveWidget) {
 			setActiveWidget(hitPlot);
-			updateOverlay();
+			// 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
+			me->accept();
+			return;
+		} else {
+			// 点击就是激活的窗口,这里不处理，下放
+			me->ignore();
+			return;
 		}
-		// 如果点击的就是当前激活窗口内部，保持激活状态（不切换）
-		me->accept();
-		return;
 	}
 
 	// ========== 步骤3：点击空白处 ==========
@@ -67909,13 +71840,16 @@ void QwtFigureWidgetOverlay::mousePressEvent(QMouseEvent* me)
 		// 无激活窗口时点击空白，让事件继续传递
 		me->ignore();
 	}
-#endif
 }
 
 void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
 {
 	QWT_D(d);
-
+#if QwtFigureWidgetOverlay_DEBUG_PRINT
+	qDebug() << "QwtFigureWidgetOverlay::mouseMoveEvent(" << qwt::compat::eventPos(me) << "),have active widget"
+			 << (d->mActiveWidget != nullptr) << ",have FunResizePlot=" << testBuiltInFunctions(FunResizePlot)
+			 << ",ControlType=" << d->mControlType;
+#endif
 	QWidget* activeW = d->mActiveWidget;
 	if (!testBuiltInFunctions(FunResizePlot)) {
 		// 没有resize plot 功能，退出
@@ -68037,14 +71971,12 @@ void QwtFigureWidgetOverlay::mouseMoveEvent(QMouseEvent* me)
 			QRectF normRect     = oldNormRect.adjusted(dw, dh, dw, dh);
 			d->mWillSetNormRect = normRect;
 			Q_EMIT widgetNormGeometryChanged(d->mActiveWidget, d->mOldNormRect, d->mWillSetNormRect);
-			// d->mOldNormRect = normRect;
 			break;
 		}
 
 		default:
 			break;
 		}
-		qDebug() << "mouse move updateOverlay:offset=" << offset;
 		updateOverlay();
 	} else {
 		// 没开始变换，则更新光标
@@ -81366,7 +85298,7 @@ double floorExt(int& exponent, double x, std::vector< double >& sortedmantissi)
   \param x Input value
   \return Mantissa
 */
-[[maybe_unused]] double floor125(int& exponent, double x)
+double floor125(int& exponent, double x)
 {
 	std::vector< double > m(2);
 	m[ 0 ] = 1;
