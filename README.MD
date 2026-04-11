@@ -165,6 +165,18 @@ The new `QwtPlotCanvasZoomer` needs no axis specification; it zooms the entire c
 
 For details, refer to the tutorial: [Zoomer](https://czyt1988.github.io/QWT/zh/use-guide/zoomer/)
 
+### Box Chart (Boxplot) Support
+
+Added `QwtPlotBoxChart` class for creating box-and-whisker plots to visualize statistical distributions:
+
+- Support for both pre-computed statistics and raw data input
+- Automatic calculation of statistics (median, quartiles, outliers)
+- Multiple box styles: Rectangle, Diamond, Notch
+- Vertical and horizontal orientations
+- Outlier detection with customizable symbols
+
+See documentation: [Box Chart Guide](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
+
 ### Other Modifications
 
 - Fixed the impact of `NAN` and `INF` values on plotting

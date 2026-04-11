@@ -2,6 +2,10 @@
 
 本规范用于指导 Qwt 中文文档的撰写，确保文档风格统一、内容完整、易于理解。
 
+本项目文档有mkdocs来组织，使用[mkdocs-material](https://squidfunk.github.io/mkdocs-material/getting-started/)主题，在撰写过程中，可以使用material相关的语法。
+
+项目文档绘图优先考虑`mermaid`
+
 ## 文档结构
 
 ### 1. 标题层级
@@ -25,7 +29,6 @@
 | 功能概述 | 必备 | 开头一句话说明类的用途和特点 |
 | 主要功能特性 | 必备 | 列举核心功能，使用 ✅ 标记 |
 | 使用方法 | 必备 | 详细的使用步骤和代码示例 |
-| 完整示例 | 推荐 | 可运行的完整代码示例 |
 | 注意事项 | 推荐 | 使用 !!! 格式标注重要信息 |
 | 参考资料 | 可选 | 相关文档、示例路径链接 |
 
@@ -182,6 +185,15 @@ flowchart TD
 ![boxchart-demo](../../assets/screenshots/boxchart-demo.png)
 ```
 
+对于效果截图的部分，应在前面文字描述见某个example中，例如：
+
+```markdown
+箱形图的例子位于:`examples/2D/boxchart`，例子截图如下：
+
+![BoxChart](../../assets/screenshots/BoxChart.png)
+
+```
+
 ## 文档风格统一
 
 ### 1. 语言风格
@@ -244,6 +256,10 @@ classDiagram
 
 ## 使用方法
 
+[如果有对应的示例，可以加入此内容]xxx的例子位于:`examples/xxx`，例子截图如下：
+
+![xxx](../../assets/screenshots/xxx.png)
+
 ### 1. 基本使用
 
 [文字说明用途和场景]
@@ -270,15 +286,7 @@ classDiagram
 !!! warning "注意事项"
     重要提示信息
 
-## 完整示例
 
-```cpp
-[完整可运行代码]
-```
-
-!!! example "示例路径"
-    完整示例可参阅：`examples/xxx`
-```
 
 ---
 

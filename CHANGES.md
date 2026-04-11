@@ -10,6 +10,7 @@
     - 支持垂直和水平两种显示方向
     - 支持异常值自动检测、自定义符号和抖动显示
     - 新增示例程序：`examples/2D/boxchart/`
+	![Box Chart](./docs/assets/screenshots/BoxChart.png)
 
 ## tag:v7.0.8
 

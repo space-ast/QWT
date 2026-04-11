@@ -54,12 +54,15 @@ plugins:
                 - Qwt简介: index.md
             - 构建指南:
                 - 构建说明: zh/build-guide/build-instructions.md
-            - 使用指南: 
+            - 基本使用指南: 
                 - 引入qwt: zh/use-guide/import-qwt.md
-                - QwtFigure绘图容器: zh/use-guide/figure-widget.md
-                - 多坐标轴的创建: zh/use-guide/parasite-axes.md
-                - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
                 - 状态机介绍: zh/use-guide/picker-state-machine.md
+            - 绘图使用:
+                - 绘图容器: zh/use-guide/figure-widget.md
+                - 多坐标轴的创建: zh/use-guide/parasite-axes.md
+                - 箱形图: zh/use-guide/boxchart.md
+            - 绘图交互:
+                - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
                 - 数据拾取工具: zh/use-guide/pick-value.md
                 - 平移工具: zh/use-guide/panner.md
                 - 缩放工具: zh/use-guide/zoomer.md

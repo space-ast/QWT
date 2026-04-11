@@ -28,6 +28,8 @@ site-doxygen
 
 # vscode 的隐藏文件
 .vscode
+.qtcreator
+.qoder
 
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------

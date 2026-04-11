@@ -29,24 +29,7 @@
 
 下图展示了标准箱线图的各个组成部分：
 
-```text
-    │                    ◆ 异常值（超出须须范围）
-    │                    
-    │         ┌──────┐
-    │         │      │
-    │         │  Q3  │ ← 上四分位数（75%分位）
-    │    ─────│      │───── 上须须（Q3 + 1.5×IQR）
-    │         │      │
-    │         │ 中位数│ ← 中位数线（50%分位）
-    │         │  ──  │
-    │         │      │
-    │    ─────│  Q1  │───── 下须须（Q1 - 1.5×IQR）
-    │         │      │
-    │         └──────┘
-    │                    ◆ 异常值
-    └──────────────────────────────
-                  箱体（IQR = Q3 - Q1）
-```
+![about-boxplot](./../../assets/picture/about-boxplot.png)
 
 ### 类关系结构
 
@@ -146,6 +129,12 @@ struct QwtBoxOutlierSample {
 
 ## 使用方法
 
+箱形图的例子位于:`examples/2D/boxchart`，例子截图如下：
+
+![BoxChart](../../assets/screenshots/BoxChart.png)
+
+
+
 ### 1. 创建基本箱线图
 
 最简单的使用方式是直接提供预计算的统计数据。这种方式适合已经完成统计分析的场景。
@@ -183,10 +172,6 @@ boxChart->setBrush(QColor(100, 150, 200, 150));  // 半透明蓝色填充箱体
 boxChart->setPen(QPen(Qt::darkBlue, 2.0));       // 深蓝色边框
 boxChart->setBoxExtent(0.35);                    // 箱体宽度（相对坐标范围）
 ```
-
-!!! warning "attach 顺序"
-    先调用 `attach()` 再调用 `setSamples()`，因为 attach 时会触发 boundingRect 计算，
-    如果数据为空可能导致断言错误。建议按照"创建 → attach → 设置数据 → 设置样式"的顺序。
 
 ### 2. 从原始数据自动计算
 

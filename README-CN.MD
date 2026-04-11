@@ -131,6 +131,20 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
 
 具体可参见教程：[缩放工具](https://czyt1988.github.io/QWT/zh/use-guide/zoomer/)
 
+### 新增箱线图(Box Chart)支持
+
+新增`QwtPlotBoxChart`类，支持绘制箱线图（Box-and-Whisker Plot），用于展示数据的统计分布特征
+
+- 支持预计算数据和原始数据两种输入方式
+- 自动计算统计量（中位数、四分位数、异常值）
+- 多种箱体样式：矩形、菱形、缺口形
+- 支持垂直和水平两种显示方向
+- 异常值自动检测和自定义符号
+
+![Box Chart](./docs/assets/screenshots/BoxChart.png)
+
+具体可参见教程：[箱线图使用指南](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
+
 ### 其它修改
 
 - 修复了`NAN`值和`INF`值对绘图的影响
