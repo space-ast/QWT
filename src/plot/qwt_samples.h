@@ -392,4 +392,152 @@ inline bool QwtVectorFieldSample::isNull() const
     return (vx == 0.0) && (vy == 0.0);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Sample for box-and-whisker plot (boxplot) visualization
+ * @details Contains all statistical values needed to render a boxplot:
+ *          whisker endpoints, quartiles, median, and outlier count.
+ *          Actual outlier values are stored separately in QwtBoxOutlierSample.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 箱线图（boxplot）样本
+ * @details 包含绘制箱线图所需的所有统计值：
+ *          须须端点、四分位数、中位数和异常值计数。
+ *          实际异常值单独存储在 QwtBoxOutlierSample 中。
+ * \endif
+ */
+class QWT_EXPORT QwtBoxSample : public QwtStatisticalSample
+{
+public:
+    /**
+     * \if ENGLISH
+     * @brief Default constructor
+     * @details All values set to 0.0
+     * \endif
+     * \if CHINESE
+     * @brief 默认构造函数
+     * @details 所有值设置为 0.0
+     * \endif
+     */
+    QwtBoxSample(double position = 0.0);
+    
+    /**
+     * \if ENGLISH
+     * @brief Full constructor with all statistical values
+     * @param position Position on the axis
+     * @param whiskerLower Lower whisker endpoint
+     * @param q1 First quartile (25th percentile)
+     * @param median Median value (50th percentile)
+     * @param q3 Third quartile (75th percentile)
+     * @param whiskerUpper Upper whisker endpoint
+     * \endif
+     * \if CHINESE
+     * @brief 包含所有统计值的完整构造函数
+     * @param position 轴上的位置
+     * @param whiskerLower 下须须端点
+     * @param q1 第一四分位数（第25百分位）
+     * @param median 中位数（第50百分位）
+     * @param q3 第三四分位数（第75百分位）
+     * @param whiskerUpper 上须须端点
+     * \endif
+     */
+    QwtBoxSample(double position, double whiskerLower, double q1,
+                 double median, double q3, double whiskerUpper);
+    
+    /**
+     * \if ENGLISH
+     * @brief Check if sample has valid ordering
+     * @details Returns true if whiskerLower <= q1 <= median <= q3 <= whiskerUpper
+     * \endif
+     * \if CHINESE
+     * @brief 检查样本顺序是否有效
+     * @details 当 whiskerLower <= q1 <= median <= q3 <= whiskerUpper 时返回 true
+     * \endif
+     */
+    bool isValid() const;
+    
+    /**
+     * \if ENGLISH
+     * @brief Get bounding interval including whiskers
+     * @return Interval from whiskerLower to whiskerUpper
+     * \endif
+     * \if CHINESE
+     * @brief 获取包含须须的边界区间
+     * @return 从 whiskerLower 到 whiskerUpper 的区间
+     * \endif
+     */
+    QwtInterval boundingInterval() const;
+    
+    /**
+     * \if ENGLISH
+     * @brief Get box body interval (Q1 to Q3)
+     * @return Interval from q1 to q3
+     * \endif
+     * \if CHINESE
+     * @brief 获取箱体区间（Q1 到 Q3）
+     * @return 从 q1 到 q3 的区间
+     * \endif
+     */
+    QwtInterval boxInterval() const;
+    
+    //! Lower whisker endpoint
+    double whiskerLower;
+    
+    //! First quartile (25th percentile)
+    double q1;
+    
+    //! Median (50th percentile) - also stored in inherited 'center' field
+    double median;
+    
+    //! Third quartile (75th percentile)
+    double q3;
+    
+    //! Upper whisker endpoint
+    double whiskerUpper;
+    
+    //! Number of outliers (stored separately, this is count only)
+    int outlierCount;
+};
+
+inline QwtBoxSample::QwtBoxSample(double pos)
+    : QwtStatisticalSample(pos)
+    , whiskerLower(0.0)
+    , q1(0.0)
+    , median(0.0)
+    , q3(0.0)
+    , whiskerUpper(0.0)
+    , outlierCount(0)
+{
+}
+
+inline QwtBoxSample::QwtBoxSample(double pos, double wl, double q1v,
+                                   double med, double q3v, double wu)
+    : QwtStatisticalSample(pos)
+    , whiskerLower(wl)
+    , q1(q1v)
+    , median(med)
+    , q3(q3v)
+    , whiskerUpper(wu)
+    , outlierCount(0)
+{
+    center = median;
+}
+
+inline bool QwtBoxSample::isValid() const
+{
+    return (whiskerLower <= q1) && (q1 <= median) && 
+           (median <= q3) && (q3 <= whiskerUpper);
+}
+
+inline QwtInterval QwtBoxSample::boundingInterval() const
+{
+    return QwtInterval(whiskerLower, whiskerUpper);
+}
+
+inline QwtInterval QwtBoxSample::boxInterval() const
+{
+    return QwtInterval(q1, q3);
+}
+
 #endif
