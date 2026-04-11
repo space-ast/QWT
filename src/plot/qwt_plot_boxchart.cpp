@@ -15,6 +15,7 @@
 #include "qwt_symbol.h"
 #include "qwt_graphic.h"
 #include "qwt_math.h"
+#include "qwt_text.h"
 
 #include <qpainter.h>
 #include <qrandom.h>
@@ -450,7 +451,7 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
 
         if (m_data->meanVisible && m_data->meanSymbol)
         {
-            const double medianPixel = valueMap->transform(sample.median);
+            double medianPixel = valueMap->transform(sample.median);
             if (doAlign)
                 medianPixel = qRound(medianPixel);
 

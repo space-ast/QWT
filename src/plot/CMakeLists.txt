@@ -143,6 +143,8 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_multi_barchart.h
         qwt_plot_intervalcurve.h
         qwt_plot_tradingcurve.h
+        qwt_plot_boxchart.h
+        qwt_box_statistics.h
         qwt_plot_layout_engine.h
         qwt_plot_layout.h
         qwt_parasite_plot_layout.h
@@ -212,6 +214,8 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_intervalcurve.cpp
         qwt_plot_zoneitem.cpp
         qwt_plot_tradingcurve.cpp
+        qwt_plot_boxchart.cpp
+        qwt_box_statistics.cpp
         qwt_plot_spectrogram.cpp
         qwt_plot_spectrocurve.cpp
         qwt_plot_scaleitem.cpp

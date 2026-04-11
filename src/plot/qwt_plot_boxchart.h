@@ -18,7 +18,6 @@
 #include "qwt_samples.h"
 
 class QwtSymbol;
-class QwtSeriesData;
 template<typename T> class QwtSeriesData;
 
 /**
