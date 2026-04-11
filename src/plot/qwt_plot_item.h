@@ -191,6 +191,9 @@ public:
         //! For QwtPlotArrowMarker
         Rtti_PlotArrowMarker,
 
+        //! Boxplot chart item
+        Rtti_PlotBoxChart,
+
         /*!
            Values >= Rtti_PlotUserItem are reserved for plot items
            not implemented in the Qwt library.
