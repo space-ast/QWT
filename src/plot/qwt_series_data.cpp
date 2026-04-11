@@ -206,6 +206,12 @@ template< class T >
 QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to)
 {
     QRectF boundingRect(1.0, 1.0, -2.0, -2.0);  // invalid;
+    
+    // Check for empty series first
+    if (series.size() == 0) {
+        return boundingRect;
+    }
+    
     if (to == 0) {
         to = series.size() - 1;
     }
