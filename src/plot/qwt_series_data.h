@@ -271,6 +271,27 @@ public:
     virtual QRectF boundingRect() const override;
 };
 
+/// Interface for iterating over an array of boxplot samples
+class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
+{
+public:
+    QwtBoxChartData(const QVector< QwtBoxSample >& = QVector< QwtBoxSample >());
+
+    virtual QRectF boundingRect() const override;
+};
+
+/// Interface for iterating over an array of boxplot outlier samples
+class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
+{
+public:
+    QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& = QVector< QwtBoxOutlierSample >());
+
+    virtual QRectF boundingRect() const override;
+
+    //! Get total outlier count across all boxes
+    int totalOutlierCount() const;
+};
+
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >&, size_t from = 0, size_t to = 0);
@@ -284,6 +305,10 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >&, size_t f
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >&, size_t from = 0, size_t to = 0);
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >&, size_t from = 0, size_t to = 0);
+
+QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t from = 0, size_t to = 0);
+
+QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
 
 /**
  * \if ENGLISH
