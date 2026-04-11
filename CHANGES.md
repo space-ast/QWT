@@ -1,3 +1,16 @@
+## tag:v7.0.9
+
+- 新增箱线图(Box Chart)支持
+    - 新增`QwtPlotBoxChart`类，用于绘制箱线图（Box-and-Whisker Plot）
+    - 新增`QwtBoxStatisticsCalculator`类，用于自动计算统计量
+    - 新增数据结构：`QwtBoxSample`、`QwtBoxOutlierSample`、`QwtBoxChartData`、`QwtBoxOutlierChartData`
+    - 支持预计算数据和原始数据两种输入方式
+    - 支持多种箱体样式：矩形(Rect)、菱形(Diamond)、缺口形(Notch)
+    - 支持多种须须计算方法：Tukey(1.5×IQR)、百分位数、最小最大值、标准差、标准误
+    - 支持垂直和水平两种显示方向
+    - 支持异常值自动检测、自定义符号和抖动显示
+    - 新增示例程序：`examples/2D/boxchart/`
+
 ## tag:v7.0.8
 
 - `QwtFigure`增加`addAxisAlignment`等坐标轴对齐功能，可以指定子绘图的坐标轴进行对齐
