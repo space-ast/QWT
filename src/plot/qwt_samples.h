@@ -33,6 +33,55 @@
 #include <qvector.h>
 #include <qrect.h>
 
+/**
+ * \if ENGLISH
+ * @brief Base class for statistical samples with position and range
+ * @details Provides common fields for samples that have a position on one axis
+ *          and a statistical range on the other axis (used by boxplots, OHLC charts).
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 统计样本的基类，包含位置和范围
+ * @details 为在一个轴上有位置、在另一个轴上有统计范围的样本提供公共字段
+ *          （用于箱线图、OHLC 图表等）。
+ * \endif
+ */
+class QWT_EXPORT QwtStatisticalSample
+{
+public:
+    /**
+     * \if ENGLISH
+     * @brief Default constructor
+     * @details All values set to 0.0
+     * \endif
+     * \if CHINESE
+     * @brief 默认构造函数
+     * @details 所有值设置为 0.0
+     * \endif
+     */
+    QwtStatisticalSample(double position = 0.0);
+    
+    //! Position on the "time" axis (x for vertical, y for horizontal orientation)
+    double position;
+    
+    //! Lower bound of the statistical range
+    double lower;
+    
+    //! Upper bound of the statistical range
+    double upper;
+    
+    //! Central reference value
+    double center;
+};
+
+inline QwtStatisticalSample::QwtStatisticalSample(double pos)
+    : position(pos)
+    , lower(0.0)
+    , upper(0.0)
+    , center(0.0)
+{
+}
+
 /// \if ENGLISH A sample of the types (x1-x2, y) or (x, y1-y2) \endif \if CHINESE 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本 \endif
 class QWT_EXPORT QwtIntervalSample
 {
