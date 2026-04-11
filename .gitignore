@@ -22,6 +22,7 @@ tmp-file
 out
 .qoderignore
 .qoder
+docs/superpowers
 #文档目录
 site
 site-doxygen

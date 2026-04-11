@@ -27,12 +27,12 @@ theme:
         name: 切换深色
   features:
     - navigation.sections # 侧边栏章节可折叠
-    - navigation.top # 右下角“回到顶部”按钮
+    - navigation.top # 右下角"回到顶部"按钮
     - navigation.path # 顶部面包屑导航条
     - navigation.expand        # 默认展开全部章节，一眼看到整本书
     - navigation.indexes       # 允许章节首页可点击
     - navigation.footer  # 底部导航条
-    - content.code.copy # 代码块右上角出现“复制”按钮
+    - content.code.copy # 代码块右上角出现"复制"按钮
     - content.code.annotate # 代码块行内注释气泡
     - search.suggest # 搜索框实时联想补全
     - search.highlight # 点击结果后正文高亮匹配关键词
@@ -56,16 +56,48 @@ plugins:
                 - 构建说明: zh/build-guide/build-instructions.md
             - 基本使用指南: 
                 - 引入qwt: zh/use-guide/import-qwt.md
+                - 第一个绘图: zh/use-guide/first-plot.md
                 - 状态机介绍: zh/use-guide/picker-state-machine.md
-            - 绘图使用:
-                - 绘图容器: zh/use-guide/figure-widget.md
+            - 绘图容器与布局:
+                - Figure绘图容器: zh/use-guide/figure-widget.md
                 - 多坐标轴的创建: zh/use-guide/parasite-axes.md
+                - 布局管理: zh/use-guide/plot-layout.md
+            - 核心绘图项:
+                - 曲线图: zh/use-guide/curve.md
+                - 散点图: zh/use-guide/scatter.md
+                - 网格线: zh/use-guide/grid.md
+                - 标记点: zh/use-guide/marker.md
+                - 柱状图: zh/use-guide/barchart.md
                 - 箱形图: zh/use-guide/boxchart.md
+                - 直方图: zh/use-guide/histogram.md
+                - 光谱图/热力图: zh/use-guide/spectrogram.md
+                - K线图: zh/use-guide/tradingcurve.md
+                - 向量场图: zh/use-guide/vectorfield.md
+                - 区间曲线: zh/use-guide/intervalcurve.md
+                - 形状项: zh/use-guide/shapeitem.md
+                - 文本标签: zh/use-guide/textlabel.md
             - 绘图交互:
                 - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
                 - 数据拾取工具: zh/use-guide/pick-value.md
                 - 平移工具: zh/use-guide/panner.md
                 - 缩放工具: zh/use-guide/zoomer.md
+                - 绘图导出: zh/use-guide/renderer.md
+            - 坐标轴系统:
+                - 坐标轴控件: zh/use-guide/scale-widget.md
+                - 刻度计算引擎: zh/use-guide/scale-engine.md
+            - 图例系统:
+                - 图例控件: zh/use-guide/legend.md
+            - 数据处理:
+                - 数据系列: zh/use-guide/series-data.md
+            - 样式与符号:
+                - 符号样式: zh/use-guide/symbol.md
+            - 极坐标绘图:
+                - 极坐标绘图: zh/use-guide/polar-plot.md
+            - 控件组件:
+                - 仪表盘与滑块: zh/use-guide/widgets-controls.md
+            - 3D绘图:
+                - 3D绘图简介: zh/use-guide/3d-plot.md
+                - OpenGL画布: zh/use-guide/opengl.md
             - API文档: 
                 - API文档首页: doxygen/index.html
                 - 类列表: doxygen/annotated.html

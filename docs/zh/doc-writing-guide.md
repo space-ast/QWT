@@ -258,7 +258,9 @@ classDiagram
 
 [如果有对应的示例，可以加入此内容]xxx的例子位于:`examples/xxx`，例子截图如下：
 
+```markdown
 ![xxx](../../assets/screenshots/xxx.png)
+```
 
 ### 1. 基本使用
 
