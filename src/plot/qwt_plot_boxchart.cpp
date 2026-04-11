@@ -463,7 +463,7 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
 
     if (m_outlierData && m_outlierData->size() > 0)
     {
-        drawOutliers(painter, xMap, yMap, canvasRect, from, to);
+        drawOutliers(painter, *posMap, *valueMap, canvasRect, from, to);
     }
 
     painter->restore();

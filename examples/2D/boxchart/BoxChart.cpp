@@ -162,6 +162,7 @@ void BoxChart::setOrientation( int orientation )
 
     plotLayout()->setCanvasMargin( 0 );
     updateCanvasMargins();
+    replot();
 }
 
 void BoxChart::exportChart()
