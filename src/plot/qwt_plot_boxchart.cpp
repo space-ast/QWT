@@ -420,7 +420,7 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
     const QwtScaleMap* posMap = (orient == Qt::Vertical) ? &xMap : &yMap;
     const QwtScaleMap* valueMap = (orient == Qt::Vertical) ? &yMap : &xMap;
 
-    const double boxWidth = scaledBoxWidth(xMap, yMap, canvasRect);
+    const double boxWidth = scaledBoxWidth(*posMap, *valueMap, canvasRect);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
     painter->setPen(m_data->pen);
