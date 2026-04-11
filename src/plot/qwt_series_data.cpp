@@ -71,6 +71,25 @@ static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
     return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
 }
 
+static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
+{
+    return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower)
+           || !std::isfinite(sample.q1) || !std::isfinite(sample.median)
+           || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+}
+
+static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
+{
+    if (!std::isfinite(sample.boxPosition))
+        return true;
+    for (int i = 0; i < sample.values.size(); ++i)
+    {
+        if (!std::isfinite(sample.values[i]))
+            return true;
+    }
+    return false;
+}
+
 static inline QRectF qwtBoundingRect(const QPointF& sample)
 {
     return QRectF(sample.x(), sample.y(), 0.0, 0.0);
@@ -136,6 +155,28 @@ static inline QRectF qwtBoundingRect(const QwtVectorFieldSample& sample)
      */
 
     return QRectF(sample.x, sample.y, 0, 0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtBoxSample& sample)
+{
+    return QRectF(sample.position, sample.whiskerLower, 0.0, sample.whiskerUpper - sample.whiskerLower);
+}
+
+static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
+{
+    if (sample.values.isEmpty())
+        return QRectF(sample.boxPosition, 0.0, 0.0, -1.0); // invalid
+    
+    double minVal = sample.values[0];
+    double maxVal = sample.values[0];
+    for (int i = 1; i < sample.values.size(); ++i)
+    {
+        if (sample.values[i] < minVal)
+            minVal = sample.values[i];
+        if (sample.values[i] > maxVal)
+            maxVal = sample.values[i];
+    }
+    return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
 }
 
 /**
@@ -399,6 +440,60 @@ QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >& series, size
 
 /**
  * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >& series, size_t from, size_t to)
+{
+    return qwtBoundingRectT< QwtBoxSample >(series, from, to);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >& series, size_t from, size_t to)
+{
+    return qwtBoundingRectT< QwtBoxOutlierSample >(series, from, to);
+}
+
+/**
+ * \if ENGLISH
  * @brief Constructor
  * @param samples Samples
  * \endif
@@ -621,4 +716,98 @@ QRectF QwtTradingChartData::boundingRect() const
         cachedBoundingRect = qwtBoundingRect(*this);
 
     return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
+ */
+QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples)
+    : QwtArraySeriesData< QwtBoxSample >(samples)
+{
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF QwtBoxChartData::boundingRect() const
+{
+    if (cachedBoundingRect.width() < 0.0)
+        cachedBoundingRect = qwtBoundingRect(*this);
+
+    return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
+ */
+QwtBoxOutlierChartData::QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& samples)
+    : QwtArraySeriesData< QwtBoxOutlierSample >(samples)
+{
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF QwtBoxOutlierChartData::boundingRect() const
+{
+    if (cachedBoundingRect.width() < 0.0)
+        cachedBoundingRect = qwtBoundingRect(*this);
+
+    return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Get total outlier count across all boxes
+ * @return Total count of all outlier values
+ * \endif
+ * \if CHINESE
+ * @brief 获取所有箱的总异常值数量
+ * @return 所有异常值的总计数
+ * \endif
+ */
+int QwtBoxOutlierChartData::totalOutlierCount() const
+{
+    int count = 0;
+    for (size_t i = 0; i < size(); ++i)
+        count += sample(i).count();
+    return count;
 }
