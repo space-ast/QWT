@@ -540,4 +540,85 @@ inline QwtInterval QwtBoxSample::boxInterval() const
     return QwtInterval(q1, q3);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Outlier values for a single boxplot position
+ * @details Contains all outlier values associated with one box position.
+ *          One QwtBoxOutlierSample corresponds to one QwtBoxSample.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 单个箱线图位置的异常值
+ * @details 包含与一个箱位置关联的所有异常值。
+ *          一个 QwtBoxOutlierSample 对应一个 QwtBoxSample。
+ * \endif
+ */
+class QWT_EXPORT QwtBoxOutlierSample
+{
+public:
+    /**
+     * \if ENGLISH
+     * @brief Default constructor
+     * \endif
+     * \if CHINESE
+     * @brief 默认构造函数
+     * \endif
+     */
+    QwtBoxOutlierSample(double boxPosition = 0.0);
+    
+    /**
+     * \if ENGLISH
+     * @brief Constructor with position and outlier values
+     * @param boxPosition Position matching parent QwtBoxSample
+     * @param values All outlier values for this box
+     * \endif
+     * \if CHINESE
+     * @brief 包含位置和异常值的构造函数
+     * @param boxPosition 匹配父 QwtBoxSample 的位置
+     * @param values 此箱的所有异常值
+     * \endif
+     */
+    QwtBoxOutlierSample(double boxPosition, const QVector<double>& values);
+    
+    /**
+     * \if ENGLISH
+     * @brief Constructor with move semantics
+     * \endif
+     * \if CHINESE
+     * @brief 移动语义构造函数
+     * \endif
+     */
+    QwtBoxOutlierSample(double boxPosition, QVector<double>&& values);
+    
+    //! Check if no outliers present
+    bool isEmpty() const { return values.isEmpty(); }
+    
+    //! Get number of outliers
+    int count() const { return values.size(); }
+    
+    //! Position of the parent box (matches QwtBoxSample.position)
+    double boxPosition;
+    
+    //! All outlier values for this box
+    QVector<double> values;
+};
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos)
+    : boxPosition(pos)
+    , values()
+{
+}
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, const QVector<double>& vals)
+    : boxPosition(pos)
+    , values(vals)
+{
+}
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& vals)
+    : boxPosition(pos)
+    , values(std::move(vals))
+{
+}
+
 #endif
