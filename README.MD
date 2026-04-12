@@ -230,6 +230,11 @@ See [CHANGES.MD](./CHANGES.md) for detailed logs.
 
 |  |  |  |
 |:---:|:---:|:---:|
+|![Ticks Inside](./docs/assets/screenshots/ticks_inside.png)|![Box Chart](./docs/assets/screenshots/BoxChart.png)|![parasite plot](./docs/assets/screenshots/parasite-plot.png)|
+|`examples/ticks_inside`|`examples/boxchart`|`examples/parasitePlot`|
+
+|  |  |  |
+|:---:|:---:|:---:|
 |![System Info](./docs/assets/screenshots/sysinfo.png)|![Distro Watch](./docs/assets/screenshots/distrowatch.png)|![Raster View 1](./docs/assets/screenshots/rasterview-1.png)|
 |`examples/sysinfo`|`examples/distrowatch`|`examples/rasterview`|
   
