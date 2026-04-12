@@ -173,6 +173,32 @@ public:
         TopLegend
     };
 
+    /**
+     * \if ENGLISH
+     * @brief Tick direction enum
+     * @details Controls whether ticks are drawn inside or outside the canvas.
+     *          When ticks are inside, they are drawn from the canvas edge toward
+     *          the interior, while the backbone and labels remain outside.
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 刻度方向枚举
+     * @details 控制刻度线是绘制在画布内部还是外部。
+     *          当刻度朝内时，刻度线从画布边缘向内延伸，
+     *          而主干和标签保持在画布外。
+     * \endif
+     */
+    enum TickDirection
+    {
+        ///< Ticks are drawn outside the canvas (default behavior)
+        ///< 刻度朝外（默认行为）
+        TickOutside = 0,
+
+        ///< Ticks are drawn inside the canvas
+        ///< 刻度朝内
+        TickInside = 1
+    };
+
     // Constructor
     explicit QwtPlot(QWidget* = nullptr);
     // Constructor with title
@@ -332,6 +358,47 @@ public:
     void setAxisMaxMajor(QwtAxisId, int maxMajor);
     // Get axis max major ticks
     int axisMaxMajor(QwtAxisId) const;
+
+    // Tick Direction - NEW
+
+    /**
+     * \if ENGLISH
+     * @brief Set the tick direction for an axis
+     * @param axisId Axis identifier (QwtAxis::YLeft, YRight, XBottom, XTop)
+     * @param direction Tick direction (TickOutside or TickInside)
+     * 
+     * When set to TickInside, the tick marks are drawn from the canvas edge
+     * toward the interior, while the backbone and labels remain outside the canvas.
+     * The inside ticks share the same style (length, color, pen width) as the
+     * outside ticks configured via QwtScaleDraw.
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 设置坐标轴的刻度方向
+     * @param axisId 坐标轴标识（QwtAxis::YLeft, YRight, XBottom, XTop）
+     * @param direction 刻度方向（TickOutside 朝外或 TickInside 朝内）
+     * 
+     * 当设置为 TickInside 时，刻度线从画布边缘向内绘制，
+     * 而主干和标签保持在画布外。
+     * 朝内刻度与朝外刻度共享相同的样式（长度、颜色、线宽）。
+     * \endif
+     */
+    void setAxisTickDirection(QwtAxisId axisId, TickDirection direction);
+
+    /**
+     * \if ENGLISH
+     * @brief Get the tick direction for an axis
+     * @param axisId Axis identifier
+     * @return Current tick direction (TickOutside or TickInside)
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 获取坐标轴的刻度方向
+     * @param axisId 坐标轴标识
+     * @return 当前刻度方向（TickOutside 朝外或 TickInside 朝内）
+     * \endif
+     */
+    TickDirection axisTickDirection(QwtAxisId axisId) const;
 
     // Legend
 
@@ -563,6 +630,10 @@ protected:
     // Implementation of updateLayout
     void doLayout();
 
+    // NEW: Draw inside ticks for axes with TickInside direction
+    void drawInsideTicks(QPainter*, const QRectF& canvasRect,
+                         const QwtScaleMap maps[QwtAxis::AxisPositions]) const;
+
 private Q_SLOTS:
     // Update legend items
     void updateLegendItems(const QVariant& itemInfo, const QList< QwtLegendData >& legendData);
@@ -589,6 +660,13 @@ private:
     void initPlot(const QwtText& title);
     // Top parasite plot triggers host to update all axis margins
     void topParasiteTriggerHostUpdateAxisMargins();
+
+    // Helper: Draw a single inside tick
+    void drawSingleInsideTick(QPainter* painter,
+                              double tickPixelPos,
+                              double tickLength,
+                              double backbonePos,
+                              int axisPos) const;
 
     class ScaleData;
     ScaleData* m_scaleData;

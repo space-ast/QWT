@@ -45,6 +45,8 @@
 #include "qwt_plot_transparent_canvas.h"
 #include "qwt_parasite_plot_layout.h"
 #include "qwt_plot_scale_event_dispatcher.h"
+#include "qwt_painter.h"
+#include "qwt_scale_draw.h"
 // qt
 #include <qpainter.h>
 #include <qpointer.h>
@@ -131,6 +133,11 @@ public:
     bool isParasitePlot { false };                                ///< 标记这个绘图是寄生绘图
     QMetaObject::Connection shareConn[ QwtAxis::AxisPositions ];  // 记录寄生轴和宿主轴坐标同步的信号槽，仅仅针对寄生轴有用
     QString plotId;
+
+    // NEW: tick direction for each axis
+    TickDirection tickDirection[QwtAxis::AxisPositions] = {
+        TickOutside, TickOutside, TickOutside, TickOutside
+    };
 };
 
 QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
@@ -849,6 +856,148 @@ void QwtPlot::updateCanvasMargins()
 }
 
 /*!
+   \brief Draw a single inside tick
+
+   \param painter Painter
+   \param tickPixelPos Tick position in pixels
+   \param tickLength Tick length
+   \param backbonePos Backbone position (canvas edge)
+   \param axisPos Axis position (YLeft, YRight, XTop, XBottom)
+ */
+void QwtPlot::drawSingleInsideTick(QPainter* painter,
+                                   double tickPixelPos,
+                                   double tickLength,
+                                   double backbonePos,
+                                   int axisPos) const
+{
+    using namespace QwtAxis;
+    const double len = tickLength;
+
+    switch (axisPos)
+    {
+    case YLeft:
+        // From canvas left edge, draw toward right (inside)
+        QwtPainter::drawLine(painter,
+            backbonePos, tickPixelPos,
+            backbonePos + len, tickPixelPos);
+        break;
+
+    case YRight:
+        // From canvas right edge, draw toward left (inside)
+        QwtPainter::drawLine(painter,
+            backbonePos, tickPixelPos,
+            backbonePos - len, tickPixelPos);
+        break;
+
+    case XTop:
+        // From canvas top edge, draw toward bottom (inside)
+        QwtPainter::drawLine(painter,
+            tickPixelPos, backbonePos,
+            tickPixelPos, backbonePos + len);
+        break;
+
+    case XBottom:
+        // From canvas bottom edge, draw toward top (inside)
+        QwtPainter::drawLine(painter,
+            tickPixelPos, backbonePos,
+            tickPixelPos, backbonePos - len);
+        break;
+    }
+}
+
+/*!
+   \brief Draw inside ticks for axes with TickInside direction
+
+   This method is called after drawItems() to draw tick marks that
+   extend from the canvas edge toward the interior.
+
+   \param painter Painter
+   \param canvasRect Canvas rectangle
+   \param maps Scale maps for all axes
+ */
+void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
+                              const QwtScaleMap maps[QwtAxis::AxisPositions]) const
+{
+    using namespace QwtAxis;
+
+    for (int axisPos = 0; axisPos < AxisPositions; axisPos++)
+    {
+        if (axisTickDirection(axisPos) != TickInside)
+            continue;
+
+        if (!isAxisVisible(axisPos))
+            continue;
+
+        const QwtScaleWidget* scaleWidget = axisWidget(axisPos);
+        if (!scaleWidget)
+            continue;
+
+        const QwtScaleDraw* scaleDraw = scaleWidget->scaleDraw();
+        if (!scaleDraw)
+            continue;
+
+        painter->save();
+
+        // Set pen style (sync with outside ticks)
+        QPen pen;
+        pen.setWidthF(scaleDraw->penWidthF());
+        pen.setColor(scaleWidget->scaleColor());
+        painter->setPen(pen);
+
+        // Get scale division
+        const QwtScaleDiv& scaleDiv = scaleDraw->scaleDiv();
+        const QwtScaleMap& map = maps[axisPos];
+
+        // Calculate backbone position (canvas edge)
+        double backbonePos;
+        switch (axisPos)
+        {
+        case YLeft:
+            backbonePos = canvasRect.left();
+            break;
+        case YRight:
+            backbonePos = canvasRect.right();
+            break;
+        case XTop:
+            backbonePos = canvasRect.top();
+            break;
+        case XBottom:
+            backbonePos = canvasRect.bottom();
+            break;
+        }
+
+        // Draw all tick types
+        const QList<double>& minorTicks = scaleDiv.ticks(QwtScaleDiv::MinorTick);
+        const QList<double>& mediumTicks = scaleDiv.ticks(QwtScaleDiv::MediumTick);
+        const QList<double>& majorTicks = scaleDiv.ticks(QwtScaleDiv::MajorTick);
+
+        double minorLen = scaleDraw->tickLength(QwtScaleDiv::MinorTick);
+        double mediumLen = scaleDraw->tickLength(QwtScaleDiv::MediumTick);
+        double majorLen = scaleDraw->tickLength(QwtScaleDiv::MajorTick);
+
+        for (const double tickValue : minorTicks)
+        {
+            double tickPixelPos = map.transform(tickValue);
+            drawSingleInsideTick(painter, tickPixelPos, minorLen, backbonePos, axisPos);
+        }
+
+        for (const double tickValue : mediumTicks)
+        {
+            double tickPixelPos = map.transform(tickValue);
+            drawSingleInsideTick(painter, tickPixelPos, mediumLen, backbonePos, axisPos);
+        }
+
+        for (const double tickValue : majorTicks)
+        {
+            double tickPixelPos = map.transform(tickValue);
+            drawSingleInsideTick(painter, tickPixelPos, majorLen, backbonePos, axisPos);
+        }
+
+        painter->restore();
+    }
+}
+
+/*!
    Redraw the canvas.
    \param painter Painter used for drawing
 
@@ -864,6 +1013,9 @@ void QwtPlot::drawCanvas(QPainter* painter)
         maps[ axisPos ] = canvasMap(axisPos);
 
     drawItems(painter, m_data->canvas->contentsRect(), maps);
+
+    // Draw inside ticks after items
+    drawInsideTicks(painter, m_data->canvas->contentsRect(), maps);
 }
 
 /*!
@@ -1766,6 +1918,69 @@ void QwtPlot::setAxisToLinearScale(QwtAxisId axisId)
     }
     setAxisScaleEngine(axisId, new QwtLinearScaleEngine());
     setAxisScaleDraw(axisId, new QwtScaleDraw());  // 恢复默认绘制器
+}
+
+/*!
+   \brief Set the tick direction for an axis
+
+   When set to TickInside, the tick marks are drawn from the canvas edge
+   toward the interior. The outside tick component is disabled on the
+   QwtScaleWidget, and inside ticks are drawn in drawCanvas.
+
+   \param axisId Axis identifier
+   \param direction Tick direction (TickOutside or TickInside)
+
+   \sa axisTickDirection()
+ */
+void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
+{
+    if (!isAxisValid(axisId))
+        return;
+
+    QWT_D(d);
+    if (d->tickDirection[axisId] != direction)
+    {
+        d->tickDirection[axisId] = direction;
+
+        // When ticks are inside, disable the outside tick component
+        QwtScaleWidget* scaleWidget = axisWidget(axisId);
+        if (scaleWidget)
+        {
+            QwtScaleDraw* scaleDraw = scaleWidget->scaleDraw();
+            if (scaleDraw)
+            {
+                if (direction == TickInside)
+                {
+                    // Disable outside ticks, keep backbone and labels
+                    scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+                }
+                else
+                {
+                    // Restore outside ticks
+                    scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, true);
+                }
+            }
+        }
+
+        autoRefresh();
+    }
+}
+
+/*!
+   \brief Get the tick direction for an axis
+
+   \param axisId Axis identifier
+   \return Current tick direction
+
+   \sa setAxisTickDirection()
+ */
+QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
+{
+    if (!isAxisValid(axisId))
+        return TickOutside;
+
+    QWT_DC(d);
+    return d->tickDirection[axisId];
 }
 
 /**
