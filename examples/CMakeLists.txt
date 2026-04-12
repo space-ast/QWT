@@ -30,6 +30,7 @@ add_subdirectory(2D/splineeditor)
 add_subdirectory(2D/stockchart)
 add_subdirectory(2D/sysinfo)
 add_subdirectory(2D/tvplot)
+add_subdirectory(2D/ticks_inside)
 
 if(QWT_CONFIG_QWTPLOT_3D)
     add_subdirectory(3D/autoswitch)
