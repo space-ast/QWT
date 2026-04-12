@@ -1,4 +1,4 @@
-/*****************************************************************************
+﻿/*****************************************************************************
  * Qwt Examples - Copyright (C) 2002 Uwe Rathmann
  * This file may be used under the terms of the 3-clause BSD License
  *****************************************************************************/
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
     setupPlot();
 
-    QWidget* centralWidget = new QWidget(this);
+    QWidget* centralWidget  = new QWidget(this);
     QHBoxLayout* mainLayout = new QHBoxLayout(centralWidget);
 
     mainLayout->addWidget(m_plot, 1);
@@ -70,8 +70,7 @@ void MainWindow::setupPlot()
     m_curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
 
     QPolygonF points;
-    for (int i = 0; i <= 10; i++)
-    {
+    for (int i = 0; i <= 10; i++) {
         double x = i;
         double y = 4.0 + 3.0 * sin(i * 0.5);
         points << QPointF(x, y);
@@ -85,9 +84,9 @@ QWidget* MainWindow::createControlPanel()
     QGroupBox* groupBox = new QGroupBox("Tick Direction", this);
     QVBoxLayout* layout = new QVBoxLayout(groupBox);
 
-    m_chkYLeft = new QCheckBox("YLeft Inside", this);
-    m_chkYRight = new QCheckBox("YRight Inside", this);
-    m_chkXTop = new QCheckBox("XTop Inside", this);
+    m_chkYLeft   = new QCheckBox("YLeft Inside", this);
+    m_chkYRight  = new QCheckBox("YRight Inside", this);
+    m_chkXTop    = new QCheckBox("XTop Inside", this);
     m_chkXBottom = new QCheckBox("XBottom Inside", this);
 
     layout->addWidget(m_chkYLeft);
@@ -97,8 +96,8 @@ QWidget* MainWindow::createControlPanel()
 
     layout->addSpacing(10);
 
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* btnAllInside = new QPushButton("All Inside", this);
+    QHBoxLayout* buttonLayout  = new QHBoxLayout();
+    QPushButton* btnAllInside  = new QPushButton("All Inside", this);
     QPushButton* btnAllOutside = new QPushButton("All Outside", this);
     buttonLayout->addWidget(btnAllInside);
     buttonLayout->addWidget(btnAllOutside);
@@ -116,26 +115,26 @@ QWidget* MainWindow::createControlPanel()
 
 void MainWindow::onYLeftToggled(bool checked)
 {
-    m_plot->setAxisTickDirection(QwtAxis::YLeft,
-        checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->setAxisTickDirection(QwtAxis::YLeft, checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->replot();
 }
 
 void MainWindow::onYRightToggled(bool checked)
 {
-    m_plot->setAxisTickDirection(QwtAxis::YRight,
-        checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->setAxisTickDirection(QwtAxis::YRight, checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->replot();
 }
 
 void MainWindow::onXTopToggled(bool checked)
 {
-    m_plot->setAxisTickDirection(QwtAxis::XTop,
-        checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->setAxisTickDirection(QwtAxis::XTop, checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->replot();
 }
 
 void MainWindow::onXBottomToggled(bool checked)
 {
-    m_plot->setAxisTickDirection(QwtAxis::XBottom,
-        checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->setAxisTickDirection(QwtAxis::XBottom, checked ? QwtPlot::TickInside : QwtPlot::TickOutside);
+    m_plot->replot();
 }
 
 void MainWindow::onAllInsideClicked()

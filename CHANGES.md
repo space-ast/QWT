@@ -1,3 +1,13 @@
+## tag:v7.1.0
+
+- 新增刻度朝内显示功能
+    - 新增`QwtPlot::TickDirection`枚举，支持`TickOutside`（刻度朝外，默认）和`TickInside`（刻度朝内）
+    - 新增`QwtPlot::setAxisTickDirection()`和`QwtPlot::axisTickDirection()`方法，可独立控制每个坐标轴的刻度方向
+    - 刻度朝内时，刻度线从画布边缘向内延伸，主干和标签保持在画布外
+    - 朝内刻度与朝外刻度共享相同的样式设置（长度、颜色、线宽）
+    - 新增示例程序：`examples/2D/ticks_inside/`
+    ![ticks_inside](./docs/assets/screenshots/ticks_inside.png)
+
 ## tag:v7.0.9
 
 - 新增箱线图(Box Chart)支持

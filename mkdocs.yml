@@ -84,6 +84,7 @@ plugins:
                 - 绘图导出: zh/use-guide/renderer.md
             - 坐标轴系统:
                 - 坐标轴控件: zh/use-guide/scale-widget.md
+                - 刻度朝内显示: zh/use-guide/ticks-inside.md
                 - 刻度计算引擎: zh/use-guide/scale-engine.md
             - 图例系统:
                 - 图例控件: zh/use-guide/legend.md
