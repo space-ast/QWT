@@ -1960,6 +1960,11 @@ void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
                     scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, true);
                 }
             }
+
+            // Trigger scale widget to recalculate layout and redraw
+            // This is necessary because enableComponent() only changes internal flags
+            // without triggering any widget update
+            scaleWidget->layoutScale();
         }
 
         autoRefresh();
