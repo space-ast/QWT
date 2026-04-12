@@ -1,4 +1,4 @@
-## tag:v7.1.0
+## tag:v7.2.1
 
 - 新增刻度朝内显示功能
     - 新增`QwtPlot::TickDirection`枚举，支持`TickOutside`（刻度朝外，默认）和`TickInside`（刻度朝内）
@@ -8,7 +8,7 @@
     - 新增示例程序：`examples/2D/ticks_inside/`
     ![ticks_inside](./docs/assets/screenshots/ticks_inside.png)
 
-## tag:v7.0.9
+## tag:v7.2.0
 
 - 新增箱线图(Box Chart)支持
     - 新增`QwtPlotBoxChart`类，用于绘制箱线图（Box-and-Whisker Plot）

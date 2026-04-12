@@ -2773,6 +2773,55 @@ inline int wheelEventDelta(QWheelEvent* e)
 #include <qvector.h>
 #include <qrect.h>
 
+/**
+ * \if ENGLISH
+ * @brief Base class for statistical samples with position and range
+ * @details Provides common fields for samples that have a position on one axis
+ *          and a statistical range on the other axis (used by boxplots, OHLC charts).
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 统计样本的基类，包含位置和范围
+ * @details 为在一个轴上有位置、在另一个轴上有统计范围的样本提供公共字段
+ *          （用于箱线图、OHLC 图表等）。
+ * \endif
+ */
+class QWT_EXPORT QwtStatisticalSample
+{
+public:
+	/**
+	 * \if ENGLISH
+	 * @brief Default constructor
+	 * @details All values set to 0.0
+	 * \endif
+	 * \if CHINESE
+	 * @brief 默认构造函数
+	 * @details 所有值设置为 0.0
+	 * \endif
+	 */
+	QwtStatisticalSample(double position = 0.0);
+
+	//! Position on the "time" axis (x for vertical, y for horizontal orientation)
+	double position;
+
+	//! Lower bound of the statistical range
+	double lower;
+
+	//! Upper bound of the statistical range
+	double upper;
+
+	//! Central reference value
+	double center;
+};
+
+inline QwtStatisticalSample::QwtStatisticalSample(double pos)
+	: position(pos)
+	, lower(0.0)
+	, upper(0.0)
+	, center(0.0)
+{
+}
+
 /// \if ENGLISH A sample of the types (x1-x2, y) or (x, y1-y2) \endif \if CHINESE 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本 \endif
 class QWT_EXPORT QwtIntervalSample
 {
@@ -3081,6 +3130,235 @@ inline QPointF QwtVectorFieldSample::pos() const
 inline bool QwtVectorFieldSample::isNull() const
 {
 	return (vx == 0.0) && (vy == 0.0);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Sample for box-and-whisker plot (boxplot) visualization
+ * @details Contains all statistical values needed to render a boxplot:
+ *          whisker endpoints, quartiles, median, and outlier count.
+ *          Actual outlier values are stored separately in QwtBoxOutlierSample.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 箱线图（boxplot）样本
+ * @details 包含绘制箱线图所需的所有统计值：
+ *          须须端点、四分位数、中位数和异常值计数。
+ *          实际异常值单独存储在 QwtBoxOutlierSample 中。
+ * \endif
+ */
+class QWT_EXPORT QwtBoxSample : public QwtStatisticalSample
+{
+public:
+	/**
+	 * \if ENGLISH
+	 * @brief Default constructor
+	 * @details All values set to 0.0
+	 * \endif
+	 * \if CHINESE
+	 * @brief 默认构造函数
+	 * @details 所有值设置为 0.0
+	 * \endif
+	 */
+	QwtBoxSample(double position = 0.0);
+
+	/**
+	 * \if ENGLISH
+	 * @brief Full constructor with all statistical values
+	 * @param position Position on the axis
+	 * @param whiskerLower Lower whisker endpoint
+	 * @param q1 First quartile (25th percentile)
+	 * @param median Median value (50th percentile)
+	 * @param q3 Third quartile (75th percentile)
+	 * @param whiskerUpper Upper whisker endpoint
+	 * \endif
+	 * \if CHINESE
+	 * @brief 包含所有统计值的完整构造函数
+	 * @param position 轴上的位置
+	 * @param whiskerLower 下须须端点
+	 * @param q1 第一四分位数（第25百分位）
+	 * @param median 中位数（第50百分位）
+	 * @param q3 第三四分位数（第75百分位）
+	 * @param whiskerUpper 上须须端点
+	 * \endif
+	 */
+	QwtBoxSample(double position, double whiskerLower, double q1,
+				 double median, double q3, double whiskerUpper);
+
+	/**
+	 * \if ENGLISH
+	 * @brief Check if sample has valid ordering
+	 * @details Returns true if whiskerLower <= q1 <= median <= q3 <= whiskerUpper
+	 * \endif
+	 * \if CHINESE
+	 * @brief 检查样本顺序是否有效
+	 * @details 当 whiskerLower <= q1 <= median <= q3 <= whiskerUpper 时返回 true
+	 * \endif
+	 */
+	bool isValid() const;
+
+	/**
+	 * \if ENGLISH
+	 * @brief Get bounding interval including whiskers
+	 * @return Interval from whiskerLower to whiskerUpper
+	 * \endif
+	 * \if CHINESE
+	 * @brief 获取包含须须的边界区间
+	 * @return 从 whiskerLower 到 whiskerUpper 的区间
+	 * \endif
+	 */
+	QwtInterval boundingInterval() const;
+
+	/**
+	 * \if ENGLISH
+	 * @brief Get box body interval (Q1 to Q3)
+	 * @return Interval from q1 to q3
+	 * \endif
+	 * \if CHINESE
+	 * @brief 获取箱体区间（Q1 到 Q3）
+	 * @return 从 q1 到 q3 的区间
+	 * \endif
+	 */
+	QwtInterval boxInterval() const;
+
+	//! Lower whisker endpoint
+	double whiskerLower;
+
+	//! First quartile (25th percentile)
+	double q1;
+
+	//! Median (50th percentile) - also stored in inherited 'center' field
+	double median;
+
+	//! Third quartile (75th percentile)
+	double q3;
+
+	//! Upper whisker endpoint
+	double whiskerUpper;
+
+	//! Number of outliers (stored separately, this is count only)
+	int outlierCount;
+};
+
+inline QwtBoxSample::QwtBoxSample(double pos)
+	: QwtStatisticalSample(pos)
+	, whiskerLower(0.0)
+	, q1(0.0)
+	, median(0.0)
+	, q3(0.0)
+	, whiskerUpper(0.0)
+	, outlierCount(0)
+{
+}
+
+inline QwtBoxSample::QwtBoxSample(double pos, double wl, double q1v,
+								   double med, double q3v, double wu)
+	: QwtStatisticalSample(pos)
+	, whiskerLower(wl)
+	, q1(q1v)
+	, median(med)
+	, q3(q3v)
+	, whiskerUpper(wu)
+	, outlierCount(0)
+{
+	center = median;
+}
+
+inline bool QwtBoxSample::isValid() const
+{
+	return (whiskerLower <= q1) && (q1 <= median) &&
+		   (median <= q3) && (q3 <= whiskerUpper);
+}
+
+inline QwtInterval QwtBoxSample::boundingInterval() const
+{
+	return QwtInterval(whiskerLower, whiskerUpper);
+}
+
+inline QwtInterval QwtBoxSample::boxInterval() const
+{
+	return QwtInterval(q1, q3);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Outlier values for a single boxplot position
+ * @details Contains all outlier values associated with one box position.
+ *          One QwtBoxOutlierSample corresponds to one QwtBoxSample.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 单个箱线图位置的异常值
+ * @details 包含与一个箱位置关联的所有异常值。
+ *          一个 QwtBoxOutlierSample 对应一个 QwtBoxSample。
+ * \endif
+ */
+class QWT_EXPORT QwtBoxOutlierSample
+{
+public:
+	/**
+	 * \if ENGLISH
+	 * @brief Default constructor
+	 * \endif
+	 * \if CHINESE
+	 * @brief 默认构造函数
+	 * \endif
+	 */
+	QwtBoxOutlierSample(double boxPosition = 0.0);
+
+	/**
+	 * \if ENGLISH
+	 * @brief Constructor with position and outlier values
+	 * @param boxPosition Position matching parent QwtBoxSample
+	 * @param values All outlier values for this box
+	 * \endif
+	 * \if CHINESE
+	 * @brief 包含位置和异常值的构造函数
+	 * @param boxPosition 匹配父 QwtBoxSample 的位置
+	 * @param values 此箱的所有异常值
+	 * \endif
+	 */
+	QwtBoxOutlierSample(double boxPosition, const QVector<double>& values);
+
+	/**
+	 * \if ENGLISH
+	 * @brief Constructor with move semantics
+	 * \endif
+	 * \if CHINESE
+	 * @brief 移动语义构造函数
+	 * \endif
+	 */
+	QwtBoxOutlierSample(double boxPosition, QVector<double>&& values);
+
+	//! Check if no outliers present
+	bool isEmpty() const { return values.isEmpty(); }
+
+	//! Get number of outliers
+	int count() const { return values.size(); }
+
+	//! Position of the parent box (matches QwtBoxSample.position)
+	double boxPosition;
+
+	//! All outlier values for this box
+	QVector<double> values;
+};
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos)
+	: boxPosition(pos)
+	, values()
+{
+}
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, const QVector<double>& vals)
+	: boxPosition(pos)
+	, values(vals)
+{
+}
+
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& vals)
+	: boxPosition(pos)
+	, values(std::move(vals))
+{
 }
 
 #endif
@@ -3540,6 +3818,27 @@ public:
 	virtual QRectF boundingRect() const override;
 };
 
+/// Interface for iterating over an array of boxplot samples
+class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
+{
+public:
+	QwtBoxChartData(const QVector< QwtBoxSample >& = QVector< QwtBoxSample >());
+
+	virtual QRectF boundingRect() const override;
+};
+
+/// Interface for iterating over an array of boxplot outlier samples
+class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
+{
+public:
+	QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& = QVector< QwtBoxOutlierSample >());
+
+	virtual QRectF boundingRect() const override;
+
+	//! Get total outlier count across all boxes
+	int totalOutlierCount() const;
+};
+
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >&, size_t from = 0, size_t to = 0);
@@ -3553,6 +3852,10 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >&, size_t f
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >&, size_t from = 0, size_t to = 0);
 
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >&, size_t from = 0, size_t to = 0);
+
+QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t from = 0, size_t to = 0);
+
+QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
 
 /**
  * \if ENGLISH
@@ -15943,6 +16246,9 @@ public:
 		//! For QwtPlotArrowMarker
 		Rtti_PlotArrowMarker,
 
+		//! Boxplot chart item
+		Rtti_PlotBoxChart,
+
 		/*!
 		   Values >= Rtti_PlotUserItem are reserved for plot items
 		   not implemented in the Qwt library.
@@ -23638,6 +23944,32 @@ public:
 		TopLegend
 	};
 
+	/**
+	 * \if ENGLISH
+	 * @brief Tick direction enum
+	 * @details Controls whether ticks are drawn inside or outside the canvas.
+	 *          When ticks are inside, they are drawn from the canvas edge toward
+	 *          the interior, while the backbone and labels remain outside.
+	 * \endif
+	 *
+	 * \if CHINESE
+	 * @brief 刻度方向枚举
+	 * @details 控制刻度线是绘制在画布内部还是外部。
+	 *          当刻度朝内时，刻度线从画布边缘向内延伸，
+	 *          而主干和标签保持在画布外。
+	 * \endif
+	 */
+	enum TickDirection
+	{
+		///< Ticks are drawn outside the canvas (default behavior)
+		///< 刻度朝外（默认行为）
+		TickOutside = 0,
+
+		///< Ticks are drawn inside the canvas
+		///< 刻度朝内
+		TickInside = 1
+	};
+
 	// Constructor
 	explicit QwtPlot(QWidget* = nullptr);
 	// Constructor with title
@@ -23797,6 +24129,47 @@ public:
 	void setAxisMaxMajor(QwtAxisId, int maxMajor);
 	// Get axis max major ticks
 	int axisMaxMajor(QwtAxisId) const;
+
+	// Tick Direction - NEW
+
+	/**
+	 * \if ENGLISH
+	 * @brief Set the tick direction for an axis
+	 * @param axisId Axis identifier (QwtAxis::YLeft, YRight, XBottom, XTop)
+	 * @param direction Tick direction (TickOutside or TickInside)
+	 *
+	 * When set to TickInside, the tick marks are drawn from the canvas edge
+	 * toward the interior, while the backbone and labels remain outside the canvas.
+	 * The inside ticks share the same style (length, color, pen width) as the
+	 * outside ticks configured via QwtScaleDraw.
+	 * \endif
+	 *
+	 * \if CHINESE
+	 * @brief 设置坐标轴的刻度方向
+	 * @param axisId 坐标轴标识（QwtAxis::YLeft, YRight, XBottom, XTop）
+	 * @param direction 刻度方向（TickOutside 朝外或 TickInside 朝内）
+	 *
+	 * 当设置为 TickInside 时，刻度线从画布边缘向内绘制，
+	 * 而主干和标签保持在画布外。
+	 * 朝内刻度与朝外刻度共享相同的样式（长度、颜色、线宽）。
+	 * \endif
+	 */
+	void setAxisTickDirection(QwtAxisId axisId, TickDirection direction);
+
+	/**
+	 * \if ENGLISH
+	 * @brief Get the tick direction for an axis
+	 * @param axisId Axis identifier
+	 * @return Current tick direction (TickOutside or TickInside)
+	 * \endif
+	 *
+	 * \if CHINESE
+	 * @brief 获取坐标轴的刻度方向
+	 * @param axisId 坐标轴标识
+	 * @return 当前刻度方向（TickOutside 朝外或 TickInside 朝内）
+	 * \endif
+	 */
+	TickDirection axisTickDirection(QwtAxisId axisId) const;
 
 	// Legend
 
@@ -24028,6 +24401,10 @@ protected:
 	// Implementation of updateLayout
 	void doLayout();
 
+	// NEW: Draw inside ticks for axes with TickInside direction
+	void drawInsideTicks(QPainter*, const QRectF& canvasRect,
+						 const QwtScaleMap maps[QwtAxis::AxisPositions]) const;
+
 private Q_SLOTS:
 	// Update legend items
 	void updateLegendItems(const QVariant& itemInfo, const QList< QwtLegendData >& legendData);
@@ -24054,6 +24431,13 @@ private:
 	void initPlot(const QwtText& title);
 	// Top parasite plot triggers host to update all axis margins
 	void topParasiteTriggerHostUpdateAxisMargins();
+
+	// Helper: Draw a single inside tick
+	void drawSingleInsideTick(QPainter* painter,
+							  double tickPixelPos,
+							  double tickLength,
+							  double backbonePos,
+							  int axisPos) const;
 
 	class ScaleData;
 	ScaleData* m_scaleData;

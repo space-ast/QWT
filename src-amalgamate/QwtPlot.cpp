@@ -35581,6 +35581,25 @@ static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
 	return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
 }
 
+static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
+{
+	return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower)
+		   || !std::isfinite(sample.q1) || !std::isfinite(sample.median)
+		   || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+}
+
+static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
+{
+	if (!std::isfinite(sample.boxPosition))
+		return true;
+	for (int i = 0; i < sample.values.size(); ++i)
+	{
+		if (!std::isfinite(sample.values[i]))
+			return true;
+	}
+	return false;
+}
+
 static inline QRectF qwtBoundingRect(const QPointF& sample)
 {
 	return QRectF(sample.x(), sample.y(), 0.0, 0.0);
@@ -35648,6 +35667,28 @@ static inline QRectF qwtBoundingRect(const QwtVectorFieldSample& sample)
 	return QRectF(sample.x, sample.y, 0, 0);
 }
 
+static inline QRectF qwtBoundingRect(const QwtBoxSample& sample)
+{
+	return QRectF(sample.position, sample.whiskerLower, 0.0, sample.whiskerUpper - sample.whiskerLower);
+}
+
+static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
+{
+	if (sample.values.isEmpty())
+		return QRectF(sample.boxPosition, 0.0, 0.0, -1.0); // invalid
+
+	double minVal = sample.values[0];
+	double maxVal = sample.values[0];
+	for (int i = 1; i < sample.values.size(); ++i)
+	{
+		if (sample.values[i] < minVal)
+			minVal = sample.values[i];
+		if (sample.values[i] > maxVal)
+			maxVal = sample.values[i];
+	}
+	return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
+}
+
 /**
  * \if ENGLISH
  * @brief Calculate the bounding rectangle of a series subset
@@ -35675,6 +35716,12 @@ template< class T >
 QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to)
 {
 	QRectF boundingRect(1.0, 1.0, -2.0, -2.0);  // invalid;
+
+	// Check for empty series first
+	if (series.size() == 0) {
+		return boundingRect;
+	}
+
 	if (to == 0) {
 		to = series.size() - 1;
 	}
@@ -35909,6 +35956,60 @@ QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >& series, size
 
 /**
  * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtBoxSample >(series, from, to);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算系列子集的边界矩形
+ * @details 缓慢的实现，遍历整个系列。
+ *
+ * @param series 系列
+ * @param from 第一个样本的索引，<= 0 表示从头开始
+ * @param to 最后一个样本的索引，< 0 表示到末尾
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtBoxOutlierSample >(series, from, to);
+}
+
+/**
+ * \if ENGLISH
  * @brief Constructor
  * @param samples Samples
  * \endif
@@ -36131,6 +36232,100 @@ QRectF QwtTradingChartData::boundingRect() const
 		cachedBoundingRect = qwtBoundingRect(*this);
 
 	return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
+ */
+QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples)
+	: QwtArraySeriesData< QwtBoxSample >(samples)
+{
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF QwtBoxChartData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param samples Samples
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param samples 样本
+ * \endif
+ */
+QwtBoxOutlierChartData::QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& samples)
+	: QwtArraySeriesData< QwtBoxOutlierSample >(samples)
+{
+}
+
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ * \endif
+ * \if CHINESE
+ * @brief 计算边界矩形
+ * @details 边界矩形通过遍历所有点计算一次，并存储以供后续所有请求使用。
+ *
+ * @return 边界矩形
+ * \endif
+ */
+QRectF QwtBoxOutlierChartData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * \if ENGLISH
+ * @brief Get total outlier count across all boxes
+ * @return Total count of all outlier values
+ * \endif
+ * \if CHINESE
+ * @brief 获取所有箱的总异常值数量
+ * @return 所有异常值的总计数
+ * \endif
+ */
+int QwtBoxOutlierChartData::totalOutlierCount() const
+{
+	int count = 0;
+	for (size_t i = 0; i < size(); ++i)
+		count += sample(i).count();
+	return count;
 }
 
 /*** End of inlined file: qwt_series_data.cpp ***/
@@ -60097,6 +60292,11 @@ public:
 	bool isParasitePlot { false };                                ///< 标记这个绘图是寄生绘图
 	QMetaObject::Connection shareConn[ QwtAxis::AxisPositions ];  // 记录寄生轴和宿主轴坐标同步的信号槽，仅仅针对寄生轴有用
 	QString plotId;
+
+	// NEW: tick direction for each axis
+	TickDirection tickDirection[QwtAxis::AxisPositions] = {
+		TickOutside, TickOutside, TickOutside, TickOutside
+	};
 };
 
 QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
@@ -60815,6 +61015,148 @@ void QwtPlot::updateCanvasMargins()
 }
 
 /*!
+   \brief Draw a single inside tick
+
+   \param painter Painter
+   \param tickPixelPos Tick position in pixels
+   \param tickLength Tick length
+   \param backbonePos Backbone position (canvas edge)
+   \param axisPos Axis position (YLeft, YRight, XTop, XBottom)
+ */
+void QwtPlot::drawSingleInsideTick(QPainter* painter,
+								   double tickPixelPos,
+								   double tickLength,
+								   double backbonePos,
+								   int axisPos) const
+{
+	using namespace QwtAxis;
+	const double len = tickLength;
+
+	switch (axisPos)
+	{
+	case YLeft:
+		// From canvas left edge, draw toward right (inside)
+		QwtPainter::drawLine(painter,
+			backbonePos, tickPixelPos,
+			backbonePos + len, tickPixelPos);
+		break;
+
+	case YRight:
+		// From canvas right edge, draw toward left (inside)
+		QwtPainter::drawLine(painter,
+			backbonePos, tickPixelPos,
+			backbonePos - len, tickPixelPos);
+		break;
+
+	case XTop:
+		// From canvas top edge, draw toward bottom (inside)
+		QwtPainter::drawLine(painter,
+			tickPixelPos, backbonePos,
+			tickPixelPos, backbonePos + len);
+		break;
+
+	case XBottom:
+		// From canvas bottom edge, draw toward top (inside)
+		QwtPainter::drawLine(painter,
+			tickPixelPos, backbonePos,
+			tickPixelPos, backbonePos - len);
+		break;
+	}
+}
+
+/*!
+   \brief Draw inside ticks for axes with TickInside direction
+
+   This method is called after drawItems() to draw tick marks that
+   extend from the canvas edge toward the interior.
+
+   \param painter Painter
+   \param canvasRect Canvas rectangle
+   \param maps Scale maps for all axes
+ */
+void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
+							  const QwtScaleMap maps[QwtAxis::AxisPositions]) const
+{
+	using namespace QwtAxis;
+
+	for (int axisPos = 0; axisPos < AxisPositions; axisPos++)
+	{
+		if (axisTickDirection(axisPos) != TickInside)
+			continue;
+
+		if (!isAxisVisible(axisPos))
+			continue;
+
+		const QwtScaleWidget* scaleWidget = axisWidget(axisPos);
+		if (!scaleWidget)
+			continue;
+
+		const QwtScaleDraw* scaleDraw = scaleWidget->scaleDraw();
+		if (!scaleDraw)
+			continue;
+
+		painter->save();
+
+		// Set pen style (sync with outside ticks)
+		QPen pen;
+		pen.setWidthF(scaleDraw->penWidthF());
+		pen.setColor(scaleWidget->scaleColor());
+		painter->setPen(pen);
+
+		// Get scale division
+		const QwtScaleDiv& scaleDiv = scaleDraw->scaleDiv();
+		const QwtScaleMap& map = maps[axisPos];
+
+		// Calculate backbone position (canvas edge)
+		double backbonePos;
+		switch (axisPos)
+		{
+		case YLeft:
+			backbonePos = canvasRect.left();
+			break;
+		case YRight:
+			backbonePos = canvasRect.right();
+			break;
+		case XTop:
+			backbonePos = canvasRect.top();
+			break;
+		case XBottom:
+			backbonePos = canvasRect.bottom();
+			break;
+		}
+
+		// Draw all tick types
+		const QList<double>& minorTicks = scaleDiv.ticks(QwtScaleDiv::MinorTick);
+		const QList<double>& mediumTicks = scaleDiv.ticks(QwtScaleDiv::MediumTick);
+		const QList<double>& majorTicks = scaleDiv.ticks(QwtScaleDiv::MajorTick);
+
+		double minorLen = scaleDraw->tickLength(QwtScaleDiv::MinorTick);
+		double mediumLen = scaleDraw->tickLength(QwtScaleDiv::MediumTick);
+		double majorLen = scaleDraw->tickLength(QwtScaleDiv::MajorTick);
+
+		for (const double tickValue : minorTicks)
+		{
+			double tickPixelPos = map.transform(tickValue);
+			drawSingleInsideTick(painter, tickPixelPos, minorLen, backbonePos, axisPos);
+		}
+
+		for (const double tickValue : mediumTicks)
+		{
+			double tickPixelPos = map.transform(tickValue);
+			drawSingleInsideTick(painter, tickPixelPos, mediumLen, backbonePos, axisPos);
+		}
+
+		for (const double tickValue : majorTicks)
+		{
+			double tickPixelPos = map.transform(tickValue);
+			drawSingleInsideTick(painter, tickPixelPos, majorLen, backbonePos, axisPos);
+		}
+
+		painter->restore();
+	}
+}
+
+/*!
    Redraw the canvas.
    \param painter Painter used for drawing
 
@@ -60830,6 +61172,9 @@ void QwtPlot::drawCanvas(QPainter* painter)
 		maps[ axisPos ] = canvasMap(axisPos);
 
 	drawItems(painter, m_data->canvas->contentsRect(), maps);
+
+	// Draw inside ticks after items
+	drawInsideTicks(painter, m_data->canvas->contentsRect(), maps);
 }
 
 /*!
@@ -61732,6 +62077,74 @@ void QwtPlot::setAxisToLinearScale(QwtAxisId axisId)
 	}
 	setAxisScaleEngine(axisId, new QwtLinearScaleEngine());
 	setAxisScaleDraw(axisId, new QwtScaleDraw());  // 恢复默认绘制器
+}
+
+/*!
+   \brief Set the tick direction for an axis
+
+   When set to TickInside, the tick marks are drawn from the canvas edge
+   toward the interior. The outside tick component is disabled on the
+   QwtScaleWidget, and inside ticks are drawn in drawCanvas.
+
+   \param axisId Axis identifier
+   \param direction Tick direction (TickOutside or TickInside)
+
+   \sa axisTickDirection()
+ */
+void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
+{
+	if (!isAxisValid(axisId))
+		return;
+
+	QWT_D(d);
+	if (d->tickDirection[axisId] != direction)
+	{
+		d->tickDirection[axisId] = direction;
+
+		// When ticks are inside, disable the outside tick component
+		QwtScaleWidget* scaleWidget = axisWidget(axisId);
+		if (scaleWidget)
+		{
+			QwtScaleDraw* scaleDraw = scaleWidget->scaleDraw();
+			if (scaleDraw)
+			{
+				if (direction == TickInside)
+				{
+					// Disable outside ticks, keep backbone and labels
+					scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, false);
+				}
+				else
+				{
+					// Restore outside ticks
+					scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, true);
+				}
+			}
+
+			// Trigger scale widget to recalculate layout and redraw
+			// This is necessary because enableComponent() only changes internal flags
+			// without triggering any widget update
+			scaleWidget->layoutScale();
+		}
+
+		autoRefresh();
+	}
+}
+
+/*!
+   \brief Get the tick direction for an axis
+
+   \param axisId Axis identifier
+   \return Current tick direction
+
+   \sa setAxisTickDirection()
+ */
+QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
+{
+	if (!isAxisValid(axisId))
+		return TickOutside;
+
+	QWT_DC(d);
+	return d->tickDirection[axisId];
 }
 
 /**
