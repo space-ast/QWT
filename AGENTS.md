@@ -119,80 +119,47 @@ Qt6额外需要：`OpenGLWidgets`
 | `QWT_CONFIG_BUILD_EXAMPLE` | ON | 构建示例 |
 | `QWT_CONFIG_BUILD_PLAYGROUND` | ON | 构建实验代码 |
 
-## 编码规范
+## 开发规范
 
-### 代码格式化
+详细的开发规范文档位于 `docs/zh/dev-guide/` 目录：
 
-项目使用 `.clang-format` 配置=
+| 文档 | 说明 |
+|------|------|
+| [编码规范](docs/zh/dev-guide/coding-standards.md) | 代码格式化、C++11兼容性宏、命名规范等 |
+| [注释规范](docs/zh/dev-guide/comment-standards.md) | Doxygen双语注释格式、注释位置规范等 |
+| [PIMPL模式](docs/zh/dev-guide/pimpl-pattern.md) | PIMPL设计模式的使用方法和宏定义 |
+| [开发指引首页](docs/zh/dev-guide/index.md) | 开发指引概览和快速开始 |
 
-### C++11 兼容性宏
-
-```cpp
-// 创建unique_ptr（C++11兼容）
-qwt_make_unique<T>(args...)
-
-// Qt容器安全迭代
-for (const auto& item : qwt_as_const(container)) { ... }
-
-// 编译期常量
-constexpr
-```
-
-### 关键代码规范
+### 编码规范要点
 
 1. **使用 `override` 和 `final`** 代替旧宏 `QWT_OVERRIDE`、`QWT_FINAL`
 2. **使用 `nullptr`** 代替 `NULL`
 3. **使用 `static_cast`** 代替C风格强制转换
 4. **使用 `using`** 代替 `typedef`
-5. **PIMPL模式** `src\qwt_global.h`中定义了`QWT_DECLARE_PRIVATE`,`QWT_DECLARE_PUBLIC`等宏，用于实现PIMPL模式，使用PIMPL模式的情况下，在类声明中添加 `QWT_DECLARE_PRIVATE([类名])`即可定义私有成员变量
+5. **Qt容器迭代** 使用 `qwt_as_const` 防止深拷贝
 
-    ```cpp
-    class QWT_EXPORT [类名]
-    {
-        QWT_DECLARE_PRIVATE([类名])
-    public:
-    ...
-    ```
+详细内容请参阅 [编码规范](docs/zh/dev-guide/coding-standards.md)。
 
-    - 在cpp文件中的`[类名]::PrivateData`类中添加 `QWT_DECLARE_PUBLIC([类名])`定义：
+### 注释规范要点
 
-    ```cpp
-    class [类名]::PrivateData
-    {
-        QWT_DECLARE_PUBLIC([类名])//这里会自动生成一个[类名]* q_ptr变量，保存宿主的指针
-    public:
-        PrivateData([类名]* p);
-    }
-    ```
+所有新增代码必须使用 **Doxygen 双语格式**（中英文）：
 
-    - 在类构造函数中注意要初始化PrivateData指针，可以使用 `QWT_PIMPL_CONSTRUCT` 宏：
+- 详细注释写在 `.cpp` 文件
+- 简洁注释写在 `.h` 文件
+- 类注释需要在头文件中添加双语 Doxygen
 
-    ```cpp
-    [类名]::[类名]() : QWT_PIMPL_CONSTRUCT
-    {
-        ...
-    }
-    ```
+详细内容请参阅 [注释规范](docs/zh/dev-guide/comment-standards.md)。
 
-    - 在函数中可以直接使用m_data调用私有成员变量，对于频繁的访问，可以使用 `QWT_D`(非常量)/`QWT_DC`(常量)` 宏：
+### PIMPL 模式要点
 
-    ```cpp
-    void [类名]::function(){
-        QWT_D(d);//扩展为PrivateData* d = d_func();d是参数名字，可以自定义
-        d->...
-    }
+项目提供 PIMPL 模式宏定义：
 
-    void [类名]::function() const{
-        QWT_DC(d);//扩展为const PrivateData* d = d_func();d是参数名字，可以自定义
-        d->...
-    }
-    ```
+- `QWT_DECLARE_PRIVATE(Class)` — 声明私有数据指针
+- `QWT_DECLARE_PUBLIC(Class)` — 声明公有宿主指针
+- `QWT_PIMPL_CONSTRUCT` — 初始化私有数据指针
+- `QWT_D(name)` / `QWT_DC(name)` — 访问私有数据
 
-6. **Qt容器迭代** 使用 `qwt_as_const` 防止深拷贝
-
-### 代码注释规范
-
-- 全部使用doxygen注释
+详细使用方法请参阅 [PIMPL模式使用指南](docs/zh/dev-guide/pimpl-pattern.md)。
 
 ## 重要命名变更 (v7.0.7+)
 
