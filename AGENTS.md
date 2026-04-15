@@ -145,6 +145,7 @@ constexpr
 3. **使用 `static_cast`** 代替C风格强制转换
 4. **使用 `using`** 代替 `typedef`
 5. **PIMPL模式** `src\qwt_global.h`中定义了`QWT_DECLARE_PRIVATE`,`QWT_DECLARE_PUBLIC`等宏，用于实现PIMPL模式，使用PIMPL模式的情况下，在类声明中添加 `QWT_DECLARE_PRIVATE([类名])`即可定义私有成员变量
+
     ```cpp
     class QWT_EXPORT [类名]
     {
@@ -154,6 +155,7 @@ constexpr
     ```
 
     - 在cpp文件中的`[类名]::PrivateData`类中添加 `QWT_DECLARE_PUBLIC([类名])`定义：
+
     ```cpp
     class [类名]::PrivateData
     {
@@ -164,6 +166,7 @@ constexpr
     ```
 
     - 在类构造函数中注意要初始化PrivateData指针，可以使用 `QWT_PIMPL_CONSTRUCT` 宏：
+
     ```cpp
     [类名]::[类名]() : QWT_PIMPL_CONSTRUCT
     {
@@ -172,6 +175,7 @@ constexpr
     ```
 
     - 在函数中可以直接使用m_data调用私有成员变量，对于频繁的访问，可以使用 `QWT_D`(非常量)/`QWT_DC`(常量)` 宏：
+
     ```cpp
     void [类名]::function(){
         QWT_D(d);//扩展为PrivateData* d = d_func();d是参数名字，可以自定义
@@ -183,7 +187,12 @@ constexpr
         d->...
     }
     ```
+
 6. **Qt容器迭代** 使用 `qwt_as_const` 防止深拷贝
+
+### 代码注释规范
+
+- 全部使用doxygen注释
 
 ## 重要命名变更 (v7.0.7+)
 
@@ -218,7 +227,9 @@ Qwt使用 `QwtAxis::Position` 枚举标识坐标轴位置：
 - `QwtAxis::XBottom`, `QwtAxis::XTop`
 - `QwtAxis::YLeft`, `QwtAxis::YRight`
 
+## 构建及编译指引
 
+如果需要构建和编译，你需要阅读`./build.md`文件
 
 ## 示例索引
 
@@ -235,7 +246,6 @@ Qwt使用 `QwtAxis::Position` 枚举标识坐标轴位置：
 | `examples/oscilloscope` | 示波器效果 |
 | `examples/polardemo` | 极坐标绘图 |
 | `examples/stockchart` | 股票图表 |
-
 
 ## 文档资源
 

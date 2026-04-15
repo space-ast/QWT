@@ -29,12 +29,9 @@
 
 #include "qwt_global.h"
 #include "qwt_null_paintdevice.h"
+#include "qwt_painter_command.h"
 
 #include <qmetatype.h>
-
-class QwtPainterCommand;
-class QPixmap;
-class QImage;
 
 /*!
     \brief A paint device for scalable graphics
