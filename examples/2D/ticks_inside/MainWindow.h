@@ -26,18 +26,24 @@ private Q_SLOTS:
     void onXBottomToggled(bool checked);
     void onAllInsideClicked();
     void onAllOutsideClicked();
+    void onLogYRightToggled(bool checked);
+    void onInvertedYLeftToggled(bool checked);
 
 private:
     void setupPlot();
     QWidget* createControlPanel();
 
     QwtPlot* m_plot;
-    QwtPlotCurve* m_curve;
+    QwtPlotCurve* m_curve;           // Regular curve (XBottom)
+    QwtPlotCurve* m_curveLog;        // Curve for log axis (YRight)
+    QwtPlotCurve* m_curveInverted;   // Curve for inverted axis (YLeft)
 
     QCheckBox* m_chkYLeft;
     QCheckBox* m_chkYRight;
     QCheckBox* m_chkXTop;
     QCheckBox* m_chkXBottom;
+    QCheckBox* m_chkLogYRight;       // Toggle log scale for YRight
+    QCheckBox* m_chkInvertedYLeft;   // Toggle inverted scale for YLeft
 };
 
 #endif // MAIN_WINDOW_H
