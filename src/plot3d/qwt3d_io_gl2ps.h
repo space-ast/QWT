@@ -8,49 +8,63 @@
 
 namespace Qwt3D {
 
-//! Provides EPS, PS, PDF, SVG, PGF and TeX output
-/*!
-
+/**
+ * \if ENGLISH
+ * @brief Provides EPS, PS, PDF, SVG, PGF and TeX output
+ * @details VectorWriter provides vector graphics output through the gl2ps library,
+ *          supporting EPS, PS, PDF, SVG, PGF and TeX formats.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 提供 EPS, PS, PDF, SVG, PGF 和 TeX 输出
+ * @details VectorWriter 通过 gl2ps 库提供矢量图形输出，
+ *          支持 EPS, PS, PDF, SVG, PGF 和 TeX 格式。
+ * \endif
  */
 class QWT3D_EXPORT VectorWriter : public IO::Functor
 {
     friend class IO;
 
 public:
-    //! The possible output formats for the text parts of the scene
+    // The possible output formats for the text parts of the scene
     enum TEXTMODE {
-        PIXEL, //!< All text will be converted to pixmaps
-        NATIVE, //!< Text output in the native output format
-        TEX //!< Text output in additional LaTeX file as an overlay
-    };
-    //! The possible behaviour for landscape settings
-    enum LANDSCAPEMODE {
-        ON, //!< Landscape mode on
-        OFF, //!< Landscape mode off
-        AUTO //!< The output orientation depends on the plot widgets aspect ratio (default)
+        PIXEL,
+        NATIVE,
+        TEX
     };
 
-    //! The possible sorting types which are translated in gl2ps types
+    // The possible behaviour for landscape settings
+    enum LANDSCAPEMODE {
+        ON,
+        OFF,
+        AUTO
+    };
+
+    // The possible sorting types which are translated in gl2ps types
     enum SORTMODE {
-        NOSORT, //!< No sorting at all
-        SIMPLESORT, //!< A more simple (yet quicker) algorithm (default)
-        BSPSORT //!< BSP SORT (best and slow!)
+        NOSORT,
+        SIMPLESORT,
+        BSPSORT
     };
 
     VectorWriter();
 
-    void setLandscape(LANDSCAPEMODE val) { landscape_ = val; } //!< Sets landscape mode.
-    LANDSCAPEMODE landscape() const { return landscape_; } //!< Returns the current landscape mode
+    // Sets landscape mode
+    void setLandscape(LANDSCAPEMODE val) { landscape_ = val; }
+    // Returns the current landscape mode
+    LANDSCAPEMODE landscape() const { return landscape_; }
 
     void setTextMode(TEXTMODE val, QString fname = "");
-    TEXTMODE textMode() const { return textmode_; } //!< Return current text output mode.
+    // Return current text output mode
+    TEXTMODE textMode() const { return textmode_; }
 
-    //! Sets one of the SORTMODE sorting modes.
+    // Sets one of the SORTMODE sorting modes
     void setSortMode(SORTMODE val) { sortmode_ = val; }
-    SORTMODE sortMode() const { return sortmode_; } //!< Returns gl2ps sorting type.
-    //! Turns compressed output on or off (no effect if zlib support is not available)
+    // Returns gl2ps sorting type
+    SORTMODE sortMode() const { return sortmode_; }
+    // Turns compressed output on or off (no effect if zlib support is not available)
     void setCompressed(bool val);
-    //! Returns compression mode (always false if zlib support has not been set)
+    // Returns compression mode (always false if zlib support has not been set)
     bool compressed() const { return compressed_; }
 
     bool setFormat(QString const &format);

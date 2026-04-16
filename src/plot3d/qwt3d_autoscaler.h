@@ -7,23 +7,37 @@
 
 namespace Qwt3D {
 
-//! ABC for autoscaler
+/**
+ * \if ENGLISH
+ * @brief Abstract base class for autoscaler
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 自动缩放器的抽象基类
+ * \endif
+ */
 class QWT3D_EXPORT AutoScaler
 {
     friend class qwt3d_ptr<AutoScaler>;
 
 protected:
-    //! Returns a new heap based object of the derived class.
     virtual AutoScaler *clone() const = 0;
-    //! To implement from subclasses
     virtual int execute(double &a, double &b, double start, double stop, int ivals) = 0;
     virtual ~AutoScaler() { }
 
 private:
-    void destroy() const { delete this; } //!< Used by qwt3d_ptr
+    void destroy() const { delete this; }
 };
 
-//! Automatic beautifying of linear scales
+/**
+ * \if ENGLISH
+ * @brief Automatic beautifying of linear scales
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 线性刻度的自动美化缩放器
+ * \endif
+ */
 class QWT3D_EXPORT LinearAutoScaler : public AutoScaler
 {
     friend class LinearScale;
@@ -31,7 +45,6 @@ class QWT3D_EXPORT LinearAutoScaler : public AutoScaler
 protected:
     LinearAutoScaler();
     explicit LinearAutoScaler(std::vector<double> &mantisses);
-    //! Returns a new heap based object utilized from qwt3d_ptr
     AutoScaler *clone() const { return new LinearAutoScaler(*this); }
     int execute(double &a, double &b, double start, double stop, int ivals);
 

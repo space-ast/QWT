@@ -8,57 +8,77 @@
 
 namespace Qwt3D {
 
-//! A flat color legend
 /**
-        The class visualizes a ColorVector together with a scale (axis)  and a caption. ColorLegends
-   are vertical or horizontal
-*/
+ * \if ENGLISH
+ * @brief A flat color legend
+ * @details The class visualizes a ColorVector together with a scale (axis)
+ *          and a caption. ColorLegends are vertical or horizontal.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 平面颜色图例
+ * @details 该类将 ColorVector 与刻度（坐标轴）和标题一起可视化。
+ *          ColorLegends 可以是垂直的或水平的。
+ * \endif
+ */
 class QWT3D_EXPORT ColorLegend : public Drawable
 {
 
 public:
-    //! Possible anchor points for caption and axis
+    // Possible anchor points for caption and axis
     enum SCALEPOSITION {
-        Top, //!< scale on top
-        Bottom, //!< scale on bottom
-        Left, //!< scale left
-        Right //!< scale right
+        Top,
+        Bottom,
+        Left,
+        Right
     };
 
-    //! Orientation of the legend
+    // Orientation of the legend
     enum ORIENTATION {
-        BottomTop, //!< Positionate the legend vertically, the lowest color index is on the bottom
-        LeftRight //!< Positionate the legend horizontally, the lowest color index is on left side
+        BottomTop,
+        LeftRight
     };
 
-    ColorLegend(); //!< Standard constructor
+    // Standard constructor
+    ColorLegend();
 
-    void
-    draw(); //!< Draws the object. You should not use this explicitely - the function is called by updateGL().
+    // Draws the object - called by updateGL()
+    void draw();
 
-    void
-    setRelPosition(Qwt3D::Tuple relMin,
-                   Qwt3D::Tuple relMax); //!< Sets the relative position of the legend inside widget
-    void setOrientation(ORIENTATION, SCALEPOSITION); //!< Sets legend orientation and scale position
-    void setLimits(double start, double stop); //!< Sets the limit of the scale.
-    void setMajors(int); //!< Sets scale major tics.
-    void setMinors(int); //!< Sets scale minor tics.
-    void drawScale(bool val) { showaxis_ = val; } //!< Sets whether a scale will be drawn.
+    // Sets the relative position of the legend inside widget
+    void setRelPosition(Qwt3D::Tuple relMin,
+                   Qwt3D::Tuple relMax);
+    // Sets legend orientation and scale position
+    void setOrientation(ORIENTATION, SCALEPOSITION);
+    // Sets the limit of the scale
+    void setLimits(double start, double stop);
+    // Sets scale major tics
+    void setMajors(int);
+    // Sets scale minor tics
+    void setMinors(int);
+    // Sets whether a scale will be drawn
+    void drawScale(bool val) { showaxis_ = val; }
+    // Sets whether the scale will have scale numbers
     void drawNumbers(bool val)
     {
         axis_.setNumbers(val);
-    } //!< Sets whether the scale will have scale numbers.
-    void setAutoScale(bool val); //!< Sets, whether the axis is autoscaled or not.
-    void setScale(Qwt3D::Scale *scale); //!< Sets another scale
-    void setScale(Qwt3D::SCALETYPE); //!< Sets one of the predefined scale types
+    }
+    // Sets whether the axis is autoscaled or not
+    void setAutoScale(bool val);
+    // Sets another scale
+    void setScale(Qwt3D::Scale *scale);
+    // Sets one of the predefined scale types
+    void setScale(Qwt3D::SCALETYPE);
 
-    void setTitleString(QString const &s); //!< Sets the legends caption string.
+    // Sets the legends caption string
+    void setTitleString(QString const &s);
 
-    //! Sets the legends caption font.
+    // Sets the legends caption font
     void setTitleFont(QString const &family, int pointSize, int weight = QFont::Normal,
-                      bool italic = false);
+                    bool italic = false);
 
-    Qwt3D::ColorVector colors; //!< The color vector
+    // The color vector
+    Qwt3D::ColorVector colors;
 
 private:
     Qwt3D::Label caption_;

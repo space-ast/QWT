@@ -7,20 +7,29 @@ namespace Qwt3D {
 
 class SurfacePlot;
 
-//! Abstract base class for mappings acting on rectangular grids
 /**
-
-*/
+ * \if ENGLISH
+ * @brief Abstract base class for mappings acting on rectangular grids
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 作用于矩形网格的映射抽象基类
+ * \endif
+ */
 class QWT3D_EXPORT GridMapping : public Mapping
 {
 public:
-    GridMapping(); //!< Constructs GridMapping object w/o assigned SurfacePlot.
+    // Constructs GridMapping object w/o assigned SurfacePlot
+    GridMapping();
 
-    void setMesh(unsigned int columns, unsigned int rows); //!< Sets number of rows and columns.
+    // Sets number of rows and columns
+    void setMesh(unsigned int columns, unsigned int rows);
+    // Sets u-v domain boundaries
     void setDomain(double minu, double maxu, double minv,
-                   double maxv); //!< Sets u-v domain boundaries.
+                   double maxv);
+    // Restrict the mappings range to the parallelepiped
     void restrictRange(
-            Qwt3D::ParallelEpiped const &); //!< Restrict the mappings range to the parallelepiped
+            Qwt3D::ParallelEpiped const &);
 
 protected:
     Qwt3D::ParallelEpiped range_p;

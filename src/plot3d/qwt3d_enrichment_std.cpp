@@ -11,11 +11,37 @@ using namespace Qwt3D;
 //
 /////////////////////////////////////////////////////////////////
 
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 CrossHair::CrossHair()
 {
     configure(0, 1, false, false);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Constructs a CrossHair with specified parameters
+ * @param[in] rad Relative radius
+ * @param[in] linewidth Line width
+ * @param[in] smooth Smooth lines
+ * @param[in] boxed Draw a box around the crosshair
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造具有指定参数的十字线
+ * @param[in] rad 相对半径
+ * @param[in] linewidth 线宽
+ * @param[in] smooth 平滑线条
+ * @param[in] boxed 在十字线周围绘制方框
+ * \endif
+ */
 CrossHair::CrossHair(double rad, double linewidth, bool smooth, bool boxed)
 {
     configure(rad, linewidth, smooth, boxed);
@@ -109,11 +135,33 @@ void CrossHair::draw(Qwt3D::Triple const &pos)
 //
 /////////////////////////////////////////////////////////////////
 
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 Dot::Dot()
 {
     configure(1, false);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Constructs a Dot with specified parameters
+ * @param[in] pointsize Point size
+ * @param[in] smooth Smooth point rendering
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造具有指定参数的点
+ * @param[in] pointsize 点大小
+ * @param[in] smooth 平滑点渲染
+ * \endif
+ */
 Dot::Dot(double pointsize, bool smooth)
 {
     configure(pointsize, smooth);
@@ -162,6 +210,15 @@ void Dot::draw(Qwt3D::Triple const &pos)
 //
 /////////////////////////////////////////////////////////////////
 
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 Cone::Cone()
 {
     hat = gluNewQuadric();
@@ -170,6 +227,19 @@ Cone::Cone()
     configure(0, 3);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Constructs a Cone with specified radius and quality
+ * @param[in] rad Cone radius
+ * @param[in] quality Number of faces for the cone
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造具有指定半径和质量的圆锥
+ * @param[in] rad 圆锥半径
+ * @param[in] quality 圆锥的面数
+ * \endif
+ */
 Cone::Cone(double rad, unsigned quality)
 {
     hat = gluNewQuadric();
@@ -178,6 +248,15 @@ Cone::Cone(double rad, unsigned quality)
     configure(rad, quality);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 Cone::~Cone()
 {
     gluDeleteQuadric(hat);
@@ -248,6 +327,15 @@ Arrow::Arrow()
     configure(3, 0.4, 0.06, 0.02);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 Arrow::~Arrow()
 {
     gluDeleteQuadric(hat);
@@ -257,12 +345,24 @@ Arrow::~Arrow()
 }
 
 /**
-\param segs number of faces for the fields arrows (see the gallery for examples)
-\param relconelength see picture
-\param relconerad see picture
-\param relstemrad see picture
-\image html arrowanatomy.png
-*/
+ * \if ENGLISH
+ * @brief Configures the arrow appearance
+ * @param[in] segs Number of faces for the arrows (see the gallery for examples)
+ * @param[in] relconelength Relative cone length (see arrowanatomy.png)
+ * @param[in] relconerad Relative cone radius (see arrowanatomy.png)
+ * @param[in] relstemrad Relative stem radius (see arrowanatomy.png)
+ * \image html arrowanatomy.png
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 配置箭头外观
+ * @param[in] segs 箭头的面数（参见图库示例）
+ * @param[in] relconelength 相对锥体长度（参见 arrowanatomy.png）
+ * @param[in] relconerad 相对锥体半径（参见 arrowanatomy.png）
+ * @param[in] relstemrad 相对杆体半径（参见 arrowanatomy.png）
+ * \image html arrowanatomy.png
+ * \endif
+ */
 void Arrow::configure(int segs, double relconelength, double relconerad, double relstemrad)
 {
     plot = 0;
@@ -313,13 +413,24 @@ void Arrow::draw(Qwt3D::Triple const &pos)
     glMatrixMode(mode);
 }
 
-//! transform a vector on the z axis with length |beg-end|, to get them in coincidence with the vector(beg,end)
 /**
-        \return Angle in degree to rotate
-        \param axis   The axis to rotate around
-        \param beg    result vector base point
-        \param end    result vector top point
-*/
+ * \if ENGLISH
+ * @brief Calculates rotation angle to transform a z-axis vector to coincide with a given vector
+ * @param[out] axis The axis to rotate around
+ * @param[in] vec The target free vector
+ * @return Angle in degrees to rotate
+ * @details Transforms a vector on the z axis with length |beg-end| to get them
+ *          in coincidence with the vector(beg,end).
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算旋转角度以将 z 轴向量变换为与给定向量重合
+ * @param[out] axis 旋转轴
+ * @param[in] vec 目标自由向量
+ * @return 旋转角度（度）
+ * @details 将 z 轴上长度为 |beg-end| 的向量变换为与向量(beg,end)重合。
+ * \endif
+ */
 double Arrow::calcRotation(Triple &axis, FreeVector const &vec)
 {
 

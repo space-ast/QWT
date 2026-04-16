@@ -75,10 +75,23 @@ void Drawable::detachAll()
     dlist.clear();
 }
 
-//! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p
 /**
-        Don't rely on (use) this in display lists !
-*/
+ * \if ENGLISH
+ * @brief Converts viewport coordinates to world coordinates (glUnProject)
+ * @param[in] win Viewport (window) coordinates
+ * @param[out] err Optional error flag (true on failure)
+ * @return World (object) coordinates
+ * @warning Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将视口坐标转换为世界坐标（glUnProject）
+ * @param[in] win 视口（窗口）坐标
+ * @param[out] err 可选的错误标志（失败时为 true）
+ * @return 世界（对象）坐标
+ * @warning 不要在显示列表中使用此功能！
+ * \endif
+ */
 Triple Drawable::ViewPort2World(Triple win, bool* err)
 {
     Triple obj;
@@ -91,10 +104,23 @@ Triple Drawable::ViewPort2World(Triple win, bool* err)
     return obj;
 }
 
-//! simplified glut routine (glProject): object coordinates_p --> windows coordinates_p
 /**
-        Don't rely on (use) this in display lists !
-*/
+ * \if ENGLISH
+ * @brief Converts world coordinates to viewport coordinates (glProject)
+ * @param[in] obj World (object) coordinates
+ * @param[out] err Optional error flag (true on failure)
+ * @return Viewport (window) coordinates
+ * @warning Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将世界坐标转换为视口坐标（glProject）
+ * @param[in] obj 世界（对象）坐标
+ * @param[out] err 可选的错误标志（失败时为 true）
+ * @return 视口（窗口）坐标
+ * @warning 不要在显示列表中使用此功能！
+ * \endif
+ */
 Triple Drawable::World2ViewPort(Triple obj, bool* err)
 {
     Triple win;
@@ -108,8 +134,20 @@ Triple Drawable::World2ViewPort(Triple obj, bool* err)
 }
 
 /**
-        Don't rely on (use) this in display lists !
-*/
+ * \if ENGLISH
+ * @brief Calculates world coordinates from relative viewport position
+ * @param[in] rel Relative position in viewport coordinates
+ * @return Corresponding world coordinates
+ * @warning Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 从相对视口位置计算世界坐标
+ * @param[in] rel 视口坐标中的相对位置
+ * @return 对应的世界坐标
+ * @warning 不要在显示列表中使用此功能！
+ * \endif
+ */
 Triple Drawable::relativePosition(Triple rel)
 {
     return ViewPort2World(Triple((rel.x - viewport[ 0 ]) * viewport[ 2 ], (rel.y - viewport[ 1 ]) * viewport[ 3 ], rel.z));

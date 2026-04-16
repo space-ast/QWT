@@ -60,7 +60,7 @@ char* read_field(FILE* fp, bool skipcomments = true)
     return (buf);
 }
 
-//! set to data begin
+// set to data begin
 bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xmin, double& xmax, double& ymin, double& ymax)
 {
     char* p;
@@ -100,7 +100,7 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
     return true;
 }
 
-//! find out what the magic string is and compare
+// find out what the magic string is and compare
 bool check_magic(FILE* fp, const char* val)
 {
     char* p;
@@ -112,7 +112,7 @@ bool check_magic(FILE* fp, const char* val)
     return true;
 }
 
-//! find out what the type is
+// find out what the type is
 bool check_type(FILE* fp, const char* val)
 {
     char* p;
@@ -143,10 +143,46 @@ void deleteData(double** data, int columns)
 }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 默认构造函数
+ * \endif
+ */
 NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
 {
 }
 
+/**
+ * \if ENGLISH
+ * @brief Collects information about the data file
+ * @param[out] file File pointer (opened on success)
+ * @param[in] fname File name to read
+ * @param[out] xmesh Number of columns in mesh
+ * @param[out] ymesh Number of rows in mesh
+ * @param[out] minx Minimum x value
+ * @param[out] maxx Maximum x value
+ * @param[out] miny Minimum y value
+ * @param[out] maxy Maximum y value
+ * @return True on success, false if file cannot be opened or has invalid format
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 收集数据文件的信息
+ * @param[out] file 文件指针（成功时已打开）
+ * @param[in] fname 要读取的文件名
+ * @param[out] xmesh 网格列数
+ * @param[out] ymesh 网格行数
+ * @param[out] minx 最小 x 值
+ * @param[out] maxx 最大 x 值
+ * @param[out] miny 最小 y 值
+ * @param[out] maxy 最大 y 值
+ * @return 成功返回 true，文件无法打开或格式无效返回 false
+ * \endif
+ */
 bool NativeReader::collectInfo(FILE*& file,
                                QString const& fname,
                                unsigned& xmesh,
@@ -173,6 +209,21 @@ bool NativeReader::collectInfo(FILE*& file,
     return true;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Reads native format data into a Plot3D widget
+ * @param[in] plot Target Plot3D widget
+ * @param[in] fname File name to read
+ * @return True on success, false on file error or data format error
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将原生格式数据读入 Plot3D 控件
+ * @param[in] plot 目标 Plot3D 控件
+ * @param[in] fname 要读取的文件名
+ * @return 成功返回 true，文件错误或数据格式错误返回 false
+ * \endif
+ */
 bool NativeReader::operator()(Plot3D* plot, QString const& fname)
 {
 

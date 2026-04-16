@@ -5,11 +5,17 @@
 
 namespace Qwt3D {
 
-/*!
-Functor for reading of native files containing grid data.
-As a standart input functor associated with "mes" and "MES"
-file extensions.
-*/
+/**
+ * \if ENGLISH
+ * @brief Functor for reading of native files containing grid data
+ * @details As a standard input functor associated with "mes" and "MES" file extensions.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 读取包含网格数据的原生文件的 Functor
+ * @details 作为与 "mes" 和 "MES" 文件扩展名关联的标准输入 Functor。
+ * \endif
+ */
 class QWT3D_EXPORT NativeReader : public IO::Functor
 {
     friend class IO;
@@ -18,9 +24,7 @@ public:
     NativeReader();
 
 private:
-    //! Provides new NativeReader object.
     IO::Functor *clone() const { return new NativeReader(*this); }
-    //! Performs actual input
     bool operator()(Plot3D *plot, QString const &fname);
     static const char *magicstring;
     double minz_, maxz_;

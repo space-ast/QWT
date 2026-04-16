@@ -9,169 +9,229 @@
 namespace Qwt3D
 {
 
-//! Base class for all plotting widgets
-/*!
-  Plot3D handles all the common features for plotting widgets - coordinate system, transformations,
-  mouse/keyboard handling, labeling etc.. It contains some pure virtual functions and is, in so far,
-  an abstract base class. The class provides interfaces for data handling and implements basic data
-  controlled color allocation.
-*/
+/**
+ * \if ENGLISH
+ * @brief Base class for all plotting widgets
+ * @details Plot3D handles all the common features for plotting widgets -
+ *          coordinate system, transformations, mouse/keyboard handling,
+ *          labeling etc. It contains some pure virtual functions and is,
+ *          in so far, an abstract base class. The class provides interfaces
+ *          for data handling and implements basic data controlled color allocation.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 所有绘图控件的基类
+ * @details Plot3D 处理绘图控件的通用功能——坐标系、变换、
+ *          鼠标/键盘处理、标注等。它包含一些纯虚函数，
+ *          因此是一个抽象基类。该类提供数据处理的接口，
+ *          并实现基本的数据控制颜色分配。
+ * \endif
+ */
 class QWT3D_EXPORT Plot3D : public QOpenGLWidget
 {
     Q_OBJECT
 
 public:
+    // Constructor
     Plot3D(QWidget* parent = 0);
+    // Destructor
     virtual ~Plot3D();
 
+    // Render to pixmap
     QPixmap renderPixmap(int w = 0, int h = 0, bool useContext = false);
-    void updateData();  //!< Recalculate data
+    // Recalculate data
+    void updateData();
+    // Create coordinate system between two points
     void createCoordinateSystem(Qwt3D::Triple beg, Qwt3D::Triple end);
+    // Returns pointer to CoordinateSystem object
     Qwt3D::CoordinateSystem* coordinates()
     {
         return &coordinates_p;
-    }  //!< Returns pointer to CoordinateSystem object
+    }
+    // Returns pointer to ColorLegend object
     Qwt3D::ColorLegend* legend()
     {
         return &legend_;
-    }  //!< Returns pointer to ColorLegend object
+    }
 
+    // Returns rotation around X axis [-360..360] (some angles are equivalent)
     double xRotation() const
     {
         return xRot_;
-    }  //!< Returns rotation around X axis [-360..360] (some angles are equivalent)
+    }
+    // Returns rotation around Y axis [-360..360] (some angles are equivalent)
     double yRotation() const
     {
         return yRot_;
-    }  //!< Returns rotation around Y axis [-360..360] (some angles are equivalent)
+    }
+    // Returns rotation around Z axis [-360..360] (some angles are equivalent)
     double zRotation() const
     {
         return zRot_;
-    }  //!< Returns rotation around Z axis [-360..360] (some angles are equivalent)
+    }
 
+    // Returns shift along X axis (object coordinates)
     double xShift() const
     {
         return xShift_;
-    }  //!< Returns shift along X axis (object coordinates)
+    }
+    // Returns shift along Y axis (object coordinates)
     double yShift() const
     {
         return yShift_;
-    }  //!< Returns shift along Y axis (object coordinates)
+    }
+    // Returns shift along Z axis (object coordinates)
     double zShift() const
     {
         return zShift_;
-    }  //!< Returns shift along Z axis (object coordinates)
+    }
 
+    // Returns relative shift [-1..1] along X axis (view coordinates)
     double xViewportShift() const
     {
         return xVPShift_;
-    }  //!< Returns relative shift [-1..1] along X axis (view coordinates)
+    }
+    // Returns relative shift [-1..1] along Y axis (view coordinates)
     double yViewportShift() const
     {
         return yVPShift_;
-    }  //!< Returns relative shift [-1..1] along Y axis (view coordinates)
+    }
 
+    // Returns scaling for X values [0..inf]
     double xScale() const
     {
         return xScale_;
-    }  //!< Returns scaling for X values [0..inf]
+    }
+    // Returns scaling for Y values [0..inf]
     double yScale() const
     {
         return yScale_;
-    }  //!< Returns scaling for Y values [0..inf]
+    }
+    // Returns scaling for Z values [0..inf]
     double zScale() const
     {
         return zScale_;
-    }  //!< Returns scaling for Z values [0..inf]
+    }
 
+    // Returns zoom (0..inf)
     double zoom() const
     {
         return zoom_;
-    }  //!< Returns zoom (0..inf)
+    }
 
+    // Returns orthogonal (true) or perspective (false) projection
     bool ortho() const
     {
         return ortho_;
-    }  //!< Returns orthogonal (true) or perspective (false) projection
+    }
+    // Set plot style
     void setPlotStyle(Qwt3D::PLOTSTYLE val);
+    // Set plot style with Enrichment
     Qwt3D::Enrichment* setPlotStyle(Qwt3D::Enrichment const& val);
+    // Returns plotting style
     Qwt3D::PLOTSTYLE plotStyle() const
     {
         return plotstyle_;
-    }  //!< Returns plotting style
-    //! Returns current Enrichment object used for plotting styles (if set, zero else)
+    }
+    // Returns current Enrichment object used for plotting styles (if set, zero else)
     Qwt3D::Enrichment* userStyle() const
     {
         return userplotstyle_p;
     }
+    // Set shading style
     void setShading(Qwt3D::SHADINGSTYLE val);
+    // Returns shading style
     Qwt3D::SHADINGSTYLE shading() const
     {
         return shading_;
-    }  //!< Returns shading style
+    }
+    // Set number of isolines
     void setIsolines(int isolines);
+    // Returns number of isolines
     int isolines() const
     {
         return isolines_;
-    }  //!< Returns number of isolines
+    }
 
+    // Enables/disables smooth data mesh lines. Default is false
     void setSmoothMesh(bool val)
     {
         smoothdatamesh_p = val;
-    }  //!< Enables/disables smooth data mesh lines. Default is false
+    }
+    // True if mesh antialiasing is on
     bool smoothDataMesh() const
     {
         return smoothdatamesh_p;
-    }                                           //!< True if mesh antialiasing is on
-    void setBackgroundColor(Qwt3D::RGBA rgba);  //!< Sets widgets background color
+    }
+    // Sets widgets background color
+    void setBackgroundColor(Qwt3D::RGBA rgba);
+    // Returns the widgets background color
     Qwt3D::RGBA backgroundRGBAColor() const
     {
         return bgcolor_;
-    }  //!< Returns the widgets background color
-    void setMeshColor(Qwt3D::RGBA rgba);  //!< Sets color for data mesh
+    }
+    // Sets color for data mesh
+    void setMeshColor(Qwt3D::RGBA rgba);
+    // Returns color for data mesh
     Qwt3D::RGBA meshColor() const
     {
         return meshcolor_;
-    }                                  //!< Returns color for data mesh
-    void setMeshLineWidth(double lw);  //!< Sets line width for data mesh
+    }
+    // Sets line width for data mesh
+    void setMeshLineWidth(double lw);
+    // Returns line width for data mesh
     double meshLineWidth() const
     {
         return meshLineWidth_;
-    }                               //!< Returns line width for data mesh
-    void setDataColor(Color* col);  //!< Sets new data color object
+    }
+    // Sets new data color object
+    void setDataColor(Color* col);
+    // Returns data color object
     const Color* dataColor() const
     {
         return datacolor_p;
-    }  //!< Returns data color object
+    }
 
-    virtual Qwt3D::Enrichment* addEnrichment(Qwt3D::Enrichment const&);  //!< Add an Enrichment
-    virtual bool degrade(Qwt3D::Enrichment*);                            //!< Remove an Enrichment
+    // Add an Enrichment
+    virtual Qwt3D::Enrichment* addEnrichment(Qwt3D::Enrichment const&);
+    // Remove an Enrichment
+    virtual bool degrade(Qwt3D::Enrichment*);
 
+    // Returns rectangular hull
     Qwt3D::ParallelEpiped hull() const
     {
         return hull_;
-    }  //!< Returns rectangular hull
+    }
 
+    // Show/hide color legend
     void showColorLegend(bool);
 
-    void setCoordinateStyle(Qwt3D::COORDSTYLE st);  //!< Sets style of coordinate system.
+    // Sets style of coordinate system
+    void setCoordinateStyle(Qwt3D::COORDSTYLE st);
+    // Set polygon offset
     void setPolygonOffset(double d);
+    // Returns relative value for polygon offset [0..1]
     double polygonOffset() const
     {
         return polygonOffset_;
-    }  //!< Returns relative value for polygon offset [0..1]
+    }
 
+    // Set title position
     void setTitlePosition(double rely, double relx = 0.5, Qwt3D::ANCHOR = Qwt3D::TopCenter);
+    // Set title font
     void setTitleFont(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
+    // Set caption color
     void setTitleColor(Qwt3D::RGBA col)
     {
         title_.setColor(col);
-    }  //!< Set caption color
+    }
+    // Set caption text (one row only)
     void setTitle(const QString& title)
     {
         title_.setString(title);
-    }  //!< Set caption text (one row only)
+    }
 
+    // Assign mouse states for rotations, scales, zoom and shifts
     void assignMouse(MouseState xrot,
                      MouseState yrot,
                      MouseState zrot,
@@ -182,7 +242,9 @@ public:
                      MouseState xshift,
                      MouseState yshift);
 
-    bool mouseEnabled() const;  //!< Returns true, if the widget accept mouse input from the user
+    // Returns true, if the widget accept mouse input from the user
+    bool mouseEnabled() const;
+    // Assign keyboard states for rotations, scales, zoom and shifts
     void assignKeyboard(KeyboardState xrot_n,
                         KeyboardState xrot_p,
                         KeyboardState yrot_n,
@@ -202,56 +264,63 @@ public:
                         KeyboardState yshift_n,
                         KeyboardState yshift_p);
 
-    bool keyboardEnabled() const;  //!< Returns true, if the widget accept keyboard input from the user
-    //! Sets speed for keyboard driven transformations
+    // Returns true, if the widget accept keyboard input from the user
+    bool keyboardEnabled() const;
+    // Sets speed for keyboard driven transformations
     void setKeySpeed(double rot, double scale, double shift);
-    //! Gets speed for keyboard driven transformations
+    // Gets speed for keyboard driven transformations
     void keySpeed(double& rot, double& scale, double& shift) const;
 
-    bool lightingEnabled() const;  //!< Returns true, if Lighting is enabled, false else
-    //! Turn light on
+    // Returns true, if Lighting is enabled, false else
+    bool lightingEnabled() const;
+    // Turn light on
     void illuminate(unsigned light = 0);
-    //! Turn light off
+    // Turn light off
     void blowout(unsigned light = 0);
 
+    // Set material component (RGBA)
     void setMaterialComponent(GLenum property, double r, double g, double b, double a = 1.0);
+    // Set material component (intensity)
     void setMaterialComponent(GLenum property, double intensity);
+    // Set shininess exponent
     void setShininess(double exponent);
+    // Set light component (RGBA)
     void setLightComponent(GLenum property, double r, double g, double b, double a = 1.0, unsigned light = 0);
+    // Set light component (intensity)
     void setLightComponent(GLenum property, double intensity, unsigned light = 0);
 
-    //! Returns Light 'idx' rotation around X axis [-360..360] (some angles are equivalent)
+    // Returns Light 'idx' rotation around X axis [-360..360] (some angles are equivalent)
     double xLightRotation(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].rot.x : 0;
     }
-    //! Returns Light 'idx' rotation around Y axis [-360..360] (some angles are equivalent)
+    // Returns Light 'idx' rotation around Y axis [-360..360] (some angles are equivalent)
     double yLightRotation(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].rot.y : 0;
     }
-    //! Returns Light 'idx' rotation around Z axis [-360..360] (some angles are equivalent)
+    // Returns Light 'idx' rotation around Z axis [-360..360] (some angles are equivalent)
     double zLightRotation(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].rot.z : 0;
     }
 
-    //! Returns shift of Light 'idx 'along X axis (object coordinates)
+    // Returns shift of Light 'idx' along X axis (object coordinates)
     double xLightShift(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].shift.x : 0;
     }
-    //! Returns shift of Light 'idx 'along Y axis (object coordinates)
+    // Returns shift of Light 'idx' along Y axis (object coordinates)
     double yLightShift(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].shift.y : 0;
     }
-    //! Returns shift of Light 'idx 'along Z axis (object coordinates)
+    // Returns shift of Light 'idx' along Z axis (object coordinates)
     double zLightShift(unsigned idx = 0) const
     {
         return (idx < 8) ? lights_[ idx ].shift.z : 0;
     }
-    //! Returns true if valid data available, false else
+    // Returns true if valid data available, false else
     bool hasData() const
     {
         return (actualData_p) ? !actualData_p->empty() : false;
@@ -259,48 +328,143 @@ public:
 
 Q_SIGNALS:
 
-    //! Emitted, if the rotation is changed
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the rotation is changed
+     * @param xAngle X axis rotation angle
+     * @param yAngle Y axis rotation angle
+     * @param zAngle Z axis rotation angle
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 旋转角度变化时发出的信号
+     * @param xAngle X轴旋转角度
+     * @param yAngle Y轴旋转角度
+     * @param zAngle Z轴旋转角度
+     * \endif
+     */
     void rotationChanged(double xAngle, double yAngle, double zAngle);
-    //! Emitted, if the shift is changed
+
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the shift is changed
+     * @param xShift X axis shift value
+     * @param yShift Y axis shift value
+     * @param zShift Z axis shift value
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 位移变化时发出的信号
+     * @param xShift X轴位移值
+     * @param yShift Y轴位移值
+     * @param zShift Z轴位移值
+     * \endif
+     */
     void shiftChanged(double xShift, double yShift, double zShift);
-    //! Emitted, if the viewport shift is changed
+
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the viewport shift is changed
+     * @param xShift X viewport shift value
+     * @param yShift Y viewport shift value
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 视口位移变化时发出的信号
+     * @param xShift X视口位移值
+     * @param yShift Y视口位移值
+     * \endif
+     */
     void vieportShiftChanged(double xShift, double yShift);
-    //! Emitted, if the scaling is changed
+
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the scaling is changed
+     * @param xScale X axis scale factor
+     * @param yScale Y axis scale factor
+     * @param zScale Z axis scale factor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 缩放比例变化时发出的信号
+     * @param xScale X轴缩放因子
+     * @param yScale Y轴缩放因子
+     * @param zScale Z轴缩放因子
+     * \endif
+     */
     void scaleChanged(double xScale, double yScale, double zScale);
-    //! Emitted, if the zoom is changed
+
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the zoom is changed
+     * @param zoom Zoom factor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 缩放因子变化时发出的信号
+     * @param zoom 缩放因子
+     * \endif
+     */
     void zoomChanged(double);
-    //! Emitted, if the projection mode is changed
+
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the projection mode is changed
+     * @param ortho True for orthogonal, false for perspective
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 投影模式变化时发出的信号
+     * @param ortho 正交投影为true，透视投影为false
+     * \endif
+     */
     void projectionChanged(bool);
 
 public Q_SLOTS:
 
+    // Set rotation values
     void setRotation(double xVal, double yVal, double zVal);
+    // Set shift values
     void setShift(double xVal, double yVal, double zVal);
+    // Set viewport shift values
     void setViewportShift(double xVal, double yVal);
+    // Set scale values
     void setScale(double xVal, double yVal, double zVal);
+    // Set zoom value
     void setZoom(double);
 
+    // Set orthogonal/perspective projection
     void setOrtho(bool);
 
-    void enableMouse(bool val = true);      //!< Enable mouse input
-    void disableMouse(bool val = true);     //!< Disable mouse input
-    void enableKeyboard(bool val = true);   //!< Enable keyboard input
-    void disableKeyboard(bool val = true);  //!< Disable keyboard input
+    // Enable mouse input
+    void enableMouse(bool val = true);
+    // Disable mouse input
+    void disableMouse(bool val = true);
+    // Enable keyboard input
+    void enableKeyboard(bool val = true);
+    // Disable keyboard input
+    void disableKeyboard(bool val = true);
 
-    void enableLighting(bool val = true);   //!< Turn Lighting on or off
-    void disableLighting(bool val = true);  //!< Turn Lighting on or off
+    // Turn Lighting on or off
+    void enableLighting(bool val = true);
+    // Turn Lighting on or off
+    void disableLighting(bool val = true);
 
+    // Set light rotation
     void setLightRotation(double xVal, double yVal, double zVal, unsigned int idx = 0);
+    // Set light shift
     void setLightShift(double xVal, double yVal, double zVal, unsigned int idx = 0);
 
+    // Saves content to pixmap format
     virtual bool savePixmap(QString const& fileName,
-                            QString const& format);  //!<  Saves content to pixmap format
-    //!  Saves content to vector format
+                            QString const& format);
+    // Saves content to vector format
     virtual bool saveVector(QString const& fileName,
                             QString const& format,
                             VectorWriter::TEXTMODE text,
                             VectorWriter::SORTMODE sortmode);
-    virtual bool save(QString const& fileName, QString const& format);  //!<  Saves content
+    // Saves content
+    virtual bool save(QString const& fileName, QString const& format);
 
 protected:
     using EnrichmentList = std::list< Qwt3D::Enrichment* >;

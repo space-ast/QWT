@@ -16,6 +16,18 @@ namespace Qwt3D {
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
+/**
+ * \if ENGLISH
+ * @brief Helper class for managing OpenGL state enable/disable
+ * @details Saves and restores OpenGL enable/disable state. Useful for temporarily
+ *          changing GL states within a drawing context.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 管理 OpenGL 状态启用/禁用的辅助类
+ * @details 保存和恢复 OpenGL 启用/禁用状态。用于在绘图上下文中临时更改 GL 状态。
+ * \endif
+ */
 class GLStateBewarer
 {
 public:
@@ -56,6 +68,7 @@ private:
     bool stateval_;
 };
 
+// Returns OpenGL error string if an error occurred
 inline const GLubyte *gl_error()
 {
     GLenum errcode;
@@ -67,6 +80,7 @@ inline const GLubyte *gl_error()
     return err;
 }
 
+// Safely deletes OpenGL display lists
 inline void SaveGlDeleteLists(GLuint &lstidx, GLsizei range)
 {
     if (glIsList(lstidx))
@@ -74,13 +88,17 @@ inline void SaveGlDeleteLists(GLuint &lstidx, GLsizei range)
     lstidx = 0;
 }
 
-//! get OpenGL transformation matrices
 /**
-        Don't rely on (use) this in display lists !
-        \param modelMatrix should be a GLdouble[16]
-        \param projMatrix should be a GLdouble[16]
-        \param viewport should be a GLint[4]
-*/
+ * \if ENGLISH
+ * @brief Get OpenGL transformation matrices
+ * @details Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取 OpenGL 变换矩阵
+ * @details 不要在显示列表中使用此函数！
+ * \endif
+ */
 inline void getMatrices(GLdouble *modelMatrix, GLdouble *projMatrix, GLint *viewport)
 {
     glGetIntegerv(GL_VIEWPORT, viewport);
@@ -88,10 +106,17 @@ inline void getMatrices(GLdouble *modelMatrix, GLdouble *projMatrix, GLint *view
     glGetDoublev(GL_PROJECTION_MATRIX, projMatrix);
 }
 
-//! simplified glut routine (glUnProject): windows coordinates_p --> object coordinates_p
 /**
-        Don't rely on (use) this in display lists !
-*/
+ * \if ENGLISH
+ * @brief Simplified glut routine (glUnProject): window coordinates -> object coordinates
+ * @details Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 简化的 glut 函数 (glUnProject)：窗口坐标 -> 对象坐标
+ * @details 不要在显示列表中使用此函数！
+ * \endif
+ */
 inline bool ViewPort2World(double &objx, double &objy, double &objz, double winx, double winy,
                            double winz)
 {
@@ -106,10 +131,17 @@ inline bool ViewPort2World(double &objx, double &objy, double &objz, double winx
     return (res == GL_FALSE) ? false : true;
 }
 
-//! simplified glut routine (glProject): object coordinates_p --> windows coordinates_p
 /**
-        Don't rely on (use) this in display lists !
-*/
+ * \if ENGLISH
+ * @brief Simplified glut routine (glProject): object coordinates -> window coordinates
+ * @details Don't rely on (use) this in display lists!
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 简化的 glut 函数 (glProject)：对象坐标 -> 窗口坐标
+ * @details 不要在显示列表中使用此函数！
+ * \endif
+ */
 inline bool World2ViewPort(double &winx, double &winy, double &winz, double objx, double objy,
                            double objz)
 {

@@ -7,16 +7,23 @@
 
 namespace Qwt3D {
 
-//! Abstract base class for general mappings
 /**
-
-*/
+ * \if ENGLISH
+ * @brief Abstract base class for general mappings
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 通用映射的抽象基类
+ * \endif
+ */
 class QWT3D_EXPORT Mapping
 {
 
 public:
-    virtual ~Mapping() { } //!< Destructor.
-    virtual QString name() const { return QString(""); } //!< Descriptive String.
+    // Destructor
+    virtual ~Mapping() { }
+    // Descriptive String
+    virtual QString name() const { return QString(""); }
 };
 
 } // ns

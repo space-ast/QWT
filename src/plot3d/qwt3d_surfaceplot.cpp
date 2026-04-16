@@ -4,8 +4,18 @@ using namespace std;
 using namespace Qwt3D;
 
 /**
-Initializes with dataNormals()==false, NOFLOOR, resolution() == 1
-*/
+ * \if ENGLISH
+ * @brief Constructs a SurfacePlot widget
+ * @param[in] parent Parent widget
+ * @details Initializes with dataNormals()==false, NOFLOOR, resolution() == 1
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造 SurfacePlot 控件
+ * @param[in] parent 父控件
+ * @details 初始化时 dataNormals()==false, NOFLOOR, resolution() == 1
+ * \endif
+ */
 SurfacePlot::SurfacePlot(QWidget* parent) : Plot3D(parent)
 {
     datanormals_p   = false;
@@ -21,20 +31,48 @@ SurfacePlot::SurfacePlot(QWidget* parent) : Plot3D(parent)
     floorstyle_ = NOFLOOR;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 SurfacePlot::~SurfacePlot()
 {
     delete actualDataG_;
     delete actualDataC_;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Shows or hides data normals
+ * @param[in] b True to show normals, false to hide
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 显示或隐藏数据法线
+ * @param[in] b true 显示法线，false 隐藏
+ * \endif
+ */
 void SurfacePlot::showNormals(bool b)
 {
     datanormals_p = b;
 }
 
 /**
-Values < 0 or > 1 are ignored
-*/
+ * \if ENGLISH
+ * @brief Sets the normal vector length
+ * @param[in] val Normal length value (0.0 to 1.0). Values < 0 or > 1 are ignored.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置法线向量长度
+ * @param[in] val 法线长度值（0.0 到 1.0）。小于 0 或大于 1 的值将被忽略。
+ * \endif
+ */
 void SurfacePlot::setNormalLength(double val)
 {
     if (val < 0 || val > 1)
@@ -43,8 +81,16 @@ void SurfacePlot::setNormalLength(double val)
 }
 
 /**
-Values < 3 are ignored
-*/
+ * \if ENGLISH
+ * @brief Sets the normal vector quality (number of arrow segments)
+ * @param[in] val Quality value. Values < 3 are ignored.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置法线向量质量（箭头段数）
+ * @param[in] val 质量值。小于 3 的值将被忽略。
+ * \endif
+ */
 void SurfacePlot::setNormalQuality(int val)
 {
     if (val < 3)
@@ -53,9 +99,16 @@ void SurfacePlot::setNormalQuality(int val)
 }
 
 /**
-        Calculates the smallest x-y-z parallelepiped enclosing the data.
-        It can be accessed by hull();
-*/
+ * \if ENGLISH
+ * @brief Calculates the smallest x-y-z parallelepiped enclosing the data
+ * @details It can be accessed by hull();
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算包围数据的最小 x-y-z 平行六面体
+ * @details 可以通过 hull() 访问。
+ * \endif
+ */
 void SurfacePlot::calculateHull()
 {
     if (actualData_p->empty())
@@ -63,10 +116,17 @@ void SurfacePlot::calculateHull()
     setHull(actualData_p->hull());
 }
 
-/*!
-  Sets data resolution (res == 1 original resolution) and updates widget
-        If res < 1, the function does nothing
-*/
+/**
+ * \if ENGLISH
+ * @brief Sets data resolution and updates widget
+ * @param[in] res Resolution multiplier (res == 1 means original resolution). If res < 1, the function does nothing.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置数据分辨率并更新控件
+ * @param[in] res 分辨率倍数（res == 1 表示原始分辨率）。如果 res < 1，函数不做任何操作。
+ * \endif
+ */
 void SurfacePlot::setResolution(int res)
 {
     if (!actualData_p || actualData_p->datatype == Qwt3D::POLYGON)
@@ -123,9 +183,18 @@ void SurfacePlot::createFloorData()
 }
 
 /**
-        The returned value is not affected by resolution(). The pair gives (columns,rows) for grid
-data , (number of cells,1) for free formed data (datatype() == POLYGON) and (0,0) else
-*/
+ * \if ENGLISH
+ * @brief Returns the number of facets in the data
+ * @return (columns,rows) for grid data, (number of cells,1) for polygon data, (0,0) otherwise
+ * @details The returned value is not affected by resolution().
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 返回数据中的面片数
+ * @return 网格数据返回 (columns,rows)，多边形数据返回 (number of cells,1)，其他返回 (0,0)
+ * @details 返回值不受 resolution() 影响。
+ * \endif
+ */
 pair< int, int > SurfacePlot::facets() const
 {
     if (!hasData())

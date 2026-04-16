@@ -3,6 +3,21 @@
 using namespace std;
 using namespace Qwt3D;
 
+/**
+ * \if ENGLISH
+ * @brief Constructs a coordinate system with specified boundaries and style
+ * @param[in] first Minimum vertex of the coordinate system box
+ * @param[in] second Maximum vertex of the coordinate system box
+ * @param[in] st Coordinate system style (NOCOORD, BOX, or FRAME)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造具有指定边界和样式的坐标系
+ * @param[in] first 坐标系框的最小顶点
+ * @param[in] second 坐标系框的最大顶点
+ * @param[in] st 坐标系样式（NOCOORD、BOX 或 FRAME）
+ * \endif
+ */
 CoordinateSystem::CoordinateSystem(Triple first, Triple second, COORDSTYLE st)
 {
     autodecoration_ = true;
@@ -19,6 +34,15 @@ CoordinateSystem::CoordinateSystem(Triple first, Triple second, COORDSTYLE st)
     setGridLines(false, false);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 CoordinateSystem::~CoordinateSystem()
 {
     destroy();
@@ -122,7 +146,6 @@ void CoordinateSystem::draw()
     //	restoreGLState();
 }
 
-//! build convex hull (6 axes: 2 x, 2 y, 2 z) and choose one of them at a time for scales, labels etc.
 void CoordinateSystem::chooseAxes()
 {
     vector< Triple > beg(axes.size());
@@ -442,12 +465,24 @@ void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS f
 }
 
 /**
-The axis used for tic calculation is chosen randomly from the respective pair.
-For most cases an identical tic distribution is therefore recommended.
-\param majors  Draw grid between major tics
-\param minors  Draw grid between minor tics
-\param sides   Side(s), where the grid should be drawn
-*/
+ * \if ENGLISH
+ * @brief Sets grid line visibility
+ * @param[in] majors Draw grid between major tics
+ * @param[in] minors Draw grid between minor tics
+ * @param[in] sides Side(s) where the grid should be drawn
+ * @details The axis used for tic calculation is chosen randomly from the respective pair.
+ *          For most cases an identical tic distribution is therefore recommended.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置网格线的可见性
+ * @param[in] majors 在主刻度之间绘制网格
+ * @param[in] minors 在次刻度之间绘制网格
+ * @param[in] sides 应绘制网格的面
+ * @details 用于刻度计算的坐标轴从相应的轴对中随机选择。
+ *          对于大多数情况，建议使用相同的刻度分布。
+ * \endif
+ */
 void CoordinateSystem::setGridLines(bool majors, bool minors, int sides)
 {
     sides_          = sides;

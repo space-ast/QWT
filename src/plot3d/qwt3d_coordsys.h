@@ -6,56 +6,69 @@
 
 namespace Qwt3D {
 
-//! A coordinate system with different styles (BOX, FRAME)
+/**
+ * \if ENGLISH
+ * @brief A coordinate system with different styles (BOX, FRAME)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 具有不同样式（BOX, FRAME）的坐标系
+ * \endif
+ */
 class QWT3D_EXPORT CoordinateSystem : public Drawable
 {
 
 public:
     explicit CoordinateSystem(Qwt3D::Triple blb = Qwt3D::Triple(0, 0, 0),
-                              Qwt3D::Triple ftr = Qwt3D::Triple(0, 0, 0),
-                              Qwt3D::COORDSTYLE = Qwt3D::BOX);
+                          Qwt3D::Triple ftr = Qwt3D::Triple(0, 0, 0),
+                          Qwt3D::COORDSTYLE = Qwt3D::BOX);
     ~CoordinateSystem();
 
     void init(Qwt3D::Triple beg = Qwt3D::Triple(0, 0, 0),
               Qwt3D::Triple end = Qwt3D::Triple(0, 0, 0));
-    //! Set style for the coordinate system (NOCOORD, FRAME or BOX)
+    // Set style for the coordinate system (NOCOORD, FRAME or BOX)
     void setStyle(Qwt3D::COORDSTYLE s, Qwt3D::AXIS frame_1 = Qwt3D::X1,
                   Qwt3D::AXIS frame_2 = Qwt3D::Y1, Qwt3D::AXIS frame_3 = Qwt3D::Z1);
-    Qwt3D::COORDSTYLE style() const { return style_; } //!< Return style oft the coordinate system
-    void
-    setPosition(Qwt3D::Triple first,
-                Qwt3D::Triple second); //!< first == front_left_bottom, second == back_right_top
+    // Return style of the coordinate system
+    Qwt3D::COORDSTYLE style() const { return style_; }
+    // first == front_left_bottom, second == back_right_top
+    void setPosition(Qwt3D::Triple first,
+                Qwt3D::Triple second);
 
-    void setAxesColor(Qwt3D::RGBA val); //!< Set common color for all axes
-    //! Set common font for all axis numberings
+    // Set common color for all axes
+    void setAxesColor(Qwt3D::RGBA val);
+    // Set common font for all axis numberings
     void setNumberFont(QString const &family, int pointSize, int weight = QFont::Normal,
                        bool italic = false);
-    //! Set common font for all axis numberings
+    // Set common font for all axis numberings
     void setNumberFont(QFont const &font);
-    //! Set common color for all axis numberings
+    // Set common color for all axis numberings
     void setNumberColor(Qwt3D::RGBA val);
-    void setStandardScale(); //!< Sets an linear axis with real number items
+    // Sets an linear axis with real number items
+    void setStandardScale();
 
-    void adjustNumbers(int val); //!< Fine tunes distance between axis numbering and axis body
-    void adjustLabels(int val); //!< Fine tunes distance between axis label and axis body
+    // Fine tunes distance between axis numbering and axis body
+    void adjustNumbers(int val);
+    // Fine tunes distance between axis label and axis body
+    void adjustLabels(int val);
 
-    //! Sets color for the grid lines
+    // Sets color for the grid lines
     void setGridLinesColor(Qwt3D::RGBA val) { gridlinecolor_ = val; }
 
-    //! Set common font for all axis labels
+    // Set common font for all axis labels
     void setLabelFont(QString const &family, int pointSize, int weight = QFont::Normal,
                       bool italic = false);
-    //! Set common font for all axis labels
+    // Set common font for all axis labels
     void setLabelFont(QFont const &font);
-    //! Set common color for all axis labels
+    // Set common color for all axis labels
     void setLabelColor(Qwt3D::RGBA val);
 
-    //! Set line width for tic marks and axes
+    // Set line width for tic marks and axes
     void setLineWidth(double val, double majfac = 0.9, double minfac = 0.5);
-    //! Set length for tic marks
+    // Set length for tic marks
     void setTicLength(double major, double minor);
 
-    //! Switch autoscaling of axes
+    // Switch autoscaling of axes
     void setAutoScale(bool val = true);
 
     Qwt3D::Triple first() const { return first_; }
@@ -64,16 +77,19 @@ public:
     void setAutoDecoration(bool val = true) { autodecoration_ = val; }
     bool autoDecoration() const { return autodecoration_; }
 
-    void setLineSmooth(bool val = true) { smooth_ = val; } //!< draw smooth axes
-    bool lineSmooth() const { return smooth_; } //!< smooth axes ?
+    // Draw smooth axes
+    void setLineSmooth(bool val = true) { smooth_ = val; }
+    // Smooth axes enabled?
+    bool lineSmooth() const { return smooth_; }
 
     void draw();
 
-    //! Defines whether a grid between the major and/or minor tics should be drawn
+    // Defines whether a grid between the major and/or minor tics should be drawn
     void setGridLines(bool majors, bool minors, int sides = Qwt3D::NOSIDEGRID);
-    int grids() const { return sides_; } //!< Returns grids switched on
+    // Returns grids switched on
+    int grids() const { return sides_; }
 
-    //! The vector of all12 axes - use them to set axis properties individually.
+    // The vector of all 12 axes - use them to set axis properties individually
     std::vector<Axis> axes;
 
 private:
@@ -88,10 +104,10 @@ private:
 
     void chooseAxes();
     void autoDecorateExposedAxis(Axis &ax, bool left);
-    void drawMajorGridLines(); //!< Draws a grid between the major tics on the site
-    void drawMinorGridLines(); //!< Draws a grid between the minor tics on the site
-    void drawMajorGridLines(Qwt3D::Axis &, Qwt3D::Axis &); //! Helper
-    void drawMinorGridLines(Qwt3D::Axis &, Qwt3D::Axis &); //! Helper
+    void drawMajorGridLines();
+    void drawMinorGridLines();
+    void drawMajorGridLines(Qwt3D::Axis &, Qwt3D::Axis &);
+    void drawMinorGridLines(Qwt3D::Axis &, Qwt3D::Axis &);
     void recalculateAxesTics();
 
     bool autodecoration_;

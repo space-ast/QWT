@@ -40,9 +40,18 @@ void ParametricSurface::assign(SurfacePlot* plotWidget)
 }
 
 /**
-For plotWidget != 0 the function permanently assigns her argument (In fact, assign(plotWidget) is
-called)
-*/
+ * \if ENGLISH
+ * @brief Creates the parametric surface data and loads it into the plot widget
+ * @return True on success, false if umesh_p <= 2, vmesh_p <= 2, or plotwidget_p is null
+ * @details For plotWidget != 0 the function permanently assigns her argument (In fact, assign(plotWidget) is called)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 创建参数曲面数据并加载到绘图控件中
+ * @return 成功返回 true，umesh_p <= 2、vmesh_p <= 2 或 plotwidget_p 为 null 时返回 false
+ * @details 当 plotWidget != 0 时，函数永久分配其参数（实际上调用了 assign(plotWidget)）
+ * \endif
+ */
 bool ParametricSurface::create()
 {
     if ((umesh_p <= 2) || (vmesh_p <= 2) || !plotwidget_p)

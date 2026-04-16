@@ -12,54 +12,73 @@ namespace Qwt3D
 {
 
 class Plot3D;
+
 /**
-IO provides a generic interface for standard and user written I/O handlers.
-It also provides functionality for the registering of such handlers in the
-framework.\n
-The interface mimics roughly Qt's QImageIO functions for defining
-image input/output functions.
-*/
+ * \if ENGLISH
+ * @brief Generic interface for standard and user written I/O handlers
+ * @details IO provides a generic interface for standard and user written I/O handlers.
+ *          It also provides functionality for the registering of such handlers in the
+ *          framework. The interface mimics roughly Qt's QImageIO functions for defining
+ *          image input/output functions.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 标准和用户自定义 I/O 处理器的通用接口
+ * @details IO 提标准和用户自定义 I/O 处理器的通用接口，
+ *          还提供在框架中注册此类处理器的功能。
+ *          该接口大致模仿 Qt 的 QImageIO 函数来定义图像输入/输出函数。
+ * \endif
+ */
 class QWT3D_EXPORT IO
 {
 
 public:
-    /*!
-      The function type that can be processed by the define... members.
-      An extension is the IO::Functor.
-    */
+    // The function type that can be processed by the define... members
     using Function = bool (*)(Plot3D*, QString const& fname);
 
-    /*!
-      This class gives more flexibility in implementing
-      userdefined IO handlers than the simple IO::Function type.
-    */
+    /**
+     * \if ENGLISH
+     * @brief Functor class for more flexible IO handler implementation
+     * @details This class gives more flexibility in implementing userdefined IO handlers
+     *          than the simple IO::Function type.
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 更灵活的 IO 处理器实现的 Functor 类
+     * @details 该类比简单的 IO::Function 类型提供了更灵活的用户自定义 IO 处理器实现方式。
+     * \endif
+     */
     class Functor
     {
     public:
         virtual ~Functor()
         {
         }
-        /*! Must clone the content of *this for an object of a derived class with
-        \c new and return the pointer. Like operator() the predefined Functors
-        hide this function from the user, still allowing IO access
-        (friend declaration)
-        */
+        // Must clone the content of *this for an object of a derived class
         virtual Functor* clone() const = 0;
-        /*! The workhorse of the user-defined implementation. Eventually, the
-        framework will call this operator.
-        */
+        // The workhorse of the user-defined implementation
         virtual bool operator()(Plot3D* plot, QString const& fname) = 0;
     };
 
+    // Define an input handler for a format with a function
     static bool defineInputHandler(QString const& format, Function func);
+    // Define an output handler for a format with a function
     static bool defineOutputHandler(QString const& format, Function func);
+    // Define an input handler for a format with a functor
     static bool defineInputHandler(QString const& format, Functor const& func);
+    // Define an output handler for a format with a functor
     static bool defineOutputHandler(QString const& format, Functor const& func);
+    // Save plot to file in specified format
     static bool save(Plot3D*, QString const& fname, QString const& format);
+    // Load plot from file in specified format
     static bool load(Plot3D*, QString const& fname, QString const& format);
+    // Returns list of available input formats
     static QStringList inputFormatList();
+    // Returns list of available output formats
     static QStringList outputFormatList();
+    // Returns output handler for a format
     static Functor* outputHandler(QString const& format);
+    // Returns input handler for a format
     static Functor* inputHandler(QString const& format);
 
 private:
@@ -67,20 +86,20 @@ private:
     {
     }
 
-    //! Lightweight Functor encapsulating an IO::Function
+    // Lightweight Functor encapsulating an IO::Function
     class Wrapper : public Functor
     {
     public:
-        //! Performs actual input
+        // Performs actual input
         Functor* clone() const
         {
             return new Wrapper(*this);
         }
-        //! Creates a Wrapper object from a function pointer
+        // Creates a Wrapper object from a function pointer
         explicit Wrapper(Function h) : hdl(h)
         {
         }
-        //! Returns a pointer to the wrapped function
+        // Returns a pointer to the wrapped function
         bool operator()(Plot3D* plot, QString const& fname)
         {
             return (hdl) ? (*hdl)(plot, fname) : false;
@@ -131,7 +150,15 @@ private:
     static void setupHandler();
 };
 
-//! Provides Qt's Pixmap output facilities
+/**
+ * \if ENGLISH
+ * @brief Provides Qt's Pixmap output facilities
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 提供 Qt 的 Pixmap 输出功能
+ * \endif
+ */
 class QWT3D_EXPORT PixmapWriter : public IO::Functor
 {
     friend class IO;
@@ -140,6 +167,7 @@ public:
     PixmapWriter() : quality_(-1)
     {
     }
+    // Set output quality
     void setQuality(int val);
 
 private:
