@@ -52,44 +52,20 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
     public virtual QwtAbstractSeriesStore
 {
   public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     explicit QwtPlotSeriesItem( const QString& title = QString() );
-    /**
-     * \if ENGLISH
-     * @brief Constructor with title
-     * \endif
-     */
+    // Constructor with title
     explicit QwtPlotSeriesItem( const QwtText& title );
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotSeriesItem();
 
-    /**
-     * \if ENGLISH
-     * @brief Set the orientation
-     * \endif
-     */
+    // Set the orientation
     void setOrientation( Qt::Orientation );
-    /**
-     * \if ENGLISH
-     * @brief Get the orientation
-     * \endif
-     */
+    // Get the orientation
     Qt::Orientation orientation() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the series item
-     * \endif
-     */
+    // Draw the series item
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
@@ -120,27 +96,14 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, int from, int to ) const = 0;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the bounding rectangle
-     * \endif
-     */
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Update the scale divisions
-     * \endif
-     */
+    // Update the scale divisions
     virtual void updateScaleDiv(
         const QwtScaleDiv&, const QwtScaleDiv& ) override;
 
   protected:
-    /**
-     * \if ENGLISH
-     * @brief Called when the data has changed
-     * \endif
-     */
     virtual void dataChanged() override;
 
   private:

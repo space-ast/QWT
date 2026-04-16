@@ -162,31 +162,31 @@ public:
         JulianDayForEpoch = 2440588
     };
 
-    /// \if ENGLISH Get minimum date \endif \if CHINESE 获取最小日期 \endif
+    // Get minimum date
     static QDate minDate();
-    /// \if ENGLISH Get maximum date \endif \if CHINESE 获取最大日期 \endif
+    // Get maximum date
     static QDate maxDate();
 
-    /// \if ENGLISH Convert double to QDateTime \endif \if CHINESE 将 double 转换为 QDateTime \endif
+    // Convert double to QDateTime
     static QDateTime toDateTime(double value, Qt::TimeSpec = Qt::UTC);
 
-    /// \if ENGLISH Convert QDateTime to double \endif \if CHINESE 将 QDateTime 转换为 double \endif
+    // Convert QDateTime to double
     static double toDouble(const QDateTime&);
 
-    /// \if ENGLISH Ceil datetime to interval type \endif \if CHINESE 按间隔类型向上取整日期时间 \endif
+    // Ceil datetime to interval type
     static QDateTime ceil(const QDateTime&, IntervalType);
-    /// \if ENGLISH Floor datetime to interval type \endif \if CHINESE 按间隔类型向下取整日期时间 \endif
+    // Floor datetime to interval type
     static QDateTime floor(const QDateTime&, IntervalType);
 
-    /// \if ENGLISH Get date of week 0 \endif \if CHINESE 获取第0周的日期 \endif
+    // Get date of week 0
     static QDate dateOfWeek0(int year, Week0Type);
-    /// \if ENGLISH Get week number \endif \if CHINESE 获取周数 \endif
+    // Get week number
     static int weekNumber(const QDate&, Week0Type);
 
-    /// \if ENGLISH Get UTC offset in seconds \endif \if CHINESE 获取 UTC 偏移量（秒） \endif
+    // Get UTC offset in seconds
     static int utcOffset(const QDateTime&);
 
-    /// \if ENGLISH Format datetime to string \endif \if CHINESE 将日期时间格式化为字符串 \endif
+    // Format datetime to string
     static QString toString(const QDateTime&, const QString& format, Week0Type);
 };
 

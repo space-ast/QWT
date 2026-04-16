@@ -47,8 +47,23 @@ class QFontMetricsF;
 class QTextDocument;
 class QPainterPath;
 
-/*!
-   \brief A collection of QPainter workarounds
+/**
+ * \if ENGLISH
+ * @brief A collection of QPainter workarounds
+ *
+ * QwtPainter provides a set of static methods that wrap QPainter operations
+ * with workarounds for various Qt rendering issues. It handles device-specific
+ * clipping, coordinate rounding, and performance optimizations for different
+ * paint engines (raster, SVG, PDF, etc.).
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QPainter绘制操作的封装和兼容性处理集合
+ *
+ * QwtPainter提供一组静态方法，封装QPainter操作并处理各种Qt渲染问题。
+ * 它处理设备特定的裁剪、坐标对齐，以及针对不同绘制引擎（光栅、SVG、PDF等）
+ * 的性能优化。
+ * \endif
  */
 class QWT_EXPORT QwtPainter
 {

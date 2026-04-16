@@ -38,33 +38,37 @@ class QWT_EXPORT QwtPlotPicker : public QwtPicker
     Q_OBJECT
 
 public:
-    /// Constructor
+    //! Constructor
     explicit QwtPlotPicker(QWidget* canvas);
-    /// Destructor
+    
+    //! Destructor
     virtual ~QwtPlotPicker();
 
-    /// Constructor with axes
+    //! Constructor with axes
     explicit QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget*);
 
-    /// Constructor with axes, rubber band and tracker mode
+    //! Constructor with axes, rubber band and tracker mode
     explicit QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand rubberBand, DisplayMode trackerMode, QWidget*);
 
-    /// Set the axes
+    //! Set the x and y axes
     virtual void setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId);
 
-    /// Get the x-axis
+    //! Get the x axis
     QwtAxisId xAxis() const;
-    /// Get the y-axis
+    
+    //! Get the y axis
     QwtAxisId yAxis() const;
 
-    /// Get the plot
+    //! Get the plot widget
     QwtPlot* plot();
-    /// Get the plot (const version)
+    
+    //! Get the plot widget (const version)
     const QwtPlot* plot() const;
 
-    /// Get the canvas
+    //! Get the canvas widget
     QWidget* canvas();
-    /// Get the canvas (const version)
+    
+    //! Get the canvas widget (const version)
     const QWidget* canvas() const;
 
 Q_SIGNALS:
@@ -139,29 +143,34 @@ Q_SIGNALS:
     void moved(const QPointF& pos);
 
 protected:
-    /// Get the scale rectangle
+    //! Get the scale rectangle
     QRectF scaleRect() const;
 
-    /// Inverse transform a rectangle
+    //! Inverse transform a rectangle
     QRectF invTransform(const QRect&) const;
-    /// Transform a rectangle
+    
+    //! Transform a rectangle
     QRect transform(const QRectF&) const;
 
-    /// Inverse transform a point
+    //! Inverse transform a point
     QPointF invTransform(const QPoint&) const;
-    /// Transform a point
+    
+    //! Transform a point
     QPoint transform(const QPointF&) const;
 
-    /// Get the tracker text for a point
+    //! Get the tracker text for a point
     virtual QwtText trackerText(const QPoint&) const override;
-    /// Get the tracker text for a point (floating point)
+    
+    //! Get the tracker text for a point (floating point)
     virtual QwtText trackerTextF(const QPointF&) const;
 
-    /// Move the selection
+    //! Move the selection
     virtual void move(const QPoint&) override;
-    /// Append a point to the selection
+    
+    //! Append a point to the selection
     virtual void append(const QPoint&) override;
-    /// End the selection
+    
+    //! End the selection
     virtual bool end(bool ok = true) override;
 
 private:

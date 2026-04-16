@@ -68,22 +68,24 @@
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {
   public:
-    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
+    //! Constructor
     QwtSplineCubic();
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    //! Destructor
     virtual ~QwtSplineCubic();
 
-    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
+    //! Get locality (always 0 - non-local)
     virtual uint locality() const override;
 
-    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
+    //! Get painter path from polygon
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    //! Get Bezier control lines
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const override;
 
-    // calculating the parametric equations
-    /// \if ENGLISH Get polynomials from polygon \endif \if CHINESE 从多边形获取多项式 \endif
+    //! Get polynomials from polygon
     virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+    //! Get slopes at control points
     virtual QVector< double > slopes( const QPolygonF& ) const override;
+    //! Get curvatures at control points
     virtual QVector< double > curvatures( const QPolygonF& ) const override;
 
   private:

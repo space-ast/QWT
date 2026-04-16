@@ -92,154 +92,62 @@ public:
 
     Q_DECLARE_FLAGS(DisplayModes, DisplayMode)
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     explicit QwtPlotSpectrogram(const QString& title = QString());
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotSpectrogram();
 
-    /**
-     * \if ENGLISH
-     * @brief Set a display mode
-     * \endif
-     */
+    // Set a display mode
     void setDisplayMode(DisplayMode, bool on = true);
-    /**
-     * \if ENGLISH
-     * @brief Test a display mode
-     * \endif
-     */
+    // Test a display mode
     bool testDisplayMode(DisplayMode) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the raster data
-     * \endif
-     */
+    // Set the raster data
     void setData(QwtRasterData* data);
-    /**
-     * \if ENGLISH
-     * @brief Get the raster data
-     * \endif
-     */
+    // Get the raster data (const)
     const QwtRasterData* data() const;
-    /**
-     * \if ENGLISH
-     * @brief Get the raster data
-     * \endif
-     */
+    // Get the raster data
     QwtRasterData* data();
 
-    /**
-     * \if ENGLISH
-     * @brief Set the color map
-     * \endif
-     */
+    // Set the color map
     void setColorMap(QwtColorMap*);
-    /**
-     * \if ENGLISH
-     * @brief Get the color map
-     * \endif
-     */
+    // Get the color map
     const QwtColorMap* colorMap() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the color table size
-     * \endif
-     */
+    // Set the color table size
     void setColorTableSize(int numColors);
-    /**
-     * \if ENGLISH
-     * @brief Get the color table size
-     * \endif
-     */
+    // Get the color table size
     int colorTableSize() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the interval for an axis
-     * \endif
-     */
+    // Get the interval for an axis
     virtual QwtInterval interval(Qt::Axis) const override;
-    /**
-     * \if ENGLISH
-     * @brief Get the pixel hint
-     * \endif
-     */
+    // Get the pixel hint
     virtual QRectF pixelHint(const QRectF&) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the default contour pen
-     * \endif
-     */
+    // Set the default contour pen with color, width and style
     void setDefaultContourPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-    /**
-     * \if ENGLISH
-     * @brief Set the default contour pen
-     * \endif
-     */
+    // Set the default contour pen
     void setDefaultContourPen(const QPen&);
-    /**
-     * \if ENGLISH
-     * @brief Get the default contour pen
-     * \endif
-     */
+    // Get the default contour pen
     QPen defaultContourPen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the contour pen for a specific level
-     * \endif
-     */
+    // Get the contour pen for a specific level
     virtual QPen contourPen(double level) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set a conrec flag
-     * \endif
-     */
+    // Set a conrec flag
     void setConrecFlag(QwtRasterData::ConrecFlag, bool on);
-    /**
-     * \if ENGLISH
-     * @brief Test a conrec flag
-     * \endif
-     */
+    // Test a conrec flag
     bool testConrecFlag(QwtRasterData::ConrecFlag) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the contour levels
-     * \endif
-     */
+    // Set the contour levels
     void setContourLevels(const QList< double >&);
-    /**
-     * \if ENGLISH
-     * @brief Get the contour levels
-     * \endif
-     */
+    // Get the contour levels
     QList< double > contourLevels() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
     virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the spectrogram
-     * \endif
-     */
+    // Draw the spectrogram
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
 protected:

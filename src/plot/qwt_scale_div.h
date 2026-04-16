@@ -71,68 +71,68 @@ public:
         NTickTypes
     };
 
-    /// Constructor with lower and upper bounds
+    // Constructor with lower and upper bounds
     explicit QwtScaleDiv(double lowerBound = 0.0, double upperBound = 0.0);
 
-    /// Constructor with interval and ticks array
+    // Constructor with interval and ticks array
     explicit QwtScaleDiv(const QwtInterval&, QList< double >[ NTickTypes ]);
 
-    /// Constructor with bounds and ticks array
+    // Constructor with bounds and ticks array
     explicit QwtScaleDiv(double lowerBound, double upperBound, QList< double >[ NTickTypes ]);
 
-    /// Constructor with bounds and separate tick lists
+    // Constructor with bounds and separate tick lists
     explicit QwtScaleDiv(double lowerBound,
                          double upperBound,
                          const QList< double >& minorTicks,
                          const QList< double >& mediumTicks,
                          const QList< double >& majorTicks);
 
-    /// Equality operator
+    // Equality operator
     bool operator==(const QwtScaleDiv&) const;
-    /// Inequality operator
+    // Inequality operator
     bool operator!=(const QwtScaleDiv&) const;
-    /// Fuzzy comparison
+    // Fuzzy comparison
     bool fuzzyCompare(const QwtScaleDiv& other) const;
 
-    /// Set the interval
+    // Set the interval
     void setInterval(double lowerBound, double upperBound);
-    /// Set the interval from QwtInterval
+    // Set the interval from QwtInterval
     void setInterval(const QwtInterval&);
-    /// Get the interval
+    // Get the interval
     QwtInterval interval() const;
 
-    /// Set the lower bound
+    // Set the lower bound
     void setLowerBound(double);
-    /// Get the lower bound
+    // Get the lower bound
     double lowerBound() const;
 
-    /// Set the upper bound
+    // Set the upper bound
     void setUpperBound(double);
-    /// Get the upper bound
+    // Get the upper bound
     double upperBound() const;
 
-    /// Get the range (upper - lower)
+    // Get the range (upper - lower)
     double range() const;
 
-    /// Check if value is within bounds
+    // Check if value is within bounds
     bool contains(double value) const;
 
-    /// Set ticks for a specific tick type
+    // Set ticks for a specific tick type
     void setTicks(int tickType, const QList< double >&);
-    /// Get ticks for a specific tick type
+    // Get ticks for a specific tick type
     QList< double > ticks(int tickType) const;
 
-    /// Check if scale division is empty
+    // Check if scale division is empty
     bool isEmpty() const;
-    /// Check if scale is increasing
+    // Check if scale is increasing
     bool isIncreasing() const;
 
-    /// Invert the scale division
+    // Invert the scale division
     void invert();
-    /// Get inverted scale division
+    // Get inverted scale division
     QwtScaleDiv inverted() const;
 
-    /// Get bounded scale division
+    // Get bounded scale division
     QwtScaleDiv bounded(double lowerBound, double upperBound) const;
 
 private:

@@ -217,12 +217,24 @@ static inline void qwtUnscaleFont(QPainter* painter)
     }
 }
 
-/*!
-   Check is the application is running with the X11 graphics system
-   that has some special capabilities that can be used for incremental
-   painting to a widget.
-
-   \return True, when the graphics system is X11
+/**
+ * \if ENGLISH
+ * @brief Check if the application is running with the X11 graphics system
+ *
+ * The X11 graphics system has special capabilities for incremental painting.
+ * With Qt 5.10+, X11 paint engine can be enabled via QT_XCB_NATIVE_PAINTING=1.
+ *
+ * @return True when the graphics system is X11
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查应用程序是否使用X11图形系统
+ *
+ * X11图形系统具有增量绘制的特殊能力。
+ * Qt 5.10+可以通过设置QT_XCB_NATIVE_PAINTING=1启用X11绘制引擎。
+ *
+ * @return 如果使用X11图形系统则返回true
+ * \endif
  */
 bool QwtPainter::isX11GraphicsSystem()
 {
@@ -243,19 +255,29 @@ bool QwtPainter::isX11GraphicsSystem()
     return onX11 == 1;
 }
 
-/*!
-   Check if the painter is using a paint engine, that aligns
-   coordinates to integers. Today these are all paint engines
-   beside QPaintEngine::Pdf and QPaintEngine::SVG.
-
-   If we have an integer based paint engine it is also
-   checked if the painter has a transformation matrix,
-   that rotates or scales.
-
-   \param  painter Painter
-   \return true, when the painter is aligning
-
-   \sa setRoundingAlignment()
+/**
+ * \if ENGLISH
+ * @brief Check if the painter is using a paint engine that aligns coordinates to integers
+ *
+ * Today these are all paint engines except QPaintEngine::Pdf and QPaintEngine::SVG.
+ * If we have an integer-based paint engine, it is also checked whether the painter
+ * has a transformation matrix that rotates or scales.
+ *
+ * @param[in] painter Painter to check
+ * @return True when the painter is aligning
+ * @sa setRoundingAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查画笔是否使用对齐到整数的绘制引擎
+ *
+ * 目前除了QPaintEngine::Pdf和QPaintEngine::SVG外，所有绘制引擎都对齐到整数。
+ * 对于整数绘制引擎，还会检查画笔是否有旋转或缩放的变换矩阵。
+ *
+ * @param[in] painter 要检查的画笔对象
+ * @return 如果画笔正在对齐则返回true
+ * @sa setRoundingAlignment()
+ * \endif
  */
 bool QwtPainter::isAligning(const QPainter* painter)
 {
@@ -289,36 +311,55 @@ bool QwtPainter::isAligning(const QPainter* painter)
     return true;
 }
 
-/*!
-   Enable whether coordinates should be rounded, before they are painted
-   to a paint engine that floors to integer values. For other paint engines
-   ( PDF, SVG ) this flag has no effect.
-   QwtPainter stores this flag only, the rounding itself is done in
-   the painting code ( f.e the plot items ).
-
-   The default setting is true.
-
-   \sa roundingAlignment(), isAligning()
+/**
+ * \if ENGLISH
+ * @brief Enable/disable coordinate rounding before painting
+ *
+ * Coordinates are rounded before being painted to a paint engine that floors
+ * to integer values. For other paint engines (PDF, SVG), this flag has no effect.
+ * QwtPainter stores this flag only; the rounding itself is done in the painting code.
+ *
+ * @param[in] enable Enable/disable rounding
+ * @sa roundingAlignment(), isAligning()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 启用/禁用坐标对齐
+ *
+ * 在绘制到向下取整的绘制引擎之前，坐标会被对齐。
+ * 对于其他绘制引擎（PDF、SVG），此标志无效。
+ * QwtPainter仅存储此标志，实际对齐在绘制代码中完成。
+ *
+ * @param[in] enable 是否启用对齐
+ * @sa roundingAlignment(), isAligning()
+ * \endif
  */
 void QwtPainter::setRoundingAlignment(bool enable)
 {
     m_roundingAlignment = enable;
 }
 
-/*!
-   \brief En/Disable line splitting for the raster paint engine
-
-   In some Qt versions the raster paint engine paints polylines of many points
-   much faster when they are split in smaller chunks: f.e all supported Qt versions
-   >= Qt 5.0 when drawing an antialiased polyline with a pen width >=2.
-
-   Also the raster paint engine has a nasty bug in many versions ( Qt 4.8 - ... )
-   for short lines ( https://codereview.qt-project.org/#/c/99456 ), that is worked
-   around in this mode.
-
-   The default setting is true.
-
-   \sa polylineSplitting()
+/**
+ * \if ENGLISH
+ * @brief Enable/disable line splitting for the raster paint engine
+ *
+ * In some Qt versions, the raster paint engine paints polylines much faster
+ * when split into smaller chunks. Also works around a bug for short lines
+ * in many Qt versions (Qt 4.8+).
+ *
+ * @param[in] enable Enable/disable splitting
+ * @sa polylineSplitting()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 启用/禁用光栅绘制引擎的线条分割
+ *
+ * 在某些Qt版本中，光栅绘制引擎在分割成小块时绘制多段线更快。
+ * 同时解决了许多Qt版本（Qt 4.8+）中短线条的bug问题。
+ *
+ * @param[in] enable 是否启用分割
+ * @sa polylineSplitting()
+ * \endif
  */
 void QwtPainter::setPolylineSplitting(bool enable)
 {
@@ -456,13 +497,24 @@ void QwtPainter::drawText(QPainter* painter, const QRectF& rect, int flags, cons
 
 #ifndef QT_NO_RICHTEXT
 
-/*!
-   Draw a text document into a rectangle
-
-   \param painter Painter
-   \param rect Target rectangle
-   \param flags Alignments/Text flags, see QPainter::drawText()
-   \param text Text document
+/**
+ * \if ENGLISH
+ * @brief Draw a text document into a rectangle
+ *
+ * @param[in] painter Painter
+ * @param[in] rect Target rectangle
+ * @param[in] flags Alignments/Text flags, see QPainter::drawText()
+ * @param[in] text Text document
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将文本文档绘制到矩形区域
+ *
+ * @param[in] painter 绘图器
+ * @param[in] rect 目标矩形
+ * @param[in] flags 对齐/文本标志，参见QPainter::drawText()
+ * @param[in] text 文本文档
+ * \endif
  */
 void QwtPainter::drawSimpleRichText(QPainter* painter, const QRectF& rect, int flags, const QTextDocument& text)
 {
@@ -749,16 +801,27 @@ void QwtPainter::drawFocusRect(QPainter* painter, const QWidget* widget, const Q
     widget->style()->drawPrimitive(QStyle::PE_FrameFocusRect, &opt, painter, widget);
 }
 
-/*!
-   Draw a round frame
-
-   \param painter Painter
-   \param rect Frame rectangle
-   \param palette QPalette::WindowText is used for plain borders
-                 QPalette::Dark and QPalette::Light for raised
-                 or sunken borders
-   \param lineWidth Line width
-   \param frameStyle bitwise OR´ed value of QFrame::Shape and QFrame::Shadow
+/**
+ * \if ENGLISH
+ * @brief Draw a round frame
+ *
+ * @param[in] painter Painter
+ * @param[in] rect Frame rectangle
+ * @param[in] palette QPalette::WindowText is used for plain borders,
+ *                    QPalette::Dark and QPalette::Light for raised/sunken borders
+ * @param[in] lineWidth Line width
+ * @param[in] frameStyle Bitwise OR'ed value of QFrame::Shape and QFrame::Shadow
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制圆形边框
+ *
+ * @param[in] painter 绘图器
+ * @param[in] rect 边框矩形
+ * @param[in] palette 简边框使用QPalette::WindowText，凸起/凹陷边框使用QPalette::Dark和QPalette::Light
+ * @param[in] lineWidth 线宽
+ * @param[in] frameStyle QFrame::Shape和QFrame::Shadow的按位或值
+ * \endif
  */
 void QwtPainter::drawRoundFrame(QPainter* painter, const QRectF& rect, const QPalette& palette, int lineWidth, int frameStyle)
 {
@@ -811,16 +874,30 @@ void QwtPainter::drawRoundFrame(QPainter* painter, const QRectF& rect, const QPa
     painter->restore();
 }
 
-/*!
-   Draw a rectangular frame
-
-   \param painter Painter
-   \param rect Frame rectangle
-   \param palette Palette
-   \param foregroundRole Foreground role used for QFrame::Plain
-   \param frameWidth Frame width
-   \param midLineWidth Used for QFrame::Box
-   \param frameStyle bitwise OR´ed value of QFrame::Shape and QFrame::Shadow
+/**
+ * \if ENGLISH
+ * @brief Draw a rectangular frame
+ *
+ * @param[in] painter Painter
+ * @param[in] rect Frame rectangle
+ * @param[in] palette Palette
+ * @param[in] foregroundRole Foreground role used for QFrame::Plain
+ * @param[in] frameWidth Frame width
+ * @param[in] midLineWidth Used for QFrame::Box
+ * @param[in] frameStyle Bitwise OR'ed value of QFrame::Shape and QFrame::Shadow
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制矩形边框
+ *
+ * @param[in] painter 绘图器
+ * @param[in] rect 边框矩形
+ * @param[in] palette 调色板
+ * @param[in] foregroundRole QFrame::Plain使用的前景角色
+ * @param[in] frameWidth 边框宽度
+ * @param[in] midLineWidth 用于QFrame::Box
+ * @param[in] frameStyle QFrame::Shape和QFrame::Shadow的按位或值
+ * \endif
  */
 void QwtPainter::drawFrame(QPainter* painter,
                            const QRectF& rect,
@@ -953,20 +1030,32 @@ void QwtPainter::drawFrame(QPainter* painter,
     painter->restore();
 }
 
-/*!
-   Draw a rectangular frame with rounded borders
-
-   \param painter Painter
-   \param rect Frame rectangle
-   \param xRadius x-radius of the ellipses defining the corners
-   \param yRadius y-radius of the ellipses defining the corners
-   \param palette QPalette::WindowText is used for plain borders
-                 QPalette::Dark and QPalette::Light for raised
-                 or sunken borders
-   \param lineWidth Line width
-   \param frameStyle bitwise OR´ed value of QFrame::Shape and QFrame::Shadow
+/**
+ * \if ENGLISH
+ * @brief Draw a rectangular frame with rounded borders
+ *
+ * @param[in] painter Painter
+ * @param[in] rect Frame rectangle
+ * @param[in] xRadius X-radius of the ellipses defining the corners
+ * @param[in] yRadius Y-radius of the ellipses defining the corners
+ * @param[in] palette QPalette::WindowText for plain borders,
+ *                    QPalette::Dark and QPalette::Light for raised/sunken
+ * @param[in] lineWidth Line width
+ * @param[in] frameStyle Bitwise OR'ed value of QFrame::Shape and QFrame::Shadow
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制带圆角的矩形边框
+ *
+ * @param[in] painter 绘图器
+ * @param[in] rect 边框矩形
+ * @param[in] xRadius 定义角落椭圆的X半径
+ * @param[in] yRadius 定义角落椭圆的Y半径
+ * @param[in] palette 简边框使用QPalette::WindowText，凸起/凹陷使用QPalette::Dark和QPalette::Light
+ * @param[in] lineWidth 线宽
+ * @param[in] frameStyle QFrame::Shape和QFrame::Shadow的按位或值
+ * \endif
  */
-
 void QwtPainter::drawRoundedFrame(QPainter* painter,
                                   const QRectF& rect,
                                   qreal xRadius,
@@ -1086,15 +1175,32 @@ void QwtPainter::drawRoundedFrame(QPainter* painter,
     painter->restore();
 }
 
-/*!
-   Draw a color bar into a rectangle
-
-   \param painter Painter
-   \param colorMap Color map
-   \param interval Value range
-   \param scaleMap Scale map
-   \param orientation Orientation
-   \param rect Target rectangle
+/**
+ * \if ENGLISH
+ * @brief Draw a color bar into a rectangle
+ *
+ * Paints to a pixmap first for scalable output in print documents.
+ *
+ * @param[in] painter Painter
+ * @param[in] colorMap Color map
+ * @param[in] interval Value range
+ * @param[in] scaleMap Scale map
+ * @param[in] orientation Orientation
+ * @param[in] rect Target rectangle
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将颜色条绘制到矩形区域
+ *
+ * 先绘制到pixmap以支持打印文档中的可缩放输出。
+ *
+ * @param[in] painter 绘图器
+ * @param[in] colorMap 颜色映射
+ * @param[in] interval 值范围
+ * @param[in] scaleMap 缩放映射
+ * @param[in] orientation 方向
+ * @param[in] rect 目标矩形
+ * \endif
  */
 void QwtPainter::drawColorBar(QPainter* painter,
                               const QwtColorMap& colorMap,
@@ -1180,18 +1286,30 @@ static inline void qwtFillRect(const QWidget* widget, QPainter* painter, const Q
     }
 }
 
-/*!
-   Fill a pixmap with the content of a widget
-
-   In Qt >= 5.0 QPixmap::fill() is a nop, in Qt 4.x it is buggy
-   for backgrounds with gradients. Thus fillPixmap() offers
-   an alternative implementation.
-
-   \param widget Widget
-   \param pixmap Pixmap to be filled
-   \param offset Offset
-
-   \sa QPixmap::fill()
+/**
+ * \if ENGLISH
+ * @brief Fill a pixmap with the content of a widget
+ *
+ * In Qt >= 5.0 QPixmap::fill() is a nop, in Qt 4.x it is buggy for
+ * backgrounds with gradients. Thus fillPixmap() offers an alternative.
+ *
+ * @param[in] widget Widget
+ * @param[out] pixmap Pixmap to be filled
+ * @param[in] offset Offset
+ * @sa QPixmap::fill()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用widget内容填充pixmap
+ *
+ * Qt >= 5.0中QPixmap::fill()无效果，Qt 4.x中渐变背景存在bug。
+ * fillPixmap()提供了替代实现。
+ *
+ * @param[in] widget 部件
+ * @param[out] pixmap 要填充的pixmap
+ * @param[in] offset 偏移量
+ * @sa QPixmap::fill()
+ * \endif
  */
 void QwtPainter::fillPixmap(const QWidget* widget, QPixmap& pixmap, const QPoint& offset)
 {
@@ -1220,9 +1338,19 @@ void QwtPainter::fillPixmap(const QWidget* widget, QPixmap& pixmap, const QPoint
 }
 
 /**
+ * \if ENGLISH
+ * @brief Fill a region by drawing all its rectangles
+ *
+ * @param[in] painter Painter
+ * @param[in] region Region to fill
+ * \endif
+ *
+ * \if CHINESE
  * @brief 填充区域
- * @param painter
- * @param region
+ *
+ * @param[in] painter 绘图器
+ * @param[in] region 要填充的区域
+ * \endif
  */
 void QwtPainter::fillRegion(QPainter* painter, const QRegion& region)
 {
@@ -1236,14 +1364,35 @@ void QwtPainter::fillRegion(QPainter* painter, const QRegion& region)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Fill specified rectangular areas of a widget with its parent's background
+ *
+ * This function handles background filling optimization for transparent or
+ * semi-transparent widgets.
+ *
+ * @param[in] painter QPainter for drawing
+ * @param[in] widget Target widget needing background fill
+ * @param[in] fillRects List of rectangular areas to fill
+ *
+ * @details Process:
+ * 1. Return if fillRects is empty
+ * 2. Determine clip region from painter or widget's content rect
+ * 3. Find background widget that can fill unfilled areas
+ * 4. For each fill rect: check intersection, create pixmap, fill, draw
+ *
+ * @note Typically used for rounded borders or partial background filling
+ * @sa fillPixmap(), findBackgroundWidget()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 填充widget背景的指定矩形区域
  *
  * 使用父级widget的背景来填充当前widget的指定矩形区域列表。
  * 这个函数主要用于处理透明或半透明widget的背景填充优化。
  *
- * @param painter 用于绘制的QPainter对象
- * @param widget 需要填充背景的目标widget
- * @param fillRects 需要填充的矩形区域列表
+ * @param[in] painter 用于绘制的QPainter对象
+ * @param[in] widget 需要填充背景的目标widget
+ * @param[in] fillRects 需要填充的矩形区域列表
  *
  * @details 填充过程如下：
  * 1. 如果填充矩形列表为空，直接返回
@@ -1256,8 +1405,8 @@ void QwtPainter::fillRegion(QPainter* painter, const QRegion& region)
  *    - 将pixmap绘制到目标位置
  *
  * @note 这个函数通常用于处理圆角边框或其他需要局部背景填充的情况
- *
- * @sa QwtPainter::fillPixmap(), QwtPainter::findBackgroundWidget()
+ * @sa fillPixmap(), findBackgroundWidget()
+ * \endif
  */
 void QwtPainter::fillBackground(QPainter* painter, QWidget* widget, const QVector< QRectF >& fillRects)
 {
@@ -1288,13 +1437,33 @@ void QwtPainter::fillBackground(QPainter* painter, QWidget* widget, const QVecto
 }
 
 /**
+ * \if ENGLISH
+ * @brief Auto-detect and fill a widget's background
+ *
+ * Detects background areas based on widget style properties and applies
+ * appropriate fill strategy. Supports styled backgrounds and rounded borders.
+ *
+ * @param[in] painter QPainter for drawing
+ * @param[in] canvas Target widget needing background fill
+ *
+ * @details Logic:
+ * 1. If WA_StyledBackground is enabled: use stylesheet recorder to detect
+ *    areas, use clipRects if opaque, otherwise use entire widget rect
+ * 2. If borderRadius property is set: calculate four corner rect areas
+ * 3. Call fillBackground() for actual filling
+ *
+ * @note Entry point for background filling, auto-selects appropriate strategy
+ * @sa fillBackground(), QwtStyleSheetRecorder
+ * \endif
+ *
+ * \if CHINESE
  * @brief 自动检测并填充widget的背景
  *
  * 根据widget的样式属性自动检测需要填充的背景区域，并调用相应的填充函数。
  * 支持样式化背景和圆角边框的背景填充。
  *
- * @param painter 用于绘制的QPainter对象
- * @param canvas 需要填充背景的目标widget
+ * @param[in] painter 用于绘制的QPainter对象
+ * @param[in] canvas 需要填充背景的目标widget
  *
  * @details 处理逻辑如下：
  * 1. 如果widget启用了样式化背景（WA_StyledBackground）：
@@ -1303,11 +1472,11 @@ void QwtPainter::fillBackground(QPainter* painter, QWidget* widget, const QVecto
  *    - 否则使用整个widget矩形
  * 2. 如果widget设置了borderRadius属性：
  *    - 计算四个角的矩形区域作为填充区域
- * 3. 调用qwtFillBackground进行实际填充
+ * 3. 调用fillBackground进行实际填充
  *
  * @note 这个函数是背景填充的入口点，会自动选择合适的填充策略
- *
  * @sa fillBackground(), QwtStyleSheetRecorder
+ * \endif
  */
 void QwtPainter::fillBackground(QPainter* painter, QWidget* canvas)
 {
@@ -1341,14 +1510,24 @@ void QwtPainter::fillBackground(QPainter* painter, QWidget* canvas)
     fillBackground(painter, canvas, rects);
 }
 
-/*!
-   Fill rect with the background of a widget
-
-   \param painter Painter
-   \param rect Rectangle to be filled
-   \param widget Widget
-
-   \sa QStyle::PE_Widget, QWidget::backgroundRole()
+/**
+ * \if ENGLISH
+ * @brief Fill rect with the background of a widget
+ *
+ * @param[in] painter Painter
+ * @param[in] rect Rectangle to be filled
+ * @param[in] widget Widget
+ * @sa QStyle::PE_Widget, QWidget::backgroundRole()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用widget的背景填充矩形
+ *
+ * @param[in] painter 绘图器
+ * @param[in] rect 要填充的矩形
+ * @param[in] widget 部件
+ * @sa QStyle::PE_Widget, QWidget::backgroundRole()
+ * \endif
  */
 void QwtPainter::drawBackgound(QPainter* painter, const QRectF& rect, const QWidget* widget)
 {
@@ -1366,13 +1545,39 @@ void QwtPainter::drawBackgound(QPainter* painter, const QRectF& rect, const QWid
 }
 
 /**
+ * \if ENGLISH
+ * @brief Draw a widget's canvas background
+ *
+ * Draws the background of a canvas widget supporting solid colors, gradients,
+ * and texture patterns. Handles custom border path clipping and optimized
+ * rendering for different brush types.
+ *
+ * @param[in] painter QPainter for drawing
+ * @param[in] canvas Target widget to draw background on
+ *
+ * @details Process:
+ * 1. Save painter state
+ * 2. Invoke borderPath() method via meta-object for clipping
+ * 3. Apply different strategies based on brush type:
+ *    - Texture: create pixmap, fillPixmap, draw
+ *    - Gradient: fill clip region or entire rect based on coordinate mode
+ *    - Plain: fill clip region directly
+ * 4. Restore painter state
+ *
+ * @note Uses Qt meta-object system to call borderPath() method.
+ *       Canvas class needs Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
+ * @warning If canvas lacks borderPath() method, uses default rect boundary
+ * @sa fillPixmap(), fillRegion(), backgroundRole(), palette()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 绘制widget的背景
  *
  * 绘制指定canvas widget的背景，支持多种背景类型包括纯色、渐变和纹理模式。
  * 该函数会处理自定义边界路径裁剪和不同背景类型的优化绘制。
  *
- * @param painter 用于绘制的QPainter对象
- * @param canvas 需要绘制背景的目标widget
+ * @param[in] painter 用于绘制的QPainter对象
+ * @param[in] canvas 需要绘制背景的目标widget
  *
  * @details 绘制过程如下：
  * 1. 保存当前绘图器状态
@@ -1385,14 +1590,11 @@ void QwtPainter::drawBackgound(QPainter* painter, const QRectF& rect, const QWid
  *
  * @note 该函数通过Qt的反射机制调用canvas的borderPath方法，
  *       因此canvas类需要提供相应的Q_INVOKABLE方法签名：
- *       @code
  *       Q_INVOKABLE QPainterPath borderPath(const QRect& rect) const;
- *       @endcode
  *
  * @warning 如果canvas没有提供borderPath方法，将使用默认矩形边界
- *
- * @sa QwtPainter::fillPixmap(), QwtPainter::fillRegion(),
- *     QWidget::backgroundRole(), QWidget::palette()
+ * @sa fillPixmap(), fillRegion(), backgroundRole(), palette()
+ * \endif
  */
 void QwtPainter::drawCanvasBackgound(QPainter* painter, QWidget* canvas)
 {
@@ -1434,13 +1636,25 @@ void QwtPainter::drawCanvasBackgound(QPainter* painter, QWidget* canvas)
 }
 
 /**
- * @brief 确保widget背景按照当前GUI风格（如Windows、Fusion等）正确绘制
+ * \if ENGLISH
+ * @brief Ensure widget background is drawn correctly per current GUI style
  *
- * 支持渐变、纹理、圆角等复杂背景效果
+ * Supports gradients, textures, rounded corners and other complex effects.
+ * Automatically adapts to system or application theme settings.
  *
- * 自动适配系统或应用程序的主题设置
- * @param w
- * @param painter
+ * @param[in] w Widget to draw background for
+ * @param[in] painter QPainter for drawing
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 确保widget背景按照当前GUI风格正确绘制
+ *
+ * 支持渐变、纹理、圆角等复杂背景效果。
+ * 自动适配系统或应用程序的主题设置。
+ *
+ * @param[in] w 需要绘制背景的widget
+ * @param[in] painter 绘图器
+ * \endif
  */
 void QwtPainter::drawStyledBackground(QWidget* w, QPainter* painter)
 {
@@ -1449,12 +1663,22 @@ void QwtPainter::drawStyledBackground(QWidget* w, QPainter* painter)
     w->style()->drawPrimitive(QStyle::PE_Widget, &opt, painter, w);
 }
 
-/*!
-   Distance appropriate for drawing a subsequent character after text.
-
-   \param fontMetrics Font metrics
-   \param text Text
-   \return horizontal advance in pixels
+/**
+ * \if ENGLISH
+ * @brief Distance appropriate for drawing a subsequent character after text
+ *
+ * @param[in] fontMetrics Font metrics
+ * @param[in] text Text
+ * @return Horizontal advance in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制文本后下一个字符的适当距离
+ *
+ * @param[in] fontMetrics 字体度量
+ * @param[in] text 文本
+ * @return 水平前进像素数
+ * \endif
  */
 int QwtPainter::horizontalAdvance(const QFontMetrics& fontMetrics, const QString& text)
 {
@@ -1465,12 +1689,22 @@ int QwtPainter::horizontalAdvance(const QFontMetrics& fontMetrics, const QString
 #endif
 }
 
-/*!
-   Distance appropriate for drawing a subsequent character after text.
-
-   \param fontMetrics Font metrics
-   \param text Text
-   \return horizontal advance in pixels
+/**
+ * \if ENGLISH
+ * @brief Distance appropriate for drawing a subsequent character after text
+ *
+ * @param[in] fontMetrics Font metrics
+ * @param[in] text Text
+ * @return Horizontal advance in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制文本后下一个字符的适当距离
+ *
+ * @param[in] fontMetrics 字体度量
+ * @param[in] text 文本
+ * @return 水平前进像素数
+ * \endif
  */
 qreal QwtPainter::horizontalAdvance(const QFontMetricsF& fontMetrics, const QString& text)
 {
@@ -1481,12 +1715,22 @@ qreal QwtPainter::horizontalAdvance(const QFontMetricsF& fontMetrics, const QStr
 #endif
 }
 
-/*!
-   Distance appropriate for drawing a subsequent character after ch.
-
-   \param fontMetrics Font metrics
-   \param ch Character
-   \return horizontal advance in pixels
+/**
+ * \if ENGLISH
+ * @brief Distance appropriate for drawing a subsequent character after ch
+ *
+ * @param[in] fontMetrics Font metrics
+ * @param[in] ch Character
+ * @return Horizontal advance in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制字符后下一个字符的适当距离
+ *
+ * @param[in] fontMetrics 字体度量
+ * @param[in] ch 字符
+ * @return 水平前进像素数
+ * \endif
  */
 int QwtPainter::horizontalAdvance(const QFontMetrics& fontMetrics, QChar ch)
 {
@@ -1497,12 +1741,22 @@ int QwtPainter::horizontalAdvance(const QFontMetrics& fontMetrics, QChar ch)
 #endif
 }
 
-/*!
-   Distance appropriate for drawing a subsequent character after ch.
-
-   \param fontMetrics Font metrics
-   \param ch Character
-   \return horizontal advance in pixels
+/**
+ * \if ENGLISH
+ * @brief Distance appropriate for drawing a subsequent character after ch
+ *
+ * @param[in] fontMetrics Font metrics
+ * @param[in] ch Character
+ * @return Horizontal advance in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制字符后下一个字符的适当距离
+ *
+ * @param[in] fontMetrics 字体度量
+ * @param[in] ch 字符
+ * @return 水平前进像素数
+ * \endif
  */
 qreal QwtPainter::horizontalAdvance(const QFontMetricsF& fontMetrics, QChar ch)
 {
@@ -1513,14 +1767,22 @@ qreal QwtPainter::horizontalAdvance(const QFontMetricsF& fontMetrics, QChar ch)
 #endif
 }
 
-/*!
-   Adjust the DPI value of font according to the DPI value of the paint device
-
-   \param font Unscaled font
-   \param paintDevice Paint device providing a DPI value. If paintDevice == null
-                     the DPI value of the primary screen will be used
-
-   \return Font being adjusted to the DPI value of the paint device
+/**
+ * \if ENGLISH
+ * @brief Adjust the DPI value of font according to the DPI value of the paint device
+ *
+ * @param[in] font Unscaled font
+ * @param[in] paintDevice Paint device providing a DPI value. If null, primary screen DPI is used
+ * @return Font adjusted to the DPI value of the paint device
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 根据绘制设备的DPI值调整字体DPI
+ *
+ * @param[in] font 未缩放的字体
+ * @param[in] paintDevice 提供DPI值的绘制设备。为null时使用主屏幕DPI
+ * @return 调整到绘制设备DPI值的字体
+ * \endif
  */
 QFont QwtPainter::scaledFont(const QFont& font, const QPaintDevice* paintDevice)
 {
@@ -1557,12 +1819,33 @@ QFont QwtPainter::scaledFont(const QFont& font, const QPaintDevice* paintDevice)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Find the top-level widget with a visible background
+ *
+ * Recursively traverses up the widget hierarchy to find the first widget
+ * with an opaque background. Used to optimize drawing operations by
+ * avoiding unnecessary background painting on transparent widgets.
+ *
+ * @param[in] w Starting widget to check
+ * @return First widget with visible background, or root widget if none found
+ *
+ * @details Logic:
+ * 1. If widget has no parent (root widget), return it
+ * 2. If autoFillBackground is enabled and background is opaque, return it
+ * 3. If WA_StyledBackground is set, test by actual drawing, return if visible
+ * 4. Otherwise, recursively check parent widget
+ *
+ * @note Used for drawing optimization to determine where to start background drawing
+ * @sa autoFillBackground(), backgroundRole(), testAttribute()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 查找具有可见背景的顶层widget
  *
  * 递归地向上遍历widget的父级层次结构，寻找第一个具有不透明背景的widget。
  * 这个函数用于优化绘图操作，避免在透明或无背景的widget上进行不必要的背景绘制。
  *
- * @param w 要检查的起始widget
+ * @param[in] w 要检查的起始widget
  * @return 返回第一个具有可见背景的widget，如果找不到则返回根widget
  *
  * @details 查找逻辑如下：
@@ -1572,8 +1855,8 @@ QFont QwtPainter::scaledFont(const QFont& font, const QPaintDevice* paintDevice)
  * 4. 如果以上条件都不满足，则递归检查父级widget
  *
  * @note 这个函数主要用于绘图优化，帮助确定在哪里开始绘制背景以避免重复绘制
- *
- * @sa QWidget::autoFillBackground(), QWidget::backgroundRole(), QWidget::testAttribute()
+ * @sa autoFillBackground(), backgroundRole(), testAttribute()
+ * \endif
  */
 QWidget* QwtPainter::findBackgroundWidget(QWidget* w)
 {
@@ -1605,9 +1888,20 @@ QWidget* QwtPainter::findBackgroundWidget(QWidget* w)
     return findBackgroundWidget(w->parentWidget());
 }
 
-/*!
-   \return Pixel ratio for a paint device
-   \param paintDevice Paint device
+/**
+ * \if ENGLISH
+ * @brief Get pixel ratio for a paint device
+ *
+ * @param[in] paintDevice Paint device
+ * @return Pixel ratio
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘制设备的像素比率
+ *
+ * @param[in] paintDevice 绘制设备
+ * @return 像素比率
+ * \endif
  */
 qreal QwtPainter::devicePixelRatio(const QPaintDevice* paintDevice)
 {
@@ -1636,11 +1930,22 @@ qreal QwtPainter::devicePixelRatio(const QPaintDevice* paintDevice)
     return pixelRatio;
 }
 
-/*!
-   \return A pixmap that can be used as backing store
-
-   \param widget Widget, for which the backingstore is intended
-   \param size Size of the pixmap
+/**
+ * \if ENGLISH
+ * @brief Create a pixmap that can be used as backing store
+ *
+ * @param[in] widget Widget for which the backing store is intended
+ * @param[in] size Size of the pixmap
+ * @return Backing store pixmap
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 创建可用作后备存储的pixmap
+ *
+ * @param[in] widget 目标部件
+ * @param[in] size pixmap大小
+ * @return 后备存储pixmap
+ * \endif
  */
 QPixmap QwtPainter::backingStore(QWidget* widget, const QSize& size)
 {

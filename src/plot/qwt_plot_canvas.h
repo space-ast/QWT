@@ -159,29 +159,29 @@ public:
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-    /// Constructor
+    // Constructor
     explicit QwtPlotCanvas(QwtPlot* = nullptr);
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotCanvas();
 
-    /// Set paint attribute
+    // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /// Test paint attribute
+    // Test paint attribute
     bool testPaintAttribute(PaintAttribute) const;
 
-    /// Get backing store
+    // Get backing store
     const QPixmap* backingStore() const;
-    /// Invalidate backing store
+    // Invalidate backing store
     Q_INVOKABLE void invalidateBackingStore();
 
-    /// Handle events
+    // Handle events
     virtual bool event(QEvent*) override;
 
-    /// Get border path
+    // Get border path
     Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
 public Q_SLOTS:
-    /// Replot the canvas
+    // Replot the canvas
     void replot();
 
 protected:

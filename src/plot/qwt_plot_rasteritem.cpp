@@ -447,21 +447,49 @@ static void qwtToRgba( const QImage* from, QImage* to,
     }
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the raster item
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 栅格项的标题
+ * \endif
+ */
 QwtPlotRasterItem::QwtPlotRasterItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
 {
     init();
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor with title
+ * @param[in] title Title of the raster item
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数（带标题）
+ * @param[in] title 栅格项的标题
+ * \endif
+ */
 QwtPlotRasterItem::QwtPlotRasterItem( const QwtText& title )
     : QwtPlotItem( title )
 {
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotRasterItem::~QwtPlotRasterItem()
 {
     delete m_data;
@@ -477,12 +505,20 @@ void QwtPlotRasterItem::init()
     setZ( 8.0 );
 }
 
-/*!
-   Specify an attribute how to draw the raster item
-
-   \param attribute Paint attribute
-   \param on On/Off
-   /sa PaintAttribute, testPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Set a paint attribute
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa PaintAttribute, testPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置绘制属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开/关
+ * @sa PaintAttribute, testPaintAttribute()
+ * \endif
  */
 void QwtPlotRasterItem::setPaintAttribute( PaintAttribute attribute, bool on )
 {
@@ -492,37 +528,56 @@ void QwtPlotRasterItem::setPaintAttribute( PaintAttribute attribute, bool on )
         m_data->paintAttributes &= ~attribute;
 }
 
-/*!
-    \return True, when attribute is enabled
-    \sa PaintAttribute, setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test a paint attribute
+ * @param[in] attribute Paint attribute
+ * @return True, when attribute is enabled
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试绘制属性
+ * @param[in] attribute 绘制属性
+ * @return 如果属性启用则返回 true
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
  */
 bool QwtPlotRasterItem::testPaintAttribute( PaintAttribute attribute ) const
 {
     return ( m_data->paintAttributes & attribute );
 }
 
-/*!
-   \brief Set an alpha value for the raster data
-
-   Often a plot has several types of raster data organized in layers.
-   ( f.e a geographical map, with weather statistics ).
-   Using setAlpha() raster items can be stacked easily.
-
-   The alpha value is a value [0, 255] to
-   control the transparency of the image. 0 represents a fully
-   transparent color, while 255 represents a fully opaque color.
-
-   \param alpha Alpha value
-
-   - alpha >= 0\n
-     All alpha values of the pixels returned by renderImage() will be set to
-     alpha, beside those with an alpha value of 0 (invalid pixels).
-   - alpha < 0
-     The alpha values returned by renderImage() are not changed.
-
-   The default alpha value is -1.
-
-   \sa alpha()
+/**
+ * \if ENGLISH
+ * @brief Set an alpha value for the raster data
+ * @details Often a plot has several types of raster data organized in layers.
+ *          (e.g. a geographical map, with weather statistics).
+ *          Using setAlpha() raster items can be stacked easily.
+ *          The alpha value is a value [0, 255] to control the transparency of the image.
+ *          0 represents a fully transparent color, while 255 represents a fully opaque color.
+ *          - alpha >= 0: All alpha values of the pixels returned by renderImage() will be set to alpha,
+ *            beside those with an alpha value of 0 (invalid pixels).
+ *          - alpha < 0: The alpha values returned by renderImage() are not changed.
+ *          The default alpha value is -1.
+ * @param[in] alpha Alpha value
+ * @sa alpha()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置栅格数据的 alpha 值
+ * @details 通常，一个绘图会有几种类型的栅格数据组织在层中。
+ *          （例如带有天气统计数据的地理地图）。
+ *          使用 setAlpha() 可以轻松堆叠栅格项。
+ *          alpha 值是 [0, 255] 的值，用于控制图像的透明度。
+ *          0 表示完全透明的颜色，255 表示完全不透明的颜色。
+ *          - alpha >= 0: renderImage() 返回的像素的所有 alpha 值都将设置为 alpha，
+ *            除了 alpha 值为 0 的像素（无效像素）。
+ *          - alpha < 0: renderImage() 返回的 alpha 值不会改变。
+ *          默认 alpha 值为 -1。
+ * @param[in] alpha Alpha 值
+ * @sa alpha()
+ * \endif
  */
 void QwtPlotRasterItem::setAlpha( int alpha )
 {
@@ -540,22 +595,38 @@ void QwtPlotRasterItem::setAlpha( int alpha )
     }
 }
 
-/*!
-   \return Alpha value of the raster item
-   \sa setAlpha()
+/**
+ * \if ENGLISH
+ * @brief Get the alpha value of the raster item
+ * @return Alpha value of the raster item
+ * @sa setAlpha()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取栅格项的 alpha 值
+ * @return 栅格项的 alpha 值
+ * @sa setAlpha()
+ * \endif
  */
 int QwtPlotRasterItem::alpha() const
 {
     return m_data->alpha;
 }
 
-/*!
-   Change the cache policy
-
-   The default policy is NoCache
-
-   \param policy Cache policy
-   \sa CachePolicy, cachePolicy()
+/**
+ * \if ENGLISH
+ * @brief Change the cache policy
+ * @details The default policy is NoCache
+ * @param[in] policy Cache policy
+ * @sa CachePolicy, cachePolicy()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改缓存策略
+ * @details 默认策略是 NoCache
+ * @param[in] policy 缓存策略
+ * @sa CachePolicy, cachePolicy()
+ * \endif
  */
 void QwtPlotRasterItem::setCachePolicy(
     QwtPlotRasterItem::CachePolicy policy )
@@ -569,18 +640,34 @@ void QwtPlotRasterItem::setCachePolicy(
     }
 }
 
-/*!
-   \return Cache policy
-   \sa CachePolicy, setCachePolicy()
+/**
+ * \if ENGLISH
+ * @brief Get the cache policy
+ * @return Cache policy
+ * @sa CachePolicy, setCachePolicy()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取缓存策略
+ * @return 缓存策略
+ * @sa CachePolicy, setCachePolicy()
+ * \endif
  */
 QwtPlotRasterItem::CachePolicy QwtPlotRasterItem::cachePolicy() const
 {
     return m_data->cache.policy;
 }
 
-/*!
-   Invalidate the paint cache
-   \sa setCachePolicy()
+/**
+ * \if ENGLISH
+ * @brief Invalidate the paint cache
+ * @sa setCachePolicy()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使绘制缓存失效
+ * @sa setCachePolicy()
+ * \endif
  */
 void QwtPlotRasterItem::invalidateCache()
 {
@@ -589,31 +676,34 @@ void QwtPlotRasterItem::invalidateCache()
     m_data->cache.size = QSize();
 }
 
-/*!
-   \brief Pixel hint
-
-   The geometry of a pixel is used to calculated the resolution and
-   alignment of the rendered image.
-
-   Width and height of the hint need to be the horizontal
-   and vertical distances between 2 neighbored points.
-   The center of the hint has to be the position of any point
-   ( it doesn't matter which one ).
-
-   Limiting the resolution of the image might significantly improve
-   the performance and heavily reduce the amount of memory when rendering
-   a QImage from the raster data.
-
-   The default implementation returns an empty rectangle (QRectF()),
-   meaning, that the image will be rendered in target device ( f.e screen )
-   resolution.
-
-   \param area In most implementations the resolution of the data doesn't
-               depend on the requested area.
-
-   \return Bounding rectangle of a pixel
-
-   \sa render(), renderImage()
+/**
+ * \if ENGLISH
+ * @brief Pixel hint
+ * @details The geometry of a pixel is used to calculate the resolution and
+ *          alignment of the rendered image.
+ *          Width and height of the hint need to be the horizontal and vertical
+ *          distances between 2 neighboring points. The center of the hint has to be
+ *          the position of any point (it doesn't matter which one).
+ *          Limiting the resolution of the image might significantly improve the performance
+ *          and heavily reduce the amount of memory when rendering a QImage from the raster data.
+ *          The default implementation returns an empty rectangle (QRectF()), meaning that
+ *          the image will be rendered in target device (e.g. screen) resolution.
+ * @param[in] area In most implementations the resolution of the data doesn't depend on the requested area
+ * @return Bounding rectangle of a pixel
+ * @sa render(), renderImage()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 像素提示
+ * @details 像素的几何形状用于计算渲染图像的分辨率和对齐方式。
+ *          提示的宽度和高度需要是两个相邻点之间的水平和垂直距离。
+ *          提示的中心必须是任何点的位置（不重要哪个点）。
+ *          限制图像的分辨率可能会显著提高性能，并大大减少从栅格数据渲染 QImage 时的内存使用量。
+ *          默认实现返回空矩形（QRectF()），意味着图像将以目标设备（如屏幕）分辨率渲染。
+ * @param[in] area 在大多数实现中，数据的分辨率不依赖于请求的区域
+ * @return 像素的边界矩形
+ * @sa render(), renderImage()
+ * \endif
  */
 QRectF QwtPlotRasterItem::pixelHint( const QRectF& area ) const
 {
@@ -621,12 +711,22 @@ QRectF QwtPlotRasterItem::pixelHint( const QRectF& area ) const
     return QRectF();
 }
 
-/*!
-   \brief Draw the raster data
-   \param painter Painter
-   \param xMap X-Scale Map
-   \param yMap Y-Scale Map
-   \param canvasRect Contents rectangle of the plot canvas
+/**
+ * \if ENGLISH
+ * @brief Draw the raster data
+ * @param[in] painter Painter
+ * @param[in] xMap X-Scale Map
+ * @param[in] yMap Y-Scale Map
+ * @param[in] canvasRect Contents rectangle of the plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制栅格数据
+ * @param[in] painter 画笔
+ * @param[in] xMap X 比例尺映射
+ * @param[in] yMap Y 比例尺映射
+ * @param[in] canvasRect 绘图画布的内容矩形
+ * \endif
  */
 void QwtPlotRasterItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -784,13 +884,22 @@ void QwtPlotRasterItem::draw( QPainter* painter,
     painter->restore();
 }
 
-/*!
-   \return Bounding interval for an axis
-
-   This method is intended to be reimplemented by derived classes.
-   The default implementation returns an invalid interval.
-
-   \param axis X, Y, or Z axis
+/**
+ * \if ENGLISH
+ * @brief Get the bounding interval for an axis
+ * @details This method is intended to be reimplemented by derived classes.
+ *          The default implementation returns an invalid interval.
+ * @param[in] axis X, Y, or Z axis
+ * @return Bounding interval for an axis
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取轴的边界区间
+ * @details 此方法旨在由派生类重新实现。
+ *          默认实现返回无效区间。
+ * @param[in] axis X、Y 或 Z 轴
+ * @return 轴的边界区间
+ * \endif
  */
 QwtInterval QwtPlotRasterItem::interval(Qt::Axis axis) const
 {
@@ -798,9 +907,18 @@ QwtInterval QwtPlotRasterItem::interval(Qt::Axis axis) const
     return QwtInterval();
 }
 
-/*!
-   \return Bounding rectangle of the data
-   \sa QwtPlotRasterItem::interval()
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle of the data
+ * @return Bounding rectangle of the data
+ * @sa QwtPlotRasterItem::interval()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取数据的边界矩形
+ * @return 数据的边界矩形
+ * @sa QwtPlotRasterItem::interval()
+ * \endif
  */
 QRectF QwtPlotRasterItem::boundingRect() const
 {

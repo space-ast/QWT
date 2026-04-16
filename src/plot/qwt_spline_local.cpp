@@ -422,24 +422,18 @@ static inline SplineStore qwtSplineLocal(const QwtSplineLocal* spline, const QVe
     return store;
 }
 
-/*!
-   \brief Constructor
-
-   \param type Spline type, specifying the type of interpolation
-   \sa type()
- */
 /**
  * \if ENGLISH
  * @brief Constructor
  *
- * @param type Spline type, specifying the type of interpolation
+ * @param[in] type Spline type, specifying the type of interpolation
  * @sa type()
  * \endif
  *
  * \if CHINESE
  * @brief 构造函数
  *
- * @param type 样条类型，指定插值类型
+ * @param[in] type 样条类型，指定插值类型
  * @sa type()
  * \endif
  */
@@ -452,7 +446,6 @@ QwtSplineLocal::QwtSplineLocal(Type type) : m_type(type)
     setBoundaryValue(QwtSpline::AtEnd, 0.0);
 }
 
-//! Destructor
 /**
  * \if ENGLISH
  * @brief Destructor
@@ -466,17 +459,16 @@ QwtSplineLocal::~QwtSplineLocal()
 {
 }
 
-/*!
-   \return Spline type, specifying the type of interpolation
- */
 /**
  * \if ENGLISH
  * @brief Get spline type
+ *
  * @return Spline type, specifying the type of interpolation
  * \endif
  *
  * \if CHINESE
  * @brief 获取样条类型
+ *
  * @return 样条类型，指定插值类型
  * \endif
  */

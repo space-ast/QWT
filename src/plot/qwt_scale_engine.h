@@ -57,20 +57,20 @@ public:
 };
 
 /**
- * @brief Base class for scale engines./刻度引擎的基类
- *
- * A scale engine tries to find "reasonable" ranges and step sizes
- * for scales.
- *
- * 刻度引擎用于为坐标轴寻找“合理”的数值范围和步长。
- *
- * The layout of the scale can be varied with setAttribute().
- *
- * 可通过 setAttribute() 方法调整刻度的布局样式。
- *
- * Qwt offers implementations for logarithmic and linear scales.
- *
- * Qwt 库提供了对数刻度和线性刻度的具体实现。
+ * \if ENGLISH
+ * @brief Base class for scale engines
+ * @details A scale engine tries to find "reasonable" ranges and step sizes
+ *          for scales. The layout of the scale can be varied with setAttribute().
+ *          Qwt offers implementations for logarithmic and linear scales.
+ * @sa QwtLinearScaleEngine, QwtLogScaleEngine
+ * \endif
+ * \if CHINESE
+ * @brief 刻度引擎的基类
+ * @details 刻度引擎用于为坐标轴寻找"合理"的数值范围和步长。
+ *          可通过 setAttribute() 方法调整刻度的布局样式。
+ *          Qwt 库提供了对数刻度和线性刻度的具体实现。
+ * @sa QwtLinearScaleEngine, QwtLogScaleEngine
+ * \endif
  */
 class QWT_EXPORT QwtScaleEngine
 {

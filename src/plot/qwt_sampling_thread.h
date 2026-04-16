@@ -59,18 +59,18 @@ class QWT_EXPORT QwtSamplingThread : public QThread
     Q_OBJECT
 
 public:
-    /// Destructor
+    // Destructor
     virtual ~QwtSamplingThread();
 
-    /// Get the interval in seconds
+    // Get the interval in seconds
     double interval() const;
-    /// Get the elapsed time since the thread was started in seconds
+    // Get the elapsed time since the thread was started in seconds
     double elapsed() const;
 
 public Q_SLOTS:
-    /// Set the interval in seconds
+    // Set the interval in seconds
     void setInterval(double interval);
-    /// Stop the thread
+    // Stop the thread
     void stop();
 
 protected:

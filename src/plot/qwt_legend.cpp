@@ -252,10 +252,6 @@ public:
     QWidget* contentsWidget;
 };
 
-/*!
-   Constructor
-   \param parent Parent widget
- */
 /**
  * \if ENGLISH
  * @brief Constructor for QwtLegend

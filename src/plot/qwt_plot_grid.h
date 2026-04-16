@@ -60,183 +60,83 @@ class QwtScaleDiv;
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 {
   public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
 explicit QwtPlotGrid();
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
 virtual ~QwtPlotGrid();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
 virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Enable/disable x-axis grid
-     * \endif
-     */
+    // Enable/disable x-axis grid
 void enableX( bool );
 
-    /**
-     * \if ENGLISH
-     * @brief Check if x-axis grid is enabled
-     * \endif
-     */
+    // Check if x-axis grid is enabled
 bool xEnabled() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Enable/disable y-axis grid
-     * \endif
-     */
+    // Enable/disable y-axis grid
 void enableY( bool );
 
-    /**
-     * \if ENGLISH
-     * @brief Check if y-axis grid is enabled
-     * \endif
-     */
+    // Check if y-axis grid is enabled
 bool yEnabled() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Enable/disable minor x-axis grid
-     * \endif
-     */
+    // Enable/disable minor x-axis grid
 void enableXMin( bool );
 
-    /**
-     * \if ENGLISH
-     * @brief Check if minor x-axis grid is enabled
-     * \endif
-     */
+    // Check if minor x-axis grid is enabled
 bool xMinEnabled() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Enable/disable minor y-axis grid
-     * \endif
-     */
+    // Enable/disable minor y-axis grid
 void enableYMin( bool );
 
-    /**
-     * \if ENGLISH
-     * @brief Check if minor y-axis grid is enabled
-     * \endif
-     */
+    // Check if minor y-axis grid is enabled
 bool yMinEnabled() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set x-axis scale division
-     * \endif
-     */
+    // Set x-axis scale division
 void setXDiv( const QwtScaleDiv& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get x-axis scale division
-     * \endif
-     */
+    // Get x-axis scale division
 const QwtScaleDiv& xScaleDiv() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set y-axis scale division
-     * \endif
-     */
+    // Set y-axis scale division
 void setYDiv( const QwtScaleDiv& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get y-axis scale division
-     * \endif
-     */
+    // Get y-axis scale division
 const QwtScaleDiv& yScaleDiv() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for both major and minor grid lines
-     * \endif
-     */
+    // Set pen for both major and minor grid lines
 void setPen( const QColor&,
     qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for both major and minor grid lines
-     * \endif
-     */
+    // Set pen for both major and minor grid lines
 void setPen( const QPen& );
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for major grid lines
-     * \endif
-     */
+    // Set pen for major grid lines
 void setMajorPen( const QColor&,
     qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for major grid lines
-     * \endif
-     */
+    // Set pen for major grid lines
 void setMajorPen( const QPen& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get pen for major grid lines
-     * \endif
-     */
+    // Get pen for major grid lines
 const QPen& majorPen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for minor grid lines
-     * \endif
-     */
+    // Set pen for minor grid lines
 void setMinorPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen for minor grid lines
-     * \endif
-     */
+    // Set pen for minor grid lines
 void setMinorPen( const QPen& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get pen for minor grid lines
-     * \endif
-     */
+    // Get pen for minor grid lines
 const QPen& minorPen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the grid
-     * \endif
-     */
+    // Draw the grid
 virtual void draw( QPainter*,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Update scale divisions
-     * \endif
-     */
+    // Update scale divisions
 virtual void updateScaleDiv(
     const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) override;
 

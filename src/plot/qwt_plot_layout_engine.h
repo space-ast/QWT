@@ -14,76 +14,55 @@ class QwtTextLabel;
 class QwtScaleWidget;
 /**
  * \if ENGLISH
- * @brief The QwtPlotLayoutEngine class
+ * @brief Layout engine for QwtPlot components
  * @details Originally a private class in QwtPlotLayout, previously written as class LayoutEngine in qwt_plot_layout.cpp.
  *          It was extracted as a public class because other layouts need to use it.
  * \endif
- * 
+ *
  * \if CHINESE
- * @brief QwtPlotLayoutEngine 类
- * @details 原来的 QwtPlotLayout 里的私有类，原来此类写在 qwt_plot_layout.cpp 中，class LayoutEngine，
- *          由于其它布局会用到，把它提取为公共类
+ * @brief QwtPlot组件的布局引擎
+ * @details 原来的QwtPlotLayout里的私有类，原来此类写在qwt_plot_layout.cpp中，class LayoutEngine，
+ *          由于其它布局会用到，把它提取为公共类。
  * \endif
  */
 class QWT_EXPORT QwtPlotLayoutEngine
 {
 public:
+    /**
+     * \if ENGLISH
+     * @brief Structure holding dimension values for layout calculation
+     * @details Contains width/height values for title, footer, and all four axes.
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 保存布局计算尺寸值的结构体
+     * @details 包含标题、页脚以及四个坐标轴的宽度/高度值。
+     * \endif
+     */
     struct Dimensions
     {
-        /**
-         * \if ENGLISH
-         * @brief Constructor
-         * \endif
-         */
+        // Constructor
         Dimensions();
 
-        /**
-         * \if ENGLISH
-         * @brief Get axis dimension
-         * \endif
-         */
+        // Get the dimension for a specific axis
         int dimAxis(QwtAxisId axisId) const;
 
-        /**
-         * \if ENGLISH
-         * @brief Set axis dimension
-         * \endif
-         */
+        // Set the dimension for a specific axis
         void setDimAxis(QwtAxisId axisId, int dim);
 
-        /**
-         * \if ENGLISH
-         * @brief Get axes dimension
-         * \endif
-         */
+        // Get the dimension for an axis position (YLeft, YRight, XTop, XBottom)
         int dimAxes(int axisPos) const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get Y axes dimension
-         * \endif
-         */
+        // Get the total width of left and right Y axes
         int dimYAxes() const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get X axes dimension
-         * \endif
-         */
+        // Get the total height of top and bottom X axes
         int dimXAxes() const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get centered rect
-         * \endif
-         */
+        // Center a label rectangle within available space after accounting for Y axes
         QRectF centered(const QRectF& rect, const QRectF& labelRect) const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get inner rect
-         * \endif
-         */
+        // Calculate inner rectangle after reserving space for all axes
         QRectF innerRect(const QRectF& rect) const;
 
         int dimTitle;
@@ -93,23 +72,37 @@ public:
         int m_dimAxes[ QwtAxis::AxisPositions ];
     };
 
+    /**
+     * \if ENGLISH
+     * @brief Data structure for layout calculation
+     * @details Contains cached data extracted from plot components for efficient layout calculation.
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 布局计算数据结构
+     * @details 包含从绘图组件提取的缓存数据，用于高效的布局计算。
+     * \endif
+     */
     class LayoutData
     {
     public:
+        /**
+         * \if ENGLISH
+         * @brief Data for legend layout calculation
+         * @details Contains frame width, scroll extents, and size hint for the legend.
+         * \endif
+         *
+         * \if CHINESE
+         * @brief 图例布局计算数据
+         * @details 包含图例的边框宽度、滚动范围和尺寸提示。
+         * \endif
+         */
         struct LegendData
         {
-            /**
-             * \if ENGLISH
-             * @brief Initialize legend data
-             * \endif
-             */
+            // Initialize legend data from a QwtAbstractLegend
             void init(const QwtAbstractLegend* legend);
 
-            /**
-             * \if ENGLISH
-             * @brief Get legend hint
-             * \endif
-             */
+            // Calculate optimal legend size for the given rectangle
             QSize legendHint(const QwtAbstractLegend* legend, const QRectF& rect) const;
 
             int frameWidth;
@@ -118,33 +111,43 @@ public:
             QSize hint;
         };
 
+        /**
+         * \if ENGLISH
+         * @brief Data for title/footer label layout calculation
+         * @details Contains text and frame width for a label widget.
+         * \endif
+         *
+         * \if CHINESE
+         * @brief 标题/页脚标签布局计算数据
+         * @details 包含标签部件的文本和边框宽度。
+         * \endif
+         */
         struct LabelData
         {
-            /**
-             * \if ENGLISH
-             * @brief Initialize label data
-             * \endif
-             */
+            // Initialize label data from a QwtTextLabel
             void init(const QwtTextLabel* label);
 
             QwtText text;
             int frameWidth;
         };
 
+        /**
+         * \if ENGLISH
+         * @brief Data for axis scale widget layout calculation
+         * @details Contains visibility, font, border distances, and tick offset for an axis.
+         * \endif
+         *
+         * \if CHINESE
+         * @brief 坐标轴刻度部件布局计算数据
+         * @details 包含坐标轴的可见性、字体、边框距离和刻度偏移量。
+         * \endif
+         */
         struct ScaleData
         {
-            /**
-             * \if ENGLISH
-             * @brief Initialize scale data
-             * \endif
-             */
+            // Initialize scale data from a QwtScaleWidget
             void init(const QwtScaleWidget* axisWidget);
 
-            /**
-             * \if ENGLISH
-             * @brief Reset scale data
-             * \endif
-             */
+            // Reset scale data to default values
             void reset();
 
             bool isVisible;
@@ -158,60 +161,57 @@ public:
             int edgeMargin;
         };
 
+        /**
+         * \if ENGLISH
+         * @brief Data for canvas layout calculation
+         * @details Contains content margins for the canvas widget.
+         * \endif
+         *
+         * \if CHINESE
+         * @brief 画布布局计算数据
+         * @details 包含画布部件的内容边距。
+         * \endif
+         */
         struct CanvasData
         {
-            /**
-             * \if ENGLISH
-             * @brief Initialize canvas data
-             * \endif
-             */
+            // Initialize canvas data from a QWidget
             void init(const QWidget* canvas);
 
             int contentsMargins[ QwtAxis::AxisPositions ];
         };
 
-    public:
+        /**
+         * \if ENGLISH
+         * @brief Label type enumeration
+         * @details Identifies title or footer labels in the layout.
+         * \endif
+         *
+         * \if CHINESE
+         * @brief 标签类型枚举
+         * @details 标识布局中的标题或页脚标签。
+         * \endif
+         */
         enum Label
         {
-            Title,
-            Footer,
+            Title,   //!< \if ENGLISH Title label \endif \if CHINESE 标题标签 \endif
+            Footer,  //!< \if ENGLISH Footer label \endif \if CHINESE 页脚标签 \endif
 
-            NumLabels
+            NumLabels  //!< \if ENGLISH Number of label types \endif \if CHINESE 标签类型数量 \endif
         };
 
-        /**
-         * \if ENGLISH
-         * @brief Constructor
-         * \endif
-         */
+        // Construct LayoutData from a QwtPlot
         LayoutData(const QwtPlot* plot);
 
-        /**
-         * \if ENGLISH
-         * @brief Check if Y axes are symmetric
-         * \endif
-         */
+        // Check if left and right Y axes have the same visibility state
         bool hasSymmetricYAxes() const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get axis data
-         * \endif
-         */
+        // Get mutable scale data for a specific axis
         ScaleData& axisData(QwtAxisId axisId);
 
-        /**
-         * \if ENGLISH
-         * @brief Get axis data (const version)
-         * \endif
-         */
+        // Get const scale data for a specific axis
         const ScaleData& axisData(QwtAxisId axisId) const;
 
-        /**
-         * \if ENGLISH
-         * @brief Get tick offset
-         * \endif
-         */
+        // Get tick offset for a specific axis position
         double tickOffset(int axisPos) const;
 
         LegendData legendData;
@@ -223,125 +223,61 @@ public:
     };
 
 public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     QwtPlotLayoutEngine();
 
-    /**
-     * \if ENGLISH
-     * @brief Layout legend
-     * \endif
-     */
+    // Calculate and return the legend rectangle within the available space
     QRectF layoutLegend(int plotLayoutOptions,
                         const LayoutData::LegendData& legendData,
                         const QRectF& rect,
                         const QSize& legendHint) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Align legend
-     * \endif
-     */
+    // Align the legend rectangle relative to the canvas
     QRectF alignLegend(const QSize& legendHint, const QRectF& canvasRect, const QRectF& legendRect) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Align scales
-     * \endif
-     */
+    // Align scale rectangles with the canvas, adjusting positions for proper layout
     void alignScales(int plotLayoutOptions,
                      const LayoutData& layoutData,
                      QRectF& canvasRect,
                      QRectF scaleRect[ QwtAxis::AxisPositions ]) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Align scales to canvas
-     * \endif
-     */
+    // Align scale rectangles to canvas boundaries
     void alignScalesToCanvas(int plotLayoutOptions,
                              const LayoutData& layoutData,
                              const QRectF& canvasRect,
                              QRectF scaleRect[ QwtAxis::AxisPositions ]) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Layout dimensions
-     * \endif
-     */
+    // Calculate layout dimensions for title, footer, and all axes
     Dimensions layoutDimensions(int plotLayoutOptions, const LayoutData& layoutData, const QRectF& rect) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set spacing
-     * \endif
-     */
+    // Set the spacing between plot components
     void setSpacing(unsigned int spacing);
 
-    /**
-     * \if ENGLISH
-     * @brief Get spacing
-     * \endif
-     */
+    // Get the spacing between plot components
     unsigned int spacing() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set align canvas
-     * \endif
-     */
+    // Set whether the canvas should align to the scale at a given axis position
     void setAlignCanvas(int axisPos, bool on);
 
-    /**
-     * \if ENGLISH
-     * @brief Check if canvas is aligned
-     * \endif
-     */
+    // Check if the canvas is aligned to the scale at a given axis position
     bool alignCanvas(int axisPos) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set canvas margin
-     * \endif
-     */
+    // Set the margin between canvas and scale at a given axis position
     void setCanvasMargin(int axisPos, int margin);
 
-    /**
-     * \if ENGLISH
-     * @brief Get canvas margin
-     * \endif
-     */
+    // Get the margin between canvas and scale at a given axis position
     int canvasMargin(int axisPos) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set legend position
-     * \endif
-     */
+    // Set the legend position
     void setLegendPos(QwtPlot::LegendPosition pos);
 
-    /**
-     * \if ENGLISH
-     * @brief Get legend position
-     * \endif
-     */
+    // Get the legend position
     QwtPlot::LegendPosition legendPos() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set legend ratio
-     * \endif
-     */
+    // Set the legend ratio for size calculation
     void setLegendRatio(double ratio);
 
-    /**
-     * \if ENGLISH
-     * @brief Get legend ratio
-     * \endif
-     */
+    // Get the legend ratio for size calculation
     double legendRatio() const;
 
 private:

@@ -52,22 +52,22 @@ class QwtSpline;
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
 public:
-    /// Constructor
+    // Constructor
     QwtSplineCurveFitter();
-    /// Destructor
+    // Destructor
     virtual ~QwtSplineCurveFitter();
 
-    /// Set spline
+    // Set spline
     void setSpline(QwtSpline*);
 
-    /// Get spline (const version)
+    // Get spline (const version)
     const QwtSpline* spline() const;
-    /// Get spline (non-const version)
+    // Get spline (non-const version)
     QwtSpline* spline();
 
-    /// Fit curve to polygon
+    // Fit curve to polygon
     virtual QPolygonF fitCurve(const QPolygonF&) const override;
-    /// Fit curve path to polygon
+    // Fit curve path to polygon
     virtual QPainterPath fitCurvePath(const QPolygonF&) const override;
 
 private:

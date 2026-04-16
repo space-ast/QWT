@@ -51,17 +51,17 @@
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
 public:
-    /// Constructor
+    // Constructor
     QwtSplinePleasing();
-    /// Destructor
+    // Destructor
     virtual ~QwtSplinePleasing();
 
-    /// Get locality (number of points used for calculation)
+    // Get locality (number of points used for calculation)
     virtual uint locality() const override;
 
-    /// Get painter path from polygon
+    // Get painter path from polygon
     virtual QPainterPath painterPath(const QPolygonF&) const override;
-    /// Get Bezier control lines
+    // Get Bezier control lines
     virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 };
 

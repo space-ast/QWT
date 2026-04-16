@@ -1,4 +1,4 @@
-﻿#include "qwt_plot_series_data_picker_group.h"
+#include "qwt_plot_series_data_picker_group.h"
 #include "qwt_plot_series_data_picker.h"
 #include <QWidget>
 #include <QPointer>
@@ -19,10 +19,30 @@ QwtPlotSeriesDataPickerGroup::PrivateData::PrivateData(QwtPlotSeriesDataPickerGr
 //----------------------------------------------------
 // QwtPlotSeriesDataPickerGroup
 //----------------------------------------------------
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] par Parent object
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] par 父对象
+ * \endif
+ */
 QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObject(par),QWT_PIMPL_CONSTRUCT
 {
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
 {
 }
@@ -57,6 +77,19 @@ void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
     connect(pick, &QwtPlotSeriesDataPicker::destroyed, this, &QwtPlotSeriesDataPickerGroup::onPickerDestroy);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Remove a picker from the group
+ * @param[in] pick Pointer to QwtPlotSeriesDataPicker instance to be removed from the group
+ * @note If the picker is not in the group, this function has no effect.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 从组中移除picker
+ * @param[in] pick 要从组中移除的QwtPlotSeriesDataPicker实例指针
+ * @note 如果picker不在组中，此函数无效。
+ * \endif
+ */
 void QwtPlotSeriesDataPickerGroup::removePicker(QwtPlotSeriesDataPicker* pick)
 {
     m_data->pickers.removeAll(pick);
@@ -82,11 +115,39 @@ QList< QwtPlotSeriesDataPicker* > QwtPlotSeriesDataPickerGroup::pickers() const
     return m_data->pickers;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set enabled state
+ * @details When disabled, picker synchronization will not occur.
+ * @param[in] on Enable/disable synchronization
+ * @sa isEnabled()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置启用状态
+ * @details 禁用时，picker同步将不会发生。
+ * @param[in] on 启用/禁用同步
+ * @sa isEnabled()
+ * \endif
+ */
 void QwtPlotSeriesDataPickerGroup::setEnabled(bool on)
 {
     m_data->enable = on;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Check if synchronization is enabled
+ * @return True if enabled
+ * @sa setEnabled()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查同步是否启用
+ * @return 启用时返回 true
+ * @sa setEnabled()
+ * \endif
+ */
 bool QwtPlotSeriesDataPickerGroup::isEnabled() const
 {
     return m_data->enable;

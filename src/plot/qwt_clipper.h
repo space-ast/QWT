@@ -50,31 +50,31 @@ template< typename T > class QVector;
  */
 namespace QwtClipper
 {
-    /// \if ENGLISH Clip polygon against a rectangle \endif \if CHINESE 针对矩形裁剪多边形 \endif
+    // Clip polygon against a rectangle
     QWT_EXPORT void clipPolygon( const QRect&,
         QPolygon&, bool closePolygon = false );
 
-    /// \if ENGLISH Clip polygon against a float rectangle \endif \if CHINESE 针对浮点矩形裁剪多边形 \endif
+    // Clip polygon against a float rectangle
     QWT_EXPORT void clipPolygon( const QRectF&,
         QPolygon&, bool closePolygon = false );
 
-    /// \if ENGLISH Clip float polygon against a float rectangle \endif \if CHINESE 针对浮点矩形裁剪浮点多边形 \endif
+    // Clip float polygon against a float rectangle
     QWT_EXPORT void clipPolygonF( const QRectF&,
         QPolygonF&, bool closePolygon = false );
 
-    /// \if ENGLISH Return clipped polygon \endif \if CHINESE 返回裁剪后的多边形 \endif
+    // Return clipped polygon
     QWT_EXPORT QPolygon clippedPolygon( const QRect&,
         const QPolygon&, bool closePolygon = false );
 
-    /// \if ENGLISH Return clipped polygon (float rect) \endif \if CHINESE 返回裁剪后的多边形（浮点矩形） \endif
+    // Return clipped polygon (float rect)
     QWT_EXPORT QPolygon clippedPolygon( const QRectF&,
         const QPolygon&, bool closePolygon = false );
 
-    /// \if ENGLISH Return clipped float polygon \endif \if CHINESE 返回裁剪后的浮点多边形 \endif
+    // Return clipped float polygon
     QWT_EXPORT QPolygonF clippedPolygonF( const QRectF&,
         const QPolygonF&, bool closePolygon = false );
 
-    /// \if ENGLISH Clip circle and return arcs \endif \if CHINESE 裁剪圆形并返回弧段 \endif
+    // Clip circle and return arcs as intervals
     QWT_EXPORT QVector< QwtInterval > clipCircle(
         const QRectF&, const QPointF&, double radius );
 };

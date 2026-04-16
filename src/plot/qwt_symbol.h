@@ -242,92 +242,92 @@ class QWT_EXPORT QwtSymbol
         AutoCache
     };
 
-  public:
-    /// \if ENGLISH Constructor with style \endif \if CHINESE 带样式的构造函数 \endif
+public:
+    // Constructor with style
     explicit QwtSymbol( Style = NoSymbol );
-    /// \if ENGLISH Constructor with style, brush, pen and size \endif \if CHINESE 带样式、画刷、画笔和大小的构造函数 \endif
+    // Constructor with style, brush, pen and size
     QwtSymbol( Style, const QBrush&, const QPen&, const QSize& );
-    /// \if ENGLISH Constructor with painter path, brush and pen \endif \if CHINESE 带绘图路径、画刷和画笔的构造函数 \endif
+    // Constructor with painter path, brush and pen
     QwtSymbol( const QPainterPath&, const QBrush&, const QPen& );
 
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    // Destructor
     virtual ~QwtSymbol();
 
-    /// \if ENGLISH Set cache policy \endif \if CHINESE 设置缓存策略 \endif
+    // Set cache policy
     void setCachePolicy( CachePolicy );
-    /// \if ENGLISH Get cache policy \endif \if CHINESE 获取缓存策略 \endif
+    // Get cache policy
     CachePolicy cachePolicy() const;
 
-    /// \if ENGLISH Set size \endif \if CHINESE 设置大小 \endif
+    // Set size
     void setSize( const QSize& );
-    /// \if ENGLISH Set size with width and height \endif \if CHINESE 使用宽度和高度设置大小 \endif
+    // Set size with width and height
     void setSize( int width, int height = -1 );
-    /// \if ENGLISH Get size \endif \if CHINESE 获取大小 \endif
+    // Get size
     const QSize& size() const;
 
-    /// \if ENGLISH Set pin point \endif \if CHINESE 设置锚点 \endif
+    // Set pin point
     void setPinPoint( const QPointF& pos, bool enable = true );
-    /// \if ENGLISH Get pin point \endif \if CHINESE 获取锚点 \endif
+    // Get pin point
     QPointF pinPoint() const;
 
-    /// \if ENGLISH Enable/disable pin point \endif \if CHINESE 启用/禁用锚点 \endif
+    // Enable/disable pin point
     void setPinPointEnabled( bool );
-    /// \if ENGLISH Check if pin point is enabled \endif \if CHINESE 检查锚点是否启用 \endif
+    // Check if pin point is enabled
     bool isPinPointEnabled() const;
 
-    /// \if ENGLISH Set color \endif \if CHINESE 设置颜色 \endif
+    // Set color
     virtual void setColor( const QColor& );
 
-    /// \if ENGLISH Set brush \endif \if CHINESE 设置画刷 \endif
+    // Set brush
     void setBrush( const QBrush& );
-    /// \if ENGLISH Get brush \endif \if CHINESE 获取画刷 \endif
+    // Get brush
     const QBrush& brush() const;
 
-    /// \if ENGLISH Set pen with color, width and style \endif \if CHINESE 使用颜色、宽度和样式设置画笔 \endif
+    // Set pen with color, width and style
     void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
-    /// \if ENGLISH Set pen \endif \if CHINESE 设置画笔 \endif
+    // Set pen
     void setPen( const QPen& );
-    /// \if ENGLISH Get pen \endif \if CHINESE 获取画笔 \endif
+    // Get pen
     const QPen& pen() const;
 
-    /// \if ENGLISH Set style \endif \if CHINESE 设置样式 \endif
+    // Set style
     void setStyle( Style );
-    /// \if ENGLISH Get style \endif \if CHINESE 获取样式 \endif
+    // Get style
     Style style() const;
 
-    /// \if ENGLISH Set painter path \endif \if CHINESE 设置绘图路径 \endif
+    // Set painter path
     void setPath( const QPainterPath& );
-    /// \if ENGLISH Get painter path \endif \if CHINESE 获取绘图路径 \endif
+    // Get painter path
     const QPainterPath& path() const;
 
-    /// \if ENGLISH Set pixmap \endif \if CHINESE 设置像素图 \endif
+    // Set pixmap
     void setPixmap( const QPixmap& );
-    /// \if ENGLISH Get pixmap \endif \if CHINESE 获取像素图 \endif
+    // Get pixmap
     const QPixmap& pixmap() const;
 
-    /// \if ENGLISH Set graphic \endif \if CHINESE 设置图形 \endif
+    // Set graphic
     void setGraphic( const QwtGraphic& );
-    /// \if ENGLISH Get graphic \endif \if CHINESE 获取图形 \endif
+    // Get graphic
     const QwtGraphic& graphic() const;
 
 #ifndef QWT_NO_SVG
-    /// \if ENGLISH Set SVG document \endif \if CHINESE 设置 SVG 文档 \endif
+    // Set SVG document
     void setSvgDocument( const QByteArray& );
 #endif
 
-    /// \if ENGLISH Draw symbol in rectangle \endif \if CHINESE 在矩形中绘制符号 \endif
+    // Draw symbol in rectangle
     void drawSymbol( QPainter*, const QRectF& ) const;
-    /// \if ENGLISH Draw symbol at point \endif \if CHINESE 在点处绘制符号 \endif
+    // Draw symbol at point
     void drawSymbol( QPainter*, const QPointF& ) const;
-    /// \if ENGLISH Draw symbols at polygon points \endif \if CHINESE 在多边形点处绘制符号 \endif
+    // Draw symbols at polygon points
     void drawSymbols( QPainter*, const QPolygonF& ) const;
-    /// \if ENGLISH Draw symbols at points \endif \if CHINESE 在点处绘制符号 \endif
+    // Draw symbols at points
     void drawSymbols( QPainter*,
         const QPointF*, int numPoints ) const;
 
-    /// \if ENGLISH Get bounding rectangle \endif \if CHINESE 获取边界矩形 \endif
+    // Get bounding rectangle
     virtual QRect boundingRect() const;
-    /// \if ENGLISH Invalidate cache \endif \if CHINESE 使缓存无效 \endif
+    // Invalidate cache
     void invalidateCache();
 
   protected:
@@ -341,11 +341,20 @@ class QWT_EXPORT QwtSymbol
     PrivateData* m_data;
 };
 
-/*!
-   \brief Draw the symbol at a specified position
-
-   \param painter Painter
-   \param pos Position of the symbol in screen coordinates
+/**
+ * \if ENGLISH
+ * @brief Draw the symbol at a specified position
+ * @param painter Painter
+ * @param pos Position of the symbol in screen coordinates
+ * @sa drawSymbols()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 在指定位置绘制符号
+ * @param painter 绘制器
+ * @param pos 符号在屏幕坐标中的位置
+ * @sa drawSymbols()
+ * \endif
  */
 inline void QwtSymbol::drawSymbol(
     QPainter* painter, const QPointF& pos ) const
@@ -353,13 +362,21 @@ inline void QwtSymbol::drawSymbol(
     drawSymbols( painter, &pos, 1 );
 }
 
-/*!
-   \brief Draw symbols at the specified points
-
-   \param painter Painter
-   \param points Positions of the symbols in screen coordinates
+/**
+ * \if ENGLISH
+ * @brief Draw symbols at the specified points
+ * @param painter Painter
+ * @param points Positions of the symbols in screen coordinates
+ * @sa drawSymbol()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 在指定点处绘制符号
+ * @param painter 绘制器
+ * @param points 符号在屏幕坐标中的位置
+ * @sa drawSymbol()
+ * \endif
  */
-
 inline void QwtSymbol::drawSymbols(
     QPainter* painter, const QPolygonF& points ) const
 {

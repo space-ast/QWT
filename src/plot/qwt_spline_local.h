@@ -122,26 +122,25 @@ public:
         PChip
     };
 
-    /// Constructor with type
-    QwtSplineLocal(Type type);
-    /// Destructor
+    //! Constructor with spline type
+    explicit QwtSplineLocal(Type type);
+    //! Destructor
     virtual ~QwtSplineLocal();
 
-    /// Get type
+    //! Get spline type
     Type type() const;
 
-    /// Get locality (number of points used for calculation)
+    //! Get locality (number of points used for calculation)
     virtual uint locality() const override;
 
-    /// Get painter path from polygon
+    //! Get painter path from polygon
     virtual QPainterPath painterPath(const QPolygonF&) const override;
-    /// Get Bezier control lines
+    //! Get Bezier control lines
     virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 
-    // calculating the parametric equations
-    /// Get polynomials from polygon
+    //! Get polynomials from polygon
     virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const override;
-    /// Get slopes
+    //! Get slopes at control points
     virtual QVector< double > slopes(const QPolygonF&) const override;
 
 private:

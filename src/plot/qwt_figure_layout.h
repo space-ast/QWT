@@ -1,4 +1,8 @@
-﻿#ifndef QWT_FIGURE_LAYOUT_H
+/******************************************************************************
+ * Qwt Widget Library
+ * Copyright (C) 2024   ChenZongYan <czy.t@163.com>
+ *****************************************************************************/
+#ifndef QWT_FIGURE_LAYOUT_H
 #define QWT_FIGURE_LAYOUT_H
 // stl
 #include <memory>
@@ -11,9 +15,14 @@
 
 /**
  * @class QwtFigureLayout
- * @brief Custom layout manager for QwtFigureWidget that handles both normalized coordinates and grid layouts
  *
- * 自定义布局管理器，用于QwtFigureWidget，支持归一化坐标和网格布局
+ * @if ENGLISH
+ * @brief Custom layout manager for QwtFigureWidget that handles both normalized coordinates and grid layouts
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 自定义布局管理器，用于QwtFigureWidget，支持归一化坐标和网格布局
+ * @endif
  */
 class QWT_EXPORT QwtFigureLayout : public QLayout
 {
@@ -32,13 +41,13 @@ public:
     virtual QSize minimumSize() const override;
     virtual void setGeometry(const QRect& rect) override;
 
-    // Add a widget with normalized coordinates/使用归一化坐标添加窗口部件
+    // Add a widget with normalized coordinates
     void addAxes(QWidget* widget, const QRectF& rect);
 
-    // Add a widget with normalized coordinates using separate parameters/使用分离参数和归一化坐标添加窗口部件
+    // Add a widget with normalized coordinates using separate parameters
     void addAxes(QWidget* widget, qreal left, qreal top, qreal width, qreal height);
 
-    // Add a widget by grid layout/添加窗口部件到网格布局
+    // Add a widget by grid layout
     void addGridAxes(QWidget* widget,
                      int rowCnt,
                      int colCnt,
@@ -49,19 +58,19 @@ public:
                      qreal wspace = 0.0,
                      qreal hspace = 0.0);
 
-    // 改变已经添加的窗口的位置占比,如果窗口还没添加，此函数无效
+    // Change the normalized position of an already added widget
     void setAxesNormPos(QWidget* widget, const QRectF& rect);
 
-    // Get the normalized rectangle for a widget/获取窗口部件的归一化矩形
+    // Get the normalized rectangle for a widget
     QRectF widgetNormRect(QWidget* widget) const;
 
-    // 计算rect相对于parentRect的归一化坐标
+    // Calculate normalized coordinates of rect relative to parentRect
     static QRectF calcNormRect(const QRect& parentRect, const QRect& rect);
-    // 计算正规矩形
+    // Calculate actual rectangle from normalized coordinates
     QRect calcActualRect(const QRect& parentRect, const QRectF& normRect);
 
 protected:
-    // calc the normalized rectangle for a grid cell/获取网格单元格的归一化矩形
+    // Calculate the normalized rectangle for a grid cell
     QRectF calcGridRect(int rowCnt,
                         int colCnt,
                         int row,

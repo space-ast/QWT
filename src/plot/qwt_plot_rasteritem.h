@@ -155,42 +155,42 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 
     Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
 
-    /// Constructor
+    // Constructor
     explicit QwtPlotRasterItem( const QString& title = QString() );
-    /// Constructor with title
+    // Constructor with title
     explicit QwtPlotRasterItem( const QwtText& title );
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotRasterItem();
 
-    /// Set a paint attribute
+    // Set a paint attribute
     void setPaintAttribute( PaintAttribute, bool on = true );
-    /// Test a paint attribute
+    // Test a paint attribute
     bool testPaintAttribute( PaintAttribute ) const;
 
-    /// Set the alpha value
+    // Set the alpha value
     void setAlpha( int alpha );
-    /// Get the alpha value
+    // Get the alpha value
     int alpha() const;
 
-    /// Set the cache policy
+    // Set the cache policy
     void setCachePolicy( CachePolicy );
-    /// Get the cache policy
+    // Get the cache policy
     CachePolicy cachePolicy() const;
 
-    /// Invalidate the cache
+    // Invalidate the cache
     void invalidateCache();
 
-    /// Draw the raster item
+    // Draw the raster item
     virtual void draw( QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect ) const override;
 
-    /// Get the pixel hint
+    // Get the pixel hint
     virtual QRectF pixelHint( const QRectF& ) const;
 
-    /// Get the interval for a specific axis
+    // Get the interval for a specific axis
     virtual QwtInterval interval(Qt::Axis) const;
-    /// Get the bounding rectangle
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
   protected:

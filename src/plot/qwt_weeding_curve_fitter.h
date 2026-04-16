@@ -76,16 +76,24 @@
 class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 {
   public:
+    // Constructor with tolerance parameter
     explicit QwtWeedingCurveFitter( double tolerance = 1.0 );
+    // Destructor
     virtual ~QwtWeedingCurveFitter();
 
+    // Set the tolerance for curve fitting
     void setTolerance( double );
+    // Get the current tolerance value
     double tolerance() const;
 
+    // Set the maximum number of points per chunk
     void setChunkSize( uint );
+    // Get the current chunk size
     uint chunkSize() const;
 
+    // Find a curve which has the best fit to a series of data points
     virtual QPolygonF fitCurve( const QPolygonF& ) const override;
+    // Find a curve path which has the best fit to a series of data points
     virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:

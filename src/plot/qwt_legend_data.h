@@ -151,31 +151,31 @@ class QWT_EXPORT QwtLegendData
         UserRole  = 32
     };
 
-    /// Constructor
+    // Constructor
     QwtLegendData();
-    /// Destructor
+    // Destructor
     ~QwtLegendData();
 
-    /// Set all values
+    // Set all values
     void setValues( const QMap< int, QVariant >& );
-    /// Return all values
+    // Return all values
     const QMap< int, QVariant >& values() const;
 
-    /// Set a value for a specific role
+    // Set a value for a specific role
     void setValue( int role, const QVariant& );
-    /// Return the value for a specific role
+    // Return the value for a specific role
     QVariant value( int role ) const;
 
-    /// Check if a value exists for a specific role
+    // Check if a value exists for a specific role
     bool hasRole( int role ) const;
-    /// Check if the legend data is valid
+    // Check if the legend data is valid
     bool isValid() const;
 
-    /// Return the icon
+    // Return the icon
     QwtGraphic icon() const;
-    /// Return the title
+    // Return the title
     QwtText title() const;
-    /// Return the mode
+    // Return the mode
     Mode mode() const;
 
   private:

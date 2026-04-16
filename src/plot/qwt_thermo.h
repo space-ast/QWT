@@ -136,93 +136,93 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
         OriginCustom
     };
 
-    /// Constructor
+    // Constructor
     explicit QwtThermo( QWidget* parent = nullptr );
-    /// Destructor
+    // Destructor
     virtual ~QwtThermo();
 
-    /// Set the orientation
+    // Set the orientation
     void setOrientation( Qt::Orientation );
-    /// Return the orientation
+    // Return the orientation
     Qt::Orientation orientation() const;
 
-    /// Set the scale position
+    // Set the scale position
     void setScalePosition( ScalePosition );
-    /// Return the scale position
+    // Return the scale position
     ScalePosition scalePosition() const;
 
-    /// Set the spacing
+    // Set the spacing
     void setSpacing( int );
-    /// Return the spacing
+    // Return the spacing
     int spacing() const;
 
-    /// Set the border width
+    // Set the border width
     void setBorderWidth( int );
-    /// Return the border width
+    // Return the border width
     int borderWidth() const;
 
-    /// Set the origin mode
+    // Set the origin mode
     void setOriginMode( OriginMode );
-    /// Return the origin mode
+    // Return the origin mode
     OriginMode originMode() const;
 
-    /// Set the origin
+    // Set the origin
     void setOrigin( double );
-    /// Return the origin
+    // Return the origin
     double origin() const;
 
-    /// Set the fill brush
+    // Set the fill brush
     void setFillBrush( const QBrush& );
-    /// Return the fill brush
+    // Return the fill brush
     QBrush fillBrush() const;
 
-    /// Set the alarm brush
+    // Set the alarm brush
     void setAlarmBrush( const QBrush& );
-    /// Return the alarm brush
+    // Return the alarm brush
     QBrush alarmBrush() const;
 
-    /// Set the alarm level
+    // Set the alarm level
     void setAlarmLevel( double );
-    /// Return the alarm level
+    // Return the alarm level
     double alarmLevel() const;
 
-    /// Set whether alarm is enabled
+    // Set whether alarm is enabled
     void setAlarmEnabled( bool );
-    /// Return whether alarm is enabled
+    // Return whether alarm is enabled
     bool alarmEnabled() const;
 
-    /// Set the color map
+    // Set the color map
     void setColorMap( QwtColorMap* );
-    /// Return the color map
+    // Return the color map
     QwtColorMap* colorMap();
-    /// Return the color map (const version)
+    // Return the color map (const version)
     const QwtColorMap* colorMap() const;
 
-    /// Set the pipe width
+    // Set the pipe width
     void setPipeWidth( int );
-    /// Return the pipe width
+    // Return the pipe width
     int pipeWidth() const;
 
-    /// Set the range flags
+    // Set the range flags
     void setRangeFlags( QwtInterval::BorderFlags );
-    /// Return the range flags
+    // Return the range flags
     QwtInterval::BorderFlags rangeFlags() const;
 
-    /// Return the current value
+    // Return the current value
     double value() const;
 
-    /// Return the size hint
+    // Return the size hint
     virtual QSize sizeHint() const override;
-    /// Return the minimum size hint
+    // Return the minimum size hint
     virtual QSize minimumSizeHint() const override;
 
-    /// Set the scale draw
+    // Set the scale draw
     void setScaleDraw( QwtScaleDraw* );
-    /// Return the scale draw
+    // Return the scale draw
     const QwtScaleDraw* scaleDraw() const;
 
   public Q_SLOTS:
-    /// Set the current value
+    // Set the current value
     virtual void setValue( double );
 
   protected:

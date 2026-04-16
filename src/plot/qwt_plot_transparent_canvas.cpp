@@ -11,6 +11,17 @@
 #define QWTPLOTTRANSPARENTCANVAS_DEBUG_DRAW 0
 #endif
 
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] plot Parent plot widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] plot 父绘图部件
+ * \endif
+ */
 QwtPlotTransparentCanvas::QwtPlotTransparentCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
 {
     // 设置透明相关属性
@@ -33,10 +44,28 @@ QwtPlotTransparentCanvas::QwtPlotTransparentCanvas(QwtPlot* plot) : QFrame(plot)
     setFrameShape(QFrame::NoFrame);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotTransparentCanvas::~QwtPlotTransparentCanvas()
 {
 }
 
+/**
+ * \if ENGLISH
+ * @brief Replot the canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 重绘画布
+ * \endif
+ */
 void QwtPlotTransparentCanvas::replot()
 {
     update(contentsRect());

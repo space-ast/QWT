@@ -237,18 +237,34 @@ public:
         DrawOverlay
     };
 
+    // Constructor with parent widget
     explicit QwtWidgetOverlay(QWidget*);
+    // Destructor
     virtual ~QwtWidgetOverlay();
 
+    // Set the mask mode for the overlay
     void setMaskMode(MaskMode);
+    // Get the current mask mode
     MaskMode maskMode() const;
 
+    // Set the render mode for the overlay
     void setRenderMode(RenderMode);
+    // Get the current render mode
     RenderMode renderMode() const;
 
+    // Event filter for parent widget resize events
     virtual bool eventFilter(QObject*, QEvent*) override;
 
 public Q_SLOTS:
+    /**
+     * \if ENGLISH
+     * @brief Recalculate the mask and repaint the overlay
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 重新计算掩码并重绘覆盖层
+     * \endif
+     */
     void updateOverlay();
 
 protected:

@@ -26,11 +26,19 @@ public:
      * \if ENGLISH
      * @brief Constructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数
+     * \endif
      */
     explicit QwtPlotTransparentCanvas(QwtPlot* plot = nullptr);
     /**
      * \if ENGLISH
      * @brief Destructor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 析构函数
      * \endif
      */
     virtual ~QwtPlotTransparentCanvas();
@@ -38,6 +46,10 @@ public Q_SLOTS:
     /**
      * \if ENGLISH
      * @brief Replot the canvas
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 重绘画布
      * \endif
      */
     virtual void replot();

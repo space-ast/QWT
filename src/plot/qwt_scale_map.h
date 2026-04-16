@@ -33,55 +33,85 @@
 class QPointF;
 class QRectF;
 
-/*!
-   \brief A scale map
-
-   QwtScaleMap offers transformations from the coordinate system
-   of a scale into the linear coordinate system of a paint device
-   and vice versa.
+/**
+ * \if ENGLISH
+ * @brief A scale map
+ * @details QwtScaleMap offers transformations from the coordinate system
+ *          of a scale into the linear coordinate system of a paint device
+ *          and vice versa.
+ * @sa QwtTransform, QwtScaleDiv
+ * \endif
+ * \if CHINESE
+ * @brief 刻度映射
+ * @details QwtScaleMap 提供从刻度坐标系到绘制设备线性坐标系之间的变换，
+ *          以及反向变换。
+ * @sa QwtTransform, QwtScaleDiv
+ * \endif
  */
 class QWT_EXPORT QwtScaleMap
 {
 public:
+    //! Default constructor
     QwtScaleMap();
+    //! Copy constructor
     QwtScaleMap(const QwtScaleMap&);
-    // 新增移动语义
+    //! Move constructor
     QwtScaleMap(QwtScaleMap&&);
 
+    //! Destructor
     ~QwtScaleMap();
 
+    //! Copy assignment operator
     QwtScaleMap& operator=(const QwtScaleMap&);
+    //! Move assignment operator
     QwtScaleMap& operator=(QwtScaleMap&&);
 
+    //! Set the transformation (takes ownership)
     void setTransformation(QwtTransform*);
+    //! Return the transformation
     const QwtTransform* transformation() const;
 
+    //! Set the paint device interval boundaries
     void setPaintInterval(double p1, double p2);
+    //! Set the scale interval boundaries
     void setScaleInterval(double s1, double s2);
 
+    //! Transform a scale value to paint device coordinate
     double transform(double s) const;
+    //! Transform a paint device coordinate to scale value
     double invTransform(double p) const;
 
+    //! Return first border of paint interval
     double p1() const;
+    //! Return second border of paint interval
     double p2() const;
 
+    //! Return first border of scale interval
     double s1() const;
+    //! Return second border of scale interval
     double s2() const;
 
+    //! Return distance between paint interval boundaries
     double pDist() const;
+    //! Return distance between scale interval boundaries
     double sDist() const;
 
+    //! Transform a rectangle from scale to paint coordinates
     static QRectF transform(const QwtScaleMap&, const QwtScaleMap&, const QRectF&);
 
+    //! Transform a rectangle from paint to scale coordinates
     static QRectF invTransform(const QwtScaleMap&, const QwtScaleMap&, const QRectF&);
 
+    //! Transform a point from scale to paint coordinates
     static QPointF transform(const QwtScaleMap&, const QwtScaleMap&, const QPointF&);
 
+    //! Transform a point from paint to scale coordinates
     static QPointF invTransform(const QwtScaleMap&, const QwtScaleMap&, const QPointF&);
 
-    // 是否为线性坐标轴
+    //! Check if the scale is linear (no transformation)
     static bool isLinerScale(const QwtScaleMap& sm);
 
+    //! Check if the mapping direction is inverted
     bool isInverting() const;
 
 protected:

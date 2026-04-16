@@ -30,36 +30,65 @@
 
 #include <qsvgrenderer.h>
 
-/*!
-   \brief Constructor
-   \param title Title
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 标题
+ * \endif
  */
 QwtPlotSvgItem::QwtPlotSvgItem( const QString& title )
     : QwtPlotGraphicItem( QwtText( title ) )
 {
 }
 
-/*!
-   \brief Constructor
-   \param title Title
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 标题
+ * \endif
  */
 QwtPlotSvgItem::QwtPlotSvgItem( const QwtText& title )
     : QwtPlotGraphicItem( title )
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotSvgItem::~QwtPlotSvgItem()
 {
 }
 
-/*!
-   Load a SVG file
-
-   \param rect Bounding rectangle
-   \param fileName SVG file name
-
-   \return true, if the SVG file could be loaded
+/**
+ * \if ENGLISH
+ * @brief Load an SVG file
+ * @param[in] rect Bounding rectangle
+ * @param[in] fileName SVG file name
+ * @return true, if the SVG file could be loaded
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 加载 SVG 文件
+ * @param[in] rect 边界矩形
+ * @param[in] fileName SVG 文件名
+ * @return 如果 SVG 文件可以加载，则返回 true
+ * \endif
  */
 bool QwtPlotSvgItem::loadFile( const QRectF& rect,
     const QString& fileName )
@@ -80,13 +109,20 @@ bool QwtPlotSvgItem::loadFile( const QRectF& rect,
     return ok;
 }
 
-/*!
-   Load SVG data
-
-   \param rect Bounding rectangle
-   \param data in SVG format
-
-   \return true, if the SVG data could be loaded
+/**
+ * \if ENGLISH
+ * @brief Load SVG data
+ * @param[in] rect Bounding rectangle
+ * @param[in] data Data in SVG format
+ * @return true, if the SVG data could be loaded
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 加载 SVG 数据
+ * @param[in] rect 边界矩形
+ * @param[in] data SVG 格式的数据
+ * @return 如果 SVG 数据可以加载，则返回 true
+ * \endif
  */
 bool QwtPlotSvgItem::loadData( const QRectF& rect,
     const QByteArray& data )

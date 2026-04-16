@@ -106,16 +106,22 @@ public:
     double mouseOffset;
 };
 
-/*!
-   \brief Constructor
-
-   Construct a knob with an angle of 270°. The style is
-   QwtKnob::Raised and the marker style is QwtKnob::Notch.
-   The width of the knob is set to 50 pixels.
-
-   \param parent Parent widget
-
-   \sa setTotalAngle()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details Construct a knob with an angle of 270°. The style is
+ *          QwtKnob::Raised and the marker style is QwtKnob::Notch.
+ *          The width of the knob is set to 50 pixels.
+ * @param[in] parent Parent widget
+ * \sa setTotalAngle()
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 构造一个角度为 270° 的旋钮。样式为 QwtKnob::Raised，
+ *          标记样式为 QwtKnob::Notch。旋钮宽度设置为 50 像素。
+ * @param[in] parent 父控件
+ * \sa setTotalAngle()
+ * \endif
  */
 QwtKnob::QwtKnob(QWidget* parent) : QwtAbstractSlider(parent)
 {
@@ -137,11 +143,17 @@ QwtKnob::~QwtKnob()
     delete m_data;
 }
 
-/*!
-   \brief Set the knob type
-
-   \param knobStyle Knob type
-   \sa knobStyle(), setBorderWidth()
+/**
+ * \if ENGLISH
+ * @brief Set the knob type
+ * @param[in] knobStyle Knob type
+ * \sa knobStyle(), setBorderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 设置旋钮类型
+ * @param[in] knobStyle 旋钮类型
+ * \sa knobStyle(), setBorderWidth()
+ * \endif
  */
 void QwtKnob::setKnobStyle(KnobStyle knobStyle)
 {
@@ -151,20 +163,34 @@ void QwtKnob::setKnobStyle(KnobStyle knobStyle)
     }
 }
 
-/*!
-    \return Marker type of the knob
-    \sa setKnobStyle(), setBorderWidth()
+/**
+ * \if ENGLISH
+ * @brief Return the knob style
+ * @return Knob type
+ * \sa setKnobStyle(), setBorderWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回旋钮样式
+ * @return 旋钮类型
+ * \sa setKnobStyle(), setBorderWidth()
+ * \endif
  */
 QwtKnob::KnobStyle QwtKnob::knobStyle() const
 {
     return m_data->knobStyle;
 }
 
-/*!
-   \brief Set the marker type of the knob
-
-   \param markerStyle Marker type
-   \sa markerStyle(), setMarkerSize()
+/**
+ * \if ENGLISH
+ * @brief Set the marker type of the knob
+ * @param[in] markerStyle Marker type
+ * \sa markerStyle(), setMarkerSize()
+ * \endif
+ * \if CHINESE
+ * @brief 设置旋钮的标记类型
+ * @param[in] markerStyle 标记类型
+ * \sa markerStyle(), setMarkerSize()
+ * \endif
  */
 void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
 {
@@ -174,26 +200,41 @@ void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
     }
 }
 
-/*!
-   \return Marker type of the knob
-   \sa setMarkerStyle(), setMarkerSize()
+/**
+ * \if ENGLISH
+ * @brief Return the marker style
+ * @return Marker type of the knob
+ * \sa setMarkerStyle(), setMarkerSize()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标记样式
+ * @return 旋钮的标记类型
+ * \sa setMarkerStyle(), setMarkerSize()
+ * \endif
  */
 QwtKnob::MarkerStyle QwtKnob::markerStyle() const
 {
     return m_data->markerStyle;
 }
 
-/*!
-   \brief Set the total angle by which the knob can be turned
-   \param angle Angle in degrees.
-
-   The angle has to be between [10, 360] degrees. Angles above
-   360 ( so that the knob can be turned several times around its axis )
-   have to be set using setNumTurns().
-
-   The default angle is 270 degrees.
-
-   \sa totalAngle(), setNumTurns()
+/**
+ * \if ENGLISH
+ * @brief Set the total angle by which the knob can be turned
+ * @details The angle has to be between [10, 360] degrees.
+ *          Angles above 360 (so that the knob can be turned several times around its axis)
+ *          have to be set using setNumTurns().
+ *          The default angle is 270 degrees.
+ * @param[in] angle Angle in degrees
+ * \sa totalAngle(), setNumTurns()
+ * \endif
+ * \if CHINESE
+ * @brief 设置旋钮可转动的总角度
+ * @details 角度必须在 [10, 360] 度之间。
+ *          超过 360 度的角度（使旋钮可绕轴转动多圈）需使用 setNumTurns() 设置。
+ *          默认角度为 270 度。
+ * @param[in] angle 角度（度）
+ * \sa totalAngle(), setNumTurns()
+ * \endif
  */
 void QwtKnob::setTotalAngle(double angle)
 {
@@ -209,24 +250,38 @@ void QwtKnob::setTotalAngle(double angle)
     }
 }
 
-/*!
-   \return the total angle
-   \sa setTotalAngle(), setNumTurns(), numTurns()
+/**
+ * \if ENGLISH
+ * @brief Return the total angle
+ * @return Total angle in degrees
+ * \sa setTotalAngle(), setNumTurns(), numTurns()
+ * \endif
+ * \if CHINESE
+ * @brief 返回总角度
+ * @return 总角度（度）
+ * \sa setTotalAngle(), setNumTurns(), numTurns()
+ * \endif
  */
 double QwtKnob::totalAngle() const
 {
     return m_data->totalAngle;
 }
 
-/*!
-   \brief Set the number of turns
-
-   When numTurns > 1 the knob can be turned several times around its axis
-   - otherwise the total angle is floored to 360°.
-
-   \sa numTurns(), totalAngle(), setTotalAngle()
+/**
+ * \if ENGLISH
+ * @brief Set the number of turns
+ * @details When numTurns > 1 the knob can be turned several times around its axis.
+ *          Otherwise the total angle is floored to 360°.
+ * @param[in] numTurns Number of turns
+ * \sa numTurns(), totalAngle(), setTotalAngle()
+ * \endif
+ * \if CHINESE
+ * @brief 设置圈数
+ * @details 当 numTurns > 1 时，旋钮可绕轴转动多圈。否则总角度限制为 360°。
+ * @param[in] numTurns 圈数
+ * \sa numTurns(), totalAngle(), setTotalAngle()
+ * \endif
  */
-
 void QwtKnob::setNumTurns(int numTurns)
 {
     numTurns = qMax(numTurns, 1);
@@ -245,25 +300,37 @@ void QwtKnob::setNumTurns(int numTurns)
     }
 }
 
-/*!
-   \return Number of turns.
-
-   When the total angle is below 360° numTurns() is ceiled to 1.
-   \sa setNumTurns(), setTotalAngle(), totalAngle()
+/**
+ * \if ENGLISH
+ * @brief Return the number of turns
+ * @return Number of turns. When the total angle is below 360°, numTurns() is ceiled to 1.
+ * \sa setNumTurns(), setTotalAngle(), totalAngle()
+ * \endif
+ * \if CHINESE
+ * @brief 返回圈数
+ * @return 圈数。当总角度低于 360° 时，numTurns() 向上取整为 1。
+ * \sa setNumTurns(), setTotalAngle(), totalAngle()
+ * \endif
  */
 int QwtKnob::numTurns() const
 {
     return qwtCeil(m_data->totalAngle / 360.0);
 }
 
-/*!
-   Change the scale draw of the knob
-
-   For changing the labels of the scales, it
-   is necessary to derive from QwtRoundScaleDraw and
-   overload QwtRoundScaleDraw::label().
-
-   \sa scaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Change the scale draw of the knob
+ * @details For changing the labels of the scales, it is necessary to derive
+ *          from QwtRoundScaleDraw and overload QwtRoundScaleDraw::label().
+ * @param[in] scaleDraw Scale draw object
+ * \sa scaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 更改旋钮的刻度绘制器
+ * @details 要更改刻度标签，需要从 QwtRoundScaleDraw 派生并重载 QwtRoundScaleDraw::label()。
+ * @param[in] scaleDraw 刻度绘制对象
+ * \sa scaleDraw()
+ * \endif
  */
 void QwtKnob::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {
@@ -274,29 +341,51 @@ void QwtKnob::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
     update();
 }
 
-/*!
-   \return the scale draw of the knob
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the knob (const version)
+ * @return The scale draw
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回旋钮的刻度绘制器 (const 版本)
+ * @return 刻度绘制器
+ * \sa setScaleDraw()
+ * \endif
  */
 const QwtRoundScaleDraw* QwtKnob::scaleDraw() const
 {
     return static_cast< const QwtRoundScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   \return the scale draw of the knob
-   \sa setScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief Return the scale draw of the knob (non-const version)
+ * @return The scale draw
+ * \sa setScaleDraw()
+ * \endif
+ * \if CHINESE
+ * @brief 返回旋钮的刻度绘制器 (非 const 版本)
+ * @return 刻度绘制器
+ * \sa setScaleDraw()
+ * \endif
  */
 QwtRoundScaleDraw* QwtKnob::scaleDraw()
 {
     return static_cast< QwtRoundScaleDraw* >(abstractScaleDraw());
 }
 
-/*!
-   Calculate the bounding rectangle of the knob without the scale
-
-   \return Bounding rectangle of the knob
-   \sa knobWidth(), alignment(), QWidget::contentsRect()
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding rectangle of the knob without the scale
+ * @return Bounding rectangle of the knob
+ * \sa knobWidth(), alignment(), QWidget::contentsRect()
+ * \endif
+ * \if CHINESE
+ * @brief 计算不含刻度的旋钮边界矩形
+ * @return 旋钮的边界矩形
+ * \sa knobWidth(), alignment(), QWidget::contentsRect()
+ * \endif
  */
 QRect QwtKnob::knobRect() const
 {
@@ -678,17 +767,21 @@ void QwtKnob::drawFocusIndicator(QPainter* painter) const
     QwtPainter::drawFocusRect(painter, this, focusRect);
 }
 
-/*!
-   \brief Set the alignment of the knob
-
-   Similar to a QLabel::alignment() the flags decide how
-   to align the knob inside of contentsRect().
-
-   The default setting is Qt::AlignCenter
-
-   \param alignment Or'd alignment flags
-
-   \sa alignment(), setKnobWidth(), knobRect()
+/**
+ * \if ENGLISH
+ * @brief Set the alignment of the knob
+ * @details Similar to QLabel::alignment(), the flags decide how to align the knob inside of contentsRect().
+ *          The default setting is Qt::AlignCenter.
+ * @param[in] alignment Or'd alignment flags
+ * \sa alignment(), setKnobWidth(), knobRect()
+ * \endif
+ * \if CHINESE
+ * @brief 设置旋钮的对齐方式
+ * @details 类似于 QLabel::alignment()，标志决定如何将旋钮在 contentsRect() 内对齐。
+ *          默认设置为 Qt::AlignCenter。
+ * @param[in] alignment 对齐标志的组合
+ * \sa alignment(), setKnobWidth(), knobRect()
+ * \endif
  */
 void QwtKnob::setAlignment(Qt::Alignment alignment)
 {
@@ -698,25 +791,38 @@ void QwtKnob::setAlignment(Qt::Alignment alignment)
     }
 }
 
-/*!
-   \return Alignment of the knob inside of contentsRect()
-   \sa setAlignment(), knobWidth(), knobRect()
+/**
+ * \if ENGLISH
+ * @brief Return alignment of the knob inside contentsRect()
+ * @return Alignment flags
+ * \sa setAlignment(), knobWidth(), knobRect()
+ * \endif
+ * \if CHINESE
+ * @brief 返回旋钮在 contentsRect() 内的对齐方式
+ * @return 对齐标志
+ * \sa setAlignment(), knobWidth(), knobRect()
+ * \endif
  */
 Qt::Alignment QwtKnob::alignment() const
 {
     return m_data->alignment;
 }
 
-/*!
-   \brief Change the knob's width.
-
-   Setting a fixed value for the diameter of the knob
-   is helpful for aligning several knobs in a row.
-
-   \param width New width
-
-   \sa knobWidth(), setAlignment()
-   \note Modifies the sizePolicy()
+/**
+ * \if ENGLISH
+ * @brief Change the knob's width
+ * @details Setting a fixed value for the diameter of the knob is helpful for aligning several knobs in a row.
+ * @param[in] width New width
+ * \sa knobWidth(), setAlignment()
+ * \note Modifies the sizePolicy()
+ * \endif
+ * \if CHINESE
+ * @brief 更改旋钮宽度
+ * @details 为旋钮直径设置固定值有助于将多个旋钮在一行中对齐。
+ * @param[in] width 新宽度
+ * \sa knobWidth(), setAlignment()
+ * \note 会修改 sizePolicy()
+ * \endif
  */
 void QwtKnob::setKnobWidth(int width)
 {
@@ -744,9 +850,15 @@ int QwtKnob::knobWidth() const
     return m_data->knobWidth;
 }
 
-/*!
-   \brief Set the knob's border width
-   \param borderWidth new border width
+/**
+ * \if ENGLISH
+ * @brief Set the knob's border width
+ * @param[in] borderWidth New border width
+ * \endif
+ * \if CHINESE
+ * @brief 设置旋钮边框宽度
+ * @param[in] borderWidth 新边框宽度
+ * \endif
  */
 void QwtKnob::setBorderWidth(int borderWidth)
 {
@@ -762,13 +874,19 @@ int QwtKnob::borderWidth() const
     return m_data->borderWidth;
 }
 
-/*!
-   \brief Set the size of the marker
-
-   When setting a size <= 0 the marker will
-   automatically scaled to 40% of the radius of the knob.
-
-   \sa markerSize(), markerStyle()
+/**
+ * \if ENGLISH
+ * @brief Set the size of the marker
+ * @details When setting a size <= 0 the marker will automatically be scaled to 40% of the radius of the knob.
+ * @param[in] size Marker size
+ * \sa markerSize(), markerStyle()
+ * \endif
+ * \if CHINESE
+ * @brief 设置标记大小
+ * @details 当设置大小 <= 0 时，标记将自动缩放为旋钮半径的 40%。
+ * @param[in] size 标记大小
+ * \sa markerSize(), markerStyle()
+ * \endif
  */
 void QwtKnob::setMarkerSize(int size)
 {
@@ -778,17 +896,32 @@ void QwtKnob::setMarkerSize(int size)
     }
 }
 
-/*!
-   \return Marker size
-   \sa setMarkerSize()
+/**
+ * \if ENGLISH
+ * @brief Return the marker size
+ * @return Marker size
+ * \sa setMarkerSize()
+ * \endif
+ * \if CHINESE
+ * @brief 返回标记大小
+ * @return 标记大小
+ * \sa setMarkerSize()
+ * \endif
  */
 int QwtKnob::markerSize() const
 {
     return m_data->markerSize;
 }
 
-/*!
-   \return sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return the size hint
+ * @return Size hint
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \endif
  */
 QSize QwtKnob::sizeHint() const
 {
@@ -796,9 +929,17 @@ QSize QwtKnob::sizeHint() const
     return qwtExpandedToGlobalStrut(hint);
 }
 
-/*!
-   \return Minimum size hint
-   \sa sizeHint()
+/**
+ * \if ENGLISH
+ * @brief Return the minimum size hint
+ * @return Minimum size hint
+ * \sa sizeHint()
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * @return 最小大小提示
+ * \sa sizeHint()
+ * \endif
  */
 QSize QwtKnob::minimumSizeHint() const
 {

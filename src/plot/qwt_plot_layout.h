@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -22,7 +22,7 @@
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
- *****************************************************************************/
+ ******************************************************************************/
 
 #ifndef QWT_PLOT_LAYOUT_H
 #define QWT_PLOT_LAYOUT_H
@@ -31,6 +31,7 @@
 #include "qwt_plot.h"
 #include "qwt_axis_id.h"
 class QwtPlotLayoutEngine;
+
 /**
  * \if ENGLISH
  * @brief Layout engine for QwtPlot
@@ -48,251 +49,141 @@ class QwtPlotLayoutEngine;
  * @sa QwtPlot::setPlotLayout()
  * \endif
  */
-
 class QWT_EXPORT QwtPlotLayout
 {
 public:
-    /*!
-       Options to configure the plot layout engine
-       \sa activate(), QwtPlotRenderer
+    /**
+     * \if ENGLISH
+     * @brief Options to configure the plot layout engine
+     * @sa activate(), QwtPlotRenderer
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 用于配置绘图布局引擎的选项
+     * @sa activate(), QwtPlotRenderer
+     * \endif
      */
     enum Option
     {
-        //! Unused
+        /**
+         * \if ENGLISH
+         * @brief Unused
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 未使用
+         * \endif
+         */
         AlignScales = 0x01,
 
-        /*!
-           Ignore the dimension of the scrollbars. There are no
-           scrollbars, when the plot is not rendered to widgets.
+        /**
+         * \if ENGLISH
+         * @brief Ignore the dimension of the scrollbars.
+         * @details There are no scrollbars when the plot is not rendered to widgets.
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 忽略滚动条的尺寸
+         * @details 当绘图未渲染到部件时，不存在滚动条。
+         * \endif
          */
         IgnoreScrollbars = 0x02,
 
-        //! Ignore all frames.
+        /**
+         * \if ENGLISH
+         * @brief Ignore all frames
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 忽略所有边框
+         * \endif
+         */
         IgnoreFrames = 0x04,
 
-        //! Ignore the legend.
+        /**
+         * \if ENGLISH
+         * @brief Ignore the legend
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 忽略图例
+         * \endif
+         */
         IgnoreLegend = 0x08,
 
-        //! Ignore the title.
+        /**
+         * \if ENGLISH
+         * @brief Ignore the title
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 忽略标题
+         * \endif
+         */
         IgnoreTitle = 0x10,
 
-        //! Ignore the footer.
+        /**
+         * \if ENGLISH
+         * @brief Ignore the footer
+         * \endif
+         * 
+         * \if CHINESE
+         * @brief 忽略页脚
+         * \endif
+         */
         IgnoreFooter = 0x20
     };
 
-    Q_DECLARE_FLAGS(Options, Option)
+    Q_DECLARE_FLAGS( Options, Option )
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
-explicit QwtPlotLayout();
+    explicit QwtPlotLayout();
+    virtual ~QwtPlotLayout();
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
-virtual ~QwtPlotLayout();
+    void setCanvasMargin( int margin, int axis = -1 );
+    int canvasMargin( int axisId ) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set canvas margin
-     * \endif
-     */
-void setCanvasMargin(int margin, int axis = -1);
+    void setAlignCanvasToScales( bool );
+    void setAlignCanvasToScale( int axisId, bool );
+    bool alignCanvasToScale( int axisId ) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get canvas margin
-     * \endif
-     */
-int canvasMargin(int axisId) const;
+    void setSpacing( int );
+    int spacing() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set align canvas to scales
-     * \endif
-     */
-void setAlignCanvasToScales(bool);
+    void setLegendPosition( QwtPlot::LegendPosition pos, double ratio );
+    void setLegendPosition( QwtPlot::LegendPosition pos );
+    QwtPlot::LegendPosition legendPosition() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set align canvas to scale
-     * \endif
-     */
-void setAlignCanvasToScale(int axisId, bool);
+    void setLegendRatio( double ratio );
+    double legendRatio() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Check if canvas is aligned to scale
-     * \endif
-     */
-bool alignCanvasToScale(int axisId) const;
+    virtual QSize minimumSizeHint( const QwtPlot* ) const;
+    virtual void activate( const QwtPlot* plot, const QRectF& plotRect,
+        Options options = Options() );
+    virtual void invalidate();
 
-    /**
-     * \if ENGLISH
-     * @brief Set spacing
-     * \endif
-     */
-void setSpacing(int);
-
-    /**
-     * \if ENGLISH
-     * @brief Get spacing
-     * \endif
-     */
-int spacing() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Set legend position
-     * \endif
-     */
-void setLegendPosition(QwtPlot::LegendPosition pos, double ratio);
-
-    /**
-     * \if ENGLISH
-     * @brief Set legend position
-     * \endif
-     */
-void setLegendPosition(QwtPlot::LegendPosition pos);
-
-    /**
-     * \if ENGLISH
-     * @brief Get legend position
-     * \endif
-     */
-QwtPlot::LegendPosition legendPosition() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Set legend ratio
-     * \endif
-     */
-void setLegendRatio(double ratio);
-
-    /**
-     * \if ENGLISH
-     * @brief Get legend ratio
-     * \endif
-     */
-double legendRatio() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Get minimum size hint
-     * \endif
-     */
-virtual QSize minimumSizeHint(const QwtPlot*) const;
-
-    /**
-     * \if ENGLISH
-     * @brief Activate the layout
-     * \endif
-     */
-virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
-
-    /**
-     * \if ENGLISH
-     * @brief Invalidate the layout
-     * \endif
-     */
-virtual void invalidate();
-
-    /**
-     * \if ENGLISH
-     * @brief Get title rect
-     * \endif
-     */
-QRectF titleRect() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Get footer rect
-     * \endif
-     */
-QRectF footerRect() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Get legend rect
-     * \endif
-     */
-QRectF legendRect() const;
-
-    /**
-     * \if ENGLISH
-     * @brief Get scale rect
-     * \endif
-     */
-QRectF scaleRect(QwtAxisId) const;
-
-    /**
-     * \if ENGLISH
-     * @brief Get canvas rect
-     * \endif
-     */
-QRectF canvasRect() const;
+    QRectF titleRect() const;
+    QRectF footerRect() const;
+    QRectF legendRect() const;
+    QRectF scaleRect( QwtAxisId ) const;
+    QRectF canvasRect() const;
 
 protected:
-    /**
-     * \if ENGLISH
-     * @brief Set title rect
-     * \endif
-     */
-void setTitleRect(const QRectF&);
-
-    /**
-     * \if ENGLISH
-     * @brief Set footer rect
-     * \endif
-     */
-void setFooterRect(const QRectF&);
-
-    /**
-     * \if ENGLISH
-     * @brief Set legend rect
-     * \endif
-     */
-void setLegendRect(const QRectF&);
-
-    /**
-     * \if ENGLISH
-     * @brief Set scale rect
-     * \endif
-     */
-void setScaleRect(QwtAxisId, const QRectF&);
-
-    /**
-     * \if ENGLISH
-     * @brief Set canvas rect
-     * \endif
-     */
-void setCanvasRect(const QRectF&);
-
-    /**
-     * \if ENGLISH
-     * @brief Get layout engine
-     * \endif
-     */
-QwtPlotLayoutEngine* layoutEngine();
-
-    /**
-     * \if ENGLISH
-     * @brief Do activate the layout
-     * \endif
-     */
-void doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
+    void setTitleRect( const QRectF& );
+    void setFooterRect( const QRectF& );
+    void setLegendRect( const QRectF& );
+    void setScaleRect( QwtAxisId, const QRectF& );
+    void setCanvasRect( const QRectF& );
+    QwtPlotLayoutEngine* layoutEngine();
+    void doActivate( const QwtPlot* plot, const QRectF& plotRect,
+        Options options = Options() );
 
 private:
-    Q_DISABLE_COPY(QwtPlotLayout)
+    Q_DISABLE_COPY( QwtPlotLayout )
 
     class PrivateData;
     PrivateData* m_data;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotLayout::Options)
+Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )
 
 #endif

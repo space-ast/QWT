@@ -494,21 +494,36 @@ class QwtSpline::PrivateData
    \sa polygon(), QwtBezier
  */
 
-/*!
-   \brief Interpolate a curve by a polygon
-
-   Interpolates a polygon piecewise with Bezier curves
-   interpolating them in a 2nd pass by polygons.
-
-   The interpolation is based on "Piecewise Linear Approximation of Bézier Curves"
-   by Roger Willcocks ( http://www.rops.org )
-
-   \param points Control points
-   \param tolerance Maximum for the accepted error of the approximation
-
-   \return polygon approximating the interpolating polynomials
-
-   \sa bezierControlLines(), QwtBezier
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve by a polygon
+ *
+ * Interpolates a polygon piecewise with Bezier curves
+ * interpolating them in a 2nd pass by polygons.
+ *
+ * The interpolation is based on "Piecewise Linear Approximation of Bézier Curves"
+ * by Roger Willcocks ( http://www.rops.org )
+ *
+ * @param[in] points Control points
+ * @param[in] tolerance Maximum for the accepted error of the approximation
+ * @return Polygon approximating the interpolating polynomials
+ *
+ * @sa bezierControlLines(), QwtBezier
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用多边形插值曲线
+ *
+ * 用贝塞尔曲线分段插值多边形，然后在第二遍中用多边形插值它们。
+ *
+ * 该插值基于 Roger Willcocks 的"贝塞尔曲线的分段线性逼近"（http://www.rops.org）
+ *
+ * @param[in] points 控制点
+ * @param[in] tolerance 逼近误差的最大值
+ * @return 逼近插值多项式的多边形
+ *
+ * @sa bezierControlLines(), QwtBezier
+ * \endif
  */
 QPolygonF QwtSpline::polygon( const QPolygonF& points, double tolerance ) const
 {
@@ -547,48 +562,96 @@ QPolygonF QwtSpline::polygon( const QPolygonF& points, double tolerance ) const
     return polygon;
 }
 
-/*!
-   \brief Constructor
-
-   The default setting is a non closing spline with chordal parametrization
-
-   \sa setParametrization(), setBoundaryType()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The default setting is a non-closing spline with chordal parametrization.
+ *
+ * @sa setParametrization(), setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 默认设置是非闭合样条，使用弦长参数化。
+ *
+ * @sa setParametrization(), setBoundaryType()
+ * \endif
  */
 QwtSpline::QwtSpline()
 {
     m_data = new PrivateData;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSpline::~QwtSpline()
 {
     delete m_data;
 }
 
-/*!
-   The locality of an spline interpolation identifies how many adjacent
-   polynomials are affected, when changing the position of one point.
-
-   A locality of 'n' means, that changing the coordinates of a point
-   has an effect on 'n' leading and 'n' following polynomials.
-   Those polynomials can be calculated from a local subpolygon.
-
-   A value of 0 means, that the interpolation is not local and any modification
-   of the polygon requires to recalculate all polynomials ( f.e cubic splines ).
-
-   \return Order of locality
+/**
+ * \if ENGLISH
+ * @brief Get the locality of the spline interpolation
+ *
+ * The locality of a spline interpolation identifies how many adjacent
+ * polynomials are affected when changing the position of one point.
+ *
+ * A locality of 'n' means that changing the coordinates of a point
+ * has an effect on 'n' leading and 'n' following polynomials.
+ * Those polynomials can be calculated from a local subpolygon.
+ *
+ * A value of 0 means the interpolation is not local and any modification
+ * of the polygon requires recalculating all polynomials (e.g., cubic splines).
+ *
+ * @return Order of locality
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取样条插值的局部性
+ *
+ * 样条插值的局部性标识当改变一个点的位置时，有多少相邻的多项式会受到影响。
+ *
+ * 局部性为 'n' 表示改变一个点的坐标会影响 'n' 个前导和 'n' 个后续多项式。
+ * 这些多项式可以从局部子多边形计算。
+ *
+ * 值为 0 表示插值不是局部的，多边形的任何修改都需要重新计算所有多项式（如三次样条）。
+ *
+ * @return 局部性阶数
+ * \endif
  */
 uint QwtSpline::locality() const
 {
     return 0;
 }
 
-/*!
-   Define the parametrization for a parametric spline approximation
-   The default setting is a chordal parametrization.
-
-   \param type Type of parametrization, usually one of QwtSplineParametrization::Type
-   \sa parametrization()
+/**
+ * \if ENGLISH
+ * @brief Set parametrization by type
+ *
+ * Define the parametrization for a parametric spline approximation.
+ * The default setting is a chordal parametrization.
+ *
+ * @param[in] type Type of parametrization, usually one of QwtSplineParametrization::Type
+ * @sa parametrization()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 按类型设置参数化
+ *
+ * 为参数样条逼近定义参数化。默认设置是弦长参数化。
+ *
+ * @param[in] type 参数化类型，通常是 QwtSplineParametrization::Type 之一
+ * @sa parametrization()
+ * \endif
  */
 void QwtSpline::setParametrization( int type )
 {
@@ -599,12 +662,25 @@ void QwtSpline::setParametrization( int type )
     }
 }
 
-/*!
-   Define the parametrization for a parametric spline approximation
-   The default setting is a chordal parametrization.
-
-   \param parametrization Parametrization
-   \sa parametrization()
+/**
+ * \if ENGLISH
+ * @brief Set parametrization object
+ *
+ * Define the parametrization for a parametric spline approximation.
+ * The default setting is a chordal parametrization.
+ *
+ * @param[in] parametrization Parametrization object
+ * @sa parametrization()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置参数化对象
+ *
+ * 为参数样条逼近定义参数化。默认设置是弦长参数化。
+ *
+ * @param[in] parametrization 参数化对象
+ * @sa parametrization()
+ * \endif
  */
 void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
 {
@@ -615,43 +691,90 @@ void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
     }
 }
 
-/*!
-   \return parametrization
-   \sa setParametrization()
+/**
+ * \if ENGLISH
+ * @brief Get parametrization
+ *
+ * @return Parametrization object
+ * @sa setParametrization()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取参数化
+ *
+ * @return 参数化对象
+ * @sa setParametrization()
+ * \endif
  */
 const QwtSplineParametrization* QwtSpline::parametrization() const
 {
     return m_data->parametrization;
 }
 
-/*!
-   Define the boundary type for the endpoints of the approximating
-   spline.
-
-   \param boundaryType Boundary type
-   \sa boundaryType()
+/**
+ * \if ENGLISH
+ * @brief Set boundary type
+ *
+ * Define the boundary type for the endpoints of the approximating spline.
+ *
+ * @param[in] boundaryType Boundary type
+ * @sa boundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置边界类型
+ *
+ * 为逼近样条的端点定义边界类型。
+ *
+ * @param[in] boundaryType 边界类型
+ * @sa boundaryType()
+ * \endif
  */
 void QwtSpline::setBoundaryType( BoundaryType boundaryType )
 {
     m_data->boundaryType = boundaryType;
 }
 
-/*!
-   \return Boundary type
-   \sa setBoundaryType()
+/**
+ * \if ENGLISH
+ * @brief Get boundary type
+ *
+ * @return Boundary type
+ * @sa setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界类型
+ *
+ * @return 边界类型
+ * @sa setBoundaryType()
+ * \endif
  */
 QwtSpline::BoundaryType QwtSpline::boundaryType() const
 {
     return m_data->boundaryType;
 }
 
-/*!
-   \brief Define the condition for an endpoint of the spline
-
-   \param position At the beginning or the end of the spline
-   \param condition Condition
-
-   \sa BoundaryCondition, QwtSplineC2::BoundaryCondition, boundaryCondition()
+/**
+ * \if ENGLISH
+ * @brief Set boundary condition
+ *
+ * Define the condition for an endpoint of the spline.
+ *
+ * @param[in] position At the beginning or the end of the spline
+ * @param[in] condition Condition
+ * @sa BoundaryCondition, QwtSplineC2::BoundaryCondition, boundaryCondition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置边界条件
+ *
+ * 为样条的端点定义条件。
+ *
+ * @param[in] position 在样条的起始或结束处
+ * @param[in] condition 条件
+ * @sa BoundaryCondition, QwtSplineC2::BoundaryCondition, boundaryCondition()
+ * \endif
  */
 void QwtSpline::setBoundaryCondition( BoundaryPosition position, int condition )
 {
@@ -659,11 +782,22 @@ void QwtSpline::setBoundaryCondition( BoundaryPosition position, int condition )
         m_data->boundaryConditions[position].type = condition;
 }
 
-/*!
-   \return Condition for an endpoint of the spline
-   \param position At the beginning or the end of the spline
-
-   \sa setBoundaryCondition(), boundaryValue(), setBoundaryConditions()
+/**
+ * \if ENGLISH
+ * @brief Get boundary condition
+ *
+ * @param[in] position At the beginning or the end of the spline
+ * @return Condition for an endpoint of the spline
+ * @sa setBoundaryCondition(), boundaryValue(), setBoundaryConditions()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界条件
+ *
+ * @param[in] position 在样条的起始或结束处
+ * @return 样条端点的条件
+ * @sa setBoundaryCondition(), boundaryValue(), setBoundaryConditions()
+ * \endif
  */
 int QwtSpline::boundaryCondition( BoundaryPosition position ) const
 {
@@ -673,16 +807,27 @@ int QwtSpline::boundaryCondition( BoundaryPosition position ) const
     return m_data->boundaryConditions[0].type; // should never happen
 }
 
-/*!
-   \brief Define the boundary value
-
-   The boundary value is an parameter used in combination with
-   the boundary condition. Its meaning depends on the condition.
-
-   \param position At the beginning or the end of the spline
-   \param value Value used for the condition at the end point
-
-   \sa boundaryValue(), setBoundaryCondition()
+/**
+ * \if ENGLISH
+ * @brief Set boundary value
+ *
+ * The boundary value is a parameter used in combination with
+ * the boundary condition. Its meaning depends on the condition.
+ *
+ * @param[in] position At the beginning or the end of the spline
+ * @param[in] value Value used for the condition at the endpoint
+ * @sa boundaryValue(), setBoundaryCondition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置边界值
+ *
+ * 边界值是与边界条件一起使用的参数。其含义取决于条件。
+ *
+ * @param[in] position 在样条的起始或结束处
+ * @param[in] value 端点处条件使用的值
+ * @sa boundaryValue(), setBoundaryCondition()
+ * \endif
  */
 void QwtSpline::setBoundaryValue( BoundaryPosition position, double value )
 {
@@ -690,11 +835,22 @@ void QwtSpline::setBoundaryValue( BoundaryPosition position, double value )
         m_data->boundaryConditions[position].value = value;
 }
 
-/*!
-   \return Boundary value
-   \param position At the beginning or the end of the spline
-
-   \sa setBoundaryValue(), boundaryCondition()
+/**
+ * \if ENGLISH
+ * @brief Get boundary value
+ *
+ * @param[in] position At the beginning or the end of the spline
+ * @return Boundary value
+ * @sa setBoundaryValue(), boundaryCondition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界值
+ *
+ * @param[in] position 在样条的起始或结束处
+ * @return 边界值
+ * @sa setBoundaryValue(), boundaryCondition()
+ * \endif
  */
 double QwtSpline::boundaryValue( BoundaryPosition position ) const
 {
@@ -704,15 +860,30 @@ double QwtSpline::boundaryValue( BoundaryPosition position ) const
     return m_data->boundaryConditions[0].value; // should never happen
 }
 
-/*!
-   \brief Define the condition at the endpoints of a spline
-
-   \param condition Condition
-   \param valueBegin Used for the condition at the beginning of te spline
-   \param valueEnd Used for the condition at the end of te spline
-
-   \sa BoundaryCondition, QwtSplineC2::BoundaryCondition,
-      testBoundaryCondition(), setBoundaryValue()
+/**
+ * \if ENGLISH
+ * @brief Set boundary conditions for both ends
+ *
+ * Define the condition at the endpoints of a spline.
+ *
+ * @param[in] condition Condition
+ * @param[in] valueBegin Used for the condition at the beginning of the spline
+ * @param[in] valueEnd Used for the condition at the end of the spline
+ * @sa BoundaryCondition, QwtSplineC2::BoundaryCondition,
+ *     testBoundaryCondition(), setBoundaryValue()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 为两端设置边界条件
+ *
+ * 为样条的端点定义条件。
+ *
+ * @param[in] condition 条件
+ * @param[in] valueBegin 用于样条起始处的条件
+ * @param[in] valueEnd 用于样条结束处的条件
+ * @sa BoundaryCondition, QwtSplineC2::BoundaryCondition,
+ *     testBoundaryCondition(), setBoundaryValue()
+ * \endif
  */
 void QwtSpline::setBoundaryConditions(
     int condition, double valueBegin, double valueEnd )
@@ -724,12 +895,28 @@ void QwtSpline::setBoundaryConditions(
     setBoundaryValue( QwtSpline::AtEnd, valueEnd );
 }
 
-//! \brief Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtSplineInterpolating::QwtSplineInterpolating()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplineInterpolating::~QwtSplineInterpolating()
 {
 }
@@ -745,22 +932,37 @@ QwtSplineInterpolating::~QwtSplineInterpolating()
    \return Control points of the interpolating Bezier curves
  */
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns them as QPainterPath.
-
-   The implementation calculates the Bezier control lines first
-   and converts them into painter path elements in an additional loop.
-
-   \param points Control points
-   \return Painter path, that can be rendered by QPainter
-
-   \note Derived spline classes might overload painterPath() to avoid
-        the extra loops for converting results into a QPainterPath
-
-   \sa bezierControlLines()
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * The implementation calculates the Bezier control lines first
+ * and converts them into painter path elements in an additional loop.
+ *
+ * @param[in] points Control points
+ * @return Painter path that can be rendered by QPainter
+ *
+ * @note Derived spline classes might overload painterPath() to avoid
+ *       the extra loops for converting results into a QPainterPath
+ * @sa bezierControlLines()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
+ *
+ * 实现首先计算贝塞尔控制线，然后在额外的循环中将它们转换为绘制路径元素。
+ *
+ * @param[in] points 控制点
+ * @return 可由 QPainter 渲染的绘制路径
+ *
+ * @note 派生样条类可能会重载 painterPath() 以避免将结果转换为 QPainterPath 的额外循环
+ * @sa bezierControlLines()
+ * \endif
  */
 QPainterPath QwtSplineInterpolating::painterPath( const QPolygonF& points ) const
 {
@@ -803,21 +1005,34 @@ QPainterPath QwtSplineInterpolating::painterPath( const QPolygonF& points ) cons
     return path;
 }
 
-/*!
-   \brief Interpolate a curve by a polygon
-
-   Interpolates a polygon piecewise with Bezier curves
-   approximating them by polygons.
-
-   The approximation is based on "Piecewise Linear Approximation of Bézier Curves"
-   by Roger Willcocks ( http://www.rops.org )
-
-   \param points Control points
-   \param tolerance Maximum for the accepted error of the approximation
-
-   \return polygon approximating the interpolating polynomials
-
-   \sa bezierControlLines(), QwtSplineBezier::toPolygon()
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve by a polygon
+ *
+ * Interpolates a polygon piecewise with Bezier curves
+ * approximating them by polygons.
+ *
+ * The approximation is based on "Piecewise Linear Approximation of Bézier Curves"
+ * by Roger Willcocks ( http://www.rops.org )
+ *
+ * @param[in] points Control points
+ * @param[in] tolerance Maximum for the accepted error of the approximation
+ * @return Polygon approximating the interpolating polynomials
+ * @sa bezierControlLines(), QwtSplineBezier::toPolygon()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用多边形插值曲线
+ *
+ * 用贝塞尔曲线分段插值多边形，然后用多边形逼近它们。
+ *
+ * 该逼近基于 Roger Willcocks 的"贝塞尔曲线的分段线性逼近"（http://www.rops.org）
+ *
+ * @param[in] points 控制点
+ * @param[in] tolerance 逼近误差的最大值
+ * @return 逼近插值多项式的多边形
+ * @sa bezierControlLines(), QwtSplineBezier::toPolygon()
+ * \endif
  */
 QPolygonF QwtSplineInterpolating::polygon(
     const QPolygonF& points, double tolerance ) const
@@ -854,28 +1069,43 @@ QPolygonF QwtSplineInterpolating::polygon(
     return polygon;
 }
 
-/*!
-   \brief Find an interpolated polygon with "equidistant" points
-
-   When withNodes is disabled all points of the resulting polygon
-   will be equidistant according to the parametrization.
-
-   When withNodes is enabled the resulting polygon will also include
-   the control points and the interpolated points are always aligned to
-   the control point before ( points[i] + i * distance ).
-
-   The implementation calculates bezier curves first and calculates
-   the interpolated points in a second run.
-
-   \param points Control nodes of the spline
-   \param distance Distance between 2 points according
-                  to the parametrization
-   \param withNodes When true, also add the control
-                   nodes ( even if not being equidistant )
-
-   \return Interpolating polygon
-
-   \sa bezierControlLines()
+/**
+ * \if ENGLISH
+ * @brief Find an interpolated polygon with "equidistant" points
+ *
+ * When withNodes is disabled, all points of the resulting polygon
+ * will be equidistant according to the parametrization.
+ *
+ * When withNodes is enabled, the resulting polygon will also include
+ * the control points and the interpolated points are always aligned to
+ * the control point before ( points[i] + i * distance ).
+ *
+ * The implementation calculates bezier curves first and calculates
+ * the interpolated points in a second run.
+ *
+ * @param[in] points Control nodes of the spline
+ * @param[in] distance Distance between 2 points according to the parametrization
+ * @param[in] withNodes When true, also add the control nodes (even if not being equidistant)
+ * @return Interpolating polygon
+ * @sa bezierControlLines()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找具有"等距"点的插值多边形
+ *
+ * 当 withNodes 为 false 时，结果多边形的所有点将根据参数化等距分布。
+ *
+ * 当 withNodes 为 true 时，结果多边形也将包含控制点，插值点始终与前一个控制点对齐
+ * （points[i] + i * distance）。
+ *
+ * 实现首先计算贝塞尔曲线，然后在第二步中计算插值点。
+ *
+ * @param[in] points 样条的控制节点
+ * @param[in] distance 根据参数化的两点之间的距离
+ * @param[in] withNodes 为 true 时，也添加控制节点（即使不等距）
+ * @return 插值多边形
+ * @sa bezierControlLines()
+ * \endif
  */
 QPolygonF QwtSplineInterpolating::equidistantPolygon( const QPolygonF& points,
     double distance, bool withNodes ) const
@@ -957,41 +1187,86 @@ QPolygonF QwtSplineInterpolating::equidistantPolygon( const QPolygonF& points,
     return path;
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtSplineG1::QwtSplineG1()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplineG1::~QwtSplineG1()
 {
 }
 
-/*!
-   \brief Constructor
-
-   The default setting is a non closing spline with no parametrization
-   ( QwtSplineParametrization::ParameterX ).
-
-   \sa QwtSpline::setParametrization(),
-      QwtSpline::setBoundaryType()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The default setting is a non-closing spline with no parametrization
+ * (QwtSplineParametrization::ParameterX).
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 默认设置是非闭合样条，不使用参数化（QwtSplineParametrization::ParameterX）。
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
  */
 QwtSplineC1::QwtSplineC1()
 {
     setParametrization( QwtSplineParametrization::ParameterX );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplineC1::~QwtSplineC1()
 {
 }
 
-/*!
-   \param points Control points
-   \param slopeNext Value of the first derivative at the second point
-
-   \return value of the first derivative at the first point
-   \sa slopeAtEnd(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+/**
+ * \if ENGLISH
+ * @brief Calculate the slope at the beginning of the spline
+ *
+ * @param[in] points Control points
+ * @param[in] slopeNext Value of the first derivative at the second point
+ * @return Value of the first derivative at the first point
+ * @sa slopeAtEnd(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算样条起始处的斜率
+ *
+ * @param[in] points 控制点
+ * @param[in] slopeNext 第二个点处的一阶导数值
+ * @return 第一个点处的一阶导数值
+ * @sa slopeAtEnd(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+ * \endif
  */
 double QwtSplineC1::slopeAtBeginning( const QPolygonF& points, double slopeNext ) const
 {
@@ -1004,12 +1279,24 @@ double QwtSplineC1::slopeAtBeginning( const QPolygonF& points, double slopeNext 
         points[0], points[1], slopeNext );
 }
 
-/*!
-   \param points Control points
-   \param slopeBefore Value of the first derivative at the point before the last one
-
-   \return value of the first derivative at the last point
-   \sa slopeAtBeginning(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+/**
+ * \if ENGLISH
+ * @brief Calculate the slope at the end of the spline
+ *
+ * @param[in] points Control points
+ * @param[in] slopeBefore Value of the first derivative at the point before the last one
+ * @return Value of the first derivative at the last point
+ * @sa slopeAtBeginning(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算样条结束处的斜率
+ *
+ * @param[in] points 控制点
+ * @param[in] slopeBefore 最后一个点之前的一阶导数值
+ * @return 最后一个点处的一阶导数值
+ * @sa slopeAtBeginning(), QwtSpline::boundaryCondition(), QwtSpline::boundaryValue()
+ * \endif
  */
 double QwtSplineC1::slopeAtEnd( const QPolygonF& points, double slopeBefore ) const
 {
@@ -1042,20 +1329,35 @@ double QwtSplineC1::slopeAtEnd( const QPolygonF& points, double slopeBefore ) co
    \note The x coordinates need to be increasing or decreasing
  */
 
-/*!
-   \brief Calculate an interpolated painter path
-
-   Interpolates a polygon piecewise into cubic Bezier curves
-   and returns them as QPainterPath.
-
-   The implementation calculates the slopes at the control points
-   and converts them into painter path elements in an additional loop.
-
-   \param points Control points
-   \return QPainterPath Painter path, that can be rendered by QPainter
-
-   \note Derived spline classes might overload painterPath() to avoid
-        the extra loops for converting results into a QPainterPath
+/**
+ * \if ENGLISH
+ * @brief Calculate an interpolated painter path
+ *
+ * Interpolates a polygon piecewise into cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * The implementation calculates the slopes at the control points
+ * and converts them into painter path elements in an additional loop.
+ *
+ * @param[in] points Control points
+ * @return QPainterPath that can be rendered by QPainter
+ *
+ * @note Derived spline classes might overload painterPath() to avoid
+ *       the extra loops for converting results into a QPainterPath
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算插值的绘制路径
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
+ *
+ * 实现首先计算控制点处的斜率，然后在额外的循环中将它们转换为绘制路径元素。
+ *
+ * @param[in] points 控制点
+ * @return 可由 QPainter 渲染的 QPainterPath
+ *
+ * @note 派生样条类可能会重载 painterPath() 以避免将结果转换为 QPainterPath 的额外循环
+ * \endif
  */
 QPainterPath QwtSplineC1::painterPath( const QPolygonF& points ) const
 {
@@ -1106,14 +1408,25 @@ QPainterPath QwtSplineC1::painterPath( const QPolygonF& points ) const
     return store.path;
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns the 2 control points of each curve as QLineF.
-
-   \param points Control points
-   \return Control points of the interpolating Bezier curves
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns the 2 control points of each curve as QLineF.
+ *
+ * @param[in] points Control points
+ * @return Control points of the interpolating Bezier curves
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
+ *
+ * @param[in] points 控制点
+ * @return 插值贝塞尔曲线的控制点
+ * \endif
  */
 QVector< QLineF > QwtSplineC1::bezierControlLines( const QPolygonF& points ) const
 {
@@ -1164,22 +1477,33 @@ QVector< QLineF > QwtSplineC1::bezierControlLines( const QPolygonF& points ) con
     return store.controlPoints;
 }
 
-/*!
-   \brief Find an interpolated polygon with "equidistant" points
-
-   The implementation is optimzed for non parametric curves
-   ( QwtSplineParametrization::ParameterX ) and falls back to
-   QwtSpline::equidistantPolygon() otherwise.
-
-   \param points Control nodes of the spline
-   \param distance Distance between 2 points according
-                  to the parametrization
-   \param withNodes When true, also add the control
-                   nodes ( even if not being equidistant )
-
-   \return Interpolating polygon
-
-   \sa QwtSpline::equidistantPolygon()
+/**
+ * \if ENGLISH
+ * @brief Find an interpolated polygon with "equidistant" points
+ *
+ * The implementation is optimized for non-parametric curves
+ * (QwtSplineParametrization::ParameterX) and falls back to
+ * QwtSpline::equidistantPolygon() otherwise.
+ *
+ * @param[in] points Control nodes of the spline
+ * @param[in] distance Distance between 2 points according to the parametrization
+ * @param[in] withNodes When true, also add the control nodes (even if not being equidistant)
+ * @return Interpolating polygon
+ * @sa QwtSpline::equidistantPolygon()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找具有"等距"点的插值多边形
+ *
+ * 实现针对非参数曲线（QwtSplineParametrization::ParameterX）进行了优化，
+ * 否则回退到 QwtSpline::equidistantPolygon()。
+ *
+ * @param[in] points 样条的控制节点
+ * @param[in] distance 根据参数化的两点之间的距离
+ * @param[in] withNodes 为 true 时，也添加控制节点（即使不等距）
+ * @return 插值多边形
+ * @sa QwtSpline::equidistantPolygon()
+ * \endif
  */
 QPolygonF QwtSplineC1::equidistantPolygon( const QPolygonF& points,
     double distance, bool withNodes ) const
@@ -1200,20 +1524,36 @@ QPolygonF QwtSplineC1::equidistantPolygon( const QPolygonF& points,
     return QwtSplineInterpolating::equidistantPolygon( points, distance, withNodes );
 }
 
-/*!
-   \brief Calculate the interpolating polynomials for a non parametric spline
-
-   C1 spline interpolations are based on finding values for the first
-   derivates at the control points. The interpolating polynomials can
-   be calculated from the the first derivates using QwtSplinePolynomial::fromSlopes().
-
-   The default implementation is a two pass calculation. In derived classes it
-   might be overloaded by a one pass implementation.
-
-   \param points Control points
-   \return Interpolating polynomials
-
-   \note The x coordinates need to be increasing or decreasing
+/**
+ * \if ENGLISH
+ * @brief Calculate the interpolating polynomials for a non-parametric spline
+ *
+ * C1 spline interpolations are based on finding values for the first
+ * derivatives at the control points. The interpolating polynomials can
+ * be calculated from the first derivatives using QwtSplinePolynomial::fromSlopes().
+ *
+ * The default implementation is a two-pass calculation. In derived classes it
+ * might be overloaded by a one-pass implementation.
+ *
+ * @param[in] points Control points
+ * @return Interpolating polynomials
+ *
+ * @note The x coordinates need to be increasing or decreasing
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算非参数样条的插值多项式
+ *
+ * C1 样条插值基于在控制点处寻找一阶导数值。插值多项式可以使用
+ * QwtSplinePolynomial::fromSlopes() 从一阶导数计算。
+ *
+ * 默认实现是两遍计算。派生类可能会用一遍实现来重载。
+ *
+ * @param[in] points 控制点
+ * @return 插值多项式
+ *
+ * @note x 坐标需要递增或递减
+ * \endif
  */
 QVector< QwtSplinePolynomial > QwtSplineC1::polynomials(
     const QPolygonF& points ) const
@@ -1234,34 +1574,65 @@ QVector< QwtSplinePolynomial > QwtSplineC1::polynomials(
     return polynomials;
 }
 
-/*!
-   \brief Constructor
-
-   The default setting is a non closing spline with no parametrization
-   ( QwtSplineParametrization::ParameterX ).
-
-   \sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ *
+ * The default setting is a non-closing spline with no parametrization
+ * (QwtSplineParametrization::ParameterX).
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ *
+ * 默认设置是非闭合样条，不使用参数化（QwtSplineParametrization::ParameterX）。
+ *
+ * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
+ * \endif
  */
 QwtSplineC2::QwtSplineC2()
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtSplineC2::~QwtSplineC2()
 {
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns them as QPainterPath.
-
-   \param points Control points
-   \return Painter path, that can be rendered by QPainter
-
-   \note The implementation simply calls QwtSplineC1::painterPath(), but is
-        intended to be replaced by a one pass calculation some day.
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns them as QPainterPath.
+ *
+ * @param[in] points Control points
+ * @return Painter path that can be rendered by QPainter
+ *
+ * @note The implementation simply calls QwtSplineC1::painterPath(), but is
+ *       intended to be replaced by a one-pass calculation some day.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
+ *
+ * @param[in] points 控制点
+ * @return 可由 QPainter 渲染的绘制路径
+ *
+ * @note 实现只是调用 QwtSplineC1::painterPath()，但打算将来替换为一次计算。
+ * \endif
  */
 QPainterPath QwtSplineC2::painterPath( const QPolygonF& points ) const
 {
@@ -1271,18 +1642,32 @@ QPainterPath QwtSplineC2::painterPath( const QPolygonF& points ) const
     return QwtSplineC1::painterPath( points );
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns the 2 control points of each curve as QLineF.
-
-   \param points Control points
-   \return Control points of the interpolating Bezier curves
-
-   \note The implementation simply calls QwtSplineC1::bezierControlLines(),
-        but is intended to be replaced by a more efficient implementation
-        that builds the polynomials by the curvatures some day.
+/**
+ * \if ENGLISH
+ * @brief Interpolate a curve with Bezier curves
+ *
+ * Interpolates a polygon piecewise with cubic Bezier curves
+ * and returns the 2 control points of each curve as QLineF.
+ *
+ * @param[in] points Control points
+ * @return Control points of the interpolating Bezier curves
+ *
+ * @note The implementation simply calls QwtSplineC1::bezierControlLines(),
+ *       but is intended to be replaced by a more efficient implementation
+ *       that builds the polynomials by the curvatures some day.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用贝塞尔曲线插值曲线
+ *
+ * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
+ *
+ * @param[in] points 控制点
+ * @return 插值贝塞尔曲线的控制点
+ *
+ * @note 实现只是调用 QwtSplineC1::bezierControlLines()，
+ *       但打算将来用更高效的实现来替换。
+ * \endif
  */
 QVector< QLineF > QwtSplineC2::bezierControlLines( const QPolygonF& points ) const
 {
@@ -1292,22 +1677,33 @@ QVector< QLineF > QwtSplineC2::bezierControlLines( const QPolygonF& points ) con
     return QwtSplineC1::bezierControlLines( points );
 }
 
-/*!
-   \brief Find an interpolated polygon with "equidistant" points
-
-   The implementation is optimzed for non parametric curves
-   ( QwtSplineParametrization::ParameterX ) and falls back to
-   QwtSpline::equidistantPolygon() otherwise.
-
-   \param points Control nodes of the spline
-   \param distance Distance between 2 points according
-                  to the parametrization
-   \param withNodes When true, also add the control
-                   nodes ( even if not being equidistant )
-
-   \return Interpolating polygon
-
-   \sa QwtSpline::equidistantPolygon()
+/**
+ * \if ENGLISH
+ * @brief Find an interpolated polygon with "equidistant" points
+ *
+ * The implementation is optimized for non-parametric curves
+ * (QwtSplineParametrization::ParameterX) and falls back to
+ * QwtSpline::equidistantPolygon() otherwise.
+ *
+ * @param[in] points Control nodes of the spline
+ * @param[in] distance Distance between 2 points according to the parametrization
+ * @param[in] withNodes When true, also add the control nodes (even if not being equidistant)
+ * @return Interpolating polygon
+ * @sa QwtSpline::equidistantPolygon()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 查找具有"等距"点的插值多边形
+ *
+ * 实现针对非参数曲线（QwtSplineParametrization::ParameterX）进行了优化，
+ * 否则回退到 QwtSpline::equidistantPolygon()。
+ *
+ * @param[in] points 样条的控制节点
+ * @param[in] distance 根据参数化的两点之间的距离
+ * @param[in] withNodes 为 true 时，也添加控制节点（即使不等距）
+ * @return 插值多边形
+ * @sa QwtSpline::equidistantPolygon()
+ * \endif
  */
 QPolygonF QwtSplineC2::equidistantPolygon( const QPolygonF& points,
     double distance, bool withNodes ) const
@@ -1339,19 +1735,35 @@ QPolygonF QwtSplineC2::equidistantPolygon( const QPolygonF& points,
    \note The x coordinates need to be increasing or decreasing
  */
 
-/*!
-   \brief Find the first derivative at the control points
-
-   An implementation calculating the 2nd derivatives and then building
-   the slopes in a 2nd loop. QwtSplineCubic overloads it with a more
-   performant implementation doing it in one loop.
-
-   \param points Control nodes of the spline
-   \return Vector with the values of the 1nd derivate at the control points
-
-   \sa curvatures()
-
-   \note The x coordinates need to be increasing or decreasing
+/**
+ * \if ENGLISH
+ * @brief Find the first derivative at the control points
+ *
+ * An implementation calculating the second derivatives and then building
+ * the slopes in a second loop. QwtSplineCubic overloads it with a more
+ * performant implementation doing it in one loop.
+ *
+ * @param[in] points Control nodes of the spline
+ * @return Vector with the values of the first derivative at the control points
+ *
+ * @sa curvatures()
+ *
+ * @note The x coordinates need to be increasing or decreasing
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 在控制点处找到一阶导数
+ *
+ * 一种计算二阶导数然后在第二遍循环中构建斜率的实现。
+ * QwtSplineCubic 用一遍计算的重载实现来提高性能。
+ *
+ * @param[in] points 样条的控制节点
+ * @return 控制点处的一阶导数值向量
+ *
+ * @sa curvatures()
+ *
+ * @note x 坐标需要递增或递减
+ * \endif
  */
 QVector< double > QwtSplineC2::slopes( const QPolygonF& points ) const
 {
@@ -1380,20 +1792,36 @@ QVector< double > QwtSplineC2::slopes( const QPolygonF& points ) const
     return slopes;
 }
 
-/*!
-   \brief Calculate the interpolating polynomials for a non parametric spline
-
-   C2 spline interpolations are based on finding values for the second
-   derivates of f at the control points. The interpolating polynomials can
-   be calculated from the the second derivates using QwtSplinePolynomial::fromCurvatures.
-
-   The default implementation is a 2 pass calculation. In derived classes it
-   might be overloaded by a one pass implementation.
-
-   \param points Control points
-   \return Interpolating polynomials
-
-   \note The x coordinates need to be increasing or decreasing
+/**
+ * \if ENGLISH
+ * @brief Calculate the interpolating polynomials for a non-parametric spline
+ *
+ * C2 spline interpolations are based on finding values for the second
+ * derivatives of f at the control points. The interpolating polynomials can
+ * be calculated from the second derivatives using QwtSplinePolynomial::fromCurvatures.
+ *
+ * The default implementation is a two-pass calculation. In derived classes it
+ * might be overloaded by a one-pass implementation.
+ *
+ * @param[in] points Control points
+ * @return Interpolating polynomials
+ *
+ * @note The x coordinates need to be increasing or decreasing
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算非参数样条的插值多项式
+ *
+ * C2 样条插值基于在控制点处寻找 f 的二阶导数值。插值多项式可以使用
+ * QwtSplinePolynomial::fromCurvatures 从二阶导数计算。
+ *
+ * 默认实现是两遍计算。派生类可能会用一遍实现来重载。
+ *
+ * @param[in] points 控制点
+ * @return 插值多项式
+ *
+ * @note x 坐标需要递增或递减
+ * \endif
  */
 QVector< QwtSplinePolynomial > QwtSplineC2::polynomials( const QPolygonF& points ) const
 {

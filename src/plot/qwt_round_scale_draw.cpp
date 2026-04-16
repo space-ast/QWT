@@ -132,7 +132,18 @@ void QwtRoundScaleDraw::moveCenter( const QPointF& center )
     m_data->center = center;
 }
 
-/// Get the center of the scale
+/**
+ * \if ENGLISH
+ * @brief Get the center of the scale
+ * @return Center point of the scale
+ * \sa moveCenter()
+ * \endif
+ * \if CHINESE
+ * @brief 获取刻度的中心
+ * @return 刻度的中心点
+ * \sa moveCenter()
+ * \endif
+ */
 QPointF QwtRoundScaleDraw::center() const
 {
     return m_data->center;

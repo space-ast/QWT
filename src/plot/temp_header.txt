@@ -1,0 +1,24 @@
+public:
+    /// Constructor
+    explicit QwtPlotCachePanner(QWidget*);
+    /// Destructor
+    virtual ~QwtPlotCachePanner();
+
+    /// Get the canvas
+    QWidget* canvas();
+    /// Get the canvas (const)
+    const QWidget* canvas() const;
+
+    /// Get the plot
+    QwtPlot* plot();
+    /// Get the plot (const)
+    const QwtPlot* plot() const;
+
+    /// Set axis enabled state
+    void setAxisEnabled(QwtAxisId axisId, bool on);
+    /// Check if axis is enabled
+    bool isAxisEnabled(QwtAxisId) const;
+
+public Q_SLOTS:
+    /// Move the canvas
+    virtual void moveCanvas(int dx, int dy);

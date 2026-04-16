@@ -91,57 +91,25 @@ class QwtText;
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 {
   public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     QwtPlotTextLabel();
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotTextLabel();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
     virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the text
-     * \endif
-     */
+    // Set the text
     void setText( const QwtText& );
-    /**
-     * \if ENGLISH
-     * @brief Get the text
-     * \endif
-     */
+    // Get the text
     QwtText text() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the margin
-     * \endif
-     */
+    // Set the margin
     void setMargin( int margin );
-    /**
-     * \if ENGLISH
-     * @brief Get the margin
-     * \endif
-     */
+    // Get the margin
     int margin() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Calculate the text rectangle
-     * \endif
-     */
+    // Calculate the text rectangle
     virtual QRectF textRect( const QRectF&, const QSizeF& ) const;
 
   protected:

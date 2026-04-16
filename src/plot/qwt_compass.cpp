@@ -37,10 +37,17 @@ public:
     QMap< double, QString > labelMap;
 };
 
-/*!
-   \brief Constructor
-
-   Initializes a label map for multiples of 45 degrees
+/**
+ * \if ENGLISH
+ *   \brief Constructor
+ *   \details Initializes a label map for multiples of 45 degrees.
+ *            The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
+ * \endif
+ * \if CHINESE
+ *   \brief 构造函数
+ *   \details 初始化一个45度倍数的标签映射。
+ *            默认映射包含标签N、NE、E、SE、S、SW、W、NW。
+ * \endif
  */
 QwtCompassScaleDraw::QwtCompassScaleDraw()
 {
@@ -72,10 +79,15 @@ QwtCompassScaleDraw::QwtCompassScaleDraw()
 #endif
 }
 
-/*!
-   \brief Constructor
-
-   \param map Value to label map
+/**
+ * \if ENGLISH
+ *   \brief Constructor
+ *   \param[in] map Value to label map
+ * \endif
+ * \if CHINESE
+ *   \brief 构造函数
+ *   \param[in] map 数值到标签的映射
+ * \endif
  */
 QwtCompassScaleDraw::QwtCompassScaleDraw(const QMap< double, QString >& map)
 {
@@ -86,50 +98,79 @@ QwtCompassScaleDraw::QwtCompassScaleDraw(const QMap< double, QString >& map)
     enableComponent(QwtAbstractScaleDraw::Ticks, false);
 }
 
-//!  Destructor
+/**
+ * \if ENGLISH
+ *   \brief Destructor
+ * \endif
+ * \if CHINESE
+ *   \brief 析构函数
+ * \endif
+ */
 QwtCompassScaleDraw::~QwtCompassScaleDraw()
 {
     delete m_data;
 }
 
-/*!
-   \brief Set a map, mapping values to labels
-   \param map Value to label map
-
-   The values of the major ticks are found by looking into this
-   map. The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
-
-   \warning The map will have no effect for values that are no major
-           tick values. Major ticks can be changed by QwtScaleDraw::setScale
-
-   \sa labelMap(), scaleDraw(), setScale()
+/**
+ * \if ENGLISH
+ *   \brief Set a map, mapping values to labels
+ *   \param[in] map Value to label map
+ *   \details The values of the major ticks are found by looking into this map.
+ *            The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
+ *   \warning The map will have no effect for values that are no major tick values.
+ *            Major ticks can be changed by QwtScaleDraw::setScale.
+ *   \sa labelMap(), scaleDraw(), setScale()
+ * \endif
+ * \if CHINESE
+ *   \brief 设置数值到标签的映射
+ *   \param[in] map 数值到标签的映射
+ *   \details 通过查找此映射来确定主要刻度的标签值。
+ *            默认映射包含标签N、NE、E、SE、S、SW、W、NW。
+ *   \warning 对于非主要刻度值，映射将不起作用。
+ *            主要刻度可通过QwtScaleDraw::setScale进行更改。
+ *   \sa labelMap(), scaleDraw(), setScale()
+ * \endif
  */
 void QwtCompassScaleDraw::setLabelMap(const QMap< double, QString >& map)
 {
     m_data->labelMap = map;
 }
 
-/*!
-   \return map, mapping values to labels
-   \sa setLabelMap()
+/**
+ * \if ENGLISH
+ *   \brief Get the map, mapping values to labels
+ *   \return Map, mapping values to labels
+ *   \sa setLabelMap()
+ * \endif
+ * \if CHINESE
+ *   \brief 获取数值到标签的映射
+ *   \return 数值到标签的映射
+ *   \sa setLabelMap()
+ * \endif
  */
 QMap< double, QString > QwtCompassScaleDraw::labelMap() const
 {
     return m_data->labelMap;
 }
 
-/*!
-   Map a value to a corresponding label
-
-   \param value Value that will be mapped
-
-   label() looks in the labelMap() for a corresponding label for value
-   or returns an null text.
-
-   \return Label
-   \sa labelMap(), setLabelMap()
+/**
+ * \if ENGLISH
+ *   \brief Map a value to a corresponding label
+ *   \param[in] value Value that will be mapped
+ *   \details label() looks in the labelMap() for a corresponding label for value
+ *            or returns a null text.
+ *   \return Label corresponding to the value, or null text if not found
+ *   \sa labelMap(), setLabelMap()
+ * \endif
+ * \if CHINESE
+ *   \brief 将数值映射为对应的标签
+ *   \param[in] value 要映射的数值
+ *   \details label()在labelMap()中查找对应数值的标签，
+ *            如果未找到则返回空文本。
+ *   \return 对应数值的标签，若未找到则返回空文本
+ *   \sa labelMap(), setLabelMap()
+ * \endif
  */
-
 QwtText QwtCompassScaleDraw::label(double value) const
 {
     if (qFuzzyCompare(value + 1.0, 1.0))
@@ -161,14 +202,22 @@ public:
     QwtCompassRose* rose;
 };
 
-/*!
-   \brief Constructor
-   \param parent Parent widget
-
-   Create a compass widget with a scale, no needle and no rose.
-   The default origin is 270.0 with no valid value. It accepts
-   mouse and keyboard inputs and has no step size. The default mode
-   is QwtDial::RotateNeedle.
+/**
+ * \if ENGLISH
+ *   \brief Constructor
+ *   \param[in] parent Parent widget
+ *   \details Creates a compass widget with a scale, no needle and no rose.
+ *            The default origin is 270.0 with no valid value. It accepts
+ *            mouse and keyboard inputs and has no step size. The default mode
+ *            is QwtDial::RotateNeedle.
+ * \endif
+ * \if CHINESE
+ *   \brief 构造函数
+ *   \param[in] parent 父控件
+ *   \details 创建一个带有刻度盘、无指针、无罗盘花的指南针控件。
+ *            默认原点为270.0，无有效值。接受鼠标和键盘输入，无步长。
+ *            默认模式为QwtDial::RotateNeedle。
+ * \endif
  */
 QwtCompass::QwtCompass(QWidget* parent) : QwtDial(parent)
 {
@@ -186,7 +235,14 @@ QwtCompass::QwtCompass(QWidget* parent) : QwtDial(parent)
     setTotalSteps(360);
 }
 
-//!  Destructor
+/**
+ * \if ENGLISH
+ *   \brief Destructor
+ * \endif
+ * \if CHINESE
+ *   \brief 析构函数
+ * \endif
+ */
 QwtCompass::~QwtCompass()
 {
     delete m_data;
@@ -232,12 +288,19 @@ void QwtCompass::drawRose(QPainter* painter, const QPointF& center, double radiu
         m_data->rose->draw(painter, center, radius, north, cg);
 }
 
-/*!
-   Set a rose for the compass
-   \param rose Compass rose
-   \warning The rose will be deleted, when a different rose is
-    set or in ~QwtCompass
-   \sa rose()
+/**
+ * \if ENGLISH
+ *   \brief Set a rose for the compass
+ *   \param[in] rose Compass rose
+ *   \warning The rose will be deleted, when a different rose is set or in ~QwtCompass.
+ *   \sa rose()
+ * \endif
+ * \if CHINESE
+ *   \brief 为指南针设置罗盘花
+ *   \param[in] rose 罗盘花对象
+ *   \warning 当设置不同的罗盘花或在~QwtCompass析构时，原罗盘花将被删除。
+ *   \sa rose()
+ * \endif
  */
 void QwtCompass::setRose(QwtCompassRose* rose)
 {
@@ -250,18 +313,34 @@ void QwtCompass::setRose(QwtCompassRose* rose)
     }
 }
 
-/*!
-   \return rose
-   \sa setRose()
+/**
+ * \if ENGLISH
+ *   \brief Get the compass rose
+ *   \return The compass rose (const version)
+ *   \sa setRose()
+ * \endif
+ * \if CHINESE
+ *   \brief 获取罗盘花
+ *   \return 罗盘花对象（const版本）
+ *   \sa setRose()
+ * \endif
  */
 const QwtCompassRose* QwtCompass::rose() const
 {
     return m_data->rose;
 }
 
-/*!
-   \return rose
-   \sa setRose()
+/**
+ * \if ENGLISH
+ *   \brief Get the compass rose
+ *   \return The compass rose
+ *   \sa setRose()
+ * \endif
+ * \if CHINESE
+ *   \brief 获取罗盘花
+ *   \return 罗盘花对象
+ *   \sa setRose()
+ * \endif
  */
 QwtCompassRose* QwtCompass::rose()
 {

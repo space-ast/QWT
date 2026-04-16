@@ -459,31 +459,11 @@ const QwtScaleDraw* QwtSlider::scaleDraw() const
     return static_cast< const QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/**
- * \if ENGLISH
- * @brief Return the scale draw of the slider (non-const version)
- * \sa setScaleDraw()
- * \endif
- * \if CHINESE
- * @brief 返回滑块的刻度绘制器 (非 const 版本)
- * \sa setScaleDraw()
- * \endif
- */
 QwtScaleDraw* QwtSlider::scaleDraw()
 {
     return static_cast< QwtScaleDraw* >(abstractScaleDraw());
 }
 
-/**
- * \if ENGLISH
- * @brief Notify changed scale
- * \sa scaleChange()
- * \endif
- * \if CHINESE
- * @brief 通知刻度变更
- * \sa scaleChange()
- * \endif
- */
 void QwtSlider::scaleChange()
 {
     QwtAbstractSlider::scaleChange();
@@ -526,20 +506,6 @@ int QwtSlider::updateInterval() const
     return m_data->updateInterval;
 }
 
-/**
- * \if ENGLISH
- * @brief Draw the slider into the specified rectangle
- * @param painter Painter
- * @param sliderRect Bounding rectangle of the slider
- * \sa drawHandle()
- * \endif
- * \if CHINESE
- * @brief 在指定矩形中绘制滑块
- * @param painter 绘制器
- * @param sliderRect 滑块的边界矩形
- * \sa drawHandle()
- * \endif
- */
 void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
 {
     QRect innerRect(sliderRect);
@@ -583,22 +549,6 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
         drawHandle(painter, handleRect(), transform(value()));
 }
 
-/**
- * \if ENGLISH
- * @brief Draw the thumb at a position
- * @param painter Painter
- * @param handleRect Bounding rectangle of the handle
- * @param pos Position of the handle marker in widget coordinates
- * \sa drawSlider()
- * \endif
- * \if CHINESE
- * @brief 在指定位置绘制滑块手柄
- * @param painter 绘制器
- * @param handleRect 手柄的边界矩形
- * @param pos 手柄标记在控件坐标中的位置
- * \sa drawSlider()
- * \endif
- */
 void QwtSlider::drawHandle(QPainter* painter, const QRect& handleRect, int pos) const
 {
     const int bw = m_data->borderWidth;
@@ -614,20 +564,6 @@ void QwtSlider::drawHandle(QPainter* painter, const QRect& handleRect, int pos) 
     }
 }
 
-/**
- * \if ENGLISH
- * @brief Determine what to do when the user presses a mouse button
- * @param pos Mouse position
- * @returns True when handleRect() contains pos
- * \sa scrolledTo()
- * \endif
- * \if CHINESE
- * @brief 确定当用户按下鼠标按钮时该做什么
- * @param pos 鼠标位置
- * @returns 当 handleRect() 包含 pos 时为 true
- * \sa scrolledTo()
- * \endif
- */
 bool QwtSlider::isScrollPosition(const QPoint& pos) const
 {
     if (handleRect().contains(pos)) {
@@ -640,20 +576,6 @@ bool QwtSlider::isScrollPosition(const QPoint& pos) const
     return false;
 }
 
-/**
- * \if ENGLISH
- * @brief Determine the value for a new position of the slider handle
- * @param pos Mouse position
- * @returns Value for the mouse position
- * \sa isScrollPosition()
- * \endif
- * \if CHINESE
- * @brief 确定滑块手柄新位置的值
- * @param pos 鼠标位置
- * @returns 鼠标位置对应的值
- * \sa isScrollPosition()
- * \endif
- */
 double QwtSlider::scrolledTo(const QPoint& pos) const
 {
     int p = (orientation() == Qt::Horizontal) ? pos.x() : pos.y();
@@ -670,18 +592,6 @@ double QwtSlider::scrolledTo(const QPoint& pos) const
     return scaleMap().invTransform(p);
 }
 
-/**
- * \if ENGLISH
- * @brief Mouse press event handler
- * @param event Mouse event
- * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
- * \endif
- * \if CHINESE
- * @brief 鼠标按下事件处理器
- * @param event 鼠标事件
- * \sa mouseReleaseEvent(), QwtAbstractSlider::mousePressEvent()
- * \endif
- */
 void QwtSlider::mousePressEvent(QMouseEvent* event)
 {
     if (isReadOnly()) {
@@ -730,18 +640,6 @@ void QwtSlider::mousePressEvent(QMouseEvent* event)
     QwtAbstractSlider::mousePressEvent(event);
 }
 
-/**
- * \if ENGLISH
- * @brief Mouse release event handler
- * @param event Mouse event
- * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
- * \endif
- * \if CHINESE
- * @brief 鼠标释放事件处理器
- * @param event 鼠标事件
- * \sa mousePressEvent(), QwtAbstractSlider::mouseReleaseEvent()
- * \endif
- */
 void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
 {
     if (m_data->repeatTimerId > 0) {
@@ -759,20 +657,6 @@ void QwtSlider::mouseReleaseEvent(QMouseEvent* event)
     QwtAbstractSlider::mouseReleaseEvent(event);
 }
 
-/**
- * \if ENGLISH
- * @brief Timer event handler
- * @details Handles the timer when the mouse stays pressed inside the sliderRect().
- * @param event Timer event
- * \sa timerEvent()
- * \endif
- * \if CHINESE
- * @brief 定时器事件处理器
- * @details 当鼠标保持在 sliderRect() 内按下时处理定时器。
- * @param event 定时器事件
- * \sa timerEvent()
- * \endif
- */
 void QwtSlider::timerEvent(QTimerEvent* event)
 {
     if (event->timerId() != m_data->repeatTimerId) {
@@ -807,18 +691,6 @@ void QwtSlider::timerEvent(QTimerEvent* event)
     }
 }
 
-/**
- * \if ENGLISH
- * @brief Qt paint event handler
- * @param event Paint event
- * \sa resizeEvent(), changeEvent()
- * \endif
- * \if CHINESE
- * @brief Qt 绘制事件处理器
- * @param event 绘制事件
- * \sa resizeEvent(), changeEvent()
- * \endif
- */
 void QwtSlider::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
@@ -839,38 +711,12 @@ void QwtSlider::paintEvent(QPaintEvent* event)
         QwtPainter::drawFocusRect(&painter, this, m_data->sliderRect);
 }
 
-/**
- * \if ENGLISH
- * @brief Qt resize event handler
- * @param event Resize event
- * \sa paintEvent(), layoutSlider()
- * \endif
- * \if CHINESE
- * @brief Qt 调整大小事件处理器
- * @param event 调整大小事件
- * \sa paintEvent(), layoutSlider()
- * \endif
- */
 void QwtSlider::resizeEvent(QResizeEvent* event)
 {
     layoutSlider(false);
     QwtAbstractSlider::resizeEvent(event);
 }
 
-/**
- * \if ENGLISH
- * @brief Qt event handler
- * @param event Event
- * @returns True if event was recognized and processed
- * \sa QwtAbstractSlider::event()
- * \endif
- * \if CHINESE
- * @brief Qt 事件处理器
- * @param event 事件
- * @returns 如果事件被识别和处理则返回 true
- * \sa QwtAbstractSlider::event()
- * \endif
- */
 bool QwtSlider::event(QEvent* event)
 {
     if (event->type() == QEvent::PolishRequest)
@@ -879,18 +725,6 @@ bool QwtSlider::event(QEvent* event)
     return QwtAbstractSlider::event(event);
 }
 
-/**
- * \if ENGLISH
- * @brief Handles QEvent::StyleChange and QEvent::FontChange events
- * @param event Change event
- * \sa QwtAbstractSlider::changeEvent()
- * \endif
- * \if CHINESE
- * @brief 处理 QEvent::StyleChange 和 QEvent::FontChange 事件
- * @param event 变更事件
- * \sa QwtAbstractSlider::changeEvent()
- * \endif
- */
 void QwtSlider::changeEvent(QEvent* event)
 {
     if (event->type() == QEvent::StyleChange || event->type() == QEvent::FontChange) {
@@ -901,20 +735,6 @@ void QwtSlider::changeEvent(QEvent* event)
     QwtAbstractSlider::changeEvent(event);
 }
 
-/**
- * \if ENGLISH
- * @brief Recalculate the slider's geometry and layout
- * @details Recalculates the slider's geometry and layout based on the current geometry and fonts.
- * @param update_geometry Notify the layout system and call update to redraw the scale
- * \sa layoutSlider()
- * \endif
- * \if CHINESE
- * @brief 重新计算滑块的几何布局和布局
- * @details 基于当前几何和字体重新计算滑块的几何和布局。
- * @param update_geometry 通知布局系统并调用 update 重新绘制刻度
- * \sa layoutSlider()
- * \endif
- */
 void QwtSlider::layoutSlider(bool update_geometry)
 {
     int bw = 0;
@@ -1172,16 +992,6 @@ QSize QwtSlider::minimumSizeHint() const
     return m_data->sizeHintCache;
 }
 
-/**
- * \if ENGLISH
- * @brief Return bounding rectangle of the slider handle
- * \sa sliderRect()
- * \endif
- * \if CHINESE
- * @brief 返回滑块手柄的边界矩形
- * \sa sliderRect()
- * \endif
- */
 QRect QwtSlider::handleRect() const
 {
     if (!isValid())
@@ -1202,16 +1012,6 @@ QRect QwtSlider::handleRect() const
     return rect;
 }
 
-/**
- * \if ENGLISH
- * @brief Return bounding rectangle of the slider - without the scale
- * \sa handleRect()
- * \endif
- * \if CHINESE
- * @brief 返回滑块的边界矩形 - 不含刻度
- * \sa handleRect()
- * \endif
- */
 QRect QwtSlider::sliderRect() const
 {
     return m_data->sliderRect;

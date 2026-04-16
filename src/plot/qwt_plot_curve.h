@@ -433,340 +433,148 @@ public:
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+// Constructor
 explicit QwtPlotCurve(const QString& title = QString());
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor with QwtText title
-     * \endif
-     */
+    // Constructor with QwtText title
 explicit QwtPlotCurve(const QwtText& title);
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
 virtual ~QwtPlotCurve();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
 virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set paint attribute
-     * \endif
-     */
+    // Set paint attribute
 void setPaintAttribute(PaintAttribute, bool on = true);
 
-    /**
-     * \if ENGLISH
-     * @brief Test paint attribute
-     * \endif
-     */
+    // Test paint attribute
 bool testPaintAttribute(PaintAttribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set legend attribute
-     * \endif
-     */
+    // Set legend attribute
 void setLegendAttribute(LegendAttribute, bool on = true);
 
-    /**
-     * \if ENGLISH
-     * @brief Test legend attribute
-     * \endif
-     */
+    // Test legend attribute
 bool testLegendAttribute(LegendAttribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set legend attributes
-     * \endif
-     */
+    // Set legend attributes
 void setLegendAttributes(LegendAttributes);
 
-    /**
-     * \if ENGLISH
-     * @brief Get legend attributes
-     * \endif
-     */
+    // Get legend attributes
 LegendAttributes legendAttributes() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set raw samples from double arrays
-     * \endif
-     */
+// Set raw samples from double arrays
 void setRawSamples(const double* xData, const double* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set raw samples from float arrays
-     * \endif
-     */
+    // Set raw samples from float arrays
 void setRawSamples(const float* xData, const float* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set raw samples from double array (y-axis only)
-     * \endif
-     */
+    // Set raw samples from double array (y-axis only)
 void setRawSamples(const double* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set raw samples from float array (y-axis only)
-     * \endif
-     */
+    // Set raw samples from float array (y-axis only)
 void setRawSamples(const float* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from double arrays
-     * \endif
-     */
+    // Set samples from double arrays
 void setSamples(const double* xData, const double* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from float arrays
-     * \endif
-     */
+    // Set samples from float arrays
 void setSamples(const float* xData, const float* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from double array (y-axis only)
-     * \endif
-     */
+    // Set samples from double array (y-axis only)
 void setSamples(const double* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from float array (y-axis only)
-     * \endif
-     */
+    // Set samples from float array (y-axis only)
 void setSamples(const float* yData, int size);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QVector<double> (y-axis only)
-     * \endif
-     */
+    // Set samples from QVector<double> (y-axis only)
 void setSamples(const QVector< double >& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QVector<float> (y-axis only)
-     * \endif
-     */
+    // Set samples from QVector<float> (y-axis only)
 void setSamples(const QVector< float >& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QVector<double> arrays
-     * \endif
-     */
+    // Set samples from QVector<double> arrays
 void setSamples(const QVector< double >& xData, const QVector< double >& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QVector<float> arrays
-     * \endif
-     */
+    // Set samples from QVector<float> arrays
 void setSamples(const QVector< float >& xData, const QVector< float >& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from rvalue QVector<double> arrays
-     * \endif
-     */
+    // Set samples from rvalue QVector<double> arrays
 void setSamples(QVector< double >&& xData, QVector< double >&& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from rvalue QVector<float> arrays
-     * \endif
-     */
+    // Set samples from rvalue QVector<float> arrays
 void setSamples(QVector< float >&& xData, QVector< float >&& yData);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from rvalue QVector<QPointF>
-     * \endif
-     */
+    // Set samples from rvalue QVector<QPointF>
 void setSamples(QVector< QPointF >&&);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QVector<QPointF>
-     * \endif
-     */
+    // Set samples from QVector<QPointF>
 void setSamples(const QVector< QPointF >&);
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from QwtSeriesData
-     * \endif
-     */
+    // Set samples from QwtSeriesData
 void setSamples(QwtSeriesData< QPointF >*);
 
-    /**
-     * \if ENGLISH
-     * @brief Find the closest point to a position
-     * \endif
-     */
+// Find the closest point to a position
 virtual int closestPoint(const QPointF& pos, double* dist = nullptr) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get minimum x value
-     * \endif
-     */
+    // Get minimum x value
 double minXValue() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get maximum x value
-     * \endif
-     */
+    // Get maximum x value
 double maxXValue() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get minimum y value
-     * \endif
-     */
+    // Get minimum y value
 double minYValue() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get maximum y value
-     * \endif
-     */
+    // Get maximum y value
 double maxYValue() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set curve attribute
-     * \endif
-     */
+    // Set curve attribute
 void setCurveAttribute(CurveAttribute, bool on = true);
 
-    /**
-     * \if ENGLISH
-     * @brief Test curve attribute
-     * \endif
-     */
+    // Test curve attribute
 bool testCurveAttribute(CurveAttribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen
-     * \endif
-     */
+    // Set pen
 void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen
-     * \endif
-     */
+    // Set pen
 void setPen(const QPen&);
 
-    /**
-     * \if ENGLISH
-     * @brief Get pen
-     * \endif
-     */
+    // Get pen
 const QPen& pen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set brush
-     * \endif
-     */
+    // Set brush
 void setBrush(const QBrush&);
 
-    /**
-     * \if ENGLISH
-     * @brief Get brush
-     * \endif
-     */
+    // Get brush
 const QBrush& brush() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set baseline
-     * \endif
-     */
+    // Set baseline
 void setBaseline(double);
 
-    /**
-     * \if ENGLISH
-     * @brief Get baseline
-     * \endif
-     */
+    // Get baseline
 double baseline() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set curve style
-     * \endif
-     */
+    // Set curve style
 void setStyle(CurveStyle style);
 
-    /**
-     * \if ENGLISH
-     * @brief Get curve style
-     * \endif
-     */
+    // Get curve style
 CurveStyle style() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set symbol
-     * \endif
-     */
+    // Set symbol
 void setSymbol(QwtSymbol*);
 
-    /**
-     * \if ENGLISH
-     * @brief Get symbol
-     * \endif
-     */
+    // Get symbol
 const QwtSymbol* symbol() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set curve fitter
-     * \endif
-     */
+    // Set curve fitter
 void setCurveFitter(QwtCurveFitter*);
 
-    /**
-     * \if ENGLISH
-     * @brief Get curve fitter
-     * \endif
-     */
+    // Get curve fitter
 QwtCurveFitter* curveFitter() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the series
-     * \endif
-     */
+    // Draw the series
 virtual void drawSeries(QPainter*,
                             const QwtScaleMap& xMap,
                             const QwtScaleMap& yMap,
@@ -774,11 +582,7 @@ virtual void drawSeries(QPainter*,
                             int from,
                             int to) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the legend icon
-     * \endif
-     */
+    // Get the legend icon
 virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:

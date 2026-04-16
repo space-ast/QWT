@@ -51,14 +51,14 @@
 class QWT_EXPORT QwtSystemClock
 {
   public:
-    //! Check if the clock has been started
+    // Check if the clock has been started
     bool isNull() const;
 
-    //! Start or restart the clock
+    // Start or restart the clock
     void start();
-    //! Restart the clock and return the elapsed time
+    // Restart the clock and return the elapsed time
     double restart();
-    //! Return the elapsed time since the clock was started
+    // Return the elapsed time since the clock was started
     double elapsed() const;
 
   private:

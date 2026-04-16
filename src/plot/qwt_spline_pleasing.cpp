@@ -261,14 +261,6 @@ static SplineStore qwtSplinePathPleasing(const QPolygonF& points, bool isClosed,
     return store;
 }
 
-/*!
-   \brief Constructor
-
-   The default setting is a non closing spline with uniform parametrization.
-   ( QwtSplineParametrization::ParameterUniform ).
-
-   \sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
- */
 /**
  * \if ENGLISH
  * @brief Constructor
@@ -293,7 +285,6 @@ QwtSplinePleasing::QwtSplinePleasing()
     setParametrization(QwtSplineParametrization::ParameterUniform);
 }
 
-//! Destructor
 /**
  * \if ENGLISH
  * @brief Destructor
@@ -307,7 +298,6 @@ QwtSplinePleasing::~QwtSplinePleasing()
 {
 }
 
-//! \return 2
 /**
  * \if ENGLISH
  * @brief Get locality
@@ -324,15 +314,6 @@ uint QwtSplinePleasing::locality() const
     return 2;
 }
 
-/*!
-   \brief Interpolate a curve with Bezier curves
-
-   Interpolates a polygon piecewise with cubic Bezier curves
-   and returns them as QPainterPath.
-
-   \param points Control points
-   \return QPainterPath Painter path, that can be rendered by QPainter
- */
 /**
  * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves

@@ -65,44 +65,16 @@ class QPainterPath;
 class QWT_EXPORT QwtVectorFieldSymbol
 {
   public:
+    //! Constructor
     QwtVectorFieldSymbol();
+    //! Destructor
     virtual ~QwtVectorFieldSymbol();
 
-    /*!
-        \if ENGLISH
-        Set the length of the symbol/arrow
-        \sa length()
-        \endif
-        *
-        \if CHINESE
-        设置符号/箭头的长度
-        \sa length()
-        \endif
-     */
+    //! Set the length of the symbol/arrow
     virtual void setLength( qreal length ) = 0;
-
-    /*!
-        \if ENGLISH
-        \return length of the symbol/arrow
-        \sa setLength()
-        \endif
-        *
-        \if CHINESE
-        \return 符号/箭头的长度
-        \sa setLength()
-        \endif
-     */
+    //! Return the length of the symbol/arrow
     virtual qreal length() const = 0;
-
-    /**
-     * \if ENGLISH
-     * @brief Draw the symbol/arrow
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 绘制符号/箭头
-     * \endif
-     */
+    //! Draw the symbol/arrow
     virtual void paint( QPainter* ) const = 0;
 
   private:
@@ -123,12 +95,16 @@ class QWT_EXPORT QwtVectorFieldSymbol
 class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
   public:
+    //! Constructor with head and tail width parameters
     QwtVectorFieldArrow( qreal headWidth = 6.0, qreal tailWidth = 1.0 );
+    //! Destructor
     virtual ~QwtVectorFieldArrow() override;
 
+    //! Set the length of the arrow
     virtual void setLength( qreal length ) override;
+    //! Return the length of the arrow
     virtual qreal length() const override;
-
+    //! Draw the arrow
     virtual void paint( QPainter* ) const override;
 
   private:
@@ -150,12 +126,16 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
   public:
+    //! Constructor with head width parameter
     QwtVectorFieldThinArrow( qreal headWidth = 6.0 );
+    //! Destructor
     virtual ~QwtVectorFieldThinArrow() override;
 
+    //! Set the length of the arrow
     virtual void setLength( qreal length ) override;
+    //! Return the length of the arrow
     virtual qreal length() const override;
-
+    //! Draw the arrow
     virtual void paint( QPainter* ) const override;
 
   private:

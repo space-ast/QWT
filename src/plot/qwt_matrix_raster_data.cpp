@@ -85,54 +85,89 @@ class QwtMatrixRasterData::PrivateData
     double dy;
 };
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor.
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数。
+ * \endif
+ */
 QwtMatrixRasterData::QwtMatrixRasterData()
 {
     m_data = new PrivateData();
     update();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtMatrixRasterData::~QwtMatrixRasterData()
 {
     delete m_data;
 }
 
-/*!
-   \brief Set the resampling algorithm
-
-   \param mode Resampling mode
-   \sa resampleMode(), value()
+/**
+ * \if ENGLISH
+ * @brief Set the resampling algorithm.
+ * @param[in] mode Resampling mode.
+ * @sa resampleMode(), value()
+ * \endif
+ * \if CHINESE
+ * @brief 设置重采样算法。
+ * @param[in] mode 重采样模式。
+ * @sa resampleMode(), value()
+ * \endif
  */
 void QwtMatrixRasterData::setResampleMode( ResampleMode mode )
 {
     m_data->resampleMode = mode;
 }
 
-/*!
-   \return resampling algorithm
-   \sa setResampleMode(), value()
+/**
+ * \if ENGLISH
+ * @brief Return the resampling algorithm.
+ * @return Resampling algorithm.
+ * @sa setResampleMode(), value()
+ * \endif
+ * \if CHINESE
+ * @brief 返回重采样算法。
+ * @return 重采样算法。
+ * @sa setResampleMode(), value()
+ * \endif
  */
 QwtMatrixRasterData::ResampleMode QwtMatrixRasterData::resampleMode() const
 {
     return m_data->resampleMode;
 }
 
-/*!
-   \brief Assign the bounding interval for an axis
-
-   Setting the bounding intervals for the X/Y axis is mandatory
-   to define the positions for the values of the value matrix.
-   The interval in Z direction defines the possible range for
-   the values in the matrix, what is f.e used by QwtPlotSpectrogram
-   to map values to colors. The Z-interval might be the bounding
-   interval of the values in the matrix, but usually it isn't.
-   ( f.e a interval of 0.0-100.0 for values in percentage )
-
-   \param axis X, Y or Z axis
-   \param interval Interval
-
-   \sa QwtRasterData::interval(), setValueMatrix()
+/**
+ * \if ENGLISH
+ * @brief Assign the bounding interval for an axis.
+ * @details Setting the bounding intervals for the X/Y axis is mandatory to define the positions
+ *          for the values of the value matrix. The interval in Z direction defines the possible range
+ *          for the values in the matrix, what is f.e used by QwtPlotSpectrogram to map values to colors.
+ *          The Z-interval might be the bounding interval of the values in the matrix, but usually it isn't.
+ *          (f.e a interval of 0.0-100.0 for values in percentage).
+ * @param[in] axis X, Y or Z axis.
+ * @param[in] interval Interval.
+ * @sa QwtRasterData::interval(), setValueMatrix()
+ * \endif
+ * \if CHINESE
+ * @brief 为轴分配边界区间。
+ * @details 设置 X/Y 轴的边界区间是必须的，用于定义数值矩阵中各值的位置。
+ *          Z 方向的区间定义了矩阵中数值的可能范围，例如用于 QwtPlotSpectrogram 将数值映射为颜色。
+ *          Z 区间可以是矩阵中数值的边界区间，但通常不是。
+ *          （例如百分比值使用 0.0-100.0 区间）。
+ * @param[in] axis X、Y 或 Z 轴。
+ * @param[in] interval 区间。
+ * @sa QwtRasterData::interval(), setValueMatrix()
+ * \endif
  */
 void QwtMatrixRasterData::setInterval(
     Qt::Axis axis, const QwtInterval& interval )
@@ -144,9 +179,19 @@ void QwtMatrixRasterData::setInterval(
     }
 }
 
-/*!
-   \return Bounding interval for an axis
-   \sa setInterval
+/**
+ * \if ENGLISH
+ * @brief Return bounding interval for an axis.
+ * @param[in] axis Axis to query.
+ * @return Bounding interval for the axis.
+ * @sa setInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 返回轴的边界区间。
+ * @param[in] axis 要查询的轴。
+ * @return 轴的边界区间。
+ * @sa setInterval()
+ * \endif
  */
 QwtInterval QwtMatrixRasterData::interval( Qt::Axis axis ) const
 {
@@ -156,18 +201,24 @@ QwtInterval QwtMatrixRasterData::interval( Qt::Axis axis ) const
     return QwtInterval();
 }
 
-/*!
-   \brief Assign a value matrix
-
-   The positions of the values are calculated by dividing
-   the bounding rectangle of the X/Y intervals into equidistant
-   rectangles ( pixels ). Each value corresponds to the center of
-   a pixel.
-
-   \param values Vector of values
-   \param numColumns Number of columns
-
-   \sa valueMatrix(), numColumns(), numRows(), setInterval()()
+/**
+ * \if ENGLISH
+ * @brief Assign a value matrix.
+ * @details The positions of the values are calculated by dividing the bounding rectangle
+ *          of the X/Y intervals into equidistant rectangles (pixels).
+ *          Each value corresponds to the center of a pixel.
+ * @param[in] values Vector of values.
+ * @param[in] numColumns Number of columns.
+ * @sa valueMatrix(), numColumns(), numRows(), setInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 分配数值矩阵。
+ * @details 数值的位置通过将 X/Y 区间的边界矩形划分为等距矩形（像素）来计算。
+ *          每个数值对应于像素的中心。
+ * @param[in] values 数值向量。
+ * @param[in] numColumns 列数。
+ * @sa valueMatrix(), numColumns(), numRows(), setInterval()
+ * \endif
  */
 void QwtMatrixRasterData::setValueMatrix(
     const QVector< double >& values, int numColumns )
@@ -177,23 +228,38 @@ void QwtMatrixRasterData::setValueMatrix(
     update();
 }
 
-/*!
-   \return Value matrix
-   \sa setValueMatrix(), numColumns(), numRows(), setInterval()
+/**
+ * \if ENGLISH
+ * @brief Return value matrix.
+ * @return Value matrix.
+ * @sa setValueMatrix(), numColumns(), numRows(), setInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 返回数值矩阵。
+ * @return 数值矩阵。
+ * @sa setValueMatrix(), numColumns(), numRows(), setInterval()
+ * \endif
  */
 const QVector< double > QwtMatrixRasterData::valueMatrix() const
 {
     return m_data->values;
 }
 
-/*!
-   \brief Change a single value in the matrix
-
-   \param row Row index
-   \param col Column index
-   \param value New value
-
-   \sa value(), setValueMatrix()
+/**
+ * \if ENGLISH
+ * @brief Change a single value in the matrix.
+ * @param[in] row Row index.
+ * @param[in] col Column index.
+ * @param[in] value New value.
+ * @sa value(), setValueMatrix()
+ * \endif
+ * \if CHINESE
+ * @brief 更改矩阵中的单个值。
+ * @param[in] row 行索引。
+ * @param[in] col 列索引。
+ * @param[in] value 新值。
+ * @sa value(), setValueMatrix()
+ * \endif
  */
 void QwtMatrixRasterData::setValue( int row, int col, double value )
 {
@@ -205,43 +271,60 @@ void QwtMatrixRasterData::setValue( int row, int col, double value )
     }
 }
 
-/*!
-   \return Number of columns of the value matrix
-   \sa valueMatrix(), numRows(), setValueMatrix()
+/**
+ * \if ENGLISH
+ * @brief Return number of columns of the value matrix.
+ * @return Number of columns.
+ * @sa valueMatrix(), numRows(), setValueMatrix()
+ * \endif
+ * \if CHINESE
+ * @brief 返回数值矩阵的列数。
+ * @return 列数。
+ * @sa valueMatrix(), numRows(), setValueMatrix()
+ * \endif
  */
 int QwtMatrixRasterData::numColumns() const
 {
     return m_data->numColumns;
 }
 
-/*!
-   \return Number of rows of the value matrix
-   \sa valueMatrix(), numColumns(), setValueMatrix()
+/**
+ * \if ENGLISH
+ * @brief Return number of rows of the value matrix.
+ * @return Number of rows.
+ * @sa valueMatrix(), numColumns(), setValueMatrix()
+ * \endif
+ * \if CHINESE
+ * @brief 返回数值矩阵的行数。
+ * @return 行数。
+ * @sa valueMatrix(), numColumns(), setValueMatrix()
+ * \endif
  */
 int QwtMatrixRasterData::numRows() const
 {
     return m_data->numRows;
 }
 
-/*!
-   \brief Calculate the pixel hint
-
-   pixelHint() returns the geometry of a pixel, that can be used
-   to calculate the resolution and alignment of the plot item, that is
-   representing the data.
-
-   - NearestNeighbour\n
-     pixelHint() returns the surrounding pixel of the top left value
-     in the matrix.
-
-   - BilinearInterpolation\n
-     Returns an empty rectangle recommending
-     to render in target device ( f.e. screen ) resolution.
-
-   \param area Requested area, ignored
-   \return Calculated hint
-
-   \sa ResampleMode, setMatrix(), setInterval()
+/**
+ * \if ENGLISH
+ * @brief Calculate the pixel hint.
+ * @details pixelHint() returns the geometry of a pixel, that can be used to calculate
+ *          the resolution and alignment of the plot item, that is representing the data.
+ *          - NearestNeighbour: pixelHint() returns the surrounding pixel of the top left value in the matrix.
+ *          - BilinearInterpolation: Returns an empty rectangle recommending to render in target device resolution.
+ * @param[in] area Requested area, ignored.
+ * @return Calculated hint.
+ * @sa ResampleMode, setMatrix(), setInterval()
+ * \endif
+ * \if CHINESE
+ * @brief 计算像素提示。
+ * @details pixelHint() 返回像素的几何信息，可用于计算表示数据的绘图项的分辨率和对齐方式。
+ *          - NearestNeighbour：返回矩阵中左上角数值周围的像素。
+ *          - BilinearInterpolation：返回空矩形，建议在目标设备分辨率下渲染。
+ * @param[in] area 请求的区域，忽略。
+ * @return 计算的提示。
+ * @sa ResampleMode, setMatrix(), setInterval()
+ * \endif
  */
 QRectF QwtMatrixRasterData::pixelHint( const QRectF& area ) const
 {
@@ -262,13 +345,21 @@ QRectF QwtMatrixRasterData::pixelHint( const QRectF& area ) const
     return rect;
 }
 
-/*!
-   \return the value at a raster position
-
-   \param x X value in plot coordinates
-   \param y Y value in plot coordinates
-
-   \sa ResampleMode
+/**
+ * \if ENGLISH
+ * @brief Return the value at a raster position.
+ * @param[in] x X value in plot coordinates.
+ * @param[in] y Y value in plot coordinates.
+ * @return Value at the position.
+ * @sa ResampleMode
+ * \endif
+ * \if CHINESE
+ * @brief 返回栅格位置处的数值。
+ * @param[in] x 绘图坐标系中的 X 值。
+ * @param[in] y 绘图坐标系中的 Y 值。
+ * @return 该位置的数值。
+ * @sa ResampleMode
+ * \endif
  */
 double QwtMatrixRasterData::value( double x, double y ) const
 {

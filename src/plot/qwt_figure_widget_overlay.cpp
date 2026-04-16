@@ -53,10 +53,17 @@ QwtFigureWidgetOverlay::PrivateData::PrivateData(QwtFigureWidgetOverlay* p) : q_
 //----------------------------------------------------
 
 /**
- * @brief QwtFigureWidgetOverlay的构造函数
+ * @if ENGLISH
+ * @brief Constructor
+ * @param[in] fig The QwtFigure to attach to
+ * @note Passing nullptr is not allowed
+ * @endif
  *
+ * @if CHINESE
+ * @brief 构造函数
+ * @param[in] fig 要附加的QwtFigure
  * @note 构造函数不允许传入nullptr
- * @param fig
+ * @endif
  */
 QwtFigureWidgetOverlay::QwtFigureWidgetOverlay(QwtFigure* fig) : QwtWidgetOverlay(fig), QWT_PIMPL_CONSTRUCT
 {
@@ -80,16 +87,49 @@ QwtFigureWidgetOverlay::~QwtFigureWidgetOverlay()
 {
 }
 
+/**
+ * @if ENGLISH
+ * @brief Returns the associated QwtFigure
+ * @return The parent QwtFigure
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 返回关联的QwtFigure
+ * @return 父级QwtFigure
+ * @endif
+ */
 QwtFigure* QwtFigureWidgetOverlay::figure() const
 {
     return static_cast< QwtFigure* >(parent());
 }
 
+/**
+ * @if ENGLISH
+ * @brief Sets whether the overlay is transparent for mouse events
+ * @param[in] on True to make transparent, false otherwise
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 设置是否对鼠标事件透明
+ * @param[in] on true表示透明，false表示不透明
+ * @endif
+ */
 void QwtFigureWidgetOverlay::setTransparentForMouseEvents(bool on)
 {
     setAttribute(Qt::WA_TransparentForMouseEvents, on);
 }
 
+/**
+ * @if ENGLISH
+ * @brief Checks if the overlay is transparent for mouse events
+ * @return True if transparent, false otherwise
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 判断是否对鼠标事件透明
+ * @return true表示透明，false表示不透明
+ * @endif
+ */
 bool QwtFigureWidgetOverlay::isTransparentForMouseEvents() const
 {
     return testAttribute(Qt::WA_TransparentForMouseEvents);
@@ -129,11 +169,21 @@ Qt::CursorShape QwtFigureWidgetOverlay::controlTypeToCursor(QwtFigureWidgetOverl
 }
 
 /**
- * @brief 根据点和矩形的关系，返回图标的样式
- * @param pos 点
- * @param region 矩形区域
- * @param err 允许误差
- * @return
+ * @if ENGLISH
+ * @brief Determines control type based on point position relative to rectangle
+ * @param[in] pos The point position
+ * @param[in] region The rectangle region
+ * @param[in] err The error tolerance
+ * @return The control type at the given position
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 根据点和矩形的关系返回控制类型
+ * @param[in] pos 点的位置
+ * @param[in] region 矩形区域
+ * @param[in] err 允许误差
+ * @return 给定位置的控制类型
+ * @endif
  */
 QwtFigureWidgetOverlay::ControlType
 QwtFigureWidgetOverlay::getPositionControlType(const QPoint& pos, const QRect& region, int err)
@@ -174,11 +224,21 @@ QwtFigureWidgetOverlay::getPositionControlType(const QPoint& pos, const QRect& r
 }
 
 /**
+ * @if ENGLISH
+ * @brief Checks if a point is on the edge of a rectangle
+ * @param[in] pos The point position
+ * @param[in] region The rectangle region
+ * @param[in] err The error tolerance
+ * @return True if the point is on the edge
+ * @endif
+ *
+ * @if CHINESE
  * @brief 判断点是否在矩形区域的边缘
- * @param pos 点
- * @param region 矩形区域
- * @param err 允许误差
- * @return  如果符合边缘条件，返回true
+ * @param[in] pos 点的位置
+ * @param[in] region 矩形区域
+ * @param[in] err 允许误差
+ * @return 如果符合边缘条件，返回true
+ * @endif
  */
 bool QwtFigureWidgetOverlay::isPointInRectEdget(const QPoint& pos, const QRect& region, int err)
 {
@@ -198,10 +258,19 @@ bool QwtFigureWidgetOverlay::isPointInRectEdget(const QPoint& pos, const QRect& 
 }
 
 /**
- * @brief 设置内置功能的开关
- * @param flag
- * @param on
+ * @if ENGLISH
+ * @brief Enables or disables built-in functions
+ * @param[in] flag The function flag to set
+ * @param[in] on True to enable, false to disable
  * @sa QwtFigureWidgetOverlay::BuiltInFunctionsFlag
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 设置内置功能的开关
+ * @param[in] flag 要设置的功能标志
+ * @param[in] on true表示开启，false表示关闭
+ * @sa QwtFigureWidgetOverlay::BuiltInFunctionsFlag
+ * @endif
  */
 void QwtFigureWidgetOverlay::setBuiltInFunctionsEnable(BuiltInFunctionsFlag flag, bool on)
 {
@@ -209,9 +278,17 @@ void QwtFigureWidgetOverlay::setBuiltInFunctionsEnable(BuiltInFunctionsFlag flag
 }
 
 /**
- * @brief 判断当前的功能开关
- * @param flag
- * @return
+ * @if ENGLISH
+ * @brief Tests if a built-in function is enabled
+ * @param[in] flag The function flag to test
+ * @return True if enabled, false otherwise
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 判断当前的功能开关状态
+ * @param[in] flag 要测试的功能标志
+ * @return true表示开启，false表示关闭
+ * @endif
  */
 bool QwtFigureWidgetOverlay::testBuiltInFunctions(BuiltInFunctionsFlag flag) const
 {
@@ -219,8 +296,15 @@ bool QwtFigureWidgetOverlay::testBuiltInFunctions(BuiltInFunctionsFlag flag) con
 }
 
 /**
+ * @if ENGLISH
+ * @brief Checks if there is an active widget
+ * @return True if there is an active widget, false otherwise
+ * @endif
+ *
+ * @if CHINESE
  * @brief 判断当前是否有激活的窗口
- * @return
+ * @return true表示有激活窗口，false表示没有
+ * @endif
  */
 bool QwtFigureWidgetOverlay::hasActiveWidget() const
 {
@@ -228,8 +312,15 @@ bool QwtFigureWidgetOverlay::hasActiveWidget() const
 }
 
 /**
- * @brief 正在改变尺寸
- * @return
+ * @if ENGLISH
+ * @brief Checks if currently resizing
+ * @return True if resizing, false otherwise
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 判断是否正在改变尺寸
+ * @return true表示正在改变尺寸，false表示没有
+ * @endif
  */
 bool QwtFigureWidgetOverlay::isResizing() const
 {
@@ -237,8 +328,15 @@ bool QwtFigureWidgetOverlay::isResizing() const
 }
 
 /**
+ * @if ENGLISH
+ * @brief Sets the border pen
+ * @param[in] p The pen to set
+ * @endif
+ *
+ * @if CHINESE
  * @brief 设置边框的画笔
- * @param p
+ * @param[in] p 要设置的画笔
+ * @endif
  */
 void QwtFigureWidgetOverlay::setBorderPen(const QPen& p)
 {
@@ -246,8 +344,15 @@ void QwtFigureWidgetOverlay::setBorderPen(const QPen& p)
 }
 
 /**
- * @brief 边框的画笔
- * @param p
+ * @if ENGLISH
+ * @brief Returns the border pen
+ * @return The current border pen
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 返回边框的画笔
+ * @return 当前的边框画笔
+ * @endif
  */
 QPen QwtFigureWidgetOverlay::borderPen() const
 {
@@ -255,8 +360,15 @@ QPen QwtFigureWidgetOverlay::borderPen() const
 }
 
 /**
- * @brief 设置控制点的填充
- * @param b
+ * @if ENGLISH
+ * @brief Sets the control point brush
+ * @param[in] b The brush to set
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 设置控制点的填充画刷
+ * @param[in] b 要设置的画刷
+ * @endif
  */
 void QwtFigureWidgetOverlay::setControlPointBrush(const QBrush& b)
 {
@@ -264,8 +376,15 @@ void QwtFigureWidgetOverlay::setControlPointBrush(const QBrush& b)
 }
 
 /**
- * @brief 控制点的填充
- * @param b
+ * @if ENGLISH
+ * @brief Returns the control point brush
+ * @return The current control point brush
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 返回控制点的填充画刷
+ * @return 当前的控制点画刷
+ * @endif
  */
 QBrush QwtFigureWidgetOverlay::controlPointBrush() const
 {
@@ -273,8 +392,15 @@ QBrush QwtFigureWidgetOverlay::controlPointBrush() const
 }
 
 /**
+ * @if ENGLISH
+ * @brief Sets the control point size
+ * @param[in] c The size to set
+ * @endif
+ *
+ * @if CHINESE
  * @brief 设置控制点尺寸
- * @param c
+ * @param[in] c 要设置的尺寸
+ * @endif
  */
 void QwtFigureWidgetOverlay::setControlPointSize(const QSize& c)
 {
@@ -282,9 +408,15 @@ void QwtFigureWidgetOverlay::setControlPointSize(const QSize& c)
 }
 
 /**
- * @brief 控制点尺寸
- * @default 8*8
- * @return
+ * @if ENGLISH
+ * @brief Returns the control point size
+ * @return The current control point size (default 8x8)
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 返回控制点尺寸
+ * @return 当前的控制点尺寸（默认8x8）
+ * @endif
  */
 QSize QwtFigureWidgetOverlay::controlPointSize() const
 {
@@ -292,8 +424,15 @@ QSize QwtFigureWidgetOverlay::controlPointSize() const
 }
 
 /**
+ * @if ENGLISH
+ * @brief Selects the next widget as the active widget
+ * @param[in] forward True for forward selection, false for backward
+ * @endif
+ *
+ * @if CHINESE
  * @brief 选择下一个窗口作为激活窗体
- * @param forward
+ * @param[in] forward true表示向前选择，false表示向后选择
+ * @endif
  */
 void QwtFigureWidgetOverlay::selectNextWidget(bool forward)
 {
@@ -321,8 +460,15 @@ void QwtFigureWidgetOverlay::selectNextWidget(bool forward)
 }
 
 /**
+ * @if ENGLISH
+ * @brief Selects the next plot as the active widget
+ * @param[in] forward True for forward selection, false for backward
+ * @endif
+ *
+ * @if CHINESE
  * @brief 选择下一个绘图作为激活窗体
- * @param forward
+ * @param[in] forward true表示向前选择，false表示向后选择
+ * @endif
  */
 void QwtFigureWidgetOverlay::selectNextPlot(bool forward)
 {
@@ -339,8 +485,15 @@ void QwtFigureWidgetOverlay::selectNextPlot(bool forward)
 }
 
 /**
+ * @if ENGLISH
+ * @brief Returns the current active widget
+ * @return The current active widget, nullptr if none
+ * @endif
+ *
+ * @if CHINESE
  * @brief 获取当前激活的窗体
- * @return
+ * @return 当前激活的窗体，如果没有则为nullptr
+ * @endif
  */
 QWidget* QwtFigureWidgetOverlay::currentActiveWidget() const
 {
@@ -348,8 +501,15 @@ QWidget* QwtFigureWidgetOverlay::currentActiveWidget() const
 }
 
 /**
+ * @if ENGLISH
+ * @brief Returns the current active plot
+ * @return The current active plot, nullptr if none or not a plot
+ * @endif
+ *
+ * @if CHINESE
  * @brief 获取当前激活的绘图
- * @return
+ * @return 当前激活的绘图，如果没有或不是绘图则为nullptr
+ * @endif
  */
 QwtPlot* QwtFigureWidgetOverlay::currentActivePlot() const
 {
@@ -357,8 +517,15 @@ QwtPlot* QwtFigureWidgetOverlay::currentActivePlot() const
 }
 
 /**
- * @brief 显示占比数值
- * @param on
+ * @if ENGLISH
+ * @brief Shows or hides percentage text
+ * @param[in] on True to show, false to hide
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 显示或隐藏占比数值
+ * @param[in] on true表示显示，false表示隐藏
+ * @endif
  */
 void QwtFigureWidgetOverlay::showPercentText(bool on)
 {
@@ -367,17 +534,33 @@ void QwtFigureWidgetOverlay::showPercentText(bool on)
 }
 
 /**
- * @brief 取消,此函数会发射finished(false)信号,重写应该显示调用
- *
+ * @if ENGLISH
+ * @brief Cancels the operation
+ * @return True on success
+ * @note This function emits finished(true) signal. Override should call this explicitly.
  * @code
  * bool MyFigureWidgetOverlay::cancel(){
  *    ...
- *    //显示调用，用以触发finished(true);
+ *    // Explicit call to trigger finished(true)
  *    QwtFigureWidgetOverlay::cancel();
  *    return true;
  * }
  * @endcode
- * @return
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 取消操作
+ * @return 成功返回true
+ * @note 此函数会发射finished(true)信号，重写应该显式调用
+ * @code
+ * bool MyFigureWidgetOverlay::cancel(){
+ *    ...
+ *    // 显式调用，用以触发finished(true)
+ *    QwtFigureWidgetOverlay::cancel();
+ *    return true;
+ * }
+ * @endcode
+ * @endif
  */
 bool QwtFigureWidgetOverlay::cancel()
 {
@@ -386,10 +569,21 @@ bool QwtFigureWidgetOverlay::cancel()
 }
 
 /**
- * @brief 设置当前激活的窗口
- * @param w 如果w和当前的activePlot一样，不做任何动作
- * @note 此函数会发射信号activeWidgetChanged
+ * @if ENGLISH
+ * @brief Sets the current active widget
+ * @param[in] w The widget to set as active
+ * @note If w is the same as current active widget, no action is taken
+ * @note This function emits activeWidgetChanged signal
  * @sa activeWidgetChanged
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 设置当前激活的窗口
+ * @param[in] w 要设置为激活的窗口
+ * @note 如果w和当前的activePlot一样，不做任何动作
+ * @note 此函数会发射activeWidgetChanged信号
+ * @sa activeWidgetChanged
+ * @endif
  */
 void QwtFigureWidgetOverlay::setActiveWidget(QWidget* w)
 {

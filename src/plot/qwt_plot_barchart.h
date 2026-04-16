@@ -121,50 +121,50 @@ public:
         LegendBarTitles
     };
 
-    /// Constructor
+    // Constructor
     explicit QwtPlotBarChart(const QString& title = QString());
-    /// Constructor with QwtText title
+    // Constructor with QwtText title
     explicit QwtPlotBarChart(const QwtText& title);
 
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotBarChart();
 
-    /// Get the runtime type information
+    // Get the runtime type information
     virtual int rtti() const override;
 
-    /// Set samples from QVector<QPointF>
+    // Set samples from QVector<QPointF>
     void setSamples(const QVector< QPointF >&);
-    /// Set samples from QVector<double>
+    // Set samples from QVector<double>
     void setSamples(const QVector< double >&);
-    /// Set samples from QwtSeriesData
+    // Set samples from QwtSeriesData
     void setSamples(QwtSeriesData< QPointF >*);
 
-    /// Set symbol
+    // Set symbol
     void setSymbol(QwtColumnSymbol*);
-    /// Get symbol
+    // Get symbol
     const QwtColumnSymbol* symbol() const;
 
-    /// Set pen
+    // Set pen
     void setPen(const QPen& p);
-    /// Get pen
+    // Get pen
     QPen pen() const;
 
-    /// Set brush
+    // Set brush
     void setBrush(const QBrush& b);
-    /// Get brush
+    // Get brush
     QBrush brush() const;
 
-    /// Set frame style
+    // Set frame style
     void setFrameStyle(QwtColumnSymbol::FrameStyle f);
-    /// Get frame style
+    // Get frame style
     QwtColumnSymbol::FrameStyle frameStyle() const;
 
-    /// Set legend mode
+    // Set legend mode
     void setLegendMode(LegendMode);
-    /// Get legend mode
+    // Get legend mode
     LegendMode legendMode() const;
 
-    /// Draw the series
+    // Draw the series
     virtual void drawSeries(QPainter*,
                             const QwtScaleMap& xMap,
                             const QwtScaleMap& yMap,
@@ -172,13 +172,13 @@ public:
                             int from,
                             int to) const override;
 
-    /// Get the bounding rectangle
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    /// Get special symbol for a sample
+    // Get special symbol for a sample
     virtual QwtColumnSymbol* specialSymbol(int sampleIndex, const QPointF&) const;
 
-    /// Get bar title for a sample
+    // Get bar title for a sample
     virtual QwtText barTitle(int sampleIndex) const;
 
 protected:

@@ -39,9 +39,16 @@ class QwtPlotSeriesItem::PrivateData
     Qt::Orientation orientation;
 };
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QwtText& title )
     : QwtPlotItem( title )
@@ -50,9 +57,16 @@ QwtPlotSeriesItem::QwtPlotSeriesItem( const QwtText& title )
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
@@ -61,20 +75,37 @@ QwtPlotSeriesItem::QwtPlotSeriesItem( const QString& title )
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotSeriesItem::~QwtPlotSeriesItem()
 {
     delete m_data;
 }
 
-/*!
-   Set the orientation of the item.
-
-   The orientation() might be used in specific way by a plot item.
-   F.e. a QwtPlotCurve uses it to identify how to display the curve
-   int QwtPlotCurve::Steps or QwtPlotCurve::Sticks style.
-
-   \sa orientation()
+/**
+ * \if ENGLISH
+ * @brief Set the orientation of the item
+ * @details The orientation() might be used in specific way by a plot item.
+ *          F.e. a QwtPlotCurve uses it to identify how to display the curve
+ *          in QwtPlotCurve::Steps or QwtPlotCurve::Sticks style.
+ * @param[in] orientation Orientation
+ * @sa orientation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置绘图项的方向
+ * @details orientation() 可能被绘图项以特定方式使用。
+ *          例如，QwtPlotCurve 使用它来识别如何在 QwtPlotCurve::Steps 或 QwtPlotCurve::Sticks 样式下显示曲线。
+ * @param[in] orientation 方向
+ * @sa orientation()
+ * \endif
  */
 void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
 {
@@ -87,22 +118,40 @@ void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
     }
 }
 
-/*!
-   \return Orientation of the plot item
-   \sa setOrientation()
+/**
+ * \if ENGLISH
+ * @brief Get the orientation of the plot item
+ * @return Orientation of the plot item
+ * @sa setOrientation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图项的方向
+ * @return 绘图项的方向
+ * @sa setOrientation()
+ * \endif
  */
 Qt::Orientation QwtPlotSeriesItem::orientation() const
 {
     return m_data->orientation;
 }
 
-/*!
-   \brief Draw the complete series
-
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas
+/**
+ * \if ENGLISH
+ * @brief Draw the complete series
+ * @param[in] painter Painter
+ * @param[in] xMap Maps x-values into pixel coordinates.
+ * @param[in] yMap Maps y-values into pixel coordinates.
+ * @param[in] canvasRect Contents rectangle of the canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制完整系列
+ * @param[in] painter 绘图器
+ * @param[in] xMap 将 x 值映射到像素坐标。
+ * @param[in] yMap 将 y 值映射到像素坐标。
+ * @param[in] canvasRect 画布的内容矩形
+ * \endif
  */
 void QwtPlotSeriesItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -111,11 +160,35 @@ void QwtPlotSeriesItem::draw( QPainter* painter,
     drawSeries( painter, xMap, yMap, canvasRect, 0, -1 );
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界矩形
+ * @return 边界矩形
+ * \endif
+ */
 QRectF QwtPlotSeriesItem::boundingRect() const
 {
     return dataRect();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Update the scale divisions
+ * @param[in] xScaleDiv X scale division
+ * @param[in] yScaleDiv Y scale division
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更新刻度划分
+ * @param[in] xScaleDiv X 刻度划分
+ * @param[in] yScaleDiv Y 刻度划分
+ * \endif
+ */
 void QwtPlotSeriesItem::updateScaleDiv(
     const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv )
 {

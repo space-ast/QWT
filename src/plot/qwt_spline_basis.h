@@ -52,14 +52,14 @@
 class QWT_EXPORT QwtSplineBasis : public QwtSpline
 {
   public:
-    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
+    //! Constructor
     QwtSplineBasis();
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    //! Destructor
     virtual ~QwtSplineBasis();
 
-    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
+    //! Get painter path from polygon
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
+    //! Get locality (always 2)
     virtual uint locality() const override;
 };
 

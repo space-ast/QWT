@@ -1,4 +1,4 @@
-﻿#include "qwt_plot_scale_event_dispatcher.h"
+#include "qwt_plot_scale_event_dispatcher.h"
 
 // qt
 #include <QMouseEvent>
@@ -150,6 +150,19 @@ QwtPlot* QwtPlotScaleEventDispatcher::PrivateData::scalePlot(QwtScaleWidget* sca
 // QwtParasitePlotEventFilter
 //----------------------------------------------------
 
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] plot Plot widget
+ * @param[in] par Parent object
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] plot 绘图控件
+ * @param[in] par 父对象
+ * \endif
+ */
 QwtPlotScaleEventDispatcher::QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject* par)
     : QObject(par), QWT_PIMPL_CONSTRUCT
 {
@@ -160,25 +173,65 @@ QwtPlotScaleEventDispatcher::QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject*
     rebuildCache();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotScaleEventDispatcher::~QwtPlotScaleEventDispatcher()
 {
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set enabled state
+ * @param[in] on Enable/disable
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置可用状态
+ * @param[in] on 启用/禁用
+ * \endif
+ */
 void QwtPlotScaleEventDispatcher::setEnable(bool on)
 {
     m_data->isEnable = on;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Check if enabled
+ * @return True if enabled
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查是否启用
+ * @return 启用时返回 true
+ * \endif
+ */
 bool QwtPlotScaleEventDispatcher::isEnable() const
 {
     return m_data->isEnable;
 }
 
 /**
+ * \if ENGLISH
+ * @brief Find axis ID corresponding to QwtScaleWidget
+ * @param[in] plot QwtPlot pointer
+ * @param[in] scaleWidget QwtScaleWidget to find
+ * @return Axis ID, returns QwtAxis::AxisPositions if not found
+ * \endif
+ *
+ * \if CHINESE
  * @brief 获取 QwtScaleWidget 对应的轴 ID
- * @param plot QwtPlot 指针
- * @param scaleWidget 要查找的 QwtScaleWidget
+ * @param[in] plot QwtPlot 指针
+ * @param[in] scaleWidget 要查找的 QwtScaleWidget
  * @return 轴 ID，如果找不到返回 QwtAxis::AxisPositions
+ * \endif
  */
 QwtAxisId QwtPlotScaleEventDispatcher::findAxisIdByScaleWidget(const QwtPlot* plot, const QwtScaleWidget* scaleWidget)
 {
@@ -218,7 +271,15 @@ void QwtPlotScaleEventDispatcher::rebuildCache()
 }
 
 /**
- * @brief 更新缓存，必要时会调用rebuildCache进行重建
+ * \if ENGLISH
+ * @brief Update cache, rebuild if necessary
+ * @details Called when cache is dirty or needs refresh.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更新缓存，必要时会调用 rebuildCache 进行重建
+ * @details 当缓存需要刷新或标记为脏时调用。
+ * \endif
  */
 void QwtPlotScaleEventDispatcher::updateCache()
 {

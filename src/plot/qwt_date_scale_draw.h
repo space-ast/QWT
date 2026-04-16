@@ -31,61 +31,91 @@
 #include "qwt_scale_draw.h"
 #include "qwt_date.h"
 
-/*!
-   \brief A class for drawing datetime scales
-
-   QwtDateScaleDraw displays values as datetime labels.
-   The format of the labels depends on the alignment of
-   the major tick labels.
-
-   The default format strings are:
-
-   - Millisecond\n
-    "hh:mm:ss:zzz\nddd dd MMM yyyy"
-   - Second\n
-    "hh:mm:ss\nddd dd MMM yyyy"
-   - Minute\n
-    "hh:mm\nddd dd MMM yyyy"
-   - Hour\n
-    "hh:mm\nddd dd MMM yyyy"
-   - Day\n
-    "ddd dd MMM yyyy"
-   - Week\n
-    "Www yyyy"
-   - Month\n
-    "MMM yyyy"
-   - Year\n
-    "yyyy"
-
-   The format strings can be modified using setDateFormat()
-   or individually for each tick label by overloading dateFormatOfDate(),
-
-   Usually QwtDateScaleDraw is used in combination with
-   QwtDateScaleEngine, that calculates scales for datetime
-   intervals.
-
-   \sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
+/**
+ * \if ENGLISH
+ * @brief A class for drawing datetime scales
+ * @details QwtDateScaleDraw displays values as datetime labels.
+ *          The format of the labels depends on the alignment of
+ *          the major tick labels.
+ *
+ *          The default format strings are:
+ *          - Millisecond: "hh:mm:ss:zzz\nddd dd MMM yyyy"
+ *          - Second: "hh:mm:ss\nddd dd MMM yyyy"
+ *          - Minute: "hh:mm\nddd dd MMM yyyy"
+ *          - Hour: "hh:mm\nddd dd MMM yyyy"
+ *          - Day: "ddd dd MMM yyyy"
+ *          - Week: "Www yyyy"
+ *          - Month: "MMM yyyy"
+ *          - Year: "yyyy"
+ *
+ *          The format strings can be modified using setDateFormat()
+ *          or individually for each tick label by overloading dateFormatOfDate().
+ *
+ *          Usually QwtDateScaleDraw is used in combination with
+ *          QwtDateScaleEngine, that calculates scales for datetime intervals.
+ * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用于绘制日期时间刻度的类
+ * @details QwtDateScaleDraw 将值显示为日期时间标签。
+ *          标签的格式取决于主要刻度标签的对齐方式。
+ *
+ *          默认格式字符串为：
+ *          - 毫秒: "hh:mm:ss:zzz\nddd dd MMM yyyy"
+ *          - 秒: "hh:mm:ss\nddd dd MMM yyyy"
+ *          - 分钟: "hh:mm\nddd dd MMM yyyy"
+ *          - 小时: "hh:mm\nddd dd MMM yyyy"
+ *          - 天: "ddd dd MMM yyyy"
+ *          - 周: "Www yyyy"
+ *          - 月: "MMM yyyy"
+ *          - 年: "yyyy"
+ *
+ *          格式字符串可以通过 setDateFormat() 修改，
+ *          或者通过重载 dateFormatOfDate() 为每个刻度标签单独设置。
+ *
+ *          通常 QwtDateScaleDraw 与 QwtDateScaleEngine 配合使用，
+ *          QwtDateScaleEngine 为日期时间间隔计算刻度。
+ * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
+ * \endif
  */
 class QWT_EXPORT QwtDateScaleDraw : public QwtScaleDraw
 {
 public:
+    /// Constructor with time specification
     explicit QwtDateScaleDraw(Qt::TimeSpec timeSpec = Qt::LocalTime);
+    
+    /// Destructor
     virtual ~QwtDateScaleDraw();
 
+    /// Set the default format string for a datetime interval type
     void setDateFormat(QwtDate::IntervalType, const QString&);
+    
+    /// Get the default format string for a datetime interval type
     QString dateFormat(QwtDate::IntervalType) const;
 
+    /// Set the time specification used for the tick labels
     void setTimeSpec(Qt::TimeSpec);
+    
+    /// Get the time specification used for the tick labels
     Qt::TimeSpec timeSpec() const;
 
+    /// Set the offset in seconds from Coordinated Universal Time
     void setUtcOffset(int seconds);
+    
+    /// Get the offset in seconds from Coordinated Universal Time
     int utcOffset() const;
 
+    /// Set how to identify the first week of a year
     void setWeek0Type(QwtDate::Week0Type);
+    
+    /// Get how to identify the first week of a year
     QwtDate::Week0Type week0Type() const;
 
+    /// Convert a value into its representing label
     virtual QwtText label(double) const override;
 
+    /// Translate a double value into a QDateTime object
     QDateTime toDateTime(double) const;
 
 protected:

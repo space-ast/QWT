@@ -142,147 +142,67 @@ class QWT_EXPORT QwtPlotHistogram
         UserStyle = 100
     };
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
 explicit QwtPlotHistogram( const QString& title = QString() );
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor with QwtText title
-     * \endif
-     */
+    // Constructor with QwtText title
 explicit QwtPlotHistogram( const QwtText& title );
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
 virtual ~QwtPlotHistogram();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
 virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen
-     * \endif
-     */
+    // Set pen
 void setPen( const QColor&,
     qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
 
-    /**
-     * \if ENGLISH
-     * @brief Set pen
-     * \endif
-     */
+    // Set pen
 void setPen( const QPen& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get pen
-     * \endif
-     */
+    // Get pen
 const QPen& pen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set brush
-     * \endif
-     */
+    // Set brush
 void setBrush( const QBrush& );
 
-    /**
-     * \if ENGLISH
-     * @brief Get brush
-     * \endif
-     */
+    // Get brush
 const QBrush& brush() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from a vector
-     * \endif
-     */
+    // Set samples from a vector
 void setSamples( const QVector< QwtIntervalSample >& );
 
-    /**
-     * \if ENGLISH
-     * @brief Set samples from a series data
-     * \endif
-     */
+    // Set samples from a series data
 void setSamples( QwtSeriesData< QwtIntervalSample >* );
 
-    /**
-     * \if ENGLISH
-     * @brief Set baseline
-     * \endif
-     */
+    // Set baseline
 void setBaseline( double );
 
-    /**
-     * \if ENGLISH
-     * @brief Get baseline
-     * \endif
-     */
+    // Get baseline
 double baseline() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set histogram style
-     * \endif
-     */
+    // Set histogram style
 void setStyle( HistogramStyle style );
 
-    /**
-     * \if ENGLISH
-     * @brief Get histogram style
-     * \endif
-     */
+    // Get histogram style
 HistogramStyle style() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set symbol
-     * \endif
-     */
+    // Set symbol
 void setSymbol( const QwtColumnSymbol* );
 
-    /**
-     * \if ENGLISH
-     * @brief Get symbol
-     * \endif
-     */
+    // Get symbol
 const QwtColumnSymbol* symbol() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the series
-     * \endif
-     */
+    // Draw the series
 virtual void drawSeries( QPainter*,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to ) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the bounding rectangle
-     * \endif
-     */
+    // Get the bounding rectangle
 virtual QRectF boundingRect() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the legend icon
-     * \endif
-     */
+    // Get the legend icon
 virtual QwtGraphic legendIcon(
     int index, const QSizeF& ) const override;
 

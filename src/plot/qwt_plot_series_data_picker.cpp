@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 2024   ChenZongYan <czy.t@163.com>
  *****************************************************************************/
@@ -272,8 +272,17 @@ QwtPlotSeriesDataPicker::~QwtPlotSeriesDataPicker()
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set pick mode
+ * @param[in] mode Pick mode
+ * @sa pickMode()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置拾取模式
- * @param mode 拾取模式
+ * @param[in] mode 拾取模式
+ * @sa pickMode()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setPickMode(PickSeriesMode mode)
 
@@ -286,8 +295,17 @@ void QwtPlotSeriesDataPicker::setPickMode(PickSeriesMode mode)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get current pick mode
+ * @return Current pick mode
+ * @sa setPickMode()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 获取当前的拾取模式
- * @return
+ * @return 当前拾取模式
+ * @sa setPickMode()
+ * \endif
  */
 QwtPlotSeriesDataPicker::PickSeriesMode QwtPlotSeriesDataPicker::pickMode() const
 {
@@ -295,8 +313,17 @@ QwtPlotSeriesDataPicker::PickSeriesMode QwtPlotSeriesDataPicker::pickMode() cons
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set text display area
+ * @param[in] t Text placement option
+ * @sa textArea()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置文字显示的区域
- * @param t
+ * @param[in] t 文本放置选项
+ * @sa textArea()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setTextArea(QwtPlotSeriesDataPicker::TextPlacement t)
 {
@@ -304,9 +331,17 @@ void QwtPlotSeriesDataPicker::setTextArea(QwtPlotSeriesDataPicker::TextPlacement
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get text display position
+ * @return Text placement option
+ * @sa setTextArea()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 文字显示的位置
- * @return
- * @sa QwtPlotSeriesDataPicker::TextPlacement
+ * @return 文本放置选项
+ * @sa setTextArea()
+ * \endif
  */
 QwtPlotSeriesDataPicker::TextPlacement QwtPlotSeriesDataPicker::textArea() const
 {
@@ -314,8 +349,17 @@ QwtPlotSeriesDataPicker::TextPlacement QwtPlotSeriesDataPicker::textArea() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set interpolation mode
+ * @param[in] mode Interpolation mode
+ * @sa interpolationMode()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置插值模式
- * @param mode 插值模式
+ * @param[in] mode 插值模式
+ * @sa interpolationMode()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setInterpolationMode(QwtPlotSeriesDataPicker::InterpolationMode mode)
 {
@@ -323,8 +367,17 @@ void QwtPlotSeriesDataPicker::setInterpolationMode(QwtPlotSeriesDataPicker::Inte
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get interpolation mode
+ * @return Current interpolation mode
+ * @sa setInterpolationMode()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 获取插值模式
  * @return 当前的插值模式
+ * @sa setInterpolationMode()
+ * \endif
  */
 QwtPlotSeriesDataPicker::InterpolationMode QwtPlotSeriesDataPicker::interpolationMode() const
 {
@@ -332,10 +385,20 @@ QwtPlotSeriesDataPicker::InterpolationMode QwtPlotSeriesDataPicker::interpolatio
 }
 
 /**
- * @brief 判断是否进行插值
+ * \if ENGLISH
+ * @brief Check if interpolation is enabled
+ * @details If interpolation is enabled, when the mouse is not on a data point,
+ *          the corresponding point on the connecting line will be interpolated.
+ * @return True if interpolation is enabled
+ * @sa interpolationMode()
+ * \endif
  *
- * 如果插值，那么在鼠标不在对应点上时，会插值找到对应的连接线上的点
- * @return
+ * \if CHINESE
+ * @brief 判断是否进行插值
+ * @details 如果插值，那么在鼠标不在对应点上时，会插值找到对应的连接线上的点
+ * @return 是否启用插值
+ * @sa interpolationMode()
+ * \endif
  */
 bool QwtPlotSeriesDataPicker::isInterpolation() const
 {
@@ -343,18 +406,27 @@ bool QwtPlotSeriesDataPicker::isInterpolation() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set nearest point search window size
+ * @details Window size determines the search range for nearest points, avoiding full curve traversal.
+ *          Window size can be set to negative values, which will use a percentage of curve point count:
+ *          - 0: No window, search entire curve
+ *          - Positive: Fixed window size (number of data points)
+ *          - Negative: Adaptive window, uses percentage of total curve points (absolute value, e.g. -5 means 5%)
+ * @param[in] windowSize Window size (default is -5)
+ * @sa nearestSearchWindowSize()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 临近点搜索窗口大小
- *
- * 窗口大小决定了临近点搜索的范围，避免全曲线遍历
- *
- * 窗口尺寸可以设置为负值，负值将是以曲线点数的百分比进行窗口设置：
- * - 0: 不使用窗口，搜索整个曲线
- * - 正数: 固定的窗口大小（数据点数量）
- * - 负数: 自适应窗口，使用曲线数据点总数的百分比（取绝对值，如-5表示5%）
- *
- * @param windowSize 窗口尺寸
- *
- * 此属性默认为-5
+ * @details 窗口大小决定了临近点搜索的范围，避免全曲线遍历。
+ *          窗口尺寸可以设置为负值，负值将是以曲线点数的百分比进行窗口设置：
+ *          - 0: 不使用窗口，搜索整个曲线
+ *          - 正数: 固定的窗口大小（数据点数量）
+ *          - 负数: 自适应窗口，使用曲线数据点总数的百分比（取绝对值，如-5表示5%）
+ * @param[in] windowSize 窗口尺寸（默认为-5）
+ * @sa nearestSearchWindowSize()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setNearestSearchWindowSize(int windowSize)
 {
@@ -362,9 +434,17 @@ void QwtPlotSeriesDataPicker::setNearestSearchWindowSize(int windowSize)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get nearest point search window size
+ * @return Window size (may be negative, see setNearestSearchWindowSize())
+ * @sa setNearestSearchWindowSize()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 临近点搜索窗口大小
- * @return 此尺寸会返回负数，具体可见@ref setNearestSearchWindowSize
- * @sa setNearestSearchWindowSize
+ * @return 此尺寸会返回负数，具体可见 @ref setNearestSearchWindowSize
+ * @sa setNearestSearchWindowSize()
+ * \endif
  */
 int QwtPlotSeriesDataPicker::nearestSearchWindowSize() const
 {
@@ -372,8 +452,17 @@ int QwtPlotSeriesDataPicker::nearestSearchWindowSize() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Enable/disable feature point drawing
+ * @param[in] on Enable/disable
+ * @sa isEnableDrawFeaturePoint()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置是否绘制特征点
- * @param on
+ * @param[in] on 启用/禁用
+ * @sa isEnableDrawFeaturePoint()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setEnableDrawFeaturePoint(bool on)
 {
@@ -381,8 +470,17 @@ void QwtPlotSeriesDataPicker::setEnableDrawFeaturePoint(bool on)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Check if feature point drawing is enabled
+ * @return True if enabled
+ * @sa setEnableDrawFeaturePoint()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 是否绘制特征点
- * @return
+ * @return 是否启用
+ * @sa setEnableDrawFeaturePoint()
+ * \endif
  */
 bool QwtPlotSeriesDataPicker::isEnableDrawFeaturePoint() const
 {
@@ -390,8 +488,17 @@ bool QwtPlotSeriesDataPicker::isEnableDrawFeaturePoint() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set drawn feature point size
+ * @param[in] px Size in pixels
+ * @sa drawFeaturePointSize()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置绘制的特征点的大小
- * @param px
+ * @param[in] px 像素大小
+ * @sa drawFeaturePointSize()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setDrawFeaturePointSize(int px)
 {
@@ -399,8 +506,17 @@ void QwtPlotSeriesDataPicker::setDrawFeaturePointSize(int px)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get drawn feature point size
+ * @return Size in pixels
+ * @sa setDrawFeaturePointSize()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置绘制的特征点的大小
- * @return
+ * @return 像素大小
+ * @sa setDrawFeaturePointSize()
+ * \endif
  */
 int QwtPlotSeriesDataPicker::drawFeaturePointSize() const
 {
@@ -408,8 +524,17 @@ int QwtPlotSeriesDataPicker::drawFeaturePointSize() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Set text area background brush
+ * @param[in] br Background brush
+ * @sa textBackgroundBrush()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置文本区域的背景颜色
- * @param br
+ * @param[in] br 背景画刷
+ * @sa textBackgroundBrush()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setTextBackgroundBrush(const QBrush& br)
 {
@@ -417,8 +542,17 @@ void QwtPlotSeriesDataPicker::setTextBackgroundBrush(const QBrush& br)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Get text area background brush
+ * @return Background brush
+ * @sa setTextBackgroundBrush()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 文本区域的背景颜色
- * @return
+ * @return 背景画刷
+ * @sa setTextBackgroundBrush()
+ * \endif
  */
 QBrush QwtPlotSeriesDataPicker::textBackgroundBrush() const
 {
@@ -426,8 +560,17 @@ QBrush QwtPlotSeriesDataPicker::textBackgroundBrush() const
 }
 
 /**
- * @brief 设置文字的对其方式
- * @param al
+ * \if ENGLISH
+ * @brief Set text alignment
+ * @param[in] al Alignment flags
+ * @sa textAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置文字的对齐方式
+ * @param[in] al 对齐标志
+ * @sa textAlignment()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setTextAlignment(Qt::Alignment al)
 {
@@ -435,8 +578,17 @@ void QwtPlotSeriesDataPicker::setTextAlignment(Qt::Alignment al)
 }
 
 /**
- * @brief 文字的对其方式
- * @return
+ * \if ENGLISH
+ * @brief Get text alignment
+ * @return Alignment flags
+ * @sa setTextAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 文字的对齐方式
+ * @return 对齐标志
+ * @sa setTextAlignment()
+ * \endif
  */
 Qt::Alignment QwtPlotSeriesDataPicker::textAlignment() const
 {
@@ -444,8 +596,17 @@ Qt::Alignment QwtPlotSeriesDataPicker::textAlignment() const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Enable/disable showing X value
+ * @param[in] on Enable/disable
+ * @sa isEnableShowXValue()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 设置是否显示x值
- * @param on
+ * @param[in] on 启用/禁用
+ * @sa isEnableShowXValue()
+ * \endif
  */
 void QwtPlotSeriesDataPicker::setEnableShowXValue(bool on)
 {
@@ -453,8 +614,17 @@ void QwtPlotSeriesDataPicker::setEnableShowXValue(bool on)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Check if showing X value is enabled
+ * @return True if enabled
+ * @sa setEnableShowXValue()
+ * \endif
+ *
+ * \if CHINESE
  * @brief 是否显示x值
- * @return
+ * @return 是否启用
+ * @sa setEnableShowXValue()
+ * \endif
  */
 bool QwtPlotSeriesDataPicker::isEnableShowXValue() const
 {

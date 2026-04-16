@@ -536,78 +536,95 @@ void QwtAbstractSlider::keyPressEvent(QKeyEvent* event)
     }
 }
 
-/*!
-   \brief Set the number of steps
-
-   The range of the slider is divided into a number of steps from
-   which the value increments according to user inputs depend.
-
-   The default setting is 100.
-
-   \param stepCount Number of steps
-
-   \sa totalSteps(), setSingleSteps(), setPageSteps()
+/**
+ * \if ENGLISH
+ * @brief Set the number of steps
+ * @details The range of the slider is divided into a number of steps from
+ *          which the value increments according to user inputs depend.
+ *          The default setting is 100.
+ * @param[in] stepCount Number of steps
+ * \sa totalSteps(), setSingleSteps(), setPageSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 设置步数
+ * @details 滑块的范围被划分为多个步数，值根据用户输入按步数递增。
+ *          默认设置为 100。
+ * @param[in] stepCount 步数
+ * \sa totalSteps(), setSingleSteps(), setPageSteps()
+ * \endif
  */
 void QwtAbstractSlider::setTotalSteps(uint stepCount)
 {
     m_data->totalSteps = stepCount;
 }
 
-/*!
-   \return Number of steps
-   \sa setTotalSteps(), singleSteps(), pageSteps()
+/**
+ * \if ENGLISH
+ * @brief Return the number of steps
+ * @return Number of steps
+ * \sa setTotalSteps(), singleSteps(), pageSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 返回步数
+ * @return 步数
+ * \sa setTotalSteps(), singleSteps(), pageSteps()
+ * \endif
  */
 uint QwtAbstractSlider::totalSteps() const
 {
     return m_data->totalSteps;
 }
 
-/*!
-   \brief Set the number of steps for a single increment
-
-   The range of the slider is divided into a number of steps from
-   which the value increments according to user inputs depend.
-
-   \param stepCount Number of steps
-
-   \sa singleSteps(), setTotalSteps(), setPageSteps()
+/**
+ * \if ENGLISH
+ * @brief Set the number of steps for a single increment
+ * @details The range of the slider is divided into a number of steps from
+ *          which the value increments according to user inputs depend.
+ * @param[in] stepCount Number of steps
+ * \sa singleSteps(), setTotalSteps(), setPageSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 设置单步增量步数
+ * @details 滑块的范围被划分为多个步数，值根据用户输入按步数递增。
+ * @param[in] stepCount 步数
+ * \sa singleSteps(), setTotalSteps(), setPageSteps()
+ * \endif
  */
-
 void QwtAbstractSlider::setSingleSteps(uint stepCount)
 {
     m_data->singleSteps = stepCount;
 }
 
-/*!
-   \return Number of steps
-   \sa setSingleSteps(), totalSteps(), pageSteps()
+/**
+ * \if ENGLISH
+ * @brief Return the number of single steps
+ * @return Number of steps
+ * \sa setSingleSteps(), totalSteps(), pageSteps()
+ * \endif
+ * \if CHINESE
+ * @brief 返回单步数
+ * @return 步数
+ * \sa setSingleSteps(), totalSteps(), pageSteps()
+ * \endif
  */
 uint QwtAbstractSlider::singleSteps() const
 {
     return m_data->singleSteps;
 }
 
-/*!
-   \brief Set the number of steps for a page increment
-
-   The range of the slider is divided into a number of steps from
-   which the value increments according to user inputs depend.
-
-   \param stepCount Number of steps
-
-   \sa pageSteps(), setTotalSteps(), setSingleSteps()
- */
-
 /**
  * \if ENGLISH
  * @brief Set the number of page steps
- * @param stepCount Number of steps
- * \sa pageSteps(), totalSteps(), singleSteps()
+ * @details The range of the slider is divided into a number of steps from
+ *          which the value increments according to user inputs depend.
+ * @param[in] stepCount Number of steps
+ * \sa pageSteps(), setTotalSteps(), setSingleSteps()
  * \endif
  * \if CHINESE
  * @brief 设置页步数
- * @param stepCount 步数
- * \sa pageSteps(), totalSteps(), singleSteps()
+ * @details 滑块的范围被划分为多个步数，值根据用户输入按步数递增。
+ * @param[in] stepCount 步数
+ * \sa pageSteps(), setTotalSteps(), setSingleSteps()
  * \endif
  */
 void QwtAbstractSlider::setPageSteps(uint stepCount)

@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 2024   ChenZongYan <czy.t@163.com>
  *****************************************************************************/
@@ -132,7 +132,8 @@ void QwtFigureLayout::setGeometry(const QRect& rect)
 }
 
 /**
- * @brief Add a widget with normalized coordinates/使用归一化坐标添加窗口部件
+ * @if ENGLISH
+ * @brief Add a widget with normalized coordinates
  *
  * This method adds a widget to the layout using normalized coordinates in the range [0,1].
  * The coordinates are specified as [left, top, width, height], where:
@@ -141,6 +142,25 @@ void QwtFigureLayout::setGeometry(const QRect& rect)
  * - width: width of the widget
  * - height: height of the widget
  *
+ * @param[in] widget Widget to add
+ * @param[in] rect Normalized coordinates [left, top, width, height] in range [0,1]
+ *
+ * @code
+ * // Add a widget that occupies the top-left quarter of the figure
+ * QWidget* widget = new QWidget;
+ * layout->addAxes(widget, QRectF(0.0, 0.0, 0.5, 0.5));
+ * @endcode
+ *
+ * @code
+ * // Add a widget that occupies the bottom-right quarter of the figure
+ * QWidget* widget = new QWidget;
+ * layout->addAxes(widget, QRectF(0.5, 0.5, 0.5, 0.5));
+ * @endcode
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 使用归一化坐标添加窗口部件
+ *
  * 此方法使用[0,1]范围内的归一化坐标将窗口部件添加到布局中。
  * 坐标指定为[左, 上, 宽, 高]，其中：
  * - 左: 距图形左边缘的距离
@@ -148,27 +168,23 @@ void QwtFigureLayout::setGeometry(const QRect& rect)
  * - 宽: 窗口部件的宽度
  * - 高: 窗口部件的高度
  *
- * @note All coordinates must be in the range [0,1]. The sum of left + width should not exceed 1,
- *       and the sum of top + height should not exceed 1.
- *       所有坐标必须在[0,1]范围内。左+宽不应超过1，上+高不应超过1。
+ * @param[in] widget 要添加的窗口部件
+ * @param[in] rect 归一化坐标 [左, 上, 宽, 高]，范围 [0,1]
  *
- * @param widget Widget to add / 要添加的窗口部件
- * @param rect Normalized coordinates [left, top, width, height] in range [0,1]
- *              归一化坐标 [左, 上, 宽, 高]，范围 [0,1]
+ * @note 所有坐标必须在[0,1]范围内。左+宽不应超过1，上+高不应超过1。
  *
  * @code
- * // Add a widget that occupies the top-left quarter of the figure
  * // 添加一个占据图形左上角四分之一的窗口部件
  * QWidget* widget = new QWidget;
  * layout->addAxes(widget, QRectF(0.0, 0.0, 0.5, 0.5));
  * @endcode
  *
  * @code
- * // Add a widget that occupies the bottom-right quarter of the figure
  * // 添加一个占据图形右下角四分之一的窗口部件
  * QWidget* widget = new QWidget;
  * layout->addAxes(widget, QRectF(0.5, 0.5, 0.5, 0.5));
  * @endcode
+ * @endif
  */
 void QwtFigureLayout::addAxes(QWidget* widget, const QRectF& rect)
 {
@@ -185,38 +201,61 @@ void QwtFigureLayout::addAxes(QWidget* widget, const QRectF& rect)
 }
 
 /**
- * @brief Add a widget with normalized coordinates using separate parameters/使用分离参数和归一化坐标添加窗口部件
+ * @if ENGLISH
+ * @brief Add a widget with normalized coordinates using separate parameters
  *
  * This is a convenience overload that adds a widget to the layout using normalized coordinates
  * in the range [0,1] with separate left, top, width, and height parameters.
  * The coordinates use Qt's standard top-left coordinate system.
  *
- * 这是一个便捷的重载函数，使用[0,1]范围内的归一化坐标和独立的左、上、宽、高参数将窗口部件添加到布局中。
- * 坐标使用Qt的标准左上角坐标系。
- *
- * @param widget Widget to add / 要添加的窗口部件
- * @param left Normalized distance from the left edge [0,1] / 距左边缘的归一化距离 [0,1]
- * @param top Normalized distance from the top edge [0,1] / 距上边缘的归一化距离 [0,1]
- * @param width Normalized width of the widget [0,1] / 窗口部件的归一化宽度 [0,1]
- * @param height Normalized height of the widget [0,1] / 窗口部件的归一化高度 [0,1]
+ * @param[in] widget Widget to add
+ * @param[in] left Normalized distance from the left edge [0,1]
+ * @param[in] top Normalized distance from the top edge [0,1]
+ * @param[in] width Normalized width of the widget [0,1]
+ * @param[in] height Normalized height of the widget [0,1]
  *
  * @note All parameters must be in the range [0,1]. The sum of left + width should not exceed 1,
  *       and the sum of top + height should not exceed 1.
- *       所有参数必须在[0,1]范围内。左+宽不应超过1，上+高不应超过1。
  *
  * @code
  * // Add a widget that occupies the top-left quarter of the figure
- * // 添加一个占据图形左上角四分之一的窗口部件
  * QWidget* widget = new QWidget;
  * layout->addAxes(widget, 0.0, 0.0, 0.5, 0.5);
  * @endcode
  *
  * @code
  * // Add a widget that occupies the center of the figure
+ * QWidget* widget = new QWidget;
+ * layout->addAxes(widget, 0.25, 0.25, 0.5, 0.5);
+ * @endcode
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 使用分离参数和归一化坐标添加窗口部件
+ *
+ * 这是一个便捷的重载函数，使用[0,1]范围内的归一化坐标和独立的左、上、宽、高参数将窗口部件添加到布局中。
+ * 坐标使用Qt的标准左上角坐标系。
+ *
+ * @param[in] widget 要添加的窗口部件
+ * @param[in] left 距左边缘的归一化距离 [0,1]
+ * @param[in] top 距上边缘的归一化距离 [0,1]
+ * @param[in] width 窗口部件的归一化宽度 [0,1]
+ * @param[in] height 窗口部件的归一化高度 [0,1]
+ *
+ * @note 所有参数必须在[0,1]范围内。左+宽不应超过1，上+高不应超过1。
+ *
+ * @code
+ * // 添加一个占据图形左上角四分之一的窗口部件
+ * QWidget* widget = new QWidget;
+ * layout->addAxes(widget, 0.0, 0.0, 0.5, 0.5);
+ * @endcode
+ *
+ * @code
  * // 添加一个占据图形中心的窗口部件
  * QWidget* widget = new QWidget;
  * layout->addAxes(widget, 0.25, 0.25, 0.5, 0.5);
  * @endcode
+ * @endif
  */
 void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal width, qreal height)
 {
@@ -224,31 +263,27 @@ void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal widt
 }
 
 /**
- * @brief Add a widget by grid layout/添加窗口部件到网格布局
+ * @if ENGLISH
+ * @brief Add a widget by grid layout
  *
  * This method adds a widget to the grid layout at the specified position with optional row and column spans.
  * The grid position is 0-based, with (0,0) being the top-left cell of the grid.
  * The normalized coordinates are calculated immediately and stored with the widget.
  *
- * 此方法将窗口部件添加到网格布局中的指定位置，可选择跨行和跨列。
- * 网格位置从0开始，(0,0)表示网格的左上角单元格。
- * 归一化坐标会立即计算并与窗口部件一起存储。
+ * @param[in] widget Widget to add
+ * @param[in] rowCnt Total number of rows in the grid
+ * @param[in] colCnt Total number of columns in the grid
+ * @param[in] row Grid row position (0-based)
+ * @param[in] col Grid column position (0-based)
+ * @param[in] rowSpan Number of rows to span (default: 1)
+ * @param[in] colSpan Number of columns to span (default: 1)
+ * @param[in] wspace Horizontal space between subplots [0,1]
+ * @param[in] hspace Vertical space between subplots [0,1]
  *
- * @param widget Widget to add / 要添加的窗口部件
- * @param rowCnt Total number of rows in the grid / 网格总行数
- * @param colCnt Total number of columns in the grid / 网格总列数
- * @param row Grid row position (0-based) / 网格行位置（从0开始）
- * @param col Grid column position (0-based) / 网格列位置（从0开始）
- * @param rowSpan Number of rows to span (default: 1) / 跨行数（默认：1）
- * @param colSpan Number of columns to span (default: 1) / 跨列数（默认：1）
- * @param wspace Horizontal space between subplots [0,1] / 子图之间的水平间距 [0,1]
- * @param hspace Vertical space between subplots [0,1] / 子图之间的垂直间距 [0,1]
  * @code
  * // Create a 2x2 grid and add widgets
- * // 创建一个2x2网格并添加窗口部件
  * //
  * // Grid layout visualization (2x2):
- * // 网格布局可视化 (2x2):
  * // +-------------------+-------------------+
  * // |                   |                   |
  * // |     (0,0)         |      (0,1)        |
@@ -260,12 +295,10 @@ void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal widt
  * // +-------------------+-------------------+
  *
  * // Add a widget that spans the entire top row (row 0, columns 0-1)
- * // 添加一个占据整个顶行（第0行，第0-1列）的窗口部件
  * QWidget* topWidget = new QWidget;
  * layout->addAxes(topWidget, 2, 2, 0, 0, 1, 2);
  * //
  * // After adding topWidget:
- * // 添加 topWidget 后:
  * // +---------------------------------------+
  * // |                                       |
  * // |            topWidget (0,0-1)          |
@@ -277,12 +310,10 @@ void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal widt
  * // +-------------------+-------------------+
  *
  * // Add a widget to the bottom-left cell (row 1, column 0)
- * // 添加一个到底部左侧单元格（第1行，第0列）的窗口部件
  * QWidget* bottomLeftWidget = new QWidget;
  * layout->addAxes(bottomLeftWidget, 2, 2, 1, 0);
  * //
  * // After adding bottomLeftWidget:
- * // 添加 bottomLeftWidget 后:
  * // +---------------------------------------+
  * // |                                       |
  * // |            topWidget (0,0-1)          |
@@ -294,11 +325,87 @@ void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal widt
  * // +-------------------+-------------------+
  *
  * // Add a widget to the bottom-right cell (row 1, column 1)
- * // 添加一个到底部右侧单元格（第1行，第1列）的窗口部件
  * QWidget* bottomRightWidget = new QWidget;
  * layout->addAxes(bottomRightWidget, 2, 2, 1, 1);
  * //
  * // Final layout:
+ * // +---------------------------------------+
+ * // |                                       |
+ * // |            topWidget (0,0-1)          |
+ * // |                                       |
+ * // +-------------------+-------------------+
+ * // |                   |                   |
+ * // | bottomLeft (1,0)  | bottomRight (1,1) |
+ * // |                   |                   |
+ * // +-------------------+-------------------+
+ * @endcode
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 添加窗口部件到网格布局
+ *
+ * 此方法将窗口部件添加到网格布局中的指定位置，可选择跨行和跨列。
+ * 网格位置从0开始，(0,0)表示网格的左上角单元格。
+ * 归一化坐标会立即计算并与窗口部件一起存储。
+ *
+ * @param[in] widget 要添加的窗口部件
+ * @param[in] rowCnt 网格总行数
+ * @param[in] colCnt 网格总列数
+ * @param[in] col 网格行位置（从0开始）
+ * @param[in] col 网格列位置（从0开始）
+ * @param[in] rowSpan 跨行数（默认：1）
+ * @param[in] colSpan 跨列数（默认：1）
+ * @param[in] wspace 子图之间的水平间距 [0,1]
+ * @param[in] hspace 子图之间的垂直间距 [0,1]
+ *
+ * @code
+ * // 创建一个2x2网格并添加窗口部件
+ * //
+ * // 网格布局可视化 (2x2):
+ * // +-------------------+-------------------+
+ * // |                   |                   |
+ * // |     (0,0)         |      (0,1)        |
+ * // |                   |                   |
+ * // +-------------------+-------------------+
+ * // |                   |                   |
+ * // |     (1,0)         |      (1,1)        |
+ * // |                   |                   |
+ * // +-------------------+-------------------+
+ *
+ * // 添加一个占据整个顶行（第0行，第0-1列）的窗口部件
+ * QWidget* topWidget = new QWidget;
+ * layout->addAxes(topWidget, 2, 2, 0, 0, 1, 2);
+ * //
+ * // 添加 topWidget 后:
+ * // +---------------------------------------+
+ * // |                                       |
+ * // |            topWidget (0,0-1)          |
+ * // |                                       |
+ * // +-------------------+-------------------+
+ * // |                   |                   |
+ * // |     (1,0)         |      (1,1)        |
+ * // |                   |                   |
+ * // +-------------------+-------------------+
+ *
+ * // 添加一个到底部左侧单元格（第1行，第0列）的窗口部件
+ * QWidget* bottomLeftWidget = new QWidget;
+ * layout->addAxes(bottomLeftWidget, 2, 2, 1, 0);
+ * //
+ * // 添加 bottomLeftWidget 后:
+ * // +---------------------------------------+
+ * // |                                       |
+ * // |            topWidget (0,0-1)          |
+ * // |                                       |
+ * // +-------------------+-------------------+
+ * // |                   |                   |
+ * // | bottomLeft (1,0)  |      (1,1)        |
+ * // |                   |                   |
+ * // +-------------------+-------------------+
+ *
+ * // 添加一个到底部右侧单元格（第1行，第1列）的窗口部件
+ * QWidget* bottomRightWidget = new QWidget;
+ * layout->addAxes(bottomRightWidget, 2, 2, 1, 1);
+ * //
  * // 最终布局:
  * // +---------------------------------------+
  * // |                                       |
@@ -310,6 +417,7 @@ void QwtFigureLayout::addAxes(QWidget* widget, qreal left, qreal top, qreal widt
  * // |                   |                   |
  * // +-------------------+-------------------+
  * @endcode
+ * @endif
  */
 void QwtFigureLayout::addGridAxes(QWidget* widget,
                                   int rowCnt,
@@ -347,11 +455,23 @@ void QwtFigureLayout::addGridAxes(QWidget* widget,
 }
 
 /**
- * @brief 改变已经添加的窗口的位置占比,如果窗口还没添加，此函数无效
+ * @if ENGLISH
+ * @brief Change the normalized position of an already added widget
+ *
+ * @note This function does not automatically refresh the widget position; manual refresh is required.
+ *
+ * @param[in] widget Widget whose position to change
+ * @param[in] rect New normalized coordinates [left, top, width, height] in range [0,1]
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 改变已经添加的窗口的位置占比
  *
  * @note 此函数不会自动刷新窗口位置，需要用户手动刷新
- * @param widget
- * @param rect
+ *
+ * @param[in] widget 要改变位置的窗口部件
+ * @param[in] rect 新的归一化坐标 [左, 上, 宽, 高]，范围 [0,1]
+ * @endif
  */
 void QwtFigureLayout::setAxesNormPos(QWidget* widget, const QRectF& rect)
 {
@@ -363,19 +483,35 @@ void QwtFigureLayout::setAxesNormPos(QWidget* widget, const QRectF& rect)
 }
 
 /**
- * @brief Get the normalized rectangle for a widget/获取窗口部件的归一化矩形
+ * @if ENGLISH
+ * @brief Get the normalized rectangle for a widget
  *
  * This method returns the normalized coordinates [0,1] for the specified widget
  * in the layout. If the widget is not found in the layout, an invalid QRectF is returned.
  *
- * 此方法返回布局中指定窗口部件的归一化坐标[0,1]。如果在布局中未找到该窗口部件，则返回无效的QRectF。
- *
- * @param widget Widget to query / 要查询的窗口部件
+ * @param[in] widget Widget to query
  * @return Normalized coordinates [left, top, width, height] in range [0,1], or invalid QRectF if not found
- *         归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
  *
  * @code
  * // Get the normalized position of a widget
+ * QRectF normRect = layout->widgetNormRect(widget);
+ * if (normRect.isValid()) {
+ *     qDebug() << "Widget position:" << normRect;
+ * } else {
+ *     qDebug() << "Widget not found in layout";
+ * }
+ * @endcode
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 获取窗口部件的归一化矩形
+ *
+ * 此方法返回布局中指定窗口部件的归一化坐标[0,1]。如果在布局中未找到该窗口部件，则返回无效的QRectF。
+ *
+ * @param[in] widget 要查询的窗口部件
+ * @return 归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
+ *
+ * @code
  * // 获取窗口部件的归一化位置
  * QRectF normRect = layout->widgetNormRect(widget);
  * if (normRect.isValid()) {
@@ -384,6 +520,7 @@ void QwtFigureLayout::setAxesNormPos(QWidget* widget, const QRectF& rect)
  *     qDebug() << "Widget not found in layout";
  * }
  * @endcode
+ * @endif
  */
 QRectF QwtFigureLayout::widgetNormRect(QWidget* widget) const
 {
@@ -401,10 +538,21 @@ QRectF QwtFigureLayout::widgetNormRect(QWidget* widget) const
 }
 
 /**
+ * @if ENGLISH
+ * @brief Calculate normalized coordinates of rect relative to parentRect
+ *
+ * @param[in] parentRect Parent rectangle (pixel coordinates)
+ * @param[in] rect Child rectangle (pixel coordinates, relative to parentRect)
+ * @return Normalized coordinates QRectF (left, top, width, height all in [0,1] range)
+ * @endif
+ *
+ * @if CHINESE
  * @brief 计算rect相对于parentRect的归一化坐标
- * @param parentRect 父矩形（像素坐标）
- * @param rect 子矩形（像素坐标，相对于parentRect）
+ *
+ * @param[in] parentRect 父矩形（像素坐标）
+ * @param[in] rect 子矩形（像素坐标，相对于parentRect）
  * @return 归一化坐标QRectF（left, top, width, height均在[0,1]范围）
+ * @endif
  */
 QRectF QwtFigureLayout::calcNormRect(const QRect& parentRect, const QRect& rect)
 {
@@ -437,10 +585,21 @@ QRectF QwtFigureLayout::calcNormRect(const QRect& parentRect, const QRect& rect)
 }
 
 /**
+ * @if ENGLISH
+ * @brief Calculate actual rectangle from normalized coordinates
+ *
+ * @param[in] parentRect Parent window size
+ * @param[in] normRect Normalized rectangle
+ * @return Actual rectangle in pixel coordinates
+ * @endif
+ *
+ * @if CHINESE
  * @brief 通过归一化矩形计算真实矩形
- * @param parentRect 父窗口大小
- * @param normRect 归一化矩形
- * @return
+ *
+ * @param[in] parentRect 父窗口大小
+ * @param[in] normRect 归一化矩形
+ * @return 实际像素坐标矩形
+ * @endif
  */
 QRect QwtFigureLayout::calcActualRect(const QRect& parentRect, const QRectF& normRect)
 {

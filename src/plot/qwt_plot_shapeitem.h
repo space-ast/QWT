@@ -128,149 +128,61 @@ public:
         LegendColor
     };
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     explicit QwtPlotShapeItem(const QString& title = QString());
-    /**
-     * \if ENGLISH
-     * @brief Constructor with title
-     * \endif
-     */
+    // Constructor with title
     explicit QwtPlotShapeItem(const QwtText& title);
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotShapeItem();
 
-    /**
-     * \if ENGLISH
-     * @brief Set a paint attribute
-     * \endif
-     */
+    // Set a paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /**
-     * \if ENGLISH
-     * @brief Test a paint attribute
-     * \endif
-     */
+    // Test a paint attribute
     bool testPaintAttribute(PaintAttribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the legend mode
-     * \endif
-     */
+    // Set the legend mode
     void setLegendMode(LegendMode);
-    /**
-     * \if ENGLISH
-     * @brief Get the legend mode
-     * \endif
-     */
+    // Get the legend mode
     LegendMode legendMode() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the shape as a rectangle
-     * \endif
-     */
+    // Set the shape as a rectangle
     void setRect(const QRectF&);
-    /**
-     * \if ENGLISH
-     * @brief Set the shape as a polygon
-     * \endif
-     */
+    // Set the shape as a polygon
     void setPolygon(const QPolygonF&);
 
-    /**
-     * \if ENGLISH
-     * @brief Set the shape
-     * \endif
-     */
+    // Set the shape
     void setShape(const QPainterPath&);
-    /**
-     * \if ENGLISH
-     * @brief Get the shape
-     * \endif
-     */
+    // Get the shape
     QPainterPath shape() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the pen
-     * \endif
-     */
+    // Set the pen
     void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
-    /**
-     * \if ENGLISH
-     * @brief Set the pen
-     * \endif
-     */
+    // Set the pen
     void setPen(const QPen&);
-    /**
-     * \if ENGLISH
-     * @brief Get the pen
-     * \endif
-     */
+    // Get the pen
     QPen pen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the brush
-     * \endif
-     */
+    // Set the brush
     void setBrush(const QBrush&);
-    /**
-     * \if ENGLISH
-     * @brief Get the brush
-     * \endif
-     */
+    // Get the brush
     QBrush brush() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the render tolerance
-     * \endif
-     */
+    // Set the render tolerance
     void setRenderTolerance(double);
-    /**
-     * \if ENGLISH
-     * @brief Get the render tolerance
-     * \endif
-     */
+    // Get the render tolerance
     double renderTolerance() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the bounding rectangle
-     * \endif
-     */
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the shape item
-     * \endif
-     */
+    // Draw the shape item
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the legend icon
-     * \endif
-     */
+    // Get the legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
     virtual int rtti() const override;
 
 private:

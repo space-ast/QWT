@@ -55,11 +55,17 @@ class QwtIntervalSymbol::PrivateData
     QBrush brush;
 };
 
-/*!
-   Constructor
-
-   \param style Style of the symbol
-   \sa setStyle(), style(), Style
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] style Style of the symbol
+ * @sa setStyle(), style(), Style
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] style 符号的样式
+ * @sa setStyle(), style(), Style
+ * \endif
  */
 QwtIntervalSymbol::QwtIntervalSymbol( Style style )
 {
@@ -67,20 +73,47 @@ QwtIntervalSymbol::QwtIntervalSymbol( Style style )
     m_data->style = style;
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ * @param[in] other Symbol to copy
+ * \endif
+ * \if CHINESE
+ * @brief 拷贝构造函数
+ * @param[in] other 要拷贝的符号
+ * \endif
+ */
 QwtIntervalSymbol::QwtIntervalSymbol( const QwtIntervalSymbol& other )
 {
     m_data = new PrivateData();
     *m_data = *other.m_data;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtIntervalSymbol::~QwtIntervalSymbol()
 {
     delete m_data;
 }
 
-//! \brief Assignment operator
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ * @param[in] other Symbol to assign
+ * @return Reference to this symbol
+ * \endif
+ * \if CHINESE
+ * @brief 赋值运算符
+ * @param[in] other 要赋值的符号
+ * @return 本符号的引用
+ * \endif
+ */
 QwtIntervalSymbol& QwtIntervalSymbol::operator=(
     const QwtIntervalSymbol& other )
 {
@@ -88,95 +121,169 @@ QwtIntervalSymbol& QwtIntervalSymbol::operator=(
     return *this;
 }
 
-//! \brief Compare two symbols
+/**
+ * \if ENGLISH
+ * @brief Compare two symbols
+ * @param[in] other Symbol to compare
+ * @return True if symbols are equal
+ * \endif
+ * \if CHINESE
+ * @brief 比较两个符号
+ * @param[in] other 要比较的符号
+ * @return 如果符号相等则返回 true
+ * \endif
+ */
 bool QwtIntervalSymbol::operator==(
     const QwtIntervalSymbol& other ) const
 {
     return *m_data == *other.m_data;
 }
 
-//! \brief Compare two symbols
+/**
+ * \if ENGLISH
+ * @brief Compare two symbols
+ * @param[in] other Symbol to compare
+ * @return True if symbols are not equal
+ * \endif
+ * \if CHINESE
+ * @brief 比较两个符号
+ * @param[in] other 要比较的符号
+ * @return 如果符号不相等则返回 true
+ * \endif
+ */
 bool QwtIntervalSymbol::operator!=(
     const QwtIntervalSymbol& other ) const
 {
     return !( *m_data == *other.m_data );
 }
 
-/*!
-   Specify the symbol style
-
-   \param style Style
-   \sa style(), Style
+/**
+ * \if ENGLISH
+ * @brief Specify the symbol style
+ * @param[in] style Style
+ * @sa style(), Style
+ * \endif
+ * \if CHINESE
+ * @brief 指定符号样式
+ * @param[in] style 样式
+ * @sa style(), Style
+ * \endif
  */
 void QwtIntervalSymbol::setStyle( Style style )
 {
     m_data->style = style;
 }
 
-/*!
-   \return Current symbol style
-   \sa setStyle()
+/**
+ * \if ENGLISH
+ * @brief Get the current symbol style
+ * @return Current symbol style
+ * @sa setStyle()
+ * \endif
+ * \if CHINESE
+ * @brief 获取当前符号样式
+ * @return 当前符号样式
+ * @sa setStyle()
+ * \endif
  */
 QwtIntervalSymbol::Style QwtIntervalSymbol::style() const
 {
     return m_data->style;
 }
 
-/*!
-   Specify the width of the symbol
-   It is used depending on the style.
-
-   \param width Width
-   \sa width(), setStyle()
+/**
+ * \if ENGLISH
+ * @brief Specify the width of the symbol
+ * @details It is used depending on the style.
+ * @param[in] width Width
+ * @sa width(), setStyle()
+ * \endif
+ * \if CHINESE
+ * @brief 指定符号的宽度
+ * @details 根据样式使用。
+ * @param[in] width 宽度
+ * @sa width(), setStyle()
+ * \endif
  */
 void QwtIntervalSymbol::setWidth( int width )
 {
     m_data->width = width;
 }
 
-/*!
-   \return Width of the symbol.
-   \sa setWidth(), setStyle()
+/**
+ * \if ENGLISH
+ * @brief Get the width of the symbol
+ * @return Width of the symbol
+ * @sa setWidth(), setStyle()
+ * \endif
+ * \if CHINESE
+ * @brief 获取符号的宽度
+ * @return 符号的宽度
+ * @sa setWidth(), setStyle()
+ * \endif
  */
 int QwtIntervalSymbol::width() const
 {
     return m_data->width;
 }
 
-/*!
-   \brief Assign a brush
-
-   The brush is used for the Box style.
-
-   \param brush Brush
-   \sa brush()
+/**
+ * \if ENGLISH
+ * @brief Assign a brush
+ * @details The brush is used for the Box style.
+ * @param[in] brush Brush
+ * @sa brush()
+ * \endif
+ * \if CHINESE
+ * @brief 分配画刷
+ * @details 画刷用于 Box 样式。
+ * @param[in] brush 画刷
+ * @sa brush()
+ * \endif
  */
 void QwtIntervalSymbol::setBrush( const QBrush& brush )
 {
     m_data->brush = brush;
 }
 
-/*!
-   \return Brush
-   \sa setBrush()
+/**
+ * \if ENGLISH
+ * @brief Get the brush
+ * @return Brush
+ * @sa setBrush()
+ * \endif
+ * \if CHINESE
+ * @brief 获取画刷
+ * @return 画刷
+ * @sa setBrush()
+ * \endif
  */
 const QBrush& QwtIntervalSymbol::brush() const
 {
     return m_data->brush;
 }
 
-/*!
-   Build and assign a pen
-
-   In Qt5 the default pen width is 1.0 ( 0.0 in Qt4 ) what makes it
-   non cosmetic ( see QPen::isCosmetic() ). This method has been introduced
-   to hide this incompatibility.
-
-   \param color Pen color
-   \param width Pen width
-   \param style Pen style
-
-   \sa pen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Build and assign a pen
+ * @details In Qt5 the default pen width is 1.0 ( 0.0 in Qt4 ) what makes it
+ *          non cosmetic ( see QPen::isCosmetic() ). This method has been introduced
+ *          to hide this incompatibility.
+ * @param[in] color Pen color
+ * @param[in] width Pen width
+ * @param[in] style Pen style
+ * @sa pen(), brush()
+ * \endif
+ * \if CHINESE
+ * @brief 构建并分配画笔
+ * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），这使得它
+ *          不是装饰性的（参见 QPen::isCosmetic()）。此方法是为了
+ *          隐藏此不兼容性而引入的。
+ * @param[in] color 画笔颜色
+ * @param[in] width 画笔宽度
+ * @param[in] style 画笔样式
+ * @sa pen(), brush()
+ * \endif
  */
 void QwtIntervalSymbol::setPen( const QColor& color,
     qreal width, Qt::PenStyle style )
@@ -184,35 +291,57 @@ void QwtIntervalSymbol::setPen( const QColor& color,
     setPen( QPen( color, width, style ) );
 }
 
-/*!
-   Assign a pen
-
-   \param pen Pen
-   \sa pen(), setBrush()
+/**
+ * \if ENGLISH
+ * @brief Assign a pen
+ * @param[in] pen Pen
+ * @sa pen(), setBrush()
+ * \endif
+ * \if CHINESE
+ * @brief 分配画笔
+ * @param[in] pen 画笔
+ * @sa pen(), setBrush()
+ * \endif
  */
 void QwtIntervalSymbol::setPen( const QPen& pen )
 {
     m_data->pen = pen;
 }
 
-/*!
-   \return Pen
-   \sa setPen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Get the pen
+ * @return Pen
+ * @sa setPen(), brush()
+ * \endif
+ * \if CHINESE
+ * @brief 获取画笔
+ * @return 画笔
+ * @sa setPen(), brush()
+ * \endif
  */
 const QPen& QwtIntervalSymbol::pen() const
 {
     return m_data->pen;
 }
 
-/*!
-   Draw a symbol depending on its style
-
-   \param painter Painter
-   \param orientation Orientation
-   \param from Start point of the interval in target device coordinates
-   \param to End point of the interval in target device coordinates
-
-   \sa setStyle()
+/**
+ * \if ENGLISH
+ * @brief Draw a symbol depending on its style
+ * @param[in] painter Painter
+ * @param[in] orientation Orientation
+ * @param[in] from Start point of the interval in target device coordinates
+ * @param[in] to End point of the interval in target device coordinates
+ * @sa setStyle()
+ * \endif
+ * \if CHINESE
+ * @brief 根据样式绘制符号
+ * @param[in] painter 绘图器
+ * @param[in] orientation 方向
+ * @param[in] from 区间起点（目标设备坐标）
+ * @param[in] to 区间终点（目标设备坐标）
+ * @sa setStyle()
+ * \endif
  */
 void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
     const QPointF& from, const QPointF& to ) const

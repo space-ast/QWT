@@ -59,6 +59,17 @@ public:
     PaintAttributes paintAttributes;
 };
 
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 图表的标题
+ * \endif
+ */
 QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
     : QwtPlotSeriesItem(QwtText(title))
     , m_outlierData(nullptr)
@@ -66,6 +77,17 @@ QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
     init();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 图表的标题
+ * \endif
+ */
 QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
     : QwtPlotSeriesItem(title)
     , m_outlierData(nullptr)
@@ -73,6 +95,15 @@ QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
     init();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotBoxChart::~QwtPlotBoxChart()
 {
     delete m_data;
@@ -90,11 +121,35 @@ void QwtPlotBoxChart::init()
     setZ(20.0);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return Rtti_PlotBoxChart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return Rtti_PlotBoxChart
+ * \endif
+ */
 int QwtPlotBoxChart::rtti() const
 {
     return Rtti_PlotBoxChart;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set a paint attribute
+ * @param[in] attr Paint attribute to set
+ * @param[in] on True to enable, false to disable
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置绘制属性
+ * @param[in] attr 要设置的绘制属性
+ * @param[in] on true 启用，false 禁用
+ * \endif
+ */
 void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
 {
     if (on)
@@ -103,11 +158,35 @@ void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
         m_data->paintAttributes &= ~attr;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Test if a paint attribute is enabled
+ * @param[in] attr Paint attribute to test
+ * @return True if the attribute is enabled
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 测试绘制属性是否启用
+ * @param[in] attr 要测试的绘制属性
+ * @return 如果属性启用则返回 true
+ * \endif
+ */
 bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
 {
     return (m_data->paintAttributes & attr);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the box style
+ * @param[in] style Box style to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置箱体样式
+ * @param[in] style 要设置的箱体样式
+ * \endif
+ */
 void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
 {
     if (m_data->boxStyle != style)
@@ -118,11 +197,33 @@ void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the box style
+ * @return Current box style
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取箱体样式
+ * @return 当前箱体样式
+ * \endif
+ */
 QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
 {
     return m_data->boxStyle;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the whisker style
+ * @param[in] style Whisker style to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置须须样式
+ * @param[in] style 要设置的须须样式
+ * \endif
+ */
 void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
 {
     if (m_data->whiskerStyle != style)
@@ -133,11 +234,35 @@ void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the whisker style
+ * @return Current whisker style
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取须须样式
+ * @return 当前须须样式
+ * \endif
+ */
 QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
 {
     return m_data->whiskerStyle;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the orientation
+ * @details Vertical orientation means x-position, horizontal means y-position.
+ * @param[in] orient Orientation to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置方向
+ * @details 垂直方向表示 x 位置，水平方向表示 y 位置。
+ * @param[in] orient 要设置的方向
+ * \endif
+ */
 void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
 {
     if (m_data->orientation != orient)
@@ -148,11 +273,33 @@ void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the orientation
+ * @return Current orientation
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取方向
+ * @return 当前方向
+ * \endif
+ */
 Qt::Orientation QwtPlotBoxChart::orientation() const
 {
     return m_data->orientation;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the box extent (width in scale coordinates)
+ * @param[in] extent Box extent to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置箱体范围（比例坐标中的宽度）
+ * @param[in] extent 要设置的箱体范围
+ * \endif
+ */
 void QwtPlotBoxChart::setBoxExtent(double extent)
 {
     extent = qwtMaxF(0.0, extent);
@@ -164,11 +311,33 @@ void QwtPlotBoxChart::setBoxExtent(double extent)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the box extent
+ * @return Current box extent
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取箱体范围
+ * @return 当前箱体范围
+ * \endif
+ */
 double QwtPlotBoxChart::boxExtent() const
 {
     return m_data->boxExtent;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the minimum box width in pixels
+ * @param[in] pixels Minimum width to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置最小箱体宽度（像素）
+ * @param[in] pixels 要设置的最小宽度
+ * \endif
+ */
 void QwtPlotBoxChart::setMinBoxWidth(double pixels)
 {
     pixels = qwtMaxF(0.0, pixels);
@@ -180,11 +349,33 @@ void QwtPlotBoxChart::setMinBoxWidth(double pixels)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the minimum box width
+ * @return Minimum box width in pixels
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取最小箱体宽度
+ * @return 最小箱体宽度（像素）
+ * \endif
+ */
 double QwtPlotBoxChart::minBoxWidth() const
 {
     return m_data->minBoxWidth;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the maximum box width in pixels
+ * @param[in] pixels Maximum width to set (negative = unlimited)
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置最大箱体宽度（像素）
+ * @param[in] pixels 要设置的最大宽度（负值 = 无限制）
+ * \endif
+ */
 void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
 {
     if (m_data->maxBoxWidth != pixels)
@@ -195,16 +386,53 @@ void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the maximum box width
+ * @return Maximum box width in pixels (negative = unlimited)
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取最大箱体宽度
+ * @return 最大箱体宽度（像素）（负值 = 无限制）
+ * \endif
+ */
 double QwtPlotBoxChart::maxBoxWidth() const
 {
     return m_data->maxBoxWidth;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the pen for box outline and whiskers
+ * @param[in] color Pen color
+ * @param[in] width Pen width
+ * @param[in] style Pen style
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置箱体轮廓和须须的画笔
+ * @param[in] color 画笔颜色
+ * @param[in] width 画笔宽度
+ * @param[in] style 画笔样式
+ * \endif
+ */
 void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle style)
 {
     setPen(QPen(color, width, style));
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the pen for box outline and whiskers
+ * @param[in] pen Pen to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置箱体轮廓和须须的画笔
+ * @param[in] pen 要设置的画笔
+ * \endif
+ */
 void QwtPlotBoxChart::setPen(const QPen& pen)
 {
     if (m_data->pen != pen)
@@ -215,11 +443,33 @@ void QwtPlotBoxChart::setPen(const QPen& pen)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the pen for box outline and whiskers
+ * @return Current pen
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取箱体轮廓和须须的画笔
+ * @return 当前画笔
+ * \endif
+ */
 const QPen& QwtPlotBoxChart::pen() const
 {
     return m_data->pen;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the brush for box body fill
+ * @param[in] brush Brush to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置箱体填充的画刷
+ * @param[in] brush 要设置的画刷
+ * \endif
+ */
 void QwtPlotBoxChart::setBrush(const QBrush& brush)
 {
     if (m_data->brush != brush)
@@ -230,11 +480,33 @@ void QwtPlotBoxChart::setBrush(const QBrush& brush)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the brush for box body fill
+ * @return Current brush
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取箱体填充的画刷
+ * @return 当前画刷
+ * \endif
+ */
 const QBrush& QwtPlotBoxChart::brush() const
 {
     return m_data->brush;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the pen for median line
+ * @param[in] pen Pen to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置中位数线的画笔
+ * @param[in] pen 要设置的画笔
+ * \endif
+ */
 void QwtPlotBoxChart::setMedianPen(const QPen& pen)
 {
     if (m_data->medianPen != pen)
@@ -245,11 +517,33 @@ void QwtPlotBoxChart::setMedianPen(const QPen& pen)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the pen for median line
+ * @return Current median pen
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取中位数线的画笔
+ * @return 当前中位数画笔
+ * \endif
+ */
 QPen QwtPlotBoxChart::medianPen() const
 {
     return m_data->medianPen;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the symbol for outliers
+ * @param[in] symbol Symbol to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置异常值的符号
+ * @param[in] symbol 要设置的符号
+ * \endif
+ */
 void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
 {
     if (m_data->outlierSymbol != symbol)
@@ -261,11 +555,33 @@ void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the symbol for outliers
+ * @return Current outlier symbol
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取异常值的符号
+ * @return 当前异常值符号
+ * \endif
+ */
 const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
 {
     return m_data->outlierSymbol;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the symbol for mean marker
+ * @param[in] symbol Symbol to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置均值标记的符号
+ * @param[in] symbol 要设置的符号
+ * \endif
+ */
 void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
 {
     if (m_data->meanSymbol != symbol)
@@ -277,11 +593,33 @@ void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the symbol for mean marker
+ * @return Current mean symbol
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取均值标记的符号
+ * @return 当前均值符号
+ * \endif
+ */
 const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
 {
     return m_data->meanSymbol;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set whether the median line is visible
+ * @param[in] visible True to show, false to hide
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置中位数线是否可见
+ * @param[in] visible true 显示，false 隐藏
+ * \endif
+ */
 void QwtPlotBoxChart::setMedianVisible(bool visible)
 {
     if (m_data->medianVisible != visible)
@@ -291,11 +629,33 @@ void QwtPlotBoxChart::setMedianVisible(bool visible)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Check if the median line is visible
+ * @return True if visible
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 检查中位数线是否可见
+ * @return 如果可见则返回 true
+ * \endif
+ */
 bool QwtPlotBoxChart::isMedianVisible() const
 {
     return m_data->medianVisible;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set whether the mean marker is visible
+ * @param[in] visible True to show, false to hide
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置均值标记是否可见
+ * @param[in] visible true 显示，false 隐藏
+ * \endif
+ */
 void QwtPlotBoxChart::setMeanVisible(bool visible)
 {
     if (m_data->meanVisible != visible)
@@ -305,31 +665,97 @@ void QwtPlotBoxChart::setMeanVisible(bool visible)
     }
 }
 
+/**
+ * \if ENGLISH
+ * @brief Check if the mean marker is visible
+ * @return True if visible
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 检查均值标记是否可见
+ * @return 如果可见则返回 true
+ * \endif
+ */
 bool QwtPlotBoxChart::isMeanVisible() const
 {
     return m_data->meanVisible;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set the outlier jitter width
+ * @param[in] jitterWidth Jitter width for overlapping outliers
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置异常值抖动宽度
+ * @param[in] jitterWidth 重叠异常值的抖动宽度
+ * \endif
+ */
 void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
 {
     m_data->outlierJitter = qwtMaxF(0.0, jitterWidth);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the outlier jitter width
+ * @return Jitter width for overlapping outliers
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取异常值抖动宽度
+ * @return 重叠异常值的抖动宽度
+ * \endif
+ */
 double QwtPlotBoxChart::outlierJitter() const
 {
     return m_data->outlierJitter;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set box samples from a vector
+ * @param[in] samples Vector of box samples
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从向量设置箱体样本
+ * @param[in] samples 箱体样本向量
+ * \endif
+ */
 void QwtPlotBoxChart::setSamples(const QVector<QwtBoxSample>& samples)
 {
     setData(new QwtBoxChartData(samples));
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set box samples from series data
+ * @param[in] data Series data to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从系列数据设置箱体样本
+ * @param[in] data 要设置的系列数据
+ * \endif
+ */
 void QwtPlotBoxChart::setSamples(QwtSeriesData<QwtBoxSample>* data)
 {
     setData(data);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set outlier samples from a vector
+ * @param[in] samples Vector of outlier samples
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从向量设置异常值样本
+ * @param[in] samples 异常值样本向量
+ * \endif
+ */
 void QwtPlotBoxChart::setOutliers(const QVector<QwtBoxOutlierSample>& samples)
 {
     delete m_outlierData;
@@ -337,6 +763,17 @@ void QwtPlotBoxChart::setOutliers(const QVector<QwtBoxOutlierSample>& samples)
     itemChanged();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Set outlier samples from series data
+ * @param[in] data Series data to set
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从系列数据设置异常值样本
+ * @param[in] data 要设置的系列数据
+ * \endif
+ */
 void QwtPlotBoxChart::setOutliers(QwtSeriesData<QwtBoxOutlierSample>* data)
 {
     delete m_outlierData;
@@ -344,11 +781,33 @@ void QwtPlotBoxChart::setOutliers(QwtSeriesData<QwtBoxOutlierSample>* data)
     itemChanged();
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the outlier data
+ * @return Current outlier data
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取异常值数据
+ * @return 当前异常值数据
+ * \endif
+ */
 const QwtSeriesData<QwtBoxOutlierSample>* QwtPlotBoxChart::outlierData() const
 {
     return m_outlierData;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle of all samples
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取边界矩形
+ * @return 所有样本的边界矩形
+ * \endif
+ */
 QRectF QwtPlotBoxChart::boundingRect() const
 {
     QRectF rect = QwtPlotSeriesItem::boundingRect();
@@ -401,6 +860,27 @@ double QwtPlotBoxChart::scaledBoxWidth(
     return width;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Draw the series
+ * @param[in] painter Painter
+ * @param[in] xMap X-axis scale map
+ * @param[in] yMap Y-axis scale map
+ * @param[in] canvasRect Canvas rectangle
+ * @param[in] from Starting index
+ * @param[in] to Ending index
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 绘制系列
+ * @param[in] painter 绘图器
+ * @param[in] xMap X 轴比例映射
+ * @param[in] yMap Y 轴比例映射
+ * @param[in] canvasRect 画布矩形
+ * @param[in] from 起始索引
+ * @param[in] to 结束索引
+ * \endif
+ */
 void QwtPlotBoxChart::drawSeries(QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to) const
@@ -743,6 +1223,21 @@ void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, doub
     symbol.drawSymbol(painter, point);
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the legend icon
+ * @param[in] index Legend entry index
+ * @param[in] size Icon size
+ * @return Legend icon graphic
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取图例图标
+ * @param[in] index 图例条目索引
+ * @param[in] size 图标大小
+ * @return 图例图标图形
+ * \endif
+ */
 QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
 {
     Q_UNUSED(index);

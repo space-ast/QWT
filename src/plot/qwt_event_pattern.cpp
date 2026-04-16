@@ -27,12 +27,18 @@
 #include "qwt_event_pattern.h"
 #include <qevent.h>
 
-/*!
-   Constructor
-
-   \sa MousePatternCode, KeyPatternCode
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details Initializes mouse and key patterns with default settings.
+ * @sa MousePatternCode, KeyPatternCode
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 使用默认设置初始化鼠标和按键模式。
+ * @sa MousePatternCode, KeyPatternCode
+ * \endif
  */
-
 QwtEventPattern::QwtEventPattern()
     : m_mousePattern( MousePatternCount )
     , m_keyPattern( KeyPatternCount )
@@ -41,16 +47,29 @@ QwtEventPattern::QwtEventPattern()
     initMousePattern( 3 );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtEventPattern::~QwtEventPattern()
 {
 }
 
-/*!
-   Set default mouse patterns, depending on the number of mouse buttons
-
-   \param numButtons Number of mouse buttons ( <= 3 )
-   \sa MousePatternCode
+/**
+ * \if ENGLISH
+ * @brief Set default mouse patterns depending on the number of mouse buttons
+ * @param[in] numButtons Number of mouse buttons (<= 3)
+ * @sa MousePatternCode
+ * \endif
+ * \if CHINESE
+ * @brief 根据鼠标按钮数量设置默认鼠标模式
+ * @param[in] numButtons 鼠标按钮数量（<= 3）
+ * @sa MousePatternCode
+ * \endif
  */
 void QwtEventPattern::initMousePattern( int numButtons )
 {
@@ -90,10 +109,15 @@ void QwtEventPattern::initMousePattern( int numButtons )
         m_mousePattern[MouseSelect3].modifiers | Qt::ShiftModifier );
 }
 
-/*!
-   Set default mouse patterns.
-
-   \sa KeyPatternCode
+/**
+ * \if ENGLISH
+ * @brief Set default key patterns
+ * @sa KeyPatternCode
+ * \endif
+ * \if CHINESE
+ * @brief 设置默认按键模式
+ * @sa KeyPatternCode
+ * \endif
  */
 void QwtEventPattern::initKeyPattern()
 {
@@ -113,14 +137,21 @@ void QwtEventPattern::initKeyPattern()
     setKeyPattern( KeyHome, Qt::Key_Escape );
 }
 
-/*!
-   Change one mouse pattern
-
-   \param pattern Index of the pattern
-   \param button Button
-   \param modifiers Keyboard modifiers
-
-   \sa QMouseEvent
+/**
+ * \if ENGLISH
+ * @brief Change one mouse pattern
+ * @param[in] pattern Index of the pattern
+ * @param[in] button Mouse button
+ * @param[in] modifiers Keyboard modifiers
+ * @sa QMouseEvent
+ * \endif
+ * \if CHINESE
+ * @brief 更改一个鼠标模式
+ * @param[in] pattern 模式的索引
+ * @param[in] button 鼠标按钮
+ * @param[in] modifiers 键盘修饰键
+ * @sa QMouseEvent
+ * \endif
  */
 void QwtEventPattern::setMousePattern( MousePatternCode pattern,
     Qt::MouseButton button, Qt::KeyboardModifiers modifiers )
@@ -132,14 +163,21 @@ void QwtEventPattern::setMousePattern( MousePatternCode pattern,
     }
 }
 
-/*!
-   Change one key pattern
-
-   \param pattern Index of the pattern
-   \param key Key
-   \param modifiers Keyboard modifiers
-
-   \sa QKeyEvent
+/**
+ * \if ENGLISH
+ * @brief Change one key pattern
+ * @param[in] pattern Index of the pattern
+ * @param[in] key Key code
+ * @param[in] modifiers Keyboard modifiers
+ * @sa QKeyEvent
+ * \endif
+ * \if CHINESE
+ * @brief 更改一个按键模式
+ * @param[in] pattern 模式的索引
+ * @param[in] key 按键代码
+ * @param[in] modifiers 键盘修饰键
+ * @sa QKeyEvent
+ * \endif
  */
 void QwtEventPattern::setKeyPattern( KeyPatternCode pattern,
     int key, Qt::KeyboardModifiers modifiers )
@@ -151,56 +189,118 @@ void QwtEventPattern::setKeyPattern( KeyPatternCode pattern,
     }
 }
 
-//! Change the mouse event patterns
+/**
+ * \if ENGLISH
+ * @brief Change the mouse event patterns
+ * @param[in] pattern Vector of mouse patterns
+ * \endif
+ * \if CHINESE
+ * @brief 更改鼠标事件模式
+ * @param[in] pattern 鼠标模式向量
+ * \endif
+ */
 void QwtEventPattern::setMousePattern( const QVector< MousePattern >& pattern )
 {
     m_mousePattern = pattern;
 }
 
-//! Change the key event patterns
+/**
+ * \if ENGLISH
+ * @brief Change the key event patterns
+ * @param[in] pattern Vector of key patterns
+ * \endif
+ * \if CHINESE
+ * @brief 更改按键事件模式
+ * @param[in] pattern 按键模式向量
+ * \endif
+ */
 void QwtEventPattern::setKeyPattern( const QVector< KeyPattern >& pattern )
 {
     m_keyPattern = pattern;
 }
 
-//! \return Mouse pattern
+/**
+ * \if ENGLISH
+ * @brief Return the mouse pattern vector
+ * @return Mouse pattern vector (const)
+ * \endif
+ * \if CHINESE
+ * @brief 返回鼠标模式向量
+ * @return 鼠标模式向量（常量）
+ * \endif
+ */
 const QVector< QwtEventPattern::MousePattern >&
 QwtEventPattern::mousePattern() const
 {
     return m_mousePattern;
 }
 
-//! \return Key pattern
+/**
+ * \if ENGLISH
+ * @brief Return the key pattern vector
+ * @return Key pattern vector (const)
+ * \endif
+ * \if CHINESE
+ * @brief 返回按键模式向量
+ * @return 按键模式向量（常量）
+ * \endif
+ */
 const QVector< QwtEventPattern::KeyPattern >&
 QwtEventPattern::keyPattern() const
 {
     return m_keyPattern;
 }
 
-//! \return Mouse pattern
+/**
+ * \if ENGLISH
+ * @brief Return the mouse pattern vector
+ * @return Mouse pattern vector (mutable)
+ * \endif
+ * \if CHINESE
+ * @brief 返回鼠标模式向量
+ * @return 鼠标模式向量（可修改）
+ * \endif
+ */
 QVector< QwtEventPattern::MousePattern >& QwtEventPattern::mousePattern()
 {
     return m_mousePattern;
 }
 
-//! \return Key pattern
+/**
+ * \if ENGLISH
+ * @brief Return the key pattern vector
+ * @return Key pattern vector (mutable)
+ * \endif
+ * \if CHINESE
+ * @brief 返回按键模式向量
+ * @return 按键模式向量（可修改）
+ * \endif
+ */
 QVector< QwtEventPattern::KeyPattern >& QwtEventPattern::keyPattern()
 {
     return m_keyPattern;
 }
 
-/*!
-   \brief Compare a mouse event with an event pattern.
-
-   A mouse event matches the pattern when both have the same button
-   value and in the state value the same key flags(Qt::KeyButtonMask)
-   are set.
-
-   \param code Index of the event pattern
-   \param event Mouse event
-   \return true if matches
-
-   \sa keyMatch()
+/**
+ * \if ENGLISH
+ * @brief Compare a mouse event with an event pattern
+ * @details A mouse event matches the pattern when both have the same button
+ *          value and in the state value the same key flags(Qt::KeyButtonMask)
+ *          are set.
+ * @param[in] code Index of the event pattern
+ * @param[in] event Mouse event
+ * @return true if matches, false otherwise
+ * @sa keyMatch()
+ * \endif
+ * \if CHINESE
+ * @brief 将鼠标事件与事件模式进行比较
+ * @details 当鼠标事件和模式具有相同的按钮值，且状态值中设置了相同的关键标志(Qt::KeyButtonMask)时，
+ *          鼠标事件与模式匹配。
+ * @param[in] code 事件模式的索引
+ * @param[in] event 鼠标事件
+ * @return 如果匹配则返回 true，否则返回 false
+ * @sa keyMatch()
+ * \endif
  */
 bool QwtEventPattern::mouseMatch( MousePatternCode code,
     const QMouseEvent* event ) const
@@ -235,18 +335,26 @@ bool QwtEventPattern::mouseMatch( const MousePattern& pattern,
     return mousePattern == pattern;
 }
 
-/*!
-   \brief Compare a key event with an event pattern.
-
-   A key event matches the pattern when both have the same key
-   value and in the state value the same key flags (Qt::KeyButtonMask)
-   are set.
-
-   \param code Index of the event pattern
-   \param event Key event
-   \return true if matches
-
-   \sa mouseMatch()
+/**
+ * \if ENGLISH
+ * @brief Compare a key event with an event pattern
+ * @details A key event matches the pattern when both have the same key
+ *          value and in the state value the same key flags (Qt::KeyButtonMask)
+ *          are set.
+ * @param[in] code Index of the event pattern
+ * @param[in] event Key event
+ * @return true if matches, false otherwise
+ * @sa mouseMatch()
+ * \endif
+ * \if CHINESE
+ * @brief 将按键事件与事件模式进行比较
+ * @details 当按键事件和模式具有相同的按键值，且状态值中设置了相同的关键标志(Qt::KeyButtonMask)时，
+ *          按键事件与模式匹配。
+ * @param[in] code 事件模式的索引
+ * @param[in] event 按键事件
+ * @return 如果匹配则返回 true，否则返回 false
+ * @sa mouseMatch()
+ * \endif
  */
 bool QwtEventPattern::keyMatch( KeyPatternCode code,
     const QKeyEvent* event ) const

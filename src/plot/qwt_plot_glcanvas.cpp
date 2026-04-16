@@ -61,23 +61,38 @@ public:
     QGLFramebufferObject* fbo;
 };
 
-/*!
-   \brief Constructor
-
-   \param plot Parent plot widget
-   \sa QwtPlot::setCanvas()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] plot Parent plot widget
+ * @sa QwtPlot::setCanvas()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] plot 父绘图部件
+ * @sa QwtPlot::setCanvas()
+ * \endif
  */
 QwtPlotGLCanvas::QwtPlotGLCanvas(QwtPlot* plot)
     : QGLWidget(QwtPlotGLCanvasFormat(), plot), QwtPlotAbstractGLCanvas(this)
 {
     init();
 }
-/*!
-   \brief Constructor
-
-   \param format OpenGL rendering options
-   \param plot Parent plot widget
-   \sa QwtPlot::setCanvas()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] format OpenGL rendering options
+ * @param[in] plot Parent plot widget
+ * @sa QwtPlot::setCanvas()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] format OpenGL 渲染选项
+ * @param[in] plot 父绘图部件
+ * @sa QwtPlot::setCanvas()
+ * \endif
  */
 QwtPlotGLCanvas::QwtPlotGLCanvas(const QGLFormat& format, QwtPlot* plot)
     : QGLWidget(format, plot), QwtPlotAbstractGLCanvas(this)
@@ -85,7 +100,15 @@ QwtPlotGLCanvas::QwtPlotGLCanvas(const QGLFormat& format, QwtPlot* plot)
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotGLCanvas::~QwtPlotGLCanvas()
 {
     delete m_data;
@@ -114,10 +137,18 @@ void QwtPlotGLCanvas::paintEvent(QPaintEvent* event)
     QGLWidget::paintEvent(event);
 }
 
-/*!
-   Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
-   \param event Qt Event
-   \return See QGLWidget::event()
+/**
+ * \if ENGLISH
+ * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
+ * @param[in] event Qt Event
+ * @return See QGLWidget::event()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief Qt 事件处理器，处理 QEvent::PolishRequest 和 QEvent::StyleChange
+ * @param[in] event Qt 事件
+ * @return 请参阅 QGLWidget::event()
+ * \endif
  */
 bool QwtPlotGLCanvas::event(QEvent* event)
 {
@@ -133,16 +164,31 @@ bool QwtPlotGLCanvas::event(QEvent* event)
     return ok;
 }
 
-/*!
-   Invalidate the paint cache and repaint the canvas
-   \sa invalidatePaintCache()
+/**
+ * \if ENGLISH
+ * @brief Invalidate the paint cache and repaint the canvas
+ * @sa invalidatePaintCache()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使绘制缓存失效并重绘画布
+ * @sa invalidatePaintCache()
+ * \endif
  */
 void QwtPlotGLCanvas::replot()
 {
     QwtPlotAbstractGLCanvas::replot();
 }
 
-//! Invalidate the internal backing store
+/**
+ * \if ENGLISH
+ * @brief Invalidate the internal backing store
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使内部后备存储失效
+ * \endif
+ */
 void QwtPlotGLCanvas::invalidateBackingStore()
 {
     m_data->fboDirty = true;
@@ -154,14 +200,22 @@ void QwtPlotGLCanvas::clearBackingStore()
     m_data->fbo = nullptr;
 }
 
-/*!
-   Calculate the painter path for a styled or rounded border
-
-   When the canvas has no styled background or rounded borders
-   the painter path is empty.
-
-   \param rect Bounding rectangle of the canvas
-   \return Painter path, that can be used for clipping
+/**
+ * \if ENGLISH
+ * @brief Calculate the painter path for a styled or rounded border
+ * @details When the canvas has no styled background or rounded borders
+ *          the painter path is empty.
+ * @param[in] rect Bounding rectangle of the canvas
+ * @return Painter path, that can be used for clipping
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算样式化或圆角边界的绘制路径
+ * @details 当画布没有样式化背景或圆角边界时，
+ *          绘制路径为空。
+ * @param[in] rect 画布的边界矩形
+ * @return 可用于裁剪的绘制路径
+ * \endif
  */
 QPainterPath QwtPlotGLCanvas::borderPath(const QRect& rect) const
 {

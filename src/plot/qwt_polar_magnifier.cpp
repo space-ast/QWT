@@ -25,28 +25,52 @@ public:
     int unzoomKeyModifiers;
 };
 
-/*!
-   Constructor
-   \param canvas Plot canvas to be magnified
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] canvas Plot canvas to be magnified
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] canvas 要放大的绘图画布
+ * \endif
  */
 QwtPolarMagnifier::QwtPolarMagnifier(QwtPolarCanvas* canvas) : QwtMagnifier(canvas)
 {
     m_data = new PrivateData();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPolarMagnifier::~QwtPolarMagnifier()
 {
     delete m_data;
 }
 
-/*!
-   Assign key and modifiers, that are used for unzooming
-   The default combination is Qt::Key_Home + Qt::NoModifier.
-
-   \param key Key code
-   \param modifiers Modifiers
-   \sa getUnzoomKey(), QwtPolarPlot::unzoom()
+/**
+ * \if ENGLISH
+ * @brief Assign key and modifiers that are used for unzooming
+ * @details The default combination is Qt::Key_Home + Qt::NoModifier.
+ * @param[in] key Key code
+ * @param[in] modifiers Modifiers
+ * @sa getUnzoomKey(), QwtPolarPlot::unzoom()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置用于取消缩放的按键和修饰键
+ * @details 默认组合是 Qt::Key_Home + Qt::NoModifier。
+ * @param[in] key 按键代码
+ * @param[in] modifiers 修饰键
+ * @sa getUnzoomKey(), QwtPolarPlot::unzoom()
+ * \endif
  */
 void QwtPolarMagnifier::setUnzoomKey(int key, int modifiers)
 {
@@ -54,12 +78,20 @@ void QwtPolarMagnifier::setUnzoomKey(int key, int modifiers)
     m_data->unzoomKeyModifiers = modifiers;
 }
 
-/*!
-   \return Key, and modifiers that are used for unzooming
-
-   \param key Key code
-   \param modifiers Modifiers
-   \sa setUnzoomKey(), QwtPolarPlot::unzoom()
+/**
+ * \if ENGLISH
+ * @brief Get the key and modifiers that are used for unzooming
+ * @param[out] key Key code
+ * @param[out] modifiers Modifiers
+ * @sa setUnzoomKey(), QwtPolarPlot::unzoom()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于取消缩放的按键和修饰键
+ * @param[out] key 按键代码
+ * @param[out] modifiers 修饰键
+ * @sa setUnzoomKey(), QwtPolarPlot::unzoom()
+ * \endif
  */
 void QwtPolarMagnifier::getUnzoomKey(int& key, int& modifiers) const
 {
@@ -67,19 +99,49 @@ void QwtPolarMagnifier::getUnzoomKey(int& key, int& modifiers) const
     modifiers = m_data->unzoomKeyModifiers;
 }
 
-//! \return Observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot canvas
+ * @return Observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图画布
+ * @return 观察的绘图画布
+ * \endif
+ */
 QwtPolarCanvas* QwtPolarMagnifier::canvas()
 {
     return qobject_cast< QwtPolarCanvas* >(parent());
 }
 
-//! \return Observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot canvas (const version)
+ * @return Observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图画布（常量版本）
+ * @return 观察的绘图画布
+ * \endif
+ */
 const QwtPolarCanvas* QwtPolarMagnifier::canvas() const
 {
-    return qobject_cast< QwtPolarCanvas* >(parent());
+    return qobject_cast< const QwtPolarCanvas* >(parent());
 }
 
-//! \return Observed plot
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot
+ * @return Observed plot
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图
+ * @return 观察的绘图
+ * \endif
+ */
 QwtPolarPlot* QwtPolarMagnifier::plot()
 {
     QwtPolarCanvas* c = canvas();
@@ -89,7 +151,17 @@ QwtPolarPlot* QwtPolarMagnifier::plot()
     return nullptr;
 }
 
-//! \return observed plot
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot (const version)
+ * @return Observed plot
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图（常量版本）
+ * @return 观察的绘图
+ * \endif
+ */
 const QwtPolarPlot* QwtPolarMagnifier::plot() const
 {
     const QwtPolarCanvas* c = canvas();
@@ -117,9 +189,16 @@ void QwtPolarMagnifier::widgetKeyPressEvent(QKeyEvent* event)
     QwtMagnifier::widgetKeyPressEvent(event);
 }
 
-/*!
-   Zoom in/out the zoomed area
-   \param factor A value < 1.0 zooms in, a value > 1.0 zooms out.
+/**
+ * \if ENGLISH
+ * @brief Zoom in/out the zoomed area
+ * @param[in] factor A value < 1.0 zooms in, a value > 1.0 zooms out
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 放大/缩小缩放区域
+ * @param[in] factor 值 < 1.0 时放大，值 > 1.0 时缩小
+ * \endif
  */
 void QwtPolarMagnifier::rescale(double factor)
 {
@@ -148,7 +227,15 @@ void QwtPolarMagnifier::rescale(double factor)
     plt->replot();
 }
 
-//! Unzoom the plot widget
+/**
+ * \if ENGLISH
+ * @brief Unzoom the plot widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 取消绘图控件的缩放
+ * \endif
+ */
 void QwtPolarMagnifier::unzoom()
 {
     QwtPolarPlot* plt = plot();

@@ -133,7 +133,16 @@ double QwtNullTransform::invTransform( double value ) const
     return value;
 }
 
-//! \if ENGLISH Clone of the transformation \endif \if CHINESE 变换的克隆 \endif
+/**
+ * \if ENGLISH
+ * @brief Clone of the transformation
+ * @return New QwtNullTransform instance
+ * \endif
+ * \if CHINESE
+ * @brief 变换的克隆
+ * @return 新的 QwtNullTransform 实例
+ * \endif
+ */
 QwtTransform* QwtNullTransform::copy() const
 {
     return new QwtNullTransform();

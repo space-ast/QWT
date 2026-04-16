@@ -82,17 +82,29 @@ public:
      * \if ENGLISH
      * @brief Constructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数
+     * \endif
      */
     explicit QwtPlotOpenGLCanvas(QwtPlot* = nullptr);
     /**
      * \if ENGLISH
      * @brief Constructor with surface format
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数（带表面格式）
+     * \endif
      */
     explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = nullptr);
     /**
      * \if ENGLISH
      * @brief Destructor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 析构函数
      * \endif
      */
     virtual ~QwtPlotOpenGLCanvas();
@@ -101,11 +113,19 @@ public:
      * \if ENGLISH
      * @brief Invalidate the backing store
      * \endif
+     *
+     * \if CHINESE
+     * @brief 使后备存储失效
+     * \endif
      */
     Q_INVOKABLE virtual void invalidateBackingStore() override;
     /**
      * \if ENGLISH
      * @brief Get the border path
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 获取边界路径
      * \endif
      */
     Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
@@ -114,6 +134,10 @@ public:
      * \if ENGLISH
      * @brief Handle events
      * \endif
+     *
+     * \if CHINESE
+     * @brief 处理事件
+     * \endif
      */
     virtual bool event(QEvent*) override;
 
@@ -121,6 +145,10 @@ public Q_SLOTS:
     /**
      * \if ENGLISH
      * @brief Replot the canvas
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 重绘画布
      * \endif
      */
     void replot();

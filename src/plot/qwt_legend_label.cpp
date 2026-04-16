@@ -64,11 +64,17 @@ public:
     int spacing;
 };
 
-/*!
-   Set the attributes of the legend label
-
-   \param legendData Attributes of the label
-   \sa data()
+/**
+ * \if ENGLISH
+ * @brief Set the attributes of the legend label
+ * @param legendData Attributes of the label
+ * \sa data()
+ * \endif
+ * \if CHINESE
+ * @brief 设置图例标签的属性
+ * @param legendData 标签的属性
+ * \sa data()
+ * \endif
  */
 void QwtLegendLabel::setData(const QwtLegendData& legendData)
 {
@@ -88,17 +94,32 @@ void QwtLegendLabel::setData(const QwtLegendData& legendData)
         setUpdatesEnabled(true);
 }
 
-/*!
-   \return Attributes of the label
-   \sa setData(), QwtPlotItem::legendData()
+/**
+ * \if ENGLISH
+ * @brief Return the attributes of the label
+ * @return Attributes of the label
+ * \sa setData(), QwtPlotItem::legendData()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图例标签的属性
+ * @return 标签的属性
+ * \sa setData(), QwtPlotItem::legendData()
+ * \endif
  */
 const QwtLegendData& QwtLegendLabel::data() const
 {
     return m_data->legendData;
 }
 
-/*!
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor for QwtLegendLabel
+ * @param parent Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief QwtLegendLabel 构造函数
+ * @param parent 父控件
+ * \endif
  */
 QwtLegendLabel::QwtLegendLabel(QWidget* parent) : QwtTextLabel(parent)
 {
@@ -107,18 +128,31 @@ QwtLegendLabel::QwtLegendLabel(QWidget* parent) : QwtTextLabel(parent)
     setIndent(cs_legendlabel_margin);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtLegendLabel::~QwtLegendLabel()
 {
     delete m_data;
     m_data = nullptr;
 }
 
-/*!
-   Set the text to the legend item
-
-   \param text Text label
-    \sa QwtTextLabel::text()
+/**
+ * \if ENGLISH
+ * @brief Set the text to the legend item
+ * @param text Text label
+ * \sa QwtTextLabel::text()
+ * \endif
+ * \if CHINESE
+ * @brief 设置图例项的文本
+ * @param text 文本标签
+ * \sa QwtTextLabel::text()
+ * \endif
  */
 void QwtLegendLabel::setText(const QwtText& text)
 {
@@ -130,12 +164,19 @@ void QwtLegendLabel::setText(const QwtText& text)
     QwtTextLabel::setText(txt);
 }
 
-/*!
-   Set the item mode
-   The default is QwtLegendData::ReadOnly
-
-   \param mode Item mode
-   \sa itemMode()
+/**
+ * \if ENGLISH
+ * @brief Set the item mode
+ * @details The default is QwtLegendData::ReadOnly
+ * @param mode Item mode
+ * \sa itemMode()
+ * \endif
+ * \if CHINESE
+ * @brief 设置条目模式
+ * @details 默认值为 QwtLegendData::ReadOnly
+ * @param mode 条目模式
+ * \sa itemMode()
+ * \endif
  */
 void QwtLegendLabel::setItemMode(QwtLegendData::Mode mode)
 {
@@ -150,21 +191,34 @@ void QwtLegendLabel::setItemMode(QwtLegendData::Mode mode)
     }
 }
 
-/*!
-   \return Item mode
-   \sa setItemMode()
+/**
+ * \if ENGLISH
+ * @brief Return the item mode
+ * @return Item mode
+ * \sa setItemMode()
+ * \endif
+ * \if CHINESE
+ * @brief 返回条目模式
+ * @return 条目模式
+ * \sa setItemMode()
+ * \endif
  */
 QwtLegendData::Mode QwtLegendLabel::itemMode() const
 {
     return m_data->itemMode;
 }
 
-/*!
-   Assign the icon
-
-   \param icon Pixmap representing a plot item
-
-   \sa icon(), QwtPlotItem::legendIcon()
+/**
+ * \if ENGLISH
+ * @brief Assign the icon
+ * @param icon Pixmap representing a plot item
+ * \sa icon(), QwtPlotItem::legendIcon()
+ * \endif
+ * \if CHINESE
+ * @brief 设置图标
+ * @param icon 表示绘图项的像素图
+ * \sa icon(), QwtPlotItem::legendIcon()
+ * \endif
  */
 void QwtLegendLabel::setIcon(const QPixmap& icon)
 {
@@ -177,20 +231,34 @@ void QwtLegendLabel::setIcon(const QPixmap& icon)
     setIndent(indent);
 }
 
-/*!
-   \return Pixmap representing a plot item
-   \sa setIcon()
+/**
+ * \if ENGLISH
+ * @brief Return the pixmap representing a plot item
+ * @return Pixmap representing a plot item
+ * \sa setIcon()
+ * \endif
+ * \if CHINESE
+ * @brief 返回表示绘图项的像素图
+ * @return 表示绘图项的像素图
+ * \sa setIcon()
+ * \endif
  */
 QPixmap QwtLegendLabel::icon() const
 {
     return m_data->icon;
 }
 
-/*!
-   \brief Change the spacing between icon and text
-
-   \param spacing Spacing
-   \sa spacing(), QwtTextLabel::margin()
+/**
+ * \if ENGLISH
+ * @brief Change the spacing between icon and text
+ * @param spacing Spacing
+ * \sa spacing(), QwtTextLabel::margin()
+ * \endif
+ * \if CHINESE
+ * @brief 更改图标和文本之间的间距
+ * @param spacing 间距
+ * \sa spacing(), QwtTextLabel::margin()
+ * \endif
  */
 void QwtLegendLabel::setSpacing(int spacing)
 {
@@ -206,20 +274,34 @@ void QwtLegendLabel::setSpacing(int spacing)
     }
 }
 
-/*!
-   \return Spacing between icon and text
-   \sa setSpacing(), QwtTextLabel::margin()
+/**
+ * \if ENGLISH
+ * @brief Return the spacing between icon and text
+ * @return Spacing between icon and text
+ * \sa setSpacing(), QwtTextLabel::margin()
+ * \endif
+ * \if CHINESE
+ * @brief 返回图标和文本之间的间距
+ * @return 图标和文本之间的间距
+ * \sa setSpacing(), QwtTextLabel::margin()
+ * \endif
  */
 int QwtLegendLabel::spacing() const
 {
     return m_data->spacing;
 }
 
-/*!
-    Check/Uncheck a the item
-
-    \param on check/uncheck
-    \sa setItemMode()
+/**
+ * \if ENGLISH
+ * @brief Check/Uncheck the item
+ * @param on check/uncheck
+ * \sa setItemMode()
+ * \endif
+ * \if CHINESE
+ * @brief 选中/取消选中条目
+ * @param on 选中/取消选中
+ * \sa setItemMode()
+ * \endif
  */
 void QwtLegendLabel::setChecked(bool on)
 {
@@ -233,7 +315,16 @@ void QwtLegendLabel::setChecked(bool on)
     }
 }
 
-//! Return true, if the item is checked
+/**
+ * \if ENGLISH
+ * @brief Return true if the item is checked
+ * @return True if the item is checked
+ * \endif
+ * \if CHINESE
+ * @brief 返回条目是否被选中
+ * @return 如果条目被选中则返回 true
+ * \endif
+ */
 bool QwtLegendLabel::isChecked() const
 {
     return m_data->itemMode == QwtLegendData::Checkable && isDown();
@@ -267,7 +358,16 @@ bool QwtLegendLabel::isDown() const
     return m_data->isDown;
 }
 
-//! Return a size hint
+/**
+ * \if ENGLISH
+ * @brief Return a size hint
+ * @return Size hint
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \endif
+ */
 QSize QwtLegendLabel::sizeHint() const
 {
     QSize sz = QwtTextLabel::sizeHint();

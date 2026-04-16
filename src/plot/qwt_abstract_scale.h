@@ -71,79 +71,79 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
     Q_PROPERTY( double scaleStepSize READ scaleStepSize WRITE setScaleStepSize )
 
   public:
-    /// Constructor for QwtAbstractScale (English only)
+    // Constructor for QwtAbstractScale
     explicit QwtAbstractScale( QWidget* parent = nullptr );
     
-    /// Destructor for QwtAbstractScale (English only)
+    // Destructor for QwtAbstractScale
     virtual ~QwtAbstractScale();
 
-    /// Set scale by lower and upper bounds (English only)
+    // Set scale by lower and upper bounds
     void setScale( double lowerBound, double upperBound );
     
-    /// Set scale by interval (English only)
+    // Set scale by interval
     void setScale( const QwtInterval& );
     
-    /// Set scale by scale division (English only)
+    // Set scale by scale division
     void setScale( const QwtScaleDiv& );
 
-    /// Return the current scale division (English only)
+    // Return the current scale division
     const QwtScaleDiv& scaleDiv() const;
 
-    /// Set the lower bound of the scale (English only)
+    // Set the lower bound of the scale
     void setLowerBound( double value );
     
-    /// Return the lower bound of the scale (English only)
+    // Return the lower bound of the scale
     double lowerBound() const;
 
-    /// Set the upper bound of the scale (English only)
+    // Set the upper bound of the scale
     void setUpperBound( double value );
     
-    /// Return the upper bound of the scale (English only)
+    // Return the upper bound of the scale
     double upperBound() const;
 
-    /// Set the step size for scale calculation (English only)
+    // Set the step size for scale calculation
     void setScaleStepSize( double stepSize );
     
-    /// Return the current step size hint (English only)
+    // Return the current step size hint
     double scaleStepSize() const;
 
-    /// Set the maximum number of major tick intervals (English only)
+    // Set the maximum number of major tick intervals
     void setScaleMaxMajor( int ticks );
     
-    /// Return the maximum number of minor tick intervals (English only)
+    // Return the maximum number of minor tick intervals
     int scaleMaxMinor() const;
 
-    /// Set the maximum number of minor tick intervals (English only)
+    // Set the maximum number of minor tick intervals
     void setScaleMaxMinor( int ticks );
     
-    /// Return the maximum number of major tick intervals (English only)
+    // Return the maximum number of major tick intervals
     int scaleMaxMajor() const;
 
-    /// Set the scale engine (English only)
+    // Set the scale engine
     void setScaleEngine( QwtScaleEngine* );
     
-    /// Return the scale engine (const version) (English only)
+    // Return the scale engine (const version)
     const QwtScaleEngine* scaleEngine() const;
     
-    /// Return the scale engine (non-const version) (English only)
+    // Return the scale engine (non-const version)
     QwtScaleEngine* scaleEngine();
 
-    /// Transform a scale value to widget coordinates (English only)
+    // Transform a scale value to widget coordinates
     int transform( double ) const;
     
-    /// Transform a widget coordinate to scale value (English only)
+    // Transform a widget coordinate to scale value
     double invTransform( int ) const;
 
-    /// Return true if scale is inverted (English only)
+    // Return true if scale is inverted
     bool isInverted() const;
 
-    /// Return the minimum boundary value (English only)
+    // Return the minimum boundary value
     double minimum() const;
     
-    /// Return the maximum boundary value (English only)
+    // Return the maximum boundary value
     double maximum() const;
 
-    /// Return the scale map (English only)
+    // Return the scale map
     const QwtScaleMap& scaleMap() const;
 
   protected:

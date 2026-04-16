@@ -117,14 +117,22 @@ class QwtPlotShapeItem::PrivateData
     QPainterPath shape;
 };
 
-/*!
-   \brief Constructor
-
-   Sets the following item attributes:
-   - QwtPlotItem::AutoScale: true
-   - QwtPlotItem::Legend:    false
-
-   \param title Title
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title
+ * @details Sets the following item attributes:
+ *          - QwtPlotItem::AutoScale: true
+ *          - QwtPlotItem::Legend: false
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 标题
+ * @details 设置以下项目属性：
+ *          - QwtPlotItem::AutoScale: true
+ *          - QwtPlotItem::Legend: false
+ * \endif
  */
 QwtPlotShapeItem::QwtPlotShapeItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
@@ -132,14 +140,22 @@ QwtPlotShapeItem::QwtPlotShapeItem( const QString& title )
     init();
 }
 
-/*!
-   \brief Constructor
-
-   Sets the following item attributes:
-   - QwtPlotItem::AutoScale: true
-   - QwtPlotItem::Legend:    false
-
-   \param title Title
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title
+ * @details Sets the following item attributes:
+ *          - QwtPlotItem::AutoScale: true
+ *          - QwtPlotItem::Legend: false
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 标题
+ * @details 设置以下项目属性：
+ *          - QwtPlotItem::AutoScale: true
+ *          - QwtPlotItem::Legend: false
+ * \endif
  */
 QwtPlotShapeItem::QwtPlotShapeItem( const QwtText& title )
     : QwtPlotItem( title )
@@ -147,7 +163,15 @@ QwtPlotShapeItem::QwtPlotShapeItem( const QwtText& title )
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotShapeItem::~QwtPlotShapeItem()
 {
     delete m_data;
@@ -164,18 +188,36 @@ void QwtPlotShapeItem::init()
     setZ( 8.0 );
 }
 
-//! \return QwtPlotItem::Rtti_PlotShape
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return QwtPlotItem::Rtti_PlotShape
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPlotItem::Rtti_PlotShape
+ * \endif
+ */
 int QwtPlotShapeItem::rtti() const
 {
     return QwtPlotItem::Rtti_PlotShape;
 }
 
-/*!
-   Specify an attribute how to draw the shape
-
-   \param attribute Paint attribute
-   \param on On/Off
-   \sa testPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Specify an attribute how to draw the shape
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa testPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定绘制形状的属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开/关
+ * @sa testPaintAttribute()
+ * \endif
  */
 void QwtPlotShapeItem::setPaintAttribute( PaintAttribute attribute, bool on )
 {
@@ -185,20 +227,38 @@ void QwtPlotShapeItem::setPaintAttribute( PaintAttribute attribute, bool on )
         m_data->paintAttributes &= ~attribute;
 }
 
-/*!
-   \return True, when attribute is enabled
-   \sa setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Check if a paint attribute is enabled
+ * @param[in] attribute Paint attribute
+ * @return True, when attribute is enabled
+ * @sa setPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查绘制属性是否启用
+ * @param[in] attribute 绘制属性
+ * @return 如果属性启用，则返回 True
+ * @sa setPaintAttribute()
+ * \endif
  */
 bool QwtPlotShapeItem::testPaintAttribute( PaintAttribute attribute ) const
 {
     return ( m_data->paintAttributes & attribute );
 }
 
-/*!
-   Set the mode how to represent the item on the legend
-
-   \param mode Mode
-   \sa legendMode()
+/**
+ * \if ENGLISH
+ * @brief Set the mode how to represent the item on the legend
+ * @param[in] mode Mode
+ * @sa legendMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置在图例上显示项目的模式
+ * @param[in] mode 模式
+ * @sa legendMode()
+ * \endif
  */
 void QwtPlotShapeItem::setLegendMode( LegendMode mode )
 {

@@ -99,17 +99,29 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
      * \if ENGLISH
      * @brief Constructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数
+     * \endif
      */
     explicit QwtPlotGLCanvas( QwtPlot* = nullptr );
     /**
      * \if ENGLISH
      * @brief Constructor with QGLFormat
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数（带 QGLFormat）
+     * \endif
      */
     explicit QwtPlotGLCanvas( const QGLFormat&, QwtPlot* = nullptr );
     /**
      * \if ENGLISH
      * @brief Destructor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 析构函数
      * \endif
      */
     virtual ~QwtPlotGLCanvas();
@@ -118,11 +130,19 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
      * \if ENGLISH
      * @brief Invalidate the backing store
      * \endif
+     *
+     * \if CHINESE
+     * @brief 使后备存储失效
+     * \endif
      */
     Q_INVOKABLE virtual void invalidateBackingStore() override;
     /**
      * \if ENGLISH
      * @brief Get the border path
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 获取边界路径
      * \endif
      */
     Q_INVOKABLE QPainterPath borderPath( const QRect& ) const;
@@ -131,6 +151,10 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
      * \if ENGLISH
      * @brief Handle events
      * \endif
+     *
+     * \if CHINESE
+     * @brief 处理事件
+     * \endif
      */
     virtual bool event( QEvent* ) override;
 
@@ -138,6 +162,10 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     /**
      * \if ENGLISH
      * @brief Replot the canvas
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 重绘画布
      * \endif
      */
     void replot();

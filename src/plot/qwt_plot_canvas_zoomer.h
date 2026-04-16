@@ -28,26 +28,29 @@ class QwtPlot;
 struct QWT_EXPORT QwtPlotCanvasZoomState
 {
 public:
-    /// Constructor
+    // Default constructor
     QwtPlotCanvasZoomState();
-    /// Constructor with plot and axis intervals
+    
+    // Constructor with plot and axis intervals
     QwtPlotCanvasZoomState(QwtPlot* p,
                            const QwtInterval& yLeft,
                            const QwtInterval& yRight,
                            const QwtInterval& xBottom,
                            const QwtInterval& xTop);
-    /// Get current state from plot
+    
+    // Create zoom state from current plot axis ranges
     static QwtPlotCanvasZoomState fromPlot(QwtPlot* plot);
 
-    /// Apply state to plot
+    // Apply this zoom state to the associated plot
     void apply() const;
 
-    /// Check if two states are equal
+    // Check if two zoom states are equal
     bool operator==(const QwtPlotCanvasZoomState& other) const;
-    /// Check if two states are not equal
+    
+    // Check if two zoom states are not equal
     bool operator!=(const QwtPlotCanvasZoomState& other) const;
 
-    /// Check if state is valid
+    // Check if this zoom state is valid (has an associated plot)
     bool isValid() const;
 
 public:
@@ -112,76 +115,75 @@ class QWT_EXPORT QwtPlotCanvasZoomer : public QwtCanvasPicker
     Q_OBJECT
     QWT_DECLARE_PRIVATE(QwtPlotCanvasZoomer)
 public:
-    /// Constructor
+    // Constructor
     explicit QwtPlotCanvasZoomer(QWidget* canvas, bool doReplot = true);
-    /// Destructor
+    
+    // Destructor
     virtual ~QwtPlotCanvasZoomer();
 
-    /// Set zoom base (current ranges of all axes), min zoom size is calculated based on this
+    // Set zoom base to current axis ranges, min zoom size is calculated based on this
     virtual void setZoomBase(bool doReplot = true);
 
-    /// Set auto replot
+    // Enable or disable automatic replot after zoom operations
     void setAutoReplot(bool on = true);
-    /// Check if auto replot is enabled
+    
+    // Check if automatic replot is enabled
     bool isAutoReplot() const;
-    /// Get zoom base
+    
+    // Get the base zoom state (initial unzoomed state)
     QList< QwtPlotCanvasZoomState > zoomBase() const;
-    /// Get current zoom state
+    
+    // Get the current zoom state
     QList< QwtPlotCanvasZoomState > zoomState() const;
-    /// Set maximum stack depth, -1 for unlimited
+    
+    // Set maximum number of zoom levels in the stack, -1 for unlimited
     void setMaxStackDepth(int);
-    /// Get maximum stack depth
+    
+    // Get maximum stack depth
     int maxStackDepth() const;
-    /// Get zoom stack
+    
+    // Get the zoom stack containing all zoom states
     const QStack< QList< QwtPlotCanvasZoomState > >& zoomStack() const;
 
-    /// Get current zoom state index
+    // Get the current zoom state index in the stack
     uint zoomStateIndex() const;
 
 public Q_SLOTS:
-    /// Navigate in zoom stack by offset
+    // Navigate in the zoom stack by offset (negative = zoom out, positive = zoom in)
     virtual void zoom(int offset);
-    /// Append zoom state
+    
+    // Append a new zoom state to the stack
     virtual void appendZoom(const QList< QwtPlotCanvasZoomState >& rect);
+    
 Q_SIGNALS:
     /**
      * \if ENGLISH
-     * A signal emitted when the plot has been zoomed in or out.
-     * @param state Current zoom state containing all axis ranges.
+     * @brief Signal emitted when the plot has been zoomed in or out
+     * @param state Current zoom state containing all axis ranges
      * \endif
      * 
      * \if CHINESE
-     * 当绘图被放大或缩小时发出的信号。
-     * @param state 包含所有坐标轴范围的当前缩放状态。
+     * @brief 当绘图被放大或缩小时发出的信号
+     * @param state 包含所有坐标轴范围的当前缩放状态
      * \endif
      */
     void zoomed(const QList< QwtPlotCanvasZoomState >& state);
 
 protected:
-    /// Rescale the plot
     virtual void rescale();
 
-    /// Handle mouse release event
     virtual void widgetMouseReleaseEvent(QMouseEvent*) override;
-    /// Handle key press event
     virtual void widgetKeyPressEvent(QKeyEvent*) override;
 
-    /// Begin selection
     virtual void begin() override;
-    /// End selection
     virtual bool end(bool ok = true) override;
-    /// Accept selection
     virtual bool accept(QPolygon&) const override;
 
 private:
-    /// Initialize the zoomer
     void init(bool doReplot);
 
-    /// Convert canvas pixel rectangle to zoom state list
     QList< QwtPlotCanvasZoomState > canvasRectToZoomStateList(const QRect& pixelRect) const;
-    /// Convert canvas pixel rectangle to zoom state
     QwtPlotCanvasZoomState canvasRectToZoomState(QwtPlot* plt, const QRect& pixelRect) const;
-    /// Move current zoom state
     void moveCurrentState(double dx, double dy);
 };
 

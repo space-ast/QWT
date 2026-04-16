@@ -82,7 +82,17 @@ inline QwtStatisticalSample::QwtStatisticalSample(double pos)
 {
 }
 
-/// \if ENGLISH A sample of the types (x1-x2, y) or (x, y1-y2) \endif \if CHINESE 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本 \endif
+/**
+ * \if ENGLISH
+ * @brief A sample of the types (x1-x2, y) or (x, y1-y2)
+ * @details Used for interval-based samples where one dimension has a range
+ *          instead of a single value.
+ * \endif
+ * \if CHINESE
+ * @brief 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本
+ * @details 用于基于区间的样本，其中一个维度是范围而不是单个值。
+ * \endif
+ */
 class QWT_EXPORT QwtIntervalSample
 {
 public:
@@ -174,7 +184,18 @@ inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
     return !(*this == other);
 }
 
-//! \brief A sample of the types (x1...xn, y) or (x, y1..yn)
+/**
+ * \if ENGLISH
+ * @brief A sample of the types (x1...xn, y) or (x, y1..yn)
+ * @details Used for set-based samples where one dimension has multiple values.
+ *          Commonly used for bar charts with multiple bars at each position.
+ * \endif
+ * \if CHINESE
+ * @brief 类型为 (x1...xn, y) 或 (x, y1..yn) 的样本
+ * @details 用于基于集合的样本，其中一个维度有多个值。
+ *          通常用于在每个位置有多个柱的柱状图。
+ * \endif
+ */
 class QWT_EXPORT QwtSetSample
 {
 public:
@@ -193,37 +214,72 @@ public:
     QVector< double > set;
 };
 
-/*!
-   Constructor
-   The value is set to 0.0
+/**
+ * \if ENGLISH
+ * @brief Default constructor
+ * @details The value is set to 0.0
+ * \endif
+ * \if CHINESE
+ * @brief 默认构造函数
+ * @details 值设置为 0.0
+ * \endif
  */
 inline QwtSetSample::QwtSetSample() : value(0.0)
 {
 }
 
-/*!
-   Constructor
-
-   \param v Value
-   \param s Set of values
+/**
+ * \if ENGLISH
+ * @brief Constructor with value and set
+ * @param v Value
+ * @param s Set of values
+ * \endif
+ * \if CHINESE
+ * @brief 带值和集合的构造函数
+ * @param v 值
+ * @param s 值的集合
+ * \endif
  */
 inline QwtSetSample::QwtSetSample(double v, const QVector< double >& s) : value(v), set(s)
 {
 }
 
-//! Compare operator
+/**
+ * \if ENGLISH
+ * @brief Equality comparison operator
+ * \endif
+ * \if CHINESE
+ * @brief 相等比较运算符
+ * \endif
+ */
 inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 {
     return value == other.value && set == other.set;
 }
 
-//! Compare operator
+/**
+ * \if ENGLISH
+ * @brief Inequality comparison operator
+ * \endif
+ * \if CHINESE
+ * @brief 不相等比较运算符
+ * \endif
+ */
 inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 {
     return !(*this == other);
 }
 
-//! \return All values of the set added
+/**
+ * \if ENGLISH
+ * @brief Return all values of the set added together
+ * @return Sum of all values in the set
+ * \endif
+ * \if CHINESE
+ * @brief 返回集合中所有值的总和
+ * @return 集合中所有值的总和
+ * \endif
+ */
 inline double QwtSetSample::added() const
 {
     double y = 0.0;
@@ -233,14 +289,20 @@ inline double QwtSetSample::added() const
     return y;
 }
 
-/*!
-   \brief Open-High-Low-Close sample used in financial charts
-
-   In financial charts the movement of a price in a time interval is often
-   represented by the opening/closing prices and the lowest/highest prices
-   in this interval.
-
-   \sa QwtTradingChartData
+/**
+ * \if ENGLISH
+ * @brief Open-High-Low-Close sample used in financial charts
+ * @details In financial charts the movement of a price in a time interval is often
+ *          represented by the opening/closing prices and the lowest/highest prices
+ *          in this interval.
+ * @sa QwtTradingChartData
+ * \endif
+ * \if CHINESE
+ * @brief 用于金融图表的开盘-最高-最低-收盘样本
+ * @details 在金融图表中，时间间隔内的价格变动通常由开盘/收盘价格
+ *          和该间隔内的最低/最高价格表示。
+ * @sa QwtTradingChartData
+ * \endif
  */
 class QWT_EXPORT QwtOHLCSample
 {
@@ -270,43 +332,65 @@ public:
     double close;
 };
 
-/*!
-   Constructor
-
-   \param t Time value
-   \param o Open value
-   \param h High value
-   \param l Low value
-   \param c Close value
+/**
+ * \if ENGLISH
+ * @brief Constructor with all OHLC values
+ * @param t Time value
+ * @param o Open value
+ * @param h High value
+ * @param l Low value
+ * @param c Close value
+ * \endif
+ * \if CHINESE
+ * @brief 包含所有 OHLC 值的构造函数
+ * @param t 时间值
+ * @param o 开盘值
+ * @param h 最高值
+ * @param l 最低值
+ * @param c 收盘值
+ * \endif
  */
 inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, double c)
     : time(t), open(o), high(h), low(l), close(c)
 {
 }
 
-/*!
-   \brief Check if a sample is valid
-
-   A sample is valid, when all of the following checks are true:
-
-   - low <= high
-   - low <= open <= high
-   - low <= close <= high
-
-   \return True, when the sample is valid
+/**
+ * \if ENGLISH
+ * @brief Check if a sample is valid
+ * @details A sample is valid, when all of the following checks are true:
+ *          - low <= high
+ *          - low <= open <= high
+ *          - low <= close <= high
+ * @return True, when the sample is valid
+ * \endif
+ * \if CHINESE
+ * @brief 检查样本是否有效
+ * @details 当以下所有检查都为真时，样本有效：
+ *          - low <= high
+ *          - low <= open <= high
+ *          - low <= close <= high
+ * @return 当样本有效时返回 true
+ * \endif
  */
 inline bool QwtOHLCSample::isValid() const
 {
     return (low <= high) && (open >= low) && (open <= high) && (close >= low) && (close <= high);
 }
 
-/*!
-   \brief Calculate the bounding interval of the OHLC values
-
-   For valid samples the limits of this interval are always low/high.
-
-   \return Bounding interval
-   \sa isValid()
+/**
+ * \if ENGLISH
+ * @brief Calculate the bounding interval of the OHLC values
+ * @details For valid samples the limits of this interval are always low/high.
+ * @return Bounding interval
+ * @sa isValid()
+ * \endif
+ * \if CHINESE
+ * @brief 计算 OHLC 值的边界区间
+ * @details 对于有效样本，此区间的边界始终是 low/high。
+ * @return 边界区间
+ * @sa isValid()
+ * \endif
  */
 inline QwtInterval QwtOHLCSample::boundingInterval() const
 {
@@ -323,13 +407,19 @@ inline QwtInterval QwtOHLCSample::boundingInterval() const
     return QwtInterval(minY, maxY);
 }
 
-/*!
-   \brief Sample used in vector fields
-
-   A vector field sample is a position and a vector - usually
-   representing some direction and magnitude - attached to this position.
-
-   \sa QwtVectorFieldData
+/**
+ * \if ENGLISH
+ * @brief Sample used in vector fields
+ * @details A vector field sample is a position and a vector - usually
+ *          representing some direction and magnitude - attached to this position.
+ * @sa QwtVectorFieldData
+ * \endif
+ * \if CHINESE
+ * @brief 用于向量场的样本
+ * @details 向量场样本是一个位置和一个向量——通常表示某个方向和大小——
+ *          附在该位置上。
+ * @sa QwtVectorFieldData
+ * \endif
  */
 class QWT_EXPORT QwtVectorFieldSample
 {
@@ -355,38 +445,71 @@ public:
     double vy;
 };
 
-/*!
-   \brief Constructor
-
-   \param posX x coordinate of the position
-   \param posY y coordinate of the position
-   \param vectorX x coordinate of the vector
-   \param vectorY y coordinate of the vector
+/**
+ * \if ENGLISH
+ * @brief Constructor with position and vector coordinates
+ * @param posX x coordinate of the position
+ * @param posY y coordinate of the position
+ * @param vectorX x coordinate of the vector
+ * @param vectorY y coordinate of the vector
+ * \endif
+ * \if CHINESE
+ * @brief 带位置和向量坐标的构造函数
+ * @param posX 位置的 x 坐标
+ * @param posY 位置的 y 坐标
+ * @param vectorX 向量的 x 坐标
+ * @param vectorY 向量的 y 坐标
+ * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, double vectorX, double vectorY)
     : x(posX), y(posY), vx(vectorX), vy(vectorY)
 {
 }
 
-/*!
-   \brief Constructor
-
-   \param pos Position
-   \param vectorX x coordinate of the vector
-   \param vectorY y coordinate of the vector
+/**
+ * \if ENGLISH
+ * @brief Constructor with QPointF position and vector coordinates
+ * @param pos Position as QPointF
+ * @param vectorX x coordinate of the vector
+ * @param vectorY y coordinate of the vector
+ * \endif
+ * \if CHINESE
+ * @brief 带 QPointF 位置和向量坐标的构造函数
+ * @param pos 作为 QPointF 的位置
+ * @param vectorX 向量的 x 坐标
+ * @param vectorY 向量的 y 坐标
+ * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vectorX, double vectorY)
     : x(pos.x()), y(pos.y()), vx(vectorX), vy(vectorY)
 {
 }
 
-//! \return x/y coordinates as QPointF
+/**
+ * \if ENGLISH
+ * @brief Return position as QPointF
+ * @return x/y coordinates as QPointF
+ * \endif
+ * \if CHINESE
+ * @brief 返回 QPointF 格式的位置
+ * @return x/y 坐标作为 QPointF
+ * \endif
+ */
 inline QPointF QwtVectorFieldSample::pos() const
 {
     return QPointF(x, y);
 }
 
-//! \return true, if vx and vy are 0
+/**
+ * \if ENGLISH
+ * @brief Check if the vector is null
+ * @return true, if vx and vy are 0
+ * \endif
+ * \if CHINESE
+ * @brief 检查向量是否为空
+ * @return 如果 vx 和 vy 为 0 则返回 true
+ * \endif
+ */
 inline bool QwtVectorFieldSample::isNull() const
 {
     return (vx == 0.0) && (vy == 0.0);

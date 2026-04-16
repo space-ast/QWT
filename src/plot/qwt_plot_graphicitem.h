@@ -58,12 +58,20 @@ class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
      * \if ENGLISH
      * @brief Constructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数
+     * \endif
      */
 explicit QwtPlotGraphicItem( const QString& title = QString() );
 
     /**
      * \if ENGLISH
      * @brief Constructor with QwtText title
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数（带 QwtText 标题）
      * \endif
      */
 explicit QwtPlotGraphicItem( const QwtText& title );
@@ -72,12 +80,20 @@ explicit QwtPlotGraphicItem( const QwtText& title );
      * \if ENGLISH
      * @brief Destructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 析构函数
+     * \endif
      */
 virtual ~QwtPlotGraphicItem();
 
     /**
      * \if ENGLISH
      * @brief Set graphic with its bounding rectangle
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 设置图形及其边界矩形
      * \endif
      */
 void setGraphic( const QRectF& rect, const QwtGraphic& );
@@ -86,6 +102,10 @@ void setGraphic( const QRectF& rect, const QwtGraphic& );
      * \if ENGLISH
      * @brief Get graphic
      * \endif
+     *
+     * \if CHINESE
+     * @brief 获取图形
+     * \endif
      */
 QwtGraphic graphic() const;
 
@@ -93,12 +113,20 @@ QwtGraphic graphic() const;
      * \if ENGLISH
      * @brief Get the bounding rectangle
      * \endif
+     *
+     * \if CHINESE
+     * @brief 获取边界矩形
+     * \endif
      */
 virtual QRectF boundingRect() const override;
 
     /**
      * \if ENGLISH
      * @brief Draw the graphic
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 绘制图形
      * \endif
      */
 virtual void draw( QPainter*,
@@ -108,6 +136,10 @@ virtual void draw( QPainter*,
     /**
      * \if ENGLISH
      * @brief Get the runtime type information
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 获取运行时类型信息
      * \endif
      */
 virtual int rtti() const override;

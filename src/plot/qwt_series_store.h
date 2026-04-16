@@ -48,7 +48,7 @@
 class QwtAbstractSeriesStore
 {
 public:
-    /// Destructor
+    // Destructor
     virtual ~QwtAbstractSeriesStore()
     {
     }
@@ -108,34 +108,34 @@ template< typename T >
 class QwtSeriesStore : public virtual QwtAbstractSeriesStore
 {
 public:
-    /// Constructor - The store contains no series
+    // Constructor - The store contains no series
     explicit QwtSeriesStore();
 
-    /// Destructor
+    // Destructor
     ~QwtSeriesStore();
 
-    /// Assign a series of samples
+    // Assign a series of samples
     void setData(QwtSeriesData< T >* series);
 
-    /// Get the series data
+    // Get the series data
     QwtSeriesData< T >* data();
 
-    /// Get the series data (const version)
+    // Get the series data (const version)
     const QwtSeriesData< T >* data() const;
 
-    /// Get sample at position index
+    // Get sample at position index
     T sample(size_t index) const;
 
-    /// Get number of samples of the series
+    // Get number of samples of the series
     virtual size_t dataSize() const override;
 
-    /// Get bounding rectangle of the series or an invalid rectangle, when no series is stored
+    // Get bounding rectangle of the series or an invalid rectangle, when no series is stored
     virtual QRectF dataRect() const override;
 
-    /// Set a the "rect of interest" for the series
+    // Set a the "rect of interest" for the series
     virtual void setRectOfInterest(const QRectF& rect) override;
 
-    /// Replace a series without deleting the previous one
+    // Replace a series without deleting the previous one
     QwtSeriesData< T >* swapData(QwtSeriesData< T >* series);
 
 private:

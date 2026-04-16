@@ -1,4 +1,4 @@
-﻿#ifndef QWT_FIGURE_H
+#ifndef QWT_FIGURE_H
 #define QWT_FIGURE_H
 // stl
 #include <memory>
@@ -15,76 +15,63 @@ class QwtPlot;
 
 /**
  * @class QwtFigure
- * @brief A figure container for organizing Qwt plots with flexible layout options
- * @brief 用于组织Qwt绘图的图形容器，提供灵活的布局选项
  *
+ * @if ENGLISH
+ * @brief A figure container for organizing Qwt plots with flexible layout options
+ *
+ * @details
  * This class provides a figure-like container similar to matplotlib's Figure class,
  * supporting both normalized coordinate positioning and grid layouts for Qwt plots.
  * It uses Qt's standard top-left coordinate system for intuitive positioning.
  *
- * 此类提供类似于matplotlib的Figure类的图形容器，支持Qwt绘图的归一化坐标定位和网格布局。
- * 它使用Qt的标准左上角坐标系，使定位更加直观。
- *
+ * @par Example:
  * @code
  * // Example usage:
- * // 使用示例：
  * QwtFigure figure;
  *
  * // Add a plot using normalized coordinates (Qt top-left coordinate system)
- * // 使用归一化坐标添加绘图（Qt左上角坐标系）
  * QwtPlot* plot1 = new QwtPlot;
- * figure.addAxes(plot1, QRectF(0.1, 0.1, 0.8, 0.4)); // Left: 10%, Top: 10%, Width: 80%, Height: 40%
+ * figure.addAxes(plot1, QRectF(0.1, 0.1, 0.8, 0.4));
  *
- * // Add plots using grid layout
- * // 使用网格布局添加绘图
- * // Create a 2x2 grid:
- * // 创建2x2网格：
- * // +-------------------+-------------------+
- * // |                   |                   |
- * // |      (0,0)        |       (0,1)       |
- * // |                   |                   |
- * // +-------------------+-------------------+
- * // |                   |                   |
- * // |      (1,0)        |       (1,1)       |
- * // |                   |                   |
- * // +-------------------+-------------------+
- *
+ * // Add plots using grid layout - Create a 2x2 grid
  * QwtPlot* plot2 = new QwtPlot;
  * figure.addAxes(plot2, 2, 2, 0, 1); // 2x2 grid, row 0, column 1
- * // Result:
- * // 结果：
- * // +-------------------+-------------------+
- * // |                   |                   |
- * // |                   |      plot2        |
- * // |                   |                   |
- * // +-------------------+-------------------+
- * // |                   |                   |
- * // |                   |                   |
- * // |                   |                   |
- * // +-------------------+-------------------+
  *
  * QwtPlot* plot3 = new QwtPlot;
- * figure.addAxes(plot3, 2, 2, 1, 0, 1, 2); // 2x2 grid, row 1, columns 0-1 (span 2 columns)
- * // Result:
- * // 结果：
- * // +-------------------+-------------------+
- * // |                   |                   |
- * // |                   |      plot2        |
- * // |                   |                   |
- * // +---------------------------------------+
- * // |                                       |
- * // |              plot3 (span 2 cols)      |
- * // |                                       |
- * // +---------------------------------------+
- *
- * // Adjust layout parameters
- * // 调整布局参数
- * figure.adjustLayout(0.1, 0.1, 0.9, 0.9, 0.2, 0.2);
+ * figure.addAxes(plot3, 2, 2, 1, 0, 1, 2); // row 1, columns 0-1 (span 2 columns)
  *
  * // Save the figure
+ * figure.saveFig("output.png", 300);
+ * @endcode
+ * @endif
+ *
+ * @if CHINESE
+ * @brief 用于组织Qwt绘图的图形容器，提供灵活的布局选项
+ *
+ * @details
+ * 此类提供类似于matplotlib的Figure类的图形容器，支持Qwt绘图的归一化坐标定位和网格布局。
+ * 它使用Qt的标准左上角坐标系，使定位更加直观。
+ *
+ * @par 示例:
+ * @code
+ * // 使用示例：
+ * QwtFigure figure;
+ *
+ * // 使用归一化坐标添加绘图（Qt左上角坐标系）
+ * QwtPlot* plot1 = new QwtPlot;
+ * figure.addAxes(plot1, QRectF(0.1, 0.1, 0.8, 0.4)); // 左: 10%, 上: 10%, 宽: 80%, 高: 40%
+ *
+ * // 使用网格布局添加绘图 - 创建2x2网格
+ * QwtPlot* plot2 = new QwtPlot;
+ * figure.addAxes(plot2, 2, 2, 0, 1); // 2x2网格, 第0行, 第1列
+ *
+ * QwtPlot* plot3 = new QwtPlot;
+ * figure.addAxes(plot3, 2, 2, 1, 0, 1, 2); // 第1行, 第0-1列(跨2列)
+ *
  * // 保存图形
  * figure.saveFig("output.png", 300);
  * @endcode
+ * @endif
  */
 class QWT_EXPORT QwtFigure : public QFrame
 {
@@ -93,7 +80,8 @@ class QWT_EXPORT QwtFigure : public QFrame
 public:
     QwtFigure(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     virtual ~QwtFigure();
-    // Add a widget with normalized coordinates/使用归一化坐标添加widget
+
+    // Add a widget with normalized coordinates
     void addWidget(QWidget* widget, qreal left, qreal top, qreal width, qreal height);
     void addWidget(QWidget* widget,
                    int rowCnt,
@@ -104,13 +92,14 @@ public:
                    int colSpan  = 1,
                    qreal wspace = 0.0,
                    qreal hspace = 0.0);
-    // Add a plot with normalized coordinates/使用归一化坐标添加绘图
+
+    // Add a plot with normalized coordinates
     void addAxes(QwtPlot* plot, const QRectF& rect);
 
-    // Add a plot with normalized coordinates using separate parameters/使用分离参数和归一化坐标添加窗口部件
+    // Add a plot with normalized coordinates using separate parameters
     void addAxes(QwtPlot* plot, qreal left, qreal top, qreal width, qreal height);
 
-    // Add a plot by grid layout/添加窗口部件到网格布局
+    // Add a plot by grid layout
     void addGridAxes(QwtPlot* plot,
                      int rowCnt,
                      int colCnt,
@@ -121,129 +110,169 @@ public:
                      qreal wspace = 0.0,
                      qreal hspace = 0.0);
 
-    // 改变已经添加的窗口的位置占比,如果窗口还没添加，此函数无效
+    // Change the normalized position of an added widget
     void setWidgetNormPos(QWidget* widget, const QRectF& rect);
 
-    // Get all axes (plots) in the figure（not contain parasite axes）/获取图形中的所有坐标轴（绘图）(不包含寄生轴)
+    // Get all axes (plots) in the figure (not including parasite axes)
     QList< QwtPlot* > allAxes(bool byZOrder = false) const;
 
-    // Check if the figure has any axes/检查图形是否有任意绘图
+    // Check if the figure has any axes
     bool hasAxes() const;
 
-    // Check if the figure has plot/检查图形是否存在plot
+    // Check if the figure has a specific plot
     bool hasAxes(QwtPlot* plot) const;
 
-    // Remove a specific axes (plot) from the figure/从图形中移除特定的坐标轴（绘图）/This function does not destroy the QwtPlot object
+    // Remove a specific axes (plot) from the figure
     void removeAxes(QwtPlot* plot);
 
-    //  Take a specific axes (plot) from the figure without deleting it/从图形中取出特定的坐标轴（绘图）但不删除它
+    // Take a specific axes (plot) from the figure without deleting it
     bool takeAxes(QwtPlot* plot);
 
-    // Clear all axes from the figure/清除图形中的所有坐标轴
+    // Clear all axes from the figure
     void clear();
 
-    //  Get the size of the figure in inches/获取图形的英寸尺寸
+    // Get the size of the figure in inches
     QSize getSizeInches() const;
 
-    // Set the size of the figure in inches/设置图形的英寸尺寸
+    // Set the size of the figure in inches
     void setSizeInches(float width, float height);
     void setSizeInches(const QSizeF& size);
 
-    //  Set/Get the face color of the figure/设置图形的背景颜色
+    // Set the face color of the figure
     void setFaceColor(const QColor& color);
     QColor faceColor() const;
 
-    // Set/Get the face brush of the figure/设置图形的背景画刷
+    // Set the face brush of the figure
     void setFaceBrush(const QBrush& brush);
     QBrush faceBrush() const;
 
-    // Set/Get the edge color of the figure/设置图形的边缘颜色
+    // Set the edge color of the figure
     void setEdgeColor(const QColor& color);
     QColor edgeColor() const;
 
-    // Set/Get the edge line width of the figure/设置图形的边缘线宽
+    // Set the edge line width of the figure
     void setEdgeLineWidth(int width);
     int edgeLineWidth() const;
 
-    // Parasite Axes
-    // Create parasite axes for a host plot/为宿主绘图创建寄生轴
+    // Create parasite axes for a host plot
     QwtPlot* createParasiteAxes(QwtPlot* hostPlot, QwtAxis::Position enableAxis);
-    // Get all parasite axes for a host plot/获取宿主绘图的所有寄生轴
+
+    // Get all parasite axes for a host plot
     QList< QwtPlot* > getParasiteAxes(QwtPlot* hostPlot) const;
 
-    // Save methods / 保存方法
-    // Save the figure to a QPixmap with specified DPI/使用指定DPI将图形保存为QPixmap
+    // Save the figure to a QPixmap with specified DPI
     QPixmap saveFig(int dpi = -1) const;
 
-    // Save the figure to a QPixmap with specified size in inches/使用指定英寸尺寸将图形保存为QPixmap
+    // Save the figure to a QPixmap with specified size in inches
     QPixmap saveFig(QSizeF& inchesSize) const;
 
-    // Save the figure to a file with specified DPI/使用指定DPI将图形保存到文件
+    // Save the figure to a file with specified DPI
     bool saveFig(const QString& filename, int dpi = -1) const;
 
-    // Set the current axes (plot)/设置当前坐标轴（绘图）
+    // Set the current axes (plot)
     void setCurrentAxes(QwtPlot* plot);
     void sca(QwtPlot* plot);
 
-    // Get the current axes (plot)/获取当前坐标轴（绘图）
+    // Get the current axes (plot)
     QwtPlot* currentAxes() const;
     QwtPlot* gca() const;
 
-    // Get the normalized rectangle for a axes/获取绘图的归一化矩形
+    // Get the normalized rectangle for an axes
     QRectF axesNormRect(QwtPlot* plot) const;
-    // Get the normalized rectangle for a child widget/获取子窗口的的归一化矩形
+
+    // Get the normalized rectangle for a child widget
     QRectF widgetNormRect(QWidget* w) const;
-    // 获取在此坐标下的绘图，如果此坐标下没有，则返回nullptr，存在寄生轴情况只返回宿主轴
+
+    // Get the plot at a given position (returns host plot if parasite exists)
     QwtPlot* plotUnderPos(const QPoint& pos) const;
-    // 通过真实位置计算归一化坐标
+
+    // Calculate normalized coordinates from actual geometry
     QRectF calcNormRect(const QRect& geoRect) const;
-    // 计算正规矩形
+
+    // Calculate actual rectangle from normalized coordinates
     QRect calcActualRect(const QRectF& normRect);
-    // 更新所有的绘图
+
+    // Update all plots
     void replotAll();
-    //=============AxisAlignment==================
-    // 添加轴对齐配置
+
+    // Add axis alignment configuration
     void addAxisAlignment(const QList< QwtPlot* >& plots, int axisId);
-    // 移除指定的轴对齐配置
+
+    // Remove specified axis alignment configuration
     bool removeAxisAlignment(const QList< QwtPlot* >& plots, int axisId);
-    // 清除所有轴对齐配置
+
+    // Clear all axis alignment configurations
     void clearAxisAlignment();
-    // 应用所有轴对齐配置，对记录的plot和轴进行对齐
+
+    // Apply all axis alignment configurations
     void applyAllAxisAlignments(bool replot = true);
-    // 应用指定轴ID的所有对齐配置
+
+    // Apply all alignment configurations for a specific axis ID
     void applyAlignmentsForAxis(int axisId);
-    // 获取轴对齐信息数量，此函数用于获取当前有多少个轴对齐信息，调用addAxisAlignment多少次，就有多少个
+
+    // Get the count of axis alignment configurations
     int axisAligmentCount() const;
-    // 获取轴对齐信息
+
+    // Get axis alignment information at specified index
     QPair<QList< QwtPlot* >,int> axisAligmentInfo(int index) const;
+
 public:
-    // QwtPlot轴对齐函数
+    // Align axes of multiple QwtPlot objects
     static void alignAxes(QList< QwtPlot* > plots, int axisId, bool update = true);
 Q_SIGNALS:
     /**
-     * @brief Signal emitted when axes are added to the figure/当坐标轴添加到图形时发出的信号
-     * @param newAxes Pointer to the newly added QwtPlot / 指向新添加的QwtPlot的指针
+     * @if ENGLISH
+     * @brief Signal emitted when axes are added to the figure
+     * @param[in] newAxes Pointer to the newly added QwtPlot
+     * @note Parasite axes addition also triggers this signal
+     * @endif
+     *
+     * @if CHINESE
+     * @brief 当坐标轴添加到图形时发出的信号
+     * @param[in] newAxes 指向新添加的QwtPlot的指针
      * @note 寄生轴的添加也会触发此信号
+     * @endif
      */
     void axesAdded(QwtPlot* newAxes);
 
     /**
-     * @brief Signal emitted when axes are removed from the figure/当坐标轴从图形中移除时发出的信号
-     * @param removedAxes Pointer to the removed QwtPlot / 指向被移除的QwtPlot的指针
+     * @if ENGLISH
+     * @brief Signal emitted when axes are removed from the figure
+     * @param[in] removedAxes Pointer to the removed QwtPlot
+     * @note Parasite axes removal also triggers this signal
+     * @endif
+     *
+     * @if CHINESE
+     * @brief 当坐标轴从图形中移除时发出的信号
+     * @param[in] removedAxes 指向被移除的QwtPlot的指针
      * @note 寄生轴的移除也会触发此信号
+     * @endif
      */
     void axesRemoved(QwtPlot* removedAxes);
 
     /**
-     * @brief Signal emitted when the figure is cleared/当图形被清除时发出的信号
+     * @if ENGLISH
+     * @brief Signal emitted when the figure is cleared
+     * @endif
+     *
+     * @if CHINESE
+     * @brief 当图形被清除时发出的信号
+     * @endif
      */
     void figureCleared();
 
     /**
+     * @if ENGLISH
+     * @brief Signal emitted when the current active axes changes
+     * @param[in] current Pointer to the current QwtPlot, nullptr if no valid axes
+     * @note Parasite axes cannot be set as current axes
+     * @endif
+     *
+     * @if CHINESE
      * @brief 当前激活的坐标系发生了改变的信号
-     * @param current
+     * @param[in] current 指向当前QwtPlot的指针，无有效激活坐标系时为nullptr
      * @note 寄生轴不能作为当前axes
-     * @note 此信号会携带空指针，说明没有设置任何有效的激活坐标系
+     * @endif
      */
     void currentAxesChanged(QwtPlot* current);
 

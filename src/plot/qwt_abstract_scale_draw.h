@@ -114,25 +114,7 @@ public:
 
     virtual QwtText label(double) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Calculate the extent
-     * @details The extent is the distance from the baseline to the outermost
-     *          pixel of the scale draw in opposite to its orientation.
-     *          It is at least minimumExtent() pixels.
-     * @param font Font used for drawing the tick labels
-     * @return Number of pixels
-     * \sa setMinimumExtent(), minimumExtent()
-     * \endif
-     * \if CHINESE
-     * @brief 计算范围
-     * @details 范围是从基线到刻度绘制相反方向最外侧像素的距离。
-     *          它至少为 minimumExtent() 像素。
-     * @param font 用于绘制刻度标签的字体
-     * @return 像素数量
-     * \sa setMinimumExtent(), minimumExtent()
-     * \endif
-     */
+    // Calculate the extent (distance from baseline to outermost pixel)
     virtual double extent(const QFont& font) const = 0;
 
     void setMinimumExtent(double);

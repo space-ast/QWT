@@ -136,11 +136,15 @@ class QWT_EXPORT QwtPlotDirectPainter : public QObject
         CopyBackingStore = 0x04
     };
 
-    Q_DECLARE_FLAGS( Attributes, Attribute )
+Q_DECLARE_FLAGS( Attributes, Attribute )
 
     /**
      * \if ENGLISH
      * @brief Constructor
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 构造函数
      * \endif
      */
 explicit QwtPlotDirectPainter( QObject* parent = nullptr );
@@ -149,12 +153,20 @@ explicit QwtPlotDirectPainter( QObject* parent = nullptr );
      * \if ENGLISH
      * @brief Destructor
      * \endif
+     *
+     * \if CHINESE
+     * @brief 析构函数
+     * \endif
      */
 virtual ~QwtPlotDirectPainter();
 
     /**
      * \if ENGLISH
      * @brief Set attribute
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 设置属性
      * \endif
      */
 void setAttribute( Attribute, bool on );
@@ -163,12 +175,20 @@ void setAttribute( Attribute, bool on );
      * \if ENGLISH
      * @brief Test attribute
      * \endif
+     *
+     * \if CHINESE
+     * @brief 测试属性
+     * \endif
      */
 bool testAttribute( Attribute ) const;
 
     /**
      * \if ENGLISH
      * @brief Set clipping
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 设置裁剪
      * \endif
      */
 void setClipping( bool );
@@ -177,12 +197,20 @@ void setClipping( bool );
      * \if ENGLISH
      * @brief Check if clipping is enabled
      * \endif
+     *
+     * \if CHINESE
+     * @brief 检查是否启用了裁剪
+     * \endif
      */
 bool hasClipping() const;
 
     /**
      * \if ENGLISH
      * @brief Set clip region
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 设置裁剪区域
      * \endif
      */
 void setClipRegion( const QRegion& );
@@ -191,12 +219,20 @@ void setClipRegion( const QRegion& );
      * \if ENGLISH
      * @brief Get clip region
      * \endif
+     *
+     * \if CHINESE
+     * @brief 获取裁剪区域
+     * \endif
      */
 QRegion clipRegion() const;
 
     /**
      * \if ENGLISH
      * @brief Draw series
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 绘制系列
      * \endif
      */
 void drawSeries( QwtPlotSeriesItem*, int from, int to );
@@ -205,12 +241,20 @@ void drawSeries( QwtPlotSeriesItem*, int from, int to );
      * \if ENGLISH
      * @brief Reset the painter
      * \endif
+     *
+     * \if CHINESE
+     * @brief 重置绘制器
+     * \endif
      */
 void reset();
 
     /**
      * \if ENGLISH
      * @brief Event filter
+     * \endif
+     *
+     * \if CHINESE
+     * @brief 事件过滤器
      * \endif
      */
 virtual bool eventFilter( QObject*, QEvent* ) override;

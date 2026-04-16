@@ -259,25 +259,25 @@ inline double qwtFastAtan2(double y, double x)
     return 0.0;
 }
 
-/* !
-   \if ENGLISH
-   \brief Calculate a value of a cubic polynomial
-   \param x Value
-   \param a Cubic coefficient
-   \param b Quadratic coefficient
-   \param c Linear coefficient
-   \param d Constant offset
-   \return Value of the polynomial for x
-   \endif
-   \if CHINESE
-   \brief 计算三次多项式的值
-   \param x 值
-   \param a 三次系数
-   \param b 二次系数
-   \param c 一次系数
-   \param d 常数偏移
-   \return x 处多项式的值
-   \endif
+/**
+ * \if ENGLISH
+ * @brief Calculate a value of a cubic polynomial
+ * @param[in] x Value
+ * @param[in] a Cubic coefficient
+ * @param[in] b Quadratic coefficient
+ * @param[in] c Linear coefficient
+ * @param[in] d Constant offset
+ * @return Value of the polynomial for x
+ * \endif
+ * \if CHINESE
+ * @brief 计算三次多项式的值
+ * @param[in] x 值
+ * @param[in] a 三次系数
+ * @param[in] b 二次系数
+ * @param[in] c 一次系数
+ * @param[in] d 常数偏移
+ * @return x 处多项式的值
+ * \endif
  */
 inline double qwtCubicPolynomial(double x, double a, double b, double c, double d)
 {
@@ -556,63 +556,38 @@ inline Container qwtRemoveNanOrInfCopy(const Container& container)
 }
 
 /**
- * @brief 比较两个浮点区间是否“模糊相等”（使用 qFuzzyCompare）。
- *        Compare two floating-point ranges for fuzzy equality using qFuzzyCompare.
- *
- * 只要迭代器类别满足前向迭代器要求，即可用于任何容器（QVector、QList、
- * std::vector、std::array、原始数组等）。区间长度不同立即返回 false；
- * 否则逐元素调用 qFuzzyCompare，全部通过返回 true。
- *
- * As long as the iterators meet the ForwardIterator requirements, this function
- * works with any container (QVector, QList, std::vector, std::array, C-style
- * arrays, etc.). If the lengths differ it returns false immediately;
- * otherwise it performs element-wise qFuzzyCompare and returns true only
- * if all comparisons succeed.
- *
- * @tparam It1  第一组迭代器类型 / type of the first range's iterator
- * @tparam It2  第二组迭代器类型 / type of the second range's iterator
- *
- * @param first1  第一组区间起始迭代器 / begin iterator of the first range
- * @param last1   第一组区间结束迭代器 / end iterator of the first range
- * @param first2  第二组区间起始迭代器 / begin iterator of the second range
- * @param last2   第二组区间结束迭代器 / end iterator of the second range
- *
- * @return true  – 长度相同且所有对应元素 qFuzzyCompare 返回 true<br>
- *         false – 长度不同或任一元素 qFuzzyCompare 返回 false
- *
- * @retval true  – ranges have equal length and all corresponding elements
- *                 satisfy qFuzzyCompare<br>
- * @retval false – lengths differ or any element pair fails qFuzzyCompare
- *
- * @note 元素类型必须能被 qFuzzyCompare 接受（一般为 float/double）。
- *       The value type must be acceptable to qFuzzyCompare (usually float/double).
- *
- * @see qFuzzyCompare
- *
- * @par 示例 / Example
- * @code
- * #include <QList>
- * #include <QVector>
- * #include <vector>
- *
- * // 1) QList vs QList
- * QList<double> v1{1.0, 2.0000000000001, 3.0};
- * QList<double> v2{1.0, 2.0,               3.0};
- * bool same = fuzzyRangeEqual(v1.begin(), v1.end(),
- *                             v2.begin(), v2.end()); // same == true
- *
- * // 2) QVector vs std::vector
- * QVector<double>  qv{0.1 + 0.2, 4.0};
- * std::vector<double> sv{0.3,      4.0};
- * bool same2 = fuzzyRangeEqual(qv.begin(), qv.end(),
- *                              sv.begin(), sv.end()); // same2 == true
- *
- * // 3) C-style array
- * double a[] = {1.0, 2.0, 3.0};
- * double b[] = {1.0, 2.0000000000001, 3.0};
- * bool same3 = fuzzyRangeEqual(std::begin(a), std::end(a),
- *                              std::begin(b), std::end(b)); // same3 == true
- * @endcode
+ * \if ENGLISH
+ * @brief Compare two floating-point ranges for fuzzy equality using qFuzzyCompare
+ * @details Works with any container as long as iterators meet ForwardIterator requirements.
+ *          If the lengths differ it returns false immediately; otherwise it performs
+ *          element-wise qFuzzyCompare and returns true only if all comparisons succeed.
+ * @tparam It1 Type of the first range's iterator
+ * @tparam It2 Type of the second range's iterator
+ * @param[in] first1 Begin iterator of the first range
+ * @param[in] last1 End iterator of the first range
+ * @param[in] first2 Begin iterator of the second range
+ * @param[in] last2 End iterator of the second range
+ * @return true if ranges have equal length and all corresponding elements satisfy qFuzzyCompare
+ * @return false if lengths differ or any element pair fails qFuzzyCompare
+ * @note Element type must be acceptable to qFuzzyCompare (usually float/double)
+ * @sa qFuzzyCompare
+ * \endif
+ * \if CHINESE
+ * @brief 比较两个浮点区间是否"模糊相等"（使用 qFuzzyCompare）
+ * @details 只要迭代器类别满足前向迭代器要求，即可用于任何容器（QVector、QList、
+ *          std::vector、std::array、原始数组等）。区间长度不同立即返回 false；
+ *          否则逐元素调用 qFuzzyCompare，全部通过返回 true。
+ * @tparam It1 第一组迭代器类型
+ * @tparam It2 第二组迭代器类型
+ * @param[in] first1 第一组区间起始迭代器
+ * @param[in] last1 第一组区间结束迭代器
+ * @param[in] first2 第二组区间起始迭代器
+ * @param[in] last2 第二组区间结束迭代器
+ * @return true 长度相同且所有对应元素 qFuzzyCompare 返回 true
+ * @return false 长度不同或任一元素 qFuzzyCompare 返回 false
+ * @note 元素类型必须能被 qFuzzyCompare 接受（一般为 float/double）
+ * @sa qFuzzyCompare
+ * \endif
  */
 template< typename It1, typename It2 >
 bool fuzzyRangeEqual(It1 first1, It1 last1, It2 first2, It2 last2)

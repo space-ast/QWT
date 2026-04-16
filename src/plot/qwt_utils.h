@@ -44,11 +44,11 @@ class QwtPlotItem;
  */
 namespace Qwt
 {
-//! Get the color of a plot item
+// Get the color of a plot item
 QColor QWT_EXPORT plotItemColor(const QwtPlotItem* item, const QColor& defaultColor = QColor());
 }
 
-//! Expand a size to the global strut
+// Expand a size to the global strut
 QWT_EXPORT QSize qwtExpandedToGlobalStrut(const QSize&);
 
 #endif

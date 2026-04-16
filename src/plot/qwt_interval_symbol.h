@@ -93,28 +93,44 @@ class QWT_EXPORT QwtIntervalSymbol
     };
 
   public:
+    // Constructor
     explicit QwtIntervalSymbol( Style = NoSymbol );
+    // Copy constructor
     QwtIntervalSymbol( const QwtIntervalSymbol& );
 
+    // Destructor
     virtual ~QwtIntervalSymbol();
 
+    // Assignment operator
     QwtIntervalSymbol& operator=( const QwtIntervalSymbol& );
+    // Compare two symbols
     bool operator==( const QwtIntervalSymbol& ) const;
+    // Compare two symbols
     bool operator!=( const QwtIntervalSymbol& ) const;
 
+    // Set the symbol width
     void setWidth( int );
+    // Get the symbol width
     int width() const;
 
+    // Set the brush for Box style
     void setBrush( const QBrush& );
+    // Get the brush
     const QBrush& brush() const;
 
+    // Build and set a pen with color, width and style
     void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    // Set the pen
     void setPen( const QPen& );
+    // Get the pen
     const QPen& pen() const;
 
+    // Set the symbol style
     void setStyle( Style );
+    // Get the symbol style
     Style style() const;
 
+    // Draw the symbol
     virtual void draw( QPainter*, Qt::Orientation,
         const QPointF& from, const QPointF& to ) const;
 

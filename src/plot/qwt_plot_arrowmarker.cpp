@@ -311,7 +311,17 @@ QwtPlotArrowMarker::QwtPlotArrowMarker()
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
 
-//! Constructor with title
+/**
+ * \if ENGLISH
+ * @brief Constructor with title
+ * @param[in] title Title of the marker
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数（带标题）
+ * @param[in] title 标记的标题
+ * \endif
+ */
 QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtText(title))
 {
     m_data = new PrivateData;
@@ -319,7 +329,17 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtTe
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
 
-//! Constructor with QwtText title
+/**
+ * \if ENGLISH
+ * @brief Constructor with QwtText title
+ * @param[in] title Title of the marker
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数（带 QwtText 标题）
+ * @param[in] title 标记的标题
+ * \endif
+ */
 QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title)
 {
     m_data = new PrivateData;
@@ -327,7 +347,15 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotArrowMarker::~QwtPlotArrowMarker()
 {
     delete m_data;
@@ -367,7 +395,17 @@ QPointF QwtPlotArrowMarker::startPoint() const
     return m_data->startPoint;
 }
 
-//! \return End point in plot coordinates
+/**
+ * \if ENGLISH
+ * @brief Get the end point of the arrow
+ * @return End point in plot coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取箭头的终点
+ * @return 绘图坐标中的终点
+ * \endif
+ */
 QPointF QwtPlotArrowMarker::endPoint() const
 {
     if (m_data->positionMode == ExplicitPoints)
@@ -376,7 +414,17 @@ QPointF QwtPlotArrowMarker::endPoint() const
         return calculateEndPoint();
 }
 
-//! Set the start point in plot coordinates
+/**
+ * \if ENGLISH
+ * @brief Set the start point in plot coordinates
+ * @param[in] point Start point in plot coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置起点（绘图坐标）
+ * @param[in] point 绘图坐标中的起点
+ * \endif
+ */
 void QwtPlotArrowMarker::setStartPoint(const QPointF& point)
 {
     if (m_data->startPoint != point) {
@@ -385,7 +433,17 @@ void QwtPlotArrowMarker::setStartPoint(const QPointF& point)
     }
 }
 
-//! Set the end point in plot coordinates
+/**
+ * \if ENGLISH
+ * @brief Set the end point in plot coordinates
+ * @param[in] point End point in plot coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置终点（绘图坐标）
+ * @param[in] point 绘图坐标中的终点
+ * \endif
+ */
 void QwtPlotArrowMarker::setEndPoint(const QPointF& point)
 {
     if (m_data->endPoint != point) {
@@ -394,7 +452,19 @@ void QwtPlotArrowMarker::setEndPoint(const QPointF& point)
     }
 }
 
-//! Set both start and end points in plot coordinates
+/**
+ * \if ENGLISH
+ * @brief Set both start and end points in plot coordinates
+ * @param[in] start Start point in plot coordinates
+ * @param[in] end End point in plot coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置起点和终点（绘图坐标）
+ * @param[in] start 绘图坐标中的起点
+ * @param[in] end 绘图坐标中的终点
+ * \endif
+ */
 void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
 {
     bool changed = false;
@@ -414,7 +484,17 @@ void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
     }
 }
 
-//! \return Arrow length in pixels
+/**
+ * \if ENGLISH
+ * @brief Get the arrow length in pixels
+ * @return Arrow length in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取箭头长度（像素）
+ * @return 箭头长度（像素）
+ * \endif
+ */
 double QwtPlotArrowMarker::length() const
 {
     return m_data->length;
@@ -452,13 +532,33 @@ void QwtPlotArrowMarker::setLength(double length)
     }
 }
 
-//! \return Rotation angle in degrees
+/**
+ * \if ENGLISH
+ * @brief Get the rotation angle in degrees
+ * @return Rotation angle in degrees
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取旋转角度（度）
+ * @return 旋转角度（度）
+ * \endif
+ */
 double QwtPlotArrowMarker::angle() const
 {
     return m_data->angle;
 }
 
-//! Set the rotation angle in degrees
+/**
+ * \if ENGLISH
+ * @brief Set the rotation angle in degrees
+ * @param[in] angle Rotation angle in degrees
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置旋转角度（度）
+ * @param[in] angle 旋转角度（度）
+ * \endif
+ */
 void QwtPlotArrowMarker::setAngle(double angle)
 {
     // Validate input
@@ -478,13 +578,33 @@ void QwtPlotArrowMarker::setAngle(double angle)
     }
 }
 
-//! \return Positioning mode
+/**
+ * \if ENGLISH
+ * @brief Get the positioning mode
+ * @return Positioning mode
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取定位模式
+ * @return 定位模式
+ * \endif
+ */
 QwtPlotArrowMarker::PositionMode QwtPlotArrowMarker::positionMode() const
 {
     return m_data->positionMode;
 }
 
-//! Set the positioning mode
+/**
+ * \if ENGLISH
+ * @brief Set the positioning mode
+ * @param[in] mode Positioning mode
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置定位模式
+ * @param[in] mode 定位模式
+ * \endif
+ */
 void QwtPlotArrowMarker::setPositionMode(PositionMode mode)
 {
     if (m_data->positionMode != mode) {
@@ -495,13 +615,33 @@ void QwtPlotArrowMarker::setPositionMode(PositionMode mode)
 
 // Style and appearance methods
 
-//! \return Arrow line pen
+/**
+ * \if ENGLISH
+ * @brief Get the arrow line pen
+ * @return Arrow line pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取箭头线条画笔
+ * @return 箭头线条画笔
+ * \endif
+ */
 const QPen& QwtPlotArrowMarker::linePen() const
 {
     return m_data->linePen;
 }
 
-//! Set the arrow line pen
+/**
+ * \if ENGLISH
+ * @brief Set the arrow line pen
+ * @param[in] pen Arrow line pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置箭头线条画笔
+ * @param[in] pen 箭头线条画笔
+ * \endif
+ */
 void QwtPlotArrowMarker::setLinePen(const QPen& pen)
 {
     if (m_data->linePen != pen) {
@@ -510,19 +650,53 @@ void QwtPlotArrowMarker::setLinePen(const QPen& pen)
     }
 }
 
-//! Convenience method to set line color and width
+/**
+ * \if ENGLISH
+ * @brief Convenience method to set line color and width
+ * @param[in] color Line color
+ * @param[in] width Line width
+ * @param[in] style Line style
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置线条颜色和宽度的便捷方法
+ * @param[in] color 线条颜色
+ * @param[in] width 线条宽度
+ * @param[in] style 线条样式
+ * \endif
+ */
 void QwtPlotArrowMarker::setLinePen(const QColor& color, qreal width, Qt::PenStyle style)
 {
     setLinePen(QPen(color, width, style));
 }
 
-//! \return Head style
+/**
+ * \if ENGLISH
+ * @brief Get the head style
+ * @return Head style
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取头部样式
+ * @return 头部样式
+ * \endif
+ */
 QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::headStyle() const
 {
     return m_data->headParams.getStyle();
 }
 
-//! Set the head style
+/**
+ * \if ENGLISH
+ * @brief Set the head style
+ * @param[in] style Head style
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部样式
+ * @param[in] style 头部样式
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadStyle(EndpointStyle style)
 {
     if (m_data->headParams.getStyle() != style) {
@@ -532,13 +706,33 @@ void QwtPlotArrowMarker::setHeadStyle(EndpointStyle style)
     }
 }
 
-//! \return Tail style
+/**
+ * \if ENGLISH
+ * @brief Get the tail style
+ * @return Tail style
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取尾部样式
+ * @return 尾部样式
+ * \endif
+ */
 QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::tailStyle() const
 {
     return m_data->tailParams.getStyle();
 }
 
-//! Set the tail style
+/**
+ * \if ENGLISH
+ * @brief Set the tail style
+ * @param[in] style Tail style
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部样式
+ * @param[in] style 尾部样式
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailStyle(EndpointStyle style)
 {
     if (m_data->tailParams.getStyle() != style) {
@@ -548,13 +742,33 @@ void QwtPlotArrowMarker::setTailStyle(EndpointStyle style)
     }
 }
 
-//! \return Head size in pixels
+/**
+ * \if ENGLISH
+ * @brief Get the head size in pixels
+ * @return Head size in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取头部大小（像素）
+ * @return 头部大小（像素）
+ * \endif
+ */
 QSizeF QwtPlotArrowMarker::headSize() const
 {
     return m_data->headParams.getSize();
 }
 
-//! Set the head size in pixels
+/**
+ * \if ENGLISH
+ * @brief Set the head size in pixels
+ * @param[in] size Head size in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部大小（像素）
+ * @param[in] size 头部大小（像素）
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadSize(const QSizeF& size)
 {
     QSizeF newSize = size;
@@ -570,19 +784,49 @@ void QwtPlotArrowMarker::setHeadSize(const QSizeF& size)
     }
 }
 
-//! Convenience method to set head size with equal width and height
+/**
+ * \if ENGLISH
+ * @brief Convenience method to set head size with equal width and height
+ * @param[in] size Head size (both width and height)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部大小的便捷方法（宽度和高度相等）
+ * @param[in] size 头部大小（宽度和高度）
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadSize(qreal size)
 {
     setHeadSize(QSizeF(size, size));
 }
 
-//! \return Tail size in pixels
+/**
+ * \if ENGLISH
+ * @brief Get the tail size in pixels
+ * @return Tail size in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取尾部大小（像素）
+ * @return 尾部大小（像素）
+ * \endif
+ */
 QSizeF QwtPlotArrowMarker::tailSize() const
 {
     return m_data->tailParams.getSize();
 }
 
-//! Set the tail size in pixels
+/**
+ * \if ENGLISH
+ * @brief Set the tail size in pixels
+ * @param[in] size Tail size in pixels
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部大小（像素）
+ * @param[in] size 尾部大小（像素）
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailSize(const QSizeF& size)
 {
     QSizeF newSize = size;
@@ -598,19 +842,49 @@ void QwtPlotArrowMarker::setTailSize(const QSizeF& size)
     }
 }
 
-//! Convenience method to set tail size with equal width and height
+/**
+ * \if ENGLISH
+ * @brief Convenience method to set tail size with equal width and height
+ * @param[in] size Tail size (both width and height)
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部大小的便捷方法（宽度和高度相等）
+ * @param[in] size 尾部大小（宽度和高度）
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailSize(qreal size)
 {
     setTailSize(QSizeF(size, size));
 }
 
-//! \return Head brush
+/**
+ * \if ENGLISH
+ * @brief Get the head brush
+ * @return Head brush
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取头部画刷
+ * @return 头部画刷
+ * \endif
+ */
 const QBrush& QwtPlotArrowMarker::headBrush() const
 {
     return m_data->headParams.getBrush();
 }
 
-//! Set the head brush
+/**
+ * \if ENGLISH
+ * @brief Set the head brush
+ * @param[in] brush Head brush
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部画刷
+ * @param[in] brush 头部画刷
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadBrush(const QBrush& brush)
 {
     if (m_data->headParams.getBrush() != brush) {
@@ -619,13 +893,33 @@ void QwtPlotArrowMarker::setHeadBrush(const QBrush& brush)
     }
 }
 
-//! \return Tail brush
+/**
+ * \if ENGLISH
+ * @brief Get the tail brush
+ * @return Tail brush
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取尾部画刷
+ * @return 尾部画刷
+ * \endif
+ */
 const QBrush& QwtPlotArrowMarker::tailBrush() const
 {
     return m_data->tailParams.getBrush();
 }
 
-//! Set the tail brush
+/**
+ * \if ENGLISH
+ * @brief Set the tail brush
+ * @param[in] brush Tail brush
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部画刷
+ * @param[in] brush 尾部画刷
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailBrush(const QBrush& brush)
 {
     if (m_data->tailParams.getBrush() != brush) {
@@ -634,13 +928,33 @@ void QwtPlotArrowMarker::setTailBrush(const QBrush& brush)
     }
 }
 
-//! \return Head pen
+/**
+ * \if ENGLISH
+ * @brief Get the head pen
+ * @return Head pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取头部画笔
+ * @return 头部画笔
+ * \endif
+ */
 const QPen& QwtPlotArrowMarker::headPen() const
 {
     return m_data->headParams.getPen();
 }
 
-//! Set the head pen
+/**
+ * \if ENGLISH
+ * @brief Set the head pen
+ * @param[in] pen Head pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部画笔
+ * @param[in] pen 头部画笔
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadPen(const QPen& pen)
 {
     if (m_data->headParams.getPen() != pen) {
@@ -649,13 +963,33 @@ void QwtPlotArrowMarker::setHeadPen(const QPen& pen)
     }
 }
 
-//! \return Tail pen
+/**
+ * \if ENGLISH
+ * @brief Get the tail pen
+ * @return Tail pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取尾部画笔
+ * @return 尾部画笔
+ * \endif
+ */
 const QPen& QwtPlotArrowMarker::tailPen() const
 {
     return m_data->tailParams.getPen();
 }
 
-//! Set the tail pen
+/**
+ * \if ENGLISH
+ * @brief Set the tail pen
+ * @param[in] pen Tail pen
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部画笔
+ * @param[in] pen 尾部画笔
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailPen(const QPen& pen)
 {
     if (m_data->tailParams.getPen() != pen) {
@@ -664,7 +998,17 @@ void QwtPlotArrowMarker::setTailPen(const QPen& pen)
     }
 }
 
-//! Set a custom path for head endpoint
+/**
+ * \if ENGLISH
+ * @brief Set a custom path for head endpoint
+ * @param[in] path Custom QPainterPath for head
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置头部端点的自定义路径
+ * @param[in] path 头部的自定义 QPainterPath
+ * \endif
+ */
 void QwtPlotArrowMarker::setHeadCustomPath(const QPainterPath& path)
 {
     if (m_data->headParams.getCustomPath() != path) {
@@ -674,13 +1018,33 @@ void QwtPlotArrowMarker::setHeadCustomPath(const QPainterPath& path)
     }
 }
 
-//! \return Custom head path
+/**
+ * \if ENGLISH
+ * @brief Get the custom head path
+ * @return Custom head path
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取自定义头部路径
+ * @return 自定义头部路径
+ * \endif
+ */
 QPainterPath QwtPlotArrowMarker::headCustomPath() const
 {
     return m_data->headParams.getCustomPath();
 }
 
-//! Set a custom path for tail endpoint
+/**
+ * \if ENGLISH
+ * @brief Set a custom path for tail endpoint
+ * @param[in] path Custom QPainterPath for tail
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置尾部端点的自定义路径
+ * @param[in] path 尾部的自定义 QPainterPath
+ * \endif
+ */
 void QwtPlotArrowMarker::setTailCustomPath(const QPainterPath& path)
 {
     if (m_data->tailParams.getCustomPath() != path) {
@@ -690,7 +1054,17 @@ void QwtPlotArrowMarker::setTailCustomPath(const QPainterPath& path)
     }
 }
 
-//! \return Custom tail path
+/**
+ * \if ENGLISH
+ * @brief Get the custom tail path
+ * @return Custom tail path
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取自定义尾部路径
+ * @return 自定义尾部路径
+ * \endif
+ */
 QPainterPath QwtPlotArrowMarker::tailCustomPath() const
 {
     return m_data->tailParams.getCustomPath();
@@ -781,7 +1155,17 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
     }
 }
 
-//! Get the bounding rectangle
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界矩形
+ * @return 边界矩形
+ * \endif
+ */
 QRectF QwtPlotArrowMarker::boundingRect() const
 {
     QPointF endPoint = (m_data->positionMode == ExplicitPoints) ? m_data->endPoint : calculateEndPoint();
@@ -800,7 +1184,21 @@ QRectF QwtPlotArrowMarker::boundingRect() const
     return rect;
 }
 
-//! Get the legend icon
+/**
+ * \if ENGLISH
+ * @brief Get the legend icon
+ * @param[in] index Index of the legend entry
+ * @param[in] size Size of the icon
+ * @return Legend icon graphic
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例图标
+ * @param[in] index 图例条目的索引
+ * @param[in] size 图标大小
+ * @return 图例图标图形
+ * \endif
+ */
 QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
 {
     Q_UNUSED(index);

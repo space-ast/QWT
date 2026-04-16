@@ -54,7 +54,17 @@ class QwtPolarSpectrogram::PrivateData
     QwtPolarSpectrogram::PaintAttributes paintAttributes;
 };
 
-//!  Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details Creates a spectrogram item with default settings.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 创建具有默认设置的光谱图项。
+ * \endif
+ */
 QwtPolarSpectrogram::QwtPolarSpectrogram()
     : QwtPolarItem( QwtText( "Spectrogram" ) )
 {
@@ -66,27 +76,52 @@ QwtPolarSpectrogram::QwtPolarSpectrogram()
     setZ( 20.0 );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPolarSpectrogram::~QwtPolarSpectrogram()
 {
     delete m_data;
 }
 
-//! \return QwtPolarItem::Rtti_PolarSpectrogram
+/**
+ * \if ENGLISH
+ * @brief Get runtime type information
+ * @return QwtPolarItem::Rtti_PolarSpectrogram
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPolarItem::Rtti_PolarSpectrogram
+ * \endif
+ */
 int QwtPolarSpectrogram::rtti() const
 {
     return QwtPolarItem::Rtti_PolarSpectrogram;
 }
 
-/*!
-   Set the data to be displayed
-
-   \param data Spectrogram Data
-   \sa data()
-
-   \warning QwtRasterData::initRaster() is called each time before the
-           image is rendered, but without any useful parameters.
-           Also QwtRasterData::rasterHint() is not used.
+/**
+ * \if ENGLISH
+ * @brief Set the data to be displayed
+ * @param[in] data Spectrogram Data
+ * @sa data()
+ * @warning QwtRasterData::initRaster() is called each time before the image is rendered,
+ *          but without any useful parameters. Also QwtRasterData::rasterHint() is not used.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置要显示的数据
+ * @param[in] data 光谱图数据
+ * @sa data()
+ * @warning 每次渲染图像前都会调用 QwtRasterData::initRaster()，但没有传入有用的参数。
+ *          同时 QwtRasterData::rasterHint() 不会被使用。
+ * \endif
  */
 void QwtPolarSpectrogram::setData( QwtRasterData* data )
 {
@@ -99,25 +134,39 @@ void QwtPolarSpectrogram::setData( QwtRasterData* data )
     }
 }
 
-/*!
-   \return Spectrogram data
-   \sa setData()
+/**
+ * \if ENGLISH
+ * @brief Get the spectrogram data
+ * @return Spectrogram data
+ * @sa setData()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取光谱图数据
+ * @return 光谱图数据
+ * @sa setData()
+ * \endif
  */
 const QwtRasterData* QwtPolarSpectrogram::data() const
 {
     return m_data->data;
 }
 
-/*!
-   Change the color map
-
-   Often it is useful to display the mapping between intensities and
-   colors as an additional plot axis, showing a color bar.
-
-   \param colorMap Color Map
-
-   \sa colorMap(), QwtScaleWidget::setColorBarEnabled(),
-      QwtScaleWidget::setColorMap()
+/**
+ * \if ENGLISH
+ * @brief Change the color map
+ * @details Often it is useful to display the mapping between intensities and colors
+ *          as an additional plot axis, showing a color bar.
+ * @param[in] colorMap Color Map
+ * @sa colorMap(), QwtScaleWidget::setColorBarEnabled(), QwtScaleWidget::setColorMap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改颜色映射
+ * @details 通常将强度和颜色之间的映射显示为附加的绘图轴（颜色条）是有用的。
+ * @param[in] colorMap 颜色映射
+ * @sa colorMap(), QwtScaleWidget::setColorBarEnabled(), QwtScaleWidget::setColorMap()
+ * \endif
  */
 void QwtPolarSpectrogram::setColorMap( QwtColorMap* colorMap )
 {
@@ -130,21 +179,38 @@ void QwtPolarSpectrogram::setColorMap( QwtColorMap* colorMap )
     itemChanged();
 }
 
-/*!
-   \return Color Map used for mapping the intensity values to colors
-   \sa setColorMap()
+/**
+ * \if ENGLISH
+ * @brief Get the color map used for mapping intensity values to colors
+ * @return Color Map
+ * @sa setColorMap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于将强度值映射到颜色的颜色映射
+ * @return 颜色映射
+ * @sa setColorMap()
+ * \endif
  */
 const QwtColorMap* QwtPolarSpectrogram::colorMap() const
 {
     return m_data->colorMap;
 }
 
-/*!
-   Specify an attribute how to draw the curve
-
-   \param attribute Paint attribute
-   \param on On/Off
-   \sa testPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Specify an attribute how to draw the curve
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa testPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定绘制曲线的属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开启/关闭
+ * @sa testPaintAttribute()
+ * \endif
  */
 void QwtPolarSpectrogram::setPaintAttribute( PaintAttribute attribute, bool on )
 {
@@ -154,25 +220,46 @@ void QwtPolarSpectrogram::setPaintAttribute( PaintAttribute attribute, bool on )
         m_data->paintAttributes &= ~attribute;
 }
 
-/*!
-    \param attribute Paint attribute
-    \return True, when attribute has been set
-    \sa setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test a paint attribute
+ * @param[in] attribute Paint attribute
+ * @return True when attribute has been set
+ * @sa setPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试绘制属性
+ * @param[in] attribute 绘制属性
+ * @return 属性已设置时返回 true
+ * @sa setPaintAttribute()
+ * \endif
  */
 bool QwtPolarSpectrogram::testPaintAttribute( PaintAttribute attribute ) const
 {
     return ( m_data->paintAttributes & attribute );
 }
 
-/*!
-   Draw the spectrogram
-
-   \param painter Painter
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param radius Radius of the complete plot area in painter coordinates
-   \param canvasRect Contents rect of the canvas in painter coordinates
+/**
+ * \if ENGLISH
+ * @brief Draw the spectrogram
+ * @param[in] painter Painter
+ * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+ * @param[in] radialMap Maps radius values into painter coordinates
+ * @param[in] pole Position of the pole in painter coordinates
+ * @param[in] radius Radius of the complete plot area in painter coordinates
+ * @param[in] canvasRect Contents rect of the canvas in painter coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制光谱图
+ * @param[in] painter 绘制器
+ * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
+ * @param[in] radialMap 将半径值映射到绘制器坐标
+ * @param[in] pole 绘制器坐标中极点的位置
+ * @param[in] radius 绘制器坐标中完整绘图区域的半径
+ * @param[in] canvasRect 绘制器坐标中画布的内容矩形
+ * \endif
  */
 void QwtPolarSpectrogram::draw( QPainter* painter,
     const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
@@ -431,14 +518,22 @@ void QwtPolarSpectrogram::renderTile(
     }
 }
 
-/*!
-   Interval, that is necessary to display the item
-   This interval can be useful for operations like clipping or autoscaling
-
-   \param scaleId Scale index
-   \return bounding interval ( == position )
-
-   \sa position()
+/**
+ * \if ENGLISH
+ * @brief Get the bounding interval for a scale
+ * @details This interval can be useful for operations like clipping or autoscaling.
+ * @param[in] scaleId Scale index
+ * @return Bounding interval ( == position )
+ * @sa position()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取指定刻度的边界区间
+ * @details 此区间可用于裁剪或自动缩放等操作。
+ * @param[in] scaleId 刻度索引
+ * @return 边界区间（== 位置）
+ * @sa position()
+ * \endif
  */
 QwtInterval QwtPolarSpectrogram::boundingInterval( int scaleId ) const
 {

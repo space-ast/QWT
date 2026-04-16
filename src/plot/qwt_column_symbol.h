@@ -39,9 +39,15 @@ class QRectF;
 /**
  * \if ENGLISH
  * @brief Directed rectangle representing bounding rectangle and orientation of a column
+ * @details QwtColumnRect is a data structure that stores the horizontal and vertical
+ *          intervals defining a column's extent, along with a direction that indicates
+ *          how the column should be drawn. It is used by QwtColumnSymbol to determine
+ *          the column's orientation and boundaries.
  * \endif
  * \if CHINESE
  * @brief 表示柱的边界矩形和方向的方向矩形
+ * @details QwtColumnRect 是一个数据结构，存储定义柱范围的水平区间和垂直区间，
+ *          以及指示柱绘制方式的方向。QwtColumnSymbol 使用它来确定柱的方向和边界。
  * \endif
  */
 class QWT_EXPORT QwtColumnRect
@@ -97,7 +103,21 @@ public:
     Direction direction;
 };
 
-//! \if ENGLISH A drawing primitive for columns \endif \if CHINESE 柱的绘图基元 \endif
+/**
+ * \if ENGLISH
+ * @brief A drawing primitive for columns
+ * @details QwtColumnSymbol defines how columns are rendered in column-based charts
+ *          like bar charts. It provides different styles (Box, etc.) and frame styles
+ *          (Plain, Raised, NoFrame) to customize the appearance of column graphics.
+ *          The symbol can be extended by deriving new types with UserStyle.
+ * \endif
+ * \if CHINESE
+ * @brief 柱的绘图基元
+ * @details QwtColumnSymbol 定义了柱状图等图表中柱的渲染方式。它提供不同的样式
+ *          （Box 等）和框架样式（Plain、Raised、NoFrame）来定制柱图形的外观。
+ *          可以通过派生带有 UserStyle 的新类型来扩展符号。
+ * \endif
+ */
 class QWT_EXPORT QwtColumnSymbol
 {
 public:
@@ -162,24 +182,37 @@ public:
     };
 
 public:
+    //! Constructor with style parameter
     explicit QwtColumnSymbol(Style = NoStyle);
+    //! Destructor
     virtual ~QwtColumnSymbol();
 
+    //! Set the frame style
     void setFrameStyle(FrameStyle);
+    //! Return the frame style
     FrameStyle frameStyle() const;
 
+    //! Set the line width for the frame
     void setLineWidth(int width);
+    //! Return the line width
     int lineWidth() const;
 
+    //! Set the column style
     void setStyle(Style);
+    //! Return the column style
     Style style() const;
 
+    //! Set the outline pen
     void setPen(const QPen& pen);
+    //! Return the outline pen
     QPen pen() const;
 
+    //! Set the fill brush
     void setBrush(const QBrush& b);
+    //! Return the fill brush
     QBrush brush() const;
 
+    //! Draw the column symbol
     virtual void draw(QPainter*, const QwtColumnRect&) const;
 
 protected:

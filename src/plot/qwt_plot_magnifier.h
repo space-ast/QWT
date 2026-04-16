@@ -59,69 +59,33 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
     Q_OBJECT
 
   public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
-explicit QwtPlotMagnifier( QWidget* );
+// Constructor
+    explicit QwtPlotMagnifier( QWidget* );
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
-virtual ~QwtPlotMagnifier();
+    // Destructor
+    virtual ~QwtPlotMagnifier();
 
-    /**
-     * \if ENGLISH
-     * @brief Set axis enabled state
-     * \endif
-     */
-void setAxisEnabled( QwtAxisId, bool on );
+    // Enable or disable an axis for magnification
+    void setAxisEnabled( QwtAxisId, bool on );
 
-    /**
-     * \if ENGLISH
-     * @brief Check if axis is enabled
-     * \endif
-     */
-bool isAxisEnabled( QwtAxisId ) const;
+    // Check if an axis is enabled for magnification
+    bool isAxisEnabled( QwtAxisId ) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the canvas
-     * \endif
-     */
-QWidget* canvas();
+    // Return the observed plot canvas
+    QWidget* canvas();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the canvas (const version)
-     * \endif
-     */
-const QWidget* canvas() const;
+    // Return the observed plot canvas (const version)
+    const QWidget* canvas() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the plot
-     * \endif
-     */
-QwtPlot* plot();
+    // Return the plot widget containing the observed canvas
+    QwtPlot* plot();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the plot (const version)
-     * \endif
-     */
-const QwtPlot* plot() const;
+    // Return the plot widget containing the observed canvas (const version)
+    const QwtPlot* plot() const;
 
-  public Q_SLOTS:
-    /**
-     * \if ENGLISH
-     * @brief Rescale the plot
-     * \endif
-     */
-virtual void rescale( double factor ) override;
+public Q_SLOTS:
+    // Rescale the plot axes by the given factor
+    virtual void rescale( double factor ) override;
 
   private:
     class PrivateData;

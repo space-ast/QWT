@@ -60,58 +60,18 @@
 class QWT_EXPORT QwtTransform
 {
 public:
+    //! Constructor
     QwtTransform();
+    //! Destructor
     virtual ~QwtTransform();
 
-    /*!
-       \if ENGLISH
-       \brief Modify value to be a valid value for the transformation
-       \details The default implementation does nothing.
-       \param value Value to modify
-       \return Modified value
-       \endif
-       \if CHINESE
-       \brief 修改值为变换的有效值
-       \details 默认实现不执行任何操作。
-       \param value 要修改的值
-       \return 修改后的值
-       \endif
-     */
+    //! Modify value to be a valid value for the transformation
     virtual double bounded(double value) const;
-
-    /*!
-       \if ENGLISH
-       \brief Transformation function
-       \param value Value to transform
-       \return Transformed value
-       \sa invTransform()
-       \endif
-       \if CHINESE
-       \brief 变换函数
-       \param value 要变换的值
-       \return 变换后的值
-       \sa invTransform()
-       \endif
-     */
+    //! Transformation function
     virtual double transform(double value) const = 0;
-
-    /*!
-       \if ENGLISH
-       \brief Inverse transformation function
-       \param value Value to transform
-       \return Inverse transformed value
-       \sa transform()
-       \endif
-       \if CHINESE
-       \brief 反变换函数
-       \param value 要变换的值
-       \return 反变换后的值
-       \sa transform()
-       \endif
-     */
+    //! Inverse transformation function
     virtual double invTransform(double value) const = 0;
-
-    //! \if ENGLISH Virtualized copy operation \endif \if CHINESE 虚拷贝操作 \endif
+    //! Virtualized copy operation
     virtual QwtTransform* copy() const = 0;
 
 private:
@@ -131,12 +91,16 @@ private:
 class QWT_EXPORT QwtNullTransform : public QwtTransform
 {
 public:
+    //! Constructor
     QwtNullTransform();
+    //! Destructor
     virtual ~QwtNullTransform();
 
+    //! Transformation function - returns value unmodified
     virtual double transform(double value) const override;
+    //! Inverse transformation function - returns value unmodified
     virtual double invTransform(double value) const override;
-
+    //! Clone of the transformation
     virtual QwtTransform* copy() const override;
 };
 /**
@@ -157,17 +121,23 @@ public:
 class QWT_EXPORT QwtLogTransform : public QwtTransform
 {
 public:
+    //! Constructor
     QwtLogTransform();
+    //! Destructor
     virtual ~QwtLogTransform();
 
+    //! Transformation function - log(value)
     virtual double transform(double value) const override;
+    //! Inverse transformation function - exp(value)
     virtual double invTransform(double value) const override;
-
+    //! Bounded function - qBound(LogMin, value, LogMax)
     virtual double bounded(double value) const override;
-
+    //! Clone of the transformation
     virtual QwtTransform* copy() const override;
 
+    //! Smallest allowed value for logarithmic scales: 1.0e-150
     static const double LogMin;
+    //! Largest allowed value for logarithmic scales: 1.0e150
     static const double LogMax;
 };
 
@@ -189,12 +159,16 @@ public:
 class QWT_EXPORT QwtPowerTransform : public QwtTransform
 {
 public:
+    //! Constructor with exponent parameter
     explicit QwtPowerTransform(double exponent);
+    //! Destructor
     virtual ~QwtPowerTransform();
 
+    //! Transformation function - pow() preserving sign
     virtual double transform(double value) const override;
+    //! Inverse transformation function - inverse pow() preserving sign
     virtual double invTransform(double value) const override;
-
+    //! Clone of the transformation
     virtual QwtTransform* copy() const override;
 
 private:

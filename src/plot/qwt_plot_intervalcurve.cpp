@@ -90,9 +90,16 @@ class QwtPlotIntervalCurve::PrivateData
     QwtPlotIntervalCurve::PaintAttributes paintAttributes;
 };
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QwtText& title )
     : QwtPlotSeriesItem( title )
@@ -100,9 +107,16 @@ QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QwtText& title )
     init();
 }
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QString& title )
     : QwtPlotSeriesItem( QwtText( title ) )
@@ -110,7 +124,15 @@ QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QString& title )
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotIntervalCurve::~QwtPlotIntervalCurve()
 {
     delete m_data;
@@ -128,18 +150,36 @@ void QwtPlotIntervalCurve::init()
     setZ( 19.0 );
 }
 
-//! \return QwtPlotItem::Rtti_PlotIntervalCurve
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return QwtPlotItem::Rtti_PlotIntervalCurve
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPlotItem::Rtti_PlotIntervalCurve
+ * \endif
+ */
 int QwtPlotIntervalCurve::rtti() const
 {
     return QwtPlotIntervalCurve::Rtti_PlotIntervalCurve;
 }
 
-/*!
-   Specify an attribute how to draw the curve
-
-   \param attribute Paint attribute
-   \param on On/Off
-   \sa testPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Specify an attribute how to draw the curve
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa testPaintAttribute()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 指定绘制曲线的属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开启/关闭
+ * @sa testPaintAttribute()
+ * \endif
  */
 void QwtPlotIntervalCurve::setPaintAttribute(
     PaintAttribute attribute, bool on )
@@ -150,9 +190,18 @@ void QwtPlotIntervalCurve::setPaintAttribute(
         m_data->paintAttributes &= ~attribute;
 }
 
-/*!
-    \return True, when attribute is enabled
-    \sa PaintAttribute, setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test if a paint attribute is enabled
+ * @return True when attribute is enabled
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 测试绘制属性是否启用
+ * @return 属性启用时返回 true
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
  */
 bool QwtPlotIntervalCurve::testPaintAttribute(
     PaintAttribute attribute ) const
@@ -160,9 +209,16 @@ bool QwtPlotIntervalCurve::testPaintAttribute(
     return ( m_data->paintAttributes & attribute );
 }
 
-/*!
-   Initialize data with an array of samples.
-   \param samples Vector of samples
+/**
+ * \if ENGLISH
+ * @brief Initialize data with an array of samples
+ * @param[in] samples Vector of samples
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 使用样本数组初始化数据
+ * @param[in] samples 样本向量
+ * \endif
  */
 void QwtPlotIntervalCurve::setSamples(
     const QVector< QwtIntervalSample >& samples )
@@ -170,15 +226,23 @@ void QwtPlotIntervalCurve::setSamples(
     setData( new QwtIntervalSeriesData( samples ) );
 }
 
-/*!
-   Assign a series of samples
-
-   setSamples() is just a wrapper for setData() without any additional
-   value - beside that it is easier to find for the developer.
-
-   \param data Data
-   \warning The item takes ownership of the data object, deleting
-           it when its not used anymore.
+/**
+ * \if ENGLISH
+ * @brief Assign a series of samples
+ * @details setSamples() is just a wrapper for setData() without any additional
+ *          value - beside that it is easier to find for the developer.
+ * @param[in] data Data
+ * @warning The item takes ownership of the data object, deleting
+ *          it when its not used anymore.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 分配样本序列
+ * @details setSamples() 只是对 setData() 的封装，没有额外的价值，
+ *          除了对开发者来说更容易找到。
+ * @param[in] data 数据
+ * @warning 该项取得数据对象的所有权，当不再使用时会删除它。
+ * \endif
  */
 void QwtPlotIntervalCurve::setSamples(
     QwtSeriesData< QwtIntervalSample >* data )
@@ -186,11 +250,18 @@ void QwtPlotIntervalCurve::setSamples(
     setData( data );
 }
 
-/*!
-   Set the curve's drawing style
-
-   \param style Curve style
-   \sa CurveStyle, style()
+/**
+ * \if ENGLISH
+ * @brief Set the curve's drawing style
+ * @param[in] style Curve style
+ * @sa CurveStyle, style()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置曲线的绘制样式
+ * @param[in] style 曲线样式
+ * @sa CurveStyle, style()
+ * \endif
  */
 void QwtPlotIntervalCurve::setStyle( CurveStyle style )
 {
@@ -203,20 +274,36 @@ void QwtPlotIntervalCurve::setStyle( CurveStyle style )
     }
 }
 
-/*!
-    \return Style of the curve
-    \sa setStyle()
+/**
+ * \if ENGLISH
+ * @brief Get the curve's drawing style
+ * @return Style of the curve
+ * @sa setStyle()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取曲线的绘制样式
+ * @return 曲线样式
+ * @sa setStyle()
+ * \endif
  */
 QwtPlotIntervalCurve::CurveStyle QwtPlotIntervalCurve::style() const
 {
     return m_data->style;
 }
 
-/*!
-   Assign a symbol.
-
-   \param symbol Symbol
-   \sa symbol()
+/**
+ * \if ENGLISH
+ * @brief Assign a symbol
+ * @param[in] symbol Symbol
+ * @sa symbol()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 分配符号
+ * @param[in] symbol 符号
+ * @sa symbol()
+ * \endif
  */
 void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 {
@@ -230,37 +317,64 @@ void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
     }
 }
 
-/*!
-   \return Current symbol or nullptr, when no symbol has been assigned
-   \sa setSymbol()
+/**
+ * \if ENGLISH
+ * @brief Get the current symbol
+ * @return Current symbol or nullptr when no symbol has been assigned
+ * @sa setSymbol()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取当前符号
+ * @return 当前符号，如果没有分配符号则返回 nullptr
+ * @sa setSymbol()
+ * \endif
  */
 const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const
 {
     return m_data->symbol;
 }
 
-/*!
-   Build and assign a pen
-
-   In Qt5 the default pen width is 1.0 ( 0.0 in Qt4 ) what makes it
-   non cosmetic ( see QPen::isCosmetic() ). This method has been introduced
-   to hide this incompatibility.
-
-   \param color Pen color
-   \param width Pen width
-   \param style Pen style
-
-   \sa pen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Build and assign a pen
+ * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) what makes it
+ *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
+ *          to hide this incompatibility.
+ * @param[in] color Pen color
+ * @param[in] width Pen width
+ * @param[in] style Pen style
+ * @sa pen(), brush()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构建并分配画笔
+ * @details 在 Qt5 中，默认画笔宽度是 1.0（Qt4 中是 0.0），这使其
+ *          成为非装饰性画笔（参见 QPen::isCosmetic()）。此方法被引入
+ *          以隐藏这种不兼容性。
+ * @param[in] color 画笔颜色
+ * @param[in] width 画笔宽度
+ * @param[in] style 画笔样式
+ * @sa pen(), brush()
+ * \endif
  */
 void QwtPlotIntervalCurve::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
     setPen( QPen( color, width, style ) );
 }
 
-/*!
-   \brief Assign a pen
-   \param pen New pen
-   \sa pen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Assign a pen
+ * @param[in] pen New pen
+ * @sa pen(), brush()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 分配画笔
+ * @param[in] pen 新画笔
+ * @sa pen(), brush()
+ * \endif
  */
 void QwtPlotIntervalCurve::setPen( const QPen& pen )
 {
@@ -273,22 +387,38 @@ void QwtPlotIntervalCurve::setPen( const QPen& pen )
     }
 }
 
-/*!
-    \return Pen used to draw the lines
-    \sa setPen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Get the pen used to draw the lines
+ * @return Pen used to draw the lines
+ * @sa setPen(), brush()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取用于绘制线条的画笔
+ * @return 用于绘制线条的画笔
+ * @sa setPen(), brush()
+ * \endif
  */
 const QPen& QwtPlotIntervalCurve::pen() const
 {
     return m_data->pen;
 }
 
-/*!
-   Assign a brush.
-
-   The brush is used to fill the area in Tube style().
-
-   \param brush Brush
-   \sa brush(), pen(), setStyle(), CurveStyle
+/**
+ * \if ENGLISH
+ * @brief Assign a brush
+ * @details The brush is used to fill the area in Tube style().
+ * @param[in] brush Brush
+ * @sa brush(), pen(), setStyle(), CurveStyle
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 分配画刷
+ * @details 画刷用于在 Tube 样式()中填充区域。
+ * @param[in] brush 画刷
+ * @sa brush(), pen(), setStyle(), CurveStyle
+ * \endif
  */
 void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
 {
@@ -301,18 +431,34 @@ void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
     }
 }
 
-/*!
-   \return Brush used to fill the area in Tube style()
-   \sa setBrush(), setStyle(), CurveStyle
+/**
+ * \if ENGLISH
+ * @brief Get the brush used to fill the area in Tube style()
+ * @return Brush used to fill the area in Tube style()
+ * @sa setBrush(), setStyle(), CurveStyle
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取用于在 Tube 样式()中填充区域的画刷
+ * @return 用于在 Tube 样式()中填充区域的画刷
+ * @sa setBrush(), setStyle(), CurveStyle
+ * \endif
  */
 const QBrush& QwtPlotIntervalCurve::brush() const
 {
     return m_data->brush;
 }
 
-/*!
-   \return Bounding rectangle of all samples.
-   For an empty series the rectangle is invalid.
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle of all samples
+ * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取所有样本的边界矩形
+ * @return 所有样本的边界矩形。对于空序列，矩形无效。
+ * \endif
  */
 QRectF QwtPlotIntervalCurve::boundingRect() const
 {
@@ -323,18 +469,28 @@ QRectF QwtPlotIntervalCurve::boundingRect() const
     return rect;
 }
 
-/*!
-   Draw a subset of the samples
-
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
-         series will be painted to its last sample.
-
-   \sa drawTube(), drawSymbols()
+/**
+ * \if ENGLISH
+ * @brief Draw a subset of the samples
+ * @param[in] painter Painter
+ * @param[in] xMap Maps x-values into pixel coordinates
+ * @param[in] yMap Maps y-values into pixel coordinates
+ * @param[in] canvasRect Contents rectangle of the canvas
+ * @param[in] from Index of the first sample to be painted
+ * @param[in] to Index of the last sample to be painted. If to < 0, the series will be painted to its last sample.
+ * @sa drawTube(), drawSymbols()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 绘制样本的子集
+ * @param[in] painter 绘制器
+ * @param[in] xMap 将 x 值映射到像素坐标
+ * @param[in] yMap 将 y 值映射到像素坐标
+ * @param[in] canvasRect 画布的内容矩形
+ * @param[in] from 要绘制的第一个样本的索引
+ * @param[in] to 要绘制的最后一个样本的索引。如果 to < 0，将绘制到序列的最后一个样本。
+ * @sa drawTube(), drawSymbols()
+ * \endif
  */
 void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -556,17 +712,26 @@ void QwtPlotIntervalCurve::drawSymbols(
     painter->restore();
 }
 
-/*!
-   \return Icon for the legend
-
-   In case of Tube style() the icon is a plain rectangle filled with the brush().
-   If a symbol is assigned it is scaled to size.
-
-   \param index Index of the legend entry
-               ( ignored as there is only one )
-   \param size Icon size
-
-   \sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+/**
+ * \if ENGLISH
+ * @brief Get the icon for the legend
+ * @details In case of Tube style() the icon is a plain rectangle filled with the brush().
+ *          If a symbol is assigned it is scaled to size.
+ * @param[in] index Index of the legend entry (ignored as there is only one)
+ * @param[in] size Icon size
+ * @return Icon for the legend
+ * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取图例图标
+ * @details 在 Tube 样式()的情况下，图标是用 brush() 填充的纯矩形。
+ *          如果分配了符号，它会缩放到指定大小。
+ * @param[in] index 图例条目的索引（忽略，因为只有一个）
+ * @param[in] size 图标大小
+ * @return 图例图标
+ * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+ * \endif
  */
 QwtGraphic QwtPlotIntervalCurve::legendIcon(
     int index, const QSizeF& size ) const

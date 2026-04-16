@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -243,102 +243,102 @@ public:
 
     Q_DECLARE_FLAGS(LayoutAttributes, LayoutAttribute)
 
-    /// \if ENGLISH Default constructor \endif \if CHINESE 默认构造函数 \endif
+    // Default constructor
     QwtText();
-    /// \if ENGLISH Constructor with text and format \endif \if CHINESE 带文本和格式的构造函数 \endif
+    // Constructor with text and format
     QwtText(const QString&, TextFormat textFormat = AutoText);
-    /// \if ENGLISH Copy constructor \endif \if CHINESE 拷贝构造函数 \endif
+    // Copy constructor
     QwtText(const QwtText&);
 
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    // Destructor
     ~QwtText();
 
-    /// \if ENGLISH Assignment operator \endif \if CHINESE 赋值运算符 \endif
+    // Assignment operator
     QwtText& operator=(const QwtText&);
 
-    /// \if ENGLISH Equality operator \endif \if CHINESE 相等运算符 \endif
+    // Equality operator
     bool operator==(const QwtText&) const;
-    /// \if ENGLISH Inequality operator \endif \if CHINESE 不等运算符 \endif
+    // Inequality operator
     bool operator!=(const QwtText&) const;
 
-    /// \if ENGLISH Set text content and format \endif \if CHINESE 设置文本内容和格式 \endif
+    // Set text content and format
     void setText(const QString&, QwtText::TextFormat textFormat = AutoText);
-    /// \if ENGLISH Get text content \endif \if CHINESE 获取文本内容 \endif
+    // Get text content
     QString text() const;
 
-    /// \if ENGLISH Check if text is null \endif \if CHINESE 检查文本是否为空 \endif
+    // Check if text is null
     bool isNull() const;
-    /// \if ENGLISH Check if text is empty \endif \if CHINESE 检查文本是否为空字符串 \endif
+    // Check if text is empty
     bool isEmpty() const;
 
-    /// \if ENGLISH Set font \endif \if CHINESE 设置字体 \endif
+    // Set font
     void setFont(const QFont&);
-    /// \if ENGLISH Get font \endif \if CHINESE 获取字体 \endif
+    // Get font
     QFont font() const;
 
-    /// \if ENGLISH Get used font (with fallback) \endif \if CHINESE 获取使用的字体（带回退） \endif
+    // Get used font (with fallback)
     QFont usedFont(const QFont&) const;
 
-    /// \if ENGLISH Get the current format \endif \if CHINESE 获取当前格式 \endif
+    // Get the current format
     TextFormat format() const;
 
-    /// \if ENGLISH Set render flags \endif \if CHINESE 设置渲染标志 \endif
+    // Set render flags
     void setRenderFlags(int);
-    /// \if ENGLISH Get render flags \endif \if CHINESE 获取渲染标志 \endif
+    // Get render flags
     int renderFlags() const;
 
-    /// \if ENGLISH Set text color \endif \if CHINESE 设置文本颜色 \endif
+    // Set text color
     void setColor(const QColor&);
-    /// \if ENGLISH Get text color \endif \if CHINESE 获取文本颜色 \endif
+    // Get text color
     QColor color() const;
 
-    /// \if ENGLISH Get used color (with fallback) \endif \if CHINESE 获取使用的颜色（带回退） \endif
+    // Get used color (with fallback)
     QColor usedColor(const QColor&) const;
 
-    /// \if ENGLISH Set border radius \endif \if CHINESE 设置边框圆角半径 \endif
+    // Set border radius
     void setBorderRadius(double);
-    /// \if ENGLISH Get border radius \endif \if CHINESE 获取边框圆角半径 \endif
+    // Get border radius
     double borderRadius() const;
 
-    /// \if ENGLISH Set border pen \endif \if CHINESE 设置边框画笔 \endif
+    // Set border pen
     void setBorderPen(const QPen&);
-    /// \if ENGLISH Get border pen \endif \if CHINESE 获取边框画笔 \endif
+    // Get border pen
     QPen borderPen() const;
 
-    /// \if ENGLISH Set background brush \endif \if CHINESE 设置背景画刷 \endif
+    // Set background brush
     void setBackgroundBrush(const QBrush&);
-    /// \if ENGLISH Get background brush \endif \if CHINESE 获取背景画刷 \endif
+    // Get background brush
     QBrush backgroundBrush() const;
 
-    /// \if ENGLISH Set paint attribute \endif \if CHINESE 设置绘制属性 \endif
+    // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /// \if ENGLISH Test paint attribute \endif \if CHINESE 测试绘制属性 \endif
+    // Test paint attribute
     bool testPaintAttribute(PaintAttribute) const;
 
-    /// \if ENGLISH Set layout attribute \endif \if CHINESE 设置布局属性 \endif
+    // Set layout attribute
     void setLayoutAttribute(LayoutAttribute, bool on = true);
-    /// \if ENGLISH Test layout attribute \endif \if CHINESE 测试布局属性 \endif
+    // Test layout attribute
     bool testLayoutAttribute(LayoutAttribute) const;
 
-    /// \if ENGLISH Get height for width \endif \if CHINESE 获取给定宽度的高度 \endif
+    // Get height for width
     double heightForWidth(double width) const;
-    /// \if ENGLISH Get height for width with font \endif \if CHINESE 使用指定字体获取给定宽度的高度 \endif
+    // Get height for width with font
     double heightForWidth(double width, const QFont&) const;
 
-    /// \if ENGLISH Get text size \endif \if CHINESE 获取文本大小 \endif
+    // Get text size
     QSizeF textSize() const;
-    /// \if ENGLISH Get text size with font \endif \if CHINESE 使用指定字体获取文本大小 \endif
+    // Get text size with font
     QSizeF textSize(const QFont&) const;
 
-    /// \if ENGLISH Draw text into rectangle \endif \if CHINESE 在矩形区域内绘制文本 \endif
+    // Draw text into rectangle
     void draw(QPainter* painter, const QRectF& rect) const;
 
-    /// \if ENGLISH Get text engine for text and format \endif \if CHINESE 获取文本和格式对应的文本引擎 \endif
+    // Get text engine for text and format
     static const QwtTextEngine* textEngine(const QString& text, QwtText::TextFormat = AutoText);
 
-    /// \if ENGLISH Get text engine for format \endif \if CHINESE 获取格式对应的文本引擎 \endif
+    // Get text engine for format
     static const QwtTextEngine* textEngine(QwtText::TextFormat);
-    /// \if ENGLISH Set text engine for format \endif \if CHINESE 为格式设置文本引擎 \endif
+    // Set text engine for format
     static void setTextEngine(QwtText::TextFormat, QwtTextEngine*);
 
 private:

@@ -209,143 +209,143 @@ public:
         StartLengthAngle
     };
 
-    /// Constructor
+    // Constructor
     explicit QwtPlotArrowMarker();
 
-    /// Constructor with title
+    // Constructor with title
     explicit QwtPlotArrowMarker(const QString& title);
 
-    /// Constructor with QwtText title
+    // Constructor with QwtText title
     explicit QwtPlotArrowMarker(const QwtText& title);
 
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotArrowMarker();
 
-    /// Get the runtime type information
+    // Get the runtime type information
     virtual int rtti() const override;
 
     // Position and geometry methods
 
-    /// Get the start point
+    // Get the start point
     QPointF startPoint() const;
 
-    /// Get the end point
+    // Get the end point
     QPointF endPoint() const;
 
-    /// Set the start point
+    // Set the start point
     void setStartPoint(const QPointF& point);
 
-    /// Set the end point
+    // Set the end point
     void setEndPoint(const QPointF& point);
 
-    /// Set both start and end points
+    // Set both start and end points
     void setPoints(const QPointF& start, const QPointF& end);
 
-    /// Get the arrow length in pixels
+    // Get the arrow length in pixels
     double length() const;
 
-    /// Set the arrow length in pixels
+    // Set the arrow length in pixels
     void setLength(double length);
 
-    /// Get the rotation angle in degrees
+    // Get the rotation angle in degrees
     double angle() const;
 
-    /// Set the rotation angle in degrees
+    // Set the rotation angle in degrees
     void setAngle(double angle);
 
-    /// Get the positioning mode
+    // Get the positioning mode
     PositionMode positionMode() const;
 
-    /// Set the positioning mode
+    // Set the positioning mode
     void setPositionMode(PositionMode mode);
 
     // Style and appearance methods
 
-    /// Get the arrow line pen
+    // Get the arrow line pen
     const QPen& linePen() const;
 
-    /// Set the arrow line pen
+    // Set the arrow line pen
     void setLinePen(const QPen& pen);
 
-    /// Convenience method to set line color and width
+    // Convenience method to set line color and width
     void setLinePen(const QColor& color, qreal width = 1.0, Qt::PenStyle style = Qt::SolidLine);
 
-    /// Get the head style
+    // Get the head style
     EndpointStyle headStyle() const;
 
-    /// Set the head style
+    // Set the head style
     void setHeadStyle(EndpointStyle style);
 
-    /// Get the tail style
+    // Get the tail style
     EndpointStyle tailStyle() const;
 
-    /// Set the tail style
+    // Set the tail style
     void setTailStyle(EndpointStyle style);
 
-    /// Get the head size in pixels
+    // Get the head size in pixels
     QSizeF headSize() const;
 
-    /// Set the head size in pixels
+    // Set the head size in pixels
     void setHeadSize(const QSizeF& size);
 
-    /// Convenience method to set head size with equal width and height
+    // Convenience method to set head size with equal width and height
     void setHeadSize(qreal size);
 
-    /// Get the tail size in pixels
+    // Get the tail size in pixels
     QSizeF tailSize() const;
 
-    /// Set the tail size in pixels
+    // Set the tail size in pixels
     void setTailSize(const QSizeF& size);
 
-    /// Convenience method to set tail size with equal width and height
+    // Convenience method to set tail size with equal width and height
     void setTailSize(qreal size);
 
-    /// Get the head brush
+    // Get the head brush
     const QBrush& headBrush() const;
 
-    /// Set the head brush
+    // Set the head brush
     void setHeadBrush(const QBrush& brush);
 
-    /// Get the tail brush
+    // Get the tail brush
     const QBrush& tailBrush() const;
 
-    /// Set the tail brush
+    // Set the tail brush
     void setTailBrush(const QBrush& brush);
 
-    /// Get the head pen
+    // Get the head pen
     const QPen& headPen() const;
 
-    /// Set the head pen
+    // Set the head pen
     void setHeadPen(const QPen& pen);
 
-    /// Get the tail pen
+    // Get the tail pen
     const QPen& tailPen() const;
 
-    /// Set the tail pen
+    // Set the tail pen
     void setTailPen(const QPen& pen);
 
-    /// Set a custom path for head endpoint (requires headStyle() == CustomPath)
+    // Set a custom path for head endpoint
     void setHeadCustomPath(const QPainterPath& path);
 
-    /// Get the custom head path
+    // Get the custom head path
     QPainterPath headCustomPath() const;
 
-    /// Set a custom path for tail endpoint (requires tailStyle() == CustomPath)
+    // Set a custom path for tail endpoint
     void setTailCustomPath(const QPainterPath& path);
 
-    /// Get the custom tail path
+    // Get the custom tail path
     QPainterPath tailCustomPath() const;
 
     // Drawing methods
 
-    /// Draw the arrow marker
+    // Draw the arrow marker
     virtual void
     draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-    /// Get the bounding rectangle
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    /// Get the legend icon
+    // Get the legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF& size) const override;
 
 protected:

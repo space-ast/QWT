@@ -66,14 +66,36 @@ class QwtPlotMarker::PrivateData
     double yValue;
 };
 
-//! Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 设置对齐为 Qt::AlignCenter，样式为 QwtPlotMarker::NoLine
+ * \endif
+ */
 QwtPlotMarker::QwtPlotMarker()
 {
     m_data = new PrivateData;
     setZ( 30.0 );
 }
 
-//! Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+/**
+ * \if ENGLISH
+ * @brief Constructor with QString title
+ * @details Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+ * @param[in] title Title of the marker
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QString标题的构造函数
+ * @details 设置对齐为 Qt::AlignCenter，样式为 QwtPlotMarker::NoLine
+ * @param[in] title 标记标题
+ * \endif
+ */
 QwtPlotMarker::QwtPlotMarker( const QString& title )
     : QwtPlotItem( QwtText( title ) )
 {
@@ -81,7 +103,19 @@ QwtPlotMarker::QwtPlotMarker( const QString& title )
     setZ( 30.0 );
 }
 
-//! Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+/**
+ * \if ENGLISH
+ * @brief Constructor with QwtText title
+ * @details Sets alignment to Qt::AlignCenter, and style to QwtPlotMarker::NoLine
+ * @param[in] title Title of the marker
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QwtText标题的构造函数
+ * @details 设置对齐为 Qt::AlignCenter，样式为 QwtPlotMarker::NoLine
+ * @param[in] title 标记标题
+ * \endif
+ */
 QwtPlotMarker::QwtPlotMarker( const QwtText& title )
     : QwtPlotItem( title )
 {
@@ -89,43 +123,113 @@ QwtPlotMarker::QwtPlotMarker( const QwtText& title )
     setZ( 30.0 );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotMarker::~QwtPlotMarker()
 {
     delete m_data;
 }
 
-//! \return QwtPlotItem::Rtti_PlotMarker
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return QwtPlotItem::Rtti_PlotMarker
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPlotItem::Rtti_PlotMarker
+ * \endif
+ */
 int QwtPlotMarker::rtti() const
 {
     return QwtPlotItem::Rtti_PlotMarker;
 }
 
-//! Return Value
+/**
+ * \if ENGLISH
+ * @brief Get the value as a point
+ * @return Value as QPointF
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取作为点的值
+ * @return QPointF形式的值
+ * \endif
+ */
 QPointF QwtPlotMarker::value() const
 {
     return QPointF( m_data->xValue, m_data->yValue );
 }
 
-//! Return x Value
+/**
+ * \if ENGLISH
+ * @brief Get the x-value
+ * @return X value
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取x值
+ * @return x值
+ * \endif
+ */
 double QwtPlotMarker::xValue() const
 {
     return m_data->xValue;
 }
 
-//! Return y Value
+/**
+ * \if ENGLISH
+ * @brief Get the y-value
+ * @return Y value
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取y值
+ * @return y值
+ * \endif
+ */
 double QwtPlotMarker::yValue() const
 {
     return m_data->yValue;
 }
 
-//! Set Value
+/**
+ * \if ENGLISH
+ * @brief Set the value from a point
+ * @param[in] pos Position as QPointF
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 从点设置值
+ * @param[in] pos QPointF形式的位置
+ * \endif
+ */
 void QwtPlotMarker::setValue( const QPointF& pos )
 {
     setValue( pos.x(), pos.y() );
 }
 
-//! Set Value
+/**
+ * \if ENGLISH
+ * @brief Set the value
+ * @param[in] x X value
+ * @param[in] y Y value
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置值
+ * @param[in] x x值
+ * @param[in] y y值
+ * \endif
+ */
 void QwtPlotMarker::setValue( double x, double y )
 {
     if ( x != m_data->xValue || y != m_data->yValue )
@@ -136,25 +240,54 @@ void QwtPlotMarker::setValue( double x, double y )
     }
 }
 
-//! Set X Value
+/**
+ * \if ENGLISH
+ * @brief Set the x-value
+ * @param[in] x X value
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置x值
+ * @param[in] x x值
+ * \endif
+ */
 void QwtPlotMarker::setXValue( double x )
 {
     setValue( x, m_data->yValue );
 }
 
-//! Set Y Value
+/**
+ * \if ENGLISH
+ * @brief Set the y-value
+ * @param[in] y Y value
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置y值
+ * @param[in] y y值
+ * \endif
+ */
 void QwtPlotMarker::setYValue( double y )
 {
     setValue( m_data->xValue, y );
 }
 
-/*!
-   Draw the marker
-
-   \param painter Painter
-   \param xMap x Scale Map
-   \param yMap y Scale Map
-   \param canvasRect Contents rectangle of the canvas in painter coordinates
+/**
+ * \if ENGLISH
+ * @brief Draw the marker
+ * @param[in] painter Painter
+ * @param[in] xMap X Scale Map
+ * @param[in] yMap Y Scale Map
+ * @param[in] canvasRect Contents rectangle of the canvas in painter coordinates
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制标记
+ * @param[in] painter 绘图器
+ * @param[in] xMap X比例映射
+ * @param[in] yMap Y比例映射
+ * @param[in] canvasRect 画布的内容矩形（绘图器坐标）
+ * \endif
  */
 void QwtPlotMarker::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -375,10 +508,18 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
     m_data->label.draw( painter, textRect );
 }
 
-/*!
-   \brief Set the line style
-   \param style Line style.
-   \sa lineStyle()
+/**
+ * \if ENGLISH
+ * @brief Set the line style
+ * @param[in] style Line style
+ * @sa lineStyle()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置线条样式
+ * @param[in] style 线条样式
+ * @sa lineStyle()
+ * \endif
  */
 void QwtPlotMarker::setLineStyle( LineStyle style )
 {
@@ -391,19 +532,36 @@ void QwtPlotMarker::setLineStyle( LineStyle style )
     }
 }
 
-/*!
-   \return the line style
-   \sa setLineStyle()
+/**
+ * \if ENGLISH
+ * @brief Get the line style
+ * @return Line style
+ * @sa setLineStyle()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取线条样式
+ * @return 线条样式
+ * @sa setLineStyle()
+ * \endif
  */
 QwtPlotMarker::LineStyle QwtPlotMarker::lineStyle() const
 {
     return m_data->style;
 }
 
-/*!
-   \brief Assign a symbol
-   \param symbol New symbol
-   \sa symbol()
+/**
+ * \if ENGLISH
+ * @brief Assign a symbol
+ * @param[in] symbol New symbol
+ * @sa symbol()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配符号
+ * @param[in] symbol 新符号
+ * @sa symbol()
+ * \endif
  */
 void QwtPlotMarker::setSymbol( const QwtSymbol* symbol )
 {
@@ -420,19 +578,36 @@ void QwtPlotMarker::setSymbol( const QwtSymbol* symbol )
     }
 }
 
-/*!
-   \return the symbol
-   \sa setSymbol(), QwtSymbol
+/**
+ * \if ENGLISH
+ * @brief Get the symbol
+ * @return The symbol
+ * @sa setSymbol(), QwtSymbol
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取符号
+ * @return 符号
+ * @sa setSymbol(), QwtSymbol
+ * \endif
  */
 const QwtSymbol* QwtPlotMarker::symbol() const
 {
     return m_data->symbol;
 }
 
-/*!
-   \brief Set the label
-   \param label Label text
-   \sa label()
+/**
+ * \if ENGLISH
+ * @brief Set the label
+ * @param[in] label Label text
+ * @sa label()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置标签
+ * @param[in] label 标签文本
+ * @sa label()
+ * \endif
  */
 void QwtPlotMarker::setLabel( const QwtText& label )
 {
@@ -443,28 +618,45 @@ void QwtPlotMarker::setLabel( const QwtText& label )
     }
 }
 
-/*!
-   \return the label
-   \sa setLabel()
+/**
+ * \if ENGLISH
+ * @brief Get the label
+ * @return Label text
+ * @sa setLabel()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签
+ * @return 标签文本
+ * @sa setLabel()
+ * \endif
  */
 QwtText QwtPlotMarker::label() const
 {
     return m_data->label;
 }
 
-/*!
-   \brief Set the alignment of the label
-
-   In case of QwtPlotMarker::HLine the alignment is relative to the
-   y position of the marker, but the horizontal flags correspond to the
-   canvas rectangle. In case of QwtPlotMarker::VLine the alignment is
-   relative to the x position of the marker, but the vertical flags
-   correspond to the canvas rectangle.
-
-   In all other styles the alignment is relative to the marker's position.
-
-   \param align Alignment.
-   \sa labelAlignment(), labelOrientation()
+/**
+ * \if ENGLISH
+ * @brief Set the alignment of the label
+ * @details In case of QwtPlotMarker::HLine the alignment is relative to the
+ *          y position of the marker, but the horizontal flags correspond to the
+ *          canvas rectangle. In case of QwtPlotMarker::VLine the alignment is
+ *          relative to the x position of the marker, but the vertical flags
+ *          correspond to the canvas rectangle.
+ *          In all other styles the alignment is relative to the marker's position.
+ * @param[in] align Alignment
+ * @sa labelAlignment(), labelOrientation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置标签的对齐方式
+ * @details 对于 QwtPlotMarker::HLine，对齐相对于标记的 y 位置，但水平标志对应于画布矩形。
+ *          对于 QwtPlotMarker::VLine，对齐相对于标记的 x 位置，但垂直标志对应于画布矩形。
+ *          对于所有其他样式，对齐相对于标记的位置。
+ * @param[in] align 对齐方式
+ * @sa labelAlignment(), labelOrientation()
+ * \endif
  */
 void QwtPlotMarker::setLabelAlignment( Qt::Alignment align )
 {
@@ -475,24 +667,39 @@ void QwtPlotMarker::setLabelAlignment( Qt::Alignment align )
     }
 }
 
-/*!
-   \return the label alignment
-   \sa setLabelAlignment(), setLabelOrientation()
+/**
+ * \if ENGLISH
+ * @brief Get the label alignment
+ * @return Label alignment
+ * @sa setLabelAlignment(), setLabelOrientation()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签对齐方式
+ * @return 标签对齐方式
+ * @sa setLabelAlignment(), setLabelOrientation()
+ * \endif
  */
 Qt::Alignment QwtPlotMarker::labelAlignment() const
 {
     return m_data->labelAlignment;
 }
 
-/*!
-   \brief Set the orientation of the label
-
-   When orientation is Qt::Vertical the label is rotated by 90.0 degrees
-   ( from bottom to top ).
-
-   \param orientation Orientation of the label
-
-   \sa labelOrientation(), setLabelAlignment()
+/**
+ * \if ENGLISH
+ * @brief Set the orientation of the label
+ * @details When orientation is Qt::Vertical the label is rotated by 90.0 degrees
+ *          (from bottom to top).
+ * @param[in] orientation Orientation of the label
+ * @sa labelOrientation(), setLabelAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置标签的方向
+ * @details 当方向为 Qt::Vertical 时，标签旋转 90.0 度（从下到上）。
+ * @param[in] orientation 标签方向
+ * @sa labelOrientation(), setLabelAlignment()
+ * \endif
  */
 void QwtPlotMarker::setLabelOrientation( Qt::Orientation orientation )
 {
@@ -503,23 +710,39 @@ void QwtPlotMarker::setLabelOrientation( Qt::Orientation orientation )
     }
 }
 
-/*!
-   \return the label orientation
-   \sa setLabelOrientation(), labelAlignment()
+/**
+ * \if ENGLISH
+ * @brief Get the label orientation
+ * @return Label orientation
+ * @sa setLabelOrientation(), labelAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标签方向
+ * @return 标签方向
+ * @sa setLabelOrientation(), labelAlignment()
+ * \endif
  */
 Qt::Orientation QwtPlotMarker::labelOrientation() const
 {
     return m_data->labelOrientation;
 }
 
-/*!
-   \brief Set the spacing
-
-   When the label is not centered on the marker position, the spacing
-   is the distance between the position and the label.
-
-   \param spacing Spacing
-   \sa spacing(), setLabelAlignment()
+/**
+ * \if ENGLISH
+ * @brief Set the spacing
+ * @details When the label is not centered on the marker position, the spacing
+ *          is the distance between the position and the label.
+ * @param[in] spacing Spacing
+ * @sa spacing(), setLabelAlignment()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置间距
+ * @details 当标签不在标记位置居中时，间距是位置和标签之间的距离。
+ * @param[in] spacing 间距
+ * @sa spacing(), setLabelAlignment()
+ * \endif
  */
 void QwtPlotMarker::setSpacing( int spacing )
 {
@@ -533,38 +756,63 @@ void QwtPlotMarker::setSpacing( int spacing )
     itemChanged();
 }
 
-/*!
-   \return the spacing
-   \sa setSpacing()
+/**
+ * \if ENGLISH
+ * @brief Get the spacing
+ * @return Spacing
+ * @sa setSpacing()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取间距
+ * @return 间距
+ * @sa setSpacing()
+ * \endif
  */
 int QwtPlotMarker::spacing() const
 {
     return m_data->spacing;
 }
 
-/*!
-   Build and assign a line pen
-
-   In Qt5 the default pen width is 1.0 ( 0.0 in Qt4 ) what makes it
-   non cosmetic ( see QPen::isCosmetic() ). This method has been introduced
-   to hide this incompatibility.
-
-   \param color Pen color
-   \param width Pen width
-   \param style Pen style
-
-   \sa pen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Build and assign a line pen
+ * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) which makes it
+ *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
+ *          to hide this incompatibility.
+ * @param[in] color Pen color
+ * @param[in] width Pen width
+ * @param[in] style Pen style
+ * @sa pen(), brush()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构建并分配线条画笔
+ * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性
+ *          （见 QPen::isCosmetic()）。此方法用于隐藏此不兼容性。
+ * @param[in] color 画笔颜色
+ * @param[in] width 画笔宽度
+ * @param[in] style 画笔样式
+ * @sa pen(), brush()
+ * \endif
  */
 void QwtPlotMarker::setLinePen( const QColor& color, qreal width, Qt::PenStyle style )
 {
     setLinePen( QPen( color, width, style ) );
 }
 
-/*!
-   Specify a pen for the line.
-
-   \param pen New pen
-   \sa linePen()
+/**
+ * \if ENGLISH
+ * @brief Specify a pen for the line
+ * @param[in] pen New pen
+ * @sa linePen()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定线条的画笔
+ * @param[in] pen 新画笔
+ * @sa linePen()
+ * \endif
  */
 void QwtPlotMarker::setLinePen( const QPen& pen )
 {
@@ -577,15 +825,37 @@ void QwtPlotMarker::setLinePen( const QPen& pen )
     }
 }
 
-/*!
-   \return the line pen
-   \sa setLinePen()
+/**
+ * \if ENGLISH
+ * @brief Get the line pen
+ * @return Line pen
+ * @sa setLinePen()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取线条画笔
+ * @return 线条画笔
+ * @sa setLinePen()
+ * \endif
  */
 const QPen& QwtPlotMarker::linePen() const
 {
     return m_data->pen;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle
+ * @details width/height of -1 does not affect the autoscale calculation
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界矩形
+ * @return 边界矩形
+ * @details -1的宽度/高度不影响自动缩放计算
+ * \endif
+ */
 QRectF QwtPlotMarker::boundingRect() const
 {
     // width/height of -1 does not affect the autoscale calculation
@@ -603,14 +873,22 @@ QRectF QwtPlotMarker::boundingRect() const
     }
 }
 
-/*!
-   \return Icon representing the marker on the legend
-
-   \param index Index of the legend entry
-                ( usually there is only one )
-   \param size Icon size
-
-   \sa setLegendIconSize(), legendData()
+/**
+ * \if ENGLISH
+ * @brief Get the icon representing the marker on the legend
+ * @param[in] index Index of the legend entry (usually there is only one)
+ * @param[in] size Icon size
+ * @return Icon representing the marker on the legend
+ * @sa setLegendIconSize(), legendData()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例上代表标记的图标
+ * @param[in] index 图例条目的索引（通常只有一个）
+ * @param[in] size 图标大小
+ * @return 图例上代表标记的图标
+ * @sa setLegendIconSize(), legendData()
+ * \endif
  */
 QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
 {

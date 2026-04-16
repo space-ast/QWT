@@ -58,10 +58,10 @@ class QWT_EXPORT QwtAbstractLegend : public QFrame
         Q_OBJECT
 
 public:
-        /// Constructor for QwtAbstractLegend (English only)
+        // Constructor for QwtAbstractLegend
         explicit QwtAbstractLegend(QWidget* parent = nullptr);
         
-        /// Destructor for QwtAbstractLegend (English only)
+        // Destructor for QwtAbstractLegend
         virtual ~QwtAbstractLegend();
 
         /**
@@ -82,10 +82,10 @@ public:
          */
         virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
-        /// \if ENGLISH Return true when no plot item is inserted \endif \if CHINESE 当没有插入绘图项时返回 true \endif
+        // Return true when no plot item is inserted
         virtual bool isEmpty() const = 0;
 
-        /// \if ENGLISH Return scroll extent \endif \if CHINESE 返回滚动范围 \endif
+        // Return scroll extent
         virtual int scrollExtent(Qt::Orientation) const;
 
 public Q_SLOTS:

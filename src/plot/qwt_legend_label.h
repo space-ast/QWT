@@ -53,47 +53,47 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 {
     Q_OBJECT
   public:
-    /// Constructor for QwtLegendLabel (English only)
+    // Constructor for QwtLegendLabel
     explicit QwtLegendLabel( QWidget* parent = 0 );
     
-    /// Destructor for QwtLegendLabel (English only)
+    // Destructor for QwtLegendLabel
     virtual ~QwtLegendLabel();
 
-    /// Set the legend data (English only)
+    // Set the legend data
     void setData( const QwtLegendData& );
     
-    /// Return the legend data (English only)
+    // Return the legend data
     const QwtLegendData& data() const;
 
-    /// Set the item mode (English only)
+    // Set the item mode
     void setItemMode( QwtLegendData::Mode );
     
-    /// Return the item mode (English only)
+    // Return the item mode
     QwtLegendData::Mode itemMode() const;
 
-    /// Set the spacing between icon and text (English only)
+    // Set the spacing between icon and text
     void setSpacing( int spacing );
     
-    /// Return the spacing (English only)
+    // Return the spacing
     int spacing() const;
 
-    /// Set the text label (English only)
+    // Set the text label
     virtual void setText( const QwtText& ) override;
 
-    /// Set the icon (English only)
+    // Set the icon
     void setIcon( const QPixmap& );
     
-    /// Return the icon (English only)
+    // Return the icon
     QPixmap icon() const;
 
-    /// Return the size hint (English only)
+    // Return the size hint
     virtual QSize sizeHint() const override;
 
-    /// Return whether the item is checked (English only)
+    // Return whether the item is checked
     bool isChecked() const;
 
   public Q_SLOTS:
-    /// Set whether the item is checked (English only)
+    // Set whether the item is checked
     void setChecked( bool on );
 
   Q_SIGNALS:

@@ -146,7 +146,15 @@ QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
     }
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtWidgetOverlay::~QwtWidgetOverlay()
 {
     delete m_data;
@@ -173,64 +181,64 @@ void QwtWidgetOverlay::setMaskMode(MaskMode mode)
     }
 }
 
-/*!
-   \if ENGLISH
-   @return Mode how to find the mask for the overlay
-   \sa setMaskMode()
-   \endif
-   *
-   \if CHINESE
-   @return 如何为覆盖层查找掩码的模式
-   \sa setMaskMode()
-   \endif
+/**
+ * \if ENGLISH
+ * @return Mode how to find the mask for the overlay
+ * \sa setMaskMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @return 如何为覆盖层查找掩码的模式
+ * \sa setMaskMode()
+ * \endif
  */
 QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 {
     return m_data->maskMode;
 }
 
-/*!
-   \if ENGLISH
-   Set the render mode
-   @param mode Render mode
-   \sa RenderMode, renderMode()
-   \endif
-   *
-   \if CHINESE
-   设置渲染模式
-   @param mode 渲染模式
-   \sa RenderMode, renderMode()
-   \endif
+/**
+ * \if ENGLISH
+ * @brief Set the render mode
+ * @param[in] mode Render mode
+ * \sa RenderMode, renderMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置渲染模式
+ * @param[in] mode 渲染模式
+ * \sa RenderMode, renderMode()
+ * \endif
  */
 void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
     m_data->renderMode = mode;
 }
 
-/*!
-   \if ENGLISH
-   @return Render mode
-   \sa RenderMode, setRenderMode()
-   \endif
-   *
-   \if CHINESE
-   @return 渲染模式
-   \sa RenderMode, setRenderMode()
-   \endif
+/**
+ * \if ENGLISH
+ * @return Render mode
+ * \sa RenderMode, setRenderMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @return 渲染模式
+ * \sa RenderMode, setRenderMode()
+ * \endif
  */
 QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 {
     return m_data->renderMode;
 }
 
-/*!
-   \if ENGLISH
-   Recalculate the mask and repaint the overlay
-   \endif
-   *
-   \if CHINESE
-   重新计算掩码并重绘覆盖层
-   \endif
+/**
+ * \if ENGLISH
+ * @brief Recalculate the mask and repaint the overlay
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 重新计算掩码并重绘覆盖层
+ * \endif
  */
 void QwtWidgetOverlay::updateOverlay()
 {
@@ -407,28 +415,26 @@ QRegion QwtWidgetOverlay::maskHint() const
     return QRegion();
 }
 
-/*!
-   \if ENGLISH
-   @brief Event filter
-
-   Resize the overlay according to the size of the parent widget.
-
-   @param object Object to be filtered
-   @param event Event
-
-   \return See QObject::eventFilter()
-   \endif
-   *
-   \if CHINESE
-   @brief 事件过滤器
-
-   根据父控件的大小调整覆盖层的大小。
-
-   @param object 要过滤的对象
-   @param event 事件
-
-   \return 参见 QObject::eventFilter()
-   \endif
+/**
+ * \if ENGLISH
+ * @brief Event filter
+ *
+ * @details Resize the overlay according to the size of the parent widget.
+ *
+ * @param[in] object Object to be filtered
+ * @param[in] event Event
+ * @return See QObject::eventFilter()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 事件过滤器
+ *
+ * @details 根据父控件的大小调整覆盖层的大小。
+ *
+ * @param[in] object 要过滤的对象
+ * @param[in] event 事件
+ * @return 参见 QObject::eventFilter()
+ * \endif
  */
 
 bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)

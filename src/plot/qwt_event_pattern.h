@@ -35,14 +35,20 @@
 class QMouseEvent;
 class QKeyEvent;
 
-/*!
-   \brief A collection of event patterns
-
-   QwtEventPattern introduces an level of indirection for mouse and
-   keyboard inputs. Those are represented by symbolic names, so
-   the application code can be configured by individual mappings.
-
-   \sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
+/**
+ * \if ENGLISH
+ * @brief A collection of event patterns
+ * @details QwtEventPattern introduces a level of indirection for mouse and
+ *          keyboard inputs. Those are represented by symbolic names, so
+ *          the application code can be configured by individual mappings.
+ * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
+ * \endif
+ * \if CHINESE
+ * @brief 事件模式的集合
+ * @details QwtEventPattern 为鼠标和键盘输入引入了一层间接抽象。
+ *          这些输入通过符号名称表示，使应用程序代码可以通过个性化的映射进行配置。
+ * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
+ * \endif
  */
 class QWT_EXPORT QwtEventPattern
 {
@@ -200,28 +206,42 @@ class QWT_EXPORT QwtEventPattern
         Qt::KeyboardModifiers modifiers;
     };
 
+    // Constructor
     QwtEventPattern();
+    // Destructor
     virtual ~QwtEventPattern();
 
+    // Initialize mouse patterns depending on number of mouse buttons
     void initMousePattern( int numButtons );
+    // Initialize key patterns with default settings
     void initKeyPattern();
 
+    // Set a single mouse pattern by code
     void setMousePattern( MousePatternCode, Qt::MouseButton button,
         Qt::KeyboardModifiers = Qt::NoModifier );
 
+    // Set a single key pattern by code
     void setKeyPattern( KeyPatternCode, int key,
         Qt::KeyboardModifiers modifiers = Qt::NoModifier );
 
+    // Set all mouse patterns
     void setMousePattern( const QVector< MousePattern >& );
+    // Set all key patterns
     void setKeyPattern( const QVector< KeyPattern >& );
 
+    // Return the mouse pattern vector (const)
     const QVector< MousePattern >& mousePattern() const;
+    // Return the key pattern vector (const)
     const QVector< KeyPattern >& keyPattern() const;
 
+    // Return the mouse pattern vector (mutable)
     QVector< MousePattern >& mousePattern();
+    // Return the key pattern vector (mutable)
     QVector< KeyPattern >& keyPattern();
 
+    // Check if mouse event matches a pattern code
     bool mouseMatch( MousePatternCode, const QMouseEvent* ) const;
+    // Check if key event matches a pattern code
     bool keyMatch( KeyPatternCode, const QKeyEvent* ) const;
 
   protected:

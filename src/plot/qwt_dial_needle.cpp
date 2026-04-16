@@ -195,43 +195,78 @@ static void qwtDrawTriangleNeedle( QPainter* painter,
     }
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * \endif
+ */
 QwtDialNeedle::QwtDialNeedle()
     : m_palette( QApplication::palette() )
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtDialNeedle::~QwtDialNeedle()
 {
 }
 
-/*!
-    Sets the palette for the needle.
-
-    \param palette New Palette
+/**
+ * \if ENGLISH
+ * @brief Sets the palette for the needle
+ * @param[in] palette New Palette
+ * \endif
+ * \if CHINESE
+ * @brief 设置指针的调色板
+ * @param[in] palette 新调色板
+ * \endif
  */
 void QwtDialNeedle::setPalette( const QPalette& palette )
 {
     m_palette = palette;
 }
 
-/*!
-   \return the palette of the needle.
+/**
+ * \if ENGLISH
+ * @brief Return the palette of the needle
+ * @return Palette of the needle
+ * \endif
+ * \if CHINESE
+ * @brief 返回指针的调色板
+ * @return 指针的调色板
+ * \endif
  */
 const QPalette& QwtDialNeedle::palette() const
 {
     return m_palette;
 }
 
-/*!
-   Draw the needle
-
-   \param painter Painter
-   \param center Center of the dial, start position for the needle
-   \param length Length of the needle
-   \param direction Direction of the needle, in degrees counter clockwise
-   \param colorGroup Color group, used for painting
+/**
+ * \if ENGLISH
+ * @brief Draw the needle
+ * @param[in] painter Painter
+ * @param[in] center Center of the dial, start position for the needle
+ * @param[in] length Length of the needle
+ * @param[in] direction Direction of the needle, in degrees counter clockwise
+ * @param[in] colorGroup Color group, used for painting
+ * \endif
+ * \if CHINESE
+ * @brief 绘制指针
+ * @param[in] painter 绘图器
+ * @param[in] center 表盘中心，指针起始位置
+ * @param[in] length 指针长度
+ * @param[in] direction 指针方向，逆时针角度
+ * @param[in] colorGroup 颜色组，用于绘制
+ * \endif
  */
 void QwtDialNeedle::draw( QPainter* painter,
     const QPointF& center, double length, double direction,
@@ -279,13 +314,21 @@ void QwtDialNeedle::drawKnob( QPainter* painter,
     painter->restore();
 }
 
-/*!
-   Constructor
-
-   \param style Style
-   \param hasKnob With/Without knob
-   \param mid Middle color
-   \param base Base color
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] style Style
+ * @param[in] hasKnob With/Without knob
+ * @param[in] mid Middle color
+ * @param[in] base Base color
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] style 样式
+ * @param[in] hasKnob 是否有旋钮
+ * @param[in] mid 中间颜色
+ * @param[in] base 基础颜色
+ * \endif
  */
 QwtDialSimpleNeedle::QwtDialSimpleNeedle( Style style, bool hasKnob,
     const QColor& mid, const QColor& base ):
@@ -300,19 +343,34 @@ QwtDialSimpleNeedle::QwtDialSimpleNeedle( Style style, bool hasKnob,
     setPalette( palette );
 }
 
-/*!
-   Set the width of the needle
-   \param width Width
-   \sa width()
+/**
+ * \if ENGLISH
+ * @brief Set the width of the needle
+ * @param[in] width Width
+ * \sa width()
+ * \endif
+ * \if CHINESE
+ * @brief 设置指针的宽度
+ * @param[in] width 宽度
+ * \sa width()
+ * \endif
  */
 void QwtDialSimpleNeedle::setWidth( double width )
 {
     m_width = width;
 }
 
-/*!
-   \return the width of the needle
-   \sa setWidth()
+/**
+ * \if ENGLISH
+ * @brief Return the width of the needle
+ * @return Width of the needle
+ * \sa setWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回指针的宽度
+ * @return 指针的宽度
+ * \sa setWidth()
+ * \endif
  */
 double QwtDialSimpleNeedle::width() const
 {
@@ -363,7 +421,20 @@ void QwtDialSimpleNeedle::drawNeedle( QPainter* painter,
     }
 }
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] style Style
+ * @param[in] light Light color
+ * @param[in] dark Dark color
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] style 样式
+ * @param[in] light 亮色
+ * @param[in] dark 暗色
+ * \endif
+ */
 QwtCompassMagnetNeedle::QwtCompassMagnetNeedle( Style style,
     const QColor& light, const QColor& dark ):
     m_style( style )
@@ -416,12 +487,19 @@ void QwtCompassMagnetNeedle::drawNeedle( QPainter* painter,
     }
 }
 
-/*!
-   Constructor
-
-   \param style Arrow style
-   \param light Light color
-   \param dark Dark color
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] style Arrow style
+ * @param[in] light Light color
+ * @param[in] dark Dark color
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] style 箭头样式
+ * @param[in] light 亮色
+ * @param[in] dark 暗色
+ * \endif
  */
 QwtCompassWindArrow::QwtCompassWindArrow( Style style,
     const QColor& light, const QColor& dark ):

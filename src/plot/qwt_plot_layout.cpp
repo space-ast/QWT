@@ -1,4 +1,4 @@
-﻿/******************************************************************************
+/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -22,7 +22,7 @@
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
- *****************************************************************************/
+ ******************************************************************************/
 
 #include "qwt_plot_layout.h"
 #include "qwt_text.h"
@@ -210,10 +210,19 @@ public:
     QwtPlotLayoutEngine engine;
 };
 
-/*!
-   \brief Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details Creates a new QwtPlotLayout instance with default settings.
+ *          The legend position is set to BottomLegend and canvas margin is set to -1.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 创建一个新的 QwtPlotLayout 实例，使用默认设置。
+ *          图例位置设置为 BottomLegend，画布边距设置为 -1。
+ * \endif
  */
-
 QwtPlotLayout::QwtPlotLayout()
 {
     m_data = new PrivateData;
@@ -225,31 +234,45 @@ QwtPlotLayout::QwtPlotLayout()
     invalidate();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * @details Destroys the QwtPlotLayout instance and releases all allocated resources.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * @details 销毁 QwtPlotLayout 实例并释放所有分配的资源。
+ * \endif
+ */
 QwtPlotLayout::~QwtPlotLayout()
 {
     delete m_data;
 }
 
-/*!
-   Change a margin of the canvas. The margin is the space
-   above/below the scale ticks. A negative margin will
-   be set to -1, excluding the borders of the scales.
-
-   设置画布的边距（margin）。这个边距是指 坐标轴刻度线与画布边缘之间的空间
-
-   正数：在刻度线外增加空白区域
-   负数：会被设置为-1，表示排除坐标轴边框的影响
-   0：紧贴刻度线
-
-   \param margin New margin
-   \param axisPos One of QwtAxis::Position. Specifies where the position of the margin.
-              -1 means margin at all borders.
-   \sa canvasMargin()
-
-   \warning The margin will have no effect when alignCanvasToScale() is true
+/**
+ * \if ENGLISH
+ * @brief Set the canvas margin for a specific axis position
+ * @param[in] margin The margin value. A negative margin (-1) excludes scale borders.
+ *                    Positive values add space between scale ticks and canvas edge.
+ *                    0 means tight against tick marks.
+ * @param[in] axisPos Axis position (QwtAxis::Position). Use -1 to apply to all axes.
+ * @details The margin is the space above/below the scale ticks.
+ *          When alignCanvasToScale() is true, the margin has no effect.
+ * @sa canvasMargin(), setAlignCanvasToScale()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置指定坐标轴位置的画布边距
+ * @param[in] margin 边距值。负值（-1）表示排除坐标轴边框的影响；
+ *                    正值在刻度线外增加空白区域；
+ *                    0 表示紧贴刻度线。
+ * @param[in] axisPos 坐标轴位置（QwtAxis::Position）。使用 -1 应用于所有坐标轴。
+ * @details 边距是指坐标轴刻度线与画布边缘之间的空间。
+ *          当 alignCanvasToScale() 为 true 时，边距设置无效。
+ * @sa canvasMargin(), setAlignCanvasToScale()
+ * \endif
  */
-
 void QwtPlotLayout::setCanvasMargin(int margin, int axisPos)
 {
     if (margin < -1)
@@ -265,10 +288,20 @@ void QwtPlotLayout::setCanvasMargin(int margin, int axisPos)
     }
 }
 
-/*!
-    \param axisPos Axis position
-    \return Margin around the scale tick borders
-    \sa setCanvasMargin()
+/**
+ * \if ENGLISH
+ * @brief Get the canvas margin for a specific axis position
+ * @param[in] axisPos Axis position (QwtAxis::Position)
+ * @return The margin around the scale tick borders for the specified axis
+ * @sa setCanvasMargin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取指定坐标轴位置的画布边距
+ * @param[in] axisPos 坐标轴位置（QwtAxis::Position）
+ * @return 指定坐标轴的刻度线边框周围的边距
+ * @sa setCanvasMargin()
+ * \endif
  */
 int QwtPlotLayout::canvasMargin(int axisPos) const
 {
@@ -278,11 +311,18 @@ int QwtPlotLayout::canvasMargin(int axisPos) const
     return m_data->engine.canvasMargin(axisPos);
 }
 
-/*!
-   \brief Set the align-canvas-to-axis-scales flag for all axes
-
-   \param on True/False
-   \sa setAlignCanvasToScale(), alignCanvasToScale()
+/**
+ * \if ENGLISH
+ * @brief Set the align-canvas-to-axis-scales flag for all axes
+ * @param[in] on True to align canvas to scales, false otherwise
+ * @sa setAlignCanvasToScale(), alignCanvasToScale()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置所有坐标轴的画布对齐标志
+ * @param[in] on true 表示画布对齐到刻度，false 表示不对齐
+ * @sa setAlignCanvasToScale(), alignCanvasToScale()
+ * \endif
  */
 void QwtPlotLayout::setAlignCanvasToScales(bool on)
 {
@@ -290,30 +330,29 @@ void QwtPlotLayout::setAlignCanvasToScales(bool on)
         m_data->engine.setAlignCanvas(axisPos, on);
 }
 
-/*!
- *  Change the align-canvas-to-axis-scales setting. The canvas may:
+/**
+ * \if ENGLISH
+ * @brief Set the align-canvas-to-axis-scales setting for a specific axis
+ * @param[in] axisPos Axis position. This identifies a border of the plot.
+ *                    For example, QwtAxis::YLeft aligns the left end of X-axes.
+ * @param[in] on True to align canvas to scales, false to extend beyond scale ends
+ * @details The canvas may either extend beyond the axis scale ends to maximize
+ *          its size, or align with the axis scale ends to control its size.
+ * @note When on is true, canvasMargin() has no effect
+ * @sa setAlignCanvasToScales(), alignCanvasToScale(), setCanvasMargin()
+ * \endif
  *
- *  - extend beyond the axis scale ends to maximize its size,
- *  - align with the axis scale ends to control its size.
- *
- *  The axisId parameter is somehow confusing as it identifies a border
- *  of the plot and not the axes, that are aligned. F.e when QwtAxis::YLeft
- *  is set, the left end of the the x-axes ( QwtAxis::XTop, QwtAxis::XBottom )
- *  is aligned.
- *
- *  设置画布是否与坐标轴刻度对齐。画布有两种表现方式：
- *
- *  - 延伸：画布可超出轴刻度端点，以最大化绘图区域；
- *  - 对齐：画布严格对齐轴刻度端点，以便精确控制大小。
- *
- *  【注意】参数 axisId 实际指代的是“绘图边框”，而非被对齐的轴本身。例如传入 QwtAxis::YLeft 时，真正被对齐的是两条 X 轴
- *  （QwtAxis::XTop 与 QwtAxis::XBottom）的左端。
- *
- *  @param axisId Axis index
- *  @param on New align-canvas-to-axis-scales setting
- *
- *  @sa setCanvasMargin(), alignCanvasToScale(), setAlignCanvasToScales()
- *  @warning In case of on == true canvasMargin() will have no effect
+ * \if CHINESE
+ * @brief 设置指定坐标轴的画布对齐设置
+ * @param[in] axisPos 坐标轴位置。此参数标识绘图的边框，而非被对齐的轴本身。
+ *                    例如，传入 QwtAxis::YLeft 时，真正被对齐的是两条 X 轴
+ *                    （QwtAxis::XTop 与 QwtAxis::XBottom）的左端。
+ * @param[in] on true 表示画布对齐到刻度端点，false 表示延伸超出刻度端点
+ * @details 画布有两种表现方式：延伸（超出轴刻度端点以最大化绘图区域）
+ *          或对齐（严格对齐轴刻度端点以便精确控制大小）。
+ * @note 当 on 为 true 时，canvasMargin() 无效
+ * @sa setAlignCanvasToScales(), alignCanvasToScale(), setCanvasMargin()
+ * \endif
  */
 void QwtPlotLayout::setAlignCanvasToScale(int axisPos, bool on)
 {
@@ -321,14 +360,20 @@ void QwtPlotLayout::setAlignCanvasToScale(int axisPos, bool on)
         m_data->engine.setAlignCanvas(axisPos, on);
 }
 
-/*!
-   Return the align-canvas-to-axis-scales setting. The canvas may:
-   - extend beyond the axis scale ends to maximize its size
-   - align with the axis scale ends to control its size.
-
-   \param axisPos Axis position
-   \return align-canvas-to-axis-scales setting
-   \sa setAlignCanvasToScale(), setAlignCanvasToScale(), setCanvasMargin()
+/**
+ * \if ENGLISH
+ * @brief Get the align-canvas-to-axis-scales setting for a specific axis
+ * @param[in] axisPos Axis position (QwtAxis::Position)
+ * @return True if canvas is aligned to scale ends, false if it extends beyond
+ * @sa setAlignCanvasToScale(), setAlignCanvasToScales(), setCanvasMargin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取指定坐标轴的画布对齐设置
+ * @param[in] axisPos 坐标轴位置（QwtAxis::Position）
+ * @return 如果画布对齐到刻度端点返回 true，如果延伸超出则返回 false
+ * @sa setAlignCanvasToScale(), setAlignCanvasToScales(), setCanvasMargin()
+ * \endif
  */
 bool QwtPlotLayout::alignCanvasToScale(int axisPos) const
 {
@@ -338,40 +383,61 @@ bool QwtPlotLayout::alignCanvasToScale(int axisPos) const
     return m_data->engine.alignCanvas(axisPos);
 }
 
-/*!
-   Change the spacing of the plot. The spacing is the distance
-   between the plot components.
-
-   \param spacing New spacing
-   \sa setCanvasMargin(), spacing()
+/**
+ * \if ENGLISH
+ * @brief Set the spacing between plot components
+ * @param[in] spacing The spacing value in pixels. Must be >= 0.
+ * @sa spacing(), setCanvasMargin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置绘图组件之间的间距
+ * @param[in] spacing 间距值（像素），必须 >= 0。
+ * @sa spacing(), setCanvasMargin()
+ * \endif
  */
 void QwtPlotLayout::setSpacing(int spacing)
 {
     m_data->engine.setSpacing(qMax(0, spacing));
 }
 
-/*!
-   \return Spacing
-   \sa margin(), setSpacing()
+/**
+ * \if ENGLISH
+ * @brief Get the spacing between plot components
+ * @return The spacing value in pixels
+ * @sa setSpacing(), canvasMargin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图组件之间的间距
+ * @return 间距值（像素）
+ * @sa setSpacing(), canvasMargin()
+ * \endif
  */
 int QwtPlotLayout::spacing() const
 {
     return m_data->engine.spacing();
 }
 
-/*!
-   \brief Specify the position of the legend
-   \param pos The legend's position.
-   \param ratio Ratio between legend and the bounding rectangle
-               of title, footer, canvas and axes. The legend will be shrunk
-               if it would need more space than the given ratio.
-               The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0
-               it will be reset to the default ratio.
-               The default vertical/horizontal ratio is 0.33/0.5.
-
-   \sa QwtPlot::setLegendPosition()
+/**
+ * \if ENGLISH
+ * @brief Set the legend position with a specified ratio
+ * @param[in] pos The legend position (LeftLegend, RightLegend, TopLegend, BottomLegend)
+ * @param[in] ratio Ratio between legend and the bounding rectangle of title, footer,
+ *                  canvas and axes. Limited to (0.0, 1.0]. Values <= 0.0 use defaults.
+ *                  Default vertical/horizontal ratio is 0.33/0.5.
+ * @sa legendPosition(), setLegendRatio(), QwtPlot::setLegendPosition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置图例位置及比例
+ * @param[in] pos 图例位置（LeftLegend、RightLegend、TopLegend、BottomLegend）
+ * @param[in] ratio 图例与标题、页脚、画布和坐标轴包围矩形的比例。
+ *                  限制在 (0.0, 1.0] 范围内。值 <= 0.0 使用默认值。
+ *                  默认垂直/水平比例为 0.33/0.5。
+ * @sa legendPosition(), setLegendRatio(), QwtPlot::setLegendPosition()
+ * \endif
  */
-
 void QwtPlotLayout::setLegendPosition(QwtPlot::LegendPosition pos, double ratio)
 {
     if (ratio > 1.0)
@@ -405,46 +471,78 @@ void QwtPlotLayout::setLegendPosition(QwtPlot::LegendPosition pos, double ratio)
     }
 }
 
-/*!
-   \brief Specify the position of the legend
-   \param pos The legend's position. Valid values are
-      \c QwtPlot::LeftLegend, \c QwtPlot::RightLegend,
-      \c QwtPlot::TopLegend, \c QwtPlot::BottomLegend.
-
-   \sa QwtPlot::setLegendPosition()
+/**
+ * \if ENGLISH
+ * @brief Set the legend position
+ * @param[in] pos The legend position. Valid values are QwtPlot::LeftLegend,
+ *                 QwtPlot::RightLegend, QwtPlot::TopLegend, QwtPlot::BottomLegend.
+ * @sa legendPosition(), QwtPlot::setLegendPosition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置图例位置
+ * @param[in] pos 图例位置。有效值为 QwtPlot::LeftLegend、QwtPlot::RightLegend、
+ *                 QwtPlot::TopLegend、QwtPlot::BottomLegend。
+ * @sa legendPosition(), QwtPlot::setLegendPosition()
+ * \endif
  */
 void QwtPlotLayout::setLegendPosition(QwtPlot::LegendPosition pos)
 {
     setLegendPosition(pos, 0.0);
 }
 
-/*!
-   \return Position of the legend
-   \sa setLegendPosition(), QwtPlot::setLegendPosition(),
-      QwtPlot::legendPosition()
+/**
+ * \if ENGLISH
+ * @brief Get the legend position
+ * @return The current legend position
+ * @sa setLegendPosition(), QwtPlot::setLegendPosition(), QwtPlot::legendPosition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例位置
+ * @return 当前图例位置
+ * @sa setLegendPosition(), QwtPlot::setLegendPosition(), QwtPlot::legendPosition()
+ * \endif
  */
 QwtPlot::LegendPosition QwtPlotLayout::legendPosition() const
 {
     return m_data->engine.legendPos();
 }
 
-/*!
-   Specify the relative size of the legend in the plot
-   \param ratio Ratio between legend and the bounding rectangle
-               of title, footer, canvas and axes. The legend will be shrunk
-               if it would need more space than the given ratio.
-               The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0
-               it will be reset to the default ratio.
-               The default vertical/horizontal ratio is 0.33/0.5.
+/**
+ * \if ENGLISH
+ * @brief Set the relative size of the legend in the plot
+ * @param[in] ratio Ratio between legend and the bounding rectangle of title, footer,
+ *                  canvas and axes. Limited to (0.0, 1.0]. Values <= 0.0 use defaults.
+ *                  Default vertical/horizontal ratio is 0.33/0.5.
+ * @sa legendRatio(), setLegendPosition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置图例在绘图中的相对大小
+ * @param[in] ratio 图例与标题、页脚、画布和坐标轴包围矩形的比例。
+ *                  限制在 (0.0, 1.0] 范围内。值 <= 0.0 使用默认值。
+ *                  默认垂直/水平比例为 0.33/0.5。
+ * @sa legendRatio(), setLegendPosition()
+ * \endif
  */
 void QwtPlotLayout::setLegendRatio(double ratio)
 {
     setLegendPosition(legendPosition(), ratio);
 }
 
-/*!
-   \return The relative size of the legend in the plot.
-   \sa setLegendPosition()
+/**
+ * \if ENGLISH
+ * @brief Get the relative size of the legend in the plot
+ * @return The legend ratio value
+ * @sa setLegendRatio(), setLegendPosition()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例在绘图中的相对大小
+ * @return 图例比例值
+ * @sa setLegendRatio(), setLegendPosition()
+ * \endif
  */
 double QwtPlotLayout::legendRatio() const
 {
@@ -464,9 +562,18 @@ void QwtPlotLayout::setTitleRect(const QRectF& rect)
     m_data->titleRect = rect;
 }
 
-/*!
-   \return Geometry for the title
-   \sa activate(), invalidate()
+/**
+ * \if ENGLISH
+ * @brief Get the geometry for the title
+ * @return The title rectangle
+ * @sa activate(), invalidate(), setTitleRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标题的几何区域
+ * @return 标题矩形区域
+ * @sa activate(), invalidate(), setTitleRect()
+ * \endif
  */
 QRectF QwtPlotLayout::titleRect() const
 {
@@ -486,9 +593,18 @@ void QwtPlotLayout::setFooterRect(const QRectF& rect)
     m_data->footerRect = rect;
 }
 
-/*!
-   \return Geometry for the footer
-   \sa activate(), invalidate()
+/**
+ * \if ENGLISH
+ * @brief Get the geometry for the footer
+ * @return The footer rectangle
+ * @sa activate(), invalidate(), setFooterRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取页脚的几何区域
+ * @return 页脚矩形区域
+ * @sa activate(), invalidate(), setFooterRect()
+ * \endif
  */
 QRectF QwtPlotLayout::footerRect() const
 {
@@ -510,9 +626,18 @@ void QwtPlotLayout::setLegendRect(const QRectF& rect)
     m_data->legendRect = rect;
 }
 
-/*!
-   \return Geometry for the legend
-   \sa activate(), invalidate()
+/**
+ * \if ENGLISH
+ * @brief Get the geometry for the legend
+ * @return The legend rectangle
+ * @sa activate(), invalidate(), setLegendRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例的几何区域
+ * @return 图例矩形区域
+ * @sa activate(), invalidate(), setLegendRect()
+ * \endif
  */
 QRectF QwtPlotLayout::legendRect() const
 {
@@ -536,10 +661,20 @@ void QwtPlotLayout::setScaleRect(QwtAxisId axisId, const QRectF& rect)
         m_data->scaleRects[ axisId ] = rect;
 }
 
-/*!
-   \param axisId Axis
-   \return Geometry for the scale
-   \sa activate(), invalidate()
+/**
+ * \if ENGLISH
+ * @brief Get the geometry for a scale axis
+ * @param[in] axisId Axis identifier
+ * @return The scale rectangle for the specified axis, or empty QRectF if invalid
+ * @sa activate(), invalidate(), setScaleRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取坐标轴的几何区域
+ * @param[in] axisId 坐标轴标识符
+ * @return 指定坐标轴的刻度矩形区域，如果无效则返回空 QRectF
+ * @sa activate(), invalidate(), setScaleRect()
+ * \endif
  */
 QRectF QwtPlotLayout::scaleRect(QwtAxisId axisId) const
 {
@@ -567,18 +702,38 @@ QwtPlotLayoutEngine* QwtPlotLayout::layoutEngine()
     return &(m_data->engine);
 }
 
-/*!
-   \return Geometry for the canvas
-   \sa activate(), invalidate()
+/**
+ * \if ENGLISH
+ * @brief Get the geometry for the canvas
+ * @return The canvas rectangle
+ * @sa activate(), invalidate(), setCanvasRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取画布的几何区域
+ * @return 画布矩形区域
+ * @sa activate(), invalidate(), setCanvasRect()
+ * \endif
  */
 QRectF QwtPlotLayout::canvasRect() const
 {
     return m_data->canvasRect;
 }
 
-/*!
-   Invalidate the geometry of all components.
-   \sa activate()
+/**
+ * \if ENGLISH
+ * @brief Invalidate the geometry of all components
+ * @details Resets all geometry rectangles (title, footer, legend, canvas, and scales)
+ *          to empty rectangles. Must call activate() to recalculate geometries.
+ * @sa activate()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使所有组件的几何区域无效
+ * @details 将所有几何矩形（标题、页脚、图例、画布和坐标轴）重置为空矩形。
+ *          必须调用 activate() 重新计算几何区域。
+ * @sa activate()
+ * \endif
  */
 void QwtPlotLayout::invalidate()
 {
@@ -588,11 +743,20 @@ void QwtPlotLayout::invalidate()
         m_data->scaleRects[ axisPos ] = QRect();
 }
 
-/*!
-   \return Minimum size hint
-   \param plot Plot widget
-
-   \sa QwtPlot::minimumSizeHint()
+/**
+ * \if ENGLISH
+ * @brief Calculate the minimum size hint for the plot
+ * @param[in] plot The plot widget to calculate size hint for
+ * @return The minimum size hint
+ * @sa QwtPlot::minimumSizeHint()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算绘图的最小尺寸提示
+ * @param[in] plot 要计算尺寸提示的绘图部件
+ * @return 最小尺寸提示
+ * @sa QwtPlot::minimumSizeHint()
+ * \endif
  */
 QSize QwtPlotLayout::minimumSizeHint(const QwtPlot* plot) const
 {
@@ -680,15 +844,27 @@ QSize QwtPlotLayout::minimumSizeHint(const QwtPlot* plot) const
 }
 
 /**
- * @brief Recalculate the geometry of all components./根据给定的外框矩形，重新计算并记录 QwtPlot
- * 内所有子部件（标题、页脚、图例、4 条轴、画布）的几何位置。
- * @param plot Plot to be layout/待布局的 plot 对象
- * @param plotRect Rectangle where to place the components/外部可用矩形（逻辑坐标，单位是像素）
- * @param options Layout options/布局选项，例如是否忽略图例、是否忽略某条轴等
- *
- * 结果全部写入 m_data->xxxRect，外部可通过 titleRect()/footerRect()/legendRect()/canvasRect()/scaleRect() 直接读取。
- *
+ * \if ENGLISH
+ * @brief Recalculate the geometry of all plot components
+ * @param[in] plot The plot widget to layout
+ * @param[in] plotRect The rectangle where to place the components (in pixels)
+ * @param[in] options Layout options (e.g., ignore legend, ignore specific axes)
+ * @details Calculates and stores the geometry for all sub-components (title, footer,
+ *          legend, 4 axes, and canvas). Results are stored internally and can be
+ *          retrieved via titleRect(), footerRect(), legendRect(), canvasRect(), and scaleRect().
  * @sa invalidate(), titleRect(), footerRect(), legendRect(), scaleRect(), canvasRect()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 根据给定的外框矩形，重新计算所有绘图组件的几何位置
+ * @param[in] plot 待布局的绘图对象
+ * @param[in] plotRect 外部可用矩形（逻辑坐标，单位是像素）
+ * @param[in] options 布局选项，例如是否忽略图例、是否忽略某条轴等
+ * @details 计算并记录 QwtPlot 内所有子部件（标题、页脚、图例、4 条轴、画布）的几何位置。
+ *          结果全部写入内部存储，外部可通过 titleRect()/footerRect()/legendRect()/
+ *          canvasRect()/scaleRect() 直接读取。
+ * @sa invalidate(), titleRect(), footerRect(), legendRect(), scaleRect(), canvasRect()
+ * \endif
  */
 void QwtPlotLayout::activate(const QwtPlot* plot, const QRectF& plotRect, Options options)
 {
@@ -696,10 +872,10 @@ void QwtPlotLayout::activate(const QwtPlot* plot, const QRectF& plotRect, Option
     doActivate(plot, plotRect, options);
 }
 
-/**
- * @brief QwtPlotLayout::activate的具体实现
- * @param plotRect
- * @param options
+/*!
+ * \brief QwtPlotLayout::activate的具体实现
+ * \param plotRect
+ * \param options
  */
 void QwtPlotLayout::doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options)
 {
@@ -721,7 +897,7 @@ void QwtPlotLayout::doActivate(const QwtPlot* plot, const QRectF& plotRect, Opti
         m_data->legendRect = m_data->engine.layoutLegend(options, layoutData.legendData, rect, legendHint);
 
         // subtract m_data->legendRect from rect
-        // 从剩余矩形里“抠掉”图例区域
+        // 从剩余矩形里"抠掉"图例区域
         const QRegion region(rect.toRect());
         rect = region.subtracted(m_data->legendRect.toRect()).boundingRect();
 

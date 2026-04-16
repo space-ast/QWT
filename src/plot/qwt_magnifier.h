@@ -52,104 +52,83 @@ class QWT_EXPORT QwtMagnifier : public QObject
     Q_OBJECT
 
   public:
-    /// Constructor for QwtMagnifier (English only)
+    // Constructor
     explicit QwtMagnifier( QWidget* );
-    
-    /// Destructor for QwtMagnifier (English only)
+    // Destructor
     virtual ~QwtMagnifier();
 
-    /// Return the parent widget (non-const version) (English only)
+    // Return the parent widget (non-const version)
     QWidget* parentWidget();
-    
-    /// Return the parent widget (const version) (English only)
+    // Return the parent widget (const version)
     const QWidget* parentWidget() const;
 
-    /// Enable or disable the magnifier (English only)
+    // Enable or disable the magnifier
     void setEnabled( bool );
-    
-    /// Return whether the magnifier is enabled (English only)
+    // Return whether the magnifier is enabled
     bool isEnabled() const;
 
     // mouse
-    
-    /// Set the mouse factor for zooming (English only)
+
+    // Set the mouse factor for zooming
     void setMouseFactor( double );
-    
-    /// Return the mouse factor (English only)
+    // Return the mouse factor
     double mouseFactor() const;
 
-    /// Set the mouse button for zooming (English only)
+    // Set the mouse button for zooming
     void setMouseButton( Qt::MouseButton, Qt::KeyboardModifiers = Qt::NoModifier );
-    
-    /// Get the mouse button and modifiers (English only)
+    // Get the mouse button and modifiers
     void getMouseButton( Qt::MouseButton&, Qt::KeyboardModifiers& ) const;
 
     // mouse wheel
-    
-    /// Set the wheel factor for zooming (English only)
+
+    // Set the wheel factor for zooming
     void setWheelFactor( double );
-    
-    /// Return the wheel factor (English only)
+    // Return the wheel factor
     double wheelFactor() const;
 
-    /// Set the wheel modifiers (English only)
+    // Set the wheel modifiers
     void setWheelModifiers( Qt::KeyboardModifiers );
-    
-    /// Return the wheel modifiers (English only)
+    // Return the wheel modifiers
     Qt::KeyboardModifiers wheelModifiers() const;
 
     // keyboard
-    
-    /// Set the key factor for zooming (English only)
+
+    // Set the key factor for zooming
     void setKeyFactor( double );
-    
-    /// Return the key factor (English only)
+    // Return the key factor
     double keyFactor() const;
 
-    /// Set the zoom in key and modifiers (English only)
+    // Set the zoom in key and modifiers
     void setZoomInKey( int key, Qt::KeyboardModifiers = Qt::NoModifier );
-    
-    /// Get the zoom in key and modifiers (English only)
+    // Get the zoom in key and modifiers
     void getZoomInKey( int& key, Qt::KeyboardModifiers& ) const;
 
-    /// Set the zoom out key and modifiers (English only)
+    // Set the zoom out key and modifiers
     void setZoomOutKey( int key, Qt::KeyboardModifiers = Qt::NoModifier );
-    
-    /// Get the zoom out key and modifiers (English only)
+    // Get the zoom out key and modifiers
     void getZoomOutKey( int& key, Qt::KeyboardModifiers& ) const;
 
-    /// Event filter for mouse and keyboard events (English only)
+    // Event filter for mouse and keyboard events
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
   protected:
     /**
      * \if ENGLISH
      * @brief Rescale the parent widget
-     * @param factor Scale factor (>1 for zoom in, <1 for zoom out)
+     * @param[in] factor Scale factor (>1 for zoom in, <1 for zoom out)
      * \endif
      * \if CHINESE
      * @brief 重新缩放父控件
-     * @param factor 缩放因子（>1 放大，<1 缩小）
+     * @param[in] factor 缩放因子（>1 放大，<1 缩小）
      * \endif
      */
     virtual void rescale( double factor ) = 0;
 
-    /// Handle mouse press events for the widget (English only)
     virtual void widgetMousePressEvent( QMouseEvent* );
-    
-    /// Handle mouse release events for the widget (English only)
     virtual void widgetMouseReleaseEvent( QMouseEvent* );
-    
-    /// Handle mouse move events for the widget (English only)
     virtual void widgetMouseMoveEvent( QMouseEvent* );
-    
-    /// Handle wheel events for the widget (English only)
     virtual void widgetWheelEvent( QWheelEvent* );
-    
-    /// Handle key press events for the widget (English only)
     virtual void widgetKeyPressEvent( QKeyEvent* );
-    
-    /// Handle key release events for the widget (English only)
     virtual void widgetKeyReleaseEvent( QKeyEvent* );
 
   private:

@@ -157,89 +157,89 @@ public:
      */
     virtual int rtti() const override;
     
-    //! Set paint attribute
+    // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
     
-    //! Test paint attribute
+    // Test paint attribute
     bool testPaintAttribute(PaintAttribute) const;
     
-    //! Set box samples
+    // Set box samples
     void setSamples(const QVector<QwtBoxSample>&);
     void setSamples(QwtSeriesData<QwtBoxSample>*);
     
-    //! Set outlier samples (optional)
+    // Set outlier samples (optional)
     void setOutliers(const QVector<QwtBoxOutlierSample>&);
     void setOutliers(QwtSeriesData<QwtBoxOutlierSample>*);
     
-    //! Get outlier data
+    // Get outlier data
     const QwtSeriesData<QwtBoxOutlierSample>* outlierData() const;
     
-    //! Set box style
+    // Set box style
     void setBoxStyle(BoxStyle);
     BoxStyle boxStyle() const;
     
-    //! Set whisker style
+    // Set whisker style
     void setWhiskerStyle(WhiskerStyle);
     WhiskerStyle whiskerStyle() const;
     
-    //! Set orientation (vertical: x-position, horizontal: y-position)
+    // Set orientation (vertical: x-position, horizontal: y-position)
     void setOrientation(Qt::Orientation);
     Qt::Orientation orientation() const;
     
-    //! Set box width in scale coordinates
+    // Set box width in scale coordinates
     void setBoxExtent(double extent);
     double boxExtent() const;
     
-    //! Set minimum box width in pixels
+    // Set minimum box width in pixels
     void setMinBoxWidth(double pixels);
     double minBoxWidth() const;
     
-    //! Set maximum box width in pixels (negative = unlimited)
+    // Set maximum box width in pixels (negative = unlimited)
     void setMaxBoxWidth(double pixels);
     double maxBoxWidth() const;
     
-    //! Set pen for box outline and whiskers
+    // Set pen for box outline and whiskers
     void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     void setPen(const QPen&);
     const QPen& pen() const;
     
-    //! Set brush for box body fill
+    // Set brush for box body fill
     void setBrush(const QBrush&);
     const QBrush& brush() const;
     
-    //! Set pen for median line
+    // Set pen for median line
     void setMedianPen(const QPen&);
     QPen medianPen() const;
     
-    //! Set symbol for outliers
+    // Set symbol for outliers
     void setOutlierSymbol(const QwtSymbol*);
     const QwtSymbol* outlierSymbol() const;
     
-    //! Set symbol for mean marker
+    // Set symbol for mean marker
     void setMeanSymbol(const QwtSymbol*);
     const QwtSymbol* meanSymbol() const;
     
-    //! Show/hide median line
+    // Show/hide median line
     void setMedianVisible(bool);
     bool isMedianVisible() const;
     
-    //! Show/hide mean marker
+    // Show/hide mean marker
     void setMeanVisible(bool);
     bool isMeanVisible() const;
     
-    //! Set outlier jitter width (for overlapping outliers)
+    // Set outlier jitter width (for overlapping outliers)
     void setOutlierJitter(double jitterWidth);
     double outlierJitter() const;
     
-    //! Draw the series
+    // Draw the series
     virtual void drawSeries(QPainter*,
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, int from, int to) const override;
     
-    //! Get bounding rectangle
+    // Get bounding rectangle
     virtual QRectF boundingRect() const override;
     
-    //! Get legend icon
+    // Get legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
     
 protected:

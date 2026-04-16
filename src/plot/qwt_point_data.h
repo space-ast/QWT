@@ -278,22 +278,22 @@ private:
 class QWT_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
 {
 public:
-    /// Constructor
+    // Constructor
     QwtSyntheticPointData(size_t size, const QwtInterval& = QwtInterval());
 
-    /// Set the number of points
+    // Set the number of points
     void setSize(size_t size);
-    /// Get the number of points
+    // Get the number of points
     virtual size_t size() const override;
 
-    /// Set the interval
+    // Set the interval
     void setInterval(const QwtInterval&);
-    /// Get the interval
+    // Get the interval
     QwtInterval interval() const;
 
-    /// Get the bounding rectangle
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
-    /// Get the sample at a specific index
+    // Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
     /**
@@ -312,12 +312,12 @@ public:
      * \endif
      */
     virtual double y(double x) const = 0;
-    /// Calculate the x value for a given index
+    // Calculate the x value for a given index
     virtual double x(size_t index) const;
 
-    /// Set the rectangle of interest
+    // Set the rectangle of interest
     virtual void setRectOfInterest(const QRectF&) override;
-    /// Get the rectangle of interest
+    // Get the rectangle of interest
     QRectF rectOfInterest() const;
 
 private:

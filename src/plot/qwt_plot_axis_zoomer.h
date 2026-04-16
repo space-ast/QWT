@@ -147,49 +147,49 @@ class QWT_EXPORT QwtPlotAxisZoomer : public QwtPlotPicker
 {
     Q_OBJECT
 public:
-    /// Constructor
+    // Constructor
     explicit QwtPlotAxisZoomer(QWidget*, bool doReplot = true);
-    /// Constructor with axes
+    // Constructor with specified axes
     explicit QwtPlotAxisZoomer(QwtAxisId xAxis, QwtAxisId yAxis, QWidget*, bool doReplot = true);
 
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotAxisZoomer();
 
-    /// Set zoom base
+    // Set zoom base from current scales
     virtual void setZoomBase(bool doReplot = true);
-    /// Set zoom base from rectangle
+    // Set zoom base from a rectangle
     virtual void setZoomBase(const QRectF&);
 
-    /// Get zoom base
+    // Get zoom base rectangle
     QRectF zoomBase() const;
-    /// Get current zoom rectangle
+    // Get current zoom rectangle
     QRectF zoomRect() const;
 
-    /// Set axes
+    // Set the axes for the zoomer
     virtual void setAxes(QwtAxisId xAxis, QwtAxisId yAxis) override;
 
-    /// Set maximum stack depth
+    // Set maximum zoom stack depth
     void setMaxStackDepth(int);
-    /// Get maximum stack depth
+    // Get maximum zoom stack depth
     int maxStackDepth() const;
 
-    /// Get zoom stack
+    // Get the zoom stack
     const QStack< QRectF >& zoomStack() const;
-    /// Set zoom stack
+    // Set the zoom stack
     void setZoomStack(const QStack< QRectF >&, int zoomRectIndex = -1);
 
-    /// Get current zoom rectangle index
+    // Get current zoom rectangle index in stack
     uint zoomRectIndex() const;
 
 public Q_SLOTS:
-    /// Move by offset
+    // Move zoom rectangle by offset
     void moveBy(double dx, double dy);
-    /// Move to position
+    // Move zoom rectangle to position
     virtual void moveTo(const QPointF&);
 
-    /// Zoom to rectangle
+    // Zoom to a rectangle
     virtual void zoom(const QRectF&);
-    /// Zoom by offset in stack
+    // Zoom by offset in stack
     virtual void zoom(int offset);
 
 Q_SIGNALS:

@@ -79,26 +79,51 @@ class QwtPlotDirectPainter::PrivateData
     int to;
 };
 
-//! Constructor
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] parent Parent object
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] parent 父对象
+ * \endif
+ */
 QwtPlotDirectPainter::QwtPlotDirectPainter( QObject* parent )
     : QObject( parent )
 {
     m_data = new PrivateData;
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotDirectPainter::~QwtPlotDirectPainter()
 {
     delete m_data;
 }
 
-/*!
-   Change an attribute
-
-   \param attribute Attribute to change
-   \param on On/Off
-
-   \sa Attribute, testAttribute()
+/**
+ * \if ENGLISH
+ * @brief Change an attribute
+ * @param[in] attribute Attribute to change
+ * @param[in] on On/Off
+ * @sa Attribute, testAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改属性
+ * @param[in] attribute 要更改的属性
+ * @param[in] on 开/关
+ * @sa Attribute, testAttribute()
+ * \endif
  */
 void QwtPlotDirectPainter::setAttribute( Attribute attribute, bool on )
 {
@@ -114,46 +139,80 @@ void QwtPlotDirectPainter::setAttribute( Attribute attribute, bool on )
     }
 }
 
-/*!
-   \return True, when attribute is enabled
-   \param attribute Attribute to be tested
-   \sa Attribute, setAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test an attribute
+ * @param[in] attribute Attribute to be tested
+ * @return True, when attribute is enabled
+ * @sa Attribute, setAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试属性
+ * @param[in] attribute 要测试的属性
+ * @return 如果属性启用则返回 true
+ * @sa Attribute, setAttribute()
+ * \endif
  */
 bool QwtPlotDirectPainter::testAttribute( Attribute attribute ) const
 {
     return m_data->attributes & attribute;
 }
 
-/*!
-   En/Disables clipping
-
-   \param enable Enables clipping is true, disable it otherwise
-   \sa hasClipping(), clipRegion(), setClipRegion()
+/**
+ * \if ENGLISH
+ * @brief Enable or disable clipping
+ * @param[in] enable Enables clipping if true, disables it otherwise
+ * @sa hasClipping(), clipRegion(), setClipRegion()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 启用或禁用裁剪
+ * @param[in] enable 如果为 true 则启用裁剪，否则禁用
+ * @sa hasClipping(), clipRegion(), setClipRegion()
+ * \endif
  */
 void QwtPlotDirectPainter::setClipping( bool enable )
 {
     m_data->hasClipping = enable;
 }
 
-/*!
-   \return true, when clipping is enabled
-   \sa setClipping(), clipRegion(), setClipRegion()
+/**
+ * \if ENGLISH
+ * @brief Check if clipping is enabled
+ * @return true, when clipping is enabled
+ * @sa setClipping(), clipRegion(), setClipRegion()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查是否启用了裁剪
+ * @return 如果裁剪启用则返回 true
+ * @sa setClipping(), clipRegion(), setClipRegion()
+ * \endif
  */
 bool QwtPlotDirectPainter::hasClipping() const
 {
     return m_data->hasClipping;
 }
 
-/*!
-   \brief Assign a clip region and enable clipping
-
-   Depending on the environment setting a proper clip region might improve
-   the performance heavily. F.e. on Qt embedded only the clipped part of
-   the backing store will be copied to a ( maybe unaccelerated ) frame buffer
-   device.
-
-   \param region Clip region
-   \sa clipRegion(), hasClipping(), setClipping()
+/**
+ * \if ENGLISH
+ * @brief Assign a clip region and enable clipping
+ * @details Depending on the environment setting a proper clip region might improve
+ *          the performance heavily. E.g. on Qt embedded only the clipped part of
+ *          the backing store will be copied to a (maybe unaccelerated) frame buffer device.
+ * @param[in] region Clip region
+ * @sa clipRegion(), hasClipping(), setClipping()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配裁剪区域并启用裁剪
+ * @details 根据环境，设置适当的裁剪区域可能会大大提高性能。
+ *          例如，在 Qt Embedded 上，只有裁剪部分的后备存储会被复制到
+ *          （可能未加速的）帧缓冲设备。
+ * @param[in] region 裁剪区域
+ * @sa clipRegion(), hasClipping(), setClipping()
+ * \endif
  */
 void QwtPlotDirectPainter::setClipRegion( const QRegion& region )
 {
@@ -161,30 +220,48 @@ void QwtPlotDirectPainter::setClipRegion( const QRegion& region )
     m_data->hasClipping = true;
 }
 
-/*!
-   \return Currently set clip region.
-   \sa setClipRegion(), setClipping(), hasClipping()
+/**
+ * \if ENGLISH
+ * @brief Get the currently set clip region
+ * @return Currently set clip region
+ * @sa setClipRegion(), setClipping(), hasClipping()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取当前设置的裁剪区域
+ * @return 当前设置的裁剪区域
+ * @sa setClipRegion(), setClipping(), hasClipping()
+ * \endif
  */
 QRegion QwtPlotDirectPainter::clipRegion() const
 {
     return m_data->clipRegion;
 }
 
-/*!
-   \brief Draw a set of points of a seriesItem.
-
-   When observing an measurement while it is running, new points have to be
-   added to an existing seriesItem. drawSeries() can be used to display them avoiding
-   a complete redraw of the canvas.
-
-   Setting plot()->canvas()->setAttribute(Qt::WA_PaintOutsidePaintEvent, true);
-   will result in faster painting, if the paint engine of the canvas widget
-   supports this feature.
-
-   \param seriesItem Item to be painted
-   \param from Index of the first point to be painted
-   \param to Index of the last point to be painted. If to < 0 the
-         series will be painted to its last point.
+/**
+ * \if ENGLISH
+ * @brief Draw a set of points of a seriesItem
+ * @details When observing a measurement while it is running, new points have to be
+ *          added to an existing seriesItem. drawSeries() can be used to display them
+ *          avoiding a complete redraw of the canvas.
+ *          Setting plot()->canvas()->setAttribute(Qt::WA_PaintOutsidePaintEvent, true);
+ *          will result in faster painting, if the paint engine of the canvas widget
+ *          supports this feature.
+ * @param[in] seriesItem Item to be painted
+ * @param[in] from Index of the first point to be painted
+ * @param[in] to Index of the last point to be painted. If to < 0 the series will be painted to its last point.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制系列项的一组点
+ * @details 在观察正在运行的测量时，必须将新点添加到现有的系列项。
+ *          drawSeries() 可以用于显示它们，避免完全重绘画布。
+ *          设置 plot()->canvas()->setAttribute(Qt::WA_PaintOutsidePaintEvent, true);
+ *          如果画布部件的绘制引擎支持此功能，将导致更快的绘制。
+ * @param[in] seriesItem 要绘制的项
+ * @param[in] from 要绘制的第一个点的索引
+ * @param[in] to 要绘制的最后一个点的索引。如果 to < 0，系列将绘制到最后一个点。
+ * \endif
  */
 void QwtPlotDirectPainter::drawSeries(
     QwtPlotSeriesItem* seriesItem, int from, int to )
@@ -277,7 +354,15 @@ void QwtPlotDirectPainter::drawSeries(
     }
 }
 
-//! Close the internal QPainter
+/**
+ * \if ENGLISH
+ * @brief Close the internal QPainter
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 关闭内部 QPainter
+ * \endif
+ */
 void QwtPlotDirectPainter::reset()
 {
     if ( m_data->painter.isActive() )
@@ -290,7 +375,21 @@ void QwtPlotDirectPainter::reset()
     }
 }
 
-//! Event filter
+/**
+ * \if ENGLISH
+ * @brief Event filter
+ * @param[in] object Object
+ * @param[in] event Event
+ * @return True if the event was handled
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 事件过滤器
+ * @param[in] object 对象
+ * @param[in] event 事件
+ * @return 如果事件被处理则返回 true
+ * \endif
+ */
 bool QwtPlotDirectPainter::eventFilter( QObject*, QEvent* event )
 {
     if ( event->type() == QEvent::Paint )

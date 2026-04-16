@@ -30,29 +30,22 @@
 #include "qwt_global.h"
 #include <qwidget.h>
 
-/*!
-   \if ENGLISH
-   \brief The Wheel Widget
-
-   The wheel widget can be used to change values over a very large range
-   in very small steps. Using the setMass() member, it can be configured
-   as a flying wheel.
-
-   The default range of the wheel is [0.0, 100.0]
-
-   \sa The radio example.
-   \endif
-   *
-   \if CHINESE
-   \brief 轮式控件
-
-   轮式控件可用于在非常大的范围内以非常小的步长改变值。
-   使用 setMass() 成员，可以将其配置为飞轮。
-
-   轮的默认范围是 [0.0, 100.0]
-
-   \sa 收音机示例。
-   \endif
+/**
+ * \if ENGLISH
+ * @brief The Wheel Widget
+ * @details The wheel widget can be used to change values over a very large range
+ *          in very small steps. Using the setMass() member, it can be configured
+ *          as a flying wheel.
+ *          The default range of the wheel is [0.0, 100.0]
+ * \sa The radio example.
+ * \endif
+ * \if CHINESE
+ * @brief 轮式控件
+ * @details 轮式控件可用于在非常大的范围内以非常小的步长改变值。
+ *          使用 setMass() 成员，可以将其配置为飞轮。
+ *          轮的默认范围是 [0.0, 100.0]
+ * \sa 收音机示例。
+ * \endif
  */
 class QWT_EXPORT QwtWheel : public QWidget
 {
@@ -85,58 +78,93 @@ class QWT_EXPORT QwtWheel : public QWidget
     Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
 
   public:
+    /// Constructor
     explicit QwtWheel( QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtWheel();
 
+    /// Return the current value
     double value() const;
 
+    /// Set the wheel orientation
     void setOrientation( Qt::Orientation );
+    /// Return the orientation
     Qt::Orientation orientation() const;
 
+    /// Return the total angle
     double totalAngle() const;
+    /// Return the view angle
     double viewAngle() const;
 
+    /// Set the number of ticks
     void setTickCount( int );
+    /// Return the number of ticks
     int tickCount() const;
 
+    /// Set the wheel width
     void setWheelWidth( int );
+    /// Return the wheel width
     int wheelWidth() const;
 
+    /// Set the wheel border width
     void setWheelBorderWidth( int );
+    /// Return the wheel border width
     int wheelBorderWidth() const;
 
+    /// Set the outer border width
     void setBorderWidth( int );
+    /// Return the outer border width
     int borderWidth() const;
 
+    /// Set inverted appearance
     void setInverted( bool );
+    /// Return whether the wheel is inverted
     bool isInverted() const;
 
+    /// Set wrapping mode
     void setWrapping( bool );
+    /// Return whether wrapping is enabled
     bool wrapping() const;
 
+    /// Set single step size
     void setSingleStep( double );
+    /// Return single step size
     double singleStep() const;
 
+    /// Set page step count
     void setPageStepCount( int );
+    /// Return page step count
     int pageStepCount() const;
 
+    /// Set step alignment
     void setStepAlignment( bool on );
+    /// Return whether step alignment is enabled
     bool stepAlignment() const;
 
+    /// Set value range
     void setRange( double min, double max );
 
+    /// Set minimum value
     void setMinimum( double );
+    /// Return minimum value
     double minimum() const;
 
+    /// Set maximum value
     void setMaximum( double );
+    /// Return maximum value
     double maximum() const;
 
+    /// Set update interval
     void setUpdateInterval( int );
+    /// Return update interval
     int updateInterval() const;
 
+    /// Set tracking mode
     void setTracking( bool );
+    /// Return whether tracking is enabled
     bool isTracking() const;
 
+    /// Return mass for flywheel effect
     double mass() const;
 
   public Q_SLOTS:
@@ -147,64 +175,52 @@ class QWT_EXPORT QwtWheel : public QWidget
 
   Q_SIGNALS:
 
-    /*!
-       \if ENGLISH
-       \brief Notify a change of value.
-
-       When tracking is enabled this signal will be emitted every
-       time the value changes.
-
-       \param value new value
-       \sa setTracking()
-       \endif
-       *
-       \if CHINESE
-       \brief 通知值变化。
-
-       当启用跟踪时，每次值变化时都会发出此信号。
-
-       \param value 新值
-       \sa setTracking()
-       \endif
+    /**
+     * \if ENGLISH
+     * @brief Notify a change of value
+     * @details When tracking is enabled this signal will be emitted every
+     *          time the value changes.
+     * @param[in] value New value
+     * \sa setTracking()
+     * \endif
+     * \if CHINESE
+     * @brief 通知值变化
+     * @details 当启用跟踪时，每次值变化时都会发出此信号。
+     * @param[in] value 新值
+     * \sa setTracking()
+     * \endif
      */
     void valueChanged( double value );
 
-    /*!
-       \if ENGLISH
-       This signal is emitted when the user presses the
-       the wheel with the mouse
-       \endif
-       *
-       \if CHINESE
-       当用户用鼠标按下轮时发出此信号
-       \endif
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user presses the wheel with the mouse
+     * \endif
+     * \if CHINESE
+     * @brief 当用户用鼠标按下轮时发出此信号
+     * \endif
      */
     void wheelPressed();
 
-    /*!
-       \if ENGLISH
-       This signal is emitted when the user releases the mouse
-       \endif
-       *
-       \if CHINESE
-       当用户释放鼠标时发出此信号
-       \endif
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user releases the mouse
+     * \endif
+     * \if CHINESE
+     * @brief 当用户释放鼠标时发出此信号
+     * \endif
      */
     void wheelReleased();
 
-    /*!
-       \if ENGLISH
-       This signal is emitted when the user moves the
-       wheel with the mouse.
-
-       \param value new value
-       \endif
-       *
-       \if CHINESE
-       当用户用鼠标移动轮时发出此信号。
-
-       \param value 新值
-       \endif
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the user moves the wheel with the mouse
+     * @param[in] value New value
+     * \endif
+     * \if CHINESE
+     * @brief 当用户用鼠标移动轮时发出此信号
+     * @param[in] value 新值
+     * \endif
      */
     void wheelMoved( double value );
 

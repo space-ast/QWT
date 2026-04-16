@@ -811,13 +811,19 @@ double QwtWheel::totalAngle() const
     return m_data->totalAngle;
 }
 
-/*!
-   \brief Set the wheel's orientation.
-
-   The default orientation is Qt::Horizontal.
-
-   \param orientation Qt::Horizontal or Qt::Vertical.
-   \sa orientation()
+/**
+ * \if ENGLISH
+ * @brief Set the wheel's orientation
+ * @details The default orientation is Qt::Horizontal.
+ * @param[in] orientation Qt::Horizontal or Qt::Vertical
+ * \sa orientation()
+ * \endif
+ * \if CHINESE
+ * @brief 设置轮的方向
+ * @details 默认方向是 Qt::Horizontal。
+ * @param[in] orientation Qt::Horizontal 或 Qt::Vertical
+ * \sa orientation()
+ * \endif
  */
 void QwtWheel::setOrientation(Qt::Orientation orientation)
 {
@@ -836,24 +842,38 @@ void QwtWheel::setOrientation(Qt::Orientation orientation)
     update();
 }
 
-/*!
-   \return Orientation
-   \sa setOrientation()
+/**
+ * \if ENGLISH
+ * @brief Return the orientation
+ * @return Orientation
+ * \sa setOrientation()
+ * \endif
+ * \if CHINESE
+ * @brief 返回方向
+ * @return 方向
+ * \sa setOrientation()
+ * \endif
  */
 Qt::Orientation QwtWheel::orientation() const
 {
     return m_data->orientation;
 }
 
-/*!
-   \brief Specify the visible portion of the wheel.
-
-   You may use this function for fine-tuning the appearance of
-   the wheel. The default value is 175 degrees. The value is
-   limited from 10 to 175 degrees.
-
-   \param angle Visible angle in degrees
-   \sa viewAngle(), setTotalAngle()
+/**
+ * \if ENGLISH
+ * @brief Specify the visible portion of the wheel
+ * @details You may use this function for fine-tuning the appearance of the wheel.
+ *          The default value is 175 degrees. The value is limited from 10 to 175 degrees.
+ * @param[in] angle Visible angle in degrees
+ * \sa viewAngle(), setTotalAngle()
+ * \endif
+ * \if CHINESE
+ * @brief 指定轮的可见部分
+ * @details 您可以使用此函数微调轮的外观。
+ *          默认值为 175 度。值限制在 10 到 175 度之间。
+ * @param[in] angle 可见角度（度）
+ * \sa viewAngle(), setTotalAngle()
+ * \endif
  */
 void QwtWheel::setViewAngle(double angle)
 {
@@ -861,9 +881,17 @@ void QwtWheel::setViewAngle(double angle)
     update();
 }
 
-/*!
-   \return Visible portion of the wheel
-   \sa setViewAngle(), totalAngle()
+/**
+ * \if ENGLISH
+ * @brief Return the visible portion of the wheel
+ * @return Visible angle in degrees
+ * \sa setViewAngle(), totalAngle()
+ * \endif
+ * \if CHINESE
+ * @brief 返回轮的可见部分
+ * @return 可见角度（度）
+ * \sa setViewAngle(), totalAngle()
+ * \endif
  */
 double QwtWheel::viewAngle() const
 {
@@ -1079,14 +1107,20 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
     }
 }
 
-/*!
-   \brief Set the width of the wheel
-
-   Corresponds to the wheel height for horizontal orientation,
-   and the wheel width for vertical orientation.
-
-   \param width the wheel's width
-   \sa wheelWidth()
+/**
+ * \if ENGLISH
+ * @brief Set the width of the wheel
+ * @details Corresponds to the wheel height for horizontal orientation,
+ *          and the wheel width for vertical orientation.
+ * @param[in] width The wheel's width
+ * \sa wheelWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 设置轮的宽度
+ * @details 对应水平方向的轮高度和垂直方向的轮宽度。
+ * @param[in] width 轮的宽度
+ * \sa wheelWidth()
+ * \endif
  */
 void QwtWheel::setWheelWidth(int width)
 {
@@ -1094,17 +1128,32 @@ void QwtWheel::setWheelWidth(int width)
     update();
 }
 
-/*!
-   \return Width of the wheel
-   \sa setWheelWidth()
+/**
+ * \if ENGLISH
+ * @brief Return the width of the wheel
+ * @return Wheel width
+ * \sa setWheelWidth()
+ * \endif
+ * \if CHINESE
+ * @brief 返回轮的宽度
+ * @return 轮宽度
+ * \sa setWheelWidth()
+ * \endif
  */
 int QwtWheel::wheelWidth() const
 {
     return m_data->wheelWidth;
 }
 
-/*!
-   \return a size hint
+/**
+ * \if ENGLISH
+ * @brief Return the size hint
+ * @return Size hint
+ * \endif
+ * \if CHINESE
+ * @brief 返回大小提示
+ * @return 大小提示
+ * \endif
  */
 QSize QwtWheel::sizeHint() const
 {
@@ -1112,9 +1161,17 @@ QSize QwtWheel::sizeHint() const
     return qwtExpandedToGlobalStrut(hint);
 }
 
-/*!
-   \return Minimum size hint
-   \warning The return value is based on the wheel width.
+/**
+ * \if ENGLISH
+ * @brief Return the minimum size hint
+ * @return Minimum size hint
+ * \warning The return value is based on the wheel width.
+ * \endif
+ * \if CHINESE
+ * @brief 返回最小大小提示
+ * @return 最小大小提示
+ * \warning 返回值基于轮宽度。
+ * \endif
  */
 QSize QwtWheel::minimumSizeHint() const
 {
@@ -1125,37 +1182,56 @@ QSize QwtWheel::minimumSizeHint() const
     return sz;
 }
 
-/*!
-   \brief Set the step size of the counter
-
-   A value <= 0.0 disables stepping
-
-   \param stepSize Single step size
-   \sa singleStep(), setPageStepCount()
+/**
+ * \if ENGLISH
+ * @brief Set the step size of the counter
+ * @details A value <= 0.0 disables stepping.
+ * @param[in] stepSize Single step size
+ * \sa singleStep(), setPageStepCount()
+ * \endif
+ * \if CHINESE
+ * @brief 设置计数器的步长
+ * @details 值 <= 0.0 禁用步进。
+ * @param[in] stepSize 单步大小
+ * \sa singleStep(), setPageStepCount()
+ * \endif
  */
 void QwtWheel::setSingleStep(double stepSize)
 {
     m_data->singleStep = qwtMaxF(stepSize, 0.0);
 }
 
-/*!
-   \return Single step size
-   \sa setSingleStep()
+/**
+ * \if ENGLISH
+ * @brief Return the single step size
+ * @return Single step size
+ * \sa setSingleStep()
+ * \endif
+ * \if CHINESE
+ * @brief 返回单步大小
+ * @return 单步大小
+ * \sa setSingleStep()
+ * \endif
  */
 double QwtWheel::singleStep() const
 {
     return m_data->singleStep;
 }
 
-/*!
-   \brief En/Disable step alignment
-
-   When step alignment is enabled value changes initiated by
-   user input ( mouse, keyboard, wheel ) are aligned to
-   the multiples of the single step.
-
-   \param on On/Off
-   \sa stepAlignment(), setSingleStep()
+/**
+ * \if ENGLISH
+ * @brief En/Disable step alignment
+ * @details When step alignment is enabled, value changes initiated by
+ *          user input (mouse, keyboard, wheel) are aligned to multiples of the single step.
+ * @param[in] on On/Off
+ * \sa stepAlignment(), setSingleStep()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用步对齐
+ * @details 当启用步对齐时，用户输入（鼠标、键盘、滚轮）引起的值变化将对齐到单步的倍数。
+ * @param[in] on 开/关
+ * \sa stepAlignment(), setSingleStep()
+ * \endif
  */
 void QwtWheel::setStepAlignment(bool on)
 {
@@ -1164,52 +1240,79 @@ void QwtWheel::setStepAlignment(bool on)
     }
 }
 
-/*!
-   \return True, when the step alignment is enabled
-   \sa setStepAlignment(), singleStep()
+/**
+ * \if ENGLISH
+ * @brief Return whether step alignment is enabled
+ * @return True when step alignment is enabled
+ * \sa setStepAlignment(), singleStep()
+ * \endif
+ * \if CHINESE
+ * @brief 返回是否启用了步对齐
+ * @return 如果启用了步对齐返回 true
+ * \sa setStepAlignment(), singleStep()
+ * \endif
  */
 bool QwtWheel::stepAlignment() const
 {
     return m_data->stepAlignment;
 }
 
-/*!
-   \brief Set the page step count
-
-   pageStepCount is a multiplicator for the single step size
-   that typically corresponds to the user pressing PageUp or PageDown.
-
-   A value of 0 disables page stepping.
-
-   The default value is 1.
-
-   \param count Multiplicator for the single step size
-   \sa pageStepCount(), setSingleStep()
+/**
+ * \if ENGLISH
+ * @brief Set the page step count
+ * @details pageStepCount is a multiplicator for the single step size
+ *          that typically corresponds to the user pressing PageUp or PageDown.
+ *          A value of 0 disables page stepping. The default value is 1.
+ * @param[in] count Multiplicator for the single step size
+ * \sa pageStepCount(), setSingleStep()
+ * \endif
+ * \if CHINESE
+ * @brief 设置页步数
+ * @details pageStepCount 是单步大小的乘数，通常对应用户按下 PageUp 或 PageDown。
+ *          值为 0 禁用页步进。默认值为 1。
+ * @param[in] count 单步大小的乘数
+ * \sa pageStepCount(), setSingleStep()
+ * \endif
  */
 void QwtWheel::setPageStepCount(int count)
 {
     m_data->pageStepCount = qMax(0, count);
 }
 
-/*!
-   \return Page step count
-   \sa setPageStepCount(), singleStep()
+/**
+ * \if ENGLISH
+ * @brief Return the page step count
+ * @return Page step count
+ * \sa setPageStepCount(), singleStep()
+ * \endif
+ * \if CHINESE
+ * @brief 返回页步数
+ * @return 页步数
+ * \sa setPageStepCount(), singleStep()
+ * \endif
  */
 int QwtWheel::pageStepCount() const
 {
     return m_data->pageStepCount;
 }
 
-/*!
-   \brief Set the minimum and maximum values
-
-   The maximum is adjusted if necessary to ensure that the range remains valid.
-   The value might be modified to be inside of the range.
-
-   \param min Minimum value
-   \param max Maximum value
-
-   \sa minimum(), maximum()
+/**
+ * \if ENGLISH
+ * @brief Set the minimum and maximum values
+ * @details The maximum is adjusted if necessary to ensure that the range remains valid.
+ *          The value might be modified to be inside of the range.
+ * @param[in] min Minimum value
+ * @param[in] max Maximum value
+ * \sa minimum(), maximum()
+ * \endif
+ * \if CHINESE
+ * @brief 设置最小值和最大值
+ * @details 如有必要会调整最大值以确保范围有效。
+ *          值可能会被修改以保持在范围内。
+ * @param[in] min 最小值
+ * @param[in] max 最大值
+ * \sa minimum(), maximum()
+ * \endif
  */
 void QwtWheel::setRange(double min, double max)
 {
@@ -1228,55 +1331,89 @@ void QwtWheel::setRange(double min, double max)
         Q_EMIT valueChanged(m_data->value);
     }
 }
-/*!
-   Set the minimum value of the range
-
-   \param value Minimum value
-   \sa setRange(), setMaximum(), minimum()
-
-   \note The maximum is adjusted if necessary to ensure that the range remains valid.
+/**
+ * \if ENGLISH
+ * @brief Set the minimum value of the range
+ * @param[in] value Minimum value
+ * \sa setRange(), setMaximum(), minimum()
+ * \note The maximum is adjusted if necessary to ensure that the range remains valid.
+ * \endif
+ * \if CHINESE
+ * @brief 设置范围的最小值
+ * @param[in] value 最小值
+ * \sa setRange(), setMaximum(), minimum()
+ * \note 如有必要会调整最大值以确保范围有效。
+ * \endif
  */
 void QwtWheel::setMinimum(double value)
 {
     setRange(value, maximum());
 }
 
-/*!
-   \return The minimum of the range
-   \sa setRange(), setMinimum(), maximum()
+/**
+ * \if ENGLISH
+ * @brief Return the minimum of the range
+ * @return Minimum value
+ * \sa setRange(), setMinimum(), maximum()
+ * \endif
+ * \if CHINESE
+ * @brief 返回范围的最小值
+ * @return 最小值
+ * \sa setRange(), setMinimum(), maximum()
+ * \endif
  */
 double QwtWheel::minimum() const
 {
     return m_data->minimum;
 }
 
-/*!
-   Set the maximum value of the range
-
-   \param value Maximum value
-   \sa setRange(), setMinimum(), maximum()
+/**
+ * \if ENGLISH
+ * @brief Set the maximum value of the range
+ * @param[in] value Maximum value
+ * \sa setRange(), setMinimum(), maximum()
+ * \endif
+ * \if CHINESE
+ * @brief 设置范围的最大值
+ * @param[in] value 最大值
+ * \sa setRange(), setMinimum(), maximum()
+ * \endif
  */
 void QwtWheel::setMaximum(double value)
 {
     setRange(minimum(), value);
 }
 
-/*!
-   \return The maximum of the range
-   \sa setRange(), setMaximum(), minimum()
+/**
+ * \if ENGLISH
+ * @brief Return the maximum of the range
+ * @return Maximum value
+ * \sa setRange(), setMaximum(), minimum()
+ * \endif
+ * \if CHINESE
+ * @brief 返回范围的最大值
+ * @return 最大值
+ * \sa setRange(), setMaximum(), minimum()
+ * \endif
  */
 double QwtWheel::maximum() const
 {
     return m_data->maximum;
 }
 
-/*!
-   \brief Set a new value without adjusting to the step raster
-
-   \param value New value
-
-   \sa value(), valueChanged()
-   \warning The value is clipped when it lies outside the range.
+/**
+ * \if ENGLISH
+ * @brief Set a new value without adjusting to the step raster
+ * @param[in] value New value
+ * \sa value(), valueChanged()
+ * \warning The value is clipped when it lies outside the range.
+ * \endif
+ * \if CHINESE
+ * @brief 设置新值而不调整到步栅格
+ * @param[in] value 新值
+ * \sa value(), valueChanged()
+ * \warning 当值超出范围时会被裁剪。
+ * \endif
  */
 void QwtWheel::setValue(double value)
 {
@@ -1293,25 +1430,39 @@ void QwtWheel::setValue(double value)
     }
 }
 
-/*!
-   \return Current value of the wheel
-   \sa setValue(), valueChanged()
+/**
+ * \if ENGLISH
+ * @brief Return the current value of the wheel
+ * @return Current value
+ * \sa setValue(), valueChanged()
+ * \endif
+ * \if CHINESE
+ * @brief 返回轮的当前值
+ * @return 当前值
+ * \sa setValue(), valueChanged()
+ * \endif
  */
 double QwtWheel::value() const
 {
     return m_data->value;
 }
 
-/*!
-   \brief En/Disable inverted appearance
-
-   An inverted wheel increases its values in the opposite direction.
-   The direction of an inverted horizontal wheel will be from right to left
-   an inverted vertical wheel will increase from bottom to top.
-
-   \param on En/Disable inverted appearance
-   \sa isInverted()
-
+/**
+ * \if ENGLISH
+ * @brief En/Disable inverted appearance
+ * @details An inverted wheel increases its values in the opposite direction.
+ *          The direction of an inverted horizontal wheel will be from right to left,
+ *          an inverted vertical wheel will increase from bottom to top.
+ * @param[in] on En/Disable inverted appearance
+ * \sa isInverted()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用反转外观
+ * @details 反转的轮以相反方向增加其值。
+ *          反转的水平轮方向将从右到左，反转的垂直轮将从底到顶增加。
+ * @param[in] on 启用/禁用反转外观
+ * \sa isInverted()
+ * \endif
  */
 void QwtWheel::setInverted(bool on)
 {
@@ -1321,54 +1472,84 @@ void QwtWheel::setInverted(bool on)
     }
 }
 
-/*!
-   \return True, when the wheel is inverted
-   \sa setInverted()
+/**
+ * \if ENGLISH
+ * @brief Return whether the wheel is inverted
+ * @return True when the wheel is inverted
+ * \sa setInverted()
+ * \endif
+ * \if CHINESE
+ * @brief 返回轮是否反转
+ * @return 如果轮反转返回 true
+ * \sa setInverted()
+ * \endif
  */
 bool QwtWheel::isInverted() const
 {
     return m_data->inverted;
 }
 
-/*!
-   \brief En/Disable wrapping
-
-   If wrapping is true stepping up from maximum() value will take
-   you to the minimum() value and vice versa.
-
-   \param on En/Disable wrapping
-   \sa wrapping()
+/**
+ * \if ENGLISH
+ * @brief En/Disable wrapping
+ * @details If wrapping is true, stepping up from maximum() value will take
+ *          you to the minimum() value and vice versa.
+ * @param[in] on En/Disable wrapping
+ * \sa wrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用环绕
+ * @details 如果启用环绕，从 maximum() 值向上步进会到达 minimum() 值，反之亦然。
+ * @param[in] on 启用/禁用环绕
+ * \sa wrapping()
+ * \endif
  */
 void QwtWheel::setWrapping(bool on)
 {
     m_data->wrapping = on;
 }
 
-/*!
-   \return True, when wrapping is set
-   \sa setWrapping()
+/**
+ * \if ENGLISH
+ * @brief Return whether wrapping is enabled
+ * @return True when wrapping is set
+ * \sa setWrapping()
+ * \endif
+ * \if CHINESE
+ * @brief 返回是否启用了环绕
+ * @return 如果启用了环绕返回 true
+ * \sa setWrapping()
+ * \endif
  */
 bool QwtWheel::wrapping() const
 {
     return m_data->wrapping;
 }
 
-/*!
-   \brief Set the slider's mass for flywheel effect.
-
-   If the slider's mass is greater then 0, it will continue
-   to move after the mouse button has been released. Its speed
-   decreases with time at a rate depending on the slider's mass.
-   A large mass means that it will continue to move for a
-   long time.
-
-   Derived widgets may overload this function to make it public.
-
-   \param mass New mass in kg
-
-   \bug If the mass is smaller than 1g, it is set to zero.
-       The maximal mass is limited to 100kg.
-   \sa mass()
+/**
+ * \if ENGLISH
+ * @brief Set the slider's mass for flywheel effect
+ * @details If the slider's mass is greater than 0, it will continue to move
+ *          after the mouse button has been released. Its speed decreases
+ *          with time at a rate depending on the slider's mass.
+ *          A large mass means that it will continue to move for a long time.
+ *          Derived widgets may overload this function to make it public.
+ * @param[in] mass New mass in kg
+ * \warning If the mass is smaller than 1g, it is set to zero.
+ *          The maximal mass is limited to 100kg.
+ * \sa mass()
+ * \endif
+ * \if CHINESE
+ * @brief 设置滑块的质量以实现飞轮效果
+ * @details 如果滑块的质量大于 0，它将在鼠标按钮释放后继续移动。
+ *          其速度随时间递减，速率取决于滑块的质量。
+ *          大质量意味着它将继续移动很长时间。
+ *          派生控件可以重载此函数使其公开。
+ * @param[in] mass 新质量（千克）
+ * \warning 如果质量小于 1g，则设置为 0。
+ *          最大质量限制为 100kg。
+ * \sa mass()
+ * \endif
  */
 void QwtWheel::setMass(double mass)
 {
@@ -1382,9 +1563,17 @@ void QwtWheel::setMass(double mass)
         stopFlying();
 }
 
-/*!
-   \return mass
-   \sa setMass()
+/**
+ * \if ENGLISH
+ * @brief Return the mass for flywheel effect
+ * @return Mass in kg
+ * \sa setMass()
+ * \endif
+ * \if CHINESE
+ * @brief 返回飞轮效果的质量
+ * @return 质量（千克）
+ * \sa setMass()
+ * \endif
  */
 double QwtWheel::mass() const
 {

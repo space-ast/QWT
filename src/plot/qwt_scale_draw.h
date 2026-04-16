@@ -156,13 +156,19 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     PrivateData* m_data;
 };
 
-/*!
-   Move the position of the scale
-
-   \param x X coordinate
-   \param y Y coordinate
-
-   \sa move(const QPointF &)
+/**
+ * \if ENGLISH
+ * @brief Move the position of the scale
+ * @param x X coordinate
+ * @param y Y coordinate
+ * \sa move(const QPointF&)
+ * \endif
+ * \if CHINESE
+ * @brief 移动刻度的位置
+ * @param x X 坐标
+ * @param y Y 坐标
+ * \sa move(const QPointF&)
+ * \endif
  */
 inline void QwtScaleDraw::move( double x, double y )
 {

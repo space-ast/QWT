@@ -30,13 +30,20 @@
 #include "qwt_global.h"
 #include "qwt_plot_seriesitem.h"
 
-/*!
-   \brief Abstract base class for bar chart items
-
-   In opposite to almost all other plot items bar charts can't be
-   displayed inside of their bounding rectangle and need a special
-   API  how to calculate the width of the bars and how they affect
-   the layout of the attached plot.
+/**
+ * \if ENGLISH
+ * @brief Abstract base class for bar chart items
+ * @details In opposite to almost all other plot items bar charts can't be
+ *          displayed inside of their bounding rectangle and need a special
+ *          API how to calculate the width of the bars and how they affect
+ *          the layout of the attached plot.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 条形图项的抽象基类
+ * @details 与几乎所有其他绘图项不同，条形图无法在其边界矩形内显示，
+ *          需要特殊的 API 来计算条形的宽度以及它们如何影响附加绘图的布局。
+ * \endif
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
@@ -76,24 +83,37 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
         FixedSampleSize
     };
 
+    // Constructor with title
     explicit QwtPlotAbstractBarChart( const QwtText& title );
+    // Destructor
     virtual ~QwtPlotAbstractBarChart();
 
+    // Set the layout policy for bar width calculation
     void setLayoutPolicy( LayoutPolicy );
+    // Get the layout policy
     LayoutPolicy layoutPolicy() const;
 
+    // Set the layout hint for bar width calculation
     void setLayoutHint( double );
+    // Get the layout hint
     double layoutHint() const;
 
+    // Set the spacing between bars
     void setSpacing( int );
+    // Get the spacing between bars
     int spacing() const;
 
+    // Set the margin around the bars
     void setMargin( int );
+    // Get the margin around the bars
     int margin() const;
 
+    // Set the baseline value for the bars
     void setBaseline( double );
+    // Get the baseline value
     double baseline() const;
 
+    // Calculate canvas margin hint for layout
     virtual void getCanvasMarginHint(
         const QwtScaleMap& xMap, const QwtScaleMap& yMap,
         const QRectF& canvasRect, double& left, double& top,

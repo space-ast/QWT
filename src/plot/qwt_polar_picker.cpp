@@ -17,50 +17,101 @@ class QwtPolarPicker::PrivateData
 {
 };
 
-/*!
-   \brief Create a polar plot picker
-   \param canvas Plot canvas to observe, also the parent object
+/**
+ * \if ENGLISH
+ * @brief Create a polar plot picker
+ * @param[in] canvas Plot canvas to observe, also the parent object
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 创建极坐标绘图拾取器
+ * @param[in] canvas 要观察的绘图画布，同时也是父对象
+ * \endif
  */
-
 QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), m_data(nullptr)
 {
 }
 
-/*!
-   Create a plot picker
-
-   \param rubberBand Rubberband style
-   \param trackerMode Tracker mode
-   \param canvas Plot canvas to observe, also the parent object
-
-   \sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(),
-      QwtPicker::setTrackerMode
-
-   \sa QwtPolarPlot::autoReplot(), QwtPolarPlot::replot(), scaleRect()
+/**
+ * \if ENGLISH
+ * @brief Create a plot picker with rubber band and tracker mode
+ * @param[in] rubberBand Rubberband style
+ * @param[in] trackerMode Tracker mode
+ * @param[in] canvas Plot canvas to observe, also the parent object
+ * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(),
+ *     QwtPicker::setTrackerMode, QwtPolarPlot::autoReplot(), QwtPolarPlot::replot()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 创建带有橡皮筋和追踪模式的绘图拾取器
+ * @param[in] rubberBand 橡皮筋样式
+ * @param[in] trackerMode 追踪模式
+ * @param[in] canvas 要观察的绘图画布，同时也是父对象
+ * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(),
+ *     QwtPicker::setTrackerMode, QwtPolarPlot::autoReplot(), QwtPolarPlot::replot()
+ * \endif
  */
 QwtPolarPicker::QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPolarCanvas* canvas)
     : QwtPicker(rubberBand, trackerMode, canvas), m_data(nullptr)
 {
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPolarPicker::~QwtPolarPicker()
 {
 }
 
-//! \return Observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot canvas
+ * @return Observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图画布
+ * @return 观察的绘图画布
+ * \endif
+ */
 QwtPolarCanvas* QwtPolarPicker::canvas()
 {
     return qobject_cast< QwtPolarCanvas* >(parentWidget());
 }
 
-//! \return Observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the observed plot canvas (const version)
+ * @return Observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取观察的绘图画布（常量版本）
+ * @return 观察的绘图画布
+ * \endif
+ */
 const QwtPolarCanvas* QwtPolarPicker::canvas() const
 {
     return qobject_cast< const QwtPolarCanvas* >(parentWidget());
 }
 
-//! \return Plot widget, containing the observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the plot widget containing the observed plot canvas
+ * @return Plot widget, containing the observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取包含观察画布的绘图控件
+ * @return 包含观察画布的绘图控件
+ * \endif
+ */
 QwtPolarPlot* QwtPolarPicker::plot()
 {
     QwtPolarCanvas* w = canvas();
@@ -70,7 +121,17 @@ QwtPolarPlot* QwtPolarPicker::plot()
     return nullptr;
 }
 
-//! \return Plot widget, containing the observed plot canvas
+/**
+ * \if ENGLISH
+ * @brief Get the plot widget containing the observed plot canvas (const version)
+ * @return Plot widget, containing the observed plot canvas
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取包含观察画布的绘图控件（常量版本）
+ * @return 包含观察画布的绘图控件
+ * \endif
+ */
 const QwtPolarPlot* QwtPolarPicker::plot() const
 {
     const QwtPolarCanvas* w = canvas();
@@ -205,9 +266,16 @@ QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
     return canvas()->invTransform(pos);
 }
 
-/*!
-    \return Bounding rectangle of the region, where picking is
-            supported.
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle of the region where picking is supported
+ * @return Bounding rectangle of the region, where picking is supported
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取支持拾取的区域边界矩形
+ * @return 支持拾取的区域边界矩形
+ * \endif
  */
 QRect QwtPolarPicker::pickRect() const
 {

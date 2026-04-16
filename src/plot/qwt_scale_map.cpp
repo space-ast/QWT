@@ -207,15 +207,23 @@ void QwtScaleMap::updateFactor()
         m_cnv = (m_p2 - m_p1) / (ts2 - m_ts1);
 }
 
-/*!
-   Transform a rectangle from scale to paint coordinates
-
-   \param xMap X map
-   \param yMap Y map
-   \param rect Rectangle in scale coordinates
-   \return Rectangle in paint coordinates
-
-   \sa invTransform()
+/**
+ * \if ENGLISH
+ * @brief Transform a rectangle from scale to paint coordinates
+ * @param xMap X axis scale map
+ * @param yMap Y axis scale map
+ * @param rect Rectangle in scale coordinates
+ * @return Rectangle in paint coordinates
+ * @sa invTransform()
+ * \endif
+ * \if CHINESE
+ * @brief 将矩形从刻度坐标转换为绘制坐标
+ * @param xMap X 轴刻度映射
+ * @param yMap Y 轴刻度映射
+ * @param rect 刻度坐标系中的矩形
+ * @return 绘制坐标系中的矩形
+ * @sa invTransform()
+ * \endif
  */
 QRectF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& rect)
 {
@@ -241,14 +249,23 @@ QRectF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, 
     return QRectF(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
 }
 
-/*!
-   Transform a rectangle from paint to scale coordinates
-
-   \param xMap X map
-   \param yMap Y map
-   \param pos Position in paint coordinates
-   \return Position in scale coordinates
-   \sa transform()
+/**
+ * \if ENGLISH
+ * @brief Transform a point from paint to scale coordinates
+ * @param xMap X axis scale map
+ * @param yMap Y axis scale map
+ * @param pos Position in paint coordinates
+ * @return Position in scale coordinates
+ * @sa transform()
+ * \endif
+ * \if CHINESE
+ * @brief 将点从绘制坐标转换为刻度坐标
+ * @param xMap X 轴刻度映射
+ * @param yMap Y 轴刻度映射
+ * @param pos 绘制坐标系中的位置
+ * @return 刻度坐标系中的位置
+ * @sa transform()
+ * \endif
  */
 QPointF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QPointF& pos)
 {
@@ -256,9 +273,16 @@ QPointF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yM
 }
 
 /**
- * @brief 是否为线性坐标轴
- * @param axisId
- * @return
+ * \if ENGLISH
+ * @brief Check if the scale is linear (no transformation)
+ * @param sm Scale map to check
+ * @return True if the scale has no transformation (linear scale)
+ * \endif
+ * \if CHINESE
+ * @brief 检查刻度是否为线性（无变换）
+ * @param sm 要检查的刻度映射
+ * @return 如果刻度没有变换（线性刻度）则返回 true
+ * \endif
  */
 bool QwtScaleMap::isLinerScale(const QwtScaleMap& sm)
 {
@@ -278,29 +302,46 @@ void QwtScaleMap::swap(QwtScaleMap& other) noexcept
     std::swap(m_transform, other.m_transform);
 }
 
-/*!
-   Transform a point from scale to paint coordinates
-
-   \param xMap X map
-   \param yMap Y map
-   \param pos Position in scale coordinates
-   \return Position in paint coordinates
-
-   \sa invTransform()
+/**
+ * \if ENGLISH
+ * @brief Transform a point from scale to paint coordinates
+ * @param xMap X axis scale map
+ * @param yMap Y axis scale map
+ * @param pos Position in scale coordinates
+ * @return Position in paint coordinates
+ * @sa invTransform()
+ * \endif
+ * \if CHINESE
+ * @brief 将点从刻度坐标转换为绘制坐标
+ * @param xMap X 轴刻度映射
+ * @param yMap Y 轴刻度映射
+ * @param pos 刻度坐标系中的位置
+ * @return 绘制坐标系中的位置
+ * @sa invTransform()
+ * \endif
  */
 QPointF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QPointF& pos)
 {
     return QPointF(xMap.transform(pos.x()), yMap.transform(pos.y()));
 }
 
-/*!
-   Transform a rectangle from paint to scale coordinates
-
-   \param xMap X map
-   \param yMap Y map
-   \param rect Rectangle in paint coordinates
-   \return Rectangle in scale coordinates
-   \sa transform()
+/**
+ * \if ENGLISH
+ * @brief Transform a rectangle from paint to scale coordinates
+ * @param xMap X axis scale map
+ * @param yMap Y axis scale map
+ * @param rect Rectangle in paint coordinates
+ * @return Rectangle in scale coordinates
+ * @sa transform()
+ * \endif
+ * \if CHINESE
+ * @brief 将矩形从绘制坐标转换为刻度坐标
+ * @param xMap X 轴刻度映射
+ * @param yMap Y 轴刻度映射
+ * @param rect 绘制坐标系中的矩形
+ * @return 刻度坐标系中的矩形
+ * @sa transform()
+ * \endif
  */
 QRectF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& rect)
 {

@@ -60,105 +60,171 @@ public:
     QString dateFormats[ QwtDate::Year + 1 ];
 };
 
-/*!
-   \brief Constructor
-
-   The default setting is to display tick labels for the
-   given time specification. The first week of a year is defined like
-   for QwtDate::FirstThursday.
-
-   \param timeSpec Time specification
-
-   \sa setTimeSpec(), setWeek0Type()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @details The default setting is to display tick labels for the
+ *          given time specification. The first week of a year is defined like
+ *          for QwtDate::FirstThursday.
+ * @param[in] timeSpec Time specification
+ * @sa setTimeSpec(), setWeek0Type()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @details 默认设置为显示给定时间规范的刻度标签。
+ *          一年的第一周按照 QwtDate::FirstThursday 定义。
+ * @param[in] timeSpec 时间规范
+ * @sa setTimeSpec(), setWeek0Type()
+ * \endif
  */
 QwtDateScaleDraw::QwtDateScaleDraw(Qt::TimeSpec timeSpec)
 {
     m_data = new PrivateData(timeSpec);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtDateScaleDraw::~QwtDateScaleDraw()
 {
     delete m_data;
 }
 
-/*!
-   Set the time specification used for the tick labels
-
-   \param timeSpec Time specification
-   \sa timeSpec(), setUtcOffset(), toDateTime()
+/**
+ * \if ENGLISH
+ * @brief Set the time specification used for the tick labels
+ * @param[in] timeSpec Time specification
+ * @sa timeSpec(), setUtcOffset(), toDateTime()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置用于刻度标签的时间规范
+ * @param[in] timeSpec 时间规范
+ * @sa timeSpec(), setUtcOffset(), toDateTime()
+ * \endif
  */
 void QwtDateScaleDraw::setTimeSpec(Qt::TimeSpec timeSpec)
 {
     m_data->timeSpec = timeSpec;
 }
 
-/*!
-   \return Time specification used for the tick labels
-   \sa setTimeSpec(), utcOffset(), toDateTime()
+/**
+ * \if ENGLISH
+ * @brief Get the time specification used for the tick labels
+ * @return Time specification used for the tick labels
+ * @sa setTimeSpec(), utcOffset(), toDateTime()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于刻度标签的时间规范
+ * @return 用于刻度标签的时间规范
+ * @sa setTimeSpec(), utcOffset(), toDateTime()
+ * \endif
  */
 Qt::TimeSpec QwtDateScaleDraw::timeSpec() const
 {
     return m_data->timeSpec;
 }
 
-/*!
-   Set the offset in seconds from Coordinated Universal Time
-
-   \param seconds Offset in seconds
-
-   \note The offset has no effect beside for the time specification
-        Qt::OffsetFromUTC.
-
-   \sa QDate::utcOffset(), setTimeSpec(), toDateTime()
+/**
+ * \if ENGLISH
+ * @brief Set the offset in seconds from Coordinated Universal Time
+ * @param[in] seconds Offset in seconds
+ * @note The offset has no effect beside for the time specification Qt::OffsetFromUTC.
+ * @sa utcOffset(), setTimeSpec(), toDateTime()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置与世界协调时间的偏移量（秒）
+ * @param[in] seconds 偏移量（秒）
+ * @note 该偏移量仅对 Qt::OffsetFromUTC 时间规范有效。
+ * @sa utcOffset(), setTimeSpec(), toDateTime()
+ * \endif
  */
 void QwtDateScaleDraw::setUtcOffset(int seconds)
 {
     m_data->utcOffset = seconds;
 }
 
-/*!
-   \return Offset in seconds from Coordinated Universal Time
-   \note The offset has no effect beside for the time specification
-        Qt::OffsetFromUTC.
-
-   \sa QDate::setUtcOffset(), setTimeSpec(), toDateTime()
+/**
+ * \if ENGLISH
+ * @brief Get the offset in seconds from Coordinated Universal Time
+ * @return Offset in seconds from Coordinated Universal Time
+ * @note The offset has no effect beside for the time specification Qt::OffsetFromUTC.
+ * @sa setUtcOffset(), setTimeSpec(), toDateTime()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取与世界协调时间的偏移量（秒）
+ * @return 与世界协调时间的偏移量（秒）
+ * @note 该偏移量仅对 Qt::OffsetFromUTC 时间规范有效。
+ * @sa setUtcOffset(), setTimeSpec(), toDateTime()
+ * \endif
  */
 int QwtDateScaleDraw::utcOffset() const
 {
     return m_data->utcOffset;
 }
 
-/*!
-   Sets how to identify the first week of a year.
-
-   \param week0Type Mode how to identify the first week of a year
-
-   \sa week0Type().
-   \note week0Type has no effect beside for intervals classified as
-        QwtDate::Week.
+/**
+ * \if ENGLISH
+ * @brief Set how to identify the first week of a year
+ * @param[in] week0Type Mode how to identify the first week of a year
+ * @note week0Type has no effect beside for intervals classified as QwtDate::Week.
+ * @sa week0Type()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置如何确定一年的第一周
+ * @param[in] week0Type 确定一年第一周的模式
+ * @note week0Type 仅对被分类为 QwtDate::Week 的间隔有效。
+ * @sa week0Type()
+ * \endif
  */
 void QwtDateScaleDraw::setWeek0Type(QwtDate::Week0Type week0Type)
 {
     m_data->week0Type = week0Type;
 }
 
-/*!
-   \return Setting how to identify the first week of a year.
-   \sa setWeek0Type()
+/**
+ * \if ENGLISH
+ * @brief Get how to identify the first week of a year
+ * @return Setting how to identify the first week of a year
+ * @sa setWeek0Type()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取如何确定一年的第一周
+ * @return 确定一年第一周的设置
+ * @sa setWeek0Type()
+ * \endif
  */
 QwtDate::Week0Type QwtDateScaleDraw::week0Type() const
 {
     return m_data->week0Type;
 }
 
-/*!
-   Set the default format string for an datetime interval type
-
-   \param intervalType Interval type
-   \param format Default format string
-
-   \sa dateFormat(), dateFormatOfDate(), QwtDate::toString()
+/**
+ * \if ENGLISH
+ * @brief Set the default format string for a datetime interval type
+ * @param[in] intervalType Interval type
+ * @param[in] format Default format string
+ * @sa dateFormat(), dateFormatOfDate(), QwtDate::toString()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置日期时间间隔类型的默认格式字符串
+ * @param[in] intervalType 间隔类型
+ * @param[in] format 默认格式字符串
+ * @sa dateFormat(), dateFormatOfDate(), QwtDate::toString()
+ * \endif
  */
 void QwtDateScaleDraw::setDateFormat(QwtDate::IntervalType intervalType, const QString& format)
 {
@@ -167,10 +233,20 @@ void QwtDateScaleDraw::setDateFormat(QwtDate::IntervalType intervalType, const Q
     }
 }
 
-/*!
-   \param intervalType Interval type
-   \return Default format string for an datetime interval type
-   \sa setDateFormat(), dateFormatOfDate()
+/**
+ * \if ENGLISH
+ * @brief Get the default format string for a datetime interval type
+ * @param[in] intervalType Interval type
+ * @return Default format string for an datetime interval type
+ * @sa setDateFormat(), dateFormatOfDate()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取日期时间间隔类型的默认格式字符串
+ * @param[in] intervalType 间隔类型
+ * @return 日期时间间隔类型的默认格式字符串
+ * @sa setDateFormat(), dateFormatOfDate()
+ * \endif
  */
 QString QwtDateScaleDraw::dateFormat(QwtDate::IntervalType intervalType) const
 {
@@ -208,16 +284,24 @@ QString QwtDateScaleDraw::dateFormatOfDate(const QDateTime& dateTime, QwtDate::I
     return m_data->dateFormats[ QwtDate::Second ];
 }
 
-/*!
-   \brief Convert a value into its representing label
-
-   The value is converted to a datetime value using toDateTime()
-   and converted to a plain text using QwtDate::toString().
-
-   \param value Value
-   \return Label string.
-
-   \sa dateFormatOfDate()
+/**
+ * \if ENGLISH
+ * @brief Convert a value into its representing label
+ * @details The value is converted to a datetime value using toDateTime()
+ *          and converted to a plain text using QwtDate::toString().
+ * @param[in] value Value
+ * @return Label string
+ * @sa dateFormatOfDate()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将值转换为其表示的标签
+ * @details 值通过 toDateTime() 转换为日期时间值，
+ *          并通过 QwtDate::toString() 转换为纯文本。
+ * @param[in] value 值
+ * @return 标签字符串
+ * @sa dateFormatOfDate()
+ * \endif
  */
 QwtText QwtDateScaleDraw::label(double value) const
 {
@@ -268,11 +352,18 @@ QwtDate::IntervalType QwtDateScaleDraw::intervalType(const QwtScaleDiv& scaleDiv
     return static_cast< QwtDate::IntervalType >(intvType);
 }
 
-/*!
-   Translate a double value into a QDateTime object.
-
-   \return QDateTime object initialized with timeSpec() and utcOffset().
-   \sa timeSpec(), utcOffset(), QwtDate::toDateTime()
+/**
+ * \if ENGLISH
+ * @brief Translate a double value into a QDateTime object
+ * @return QDateTime object initialized with timeSpec() and utcOffset()
+ * @sa timeSpec(), utcOffset(), QwtDate::toDateTime()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 将 double 值转换为 QDateTime 对象
+ * @return 使用 timeSpec() 和 utcOffset() 初始化的 QDateTime 对象
+ * @sa timeSpec(), utcOffset(), QwtDate::toDateTime()
+ * \endif
  */
 QDateTime QwtDateScaleDraw::toDateTime(double value) const
 {

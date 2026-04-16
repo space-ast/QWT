@@ -78,7 +78,14 @@ QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
     setTolerance( tolerance );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 {
     delete m_data;

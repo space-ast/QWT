@@ -48,11 +48,18 @@ public:
     QPixmap* backingStore;
 };
 
-/*!
-   \brief Constructor
-
-   \param plot Parent plot widget
-   \sa QwtPlot::setCanvas()
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] plot Parent plot widget
+ * @sa QwtPlot::setCanvas()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] plot 父绘图控件
+ * @sa QwtPlot::setCanvas()
+ * \endif
  */
 QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
 {
@@ -67,19 +74,34 @@ QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanva
     setFrameShape(QFrame::Box);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotCanvas::~QwtPlotCanvas()
 {
     delete m_data;
 }
 
-/*!
-   \brief Changing the paint attributes
-
-   \param attribute Paint attribute
-   \param on On/Off
-
-   \sa testPaintAttribute(), backingStore()
+/**
+ * \if ENGLISH
+ * @brief Change the paint attributes
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa testPaintAttribute(), backingStore()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改绘制属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开启/关闭
+ * @sa testPaintAttribute(), backingStore()
+ * \endif
  */
 void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
@@ -122,36 +144,69 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
     }
 }
 
-/*!
-   Test whether a paint attribute is enabled
-
-   \param attribute Paint attribute
-   \return true, when attribute is enabled
-   \sa setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test whether a paint attribute is enabled
+ * @param[in] attribute Paint attribute
+ * @return true when attribute is enabled
+ * @sa setPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试绘制属性是否启用
+ * @param[in] attribute 绘制属性
+ * @return 属性启用时返回 true
+ * @sa setPaintAttribute()
+ * \endif
  */
 bool QwtPlotCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
     return m_data->paintAttributes & attribute;
 }
 
-//! \return Backing store, might be null
+/**
+ * \if ENGLISH
+ * @brief Get the backing store
+ * @return Backing store pixmap, might be null
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取后备存储
+ * @return 后备存储 pixmap，可能为空
+ * \endif
+ */
 const QPixmap* QwtPlotCanvas::backingStore() const
 {
     return m_data->backingStore;
 }
 
-//! Invalidate the internal backing store
+/**
+ * \if ENGLISH
+ * @brief Invalidate the internal backing store
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使内部后备存储失效
+ * \endif
+ */
 void QwtPlotCanvas::invalidateBackingStore()
 {
     if (m_data->backingStore)
         *m_data->backingStore = QPixmap();
 }
 
-/*!
-   Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
-
-   \param event Qt Event
-   \return See QFrame::event()
+/**
+ * \if ENGLISH
+ * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
+ * @param[in] event Qt Event
+ * @return See QFrame::event()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief Qt 事件处理器，处理 QEvent::PolishRequest 和 QEvent::StyleChange
+ * @param[in] event Qt 事件
+ * @return 参见 QFrame::event()
+ * \endif
  */
 bool QwtPlotCanvas::event(QEvent* event)
 {
@@ -273,9 +328,16 @@ void QwtPlotCanvas::resizeEvent(QResizeEvent* event)
     updateStyleSheetInfo();
 }
 
-/*!
-   Invalidate the paint cache and repaint the canvas
-   \sa invalidatePaintCache()
+/**
+ * \if ENGLISH
+ * @brief Invalidate the paint cache and repaint the canvas
+ * @sa invalidatePaintCache()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使绘制缓存失效并重绘画布
+ * @sa invalidatePaintCache()
+ * \endif
  */
 void QwtPlotCanvas::replot()
 {
@@ -287,14 +349,21 @@ void QwtPlotCanvas::replot()
         update(contentsRect());
 }
 
-/*!
-   Calculate the painter path for a styled or rounded border
-
-   When the canvas has no styled background or rounded borders
-   the painter path is empty.
-
-   \param rect Bounding rectangle of the canvas
-   \return Painter path, that can be used for clipping
+/**
+ * \if ENGLISH
+ * @brief Calculate the painter path for a styled or rounded border
+ * @param[in] rect Bounding rectangle of the canvas
+ * @return Painter path that can be used for clipping
+ * @details When the canvas has no styled background or rounded borders,
+ *          the painter path is empty.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 计算样式边框或圆角边框的绘制路径
+ * @param[in] rect 画布的边界矩形
+ * @return 可用于裁剪的绘制路径
+ * @details 当画布没有样式背景或圆角边框时，绘制路径为空。
+ * \endif
  */
 QPainterPath QwtPlotCanvas::borderPath(const QRect& rect) const
 {

@@ -26,27 +26,57 @@
 
 #include "qwt_painter_command.h"
 
-//! Construct an invalid command
+/**
+ * \if ENGLISH
+ * @brief Construct an invalid command
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造无效命令
+ * \endif
+ */
 QwtPainterCommand::QwtPainterCommand()
     : m_type( Invalid )
 {
 }
 
-//! Copy constructor
+/**
+ * \if ENGLISH
+ * @brief Construct a path command
+ *
+ * @param[in] path QPainterPath to be painted
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造路径命令
+ *
+ * @param[in] path 要绘制的QPainterPath
+ * \endif
+ */
 QwtPainterCommand::QwtPainterCommand( const QPainterPath& path )
     : m_type( Path )
 {
     m_path = new QPainterPath( path );
 }
 
-/*!
-   Constructor for Pixmap paint operation
-
-   \param rect Target rectangle
-   \param pixmap Pixmap
-   \param subRect Rectangle inside the pixmap
-
-   \sa QPainter::drawPixmap()
+/**
+ * \if ENGLISH
+ * @brief Constructor for Pixmap paint operation
+ *
+ * @param[in] rect Target rectangle
+ * @param[in] pixmap Pixmap to draw
+ * @param[in] subRect Rectangle inside the pixmap
+ * @sa QPainter::drawPixmap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief Pixmap绘制操作的构造函数
+ *
+ * @param[in] rect 目标矩形
+ * @param[in] pixmap 要绘制的pixmap
+ * @param[in] subRect pixmap内部的矩形区域
+ * @sa QPainter::drawPixmap()
+ * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
         const QPixmap& pixmap, const QRectF& subRect )
@@ -58,15 +88,26 @@ QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
     m_pixmapData->subRect = subRect;
 }
 
-/*!
-   Constructor for Image paint operation
-
-   \param rect Target rectangle
-   \param image Image
-   \param subRect Rectangle inside the image
-   \param flags Conversion flags
-
-   \sa QPainter::drawImage()
+/**
+ * \if ENGLISH
+ * @brief Constructor for Image paint operation
+ *
+ * @param[in] rect Target rectangle
+ * @param[in] image Image to draw
+ * @param[in] subRect Rectangle inside the image
+ * @param[in] flags Conversion flags
+ * @sa QPainter::drawImage()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief Image绘制操作的构造函数
+ *
+ * @param[in] rect 目标矩形
+ * @param[in] image 要绘制的图像
+ * @param[in] subRect 图像内部的矩形区域
+ * @param[in] flags 转换标志
+ * @sa QPainter::drawImage()
+ * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
         const QImage& image, const QRectF& subRect,
@@ -80,9 +121,18 @@ QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
     m_imageData->flags = flags;
 }
 
-/*!
-   Constructor for State paint operation
-   \param state Paint engine state
+/**
+ * \if ENGLISH
+ * @brief Constructor for State paint operation
+ *
+ * @param[in] state Paint engine state
+ * \endif
+ *
+ * \if CHINESE
+ * @brief State绘制操作的构造函数
+ *
+ * @param[in] state 绘制引擎状态
+ * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QPaintEngineState& state )
     : m_type( State )
@@ -137,27 +187,52 @@ QwtPainterCommand::QwtPainterCommand( const QPaintEngineState& state )
         m_stateData->opacity = state.opacity();
 }
 
-/*!
-   Copy constructor
-   \param other Command to be copied
-
+/**
+ * \if ENGLISH
+ * @brief Copy constructor
+ *
+ * @param[in] other Command to be copied
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 拷贝构造函数
+ *
+ * @param[in] other 要拷贝的命令
+ * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QwtPainterCommand& other )
 {
     copy( other );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPainterCommand::~QwtPainterCommand()
 {
     reset();
 }
 
-/*!
-   Assignment operator
-
-   \param other Command to be copied
-   \return Modified command
+/**
+ * \if ENGLISH
+ * @brief Assignment operator
+ *
+ * @param[in] other Command to be copied
+ * @return Modified command
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 赋值操作符
+ *
+ * @param[in] other 要拷贝的命令
+ * @return 修改后的命令
+ * \endif
  */
 QwtPainterCommand& QwtPainterCommand::operator=( const QwtPainterCommand& other )
 {

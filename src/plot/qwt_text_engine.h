@@ -52,7 +52,7 @@ class QPainter;
 class QWT_EXPORT QwtTextEngine
 {
   public:
-    /// Virtual destructor
+    // Virtual destructor
     virtual ~QwtTextEngine();
 
     /**
@@ -182,27 +182,27 @@ class QWT_EXPORT QwtTextEngine
 class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 {
   public:
-    /// Constructor
+    // Constructor
     QwtPlainTextEngine();
-    /// Destructor
+    // Destructor
     virtual ~QwtPlainTextEngine();
 
-    /// Calculate height for a given width
+    // Calculate height for a given width
     virtual double heightForWidth( const QFont& font, int flags,
         const QString& text, double width ) const override;
 
-    /// Return the size needed to render text
+    // Return the size needed to render text
     virtual QSizeF textSize( const QFont& font, int flags,
         const QString& text ) const override;
 
-    /// Draw the text
+    // Draw the text
     virtual void draw( QPainter*, const QRectF& rect,
         int flags, const QString& text ) const override;
 
-    /// Test if a string can be rendered
+    // Test if a string can be rendered
     virtual bool mightRender( const QString& ) const override;
 
-    /// Return text margins
+    // Return text margins
     virtual void textMargins(
         const QFont&, const QString&,
         double& left, double& right,
@@ -232,25 +232,25 @@ class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 class QWT_EXPORT QwtRichTextEngine : public QwtTextEngine
 {
   public:
-    /// Constructor
+    // Constructor
     QwtRichTextEngine();
 
-    /// Calculate height for a given width
+    // Calculate height for a given width
     virtual double heightForWidth( const QFont& font, int flags,
         const QString& text, double width ) const override;
 
-    /// Return the size needed to render text
+    // Return the size needed to render text
     virtual QSizeF textSize( const QFont& font, int flags,
         const QString& text ) const override;
 
-    /// Draw the text
+    // Draw the text
     virtual void draw( QPainter*, const QRectF& rect,
         int flags, const QString& text ) const override;
 
-    /// Test if a string can be rendered
+    // Test if a string can be rendered
     virtual bool mightRender( const QString& ) const override;
 
-    /// Return text margins
+    // Return text margins
     virtual void textMargins(
         const QFont&, const QString&,
         double& left, double& right,

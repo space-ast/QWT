@@ -78,10 +78,17 @@ void QwtFigure::PrivateData::plotWillRemove(QwtPlot* p)
 //----------------------------------------------------
 
 /**
+ * \if ENGLISH
  * @brief Constructor
+ * @param[in] parent Parent widget
+ * @param[in] f Window flags
+ * \endif
+ *
+ * \if CHINESE
  * @brief 构造函数
- * @param parent Parent widget / 父窗口部件
- * @param f Window flags / 窗口标志
+ * @param[in] parent 父窗口部件
+ * @param[in] f 窗口标志
+ * \endif
  */
 QwtFigure::QwtFigure(QWidget* parent, Qt::WindowFlags f) : QFrame(parent, f), QWT_PIMPL_CONSTRUCT
 {
@@ -95,17 +102,31 @@ QwtFigure::~QwtFigure()
 }
 
 /**
- * @brief Add a widget with normalized coordinates/使用归一化坐标添加窗口
- * @param widget QWidget to add / 要添加的QWidget
- * @param left Normalized coordinates left in range [0,1]
- * @param top Normalized coordinates top in range [0,1]
- * @param width Normalized coordinates width in range [0,1]
- * @param height Normalized coordinates height in range [0,1]
+ * \if ENGLISH
+ * @brief Add a widget with normalized coordinates
+ * @param[in] widget QWidget to add
+ * @param[in] left Normalized coordinates left in range [0,1]
+ * @param[in] top Normalized coordinates top in range [0,1]
+ * @param[in] width Normalized coordinates width in range [0,1]
+ * @param[in] height Normalized coordinates height in range [0,1]
  *
- * @note 即使添加的窗口是qwtplot,此函数也不会发射@ref axesAdded 信号，因此，如果你需要添加QwtPlot窗口，
- * 你应该使用@ref addAxes 函数,此函数是为了在figure窗口添加除QwtPlot以外的窗口使用的
- *
+ * @note Even if the added widget is a QwtPlot, this function will not emit axesAdded signal.
+ *       Use addAxes() instead if you need to add QwtPlot widgets.
  * @sa addAxes
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 使用归一化坐标添加窗口
+ * @param[in] widget 要添加的QWidget
+ * @param[in] left 归一化坐标左边界，范围[0,1]
+ * @param[in] top 归一化坐标上边界，范围[0,1]
+ * @param[in] width 归一化坐标宽度，范围[0,1]
+ * @param[in] height 归一化坐标高度，范围[0,1]
+ *
+ * @note 即使添加的窗口是QwtPlot，此函数也不会发射axesAdded信号，因此，如果你需要添加QwtPlot窗口，
+ *       你应该使用addAxes函数，此函数是为了在figure窗口添加除QwtPlot以外的窗口使用的
+ * @sa addAxes
+ * \endif
  */
 void QwtFigure::addWidget(QWidget* widget, qreal left, qreal top, qreal width, qreal height)
 {
@@ -117,26 +138,41 @@ void QwtFigure::addWidget(QWidget* widget, qreal left, qreal top, qreal width, q
 }
 
 /**
- * @brief Add a widget by grid layout/添加窗口部件到网格布局
+ * \if ENGLISH
+ * @brief Add a widget by grid layout
+ * @details This method adds a widget to the grid layout at the specified position with optional row and column spans.
+ * @param[in] widget Widget to add
+ * @param[in] rowCnt Number of rows in the grid
+ * @param[in] colCnt Number of columns in the grid
+ * @param[in] row Grid row position (0-based)
+ * @param[in] col Grid column position (0-based)
+ * @param[in] rowSpan Number of rows to span (default: 1)
+ * @param[in] colSpan Number of columns to span (default: 1)
+ * @param[in] wspace Horizontal space between subplots [0,1]
+ * @param[in] hspace Vertical space between subplots [0,1]
  *
- * This method adds a widget to the grid layout at the specified position with optional row and column spans.
- *
- * 此方法将widget添加到网格布局中的指定位置，可选择跨行和跨列。
- *
- * @param plot widget to add / 要添加的widget
- * @param rowCnt Number of rows in the grid / 网格行数
- * @param colCnt Number of columns in the grid / 网格列数
- * @param row Grid row position (0-based) / 网格行位置（从0开始）
- * @param col Grid column position (0-based) / 网格列位置（从0开始）
- * @param rowSpan Number of rows to span (default: 1) / 跨行数（默认：1）
- * @param colSpan Number of columns to span (default: 1) / 跨列数（默认：1）
- * @param wspace Horizontal space between subplots [0,1] / 子图之间的水平间距 [0,1]
- * @param hspace Vertical space between subplots [0,1] / 子图之间的垂直间距 [0,1]
- *
- * @note 即使添加的窗口是qwtplot,此函数也不会发射@ref axesAdded 信号，因此，如果你需要添加QwtPlot窗口，
- * 你应该使用@ref addAxes 函数,此函数是为了在figure窗口添加除QwtPlot以外的窗口使用的
- *
+ * @note Even if the added widget is a QwtPlot, this function will not emit axesAdded signal.
+ *       Use addAxes() instead if you need to add QwtPlot widgets.
  * @sa addAxes
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 添加窗口部件到网格布局
+ * @details 此方法将widget添加到网格布局中的指定位置，可选择跨行和跨列。
+ * @param[in] widget 要添加的widget
+ * @param[in] rowCnt 网格行数
+ * @param[in] colCnt 网格列数
+ * @param[in] row 网格行位置（从0开始）
+ * @param[in] col 网格列位置（从0开始）
+ * @param[in] rowSpan 跨行数（默认：1）
+ * @param[in] colSpan 跨列数（默认：1）
+ * @param[in] wspace 子图之间的水平间距 [0,1]
+ * @param[in] hspace 子图之间的垂直间距 [0,1]
+ *
+ * @note 即使添加的窗口是QwtPlot，此函数也不会发射axesAdded信号，因此，如果你需要添加QwtPlot窗口，
+ *       你应该使用addAxes函数，此函数是为了在figure窗口添加除QwtPlot以外的窗口使用的
+ * @sa addAxes
+ * \endif
  */
 void QwtFigure::addWidget(QWidget* widget, int rowCnt, int colCnt, int row, int col, int rowSpan, int colSpan, qreal wspace, qreal hspace)
 {
@@ -148,26 +184,25 @@ void QwtFigure::addWidget(QWidget* widget, int rowCnt, int colCnt, int row, int 
 }
 
 /**
- * @brief Add a plot with normalized coordinates/使用归一化坐标添加绘图
+ * \if ENGLISH
+ * @brief Add a plot with normalized coordinates
+ * @details This method adds a QwtPlot to the figure using normalized coordinates in the range [0,1].
+ *          The coordinates are specified as [left, bottom, width, height].
+ * @param[in] plot QwtPlot to add
+ * @param[in] rect Normalized coordinates [left, bottom, width, height] in range [0,1]
  *
- * This method adds a QwtPlot to the figure using normalized coordinates in the range [0,1].
- * The coordinates are specified as [left, bottom, width, height].
+ * @note This function will emit axesAdded signal, followed by currentAxesChanged signal
+ * \endif
  *
- * 此方法使用[0,1]范围内的归一化坐标将QwtPlot添加到图形中。
- * 坐标指定为[左, 下, 宽, 高]。
+ * \if CHINESE
+ * @brief 使用归一化坐标添加绘图
+ * @details 此方法使用[0,1]范围内的归一化坐标将QwtPlot添加到图形中。
+ *          坐标指定为[左, 下, 宽, 高]。
+ * @param[in] plot 要添加的QwtPlot
+ * @param[in] rect 归一化坐标 [左, 下, 宽, 高]，范围 [0,1]
  *
- * @param plot QwtPlot to add / 要添加的QwtPlot
- * @param rect Normalized coordinates [left, bottom, width, height] in range [0,1]
- *              归一化坐标 [左, 下, 宽, 高]，范围 [0,1]
- *
- * @code
- * // Add a plot that occupies the top-left quarter of the figure
- * // 添加一个占据图形左上角四分之一的绘图
- * QwtPlot* plot = new QwtPlot;
- * figure.addAxes(plot, QRectF(0.0, 0.5, 0.5, 0.5));
- * @endcode
- *
- * @note 此函数会发射@ref axesAdded 信号，此信号发射后发射@ref currentAxesChanged 信号
+ * @note 此函数会发射axesAdded信号，此信号发射后发射currentAxesChanged信号
+ * \endif
  */
 void QwtFigure::addAxes(QwtPlot* plot, const QRectF& rect)
 {
@@ -175,18 +210,27 @@ void QwtFigure::addAxes(QwtPlot* plot, const QRectF& rect)
 }
 
 /**
- * @brief Add a plot with normalized coordinates/使用归一化坐标添加绘图
+ * \if ENGLISH
+ * @brief Add a plot with normalized coordinates using separate parameters
+ * @param[in] plot QwtPlot to add
+ * @param[in] left Normalized coordinates left in range [0,1]
+ * @param[in] top Normalized coordinates top in range [0,1]
+ * @param[in] width Normalized coordinates width in range [0,1]
+ * @param[in] height Normalized coordinates height in range [0,1]
  *
- * This method adds a QwtPlot to the figure using normalized coordinates in the range [0,1].
- * The coordinates are specified as [left, bottom, width, height].
+ * @note This function will emit axesAdded signal, followed by currentAxesChanged signal
+ * \endif
  *
- * @param plot QwtPlot to add / 要添加的QwtPlot
- * @param left Normalized coordinates left in range [0,1]
- * @param top Normalized coordinates top in range [0,1]
- * @param width Normalized coordinates width in range [0,1]
- * @param height Normalized coordinates height in range [0,1]
+ * \if CHINESE
+ * @brief 使用归一化坐标添加绘图（分离参数）
+ * @param[in] plot 要添加的QwtPlot
+ * @param[in] left 归一化坐标左边界，范围[0,1]
+ * @param[in] top 归一化坐标上边界，范围[0,1]
+ * @param[in] width 归一化坐标宽度，范围[0,1]
+ * @param[in] height 归一化坐标高度，范围[0,1]
  *
- * @note 此函数会发射@ref axesAdded 信号，此信号发射后发射@ref currentAxesChanged 信号
+ * @note 此函数会发射axesAdded信号，此信号发射后发射currentAxesChanged信号
+ * \endif
  */
 void QwtFigure::addAxes(QwtPlot* plot, qreal left, qreal top, qreal width, qreal height)
 {
@@ -196,38 +240,37 @@ void QwtFigure::addAxes(QwtPlot* plot, qreal left, qreal top, qreal width, qreal
 }
 
 /**
- * @brief Add a plot by grid layout/添加窗口部件到网格布局
+ * \if ENGLISH
+ * @brief Add a plot by grid layout
+ * @details This method adds a QwtPlot to the grid layout at the specified position with optional row and column spans.
+ * @param[in] plot QwtPlot to add
+ * @param[in] rowCnt Number of rows in the grid
+ * @param[in] colCnt Number of columns in the grid
+ * @param[in] row Grid row position (0-based)
+ * @param[in] col Grid column position (0-based)
+ * @param[in] rowSpan Number of rows to span (default: 1)
+ * @param[in] colSpan Number of columns to span (default: 1)
+ * @param[in] wspace Horizontal space between subplots [0,1]
+ * @param[in] hspace Vertical space between subplots [0,1]
  *
- * This method adds a QwtPlot to the grid layout at the specified position with optional row and column spans.
+ * @note This function will emit axesAdded signal, followed by currentAxesChanged signal
+ * \endif
  *
- * 此方法将QwtPlot添加到网格布局中的指定位置，可选择跨行和跨列。
+ * \if CHINESE
+ * @brief 添加窗口部件到网格布局
+ * @details 此方法将QwtPlot添加到网格布局中的指定位置，可选择跨行和跨列。
+ * @param[in] plot 要添加的QwtPlot
+ * @param[in] rowCnt 网格行数
+ * @param[in] colCnt 网格列数
+ * @param[in] row 网格行位置（从0开始）
+ * @param[in] col 网格列位置（从0开始）
+ * @param[in] rowSpan 跨行数（默认：1）
+ * @param[in] colSpan 跨列数（默认：1）
+ * @param[in] wspace 子图之间的水平间距 [0,1]
+ * @param[in] hspace 子图之间的垂直间距 [0,1]
  *
- * @param plot QwtPlot to add / 要添加的QwtPlot
- * @param rowCnt Number of rows in the grid / 网格行数
- * @param colCnt Number of columns in the grid / 网格列数
- * @param row Grid row position (0-based) / 网格行位置（从0开始）
- * @param col Grid column position (0-based) / 网格列位置（从0开始）
- * @param rowSpan Number of rows to span (default: 1) / 跨行数（默认：1）
- * @param colSpan Number of columns to span (default: 1) / 跨列数（默认：1）
- * @param wspace Horizontal space between subplots [0,1] / 子图之间的水平间距 [0,1]
- * @param hspace Vertical space between subplots [0,1] / 子图之间的垂直间距 [0,1]
- *
- * @code
- * // Create a 2x2 grid and add plots
- * // 创建一个2x2网格并添加绘图
- *
- * // Add a plot that spans the entire top row (row 0, columns 0-1)
- * // 添加一个占据整个顶行（第0行，第0-1列）的绘图
- * QwtPlot* topPlot = new QwtPlot;
- * figure.addAxes(topPlot, 2, 2, 0, 0, 1, 2);
- *
- * // Add a plot to the bottom-left cell (row 1, column 0)
- * // 添加一个到底部左侧单元格（第1行，第0列）的绘图
- * QwtPlot* bottomLeftPlot = new QwtPlot;
- * figure.addAxes(bottomLeftPlot, 2, 2, 1, 0);
- * @endcode
- *
- * @note 此函数会发射@ref axesAdded 信号，此信号发射后发射@ref currentAxesChanged 信号
+ * @note 此函数会发射axesAdded信号，此信号发射后发射currentAxesChanged信号
+ * \endif
  */
 void QwtFigure::addGridAxes(QwtPlot* plot, int rowCnt, int colCnt, int row, int col, int rowSpan, int colSpan, qreal wspace, qreal hspace)
 {
@@ -249,26 +292,23 @@ void QwtFigure::setWidgetNormPos(QWidget* widget, const QRectF& rect)
 }
 
 /**
- * @brief Get all axes (plots) in the figure（not contain parasite axes）/获取图形中的所有坐标轴（绘图）(不包含寄生轴)
+ * \if ENGLISH
+ * @brief Get all axes (plots) in the figure (not including parasite axes)
+ * @details This method returns a list of all QwtPlot objects added to the figure.
+ * @param[in] byZOrder If true, sort by z-order from top to bottom
+ * @return List of all QwtPlot objects (not including parasite axes)
  *
- * This method returns a list of all QwtPlot objects added to the figure.（not contain parasite axes）
+ * @note Parasite axes are not included in the returned list
+ * \endif
  *
- * 此方法返回添加到图形中的所有QwtPlot对象的列表。(不包含寄生轴)
- *
- * @param byZOrder 是否按zorder排序，如果按zorder排序，按按 z 序从高到低排序
- *
- * @return List of all QwtPlot objects / 所有QwtPlot对象的列表(不包含寄生轴)
+ * \if CHINESE
+ * @brief 获取图形中的所有坐标轴（绘图）(不包含寄生轴)
+ * @details 此方法返回添加到图形中的所有QwtPlot对象的列表。
+ * @param[in] byZOrder 是否按z-order排序，如果按z-order排序，按z序从高到低排序
+ * @return 所有QwtPlot对象的列表(不包含寄生轴)
  *
  * @note 此方法获取的绘图不包含寄生轴
- *
- * @code
- * // Get all plots and update their titles
- * // 获取所有绘图并更新它们的标题
- * QList<QwtPlot*> plots = figure.allAxes();
- * for (int i = 0; i < plots.size(); ++i) {
- *     plots[i]->setTitle(QString("Plot %1").arg(i + 1));
- * }
- * @endcode
+ * \endif
  */
 QList< QwtPlot* > QwtFigure::allAxes(bool byZOrder) const
 {
@@ -308,22 +348,17 @@ QList< QwtPlot* > QwtFigure::allAxes(bool byZOrder) const
 }
 
 /**
- * @brief Check if the figure has any axes/检查图形是否有坐标轴
+ * \if ENGLISH
+ * @brief Check if the figure has any axes
+ * @details This method returns true if the figure contains at least one QwtPlot.
+ * @return true if the figure has axes, false otherwise
+ * \endif
  *
- * This method returns true if the figure contains at least one QwtPlot.
- *
- * 如果图形包含至少一个QwtPlot，则此方法返回true。
- *
- * @return true if the figure has axes, false otherwise / 如果图形有坐标轴返回true，否则返回false
- *
- * @code
- * // Check if figure has axes before performing operations
- * // 在执行操作前检查图形是否有坐标轴
- * if (figure.hasAxes()) {
- *     // Do something with the plots
- *     // 对绘图进行操作
- * }
- * @endcode
+ * \if CHINESE
+ * @brief 检查图形是否有坐标轴
+ * @details 如果图形包含至少一个QwtPlot，则此方法返回true。
+ * @return 如果图形有坐标轴返回true，否则返回false
+ * \endif
  */
 bool QwtFigure::hasAxes() const
 {
@@ -343,24 +378,19 @@ bool QwtFigure::hasAxes() const
 }
 
 /**
- * @brief Check if the figure has any axes/检查图形是否有坐标轴
+ * \if ENGLISH
+ * @brief Check if the figure contains a specific plot
+ * @details This method returns true if the figure contains the specified QwtPlot.
+ * @param[in] plot QwtPlot to check
+ * @return true if the figure contains the plot, false otherwise
+ * \endif
  *
- * This method returns true if the figure contains at least one QwtPlot.
- *
- * 如果图形包含至少一个QwtPlot，则此方法返回true。
- * @param plot QwtPlot to check / 要检测的QwtPlot
- * @return true if the figure has axes, false otherwise / 如果图形有坐标轴返回true，否则返回false
- *
- * @code
- * // Check if figure has axes before performing operations
- * // 在执行操作前检查图形是否有坐标轴
- * QwtPlot* plot;
- * ...
- * if (figure.hasAxes(plot)) {
- *     // Do something with the plots
- *     // 对绘图进行操作
- * }
- * @endcode
+ * \if CHINESE
+ * @brief 检查图形是否存在特定plot
+ * @details 如果图形包含指定的QwtPlot，则此方法返回true。
+ * @param[in] plot 要检测的QwtPlot
+ * @return 如果图形存在该绘图返回true，否则返回false
+ * \endif
  */
 bool QwtFigure::hasAxes(QwtPlot* plot) const
 {
@@ -383,25 +413,21 @@ bool QwtFigure::hasAxes(QwtPlot* plot) const
 }
 
 /**
- * @brief Remove a specific axes (plot) from the figure/从图形中移除特定的坐标轴（绘图）
+ * \if ENGLISH
+ * @brief Remove a specific axes (plot) from the figure
+ * @details This method removes the specified QwtPlot from the figure.
+ * @param[in] plot QwtPlot to remove
  *
- * This method removes the specified QwtPlot from the figure.
+ * @note This function does not destroy the QwtPlot object. You need to call deleteLater() manually.
+ * \endif
  *
- * 此方法从图形中移除指定的QwtPlot。
+ * \if CHINESE
+ * @brief 从图形中移除特定的坐标轴（绘图）
+ * @details 此方法从图形中移除指定的QwtPlot。
+ * @param[in] plot 要移除的QwtPlot
  *
- * @param plot QwtPlot to remove / 要移除的QwtPlot
- *
- * @note This function will destroy the QwtPlot object
- * 此函数会销毁QwtPlot对象
- *
- * @code
- * // Remove a specific plot from the figure
- * // 从图形中移除特定的绘图
- * QwtPlot* plotToRemove = figure.getAllAxes().first();
- * figure.removeAxes(plotToRemove);
- * // 你需要手动删除它
- * plotToRemove->deletelater();
- * @endcode
+ * @note 此函数不会销毁QwtPlot对象，你需要手动调用deleteLater()。
+ * \endif
  */
 void QwtFigure::removeAxes(QwtPlot* plot)
 {
@@ -409,15 +435,25 @@ void QwtFigure::removeAxes(QwtPlot* plot)
 }
 
 /**
- * @brief Take a specific axes (plot) from the figure without deleting it/从图形中取出特定的坐标轴（绘图）但不删除它
- * @param plot Pointer to the QwtPlot to take / 要取出的QwtPlot指针
- * @return Pointer to the taken QwtPlot, or nullptr if not found / 取出的QwtPlot指针，如果未找到则返回nullptr
+ * \if ENGLISH
+ * @brief Take a specific axes (plot) from the figure without deleting it
+ * @param[in] plot Pointer to the QwtPlot to take
+ * @return true if successfully taken, false otherwise
  *
- * @note 如果当前的绘图是选择的激活坐标系，在移除时，会先发射@ref currentAxesChanged 信号，再发射@ref axesRemoved 信号
+ * @note If the removed plot is the current active axes, currentAxesChanged signal is emitted first, then axesRemoved signal.
+ * @note If the figure has no plots after removal, currentAxesChanged signal is emitted with nullptr.
+ * @note If a plot has parasite axes, they will be hidden and have parent widget set to nullptr.
+ * \endif
  *
- * @note 如果只有一个绘图，在移除后，整个figure没有绘图的情况下，也会发射@ref currentAxesChanged 信号，信号携带的内容为nullptr
+ * \if CHINESE
+ * @brief 从图形中取出特定的坐标轴（绘图）但不删除它
+ * @param[in] plot 要取出的QwtPlot指针
+ * @return 成功取出返回true，否则返回false
  *
- * @note 如果一个绘图有寄生轴，再takeAxes后，它的寄生轴会设置为隐藏，并把parent widget设置为nullptr
+ * @note 如果当前的绘图是选择的激活坐标系，在移除时，会先发射currentAxesChanged信号，再发射axesRemoved信号。
+ * @note 如果只有一个绘图，在移除后，整个figure没有绘图的情况下，也会发射currentAxesChanged信号，信号携带的内容为nullptr。
+ * @note 如果一个绘图有寄生轴，在takeAxes后，它的寄生轴会设置为隐藏，并把parent widget设置为nullptr。
+ * \endif
  */
 bool QwtFigure::takeAxes(QwtPlot* plot)
 {
@@ -481,25 +517,23 @@ bool QwtFigure::takeAxes(QwtPlot* plot)
 }
 
 /**
- * @brief Clear all axes from the figure/清除图形中的所有坐标轴
+ * \if ENGLISH
+ * @brief Clear all axes from the figure
+ * @details This method removes all QwtPlot objects from the figure and deletes them.
  *
- * This method removes all QwtPlot objects from the figure and deletes them.
+ * @note This method emits axesRemoved signal during removal process.
+ * @note After all removals, currentAxesChanged signal is emitted with nullptr, then figureCleared signal.
+ * @note This method deletes all held plot widgets.
+ * \endif
  *
- * 此方法从图形中移除所有QwtPlot对象并删除它们。
+ * \if CHINESE
+ * @brief 清除图形中的所有坐标轴
+ * @details 此方法从图形中移除所有QwtPlot对象并删除它们。
  *
- * @note 此方法在移除过程中会发射@ref axesRemoved 信号，
- * axesRemoved携带的绘图指针不应该被保存
- *
- * @note 此方法还会发射3个信号，删除过程会发射@ref axesRemoved 信号，删除完后发射@ref currentAxesChanged 信号，此信号参数会携带nullptr，
- * 最后发射@ref figureCleared 信号
- *
- * @note 此方法会删除已经持有的所有plot窗口
- *
- * @code
- * // Clear all plots from the figure
- * // 清除图形中的所有绘图
- * figure.clear();
- * @endcode
+ * @note 此方法在移除过程中会发射axesRemoved信号。
+ * @note 此方法还会发射currentAxesChanged信号（携带nullptr），最后发射figureCleared信号。
+ * @note 此方法会删除已经持有的所有plot窗口。
+ * \endif
  */
 void QwtFigure::clear()
 {
@@ -537,21 +571,18 @@ void QwtFigure::clear()
 }
 
 /**
- * @brief Get the size of the figure in inches/获取图形的英寸尺寸
+ * \if ENGLISH
+ * @brief Get the size of the figure in inches
+ * @details This method calculates the physical size of the figure in inches based on
+ *          the current pixel size and screen DPI.
+ * @return Size of the figure in inches
+ * \endif
  *
- * This method calculates the physical size of the figure in inches based on
- * the current pixel size and screen DPI.
- *
- * 此方法基于当前像素尺寸和屏幕DPI计算图形的物理尺寸（英寸）。
- *
- * @return Size of the figure in inches / 图形的英寸尺寸
- *
- * @code
- * // Get the size of the figure in inches
- * // 获取图形的英寸尺寸
- * QSize sizeInInches = figure.getSizeInches();
- * qDebug() << "Figure size:" << sizeInInches.width() << "x" << sizeInInches.height() << "inches";
- * @endcode
+ * \if CHINESE
+ * @brief 获取图形的英寸尺寸
+ * @details 此方法基于当前像素尺寸和屏幕DPI计算图形的物理尺寸（英寸）。
+ * @return 图形的英寸尺寸
+ * \endif
  */
 QSize QwtFigure::getSizeInches() const
 {
@@ -563,21 +594,20 @@ QSize QwtFigure::getSizeInches() const
 }
 
 /**
- * @brief Set the size of the figure in inches/设置图形的英寸尺寸
+ * \if ENGLISH
+ * @brief Set the size of the figure in inches
+ * @details This method sets the size of the figure in inches, converting to pixels
+ *          based on the screen DPI.
+ * @param[in] width Width in inches
+ * @param[in] height Height in inches
+ * \endif
  *
- * This method sets the size of the figure in inches, converting to pixels
- * based on the screen DPI.
- *
- * 此方法设置图形的英寸尺寸，基于屏幕DPI转换为像素。
- *
- * @param width Width in inches / 宽度（英寸）
- * @param height Height in inches / 高度（英寸）
- *
- * @code
- * // Set the figure size to 6x4 inches
- * // 将图形尺寸设置为6x4英寸
- * figure.setSizeInches(6.0, 4.0);
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的英寸尺寸
+ * @details 此方法设置图形的英寸尺寸，基于屏幕DPI转换为像素。
+ * @param[in] width 宽度（英寸）
+ * @param[in] height 高度（英寸）
+ * \endif
  */
 void QwtFigure::setSizeInches(float width, float height)
 {
@@ -591,20 +621,18 @@ void QwtFigure::setSizeInches(float width, float height)
 }
 
 /**
- * @brief Set the size of the figure in inches/设置图形的英寸尺寸
+ * \if ENGLISH
+ * @brief Set the size of the figure in inches
+ * @details This method sets the size of the figure in inches, converting to pixels
+ *          based on the screen DPI.
+ * @param[in] size Size in inches
+ * \endif
  *
- * This method sets the size of the figure in inches, converting to pixels
- * based on the screen DPI.
- *
- * 此方法设置图形的英寸尺寸，基于屏幕DPI转换为像素。
- *
- * @param size Size in inches / 英寸尺寸
- *
- * @code
- * // Set the figure size to 6x4 inches
- * // 将图形尺寸设置为6x4英寸
- * figure.setSizeInches(QSizeF(6.0, 4.0));
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的英寸尺寸
+ * @details 此方法设置图形的英寸尺寸，基于屏幕DPI转换为像素。
+ * @param[in] size 英寸尺寸
+ * \endif
  */
 void QwtFigure::setSizeInches(const QSizeF& size)
 {
@@ -612,19 +640,17 @@ void QwtFigure::setSizeInches(const QSizeF& size)
 }
 
 /**
- * @brief Set the face color of the figure/设置图形的背景颜色
+ * \if ENGLISH
+ * @brief Set the face color of the figure
+ * @details This method sets the background color of the figure.
+ * @param[in] color Background color
+ * \endif
  *
- * This method sets the background color of the figure.
- *
- * 此方法设置图形的背景颜色。
- *
- * @param color Background color / 背景颜色
- *
- * @code
- * // Set the figure background to light gray
- * // 将图形背景设置为浅灰色
- * figure.setFaceColor(Qt::lightGray);
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的背景颜色
+ * @details 此方法设置图形的背景颜色。
+ * @param[in] color 背景颜色
+ * \endif
  */
 void QwtFigure::setFaceColor(const QColor& color)
 {
@@ -632,19 +658,17 @@ void QwtFigure::setFaceColor(const QColor& color)
 }
 
 /**
- * @brief Get the face color of the figure/获取图形的表面颜色
+ * \if ENGLISH
+ * @brief Get the face color of the figure
+ * @details This method returns the background color of the figure.
+ * @return Background color
+ * \endif
  *
- * This method returns the background color of the figure.
- *
- * 此方法返回图形的背景颜色。
- *
- * @return Background color / 背景颜色
- *
- * @code
- * // Get the current background color
- * // 获取当前背景颜色
- * QColor bgColor = figure.faceColor();
- * @endcode
+ * \if CHINESE
+ * @brief 获取图形的表面颜色
+ * @details 此方法返回图形的背景颜色。
+ * @return 背景颜色
+ * \endif
  */
 QColor QwtFigure::faceColor() const
 {
@@ -652,23 +676,18 @@ QColor QwtFigure::faceColor() const
 }
 
 /**
- * @brief Set the face brush of the figure/设置图形的背景画刷
+ * \if ENGLISH
+ * @brief Set the face brush of the figure
+ * @details This method sets the background brush of the figure, allowing for
+ *          more complex backgrounds (gradients, textures, etc.).
+ * @param[in] brush Background brush
+ * \endif
  *
- * This method sets the background brush of the figure, allowing for
- * more complex backgrounds (gradients, textures, etc.).
- *
- * 此方法设置图形的背景画刷，允许更复杂的背景（渐变、纹理等）。
- *
- * @param brush Background brush / 背景画刷
- *
- * @code
- * // Set a gradient background
- * // 设置渐变背景
- * QLinearGradient gradient(0, 0, 0, 1);
- * gradient.setColorAt(0, Qt::white);
- * gradient.setColorAt(1, Qt::lightGray);
- * figure.setFaceBrush(QBrush(gradient));
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的背景画刷
+ * @details 此方法设置图形的背景画刷，允许更复杂的背景（渐变、纹理等）。
+ * @param[in] brush 背景画刷
+ * \endif
  */
 void QwtFigure::setFaceBrush(const QBrush& brush)
 {
@@ -676,19 +695,17 @@ void QwtFigure::setFaceBrush(const QBrush& brush)
 }
 
 /**
- * @brief Get the face brush of the figure/获取图形的表面画刷
+ * \if ENGLISH
+ * @brief Get the face brush of the figure
+ * @details This method returns the background brush of the figure.
+ * @return Background brush
+ * \endif
  *
- * This method returns the background brush of the figure.
- *
- * 此方法返回图形的背景画刷。
- *
- * @return Background brush / 背景画刷
- *
- * @code
- * // Get the current background brush
- * // 获取当前背景画刷
- * QBrush bgBrush = figure.faceBrush();
- * @endcode
+ * \if CHINESE
+ * @brief 获取图形的表面画刷
+ * @details 此方法返回图形的背景画刷。
+ * @return 背景画刷
+ * \endif
  */
 QBrush QwtFigure::faceBrush() const
 {
@@ -696,19 +713,17 @@ QBrush QwtFigure::faceBrush() const
 }
 
 /**
- * @brief Set the edge color of the figure/设置图形的边缘颜色
+ * \if ENGLISH
+ * @brief Set the edge color of the figure
+ * @details This method sets the border color of the figure.
+ * @param[in] color Border color
+ * \endif
  *
- * This method sets the border color of the figure.
- *
- * 此方法设置图形的边框颜色。
- *
- * @param color Border color / 边框颜色
- *
- * @code
- * // Set the figure border to black
- * // 将图形边框设置为黑色
- * figure.setEdgeColor(Qt::black);
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的边缘颜色
+ * @details 此方法设置图形的边框颜色。
+ * @param[in] color 边框颜色
+ * \endif
  */
 void QwtFigure::setEdgeColor(const QColor& color)
 {
@@ -716,19 +731,17 @@ void QwtFigure::setEdgeColor(const QColor& color)
 }
 
 /**
- * @brief Get the edge color of the figure/获取图形的边缘颜色
+ * \if ENGLISH
+ * @brief Get the edge color of the figure
+ * @details This method returns the border color of the figure.
+ * @return Border color
+ * \endif
  *
- * This method returns the border color of the figure.
- *
- * 此方法返回图形的边框颜色。
- *
- * @return Border color / 边框颜色
- *
- * @code
- * // Get the current border color
- * // 获取当前边框颜色
- * QColor borderColor = figure.edgeColor();
- * @endcode
+ * \if CHINESE
+ * @brief 获取图形的边缘颜色
+ * @details 此方法返回图形的边框颜色。
+ * @return 边框颜色
+ * \endif
  */
 QColor QwtFigure::edgeColor() const
 {
@@ -736,19 +749,17 @@ QColor QwtFigure::edgeColor() const
 }
 
 /**
- * @brief Set the edge line width of the figure/设置图形的边缘线宽
+ * \if ENGLISH
+ * @brief Set the edge line width of the figure
+ * @details This method sets the border line width of the figure.
+ * @param[in] width Border line width in pixels
+ * \endif
  *
- * This method sets the border line width of the figure.
- *
- * 此方法设置图形的边框线宽。
- *
- * @param width Border line width in pixels / 边框线宽（像素）
- *
- * @code
- * // Set the figure border width to 2 pixels
- * // 将图形边框宽度设置为2像素
- * figure.setEdgeLineWidth(2);
- * @endcode
+ * \if CHINESE
+ * @brief 设置图形的边缘线宽
+ * @details 此方法设置图形的边框线宽。
+ * @param[in] width 边框线宽（像素）
+ * \endif
  */
 void QwtFigure::setEdgeLineWidth(int width)
 {
@@ -756,19 +767,17 @@ void QwtFigure::setEdgeLineWidth(int width)
 }
 
 /**
- * @brief Get the edge line width of the figure/获取图形的边缘线宽
+ * \if ENGLISH
+ * @brief Get the edge line width of the figure
+ * @details This method returns the border line width of the figure.
+ * @return Border line width in pixels
+ * \endif
  *
- * This method returns the border line width of the figure.
- *
- * 此方法返回图形的边框线宽。
- *
- * @return Border line width in pixels / 边框线宽（像素）
- *
- * @code
- * // Get the current border width
- * // 获取当前边框宽度
- * int borderWidth = figure.edgeLineWidth();
- * @endcode
+ * \if CHINESE
+ * @brief 获取图形的边缘线宽
+ * @details 此方法返回图形的边框线宽。
+ * @return 边框线宽（像素）
+ * \endif
  */
 int QwtFigure::edgeLineWidth() const
 {
@@ -776,58 +785,34 @@ int QwtFigure::edgeLineWidth() const
 }
 
 /**
- * @brief Create parasite axes for a host plot/为宿主绘图创建寄生轴
- *
- * This method creates a parasite axes that shares the same plotting area as the host plot
- * but with independent axis scaling and labeling. The parasite axes will be positioned
- * exactly on top of the host plot and will automatically synchronize its geometry.
- *
- * 此方法创建一个寄生轴，它与宿主绘图共享相同的绘图区域，但具有独立的轴缩放和标签。
- * 寄生轴将精确定位在宿主绘图之上，并自动同步其几何形状。
- *
- * @param hostPlot Pointer to the host QwtPlot/指向宿主QwtPlot的指针
- * @param enableAxis The axis position to enable on the parasite axes/在寄生轴上启用的轴位置
- * @param shareX If true, share X-axis scale with host plot/如果为true，与宿主绘图共享X轴刻度
- * @param shareY If true, share Y-axis scale with host plot/如果为true，与宿主绘图共享Y轴刻度
- * @return Pointer to the created parasite QwtPlot/指向创建的寄生QwtPlot的指针
- * @retval nullptr if hostPlot is invalid or not in the figure/如果hostPlot无效或不在图形中则返回nullptr
- *
+ * \if ENGLISH
+ * @brief Create parasite axes for a host plot
+ * @details This method creates a parasite axes that shares the same plotting area as the host plot
+ *          but with independent axis scaling and labeling. The parasite axes will be positioned
+ *          exactly on top of the host plot and will automatically synchronize its geometry.
+ * @param[in] hostPlot Pointer to the host QwtPlot
+ * @param[in] enableAxis The axis position to enable on the parasite axes
+ * @return Pointer to the created parasite QwtPlot
+ * @retval nullptr if hostPlot is invalid or not in the figure
  * @note The parasite axes will have a transparent background and only the specified axis will be visible.
- *       /寄生轴将具有透明背景，只有指定的轴可见。
  * @note The parasite axes will automatically be deleted when the host plot is removed from the figure.
- *       /当宿主绘图从图形中移除时，寄生轴将自动被删除。
- * @note Parasitic axes are not stored in QwtFigureLayout, but are separately controlled by QwtFigure for layout
- * management /寄生轴不会存入QwtFigureLayout中，单独由QwtFigure进行布局控制
+ * @note Parasitic axes are not stored in QwtFigureLayout, but are separately controlled by QwtFigure for layout management.
+ * @note Parasite axes must be managed by the figure because they only overlap the plotting area with the host, while the coordinate window positions are different from the host.
+ * \endif
  *
- * @code
- * // Create a host plot
- * // 创建宿主绘图
- * QwtPlot* hostPlot = new QwtPlot(figure);
- * figure->addAxes(hostPlot, 0.1, 0.1, 0.8, 0.8);
- *
- * // Create parasite axes with YRight axis enabled and sharing Y-axis scale
- * // 创建寄生轴，启用YRight轴并共享X轴刻度
- * QwtPlot* parasiteYRight = figure->createParasiteAxes(hostPlot, QwtAxis::YRight, true, false);
- *
- * // Add curves to both plots
- * // 向两个绘图添加曲线
- * QwtPlotCurve* curve1 = new QwtPlotCurve("Host Curve");
- * curve1->setSamples(xData, yData1);
- * curve1->attach(hostPlot);
- *
- * QwtPlotCurve* curve2 = new QwtPlotCurve("Parasite Curve");
- * curve2->setSamples(xData, yData2);
- * curve2->attach(parasiteYRight);
- *
- * // Set different axis titles
- * // 设置不同的轴标题
- * hostPlot->setAxisTitle(QwtAxis::YLeft, "Primary Y");
- * parasiteYRight->setAxisTitle(QwtAxis::YRight, "Secondary Y");
- * @endcode
- *
- * @see getParasiteAxes()
- *
- * @note 寄生轴必须有figure来管理，这是因为寄生轴仅仅是绘图区域和宿主重叠，坐标窗口的位置都和宿主不一样
+ * \if CHINESE
+ * @brief 为宿主绘图创建寄生轴
+ * @details 此方法创建一个寄生轴，它与宿主绘图共享相同的绘图区域，但具有独立的轴缩放和标签。
+ *          寄生轴将精确定位在宿主绘图之上，并自动同步其几何形状。
+ * @param[in] hostPlot 指向宿主QwtPlot的指针
+ * @param[in] enableAxis 在寄生轴上启用的轴位置
+ * @return 指向创建的寄生QwtPlot的指针
+ * @retval nullptr 如果hostPlot无效或不在图形中则返回nullptr
+ * @note 寄生轴将具有透明背景，只有指定的轴可见。
+ * @note 当宿主绘图从图形中移除时，寄生轴将自动被删除。
+ * @note 寄生轴不会存入QwtFigureLayout中，单独由QwtFigure进行布局控制。
+ * @note 寄生轴必须有figure来管理，这是因为寄生轴仅仅是绘图区域和宿主重叠，坐标窗口的位置都和宿主不一样。
+ * \endif
  */
 QwtPlot* QwtFigure::createParasiteAxes(QwtPlot* hostPlot, QwtAxis::Position enableAxis)
 {
@@ -846,17 +831,21 @@ QwtPlot* QwtFigure::createParasiteAxes(QwtPlot* hostPlot, QwtAxis::Position enab
 }
 
 /**
- * @brief Get all parasite axes for a host plot/获取宿主绘图的所有寄生轴
+ * \if ENGLISH
+ * @brief Get all parasite axes for a host plot
+ * @details This method returns a list of all parasite axes associated with the specified host plot.
+ * @param[in] hostPlot Pointer to the host QwtPlot
+ * @return List of parasite QwtPlot pointers
+ * @retval Empty list if hostPlot is invalid or has no parasite axes
+ * \endif
  *
- * This method returns a list of all parasite axes associated with the specified host plot.
- *
- * 此方法返回与指定宿主绘图关联的所有寄生轴的列表。
- *
- * @param hostPlot Pointer to the host QwtPlot/指向宿主QwtPlot的指针
- * @return List of parasite QwtPlot pointers/寄生QwtPlot指针列表
- * @retval Empty list if hostPlot is invalid or has no parasite axes/如果hostPlot无效或没有寄生轴则返回空列表
- *
- * @see createParasiteAxes()
+ * \if CHINESE
+ * @brief 获取宿主绘图的所有寄生轴
+ * @details 此方法返回与指定宿主绘图关联的所有寄生轴的列表。
+ * @param[in] hostPlot 指向宿主QwtPlot的指针
+ * @return 寄生QwtPlot指针列表
+ * @retval 空列表 如果hostPlot无效或没有寄生轴则返回空列表
+ * \endif
  */
 QList< QwtPlot* > QwtFigure::getParasiteAxes(QwtPlot* hostPlot) const
 {
@@ -867,26 +856,21 @@ QList< QwtPlot* > QwtFigure::getParasiteAxes(QwtPlot* hostPlot) const
 }
 
 /**
- * @brief Save the figure to a QPixmap with specified DPI/使用指定DPI将图形保存为QPixmap
+ * \if ENGLISH
+ * @brief Save the figure to a QPixmap with specified DPI
+ * @details This method renders the figure to a QPixmap with the specified DPI.
+ *          If DPI is -1, the current screen DPI is used.
+ * @param[in] dpi Dots per inch for the saved image (-1 to use screen DPI)
+ * @return QPixmap containing the rendered figure
+ * \endif
  *
- * This method renders the figure to a QPixmap with the specified DPI.
- * If DPI is -1, the current screen DPI is used.
- *
- * 此方法将图形渲染为具有指定DPI的QPixmap。
- * 如果DPI为-1，则使用当前屏幕DPI。
- *
- * @param dpi Dots per inch for the saved image (-1 to use screen DPI) / 保存图像的DPI（-1表示使用屏幕DPI）
- * @return QPixmap containing the rendered figure / 包含渲染图形的QPixmap
- *
- * @code
- * // Save the figure with screen DPI
- * // 使用屏幕DPI保存图形
- * QPixmap pixmap1 = figure.saveFig();
- *
- * // Save the figure with 300 DPI
- * // 使用300 DPI保存图形
- * QPixmap pixmap2 = figure.saveFig(300);
- * @endcode
+ * \if CHINESE
+ * @brief 使用指定DPI将图形保存为QPixmap
+ * @details 此方法将图形渲染为具有指定DPI的QPixmap。
+ *          如果DPI为-1，则使用当前屏幕DPI。
+ * @param[in] dpi 保存图像的DPI（-1表示使用屏幕DPI）
+ * @return 包含渲染图形的QPixmap
+ * \endif
  */
 QPixmap QwtFigure::saveFig(int dpi) const
 {
@@ -943,22 +927,21 @@ QPixmap QwtFigure::saveFig(int dpi) const
 }
 
 /**
- * @brief Save the figure to a QPixmap with specified size in inches/使用指定英寸尺寸将图形保存为QPixmap
+ * \if ENGLISH
+ * @brief Save the figure to a QPixmap with specified size in inches
+ * @details This method renders the figure to a QPixmap with the specified physical size in inches.
+ *          The current DPI setting of the figure is used to calculate the pixel size.
+ * @param[in] inchesSize Physical size in inches
+ * @return QPixmap containing the rendered figure
+ * \endif
  *
- * This method renders the figure to a QPixmap with the specified physical size in inches.
- * The current DPI setting of the figure is used to calculate the pixel size.
- *
- * 此方法将图形渲染为具有指定物理尺寸（英寸）的QPixmap。
- * 使用图形当前的DPI设置来计算像素尺寸。
- *
- * @param inchesSize Physical size in inches / 物理尺寸（英寸）
- * @return QPixmap containing the rendered figure / 包含渲染图形的QPixmap
- *
- * @code
- * // Save the figure as a 6x4 inch image
- * // 将图形保存为6x4英寸的图像
- * QPixmap pixmap = figure.saveFig(QSizeF(6.0, 4.0));
- * @endcode
+ * \if CHINESE
+ * @brief 使用指定英寸尺寸将图形保存为QPixmap
+ * @details 此方法将图形渲染为具有指定物理尺寸（英寸）的QPixmap。
+ *          使用图形当前的DPI设置来计算像素尺寸。
+ * @param[in] inchesSize 物理尺寸（英寸）
+ * @return 包含渲染图形的QPixmap
+ * \endif
  */
 QPixmap QwtFigure::saveFig(QSizeF& inchesSize) const
 {
@@ -1004,25 +987,21 @@ QPixmap QwtFigure::saveFig(QSizeF& inchesSize) const
 }
 
 /**
- * @brief Save the figure to a file with specified DPI/使用指定DPI将图形保存到文件
+ * \if ENGLISH
+ * @brief Save the figure to a file with specified DPI
+ * @details This method saves the figure to an image file with the specified DPI.
+ * @param[in] filename Name of the file to save
+ * @param[in] dpi Dots per inch for the saved image (-1 to use screen DPI)
+ * @return true if saved successfully, false otherwise
+ * \endif
  *
- * This method saves the figure to an image file with the specified DPI.
- *
- * 此方法将图形保存为具有指定DPI的图像文件。
- *
- * @param filename Name of the file to save / 要保存的文件名
- * @param dpi Dots per inch for the saved image (-1 to use screen DPI) / 保存图像的DPI（-1表示使用屏幕DPI）
- * @return true if saved successfully, false otherwise / 成功保存返回true，否则返回false
- *
- * @code
- * // Save the figure with screen DPI
- * // 使用屏幕DPI保存图形
- * figure.saveFig("figure.png");
- *
- * // Save the figure with 300 DPI
- * // 使用300 DPI保存图形
- * figure.saveFig("high_res_figure.png", 300);
- * @endcode
+ * \if CHINESE
+ * @brief 使用指定DPI将图形保存到文件
+ * @details 此方法将图形保存为具有指定DPI的图像文件。
+ * @param[in] filename 要保存的文件名
+ * @param[in] dpi 保存图像的DPI（-1表示使用屏幕DPI）
+ * @return 成功保存返回true，否则返回false
+ * \endif
  */
 bool QwtFigure::saveFig(const QString& filename, int dpi) const
 {
@@ -1031,22 +1010,17 @@ bool QwtFigure::saveFig(const QString& filename, int dpi) const
 }
 
 /**
- * @brief Set the current axes (plot)/设置当前坐标轴（绘图）
+ * \if ENGLISH
+ * @brief Set the current axes (plot)
+ * @details This method sets the specified QwtPlot as the current active axes in the figure.
+ * @param[in] plot QwtPlot to set as current
+ * \endif
  *
- * This method sets the specified QwtPlot as the current active axes in the figure.
- *
- * 此方法将指定的QwtPlot设置为图形中当前活动的坐标轴。
- *
- * @param plot QwtPlot to set as current / 要设置为当前的QwtPlot
- *
- * @code
- * // Set a specific plot as current axes
- * // 将特定绘图设置为当前坐标轴
- * QList<QwtPlot*> plots = figure.getAllAxes();
- * if (!plots.isEmpty()) {
- *     figure.setCurrentAxes(plots.first());  // Set first plot as current
- * }
- * @endcode
+ * \if CHINESE
+ * @brief 设置当前坐标轴（绘图）
+ * @details 此方法将指定的QwtPlot设置为图形中当前活动的坐标轴。
+ * @param[in] plot 要设置为当前的QwtPlot
+ * \endif
  */
 void QwtFigure::setCurrentAxes(QwtPlot* plot)
 {
@@ -1058,9 +1032,17 @@ void QwtFigure::setCurrentAxes(QwtPlot* plot)
 }
 
 /**
- * @brief Set the current axes (plot)/设置当前坐标轴（绘图）
- * @param plot QwtPlot to set as current / 要设置为当前的QwtPlot
- * @sa setCurrentAxes
+ * \if ENGLISH
+ * @brief Set the current axes (plot)
+ * @details This is a convenience method that calls setCurrentAxes.
+ * @param[in] plot QwtPlot to set as current
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置当前坐标轴（绘图）
+ * @details 这是一个便捷方法，调用setCurrentAxes。
+ * @param[in] plot 要设置为当前的QwtPlot
+ * \endif
  */
 void QwtFigure::sca(QwtPlot* plot)
 {
@@ -1068,28 +1050,19 @@ void QwtFigure::sca(QwtPlot* plot)
 }
 
 /**
- * @brief Get the current axes (plot)/获取当前坐标轴（绘图）
+ * \if ENGLISH
+ * @brief Get the current axes (plot)
+ * @details This method returns the current active QwtPlot in the figure.
+ *          The current axes is typically the last axes that was added, modified, or plotted on.
+ * @return Pointer to the current QwtPlot, or nullptr if no axes exist
+ * \endif
  *
- * This method returns the current active QwtPlot in the figure.
- * The current axes is typically the last axes that was added, modified, or plotted on.
- *
- * 此方法返回图形中当前活动的QwtPlot。
- * 当前坐标轴通常是最后添加、修改或绘图的坐标轴。
- *
- * @return Pointer to the current QwtPlot, or nullptr if no axes exist / 指向当前QwtPlot的指针，如果没有坐标轴则返回nullptr
- *
- * @code
- * // Get the current axes and plot some data
- * // 获取当前坐标轴并绘制一些数据
- * QwtPlot* currentPlot = figure.currentAxes();
- * if (currentPlot) {
- *     // Add curve to the current plot
- *     // 在当前绘图中添加曲线
- *     QwtPlotCurve* curve = new QwtPlotCurve;
- *     curve->attach(currentPlot);
- * }
- * @endcode
- * @sa gca
+ * \if CHINESE
+ * @brief 获取当前坐标轴（绘图）
+ * @details 此方法返回图形中当前活动的QwtPlot。
+ *          当前坐标轴通常是最后添加、修改或绘图的坐标轴。
+ * @return 指向当前QwtPlot的指针，如果没有坐标轴则返回nullptr
+ * \endif
  */
 QwtPlot* QwtFigure::currentAxes() const
 {
@@ -1097,9 +1070,17 @@ QwtPlot* QwtFigure::currentAxes() const
 }
 
 /**
- * @brief Get the current axes (plot)/获取当前坐标轴（绘图）
- * @return Pointer to the current QwtPlot, or nullptr if no axes exist / 指向当前QwtPlot的指针，如果没有坐标轴则返回nullptr
- * @sa currentAxes
+ * \if ENGLISH
+ * @brief Get the current axes (plot)
+ * @details This is a convenience method that calls currentAxes.
+ * @return Pointer to the current QwtPlot, or nullptr if no axes exist
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取当前坐标轴（绘图）
+ * @details 这是一个便捷方法，调用currentAxes。
+ * @return 指向当前QwtPlot的指针，如果没有坐标轴则返回nullptr
+ * \endif
  */
 QwtPlot* QwtFigure::gca() const
 {
@@ -1107,27 +1088,20 @@ QwtPlot* QwtFigure::gca() const
 }
 
 /**
- * @brief Get the normalized rectangle for a axes/获取坐标系的归一化矩形
- *
- * This method returns the normalized coordinates [0,1] for the specified axes
- * in the figure. If the axes is not found in the figure, an invalid QRectF is returned.
- *
- * 此方法返回布局中指定坐标系的归一化坐标[0,1]。如果在绘图中未找到该坐标系，则返回无效的QRectF。
- *
- * @param widget Widget to query / 要查询的坐标系
+ * \if ENGLISH
+ * @brief Get the normalized rectangle for a axes
+ * @details This method returns the normalized coordinates [0,1] for the specified axes
+ *          in the figure. If the axes is not found in the figure, an invalid QRectF is returned.
+ * @param[in] widget Widget to query
  * @return Normalized coordinates [left, top, width, height] in range [0,1], or invalid QRectF if not found
- *         归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
+ * \endif
  *
- * @code
- * // Get the normalized position of a widget
- * // 获取窗口部件的归一化位置
- * QRectF normRect = figure->axesNormRect(plot);
- * if (normRect.isValid()) {
- *     qDebug() << "axes position:" << normRect;
- * } else {
- *     qDebug() << "axes not found in figure";
- * }
- * @endcode
+ * \if CHINESE
+ * @brief 获取坐标系的归一化矩形
+ * @details 此方法返回布局中指定坐标系的归一化坐标[0,1]。如果在绘图中未找到该坐标系，则返回无效的QRectF。
+ * @param[in] widget 要查询的坐标系
+ * @return 归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
+ * \endif
  */
 QRectF QwtFigure::axesNormRect(QwtPlot* plot) const
 {
@@ -1136,16 +1110,20 @@ QRectF QwtFigure::axesNormRect(QwtPlot* plot) const
 }
 
 /**
- * @brief Get the normalized rectangle for a widget/获取窗口的归一化矩形
- *
- * This method returns the normalized coordinates [0,1] for the specified axes
- * in the figure. If the widget is not found in the figure, an invalid QRectF is returned.
- *
- * 此方法返回布局中指定坐标系的归一化坐标[0,1]。如果在绘图中未找到该窗口，则返回无效的QRectF。
- *
- * @param widget Widget to query / 要查询的窗口
+ * \if ENGLISH
+ * @brief Get the normalized rectangle for a widget
+ * @details This method returns the normalized coordinates [0,1] for the specified axes
+ *          in the figure. If the widget is not found in the figure, an invalid QRectF is returned.
+ * @param[in] widget Widget to query
  * @return Normalized coordinates [left, top, width, height] in range [0,1], or invalid QRectF if not found
- *         归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取窗口的归一化矩形
+ * @details 此方法返回布局中指定坐标系的归一化坐标[0,1]。如果在绘图中未找到该窗口，则返回无效的QRectF。
+ * @param[in] widget 要查询的窗口
+ * @return 归一化坐标 [左, 上, 宽, 高]，范围 [0,1]，如果未找到则返回无效QRectF
+ * \endif
  */
 QRectF QwtFigure::widgetNormRect(QWidget* w) const
 {
@@ -1154,10 +1132,20 @@ QRectF QwtFigure::widgetNormRect(QWidget* w) const
 }
 
 /**
- * @brief 获取在此坐标下的绘图，如果此坐标下没有，则返回nullptr，存在寄生轴情况只返回宿主轴
- * @note 隐藏的窗口不会获取到
- * @param pos 坐标
- * @return 如果此坐标下没有，则返回nullptr
+ * \if ENGLISH
+ * @brief Get the plot under a position
+ * @details This method returns the QwtPlot under the specified position.
+ *          If no plot is found, nullptr is returned. Hidden windows are not considered.
+ * @param[in] pos Position to query
+ * @return Pointer to the QwtPlot under the position, or nullptr if not found
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取在此坐标下的绘图
+ * @details 此方法返回指定坐标下的QwtPlot。如果此坐标下没有绘图，则返回nullptr。隐藏的窗口不会被获取到。
+ * @param[in] pos 坐标
+ * @return 如果此坐标下没有绘图，则返回nullptr
+ * \endif
  */
 QwtPlot* QwtFigure::plotUnderPos(const QPoint& pos) const
 {
@@ -1178,9 +1166,19 @@ QwtPlot* QwtFigure::plotUnderPos(const QPoint& pos) const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Calculate normalized coordinates from actual window coordinates
+ * @details This method converts actual window coordinates (geometry) to normalized coordinates.
+ * @param[in] geoRect Actual window coordinates (geometry)
+ * @return Normalized coordinates QRectF
+ * \endif
+ *
+ * \if CHINESE
  * @brief 通过真实的窗口坐标计算归一化坐标
- * @param geoRect 真实窗口坐标，就是子窗口的geometry()
- * @return
+ * @details 此方法将真实的窗口坐标（geometry）转换为归一化坐标。
+ * @param[in] geoRect 真实窗口坐标，就是子窗口的geometry()
+ * @return 归一化坐标QRectF
+ * \endif
  */
 QRectF QwtFigure::calcNormRect(const QRect& geoRect) const
 {
@@ -1188,9 +1186,19 @@ QRectF QwtFigure::calcNormRect(const QRect& geoRect) const
 }
 
 /**
- * @brief 通过正则矩形计算真实矩形
- * @param normRect
- * @return
+ * \if ENGLISH
+ * @brief Calculate actual rectangle from normalized coordinates
+ * @details This method converts normalized coordinates to actual window coordinates.
+ * @param[in] normRect Normalized coordinates QRectF
+ * @return Actual window coordinates QRect
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 通过归一化矩形计算真实矩形
+ * @details 此方法将归一化坐标转换为真实的窗口坐标。
+ * @param[in] normRect 归一化坐标QRectF
+ * @return 真实窗口坐标QRect
+ * \endif
  */
 QRect QwtFigure::calcActualRect(const QRectF& normRect)
 {
@@ -1199,7 +1207,15 @@ QRect QwtFigure::calcActualRect(const QRectF& normRect)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Update all plots in the figure
+ * @details This method calls replot on all plots in the figure.
+ * \endif
+ *
+ * \if CHINESE
  * @brief 更新所有的绘图
+ * @details 此方法对所有图形中的绘图调用replot。
+ * \endif
  */
 void QwtFigure::replotAll()
 {
@@ -1210,9 +1226,19 @@ void QwtFigure::replotAll()
 }
 
 /**
+ * \if ENGLISH
+ * @brief Add axis alignment configuration
+ * @details This method adds an alignment configuration for the specified plots and axis.
+ * @param[in] plots List of plots to align
+ * @param[in] axisId Axis ID to align (QwtAxis::XTop/XBottom/YLeft/YRight)
+ * \endif
+ *
+ * \if CHINESE
  * @brief 添加轴对齐配置
- * @param plots 需要对齐的plot列表
- * @param axisId 要对齐的轴ID（QwtAxis::XTop/XBottom/YLeft/YRight）
+ * @details 此方法添加指定绘图和轴的对齐配置。
+ * @param[in] plots 需要对齐的plot列表
+ * @param[in] axisId 要对齐的轴ID（QwtAxis::XTop/XBottom/YLeft/YRight）
+ * \endif
  */
 void QwtFigure::addAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
 {
@@ -1240,10 +1266,21 @@ void QwtFigure::addAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Remove specified axis alignment configuration
+ * @details This method removes the alignment configuration for the specified plots and axis.
+ * @param[in] plots List of plots to remove from alignment
+ * @param[in] axisId Axis ID to remove from alignment
+ * @return true if successfully removed, false otherwise
+ * \endif
+ *
+ * \if CHINESE
  * @brief 移除指定的轴对齐配置
- * @param plots 需要移除的对齐配置中的plot列表
- * @param axisId 要移除的对齐配置中的轴ID
+ * @details 此方法移除指定绘图和轴的对齐配置。
+ * @param[in] plots 需要移除的对齐配置中的plot列表
+ * @param[in] axisId 要移除的对齐配置中的轴ID
  * @return 是否成功移除
+ * \endif
  */
 bool QwtFigure::removeAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
 {
@@ -1264,7 +1301,15 @@ bool QwtFigure::removeAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
     return removed;
 }
 /**
+ * \if ENGLISH
+ * @brief Clear all axis alignment configurations
+ * @details This method removes all alignment configurations from the figure.
+ * \endif
+ *
+ * \if CHINESE
  * @brief 清除所有轴对齐配置
+ * @details 此方法移除图形中的所有对齐配置。
+ * \endif
  */
 void QwtFigure::clearAxisAlignment()
 {
@@ -1272,7 +1317,17 @@ void QwtFigure::clearAxisAlignment()
 }
 
 /**
- * @brief 应用所有轴对齐配置，对记录的plot和轴进行对齐
+ * \if ENGLISH
+ * @brief Apply all axis alignment configurations
+ * @details This method applies all recorded alignment configurations to the plots.
+ * @param[in] replot If true, replot all affected plots after alignment
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 应用所有轴对齐配置
+ * @details 此方法对所有记录的对齐配置进行对齐。
+ * @param[in] replot 如果为true，对齐后重新绘制所有受影响的绘图
+ * \endif
  */
 void QwtFigure::applyAllAxisAlignments(bool replot)
 {
@@ -1282,8 +1337,17 @@ void QwtFigure::applyAllAxisAlignments(bool replot)
 }
 
 /**
+ * \if ENGLISH
+ * @brief Apply alignment configurations for a specific axis
+ * @details This method applies all alignment configurations for the specified axis ID.
+ * @param[in] axisId Axis ID to apply alignments for
+ * \endif
+ *
+ * \if CHINESE
  * @brief 应用指定轴ID的所有对齐配置
- * @param axisId 轴ID
+ * @details 此方法应用指定轴ID的所有对齐配置。
+ * @param[in] axisId 轴ID
+ * \endif
  */
 void QwtFigure::applyAlignmentsForAxis(int axisId)
 {
@@ -1299,10 +1363,17 @@ void QwtFigure::applyAlignmentsForAxis(int axisId)
 }
 
 /**
- * @brief 获取轴对齐信息数量，此函数用于获取当前有多少个轴对齐信息
+ * \if ENGLISH
+ * @brief Get the number of axis alignment configurations
+ * @details This method returns the count of alignment configurations added via addAxisAlignment.
+ * @return Number of alignment configurations
+ * \endif
  *
- * 调用addAxisAlignment多少次，就有多少个轴对齐信息,通过@ref axisAligmentInfo可以获取到具体的轴对齐信息
- * @return
+ * \if CHINESE
+ * @brief 获取轴对齐信息数量
+ * @details 此函数用于获取当前有多少个轴对齐信息。调用addAxisAlignment多少次，就有多少个轴对齐信息。
+ * @return 轴对齐配置数量
+ * \endif
  */
 int QwtFigure::axisAligmentCount() const
 {
@@ -1310,9 +1381,19 @@ int QwtFigure::axisAligmentCount() const
 }
 
 /**
- * @brief QwtFigure::axisAligmentInfo
- * @param index
- * @return
+ * \if ENGLISH
+ * @brief Get axis alignment information by index
+ * @details This method returns the alignment configuration at the specified index.
+ * @param[in] index Index of the alignment configuration to retrieve
+ * @return QPair containing the plot list and axis ID
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取轴对齐信息
+ * @details 此方法返回指定索引的对齐配置信息。
+ * @param[in] index 对齐配置的索引
+ * @return QPair包含plot列表和轴ID
+ * \endif
  */
 QPair<QList<QwtPlot*>, int> QwtFigure::axisAligmentInfo(int index) const
 {
@@ -1324,13 +1405,29 @@ QPair<QList<QwtPlot*>, int> QwtFigure::axisAligmentInfo(int index) const
 }
 
 /**
+ * \if ENGLISH
+ * @brief Align axes of multiple plots
+ * @details This function unifies the minimumExtent and minBorderDist of the specified axis
+ *          to ensure visual alignment of axes.
+ * @param[in] plots List of QwtPlot to align (must be non-empty)
+ * @param[in] axisId Axis ID to align (QwtAxis::XTop/XBottom/YLeft/YRight)
+ * @param[in] replot If true, update layout and replot after alignment
+ * @note This function should be called after widget initialization (e.g., in showEvent/resizeEvent).
+ * @note Supports any number of plots and any valid axis type, adapting to horizontal/vertical layouts.
+ * @note Do not pass parasite axes, currently only supports host axes.
+ * \endif
+ *
+ * \if CHINESE
  * @brief QwtPlot轴对齐函数
- * @param plots 待对齐的QwtPlot列表（非空）
- * @param axisId 要对齐的轴ID（QwtAxis::XTop/XBottom/YLeft/YRight）
- * @note 1. 函数会统一指定轴的minimumExtent和minBorderDist，确保轴视觉对齐；
- *       2. 需在控件初始化完成后调用（如showEvent/resizeEvent中）；
- *       3. 支持任意数量Plot、任意合法轴类型，适配水平/垂直布局。
- *       4. 不要传入寄生轴，目前仅支持宿主轴
+ * @details 此函数统一指定轴的minimumExtent和minBorderDist，确保轴视觉对齐。
+ * @param[in] plots 待对齐的QwtPlot列表（非空）
+ * @param[in] axisId 要对齐的轴ID（QwtAxis::XTop/XBottom/YLeft/YRight）
+ * @param[in] replot 如果为true，对齐后更新布局并重新绘制
+ * @note 函数会统一指定轴的minimumExtent和minBorderDist，确保轴视觉对齐。
+ * @note 需在控件初始化完成后调用（如showEvent/resizeEvent中）。
+ * @note 支持任意数量Plot、任意合法轴类型，适配水平/垂直布局。
+ * @note 不要传入寄生轴，目前仅支持宿主轴。
+ * \endif
  */
 void QwtFigure::alignAxes(QList< QwtPlot* > plots, int axisId, bool update)
 {

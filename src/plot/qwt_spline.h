@@ -274,43 +274,43 @@ class QWT_EXPORT QwtSpline
         LinearRunout
     };
 
-    /// \if ENGLISH Constructor \endif \if CHINESE 构造函数 \endif
+    //! Constructor
     QwtSpline();
-    /// \if ENGLISH Destructor \endif \if CHINESE 析构函数 \endif
+    //! Destructor
     virtual ~QwtSpline();
 
-    /// \if ENGLISH Set parametrization by type \endif \if CHINESE 按类型设置参数化 \endif
+    //! Set parametrization by type
     void setParametrization( int type );
-    /// \if ENGLISH Set parametrization object \endif \if CHINESE 设置参数化对象 \endif
+    //! Set parametrization object
     void setParametrization( QwtSplineParametrization* );
-    /// \if ENGLISH Get parametrization \endif \if CHINESE 获取参数化 \endif
+    //! Get parametrization
     const QwtSplineParametrization* parametrization() const;
 
-    /// \if ENGLISH Set boundary type \endif \if CHINESE 设置边界类型 \endif
+    //! Set boundary type
     void setBoundaryType( BoundaryType );
-    /// \if ENGLISH Get boundary type \endif \if CHINESE 获取边界类型 \endif
+    //! Get boundary type
     BoundaryType boundaryType() const;
 
-    /// \if ENGLISH Set boundary value \endif \if CHINESE 设置边界值 \endif
+    //! Set boundary value
     void setBoundaryValue( BoundaryPosition, double value );
-    /// \if ENGLISH Get boundary value \endif \if CHINESE 获取边界值 \endif
+    //! Get boundary value
     double boundaryValue( BoundaryPosition ) const;
 
-    /// \if ENGLISH Set boundary condition \endif \if CHINESE 设置边界条件 \endif
+    //! Set boundary condition
     void setBoundaryCondition( BoundaryPosition, int condition );
-    /// \if ENGLISH Get boundary condition \endif \if CHINESE 获取边界条件 \endif
+    //! Get boundary condition
     int boundaryCondition( BoundaryPosition ) const;
 
-    /// \if ENGLISH Set boundary conditions for both ends \endif \if CHINESE 为两端设置边界条件 \endif
+    //! Set boundary conditions for both ends
     void setBoundaryConditions( int condition,
         double valueBegin = 0.0, double valueEnd = 0.0 );
 
-    /// \if ENGLISH Get polygon approximation with tolerance \endif \if CHINESE 获取带容差的多边形逼近 \endif
+    //! Get polygon approximation with tolerance
     virtual QPolygonF polygon( const QPolygonF&, double tolerance ) const;
-    /// \if ENGLISH Get painter path from polygon \endif \if CHINESE 从多边形获取绘制路径 \endif
+    //! Get painter path from polygon (pure virtual)
     virtual QPainterPath painterPath( const QPolygonF& ) const = 0;
 
-    /// \if ENGLISH Get locality (number of points used for calculation) \endif \if CHINESE 获取局部性（用于计算的点数） \endif
+    //! Get locality (number of points used for calculation)
     virtual uint locality() const;
 
   private:
@@ -320,11 +320,19 @@ class QWT_EXPORT QwtSpline
     PrivateData* m_data;
 };
 
-/*!
-   \brief Base class for a spline interpolation
-
-   Spline interpolation is the process of interpolating a set of points
-   piecewise with polynomials. The initial set of points is preserved.
+/**
+ * \if ENGLISH
+ * @brief Base class for spline interpolation
+ *
+ * Spline interpolation is the process of interpolating a set of points
+ * piecewise with polynomials. The initial set of points is preserved.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 样条插值基类
+ *
+ * 样条插值是用多项式分段插值一组点的过程。初始点集被保留。
+ * \endif
  */
 class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 {
@@ -345,9 +353,18 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
     Q_DISABLE_COPY(QwtSplineInterpolating)
 };
 
-/*!
-   \brief Base class for spline interpolations providing a
-         first order geometric continuity ( G1 ) between adjoining curves
+/**
+ * \if ENGLISH
+ * @brief Base class for spline interpolations with G1 (first order geometric) continuity
+ *
+ * Provides first order geometric continuity (G1) between adjoining curves.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 提供 G1（一阶几何）连续性的样条插值基类
+ *
+ * 在相邻曲线之间提供一阶几何连续性 (G1)。
+ * \endif
  */
 class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
 {
@@ -356,17 +373,28 @@ class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
     virtual ~QwtSplineG1();
 };
 
-/*!
-   \brief Base class for spline interpolations providing a
-         first order parametric continuity ( C1 ) between adjoining curves
-
-   All interpolations with C1 continuity are based on rules for finding
-   the 1. derivate at some control points.
-
-   In case of non parametric splines those points are the curve points, while
-   for parametric splines the calculation is done twice using a parameter value t.
-
-   \sa QwtSplineParametrization
+/**
+ * \if ENGLISH
+ * @brief Base class for spline interpolations with C1 (first order parametric) continuity
+ *
+ * All interpolations with C1 continuity are based on rules for finding
+ * the first derivative at some control points.
+ *
+ * For non-parametric splines those points are the curve points, while
+ * for parametric splines the calculation is done twice using a parameter value t.
+ *
+ * \sa QwtSplineParametrization
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 提供 C1（一阶参数）连续性的样条插值基类
+ *
+ * 所有具有 C1 连续性的插值都基于在某些控制点处寻找一阶导数的规则。
+ *
+ * 对于非参数样条，这些点是曲线点；对于参数样条，使用参数值 t 进行两次计算。
+ *
+ * \sa QwtSplineParametrization
+ * \endif
  */
 class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
@@ -388,17 +416,28 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
     virtual double slopeAtEnd( const QPolygonF&, double slopeBefore ) const;
 };
 
-/*!
-   \brief Base class for spline interpolations providing a
-         second order parametric continuity ( C2 ) between adjoining curves
-
-   All interpolations with C2 continuity are based on rules for finding
-   the 2. derivate at some control points.
-
-   In case of non parametric splines those points are the curve points, while
-   for parametric splines the calculation is done twice using a parameter value t.
-
-   \sa QwtSplineParametrization
+/**
+ * \if ENGLISH
+ * @brief Base class for spline interpolations with C2 (second order parametric) continuity
+ *
+ * All interpolations with C2 continuity are based on rules for finding
+ * the second derivative at some control points.
+ *
+ * For non-parametric splines those points are the curve points, while
+ * for parametric splines the calculation is done twice using a parameter value t.
+ *
+ * \sa QwtSplineParametrization
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 提供 C2（二阶参数）连续性的样条插值基类
+ *
+ * 所有具有 C2 连续性的插值都基于在某些控制点处寻找二阶导数的规则。
+ *
+ * 对于非参数样条，这些点是曲线点；对于参数样条，使用参数值 t 进行两次计算。
+ *
+ * \sa QwtSplineParametrization
+ * \endif
  */
 class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 {

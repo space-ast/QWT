@@ -55,9 +55,11 @@ QwtCurveFitter::~QwtCurveFitter()
 
 /**
  * \if ENGLISH
+ * @brief Get the preferred fitting mode
  * @return Preferred fitting mode
  * \endif
  * \if CHINESE
+ * @brief 获取首选拟合模式
  * @return 首选拟合模式
  * \endif
  */

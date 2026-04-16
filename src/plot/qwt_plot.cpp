@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  * Qwt Widget Library
  * Copyright (C) 1997   Josef Wilgen
  * Copyright (C) 2002   Uwe Rathmann
@@ -148,26 +148,55 @@ QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
 // QwtPlot
 //----------------------------------------------------
 
-/*!
-   \brief Constructor
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] parent Parent widget
+ * @details Creates a QwtPlot widget with an empty title.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] parent 父部件
+ * @details 创建一个带有空标题的 QwtPlot 部件。
+ * \endif
  */
 QwtPlot::QwtPlot(QWidget* parent) : QFrame(parent), QWT_PIMPL_CONSTRUCT
 {
     initPlot(QwtText());
 }
 
-/*!
-   \brief Constructor
-   \param title Title text
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ * @brief Constructor with title
+ * @param[in] title Title text
+ * @param[in] parent Parent widget
+ * @details Creates a QwtPlot widget with the specified title.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 带标题的构造函数
+ * @param[in] title 标题文本
+ * @param[in] parent 父部件
+ * @details 创建一个带有指定标题的 QwtPlot 部件。
+ * \endif
  */
 QwtPlot::QwtPlot(const QwtText& title, QWidget* parent) : QFrame(parent), QWT_PIMPL_CONSTRUCT
 {
     initPlot(title);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * @details Detaches all plot items and deletes the layout and axis data.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * @details 分离所有绘图项并删除布局和坐标轴数据。
+ * \endif
+ */
 QwtPlot::~QwtPlot()
 {
     setAutoReplot(false);
@@ -352,7 +381,18 @@ bool QwtPlot::eventFilter(QObject* object, QEvent* e)
     return QFrame::eventFilter(object, e);
 }
 
-//! Replots the plot if autoReplot() is \c true.
+/**
+ * \if ENGLISH
+ * @brief Replots the plot if autoReplot() is enabled
+ * @details This method is called internally when plot properties change
+ *          and autoReplot is enabled.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 如果 autoReplot() 启用则重绘绘图
+ * @details 当绘图属性更改且 autoReplot 启用时，此方法会在内部被调用。
+ * \endif
+ */
 void QwtPlot::autoRefresh()
 {
     if (m_data->autoReplot) {
@@ -380,9 +420,17 @@ void QwtPlot::setAutoReplot(bool tf)
     m_data->autoReplot = tf;
 }
 
-/*!
-   \return true if the autoReplot option is set.
-   \sa setAutoReplot()
+/**
+ * \if ENGLISH
+ * @brief Check if autoReplot option is enabled
+ * @return true if the autoReplot option is set
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 检查自动重绘选项是否启用
+ * @return 如果设置了 autoReplot 选项则返回 true
+ * \endif
+ * @sa setAutoReplot()
  */
 bool QwtPlot::autoReplot() const
 {
@@ -416,9 +464,16 @@ QString QwtPlot::plotId() const
     return m_data->plotId;
 }
 
-/*!
-   Change the plot's title
-   \param title New title
+/**
+ * \if ENGLISH
+ * @brief Change the plot's title
+ * @param[in] title New title as a string
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改绘图的标题
+ * @param[in] title 新标题字符串
+ * \endif
  */
 void QwtPlot::setTitle(const QString& title)
 {
@@ -428,9 +483,16 @@ void QwtPlot::setTitle(const QString& title)
     }
 }
 
-/*!
-   Change the plot's title
-   \param title New title
+/**
+ * \if ENGLISH
+ * @brief Change the plot's title
+ * @param[in] title New title as a string
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改绘图的标题
+ * @param[in] title 新标题字符串
+ * \endif
  */
 void QwtPlot::setTitle(const QwtText& title)
 {
@@ -440,27 +502,64 @@ void QwtPlot::setTitle(const QwtText& title)
     }
 }
 
-//! \return Title of the plot
+/**
+ * \if ENGLISH
+ * @brief Get the plot's title
+ * @return Title of the plot
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的标题
+ * @return 绘图的标题
+ * \endif
+ */
 QwtText QwtPlot::title() const
 {
     return m_data->titleLabel->text();
 }
 
-//! \return Title label widget.
+/**
+ * \if ENGLISH
+ * @brief Get the title label widget
+ * @return Title label widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标题标签部件
+ * @return 标题标签部件
+ * \endif
+ */
 QwtTextLabel* QwtPlot::titleLabel()
 {
     return m_data->titleLabel;
 }
 
-//! \return Title label widget.
+/**
+ * \if ENGLISH
+ * @brief Get the title label widget
+ * @return Title label widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取标题标签部件
+ * @return 标题标签部件
+ * \endif
+ */
 const QwtTextLabel* QwtPlot::titleLabel() const
 {
     return m_data->titleLabel;
 }
 
-/*!
-   Change the text the footer
-   \param text New text of the footer
+/**
+ * \if ENGLISH
+ * @brief Change the footer text
+ * @param[in] text New text of the footer as a string
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改页脚文本
+ * @param[in] text 新的页脚文本字符串
+ * \endif
  */
 void QwtPlot::setFooter(const QString& text)
 {
@@ -470,9 +569,16 @@ void QwtPlot::setFooter(const QString& text)
     }
 }
 
-/*!
-   Change the text the footer
-   \param text New text of the footer
+/**
+ * \if ENGLISH
+ * @brief Change the footer text
+ * @param[in] text New text of the footer as a string
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改页脚文本
+ * @param[in] text 新的页脚文本字符串
+ * \endif
  */
 void QwtPlot::setFooter(const QwtText& text)
 {
@@ -482,19 +588,49 @@ void QwtPlot::setFooter(const QwtText& text)
     }
 }
 
-//! \return Text of the footer
+/**
+ * \if ENGLISH
+ * @brief Get the footer text
+ * @return Text of the footer
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取页脚文本
+ * @return 页脚的文本
+ * \endif
+ */
 QwtText QwtPlot::footer() const
 {
     return m_data->footerLabel->text();
 }
 
-//! \return Footer label widget.
+/**
+ * \if ENGLISH
+ * @brief Get the footer label widget
+ * @return Footer label widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取页脚标签部件
+ * @return 页脚标签部件
+ * \endif
+ */
 QwtTextLabel* QwtPlot::footerLabel()
 {
     return m_data->footerLabel;
 }
 
-//! \return Footer label widget.
+/**
+ * \if ENGLISH
+ * @brief Get the footer label widget
+ * @return Footer label widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取页脚标签部件
+ * @return 页脚标签部件
+ * \endif
+ */
 const QwtTextLabel* QwtPlot::footerLabel() const
 {
     return m_data->footerLabel;
@@ -516,46 +652,98 @@ void QwtPlot::setPlotLayout(QwtPlotLayout* layout)
     }
 }
 
-//! \return the plot's layout
+/**
+ * \if ENGLISH
+ * @brief Get the plot's layout
+ * @return The plot's layout
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的布局
+ * @return 绘图的布局
+ * \endif
+ */
 QwtPlotLayout* QwtPlot::plotLayout()
 {
     return m_data->layout;
 }
 
-//! \return the plot's layout
+/**
+ * \if ENGLISH
+ * @brief Get the plot's layout
+ * @return The plot's layout
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的布局
+ * @return 绘图的布局
+ * \endif
+ */
 const QwtPlotLayout* QwtPlot::plotLayout() const
 {
     return m_data->layout;
 }
 
-/*!
-   \return the plot's legend
-   \sa insertLegend()
+/**
+ * \if ENGLISH
+ * @brief Get the plot's legend
+ * @return The plot's legend
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的图例
+ * @return 绘图的图例
+ * \endif
+ * @sa insertLegend()
  */
 QwtAbstractLegend* QwtPlot::legend()
 {
     return m_data->legend;
 }
 
-/*!
-   \return the plot's legend
-   \sa insertLegend()
+/**
+ * \if ENGLISH
+ * @brief Get the plot's legend
+ * @return The plot's legend
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的图例
+ * @return 绘图的图例
+ * \endif
+ * @sa insertLegend()
  */
 const QwtAbstractLegend* QwtPlot::legend() const
 {
     return m_data->legend;
 }
 
-/*!
-   \return the plot's canvas
+/**
+ * \if ENGLISH
+ * @brief Get the plot's canvas
+ * @return The plot's canvas widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的画布
+ * @return 绘图的画布部件
+ * \endif
  */
 QWidget* QwtPlot::canvas()
 {
     return m_data->canvas;
 }
 
-/*!
-   \return the plot's canvas
+/**
+ * \if ENGLISH
+ * @brief Get the plot's canvas
+ * @return The plot's canvas widget
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取绘图的画布
+ * @return 绘图的画布部件
+ * \endif
  */
 const QWidget* QwtPlot::canvas() const
 {

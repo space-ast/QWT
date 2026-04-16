@@ -58,9 +58,16 @@ class QwtPlotAbstractBarChart::PrivateData
     double baseline;
 };
 
-/*!
-   Constructor
-   \param title Title of the chart
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 图表的标题
+ * \endif
  */
 QwtPlotAbstractBarChart::QwtPlotAbstractBarChart( const QwtText& title )
     : QwtPlotSeriesItem( title )
@@ -73,19 +80,35 @@ QwtPlotAbstractBarChart::QwtPlotAbstractBarChart( const QwtText& title )
     setZ( 19.0 );
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotAbstractBarChart::~QwtPlotAbstractBarChart()
 {
     delete m_data;
 }
 
-/*!
-   The combination of layoutPolicy() and layoutHint() define how the width
-   of the bars is calculated
-
-   \param policy Layout policy
-
-   \sa layoutPolicy(), layoutHint()
+/**
+ * \if ENGLISH
+ * @brief Set the layout policy
+ * @details The combination of layoutPolicy() and layoutHint() define how the width
+ *          of the bars is calculated.
+ * @param[in] policy Layout policy
+ * @sa layoutPolicy(), layoutHint()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置布局策略
+ * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
+ * @param[in] policy 布局策略
+ * @sa layoutPolicy(), layoutHint()
+ * \endif
  */
 void QwtPlotAbstractBarChart::setLayoutPolicy( LayoutPolicy policy )
 {
@@ -96,25 +119,42 @@ void QwtPlotAbstractBarChart::setLayoutPolicy( LayoutPolicy policy )
     }
 }
 
-/*!
-   The combination of layoutPolicy() and layoutHint() define how the width
-   of the bars is calculated
-
-   \return Layout policy of the chart item
-   \sa setLayoutPolicy(), layoutHint()
+/**
+ * \if ENGLISH
+ * @brief Get the layout policy
+ * @details The combination of layoutPolicy() and layoutHint() define how the width
+ *          of the bars is calculated.
+ * @return Layout policy of the chart item
+ * @sa setLayoutPolicy(), layoutHint()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取布局策略
+ * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
+ * @return 图表项的布局策略
+ * @sa setLayoutPolicy(), layoutHint()
+ * \endif
  */
 QwtPlotAbstractBarChart::LayoutPolicy QwtPlotAbstractBarChart::layoutPolicy() const
 {
     return m_data->layoutPolicy;
 }
 
-/*!
-   The combination of layoutPolicy() and layoutHint() define how the width
-   of the bars is calculated
-
-   \param hint Layout hint
-
-   \sa LayoutPolicy, layoutPolicy(), layoutHint()
+/**
+ * \if ENGLISH
+ * @brief Set the layout hint
+ * @details The combination of layoutPolicy() and layoutHint() define how the width
+ *          of the bars is calculated.
+ * @param[in] hint Layout hint
+ * @sa LayoutPolicy, layoutPolicy(), layoutHint()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置布局提示
+ * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
+ * @param[in] hint 布局提示
+ * @sa LayoutPolicy, layoutPolicy(), layoutHint()
+ * \endif
  */
 void QwtPlotAbstractBarChart::setLayoutHint( double hint )
 {
@@ -126,25 +166,43 @@ void QwtPlotAbstractBarChart::setLayoutHint( double hint )
     }
 }
 
-/*!
-   The combination of layoutPolicy() and layoutHint() define how the width
-   of the bars is calculated
-
-   \return Layout policy of the chart item
-   \sa LayoutPolicy, setLayoutHint(), layoutPolicy()
+/**
+ * \if ENGLISH
+ * @brief Get the layout hint
+ * @details The combination of layoutPolicy() and layoutHint() define how the width
+ *          of the bars is calculated.
+ * @return Layout hint of the chart item
+ * @sa LayoutPolicy, setLayoutHint(), layoutPolicy()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取布局提示
+ * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
+ * @return 图表项的布局提示
+ * @sa LayoutPolicy, setLayoutHint(), layoutPolicy()
+ * \endif
  */
 double QwtPlotAbstractBarChart::layoutHint() const
 {
     return m_data->layoutHint;
 }
 
-/*!
-   \brief Set the spacing
-
-   The spacing is the distance between 2 samples ( bars for QwtPlotBarChart or
-   a group of bars for QwtPlotMultiBarChart ) in paint device coordinates.
-
-   \sa spacing()
+/**
+ * \if ENGLISH
+ * @brief Set the spacing between bars
+ * @details The spacing is the distance between 2 samples ( bars for QwtPlotBarChart or
+ *          a group of bars for QwtPlotMultiBarChart ) in paint device coordinates.
+ * @param[in] spacing Spacing in pixels
+ * @sa spacing()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置条形之间的间距
+ * @details 间距是两个样本之间的距离（QwtPlotBarChart 的条形或 QwtPlotMultiBarChart 的条形组）
+ *          ，以绘图设备坐标表示。
+ * @param[in] spacing 间距（像素）
+ * @sa spacing()
+ * \endif
  */
 void QwtPlotAbstractBarChart::setSpacing( int spacing )
 {
@@ -156,23 +214,39 @@ void QwtPlotAbstractBarChart::setSpacing( int spacing )
     }
 }
 
-/*!
-   \return Spacing between 2 samples ( bars or groups of bars )
-   \sa setSpacing(), margin()
+/**
+ * \if ENGLISH
+ * @brief Get the spacing between bars
+ * @return Spacing between 2 samples ( bars or groups of bars )
+ * @sa setSpacing(), margin()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取条形之间的间距
+ * @return 两个样本之间的间距（条形或条形组）
+ * @sa setSpacing(), margin()
+ * \endif
  */
 int QwtPlotAbstractBarChart::spacing() const
 {
     return m_data->spacing;
 }
-/*!
-   \brief Set the margin
-
-   The margin is the distance between the outmost bars and the contentsRect()
-   of the canvas. The default setting is 5 pixels.
-
-   \param margin Margin
-
-   \sa spacing(), margin()
+/**
+ * \if ENGLISH
+ * @brief Set the margin around the bars
+ * @details The margin is the distance between the outmost bars and the contentsRect()
+ *          of the canvas. The default setting is 5 pixels.
+ * @param[in] margin Margin in pixels
+ * @sa spacing(), margin()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置条形周围的边距
+ * @details 边距是最外侧条形与画布 contentsRect() 之间的距离。
+ *          默认设置为 5 像素。
+ * @param[in] margin 边距（像素）
+ * @sa spacing(), margin()
+ * \endif
  */
 void QwtPlotAbstractBarChart::setMargin( int margin )
 {
@@ -184,30 +258,44 @@ void QwtPlotAbstractBarChart::setMargin( int margin )
     }
 }
 
-/*!
-   \return Margin between the outmost bars and the contentsRect()
-   of the canvas.
-
-   \sa setMargin(), spacing()
+/**
+ * \if ENGLISH
+ * @brief Get the margin around the bars
+ * @return Margin between the outmost bars and the contentsRect() of the canvas.
+ * @sa setMargin(), spacing()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取条形周围的边距
+ * @return 最外侧条形与画布 contentsRect() 之间的边距。
+ * @sa setMargin(), spacing()
+ * \endif
  */
 int QwtPlotAbstractBarChart::margin() const
 {
     return m_data->margin;
 }
 
-/*!
-   \brief Set the baseline
-
-   The baseline is the origin for the chart. Each bar is
-   painted from the baseline in the direction of the sample
-   value. In case of a horizontal orientation() the baseline
-   is interpreted as x - otherwise as y - value.
-
-   The default value for the baseline is 0.
-
-   \param value Value for the baseline
-
-   \sa baseline(), QwtPlotSeriesItem::orientation()
+/**
+ * \if ENGLISH
+ * @brief Set the baseline value
+ * @details The baseline is the origin for the chart. Each bar is
+ *          painted from the baseline in the direction of the sample
+ *          value. In case of a horizontal orientation() the baseline
+ *          is interpreted as x - otherwise as y - value.
+ *          The default value for the baseline is 0.
+ * @param[in] value Value for the baseline
+ * @sa baseline(), QwtPlotSeriesItem::orientation()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置基线值
+ * @details 基线是图表的原点。每个条形从基线向样本值的方向绘制。
+ *          如果是水平方向，基线被解释为 x 值，否则为 y 值。
+ *          基线的默认值为 0。
+ * @param[in] value 基线值
+ * @sa baseline(), QwtPlotSeriesItem::orientation()
+ * \endif
  */
 void QwtPlotAbstractBarChart::setBaseline( double value )
 {
@@ -218,9 +306,18 @@ void QwtPlotAbstractBarChart::setBaseline( double value )
     }
 }
 
-/*!
-   \return Value for the origin of the bar chart
-   \sa setBaseline(), QwtPlotSeriesItem::orientation()
+/**
+ * \if ENGLISH
+ * @brief Get the baseline value
+ * @return Value for the origin of the bar chart
+ * @sa setBaseline(), QwtPlotSeriesItem::orientation()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取基线值
+ * @return 条形图的原点值
+ * @sa setBaseline(), QwtPlotSeriesItem::orientation()
+ * \endif
  */
 double QwtPlotAbstractBarChart::baseline() const
 {
@@ -281,27 +378,39 @@ double QwtPlotAbstractBarChart::sampleWidth( const QwtScaleMap& map,
     return width;
 }
 
-/*!
-   \brief Calculate a hint for the canvas margin
-
-   Bar charts need to reserve some space for displaying the bars
-   for the first and the last sample.  The hint is calculated
-   from the layoutHint() depending on the layoutPolicy().
-
-   The margins are in target device coordinates ( pixels on screen )
-
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas in painter coordinates
-   \param left Returns the left margin
-   \param top Returns the top margin
-   \param right Returns the right margin
-   \param bottom Returns the bottom margin
-
-   \return Margin
-
-   \sa layoutPolicy(), layoutHint(), QwtPlotItem::Margins
-       QwtPlot::getCanvasMarginsHint(), QwtPlot::updateCanvasMargins()
+/**
+ * \if ENGLISH
+ * @brief Calculate a hint for the canvas margin
+ * @details Bar charts need to reserve some space for displaying the bars
+ *          for the first and the last sample. The hint is calculated
+ *          from the layoutHint() depending on the layoutPolicy().
+ *          The margins are in target device coordinates ( pixels on screen ).
+ * @param[in] xMap Maps x-values into pixel coordinates.
+ * @param[in] yMap Maps y-values into pixel coordinates.
+ * @param[in] canvasRect Contents rectangle of the canvas in painter coordinates
+ * @param[out] left Returns the left margin
+ * @param[out] top Returns the top margin
+ * @param[out] right Returns the right margin
+ * @param[out] bottom Returns the bottom margin
+ * @sa layoutPolicy(), layoutHint(), QwtPlotItem::Margins,
+ *     QwtPlot::getCanvasMarginsHint(), QwtPlot::updateCanvasMargins()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 计算画布边距的提示
+ * @details 条形图需要预留一些空间来显示第一个和最后一个样本的条形。
+ *          提示是根据 layoutPolicy() 从 layoutHint() 计算的。
+ *          边距以目标设备坐标（屏幕上的像素）表示。
+ * @param[in] xMap 将 x 值映射到像素坐标。
+ * @param[in] yMap 将 y 值映射到像素坐标。
+ * @param[in] canvasRect 画布的内容矩形（绘图坐标）
+ * @param[out] left 返回左边距
+ * @param[out] top 返回上边距
+ * @param[out] right 返回右边距
+ * @param[out] bottom 返回下边距
+ * @sa layoutPolicy(), layoutHint(), QwtPlotItem::Margins,
+ *     QwtPlot::getCanvasMarginsHint(), QwtPlot::updateCanvasMargins()
+ * \endif
  */
 void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap& xMap,
     const QwtScaleMap& yMap, const QRectF& canvasRect,

@@ -12,13 +12,22 @@
 #include "qwt_global.h"
 #include "qwt_polar_plot.h"
 
-/*!
-   \brief Layout class for QwtPolarPlot.
-
-   Organizes the geometry for the different QwtPolarPlot components.
-   It is used by the QwtPolar widget to organize its internal widgets
-   or by QwtPolarRnderer to render its content to a QPaintDevice like
-   a QPrinter, QPixmap/QImage or QSvgRenderer.
+/**
+ * \if ENGLISH
+ * @brief Layout class for QwtPolarPlot
+ * @details Organizes the geometry for the different QwtPolarPlot components.
+ *          It is used by the QwtPolar widget to organize its internal widgets
+ *          or by QwtPolarRenderer to render its content to a QPaintDevice like
+ *          a QPrinter, QPixmap/QImage or QSvgRenderer.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief QwtPolarPlot 的布局类
+ * @details 为不同的 QwtPolarPlot 组件组织几何形状。
+ *          它被 QwtPolar 控件用于组织其内部控件，
+ *          或被 QwtPolarRenderer 用于将内容渲染到 QPaintDevice，
+ *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
+ * \endif
  */
 class QWT_EXPORT QwtPolarLayout
 {
@@ -42,23 +51,35 @@ class QWT_EXPORT QwtPolarLayout
 
     Q_DECLARE_FLAGS( Options, Option )
 
+    /// Constructor
     explicit QwtPolarLayout();
+    /// Destructor
     virtual ~QwtPolarLayout();
 
+    /// Set the legend position with ratio
     void setLegendPosition( QwtPolarPlot::LegendPosition pos, double ratio );
+    /// Set the legend position
     void setLegendPosition( QwtPolarPlot::LegendPosition pos );
+    /// Get the legend position
     QwtPolarPlot::LegendPosition legendPosition() const;
 
+    /// Set the legend ratio
     void setLegendRatio( double ratio );
+    /// Get the legend ratio
     double legendRatio() const;
 
+    /// Activate the layout
     virtual void activate( const QwtPolarPlot*,
         const QRectF& rect, Options options = Options() );
 
+    /// Invalidate the layout
     virtual void invalidate();
 
+    /// Get the title rectangle
     const QRectF& titleRect() const;
+    /// Get the legend rectangle
     const QRectF& legendRect() const;
+    /// Get the canvas rectangle
     const QRectF& canvasRect() const;
 
     class LayoutData;

@@ -32,54 +32,87 @@
 
 template< typename T > class QList;
 
-/*!
-   \brief The QwtDynGridLayout class lays out widgets in a grid,
-         adjusting the number of columns and rows to the current size.
-
-   QwtDynGridLayout takes the space it gets, divides it up into rows and
-   columns, and puts each of the widgets it manages into the correct cell(s).
-   It lays out as many number of columns as possible (limited by maxColumns()).
+/**
+ * \if ENGLISH
+ * @brief Dynamic grid layout that adjusts columns and rows to the current size
+ *
+ * @details QwtDynGridLayout takes the space it gets, divides it up into rows and
+ * columns, and puts each of the widgets it manages into the correct cell(s).
+ * It lays out as many number of columns as possible (limited by maxColumns()).
+ *
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 动态网格布局，根据当前大小调整列数和行数
+ *
+ * @details QwtDynGridLayout 获取可用空间，将其划分为行和列，
+ * 并将管理的每个控件放入正确的单元格中。
+ * 它尽可能多地排列列数（受 maxColumns() 限制）。
+ *
+ * \endif
  */
-
 class QWT_EXPORT QwtDynGridLayout : public QLayout
 {
     Q_OBJECT
   public:
+    // Constructor with parent widget, margin and spacing
     explicit QwtDynGridLayout( QWidget*, int margin = 0, int spacing = -1 );
+    // Constructor with spacing only
     explicit QwtDynGridLayout( int spacing = -1 );
 
+    // Destructor
     virtual ~QwtDynGridLayout();
 
+    // Invalidate all internal caches
     virtual void invalidate() override;
 
+    // Set the maximum number of columns
     void setMaxColumns( uint maxColumns );
+    // Get the maximum number of columns
     uint maxColumns() const;
 
+    // Get the number of rows in the current layout
     uint numRows () const;
+    // Get the number of columns in the current layout
     uint numColumns () const;
 
+    // Add a layout item to the next free position
     virtual void addItem( QLayoutItem* ) override;
 
+    // Get the item at a specific index
     virtual QLayoutItem* itemAt( int index ) const override;
+    // Remove and return the item at a specific index
     virtual QLayoutItem* takeAt( int index ) override;
+    // Get the number of items in the layout
     virtual int count() const override;
 
+    // Set the expanding directions for the layout
     void setExpandingDirections( Qt::Orientations );
+    // Get the expanding directions for the layout
     virtual Qt::Orientations expandingDirections() const override;
+    // Calculate geometries for items with given number of columns
     QList< QRect > layoutItems( const QRect&, uint numColumns ) const;
 
+    // Get the maximum width of all layout items
     virtual int maxItemWidth() const;
 
+    // Set the geometry for the layout
     virtual void setGeometry( const QRect& ) override;
 
+    // Check if the layout has height for width
     virtual bool hasHeightForWidth() const override;
+    // Get the preferred height for a given width
     virtual int heightForWidth( int ) const override;
 
+    // Get the size hint for the layout
     virtual QSize sizeHint() const override;
 
+    // Check if the layout is empty
     virtual bool isEmpty() const override;
+    // Get the number of layout items
     uint itemCount() const;
 
+    // Calculate the number of columns for a given width
     virtual uint columnsForWidth( int width ) const;
 
   protected:

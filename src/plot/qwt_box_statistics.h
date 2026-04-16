@@ -59,14 +59,7 @@ public:
         StandardError
     };
     
-    /**
-     * \if ENGLISH
-     * @brief Constructor with default Tukey method
-     * \endif
-     * \if CHINESE
-     * @brief 默认使用 Tukey 方法的构造函数
-     * \endif
-     */
+    //! Constructor with default Tukey method
     QwtBoxStatisticsCalculator();
     
     //! Set whisker calculation method

@@ -79,144 +79,60 @@ class QPalette;
 class QWT_EXPORT QwtPlotScaleItem : public QwtPlotItem
 {
 public:
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     explicit QwtPlotScaleItem(QwtScaleDraw::Alignment = QwtScaleDraw::BottomScale, const double pos = 0.0);
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotScaleItem();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
     virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the scale division
-     * \endif
-     */
+    // Set the scale division
     void setScaleDiv(const QwtScaleDiv&);
-    /**
-     * \if ENGLISH
-     * @brief Get the scale division
-     * \endif
-     */
+    // Get the scale division
     const QwtScaleDiv& scaleDiv() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Enable/disable scale division from axis
-     * \endif
-     */
+    // Enable/disable scale division from axis
     void setScaleDivFromAxis(bool on);
-    /**
-     * \if ENGLISH
-     * @brief Check if scale division is from axis
-     * \endif
-     */
+    // Check if scale division is from axis
     bool isScaleDivFromAxis() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the palette
-     * \endif
-     */
+    // Set the palette
     void setPalette(const QPalette&);
-    /**
-     * \if ENGLISH
-     * @brief Get the palette
-     * \endif
-     */
+    // Get the palette
     QPalette palette() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the font
-     * \endif
-     */
+    // Set the font
     void setFont(const QFont&);
-    /**
-     * \if ENGLISH
-     * @brief Get the font
-     * \endif
-     */
+    // Get the font
     QFont font() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the scale draw
-     * \endif
-     */
+    // Set the scale draw
     void setScaleDraw(QwtScaleDraw*);
 
-    /**
-     * \if ENGLISH
-     * @brief Get the scale draw (const version)
-     * \endif
-     */
+    // Get the scale draw (const version)
     const QwtScaleDraw* scaleDraw() const;
-    /**
-     * \if ENGLISH
-     * @brief Get the scale draw
-     * \endif
-     */
+    // Get the scale draw
     QwtScaleDraw* scaleDraw();
 
-    /**
-     * \if ENGLISH
-     * @brief Set the position
-     * \endif
-     */
+    // Set the position
     void setPosition(double pos);
-    /**
-     * \if ENGLISH
-     * @brief Get the position
-     * \endif
-     */
+    // Get the position
     double position() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the border distance
-     * \endif
-     */
+    // Set the border distance
     void setBorderDistance(int);
-    /**
-     * \if ENGLISH
-     * @brief Get the border distance
-     * \endif
-     */
+    // Get the border distance
     int borderDistance() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the alignment
-     * \endif
-     */
+    // Set the alignment
     void setAlignment(QwtScaleDraw::Alignment);
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the scale item
-     * \endif
-     */
+    // Draw the scale item
     virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Update the scale division
-     * \endif
-     */
+    // Update the scale division
     virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
 private:

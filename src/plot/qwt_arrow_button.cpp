@@ -64,10 +64,19 @@ static QStyleOptionButton styleOpt(const QwtArrowButton* btn)
     return option;
 }
 
-/*!
-   \param num Number of arrows
-   \param arrowType see Qt::ArrowType in the Qt docs.
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ *   \brief Constructor
+ *   \param[in] num Number of arrows (1-3)
+ *   \param[in] arrowType Direction of arrows (see Qt::ArrowType)
+ *   \param[in] parent Parent widget
+ * \endif
+ * \if CHINESE
+ *   \brief 构造函数
+ *   \param[in] num 箭头数量（1-3）
+ *   \param[in] arrowType 箭头方向（参见Qt::ArrowType）
+ *   \param[in] parent 父控件
+ * \endif
  */
 QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent) : QPushButton(parent)
 {
@@ -88,23 +97,44 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
     }
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ *   \brief Destructor
+ * \endif
+ * \if CHINESE
+ *   \brief 析构函数
+ * \endif
+ */
 QwtArrowButton::~QwtArrowButton()
 {
     delete m_data;
     m_data = nullptr;
 }
 
-/*!
-   \brief The direction of the arrows
+/**
+ * \if ENGLISH
+ *   \brief Get the direction of the arrows
+ *   \return Arrow direction
+ * \endif
+ * \if CHINESE
+ *   \brief 获取箭头的方向
+ *   \return 箭头方向
+ * \endif
  */
 Qt::ArrowType QwtArrowButton::arrowType() const
 {
     return m_data->arrowType;
 }
 
-/*!
-   \brief The number of arrows
+/**
+ * \if ENGLISH
+ *   \brief Get the number of arrows
+ *   \return Number of arrows
+ * \endif
+ * \if CHINESE
+ *   \brief 获取箭头的数量
+ *   \return 箭头数量
+ * \endif
  */
 int QwtArrowButton::num() const
 {
@@ -249,8 +279,15 @@ void QwtArrowButton::drawArrow(QPainter* painter, const QRect& r, Qt::ArrowType 
     painter->restore();
 }
 
-/*!
-   \return a size hint
+/**
+ * \if ENGLISH
+ *   \brief Get a size hint for the button
+ *   \return Size hint
+ * \endif
+ * \if CHINESE
+ *   \brief 获取按钮的大小提示
+ *   \return 大小提示
+ * \endif
  */
 QSize QwtArrowButton::sizeHint() const
 {
@@ -258,8 +295,15 @@ QSize QwtArrowButton::sizeHint() const
     return qwtExpandedToGlobalStrut(hint);
 }
 
-/*!
-   \brief Return a minimum size hint
+/**
+ * \if ENGLISH
+ *   \brief Get a minimum size hint for the button
+ *   \return Minimum size hint
+ * \endif
+ * \if CHINESE
+ *   \brief 获取按钮的最小大小提示
+ *   \return 最小大小提示
+ * \endif
  */
 QSize QwtArrowButton::minimumSizeHint() const
 {

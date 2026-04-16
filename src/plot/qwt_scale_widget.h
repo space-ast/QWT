@@ -136,28 +136,43 @@ public:
 Q_SIGNALS:
 
     /**
-     * @brief Signal emitted, whenever the scale division changes/当刻度分度发生变化时发出的信号
+     * \if ENGLISH
+     * @brief Signal emitted whenever the scale division changes
+     * \endif
+     * \if CHINESE
+     * @brief 当刻度分度发生变化时发出的信号
+     * \endif
      */
     void scaleDivChanged();
 
     /**
-     * @brief Request to change the axis scale division/坐标轴主动请求变更刻度范围
-     *
-     * Emitted when built-in actions (zoom/pan) need to alter the scale.
-     * 内置动作（缩放/平移）需要改变刻度时发射此信号。
-     *
-     * Unlike normal QwtPlot updates, here the axis drives the change:
-     * QwtPlot receives this signal and adjusts item bounds accordingly.
-     * 与常规 QwtPlot 更新不同，此处由轴驱动变更：QwtPlot 接收信号后调整图元范围。
-     *
-     * @param min min scale division requested/请求的最小刻度范围
-     * @param min max scale division requested/请求的最大刻度范围
+     * \if ENGLISH
+     * @brief Request to change the axis scale division
+     * @details Emitted when built-in actions (zoom/pan) need to alter the scale.
+     *          Unlike normal QwtPlot updates, here the axis drives the change:
+     *          QwtPlot receives this signal and adjusts item bounds accordingly.
+     * @param min Minimum scale division requested
+     * @param max Maximum scale division requested
+     * \endif
+     * \if CHINESE
+     * @brief 坐标轴主动请求变更刻度范围
+     * @details 内置动作（缩放/平移）需要改变刻度时发射此信号。
+     *          与常规 QwtPlot 更新不同，此处由轴驱动变更：QwtPlot 接收信号后调整图元范围。
+     * @param min 请求的最小刻度范围
+     * @param max 请求的最大刻度范围
+     * \endif
      */
     void requestScaleRangeUpdate(double min, double max);
 
     /**
+     * \if ENGLISH
+     * @brief Signal emitted when the axis selection state changes
+     * @param selected True if the axis is selected, false otherwise
+     * \endif
+     * \if CHINESE
      * @brief 当前轴被选中状态发生变化发射信号
-     * @param selected
+     * @param selected true 表示选中，false 表示取消选中
+     * \endif
      */
     void selectionChanged(bool selected);
 

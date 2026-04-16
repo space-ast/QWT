@@ -37,15 +37,26 @@
 
 class QPainterPath;
 
-/*!
-   QwtPainterCommand represents the attributes of a paint operation
-   how it is used between QPainter and QPaintDevice
-
-   It is used by QwtGraphic to record and replay paint operations
-
-   \sa QwtGraphic::commands()
+/**
+ * \if ENGLISH
+ * @brief Represents the attributes of a paint operation between QPainter and QPaintDevice
+ *
+ * QwtPainterCommand encapsulates different types of paint operations including
+ * drawing paths, pixmaps, images, and state changes. It is used by QwtGraphic
+ * to record and replay paint operations.
+ *
+ * @sa QwtGraphic::commands()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 表示QPainter和QPaintDevice之间的绘制操作属性
+ *
+ * QwtPainterCommand封装了不同类型的绘制操作，包括绘制路径、pixmap、
+ * 图像和状态变化。它被QwtGraphic用于记录和重放绘制操作。
+ *
+ * @sa QwtGraphic::commands()
+ * \endif
  */
-
 class QWT_EXPORT QwtPainterCommand
 {
   public:

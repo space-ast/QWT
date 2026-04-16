@@ -30,23 +30,36 @@
 #include "qwt_global.h"
 #include <qpushbutton.h>
 
-/*!
-   \brief Arrow Button
-
-   A push button with one or more filled triangles on its front.
-   An Arrow button can have 1 to 3 arrows in a row, pointing
-   up, down, left or right.
+/**
+ * \if ENGLISH
+ *   \brief Arrow Button
+ *   \details A push button with one or more filled triangles on its front.
+ *            An Arrow button can have 1 to 3 arrows in a row, pointing
+ *            up, down, left or right.
+ * \endif
+ * \if CHINESE
+ *   \brief 箭头按钮
+ *   \details 一个带有一个或多个填充三角形的前面板按钮。
+ *            箭头按钮可以有1到3个箭头排列成一行，
+ *            指向上、下、左或右方向。
+ * \endif
  */
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {
   public:
+    // Constructs an arrow button with specified number of arrows and arrow type
     explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
+    // Destructor
     virtual ~QwtArrowButton();
 
+    // Returns the direction of the arrows
     Qt::ArrowType arrowType() const;
+    // Returns the number of arrows
     int num() const;
 
+    // Returns a size hint for the button
     virtual QSize sizeHint() const override;
+    // Returns a minimum size hint for the button
     virtual QSize minimumSizeHint() const override;
 
   protected:

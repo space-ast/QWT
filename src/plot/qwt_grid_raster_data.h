@@ -8,95 +8,102 @@ class QVector;
 #endif
 
 /**
- * \class QwtGridRasterData
- * \brief A class that encapsulates grid data and provides interpolation methods.
- *
- * This class inherits from QwtRasterData and is used to represent 2D grid data.
- * It supports various interpolation methods such as nearest neighbor and bilinear interpolation.
- *
- * 此类继承自 QwtRasterData，用于表示二维网格数据。
- * 它支持多种插值方法，例如最近邻插值和双线性插值。
+ * \if ENGLISH
+ * @brief A class that encapsulates grid data and provides interpolation methods.
+ * @details This class inherits from QwtRasterData and is used to represent 2D grid data.
+ *          It supports various interpolation methods such as nearest neighbor and bilinear interpolation.
+ * \endif
+ * \if CHINESE
+ * @brief 封装网格数据并提供插值方法的类。
+ * @details 此类继承自 QwtRasterData，用于表示二维网格数据。
+ *          它支持多种插值方法，例如最近邻插值和双线性插值。
+ * \endif
  */
 class QWT_EXPORT QwtGridRasterData : public QwtRasterData
 {
 public:
-    /*!
-       \brief Resampling algorithm
-       The default setting is NearestNeighbour;
+    /**
+     * \if ENGLISH
+     * @brief Resampling algorithm
+     * @details The default setting is NearestNeighbour.
+     * \endif
+     * 
+     * \if CHINESE
+     * @brief 重采样算法
+     * @details 默认设置为 NearestNeighbour。
+     * \endif
      */
     enum ResampleMode
     {
-        /*!
-           Return the value from the matrix, that is nearest to the
-           the requested position.
+        /**
+         * \if ENGLISH
+         * Return the value from the matrix that is nearest to the requested position.
+         * \endif
+         * 
+         * \if CHINESE
+         * 返回矩阵中距离请求位置最近的值。
+         * \endif
          */
         NearestNeighbour,
 
-        /*!
-           Interpolate the value from the distances and values of the
-           4 surrounding values in the matrix,
+        /**
+         * \if ENGLISH
+         * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
+         * \endif
+         * 
+         * \if CHINESE
+         * 从矩阵中 4 个相邻值的距离和值进行插值。
+         * \endif
          */
         BilinearInterpolation,
 
-        /*!
-           Interpolate the value from the 16 surrounding values in the
-           matrix using hermite bicubic interpolation
+        /**
+         * \if ENGLISH
+         * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
+         * \endif
+         * 
+         * \if CHINESE
+         * 使用 Hermite 双三次插值从矩阵中 16 个相邻值进行插值。
+         * \endif
          */
         BicubicInterpolation
     };
 
 public:
+    // Constructor
     QwtGridRasterData();
+    // Destructor
     virtual ~QwtGridRasterData();
 
-    //  Set the resampling algorithm
+    // Set the resampling algorithm
     void setResampleMode(ResampleMode mode);
+    // Return the resampling algorithm
     ResampleMode resampleMode() const;
 
+    // Return bounding interval for an axis
     virtual QwtInterval interval(Qt::Axis axis) const override final;
 
-    /**
-     * @brief Set new x-axis, y-axis, and data matrix.
-     *
-     * data matrix is look like that:
-     *
-     * |column[0]|column[1]| ... |column[m]|
-     * +---------+---------+-----+---------+
-     * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
-     * +---------+---------+-----+---------+
-     * |   ...   |   ...   | ... |   ...   |
-     * +---------+---------+-----+---------+
-     * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
-     * +---------+---------+-----+---------+
-     * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
-     * +---------+---------+-----+---------+
-     *      ↑          ↑      ↑       ↑
-     *  xAxis[0]   xAxis[1]  ...   xAxis[m]
-     *
-     *  so (data matrix).size = xAxis.size,(data matrix).at(n).size = yAxis.szie
-     *
-     * 设置新的 x 轴、y 轴和数据矩阵。
-     * 数据矩阵是一个vector<vector> ,数据矩阵.size = xAxis.size,数据矩阵.at(n).size = yAxis.size
-     *
-     * @param xAxis The x-axis values. / x 轴值。
-     * @param yAxis The y-axis values. / y 轴值。
-     * @param data The 2D data matrix. / 二维数据矩阵。
-     */
+    // Set new x-axis, y-axis, and data matrix
     void setValue(const QVector< double >& x, const QVector< double >& y, const QVector< QVector< double > >& v);
+    // Return the value at a raster position
     virtual double value(double x, double y) const override;
 
+    // Calculate the pixel hint
     virtual QRectF pixelHint(const QRectF&) const override;
 
-    // 获取尺寸
+    // Return the size of x-axis
     int xSize() const;
+    // Return the size of y-axis
     int ySize() const;
+    // Return the size of the value matrix
     std::pair< int, int > valueSize() const;
 
-    // 获取value矩阵对应位置的值
+    // Return the value at specified position in the value matrix
     double atValue(int xIndex, int yIndex) const;
 
-    // 获取x,y在索引位置对应的值
+    // Return the x-axis value at specified index
     double atX(int xIndex) const;
+    // Return the y-axis value at specified index
     double atY(int yIndex) const;
 
 private:

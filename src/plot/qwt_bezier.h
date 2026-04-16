@@ -49,16 +49,23 @@ class QPolygonF;
 class QWT_EXPORT QwtBezier
 {
 public:
+    //! Constructor with tolerance parameter
     QwtBezier(double tolerance = 0.5);
+    //! Destructor
     ~QwtBezier();
 
+    //! Set the tolerance for curve subdivision
     void setTolerance(double tolerance);
+    //! Get the tolerance value
     double tolerance() const;
 
+    //! Interpolate a Bézier curve as a polygon
     QPolygonF toPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2) const;
 
+    //! Append Bézier curve points to an existing polygon
     void appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, QPolygonF& polygon) const;
 
+    //! Find a point on a Bézier curve at parameter t
     static QPointF pointAt(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t);
 
 private:
@@ -66,16 +73,7 @@ private:
     double m_flatness;
 };
 
-/**
- * \if ENGLISH
- * @return Tolerance used as criterion for the subdivision
- * \sa setTolerance()
- * \endif
- * \if CHINESE
- * @return 用作细分判据的容差值
- * \sa setTolerance()
- * \endif
- */
+//! \return Tolerance value used for subdivision
 inline double QwtBezier::tolerance() const
 {
     return m_tolerance;

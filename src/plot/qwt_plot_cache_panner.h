@@ -64,28 +64,28 @@ class QWT_EXPORT QwtPlotCachePanner : public QwtCachePanner
     Q_OBJECT
 
 public:
-    /// Constructor
+    //! Constructor
     explicit QwtPlotCachePanner(QWidget*);
-    /// Destructor
+    //! Destructor
     virtual ~QwtPlotCachePanner();
 
-    /// Get the canvas
+    //! Get the canvas widget
     QWidget* canvas();
-    /// Get the canvas (const)
+    //! Get the canvas widget (const version)
     const QWidget* canvas() const;
 
-    /// Get the plot
+    //! Get the plot widget
     QwtPlot* plot();
-    /// Get the plot (const)
+    //! Get the plot widget (const version)
     const QwtPlot* plot() const;
 
-    /// Set axis enabled state
+    //! Enable or disable an axis for panning
     void setAxisEnabled(QwtAxisId axisId, bool on);
-    /// Check if axis is enabled
+    //! Check if an axis is enabled for panning
     bool isAxisEnabled(QwtAxisId) const;
 
 public Q_SLOTS:
-    /// Move the canvas
+    //! Move the canvas by the specified offset
     virtual void moveCanvas(int dx, int dy);
 
 protected:

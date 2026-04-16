@@ -37,19 +37,25 @@ template< typename T >
 class QVector;
 #endif
 
-/*!
-   \brief QwtColorMap is used to map values into colors.
-
-   For displaying 3D data on a 2D plane the 3rd dimension is often
-   displayed using colors, like f.e in a spectrogram.
-
-   Each color map is optimized to return colors for only one of the
-   following image formats:
-
-   - QImage::Format_Indexed8\n
-   - QImage::Format_ARGB32\n
-
-   \sa QwtPlotSpectrogram, QwtScaleWidget
+/**
+ * \if ENGLISH
+ * @brief QwtColorMap is used to map values into colors.
+ * @details For displaying 3D data on a 2D plane the 3rd dimension is often
+ *          displayed using colors, like f.e in a spectrogram.
+ *          Each color map is optimized to return colors for only one of the
+ *          following image formats:
+ *          - QImage::Format_Indexed8
+ *          - QImage::Format_ARGB32
+ * @sa QwtPlotSpectrogram, QwtScaleWidget
+ * \endif
+ * \if CHINESE
+ * @brief QwtColorMap 用于将数值映射为颜色。
+ * @details 在二维平面上显示三维数据时，第三维通常使用颜色来表示，
+ *          例如在光谱图中。每个颜色映射针对以下图像格式之一进行了优化：
+ *          - QImage::Format_Indexed8
+ *          - QImage::Format_ARGB32
+ * @sa QwtPlotSpectrogram, QwtScaleWidget
+ * \endif
  */
 
 class QWT_EXPORT QwtColorMap
@@ -84,13 +90,7 @@ public:
     void setFormat(Format);
     Format format() const;
 
-    /*!
-       Map a value of a given interval into a RGB value.
-
-       \param interval Range for the values
-       \param value Value
-       \return RGB value, corresponding to value
-     */
+    /// Map a value of a given interval into a RGB value.
     virtual QRgb rgb(const QwtInterval& interval, double value) const = 0;
 
     virtual uint colorIndex(int numColors, const QwtInterval& interval, double value) const;
@@ -105,12 +105,18 @@ private:
     Format m_format;
 };
 
-/*!
-   \brief QwtLinearColorMap builds a color map from color stops.
-
-   A color stop is a color at a specific position. The valid
-   range for the positions is [0.0, 1.0]. When mapping a value
-   into a color it is translated into this interval according to mode().
+/**
+ * \if ENGLISH
+ * @brief QwtLinearColorMap builds a color map from color stops.
+ * @details A color stop is a color at a specific position. The valid
+ *          range for the positions is [0.0, 1.0]. When mapping a value
+ *          into a color it is translated into this interval according to mode().
+ * \endif
+ * \if CHINESE
+ * @brief QwtLinearColorMap 从颜色停止点构建颜色映射。
+ * @details 颜色停止点是指特定位置的颜色。位置的有效范围为 [0.0, 1.0]。
+ *          将数值映射为颜色时，根据 mode() 设置将其转换到此区间。
+ * \endif
  */
 class QWT_EXPORT QwtLinearColorMap : public QwtColorMap
 {
@@ -155,8 +161,13 @@ private:
     PrivateData* m_data;
 };
 
-/*!
-   \brief QwtAlphaColorMap varies the alpha value of a color
+/**
+ * \if ENGLISH
+ * @brief QwtAlphaColorMap varies the alpha value of a color.
+ * \endif
+ * \if CHINESE
+ * @brief QwtAlphaColorMap 改变颜色的透明度值。
+ * \endif
  */
 class QWT_EXPORT QwtAlphaColorMap : public QwtColorMap
 {
@@ -179,16 +190,22 @@ private:
     PrivateData* m_data;
 };
 
-/*!
-   \brief QwtHueColorMap varies the hue value of the HSV color model.
-
-   QwtHueColorMap can be used to set up a color map easily, that runs cyclic over
-   all colors. Each cycle has 360 different steps.
-
-   The values for value and saturation are in the range of 0 to 255 and doesn't
-   depend on the data value to be mapped.
-
-   \sa QwtSaturationValueColorMap
+/**
+ * \if ENGLISH
+ * @brief QwtHueColorMap varies the hue value of the HSV color model.
+ * @details QwtHueColorMap can be used to set up a color map easily, that runs cyclic over
+ *          all colors. Each cycle has 360 different steps.
+ *          The values for value and saturation are in the range of 0 to 255 and doesn't
+ *          depend on the data value to be mapped.
+ * @sa QwtSaturationValueColorMap
+ * \endif
+ * \if CHINESE
+ * @brief QwtHueColorMap 改变 HSV 颜色模型中的色调值。
+ * @details QwtHueColorMap 可以轻松设置循环遍历所有颜色的颜色映射。
+ *          每个周期有 360 个不同的步进。
+ *          value 和 saturation 的值范围为 0 到 255，不依赖于要映射的数据值。
+ * @sa QwtSaturationValueColorMap
+ * \endif
  */
 class QWT_EXPORT QwtHueColorMap : public QwtColorMap
 {
@@ -214,14 +231,17 @@ private:
     PrivateData* m_data;
 };
 
-/*!
-   \brief QwtSaturationValueColorMap varies the saturation and/or value for a given
-         hue in the HSV color model.
-
-   Value and saturation are in the range of 0 to 255 while hue is in the range
-   of 0 to 259.
-
-   \sa QwtHueColorMap
+/**
+ * \if ENGLISH
+ * @brief QwtSaturationValueColorMap varies the saturation and/or value for a given hue in the HSV color model.
+ * @details Value and saturation are in the range of 0 to 255 while hue is in the range of 0 to 359.
+ * @sa QwtHueColorMap
+ * \endif
+ * \if CHINESE
+ * @brief QwtSaturationValueColorMap 改变 HSV 颜色模型中给定色调的饱和度和/或明度值。
+ * @details Value 和 saturation 的值范围为 0 到 255，而 hue 的范围为 0 到 359。
+ * @sa QwtHueColorMap
+ * \endif
  */
 class QWT_EXPORT QwtSaturationValueColorMap : public QwtColorMap
 {
@@ -248,24 +268,14 @@ private:
     PrivateData* m_data;
 };
 
-/*!
-   Map a value into a color
-
-   \param interval Valid interval for values
-   \param value Value
-
-   \return Color corresponding to value
- */
-inline QColor QwtColorMap::color(const QwtInterval& interval, double value) const
+// Map a value into a color.
+    inline QColor QwtColorMap::color(const QwtInterval& interval, double value) const
 {
     return QColor::fromRgba(rgb(interval, value));
 }
 
-/*!
-   \return Intended format of the color map
-   \sa Format
- */
-inline QwtColorMap::Format QwtColorMap::format() const
+// Return the intended format of the color map.
+    inline QwtColorMap::Format QwtColorMap::format() const
 {
     return m_format;
 }

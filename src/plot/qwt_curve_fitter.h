@@ -90,38 +90,13 @@ class QWT_EXPORT QwtCurveFitter
 
     virtual ~QwtCurveFitter();
 
+    // Get the preferred fitting mode
     Mode mode() const;
 
-    /*!
-        \if ENGLISH
-        \brief Find a curve which has the best fit to a series of data points
-        \param polygon Series of data points
-        \return Curve points
-        \sa fitCurvePath()
-        \endif
-        \if CHINESE
-        \brief 查找与一系列数据点最佳拟合的曲线
-        \param polygon 数据点序列
-        \return 曲线点
-        \sa fitCurvePath()
-        \endif
-     */
+    // Find a curve which has the best fit to a series of data points
     virtual QPolygonF fitCurve( const QPolygonF& polygon ) const = 0;
 
-    /*!
-        \if ENGLISH
-        \brief Find a curve path which has the best fit to a series of data points
-        \param polygon Series of data points
-        \return Curve path
-        \sa fitCurve()
-        \endif
-        \if CHINESE
-        \brief 查找与一系列数据点最佳拟合的曲线路径
-        \param polygon 数据点序列
-        \return 曲线路径
-        \sa fitCurve()
-        \endif
-     */
+    // Find a curve path which has the best fit to a series of data points
     virtual QPainterPath fitCurvePath( const QPolygonF& polygon ) const = 0;
 
   protected:

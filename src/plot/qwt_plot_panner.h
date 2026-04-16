@@ -26,35 +26,35 @@ class QWT_EXPORT QwtPlotPanner : public QwtPicker
     Q_OBJECT
     QWT_DECLARE_PRIVATE(QwtPlotPanner)
 public:
-    /// Constructor
+    // Constructor
     explicit QwtPlotPanner(QWidget* canvas);
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotPanner();
 
-    /// Get the canvas
+    // Get the canvas widget
     QWidget* canvas();
-    /// Get the canvas (const version)
+    // Get the canvas widget (const)
     const QWidget* canvas() const;
 
-    /// Get the plot
+    // Get the plot widget
     QwtPlot* plot();
-    /// Get the plot (const version)
+    // Get the plot widget (const)
     const QwtPlot* plot() const;
 
-    /// Set the orientations for panning
+    // Set the orientations for panning
     void setOrientations(Qt::Orientations);
-    /// Get the orientations for panning
+    // Get the orientations for panning
     Qt::Orientations orientations() const;
-    /// Check if an orientation is enabled
+    // Check if an orientation is enabled
     bool isOrientationEnabled(Qt::Orientation) const;
 
-    /// Set the mouse button and modifiers for panning
+    // Set the mouse button and modifiers for panning
     void setMouseButton(Qt::MouseButton button, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
-    /// Get the mouse button and modifiers for panning
+    // Get the mouse button and modifiers for panning
     void getMouseButton(Qt::MouseButton& button, Qt::KeyboardModifiers& modifiers) const;
 
 public Q_SLOTS:
-    /// Move the canvas by dx, dy
+    // Move the canvas by dx, dy
     void moveCanvas(int dx, int dy);
 
 Q_SIGNALS:

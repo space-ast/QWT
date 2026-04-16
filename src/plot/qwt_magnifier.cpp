@@ -73,9 +73,15 @@ public:
     QPoint mousePos;
 };
 
-/*!
-   Constructor
-   \param parent Widget to be magnified
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] parent Widget to be magnified
+ * \endif
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] parent 要放大的控件
+ * \endif
  */
 QwtMagnifier::QwtMagnifier(QWidget* parent) : QObject(parent)
 {
@@ -89,20 +95,34 @@ QwtMagnifier::QwtMagnifier(QWidget* parent) : QObject(parent)
     setEnabled(true);
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtMagnifier::~QwtMagnifier()
 {
     delete m_data;
 }
 
-/*!
-   \brief En/disable the magnifier
-
-   When enabled is true an event filter is installed for
-   the observed widget, otherwise the event filter is removed.
-
-   \param on true or false
-   \sa isEnabled(), eventFilter()
+/**
+ * \if ENGLISH
+ * @brief En/disable the magnifier
+ * @details When enabled is true an event filter is installed for
+ *          the observed widget, otherwise the event filter is removed.
+ * @param[in] on true or false
+ * @sa isEnabled(), eventFilter()
+ * \endif
+ * \if CHINESE
+ * @brief 启用/禁用放大器
+ * @details 当 enabled 为 true 时，为观察的控件安装事件过滤器，
+ *          否则移除事件过滤器。
+ * @param[in] on true 或 false
+ * @sa isEnabled(), eventFilter()
+ * \endif
  */
 void QwtMagnifier::setEnabled(bool on)
 {
@@ -119,98 +139,157 @@ void QwtMagnifier::setEnabled(bool on)
     }
 }
 
-/*!
-   \return true when enabled, false otherwise
-   \sa setEnabled(), eventFilter()
+/**
+ * \if ENGLISH
+ * @brief Return whether the magnifier is enabled
+ * @return true when enabled, false otherwise
+ * @sa setEnabled(), eventFilter()
+ * \endif
+ * \if CHINESE
+ * @brief 返回放大器是否启用
+ * @return 启用时返回 true，否则返回 false
+ * @sa setEnabled(), eventFilter()
+ * \endif
  */
 bool QwtMagnifier::isEnabled() const
 {
     return m_data->isEnabled;
 }
 
-/*!
-   \brief Change the wheel factor
-
-   The wheel factor defines the ratio between the current range
-   on the parent widget and the zoomed range for each step of the wheel.
-
-   Use values > 1 for magnification (i.e. 2.0) and values < 1 for
-   scaling down (i.e. 1/2.0 = 0.5). You can use this feature for
-   inverting the direction of the wheel.
-
-   The default value is 0.9.
-
-   \param factor Wheel factor
-   \sa wheelFactor(), setWheelButtonState(),
-       setMouseFactor(), setKeyFactor()
+/**
+ * \if ENGLISH
+ * @brief Change the wheel factor
+ * @details The wheel factor defines the ratio between the current range
+ *          on the parent widget and the zoomed range for each step of the wheel.
+ *          Use values > 1 for magnification (i.e. 2.0) and values < 1 for
+ *          scaling down (i.e. 1/2.0 = 0.5). You can use this feature for
+ *          inverting the direction of the wheel.
+ *          The default value is 0.9.
+ * @param[in] factor Wheel factor
+ * @sa wheelFactor(), setWheelButtonState(), setMouseFactor(), setKeyFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 更改滚轮因子
+ * @details 滚轮因子定义了父控件当前范围与滚轮每步缩放范围之间的比率。
+ *          使用 > 1 的值进行放大（如 2.0），使用 < 1 的值进行缩小（如 1/2.0 = 0.5）。
+ *          您可以使用此功能反转滚轮方向。
+ *          默认值为 0.9。
+ * @param[in] factor 滚轮因子
+ * @sa wheelFactor(), setWheelButtonState(), setMouseFactor(), setKeyFactor()
+ * \endif
  */
 void QwtMagnifier::setWheelFactor(double factor)
 {
     m_data->wheelFactor = factor;
 }
 
-/*!
-   \return Wheel factor
-   \sa setWheelFactor()
+/**
+ * \if ENGLISH
+ * @brief Return the wheel factor
+ * @return Wheel factor
+ * @sa setWheelFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滚轮因子
+ * @return 滚轮因子
+ * @sa setWheelFactor()
+ * \endif
  */
 double QwtMagnifier::wheelFactor() const
 {
     return m_data->wheelFactor;
 }
 
-/*!
-   Assign keyboard modifiers for zooming in/out using the wheel.
-   The default modifiers are Qt::NoModifiers.
-
-   \param modifiers Keyboard modifiers
-   \sa wheelModifiers()
+/**
+ * \if ENGLISH
+ * @brief Assign keyboard modifiers for zooming in/out using the wheel
+ * @details The default modifiers are Qt::NoModifiers.
+ * @param[in] modifiers Keyboard modifiers
+ * @sa wheelModifiers()
+ * \endif
+ * \if CHINESE
+ * @brief 设置使用滚轮放大/缩小时的键盘修饰键
+ * @details 默认修饰键为 Qt::NoModifiers。
+ * @param[in] modifiers 键盘修饰键
+ * @sa wheelModifiers()
+ * \endif
  */
 void QwtMagnifier::setWheelModifiers(Qt::KeyboardModifiers modifiers)
 {
     m_data->wheelModifiers = modifiers;
 }
 
-/*!
-   \return Wheel modifiers
-   \sa setWheelModifiers()
+/**
+ * \if ENGLISH
+ * @brief Return the wheel modifiers
+ * @return Wheel modifiers
+ * @sa setWheelModifiers()
+ * \endif
+ * \if CHINESE
+ * @brief 返回滚轮修饰键
+ * @return 滚轮修饰键
+ * @sa setWheelModifiers()
+ * \endif
  */
 Qt::KeyboardModifiers QwtMagnifier::wheelModifiers() const
 {
     return m_data->wheelModifiers;
 }
 
-/*!
-   \brief Change the mouse factor
-
-   The mouse factor defines the ratio between the current range
-   on the parent widget and the zoomed range for each vertical mouse movement.
-   The default value is 0.95.
-
-   \param factor Wheel factor
-   \sa mouseFactor(), setMouseButton(), setWheelFactor(), setKeyFactor()
+/**
+ * \if ENGLISH
+ * @brief Change the mouse factor
+ * @details The mouse factor defines the ratio between the current range
+ *          on the parent widget and the zoomed range for each vertical mouse movement.
+ *          The default value is 0.95.
+ * @param[in] factor Mouse factor
+ * @sa mouseFactor(), setMouseButton(), setWheelFactor(), setKeyFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 更改鼠标因子
+ * @details 鼠标因子定义了父控件当前范围与每次垂直鼠标移动缩放范围之间的比率。
+ *          默认值为 0.95。
+ * @param[in] factor 鼠标因子
+ * @sa mouseFactor(), setMouseButton(), setWheelFactor(), setKeyFactor()
+ * \endif
  */
 void QwtMagnifier::setMouseFactor(double factor)
 {
     m_data->mouseFactor = factor;
 }
 
-/*!
-   \return Mouse factor
-   \sa setMouseFactor()
+/**
+ * \if ENGLISH
+ * @brief Return the mouse factor
+ * @return Mouse factor
+ * @sa setMouseFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 返回鼠标因子
+ * @return 鼠标因子
+ * @sa setMouseFactor()
+ * \endif
  */
 double QwtMagnifier::mouseFactor() const
 {
     return m_data->mouseFactor;
 }
 
-/*!
-   Assign the mouse button, that is used for zooming in/out.
-   The default value is Qt::RightButton.
-
-   \param button Button
-   \param modifiers Keyboard modifiers
-
-   \sa getMouseButton()
+/**
+ * \if ENGLISH
+ * @brief Assign the mouse button that is used for zooming in/out
+ * @details The default value is Qt::RightButton.
+ * @param[in] button Button
+ * @param[in] modifiers Keyboard modifiers
+ * @sa getMouseButton()
+ * \endif
+ * \if CHINESE
+ * @brief 设置用于放大/缩小的鼠标按钮
+ * @details 默认值为 Qt::RightButton。
+ * @param[in] button 鼠标按钮
+ * @param[in] modifiers 键盘修饰键
+ * @sa getMouseButton()
+ * \endif
  */
 void QwtMagnifier::setMouseButton(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
@@ -218,45 +297,80 @@ void QwtMagnifier::setMouseButton(Qt::MouseButton button, Qt::KeyboardModifiers 
     m_data->mouseButtonModifiers = modifiers;
 }
 
-//! \sa setMouseButton()
+/**
+ * \if ENGLISH
+ * @brief Get the mouse button and modifiers used for zooming
+ * @param[out] button Mouse button used for zooming
+ * @param[out] modifiers Keyboard modifiers used for zooming
+ * @sa setMouseButton()
+ * \endif
+ * \if CHINESE
+ * @brief 获取用于放大/缩小的鼠标按钮和修饰键
+ * @param[out] button 用于放大/缩小的鼠标按钮
+ * @param[out] modifiers 用于放大/缩小的键盘修饰键
+ * @sa setMouseButton()
+ * \endif
+ */
 void QwtMagnifier::getMouseButton(Qt::MouseButton& button, Qt::KeyboardModifiers& modifiers) const
 {
     button    = m_data->mouseButton;
     modifiers = m_data->mouseButtonModifiers;
 }
 
-/*!
-   \brief Change the key factor
-
-   The key factor defines the ratio between the current range
-   on the parent widget and the zoomed range for each key press of
-   the zoom in/out keys. The default value is 0.9.
-
-   \param factor Key factor
-   \sa keyFactor(), setZoomInKey(), setZoomOutKey(),
-       setWheelFactor, setMouseFactor()
+/**
+ * \if ENGLISH
+ * @brief Change the key factor
+ * @details The key factor defines the ratio between the current range
+ *          on the parent widget and the zoomed range for each key press of
+ *          the zoom in/out keys. The default value is 0.9.
+ * @param[in] factor Key factor
+ * @sa keyFactor(), setZoomInKey(), setZoomOutKey(), setWheelFactor(), setMouseFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 更改按键因子
+ * @details 按键因子定义了父控件当前范围与每次按下放大/缩小键缩放范围之间的比率。
+ *          默认值为 0.9。
+ * @param[in] factor 按键因子
+ * @sa keyFactor(), setZoomInKey(), setZoomOutKey(), setWheelFactor(), setMouseFactor()
+ * \endif
  */
 void QwtMagnifier::setKeyFactor(double factor)
 {
     m_data->keyFactor = factor;
 }
 
-/*!
-   \return Key factor
-   \sa setKeyFactor()
+/**
+ * \if ENGLISH
+ * @brief Return the key factor
+ * @return Key factor
+ * @sa setKeyFactor()
+ * \endif
+ * \if CHINESE
+ * @brief 返回按键因子
+ * @return 按键因子
+ * @sa setKeyFactor()
+ * \endif
  */
 double QwtMagnifier::keyFactor() const
 {
     return m_data->keyFactor;
 }
 
-/*!
-   Assign the key, that is used for zooming in.
-   The default combination is Qt::Key_Plus + Qt::NoModifier.
-
-   \param key
-   \param modifiers
-   \sa getZoomInKey(), setZoomOutKey()
+/**
+ * \if ENGLISH
+ * @brief Assign the key that is used for zooming in
+ * @details The default combination is Qt::Key_Plus + Qt::NoModifier.
+ * @param[in] key Key code
+ * @param[in] modifiers Keyboard modifiers
+ * @sa getZoomInKey(), setZoomOutKey()
+ * \endif
+ * \if CHINESE
+ * @brief 设置用于放大的按键
+ * @details 默认组合为 Qt::Key_Plus + Qt::NoModifier。
+ * @param[in] key 按键代码
+ * @param[in] modifiers 键盘修饰键
+ * @sa getZoomInKey(), setZoomOutKey()
+ * \endif
  */
 void QwtMagnifier::setZoomInKey(int key, Qt::KeyboardModifiers modifiers)
 {
@@ -264,13 +378,19 @@ void QwtMagnifier::setZoomInKey(int key, Qt::KeyboardModifiers modifiers)
     m_data->zoomInKeyModifiers = modifiers;
 }
 
-/*!
-   \brief Retrieve the settings of the zoom in key
-
-   \param key Key code, see Qt::Key
-   \param modifiers Keyboard modifiers
-
-   \sa setZoomInKey()
+/**
+ * \if ENGLISH
+ * @brief Retrieve the settings of the zoom in key
+ * @param[out] key Key code, see Qt::Key
+ * @param[out] modifiers Keyboard modifiers
+ * @sa setZoomInKey()
+ * \endif
+ * \if CHINESE
+ * @brief 获取放大键的设置
+ * @param[out] key 按键代码，参见 Qt::Key
+ * @param[out] modifiers 键盘修饰键
+ * @sa setZoomInKey()
+ * \endif
  */
 void QwtMagnifier::getZoomInKey(int& key, Qt::KeyboardModifiers& modifiers) const
 {
@@ -278,13 +398,21 @@ void QwtMagnifier::getZoomInKey(int& key, Qt::KeyboardModifiers& modifiers) cons
     modifiers = m_data->zoomInKeyModifiers;
 }
 
-/*!
-   Assign the key, that is used for zooming out.
-   The default combination is Qt::Key_Minus + Qt::NoModifier.
-
-   \param key
-   \param modifiers
-   \sa getZoomOutKey(), setZoomOutKey()
+/**
+ * \if ENGLISH
+ * @brief Assign the key that is used for zooming out
+ * @details The default combination is Qt::Key_Minus + Qt::NoModifier.
+ * @param[in] key Key code
+ * @param[in] modifiers Keyboard modifiers
+ * @sa getZoomOutKey(), setZoomInKey()
+ * \endif
+ * \if CHINESE
+ * @brief 设置用于缩小的按键
+ * @details 默认组合为 Qt::Key_Minus + Qt::NoModifier。
+ * @param[in] key 按键代码
+ * @param[in] modifiers 键盘修饰键
+ * @sa getZoomOutKey(), setZoomInKey()
+ * \endif
  */
 void QwtMagnifier::setZoomOutKey(int key, Qt::KeyboardModifiers modifiers)
 {
@@ -292,13 +420,19 @@ void QwtMagnifier::setZoomOutKey(int key, Qt::KeyboardModifiers modifiers)
     m_data->zoomOutKeyModifiers = modifiers;
 }
 
-/*!
-   \brief Retrieve the settings of the zoom out key
-
-   \param key Key code, see Qt::Key
-   \param modifiers Keyboard modifiers
-
-   \sa setZoomOutKey()
+/**
+ * \if ENGLISH
+ * @brief Retrieve the settings of the zoom out key
+ * @param[out] key Key code, see Qt::Key
+ * @param[out] modifiers Keyboard modifiers
+ * @sa setZoomOutKey()
+ * \endif
+ * \if CHINESE
+ * @brief 获取缩小键的设置
+ * @param[out] key 按键代码，参见 Qt::Key
+ * @param[out] modifiers 键盘修饰键
+ * @sa setZoomOutKey()
+ * \endif
  */
 void QwtMagnifier::getZoomOutKey(int& key, Qt::KeyboardModifiers& modifiers) const
 {
@@ -306,20 +440,28 @@ void QwtMagnifier::getZoomOutKey(int& key, Qt::KeyboardModifiers& modifiers) con
     modifiers = m_data->zoomOutKeyModifiers;
 }
 
-/*!
-   \brief Event filter
-
-   When isEnabled() is true, the mouse events of the
-   observed widget are filtered.
-
-   \param object Object to be filtered
-   \param event Event
-
-   \return Forwarded to QObject::eventFilter()
-
-   \sa widgetMousePressEvent(), widgetMouseReleaseEvent(),
-      widgetMouseMoveEvent(), widgetWheelEvent(), widgetKeyPressEvent()
-      widgetKeyReleaseEvent()
+/**
+ * \if ENGLISH
+ * @brief Event filter
+ * @details When isEnabled() is true, the mouse events of the
+ *          observed widget are filtered.
+ * @param[in] object Object to be filtered
+ * @param[in] event Event
+ * @return Forwarded to QObject::eventFilter()
+ * @sa widgetMousePressEvent(), widgetMouseReleaseEvent(),
+ *     widgetMouseMoveEvent(), widgetWheelEvent(), widgetKeyPressEvent(),
+ *     widgetKeyReleaseEvent()
+ * \endif
+ * \if CHINESE
+ * @brief 事件过滤器
+ * @details 当 isEnabled() 为 true 时，观察控件的鼠标事件被过滤。
+ * @param[in] object 要过滤的对象
+ * @param[in] event 事件
+ * @return 转发给 QObject::eventFilter()
+ * @sa widgetMousePressEvent(), widgetMouseReleaseEvent(),
+ *     widgetMouseMoveEvent(), widgetWheelEvent(), widgetKeyPressEvent(),
+ *     widgetKeyReleaseEvent()
+ * \endif
  */
 bool QwtMagnifier::eventFilter(QObject* object, QEvent* event)
 {
@@ -481,13 +623,31 @@ void QwtMagnifier::widgetKeyReleaseEvent(QKeyEvent* keyEvent)
     Q_UNUSED(keyEvent);
 }
 
-//! \return Parent widget, where the rescaling happens
+/**
+ * \if ENGLISH
+ * @brief Return the parent widget where the rescaling happens
+ * @return Parent widget
+ * \endif
+ * \if CHINESE
+ * @brief 返回发生重新缩放的父控件
+ * @return 父控件
+ * \endif
+ */
 QWidget* QwtMagnifier::parentWidget()
 {
     return qobject_cast< QWidget* >(parent());
 }
 
-//! \return Parent widget, where the rescaling happens
+/**
+ * \if ENGLISH
+ * @brief Return the parent widget where the rescaling happens
+ * @return Parent widget (const)
+ * \endif
+ * \if CHINESE
+ * @brief 返回发生重新缩放的父控件
+ * @return 父控件（常量版本）
+ * \endif
+ */
 const QWidget* QwtMagnifier::parentWidget() const
 {
     return qobject_cast< const QWidget* >(parent());

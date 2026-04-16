@@ -302,9 +302,16 @@ class QwtPlotVectorField::PrivateData
     MagnitudeModes magnitudeModes;
 };
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotVectorField::QwtPlotVectorField( const QwtText& title )
     : QwtPlotSeriesItem( title )
@@ -312,9 +319,16 @@ QwtPlotVectorField::QwtPlotVectorField( const QwtText& title )
     init();
 }
 
-/*!
-   Constructor
-   \param title Title of the curve
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the curve
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 曲线标题
+ * \endif
  */
 QwtPlotVectorField::QwtPlotVectorField( const QString& title )
     : QwtPlotSeriesItem( QwtText( title ) )
@@ -322,14 +336,30 @@ QwtPlotVectorField::QwtPlotVectorField( const QString& title )
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotVectorField::~QwtPlotVectorField()
 {
     delete m_data;
 }
 
-/*!
-   \brief Initialize data members
+/**
+ * \if ENGLISH
+ * @brief Initialize data members
+ * @details Initializes the internal data members and sets default attributes.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 初始化数据成员
+ * @details 初始化内部数据成员并设置默认属性。
+ * \endif
  */
 void QwtPlotVectorField::init()
 {
@@ -342,13 +372,20 @@ void QwtPlotVectorField::init()
     setZ( 20.0 );
 }
 
-/*!
-   Assign a pen
-
-   \param pen New pen
-   \sa pen(), brush()
-
-   \note the pen is ignored in MagnitudeAsColor mode
+/**
+ * \if ENGLISH
+ * @brief Assign a pen
+ * @param[in] pen New pen
+ * @note The pen is ignored in MagnitudeAsColor mode
+ * @sa pen(), brush()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置画笔
+ * @param[in] pen 新的画笔
+ * @note 在 MagnitudeAsColor 模式下画笔被忽略
+ * @sa pen(), brush()
+ * \endif
  */
 void QwtPlotVectorField::setPen( const QPen& pen )
 {
@@ -361,22 +398,38 @@ void QwtPlotVectorField::setPen( const QPen& pen )
     }
 }
 
-/*!
-   \return Pen used to draw the lines
-   \sa setPen(), brush()
+/**
+ * \if ENGLISH
+ * @brief Get the pen used to draw the lines
+ * @return Pen used for drawing
+ * @sa setPen(), brush()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于绘制线条的画笔
+ * @return 用于绘制的画笔
+ * @sa setPen(), brush()
+ * \endif
  */
 QPen QwtPlotVectorField::pen() const
 {
     return m_data->pen;
 }
 
-/*!
-   \brief Assign a brush.
-
-   \param brush New brush
-   \sa brush(), pen()
-
-   \note the brush is ignored in MagnitudeAsColor mode
+/**
+ * \if ENGLISH
+ * @brief Assign a brush
+ * @param[in] brush New brush
+ * @note The brush is ignored in MagnitudeAsColor mode
+ * @sa brush(), pen()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置画刷
+ * @param[in] brush 新的画刷
+ * @note 在 MagnitudeAsColor 模式下画刷被忽略
+ * @sa brush(), pen()
+ * \endif
  */
 void QwtPlotVectorField::setBrush( const QBrush& brush )
 {
@@ -389,20 +442,36 @@ void QwtPlotVectorField::setBrush( const QBrush& brush )
     }
 }
 
-/*!
-   \return Brush used to fill the symbol
-   \sa setBrush(), pen()
+/**
+ * \if ENGLISH
+ * @brief Get the brush used to fill the symbol
+ * @return Brush used for filling
+ * @sa setBrush(), pen()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于填充符号的画刷
+ * @return 用于填充的画刷
+ * @sa setBrush(), pen()
+ * \endif
  */
 QBrush QwtPlotVectorField::brush() const
 {
     return m_data->brush;
 }
 
-/*!
-   Set the origin for the symbols/arrows
-
-   \param origin Origin
-   \sa indicatorOrigin()
+/**
+ * \if ENGLISH
+ * @brief Set the origin for the symbols/arrows
+ * @param[in] origin Origin position
+ * @sa indicatorOrigin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置符号/箭头的原点
+ * @param[in] origin 原点位置
+ * @sa indicatorOrigin()
+ * \endif
  */
 void QwtPlotVectorField::setIndicatorOrigin( IndicatorOrigin origin )
 {
@@ -414,22 +483,41 @@ void QwtPlotVectorField::setIndicatorOrigin( IndicatorOrigin origin )
     }
 }
 
-//! \return origin for the symbols/arrows
+/**
+ * \if ENGLISH
+ * @brief Get the origin for the symbols/arrows
+ * @return Origin position
+ * @sa setIndicatorOrigin()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取符号/箭头的原点
+ * @return 原点位置
+ * @sa setIndicatorOrigin()
+ * \endif
+ */
 QwtPlotVectorField::IndicatorOrigin QwtPlotVectorField::indicatorOrigin() const
 {
     return m_data->indicatorOrigin;
 }
 
-/*!
-   \brief Set the magnitudeScaleFactor
-
-   The length of the arrow in screen coordinate units is calculated by
-   scaling the magnitude by the magnitudeScaleFactor.
-
-   \param factor Scale factor
-
-   \sa magnitudeScaleFactor(), arrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Set the magnitude scale factor
+ * @details The length of the arrow in screen coordinate units is calculated by
+ *          scaling the magnitude by the magnitudeScaleFactor.
+ * @param[in] factor Scale factor
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa magnitudeScaleFactor(), arrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置大小缩放因子
+ * @details 箭头在屏幕坐标单位中的长度通过将大小乘以 magnitudeScaleFactor 来计算。
+ * @param[in] factor 缩放因子
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa magnitudeScaleFactor(), arrowLength()
+ * \endif
  */
 void QwtPlotVectorField::setMagnitudeScaleFactor( double factor )
 {
@@ -440,29 +528,46 @@ void QwtPlotVectorField::setMagnitudeScaleFactor( double factor )
     }
 }
 
-/*!
-   \return Scale factor used to calculate the arrow length from the magnitude
-
-   The length of the arrow in screen coordinate units is calculated by
-   scaling the magnitude by the magnitudeScaleFactor.
-
-   Default implementation simply scales the vector using the magnitudeScaleFactor
-   property.  Re-implement this function to provide special handling for
-   zero/non-zero magnitude arrows, or impose minimum/maximum arrow length limits.
-
-   \return Length of arrow to be drawn in dependence of vector magnitude.
-   \sa magnitudeScaleFactor
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Get the scale factor used to calculate the arrow length from the magnitude
+ * @details The length of the arrow in screen coordinate units is calculated by
+ *          scaling the magnitude by the magnitudeScaleFactor.
+ *          Default implementation simply scales the vector using the magnitudeScaleFactor property.
+ *          Re-implement this function to provide special handling for zero/non-zero magnitude arrows,
+ *          or impose minimum/maximum arrow length limits.
+ * @return Scale factor
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa setMagnitudeScaleFactor()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于从大小计算箭头长度的缩放因子
+ * @details 箭头在屏幕坐标单位中的长度通过将大小乘以 magnitudeScaleFactor 来计算。
+ *          默认实现只是使用 magnitudeScaleFactor 属性缩放向量。
+ *          重写此函数可为零/非零大小箭头提供特殊处理，或设置最小/最大箭头长度限制。
+ * @return 缩放因子
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa setMagnitudeScaleFactor()
+ * \endif
  */
 double QwtPlotVectorField::magnitudeScaleFactor() const
 {
     return m_data->magnitudeScaleFactor;
 }
 
-/*!
-   Set the raster size used for filtering samples
-
-   \sa rasterSize(), QwtPlotVectorField::FilterVectors
+/**
+ * \if ENGLISH
+ * @brief Set the raster size used for filtering samples
+ * @param[in] size Raster size
+ * @sa rasterSize(), QwtPlotVectorField::FilterVectors
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置用于过滤样本的栅格大小
+ * @param[in] size 栅格大小
+ * @sa rasterSize(), QwtPlotVectorField::FilterVectors
+ * \endif
  */
 void QwtPlotVectorField::setRasterSize( const QSizeF& size )
 {
@@ -473,21 +578,38 @@ void QwtPlotVectorField::setRasterSize( const QSizeF& size )
     }
 }
 
-/*!
-   \return raster size used for filtering samples
-   \sa setRasterSize(), QwtPlotVectorField::FilterVectors
+/**
+ * \if ENGLISH
+ * @brief Get the raster size used for filtering samples
+ * @return Raster size
+ * @sa setRasterSize(), QwtPlotVectorField::FilterVectors
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于过滤样本的栅格大小
+ * @return 栅格大小
+ * @sa setRasterSize(), QwtPlotVectorField::FilterVectors
+ * \endif
  */
 QSizeF QwtPlotVectorField::rasterSize() const
 {
     return m_data->rasterSize;
 }
 
-/*!
-   Specify an attribute how to draw the curve
-
-   \param attribute Paint attribute
-   \param on On/Off
-   \sa testPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Specify an attribute how to draw the curve
+ * @param[in] attribute Paint attribute
+ * @param[in] on On/Off
+ * @sa testPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定绘制曲线的属性
+ * @param[in] attribute 绘制属性
+ * @param[in] on 开启/关闭
+ * @sa testPaintAttribute()
+ * \endif
  */
 void QwtPlotVectorField::setPaintAttribute(
     PaintAttribute attribute, bool on )
@@ -506,9 +628,18 @@ void QwtPlotVectorField::setPaintAttribute(
     }
 }
 
-/*!
-    \return True, when attribute is enabled
-    \sa PaintAttribute, setPaintAttribute()
+/**
+ * \if ENGLISH
+ * @brief Test a paint attribute
+ * @return True when attribute is enabled
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试绘制属性
+ * @return 当属性启用时返回 true
+ * @sa PaintAttribute, setPaintAttribute()
+ * \endif
  */
 bool QwtPlotVectorField::testPaintAttribute(
     PaintAttribute attribute ) const
@@ -516,19 +647,38 @@ bool QwtPlotVectorField::testPaintAttribute(
     return ( m_data->paintAttributes & attribute );
 }
 
-//! \return QwtPlotItem::Rtti_PlotField
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return QwtPlotItem::Rtti_PlotVectorField
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPlotItem::Rtti_PlotVectorField
+ * \endif
+ */
 int QwtPlotVectorField::rtti() const
 {
     return QwtPlotItem::Rtti_PlotVectorField;
 }
 
-/*!
-   Sets a new arrow symbol (implementation of arrow drawing code).
-
-   \param symbol Arrow symbol
-
-   \sa symbol(), drawSymbol()
-   \note Ownership is transferred to QwtPlotVectorField.
+/**
+ * \if ENGLISH
+ * @brief Set a new arrow symbol
+ * @details Sets a new arrow symbol (implementation of arrow drawing code).
+ * @param[in] symbol Arrow symbol
+ * @note Ownership is transferred to QwtPlotVectorField.
+ * @sa symbol(), drawSymbol()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置新的箭头符号
+ * @details 设置新的箭头符号（箭头绘制代码的实现）。
+ * @param[in] symbol 箭头符号
+ * @note 所有权转移给 QwtPlotVectorField。
+ * @sa symbol(), drawSymbol()
+ * \endif
  */
 void QwtPlotVectorField::setSymbol( QwtVectorFieldSymbol* symbol )
 {
@@ -542,48 +692,76 @@ void QwtPlotVectorField::setSymbol( QwtVectorFieldSymbol* symbol )
     legendChanged();
 }
 
-/*!
-   \return arrow symbol
-   \sa setSymbol(), drawSymbol()
+/**
+ * \if ENGLISH
+ * @brief Get the arrow symbol
+ * @return Arrow symbol
+ * @sa setSymbol(), drawSymbol()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取箭头符号
+ * @return 箭头符号
+ * @sa setSymbol(), drawSymbol()
+ * \endif
  */
 const QwtVectorFieldSymbol* QwtPlotVectorField::symbol() const
 {
     return m_data->symbol;
 }
 
-/*!
-   Initialize data with an array of samples.
-   \param samples Vector of points
+/**
+ * \if ENGLISH
+ * @brief Initialize data with an array of samples
+ * @param[in] samples Vector of points
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 用样本数组初始化数据
+ * @param[in] samples 点向量
+ * \endif
  */
 void QwtPlotVectorField::setSamples( const QVector< QwtVectorFieldSample >& samples )
 {
     setData( new QwtVectorFieldData( samples ) );
 }
 
-/*!
-   Assign a series of samples
-
-   setSamples() is just a wrapper for setData() without any additional
-   value - beside that it is easier to find for the developer.
-
-   \param data Data
-   \warning The item takes ownership of the data object, deleting
-           it when its not used anymore.
+/**
+ * \if ENGLISH
+ * @brief Assign a series of samples
+ * @details setSamples() is just a wrapper for setData() without any additional
+ *          value - beside that it is easier to find for the developer.
+ * @param[in] data Data
+ * @warning The item takes ownership of the data object, deleting it when its not used anymore.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 分配一系列样本
+ * @details setSamples() 只是 setData() 的包装器，没有任何额外价值——除了让开发者更容易找到。
+ * @param[in] data 数据
+ * @warning 该项获取数据对象的所有权，当不再使用时会删除它。
+ * \endif
  */
 void QwtPlotVectorField::setSamples( QwtVectorFieldData* data )
 {
     setData( data );
 }
 
-/*!
-   Change the color map
-
-   The color map is used to map the magnitude of a sample into
-   a color using a known range for the magnitudes.
-
-   \param colorMap Color Map
-
-   \sa colorMap(), magnitudeRange()
+/**
+ * \if ENGLISH
+ * @brief Change the color map
+ * @details The color map is used to map the magnitude of a sample into
+ *          a color using a known range for the magnitudes.
+ * @param[in] colorMap Color Map
+ * @sa colorMap(), magnitudeRange()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 更改颜色映射
+ * @details 颜色映射用于使用已知的大小范围将样本的大小映射到颜色。
+ * @param[in] colorMap 颜色映射
+ * @sa colorMap(), magnitudeRange()
+ * \endif
  */
 void QwtPlotVectorField::setColorMap( QwtColorMap* colorMap )
 {
@@ -600,21 +778,38 @@ void QwtPlotVectorField::setColorMap( QwtColorMap* colorMap )
     itemChanged();
 }
 
-/*!
-   \return Color Map used for mapping the intensity values to colors
-   \sa setColorMap()
+/**
+ * \if ENGLISH
+ * @brief Get the color map used for mapping intensity values to colors
+ * @return Color Map
+ * @sa setColorMap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于将强度值映射到颜色的颜色映射
+ * @return 颜色映射
+ * @sa setColorMap()
+ * \endif
  */
 const QwtColorMap* QwtPlotVectorField::colorMap() const
 {
     return m_data->colorMap;
 }
 
-/*!
-   Specify a mode how to represent the magnitude a n arrow/symbol
-
-   \param mode Mode
-   \param on On/Off
-   \sa testMagnitudeMode()
+/**
+ * \if ENGLISH
+ * @brief Specify a mode how to represent the magnitude of an arrow/symbol
+ * @param[in] mode Mode
+ * @param[in] on On/Off
+ * @sa testMagnitudeMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 指定表示箭头/符号大小的方式
+ * @param[in] mode 模式
+ * @param[in] on 开启/关闭
+ * @sa testMagnitudeMode()
+ * \endif
  */
 void QwtPlotVectorField::setMagnitudeMode( MagnitudeMode mode, bool on )
 {
@@ -629,22 +824,41 @@ void QwtPlotVectorField::setMagnitudeMode( MagnitudeMode mode, bool on )
     itemChanged();
 }
 
-/*!
-    \return True, when mode is enabled
-    \sa MagnitudeMode, setMagnitudeMode()
+/**
+ * \if ENGLISH
+ * @brief Test a magnitude mode
+ * @return True when mode is enabled
+ * @sa MagnitudeMode, setMagnitudeMode()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 测试大小模式
+ * @return 当模式启用时返回 true
+ * @sa MagnitudeMode, setMagnitudeMode()
+ * \endif
  */
 bool QwtPlotVectorField::testMagnitudeMode( MagnitudeMode mode ) const
 {
     return m_data->magnitudeModes & mode;
 }
 
-/*!
-   Sets the min/max magnitudes to be used for color map lookups.
-
-   If invalid (min=max=0 or negative values), the range is determined from
-   the current range of magnitudes in the vector samples.
-
-   \sa magnitudeRange(), colorMap()
+/**
+ * \if ENGLISH
+ * @brief Set the magnitude range for color map lookups
+ * @details Sets the min/max magnitudes to be used for color map lookups.
+ *          If invalid (min=max=0 or negative values), the range is determined from
+ *          the current range of magnitudes in the vector samples.
+ * @param[in] magnitudeRange Magnitude range
+ * @sa magnitudeRange(), colorMap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置用于颜色映射查找的大小范围
+ * @details 设置用于颜色映射查找的最小/最大大小。
+ *          如果无效（min=max=0 或负值），则范围从向量样本的当前大小范围确定。
+ * @param[in] magnitudeRange 大小范围
+ * @sa magnitudeRange(), colorMap()
+ * \endif
  */
 void QwtPlotVectorField::setMagnitudeRange( const QwtInterval& magnitudeRange )
 {
@@ -655,22 +869,38 @@ void QwtPlotVectorField::setMagnitudeRange( const QwtInterval& magnitudeRange )
     }
 }
 
-/*!
-    \return min/max magnitudes to be used for color map lookups
-   \sa setMagnitudeRange(), colorMap()
+/**
+ * \if ENGLISH
+ * @brief Get the magnitude range for color map lookups
+ * @return Magnitude range
+ * @sa setMagnitudeRange(), colorMap()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取用于颜色映射查找的大小范围
+ * @return 大小范围
+ * @sa setMagnitudeRange(), colorMap()
+ * \endif
  */
 QwtInterval QwtPlotVectorField::magnitudeRange() const
 {
     return m_data->magnitudeRange;
 }
 
-/*!
-   Set a minimum for the arrow length of non zero vectors
-
-   \param length Minimum for the arrow length in pixels
-
-   \sa minArrowLength(), setMaxArrowLength(), arrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Set a minimum for the arrow length of non zero vectors
+ * @param[in] length Minimum for the arrow length in pixels
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa minArrowLength(), setMaxArrowLength(), arrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置非零向量箭头长度的最小值
+ * @param[in] length 箭头长度的最小值（像素）
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa minArrowLength(), setMaxArrowLength(), arrowLength()
+ * \endif
  */
 void QwtPlotVectorField::setMinArrowLength( double length )
 {
@@ -683,24 +913,40 @@ void QwtPlotVectorField::setMinArrowLength( double length )
     }
 }
 
-/*!
-   \return minimum for the arrow length of non zero vectors
-
-   \sa setMinArrowLength(), maxArrowLength(), arrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Get the minimum for the arrow length of non zero vectors
+ * @return Minimum for the arrow length in pixels
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa setMinArrowLength(), maxArrowLength(), arrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取非零向量箭头长度的最小值
+ * @return 箭头长度的最小值（像素）
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa setMinArrowLength(), maxArrowLength(), arrowLength()
+ * \endif
  */
 double QwtPlotVectorField::minArrowLength() const
 {
     return m_data->minArrowLength;
 }
 
-/*!
-   Set a maximum for the arrow length
-
-   \param length Maximum for the arrow length in pixels
-
-   \sa maxArrowLength(), setMinArrowLength(), arrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Set a maximum for the arrow length
+ * @param[in] length Maximum for the arrow length in pixels
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa maxArrowLength(), setMinArrowLength(), arrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 设置箭头长度的最大值
+ * @param[in] length 箭头长度的最大值（像素）
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa maxArrowLength(), setMinArrowLength(), arrowLength()
+ * \endif
  */
 void QwtPlotVectorField::setMaxArrowLength( double length )
 {
@@ -713,32 +959,52 @@ void QwtPlotVectorField::setMaxArrowLength( double length )
     }
 }
 
-/*!
-   \return maximum for the arrow length
-
-   \sa setMinArrowLength(), maxArrowLength(), arrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Get the maximum for the arrow length
+ * @return Maximum for the arrow length in pixels
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa setMinArrowLength(), maxArrowLength(), arrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取箭头长度的最大值
+ * @return 箭头长度的最大值（像素）
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa setMinArrowLength(), maxArrowLength(), arrowLength()
+ * \endif
  */
 double QwtPlotVectorField::maxArrowLength() const
 {
     return m_data->maxArrowLength;
 }
 
-/*!
-   Computes length of the arrow in screen coordinate units based on its magnitude.
-
-   Default implementation simply scales the vector using the magnitudeScaleFactor()
-   If the result is not null, the length is then bounded into the interval
-   [ minArrowLength(), maxArrowLength() ].
-
-   Re-implement this function to provide special handling for
-   zero/non-zero magnitude arrows, or impose minimum/maximum arrow length limits.
-
-   \param magnitude Magnitude
-   \return Length of arrow to be drawn in dependence of vector magnitude.
-
-   \sa magnitudeScaleFactor, minArrowLength(), maxArrowLength()
-   \note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+/**
+ * \if ENGLISH
+ * @brief Calculate the arrow length for a given magnitude
+ * @details Computes length of the arrow in screen coordinate units based on its magnitude.
+ *          Default implementation simply scales the vector using the magnitudeScaleFactor().
+ *          If the result is not null, the length is then bounded into the interval
+ *          [ minArrowLength(), maxArrowLength() ].
+ *          Re-implement this function to provide special handling for
+ *          zero/non-zero magnitude arrows, or impose minimum/maximum arrow length limits.
+ * @param[in] magnitude Magnitude
+ * @return Length of arrow to be drawn in dependence of vector magnitude.
+ * @note Has no effect when QwtPlotVectorField::MagnitudeAsLength is not enabled
+ * @sa magnitudeScaleFactor, minArrowLength(), maxArrowLength()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 根据给定大小计算箭头长度
+ * @details 根据大小计算箭头在屏幕坐标单位中的长度。
+ *          默认实现只是使用 magnitudeScaleFactor() 缩放向量。
+ *          如果结果不为空，长度将被限制在区间 [ minArrowLength(), maxArrowLength() ] 中。
+ *          重写此函数可为零/非零大小箭头提供特殊处理，或设置最小/最大箭头长度限制。
+ * @param[in] magnitude 大小
+ * @return 根据向量大小绘制的箭头长度
+ * @note 当未启用 QwtPlotVectorField::MagnitudeAsLength 时无效
+ * @sa magnitudeScaleFactor, minArrowLength(), maxArrowLength()
+ * \endif
  */
 double QwtPlotVectorField::arrowLength( double magnitude ) const
 {
@@ -763,6 +1029,17 @@ double QwtPlotVectorField::arrowLength( double magnitude ) const
     return length;
 }
 
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle of all samples
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取边界矩形
+ * @return 所有样本的边界矩形
+ * \endif
+ */
 QRectF QwtPlotVectorField::boundingRect() const
 {
 #if 0
@@ -776,13 +1053,22 @@ QRectF QwtPlotVectorField::boundingRect() const
     return QwtPlotSeriesItem::boundingRect();
 }
 
-/*!
-   \return Icon representing the vector fields on the legend
-
-   \param index Index of the legend entry ( ignored as there is only one )
-   \param size Icon size
-
-   \sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+/**
+ * \if ENGLISH
+ * @brief Get the icon representing the vector fields on the legend
+ * @param[in] index Index of the legend entry ( ignored as there is only one )
+ * @param[in] size Icon size
+ * @return Legend icon
+ * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 获取图例上表示矢量场的图标
+ * @param[in] index 图例条目的索引（忽略，因为只有一个）
+ * @param[in] size 图标大小
+ * @return 图例图标
+ * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+ * \endif
  */
 QwtGraphic QwtPlotVectorField::legendIcon(
     int index, const QSizeF& size ) const
@@ -810,16 +1096,27 @@ QwtGraphic QwtPlotVectorField::legendIcon(
     return icon;
 }
 
-/*!
-   Draw a subset of the points
-
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
-         series will be painted to its last sample.
+/**
+ * \if ENGLISH
+ * @brief Draw a subset of the points
+ * @param[in] painter Painter
+ * @param[in] xMap Maps x-values into pixel coordinates.
+ * @param[in] yMap Maps y-values into pixel coordinates.
+ * @param[in] canvasRect Contents rectangle of the canvas
+ * @param[in] from Index of the first sample to be painted
+ * @param[in] to Index of the last sample to be painted. If to < 0 the
+ *               series will be painted to its last sample.
+ * \endif
+ *
+ * \if CHINESE
+ * @brief 绘制点的一部分
+ * @param[in] painter 绘图器
+ * @param[in] xMap 将 x 值映射到像素坐标。
+ * @param[in] yMap 将 y 值映射到像素坐标。
+ * @param[in] canvasRect 画布的内容矩形
+ * @param[in] from 要绘制的第一个样本的索引
+ * @param[in] to 要绘制的最后一个样本的索引。如果 to < 0，则绘制到最后一个样本。
+ * \endif
  */
 void QwtPlotVectorField::drawSeries( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,

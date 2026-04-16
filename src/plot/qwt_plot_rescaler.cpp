@@ -72,13 +72,21 @@ private:
 };
 
 /*!
-   Constructor
+   \if ENGLISH
+   @brief Constructs a rescaler for the given canvas
+   @param[in] canvas Canvas widget
+   @param[in] referenceAxis Reference axis, see RescalePolicy
+   @param[in] policy Rescale policy
+   @sa setRescalePolicy(), setReferenceAxis()
+   \endif
 
-   \param canvas Canvas
-   \param referenceAxis Reference axis, see RescalePolicy
-   \param policy Rescale policy
-
-   \sa setRescalePolicy(), setReferenceAxis()
+   \if CHINESE
+   @brief 为给定的画布构造重缩放器
+   @param[in] canvas 画布控件
+   @param[in] referenceAxis 参考轴，参见 RescalePolicy
+   @param[in] policy 重缩放策略
+   @sa setRescalePolicy(), setReferenceAxis()
+   \endif
  */
 QwtPlotRescaler::QwtPlotRescaler(QWidget* canvas, QwtAxisId referenceAxis, RescalePolicy policy) : QObject(canvas)
 {
@@ -89,20 +97,35 @@ QwtPlotRescaler::QwtPlotRescaler(QWidget* canvas, QwtAxisId referenceAxis, Resca
     setEnabled(true);
 }
 
-//! Destructor
+/*!
+   \if ENGLISH
+   @brief Destructs the rescaler
+   \endif
+
+   \if CHINESE
+   @brief 析构重缩放器
+   \endif
+ */
 QwtPlotRescaler::~QwtPlotRescaler()
 {
     delete m_data;
 }
 
 /*!
-   \brief En/disable the rescaler
+   \if ENGLISH
+   @brief Enables or disables the rescaler
+   @details When enabled is true, an event filter is installed for the canvas,
+            otherwise the event filter is removed.
+   @param[in] on true to enable, false to disable
+   @sa isEnabled(), eventFilter()
+   \endif
 
-   When enabled is true an event filter is installed for
-   the canvas, otherwise the event filter is removed.
-
-   \param on true or false
-   \sa isEnabled(), eventFilter()
+   \if CHINESE
+   @brief 启用或禁用重缩放器
+   @details 当 enabled 为 true 时，为画布安装事件过滤器，否则移除事件过滤器。
+   @param[in] on true 启用，false 禁用
+   @sa isEnabled(), eventFilter()
+   \endif
  */
 void QwtPlotRescaler::setEnabled(bool on)
 {
@@ -120,8 +143,17 @@ void QwtPlotRescaler::setEnabled(bool on)
 }
 
 /*!
-   \return true when enabled, false otherwise
-   \sa setEnabled, eventFilter()
+   \if ENGLISH
+   @brief Checks if the rescaler is enabled
+   @return true if enabled, false otherwise
+   @sa setEnabled(), eventFilter()
+   \endif
+
+   \if CHINESE
+   @brief 检查重缩放器是否启用
+   @return 如果启用则返回 true，否则返回 false
+   @sa setEnabled(), eventFilter()
+   \endif
  */
 bool QwtPlotRescaler::isEnabled() const
 {
@@ -129,10 +161,17 @@ bool QwtPlotRescaler::isEnabled() const
 }
 
 /*!
-   Change the rescale policy
+   \if ENGLISH
+   @brief Sets the rescale policy
+   @param[in] policy Rescale policy
+   @sa rescalePolicy()
+   \endif
 
-   \param policy Rescale policy
-   \sa rescalePolicy()
+   \if CHINESE
+   @brief 设置重缩放策略
+   @param[in] policy 重缩放策略
+   @sa rescalePolicy()
+   \endif
  */
 void QwtPlotRescaler::setRescalePolicy(RescalePolicy policy)
 {
@@ -140,8 +179,17 @@ void QwtPlotRescaler::setRescalePolicy(RescalePolicy policy)
 }
 
 /*!
-   \return Rescale policy
-   \sa setRescalePolicy()
+   \if ENGLISH
+   @brief Gets the rescale policy
+   @return Rescale policy
+   @sa setRescalePolicy()
+   \endif
+
+   \if CHINESE
+   @brief 获取重缩放策略
+   @return 重缩放策略
+   @sa setRescalePolicy()
+   \endif
  */
 QwtPlotRescaler::RescalePolicy QwtPlotRescaler::rescalePolicy() const
 {
@@ -149,10 +197,19 @@ QwtPlotRescaler::RescalePolicy QwtPlotRescaler::rescalePolicy() const
 }
 
 /*!
-   Set the reference axis ( see RescalePolicy )
+   \if ENGLISH
+   @brief Sets the reference axis
+   @details The reference axis is used as the basis for rescale calculations.
+   @param[in] axisId Axis identifier
+   @sa referenceAxis()
+   \endif
 
-   \param axisId Axis
-   \sa referenceAxis()
+   \if CHINESE
+   @brief 设置参考轴
+   @details 参考轴用作重缩放计算的基础。
+   @param[in] axisId 轴标识符
+   @sa referenceAxis()
+   \endif
  */
 void QwtPlotRescaler::setReferenceAxis(QwtAxisId axisId)
 {
@@ -160,8 +217,17 @@ void QwtPlotRescaler::setReferenceAxis(QwtAxisId axisId)
 }
 
 /*!
-   \return Reference axis ( see RescalePolicy )
-   \sa setReferenceAxis()
+   \if ENGLISH
+   @brief Gets the reference axis
+   @return Reference axis identifier
+   @sa setReferenceAxis()
+   \endif
+
+   \if CHINESE
+   @brief 获取参考轴
+   @return 参考轴标识符
+   @sa setReferenceAxis()
+   \endif
  */
 QwtAxisId QwtPlotRescaler::referenceAxis() const
 {
@@ -169,10 +235,17 @@ QwtAxisId QwtPlotRescaler::referenceAxis() const
 }
 
 /*!
-   Set the direction in which all axis should be expanded
+   \if ENGLISH
+   @brief Sets the expanding direction for all axes
+   @param[in] direction Expanding direction
+   @sa expandingDirection()
+   \endif
 
-   \param direction Direction
-   \sa expandingDirection()
+   \if CHINESE
+   @brief 设置所有轴的扩展方向
+   @param[in] direction 扩展方向
+   @sa expandingDirection()
+   \endif
  */
 void QwtPlotRescaler::setExpandingDirection(ExpandingDirection direction)
 {
@@ -181,11 +254,19 @@ void QwtPlotRescaler::setExpandingDirection(ExpandingDirection direction)
 }
 
 /*!
-   Set the direction in which an axis should be expanded
+   \if ENGLISH
+   @brief Sets the expanding direction for a specific axis
+   @param[in] axisId Axis identifier
+   @param[in] direction Expanding direction
+   @sa expandingDirection()
+   \endif
 
-   \param axisId Axis
-   \param direction Direction
-   \sa expandingDirection()
+   \if CHINESE
+   @brief 设置指定轴的扩展方向
+   @param[in] axisId 轴标识符
+   @param[in] direction 扩展方向
+   @sa expandingDirection()
+   \endif
  */
 void QwtPlotRescaler::setExpandingDirection(QwtAxisId axisId, ExpandingDirection direction)
 {
@@ -194,10 +275,19 @@ void QwtPlotRescaler::setExpandingDirection(QwtAxisId axisId, ExpandingDirection
 }
 
 /*!
-   \return Direction in which an axis should be expanded
+   \if ENGLISH
+   @brief Gets the expanding direction for a specific axis
+   @param[in] axisId Axis identifier
+   @return Expanding direction for the specified axis
+   @sa setExpandingDirection()
+   \endif
 
-   \param axisId Axis
-   \sa setExpandingDirection()
+   \if CHINESE
+   @brief 获取指定轴的扩展方向
+   @param[in] axisId 轴标识符
+   @return 指定轴的扩展方向
+   @sa setExpandingDirection()
+   \endif
  */
 QwtPlotRescaler::ExpandingDirection QwtPlotRescaler::expandingDirection(QwtAxisId axisId) const
 {
@@ -208,11 +298,20 @@ QwtPlotRescaler::ExpandingDirection QwtPlotRescaler::expandingDirection(QwtAxisI
 }
 
 /*!
-   Set the aspect ratio between the scale of the reference axis
-   and the other scales. The default ratio is 1.0
+   \if ENGLISH
+   @brief Sets the aspect ratio for all axes
+   @details Sets the aspect ratio between the scale of the reference axis
+            and other scales. The default ratio is 1.0.
+   @param[in] ratio Aspect ratio
+   @sa aspectRatio()
+   \endif
 
-   \param ratio Aspect ratio
-   \sa aspectRatio()
+   \if CHINESE
+   @brief 设置所有轴的宽高比
+   @details 设置参考轴与其他轴之间的宽高比。默认比值为 1.0。
+   @param[in] ratio 宽高比
+   @sa aspectRatio()
+   \endif
  */
 void QwtPlotRescaler::setAspectRatio(double ratio)
 {
@@ -221,12 +320,22 @@ void QwtPlotRescaler::setAspectRatio(double ratio)
 }
 
 /*!
-   Set the aspect ratio between the scale of the reference axis
-   and another scale. The default ratio is 1.0
+   \if ENGLISH
+   @brief Sets the aspect ratio for a specific axis
+   @details Sets the aspect ratio between the scale of the reference axis
+            and another scale. The default ratio is 1.0.
+   @param[in] axisId Axis identifier
+   @param[in] ratio Aspect ratio
+   @sa aspectRatio()
+   \endif
 
-   \param axisId Axis
-   \param ratio Aspect ratio
-   \sa aspectRatio()
+   \if CHINESE
+   @brief 设置指定轴的宽高比
+   @details 设置参考轴与指定轴之间的宽高比。默认比值为 1.0。
+   @param[in] axisId 轴标识符
+   @param[in] ratio 宽高比
+   @sa aspectRatio()
+   \endif
  */
 void QwtPlotRescaler::setAspectRatio(QwtAxisId axisId, double ratio)
 {
@@ -239,10 +348,19 @@ void QwtPlotRescaler::setAspectRatio(QwtAxisId axisId, double ratio)
 }
 
 /*!
-   \return Aspect ratio between an axis and the reference axis.
+   \if ENGLISH
+   @brief Gets the aspect ratio for a specific axis
+   @param[in] axisId Axis identifier
+   @return Aspect ratio between the specified axis and the reference axis
+   @sa setAspectRatio()
+   \endif
 
-   \param axisId Axis
-   \sa setAspectRatio()
+   \if CHINESE
+   @brief 获取指定轴的宽高比
+   @param[in] axisId 轴标识符
+   @return 指定轴与参考轴之间的宽高比
+   @sa setAspectRatio()
+   \endif
  */
 double QwtPlotRescaler::aspectRatio(QwtAxisId axisId) const
 {
@@ -253,14 +371,22 @@ double QwtPlotRescaler::aspectRatio(QwtAxisId axisId) const
 }
 
 /*!
-   Set an interval hint for an axis
+   \if ENGLISH
+   @brief Sets an interval hint for an axis
+   @details In Fitting mode, the hint is used as the minimal interval
+            that always needs to be displayed.
+   @param[in] axisId Axis identifier
+   @param[in] interval Interval hint
+   @sa intervalHint(), RescalePolicy
+   \endif
 
-   In Fitting mode, the hint is used as minimal interval
-   that always needs to be displayed.
-
-   \param axisId Axis
-   \param interval Axis
-   \sa intervalHint(), RescalePolicy
+   \if CHINESE
+   @brief 设置轴的区间提示
+   @details 在 Fitting 模式下，提示用作始终需要显示的最小区间。
+   @param[in] axisId 轴标识符
+   @param[in] interval 区间提示
+   @sa intervalHint(), RescalePolicy
+   \endif
  */
 void QwtPlotRescaler::setIntervalHint(QwtAxisId axisId, const QwtInterval& interval)
 {
@@ -269,9 +395,19 @@ void QwtPlotRescaler::setIntervalHint(QwtAxisId axisId, const QwtInterval& inter
 }
 
 /*!
-   \param axisId Axis
-   \return Interval hint
-   \sa setIntervalHint(), RescalePolicy
+   \if ENGLISH
+   @brief Gets the interval hint for an axis
+   @param[in] axisId Axis identifier
+   @return Interval hint
+   @sa setIntervalHint(), RescalePolicy
+   \endif
+
+   \if CHINESE
+   @brief 获取轴的区间提示
+   @param[in] axisId 轴标识符
+   @return 区间提示
+   @sa setIntervalHint(), RescalePolicy
+   \endif
  */
 QwtInterval QwtPlotRescaler::intervalHint(QwtAxisId axisId) const
 {
@@ -281,19 +417,49 @@ QwtInterval QwtPlotRescaler::intervalHint(QwtAxisId axisId) const
     return QwtInterval();
 }
 
-//! \return plot canvas
+/*!
+   \if ENGLISH
+   @brief Gets the canvas widget
+   @return Canvas widget
+   \endif
+
+   \if CHINESE
+   @brief 获取画布控件
+   @return 画布控件
+   \endif
+ */
 QWidget* QwtPlotRescaler::canvas()
 {
     return qobject_cast< QWidget* >(parent());
 }
 
-//! \return plot canvas
+/*!
+   \if ENGLISH
+   @brief Gets the canvas widget (const version)
+   @return Canvas widget (const)
+   \endif
+
+   \if CHINESE
+   @brief 获取画布控件（常量版本）
+   @return 画布控件（常量）
+   \endif
+ */
 const QWidget* QwtPlotRescaler::canvas() const
 {
     return qobject_cast< const QWidget* >(parent());
 }
 
-//! \return plot widget
+/*!
+   \if ENGLISH
+   @brief Gets the plot widget
+   @return Plot widget
+   \endif
+
+   \if CHINESE
+   @brief 获取绘图控件
+   @return 绘图控件
+   \endif
+ */
 QwtPlot* QwtPlotRescaler::plot()
 {
     QWidget* w = canvas();
@@ -303,7 +469,17 @@ QwtPlot* QwtPlotRescaler::plot()
     return qobject_cast< QwtPlot* >(w);
 }
 
-//! \return plot widget
+/*!
+   \if ENGLISH
+   @brief Gets the plot widget (const version)
+   @return Plot widget (const)
+   \endif
+
+   \if CHINESE
+   @brief 获取绘图控件（常量版本）
+   @return 绘图控件（常量）
+   \endif
+ */
 const QwtPlot* QwtPlotRescaler::plot() const
 {
     const QWidget* w = canvas();
@@ -313,7 +489,23 @@ const QwtPlot* QwtPlotRescaler::plot() const
     return qobject_cast< const QwtPlot* >(w);
 }
 
-//!  Event filter for the plot canvas
+/*!
+   \if ENGLISH
+   @brief Event filter for the plot canvas
+   @details Handles resize and polish request events for the canvas.
+   @param[in] object Object that received the event
+   @param[in] event Event that was received
+   @return false to allow further processing of the event
+   \endif
+
+   \if CHINESE
+   @brief 画布事件过滤器
+   @details 处理画布的调整大小和整理请求事件。
+   @param[in] object 接收事件的对象
+   @param[in] event 接收到的事件
+   @return false 以允许事件的进一步处理
+   \endif
+ */
 bool QwtPlotRescaler::eventFilter(QObject* object, QEvent* event)
 {
     if (object && object == canvas()) {
@@ -350,7 +542,17 @@ void QwtPlotRescaler::canvasResizeEvent(QResizeEvent* event)
     rescale(oldSize, newSize);
 }
 
-//! Adjust the plot axes scales
+/*!
+   \if ENGLISH
+   @brief Rescales the plot axes
+   @details Adjusts the plot axes scales based on the current canvas size.
+   \endif
+
+   \if CHINESE
+   @brief 重缩放绘图轴
+   @details 根据当前画布大小调整绘图轴的刻度。
+   \endif
+ */
 void QwtPlotRescaler::rescale() const
 {
     const QSize size = canvas()->contentsRect().size();

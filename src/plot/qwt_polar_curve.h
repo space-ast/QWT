@@ -100,7 +100,15 @@ public:
          */
         LegendShowLine = 0x01,
 
-        /// If the curve has a valid symbol it is painted.
+        /**
+         * \if ENGLISH
+         * If the curve has a valid symbol it is painted.
+         * \endif
+         *
+         * \if CHINESE
+         * 如果曲线有有效的符号，则绘制该符号。
+         * \endif
+         */
         LegendShowSymbol = 0x02
     };
 

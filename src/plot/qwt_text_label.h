@@ -60,53 +60,53 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
 
   public:
-    /// Constructor with parent
+    // Constructor with parent
     explicit QwtTextLabel( QWidget* parent = nullptr );
-    /// Constructor with text and parent
+    // Constructor with text and parent
     explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
-    /// Destructor
+    // Destructor
     virtual ~QwtTextLabel();
 
-    /// Set the text as plain text
+    // Set the text as plain text
     void setPlainText( const QString& );
-    /// Return the text as plain text
+    // Return the text as plain text
     QString plainText() const;
 
   public Q_SLOTS:
-    /// Set the text with auto format detection
+    // Set the text with auto format detection
     void setText( const QString&,
         QwtText::TextFormat textFormat = QwtText::AutoText );
-    /// Set the text
+    // Set the text
     virtual void setText( const QwtText& );
 
-    /// Clear the text
+    // Clear the text
     void clear();
 
   public:
-    /// Return the text
+    // Return the text
     const QwtText& text() const;
 
-    /// Return the indent
+    // Return the indent
     int indent() const;
-    /// Set the indent
+    // Set the indent
     void setIndent( int );
 
-    /// Return the margin
+    // Return the margin
     int margin() const;
-    /// Set the margin
+    // Set the margin
     void setMargin( int );
 
-    /// Return the size hint
+    // Return the size hint
     virtual QSize sizeHint() const override;
-    /// Return the minimum size hint
+    // Return the minimum size hint
     virtual QSize minimumSizeHint() const override;
-    /// Return the height for a given width
+    // Return the height for a given width
     virtual int heightForWidth( int ) const override;
 
-    /// Return the rectangle for the text
+    // Return the rectangle for the text
     QRect textRect() const;
 
-    /// Draw the text
+    // Draw the text
     virtual void drawText( QPainter*, const QRectF& );
 
   protected:

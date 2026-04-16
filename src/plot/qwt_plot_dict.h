@@ -61,22 +61,22 @@ using QwtPlotItemIterator = QList< QwtPlotItem* >::ConstIterator;
 class QWT_EXPORT QwtPlotDict
 {
 public:
-    /// Constructor
+    // Constructor
     explicit QwtPlotDict();
-    /// Destructor
+    // Destructor
     virtual ~QwtPlotDict();
 
-    /// Set the auto-delete mode
+    // Set the auto-delete mode
     void setAutoDelete(bool);
-    /// Get the auto-delete mode
+    // Get the auto-delete mode
     bool autoDelete() const;
 
-    /// Get the list of all items
+    // Get the list of all items
     const QwtPlotItemList& itemList() const;
-    /// Get the list of items with a specific RTTI value
+    // Get the list of items with a specific RTTI value
     QwtPlotItemList itemList(int rtti) const;
 
-    /// Detach items from the dictionary
+    // Detach items from the dictionary
     void detachItems(int rtti = QwtPlotItem::Rtti_PlotItem, bool autoDelete = true);
 
 protected:

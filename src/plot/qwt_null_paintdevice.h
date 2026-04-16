@@ -32,101 +32,113 @@
 #include <qpaintdevice.h>
 #include <qpaintengine.h>
 
-/*!
-   \brief A null paint device doing nothing
-
-   Sometimes important layout/rendering geometries are not
-   available or changeable from the public Qt class interface.
-   ( f.e hidden in the style implementation ).
-
-   QwtNullPaintDevice can be used to manipulate or filter out
-   this information by analyzing the stream of paint primitives.
-
-   F.e. QwtNullPaintDevice is used by QwtPlotCanvas to identify
-   styled backgrounds with rounded corners.
+/**
+ * \if ENGLISH
+ * @brief A null paint device that does nothing
+ * @details Sometimes important layout/rendering geometries are not
+ *          available or changeable from the public Qt class interface
+ *          (e.g., hidden in the style implementation).
+ *          QwtNullPaintDevice can be used to manipulate or filter out
+ *          this information by analyzing the stream of paint primitives.
+ *          For example, QwtNullPaintDevice is used by QwtPlotCanvas to identify
+ *          styled backgrounds with rounded corners.
+ * \endif
+ * \if CHINESE
+ * @brief 一个不执行任何操作的空绘制设备
+ * @details 有时重要的布局/渲染几何信息无法从公共 Qt 类接口获取或修改
+ *          （例如隐藏在样式实现中）。
+ *          QwtNullPaintDevice 可用于通过分析绘制原语流来操作或过滤这些信息。
+ *          例如，QwtPlotCanvas 使用 QwtNullPaintDevice 来识别带有圆角的样式背景。
+ * \endif
  */
-
 class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 {
   public:
-    /*!
-       \brief Render mode
-
-       \sa setMode(), mode()
+/**
+     * \if ENGLISH
+     * @brief Render mode for the paint device
+     * @details Controls how vector graphic primitives are processed.
+     * \endif
+     * \if CHINESE
+     * @brief 绘制设备的渲染模式
+     * @details 控制矢量图形原语的处理方式。
+     * \endif
      */
     enum Mode
     {
-        /*!
-           All vector graphic primitives are painted by
-           the corresponding draw methods
-         */
+        //! All vector graphic primitives are painted by corresponding draw methods
         NormalMode,
 
-        /*!
-           Vector graphic primitives ( beside polygons ) are mapped to a QPainterPath
-           and are painted by drawPath. In PathMode mode
-           only a few draw methods are called:
-
-           - drawPath()
-           - drawPixmap()
-           - drawImage()
-           - drawPolygon()
-         */
+        //! Vector graphic primitives (beside polygons) are mapped to QPainterPath
         PolygonPathMode,
 
-        /*!
-           Vector graphic primitives are mapped to a QPainterPath
-           and are painted by drawPath. In PathMode mode
-           only a few draw methods are called:
-
-           - drawPath()
-           - drawPixmap()
-           - drawImage()
-         */
+        //! All vector graphic primitives are mapped to QPainterPath
         PathMode
     };
 
+    //! Constructor
     QwtNullPaintDevice();
+    //! Destructor
     virtual ~QwtNullPaintDevice();
 
+    //! Set the render mode
     void setMode( Mode );
+    //! Get the render mode
     Mode mode() const;
 
+    //! Return the paint engine
     virtual QPaintEngine* paintEngine() const override;
 
+    //! Return metric information for the paint device
     virtual int metric( PaintDeviceMetric ) const override;
 
+    //! Draw rectangles (integer version)
     virtual void drawRects(const QRect*, int );
+    //! Draw rectangles (floating point version)
     virtual void drawRects(const QRectF*, int );
 
+    //! Draw lines (integer version)
     virtual void drawLines(const QLine*, int );
+    //! Draw lines (floating point version)
     virtual void drawLines(const QLineF*, int );
 
+    //! Draw ellipse (floating point version)
     virtual void drawEllipse(const QRectF&);
+    //! Draw ellipse (integer version)
     virtual void drawEllipse(const QRect&);
 
+    //! Draw a painter path
     virtual void drawPath(const QPainterPath&);
 
+    //! Draw points (floating point version)
     virtual void drawPoints(const QPointF*, int );
+    //! Draw points (integer version)
     virtual void drawPoints(const QPoint*, int );
 
+    //! Draw polygon (floating point version)
     virtual void drawPolygon( const QPointF*, int,
         QPaintEngine::PolygonDrawMode );
 
+    //! Draw polygon (integer version)
     virtual void drawPolygon( const QPoint*, int,
         QPaintEngine::PolygonDrawMode );
 
+    //! Draw a pixmap
     virtual void drawPixmap(const QRectF&,
         const QPixmap&, const QRectF&);
 
+    //! Draw a text item
     virtual void drawTextItem(const QPointF&, const QTextItem&);
 
+    //! Draw a tiled pixmap
     virtual void drawTiledPixmap(const QRectF&,
         const QPixmap&, const QPointF& );
 
+    //! Draw an image
     virtual void drawImage(const QRectF&, const QImage&,
         const QRectF&, Qt::ImageConversionFlags );
 
+    //! Update the paint engine state
     virtual void updateState( const QPaintEngineState& );
 
   protected:

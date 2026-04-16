@@ -61,9 +61,19 @@ public:
 };
 }
 
-/*!
-   Constructor
-   \param parent Parent widget
+/**
+ * \if ENGLISH
+ *   \brief Constructor
+ *   \param[in] parent Parent widget
+ *   \details Creates an analog clock widget with default appearance.
+ *            The clock is read-only and displays the current time.
+ * \endif
+ * \if CHINESE
+ *   \brief 构造函数
+ *   \param[in] parent 父控件
+ *   \details 创建一个具有默认外观的模拟时钟控件。
+ *            时钟为只读模式，显示当前时间。
+ * \endif
  */
 QwtAnalogClock::QwtAnalogClock(QWidget* parent) : QwtDial(parent)
 {
@@ -116,16 +126,29 @@ QwtAnalogClock::QwtAnalogClock(QWidget* parent) : QwtDial(parent)
     }
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ *   \brief Destructor
+ * \endif
+ * \if CHINESE
+ *   \brief 析构函数
+ * \endif
+ */
 QwtAnalogClock::~QwtAnalogClock()
 {
     for (int i = 0; i < NHands; i++)
         delete m_hand[ i ];
 }
 
-/*!
-   Nop method, use setHand() instead
-   \sa setHand()
+/**
+ * \if ENGLISH
+ *   \brief No-op method, use setHand() instead
+ *   \sa setHand()
+ * \endif
+ * \if CHINESE
+ *   \brief 空操作方法，请使用setHand()
+ *   \sa setHand()
+ * \endif
  */
 void QwtAnalogClock::setNeedle(QwtDialNeedle*)
 {
@@ -133,11 +156,19 @@ void QwtAnalogClock::setNeedle(QwtDialNeedle*)
     return;
 }
 
-/*!
-   Set a clock hand
-   \param hand Specifies the type of hand
-   \param needle Hand
-   \sa hand()
+/**
+ * \if ENGLISH
+ *   \brief Set a clock hand
+ *   \param[in] hand Specifies the type of hand (SecondHand, MinuteHand, HourHand)
+ *   \param[in] needle Needle object representing the hand
+ *   \sa hand()
+ * \endif
+ * \if CHINESE
+ *   \brief 设置时钟指针
+ *   \param[in] hand 指针类型（SecondHand、MinuteHand、HourHand）
+ *   \param[in] needle 表示指针的针对象
+ *   \sa hand()
+ * \endif
  */
 void QwtAnalogClock::setHand(Hand hand, QwtDialNeedle* needle)
 {
@@ -147,10 +178,19 @@ void QwtAnalogClock::setHand(Hand hand, QwtDialNeedle* needle)
     }
 }
 
-/*!
-   \return Clock hand
-   \param hd Specifies the type of hand
-   \sa setHand()
+/**
+ * \if ENGLISH
+ *   \brief Get a clock hand
+ *   \param[in] hd Specifies the type of hand
+ *   \return Clock hand needle, or nullptr if invalid hand type
+ *   \sa setHand()
+ * \endif
+ * \if CHINESE
+ *   \brief 获取时钟指针
+ *   \param[in] hd 指针类型
+ *   \return 时钟指针针对象，若类型无效则返回nullptr
+ *   \sa setHand()
+ * \endif
  */
 QwtDialNeedle* QwtAnalogClock::hand(Hand hd)
 {
@@ -160,27 +200,52 @@ QwtDialNeedle* QwtAnalogClock::hand(Hand hd)
     return m_hand[ hd ];
 }
 
-/*!
-   \return Clock hand
-   \param hd Specifies the type of hand
-   \sa setHand()
+/**
+ * \if ENGLISH
+ *   \brief Get a clock hand (const version)
+ *   \param[in] hd Specifies the type of hand
+ *   \return Clock hand needle (const), or nullptr if invalid hand type
+ *   \sa setHand()
+ * \endif
+ * \if CHINESE
+ *   \brief 获取时钟指针（const版本）
+ *   \param[in] hd 指针类型
+ *   \return 时钟指针针对象（const），若类型无效则返回nullptr
+ *   \sa setHand()
+ * \endif
  */
 const QwtDialNeedle* QwtAnalogClock::hand(Hand hd) const
 {
     return const_cast< QwtAnalogClock* >(this)->hand(hd);
 }
 
-/*!
-   \brief Set the current time
+/**
+ * \if ENGLISH
+ *   \brief Set the clock to display the current time
+ *   \details Updates the clock to show the current system time.
+ * \endif
+ * \if CHINESE
+ *   \brief 设置时钟显示当前时间
+ *   \details 更新时钟显示为当前系统时间。
+ * \endif
  */
 void QwtAnalogClock::setCurrentTime()
 {
     setTime(QTime::currentTime());
 }
 
-/*!
-   Set a time
-   \param time Time to display
+/**
+ * \if ENGLISH
+ *   \brief Set the clock to display a specific time
+ *   \param[in] time Time to display
+ *   \details Sets the clock to display the given time. If the time is invalid,
+ *            the clock display is invalidated.
+ * \endif
+ * \if CHINESE
+ *   \brief 设置时钟显示特定时间
+ *   \param[in] time 要显示的时间
+ *   \details 设置时钟显示给定的时间。如果时间无效，时钟显示将被置为无效状态。
+ * \endif
  */
 void QwtAnalogClock::setTime(const QTime& time)
 {

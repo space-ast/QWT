@@ -163,201 +163,81 @@ public:
 
     Q_DECLARE_FLAGS(MagnitudeModes, MagnitudeMode)
 
-    /**
-     * \if ENGLISH
-     * @brief Constructor
-     * \endif
-     */
+    // Constructor
     explicit QwtPlotVectorField(const QString& title = QString());
-    /**
-     * \if ENGLISH
-     * @brief Constructor with title
-     * \endif
-     */
+    // Constructor with title
     explicit QwtPlotVectorField(const QwtText& title);
 
-    /**
-     * \if ENGLISH
-     * @brief Destructor
-     * \endif
-     */
+    // Destructor
     virtual ~QwtPlotVectorField();
 
-    /**
-     * \if ENGLISH
-     * @brief Set a paint attribute
-     * \endif
-     */
+    // Set a paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
-    /**
-     * \if ENGLISH
-     * @brief Test a paint attribute
-     * \endif
-     */
+    // Test a paint attribute
     bool testPaintAttribute(PaintAttribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set a magnitude mode
-     * \endif
-     */
+    // Set a magnitude mode
     void setMagnitudeMode(MagnitudeMode, bool on = true);
-    /**
-     * \if ENGLISH
-     * @brief Test a magnitude mode
-     * \endif
-     */
+    // Test a magnitude mode
     bool testMagnitudeMode(MagnitudeMode) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the symbol
-     * \endif
-     */
+    // Set the symbol
     void setSymbol(QwtVectorFieldSymbol*);
-    /**
-     * \if ENGLISH
-     * @brief Get the symbol
-     * \endif
-     */
+    // Get the symbol
     const QwtVectorFieldSymbol* symbol() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the pen
-     * \endif
-     */
+    // Set the pen
     void setPen(const QPen&);
-    /**
-     * \if ENGLISH
-     * @brief Get the pen
-     * \endif
-     */
+    // Get the pen
     QPen pen() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the brush
-     * \endif
-     */
+    // Set the brush
     void setBrush(const QBrush&);
-    /**
-     * \if ENGLISH
-     * @brief Get the brush
-     * \endif
-     */
+    // Get the brush
     QBrush brush() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the raster size
-     * \endif
-     */
+    // Set the raster size
     void setRasterSize(const QSizeF&);
-    /**
-     * \if ENGLISH
-     * @brief Get the raster size
-     * \endif
-     */
+    // Get the raster size
     QSizeF rasterSize() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the indicator origin
-     * \endif
-     */
+    // Set the indicator origin
     void setIndicatorOrigin(IndicatorOrigin);
-    /**
-     * \if ENGLISH
-     * @brief Get the indicator origin
-     * \endif
-     */
+    // Get the indicator origin
     IndicatorOrigin indicatorOrigin() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the samples
-     * \endif
-     */
+    // Set the samples
     void setSamples(const QVector< QwtVectorFieldSample >&);
-    /**
-     * \if ENGLISH
-     * @brief Set the samples
-     * \endif
-     */
+    // Set the samples
     void setSamples(QwtVectorFieldData*);
 
-    /**
-     * \if ENGLISH
-     * @brief Set the color map
-     * \endif
-     */
+    // Set the color map
     void setColorMap(QwtColorMap*);
-    /**
-     * \if ENGLISH
-     * @brief Get the color map
-     * \endif
-     */
+    // Get the color map
     const QwtColorMap* colorMap() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the magnitude range
-     * \endif
-     */
+    // Set the magnitude range
     void setMagnitudeRange(const QwtInterval&);
-    /**
-     * \if ENGLISH
-     * @brief Get the magnitude range
-     * \endif
-     */
+    // Get the magnitude range
     QwtInterval magnitudeRange() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the minimum arrow length
-     * \endif
-     */
+    // Set the minimum arrow length
     void setMinArrowLength(double);
-    /**
-     * \if ENGLISH
-     * @brief Get the minimum arrow length
-     * \endif
-     */
+    // Get the minimum arrow length
     double minArrowLength() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the maximum arrow length
-     * \endif
-     */
+    // Set the maximum arrow length
     void setMaxArrowLength(double);
-    /**
-     * \if ENGLISH
-     * @brief Get the maximum arrow length
-     * \endif
-     */
+    // Get the maximum arrow length
     double maxArrowLength() const;
 
-    /**
-     * \if ENGLISH
-     * @brief Calculate the arrow length for a given magnitude
-     * \endif
-     */
+    // Calculate the arrow length for a given magnitude
     virtual double arrowLength(double magnitude) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the bounding rectangle
-     * \endif
-     */
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw the series
-     * \endif
-     */
+    // Draw the series
     virtual void drawSeries(QPainter*,
                             const QwtScaleMap& xMap,
                             const QwtScaleMap& yMap,
@@ -365,62 +245,26 @@ public:
                             int from,
                             int to) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the runtime type information
-     * \endif
-     */
+    // Get the runtime type information
     virtual int rtti() const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the legend icon
-     * \endif
-     */
+    // Get the legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-    /**
-     * \if ENGLISH
-     * @brief Set the magnitude scale factor
-     * \endif
-     */
+    // Set the magnitude scale factor
     void setMagnitudeScaleFactor(double factor);
-    /**
-     * \if ENGLISH
-     * @brief Get the magnitude scale factor
-     * \endif
-     */
+    // Get the magnitude scale factor
     double magnitudeScaleFactor() const;
 
 protected:
-    /**
-     * \if ENGLISH
-     * @brief Draw the symbols
-     * \endif
-     */
     virtual void
     drawSymbols(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Draw a symbol
-     * \endif
-     */
     virtual void drawSymbol(QPainter*, double x, double y, double vx, double vy) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Handle data changes
-     * \endif
-     */
     virtual void dataChanged() override;
 
 private:
-    /**
-     * \if ENGLISH
-     * @brief Initialize the vector field
-     * \endif
-     */
     void init();
 
     class PrivateData;

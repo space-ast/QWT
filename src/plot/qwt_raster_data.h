@@ -162,21 +162,7 @@ public:
     /// Test an attribute
     bool testAttribute(Attribute) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Get the bounding interval for an axis
-     * @param axis Axis index
-     * @return Bounding interval
-     * @sa setInterval
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 获取轴的边界区间
-     * @param axis 轴索引
-     * @return 边界区间
-     * @sa setInterval
-     * \endif
-     */
+// Get the bounding interval for an axis
     virtual QwtInterval interval(Qt::Axis) const = 0;
 
     /// Return a hint for the raster item, about how to align the pixels
@@ -187,21 +173,7 @@ public:
     /// Discard the raster
     virtual void discardRaster();
 
-    /**
-     * \if ENGLISH
-     * @brief Get the value at a raster position
-     * @param x X value in plot coordinates
-     * @param y Y value in plot coordinates
-     * @return Value at (x, y)
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 获取栅格位置的值
-     * @param x 绘图坐标中的 X 值
-     * @param y 绘图坐标中的 Y 值
-     * @return (x, y) 处的值
-     * \endif
-     */
+    // Get the value at a raster position
     virtual double value(double x, double y) const = 0;
 
     /// Calculate contour lines

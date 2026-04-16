@@ -32,28 +32,32 @@
 
 class QwtRoundScaleDraw;
 
-/*!
-   \brief The Knob Widget
-
-   The QwtKnob widget imitates look and behavior of a volume knob on a radio.
-   It looks similar to QDial - not to QwtDial.
-
-   The value range of a knob might be divided into several turns.
-
-   The layout of the knob depends on the knobWidth().
-
-   - width > 0
-    The diameter of the knob is fixed and the knob is aligned
-    according to the alignment() flags inside of the contentsRect().
-
-   - width <= 0
-    The knob is extended to the minimum of width/height of the contentsRect()
-    and aligned in the other direction according to alignment().
-
-   Setting a fixed knobWidth() is helpful to align several knobs with different
-   scale labels.
-
-   \image html knob.png
+/**
+ * \if ENGLISH
+ * @brief The Knob Widget
+ * @details The QwtKnob widget imitates look and behavior of a volume knob on a radio.
+ *          It looks similar to QDial - not to QwtDial.
+ *          The value range of a knob might be divided into several turns.
+ *          The layout of the knob depends on the knobWidth():
+ *          - width > 0: The diameter of the knob is fixed and the knob is aligned
+ *            according to the alignment() flags inside of the contentsRect().
+ *          - width <= 0: The knob is extended to the minimum of width/height of
+ *            the contentsRect() and aligned in the other direction according to alignment().
+ *          Setting a fixed knobWidth() is helpful to align several knobs with different scale labels.
+ * \image html knob.png
+ * \endif
+ * \if CHINESE
+ * @brief 旋钮控件
+ * @details QwtKnob 控件模仿收音机音量旋钮的外观和行为。
+ *          它看起来类似于 QDial - 而不是 QwtDial。
+ *          旋钮的值范围可以被划分为多圈。
+ *          旋钮的布局取决于 knobWidth()：
+ *          - width > 0：旋钮的直径固定，旋钮根据 alignment() 标志在 contentsRect() 内对齐。
+ *          - width <= 0：旋钮扩展到 contentsRect() 的最小宽度/高度，
+ *            并在另一个方向根据 alignment() 对齐。
+ *          设置固定的 knobWidth() 有助于对齐具有不同刻度标签的多个旋钮。
+ * \image html knob.png
+ * \endif
  */
 
 class QWT_EXPORT QwtKnob : public QwtAbstractSlider
@@ -71,106 +75,128 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
     Q_PROPERTY( int markerSize READ markerSize WRITE setMarkerSize )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
 
-  public:
-    /*!
-       \brief Style of the knob surface
-
-       Depending on the KnobStyle the surface of the knob is
-       filled from the brushes of the widget palette().
-
-       \sa setKnobStyle(), knobStyle()
+public:
+    /**
+     * \if ENGLISH
+     * @brief Style of the knob surface
+     * @details Depending on the KnobStyle the surface of the knob is
+     *          filled from the brushes of the widget palette().
+     * \sa setKnobStyle(), knobStyle()
+     * \endif
+     * \if CHINESE
+     * @brief 旋钮表面样式
+     * @details 根据 KnobStyle，旋钮表面使用控件 palette() 的画笔填充。
+     * \sa setKnobStyle(), knobStyle()
+     * \endif
      */
     enum KnobStyle
     {
-        //! Fill the knob with a brush from QPalette::Button.
+        /// Fill the knob with a brush from QPalette::Button
         Flat,
 
-        //! Build a gradient from QPalette::Midlight and QPalette::Button
+        /// Build a gradient from QPalette::Midlight and QPalette::Button
         Raised,
 
-        /*!
-           Build a gradient from QPalette::Midlight, QPalette::Button
-           and QPalette::Midlight
-         */
+        /// Build a gradient from QPalette::Midlight, QPalette::Button and QPalette::Midlight
         Sunken,
 
-        /*!
-           Build a radial gradient from QPalette::Button
-           like it is used for QDial in various Qt styles.
-         */
+        /// Build a radial gradient from QPalette::Button like QDial in various Qt styles
         Styled
     };
 
-    /*!
-        \brief Marker type
-
-        The marker indicates the current value on the knob
-        The default setting is a Notch marker.
-
-        \sa setMarkerStyle(), setMarkerSize()
+    /**
+     * \if ENGLISH
+     * @brief Marker type
+     * @details The marker indicates the current value on the knob.
+     *          The default setting is a Notch marker.
+     * \sa setMarkerStyle(), setMarkerSize()
+     * \endif
+     * \if CHINESE
+     * @brief 标记类型
+     * @details 标记指示旋钮上的当前值。默认设置为 Notch 标记。
+     * \sa setMarkerStyle(), setMarkerSize()
+     * \endif
      */
     enum MarkerStyle
     {
-        //! Don't paint any marker
+        /// Don't paint any marker
         NoMarker = -1,
 
-        //! Paint a single tick in QPalette::ButtonText color
+        /// Paint a single tick in QPalette::ButtonText color
         Tick,
 
-        //! Paint a triangle in QPalette::ButtonText color
+        /// Paint a triangle in QPalette::ButtonText color
         Triangle,
 
-        //! Paint a circle in QPalette::ButtonText color
+        /// Paint a circle in QPalette::ButtonText color
         Dot,
 
-        /*!
-           Draw a raised ellipse with a gradient build from
-           QPalette::Light and QPalette::Mid
-         */
+        /// Draw a raised ellipse with a gradient from QPalette::Light and QPalette::Mid
         Nub,
 
-        /*!
-           Draw a sunken ellipse with a gradient build from
-           QPalette::Light and QPalette::Mid
-         */
+        /// Draw a sunken ellipse with a gradient from QPalette::Light and QPalette::Mid
         Notch
     };
 
+    /// Constructor
     explicit QwtKnob( QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtKnob();
 
+    /// Set alignment of the knob inside contentsRect()
     void setAlignment( Qt::Alignment );
+    /// Return alignment of the knob
     Qt::Alignment alignment() const;
 
+    /// Set the knob's width (diameter)
     void setKnobWidth( int );
+    /// Return the knob's width
     int knobWidth() const;
 
+    /// Set the number of turns for the knob
     void setNumTurns( int );
+    /// Return the number of turns
     int numTurns() const;
 
+    /// Set the total angle which the knob can be turned
     void setTotalAngle ( double angle );
+    /// Return the total angle
     double totalAngle() const;
 
+    /// Set the knob style
     void setKnobStyle( KnobStyle );
+    /// Return the knob style
     KnobStyle knobStyle() const;
 
+    /// Set the border width
     void setBorderWidth( int );
+    /// Return the border width
     int borderWidth() const;
 
+    /// Set the marker style
     void setMarkerStyle( MarkerStyle );
+    /// Return the marker style
     MarkerStyle markerStyle() const;
 
+    /// Set the marker size
     void setMarkerSize( int );
+    /// Return the marker size
     int markerSize() const;
 
+    /// Return size hint
     virtual QSize sizeHint() const override;
+    /// Return minimum size hint
     virtual QSize minimumSizeHint() const override;
 
+    /// Set the scale draw
     void setScaleDraw( QwtRoundScaleDraw* );
 
+    /// Return the scale draw (const version)
     const QwtRoundScaleDraw* scaleDraw() const;
+    /// Return the scale draw (non-const version)
     QwtRoundScaleDraw* scaleDraw();
 
+    /// Return the bounding rectangle of the knob
     QRect knobRect() const;
 
   protected:

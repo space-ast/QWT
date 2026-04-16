@@ -83,19 +83,19 @@ bool isYAxis(int axisPos);
 bool isXAxis(int axisPos);
 }
 
-//! Return true, when axisPos is in the valid range [ YLeft, XTop ]
+// Return true, when axisPos is in the valid range [ YLeft, XTop ]
 inline bool QwtAxis::isValid(int axisPos)
 {
     return (axisPos >= 0 && axisPos < AxisPositions);
 }
 
-//! Return true, when axisPos is XBottom or XTop
+// Return true, when axisPos is XBottom or XTop
 inline bool QwtAxis::isXAxis(int axisPos)
 {
     return (axisPos == XBottom) || (axisPos == XTop);
 }
 
-//! Return true, when axisPos is YLeft or YRight
+// Return true, when axisPos is YLeft or YRight
 inline bool QwtAxis::isYAxis(int axisPos)
 {
     return (axisPos == YLeft) || (axisPos == YRight);

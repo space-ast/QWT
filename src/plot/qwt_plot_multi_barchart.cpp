@@ -62,9 +62,16 @@ class QwtPlotMultiBarChart::PrivateData
     QMap< int, QwtColumnSymbol* > symbolMap;
 };
 
-/*!
-   Constructor
-   \param title Title of the chart
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 图表标题
+ * \endif
  */
 QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
     : QwtPlotAbstractBarChart( title )
@@ -72,9 +79,16 @@ QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
     init();
 }
 
-/*!
-   Constructor
-   \param title Title of the chart
+/**
+ * \if ENGLISH
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 构造函数
+ * @param[in] title 图表标题
+ * \endif
  */
 QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QString& title )
     : QwtPlotAbstractBarChart( QwtText( title ) )
@@ -82,7 +96,15 @@ QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QString& title )
     init();
 }
 
-//! Destructor
+/**
+ * \if ENGLISH
+ * @brief Destructor
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 析构函数
+ * \endif
+ */
 QwtPlotMultiBarChart::~QwtPlotMultiBarChart()
 {
     resetSymbolMap();
@@ -95,15 +117,32 @@ void QwtPlotMultiBarChart::init()
     setData( new QwtSetSeriesData() );
 }
 
-//! \return QwtPlotItem::Rtti_PlotBarChart
+/**
+ * \if ENGLISH
+ * @brief Get the runtime type information
+ * @return QwtPlotItem::Rtti_PlotMultiBarChart
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取运行时类型信息
+ * @return QwtPlotItem::Rtti_PlotMultiBarChart
+ * \endif
+ */
 int QwtPlotMultiBarChart::rtti() const
 {
     return QwtPlotItem::Rtti_PlotMultiBarChart;
 }
 
-/*!
-   Initialize data with an array of samples.
-   \param samples Vector of points
+/**
+ * \if ENGLISH
+ * @brief Initialize data with an array of samples
+ * @param[in] samples Vector of samples
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 使用样本数组初始化数据
+ * @param[in] samples 样本向量
+ * \endif
  */
 void QwtPlotMultiBarChart::setSamples(
     const QVector< QwtSetSample >& samples )
@@ -111,9 +150,16 @@ void QwtPlotMultiBarChart::setSamples(
     setData( new QwtSetSeriesData( samples ) );
 }
 
-/*!
-   Initialize data with an array of samples.
-   \param samples Vector of points
+/**
+ * \if ENGLISH
+ * @brief Initialize data with an array of samples
+ * @param[in] samples Vector of vectors containing values
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 使用向量数组初始化数据
+ * @param[in] samples 包含值的向量数组
+ * \endif
  */
 void QwtPlotMultiBarChart::setSamples(
     const QVector< QVector< double > >& samples )
@@ -127,15 +173,23 @@ void QwtPlotMultiBarChart::setSamples(
     setData( new QwtSetSeriesData( s ) );
 }
 
-/*!
-   Assign a series of samples
-
-   setSamples() is just a wrapper for setData() without any additional
-   value - beside that it is easier to find for the developer.
-
-   \param data Data
-   \warning The item takes ownership of the data object, deleting
-           it when its not used anymore.
+/**
+ * \if ENGLISH
+ * @brief Assign a series of samples
+ * @details setSamples() is just a wrapper for setData() without any additional
+ *          value - beside that it is easier to find for the developer.
+ * @param[in] data Data
+ * @warning The item takes ownership of the data object, deleting
+ *          it when its not used anymore.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 分配样本序列
+ * @details setSamples() 只是对 setData() 的封装，没有额外的价值，
+ *          除了对开发者来说更容易找到。
+ * @param[in] data 数据
+ * @warning 该项取得数据对象的所有权，当不再使用时会删除它。
+ * \endif
  */
 void QwtPlotMultiBarChart::setSamples(
     QwtSeriesData< QwtSetSample >* data )
@@ -143,14 +197,20 @@ void QwtPlotMultiBarChart::setSamples(
     setData( data );
 }
 
-/*!
-   \brief Set the titles for the bars
-
-   The titles are used for the legend.
-
-   \param titles Bar titles
-
-   \sa barTitles(), legendData()
+/**
+ * \if ENGLISH
+ * @brief Set the titles for the bars
+ * @details The titles are used for the legend.
+ * @param[in] titles Bar titles
+ * @sa barTitles(), legendData()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置条形的标题
+ * @details 标题用于图例。
+ * @param[in] titles 条形标题
+ * @sa barTitles(), legendData()
+ * \endif
  */
 void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
 {
@@ -158,25 +218,41 @@ void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
     itemChanged();
 }
 
-/*!
-   \return Bar titles
-   \sa setBarTitles(), legendData()
+/**
+ * \if ENGLISH
+ * @brief Get the bar titles
+ * @return Bar titles
+ * @sa setBarTitles(), legendData()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取条形标题
+ * @return 条形标题
+ * @sa setBarTitles(), legendData()
+ * \endif
  */
 QList< QwtText > QwtPlotMultiBarChart::barTitles() const
 {
     return m_data->barTitles;
 }
 
-/*!
-   \brief Add a symbol to the symbol map
-
-   Assign a default symbol for drawing the bar representing all values
-   with the same index in a set.
-
-   \param valueIndex Index of a value in a set
-   \param symbol Symbol used for drawing a bar
-
-   \sa symbol(), resetSymbolMap(), specialSymbol()
+/**
+ * \if ENGLISH
+ * @brief Add a symbol to the symbol map
+ * @details Assign a default symbol for drawing the bar representing all values
+ *          with the same index in a set.
+ * @param[in] valueIndex Index of a value in a set
+ * @param[in] symbol Symbol used for drawing a bar
+ * @sa symbol(), resetSymbolMap(), specialSymbol()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 将符号添加到符号映射
+ * @details 分配用于绘制表示集合中具有相同索引的所有值的条形的默认符号。
+ * @param[in] valueIndex 集合中值的索引
+ * @param[in] symbol 用于绘制条形的符号
+ * @sa symbol(), resetSymbolMap(), specialSymbol()
+ * \endif
  */
 void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 {
@@ -216,13 +292,20 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
     }
 }
 
-/*!
-   Find a symbol in the symbol map
-
-   \param valueIndex Index of a value in a set
-   \return The symbol, that had been set by setSymbol() or nullptr.
-
-   \sa setSymbol(), specialSymbol(), drawBar()
+/**
+ * \if ENGLISH
+ * @brief Find a symbol in the symbol map
+ * @param[in] valueIndex Index of a value in a set
+ * @return The symbol that had been set by setSymbol() or nullptr
+ * @sa setSymbol(), specialSymbol(), drawBar()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 在符号映射中查找符号
+ * @param[in] valueIndex 集合中值的索引
+ * @return 通过 setSymbol() 设置的符号，如果未设置则返回 nullptr
+ * @sa setSymbol(), specialSymbol(), drawBar()
+ * \endif
  */
 const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
 {
@@ -248,8 +331,14 @@ QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
     return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
-/*!
-   Remove all symbols from the symbol map
+/**
+ * \if ENGLISH
+ * @brief Remove all symbols from the symbol map
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 从符号映射中删除所有符号
+ * \endif
  */
 void QwtPlotMultiBarChart::resetSymbolMap()
 {
@@ -286,11 +375,18 @@ QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
     return nullptr;
 }
 
-/*!
-   Set the style of the chart
-
-   \param style Chart style
-   \sa style()
+/**
+ * \if ENGLISH
+ * @brief Set the style of the chart
+ * @param[in] style Chart style
+ * @sa style()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 设置图表样式
+ * @param[in] style 图表样式
+ * @sa style()
+ * \endif
  */
 void QwtPlotMultiBarChart::setStyle( ChartStyle style )
 {
@@ -303,18 +399,34 @@ void QwtPlotMultiBarChart::setStyle( ChartStyle style )
     }
 }
 
-/*!
-   \return Style of the chart
-   \sa setStyle()
+/**
+ * \if ENGLISH
+ * @brief Get the style of the chart
+ * @return Style of the chart
+ * @sa setStyle()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取图表样式
+ * @return 图表样式
+ * @sa setStyle()
+ * \endif
  */
 QwtPlotMultiBarChart::ChartStyle QwtPlotMultiBarChart::style() const
 {
     return m_data->style;
 }
 
-/*!
-   \return Bounding rectangle of all samples.
-   For an empty series the rectangle is invalid.
+/**
+ * \if ENGLISH
+ * @brief Get the bounding rectangle of all samples
+ * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取所有样本的边界矩形
+ * @return 所有样本的边界矩形。对于空序列，矩形无效。
+ * \endif
  */
 QRectF QwtPlotMultiBarChart::boundingRect() const
 {
@@ -375,18 +487,28 @@ QRectF QwtPlotMultiBarChart::boundingRect() const
     return rect;
 }
 
-/*!
-   Draw an interval of the bar chart
-
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas
-   \param from Index of the first point to be painted
-   \param to Index of the last point to be painted. If to < 0 the
-         curve will be painted to its last point.
-
-   \sa drawSymbols()
+/**
+ * \if ENGLISH
+ * @brief Draw an interval of the bar chart
+ * @param[in] painter Painter
+ * @param[in] xMap Maps x-values into pixel coordinates
+ * @param[in] yMap Maps y-values into pixel coordinates
+ * @param[in] canvasRect Contents rectangle of the canvas
+ * @param[in] from Index of the first point to be painted
+ * @param[in] to Index of the last point to be painted. If to < 0, the curve will be painted to its last point.
+ * @sa drawSample()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 绘制柱状图的区间
+ * @param[in] painter 绘制器
+ * @param[in] xMap 将 x 值映射到像素坐标
+ * @param[in] yMap 将 y 值映射到像素坐标
+ * @param[in] canvasRect 画布的内容矩形
+ * @param[in] from 要绘制的第一个点的索引
+ * @param[in] to 要绘制的最后一个点的索引。如果 to < 0，将绘制到曲线的最后一个点。
+ * @sa drawSample()
+ * \endif
  */
 void QwtPlotMultiBarChart::drawSeries( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -693,13 +815,22 @@ void QwtPlotMultiBarChart::drawBar( QPainter* painter,
     delete specialSym;
 }
 
-/*!
-   \return Information to be displayed on the legend
-
-   The chart is represented by a list of entries - one for each bar title.
-   Each element contains a bar title and an icon showing its corresponding bar.
-
-   \sa barTitles(), legendIcon(), legendIconSize()
+/**
+ * \if ENGLISH
+ * @brief Get information to be displayed on the legend
+ * @details The chart is represented by a list of entries - one for each bar title.
+ *          Each element contains a bar title and an icon showing its corresponding bar.
+ * @return List of legend data entries
+ * @sa barTitles(), legendIcon(), legendIconSize()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取要在图例上显示的信息
+ * @details 图表由条目列表表示 - 每个条形标题一个条目。
+ *          每个元素包含一个条形标题和一个显示其对应条形的图标。
+ * @return 图例数据条目列表
+ * @sa barTitles(), legendIcon(), legendIconSize()
+ * \endif
  */
 QList< QwtLegendData > QwtPlotMultiBarChart::legendData() const
 {
@@ -725,14 +856,22 @@ QList< QwtLegendData > QwtPlotMultiBarChart::legendData() const
     return list;
 }
 
-/*!
-   \return Icon for representing a bar on the legend
-
-   \param index Index of the bar
-   \param size Icon size
-
-   \return An icon showing a bar
-   \sa drawBar(), legendData()
+/**
+ * \if ENGLISH
+ * @brief Get icon for representing a bar on the legend
+ * @param[in] index Index of the bar
+ * @param[in] size Icon size
+ * @return An icon showing a bar
+ * @sa drawBar(), legendData()
+ * \endif
+ * 
+ * \if CHINESE
+ * @brief 获取用于在图例上表示条形的图标
+ * @param[in] index 条形的索引
+ * @param[in] size 图标大小
+ * @return 显示条形的图标
+ * @sa drawBar(), legendData()
+ * \endif
  */
 QwtGraphic QwtPlotMultiBarChart::legendIcon( int index,
     const QSizeF& size ) const

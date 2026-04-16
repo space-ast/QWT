@@ -30,36 +30,51 @@
 #include "qwt_global.h"
 #include <qwidget.h>
 
-/*!
-   \brief The Counter Widget
-
-   A Counter consists of a label displaying a number and
-   one ore more (up to three) push buttons on each side
-   of the label which can be used to increment or decrement
-   the counter's value.
-
-   A counter has a range from a minimum value to a maximum value
-   and a step size. When the wrapping property is set
-   the counter is circular.
-
-   The number of steps by which a button increments or decrements the value
-   can be specified using setIncSteps(). The number of buttons can be
-   changed with setNumButtons().
-
-   Example:
-   \code
- #include <qwt_counter.h>
-
-   QwtCounter *counter = new QwtCounter(parent);
-
-   counter->setRange(0.0, 100.0);                  // From 0.0 to 100
-   counter->setSingleStep( 1.0 );                  // Step size 1.0
-   counter->setNumButtons(2);                      // Two buttons each side
-   counter->setIncSteps(QwtCounter::Button1, 1);   // Button 1 increments 1 step
-   counter->setIncSteps(QwtCounter::Button2, 20);  // Button 2 increments 20 steps
-
-   connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
-   \endcode
+/**
+ * \if ENGLISH
+ * @brief The Counter Widget
+ * @details A Counter consists of a label displaying a number and
+ *          one or more (up to three) push buttons on each side
+ *          of the label which can be used to increment or decrement
+ *          the counter's value.
+ *          A counter has a range from a minimum value to a maximum value
+ *          and a step size. When the wrapping property is set
+ *          the counter is circular.
+ *          The number of steps by which a button increments or decrements the value
+ *          can be specified using setIncSteps(). The number of buttons can be
+ *          changed with setNumButtons().
+ *          Example:
+ *          @code
+ *          #include <qwt_counter.h>
+ *          QwtCounter *counter = new QwtCounter(parent);
+ *          counter->setRange(0.0, 100.0);                  // From 0.0 to 100
+ *          counter->setSingleStep( 1.0 );                  // Step size 1.0
+ *          counter->setNumButtons(2);                      // Two buttons each side
+ *          counter->setIncSteps(QwtCounter::Button1, 1);   // Button 1 increments 1 step
+ *          counter->setIncSteps(QwtCounter::Button2, 20);  // Button 2 increments 20 steps
+ *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
+ *          @endcode
+ * \endif
+ * \if CHINESE
+ * @brief 计数器控件
+ * @details 计数器由一个显示数字的标签和标签两侧的一个或多个（最多三个）按钮组成，
+ *          这些按钮可用于增加或减少计数器的值。
+ *          计数器有一个最小值到最大值的范围和一个步长。当设置了循环属性时，
+ *          计数器是循环的。
+ *          使用 setIncSteps() 可以指定按钮增加或减少值的步数。
+ *          使用 setNumButtons() 可以更改按钮数量。
+ *          示例：
+ *          @code
+ *          #include <qwt_counter.h>
+ *          QwtCounter *counter = new QwtCounter(parent);
+ *          counter->setRange(0.0, 100.0);                  // 从 0.0 到 100
+ *          counter->setSingleStep( 1.0 );                  // 步长 1.0
+ *          counter->setNumButtons(2);                      // 每侧两个按钮
+ *          counter->setIncSteps(QwtCounter::Button1, 1);   // 按钮 1 增加 1 步
+ *          counter->setIncSteps(QwtCounter::Button2, 20);  // 按钮 2 增加 20 步
+ *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
+ *          @endcode
+ * \endif
  */
 
 class QWT_EXPORT QwtCounter : public QWidget
@@ -80,62 +95,96 @@ class QWT_EXPORT QwtCounter : public QWidget
     Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
 
   public:
-    //! Button index
+    /**
+     * \if ENGLISH
+     * @brief Button index
+     * \endif
+     * \if CHINESE
+     * @brief 按钮索引
+     * \endif
+     */
     enum Button
     {
-        //! Button intended for minor steps
+        /// Button intended for minor steps
         Button1,
 
-        //! Button intended for medium steps
+        /// Button intended for medium steps
         Button2,
 
-        //! Button intended for large steps
+        /// Button intended for large steps
         Button3,
 
-        //! Number of buttons
+        /// Number of buttons
         ButtonCnt
     };
 
+    /// Constructor
     explicit QwtCounter( QWidget* parent = nullptr );
+    /// Destructor
     virtual ~QwtCounter();
 
+    /// Set the counter to be in valid/invalid state
     void setValid( bool );
+    /// Return true if the value is valid
     bool isValid() const;
 
+    /// Enable or disable wrapping
     void setWrapping( bool );
+    /// Return true if wrapping is enabled
     bool wrapping() const;
 
+    /// Return true if the counter is read only
     bool isReadOnly() const;
+    /// Set the counter to read only mode
     void setReadOnly( bool );
 
+    /// Set the number of buttons on each side
     void setNumButtons( int );
+    /// Return the number of buttons
     int numButtons() const;
 
+    /// Set the number of increment steps for a button
     void setIncSteps( QwtCounter::Button, int numSteps );
+    /// Return the number of increment steps for a button
     int incSteps( QwtCounter::Button ) const;
 
+    /// Return a size hint
     virtual QSize sizeHint() const override;
 
+    /// Return the single step size
     double singleStep() const;
+    /// Set the single step size
     void setSingleStep( double stepSize );
 
+    /// Set the range of the counter
     void setRange( double min, double max );
 
+    /// Return the minimum value
     double minimum() const;
+    /// Set the minimum value
     void setMinimum( double );
 
+    /// Return the maximum value
     double maximum() const;
+    /// Set the maximum value
     void setMaximum( double );
 
+    /// Set the number of increment steps for button 1
     void setStepButton1( int nSteps );
+    /// Return the number of increment steps for button 1
     int stepButton1() const;
 
+    /// Set the number of increment steps for button 2
     void setStepButton2( int nSteps );
+    /// Return the number of increment steps for button 2
     int stepButton2() const;
 
+    /// Set the number of increment steps for button 3
     void setStepButton3( int nSteps );
+    /// Return the number of increment steps for button 3
     int stepButton3() const;
 
+    /// Return the current value
     double value() const;
 
   public Q_SLOTS:
@@ -143,15 +192,27 @@ class QWT_EXPORT QwtCounter : public QWidget
 
 
   Q_SIGNALS:
-    /*!
-        This signal is emitted when a button has been released
-        \param value The new value
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when a button has been released
+     * @param value The new value
+     * \endif
+     * \if CHINESE
+     * @brief 当按钮释放时发出的信号
+     * @param value 新值
+     * \endif
      */
     void buttonReleased ( double value );
 
-    /*!
-        This signal is emitted when the counter's value has changed
-        \param value The new value
+    /**
+     * \if ENGLISH
+     * @brief Signal emitted when the counter's value has changed
+     * @param value The new value
+     * \endif
+     * \if CHINESE
+     * @brief 当计数器值改变时发出的信号
+     * @param value 新值
+     * \endif
      */
     void valueChanged ( double value );
 

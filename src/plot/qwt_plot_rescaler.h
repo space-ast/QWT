@@ -139,92 +139,92 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
         ExpandBoth
     };
 
-    /// Constructor
+    // Constructs a rescaler for the given canvas with specified reference axis and policy
     explicit QwtPlotRescaler( QWidget* canvas,
         QwtAxisId referenceAxis = QwtAxis::XBottom,
         RescalePolicy = Expanding );
 
-    /// Destructor
+    // Destructs the rescaler
     virtual ~QwtPlotRescaler();
 
-    /// Enable/disable the rescaler
+    // Enable or disable the rescaler
     void setEnabled( bool );
-    /// Check if the rescaler is enabled
+    // Check if the rescaler is enabled
     bool isEnabled() const;
 
-    /// Set the rescale policy
+    // Set the rescale policy
     void setRescalePolicy( RescalePolicy );
-    /// Get the rescale policy
+    // Get the rescale policy
     RescalePolicy rescalePolicy() const;
 
-    /// Set the expanding direction for all axes
+    // Set the expanding direction for all axes
     void setExpandingDirection( ExpandingDirection );
-    /// Set the expanding direction for a specific axis
+    // Set the expanding direction for a specific axis
     void setExpandingDirection( QwtAxisId, ExpandingDirection );
-    /// Get the expanding direction for a specific axis
+    // Get the expanding direction for a specific axis
     ExpandingDirection expandingDirection( QwtAxisId ) const;
 
-    /// Set the reference axis
+    // Set the reference axis
     void setReferenceAxis( QwtAxisId );
-    /// Get the reference axis
+    // Get the reference axis
     QwtAxisId referenceAxis() const;
 
-    /// Set the aspect ratio for all axes
+    // Set the aspect ratio for all axes
     void setAspectRatio( double ratio );
-    /// Set the aspect ratio for a specific axis
+    // Set the aspect ratio for a specific axis
     void setAspectRatio( QwtAxisId, double ratio );
-    /// Get the aspect ratio for a specific axis
+    // Get the aspect ratio for a specific axis
     double aspectRatio( QwtAxisId ) const;
 
-    /// Set the interval hint for a specific axis
+    // Set the interval hint for a specific axis
     void setIntervalHint( QwtAxisId, const QwtInterval& );
-    /// Get the interval hint for a specific axis
+    // Get the interval hint for a specific axis
     QwtInterval intervalHint( QwtAxisId ) const;
 
-    /// Get the canvas
+    // Get the canvas widget
     QWidget* canvas();
-    /// Get the canvas (const version)
+    // Get the canvas widget (const version)
     const QWidget* canvas() const;
 
-    /// Get the plot
+    // Get the plot widget
     QwtPlot* plot();
-    /// Get the plot (const version)
+    // Get the plot widget (const version)
     const QwtPlot* plot() const;
 
-    /// Event filter
+    // Event filter for the plot canvas
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
-    /// Rescale the axes
+    // Rescale the plot axes
     void rescale() const;
 
   protected:
-    /// Handle canvas resize events
+    // Handle canvas resize events
     virtual void canvasResizeEvent( QResizeEvent* );
 
-    /// Rescale the axes
+    // Rescale the axes with old and new sizes
     virtual void rescale( const QSize& oldSize, const QSize& newSize ) const;
-    /// Expand a scale
+    // Expand a scale interval
     virtual QwtInterval expandScale(
         QwtAxisId, const QSize& oldSize, const QSize& newSize ) const;
 
-    /// Sync a scale to the reference axis
+    // Sync a scale to the reference axis
     virtual QwtInterval syncScale(
         QwtAxisId, const QwtInterval& reference, const QSize& size ) const;
 
-    /// Update the scales
+    // Update the axes scales
     virtual void updateScales(
         QwtInterval intervals[QwtAxis::AxisPositions] ) const;
 
-    /// Get the orientation of an axis
+    // Get the orientation of an axis
     Qt::Orientation orientation( QwtAxisId ) const;
-    /// Get the interval of an axis
+    // Get the normalized interval of an axis
     QwtInterval interval( QwtAxisId ) const;
-    /// Expand an interval
+    // Expand an interval by the specified width
     QwtInterval expandInterval( const QwtInterval&,
         double width, ExpandingDirection ) const;
 
   private:
-    /// Calculate the pixel distance for an axis
+    // Calculate the pixel distance for an axis
     double pixelDist( QwtAxisId, const QSize& ) const;
 
     class AxisData;

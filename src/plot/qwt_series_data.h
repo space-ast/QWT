@@ -217,75 +217,169 @@ T QwtArraySeriesData< T >::sample(size_t i) const
     return m_samples[ static_cast< int >(i) ];
 }
 
-/// Interface for iterating over an array of points
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of points
+ * @details QwtPointSeriesData provides access to QPointF samples stored in a QVector.
+ * \endif
+ * \if CHINESE
+ * @brief 点数组迭代接口
+ * @details QwtPointSeriesData 提供对存储在 QVector 中的 QPointF 样本的访问。
+ * \endif
+ */
 class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 {
 public:
+    //! Constructor
     QwtPointSeriesData(const QVector< QPointF >& = QVector< QPointF >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of 3D points
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of 3D points
+ * @details QwtPoint3DSeriesData provides access to QwtPoint3D samples stored in a QVector.
+ * \endif
+ * \if CHINESE
+ * @brief 3D点数组迭代接口
+ * @details QwtPoint3DSeriesData 提供对存储在 QVector 中的 QwtPoint3D 样本的访问。
+ * \endif
+ */
 class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 {
 public:
+    //! Constructor
     QwtPoint3DSeriesData(const QVector< QwtPoint3D >& = QVector< QwtPoint3D >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of intervals
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of intervals
+ * @details QwtIntervalSeriesData provides access to QwtIntervalSample samples stored in a QVector.
+ * \endif
+ * \if CHINESE
+ * @brief 区间数组迭代接口
+ * @details QwtIntervalSeriesData 提供对存储在 QVector 中的 QwtIntervalSample 样本的访问。
+ * \endif
+ */
 class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalSample >
 {
 public:
+    //! Constructor
     QwtIntervalSeriesData(const QVector< QwtIntervalSample >& = QVector< QwtIntervalSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of samples
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of set samples
+ * @details QwtSetSeriesData provides access to QwtSetSample samples stored in a QVector.
+ * \endif
+ * \if CHINESE
+ * @brief 集合样本数组迭代接口
+ * @details QwtSetSeriesData 提供对存储在 QVector 中的 QwtSetSample 样本的访问。
+ * \endif
+ */
 class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 {
 public:
+    //! Constructor
     QwtSetSeriesData(const QVector< QwtSetSample >& = QVector< QwtSetSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of vector field samples
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of vector field samples
+ * @details QwtVectorFieldData provides access to QwtVectorFieldSample samples stored in a QVector.
+ * \endif
+ * \if CHINESE
+ * @brief 向量场样本数组迭代接口
+ * @details QwtVectorFieldData 提供对存储在 QVector 中的 QwtVectorFieldSample 样本的访问。
+ * \endif
+ */
 class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldSample >
 {
 public:
+    //! Constructor
     QwtVectorFieldData(const QVector< QwtVectorFieldSample >& = QVector< QwtVectorFieldSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of OHLC samples
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of OHLC samples
+ * @details QwtTradingChartData provides access to QwtOHLCSample samples stored in a QVector.
+ *          Used for candlestick or OHLC chart financial data.
+ * \endif
+ * \if CHINESE
+ * @brief OHLC样本数组迭代接口
+ * @details QwtTradingChartData 提供对存储在 QVector 中的 QwtOHLCSample 样本的访问。
+ *          用于蜡烛图或OHLC图表的金融数据。
+ * \endif
+ */
 class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample >
 {
 public:
+    //! Constructor
     QwtTradingChartData(const QVector< QwtOHLCSample >& = QVector< QwtOHLCSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of boxplot samples
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of boxplot samples
+ * @details QwtBoxChartData provides access to QwtBoxSample samples stored in a QVector.
+ *          Used for box-and-whisker plot statistical data.
+ * \endif
+ * \if CHINESE
+ * @brief 箱线图样本数组迭代接口
+ * @details QwtBoxChartData 提供对存储在 QVector 中的 QwtBoxSample 样本的访问。
+ *          用于箱线图的统计数据。
+ * \endif
+ */
 class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
 {
 public:
+    //! Constructor
     QwtBoxChartData(const QVector< QwtBoxSample >& = QVector< QwtBoxSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 };
 
-/// Interface for iterating over an array of boxplot outlier samples
+/**
+ * \if ENGLISH
+ * @brief Interface for iterating over an array of boxplot outlier samples
+ * @details QwtBoxOutlierChartData provides access to QwtBoxOutlierSample samples stored in a QVector.
+ *          Used for displaying outlier points in box-and-whisker plots.
+ * \endif
+ * \if CHINESE
+ * @brief 箱线图异常值样本数组迭代接口
+ * @details QwtBoxOutlierChartData 提供对存储在 QVector 中的 QwtBoxOutlierSample 样本的访问。
+ *          用于显示箱线图中的异常值点。
+ * \endif
+ */
 class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
 {
 public:
+    //! Constructor
     QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& = QVector< QwtBoxOutlierSample >());
 
+    //! Calculate the bounding rectangle
     virtual QRectF boundingRect() const override;
 
     //! Get total outlier count across all boxes
