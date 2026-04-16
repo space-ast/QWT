@@ -22,6 +22,8 @@
 
 所有新增代码必须使用 **Doxygen 格式**，并区分中英文。
 
+doxygen关键字中，除了`if`和`endif`关键字使用`\`，其余关键字使用`@`进行标记
+
 ### 函数注释模板
 
 ```cpp
@@ -256,6 +258,7 @@ public:
 ### ✅ 正确：简洁头文件注释 + 详细cpp注释
 
 头文件 `MyClass.h`：
+
 ```cpp
 class MyClass {
 public:
@@ -265,6 +268,7 @@ public:
 ```
 
 源文件 `MyClass.cpp`：
+
 ```cpp
 /**
  * \if ENGLISH
