@@ -26,12 +26,18 @@ jobs:
       - name: Install Doxygen
         run: sudo apt-get update && sudo apt-get install -y doxygen graphviz
 
-      # Doxygen会在docs目录下生成doxygen文件夹，里面为api文档
-      - name: Build Doxygen API docs
+      # Doxygen会在docs目录下生成doxygen_en和doxygen_cn文件夹，分别对应英文和中文API文档
+      - name: Build Doxygen English API docs
         run: |
           cd docs
           cd doxygen-doc-file
-          doxygen Doxyfile
+          doxygen Doxyfile_en.cfg
+
+      - name: Build Doxygen Chinese API docs
+        run: |
+          cd docs
+          cd doxygen-doc-file
+          doxygen Doxyfile_cn.cfg
 
       - name: Setup Python
         uses: actions/setup-python@v4

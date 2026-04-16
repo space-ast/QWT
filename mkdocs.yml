@@ -11,6 +11,13 @@ extra:
   site_description: 
     zh: QWT是一个功能强大的Qt绘图库，提供丰富的科学和工程图表绘制功能
     en: QWT is a powerful Qt plotting library that provides rich scientific and engineering chart drawing capabilities
+  alternate:
+    - name: 中文
+      link: /
+      lang: zh
+    - name: English
+      link: /en/
+      lang: en
     
 # 主题
 theme:
@@ -106,9 +113,73 @@ plugins:
                 - 3D绘图简介: zh/use-guide/3d-plot.md
                 - OpenGL画布: zh/use-guide/opengl.md
             - API文档: 
-                - API文档首页: doxygen/index.html
-                - 类列表: doxygen/annotated.html
-                - 类索引: doxygen/classes.html
+                - API文档首页: doxygen_cn/index.html
+                - 类列表: doxygen_cn/annotated.html
+                - 类索引: doxygen_cn/classes.html
+        - locale: en
+          name: English
+          build: true
+          # English navigation configuration
+          nav:
+            - Overview:
+                - Qwt Introduction: index.md
+                - Qwt 7.0 New Features: zh/use-guide/qwt7-new-features.md
+            - Build Guide:
+                - Build Instructions: zh/build-guide/build-instructions.md
+            - Development Guide:
+                - Dev Guide Home: zh/dev-guide/index.md
+                - Coding Standards: zh/dev-guide/coding-standards.md
+                - Comment Standards: zh/dev-guide/comment-standards.md
+                - PIMPL Pattern: zh/dev-guide/pimpl-pattern.md
+            - Basic Usage:
+                - Import Qwt: zh/use-guide/import-qwt.md
+                - First Plot: zh/use-guide/first-plot.md
+                - Picker State Machine: zh/use-guide/picker-state-machine.md
+            - Plot Container & Layout:
+                - Figure Widget: zh/use-guide/figure-widget.md
+                - Parasite Axes: zh/use-guide/parasite-axes.md
+                - Plot Layout: zh/use-guide/plot-layout.md
+            - Core Plot Items:
+                - Curve: zh/use-guide/curve.md
+                - Scatter: zh/use-guide/scatter.md
+                - Grid: zh/use-guide/grid.md
+                - Marker: zh/use-guide/marker.md
+                - Bar Chart: zh/use-guide/barchart.md
+                - Box Chart: zh/use-guide/boxchart.md
+                - Histogram: zh/use-guide/histogram.md
+                - Spectrogram: zh/use-guide/spectrogram.md
+                - Trading Curve: zh/use-guide/tradingcurve.md
+                - Vector Field: zh/use-guide/vectorfield.md
+                - Interval Curve: zh/use-guide/intervalcurve.md
+                - Shape Item: zh/use-guide/shapeitem.md
+                - Text Label: zh/use-guide/textlabel.md
+            - Plot Interaction:
+                - Scale Built-in Action: zh/use-guide/scale-builtin-action.md
+                - Pick Value: zh/use-guide/pick-value.md
+                - Panner: zh/use-guide/panner.md
+                - Zoomer: zh/use-guide/zoomer.md
+                - Renderer: zh/use-guide/renderer.md
+            - Axis System:
+                - Scale Widget: zh/use-guide/scale-widget.md
+                - Ticks Inside: zh/use-guide/ticks-inside.md
+                - Scale Engine: zh/use-guide/scale-engine.md
+            - Legend:
+                - Legend Widget: zh/use-guide/legend.md
+            - Data Processing:
+                - Series Data: zh/use-guide/series-data.md
+            - Styles & Symbols:
+                - Symbol: zh/use-guide/symbol.md
+            - Polar Plot:
+                - Polar Plot: zh/use-guide/polar-plot.md
+            - Control Widgets:
+                - Widgets & Controls: zh/use-guide/widgets-controls.md
+            - 3D Plot:
+                - 3D Plot Introduction: zh/use-guide/3d-plot.md
+                - OpenGL Canvas: zh/use-guide/opengl.md
+            - API Docs:
+                - API Home: doxygen_en/index.html
+                - Class List: doxygen_en/annotated.html
+                - Class Index: doxygen_en/classes.html
   # 需要导出pdf再打开下面
   # - with-pdf:
   #      # 启用整站 PDF 导出

@@ -26,13 +26,13 @@ docs/superpowers
 #文档目录
 site
 site-doxygen
-
+opencode.md
 # vscode 的隐藏文件
 .vscode
 .qtcreator
 .qoder
 .kilo
-
+.sisyphus
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
