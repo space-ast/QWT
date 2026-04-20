@@ -1,8 +1,9 @@
-﻿#include "MainWindow.h"
+#include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <cmath>
 #include <limits>
 #include <QVBoxLayout>
+#include <QLabel>
 #include <QDebug>
 // qwt
 #include "qwt_math.h"
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWi
     createToolBar();
     // 添加布局
     mainLayout->addWidget(figure);
+    // m_clickInfoLabel is created inside initFigure(), added to layout there
 }
 
 MainWindow::~MainWindow()
@@ -137,6 +139,24 @@ void MainWindow::initFigure(QwtFigure* figure)
     m_pickerLinker->addPicker(picker3);
     m_pickerLinker->addPicker(picker4);
     m_pickerLinker->addPicker(picker5);
+
+    // Connect the group's clicked signal to display data
+    connect(m_pickerLinker, &QwtPlotSeriesDataPickerGroup::clicked,
+            this, &MainWindow::onPickerGroupClicked);
+
+    // Create info label at the bottom
+    m_clickInfoLabel = new QLabel("Click on a curve to see data");
+    m_clickInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    m_clickInfoLabel->setStyleSheet("QLabel { background-color: #f0f0f0; padding: 4px; border: 1px solid #ccc; }");
+    m_clickInfoLabel->setMinimumHeight(30);
+
+    // Add the info label to the main layout (after figure)
+    // Find the parent layout that contains the figure
+    if (QWidget* central = this->centralWidget()) {
+        if (QVBoxLayout* mainLayout = qobject_cast<QVBoxLayout*>(central->layout())) {
+            mainLayout->addWidget(m_clickInfoLabel);
+        }
+    }
 }
 
 void MainWindow::setupPlotStyle(QwtPlot* plot, const QString& title, const QColor& color)
@@ -208,6 +228,26 @@ QwtPlot* MainWindow::createParasitePlot()
     parasiteCurve->setSamples(generateSampleData(100, 2000, 2.3));
     parasiteCurve->attach(parasitePlot);
     return hostPlot;
+}
+
+void MainWindow::onPickerGroupClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+    Q_UNUSED(pos);
+    QList< QwtPlotSeriesDataPicker::FeaturePoint > fps = picker->featurePoints();
+    if (fps.isEmpty()) {
+        m_clickInfoLabel->setText("No data at click position");
+        return;
+    }
+    QString info;
+    for (const auto& fp : fps) {
+        QString itemName = fp.item ? fp.item->title().text() : "Unknown";
+        info += QString("%1: (%2, %3) [idx=%4]  ")
+                .arg(itemName)
+                .arg(fp.feature.x(), 0, 'f', 2)
+                .arg(fp.feature.y(), 0, 'f', 2)
+                .arg(fp.index);
+    }
+    m_clickInfoLabel->setText(info);
 }
 
 void MainWindow::onActionResizeTriggered(bool on)

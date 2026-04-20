@@ -75,6 +75,8 @@ void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
     connect(pick, &QwtPlotSeriesDataPicker::moved, this, &QwtPlotSeriesDataPickerGroup::onPickerMove);
     connect(pick, &QwtPlotSeriesDataPicker::activated, this, &QwtPlotSeriesDataPickerGroup::onPickerActivated);
     connect(pick, &QwtPlotSeriesDataPicker::destroyed, this, &QwtPlotSeriesDataPickerGroup::onPickerDestroy);
+    connect(pick, &QwtPlotSeriesDataPicker::clicked, this, &QwtPlotSeriesDataPickerGroup::onPickerClicked);
+    connect(pick, &QwtPlotSeriesDataPicker::doubleClicked, this, &QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked);
 }
 
 /**
@@ -204,6 +206,89 @@ void QwtPlotSeriesDataPickerGroup::onPickerActivated(bool on)
 
 void QwtPlotSeriesDataPickerGroup::onPickerDestroy(QObject* obj)
 {
-    QwtPlotSeriesDataPicker* pick = (QwtPlotSeriesDataPicker*)obj;
-    m_data->pickers.removeAll(pick);
+    m_data->pickers.removeAll(static_cast< QwtPlotSeriesDataPicker* >(obj));
+}
+
+/**
+ * \if ENGLISH
+ * @brief Handles click signal from a picker, syncs other pickers, then emits group's clicked signal
+ * @param picker The picker that emitted the click signal
+ * @param pos The click position
+ * \endif
+ * \if CHINESE
+ * @brief 处理picker的点击信号，同步其他picker后发出组的clicked信号
+ * @param picker 发出点击信号的picker
+ * @param pos 点击位置
+ * \endif
+ */
+void QwtPlotSeriesDataPickerGroup::onPickerClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+    if (!isEnabled()) {
+        return;
+    }
+
+    QWidget* canvas = picker->canvas();
+    if (!canvas) {
+        return;
+    }
+
+    // Sync all other pickers to the proportional position
+    double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
+    double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
+
+    for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+        if (p != picker) {
+            QWidget* c = p->canvas();
+            if (c) {
+                double x = c->width() * xPresent;
+                double y = c->height() * yPresent;
+                p->setTrackerPosition(QPoint(x, y));
+                p->update();  // Trigger featurePoint recalculation at synced position
+            }
+        }
+    }
+
+    emit clicked(picker, pos);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Handles double-click signal from a picker, syncs other pickers, then emits group's doubleClicked signal
+ * @param picker The picker that emitted the double-click signal
+ * @param pos The double-click position
+ * \endif
+ * \if CHINESE
+ * @brief 处理picker的双击信号，同步其他picker后发出组的doubleClicked信号
+ * @param picker 发出双击信号的picker
+ * @param pos 双击位置
+ * \endif
+ */
+void QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+    if (!isEnabled()) {
+        return;
+    }
+
+    QWidget* canvas = picker->canvas();
+    if (!canvas) {
+        return;
+    }
+
+    // Sync all other pickers to the proportional position
+    double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
+    double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
+
+    for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+        if (p != picker) {
+            QWidget* c = p->canvas();
+            if (c) {
+                double x = c->width() * xPresent;
+                double y = c->height() * yPresent;
+                p->setTrackerPosition(QPoint(x, y));
+                p->update();  // Trigger featurePoint recalculation at synced position
+            }
+        }
+    }
+
+    emit doubleClicked(picker, pos);
 }

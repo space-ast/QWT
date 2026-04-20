@@ -136,6 +136,24 @@ public:
     /// Get feature point size
     int drawFeaturePointSize() const;
 
+    /**
+     * \if ENGLISH
+     * @brief Returns the list of feature points currently picked by the tracker
+     * @return List of FeaturePoint structures containing picked data coordinates
+     * @note The returned points correspond to the current tracker position.
+     *       Call this method from a clicked/doubleClicked signal handler to
+     *       get data at the click position.
+     * \endif
+     * \if CHINESE
+     * @brief 返回当前 tracker 拾取到的特征点列表
+     * @return 包含拾取数据坐标的 FeaturePoint 结构列表
+     * @note 返回的点对应当前 tracker 位置。
+     *       从 clicked/doubleClicked 信号处理器中调用此方法
+     *       可获取点击位置的数据。
+     * \endif
+     */
+    QList<FeaturePoint> featurePoints() const;
+
     /// Set text background brush
     void setTextBackgroundBrush(const QBrush& br);
     /// Get text background brush
@@ -171,6 +189,45 @@ protected:
     virtual int pickYValue(const QwtPlot* p, const QPoint& pos, bool interpolate = false);
     // 获取绘图区域屏幕坐标pos上，可拾取的最近的一个点，(基于窗口实现快速索引)
     virtual int pickNearestPoint(const QwtPlot* plot, const QPoint& pos, int windowSize = -5);
+
+    virtual void widgetMousePressEvent(QMouseEvent* event) override;
+    virtual void widgetMouseDoubleClickEvent(QMouseEvent* event) override;
+Q_SIGNALS:
+    /**
+     * \if ENGLISH
+     * @brief Emitted when the user left-clicks on the plot canvas
+     * @param picker Pointer to the picker that was clicked
+     * @param pos Screen position of the click event
+     * @note A double-click will trigger clicked() before doubleClicked().
+     *       Connect only one of these signals if you need to distinguish
+     *       single-click from double-click.
+     * \endif
+     * \if CHINESE
+     * @brief 当用户在绘图画布上左键单击时发出
+     * @param picker 被点击的picker指针
+     * @param pos 点击事件的屏幕位置
+     * @note 双击时会先触发 clicked() 再触发 doubleClicked()。
+     *       如需区分单击与双击，请只连接其中一个信号。
+     * \endif
+     */
+    void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
+    /**
+     * \if ENGLISH
+     * @brief Emitted when the user double-left-clicks on the plot canvas
+     * @param picker Pointer to the picker that was double-clicked
+     * @param pos Screen position of the double-click event
+     * @note A double-click also triggers clicked() before this signal.
+     * \endif
+     * \if CHINESE
+     * @brief 当用户在绘图画布上左键双击时发出
+     * @param picker 被双击的picker指针
+     * @param pos 双击事件的屏幕位置
+     * @note 双击时也会先触发 clicked()，再触发此信号。
+     * \endif
+     */
+    void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
 private Q_SLOTS:
     // item删除的槽，用于更新记录
     void onPlotItemDetached(QwtPlotItem* item, bool on);

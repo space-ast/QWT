@@ -58,10 +58,42 @@ public:
     void setEnabled(bool on);
     /// Check if enabled
     bool isEnabled() const;
+
+Q_SIGNALS:
+    /**
+     * \if ENGLISH
+     * @brief Emitted when a picker in the group is clicked
+     * @param picker The picker that was clicked
+     * @param pos The click position in picker's canvas coordinates
+     * \endif
+     * \if CHINESE
+     * @brief 组内picker被点击时发出
+     * @param picker 被点击的picker
+     * @param pos 点击位置（picker的画布坐标）
+     * \endif
+     */
+    void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
+    /**
+     * \if ENGLISH
+     * @brief Emitted when a picker in the group is double-clicked
+     * @param picker The picker that was double-clicked
+     * @param pos The double-click position in picker's canvas coordinates
+     * \endif
+     * \if CHINESE
+     * @brief 组内picker被双击时发出
+     * @param picker 被双击的picker
+     * @param pos 双击位置（picker的画布坐标）
+     * \endif
+     */
+    void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
 public Q_SLOTS:
     void onPickerMove(const QPoint& pos);
     void onPickerActivated(bool on);
     void onPickerDestroy(QObject* obj);
+    void onPickerClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+    void onPickerDoubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
 };
 
 #endif  // QWT_PLOT_SERIES_DATA_PICKER_GROUP_H

@@ -6,6 +6,8 @@
 // stl
 #include <algorithm>
 #include <limits>
+// Qt
+#include <QMouseEvent>
 // qwt
 #include "qwt_utils.h"
 #include "qwt_picker_machine.h"
@@ -992,6 +994,75 @@ void QwtPlotSeriesDataPicker::move(const QPoint& pos)
 {
     updateFeaturePoint(pos);
     QwtPicker::move(pos);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Handle mouse press events on the widget
+ * @details Emits clicked() for left-button presses, after updating feature points
+ *          at the press position to ensure featurePoints() returns accurate data.
+ *          Then delegates to base class for normal picker transition handling.
+ * @param event The mouse press event
+ * \endif
+ * \if CHINESE
+ * @brief 处理部件上的鼠标按下事件
+ * @details 对于左键按下事件，先更新按下位置的特征点再发出 clicked() 信号，
+ *          确保 featurePoints() 返回准确的数据。
+ *          然后委托给基类进行正常的 picker 状态转换处理。
+ * @param event 鼠标按下事件
+ * \endif
+ */
+void QwtPlotSeriesDataPicker::widgetMousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = event->pos();
+        updateFeaturePoint(pos);
+        emit clicked(this, pos);
+    }
+    QwtPicker::widgetMousePressEvent(event);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Handle mouse double-click events on the widget
+ * @details Emits doubleClicked() for left-button double-clicks.
+ *          A double-click also triggers clicked() (via widgetMousePressEvent)
+ *          before this signal. Then delegates to base class.
+ * @param event The mouse double-click event
+ * \endif
+ * \if CHINESE
+ * @brief 处理部件上的鼠标双击事件
+ * @details 对于左键双击事件发出 doubleClicked() 信号。
+ *          双击也会先触发 clicked()（通过 widgetMousePressEvent）再触发此信号。
+ *          然后委托给基类处理。
+ * @param event 鼠标双击事件
+ * \endif
+ */
+void QwtPlotSeriesDataPicker::widgetMouseDoubleClickEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QPoint pos = event->pos();
+        emit doubleClicked(this, pos);
+    }
+    QwtPicker::widgetMouseDoubleClickEvent(event);
+}
+
+/**
+ * \if ENGLISH
+ * @brief Returns the list of feature points currently picked by the tracker
+ * @return Copy of the internal FeaturePoint list
+ * @note Call from a clicked/doubleClicked signal handler to get data at the click position
+ * \endif
+ * \if CHINESE
+ * @brief 返回当前 tracker 拾取到的特征点列表
+ * @return 内部 FeaturePoint 列表的副本
+ * @note 从 clicked/doubleClicked 信号处理器中调用此方法可获取点击位置的数据
+ * \endif
+ */
+QList<QwtPlotSeriesDataPicker::FeaturePoint> QwtPlotSeriesDataPicker::featurePoints() const
+{
+    QWT_DC(d);
+    return d->featurePoints;
 }
 
 QString QwtPlotSeriesDataPicker::formatAxisValue(double value, int axisId, QwtPlot* plot) const
