@@ -1,224 +1,185 @@
 # Qwt 项目 AI Agent 指引
 
-本文档为 AI Agent 提供项目快速指引，帮助快速理解项目架构、编码规则和关键信息。
+Qwt 7.x（v7.2.1）是基于原版 Qwt 6.2.0 的维护分支。
+基于 Qt 的高性能 2D/3D 绘图库，适用于科学计算和工程数据可视化。许可证：LGPL（Qwt License v1.0）。
 
-## 项目概述
+快速链接：[GitHub](https://github.com/czyt1988/QWT) | [Gitee](https://gitee.com/czyt1988/QWT) | [文档](https://czyt1988.github.io/QWT/zh/)
 
-**Qwt 7.x** 是基于原版 Qwt 6.2.0 的维护版本，是一个基于 Qt 的高性能 2D/3D 绘图库，适用于科学计算和工程应用中的数据可视化。
+## 构建命令
 
-- **协议**: LGPL（商业友好）
-- **Qt版本**: 支持 Qt5.12+ 和 Qt6
-- **C++标准**: C++11（Qt6时使用C++17）
-- **构建系统**: CMake
-- **项目地址**: [GitHub](https://github.com/czyt1988/QWT) / [Gitee](https://gitee.com/czyt1988/QWT)
+```powershell
+# 推荐：Visual Studio 生成器（自动处理 MSVC 环境变量）
+cd build
+cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="D:/Qt/6.7.3/msvc2019_64"
+cmake --build . --config Debug
 
-## 目录结构
-
-本项目把qwt的2d绘图和3d绘图进行合并，引入一个库，可以同时拥有2d绘图和3d绘图
-
-```
-qwt/
-├── src/
-│   ├── plot/          # 2D 绘图核心模块（~140个源文件）
-│   ├── plot3d/        # 3D 绘图模块（来自qwtplot3d整合）
-│   └── qwt_global.h   # 全局定义和兼容性宏
-├── src-amalgamate/    # 单文件聚合版本
-│   ├── QwtPlot.h      # 合并后的单一头文件
-│   └── QwtPlot.cpp    # 合并后的单一源文件
-├── examples/          # 示例程序
-│   ├── 2D/            # 2D绘图示例
-│   └── 3D/            # 3D绘图示例
-├── playground/        # 实验性代码
-├── classincludes/     # 类名头文件映射（支持 #include <QwtPlot>）
-├── docs/              # 用户文档
-│   └── zh/            # 中文文档
-├── cmake/             # CMake配置模板
-├── designer/          # Qt Designer插件
-├── tests/             # 测试代码
-└── tools/             # 工具脚本
+# Ninja（需先初始化 MSVC 环境变量：INCLUDE, LIB, PATH）
+cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 ```
 
-## 核心模块
+- CMake 3.5+, Qt 5.12+ / Qt 6.x, MSVC 2019+
+- 先检查 `build/CMakeCache.txt` 中 Qt 路径是否正确，清理构建只需删 `CMakeCache.txt` 和 `CMakeFiles/`
+- CI 使用 GitHub Actions（Linux + Windows, Qt6.8），构建时跳过 examples/playground
 
-### 2D 绘图模块 (src/plot)
+## 架构关键点
 
-| 核心类 | 功能描述 |
-|--------|----------|
-| `QwtPlot` | 二维绘图主控件，管理布局、坐标轴、图例、画布 |
-| `QwtPlotCurve` | 数据曲线项，支持多种样式（连线、台阶、点等） |
-| `QwtPlotGrid` | 网格项，提供主/次网格线 |
-| `QwtPlotLegend` | 图例容器 |
-| `QwtPlotMarker` | 标记项 |
-| `QwtPlotSpectrogram` | 光谱图项 |
-| `QwtPlotBarChart` | 柱状图项 |
-| `QwtPlotVectorField` | 向量场项 |
+### 双库结构（非单库）
 
-### 布局与容器
+项目生成两个独立的 shared library：
 
-| 类名 | 功能描述 |
-|------|----------|
-| `QwtFigure` | 多绘图布局容器（类似matplotlib的Figure） |
-| `QwtFigureWidgetOverlay` | Figure操作蒙版，支持拖动、缩放子绘图 |
-| `QwtPlotLayout` | 单个绘图布局管理器 |
-| `QwtPlotParasiteLayout` | 寄生绘图布局管理器 |
+| 目标 | CMake target | 输出名 | DLL 导出宏 |
+|------|-------------|--------|-----------|
+| 2D 绘图 | `qwt::plot` | `qwtplot.dll` / `libqwtplot.so` | `QWT_EXPORT` |
+| 3D 绘图 | `qwt::plot3d` | `qwtplot3d.dll` / `libqwtplot3d.so` | `QWT3D_EXPORT` |
 
-### 交互控件
+两者独立构建，3D 模块通过 `QWT_CONFIG_QWTPLOT_3D` 控制。依赖：
+- 2D：`Core Gui Widgets`(public) + `Concurrent PrintSupport`(private)，可选 `OpenGL OpenGLWidgets Svg`
+- 3D：`OpenGL::GLU` + `Qt OpenGL Widgets`，内置 `gl2ps` 回退
 
-| 类名 | 功能描述 |
-|------|----------|
-| `QwtPlotPanner` | 画布实时拖动（支持多坐标轴） |
-| `QwtPlotCachePanner` | 带缓存的拖动（原QwtPanner） |
-| `QwtPlotCanvasZoomer` | 画布整体缩放（支持多坐标轴） |
-| `QwtPlotAxisZoomer` | 坐标轴缩放（原QwtPlotZoomer） |
-| `QwtPlotMagnifier` | 放大器 |
-| `QwtPlotSeriesDataPicker` | 数据拾取器 |
-| `QwtPicker` | 基础拾取器 |
-| `QwtScaleWidget` | 坐标轴控件（支持内置pan/zoom动作） |
+### 条件编译模块
 
-### 3D 绘图模块 (src/plot3d)
+| CMake 选项 | 默认 | 控制内容 |
+|-----------|------|---------|
+| `QWT_CONFIG_QWTPLOT` | ON | 核心绘图：QwtPlot、曲线、网格、缩放等 |
+| `QWT_CONFIG_QWTPOLAR` | ON | 极坐标绘图子模块 |
+| `QWT_CONFIG_QWTWIDGETS` | ON | 控件：滑块、旋钮、刻度盘、温度计等 |
+| `QWT_CONFIG_QWTSVG` | ON | SVG 导出/渲染 |
+| `QWT_CONFIG_QWTOPENGL` | ON | OpenGL 画布 |
+| `QWT_CONFIG_QWTPLOT_3D` | ON | 3D 绘图模块 |
+| `QWT_CONFIG_BUILD_TESTS` | OFF | 测试构建 |
 
-| 核心类 | 功能描述 |
-|--------|----------|
-| `Qwt3DPlot` | 3D绘图主控件 |
-| `Qwt3DSurfacePlot` | 3D表面图 |
-| `Qwt3DGridPlot` | 3D网格图 |
-| `Qwt3DFunction` | 3D函数绘图 |
+### PIMPL 模式（自定义宏）
 
-## 项目引入方式
+使用 `qwt_global.h` 定义的宏，而非 Qt 的 `Q_DECLARE_PRIVATE`：
 
-### 方式一：CMake 包引入（推荐）
+```cpp
+// 头文件：声明 PIMPL
+class QWT_EXPORT QwtFoo : public QWidget {
+    QWT_DECLARE_PRIVATE(QwtFoo)  // → class PrivateData; unique_ptr<PrivateData> m_data;
+};
 
-```cmake
-find_package(qwt REQUIRED)
-# 2D绘图
-target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot)
-# 3D绘图
-target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
+// 源文件：实现 PrivateData
+class QwtFoo::PrivateData {
+    QWT_DECLARE_PUBLIC(QwtFoo)  // → QwtFoo* q_ptr;
+};
+
+// 构造函数初始化
+QwtFoo::QwtFoo() : QWT_PIMPL_CONSTRUCT {}  // → m_data(qwt_make_unique<PrivateData>(this))
+
+// 访问私有时使用
+QWT_D(d);     // PrivateData* d = d_func()
+QWT_DC(d);    // const PrivateData* d = d_func()
 ```
 
-### 方式二：单文件直接引入
+**关键原则**：`m_data` 直接存储 PrivateData（不使用堆指针重定向）。非 const 方法通过 `QWT_D()` 访问，const 方法通过 `QWT_DC()` 访问。
 
-将 `src-amalgamate/QwtPlot.h` 和 `src-amalgamate/QwtPlot.cpp` 加入项目。
+### Qt5/Qt6 兼容层
 
-依赖的Qt模块：`Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, `PrintSupport`
-Qt6额外需要：`OpenGLWidgets`
-3D功能需要：`OpenGL::GLU`
+`qwt_qt5qt6_compat.hpp` 提供 `qwt::compat::` 命名空间下的兼容函数。涉及鼠标/滚轮/字体度量差异时，**必须使用**：
+- `qwt::compat::eventPos(event)` → `event->pos()`(Qt5) / `event->position().toPoint()`(Qt6)
+- `qwt::compat::wheelEventDelta(event)` → `event->delta()`(Qt5) / `event->angleDelta().y()`(Qt6)
+- `qwt::compat::horizontalAdvance(fm, str)` → `fm.width(str)`(Qt5.12-) / `fm.horizontalAdvance(str)`(Qt5.12+)
 
-**注意:**单文件是由工具合成，agent不要操作`QwtPlot.h`和`QwtPlot.cpp`文件
+## 编码规范（必须遵守）
 
-## 构建配置选项
+### 格式化
 
-| CMake选项 | 默认值 | 说明 |
-|-----------|--------|------|
-| `QWT_CONFIG_QWTPLOT` | ON | 2D绘图核心类 |
-| `QWT_CONFIG_QWTPOLAR` | ON | 极坐标绘图 |
-| `QWT_CONFIG_QWTWIDGETS` | ON | 其他控件（滑块、刻度盘等） |
-| `QWT_CONFIG_QWTSVG` | ON | SVG支持 |
-| `QWT_CONFIG_QWTOPENGL` | ON | OpenGL画布支持 |
-| `QWT_CONFIG_QWTPLOT_3D` | ON | 3D绘图模块 |
-| `QWT_CONFIG_BUILD_EXAMPLE` | ON | 构建示例 |
-| `QWT_CONFIG_BUILD_PLAYGROUND` | ON | 构建实验代码 |
+`.clang-format` 基于 WebKit 风格：
+- 缩进 4 空格，列宽 120
+- 花括号：类/函数/枚举/命名空间后换行，控制语句不换行
+- 指针左对齐（`int* p`），模板 `template<` 后无空格
+- `SortIncludes: false` —— include 顺序手动控制
 
-## 开发规范
+### 命名
 
-详细的开发规范文档位于 `docs/zh/dev-guide/` 目录：
+- 类名：`Qwt` 开头大驼峰，如 `QwtPlotCurve`
+- 方法：小驼峰，getter 不加 `get` 前缀，setter 加 `set`
+- 成员变量：`m_` 前缀，如 `m_data`
+- 局部变量：小驼峰
+- 常量：`MAX_WIDTH`
 
-| 文档 | 说明 |
-|------|------|
-| [编码规范](docs/zh/dev-guide/coding-standards.md) | 代码格式化、C++11兼容性宏、命名规范等 |
-| [注释规范](docs/zh/dev-guide/comment-standards.md) | Doxygen双语注释格式、注释位置规范等 |
-| [PIMPL模式](docs/zh/dev-guide/pimpl-pattern.md) | PIMPL设计模式的使用方法和宏定义 |
-| [开发指引首页](docs/zh/dev-guide/index.md) | 开发指引概览和快速开始 |
+### Include 顺序（手动排序，不可乱）
 
-### 编码规范要点
+```cpp
+#include "own_header.h"   // 本文件对应头文件优先
+// 空行
+#include <qnamespace.h>   // Qt 系统头文件 <q...>
+#include <QWidget>        // Qt 类头文件 <Q...>
+// 空行
+#include <algorithm>      // STL
+// 空行
+#include "qwt_plot.h"     // 本项目其他头文件
+```
 
-1. **使用 `override` 和 `final`** 代替旧宏 `QWT_OVERRIDE`、`QWT_FINAL`
-2. **使用 `nullptr`** 代替 `NULL`
-3. **使用 `static_cast`** 代替C风格强制转换
-4. **使用 `using`** 代替 `typedef`
-5. **Qt容器迭代** 使用 `qwt_as_const` 防止深拷贝
+### 注释规范（Doxygen 双语）
 
-详细内容请参阅 [编码规范](docs/zh/dev-guide/coding-standards.md)。
+- **类注释**：头文件中双语 Doxygen，带示例
+- **public 函数详细**：`.cpp` 中双语 Doxygen
+- **public 函数简洁**：`.h` 中单行英文 `// Comment`（无 Doxygen 块）
+- **信号注释**：`.h` 中双语 Doxygen（信号无 cpp 定义）
+- `\if ENGLISH` / `\if CHINESE` 包裹双语内容，`\if`/`\endif` 使用反斜杠，其余关键字用 `@`
 
-### 注释规范要点
+### 现代 C++ 要求
 
-所有新增代码必须使用 **Doxygen 双语格式**（中英文）：
+- 使用 `override`/`final`（不用旧宏 `QWT_OVERRIDE`/`QWT_FINAL`）
+- 使用 `nullptr`（不用 `NULL`）
+- 使用 `static_cast<>` / `using`（不用 C 风格转换 / `typedef`）
+- Qt 容器迭代使用 `qwt_as_const(container)` 防止 COW 深拷贝
+- 智能指针使用 `qwt_make_unique<T>(args...)`（C++11 兼容）
 
-- 详细注释写在 `.cpp` 文件
-- 简洁注释写在 `.h` 文件
-- 类注释需要在头文件中添加双语 Doxygen
+### 信号槽
 
-详细内容请参阅 [注释规范](docs/zh/dev-guide/comment-standards.md)。
+- 使用 `Q_SIGNALS:` / `public Q_SLOTS:` 宏（不用 `signals:` / `public slots:`）
+- 优先新式 `connect(sender, &Sender::signal, receiver, &Receiver::slot)` 语法
 
-### PIMPL 模式要点
+## 重要命名变更（v7.0.7+）
 
-项目提供 PIMPL 模式宏定义：
+旧名称已在代码库中移除，**不要使用旧名**：
 
-- `QWT_DECLARE_PRIVATE(Class)` — 声明私有数据指针
-- `QWT_DECLARE_PUBLIC(Class)` — 声明公有宿主指针
-- `QWT_PIMPL_CONSTRUCT` — 初始化私有数据指针
-- `QWT_D(name)` / `QWT_DC(name)` — 访问私有数据
-
-详细使用方法请参阅 [PIMPL模式使用指南](docs/zh/dev-guide/pimpl-pattern.md)。
-
-## 重要命名变更 (v7.0.7+)
-
-| 原名称 | 新名称 | 说明 |
-|--------|--------|------|
-| `QwtPlotZoomer` | `QwtPlotAxisZoomer` | 只能绑定2个坐标轴 |
-| `QwtPanner` | `QwtCachePanner` | 带缓存的拖动 |
-| `QwtPlotPanner` | `QwtPlotCachePanner` | 带缓存的绘图拖动 |
-| - | `QwtPlotCanvasZoomer` | 新增：整体画布缩放 |
-| - | `QwtPlotPanner` | 新增：实时拖动 |
+| 已废弃的旧名 | 当前使用的新名 |
+|-------------|--------------|
+| `QwtPlotZoomer` | `QwtPlotAxisZoomer`（仅绑定 2 个轴） |
+| `QwtPanner` | `QwtCachePanner`（带像素缓存） |
+| `QwtPlotPanner` (旧) | `QwtPlotCachePanner` |
+| - | `QwtPlotCanvasZoomer`（新增：整体画布缩放，不限轴数） |
+| - | `QwtPlotPanner`（新增：实时拖动，基于 QwtPicker） |
 
 ## 关键架构概念
 
-### 寄生绘图 (Parasite Plot)
-
-寄生绘图允许在同一个绘图区域内创建多个独立坐标轴：
-
-- 通过 `QwtPlot::createParasitePlot()` 创建
-- 与宿主绘图共享绘图区域
-- 支持任意多个X/Y轴
-- 自动生命周期管理
-
-```cpp
-QwtPlot* hostPlot = new QwtPlot();
-QwtPlot* parasitePlot = hostPlot->createParasitePlot(QwtAxis::YLeft);
-```
-
 ### 坐标轴系统
 
-Qwt使用 `QwtAxis::Position` 枚举标识坐标轴位置：
+使用 `QwtAxisId`（包含 Position + 序号），枚举 `QwtAxis::Position`：
+- `QwtAxis::XBottom`, `QwtAxis::XTop`, `QwtAxis::YLeft`, `QwtAxis::YRight`
 
-- `QwtAxis::XBottom`, `QwtAxis::XTop`
-- `QwtAxis::YLeft`, `QwtAxis::YRight`
+兼容旧版 `Axis` 枚举：`QwtPlot::yLeft` 等仍可用（通过 `QWT_AXIS_COMPAT` 宏）。
 
-## 构建及编译指引
+### 寄生绘图 (Parasite Plot)
 
-如果需要构建和编译，你需要阅读`./build.md`文件
+通过 `QwtPlot::createParasitePlot(QwtAxis::Position)` 创建寄生绘图，共享宿主画布区域，支持任意多轴。寄生绘图和宿主通过 `plotList()` / `hostPlot()` / `parasitePlots()` 管理。
 
-## 示例索引
+### QwtFigure
 
-| 示例路径 | 功能演示 |
-|----------|----------|
-| `examples/2D/simpleplot` | 基础折线图 |
-| `examples/figure` | QwtFigure多绘图布局 |
-| `examples/parasitePlot` | 寄生轴多坐标轴 |
-| `examples/curvedemo` | 曲线样式演示 |
-| `examples/barchart` | 柱状图 |
-| `examples/spectrogram` | 光谱图 |
-| `examples/cpuplot` | 实时数据监控 |
-| `examples/realtime` | 实时绘图 |
-| `examples/oscilloscope` | 示波器效果 |
-| `examples/polardemo` | 极坐标绘图 |
-| `examples/stockchart` | 股票图表 |
+类似 matplotlib Figure 的多绘图布局容器，支持网格排列。通过 `QwtFigureWidgetOverlay` 提供交互操作（拖动、缩放子绘图）。
 
-## 文档资源
+## 不可触碰的文件
 
-- **用户文档**: `docs/zh/` 目录下的中文文档
-- **构建说明**: `docs/zh/build-guide/build-instructions.md`
-- **引入说明**: `docs/zh/use-guide/import-qwt.md`
-- **Figure使用**: `docs/zh/use-guide/figure-widget.md`
-- **寄生轴**: `docs/zh/use-guide/parasite-axes.md`
-- **变更日志**: `CHANGES.md`
+| 文件 | 原因 |
+|------|------|
+| `src-amalgamate/QwtPlot.h` | 自动合成，不要手动编辑 |
+| `src-amalgamate/QwtPlot.cpp` | 自动合成，不要手动编辑 |
+| `tools/` | 合成脚本，非核心库代码 |
+
+## 测试
+
+- 位于 `tests/`，使用 Qt Test 框架
+- 构建时需 `-DQWT_CONFIG_BUILD_TESTS=ON`
+- 当前活跃测试：`picker_click_test`, `picker_group_click_test`
+- `splineprof/` 和 `splinetest/` 为性能/功能测试，暂未接入 CMake
+
+## 文档
+
+- MkDocs Material 主题 + i18n 插件（中文/英文）
+- Doxygen API 文档：`docs/doxygen-doc-file/Doxyfile_en.cfg` / `Doxyfile_cn.cfg`
+- CI 自动部署 GitHub Pages（仅 master 分支 push 触发）
+- 构建文档依赖：`pip install -r requirements-docs.txt`
+- 在线文档：https://czyt1988.github.io/QWT/zh/
