@@ -2298,7 +2298,10 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
     QRectF hostScaleRect = host->plotLayout()->scaleRect(axisId);
     // 宿主的矩形修正，宿主只修正edgeMargin作为原始矩形
     hostScaleRect = shrinkRect(hostScaleRect, host->axisWidget(axisId)->edgeMargin(), axisId);
-    layers.append({ host, hostScaleRect });
+    AxisLayer hostLayer;
+    hostLayer.plot = host;
+    hostLayer.scaleRect = hostScaleRect;
+    layers.append(hostLayer);
     // 寄生轴按加入顺序构成 1,2,… 层
     for (QwtPlot* p : parasites) {
         if (!p || !p->isAxisVisible(axisId)) {
@@ -2313,7 +2316,10 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
         const int oldMarg = p->axisWidget(axisId)->margin();
         r                 = shrinkRect(r, oldEdge + oldMarg, axisId);
 
-        layers.append({ p, r });
+        AxisLayer pLayer;
+        pLayer.plot = p;
+        pLayer.scaleRect = r;
+        layers.append(pLayer);
     }
     if (layers.isEmpty()) {
         return;
