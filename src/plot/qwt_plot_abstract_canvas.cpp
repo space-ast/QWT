@@ -195,15 +195,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] canvasWidget 绘图画布部件
- * \endif
  */
 QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
 {
@@ -217,13 +210,7 @@ QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotAbstractCanvas::~QwtPlotAbstractCanvas()
 {
@@ -231,15 +218,8 @@ QwtPlotAbstractCanvas::~QwtPlotAbstractCanvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Return parent plot widget
  * @return Parent plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 返回父绘图部件
- * @return 父绘图部件
- * \endif
  */
 QwtPlot* QwtPlotAbstractCanvas::plot()
 {
@@ -247,15 +227,8 @@ QwtPlot* QwtPlotAbstractCanvas::plot()
 }
 
 /**
- * \if ENGLISH
  * @brief Return parent plot widget
  * @return Parent plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 返回父绘图部件
- * @return 父绘图部件
- * \endif
  */
 const QwtPlot* QwtPlotAbstractCanvas::plot() const
 {
@@ -263,17 +236,9 @@ const QwtPlot* QwtPlotAbstractCanvas::plot() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the focus indicator
  * @param[in] focusIndicator Focus indicator type
  * @sa FocusIndicator, focusIndicator()
- * \endif
- *
- * \if CHINESE
- * @brief 设置焦点指示器
- * @param[in] focusIndicator 焦点指示器类型
- * @sa FocusIndicator, focusIndicator()
- * \endif
  */
 void QwtPlotAbstractCanvas::setFocusIndicator(FocusIndicator focusIndicator)
 {
@@ -281,17 +246,9 @@ void QwtPlotAbstractCanvas::setFocusIndicator(FocusIndicator focusIndicator)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the focus indicator
  * @return Focus indicator
  * @sa FocusIndicator, setFocusIndicator()
- * \endif
- *
- * \if CHINESE
- * @brief 获取焦点指示器
- * @return 焦点指示器
- * @sa FocusIndicator, setFocusIndicator()
- * \endif
  */
 QwtPlotAbstractCanvas::FocusIndicator QwtPlotAbstractCanvas::focusIndicator() const
 {
@@ -316,17 +273,9 @@ void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the radius for the corners of the border frame
  * @param[in] radius Radius of a rounded corner
  * @sa borderRadius()
- * \endif
- *
- * \if CHINESE
- * @brief 设置边框框架角落的半径
- * @param[in] radius 圆角的半径
- * @sa borderRadius()
- * \endif
  */
 void QwtPlotAbstractCanvas::setBorderRadius(double radius)
 {
@@ -334,17 +283,9 @@ void QwtPlotAbstractCanvas::setBorderRadius(double radius)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the radius for the corners of the border frame
  * @return Radius for the corners of the border frame
  * @sa setBorderRadius()
- * \endif
- *
- * \if CHINESE
- * @brief 获取边框框架角落的半径
- * @return 边框框架角落的半径
- * @sa setBorderRadius()
- * \endif
  */
 double QwtPlotAbstractCanvas::borderRadius() const
 {
@@ -603,15 +544,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] canvasWidget 绘图画布部件
- * \endif
  */
 QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget)
 {
@@ -622,13 +556,7 @@ QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlo
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotAbstractGLCanvas::~QwtPlotAbstractGLCanvas()
 {
@@ -636,19 +564,10 @@ QwtPlotAbstractGLCanvas::~QwtPlotAbstractGLCanvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Changing the paint attributes
  * @param[in] attribute Paint attribute
  * @param[in] on On/Off
  * @sa testPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘制属性
- * @param[in] attribute 绘制属性
- * @param[in] on 开/关
- * @sa testPaintAttribute()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
@@ -666,19 +585,10 @@ void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool o
 }
 
 /**
- * \if ENGLISH
  * @brief Test whether a paint attribute is enabled
  * @param[in] attribute Paint attribute
  * @return true, when attribute is enabled
  * @sa setPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试绘制属性是否启用
- * @param[in] attribute 绘制属性
- * @return 如果属性启用则返回 true
- * @sa setPaintAttribute()
- * \endif
  */
 bool QwtPlotAbstractGLCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
@@ -686,17 +596,9 @@ bool QwtPlotAbstractGLCanvas::testPaintAttribute(PaintAttribute attribute) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame style
  * @param[in] style The bitwise OR between a shape and a shadow
  * @sa frameStyle(), QFrame::setFrameStyle(), setFrameShadow(), setFrameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架样式
- * @param[in] style 形状和阴影的按位或
- * @sa frameStyle(), QFrame::setFrameStyle(), setFrameShadow(), setFrameShape()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
 {
@@ -709,17 +611,9 @@ void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame style
  * @return The bitwise OR between a frameShape() and a frameShadow()
  * @sa setFrameStyle(), QFrame::frameStyle()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架样式
- * @return frameShape() 和 frameShadow() 的按位或
- * @sa setFrameStyle(), QFrame::frameStyle()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::frameStyle() const
 {
@@ -727,17 +621,9 @@ int QwtPlotAbstractGLCanvas::frameStyle() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame shadow
  * @param[in] shadow Frame shadow
  * @sa frameShadow(), setFrameShape(), QFrame::setFrameShadow()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架阴影
- * @param[in] shadow 框架阴影
- * @sa frameShadow(), setFrameShape(), QFrame::setFrameShadow()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameShadow(QFrame::Shadow shadow)
 {
@@ -745,17 +631,9 @@ void QwtPlotAbstractGLCanvas::setFrameShadow(QFrame::Shadow shadow)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame shadow
  * @return Frame shadow
  * @sa setFrameShadow(), QFrame::setFrameShadow()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架阴影
- * @return 框架阴影
- * @sa setFrameShadow(), QFrame::setFrameShadow()
- * \endif
  */
 QFrame::Shadow QwtPlotAbstractGLCanvas::frameShadow() const
 {
@@ -763,17 +641,9 @@ QFrame::Shadow QwtPlotAbstractGLCanvas::frameShadow() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame shape
  * @param[in] shape Frame shape
  * @sa frameShape(), setFrameShadow(), QFrame::frameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架形状
- * @param[in] shape 框架形状
- * @sa frameShape(), setFrameShadow(), QFrame::frameShape()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameShape(QFrame::Shape shape)
 {
@@ -781,17 +651,9 @@ void QwtPlotAbstractGLCanvas::setFrameShape(QFrame::Shape shape)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame shape
  * @return Frame shape
  * @sa setFrameShape(), QFrame::frameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架形状
- * @return 框架形状
- * @sa setFrameShape(), QFrame::frameShape()
- * \endif
  */
 QFrame::Shape QwtPlotAbstractGLCanvas::frameShape() const
 {
@@ -799,19 +661,10 @@ QFrame::Shape QwtPlotAbstractGLCanvas::frameShape() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame line width
  * @details The default line width is 2 pixels.
  * @param[in] width Line width of the frame
  * @sa lineWidth(), setMidLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架线宽度
- * @details 默认线宽度为 2 像素。
- * @param[in] width 框架的线宽度
- * @sa lineWidth(), setMidLineWidth()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setLineWidth(int width)
 {
@@ -824,17 +677,9 @@ void QwtPlotAbstractGLCanvas::setLineWidth(int width)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the line width of the frame
  * @return Line width of the frame
  * @sa setLineWidth(), midLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架的线宽度
- * @return 框架的线宽度
- * @sa setLineWidth(), midLineWidth()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::lineWidth() const
 {
@@ -842,19 +687,10 @@ int QwtPlotAbstractGLCanvas::lineWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame mid line width
  * @details The default midline width is 0 pixels.
  * @param[in] width Midline width of the frame
  * @sa midLineWidth(), setLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架中线宽度
- * @details 默认中线宽度为 0 像素。
- * @param[in] width 框架的中线宽度
- * @sa midLineWidth(), setLineWidth()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setMidLineWidth(int width)
 {
@@ -867,17 +703,9 @@ void QwtPlotAbstractGLCanvas::setMidLineWidth(int width)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the midline width of the frame
  * @return Midline width of the frame
  * @sa setMidLineWidth(), lineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架的中线宽度
- * @return 框架的中线宽度
- * @sa setMidLineWidth(), lineWidth()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::midLineWidth() const
 {
@@ -885,15 +713,8 @@ int QwtPlotAbstractGLCanvas::midLineWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame width depending on the style, line width and midline width
  * @return Frame width depending on the style, line width and midline width
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架宽度，取决于样式、线宽和中线宽度
- * @return 框架宽度
- * \endif
  */
 int QwtPlotAbstractGLCanvas::frameWidth() const
 {
@@ -901,15 +722,8 @@ int QwtPlotAbstractGLCanvas::frameWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache and repaint the canvas
  * @sa invalidatePaintCache()
- * \endif
- *
- * \if CHINESE
- * @brief 使绘制缓存失效并重绘画布
- * @sa invalidatePaintCache()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::replot()
 {
@@ -923,15 +737,8 @@ void QwtPlotAbstractGLCanvas::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the rectangle where the frame is drawn in
  * @return The rectangle where the frame is drawn in
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘制框架的矩形区域
- * @return 绘制框架的矩形区域
- * \endif
  */
 QRect QwtPlotAbstractGLCanvas::frameRect() const
 {

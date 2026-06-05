@@ -118,20 +118,11 @@ public:
     mutable QSize sizeHintCache;
 };
 /**
- * \if ENGLISH
  * @brief Construct vertical slider in QwtSlider::Trough style
  * @details Construct vertical slider in QwtSlider::Trough style with a scale to the left.
  *          The scale is initialized to [0.0, 100.0] and the value set to 0.0.
  * @param parent Parent widget
  * \sa setOrientation(), setScalePosition()
- * \endif
- * \if CHINESE
- * @brief 构造垂直滑块 (QwtSlider::Trough 样式)
- * @details 构造左侧带刻度的 QwtSlider::Trough 样式垂直滑块。
- *          刻度初始化为 [0.0, 100.0]，值设置为 0.0。
- * @param parent 父控件
- * \sa setOrientation(), setScalePosition()
- * \endif
  */
 QwtSlider::QwtSlider(QWidget* parent) : QwtAbstractSlider(parent)
 {
@@ -139,7 +130,6 @@ QwtSlider::QwtSlider(QWidget* parent) : QwtAbstractSlider(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Construct a slider in QwtSlider::Trough style
  * @details Construct a slider in QwtSlider::Trough style.
  *          When orientation is Qt::Vertical the scale will be aligned to the left,
@@ -148,16 +138,6 @@ QwtSlider::QwtSlider(QWidget* parent) : QwtAbstractSlider(parent)
  * @param parent Parent widget
  * @param orientation Orientation of the slider
  * \sa setOrientation(), setScalePosition()
- * \endif
- * \if CHINESE
- * @brief 构造滑块 (QwtSlider::Trough 样式)
- * @details 构造 QwtSlider::Trough 样式的滑块。
- *          当方向为 Qt::Vertical时刻度对齐到左侧，否则在滑块顶部。
- *          刻度初始化为 [0.0, 100.0]，值设置为 0.0。
- * @param parent 父控件
- * @param orientation 滑块方向
- * \sa setOrientation(), setScalePosition()
- * \endif
  */
 QwtSlider::QwtSlider(Qt::Orientation orientation, QWidget* parent) : QwtAbstractSlider(parent)
 {
@@ -165,14 +145,8 @@ QwtSlider::QwtSlider(Qt::Orientation orientation, QWidget* parent) : QwtAbstract
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  * \sa QwtSlider()
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \sa QwtSlider()
- * \endif
  */
 QwtSlider::~QwtSlider()
 {
@@ -200,16 +174,9 @@ void QwtSlider::initSlider(Qt::Orientation orientation)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the orientation
  * @param orientation Allowed values are Qt::Horizontal and Qt::Vertical
  * \sa orientation(), scalePosition()
- * \endif
- * \if CHINESE
- * @brief 设置方向
- * @param orientation 允许的值为 Qt::Horizontal 和 Qt::Vertical
- * \sa orientation(), scalePosition()
- * \endif
  */
 void QwtSlider::setOrientation(Qt::Orientation orientation)
 {
@@ -233,14 +200,8 @@ void QwtSlider::setOrientation(Qt::Orientation orientation)
 }
 
 /**
- * \if ENGLISH
  * @brief Return orientation
  * \sa setOrientation()
- * \endif
- * \if CHINESE
- * @brief 返回方向
- * \sa setOrientation()
- * \endif
  */
 Qt::Orientation QwtSlider::orientation() const
 {
@@ -248,16 +209,9 @@ Qt::Orientation QwtSlider::orientation() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the position of the scale
  * @param scalePosition Position of the scale
  * \sa ScalePosition, scalePosition()
- * \endif
- * \if CHINESE
- * @brief 更改刻度位置
- * @param scalePosition 刻度位置
- * \sa ScalePosition, scalePosition()
- * \endif
  */
 void QwtSlider::setScalePosition(ScalePosition scalePosition)
 {
@@ -272,14 +226,8 @@ void QwtSlider::setScalePosition(ScalePosition scalePosition)
 }
 
 /**
- * \if ENGLISH
  * @brief Return position of the scale
  * \sa setScalePosition()
- * \endif
- * \if CHINESE
- * @brief 返回刻度位置
- * \sa setScalePosition()
- * \endif
  */
 QwtSlider::ScalePosition QwtSlider::scalePosition() const
 {
@@ -287,18 +235,10 @@ QwtSlider::ScalePosition QwtSlider::scalePosition() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the slider's border width
  * @details The border width is used for drawing the slider handle and the trough.
  * @param width Border width
  * \sa borderWidth()
- * \endif
- * \if CHINESE
- * @brief 更改滑块的边框宽度
- * @details 边框宽度用于绘制滑块手柄和槽。
- * @param width 边框宽度
- * \sa borderWidth()
- * \endif
  */
 void QwtSlider::setBorderWidth(int width)
 {
@@ -314,14 +254,8 @@ void QwtSlider::setBorderWidth(int width)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the border width
  * \sa setBorderWidth()
- * \endif
- * \if CHINESE
- * @brief 返回边框宽度
- * \sa setBorderWidth()
- * \endif
  */
 int QwtSlider::borderWidth() const
 {
@@ -329,19 +263,11 @@ int QwtSlider::borderWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the spacing between trough and scale
  * @details A spacing of 0 means that the backbone of the scale is covered by the trough.
  *          The default setting is 4 pixels.
  * @param spacing Number of pixels
  * \sa spacing()
- * \endif
- * \if CHINESE
- * @brief 更改槽和刻度之间的间距
- * @details 间距为 0 表示刻度的主干线被槽覆盖。默认设置为 4 像素。
- * @param spacing 像素数
- * \sa spacing()
- * \endif
  */
 void QwtSlider::setSpacing(int spacing)
 {
@@ -357,14 +283,8 @@ void QwtSlider::setSpacing(int spacing)
 }
 
 /**
- * \if ENGLISH
  * @brief Return number of pixels between slider and scale
  * \sa setSpacing()
- * \endif
- * \if CHINESE
- * @brief 返回滑块和刻度之间的像素数
- * \sa setSpacing()
- * \endif
  */
 int QwtSlider::spacing() const
 {
@@ -372,20 +292,11 @@ int QwtSlider::spacing() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the slider's handle size
  * @details When the size is empty the slider handle will be painted with a
  *          default size depending on its orientation() and backgroundStyle().
  * @param size New size
  * \sa handleSize()
- * \endif
- * \if CHINESE
- * @brief 设置滑块手柄大小
- * @details 当大小为 empty 时，滑块手柄将根据其 orientation() 和 backgroundStyle()
- *          使用默认大小绘制。
- * @param size 新大小
- * \sa handleSize()
- * \endif
  */
 void QwtSlider::setHandleSize(const QSize& size)
 {
@@ -398,14 +309,8 @@ void QwtSlider::setHandleSize(const QSize& size)
 }
 
 /**
- * \if ENGLISH
  * @brief Return size of the handle
  * \sa setHandleSize()
- * \endif
- * \if CHINESE
- * @brief 返回手柄大小
- * \sa setHandleSize()
- * \endif
  */
 QSize QwtSlider::handleSize() const
 {
@@ -413,21 +318,12 @@ QSize QwtSlider::handleSize() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a scale draw
  * @details For changing the labels of the scales, it is necessary to derive
  *          from QwtScaleDraw and overload QwtScaleDraw::label().
  * @param scaleDraw ScaleDraw object that has to be created with new and will be
  *                  deleted in ~QwtSlider() or the next call of setScaleDraw()
  * \sa scaleDraw()
- * \endif
- * \if CHINESE
- * @brief 设置刻度绘制器
- * @details 要更改刻度标签，需要从 QwtScaleDraw 派生并重载 QwtScaleDraw::label()。
- * @param scaleDraw 刻度绘制对象，必须用 new 创建，将在 ~QwtSlider() 或下次调用
- *                  setScaleDraw() 时删除
- * \sa scaleDraw()
- * \endif
  */
 void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
@@ -445,14 +341,8 @@ void QwtSlider::setScaleDraw(QwtScaleDraw* scaleDraw)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale draw of the slider (const version)
  * \sa setScaleDraw()
- * \endif
- * \if CHINESE
- * @brief 返回滑块的刻度绘制器 (const 版本)
- * \sa setScaleDraw()
- * \endif
  */
 const QwtScaleDraw* QwtSlider::scaleDraw() const
 {
@@ -473,18 +363,10 @@ void QwtSlider::scaleChange()
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the update interval for automatic scrolling
  * @details The minimal accepted value is 50 ms.
  * @param interval Update interval in milliseconds
  * \sa updateInterval()
- * \endif
- * \if CHINESE
- * @brief 指定自动刷新的更新间隔
- * @details 最小接受值为 50 毫秒。
- * @param interval 更新间隔 (毫秒)
- * \sa updateInterval()
- * \endif
  */
 void QwtSlider::setUpdateInterval(int interval)
 {
@@ -492,14 +374,8 @@ void QwtSlider::setUpdateInterval(int interval)
 }
 
 /**
- * \if ENGLISH
  * @brief Return update interval in milliseconds for automatic scrolling
  * \sa setUpdateInterval()
- * \endif
- * \if CHINESE
- * @brief 返回自动刷新的更新间隔 (毫秒)
- * \sa setUpdateInterval()
- * \endif
  */
 int QwtSlider::updateInterval() const
 {
@@ -828,18 +704,10 @@ void QwtSlider::layoutSlider(bool update_geometry)
 }
 
 /**
- * \if ENGLISH
  * @brief En/Disable the trough
  * @details The slider can be customized by showing a trough for the handle.
  * @param on When true, the trough is visible
  * \sa hasTrough(), setGroove()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用槽
- * @details 滑块可以通过显示手柄的槽来自定义。
- * @param on 当 true 时，槽可见
- * \sa hasTrough(), setGroove()
- * \endif
  */
 void QwtSlider::setTrough(bool on)
 {
@@ -852,14 +720,8 @@ void QwtSlider::setTrough(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true when the trough is visible
  * \sa setTrough(), hasGroove()
- * \endif
- * \if CHINESE
- * @brief 当槽可见时返回 true
- * \sa setTrough(), hasGroove()
- * \endif
  */
 bool QwtSlider::hasTrough() const
 {
@@ -867,18 +729,10 @@ bool QwtSlider::hasTrough() const
 }
 
 /**
- * \if ENGLISH
  * @brief En/Disable the groove
  * @details The slider can be customized by showing a groove for the handle.
  * @param on When true, the groove is visible
  * \sa hasGroove(), setTrough()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用凹槽
- * @details 滑块可以通过显示手柄的凹槽来自定义。
- * @param on 当 true 时，凹槽可见
- * \sa hasGroove(), setTrough()
- * \endif
  */
 void QwtSlider::setGroove(bool on)
 {
@@ -891,14 +745,8 @@ void QwtSlider::setGroove(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true when the groove is visible
  * \sa setGroove(), hasTrough()
- * \endif
- * \if CHINESE
- * @brief 当凹槽可见时返回 true
- * \sa setGroove(), hasTrough()
- * \endif
  */
 bool QwtSlider::hasGroove() const
 {
@@ -906,16 +754,9 @@ bool QwtSlider::hasGroove() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return size hint
  * @returns minimumSizeHint()
  * \sa minimumSizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回大小提示
- * @returns minimumSizeHint()
- * \sa minimumSizeHint()
- * \endif
  */
 QSize QwtSlider::sizeHint() const
 {
@@ -924,14 +765,8 @@ QSize QwtSlider::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return minimum size hint
  * \sa sizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回最小大小提示
- * \sa sizeHint()
- * \endif
  */
 QSize QwtSlider::minimumSizeHint() const
 {

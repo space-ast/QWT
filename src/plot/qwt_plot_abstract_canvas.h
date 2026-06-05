@@ -33,68 +33,34 @@
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief Base class for all type of plot canvases
- * \endif
- *
- * \if CHINESE
- * @brief 所有类型绘图画布的基类
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractCanvas
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Focus indicator
      * @details The default setting is NoFocusIndicator
      * @sa setFocusIndicator(), focusIndicator(), drawFocusIndicator()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 焦点指示器
-     * @details 默认设置是 NoFocusIndicator
-     * @sa setFocusIndicator(), focusIndicator(), drawFocusIndicator()
-     * \endif
      */
 
     enum FocusIndicator
     {
         /**
-         * \if ENGLISH
          * Don't paint a focus indicator
-         * \endif
-         *
-         * \if CHINESE
-         * 不绘制焦点指示器
-         * \endif
          */
         NoFocusIndicator,
 
         /**
-         * \if ENGLISH
          * The focus is related to the complete canvas.
          * Paint the focus indicator using drawFocusIndicator()
-         * \endif
-         *
-         * \if CHINESE
-         * 焦点与整个画布相关。
-         * 使用 drawFocusIndicator() 绘制焦点指示器
-         * \endif
          */
         CanvasFocusIndicator,
 
         /**
-         * \if ENGLISH
          * The focus is related to an item (curve, point, ...) on
          * the canvas. It is up to the application to display a
          * focus indication using e.g. highlighting.
-         * \endif
-         *
-         * \if CHINESE
-         * 焦点与画布上的项目（曲线、点等）相关。
-         * 由应用程序决定如何显示焦点指示，例如通过高亮。
-         * \endif
          */
         ItemFocusIndicator
     };
@@ -143,62 +109,31 @@ class QWT_EXPORT QwtPlotAbstractCanvas
 };
 
 /**
- * \if ENGLISH
  * @brief Base class of QwtPlotOpenGLCanvas and QwtPlotGLCanvas
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotOpenGLCanvas 和 QwtPlotGLCanvas 的基类
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Paint attributes
      * @details The default setting enables BackingStore and Opaque.
      * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 绘制属性
-     * @details 默认设置启用 BackingStore 和 Opaque。
-     * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      */
     enum PaintAttribute
     {
         /**
-         * \if ENGLISH
          * @brief Paint double buffered reusing the content of the pixmap buffer when possible
          * @details Using a backing store might improve the performance significantly,
          *          when working with widget overlays (like rubber bands).
          *          Disabling the cache might improve the performance for incremental paints
          *          (using QwtPlotDirectPainter).
          * @sa backingStore(), invalidateBackingStore()
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 尽可能重用像素映射缓冲区内容进行双缓冲绘制
-         * @details 使用后备存储可能会显著提高性能，
-         *          当使用部件覆盖（如橡皮筋）时。
-         *          禁用缓存可能会提高增量绘制的性能（使用 QwtPlotDirectPainter）。
-         * @sa backingStore(), invalidateBackingStore()
-         * \endif
          */
         BackingStore = 1,
 
         /**
-         * \if ENGLISH
          * @brief When ImmediatePaint is set replot() calls repaint() instead of update()
          * @sa replot(), QWidget::repaint(), QWidget::update()
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 当设置 ImmediatePaint 时，replot() 调用 repaint() 而不是 update()
-         * @sa replot(), QWidget::repaint(), QWidget::update()
-         * \endif
          */
         ImmediatePaint = 8,
     };

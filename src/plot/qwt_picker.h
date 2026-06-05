@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -49,7 +49,6 @@ class QKeyEvent;
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief QwtPicker provides selections on a widget
  * @details QwtPicker filters all enter, leave, mouse and keyboard events of a widget
  *          and translates them into an array of selected points.
@@ -104,54 +103,6 @@ class QPainter;
  * picker->setTrackerMode(QwtPicker::ActiveOnly);
  * picker->setRubberBand(QwtPicker::RectRubberBand);
  * @endcode
- * \endif
- * \if CHINESE
- * @brief QwtPicker 在一个部件上提供选择功能
- * @details QwtPicker 会过滤一个部件的所有进入、离开、鼠标和键盘事件，
- *          并将它们转换为一个选定坐标点的数组。
- *
- *          收集点的方式取决于连接到选择器的状态机类型。Qwt 提供了几个预定义的选择状态机：
- *
- *          - 无：QwtPickerTrackerMachine
- *          - 单个点：QwtPickerClickPointMachine, QwtPickerDragPointMachine
- *          - 矩形：QwtPickerClickRectMachine, QwtPickerDragRectMachine
- *          - 多边形：QwtPickerPolygonMachine
- *
- *          虽然这些状态机涵盖了最常见的点收集方式，但也可以实现自定义的状态机。
- *
- *          QwtPicker 使用 adjustedPoints() 方法将拾取的点转换为一个选择区域/集合。
- *          adjustedPoints() 方法旨在被重写，以便根据应用程序的特定要求修正选择结果。
- *          （例如：当应用程序只接受固定宽高比的矩形时。）
- *
- *          QwtPicker 可以选择性地通过一个橡皮筋和一个显示当前鼠标位置文本的追踪器来辅助点的收集过程。
- *
- *          状态机会触发以下命令：
- *          - begin()：激活/初始化选择。
- *          - append()：添加一个新点。
- *          - move()：改变最后一个点的位置。
- *          - remove()：移除最后一个点。
- *          - end()：终止选择，并调用 accept 来验证拾取的点。
- *
- *          在 begin() 和 end() 之间，选择器处于活动状态（isActive()）。
- *          在活动状态下，橡皮筋会显示。如果追踪器模式是 ActiveOnly 或 AlwaysOn，追踪器也会可见。
- *
- *          可以使用方向键移动光标。所有选择都可以使用取消键来中止。(QwtEventPattern::KeyPatternCode)
- *
- * @warning 如果观察的部件的焦点策略是 QWidget::NoFocus，
- *          那么在选择器处于活动状态时，或者如果 trackerMode() 是 AlwaysOn 时，
- *          该部件的焦点策略会被设置为 QWidget::WheelFocus，并且鼠标追踪会被操控。
- *
- * @par 示例
- * @code
- * #include <qwt_picker.h>
- * #include <qwt_picker_machine.h>
- *
- * QwtPicker *picker = new QwtPicker(widget);
- * picker->setStateMachine(new QwtPickerDragRectMachine);
- * picker->setTrackerMode(QwtPicker::ActiveOnly);
- * picker->setRubberBand(QwtPicker::RectRubberBand);
- * @endcode
- * \endif
  */
 class QWT_EXPORT QwtPicker : public QObject, public QwtEventPattern
 {
@@ -170,17 +121,10 @@ class QWT_EXPORT QwtPicker : public QObject, public QwtEventPattern
     Q_PROPERTY(QPen rubberBandPen READ rubberBandPen WRITE setRubberBandPen)
     QWT_DECLARE_PRIVATE(QwtPicker)
 public:
-/**
-     * \if ENGLISH
+    /**
      * @brief Rubber band style
      * @details The default value is QwtPicker::NoRubberBand.
-     * \sa setRubberBand(), rubberBand()
-     * \endif
-     * \if CHINESE
-     * @brief 橡皮筋样式
-     * @details 默认值为 QwtPicker::NoRubberBand。
-     * \sa setRubberBand(), rubberBand()
-     * \endif
+     * @sa setRubberBand(), rubberBand()
      */
     enum RubberBand
     {
@@ -206,25 +150,14 @@ public:
         PolygonRubberBand,
 
         /**
-         * \if ENGLISH
          * @brief Values >= UserRubberBand can be used to define additional rubber bands
-         * \endif
-         * \if CHINESE
-         * @brief 值 >= UserRubberBand 可用于定义额外的橡皮筋
-         * \endif
          */
         UserRubberBand = 100
     };
 
-/**
-     * \if ENGLISH
+    /**
      * @brief Display mode
-     * \sa setTrackerMode(), trackerMode(), isActive()
-     * \endif
-     * \if CHINESE
-     * @brief 显示模式
-     * \sa setTrackerMode(), trackerMode(), isActive()
-     * \endif
+     * @sa setTrackerMode(), trackerMode(), isActive()
      */
     enum DisplayMode
     {
@@ -238,17 +171,10 @@ public:
         ActiveOnly
     };
 
-/**
-     * \if ENGLISH
+    /**
      * @brief Controls what to do with the selected points when the observed widget is resized
      * @details The default value is QwtPicker::Stretch.
-     * \sa setResizeMode()
-     * \endif
-     * \if CHINESE
-     * @brief 控制当观察部件调整大小时对选定点的处理方式
-     * @details 默认值为 QwtPicker::Stretch。
-     * \sa setResizeMode()
-     * \endif
+     * @sa setResizeMode()
      */
     enum ResizeMode
     {
@@ -350,87 +276,45 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal indicating when the picker has been activated
      * @details Together with setEnabled() it can be used to implement
      *          selections with more than one picker.
      * @param on True, when the picker has been activated
-     * \endif
-     * \if CHINESE
-     * @brief 当选择器被激活时发出的信号
-     * @details 与 setEnabled() 配合使用可以实现多个选择器的选择。
-     * @param on 当选择器被激活时为 true
-     * \endif
      */
     void activated(bool on);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitting the selected points at the end of a selection
      * @param polygon Selected points
-     * \endif
-     * \if CHINESE
-     * @brief 在选择结束时发出选定点的信号
-     * @param polygon 选定的点
-     * \endif
      */
     void selected(const QPolygon& polygon);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when a point has been appended to the selection
      * @param pos Position of the appended point
-     * \sa append(), moved()
-     * \endif
-     * \if CHINESE
-     * @brief 当一个点被添加到选择时发出的信号
-     * @param pos 添加点的位置
-     * \sa append(), moved()
-     * \endif
+     * @sa append(), moved()
      */
     void appended(const QPoint& pos);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted whenever the last appended point of the selection has been moved
      * @param pos Position of the moved last point of the selection
-     * \sa move(), appended()
-     * \endif
-     * \if CHINESE
-     * @brief 当选择的最后一个添加点被移动时发出的信号
-     * @param pos 移动的最后一个点的位置
-     * \sa move(), appended()
-     * \endif
+     * @sa move(), appended()
      */
     void moved(const QPoint& pos);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted whenever the last appended point of the selection has been removed
      * @param pos Position of the point that has been removed
-     * \sa remove(), appended()
-     * \endif
-     * \if CHINESE
-     * @brief 当选择的最后一个添加点被移除时发出的信号
-     * @param pos 被移除点的位置
-     * \sa remove(), appended()
-     * \endif
+     * @sa remove(), appended()
      */
     void removed(const QPoint& pos);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the active selection has been changed
      * @details This might happen when the observed widget is resized.
      * @param selection Changed selection
-     * \sa stretchSelection()
-     * \endif
-     * \if CHINESE
-     * @brief 当活动选择被更改时发出的信号
-     * @details 这可能在观察部件调整大小时发生。
-     * @param selection 更改的选择
-     * \sa stretchSelection()
-     * \endif
+     * @sa stretchSelection()
      */
     void changed(const QPolygon& selection);
 

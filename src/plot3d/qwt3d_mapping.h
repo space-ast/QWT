@@ -8,13 +8,7 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for general mappings
- * \endif
- *
- * \if CHINESE
- * @brief 通用映射的抽象基类
- * \endif
  */
 class QWT3D_EXPORT Mapping
 {

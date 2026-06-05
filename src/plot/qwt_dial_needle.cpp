@@ -196,12 +196,7 @@ static void qwtDrawTriangleNeedle( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtDialNeedle::QwtDialNeedle()
     : m_palette( QApplication::palette() )
@@ -209,12 +204,7 @@ QwtDialNeedle::QwtDialNeedle()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtDialNeedle::~QwtDialNeedle()
 {

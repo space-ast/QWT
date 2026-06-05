@@ -59,17 +59,9 @@ class QwtWeedingCurveFitter::Line
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param tolerance Tolerance
- * \sa setTolerance(), tolerance()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param tolerance 容差
- * \sa setTolerance(), tolerance()
- * \endif
+ * @sa setTolerance(), tolerance()
  */
 QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
     : QwtCurveFitter( QwtCurveFitter::Polygon )
@@ -79,12 +71,7 @@ QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 {
@@ -92,7 +79,6 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 }
 
 /*!
-   \if ENGLISH
    Assign the tolerance
 
    The tolerance is the maximum distance, that is acceptable
@@ -104,19 +90,6 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
    \param tolerance Tolerance
 
    \sa tolerance()
-   \endif
-   *
-   \if CHINESE
-   设置容差
-
-   容差是原始曲线和平滑曲线之间可接受的最大距离。
-
-   增加容差将减少结果点的数量。
-
-   \param tolerance 容差
-
-   \sa tolerance()
-   \endif
  */
 void QwtWeedingCurveFitter::setTolerance( double tolerance )
 {
@@ -124,15 +97,8 @@ void QwtWeedingCurveFitter::setTolerance( double tolerance )
 }
 
 /*!
-   \if ENGLISH
    \return Tolerance
    \sa setTolerance()
-   \endif
-   *
-   \if CHINESE
-   \return 容差
-   \sa setTolerance()
-   \endif
  */
 double QwtWeedingCurveFitter::tolerance() const
 {
@@ -140,7 +106,6 @@ double QwtWeedingCurveFitter::tolerance() const
 }
 
 /*!
-   \if ENGLISH
    Limit the number of points passed to a run of the algorithm
 
    The runtime of the Douglas Peucker algorithm increases non linear
@@ -150,18 +115,6 @@ double QwtWeedingCurveFitter::tolerance() const
    \param numPoints Maximum for the number of points passed to the algorithm
 
    \sa chunkSize()
-   \endif
-   *
-   \if CHINESE
-   限制传递给算法运行的点数
-
-   Douglas Peucker 算法的运行时间随点数非线性增长。
-   对于块大小 > 0，多边形被拆分成块，逐个传递给算法。
-
-   \param numPoints 传递给算法的点数最大值
-
-   \sa chunkSize()
-   \endif
  */
 void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 {
@@ -172,16 +125,9 @@ void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 }
 
 /*!
-   \if ENGLISH
    \return Maximum for the number of points passed to a run
           of the algorithm - or 0, when unlimited
    \sa setChunkSize()
-   \endif
-   *
-   \if CHINESE
-   \return 传递给算法运行的点数最大值 - 如果无限制则为 0
-   \sa setChunkSize()
-   \endif
  */
 uint QwtWeedingCurveFitter::chunkSize() const
 {
@@ -189,17 +135,9 @@ uint QwtWeedingCurveFitter::chunkSize() const
 }
 
 /*!
-   \if ENGLISH
    @param points Series of data points
    @return Curve points
    \sa fitCurvePath()
-   \endif
-   *
-   \if CHINESE
-   @param points 数据点序列
-   @return 曲线点
-   \sa fitCurvePath()
-   \endif
  */
 QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 {
@@ -224,17 +162,9 @@ QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 }
 
 /*!
-   \if ENGLISH
    @param points Series of data points
    @return Curve path
    \sa fitCurve()
-   \endif
-   *
-   \if CHINESE
-   @param points 数据点序列
-   @return 曲线路径
-   \sa fitCurve()
-   \endif
  */
 QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
 {

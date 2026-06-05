@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -34,25 +34,14 @@
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotMagnifier provides zooming, by magnifying in steps
  * @details Using QwtPlotMagnifier a plot can be zoomed in/out in steps using
  *          keys, the mouse wheel or moving a mouse button in vertical direction.
- * 
+ *
  *          Together with QwtPlotZoomer and QwtPlotPanner it is possible to implement
  *          individual and powerful navigation of the plot canvas.
- * 
+ *
  * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlotMagnifier 通过逐步放大提供缩放功能
- * @details 使用 QwtPlotMagnifier，可以使用按键、鼠标滚轮或在垂直方向移动鼠标按钮来逐步放大/缩小绘图。
- * 
- *          与 QwtPlotZoomer 和 QwtPlotPanner 一起，可以实现绘图画布的个性化和强大导航。
- * 
- * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
- * \endif
  */
 class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 {

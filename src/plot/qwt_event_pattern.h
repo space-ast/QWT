@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -36,19 +36,11 @@ class QMouseEvent;
 class QKeyEvent;
 
 /**
- * \if ENGLISH
  * @brief A collection of event patterns
  * @details QwtEventPattern introduces a level of indirection for mouse and
  *          keyboard inputs. Those are represented by symbolic names, so
  *          the application code can be configured by individual mappings.
  * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
- * \endif
- * \if CHINESE
- * @brief 事件模式的集合
- * @details QwtEventPattern 为鼠标和键盘输入引入了一层间接抽象。
- *          这些输入通过符号名称表示，使应用程序代码可以通过个性化的映射进行配置。
- * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
- * \endif
  */
 class QWT_EXPORT QwtEventPattern
 {

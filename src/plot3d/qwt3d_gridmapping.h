@@ -8,13 +8,7 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for mappings acting on rectangular grids
- * \endif
- *
- * \if CHINESE
- * @brief 作用于矩形网格的映射抽象基类
- * \endif
  */
 class QWT3D_EXPORT GridMapping : public Mapping
 {

@@ -33,21 +33,12 @@
 class QwtScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief The Slider Widget
  * @details QwtSlider is a slider widget which operates on an interval
  *          of type double. Its position is related to a scale showing
  *          the current value.
  *          The slider can be customized by having a through, a groove - or both.
  * \image html sliders.png
- * \endif
- * \if CHINESE
- * @brief 滑块控件
- * @details QwtSlider 是一个在 double 类型区间上操作的滑块控件。其位置与显示
- *          当前值的刻度相关联。
- *          滑块可以通过拥有槽、凹槽或两者来进行自定义。
- * \image html sliders.png
- * \endif
  */
 
 class QWT_EXPORT QwtSlider : public QwtAbstractSlider
@@ -71,14 +62,8 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
   public:
 
     /**
-     * \if ENGLISH
      * @brief Position of the scale
      * \sa QwtSlider(), setScalePosition(), setOrientation()
-     * \endif
-     * \if CHINESE
-     * @brief 刻度位置
-     * \sa QwtSlider(), setScalePosition(), setOrientation()
-     * \endif
      */
     enum ScalePosition
     {

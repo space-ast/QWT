@@ -8,13 +8,7 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for autoscaler
- * \endif
- *
- * \if CHINESE
- * @brief 自动缩放器的抽象基类
- * \endif
  */
 class QWT3D_EXPORT AutoScaler
 {
@@ -30,13 +24,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Automatic beautifying of linear scales
- * \endif
- *
- * \if CHINESE
- * @brief 线性刻度的自动美化缩放器
- * \endif
  */
 class QWT3D_EXPORT LinearAutoScaler : public AutoScaler
 {

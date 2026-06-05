@@ -31,23 +31,12 @@
 #include "qwt_spline.h"
 
 /**
- * \if ENGLISH
  * @brief An approximation using a basis spline
  *
  * QwtSplineBasis approximates a set of points by a polynomials with C2 continuity
  * ( = first and second derivatives are equal ) at the end points.
  *
  * The end points of the spline do not match the original points.
- * \endif
- *
- * \if CHINESE
- * @brief 使用基样条的逼近
- *
- * QwtSplineBasis 通过具有 C2 连续性的多项式（即端点处一阶和二阶导数相等）
- * 来逼近一组点。
- *
- * 样条的端点与原始点不匹配。
- * \endif
  */
 class QWT_EXPORT QwtSplineBasis : public QwtSpline
 {

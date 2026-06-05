@@ -9,7 +9,6 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Non-visual scale class encapsulating tic generation
  * @details The class encapsulates non-visual scales. It is utilized by Axis and also
  *          collaborates closely with AutoScaler. A Scale allows control over all aspects
@@ -17,15 +16,6 @@ namespace Qwt3D {
  *          strings. The strings contain what eventually will be shown as tic labels.
  *          Standard linear and logarithmic scales have been integrated into the Axis interface.
  *          User-defined axes can be derived from Scale, LinearScale et al.
- * \endif
- *
- * \if CHINESE
- * @brief 非可视化刻度类，封装刻度线生成
- * @details 该类封装非可视化刻度。它由 Axis 使用，并与 AutoScaler 紧密协作。
- *          Scale 允许控制刻度线生成的所有方面，包括将刻度值任意转换为对应的字符串。
- *          字串最终将显示为刻度标签。标准线性和对数刻度已集成到 Axis 接口中。
- *          用户自定义坐标轴可以从 Scale、LinearScale 等派生。
- * \endif
  */
 class QWT3D_EXPORT Scale
 {
@@ -68,13 +58,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief The standard (1:1) mapping class for axis numbering
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴编号的标准（1:1）映射类
- * \endif
  */
 class QWT3D_EXPORT LinearScale : public Scale
 {
@@ -90,13 +74,7 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief Log10 scale
- * \endif
- *
- * \if CHINESE
- * @brief log10 对数刻度
- * \endif
  */
 class QWT3D_EXPORT LogScale : public Scale
 {

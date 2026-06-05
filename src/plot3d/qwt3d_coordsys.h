@@ -7,13 +7,7 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A coordinate system with different styles (BOX, FRAME)
- * \endif
- *
- * \if CHINESE
- * @brief 具有不同样式（BOX, FRAME）的坐标系
- * \endif
  */
 class QWT3D_EXPORT CoordinateSystem : public Drawable
 {

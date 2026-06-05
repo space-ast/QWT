@@ -11,16 +11,9 @@ namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Autoscalable axis with caption
  * @details Axes are highly customizable especially in terms
  *          of labeling and scaling.
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的自动缩放坐标轴
- * @details 坐标轴在标注和缩放方面高度可定制。
- * \endif
  */
 class QWT3D_EXPORT Axis : public Drawable
 {

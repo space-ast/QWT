@@ -12,17 +12,9 @@ class QwtPlot;
 class QwtPlotItem;
 
 /**
- * \if ENGLISH
  * @brief A plot data picker class for displaying current y-values or nearest points
  * @details QwtPlotSeriesDataPicker is a plot data picker class that displays current y-values
  *          or the nearest points to the mouse cursor position.
- * \endif
- * 
- * \if CHINESE
- * @brief 这是一个绘图数据拾取显示类，用于显示当前的y值，或者显示最近点
- * @details QwtPlotSeriesDataPicker 是一个绘图数据拾取显示类，用于显示当前的y值，
- *          或者显示最接近鼠标光标位置的点。
- * \endif
  */
 class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
 {
@@ -30,13 +22,7 @@ class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
     QWT_DECLARE_PRIVATE(QwtPlotSeriesDataPicker)
 public:
     /**
-     * \if ENGLISH
      * @brief Pick modes
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 拾取模式
-     * \endif
      */
     enum PickSeriesMode
     {
@@ -45,13 +31,7 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Text placement options
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 文本放置选项
-     * \endif
      */
     enum TextPlacement
     {
@@ -68,13 +48,7 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Interpolation modes
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 插值模式
-     * \endif
      */
     enum InterpolationMode
     {
@@ -83,13 +57,7 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Feature point structure
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 特征点结构
-     * \endif
      */
     struct FeaturePoint
     {
@@ -137,20 +105,11 @@ public:
     int drawFeaturePointSize() const;
 
     /**
-     * \if ENGLISH
      * @brief Returns the list of feature points currently picked by the tracker
      * @return List of FeaturePoint structures containing picked data coordinates
      * @note The returned points correspond to the current tracker position.
      *       Call this method from a clicked/doubleClicked signal handler to
      *       get data at the click position.
-     * \endif
-     * \if CHINESE
-     * @brief 返回当前 tracker 拾取到的特征点列表
-     * @return 包含拾取数据坐标的 FeaturePoint 结构列表
-     * @note 返回的点对应当前 tracker 位置。
-     *       从 clicked/doubleClicked 信号处理器中调用此方法
-     *       可获取点击位置的数据。
-     * \endif
      */
     QList<FeaturePoint> featurePoints() const;
 
@@ -164,89 +123,72 @@ public:
     /// Get text alignment
     Qt::Alignment textAlignment() const;
 
-    // 是否显示x值
+    /// Whether to show X value
     void setEnableShowXValue(bool on);
     bool isEnableShowXValue() const;
 
-    // 设置trackerRect在TextFollowMouse模式下的偏移量
+    /// Set the tracker rectangle offset in TextFollowMouse mode
     void setTextTrackerOffset(const QPoint& offset);
     QPoint textTrackerOffset() const;
 
-    // 顶部矩形文字
+    /// Top rectangle text
     QwtText trackerText(const QPoint& pos) const override;
 
-    // 让矩形在最顶部
+    /// Keep rectangle at top
     QRect trackerRect(const QFont& f) const override;
 
-    // 绘制rubberband
+    /// Draw rubber band
     virtual void drawRubberBand(QPainter* painter) const override;
 
-    // 手动设置位置
+    /// Manually set position
     virtual void setTrackerPosition(const QPoint& pos) override;
 
 protected:
-    // 获取绘图区域屏幕坐标pos上，的所有可拾取的y值,返回获取的个数
+    /// Get all pickable Y values at the specified screen position; returns the number picked
     virtual int pickYValue(const QwtPlot* p, const QPoint& pos, bool interpolate = false);
-    // 获取绘图区域屏幕坐标pos上，可拾取的最近的一个点，(基于窗口实现快速索引)
+    /// Get the nearest pickable point at the specified screen position (window-based fast indexing)
     virtual int pickNearestPoint(const QwtPlot* plot, const QPoint& pos, int windowSize = -5);
 
     virtual void widgetMousePressEvent(QMouseEvent* event) override;
     virtual void widgetMouseDoubleClickEvent(QMouseEvent* event) override;
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Emitted when the user left-clicks on the plot canvas
      * @param picker Pointer to the picker that was clicked
      * @param pos Screen position of the click event
      * @note A double-click will trigger clicked() before doubleClicked().
      *       Connect only one of these signals if you need to distinguish
      *       single-click from double-click.
-     * \endif
-     * \if CHINESE
-     * @brief 当用户在绘图画布上左键单击时发出
-     * @param picker 被点击的picker指针
-     * @param pos 点击事件的屏幕位置
-     * @note 双击时会先触发 clicked() 再触发 doubleClicked()。
-     *       如需区分单击与双击，请只连接其中一个信号。
-     * \endif
      */
     void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
 
     /**
-     * \if ENGLISH
      * @brief Emitted when the user double-left-clicks on the plot canvas
      * @param picker Pointer to the picker that was double-clicked
      * @param pos Screen position of the double-click event
      * @note A double-click also triggers clicked() before this signal.
-     * \endif
-     * \if CHINESE
-     * @brief 当用户在绘图画布上左键双击时发出
-     * @param picker 被双击的picker指针
-     * @param pos 双击事件的屏幕位置
-     * @note 双击时也会先触发 clicked()，再触发此信号。
-     * \endif
      */
     void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
 
 private Q_SLOTS:
-    // item删除的槽，用于更新记录
+    // Slot for item detachment, used to update records
     void onPlotItemDetached(QwtPlotItem* item, bool on);
     void onParasitePlotAttached(QwtPlot* parasiteplot, bool on);
 
 protected:
-    // 生成一个item的文字内容
+    // Generate text content for an item
     virtual QString valueString(const QList< FeaturePoint >& fps) const;
-    // 绘制特征点
+    // Draw a feature point
     virtual void drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
-    // 鼠标移动
+    // Mouse move
     virtual void move(const QPoint& pos) override;
-    // 格式化为坐标轴对应的内容，针对时间轴，value是一个大浮点数，用户需要看到的是2024-10-01这样的数字
+    // Format value according to axis type; for date axes the value is a large float but users need to see a format like 2024-10-01
     QString formatAxisValue(double value, int axisId, QwtPlot* plot) const;
 
 private:
-    // 绘制特征点，所谓特征点就是捕获到的点
+    // Draw feature points (captured points)
     void drawAllFeaturePoints(QPainter* painter) const;
-    // 更新特征点
+    // Update feature points
     void updateFeaturePoint(const QPoint& pos);
     //
     QRect ensureRectInBounds(const QRect& rect, const QRect& bounds) const;

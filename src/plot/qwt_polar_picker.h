@@ -20,16 +20,9 @@ class QwtPolarCanvas;
 class QwtPointPolar;
 
 /**
- * \if ENGLISH
  * @brief QwtPolarPicker provides selections on a plot canvas
  * @details QwtPolarPicker is a QwtPicker tailored for selections on
  *          a polar plot canvas.
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPolarPicker 提供在绘图画布上的选择功能
- * @details QwtPolarPicker 是为极坐标绘图画布上的选择而定制的 QwtPicker。
- * \endif
  */
 class QWT_EXPORT QwtPolarPicker : public QwtPicker
 {
@@ -63,30 +56,26 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
 
     /**
      * @brief A signal emitted in case of selectionFlags() & PointSelection
-     *        当 selectionFlags() & PointSelection 时发出的信号
-     * @param pos Selected point / 选中的点
+     * @param pos Selected point
      */
     void selected( const QwtPointPolar& pos );
 
     /**
      * @brief A signal emitting the selected points, at the end of a selection
-     *        在选择结束时发出选中点的信号
-     * @param points Selected points / 选中的点
+     * @param points Selected points
      */
     void selected( const QVector< QwtPointPolar >& points );
 
     /**
      * @brief A signal emitted when a point has been appended to the selection
-     *        当点被追加到选择时发出的信号
-     * @param pos Position of the appended point / 追加点的位置
+     * @param pos Position of the appended point
      * @sa append(), moved()
      */
     void appended( const QwtPointPolar& pos );
 
     /**
      * @brief A signal emitted whenever the last appended point of the selection has been moved
-     *        当选择的最后一个追加点被移动时发出的信号
-     * @param pos Position of the moved last point of the selection / 移动的最后一个点的位置
+     * @param pos Position of the moved last point of the selection
      * @sa move(), appended()
      */
     void moved( const QwtPointPolar& pos );

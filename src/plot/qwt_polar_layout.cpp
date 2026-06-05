@@ -100,13 +100,7 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtPolarLayout::QwtPolarLayout()
 {
@@ -117,13 +111,7 @@ QwtPolarLayout::QwtPolarLayout()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarLayout::~QwtPolarLayout()
 {
@@ -131,25 +119,13 @@ QwtPolarLayout::~QwtPolarLayout()
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the position of the legend
- * @param[in] pos The legend's position
- * @param[in] ratio Ratio between legend and the bounding rect of title, canvas and axes.
- *                  The legend will be shrunk if it would need more space than the given ratio.
- *                  The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
- *                  The default vertical/horizontal ratio is 0.33/0.5.
+ * @param pos The legend's position
+ * @param ratio Ratio between legend and the bounding rect of title, canvas and axes.
+ *              The legend will be shrunk if it would need more space than the given ratio.
+ *              The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
+ *              The default vertical/horizontal ratio is 0.33/0.5.
  * @sa QwtPolarPlot::setLegendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 指定图例的位置
- * @param[in] pos 图例的位置
- * @param[in] ratio 图例与标题、画布和轴的边界矩形之间的比例。
- *                  如果图例需要的空间超过给定比例，它将被缩小。
- *                  比例限制在 ]0.0 .. 1.0]。如果 <= 0.0，将重置为默认比例。
- *                  默认的垂直/水平比例为 0.33/0.5。
- * @sa QwtPolarPlot::setLegendPosition()
- * \endif
  */
 void QwtPolarLayout::setLegendPosition(QwtPolarPlot::LegendPosition pos, double ratio)
 {
@@ -184,19 +160,10 @@ void QwtPolarLayout::setLegendPosition(QwtPolarPlot::LegendPosition pos, double 
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the position of the legend
- * @param[in] pos The legend's position. Valid values are \c QwtPolarPlot::LeftLegend,
- *                \c QwtPolarPlot::RightLegend, \c QwtPolarPlot::TopLegend, \c QwtPolarPlot::BottomLegend.
+ * @param pos The legend's position. Valid values are \c QwtPolarPlot::LeftLegend,
+ *            \c QwtPolarPlot::RightLegend, \c QwtPolarPlot::TopLegend, \c QwtPolarPlot::BottomLegend.
  * @sa QwtPolarPlot::setLegendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 指定图例的位置
- * @param[in] pos 图例的位置。有效值为 \c QwtPolarPlot::LeftLegend,
- *                \c QwtPolarPlot::RightLegend, \c QwtPolarPlot::TopLegend, \c QwtPolarPlot::BottomLegend。
- * @sa QwtPolarPlot::setLegendPosition()
- * \endif
  */
 void QwtPolarLayout::setLegendPosition(QwtPolarPlot::LegendPosition pos)
 {
@@ -204,17 +171,9 @@ void QwtPolarLayout::setLegendPosition(QwtPolarPlot::LegendPosition pos)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the position of the legend
  * @return Position of the legend
  * @sa setLegendPosition(), QwtPolarPlot::setLegendPosition(), QwtPolarPlot::legendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 获取图例的位置
- * @return 图例的位置
- * @sa setLegendPosition(), QwtPolarPlot::setLegendPosition(), QwtPolarPlot::legendPosition()
- * \endif
  */
 QwtPolarPlot::LegendPosition QwtPolarLayout::legendPosition() const
 {
@@ -222,23 +181,12 @@ QwtPolarPlot::LegendPosition QwtPolarLayout::legendPosition() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the relative size of the legend in the plot
- * @param[in] ratio Ratio between legend and the bounding rect of title, canvas and axes.
- *                  The legend will be shrunk if it would need more space than the given ratio.
- *                  The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
- *                  The default vertical/horizontal ratio is 0.33/0.5.
+ * @param ratio Ratio between legend and the bounding rect of title, canvas and axes.
+ *              The legend will be shrunk if it would need more space than the given ratio.
+ *              The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
+ *              The default vertical/horizontal ratio is 0.33/0.5.
  * @sa setLegendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 指定图例在绘图中的相对大小
- * @param[in] ratio 图例与标题、画布和轴的边界矩形之间的比例。
- *                  如果图例需要的空间超过给定比例，它将被缩小。
- *                  比例限制在 ]0.0 .. 1.0]。如果 <= 0.0，将重置为默认比例。
- *                  默认的垂直/水平比例为 0.33/0.5。
- * @sa setLegendPosition()
- * \endif
  */
 void QwtPolarLayout::setLegendRatio(double ratio)
 {
@@ -246,17 +194,9 @@ void QwtPolarLayout::setLegendRatio(double ratio)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the relative size of the legend in the plot
  * @return The relative size of the legend in the plot
  * @sa setLegendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 获取图例在绘图中的相对大小
- * @return 图例在绘图中的相对大小
- * @sa setLegendPosition()
- * \endif
  */
 double QwtPolarLayout::legendRatio() const
 {
@@ -264,17 +204,9 @@ double QwtPolarLayout::legendRatio() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get geometry for the title
  * @return Geometry for the title
  * @sa activate(), invalidate()
- * \endif
- *
- * \if CHINESE
- * @brief 获取标题的几何形状
- * @return 标题的几何形状
- * @sa activate(), invalidate()
- * \endif
  */
 const QRectF& QwtPolarLayout::titleRect() const
 {
@@ -282,17 +214,9 @@ const QRectF& QwtPolarLayout::titleRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get geometry for the legend
  * @return Geometry for the legend
  * @sa activate(), invalidate()
- * \endif
- *
- * \if CHINESE
- * @brief 获取图例的几何形状
- * @return 图例的几何形状
- * @sa activate(), invalidate()
- * \endif
  */
 const QRectF& QwtPolarLayout::legendRect() const
 {
@@ -300,17 +224,9 @@ const QRectF& QwtPolarLayout::legendRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get geometry for the canvas
  * @return Geometry for the canvas
  * @sa activate(), invalidate()
- * \endif
- *
- * \if CHINESE
- * @brief 获取画布的几何形状
- * @return 画布的几何形状
- * @sa activate(), invalidate()
- * \endif
  */
 const QRectF& QwtPolarLayout::canvasRect() const
 {
@@ -318,15 +234,8 @@ const QRectF& QwtPolarLayout::canvasRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the geometry of all components
  * @sa activate()
- * \endif
- *
- * \if CHINESE
- * @brief 使所有组件的几何形状无效
- * @sa activate()
- * \endif
  */
 void QwtPolarLayout::invalidate()
 {
@@ -334,19 +243,10 @@ void QwtPolarLayout::invalidate()
 }
 
 /**
- * \if ENGLISH
  * @brief Find the geometry for the legend
- * @param[in] options Options how to layout the legend
+ * @param options Options how to layout the legend
  * @param[in,out] rect Rectangle where to place the legend
  * @return Geometry for the legend
- * \endif
- *
- * \if CHINESE
- * @brief 查找图例的几何形状
- * @param[in] options 如何布局图例的选项
- * @param[in,out] rect 放置图例的矩形
- * @return 图例的几何形状
- * \endif
  */
 QRectF QwtPolarLayout::layoutLegend(Options options, QRectF& rect) const
 {
@@ -404,21 +304,11 @@ QRectF QwtPolarLayout::layoutLegend(Options options, QRectF& rect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Recalculate the geometry of all components
- * @param[in] plot Plot to be layout
- * @param[in] boundingRect Rect where to place the components
- * @param[in] options Options
+ * @param plot Plot to be layout
+ * @param boundingRect Rect where to place the components
+ * @param options Options
  * @sa invalidate(), titleRect(), legendRect(), canvasRect()
- * \endif
- *
- * \if CHINESE
- * @brief 重新计算所有组件的几何形状
- * @param[in] plot 要布局的绘图
- * @param[in] boundingRect 放置组件的矩形
- * @param[in] options 选项
- * @sa invalidate(), titleRect(), legendRect(), canvasRect()
- * \endif
  */
 void QwtPolarLayout::activate(const QwtPolarPlot* plot, const QRectF& boundingRect, Options options)
 {

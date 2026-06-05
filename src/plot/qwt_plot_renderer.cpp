@@ -154,15 +154,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] parent Parent object
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] parent 父对象
- * \endif
  */
 QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent)
 {
@@ -170,13 +163,7 @@ QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotRenderer::~QwtPlotRenderer()
 {
@@ -184,19 +171,10 @@ QwtPlotRenderer::~QwtPlotRenderer()
 }
 
 /**
- * \if ENGLISH
  * @brief Change a flag, indicating what to discard from rendering
  * @param[in] flag Flag to change
  * @param[in] on On/Off
  * @sa DiscardFlag, testDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 更改指示渲染时丢弃内容的标志
- * @param[in] flag 要更改的标志
- * @param[in] on 开启或关闭
- * @sa DiscardFlag, testDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
  */
 void QwtPlotRenderer::setDiscardFlag(DiscardFlag flag, bool on)
 {
@@ -207,19 +185,10 @@ void QwtPlotRenderer::setDiscardFlag(DiscardFlag flag, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a discard flag is enabled
  * @param[in] flag Flag to be tested
  * @return True if flag is enabled
  * @sa DiscardFlag, setDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 测试丢弃标志是否启用
- * @param[in] flag 要测试的标志
- * @return 如果标志启用则返回 true
- * @sa DiscardFlag, setDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
  */
 bool QwtPlotRenderer::testDiscardFlag(DiscardFlag flag) const
 {
@@ -227,17 +196,9 @@ bool QwtPlotRenderer::testDiscardFlag(DiscardFlag flag) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the flags, indicating what to discard from rendering
  * @param[in] flags Flags to set
  * @sa DiscardFlag, setDiscardFlag(), testDiscardFlag(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 设置指示渲染时丢弃内容的标志
- * @param[in] flags 要设置的标志
- * @sa DiscardFlag, setDiscardFlag(), testDiscardFlag(), discardFlags()
- * \endif
  */
 void QwtPlotRenderer::setDiscardFlags(DiscardFlags flags)
 {
@@ -245,17 +206,9 @@ void QwtPlotRenderer::setDiscardFlags(DiscardFlags flags)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the flags indicating what to discard from rendering
  * @return Flags indicating what to discard from rendering
  * @sa DiscardFlag, setDiscardFlags(), setDiscardFlag(), testDiscardFlag()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指示渲染时丢弃内容的标志
- * @return 指示渲染时丢弃内容的标志
- * @sa DiscardFlag, setDiscardFlags(), setDiscardFlag(), testDiscardFlag()
- * \endif
  */
 QwtPlotRenderer::DiscardFlags QwtPlotRenderer::discardFlags() const
 {
@@ -263,19 +216,10 @@ QwtPlotRenderer::DiscardFlags QwtPlotRenderer::discardFlags() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change a layout flag
  * @param[in] flag Flag to change
  * @param[in] on On/Off
  * @sa LayoutFlag, testLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 更改布局标志
- * @param[in] flag 要更改的标志
- * @param[in] on 开启或关闭
- * @sa LayoutFlag, testLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
  */
 void QwtPlotRenderer::setLayoutFlag(LayoutFlag flag, bool on)
 {
@@ -286,19 +230,10 @@ void QwtPlotRenderer::setLayoutFlag(LayoutFlag flag, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a layout flag is enabled
  * @param[in] flag Flag to be tested
  * @return True if flag is enabled
  * @sa LayoutFlag, setLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 测试布局标志是否启用
- * @param[in] flag 要测试的标志
- * @return 如果标志启用则返回 true
- * @sa LayoutFlag, setLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
  */
 bool QwtPlotRenderer::testLayoutFlag(LayoutFlag flag) const
 {
@@ -306,17 +241,9 @@ bool QwtPlotRenderer::testLayoutFlag(LayoutFlag flag) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the layout flags
  * @param[in] flags Flags to set
  * @sa LayoutFlag, setLayoutFlag(), testLayoutFlag(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 设置布局标志
- * @param[in] flags 要设置的标志
- * @sa LayoutFlag, setLayoutFlag(), testLayoutFlag(), layoutFlags()
- * \endif
  */
 void QwtPlotRenderer::setLayoutFlags(LayoutFlags flags)
 {
@@ -324,17 +251,9 @@ void QwtPlotRenderer::setLayoutFlags(LayoutFlags flags)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout flags
  * @return Layout flags
  * @sa LayoutFlag, setLayoutFlags(), setLayoutFlag(), testLayoutFlag()
- * \endif
- *
- * \if CHINESE
- * @brief 获取布局标志
- * @return 布局标志
- * @sa LayoutFlag, setLayoutFlags(), setLayoutFlag(), testLayoutFlag()
- * \endif
  */
 QwtPlotRenderer::LayoutFlags QwtPlotRenderer::layoutFlags() const
 {
@@ -484,23 +403,12 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
 }
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QPaintDevice
  * @details This function renders the contents of a QwtPlot instance to QPaintDevice object.
  *          The target rectangle is derived from its device metrics.
  * @param[in] plot Plot to be rendered
  * @param[in] paintDevice Device to paint on, f.e. a QImage
  * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QPaintDevice
- * @details 此函数将 QwtPlot 实例的内容渲染到 QPaintDevice 对象。
- *          目标矩形从其设备指标派生。
- * @param[in] plot 要渲染的绘图
- * @param[in] paintDevice 绘制设备，例如 QImage
- * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 
 void QwtPlotRenderer::renderTo(QwtPlot* plot, QPaintDevice& paintDevice) const
@@ -513,23 +421,12 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPaintDevice& paintDevice) const
 }
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QPrinter
  * @details This function renders the contents of a QwtPlot instance to QPaintDevice object.
  *          The size is derived from the printer metrics.
  * @param[in] plot Plot to be rendered
  * @param[in] printer Printer to paint on
  * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QPrinter
- * @details 此函数将 QwtPlot 实例的内容渲染到 QPaintDevice 对象。
- *          尺寸从打印机指标派生。
- * @param[in] plot 要渲染的绘图
- * @param[in] printer 绘制打印机
- * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 
 #ifndef QT_NO_PRINTER
@@ -553,7 +450,6 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPrinter& printer) const
 #if QWT_FORMAT_SVG
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QSvgGenerator
  * @details If the generator has a view box, the plot will be rendered into it.
  *          If it has no viewBox but a valid size, the target coordinates will be
@@ -561,17 +457,6 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPrinter& printer) const
  *          rectangle will be QRectF(0, 0, 800, 600).
  * @param[in] plot Plot to be rendered
  * @param[in] generator SVG generator
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QSvgGenerator
- * @details 如果生成器有视图框，绘图将渲染到其中。
- *          如果没有 viewBox 但有有效尺寸，目标坐标将是
- *          (0, 0, generator.width(), generator.height())。
- *          否则目标矩形将是 QRectF(0, 0, 800, 600)。
- * @param[in] plot 要渲染的绘图
- * @param[in] generator SVG 生成器
- * \endif
  */
 void QwtPlotRenderer::renderTo(QwtPlot* plot, QSvgGenerator& generator) const
 {
@@ -589,21 +474,11 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QSvgGenerator& generator) const
 #endif
 
 /**
- * \if ENGLISH
  * @brief Paint the contents of a QwtPlot instance into a given rectangle
  * @param[in] plot Plot to be rendered
  * @param[in] painter Painter
  * @param[in] plotRect Bounding rectangle
  * @sa renderDocument(), renderTo(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将 QwtPlot 实例的内容绘制到给定矩形中
- * @param[in] plot 要渲染的绘图
- * @param[in] painter 绘制器
- * @param[in] plotRect 边界矩形
- * @sa renderDocument(), renderTo(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {

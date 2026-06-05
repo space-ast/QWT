@@ -8,20 +8,11 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for color functors
  * @details Use your own color model by providing an implementation of
  *          operator()(double x, double y, double z). Colors destructor has been
  *          declared protected, in order to use only heap based objects. Plot3D
  *          will handle the objects destruction. See StandardColor for an example.
- * \endif
- *
- * \if CHINESE
- * @brief 颜色函数的抽象基类
- * @details 通过提供 operator()(double x, double y, double z) 的实现来使用自定义颜色模型。
- *          Color 的析构函数声明为 protected，以便仅使用堆分配的对象。
- *          Plot3D 将负责对象的销毁。参见 StandardColor 作为示例。
- * \endif
  */
 class QWT3D_EXPORT Color
 {
@@ -45,16 +36,9 @@ protected:
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Standard color model for Plot3D - implements the data driven operator()(double x, double y, double z)
  * @details The class has a ColorVector representing z values, which will be used by
  *          operator()(double x, double y, double z)
- * \endif
- *
- * \if CHINESE
- * @brief Plot3D 的标准颜色模型 - 实现数据驱动的 operator()(double x, double y, double z)
- * @details 该类有一个表示 z 值的 ColorVector，将由 operator()(double x, double y, double z) 使用。
- * \endif
  */
 class QWT3D_EXPORT StandardColor : public Color
 {

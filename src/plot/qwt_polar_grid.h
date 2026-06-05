@@ -22,7 +22,6 @@ class QwtRoundScaleDraw;
 class QwtScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief An item which draws scales and grid lines on a polar plot
  * @details The QwtPolarGrid class can be used to draw a coordinate grid.
  *          A coordinate grid consists of major and minor gridlines.
@@ -36,100 +35,47 @@ class QwtScaleDraw;
  *          is synchronized by updateScaleDiv().
  *
  * @sa QwtPolarPlot, QwtPolar::Axis
- * \endif
- *
- * \if CHINESE
- * @brief 在极坐标图上绘制刻度和网格线的绘图项
- * @details QwtPolarGrid 类可用于绘制坐标网格。坐标网格由主次网格线组成。
- *          网格线的位置由方位角和径向刻度分度决定。
- *
- *          QwtPolarGrid 还负责绘制代表刻度的轴。可以显示 4 个径向轴和 1 个方位角轴。
- *
- *          当绘图控件的刻度分度发生变化时，网格会通过 updateScaleDiv() 进行同步。
- *
- * @sa QwtPolarPlot, QwtPolar::Axis
- * \endif
  */
 class QWT_EXPORT QwtPolarGrid : public QwtPolarItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Display flags to avoid conflicts when painting scales and grid lines
      * @details The default setting enables all flags.
      * @sa setDisplayFlag(), testDisplayFlag()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 绘制刻度和网格线时避免冲突的显示标志
-     * @details 默认设置启用所有标志。
-     * @sa setDisplayFlag(), testDisplayFlag()
-     * \endif
      */
     enum DisplayFlag
     {
         /**
-         * \if ENGLISH
          * Try to avoid situations, where the label of the origin is
          * painted over another axis.
-         * \endif
-         *
-         * \if CHINESE
-         * 尽量避免原点的标签绘制在另一个轴上的情况。
-         * \endif
          */
         SmartOriginLabel = 1,
 
         /**
-         * \if ENGLISH
          * Often the outermost tick of the radial scale is close to the
          * canvas border. With HideMaxRadiusLabel enabled it is not painted.
-         * \endif
-         *
-         * \if CHINESE
-         * 径向刻度的最外刻度通常靠近画布边界。启用 HideMaxRadiusLabel 后，它将不被绘制。
-         * \endif
          */
         HideMaxRadiusLabel = 2,
 
         /**
-         * \if ENGLISH
          * The tick labels of the radial scales might be hard to read, when
          * they are painted on top of the radial grid lines ( or on top
          * of a curve/spectrogram ). When ClipAxisBackground the bounding rect
          * of each label is added to the clip region.
-         * \endif
-         *
-         * \if CHINESE
-         * 当径向刻度的刻度标签绘制在径向网格线（或曲线/光谱图）上时，可能难以阅读。
-         * 使用 ClipAxisBackground 时，每个标签的边界矩形将添加到裁剪区域。
-         * \endif
          */
         ClipAxisBackground = 4,
 
         /**
-         * \if ENGLISH
          * Don't paint the backbone of the radial axes, when they are very close
          * to a line of the azimuth grid.
-         * \endif
-         *
-         * \if CHINESE
-         * 当径向轴的骨干非常靠近方位角网格线时，不绘制它。
-         * \endif
          */
         SmartScaleDraw = 8,
 
         /**
-         * \if ENGLISH
          * All grid lines are clipped against the plot area before being painted.
          * When the plot is zoomed in this will have an significant impact
          * on the performance of the painting code.
-         * \endif
-         *
-         * \if CHINESE
-         * 所有网格线在绘制之前都针对绘图区域进行裁剪。
-         * 当绘图放大时，这将对绘制代码的性能产生显著影响。
-         * \endif
          */
         ClipGridLines = 16
     };
@@ -137,27 +83,14 @@ public:
     Q_DECLARE_FLAGS(DisplayFlags, DisplayFlag)
 
     /**
-     * \if ENGLISH
      * @brief Grid attributes
      * @sa setGridAttributes(), testGridAttributes()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 网格属性
-     * @sa setGridAttributes(), testGridAttributes()
-     * \endif
      */
     enum GridAttribute
     {
         /**
-         * \if ENGLISH
          * When AutoScaling is enabled, the radial axes will be adjusted
          * to the interval, that is currently visible on the canvas plot.
-         * \endif
-         *
-         * \if CHINESE
-         * 启用自动缩放时，径向轴将调整为当前在画布绘图上可见的区间。
-         * \endif
          */
         AutoScaling = 0x01
     };

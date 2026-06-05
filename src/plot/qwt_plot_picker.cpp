@@ -22,7 +22,6 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Creates a plot picker attached to the specified canvas.
  *          The picker is set to those x- and y-axis of the plot that are enabled.
@@ -30,17 +29,6 @@ public:
  *          If both or no y-axis are enabled, it is set to QwtAxis::YLeft.
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个附加到指定画布的绘图画布选择器。
- *          选择器会绑定到绘图中已启用的 X 轴和 Y 轴。
- *          如果两个或没有 X 轴启用，选择器绑定到 QwtAxis::XBottom。
- *          如果两个或没有 Y 轴启用，选择器绑定到 QwtAxis::YLeft。
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
 QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
 {
@@ -66,23 +54,12 @@ QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with axes
  * @details Creates a plot picker attached to the specified canvas with given axes.
  * @param[in] xAxisId X axis of the picker
  * @param[in] yAxisId Y axis of the picker
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 带坐标轴参数的构造函数
- * @details 创建一个附加到指定画布并绑定指定坐标轴的绘图画布选择器。
- * @param[in] xAxisId 选择器的 X 轴ID
- * @param[in] yAxisId 选择器的 Y 轴ID
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
 QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas)
 {
@@ -92,7 +69,6 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canv
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with axes, rubber band and tracker mode
  * @details Creates a plot picker with specified axes, rubber band style and tracker mode.
  * @param[in] xAxisId X axis of the picker
@@ -102,19 +78,6 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canv
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(), QwtPicker::setTrackerMode
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 带坐标轴、橡皮筋和跟踪模式的构造函数
- * @details 创建一个具有指定坐标轴、橡皮筋样式和跟踪模式的绘图画布选择器。
- * @param[in] xAxisId 选择器的 X 轴ID
- * @param[in] yAxisId 选择器的 Y 轴ID
- * @param[in] rubberBand 橡皮筋样式
- * @param[in] trackerMode 跟踪模式
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(), QwtPicker::setTrackerMode
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
 QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand rubberBand, DisplayMode trackerMode, QWidget* canvas)
     : QwtPicker(rubberBand, trackerMode, canvas)
@@ -125,15 +88,8 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand ru
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  * @details Destroys the plot picker and releases all allocated resources.
- * \endif
- * 
- * \if CHINESE
- * @brief 析构函数
- * @details 销毁绘图画布选择器并释放所有分配的资源。
- * \endif
  */
 QwtPlotPicker::~QwtPlotPicker()
 {
@@ -141,15 +97,8 @@ QwtPlotPicker::~QwtPlotPicker()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the canvas widget
  * @return Observed plot canvas widget
- * \endif
- * 
- * \if CHINESE
- * @brief 获取画布控件
- * @return 被观察的绘图画布控件
- * \endif
  */
 QWidget* QwtPlotPicker::canvas()
 {
@@ -157,15 +106,8 @@ QWidget* QwtPlotPicker::canvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the canvas widget (const version)
  * @return Observed plot canvas widget
- * \endif
- * 
- * \if CHINESE
- * @brief 获取画布控件（常量版本）
- * @return 被观察的绘图画布控件
- * \endif
  */
 const QWidget* QwtPlotPicker::canvas() const
 {
@@ -173,15 +115,8 @@ const QWidget* QwtPlotPicker::canvas() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget
  * @return Plot widget containing the observed plot canvas
- * \endif
- * 
- * \if CHINESE
- * @brief 获取绘图控件
- * @return 包含被观察画布的绘图控件
- * \endif
  */
 QwtPlot* QwtPlotPicker::plot()
 {
@@ -193,15 +128,8 @@ QwtPlot* QwtPlotPicker::plot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget (const version)
  * @return Plot widget containing the observed plot canvas
- * \endif
- * 
- * \if CHINESE
- * @brief 获取绘图控件（常量版本）
- * @return 包含被观察画布的绘图控件
- * \endif
  */
 const QwtPlot* QwtPlotPicker::plot() const
 {
@@ -232,19 +160,10 @@ QRectF QwtPlotPicker::scaleRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the x and y axes
  * @details Binds the picker to the specified x and y axes.
  * @param[in] xAxisId X axis ID
  * @param[in] yAxisId Y axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 设置 X 轴和 Y 轴
- * @details 将选择器绑定到指定的 X 轴和 Y 轴。
- * @param[in] xAxisId X 轴ID
- * @param[in] yAxisId Y 轴ID
- * \endif
  */
 void QwtPlotPicker::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
 {
@@ -259,15 +178,8 @@ void QwtPlotPicker::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the x axis
  * @return X axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 获取 X 轴
- * @return X 轴ID
- * \endif
  */
 QwtAxisId QwtPlotPicker::xAxis() const
 {
@@ -275,15 +187,8 @@ QwtAxisId QwtPlotPicker::xAxis() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the y axis
  * @return Y axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 获取 Y 轴
- * @return Y 轴ID
- * \endif
  */
 QwtAxisId QwtPlotPicker::yAxis() const
 {

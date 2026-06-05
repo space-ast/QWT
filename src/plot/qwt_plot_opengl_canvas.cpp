@@ -54,17 +54,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 父绘图部件
- * @sa QwtPlot::setCanvas()
- * \endif
  */
 QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
 {
@@ -75,19 +67,10 @@ QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), Q
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] format OpenGL surface format
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] format OpenGL 表面格式
- * @param[in] plot 父绘图部件
- * @sa QwtPlot::setCanvas()
- * \endif
  */
 QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(const QSurfaceFormat& format, QwtPlot* plot)
     : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
@@ -112,13 +95,7 @@ void QwtPlotOpenGLCanvas::init(const QSurfaceFormat& format)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotOpenGLCanvas::~QwtPlotOpenGLCanvas()
 {
@@ -138,17 +115,9 @@ void QwtPlotOpenGLCanvas::paintEvent(QPaintEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
  * @param[in] event Qt Event
  * @return See QOpenGLWidget::event()
- * \endif
- *
- * \if CHINESE
- * @brief Qt 事件处理器，处理 QEvent::PolishRequest 和 QEvent::StyleChange
- * @param[in] event Qt 事件
- * @return 请参阅 QOpenGLWidget::event()
- * \endif
  */
 bool QwtPlotOpenGLCanvas::event(QEvent* event)
 {
@@ -173,15 +142,8 @@ bool QwtPlotOpenGLCanvas::event(QEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache and repaint the canvas
  * @sa invalidatePaintCache()
- * \endif
- *
- * \if CHINESE
- * @brief 使绘制缓存失效并重绘画布
- * @sa invalidatePaintCache()
- * \endif
  */
 void QwtPlotOpenGLCanvas::replot()
 {
@@ -189,13 +151,7 @@ void QwtPlotOpenGLCanvas::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal backing store
- * \endif
- *
- * \if CHINESE
- * @brief 使内部后备存储失效
- * \endif
  */
 void QwtPlotOpenGLCanvas::invalidateBackingStore()
 {
@@ -209,21 +165,11 @@ void QwtPlotOpenGLCanvas::clearBackingStore()
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the painter path for a styled or rounded border
  * @details When the canvas has no styled background or rounded borders
  *          the painter path is empty.
  * @param[in] rect Bounding rectangle of the canvas
  * @return Painter path, that can be used for clipping
- * \endif
- *
- * \if CHINESE
- * @brief 计算样式化或圆角边界的绘制路径
- * @details 当画布没有样式化背景或圆角边界时，
- *          绘制路径为空。
- * @param[in] rect 画布的边界矩形
- * @return 可用于裁剪的绘制路径
- * \endif
  */
 QPainterPath QwtPlotOpenGLCanvas::borderPath(const QRect& rect) const
 {

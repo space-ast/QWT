@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -34,30 +34,16 @@
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotCachePanner provides panning of a plot canvas
  * @details QwtPlotCachePanner is a panner for a plot canvas, that
  *          adjusts the scales of the axes after dropping
  *          the canvas on its new position.
- * 
+ *
  *          Together with QwtPlotZoomer and QwtPlotMagnifier powerful ways
  *          of navigating on a QwtPlot widget can be implemented easily.
- * 
+ *
  * @note The axes are not updated, while dragging the canvas
  * @sa QwtPlotZoomer, QwtPlotMagnifier
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlotCachePanner 提供绘图画布的平移功能
- * @details QwtPlotCachePanner 是绘图画布的平移器，它会在
- *          将画布拖放到新位置后调整坐标轴的比例尺。
- * 
- *          与 QwtPlotZoomer 和 QwtPlotMagnifier 一起使用，可以轻松实现
- *          在 QwtPlot 部件上导航的强大方法。
- * 
- * @note 拖动画布时，坐标轴不会更新
- * @sa QwtPlotZoomer, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotCachePanner : public QwtCachePanner
 {

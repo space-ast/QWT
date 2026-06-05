@@ -27,23 +27,12 @@
 #include "qwt_spline_parametrization.h"
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * Creates a spline parametrization with the specified type.
  *
  * @param[in] type Parametrization type
  * @sa type()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * 创建具有指定类型的样条参数化。
- *
- * @param[in] type 参数化类型
- * @sa type()
- * \endif
  */
 QwtSplineParametrization::QwtSplineParametrization( int type )
     : m_type( type )
@@ -51,36 +40,19 @@ QwtSplineParametrization::QwtSplineParametrization( int type )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSplineParametrization::~QwtSplineParametrization()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the parameter value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return Value increment
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的参数值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return 增量值
- * \endif
  */
 double QwtSplineParametrization::valueIncrement(
     const QPointF& point1, const QPointF& point2 ) const
@@ -119,17 +91,9 @@ double QwtSplineParametrization::valueIncrement(
 }
 
 /**
- * \if ENGLISH
  * @brief Get the parametrization type
  *
  * @return Parametrization type
- * \endif
- *
- * \if CHINESE
- * @brief 获取参数化类型
- *
- * @return 参数化类型
- * \endif
  */
 int QwtSplineParametrization::type() const
 {

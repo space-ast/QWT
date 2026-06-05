@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -36,16 +36,9 @@ class QWheelEvent;
 class QKeyEvent;
 
 /**
- * \if ENGLISH
  * @brief QwtMagnifier provides zooming by magnifying in steps
  * @details Using QwtMagnifier a plot can be zoomed in/out in steps using
  *          keys, the mouse wheel or moving a mouse button in vertical direction.
- * \endif
- * \if CHINESE
- * @brief QwtMagnifier 提供逐步放大的缩放功能
- * @details 使用 QwtMagnifier 可以通过按键、鼠标滚轮或在垂直方向移动鼠标按钮
- *          来逐步放大/缩小绘图。
- * \endif
  */
 class QWT_EXPORT QwtMagnifier : public QObject
 {
@@ -113,14 +106,8 @@ class QWT_EXPORT QwtMagnifier : public QObject
 
   protected:
     /**
-     * \if ENGLISH
      * @brief Rescale the parent widget
      * @param[in] factor Scale factor (>1 for zoom in, <1 for zoom out)
-     * \endif
-     * \if CHINESE
-     * @brief 重新缩放父控件
-     * @param[in] factor 缩放因子（>1 放大，<1 缩小）
-     * \endif
      */
     virtual void rescale( double factor ) = 0;
 

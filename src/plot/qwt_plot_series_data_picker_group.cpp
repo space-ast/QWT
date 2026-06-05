@@ -20,35 +20,21 @@ QwtPlotSeriesDataPickerGroup::PrivateData::PrivateData(QwtPlotSeriesDataPickerGr
 // QwtPlotSeriesDataPickerGroup
 //----------------------------------------------------
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] par Parent object
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] par 父对象
- * \endif
  */
 QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObject(par),QWT_PIMPL_CONSTRUCT
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Adds a picker to the synchronization group
  * @param pick Pointer to QwtPlotSeriesDataPicker instance to be added to the group
  * @note The picker must belong to a QwtPlot with properly configured axes. Adding a null
@@ -56,15 +42,6 @@ QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
  *       ownership of the picker.
  * @warning Pickers from plots with significantly different X-axis scales may show positioning
  *          artifacts due to proportional mapping limitations.
- * \endif
- *
- * \if CHINESE
- * @brief 将picker添加到同步组中
- * @param pick 指向要加入组的QwtPlotSeriesDataPicker实例的指针
- * @note picker必须属于具有正确配置坐标轴的QwtPlot。添加空指针或已在组中的picker将无效。
- *       该组不接管picker的所有权。
- * @warning 来自X轴比例差异显著的绘图的picker，可能因比例映射限制而出现定位异常。
- * \endif
  */
 void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
 {
@@ -80,17 +57,9 @@ void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
 }
 
 /**
- * \if ENGLISH
  * @brief Remove a picker from the group
  * @param[in] pick Pointer to QwtPlotSeriesDataPicker instance to be removed from the group
  * @note If the picker is not in the group, this function has no effect.
- * \endif
- *
- * \if CHINESE
- * @brief 从组中移除picker
- * @param[in] pick 要从组中移除的QwtPlotSeriesDataPicker实例指针
- * @note 如果picker不在组中，此函数无效。
- * \endif
  */
 void QwtPlotSeriesDataPickerGroup::removePicker(QwtPlotSeriesDataPicker* pick)
 {
@@ -98,19 +67,10 @@ void QwtPlotSeriesDataPickerGroup::removePicker(QwtPlotSeriesDataPicker* pick)
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the list of all pickers currently in the group
  * @return QList containing pointers to all managed QwtPlotSeriesDataPicker instances
  * @note The returned list is a copy; modifications to it do not affect the internal group state.
  *       Use addPicker() to modify group membership.
- * \endif
- *
- * \if CHINESE
- * @brief 返回组内当前所有picker的列表
- * @return 包含所有受管理QwtPlotSeriesDataPicker实例指针的QList
- * @note 返回的列表是副本；修改该列表不会影响组的内部状态。
- *       使用addPicker()修改组成员关系。
- * \endif
  */
 QList< QwtPlotSeriesDataPicker* > QwtPlotSeriesDataPickerGroup::pickers() const
 {
@@ -118,19 +78,10 @@ QList< QwtPlotSeriesDataPicker* > QwtPlotSeriesDataPickerGroup::pickers() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set enabled state
  * @details When disabled, picker synchronization will not occur.
  * @param[in] on Enable/disable synchronization
  * @sa isEnabled()
- * \endif
- *
- * \if CHINESE
- * @brief 设置启用状态
- * @details 禁用时，picker同步将不会发生。
- * @param[in] on 启用/禁用同步
- * @sa isEnabled()
- * \endif
  */
 void QwtPlotSeriesDataPickerGroup::setEnabled(bool on)
 {
@@ -138,17 +89,9 @@ void QwtPlotSeriesDataPickerGroup::setEnabled(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if synchronization is enabled
  * @return True if enabled
  * @sa setEnabled()
- * \endif
- *
- * \if CHINESE
- * @brief 检查同步是否启用
- * @return 启用时返回 true
- * @sa setEnabled()
- * \endif
  */
 bool QwtPlotSeriesDataPickerGroup::isEnabled() const
 {
@@ -164,14 +107,14 @@ void QwtPlotSeriesDataPickerGroup::onPickerMove(const QPoint& pos)
     if (!pick) {
         return;
     }
-    // 转换为当前这个picker所在widget的百分比
+    // Convert to percentages relative to this picker's widget
     QWidget* canvas = pick->canvas();
     if (!canvas) {
         return;
     }
     double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
     double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
-    // 让其它picker也设置这个位置的移动
+    // Have other pickers also set position at this location
     for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
         if (p == pick) {
             continue;
@@ -210,16 +153,9 @@ void QwtPlotSeriesDataPickerGroup::onPickerDestroy(QObject* obj)
 }
 
 /**
- * \if ENGLISH
  * @brief Handles click signal from a picker, syncs other pickers, then emits group's clicked signal
  * @param picker The picker that emitted the click signal
  * @param pos The click position
- * \endif
- * \if CHINESE
- * @brief 处理picker的点击信号，同步其他picker后发出组的clicked信号
- * @param picker 发出点击信号的picker
- * @param pos 点击位置
- * \endif
  */
 void QwtPlotSeriesDataPickerGroup::onPickerClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
 {
@@ -252,16 +188,9 @@ void QwtPlotSeriesDataPickerGroup::onPickerClicked(QwtPlotSeriesDataPicker* pick
 }
 
 /**
- * \if ENGLISH
  * @brief Handles double-click signal from a picker, syncs other pickers, then emits group's doubleClicked signal
  * @param picker The picker that emitted the double-click signal
  * @param pos The double-click position
- * \endif
- * \if CHINESE
- * @brief 处理picker的双击信号，同步其他picker后发出组的doubleClicked信号
- * @param picker 发出双击信号的picker
- * @param pos 双击位置
- * \endif
  */
 void QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
 {

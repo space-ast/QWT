@@ -9,17 +9,9 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A flat color legend
  * @details The class visualizes a ColorVector together with a scale (axis)
  *          and a caption. ColorLegends are vertical or horizontal.
- * \endif
- *
- * \if CHINESE
- * @brief 平面颜色图例
- * @details 该类将 ColorVector 与刻度（坐标轴）和标题一起可视化。
- *          ColorLegends 可以是垂直的或水平的。
- * \endif
  */
 class QWT3D_EXPORT ColorLegend : public Drawable
 {

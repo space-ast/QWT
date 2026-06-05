@@ -9,13 +9,7 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for Drawables
- * \endif
- *
- * \if CHINESE
- * @brief 可绘制对象的抽象基类
- * \endif
  */
 class QWT3D_EXPORT Drawable
 {

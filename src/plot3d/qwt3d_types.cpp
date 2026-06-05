@@ -158,21 +158,11 @@ void CellData::clear()
 }
 
 /**
- * \if ENGLISH
  * @brief Converts GL double color components to Qt QColor
- * @param[in] r Red component (0.0-1.0)
- * @param[in] g Green component (0.0-1.0)
- * @param[in] b Blue component (0.0-1.0)
+ * @param r Red component (0.0-1.0)
+ * @param g Green component (0.0-1.0)
+ * @param b Blue component (0.0-1.0)
  * @return QColor with components scaled to 0-255 range
- * \endif
- *
- * \if CHINESE
- * @brief 将 GL 双精度颜色分量转换为 Qt QColor
- * @param[in] r 红色分量（0.0-1.0）
- * @param[in] g 绿色分量（0.0-1.0）
- * @param[in] b 蓝色分量（0.0-1.0）
- * @return 分量缩放到 0-255 范围的 QColor
- * \endif
  */
 QColor Qwt3D::GL2Qt(GLdouble r, GLdouble g, GLdouble b)
 {
@@ -180,17 +170,9 @@ QColor Qwt3D::GL2Qt(GLdouble r, GLdouble g, GLdouble b)
 }
 
 /**
- * \if ENGLISH
  * @brief Converts Qt QColor to GL RGBA structure
- * @param[in] col Qt QColor to convert
+ * @param col Qt QColor to convert
  * @return RGBA structure with components scaled to 0.0-1.0 range
- * \endif
- *
- * \if CHINESE
- * @brief 将 Qt QColor 转换为 GL RGBA 结构
- * @param[in] col 要转换的 Qt QColor
- * @return 分量缩放到 0.0-1.0 范围的 RGBA 结构
- * \endif
  */
 RGBA Qwt3D::Qt2GL(QColor col)
 {
@@ -204,17 +186,9 @@ RGBA Qwt3D::Qt2GL(QColor col)
 }
 
 /**
- * \if ENGLISH
  * @brief Calculates 2D convex hull indices from a set of points
  * @param[out] idx Output vector of indices into src forming the convex hull
- * @param[in] src Source vector of Tuple points
- * \endif
- *
- * \if CHINESE
- * @brief 从一组点计算二维凸包索引
- * @param[out] idx 构成凸包的 src 索引输出向量
- * @param[in] src Tuple 点的源向量
- * \endif
+ * @param src Source vector of Tuple points
  */
 void Qwt3D::convexhull2d(std::vector< unsigned >& idx, const std::vector< Tuple >& src)
 {
@@ -247,17 +221,9 @@ void Qwt3D::convexhull2d(std::vector< unsigned >& idx, const std::vector< Tuple 
 }
 
 /**
- * \if ENGLISH
  * @brief Returns total size of tesselation
- * @param[in] t Cell field to measure
+ * @param t Cell field to measure
  * @return Sum of all cell sizes in the field
- * \endif
- *
- * \if CHINESE
- * @brief 返回细分总大小
- * @param[in] t 要测量的单元格场
- * @return 场中所有单元格大小的总和
- * \endif
  */
 unsigned Qwt3D::tesselationSize(CellField const& t)
 {

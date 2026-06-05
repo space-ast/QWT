@@ -72,15 +72,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * @param[in] parent Parent widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] parent 父控件
- * \endif
+ * @param parent Parent widget
  */
 QwtPolarPlot::QwtPolarPlot(QWidget* parent) : QFrame(parent)
 {
@@ -88,17 +81,9 @@ QwtPolarPlot::QwtPolarPlot(QWidget* parent) : QFrame(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with title
- * @param[in] title Title text
- * @param[in] parent Parent widget
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的构造函数
- * @param[in] title 标题文本
- * @param[in] parent 父控件
- * \endif
+ * @param title Title text
+ * @param parent Parent widget
  */
 QwtPolarPlot::QwtPolarPlot(const QwtText& title, QWidget* parent) : QFrame(parent)
 {
@@ -106,13 +91,7 @@ QwtPolarPlot::QwtPolarPlot(const QwtText& title, QWidget* parent) : QFrame(paren
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarPlot::~QwtPolarPlot()
 {
@@ -123,15 +102,8 @@ QwtPolarPlot::~QwtPolarPlot()
 }
 
 /**
- * \if ENGLISH
  * @brief Change the plot's title
- * @param[in] title New title
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘图的标题
- * @param[in] title 新标题
- * \endif
+ * @param title New title
  */
 void QwtPolarPlot::setTitle(const QString& title)
 {
@@ -145,15 +117,8 @@ void QwtPolarPlot::setTitle(const QString& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the plot's title
- * @param[in] title New title
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘图的标题
- * @param[in] title 新标题
- * \endif
+ * @param title New title
  */
 void QwtPolarPlot::setTitle(const QwtText& title)
 {
@@ -167,15 +132,8 @@ void QwtPolarPlot::setTitle(const QwtText& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's title
  * @return Title text
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的标题
- * @return 标题文本
- * \endif
  */
 QwtText QwtPolarPlot::title() const
 {
@@ -183,15 +141,8 @@ QwtText QwtPolarPlot::title() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the title label widget
  * @return Title label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取标题标签控件
- * @return 标题标签控件
- * \endif
  */
 QwtTextLabel* QwtPolarPlot::titleLabel()
 {
@@ -199,15 +150,8 @@ QwtTextLabel* QwtPolarPlot::titleLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the title label widget (const version)
  * @return Title label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取标题标签控件（常量版本）
- * @return 标题标签控件
- * \endif
  */
 const QwtTextLabel* QwtPolarPlot::titleLabel() const
 {
@@ -215,7 +159,6 @@ const QwtTextLabel* QwtPolarPlot::titleLabel() const
 }
 
 /**
- * \if ENGLISH
  * @brief Insert a legend
  * @details If the position legend is \c QwtPolarPlot::LeftLegend or \c QwtPolarPlot::RightLegend
  *          the legend will be organized in one column from top to down.
@@ -224,30 +167,14 @@ const QwtTextLabel* QwtPolarPlot::titleLabel() const
  *          If pos != QwtPolarPlot::ExternalLegend the plot widget will become
  *          parent of the legend. It will be deleted when the plot is deleted,
  *          or another legend is set with insertLegend().
- * @param[in] legend Legend widget
- * @param[in] pos The legend's position. For top/left position the number
- *                of columns will be limited to 1, otherwise it will be set to unlimited.
- * @param[in] ratio Ratio between legend and the bounding rect of title, canvas and axes.
- *                   The legend will be shrunk if it would need more space than the given ratio.
- *                   The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
- *                   The default vertical/horizontal ratio is 0.33/0.5.
+ * @param legend Legend widget
+ * @param pos The legend's position. For top/left position the number
+ *            of columns will be limited to 1, otherwise it will be set to unlimited.
+ * @param ratio Ratio between legend and the bounding rect of title, canvas and axes.
+ *               The legend will be shrunk if it would need more space than the given ratio.
+ *               The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0 it will be reset to the default ratio.
+ *               The default vertical/horizontal ratio is 0.33/0.5.
  * @sa legend(), QwtPolarLayout::legendPosition(), QwtPolarLayout::setLegendPosition()
- * \endif
- *
- * \if CHINESE
- * @brief 插入图例
- * @details 如果图例位置为 \c QwtPolarPlot::LeftLegend 或 \c QwtPolarPlot::RightLegend，
- *          图例将从上到下按单列排列。否则，图例项将按最佳列数从左到右排列在表格中。
- *          如果 pos != QwtPolarPlot::ExternalLegend，绘图控件将成为图例的父控件。
- *          当绘图被删除或使用 insertLegend() 设置另一个图例时，图例将被删除。
- * @param[in] legend 图例控件
- * @param[in] pos 图例的位置。对于顶部/左侧位置，列数将限制为1，否则设置为无限制。
- * @param[in] ratio 图例与标题、画布和轴的边界矩形之间的比例。
- *                   如果图例需要的空间超过给定比例，它将被缩小。
- *                   比例限制在 ]0.0 .. 1.0]。如果 <= 0.0，将重置为默认比例。
- *                   默认的垂直/水平比例为 0.33/0.5。
- * @sa legend(), QwtPolarLayout::legendPosition(), QwtPolarLayout::setLegendPosition()
- * \endif
  */
 void QwtPolarPlot::insertLegend(QwtAbstractLegend* legend, QwtPolarPlot::LegendPosition pos, double ratio)
 {
@@ -295,15 +222,8 @@ void QwtPolarPlot::insertLegend(QwtAbstractLegend* legend, QwtPolarPlot::LegendP
 }
 
 /**
- * \if ENGLISH
  * @brief Emit legendDataChanged() for all plot items
  * @sa QwtPlotItem::legendData(), legendDataChanged()
- * \endif
- *
- * \if CHINESE
- * @brief 为所有绘图项发出 legendDataChanged() 信号
- * @sa QwtPlotItem::legendData(), legendDataChanged()
- * \endif
  */
 void QwtPolarPlot::updateLegend()
 {
@@ -314,17 +234,9 @@ void QwtPolarPlot::updateLegend()
 }
 
 /**
- * \if ENGLISH
  * @brief Emit legendDataChanged() for a plot item
- * @param[in] plotItem Plot item
+ * @param plotItem Plot item
  * @sa QwtPlotItem::legendData(), legendDataChanged()
- * \endif
- *
- * \if CHINESE
- * @brief 为绘图项发出 legendDataChanged() 信号
- * @param[in] plotItem 绘图项
- * @sa QwtPlotItem::legendData(), legendDataChanged()
- * \endif
  */
 void QwtPolarPlot::updateLegend(const QwtPolarItem* plotItem)
 {
@@ -341,17 +253,9 @@ void QwtPolarPlot::updateLegend(const QwtPolarItem* plotItem)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's legend
  * @return Legend widget
  * @sa insertLegend()
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的图例
- * @return 图例控件
- * @sa insertLegend()
- * \endif
  */
 QwtAbstractLegend* QwtPolarPlot::legend()
 {
@@ -359,17 +263,9 @@ QwtAbstractLegend* QwtPolarPlot::legend()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's legend (const version)
  * @return Legend widget
  * @sa insertLegend()
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的图例（常量版本）
- * @return 图例控件
- * @sa insertLegend()
- * \endif
  */
 const QwtAbstractLegend* QwtPolarPlot::legend() const
 {
@@ -377,19 +273,10 @@ const QwtAbstractLegend* QwtPolarPlot::legend() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the background of the plot area
  * @details The plot area is the circle around the pole. Its radius is defined by the radial scale.
- * @param[in] brush Background brush
+ * @param brush Background brush
  * @sa plotBackground(), plotArea()
- * \endif
- *
- * \if CHINESE
- * @brief 设置绘图区域的背景
- * @details 绘图区域是围绕极点的圆。其半径由径向刻度定义。
- * @param[in] brush 背景画刷
- * @sa plotBackground(), plotArea()
- * \endif
  */
 void QwtPolarPlot::setPlotBackground(const QBrush& brush)
 {
@@ -400,17 +287,9 @@ void QwtPolarPlot::setPlotBackground(const QBrush& brush)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot background brush
  * @return Background brush
  * @sa plotBackground(), plotArea()
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图背景画刷
- * @return 背景画刷
- * @sa plotBackground(), plotArea()
- * \endif
  */
 const QBrush& QwtPolarPlot::plotBackground() const
 {
@@ -418,25 +297,14 @@ const QBrush& QwtPolarPlot::plotBackground() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set or reset the autoReplot option
  * @details If the autoReplot option is set, the plot will be updated implicitly by manipulating member functions.
  *          Since this may be time-consuming, it is recommended to leave this option switched off and call replot()
  *          explicitly if necessary.
  *          The autoReplot option is set to false by default, which means that the user has to call replot()
  *          in order to make changes visible.
- * @param[in] enable \c true or \c false. Defaults to \c true.
+ * @param enable \c true or \c false. Defaults to \c true.
  * @sa replot()
- * \endif
- *
- * \if CHINESE
- * @brief 设置或重置自动重绘选项
- * @details 如果设置了自动重绘选项，绘图将在操作成员函数时隐式更新。
- *          由于这可能耗时，建议关闭此选项并在必要时显式调用 replot()。
- *          默认情况下自动重绘选项为 false，这意味着用户必须调用 replot() 才能使更改可见。
- * @param[in] enable \c true 或 \c false。默认为 \c true。
- * @sa replot()
- * \endif
  */
 void QwtPolarPlot::setAutoReplot(bool enable)
 {
@@ -444,17 +312,9 @@ void QwtPolarPlot::setAutoReplot(bool enable)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if autoReplot option is set
  * @return \c true if autoReplot option is set
  * @sa setAutoReplot()
- * \endif
- *
- * \if CHINESE
- * @brief 检查是否设置了自动重绘选项
- * @return \c true 如果设置了自动重绘选项
- * @sa setAutoReplot()
- * \endif
  */
 bool QwtPolarPlot::autoReplot() const
 {
@@ -462,24 +322,13 @@ bool QwtPolarPlot::autoReplot() const
 }
 
 /**
- * \if ENGLISH
  * @brief Enable autoscaling
  * @details This member function is used to switch back to autoscaling mode after a fixed scale has been set.
  *          Autoscaling calculates a useful scale division from the bounding interval of all plot items
  *          with the QwtPolarItem::AutoScale attribute.
  *          Autoscaling is only supported for the radial scale and enabled as default.
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @sa hasAutoScale(), setScale(), setScaleDiv(), QwtPolarItem::boundingInterval()
- * \endif
- *
- * \if CHINESE
- * @brief 启用自动缩放
- * @details 此成员函数用于在设置了固定刻度后切换回自动缩放模式。
- *          自动缩放从所有带有 QwtPolarItem::AutoScale 属性的绘图项的边界区间计算有用的刻度划分。
- *          自动缩放仅支持径向刻度，默认启用。
- * @param[in] scaleId 刻度索引
- * @sa hasAutoScale(), setScale(), setScaleDiv(), QwtPolarItem::boundingInterval()
- * \endif
  */
 void QwtPolarPlot::setAutoScale(int scaleId)
 {
@@ -494,19 +343,10 @@ void QwtPolarPlot::setAutoScale(int scaleId)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if autoscaling is enabled
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return \c true if autoscaling is enabled
  * @sa setAutoScale()
- * \endif
- *
- * \if CHINESE
- * @brief 检查是否启用了自动缩放
- * @param[in] scaleId 刻度索引
- * @return \c true 如果启用了自动缩放
- * @sa setAutoScale()
- * \endif
  */
 bool QwtPolarPlot::hasAutoScale(int scaleId) const
 {
@@ -517,19 +357,10 @@ bool QwtPolarPlot::hasAutoScale(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the maximum number of minor scale intervals for a specified scale
- * @param[in] scaleId Scale index
- * @param[in] maxMinor Maximum number of minor steps
+ * @param scaleId Scale index
+ * @param maxMinor Maximum number of minor steps
  * @sa scaleMaxMajor()
- * \endif
- *
- * \if CHINESE
- * @brief 设置指定刻度的最大次要刻度间隔数
- * @param[in] scaleId 刻度索引
- * @param[in] maxMinor 最大次要步数
- * @sa scaleMaxMajor()
- * \endif
  */
 void QwtPolarPlot::setScaleMaxMinor(int scaleId, int maxMinor)
 {
@@ -548,19 +379,10 @@ void QwtPolarPlot::setScaleMaxMinor(int scaleId, int maxMinor)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the maximum number of minor ticks for a specified axis
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Maximum number of minor ticks
  * @sa setScaleMaxMinor()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指定轴的最大次要刻度数
- * @param[in] scaleId 刻度索引
- * @return 最大次要刻度数
- * @sa setScaleMaxMinor()
- * \endif
  */
 int QwtPolarPlot::scaleMaxMinor(int scaleId) const
 {
@@ -571,19 +393,10 @@ int QwtPolarPlot::scaleMaxMinor(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the maximum number of major scale intervals for a specified scale
- * @param[in] scaleId Scale index
- * @param[in] maxMajor Maximum number of major steps
+ * @param scaleId Scale index
+ * @param maxMajor Maximum number of major steps
  * @sa scaleMaxMajor()
- * \endif
- *
- * \if CHINESE
- * @brief 设置指定刻度的最大主要刻度间隔数
- * @param[in] scaleId 刻度索引
- * @param[in] maxMajor 最大主要步数
- * @sa scaleMaxMajor()
- * \endif
  */
 void QwtPolarPlot::setScaleMaxMajor(int scaleId, int maxMajor)
 {
@@ -601,19 +414,10 @@ void QwtPolarPlot::setScaleMaxMajor(int scaleId, int maxMajor)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the maximum number of major ticks for a specified axis
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Maximum number of major ticks
  * @sa setScaleMaxMajor()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指定轴的最大主要刻度数
- * @param[in] scaleId 刻度索引
- * @return 最大主要刻度数
- * @sa setScaleMaxMajor()
- * \endif
  */
 int QwtPolarPlot::scaleMaxMajor(int scaleId) const
 {
@@ -624,19 +428,10 @@ int QwtPolarPlot::scaleMaxMajor(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the scale engine for an axis
- * @param[in] scaleId Scale index
- * @param[in] scaleEngine Scale engine
+ * @param scaleId Scale index
+ * @param scaleEngine Scale engine
  * @sa axisScaleEngine()
- * \endif
- *
- * \if CHINESE
- * @brief 更改轴的刻度引擎
- * @param[in] scaleId 刻度索引
- * @param[in] scaleEngine 刻度引擎
- * @sa axisScaleEngine()
- * \endif
  */
 void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 {
@@ -656,19 +451,10 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 }
 
 /**
- * \if ENGLISH
  * @brief Get scale engine for a specific scale
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Scale engine
  * @sa setScaleEngine()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定刻度的刻度引擎
- * @param[in] scaleId 刻度索引
- * @return 刻度引擎
- * @sa setScaleEngine()
- * \endif
  */
 QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 {
@@ -679,19 +465,10 @@ QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 }
 
 /**
- * \if ENGLISH
  * @brief Get scale engine for a specific scale (const version)
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Scale engine
  * @sa setScaleEngine()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定刻度的刻度引擎（常量版本）
- * @param[in] scaleId 刻度索引
- * @return 刻度引擎
- * @sa setScaleEngine()
- * \endif
  */
 const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
 {
@@ -702,23 +479,12 @@ const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Disable autoscaling and specify a fixed scale for a selected scale
- * @param[in] scaleId Scale index
- * @param[in] min Minimum value of the scale
- * @param[in] max Maximum value of the scale
- * @param[in] stepSize Major step size. If <code>step == 0</code>, the step size is calculated automatically using the maxMajor setting.
+ * @param scaleId Scale index
+ * @param min Minimum value of the scale
+ * @param max Maximum value of the scale
+ * @param stepSize Major step size. If <code>step == 0</code>, the step size is calculated automatically using the maxMajor setting.
  * @sa setScaleMaxMajor(), setAutoScale()
- * \endif
- *
- * \if CHINESE
- * @brief 禁用自动缩放并指定选定刻度的固定刻度
- * @param[in] scaleId 刻度索引
- * @param[in] min 刻度的最小值
- * @param[in] max 刻度的最大值
- * @param[in] stepSize 主要步长。如果 <code>step == 0</code>，则使用 maxMajor 设置自动计算步长。
- * @sa setScaleMaxMajor(), setAutoScale()
- * \endif
  */
 void QwtPolarPlot::setScale(int scaleId, double min, double max, double stepSize)
 {
@@ -738,19 +504,10 @@ void QwtPolarPlot::setScale(int scaleId, double min, double max, double stepSize
 }
 
 /**
- * \if ENGLISH
  * @brief Disable autoscaling and specify a fixed scale for a selected scale
- * @param[in] scaleId Scale index
- * @param[in] scaleDiv Scale division
+ * @param scaleId Scale index
+ * @param scaleDiv Scale division
  * @sa setScale(), setAutoScale()
- * \endif
- *
- * \if CHINESE
- * @brief 禁用自动缩放并指定选定刻度的固定刻度
- * @param[in] scaleId 刻度索引
- * @param[in] scaleDiv 刻度划分
- * @sa setScale(), setAutoScale()
- * \endif
  */
 void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
 {
@@ -767,21 +524,11 @@ void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale division of a specified scale
  * @details scaleDiv(scaleId)->lBound(), scaleDiv(scaleId)->hBound() are the current limits of the scale.
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Scale division
  * @sa QwtScaleDiv, setScaleDiv(), setScale()
- * \endif
- *
- * \if CHINESE
- * @brief 返回指定刻度的刻度划分
- * @details scaleDiv(scaleId)->lBound(), scaleDiv(scaleId)->hBound() 是刻度的当前界限。
- * @param[in] scaleId 刻度索引
- * @return 刻度划分
- * @sa QwtScaleDiv, setScaleDiv(), setScale()
- * \endif
  */
 const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 {
@@ -792,21 +539,11 @@ const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale division of a specified scale
  * @details scaleDiv(scaleId)->lBound(), scaleDiv(scaleId)->hBound() are the current limits of the scale.
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Scale division
  * @sa QwtScaleDiv, setScaleDiv(), setScale()
- * \endif
- *
- * \if CHINESE
- * @brief 返回指定刻度的刻度划分
- * @details scaleDiv(scaleId)->lBound(), scaleDiv(scaleId)->hBound() 是刻度的当前界限。
- * @param[in] scaleId 刻度索引
- * @return 刻度划分
- * @sa QwtScaleDiv, setScaleDiv(), setScale()
- * \endif
  */
 QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
 {
@@ -817,19 +554,10 @@ QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the origin of the azimuth scale
  * @details The azimuth origin is the angle where the azimuth scale shows the value 0.0. The default origin is 0.0.
- * @param[in] origin New origin
+ * @param origin New origin
  * @sa azimuthOrigin()
- * \endif
- *
- * \if CHINESE
- * @brief 更改方位角刻度的原点
- * @details 方位角原点是方位角刻度显示值 0.0 的角度。默认原点为 0.0。
- * @param[in] origin 新原点
- * @sa azimuthOrigin()
- * \endif
  */
 void QwtPolarPlot::setAzimuthOrigin(double origin)
 {
@@ -841,19 +569,10 @@ void QwtPolarPlot::setAzimuthOrigin(double origin)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the origin of the azimuth scale
  * @details The azimuth origin is the angle where the azimuth scale shows the value 0.0.
  * @return Origin of the azimuth scale
  * @sa setAzimuthOrigin()
- * \endif
- *
- * \if CHINESE
- * @brief 获取方位角刻度的原点
- * @details 方位角原点是方位角刻度显示值 0.0 的角度。
- * @return 方位角刻度的原点
- * @sa setAzimuthOrigin()
- * \endif
  */
 double QwtPolarPlot::azimuthOrigin() const
 {
@@ -861,27 +580,14 @@ double QwtPolarPlot::azimuthOrigin() const
 }
 
 /**
- * \if ENGLISH
  * @brief Translate and in/decrease the zoom factor
  * @details In zoom mode the zoom position is in the center of the canvas.
  *          The radius of the circle depends on the size of the plot canvas, that is divided by the zoom factor.
  *          Thus a factor < 1.0 zooms in.
  *          Setting an invalid zoom position disables zooming.
- * @param[in] zoomPos Center of the translation
- * @param[in] zoomFactor Zoom factor
+ * @param zoomPos Center of the translation
+ * @param zoomFactor Zoom factor
  * @sa unzoom(), zoomPos(), zoomFactor()
- * \endif
- *
- * \if CHINESE
- * @brief 平移和增/减缩放因子
- * @details 在缩放模式下，缩放位置位于画布中心。
- *          圆的半径取决于绘图画布的大小，除以缩放因子。
- *          因此因子 < 1.0 会放大。
- *          设置无效的缩放位置将禁用缩放。
- * @param[in] zoomPos 平移的中心
- * @param[in] zoomFactor 缩放因子
- * @sa unzoom(), zoomPos(), zoomFactor()
- * \endif
  */
 void QwtPolarPlot::zoom(const QwtPointPolar& zoomPos, double zoomFactor)
 {
@@ -895,15 +601,8 @@ void QwtPolarPlot::zoom(const QwtPointPolar& zoomPos, double zoomFactor)
 }
 
 /**
- * \if ENGLISH
  * @brief Unzoom the plot
  * @sa zoom()
- * \endif
- *
- * \if CHINESE
- * @brief 取消绘图的缩放
- * @sa zoom()
- * \endif
  */
 void QwtPolarPlot::unzoom()
 {
@@ -915,17 +614,9 @@ void QwtPolarPlot::unzoom()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the zoom position
  * @return Zoom position
  * @sa zoom(), zoomFactor()
- * \endif
- *
- * \if CHINESE
- * @brief 获取缩放位置
- * @return 缩放位置
- * @sa zoom(), zoomFactor()
- * \endif
  */
 QwtPointPolar QwtPolarPlot::zoomPos() const
 {
@@ -933,17 +624,9 @@ QwtPointPolar QwtPolarPlot::zoomPos() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the zoom factor
  * @return Zoom factor
  * @sa zoom(), zoomPos()
- * \endif
- *
- * \if CHINESE
- * @brief 获取缩放因子
- * @return 缩放因子
- * @sa zoom(), zoomPos()
- * \endif
  */
 double QwtPolarPlot::zoomFactor() const
 {
@@ -951,25 +634,13 @@ double QwtPolarPlot::zoomFactor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Build a scale map
  * @details The azimuth map translates between the scale values and angles from [0.0, 2 * PI[.
  *          The radial map translates scale values into the distance from the pole.
  *          The radial map is calculated from the current geometry of the canvas.
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Map for the scale on the canvas. With this map pixel coordinates can be translated to plot coordinates and vice versa.
  * @sa QwtScaleMap, transform(), invTransform()
- * \endif
- *
- * \if CHINESE
- * @brief 构建刻度映射
- * @details 方位角映射将刻度值转换为 [0.0, 2 * PI[ 范围内的角度。
- *          径向映射将刻度值转换为距极点的距离。
- *          径向映射根据画布的当前几何形状计算。
- * @param[in] scaleId 刻度索引
- * @return 画布上刻度的映射。使用此映射可以将像素坐标转换为绘图坐标，反之亦然。
- * @sa QwtScaleMap, transform(), invTransform()
- * \endif
  */
 QwtScaleMap QwtPolarPlot::scaleMap(int scaleId) const
 {
@@ -978,25 +649,13 @@ QwtScaleMap QwtPolarPlot::scaleMap(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Build a scale map with specified radius
  * @details The azimuth map translates between the scale values and angles from [0.0, 2 * PI[.
  *          The radial map translates scale values into the distance from the pole.
- * @param[in] scaleId Scale index
- * @param[in] radius Radius of the plot area in pixels
+ * @param scaleId Scale index
+ * @param radius Radius of the plot area in pixels
  * @return Map for the scale on the canvas. With this map pixel coordinates can be translated to plot coordinates and vice versa.
  * @sa QwtScaleMap, transform(), invTransform()
- * \endif
- *
- * \if CHINESE
- * @brief 构建带有指定半径的刻度映射
- * @details 方位角映射将刻度值转换为 [0.0, 2 * PI[ 范围内的角度。
- *          径向映射将刻度值转换为距极点的距离。
- * @param[in] scaleId 刻度索引
- * @param[in] radius 绘图区域的半径（像素）
- * @return 画布上刻度的映射。使用此映射可以将像素坐标转换为绘图坐标，反之亦然。
- * @sa QwtScaleMap, transform(), invTransform()
- * \endif
  */
 QwtScaleMap QwtPolarPlot::scaleMap(int scaleId, const double radius) const
 {
@@ -1019,19 +678,10 @@ QwtScaleMap QwtPolarPlot::scaleMap(int scaleId, const double radius) const
 }
 
 /**
- * \if ENGLISH
  * @brief Qt event handler
  * @details Handles QEvent::LayoutRequest and QEvent::PolishRequest
- * @param[in] e Qt Event
+ * @param e Qt Event
  * @return True when the event was processed
- * \endif
- *
- * \if CHINESE
- * @brief Qt 事件处理器
- * @details 处理 QEvent::LayoutRequest 和 QEvent::PolishRequest
- * @param[in] e Qt 事件
- * @return 当事件被处理时返回 true
- * \endif
  */
 bool QwtPolarPlot::event(QEvent* e)
 {
@@ -1052,15 +702,8 @@ bool QwtPolarPlot::event(QEvent* e)
 }
 
 /**
- * \if ENGLISH
  * @brief Resize and update internal layout
- * @param[in] e Resize event
- * \endif
- *
- * \if CHINESE
- * @brief 调整大小并更新内部布局
- * @param[in] e 调整大小事件
- * \endif
+ * @param e Resize event
  */
 void QwtPolarPlot::resizeEvent(QResizeEvent* e)
 {
@@ -1120,13 +763,7 @@ void QwtPolarPlot::initPlot(const QwtText& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Replots the plot if autoReplot() is \c true
- * \endif
- *
- * \if CHINESE
- * @brief 如果 autoReplot() 为 \c true 则重新绘制绘图
- * \endif
  */
 void QwtPolarPlot::autoRefresh()
 {
@@ -1135,13 +772,7 @@ void QwtPolarPlot::autoRefresh()
 }
 
 /**
- * \if ENGLISH
  * @brief Rebuild the layout
- * \endif
- *
- * \if CHINESE
- * @brief 重建布局
- * \endif
  */
 void QwtPolarPlot::updateLayout()
 {
@@ -1172,21 +803,11 @@ void QwtPolarPlot::updateLayout()
 }
 
 /**
- * \if ENGLISH
  * @brief Redraw the plot
  * @details If the autoReplot option is not set (which is the default) or if any curves are attached to raw data,
  *          the plot has to be refreshed explicitly in order to make changes visible.
  * @warning Calls canvas()->repaint, take care of infinite recursions
  * @sa setAutoReplot()
- * \endif
- *
- * \if CHINESE
- * @brief 重绘绘图
- * @details 如果未设置自动重绘选项（默认）或任何曲线附加到原始数据，
- *          必须显式刷新绘图才能使更改可见。
- * @warning 调用 canvas()->repaint，注意无限递归
- * @sa setAutoReplot()
- * \endif
  */
 void QwtPolarPlot::replot()
 {
@@ -1203,15 +824,8 @@ void QwtPolarPlot::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's canvas
  * @return Canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的画布
- * @return 画布控件
- * \endif
  */
 QwtPolarCanvas* QwtPolarPlot::canvas()
 {
@@ -1219,15 +833,8 @@ QwtPolarCanvas* QwtPolarPlot::canvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's canvas (const version)
  * @return Canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的画布（常量版本）
- * @return 画布控件
- * \endif
  */
 const QwtPolarCanvas* QwtPolarPlot::canvas() const
 {
@@ -1235,17 +842,9 @@ const QwtPolarCanvas* QwtPolarPlot::canvas() const
 }
 
 /**
- * \if ENGLISH
  * @brief Redraw the canvas
- * @param[in] painter Painter used for drawing
- * @param[in] canvasRect Contents rect of the canvas
- * \endif
- *
- * \if CHINESE
- * @brief 重绘画布
- * @param[in] painter 用于绘制的画师
- * @param[in] canvasRect 画布的内容矩形
- * \endif
+ * @param painter Painter used for drawing
+ * @param canvasRect Contents rect of the canvas
  */
 void QwtPolarPlot::drawCanvas(QPainter* painter, const QRectF& canvasRect) const
 {
@@ -1273,25 +872,13 @@ void QwtPolarPlot::drawCanvas(QPainter* painter, const QRectF& canvasRect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Redraw the canvas items
- * @param[in] painter Painter used for drawing
- * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
- * @param[in] radialMap Maps radius values into painter coordinates
- * @param[in] pole Position of the pole in painter coordinates
- * @param[in] radius Radius of the complete plot area in painter coordinates
- * @param[in] canvasRect Contents rect of the canvas in painter coordinates
- * \endif
- *
- * \if CHINESE
- * @brief 重绘画布项
- * @param[in] painter 用于绘制的画师
- * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
- * @param[in] radialMap 将半径值映射到画师坐标
- * @param[in] pole 画师坐标中极点的位置
- * @param[in] radius 画师坐标中完整绘图区域的半径
- * @param[in] canvasRect 画师坐标中画布的内容矩形
- * \endif
+ * @param painter Painter used for drawing
+ * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+ * @param radialMap Maps radius values into painter coordinates
+ * @param pole Position of the pole in painter coordinates
+ * @param radius Radius of the complete plot area in painter coordinates
+ * @param canvasRect Contents rect of the canvas in painter coordinates
  */
 void QwtPolarPlot::drawItems(QPainter* painter,
                              const QwtScaleMap& azimuthMap,
@@ -1345,15 +932,8 @@ void QwtPolarPlot::drawItems(QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Rebuild the scale
- * @param[in] scaleId Scale index
- * \endif
- *
- * \if CHINESE
- * @brief 重建刻度
- * @param[in] scaleId 刻度索引
- * \endif
+ * @param scaleId Scale index
  */
 void QwtPolarPlot::updateScale(int scaleId)
 {
@@ -1398,17 +978,9 @@ void QwtPolarPlot::updateScale(int scaleId)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the maximum of all item margin hints
  * @return Maximum margin hint
  * @sa QwtPolarItem::marginHint()
- * \endif
- *
- * \if CHINESE
- * @brief 获取所有项边距提示的最大值
- * @return 最大边距提示
- * @sa QwtPolarItem::marginHint()
- * \endif
  */
 int QwtPolarPlot::plotMarginHint() const
 {
@@ -1426,17 +998,9 @@ int QwtPolarPlot::plotMarginHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rect of the plot area
  * @details The plot area depends on the size of the canvas and the zoom parameters.
  * @return Bounding rect of the plot area
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图区域的边界矩形
- * @details 绘图区域取决于画布的大小和缩放参数。
- * @return 绘图区域的边界矩形
- * \endif
  */
 QRectF QwtPolarPlot::plotRect() const
 {
@@ -1444,19 +1008,10 @@ QRectF QwtPolarPlot::plotRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the bounding rect of the plot area
  * @details The plot area depends on the zoom parameters.
- * @param[in] canvasRect Rectangle of the canvas
+ * @param canvasRect Rectangle of the canvas
  * @return Rectangle for displaying 100% of the plot
- * \endif
- *
- * \if CHINESE
- * @brief 计算绘图区域的边界矩形
- * @details 绘图区域取决于缩放参数。
- * @param[in] canvasRect 画布的矩形
- * @return 显示 100% 绘图的矩形
- * \endif
  */
 QRectF QwtPolarPlot::plotRect(const QRectF& canvasRect) const
 {
@@ -1491,15 +1046,8 @@ QRectF QwtPolarPlot::plotRect(const QRectF& canvasRect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding interval of the radial scale visible on canvas
  * @return Bounding interval of the radial scale that is visible on the canvas
- * \endif
- *
- * \if CHINESE
- * @brief 获取画布上可见的径向刻度的边界区间
- * @return 画布上可见的径向刻度的边界区间
- * \endif
  */
 QwtInterval QwtPolarPlot::visibleInterval() const
 {
@@ -1577,15 +1125,8 @@ QwtInterval QwtPolarPlot::visibleInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout responsible for geometry of plot components
  * @return Plot layout
- * \endif
- *
- * \if CHINESE
- * @brief 获取负责绘图组件几何形状的布局
- * @return 绘图布局
- * \endif
  */
 QwtPolarLayout* QwtPolarPlot::plotLayout()
 {
@@ -1593,15 +1134,8 @@ QwtPolarLayout* QwtPolarPlot::plotLayout()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout responsible for geometry of plot components (const version)
  * @return Plot layout
- * \endif
- *
- * \if CHINESE
- * @brief 获取负责绘图组件几何形状的布局（常量版本）
- * @return 绘图布局
- * \endif
  */
 const QwtPolarLayout* QwtPolarPlot::plotLayout() const
 {
@@ -1609,17 +1143,9 @@ const QwtPolarLayout* QwtPolarPlot::plotLayout() const
 }
 
 /**
- * \if ENGLISH
  * @brief Attach/Detach a plot item
- * @param[in] plotItem Plot item
- * @param[in] on When true attach the item, otherwise detach it
- * \endif
- *
- * \if CHINESE
- * @brief 附加/分离绘图项
- * @param[in] plotItem 绘图项
- * @param[in] on 当为 true 时附加项，否则分离它
- * \endif
+ * @param plotItem Plot item
+ * @param on When true attach the item, otherwise detach it
  */
 void QwtPolarPlot::attachItem(QwtPolarItem* plotItem, bool on)
 {
@@ -1646,23 +1172,12 @@ void QwtPolarPlot::attachItem(QwtPolarItem* plotItem, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Build an information object to identify a plot item on the legend
  * @details The default implementation simply wraps the plot item into a QVariant object.
  *          When overloading itemToInfo() usually infoToItem() needs to be reimplemented too.
- * @param[in] plotItem Plot item
+ * @param plotItem Plot item
  * @return QVariant containing the plot item information
  * @sa infoToItem()
- * \endif
- *
- * \if CHINESE
- * @brief 构建信息对象以在图例上标识绘图项
- * @details 默认实现只是将绘图项包装到 QVariant 对象中。
- *          重载 itemToInfo() 时通常也需要重载 infoToItem()。
- * @param[in] plotItem 绘图项
- * @return 包含绘图项信息的 QVariant
- * @sa infoToItem()
- * \endif
  */
 QVariant QwtPolarPlot::itemToInfo(QwtPolarItem* plotItem) const
 {
@@ -1670,21 +1185,11 @@ QVariant QwtPolarPlot::itemToInfo(QwtPolarItem* plotItem) const
 }
 
 /**
- * \if ENGLISH
  * @brief Identify the plot item according to an item info object
  * @details The default implementation simply tries to unwrap a QwtPolarItem pointer.
- * @param[in] itemInfo Item info object generated from itemToInfo()
+ * @param itemInfo Item info object generated from itemToInfo()
  * @return A plot item when successful, otherwise nullptr
  * @sa itemToInfo()
- * \endif
- *
- * \if CHINESE
- * @brief 根据项信息对象标识绘图项
- * @details 默认实现只是尝试解包 QwtPolarItem 指针。
- * @param[in] itemInfo 由 itemToInfo() 生成的项信息对象
- * @return 成功时返回绘图项，否则返回 nullptr
- * @sa itemToInfo()
- * \endif
  */
 QwtPolarItem* QwtPolarPlot::infoToItem(const QVariant& itemInfo) const
 {

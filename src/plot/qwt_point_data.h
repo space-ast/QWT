@@ -33,13 +33,7 @@
 #include <cstring>
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over two QVector<T> objects.
- * \endif
- *
- * \if CHINESE
- * @brief 用于遍历两个 QVector<T> 对象的接口
- * \endif
  */
 template< typename T >
 class QwtPointArrayData : public QwtPointSeriesData
@@ -68,13 +62,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Data class containing two pointers to memory blocks of T.
- * \endif
- *
- * \if CHINESE
- * @brief 包含两个指向 T 类型内存块的指针的数据类
- * \endif
  */
 template< typename T >
 class QwtCPointerData : public QwtPointSeriesData
@@ -100,18 +88,10 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over a QVector<T>.
  *
  * The memory contains the y coordinates, while the index is
  * interpreted as x coordinate.
- * \endif
- *
- * \if CHINESE
- * @brief 用于遍历 QVector<T> 的接口
- *
- * 内存包含 y 坐标，而索引被解释为 x 坐标。
- * \endif
  */
 template< typename T >
 class QwtValuePointData : public QwtPointSeriesData
@@ -135,18 +115,10 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Data class containing a pointer to memory of y coordinates
  *
  * The memory contains the y coordinates, while the index is
  * interpreted as x coordinate.
- * \endif
- *
- * \if CHINESE
- * @brief 包含指向 y 坐标内存的指针的数据类
- *
- * 内存包含 y 坐标，而索引被解释为 x 坐标。
- * \endif
  */
 template< typename T >
 class QwtCPointerValueData : public QwtPointSeriesData
@@ -169,7 +141,6 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Synthetic point data
  *
  * QwtSyntheticPointData provides a fixed number of points for an interval.
@@ -221,59 +192,6 @@ private:
  *  return a.exec();
  * }
  * @endcode
- * \endif
- *
- * \if CHINESE
- * @brief 合成点数据
- *
- * QwtSyntheticPointData 为一个区间提供固定数量的点。
- * 这些点在 x 方向上等距计算。
- *
- * 如果区间无效，点将为"感兴趣的矩形"计算，通常是绘图画布上的显示区域。
- * 在这种模式下，当放大/缩小时，您会获得不同级别的细节。
- *
- * @par 示例
- *
- * 以下示例显示如何实现正弦曲线。
- *
- * @code
- * #include <cmath>
- * #include <qwt_series_data.h>
- * #include <qwt_plot_curve.h>
- * #include <qwt_plot.h>
- * #include <qapplication.h>
- *
- * class SinusData: public QwtSyntheticPointData
- * {
- * public:
- *  SinusData():
- *      QwtSyntheticPointData( 100 )
- *  {
- *  }
- *
- *  virtual double y( double x ) const
- *  {
- *      return qSin( x );
- *  }
- * };
- *
- * int main(int argc, char **argv)
- * {
- *  QApplication a( argc, argv );
- *
- *  QwtPlot plot;
- *  plot.setAxisScale( QwtAxis::XBottom, 0.0, 10.0 );
- *  plot.setAxisScale( QwtAxis::YLeft, -1.0, 1.0 );
- *
- *  QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
- *  curve->setData( new SinusData() );
- *  curve->attach( &plot );
- *
- *  plot.show();
- *  return a.exec();
- * }
- * @endcode
- * \endif
  */
 class QWT_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
 {
@@ -297,19 +215,10 @@ public:
     virtual QPointF sample(size_t index) const override;
 
     /**
-     * \if ENGLISH
      * @brief Calculate a y value for a x value
      *
      * @param x x value
      * @return Corresponding y value
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 计算 x 值对应的 y 值
-     *
-     * @param x x 值
-     * @return 对应的 y 值
-     * \endif
      */
     virtual double y(double x) const = 0;
     // Calculate the x value for a given index

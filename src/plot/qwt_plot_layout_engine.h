@@ -13,31 +13,16 @@ class QwtAbstractLegend;
 class QwtTextLabel;
 class QwtScaleWidget;
 /**
- * \if ENGLISH
  * @brief Layout engine for QwtPlot components
  * @details Originally a private class in QwtPlotLayout, previously written as class LayoutEngine in qwt_plot_layout.cpp.
  *          It was extracted as a public class because other layouts need to use it.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot组件的布局引擎
- * @details 原来的QwtPlotLayout里的私有类，原来此类写在qwt_plot_layout.cpp中，class LayoutEngine，
- *          由于其它布局会用到，把它提取为公共类。
- * \endif
  */
 class QWT_EXPORT QwtPlotLayoutEngine
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Structure holding dimension values for layout calculation
      * @details Contains width/height values for title, footer, and all four axes.
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 保存布局计算尺寸值的结构体
-     * @details 包含标题、页脚以及四个坐标轴的宽度/高度值。
-     * \endif
      */
     struct Dimensions
     {
@@ -73,29 +58,15 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Data structure for layout calculation
      * @details Contains cached data extracted from plot components for efficient layout calculation.
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 布局计算数据结构
-     * @details 包含从绘图组件提取的缓存数据，用于高效的布局计算。
-     * \endif
      */
     class LayoutData
     {
     public:
         /**
-         * \if ENGLISH
          * @brief Data for legend layout calculation
          * @details Contains frame width, scroll extents, and size hint for the legend.
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 图例布局计算数据
-         * @details 包含图例的边框宽度、滚动范围和尺寸提示。
-         * \endif
          */
         struct LegendData
         {
@@ -112,15 +83,8 @@ public:
         };
 
         /**
-         * \if ENGLISH
          * @brief Data for title/footer label layout calculation
          * @details Contains text and frame width for a label widget.
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 标题/页脚标签布局计算数据
-         * @details 包含标签部件的文本和边框宽度。
-         * \endif
          */
         struct LabelData
         {
@@ -132,15 +96,8 @@ public:
         };
 
         /**
-         * \if ENGLISH
          * @brief Data for axis scale widget layout calculation
          * @details Contains visibility, font, border distances, and tick offset for an axis.
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 坐标轴刻度部件布局计算数据
-         * @details 包含坐标轴的可见性、字体、边框距离和刻度偏移量。
-         * \endif
          */
         struct ScaleData
         {
@@ -162,15 +119,8 @@ public:
         };
 
         /**
-         * \if ENGLISH
          * @brief Data for canvas layout calculation
          * @details Contains content margins for the canvas widget.
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 画布布局计算数据
-         * @details 包含画布部件的内容边距。
-         * \endif
          */
         struct CanvasData
         {
@@ -181,22 +131,15 @@ public:
         };
 
         /**
-         * \if ENGLISH
          * @brief Label type enumeration
          * @details Identifies title or footer labels in the layout.
-         * \endif
-         *
-         * \if CHINESE
-         * @brief 标签类型枚举
-         * @details 标识布局中的标题或页脚标签。
-         * \endif
          */
         enum Label
         {
-            Title,   //!< \if ENGLISH Title label \endif \if CHINESE 标题标签 \endif
-            Footer,  //!< \if ENGLISH Footer label \endif \if CHINESE 页脚标签 \endif
+            Title,   //!< Title label
+            Footer,  //!< Footer label
 
-            NumLabels  //!< \if ENGLISH Number of label types \endif \if CHINESE 标签类型数量 \endif
+            NumLabels  //!< Number of label types
         };
 
         // Construct LayoutData from a QwtPlot
@@ -282,9 +225,7 @@ public:
 
 private:
     /**
-     * \if ENGLISH
      * @brief Get height for width
-     * \endif
      */
     int heightForWidth(LayoutData::Label labelType,
                        const LayoutData& layoutData,

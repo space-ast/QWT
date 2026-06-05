@@ -4,28 +4,15 @@
 using namespace Qwt3D;
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 Function::Function() : GridMapping()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a Function object and assigns a SurfacePlot
- * @param[in] pw Reference to a SurfacePlot widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造 Function 对象并分配 SurfacePlot
- * @param[in] pw SurfacePlot 控件的引用
- * \endif
+ * @param pw Reference to a SurfacePlot widget
  */
 Function::Function(SurfacePlot& pw) : GridMapping()
 {
@@ -33,15 +20,8 @@ Function::Function(SurfacePlot& pw) : GridMapping()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a Function object and assigns a SurfacePlot
- * @param[in] pw Pointer to a SurfacePlot widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造 Function 对象并分配 SurfacePlot
- * @param[in] pw SurfacePlot 控件的指针
- * \endif
+ * @param pw Pointer to a SurfacePlot widget
  */
 Function::Function(SurfacePlot* pw) : GridMapping()
 {
@@ -49,15 +29,8 @@ Function::Function(SurfacePlot* pw) : GridMapping()
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns the object to another widget - call before create()
- * @param[in] plotWidget Reference to a SurfacePlot widget
- * \endif
- *
- * \if CHINESE
- * @brief 将对象分配到另一个控件 - 在 create() 之前调用
- * @param[in] plotWidget SurfacePlot 控件的引用
- * \endif
+ * @param plotWidget Reference to a SurfacePlot widget
  */
 void Function::assign(SurfacePlot& plotWidget)
 {
@@ -66,15 +39,8 @@ void Function::assign(SurfacePlot& plotWidget)
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns the object to another widget - call before create()
- * @param[in] plotWidget Pointer to a SurfacePlot widget
- * \endif
- *
- * \if CHINESE
- * @brief 将对象分配到另一个控件 - 在 create() 之前调用
- * @param[in] plotWidget SurfacePlot 控件的指针
- * \endif
+ * @param plotWidget Pointer to a SurfacePlot widget
  */
 void Function::assign(SurfacePlot* plotWidget)
 {
@@ -83,15 +49,8 @@ void Function::assign(SurfacePlot* plotWidget)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets minimum z value for the function
- * @param[in] val Minimum z value
- * \endif
- *
- * \if CHINESE
- * @brief 设置函数的最小 z 值
- * @param[in] val 最小 z 值
- * \endif
+ * @param val Minimum z value
  */
 void Function::setMinZ(double val)
 {
@@ -99,15 +58,8 @@ void Function::setMinZ(double val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets maximum z value for the function
- * @param[in] val Maximum z value
- * \endif
- *
- * \if CHINESE
- * @brief 设置函数的最大 z 值
- * @param[in] val 最大 z 值
- * \endif
+ * @param val Maximum z value
  */
 void Function::setMaxZ(double val)
 {
@@ -115,20 +67,11 @@ void Function::setMaxZ(double val)
 }
 
 /**
- * \if ENGLISH
  * @brief Creates data representation for the actual assigned SurfacePlot
  * @return True on success, false if mesh is too small or no widget assigned
  * @details Allocates data arrays, evaluates the function operator() over the
  *          mesh grid, clips values to the min/max z range, and loads data
  *          into the assigned SurfacePlot.
- * \endif
- *
- * \if CHINESE
- * @brief 为实际分配的 SurfacePlot 创建数据表示
- * @return 成功时返回 true，网格太小或未分配控件时返回 false
- * @details 分配数据数组，在网格上求值函数 operator()，
- *          将值裁剪到 min/max z 范围，并将数据加载到分配的 SurfacePlot 中。
- * \endif
  */
 bool Function::create()
 {
@@ -176,17 +119,9 @@ bool Function::create()
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns a new SurfacePlot and creates a data representation for it
- * @param[in] pl Reference to a SurfacePlot widget
+ * @param pl Reference to a SurfacePlot widget
  * @return True on success
- * \endif
- *
- * \if CHINESE
- * @brief 分配新的 SurfacePlot 并为其创建数据表示
- * @param[in] pl SurfacePlot 控件的引用
- * @return 成功时返回 true
- * \endif
  */
 bool Function::create(SurfacePlot& pl)
 {

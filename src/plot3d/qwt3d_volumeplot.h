@@ -7,17 +7,9 @@ namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Volume plot widget (TODO: not yet fully implemented)
  * @details VolumePlot is intended to provide 3D volume visualization capabilities.
  *          This class is a placeholder for future implementation.
- * \endif
- *
- * \if CHINESE
- * @brief 体绘制控件（TODO：尚未完全实现）
- * @details VolumePlot 旨在提供三维体可视化功能。
- *          该类是未来实现的占位符。
- * \endif
  */
 class QWT3D_EXPORT VolumePlot : public Plot3D
 {

@@ -10,22 +10,12 @@ namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Base class for all plotting widgets
  * @details Plot3D handles all the common features for plotting widgets -
  *          coordinate system, transformations, mouse/keyboard handling,
  *          labeling etc. It contains some pure virtual functions and is,
  *          in so far, an abstract base class. The class provides interfaces
  *          for data handling and implements basic data controlled color allocation.
- * \endif
- *
- * \if CHINESE
- * @brief 所有绘图控件的基类
- * @details Plot3D 处理绘图控件的通用功能——坐标系、变换、
- *          鼠标/键盘处理、标注等。它包含一些纯虚函数，
- *          因此是一个抽象基类。该类提供数据处理的接口，
- *          并实现基本的数据控制颜色分配。
- * \endif
  */
 class QWT3D_EXPORT Plot3D : public QOpenGLWidget
 {
@@ -329,94 +319,45 @@ public:
 Q_SIGNALS:
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the rotation is changed
      * @param xAngle X axis rotation angle
      * @param yAngle Y axis rotation angle
      * @param zAngle Z axis rotation angle
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 旋转角度变化时发出的信号
-     * @param xAngle X轴旋转角度
-     * @param yAngle Y轴旋转角度
-     * @param zAngle Z轴旋转角度
-     * \endif
      */
     void rotationChanged(double xAngle, double yAngle, double zAngle);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the shift is changed
      * @param xShift X axis shift value
      * @param yShift Y axis shift value
      * @param zShift Z axis shift value
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 位移变化时发出的信号
-     * @param xShift X轴位移值
-     * @param yShift Y轴位移值
-     * @param zShift Z轴位移值
-     * \endif
      */
     void shiftChanged(double xShift, double yShift, double zShift);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the viewport shift is changed
      * @param xShift X viewport shift value
      * @param yShift Y viewport shift value
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 视口位移变化时发出的信号
-     * @param xShift X视口位移值
-     * @param yShift Y视口位移值
-     * \endif
      */
     void vieportShiftChanged(double xShift, double yShift);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the scaling is changed
      * @param xScale X axis scale factor
      * @param yScale Y axis scale factor
      * @param zScale Z axis scale factor
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 缩放比例变化时发出的信号
-     * @param xScale X轴缩放因子
-     * @param yScale Y轴缩放因子
-     * @param zScale Z轴缩放因子
-     * \endif
      */
     void scaleChanged(double xScale, double yScale, double zScale);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the zoom is changed
      * @param zoom Zoom factor
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 缩放因子变化时发出的信号
-     * @param zoom 缩放因子
-     * \endif
      */
     void zoomChanged(double);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the projection mode is changed
      * @param ortho True for orthogonal, false for perspective
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 投影模式变化时发出的信号
-     * @param ortho 正交投影为true，透视投影为false
-     * \endif
      */
     void projectionChanged(bool);
 

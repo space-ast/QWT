@@ -71,17 +71,10 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Enables major and disables minor grid lines.
  *          The azimuth and right radial axis are visible. All other axes are hidden.
  *          AutoScaling is enabled.
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @details 启用主网格线并禁用次网格线。方位角和右侧径向轴可见，其他轴隐藏。启用自动缩放。
- * \endif
  */
 QwtPolarGrid::QwtPolarGrid() : QwtPolarItem(QwtText("Grid"))
 {
@@ -148,13 +141,7 @@ QwtPolarGrid::QwtPolarGrid() : QwtPolarItem(QwtText("Grid"))
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarGrid::~QwtPolarGrid()
 {
@@ -162,15 +149,8 @@ QwtPolarGrid::~QwtPolarGrid()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PolarGrid
- * \endif
- *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PolarGrid
- * \endif
  */
 int QwtPolarGrid::rtti() const
 {
@@ -178,19 +158,10 @@ int QwtPolarGrid::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the display flags
- * @param[in] flag Display flag to modify
- * @param[in] on True to enable, false to disable
+ * @param flag Display flag to modify
+ * @param on True to enable, false to disable
  * @sa DisplayFlag
- * \endif
- *
- * \if CHINESE
- * @brief 更改显示标志
- * @param[in] flag 要修改的显示标志
- * @param[in] on true 启用，false 禁用
- * @sa DisplayFlag
- * \endif
  */
 void QwtPolarGrid::setDisplayFlag(DisplayFlag flag, bool on)
 {
@@ -205,19 +176,10 @@ void QwtPolarGrid::setDisplayFlag(DisplayFlag flag, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test a display flag
- * @param[in] flag Display flag to test
+ * @param flag Display flag to test
  * @return True if flag is enabled
  * @sa DisplayFlag
- * \endif
- *
- * \if CHINESE
- * @brief 测试显示标志
- * @param[in] flag 要测试的显示标志
- * @return 如果标志已启用则返回 true
- * @sa DisplayFlag
- * \endif
  */
 bool QwtPolarGrid::testDisplayFlag(DisplayFlag flag) const
 {
@@ -225,19 +187,10 @@ bool QwtPolarGrid::testDisplayFlag(DisplayFlag flag) const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify an attribute for the grid
- * @param[in] attribute Grid attribute to set
- * @param[in] on True to enable, false to disable
+ * @param attribute Grid attribute to set
+ * @param on True to enable, false to disable
  * @sa GridAttribute, testGridAttribute(), updateScaleDiv(), QwtPolarPlot::zoom(), QwtPolarPlot::scaleDiv()
- * \endif
- *
- * \if CHINESE
- * @brief 指定网格的属性
- * @param[in] attribute 要设置的网格属性
- * @param[in] on true 启用，false 禁用
- * @sa GridAttribute, testGridAttribute(), updateScaleDiv(), QwtPolarPlot::zoom(), QwtPolarPlot::scaleDiv()
- * \endif
  */
 void QwtPolarGrid::setGridAttribute(GridAttribute attribute, bool on)
 {
@@ -253,19 +206,10 @@ void QwtPolarGrid::setGridAttribute(GridAttribute attribute, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test a grid attribute
- * @param[in] attribute Grid attribute to test
+ * @param attribute Grid attribute to test
  * @return True if attribute is enabled
  * @sa GridAttribute, setGridAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试网格属性
- * @param[in] attribute 要测试的网格属性
- * @return 如果属性已启用则返回 true
- * @sa GridAttribute, setGridAttribute()
- * \endif
  */
 bool QwtPolarGrid::testGridAttribute(GridAttribute attribute) const
 {
@@ -273,19 +217,10 @@ bool QwtPolarGrid::testGridAttribute(GridAttribute attribute) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for painting an axis
- * @param[in] axisId Axis id (QwtPolar::Axis)
- * @param[in] pen Pen for the axis
+ * @param axisId Axis id (QwtPolar::Axis)
+ * @param pen Pen for the axis
  * @sa axisPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为绘制轴分配画笔
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @param[in] pen 轴的画笔
- * @sa axisPen()
- * \endif
  */
 void QwtPolarGrid::setAxisPen(int axisId, const QPen& pen)
 {
@@ -300,19 +235,10 @@ void QwtPolarGrid::setAxisPen(int axisId, const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Show/hide grid lines for a scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
- * @param[in] show True to show, false to hide
+ * @param scaleId Scale id (QwtPolar::Scale)
+ * @param show True to show, false to hide
  * @sa QwtPolar::Scale, isGridVisible()
- * \endif
- *
- * \if CHINESE
- * @brief 显示/隐藏刻度的网格线
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @param[in] show true 显示，false 隐藏
- * @sa QwtPolar::Scale, isGridVisible()
- * \endif
  */
 void QwtPolarGrid::showGrid(int scaleId, bool show)
 {
@@ -327,19 +253,10 @@ void QwtPolarGrid::showGrid(int scaleId, bool show)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if grid lines are visible for a scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
+ * @param scaleId Scale id (QwtPolar::Scale)
  * @return True if grid lines are enabled
  * @sa QwtPolar::Scale, showGrid()
- * \endif
- *
- * \if CHINESE
- * @brief 检查刻度的网格线是否可见
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @return 如果网格线已启用则返回 true
- * @sa QwtPolar::Scale, showGrid()
- * \endif
  */
 bool QwtPolarGrid::isGridVisible(int scaleId) const
 {
@@ -350,21 +267,11 @@ bool QwtPolarGrid::isGridVisible(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Show/hide minor grid lines for a scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
- * @param[in] show True to show, false to hide
+ * @param scaleId Scale id (QwtPolar::Scale)
+ * @param show True to show, false to hide
  * @details To display minor grid lines, showGrid() needs to be enabled too.
  * @sa showGrid()
- * \endif
- *
- * \if CHINESE
- * @brief 显示/隐藏刻度的次网格线
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @param[in] show true 显示，false 隐藏
- * @details 要显示次网格线，showGrid() 也需要启用。
- * @sa showGrid()
- * \endif
  */
 void QwtPolarGrid::showMinorGrid(int scaleId, bool show)
 {
@@ -379,19 +286,10 @@ void QwtPolarGrid::showMinorGrid(int scaleId, bool show)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if minor grid lines are visible for a scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
+ * @param scaleId Scale id (QwtPolar::Scale)
  * @return True if minor grid lines are enabled
  * @sa showMinorGrid()
- * \endif
- *
- * \if CHINESE
- * @brief 检查刻度的次网格线是否可见
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @return 如果次网格线已启用则返回 true
- * @sa showMinorGrid()
- * \endif
  */
 bool QwtPolarGrid::isMinorGridVisible(int scaleId) const
 {
@@ -402,19 +300,10 @@ bool QwtPolarGrid::isMinorGridVisible(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Show/hide an axis
- * @param[in] axisId Axis id (QwtPolar::Axis)
- * @param[in] show True to show, false to hide
+ * @param axisId Axis id (QwtPolar::Axis)
+ * @param show True to show, false to hide
  * @sa isAxisVisible()
- * \endif
- *
- * \if CHINESE
- * @brief 显示/隐藏轴
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @param[in] show true 显示，false 隐藏
- * @sa isAxisVisible()
- * \endif
  */
 void QwtPolarGrid::showAxis(int axisId, bool show)
 {
@@ -429,19 +318,10 @@ void QwtPolarGrid::showAxis(int axisId, bool show)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if an axis is visible
- * @param[in] axisId Axis id (QwtPolar::Axis)
+ * @param axisId Axis id (QwtPolar::Axis)
  * @return True if the axis is visible
  * @sa showAxis()
- * \endif
- *
- * \if CHINESE
- * @brief 检查轴是否可见
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @return 如果轴可见则返回 true
- * @sa showAxis()
- * \endif
  */
 bool QwtPolarGrid::isAxisVisible(int axisId) const
 {
@@ -452,17 +332,9 @@ bool QwtPolarGrid::isAxisVisible(int axisId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for all axes and grid lines
- * @param[in] pen Pen for all axes and grid lines
+ * @param pen Pen for all axes and grid lines
  * @sa setMajorGridPen(), setMinorGridPen(), setAxisPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为所有轴和网格线分配画笔
- * @param[in] pen 所有轴和网格线的画笔
- * @sa setMajorGridPen(), setMinorGridPen(), setAxisPen()
- * \endif
  */
 void QwtPolarGrid::setPen(const QPen& pen)
 {
@@ -488,17 +360,9 @@ void QwtPolarGrid::setPen(const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a font for all scale tick labels
- * @param[in] font Font for all scale tick labels
+ * @param font Font for all scale tick labels
  * @sa setAxisFont()
- * \endif
- *
- * \if CHINESE
- * @brief 为所有刻度标签分配字体
- * @param[in] font 所有刻度标签的字体
- * @sa setAxisFont()
- * \endif
  */
 void QwtPolarGrid::setFont(const QFont& font)
 {
@@ -515,17 +379,9 @@ void QwtPolarGrid::setFont(const QFont& font)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the major grid lines
- * @param[in] pen Pen for major grid lines
+ * @param pen Pen for major grid lines
  * @sa setPen(), setMinorGridPen(), majorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为主网格线分配画笔
- * @param[in] pen 主网格线的画笔
- * @sa setPen(), setMinorGridPen(), majorGridPen()
- * \endif
  */
 void QwtPolarGrid::setMajorGridPen(const QPen& pen)
 {
@@ -543,19 +399,10 @@ void QwtPolarGrid::setMajorGridPen(const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the major grid lines of a specific scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
- * @param[in] pen Pen for major grid lines
+ * @param scaleId Scale id (QwtPolar::Scale)
+ * @param pen Pen for major grid lines
  * @sa setPen(), setMinorGridPen(), majorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为特定刻度的主网格线分配画笔
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @param[in] pen 主网格线的画笔
- * @sa setPen(), setMinorGridPen(), majorGridPen()
- * \endif
  */
 void QwtPolarGrid::setMajorGridPen(int scaleId, const QPen& pen)
 {
@@ -570,19 +417,10 @@ void QwtPolarGrid::setMajorGridPen(int scaleId, const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen for painting the major grid lines of a specific scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
+ * @param scaleId Scale id (QwtPolar::Scale)
  * @return Pen for major grid lines
  * @sa setMajorGridPen(), minorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定刻度主网格线的画笔
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @return 主网格线的画笔
- * @sa setMajorGridPen(), minorGridPen()
- * \endif
  */
 QPen QwtPolarGrid::majorGridPen(int scaleId) const
 {
@@ -594,17 +432,9 @@ QPen QwtPolarGrid::majorGridPen(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the minor grid lines
- * @param[in] pen Pen for minor grid lines
+ * @param pen Pen for minor grid lines
  * @sa setPen(), setMajorGridPen(), minorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为次网格线分配画笔
- * @param[in] pen 次网格线的画笔
- * @sa setPen(), setMajorGridPen(), minorGridPen()
- * \endif
  */
 void QwtPolarGrid::setMinorGridPen(const QPen& pen)
 {
@@ -622,19 +452,10 @@ void QwtPolarGrid::setMinorGridPen(const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the minor grid lines of a specific scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
- * @param[in] pen Pen for minor grid lines
+ * @param scaleId Scale id (QwtPolar::Scale)
+ * @param pen Pen for minor grid lines
  * @sa setPen(), setMajorGridPen(), minorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 为特定刻度的次网格线分配画笔
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @param[in] pen 次网格线的画笔
- * @sa setPen(), setMajorGridPen(), minorGridPen()
- * \endif
  */
 void QwtPolarGrid::setMinorGridPen(int scaleId, const QPen& pen)
 {
@@ -649,19 +470,10 @@ void QwtPolarGrid::setMinorGridPen(int scaleId, const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen for painting the minor grid lines of a specific scale
- * @param[in] scaleId Scale id (QwtPolar::Scale)
+ * @param scaleId Scale id (QwtPolar::Scale)
  * @return Pen for minor grid lines
  * @sa setMinorGridPen()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定刻度次网格线的画笔
- * @param[in] scaleId 刻度标识 (QwtPolar::Scale)
- * @return 次网格线的画笔
- * @sa setMinorGridPen()
- * \endif
  */
 QPen QwtPolarGrid::minorGridPen(int scaleId) const
 {
@@ -673,19 +485,10 @@ QPen QwtPolarGrid::minorGridPen(int scaleId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen for painting a specific axis
- * @param[in] axisId Axis id (QwtPolar::Axis)
+ * @param axisId Axis id (QwtPolar::Axis)
  * @return Pen for the axis
  * @sa setAxisPen()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定轴的画笔
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @return 轴的画笔
- * @sa setAxisPen()
- * \endif
  */
 QPen QwtPolarGrid::axisPen(int axisId) const
 {
@@ -696,19 +499,10 @@ QPen QwtPolarGrid::axisPen(int axisId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a font for the tick labels of a specific axis
- * @param[in] axisId Axis id (QwtPolar::Axis)
- * @param[in] font New font
+ * @param axisId Axis id (QwtPolar::Axis)
+ * @param font New font
  * @sa axisFont()
- * \endif
- *
- * \if CHINESE
- * @brief 为特定轴的刻度标签分配字体
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @param[in] font 新字体
- * @sa axisFont()
- * \endif
  */
 void QwtPolarGrid::setAxisFont(int axisId, const QFont& font)
 {
@@ -723,19 +517,10 @@ void QwtPolarGrid::setAxisFont(int axisId, const QFont& font)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the font for the tick labels of a specific axis
- * @param[in] axisId Axis id (QwtPolar::Axis)
+ * @param axisId Axis id (QwtPolar::Axis)
  * @return Font for the axis
  * @sa setAxisFont()
- * \endif
- *
- * \if CHINESE
- * @brief 获取特定轴的刻度标签字体
- * @param[in] axisId 轴标识 (QwtPolar::Axis)
- * @return 轴的字体
- * @sa setAxisFont()
- * \endif
  */
 QFont QwtPolarGrid::axisFont(int axisId) const
 {
@@ -746,25 +531,13 @@ QFont QwtPolarGrid::axisFont(int axisId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the grid and axes
- * @param[in] painter Painter
- * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
- * @param[in] radialMap Maps radius values into painter coordinates
- * @param[in] pole Position of the pole in painter coordinates
- * @param[in] radius Radius of the complete plot area in painter coordinates
- * @param[in] canvasRect Contents rect of the canvas in painter coordinates
- * \endif
- *
- * \if CHINESE
- * @brief 绘制网格和轴
- * @param[in] painter 绘图器
- * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
- * @param[in] radialMap 将半径值映射到绘图器坐标
- * @param[in] pole 绘图器坐标中极点的位置
- * @param[in] radius 绘图器坐标中完整绘图区域的半径
- * @param[in] canvasRect 绘图器坐标中画布的内容矩形
- * \endif
+ * @param painter Painter
+ * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+ * @param radialMap Maps radius values into painter coordinates
+ * @param pole Position of the pole in painter coordinates
+ * @param radius Radius of the complete plot area in painter coordinates
+ * @param canvasRect Contents rect of the canvas in painter coordinates
  */
 void QwtPolarGrid::draw(QPainter* painter,
                         const QwtScaleMap& azimuthMap,
@@ -1078,24 +851,13 @@ void QwtPolarGrid::updateScaleDraws(const QwtScaleMap& azimuthMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Update the item to changes of the axes scale division
- * @param[in] azimuthScaleDiv Scale division of the azimuth-scale
- * @param[in] radialScaleDiv Scale division of the radius-axis
- * @param[in] interval The interval of the radius-axis that is visible on the canvas
+ * @param azimuthScaleDiv Scale division of the azimuth-scale
+ * @param radialScaleDiv Scale division of the radius-axis
+ * @param interval The interval of the radius-axis that is visible on the canvas
  * @details If AutoScaling is enabled the radial scale is calculated from the interval,
  *          otherwise the scales are adopted to the plot scales.
  * @sa QwtPolarPlot::setGridAttributes()
- * \endif
- *
- * \if CHINESE
- * @brief 更新项以响应轴刻度分度的变化
- * @param[in] azimuthScaleDiv 方位角刻度的刻度分度
- * @param[in] radialScaleDiv 径向轴的刻度分度
- * @param[in] interval 画布上可见的径向轴区间
- * @details 如果启用自动缩放，径向刻度将根据区间计算；否则刻度将采用绘图刻度。
- * @sa QwtPolarPlot::setGridAttributes()
- * \endif
  */
 void QwtPolarGrid::updateScaleDiv(const QwtScaleDiv& azimuthScaleDiv,
                                   const QwtScaleDiv& radialScaleDiv,
@@ -1171,17 +933,9 @@ void QwtPolarGrid::updateScaleDiv(const QwtScaleDiv& azimuthScaleDiv,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the margin hint
  * @return Number of pixels necessary to paint the azimuth scale
  * @sa QwtRoundScaleDraw::extent()
- * \endif
- *
- * \if CHINESE
- * @brief 获取边距提示
- * @return 绘制方位角刻度所需的像素数
- * @sa QwtRoundScaleDraw::extent()
- * \endif
  */
 int QwtPolarGrid::marginHint() const
 {
@@ -1195,19 +949,10 @@ int QwtPolarGrid::marginHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw of a specified axis
- * @param[in] axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
+ * @param axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
  * @return Scale draw for the axis, or nullptr if axis is invalid
  * @sa azimuthScaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指定轴的刻度绘制器
- * @param[in] axisId 轴索引 (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
- * @return 轴的刻度绘制器，如果轴无效则返回 nullptr
- * @sa azimuthScaleDraw()
- * \endif
  */
 const QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId) const
 {
@@ -1218,19 +963,10 @@ const QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw of a specified axis
- * @param[in] axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
+ * @param axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
  * @return Scale draw for the axis, or nullptr if axis is invalid
  * @sa setScaleDraw(), azimuthScaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指定轴的刻度绘制器
- * @param[in] axisId 轴索引 (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
- * @return 轴的刻度绘制器，如果轴无效则返回 nullptr
- * @sa setScaleDraw(), azimuthScaleDraw()
- * \endif
  */
 QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId)
 {
@@ -1241,19 +977,10 @@ QwtScaleDraw* QwtPolarGrid::scaleDraw(int axisId)
 }
 
 /**
- * \if ENGLISH
  * @brief Set a scale draw for a specified axis
- * @param[in] axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
- * @param[in] scaleDraw Object responsible for drawing scales (ownership is transferred)
+ * @param axisId Axis index (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
+ * @param scaleDraw Object responsible for drawing scales (ownership is transferred)
  * @sa scaleDraw(), setAzimuthScaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 为指定轴设置刻度绘制器
- * @param[in] axisId 轴索引 (QwtPolar::AxisLeft <= axisId <= QwtPolar::AxisBottom)
- * @param[in] scaleDraw 负责绘制刻度的对象（所有权转移）
- * @sa scaleDraw(), setAzimuthScaleDraw()
- * \endif
  */
 void QwtPolarGrid::setScaleDraw(int axisId, QwtScaleDraw* scaleDraw)
 {
@@ -1269,17 +996,9 @@ void QwtPolarGrid::setScaleDraw(int axisId, QwtScaleDraw* scaleDraw)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw for the azimuth scale
  * @return Scale draw for the azimuth scale
  * @sa setAzimuthScaleDraw(), scaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 获取方位角刻度的刻度绘制器
- * @return 方位角刻度的刻度绘制器
- * @sa setAzimuthScaleDraw(), scaleDraw()
- * \endif
  */
 const QwtRoundScaleDraw* QwtPolarGrid::azimuthScaleDraw() const
 {
@@ -1287,17 +1006,9 @@ const QwtRoundScaleDraw* QwtPolarGrid::azimuthScaleDraw() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw for the azimuth scale
  * @return Scale draw for the azimuth scale
  * @sa setAzimuthScaleDraw(), scaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 获取方位角刻度的刻度绘制器
- * @return 方位角刻度的刻度绘制器
- * @sa setAzimuthScaleDraw(), scaleDraw()
- * \endif
  */
 QwtRoundScaleDraw* QwtPolarGrid::azimuthScaleDraw()
 {
@@ -1305,17 +1016,9 @@ QwtRoundScaleDraw* QwtPolarGrid::azimuthScaleDraw()
 }
 
 /**
- * \if ENGLISH
  * @brief Set a scale draw for the azimuth scale
- * @param[in] scaleDraw Object responsible for drawing scales (ownership is transferred)
+ * @param scaleDraw Object responsible for drawing scales (ownership is transferred)
  * @sa azimuthScaleDraw(), setScaleDraw()
- * \endif
- *
- * \if CHINESE
- * @brief 为方位角刻度设置刻度绘制器
- * @param[in] scaleDraw 负责绘制刻度的对象（所有权转移）
- * @sa azimuthScaleDraw(), setScaleDraw()
- * \endif
  */
 void QwtPolarGrid::setAzimuthScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {

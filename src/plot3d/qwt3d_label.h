@@ -12,16 +12,9 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A Qt string or an output device dependent string
  * @details Label provides text rendering on 3D plots, supporting both Qt string
  *          representation and device-dependent string output.
- * \endif
- *
- * \if CHINESE
- * @brief Qt 字符串或输出设备依赖的字符串
- * @details Label 提供三维绘图上的文本渲染，支持 Qt 字符串表示和设备依赖的字符串输出。
- * \endif
  */
 class QWT3D_EXPORT Label : public Drawable
 {

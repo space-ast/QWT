@@ -977,17 +977,9 @@ class QwtSplineCubic::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * The default setting is a non-closing natural spline with no parametrization.
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * 默认设置是非闭合自然样条，不使用参数化。
- * \endif
  */
 QwtSplineCubic::QwtSplineCubic()
     : m_data( nullptr )
@@ -1002,35 +994,19 @@ QwtSplineCubic::QwtSplineCubic()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSplineCubic::~QwtSplineCubic()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Get locality
  *
  * A cubic spline is non-local, where changing one point has an effect on all
  * polynomials.
  *
  * @return 0
- * \endif
- *
- * \if CHINESE
- * @brief 获取局部性
- *
- * 三次样条是非局部的，改变一个点会影响所有多项式。
- *
- * @return 0
- * \endif
  */
 uint QwtSplineCubic::locality() const
 {
@@ -1038,7 +1014,6 @@ uint QwtSplineCubic::locality() const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the first derivative at the control points
  *
  * In contrast to the QwtSplineC2::slopes implementation, the first derivatives
@@ -1050,20 +1025,6 @@ uint QwtSplineCubic::locality() const
  * @sa curvatures(), QwtSplinePolynomial::fromCurvatures()
  *
  * @note The x coordinates need to be increasing or decreasing
- * \endif
- *
- * \if CHINESE
- * @brief 在控制点处找到一阶导数
- *
- * 与 QwtSplineC2::slopes 实现相反，一阶导数直接计算，无需先计算二阶导数。
- *
- * @param[in] points 样条的控制节点
- * @return 控制点处的一阶导数值向量
- *
- * @sa curvatures(), QwtSplinePolynomial::fromCurvatures()
- *
- * @note x 坐标需要递增或递减
- * \endif
  */
 QVector< double > QwtSplineCubic::slopes( const QPolygonF& points ) const
 {
@@ -1129,7 +1090,6 @@ QVector< double > QwtSplineCubic::slopes( const QPolygonF& points ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the second derivative at the control points
  *
  * @param[in] points Control nodes of the spline
@@ -1138,18 +1098,6 @@ QVector< double > QwtSplineCubic::slopes( const QPolygonF& points ) const
  * @sa slopes()
  *
  * @note The x coordinates need to be increasing or decreasing
- * \endif
- *
- * \if CHINESE
- * @brief 在控制点处找到二阶导数
- *
- * @param[in] points 样条的控制节点
- * @return 控制点处的二阶导数值向量
- *
- * @sa slopes()
- *
- * @note x 坐标需要递增或递减
- * \endif
  */
 QVector< double > QwtSplineCubic::curvatures( const QPolygonF& points ) const
 {
@@ -1193,7 +1141,6 @@ QVector< double > QwtSplineCubic::curvatures( const QPolygonF& points ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -1203,18 +1150,6 @@ QVector< double > QwtSplineCubic::curvatures( const QPolygonF& points ) const
  * @return Painter path that can be rendered by QPainter
  *
  * @note The implementation simply calls QwtSplineC1::painterPath()
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
- *
- * @param[in] points 控制点
- * @return 可由 QPainter 渲染的绘制路径
- *
- * @note 实现只是调用 QwtSplineC1::painterPath()
- * \endif
  */
 QPainterPath QwtSplineCubic::painterPath( const QPolygonF& points ) const
 {
@@ -1225,7 +1160,6 @@ QPainterPath QwtSplineCubic::painterPath( const QPolygonF& points ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -1235,18 +1169,6 @@ QPainterPath QwtSplineCubic::painterPath( const QPolygonF& points ) const
  * @return Control points of the interpolating Bezier curves
  *
  * @note The implementation simply calls QwtSplineC1::bezierControlLines()
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
- *
- * @param[in] points 控制点
- * @return 插值贝塞尔曲线的控制点
- *
- * @note 实现只是调用 QwtSplineC1::bezierControlLines()
- * \endif
  */
 QVector< QLineF > QwtSplineCubic::bezierControlLines( const QPolygonF& points ) const
 {
@@ -1257,7 +1179,6 @@ QVector< QLineF > QwtSplineCubic::bezierControlLines( const QPolygonF& points ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the interpolating polynomials for a non-parametric spline
  *
  * @param[in] points Control points
@@ -1266,20 +1187,8 @@ QVector< QLineF > QwtSplineCubic::bezierControlLines( const QPolygonF& points ) 
  * @note The x coordinates need to be increasing or decreasing
  * @note The implementation simply calls QwtSplineC2::polynomials(), but is
  *       intended to be replaced by a one-pass calculation some day.
- * \endif
- *
- * \if CHINESE
- * @brief 计算非参数样条的插值多项式
- *
- * @param[in] points 控制点
- * @return 插值多项式
- *
- * @note x 坐标需要递增或递减
- * @note 实现只是调用 QwtSplineC2::polynomials()，但打算将来替换为一次计算。
- * \endif
  */
 QVector< QwtSplinePolynomial > QwtSplineCubic::polynomials( const QPolygonF& points ) const
 {
     return QwtSplineC2::polynomials( points );
 }
-

@@ -9,17 +9,9 @@
 using namespace Qwt3D;
 
 /**
- * \if ENGLISH
  * @brief Constructs a Plot3D widget
- * @param[in] parent Parent widget
+ * @param parent Parent widget
  * @details This should be the first call in your derived classes constructors.
- * \endif
- *
- * \if CHINESE
- * @brief 构造 Plot3D 控件
- * @param[in] parent 父控件
- * @details 这应该是派生类构造函数中的第一个调用。
- * \endif
  */
 Plot3D::Plot3D(QWidget *parent) : QOpenGLWidget(parent)
 {
@@ -98,13 +90,7 @@ Plot3D::Plot3D(QWidget *parent) : QOpenGLWidget(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor - releases allocated resources
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数 - 释放已分配的资源
- * \endif
  */
 Plot3D::~Plot3D()
 {
@@ -119,13 +105,7 @@ Plot3D::~Plot3D()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets up the OpenGL rendering state
- * \endif
- *
- * \if CHINESE
- * @brief 设置 OpenGL 渲染状态
- * \endif
  */
 void Plot3D::initializeGL()
 {
@@ -159,13 +139,7 @@ void Plot3D::initializeGL()
 }
 
 /**
- * \if ENGLISH
  * @brief Paints the widget's content
- * \endif
- *
- * \if CHINESE
- * @brief 绘制控件内容
- * \endif
  */
 void Plot3D::paintGL()
 {
@@ -237,17 +211,9 @@ void Plot3D::paintGL()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets up the OpenGL view port
- * @param[in] w New width
- * @param[in] h New height
- * \endif
- *
- * \if CHINESE
- * @brief 设置 OpenGL 视口
- * @param[in] w 新宽度
- * @param[in] h 新高度
- * \endif
+ * @param w New width
+ * @param h New height
  */
 void Plot3D::resizeGL(int w, int h)
 {
@@ -256,17 +222,9 @@ void Plot3D::resizeGL(int w, int h)
 }
 
 /**
- * \if ENGLISH
  * @brief Creates a coordinate system with generating corners beg and end
- * @param[in] beg Minimum vertex of the coordinate system
- * @param[in] end Maximum vertex of the coordinate system
- * \endif
- *
- * \if CHINESE
- * @brief 创建具有生成角点 beg 和 end 的坐标系
- * @param[in] beg 坐标系的最小顶点
- * @param[in] end 坐标系的最大顶点
- * \endif
+ * @param beg Minimum vertex of the coordinate system
+ * @param end Maximum vertex of the coordinate system
  */
 void Plot3D::createCoordinateSystem(Triple beg, Triple end)
 {
@@ -275,15 +233,8 @@ void Plot3D::createCoordinateSystem(Triple beg, Triple end)
 }
 
 /**
- * \if ENGLISH
  * @brief Creates a coordinate system from data
  * @details Calculates the hull first, then creates the coordinate system from hull boundaries.
- * \endif
- *
- * \if CHINESE
- * @brief 从数据创建坐标系
- * @details 先计算外壳，然后从外壳边界创建坐标系。
- * \endif
  */
 void Plot3D::createCoordinateSystem()
 {
@@ -294,15 +245,8 @@ void Plot3D::createCoordinateSystem()
 }
 
 /**
- * \if ENGLISH
  * @brief Shows or hides the color legend
- * @param[in] show True to show, false to hide
- * \endif
- *
- * \if CHINESE
- * @brief 显示或隐藏颜色图例
- * @param[in] show true 显示，false 隐藏
- * \endif
+ * @param show True to show, false to hide
  */
 void Plot3D::showColorLegend(bool show)
 {
@@ -313,15 +257,8 @@ void Plot3D::showColorLegend(bool show)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the mesh color
- * @param[in] rgba Mesh color as RGBA value
- * \endif
- *
- * \if CHINESE
- * @brief 设置网格颜色
- * @param[in] rgba 网格颜色的 RGBA 值
- * \endif
+ * @param rgba Mesh color as RGBA value
  */
 void Plot3D::setMeshColor(RGBA rgba)
 {
@@ -329,15 +266,8 @@ void Plot3D::setMeshColor(RGBA rgba)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the background color
- * @param[in] rgba Background color as RGBA value
- * \endif
- *
- * \if CHINESE
- * @brief 设置背景颜色
- * @param[in] rgba 背景颜色的 RGBA 值
- * \endif
+ * @param rgba Background color as RGBA value
  */
 void Plot3D::setBackgroundColor(RGBA rgba)
 {
@@ -345,15 +275,8 @@ void Plot3D::setBackgroundColor(RGBA rgba)
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns a new coloring object for the data
- * @param[in] col Pointer to a new Color object
- * \endif
- *
- * \if CHINESE
- * @brief 为数据分配新的颜色对象
- * @param[in] col 新的 Color 对象指针
- * \endif
+ * @param col Pointer to a new Color object
  */
 void Plot3D::setDataColor(Color *col)
 {
@@ -364,15 +287,8 @@ void Plot3D::setDataColor(Color *col)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets up orthogonal or perspective mode and updates widget
- * @param[in] val True for orthogonal projection, false for perspective
- * \endif
- *
- * \if CHINESE
- * @brief 设置正交或透视模式并更新控件
- * @param[in] val true 为正交投影，false 为透视投影
- * \endif
+ * @param val True for orthogonal projection, false for perspective
  */
 void Plot3D::setOrtho(bool val)
 {
@@ -385,15 +301,8 @@ void Plot3D::setOrtho(bool val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets style of coordinate system
- * @param[in] st Coordinate system style (NOCOORD, BOX, or FRAME)
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标系样式
- * @param[in] st 坐标系样式（NOCOORD、BOX 或 FRAME）
- * \endif
+ * @param st Coordinate system style (NOCOORD, BOX, or FRAME)
  */
 void Plot3D::setCoordinateStyle(COORDSTYLE st)
 {
@@ -402,15 +311,8 @@ void Plot3D::setCoordinateStyle(COORDSTYLE st)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets plot style for the standard plotting types
- * @param[in] val Plot style value. An argument of value Qwt3D::USER is ignored.
- * \endif
- *
- * \if CHINESE
- * @brief 设置标准绘图类型的绘图样式
- * @param[in] val 绘图样式值。值为 Qwt3D::USER 的参数将被忽略。
- * \endif
+ * @param val Plot style value. An argument of value Qwt3D::USER is ignored.
  */
 void Plot3D::setPlotStyle(PLOTSTYLE val)
 {
@@ -422,17 +324,9 @@ void Plot3D::setPlotStyle(PLOTSTYLE val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets plot style to Qwt3D::USER with an associated enrichment object
- * @param[in] obj Reference to an Enrichment object
+ * @param obj Reference to an Enrichment object
  * @return Pointer to the cloned enrichment object
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图样式设置为 Qwt3D::USER 并关联一个装饰对象
- * @param[in] obj Enrichment 对象的引用
- * @return 克隆的装饰对象指针
- * \endif
  */
 Qwt3D::Enrichment *Plot3D::setPlotStyle(Qwt3D::Enrichment const &obj)
 {
@@ -446,15 +340,8 @@ Qwt3D::Enrichment *Plot3D::setPlotStyle(Qwt3D::Enrichment const &obj)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets shading style
- * @param[in] val Shading style (FLAT or GOURAUD)
- * \endif
- *
- * \if CHINESE
- * @brief 设置着色样式
- * @param[in] val 着色样式（FLAT 或 GOURAUD）
- * \endif
+ * @param val Shading style (FLAT or GOURAUD)
  */
 void Plot3D::setShading(SHADINGSTYLE val)
 {
@@ -477,15 +364,8 @@ void Plot3D::setShading(SHADINGSTYLE val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets number of isolines
- * @param[in] steps Number of isolines. The lines are equidistant between minimal and maximal Z value.
- * \endif
- *
- * \if CHINESE
- * @brief 设置等值线数量
- * @param[in] steps 等值线数量。等值线在最小和最大 Z 值之间等距分布。
- * \endif
+ * @param steps Number of isolines. The lines are equidistant between minimal and maximal Z value.
  */
 void Plot3D::setIsolines(int steps)
 {
@@ -496,19 +376,10 @@ void Plot3D::setIsolines(int steps)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets polygon offset
- * @param[in] val Polygon offset value
+ * @param val Polygon offset value
  * @details The function affects the OpenGL rendering process. Try different values
  *          for surfaces with polygons only and with mesh and polygons.
- * \endif
- *
- * \if CHINESE
- * @brief 设置多边形偏移
- * @param[in] val 多边形偏移值
- * @details 此函数影响 OpenGL 渲染过程。对于仅含多边形和含网格与多边形的表面，
- *          请尝试不同的值。
- * \endif
  */
 void Plot3D::setPolygonOffset(double val)
 {
@@ -516,15 +387,8 @@ void Plot3D::setPolygonOffset(double val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the mesh line width
- * @param[in] val Line width value (must be >= 0)
- * \endif
- *
- * \if CHINESE
- * @brief 设置网格线宽
- * @param[in] val 线宽值（必须 >= 0）
- * \endif
+ * @param val Line width value (must be >= 0)
  */
 void Plot3D::setMeshLineWidth(double val)
 {
@@ -537,19 +401,10 @@ void Plot3D::setMeshLineWidth(double val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets relative caption position
- * @param[in] rely Relative Y position (0-1). (0.5,0.5) means the anchor point lies in the center of the screen.
- * @param[in] relx Relative X position (0-1)
- * @param[in] anchor Anchor type for title alignment
- * \endif
- *
- * \if CHINESE
- * @brief 设置标题的相对位置
- * @param[in] rely 相对 Y 位置（0-1）。(0.5,0.5) 表示锚点位于屏幕中心。
- * @param[in] relx 相对 X 位置（0-1）
- * @param[in] anchor 标题对齐的锚点类型
- * \endif
+ * @param rely Relative Y position (0-1). (0.5,0.5) means the anchor point lies in the center of the screen.
+ * @param relx Relative X position (0-1)
+ * @param anchor Anchor type for title alignment
  */
 void Plot3D::setTitlePosition(double rely, double relx, Qwt3D::ANCHOR anchor)
 {
@@ -560,21 +415,11 @@ void Plot3D::setTitlePosition(double rely, double relx, Qwt3D::ANCHOR anchor)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the caption font
- * @param[in] family Font family name
- * @param[in] pointSize Font point size
- * @param[in] weight Font weight
- * @param[in] italic Whether font is italic
- * \endif
- *
- * \if CHINESE
- * @brief 设置标题字体
- * @param[in] family 字体族名
- * @param[in] pointSize 字体磅值大小
- * @param[in] weight 字体粗细
- * @param[in] italic 是否斜体
- * \endif
+ * @param family Font family name
+ * @param pointSize Font point size
+ * @param weight Font weight
+ * @param italic Whether font is italic
  */
 void Plot3D::setTitleFont(const QString &family, int pointSize, int weight, bool italic)
 {
@@ -582,17 +427,9 @@ void Plot3D::setTitleFont(const QString &family, int pointSize, int weight, bool
 }
 
 /**
- * \if ENGLISH
  * @brief Adds an enrichment object to the plot
- * @param[in] e Reference to an Enrichment object
+ * @param e Reference to an Enrichment object
  * @return Pointer to the cloned enrichment object added to the list
- * \endif
- *
- * \if CHINESE
- * @brief 向绘图添加装饰对象
- * @param[in] e Enrichment 对象的引用
- * @return 添加到列表中的克隆装饰对象指针
- * \endif
  */
 Enrichment *Plot3D::addEnrichment(Enrichment const &e)
 {
@@ -602,17 +439,9 @@ Enrichment *Plot3D::addEnrichment(Enrichment const &e)
 }
 
 /**
- * \if ENGLISH
  * @brief Removes an enrichment object from the plot
- * @param[in] e Pointer to the Enrichment object to remove
+ * @param e Pointer to the Enrichment object to remove
  * @return True if the enrichment was found and removed, false otherwise
- * \endif
- *
- * \if CHINESE
- * @brief 从绘图中移除装饰对象
- * @param[in] e 要移除的 Enrichment 对象指针
- * @return 找到并移除装饰时返回 true，否则返回 false
- * \endif
  */
 bool Plot3D::degrade(Enrichment *e)
 {
@@ -634,13 +463,7 @@ void Plot3D::createEnrichments()
 }
 
 /**
- * \if ENGLISH
  * @brief Updates OpenGL data representation
- * \endif
- *
- * \if CHINESE
- * @brief 更新 OpenGL 数据表示
- * \endif
  */
 void Plot3D::updateData()
 {

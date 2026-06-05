@@ -16,7 +16,6 @@ class QwtPlot;
 /**
  * @class QwtFigure
  *
- * @if ENGLISH
  * @brief A figure container for organizing Qwt plots with flexible layout options
  *
  * @details
@@ -43,35 +42,6 @@ class QwtPlot;
  * // Save the figure
  * figure.saveFig("output.png", 300);
  * @endcode
- * @endif
- *
- * @if CHINESE
- * @brief 用于组织Qwt绘图的图形容器，提供灵活的布局选项
- *
- * @details
- * 此类提供类似于matplotlib的Figure类的图形容器，支持Qwt绘图的归一化坐标定位和网格布局。
- * 它使用Qt的标准左上角坐标系，使定位更加直观。
- *
- * @par 示例:
- * @code
- * // 使用示例：
- * QwtFigure figure;
- *
- * // 使用归一化坐标添加绘图（Qt左上角坐标系）
- * QwtPlot* plot1 = new QwtPlot;
- * figure.addAxes(plot1, QRectF(0.1, 0.1, 0.8, 0.4)); // 左: 10%, 上: 10%, 宽: 80%, 高: 40%
- *
- * // 使用网格布局添加绘图 - 创建2x2网格
- * QwtPlot* plot2 = new QwtPlot;
- * figure.addAxes(plot2, 2, 2, 0, 1); // 2x2网格, 第0行, 第1列
- *
- * QwtPlot* plot3 = new QwtPlot;
- * figure.addAxes(plot3, 2, 2, 1, 0, 1, 2); // 第1行, 第0-1列(跨2列)
- *
- * // 保存图形
- * figure.saveFig("output.png", 300);
- * @endcode
- * @endif
  */
 class QWT_EXPORT QwtFigure : public QFrame
 {
@@ -221,58 +191,28 @@ public:
     static void alignAxes(QList< QwtPlot* > plots, int axisId, bool update = true);
 Q_SIGNALS:
     /**
-     * @if ENGLISH
      * @brief Signal emitted when axes are added to the figure
-     * @param[in] newAxes Pointer to the newly added QwtPlot
+     * @param newAxes Pointer to the newly added QwtPlot
      * @note Parasite axes addition also triggers this signal
-     * @endif
-     *
-     * @if CHINESE
-     * @brief 当坐标轴添加到图形时发出的信号
-     * @param[in] newAxes 指向新添加的QwtPlot的指针
-     * @note 寄生轴的添加也会触发此信号
-     * @endif
      */
     void axesAdded(QwtPlot* newAxes);
 
     /**
-     * @if ENGLISH
      * @brief Signal emitted when axes are removed from the figure
-     * @param[in] removedAxes Pointer to the removed QwtPlot
+     * @param removedAxes Pointer to the removed QwtPlot
      * @note Parasite axes removal also triggers this signal
-     * @endif
-     *
-     * @if CHINESE
-     * @brief 当坐标轴从图形中移除时发出的信号
-     * @param[in] removedAxes 指向被移除的QwtPlot的指针
-     * @note 寄生轴的移除也会触发此信号
-     * @endif
      */
     void axesRemoved(QwtPlot* removedAxes);
 
     /**
-     * @if ENGLISH
      * @brief Signal emitted when the figure is cleared
-     * @endif
-     *
-     * @if CHINESE
-     * @brief 当图形被清除时发出的信号
-     * @endif
      */
     void figureCleared();
 
     /**
-     * @if ENGLISH
      * @brief Signal emitted when the current active axes changes
-     * @param[in] current Pointer to the current QwtPlot, nullptr if no valid axes
+     * @param current Pointer to the current QwtPlot, nullptr if no valid axes
      * @note Parasite axes cannot be set as current axes
-     * @endif
-     *
-     * @if CHINESE
-     * @brief 当前激活的坐标系发生了改变的信号
-     * @param[in] current 指向当前QwtPlot的指针，无有效激活坐标系时为nullptr
-     * @note 寄生轴不能作为当前axes
-     * @endif
      */
     void currentAxesChanged(QwtPlot* current);
 

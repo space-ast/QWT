@@ -29,14 +29,8 @@ class QSvgGenerator;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Renderer for exporting a polar plot to a document, a printer
  *        or anything else, that is supported by QPainter/QPaintDevice
- * \endif
- * 
- * \if CHINESE
- * @brief 用于将极坐标图导出到文档、打印机或其他支持 QPainter/QPaintDevice 的设备的渲染器
- * \endif
  */
 class QWT_EXPORT QwtPolarRenderer : public QObject
 {

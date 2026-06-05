@@ -12,59 +12,40 @@
 #endif
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] plot Parent plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 父绘图部件
- * \endif
  */
 QwtPlotTransparentCanvas::QwtPlotTransparentCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
 {
-    // 设置透明相关属性
+    // Set transparency-related attributes
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_NoSystemBackground);
-    setAttribute(Qt::WA_TransparentForMouseEvents, false);  // 通常需要处理鼠标事件
-    // 禁用所有可能产生不透明效果的属性
-    setAttribute(Qt::WA_OpaquePaintEvent, false);  // Qt 不会再在 paintEvent() 之前用背景色/刷擦除背景。
+    setAttribute(Qt::WA_TransparentForMouseEvents, false);  // Typically needs to handle mouse events
+    // Disable all attributes that may produce opaque effects
+    setAttribute(Qt::WA_OpaquePaintEvent, false);  // Qt will no longer erase background with background color/brush before paintEvent()
     setAttribute(Qt::WA_StyledBackground, false);
     setAutoFillBackground(false);
 
-    // 设置透明调色板
+    // Set transparent palette
     QPalette palette = this->palette();
     palette.setColor(QPalette::Window, Qt::transparent);
     setPalette(palette);
 
-    // 禁用边框
+    // Disable border
     setLineWidth(0);
     setFrameShadow(QFrame::Plain);
     setFrameShape(QFrame::NoFrame);
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotTransparentCanvas::~QwtPlotTransparentCanvas()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Replot the canvas
- * \endif
- *
- * \if CHINESE
- * @brief 重绘画布
- * \endif
  */
 void QwtPlotTransparentCanvas::replot()
 {
@@ -80,14 +61,14 @@ void QwtPlotTransparentCanvas::paintEvent(QPaintEvent* event)
     painter.setClipRegion(event->region());
 #endif
 
-    // 对于透明画布，我们不需要填充背景
-    // 直接绘制内容到画布
+    // For transparent canvas, we do not need to fill the background
+    // Draw content directly onto the canvas
     drawCanvas(&painter);
 }
 
 void QwtPlotTransparentCanvas::drawBorder(QPainter* painter)
 {
-    // 不绘制任何边框
+    // Do not draw any border
     Q_UNUSED(painter);
 }
 

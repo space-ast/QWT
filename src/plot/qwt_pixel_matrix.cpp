@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -27,15 +27,8 @@
 #include "qwt_pixel_matrix.h"
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] rect Bounding rectangle for the matrix
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] rect 矩阵的边界矩形
- * \endif
  */
 QwtPixelMatrix::QwtPixelMatrix( const QRect& rect )
     : QBitArray( qMax( rect.width() * rect.height(), 0 ) )
@@ -44,30 +37,16 @@ QwtPixelMatrix::QwtPixelMatrix( const QRect& rect )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPixelMatrix::~QwtPixelMatrix()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Set the bounding rectangle of the matrix
  * @param[in] rect Bounding rectangle
  * @note All bits are cleared
- * \endif
- *
- * \if CHINESE
- * @brief 设置矩阵的边界矩形
- * @param[in] rect 边界矩形
- * @note 所有位被清除
- * \endif
  */
 void QwtPixelMatrix::setRect( const QRect& rect )
 {
@@ -82,15 +61,8 @@ void QwtPixelMatrix::setRect( const QRect& rect )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  * @return Bounding rectangle
- * \endif
- *
- * \if CHINESE
- * @brief 获取边界矩形
- * @return 边界矩形
- * \endif
  */
 QRect QwtPixelMatrix::rect() const
 {

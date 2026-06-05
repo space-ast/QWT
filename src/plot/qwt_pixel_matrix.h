@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -33,18 +33,10 @@
 #include <qrect.h>
 
 /**
- * \if ENGLISH
  * @brief A bit field corresponding to the pixels of a rectangle
  *
  * QwtPixelMatrix is intended to filter out duplicates in an
  * unsorted array of points.
- * \endif
- *
- * \if CHINESE
- * @brief 与矩形像素对应的位域
- *
- * QwtPixelMatrix 用于过滤未排序点数组中的重复项。
- * \endif
  */
 class QWT_EXPORT QwtPixelMatrix : public QBitArray
 {
@@ -72,19 +64,10 @@ class QWT_EXPORT QwtPixelMatrix : public QBitArray
 };
 
 /**
- * \if ENGLISH
  * @brief Test if a pixel has been set
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @return true when position is outside of rect(), or when the pixel has already been set
- * \endif
- *
- * \if CHINESE
- * @brief 测试像素是否已设置
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @return 当位置在 rect() 之外，或像素已设置时返回 true
- * \endif
  */
 inline bool QwtPixelMatrix::testPixel( int x, int y ) const
 {
@@ -93,21 +76,11 @@ inline bool QwtPixelMatrix::testPixel( int x, int y ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a pixel and test if a pixel has been set before
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @param[in] on Set/Clear the pixel
  * @return true when position is outside of rect(), or when the pixel was set before
- * \endif
- *
- * \if CHINESE
- * @brief 设置像素并测试之前是否已设置
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @param[in] on 设置/清除像素
- * @return 当位置在 rect() 之外，或像素之前已设置时返回 true
- * \endif
  */
 inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
 {
@@ -122,19 +95,10 @@ inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the index in the bit field corresponding to a position
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @return Index when rect() contains position, otherwise -1
- * \endif
- *
- * \if CHINESE
- * @brief 计算位域中对应位置的索引
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @return 当 rect() 包含位置时返回索引，否则返回 -1
- * \endif
  */
 inline int QwtPixelMatrix::index( int x, int y ) const
 {

@@ -3,15 +3,8 @@
 using namespace Qwt3D;
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details Constructs an uninitialized axis with default parameters.
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * @details 使用默认参数构造未初始化的坐标轴。
- * \endif
  */
 Axis::Axis()
 {
@@ -19,30 +12,16 @@ Axis::Axis()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 Axis::~Axis()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs an axis with specified start and end positions
- * @param[in] beg Start position of the axis
- * @param[in] end End position of the axis
- * \endif
- *
- * \if CHINESE
- * @brief 构造具有指定起点和终点位置的坐标轴
- * @param[in] beg 坐标轴的起点位置
- * @param[in] end 坐标轴的终点位置
- * \endif
+ * @param beg Start position of the axis
+ * @param end End position of the axis
  */
 Axis::Axis(Triple beg, Triple end)
 {
@@ -88,17 +67,9 @@ void Axis::init()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the axis position
- * @param[in] beg Start position of the axis
- * @param[in] end End position of the axis
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴位置
- * @param[in] beg 坐标轴的起点位置
- * @param[in] end 坐标轴的终点位置
- * \endif
+ * @param beg Start position of the axis
+ * @param end End position of the axis
  */
 void Axis::setPosition(const Triple& beg, const Triple& end)
 {
@@ -107,15 +78,8 @@ void Axis::setPosition(const Triple& beg, const Triple& end)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets number of major intervals
- * @param[in] val Number of major intervals (always >= 1)
- * \endif
- *
- * \if CHINESE
- * @brief 设置主刻度区间数
- * @param[in] val 主刻度区间数（始终 >= 1）
- * \endif
+ * @param val Number of major intervals (always >= 1)
  */
 void Axis::setMajors(int val)
 {
@@ -126,17 +90,9 @@ void Axis::setMajors(int val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets number of minor intervals
- * @param[in] val Number of minor intervals (always >= 1)
+ * @param val Number of minor intervals (always >= 1)
  * @see LogScale::setMinors()
- * \endif
- *
- * \if CHINESE
- * @brief 设置次刻度区间数
- * @param[in] val 次刻度区间数（始终 >= 1）
- * @see LogScale::setMinors()
- * \endif
  */
 void Axis::setMinors(int val)
 {
@@ -147,17 +103,9 @@ void Axis::setMinors(int val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets tic length
- * @param[in] majorl Length of major tics
- * @param[in] minorl Length of minor tics
- * \endif
- *
- * \if CHINESE
- * @brief 设置刻度线长度
- * @param[in] majorl 主刻度线长度
- * @param[in] minorl 次刻度线长度
- * \endif
+ * @param majorl Length of major tics
+ * @param minorl Length of minor tics
  */
 void Axis::setTicLength(double majorl, double minorl)
 {
@@ -166,19 +114,10 @@ void Axis::setTicLength(double majorl, double minorl)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets tic orientation from individual components
- * @param[in] tx X component of tic orientation
- * @param[in] ty Y component of tic orientation
- * @param[in] tz Z component of tic orientation
- * \endif
- *
- * \if CHINESE
- * @brief 从各分量设置刻度线方向
- * @param[in] tx 刻度线方向的 X 分量
- * @param[in] ty 刻度线方向的 Y 分量
- * @param[in] tz 刻度线方向的 Z 分量
- * \endif
+ * @param tx X component of tic orientation
+ * @param ty Y component of tic orientation
+ * @param tz Z component of tic orientation
  */
 void Axis::setTicOrientation(double tx, double ty, double tz)
 {
@@ -186,15 +125,8 @@ void Axis::setTicOrientation(double tx, double ty, double tz)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets tic orientation from a Triple vector
- * @param[in] val Orientation vector for tics (will be normalized)
- * \endif
- *
- * \if CHINESE
- * @brief 从三元组向量设置刻度线方向
- * @param[in] val 刻度线的方向向量（将被归一化）
- * \endif
+ * @param val Orientation vector for tics (will be normalized)
  */
 void Axis::setTicOrientation(const Triple& val)
 {
@@ -203,19 +135,10 @@ void Axis::setTicOrientation(const Triple& val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets line width for axis and tics
- * @param[in] val Thickness for axis base line
- * @param[in] majfac Relative thickness for axis major tics (majfac*val)
- * @param[in] minfac Relative thickness for axis minor tics (minfac*val)
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴和刻度线的线宽
- * @param[in] val 坐标轴基线的厚度
- * @param[in] majfac 主刻度线的相对厚度（majfac*val）
- * @param[in] minfac 次刻度线的相对厚度（minfac*val）
- * \endif
+ * @param val Thickness for axis base line
+ * @param majfac Relative thickness for axis major tics (majfac*val)
+ * @param minfac Relative thickness for axis minor tics (minfac*val)
  */
 void Axis::setLineWidth(double val, double majfac, double minfac)
 {
@@ -225,13 +148,7 @@ void Axis::setLineWidth(double val, double majfac, double minfac)
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the axis including base line, tics, and label
- * \endif
- *
- * \if CHINESE
- * @brief 绘制坐标轴，包括基线、刻度线和标签
- * \endif
  */
 void Axis::draw()
 {
@@ -397,21 +314,11 @@ Triple Axis::drawTic(Triple nadir, double length)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the font for axis numbers
- * @param[in] family Font family name
- * @param[in] pointSize Font point size
- * @param[in] weight Font weight
- * @param[in] italic Whether font is italic
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴数字的字体
- * @param[in] family 字体族名
- * @param[in] pointSize 字体磅值大小
- * @param[in] weight 字体粗细
- * @param[in] italic 是否斜体
- * \endif
+ * @param family Font family name
+ * @param pointSize Font point size
+ * @param weight Font weight
+ * @param italic Whether font is italic
  */
 void Axis::setNumberFont(QString const& family, int pointSize, int weight, bool italic)
 {
@@ -419,15 +326,8 @@ void Axis::setNumberFont(QString const& family, int pointSize, int weight, bool 
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the font for axis numbers
- * @param[in] font QFont object to use for axis numbers
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴数字的字体
- * @param[in] font 用于坐标轴数字的 QFont 对象
- * \endif
+ * @param font QFont object to use for axis numbers
  */
 void Axis::setNumberFont(QFont const& font)
 {
@@ -435,15 +335,8 @@ void Axis::setNumberFont(QFont const& font)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the color for axis numbers
- * @param[in] col RGBA color value for axis numbers
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴数字的颜色
- * @param[in] col 坐标轴数字的 RGBA 颜色值
- * \endif
+ * @param col RGBA color value for axis numbers
  */
 void Axis::setNumberColor(RGBA col)
 {
@@ -451,21 +344,11 @@ void Axis::setNumberColor(RGBA col)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the font for the axis label
- * @param[in] family Font family name
- * @param[in] pointSize Font point size
- * @param[in] weight Font weight
- * @param[in] italic Whether font is italic
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴标签的字体
- * @param[in] family 字体族名
- * @param[in] pointSize 字体磅值大小
- * @param[in] weight 字体粗细
- * @param[in] italic 是否斜体
- * \endif
+ * @param family Font family name
+ * @param pointSize Font point size
+ * @param weight Font weight
+ * @param italic Whether font is italic
  */
 void Axis::setLabelFont(QString const& family, int pointSize, int weight, bool italic)
 {
@@ -474,15 +357,8 @@ void Axis::setLabelFont(QString const& family, int pointSize, int weight, bool i
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the font for the axis label
- * @param[in] font QFont object to use for the axis label
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴标签的字体
- * @param[in] font 用于坐标轴标签的 QFont 对象
- * \endif
+ * @param font QFont object to use for the axis label
  */
 void Axis::setLabelFont(QFont const& font)
 {
@@ -490,15 +366,8 @@ void Axis::setLabelFont(QFont const& font)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the axis label string
- * @param[in] name The label text string
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴标签字符串
- * @param[in] name 标签文本字符串
- * \endif
+ * @param name The label text string
  */
 void Axis::setLabelString(QString const& name)
 {
@@ -506,17 +375,9 @@ void Axis::setLabelString(QString const& name)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets label position in conjunction with an anchoring strategy
- * @param[in] pos Position for the label
- * @param[in] an Anchor strategy for the label
- * \endif
- *
- * \if CHINESE
- * @brief 结合锚定策略设置标签位置
- * @param[in] pos 标签的位置
- * @param[in] an 标签的锚定策略
- * \endif
+ * @param pos Position for the label
+ * @param an Anchor strategy for the label
  */
 void Axis::setLabelPosition(const Triple& pos, Qwt3D::ANCHOR an)
 {
@@ -524,15 +385,8 @@ void Axis::setLabelPosition(const Triple& pos, Qwt3D::ANCHOR an)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets color for the axis label
- * @param[in] col RGBA color value for the label
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴标签的颜色
- * @param[in] col 标签的 RGBA 颜色值
- * \endif
+ * @param col RGBA color value for the label
  */
 void Axis::setLabelColor(RGBA col)
 {
@@ -560,17 +414,9 @@ Triple Axis::biggestNumberString()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets a user-defined scale object
- * @param[in] val Pointer to a Scale object. Use with a heap based initialized pointer only.
- *                The axis adopts ownership.
- * \endif
- *
- * \if CHINESE
- * @brief 设置用户自定义的刻度对象
- * @param[in] val Scale 对象的指针。仅使用基于堆的初始化指针。
- *                坐标轴将获得所有权。
- * \endif
+ * @param val Pointer to a Scale object. Use with a heap based initialized pointer only.
+ *            The axis adopts ownership.
  */
 void Axis::setScale(Scale* val)
 {
@@ -578,20 +424,11 @@ void Axis::setScale(Scale* val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets one of the predefined scaling types
- * @param[in] val Predefined scale type (LINEARSCALE or LOG10SCALE)
+ * @param val Predefined scale type (LINEARSCALE or LOG10SCALE)
  * @warning Too small intervals in logarithmic scales lead to empty scales
  *          (or perhaps a scale only containing an isolated major tic).
  *          Better switch to linear scales in such cases.
- * \endif
- *
- * \if CHINESE
- * @brief 设置预定义的刻度类型之一
- * @param[in] val 预定义刻度类型（LINEARSCALE 或 LOG10SCALE）
- * @warning 对数刻度中过小的区间会导致空刻度（或仅包含孤立主刻度的刻度）。
- *          在这种情况下最好切换到线性刻度。
- * \endif
  */
 void Axis::setScale(Qwt3D::SCALETYPE val)
 {

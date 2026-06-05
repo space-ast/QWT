@@ -16,13 +16,7 @@
 /**
  * @class QwtFigureLayout
  *
- * @if ENGLISH
  * @brief Custom layout manager for QwtFigureWidget that handles both normalized coordinates and grid layouts
- * @endif
- *
- * @if CHINESE
- * @brief 自定义布局管理器，用于QwtFigureWidget，支持归一化坐标和网格布局
- * @endif
  */
 class QWT_EXPORT QwtFigureLayout : public QLayout
 {

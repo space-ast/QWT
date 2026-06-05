@@ -14,20 +14,11 @@ namespace Qwt3D
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Generic interface for standard and user written I/O handlers
  * @details IO provides a generic interface for standard and user written I/O handlers.
  *          It also provides functionality for the registering of such handlers in the
  *          framework. The interface mimics roughly Qt's QImageIO functions for defining
  *          image input/output functions.
- * \endif
- *
- * \if CHINESE
- * @brief 标准和用户自定义 I/O 处理器的通用接口
- * @details IO 提标准和用户自定义 I/O 处理器的通用接口，
- *          还提供在框架中注册此类处理器的功能。
- *          该接口大致模仿 Qt 的 QImageIO 函数来定义图像输入/输出函数。
- * \endif
  */
 class QWT3D_EXPORT IO
 {
@@ -37,16 +28,9 @@ public:
     using Function = bool (*)(Plot3D*, QString const& fname);
 
     /**
-     * \if ENGLISH
      * @brief Functor class for more flexible IO handler implementation
      * @details This class gives more flexibility in implementing userdefined IO handlers
      *          than the simple IO::Function type.
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 更灵活的 IO 处理器实现的 Functor 类
-     * @details 该类比简单的 IO::Function 类型提供了更灵活的用户自定义 IO 处理器实现方式。
-     * \endif
      */
     class Functor
     {
@@ -151,13 +135,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Provides Qt's Pixmap output facilities
- * \endif
- *
- * \if CHINESE
- * @brief 提供 Qt 的 Pixmap 输出功能
- * \endif
  */
 class QWT3D_EXPORT PixmapWriter : public IO::Functor
 {

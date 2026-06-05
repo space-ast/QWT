@@ -22,17 +22,9 @@ class QwtPolarFitter::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * @param[in] stepCount Number of points that will be inserted between 2 points
+ * @param stepCount Number of points that will be inserted between 2 points
  * @sa setStepCount()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] stepCount 在两个点之间插入的点数
- * @sa setStepCount()
- * \endif
  */
 QwtPolarFitter::QwtPolarFitter( int stepCount )
     : QwtCurveFitter( QwtPolarFitter::Polygon )
@@ -42,13 +34,7 @@ QwtPolarFitter::QwtPolarFitter( int stepCount )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarFitter::~QwtPolarFitter()
 {
@@ -56,19 +42,10 @@ QwtPolarFitter::~QwtPolarFitter()
 }
 
 /**
- * \if ENGLISH
  * @brief Assign the number of points that will be inserted between 2 points
  * @details The default value is 5.
- * @param[in] stepCount Number of steps
+ * @param stepCount Number of steps
  * @sa stepCount()
- * \endif
- *
- * \if CHINESE
- * @brief 设置在两个点之间插入的点数
- * @details 默认值为 5。
- * @param[in] stepCount 步数
- * @sa stepCount()
- * \endif
  */
 void QwtPolarFitter::setStepCount( int stepCount )
 {
@@ -76,17 +53,9 @@ void QwtPolarFitter::setStepCount( int stepCount )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the number of points that will be inserted between 2 points
  * @return Number of points that will be inserted between 2 points
  * @sa setStepCount()
- * \endif
- *
- * \if CHINESE
- * @brief 获取在两个点之间插入的点数
- * @return 在两个点之间插入的点数
- * @sa setStepCount()
- * \endif
  */
 int QwtPolarFitter::stepCount() const
 {
@@ -94,17 +63,9 @@ int QwtPolarFitter::stepCount() const
 }
 
 /**
- * \if ENGLISH
  * @brief Insert stepCount() number of additional points between 2 elements of points
- * @param[in] points Array of points
+ * @param points Array of points
  * @return Array of points including the additional points
- * \endif
- *
- * \if CHINESE
- * @brief 在两个点元素之间插入 stepCount() 个附加点
- * @param[in] points 点数组
- * @return 包含附加点的点数组
- * \endif
  */
 QPolygonF QwtPolarFitter::fitCurve( const QPolygonF& points ) const
 {
@@ -140,19 +101,10 @@ QPolygonF QwtPolarFitter::fitCurve( const QPolygonF& points ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Create a curve path from the data points
- * @param[in] points Series of data points
+ * @param points Series of data points
  * @return Curve path
  * @sa fitCurve()
- * \endif
- *
- * \if CHINESE
- * @brief 从数据点创建曲线路径
- * @param[in] points 数据点序列
- * @return 曲线路径
- * @sa fitCurve()
- * \endif
  */
 QPainterPath QwtPolarFitter::fitCurvePath( const QPolygonF& points ) const
 {

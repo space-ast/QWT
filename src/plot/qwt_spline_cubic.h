@@ -31,7 +31,6 @@
 #include "qwt_spline.h"
 
 /**
- * \if ENGLISH
  * @brief A cubic spline
  *
  * A cubic spline is a spline with C2 continuity at all control points.
@@ -47,23 +46,6 @@
  * The default setting is a "natural spline" having M(x0) = M(xn) = 0.
  *
  * @sa QwtSpline::BoundaryType
- * \endif
- *
- * \if CHINESE
- * @brief 三次样条
- *
- * 三次样条是在所有控制点处具有 C2 连续性的样条。
- * 它是一种非局部样条，其中一个控制点的修改会影响整个样条。
- *
- * 该实现基于控制点 P(x) 的二阶导数 M(x) 的方程组。
- *
- * QwtSplineCubic 提供了几种查找 M(x) 的算法，
- * 这些算法通过 setBoundaryType() 选择。
- *
- * 默认设置是"自然样条"，具有 M(x0) = M(xn) = 0。
- *
- * @sa QwtSpline::BoundaryType
- * \endif
  */
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {

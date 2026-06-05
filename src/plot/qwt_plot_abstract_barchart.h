@@ -31,19 +31,11 @@
 #include "qwt_plot_seriesitem.h"
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for bar chart items
  * @details In opposite to almost all other plot items bar charts can't be
  *          displayed inside of their bounding rectangle and need a special
  *          API how to calculate the width of the bars and how they affect
  *          the layout of the attached plot.
- * \endif
- * 
- * \if CHINESE
- * @brief 条形图项的抽象基类
- * @details 与几乎所有其他绘图项不同，条形图无法在其边界矩形内显示，
- *          需要特殊的 API 来计算条形的宽度以及它们如何影响附加绘图的布局。
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {

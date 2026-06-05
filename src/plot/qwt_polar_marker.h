@@ -18,7 +18,6 @@ class QwtText;
 class QwtSymbol;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing markers
  * @details A marker can be a a symbol, a label or a combination of them, which can
  *          be drawn around a center point inside a bounding rectangle.
@@ -32,19 +31,6 @@ class QwtSymbol;
  *          are valid. The alignment refers to the center point of
  *          the marker, which means, for example, that the label would be painted
  *          left above the center point if the alignment was set to AlignLeft|AlignTop.
- * \endif
- *
- * \if CHINESE
- * @brief 用于绘制标记的类
- * @details 标记可以是符号、标签或它们的组合，可以在边界矩形内的中心点周围绘制。
- *
- *          setSymbol() 成员为标记分配一个符号。符号在指定的点绘制。
- *
- *          使用 setLabel() 可以为标记分配标签。setLabelAlignment() 成员指定标签的绘制位置。
- *          Qt::AlignmentFlags 中的所有 Align*-常量（参见 Qt 文档）都有效。
- *          对齐方式指的是标记的中心点，例如，如果对齐方式设置为 AlignLeft|AlignTop，
- *          则标签将在中心点的左上方绘制。
- * \endif
  */
 class QWT_EXPORT QwtPolarMarker : public QwtPolarItem
 {

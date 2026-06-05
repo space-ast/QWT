@@ -50,14 +50,8 @@ class QSvgGenerator;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Renderer for exporting a plot to a document, a printer
  *        or anything else, that is supported by QPainter/QPaintDevice
- * \endif
- * 
- * \if CHINESE
- * @brief 用于将绘图导出到文档、打印机或其他受 QPainter/QPaintDevice 支持的对象的渲染器
- * \endif
  */
 class QWT_EXPORT QwtPlotRenderer : public QObject
 {
@@ -65,15 +59,8 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 
   public:
     /**
-     * \if ENGLISH
      * @brief Discard flags
      * @details Flags to control which components of the plot are rendered
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 丢弃标志
-     * @details 控制渲染绘图哪些组件的标志
-     * \endif
      */
     enum DiscardFlag
     {
@@ -95,21 +82,8 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
         /// Don't render the footer of the plot
         DiscardFooter           = 0x10,
 
-        /**
-         * \if ENGLISH
-         * Don't render the frame of the canvas
-         * 
-         * @note This flag has no effect when using
-         *       style sheets, where the frame is part
-         *       of the background
-         * \endif
-         * 
-         * \if CHINESE
-         * 不渲染画布的边框
-         * 
-         * @note 当使用样式表时，此标志无效，因为边框是背景的一部分
-         * \endif
-         */
+        ///< Don't render the frame of the canvas
+        ///< @note This flag has no effect when using style sheets, where the frame is part of the background
         DiscardCanvasFrame           = 0x20
 
     };
@@ -117,33 +91,16 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
     Q_DECLARE_FLAGS( DiscardFlags, DiscardFlag )
 
     /**
-     * \if ENGLISH
      * @brief Layout flags
      * @details Flags to control the layout of the rendered plot
      * @sa setLayoutFlag(), testLayoutFlag()
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 布局标志
-     * @details 控制渲染绘图布局的标志
-     * @sa setLayoutFlag(), testLayoutFlag()
-     * \endif
      */
     enum LayoutFlag
     {
         /// Use the default layout as on screen
         DefaultLayout   = 0x00,
 
-        /**
-         * \if ENGLISH
-         * Instead of the scales a box is painted around the plot canvas,
-         * where the scale ticks are aligned to.
-         * \endif
-         * 
-         * \if CHINESE
-         * 代替比例尺，在绘图画布周围绘制一个框，比例尺刻度对齐到该框。
-         * \endif
-         */
+        ///< Instead of the scales a box is painted around the plot canvas, where the scale ticks are aligned to.
         FrameWithScales = 0x01
     };
 
@@ -229,19 +186,11 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
         const QSizeF& sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
   private:
-    /**
-     * \if ENGLISH
-     * @brief Build canvas maps
-     * \endif
-     */
+    // Build canvas maps
     void buildCanvasMaps( const QwtPlot*,
         const QRectF&, QwtScaleMap maps[] ) const;
 
-    /**
-     * \if ENGLISH
-     * @brief Update canvas margins
-     * \endif
-     */
+    // Update canvas margins
     bool updateCanvasMargins( QwtPlot*,
         const QRectF&, const QwtScaleMap maps[] ) const;
 

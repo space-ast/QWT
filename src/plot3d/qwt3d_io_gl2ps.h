@@ -9,17 +9,9 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Provides EPS, PS, PDF, SVG, PGF and TeX output
  * @details VectorWriter provides vector graphics output through the gl2ps library,
  *          supporting EPS, PS, PDF, SVG, PGF and TeX formats.
- * \endif
- *
- * \if CHINESE
- * @brief 提供 EPS, PS, PDF, SVG, PGF 和 TeX 输出
- * @details VectorWriter 通过 gl2ps 库提供矢量图形输出，
- *          支持 EPS, PS, PDF, SVG, PGF 和 TeX 格式。
- * \endif
  */
 class QWT3D_EXPORT VectorWriter : public IO::Functor
 {

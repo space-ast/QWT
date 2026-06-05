@@ -8,13 +8,7 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for parametric surfaces
- * \endif
- *
- * \if CHINESE
- * @brief 参数化表面的抽象基类
- * \endif
  */
 class QWT3D_EXPORT ParametricSurface : public GridMapping
 {

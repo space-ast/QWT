@@ -7,16 +7,9 @@
 using namespace Qwt3D;
 
 /**
- * \if ENGLISH
  * @brief Constructs a legend object with an axis at the left side
  * @details The legend resides in the top-right area and has no caption.
  *          Scale numbering is shown.
- * \endif
- *
- * \if CHINESE
- * @brief 构造左侧带有坐标轴的图例对象
- * @details 图例位于右上区域，没有标题。显示刻度编号。
- * \endif
  */
 ColorLegend::ColorLegend()
 {
@@ -35,15 +28,8 @@ ColorLegend::ColorLegend()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the legend title string
- * @param[in] s Title text string
- * \endif
- *
- * \if CHINESE
- * @brief 设置图例标题字符串
- * @param[in] s 标题文本字符串
- * \endif
+ * @param s Title text string
  */
 void ColorLegend::setTitleString(QString const &s)
 {
@@ -51,21 +37,11 @@ void ColorLegend::setTitleString(QString const &s)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the legend title font
- * @param[in] family Font family name
- * @param[in] pointSize Font point size
- * @param[in] weight Font weight
- * @param[in] italic Whether font is italic
- * \endif
- *
- * \if CHINESE
- * @brief 设置图例标题字体
- * @param[in] family 字体族名
- * @param[in] pointSize 字体磅值大小
- * @param[in] weight 字体粗细
- * @param[in] italic 是否斜体
- * \endif
+ * @param family Font family name
+ * @param pointSize Font point size
+ * @param weight Font weight
+ * @param italic Whether font is italic
  */
 void ColorLegend::setTitleFont(QString const &family, int pointSize, int weight, bool italic)
 {
@@ -73,17 +49,9 @@ void ColorLegend::setTitleFont(QString const &family, int pointSize, int weight,
 }
 
 /**
- * \if ENGLISH
  * @brief Sets axis scale limits
- * @param[in] start Start value
- * @param[in] stop Stop value
- * \endif
- *
- * \if CHINESE
- * @brief 设置坐标轴刻度范围
- * @param[in] start 起始值
- * @param[in] stop 结束值
- * \endif
+ * @param start Start value
+ * @param stop Stop value
  */
 void ColorLegend::setLimits(double start, double stop)
 {
@@ -91,15 +59,8 @@ void ColorLegend::setLimits(double start, double stop)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets number of major intervals
- * @param[in] majors Number of major intervals
- * \endif
- *
- * \if CHINESE
- * @brief 设置主刻度区间数
- * @param[in] majors 主刻度区间数
- * \endif
+ * @param majors Number of major intervals
  */
 void ColorLegend::setMajors(int majors)
 {
@@ -107,15 +68,8 @@ void ColorLegend::setMajors(int majors)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets number of minor intervals
- * @param[in] minors Number of minor intervals
- * \endif
- *
- * \if CHINESE
- * @brief 设置次刻度区间数
- * @param[in] minors 次刻度区间数
- * \endif
+ * @param minors Number of minor intervals
  */
 void ColorLegend::setMinors(int minors)
 {
@@ -123,15 +77,8 @@ void ColorLegend::setMinors(int minors)
 }
 
 /**
- * \if ENGLISH
  * @brief Enables or disables auto-scaling
- * @param[in] val True to enable auto-scaling, false to disable
- * \endif
- *
- * \if CHINESE
- * @brief 启用或禁用自动缩放
- * @param[in] val true 启用自动缩放，false 禁用
- * \endif
+ * @param val True to enable auto-scaling, false to disable
  */
 void ColorLegend::setAutoScale(bool val)
 {
@@ -139,15 +86,8 @@ void ColorLegend::setAutoScale(bool val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets predefined scale type
- * @param[in] val Scale type (LINEARSCALE or LOG10SCALE)
- * \endif
- *
- * \if CHINESE
- * @brief 设置预定义刻度类型
- * @param[in] val 刻度类型（LINEARSCALE 或 LOG10SCALE）
- * \endif
+ * @param val Scale type (LINEARSCALE or LOG10SCALE)
  */
 void ColorLegend::setScale(SCALETYPE val)
 {
@@ -155,15 +95,8 @@ void ColorLegend::setScale(SCALETYPE val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets a user-defined scale object
- * @param[in] val Pointer to a Scale object
- * \endif
- *
- * \if CHINESE
- * @brief 设置用户自定义刻度对象
- * @param[in] val Scale 对象的指针
- * \endif
+ * @param val Pointer to a Scale object
  */
 void ColorLegend::setScale(Scale *val)
 {
@@ -171,17 +104,9 @@ void ColorLegend::setScale(Scale *val)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the legend orientation and axis scale position
- * @param[in] orientation Legend orientation (BottomTop or TopBottom)
- * @param[in] pos Axis scale position (Left, Right, Top, or Bottom)
- * \endif
- *
- * \if CHINESE
- * @brief 设置图例方向和坐标轴刻度位置
- * @param[in] orientation 图例方向（BottomTop 或 TopBottom）
- * @param[in] pos 坐标轴刻度位置（Left、Right、Top 或 Bottom）
- * \endif
+ * @param orientation Legend orientation (BottomTop or TopBottom)
+ * @param pos Axis scale position (Left, Right, Top, or Bottom)
  */
 void ColorLegend::setOrientation(ORIENTATION orientation, SCALEPOSITION pos)
 {
@@ -198,17 +123,9 @@ void ColorLegend::setOrientation(ORIENTATION orientation, SCALEPOSITION pos)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets relative position of the legend within the plot area
- * @param[in] relMin Minimum relative position (x,y)
- * @param[in] relMax Maximum relative position (x,y)
- * \endif
- *
- * \if CHINESE
- * @brief 设置图例在绘图区域内的相对位置
- * @param[in] relMin 最小相对位置（x,y）
- * @param[in] relMax 最大相对位置（x,y）
- * \endif
+ * @param relMin Minimum relative position (x,y)
+ * @param relMax Maximum relative position (x,y)
  */
 void ColorLegend::setRelPosition(Tuple relMin, Tuple relMax)
 {
@@ -280,15 +197,8 @@ void ColorLegend::setGeometryInternal()
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the color legend
  * @details Renders the color legend including color bar, axis, and caption.
- * \endif
- *
- * \if CHINESE
- * @brief 绘制颜色图例
- * @details 渲染颜色图例，包括颜色条、坐标轴和标题。
- * \endif
  */
 void ColorLegend::draw()
 {

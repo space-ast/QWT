@@ -33,7 +33,6 @@
 #include <qpoint.h>
 
 /**
- * \if ENGLISH
  * @brief Curve parametrization used for a spline interpolation
  *
  * Parametrization is the process of finding a parameter value for
@@ -58,30 +57,6 @@
  *       approximation of the curve length.
  *
  * @sa QwtSpline::setParametrization()
- * \endif
- *
- * \if CHINESE
- * @brief 用于样条插值的曲线参数化
- *
- * 参数化是为每个曲线点找到参数值的过程——通常与某些物理量相关
- * （距离、时间等）。
- *
- * 通常累积曲线长度是参数化的预期方式，但由于插值曲线预先未知，
- * 需要使用近似方法。
- *
- * 值通过累积增量来计算，增量由 QwtSplineParametrization 提供。
- * 由于曲线参数需要单调递增，每个增量都需要为正值。
- *
- * - t[0] = 0;
- * - t[i] = t[i-1] + valueIncrement( point[i-1], p[i] );
- *
- * QwtSplineParametrization 提供了最常用的参数化类型，
- * 并提供了注入自定义实现的接口。
- *
- * @note 最相关的参数化类型是尝试提供曲线长度的近似。
- *
- * @sa QwtSpline::setParametrization()
- * \endif
  */
 class QWT_EXPORT QwtSplineParametrization
 {
@@ -170,23 +145,12 @@ class QWT_EXPORT QwtSplineParametrization
 };
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterX value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return point2.x() - point1.x()
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterX 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return point2.x() - point1.x()
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementX(
     const QPointF& point1, const QPointF& point2 )
@@ -195,23 +159,12 @@ inline double QwtSplineParametrization::valueIncrementX(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterY value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return point2.y() - point1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterY 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return point2.y() - point1.y()
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementY(
     const QPointF& point1, const QPointF& point2 )
@@ -220,23 +173,12 @@ inline double QwtSplineParametrization::valueIncrementY(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterUniform value increment
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return 1.0
- * \endif
- *
- * \if CHINESE
- * @brief 计算 ParameterUniform 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return 1.0
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementUniform(
     const QPointF& point1, const QPointF& point2 )
@@ -248,23 +190,12 @@ inline double QwtSplineParametrization::valueIncrementUniform(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterChordal value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return qSqrt( dx * dx + dy * dy )
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterChordal 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return qSqrt( dx * dx + dy * dy )
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementChordal(
     const QPointF& point1, const QPointF& point2 )
@@ -276,23 +207,12 @@ inline double QwtSplineParametrization::valueIncrementChordal(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterCentripetal value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return The square root of a chordal increment
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterCentripetal 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return 弦长增量的平方根
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementCentripetal(
     const QPointF& point1, const QPointF& point2 )
@@ -301,23 +221,12 @@ inline double QwtSplineParametrization::valueIncrementCentripetal(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterManhattan value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return | point2.x() - point1.x() | + | point2.y() - point1.y() |
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterManhattan 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return | point2.x() - point1.x() | + | point2.y() - point1.y() |
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementManhattan(
     const QPointF& point1, const QPointF& point2 )

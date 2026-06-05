@@ -117,7 +117,6 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Create a dial widget with no needle. The scale is initialized
  *          to [ 0.0, 360.0 ] and 360 steps ( QwtAbstractSlider::setTotalSteps() ).
@@ -125,15 +124,6 @@ public:
  *          The value is set to 0.0.
  *          The default mode is QwtDial::RotateNeedle.
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个无指针的表盘控件。刻度初始化为 [ 0.0, 360.0 ] 和 360 步
- *          ( QwtAbstractSlider::setTotalSteps() )。
- *          刻度的原点在 90°，值设置为 0.0。
- *          默认模式是 QwtDial::RotateNeedle。
- * @param parent 父控件
- * \endif
  */
 QwtDial::QwtDial(QWidget* parent) : QwtAbstractSlider(parent)
 {
@@ -166,12 +156,7 @@ QwtDial::QwtDial(QWidget* parent) : QwtAbstractSlider(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtDial::~QwtDial()
 {
@@ -179,16 +164,9 @@ QwtDial::~QwtDial()
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the frame shadow value from the frame style
  * @param shadow Frame shadow
  * \sa setLineWidth(), QFrame::setFrameShadow()
- * \endif
- * \if CHINESE
- * @brief 从框架样式设置框架阴影值
- * @param shadow 框架阴影
- * \sa setLineWidth(), QFrame::setFrameShadow()
- * \endif
  */
 void QwtDial::setFrameShadow(Shadow shadow)
 {
@@ -202,14 +180,8 @@ void QwtDial::setFrameShadow(Shadow shadow)
 }
 
 /**
- * \if ENGLISH
  * @brief Return frame shadow
  * \sa setFrameShadow(), lineWidth(), QFrame::frameShadow()
- * \endif
- * \if CHINESE
- * @brief 返回框架阴影
- * \sa setFrameShadow(), lineWidth(), QFrame::frameShadow()
- * \endif
  */
 QwtDial::Shadow QwtDial::frameShadow() const
 {
@@ -217,16 +189,9 @@ QwtDial::Shadow QwtDial::frameShadow() const
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the line width of the frame
  * @param lineWidth Line width
  * \sa setFrameShadow()
- * \endif
- * \if CHINESE
- * @brief 设置框架的线宽
- * @param lineWidth 线宽
- * \sa setFrameShadow()
- * \endif
  */
 void QwtDial::setLineWidth(int lineWidth)
 {
@@ -242,14 +207,8 @@ void QwtDial::setLineWidth(int lineWidth)
 }
 
 /**
- * \if ENGLISH
  * @brief Return line width of the frame
  * \sa setLineWidth(), frameShadow(), lineWidth()
- * \endif
- * \if CHINESE
- * @brief 返回框架的线宽
- * \sa setLineWidth(), frameShadow(), lineWidth()
- * \endif
  */
 int QwtDial::lineWidth() const
 {
@@ -257,14 +216,8 @@ int QwtDial::lineWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return bounding rectangle of the circle inside the frame
  * \sa setLineWidth(), scaleInnerRect(), boundingRect()
- * \endif
- * \if CHINESE
- * @brief 返回框架内圆的边界矩形
- * \sa setLineWidth(), scaleInnerRect(), boundingRect()
- * \endif
  */
 QRect QwtDial::innerRect() const
 {
@@ -273,14 +226,8 @@ QRect QwtDial::innerRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return bounding rectangle of the dial including the frame
  * \sa setLineWidth(), scaleInnerRect(), innerRect()
- * \endif
- * \if CHINESE
- * @brief 返回表盘的边界矩形（含框架）
- * \sa setLineWidth(), scaleInnerRect(), innerRect()
- * \endif
  */
 QRect QwtDial::boundingRect() const
 {
@@ -295,14 +242,8 @@ QRect QwtDial::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return rectangle inside the scale
  * \sa setLineWidth(), boundingRect(), innerRect()
- * \endif
- * \if CHINESE
- * @brief 返回刻度内的矩形
- * \sa setLineWidth(), boundingRect(), innerRect()
- * \endif
  */
 QRect QwtDial::scaleInnerRect() const
 {
@@ -320,7 +261,6 @@ QRect QwtDial::scaleInnerRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the mode of the dial
  * @details In case of QwtDial::RotateNeedle the needle is rotating, in case of
  *          QwtDial::RotateScale, the needle points to origin()
@@ -328,15 +268,6 @@ QRect QwtDial::scaleInnerRect() const
  *          The default mode is QwtDial::RotateNeedle.
  * @param mode New mode
  * \sa mode(), setValue(), setOrigin()
- * \endif
- * \if CHINESE
- * @brief 更改表盘的模式
- * @details 如果是 QwtDial::RotateNeedle，指针是旋转的；如果是 QwtDial::RotateScale，
- *          指针指向 origin()，刻度是旋转的。
- *          默认模式是 QwtDial::RotateNeedle。
- * @param mode 新模式
- * \sa mode(), setValue(), setOrigin()
- * \endif
  */
 void QwtDial::setMode(Mode mode)
 {
@@ -349,14 +280,8 @@ void QwtDial::setMode(Mode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return mode of the dial
  * \sa setMode(), origin(), setScaleArc(), value()
- * \endif
- * \if CHINESE
- * @brief 返回表盘的模式
- * \sa setMode(), origin(), setScaleArc(), value()
- * \endif
  */
 QwtDial::Mode QwtDial::mode() const
 {
@@ -364,12 +289,7 @@ QwtDial::Mode QwtDial::mode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal caches used to speed up repainting
- * \endif
- * \if CHINESE
- * @brief 使用于加速重绘的内部缓存失效
- * \endif
  */
 void QwtDial::invalidateCache()
 {
@@ -572,16 +492,9 @@ void QwtDial::drawScaleContents(QPainter* painter, const QPointF& center, double
 }
 
 /**
- * \if ENGLISH
  * @brief Set a needle for the dial
  * @param needle Needle
  * @warning The needle will be deleted, when a different needle is set or in ~QwtDial()
- * \endif
- * \if CHINESE
- * @brief 为表盘设置指针
- * @param needle 指针
- * @warning 当设置不同的指针或在 ~QwtDial() 时，指针将被删除
- * \endif
  */
 void QwtDial::setNeedle(QwtDialNeedle* needle)
 {
@@ -595,14 +508,8 @@ void QwtDial::setNeedle(QwtDialNeedle* needle)
 }
 
 /**
- * \if ENGLISH
  * @brief Return needle
  * \sa setNeedle()
- * \endif
- * \if CHINESE
- * @brief 返回指针
- * \sa setNeedle()
- * \endif
  */
 const QwtDialNeedle* QwtDial::needle() const
 {
@@ -610,14 +517,8 @@ const QwtDialNeedle* QwtDial::needle() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return needle
  * \sa setNeedle()
- * \endif
- * \if CHINESE
- * @brief 返回指针
- * \sa setNeedle()
- * \endif
  */
 QwtDialNeedle* QwtDial::needle()
 {
@@ -625,12 +526,7 @@ QwtDialNeedle* QwtDial::needle()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale draw
- * \endif
- * \if CHINESE
- * @brief 返回刻度绘制器
- * \endif
  */
 QwtRoundScaleDraw* QwtDial::scaleDraw()
 {
@@ -638,12 +534,7 @@ QwtRoundScaleDraw* QwtDial::scaleDraw()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale draw
- * \endif
- * \if CHINESE
- * @brief 返回刻度绘制器
- * \endif
  */
 const QwtRoundScaleDraw* QwtDial::scaleDraw() const
 {
@@ -651,20 +542,11 @@ const QwtRoundScaleDraw* QwtDial::scaleDraw() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set an individual scale draw
  * @details The motivation for setting a scale draw is often to overload QwtRoundScaleDraw::label()
  *          to return individual tick labels.
  * @param scaleDraw Scale draw
  * @warning The previous scale draw is deleted
- * \endif
- * \if CHINESE
- * @brief 设置单独的刻度绘制器
- * @details 设置刻度绘制器的原因通常是为了重载 QwtRoundScaleDraw::label()
- *          以返回单独的刻度标签。
- * @param scaleDraw 刻度绘制器
- * @warning 之前的刻度绘制器将被删除
- * \endif
  */
 void QwtDial::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {
@@ -673,18 +555,10 @@ void QwtDial::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the arc of the scale
- * @param[in] minArc Lower limit
- * @param[in] maxArc Upper limit
+ * @param minArc Lower limit
+ * @param maxArc Upper limit
  * \sa minScaleArc(), maxScaleArc()
- * \endif
- * \if CHINESE
- * @brief 更改刻度的弧度范围
- * @param[in] minArc 下限
- * @param[in] maxArc 上限
- * \sa minScaleArc(), maxScaleArc()
- * \endif
  */
 void QwtDial::setScaleArc(double minArc, double maxArc)
 {
@@ -709,16 +583,9 @@ void QwtDial::setScaleArc(double minArc, double maxArc)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the lower limit for the scale arc
  * @param min Lower limit of the scale arc
  * \sa setScaleArc(), setMaxScaleArc()
- * \endif
- * \if CHINESE
- * @brief 设置刻度弧的下限
- * @param min 刻度弧下限
- * \sa setScaleArc(), setMaxScaleArc()
- * \endif
  */
 void QwtDial::setMinScaleArc(double min)
 {
@@ -726,14 +593,8 @@ void QwtDial::setMinScaleArc(double min)
 }
 
 /**
- * \if ENGLISH
  * @brief Return lower limit of the scale arc
  * \sa setScaleArc()
- * \endif
- * \if CHINESE
- * @brief 返回刻度弧的下限
- * \sa setScaleArc()
- * \endif
  */
 double QwtDial::minScaleArc() const
 {
@@ -741,16 +602,9 @@ double QwtDial::minScaleArc() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the upper limit for the scale arc
  * @param max Upper limit of the scale arc
  * \sa setScaleArc(), setMinScaleArc()
- * \endif
- * \if CHINESE
- * @brief 设置刻度弧的上限
- * @param max 刻度弧上限
- * \sa setScaleArc(), setMinScaleArc()
- * \endif
  */
 void QwtDial::setMaxScaleArc(double max)
 {
@@ -758,14 +612,8 @@ void QwtDial::setMaxScaleArc(double max)
 }
 
 /**
- * \if ENGLISH
  * @brief Return upper limit of the scale arc
  * \sa setScaleArc()
- * \endif
- * \if CHINESE
- * @brief 返回刻度弧的上限
- * \sa setScaleArc()
- * \endif
  */
 double QwtDial::maxScaleArc() const
 {
@@ -773,18 +621,10 @@ double QwtDial::maxScaleArc() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the origin
  * @details The origin is the angle where scale and needle is relative to.
  * @param origin New origin
  * \sa origin()
- * \endif
- * \if CHINESE
- * @brief 更改原点
- * @details 原点是刻度和指针相对的角度。
- * @param origin 新原点
- * \sa origin()
- * \endif
  */
 void QwtDial::setOrigin(double origin)
 {
@@ -795,16 +635,9 @@ void QwtDial::setOrigin(double origin)
 }
 
 /**
- * \if ENGLISH
  * @brief The origin is the angle where scale and needle is relative to
  * @return Origin of the dial
  * \sa setOrigin()
- * \endif
- * \if CHINESE
- * @brief 原点是刻度和指针相对的角度
- * @return 表盘原点
- * \sa setOrigin()
- * \endif
  */
 double QwtDial::origin() const
 {
@@ -812,14 +645,8 @@ double QwtDial::origin() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return size hint
  * \sa minimumSizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回尺寸提示
- * \sa minimumSizeHint()
- * \endif
  */
 QSize QwtDial::sizeHint() const
 {
@@ -837,14 +664,8 @@ QSize QwtDial::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return minimum size hint
  * \sa sizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回最小尺寸提示
- * \sa sizeHint()
- * \endif
  */
 QSize QwtDial::minimumSizeHint() const
 {
