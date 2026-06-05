@@ -19,7 +19,8 @@
 | `QWT_CONFIG_QWTPLOT_3D` | `ON` | 启用 QwtPlot3D，允许使用3D图表 |
 | `QWT_CONFIG_BUILD_EXAMPLE` | `ON` | 构建示例程序 |
 | `QWT_CONFIG_BUILD_PLAYGROUND` | `ON` | 构建实验性代码 |
-| `QWT_CONFIG_BUILD_STATIC_EXAMPLE` | `OFF` | 构建静态链接示例。注意：构建静态示例会需要相对较长的编译时间 |
+| `QWT_CONFIG_BUILD_STATIC_EXAMPLE` | `ON` | 构建静态链接示例。注意：构建静态示例会需要相对较长的编译时间 |
+| `QWT_CONFIG_BUILD_TESTS` | `OFF` | 构建测试程序 |
 
 !!! tips "提示"
     QWT 7.1之后的版本把QwtPlot3D的代码整合，实现了2D和3D图表，QwtPlot3D的代码来自[https://github.com/SciDAVis/qwtplot3d](https://github.com/SciDAVis/qwtplot3d)

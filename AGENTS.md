@@ -111,13 +111,20 @@ QWT_DC(d);    // const PrivateData* d = d_func()
 #include "qwt_plot.h"     // 本项目其他头文件
 ```
 
-### 注释规范（Doxygen 双语）
+### 注释规范（Doxygen 纯英文）
 
-- **类注释**：头文件中双语 Doxygen，带示例
-- **public 函数详细**：`.cpp` 中双语 Doxygen
-- **public 函数简洁**：`.h` 中单行英文 `// Comment`（无 Doxygen 块）
-- **信号注释**：`.h` 中双语 Doxygen（信号无 cpp 定义）
-- `\if ENGLISH` / `\if CHINESE` 包裹双语内容，`\if`/`\endif` 使用反斜杠，其余关键字用 `@`
+所有源码注释**一律使用英文**，禁止中文。Doxygen 关键字统一用 `@` 前缀（`@brief`、`@param`、`@return`、`@details`）。
+
+| 注释类型 | 位置 | 要求 |
+|---------|------|------|
+| 类注释 | `.h` | 英文 Doxygen，含使用示例 |
+| public 函数详细 | `.cpp` | 英文 Doxygen（`@brief`/`@param`/`@return`/`@details`） |
+| public 函数简要 | `.h` | 单行英文 `// Comment`（无 Doxygen 块） |
+| 信号注释 | `.h` | 英文 Doxygen（信号无 cpp 定义） |
+| private/protected 函数 | `.cpp` | 可选，建议英文 |
+| 行内注释 | 任意 | 英文 |
+
+参数方向：`@param[out]`、`@param[in,out]` 仅在非 const 引用/指针时必须标注；value 和 const ref 省略。
 
 ### 现代 C++ 要求
 

@@ -7,7 +7,7 @@
 | 文档 | 说明 |
 |------|------|
 | [编码规范](coding-standards.md) | 代码格式化、C++11兼容性宏、命名规范等 |
-| [注释规范](comment-standards.md) | Doxygen双语注释格式、注释位置规范等 |
+| [注释规范](comment-standards.md) | Doxygen英文注释格式、注释位置规范等 |
 | [PIMPL模式](pimpl-pattern.md) | PIMPL设计模式的使用方法和宏定义 |
 
 ## 开发流程概览
@@ -16,7 +16,7 @@
 flowchart TD
     A[理解需求] --> B[编写代码]
     B --> C[遵循编码规范]
-    C --> D[添加双语注释]
+    C --> D[添加英文注释]
     D --> E[格式化代码]
     E --> F[编译测试]
     F --> G[提交代码]
@@ -24,8 +24,8 @@ flowchart TD
     C --> C1[使用现代C++语法]
     C --> C2[使用PIMPL模式]
     
-    D --> D1[头文件简洁注释]
-    D --> D2[cpp文件详细注释]
+    D --> D1[Header brief comments]
+    D --> D2[cpp detailed comments]
 ```
 
 ## 快速开始
@@ -52,7 +52,7 @@ flowchart TD
 
 所有新增代码必须遵循 [注释规范](comment-standards.md)：
 
-- 使用 Doxygen 双语格式（中英文）
+- 使用 Doxygen 纯英文格式编写注释
 - 详细注释写在 `.cpp` 文件
 - 简洁注释写在 `.h` 文件
 
@@ -71,7 +71,7 @@ flowchart TD
 - [ ] 代码已使用 clang-format 格式化
 - [ ] 使用现代 C++ 语法（override、nullptr、using）
 - [ ] 新增类使用了 PIMPL 模式
-- [ ] 函数添加了双语 Doxygen 注释
+- [ ] 函数添加了英文 Doxygen 注释
 - [ ] 头文件保持简洁，详细注释在 cpp 文件
 - [ ] 代码可正常编译，无警告
 - [ ] 示例程序运行正常
