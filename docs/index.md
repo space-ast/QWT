@@ -1,273 +1,265 @@
 ---
-title: QWT概述
-description: QWT 是一个基于 Qt 的高性能绘图库，支持 Qt6，采用 LGPL 协议，适用于科学计算和工程应用中的数据可视化。提供现代化 UI 设计和丰富的图表类型。
-keywords: [QWT,Qt 绘图库,科学图表,数据可视化,Qt6,LGPL 协议,C++ 绘图,工程绘图,实时数据可视化,Qt 图表组件]
+title: QWT — Qt Plotting Library
+description: A high-performance 2D/3D plotting library for Qt applications. Designed for scientific computing and engineering data visualization.
+hide:
+  - navigation
+  - toc
 ---
 
-# 概述
+<div class="qwt-hero">
+<div class="qwt-hero-bg"></div>
+<div class="qwt-hero-inner">
 
-Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Charts`和`KDChart`，Qt6.8之后把原来的 `Qt Charts`（2D） 与 Qt DataVisualization（3D） 合并为统一的Qt Graphs模块（注意不是Qt Graphics），底层全部基于 Qt Quick Scene Graph（QSG）+ Qt Quick 3D，彻底放弃了老旧的 Graphics-View/QPainter 管线，不过Qt Graphs 须通过 QQuickWidget 或 QQuickWindow 嵌入，必须带 QML runtime，C++支持不足，[论坛吐槽不少](https://forum.qt.io/topic/159224/qt-graphs-building-2d-plot-using-c-only),虽然Qt Graphs 是 Qt 官方“大一统”的未来，但这个未来可能3年内不会到来，且不支持win7等老系统，对嵌入式也不友好，因此，`QCustomPlot`、`Qwt`、`Qt Charts`和`KDChart`还会是最近几年绘图控件的选项。
+<p class="qwt-hero-badge">Open Source &middot; LGPL Licensed</p>
 
-这几个控件`QCustomPlot`最简单、美观，推广度最高，只要引入`qcustomplot.h`头文件，`qcustomplot.cpp`源文件，就可以直接使用（[官方文档](https://www.qcustomplot.com/index.php/documentation)），也支持Qt6，然而`QCustomPlot`最大的问题是其开源协议为`GPL`，有传染性，如果你使用了`QCustomPlot`，意味着你的软件也要成为`GPL`，这对商业非常不友好。
+<h1 class="qwt-hero-title">Qt Plotting Library</h1>
 
-`Qwt`是老牌的绘图控件（[官方文档](https://qwt.sourceforge.io/index.html)），有着不错的性能，但部署难，让很多人望而怯步。它的协议为`LGPL`，商业相对友好。
+<p class="qwt-hero-desc">
+A high-performance 2D/3D plotting library for Qt applications,
+designed for scientific computing and engineering data visualization.
+</p>
 
-`Qt Charts`是Qt官方的绘图控件（[官方文档](https://doc.qt.io/qt-5/qtcharts-index.html)），效率不高(可以说很低)，不适合做科学计算，同时，Qt Charts 没有 LGPL 选项，开源版是GPLv3，只要你在项目中使用了Qt Charts，就必须 把整个项目以 GPLv3 协议开源。
+<div class="qwt-hero-pills">
+<span>C++11/17</span>
+<span>CMake</span>
+<span>Qt 5.12+ / Qt 6</span>
+</div>
 
-`KDChart`是KDAB的绘图控件（[官方文档](https://www.kdab.com/software-technologies/developer-tools/kd-chart/)），`KDChart3.0`起是MIT协议，对商业非常友好，但渲染效果一般，一股excel2003的风格，但`KDChart`有甘特图，这是上面3款都没有的。
+<div class="qwt-hero-actions">
+<a href="en/use-guide/qwt7-new-features/" class="qwt-btn qwt-btn-primary">Get Started</a>
+<a href="https://github.com/czyt1988/QWT" class="qwt-btn qwt-btn-ghost">GitHub</a>
+<a href="https://gitee.com/czyt1988/QWT" class="qwt-btn qwt-btn-ghost">Gitee</a>
+</div>
 
-因此，如果你的项目需要商业用途，那么你只有`Qwt`和`KDChart3.0`两种选择，但`Qwt`作者停止更新，我个人更喜欢`Qwt`，因为`Qwt`的架构更符合软件工程原则，其大规模渲染性能更优，像`QCustomPlot`的优势是交互功能开箱即用，例如鼠标缩放，坐标轴缩放，而`Qwt`需要较多的代码来实现，但`Qwt`有着更精细的控制能力，因此在我的项目需要绘图的时候，我会选择`Qwt`，并根据我的需求添加一些自己需要的功能，改进、优化它，因此，就有了此项目。
+</div>
+</div>
 
-## Qwt 7.0
+<div class="qwt-stats-bar">
+<div class="qwt-stat">
+<strong>20+</strong>
+<span>Chart Types</span>
+</div>
+<div class="qwt-stat-divider"></div>
+<div class="qwt-stat">
+<strong>2D &amp; 3D</strong>
+<span>Visualization</span>
+</div>
+<div class="qwt-stat-divider"></div>
+<div class="qwt-stat">
+<strong>Qt 5 &amp; 6</strong>
+<span>Fully Compatible</span>
+</div>
+<div class="qwt-stat-divider"></div>
+<div class="qwt-stat">
+<strong>LGPL</strong>
+<span>Commercial Friendly</span>
+</div>
+</div>
 
-我在`Qwt`最后版本上进行了维护，后续我将我需要的功能添加进去，同时逐步修改、优化一些已有的功能，例如它默认的老旧样式
+<div class="qwt-container">
 
-项目地址为：
+<div class="qwt-section-head">
+<h2>Core Features</h2>
+<p>Everything you need for professional data visualization in Qt applications.</p>
+</div>
 
-[Github：https://github.com/czyt1988/QWT](https://github.com/czyt1988/QWT)
+<div class="qwt-card-grid">
 
-[Gitee：https://gitee.com/czyt1988/QWT](https://gitee.com/czyt1988/QWT)
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+</div>
+<h3>High Performance</h3>
+<p>Optimized QPainter rendering pipeline for large-scale datasets. Smooth real-time plotting with efficient redraw strategies.</p>
+</div>
 
-下面是我的目标以及目前我已经完成的一些工作：
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+</div>
+<h3>Rich Chart Types</h3>
+<p>20+ built-in chart types: curves, scatter, bar, box, histogram, spectrogram, K-line, vector field, polar plots, and 3D surfaces.</p>
+</div>
 
-- [x] CMake支持 
-- [x] 支持Qt6
-- [ ] C++11优化
-- [x] 合并为单一文件，简化引入
-- [ ] 优化超大规模数据的渲染
-- [x] 提供一些集成的交互方法，让使用更简单(提供了坐标轴交互、绘图窗口移动缩放等功能)
-- [x] 美化控件
-- [x] 提供Figure实现绘图的布局
-- [x] 增加寄生轴的支持，实现n个坐标轴
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+</div>
+<h3>CMake &amp; Qt6</h3>
+<p>Full CMake support with <code>find_package(qwt)</code>. Single-file amalgamation available. Compatible with Qt 5.12+ and Qt 6.</p>
+</div>
 
-总之，我将继续维护`Qwt`，让其成为一个协议友好，性能优越，方便使用的Qt绘图库
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+</div>
+<h3>Multi-Axis System</h3>
+<p>Create unlimited independent axes via parasite plot architecture &mdash; similar to matplotlib's twin axis system with full interaction support.</p>
+</div>
 
-## Qwt7.0的新特性
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="19" cy="13" r="2"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="10" cy="20" r="2"></circle></svg>
+</div>
+<h3>Modern Design</h3>
+<p>Clean, flat visual style replacing the legacy embossed look. Professional aesthetics that fit contemporary application design.</p>
+</div>
 
-### Cmake支持
+<div class="qwt-card">
+<div class="qwt-card-icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+</div>
+<h3>Figure Layout</h3>
+<p>matplotlib-inspired <code>QwtFigure</code> for multi-plot grid layouts. Interactive drag, resize, and manage subplots with overlay widgets.</p>
+</div>
 
-Qwt7.0已经支持`CMake`，并且未来将考虑抛弃`QMake`
+</div>
+</div>
 
-安装Qwt后，你的项目只需如下即可引入Qwt，免去以往繁琐的配置和预定义宏：
+<div class="qwt-showcase">
 
-```cmake
-target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::qwt)
-```
+<div class="qwt-section-head">
+<h2>Visualization Showcase</h2>
+<p>From basic charts to advanced scientific visualizations.</p>
+</div>
 
-### 单一头文件和源文件
+<div class="qwt-gallery">
 
-参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用
+<a class="qwt-gallery-item" href="en/use-guide/figure-widget/">
+<img src="assets/screenshots/qwt_figure.png" alt="Figure Widget" loading="lazy">
+<span>Figure Layout</span>
+</a>
 
+<a class="qwt-gallery-item" href="en/use-guide/curve/">
+<img src="assets/screenshots/simpleplot.png" alt="Simple Plot" loading="lazy">
+<span>Curve Plot</span>
+</a>
 
-### 美化了风格
+<a class="qwt-gallery-item" href="en/use-guide/scatter/">
+<img src="assets/screenshots/scatterplot.png" alt="Scatter Plot" loading="lazy">
+<span>Scatter Plot</span>
+</a>
 
-原有的Qwt样式使用的是很老旧的浮雕风，和现代审美不符，为此我针对性的优化，主要去除了默认的凹陷风格，坐标轴紧贴绘图不进行分离，总体视觉更符合现代风格
+<a class="qwt-gallery-item" href="en/use-guide/barchart/">
+<img src="assets/screenshots/BarChart-grouped.png" alt="Bar Chart" loading="lazy">
+<span>Bar Chart</span>
+</a>
 
-具体可见屏幕快照
+<a class="qwt-gallery-item" href="en/use-guide/spectrogram/">
+<img src="assets/screenshots/spectrogram.png" alt="Spectrogram" loading="lazy">
+<span>Spectrogram</span>
+</a>
 
-### 增加了Figure绘图容器
+<a class="qwt-gallery-item" href="en/use-guide/vectorfield/">
+<img src="assets/screenshots/vectorfield.png" alt="Vector Field" loading="lazy">
+<span>Vector Field</span>
+</a>
 
-类似Python的matplotlib，Qwt提供了Figure绘图容器，可以很方便的进行多个绘图布局
+<a class="qwt-gallery-item" href="en/use-guide/tradingcurve/">
+<img src="assets/screenshots/stockchart.png" alt="Stock Chart" loading="lazy">
+<span>K-Line / Stock</span>
+</a>
 
-通过新增的`QwtFigure`类，可以很方便的进行多个绘图布局,支持网格布局（类似matplotlib的subplot）
-
-### 支持多坐标轴
-
-增加了类似matplotlib的寄生轴功能，支持任意多个坐标轴显示
-
-![parasite plot](assets/screenshots/parasite-plot.png) 
-
-### 增加了坐标轴交互
-
-增加坐标轴交互功能，支持在坐标轴上使用鼠标拖动、滚轮缩放等功能
-
-拖动：
-![qwt-scale-builtin-action-pan](assets/screenshots/qwt-scale-builtin-action-pan.gif)
-
-缩放：
-![qwt-scale-builtin-action-zoom](assets/screenshots/qwt-scale-builtin-action-zoom.gif)
-
-## Copyright
-
----------
-
-    Qwt Widget Library 
-    Copyright (C) 1997   Josef Wilgen
-    Copyright (C) 2002   Uwe Rathmann
-
-    Qwt is published under the Qwt License, Version 1.0.
-    You should have received a copy of this licence in the file
-    COPYING.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
-
-----------------------
-
-## 绘图展示
-
-### 基本图表
-
-<div class="grid cards" markdown>
-
-- ![Figure Widget](assets/screenshots/qwt_figure.png)
-  `examples/figure`
-
-- ![Simple Plot](assets/screenshots/simpleplot.png)  
-   `examples/simpleplot`  
-
-- ![Bar Chart - Grouped](assets/screenshots/BarChart-grouped.png)  
-  `examples/barchart`  
-
-- ![Bar Chart - Stacked](assets/screenshots/BarChart-stacked.png)  
-  `examples/barchart`  
-
-- ![Scatter Plot](assets/screenshots/scatterplot.png)  
-  `examples/scatterplot`  
-
-- ![Curve Demo](assets/screenshots/curvedemo.png)  
-  `examples/curvedemo`  
+<a class="qwt-gallery-item" href="en/use-guide/polar-plot/">
+<img src="assets/screenshots/polardemo.png" alt="Polar Plot" loading="lazy">
+<span>Polar Plot</span>
+</a>
 
 </div>
 
-### 实时可视化
+<div class="qwt-gallery">
 
-<div class="grid cards" markdown>
+<a class="qwt-gallery-item" href="en/use-guide/curve/">
+<img src="assets/screenshots/oscilloscope.png" alt="Oscilloscope" loading="lazy">
+<span>Oscilloscope</span>
+</a>
 
-- ![CPU Monitor](assets/screenshots/cpuplot.png)  
-  `examples/cpuplot`  
+<a class="qwt-gallery-item" href="en/use-guide/curve/">
+<img src="assets/screenshots/realtime.png" alt="Real-Time" loading="lazy">
+<span>Real-Time Plot</span>
+</a>
 
-- ![Real-Time Plot](assets/screenshots/realtime.png)  
-  `examples/realtime`  
+<a class="qwt-gallery-item" href="en/use-guide/parasite-axes/">
+<img src="assets/screenshots/parasite-plot.png" alt="Parasite Plot" loading="lazy">
+<span>Multi-Axis Plot</span>
+</a>
 
-- ![Oscilloscope](assets/screenshots/oscilloscope.png)  
-  `examples/oscilloscope`  
-
-</div>
-
-### 高级图表
-
-<div class="grid cards" markdown>
-
-- ![Polar Demo](assets/screenshots/polardemo.png)  
-  `examples/polardemo`  
-
-- ![Spectrogram](assets/screenshots/spectrogram.png)  
-  `examples/spectrogram`  
-
-- ![Contour Spectrogram](assets/screenshots/spectrogram-contour.png)  
-  `examples/spectrogram`  
-
-- ![Vector Field](assets/screenshots/vectorfield.png)  
-  `playground/vectorfield`  
-
-- ![Stock Chart](assets/screenshots/stockchart.png)  
-  `examples/stockchart`  
-
-- ![Bode Plot](assets/screenshots/bode.png)  
-  `examples/bode`  
-
-- ![Tube Display](assets/screenshots/friedberg-tube.png)  
-  `examples/friedberg`  
-
-- ![plot matrix](assets/screenshots/plotmatrix.png)  
-  `playground/plotmatrix`  
-
-- ![Scale Engine](assets/screenshots/scaleengine.png)  
-  `playground/scaleengine`  
-
-- ![Rescaler](assets/screenshots/rescaler.png)  
-  `playground/rescaler`  
-
-- ![Graphics Scale](assets/screenshots/graphicscale.png)  
-  `playground/graphicscale`  
-
-- ![Spline Editor](assets/screenshots/splineeditor.png)  
-  `examples/splineeditor`  
-
-- ![System Info](assets/screenshots/sysinfo.png)  
-  `examples/sysinfo`  
-
-- ![Distro Watch](assets/screenshots/distrowatch.png)  
-  `examples/distrowatch`  
-
-- ![Raster View 1](assets/screenshots/rasterview-1.png)  
-  `examples/rasterview`  
-
-- ![Raster View 2](assets/screenshots/rasterview-2.png)  
-  `examples/rasterview`  
-
-- ![SVG Map](assets/screenshots/svgmap.png)  
-  `playground/svgmap`  
-
-- ![parasite plot](assets/screenshots/parasite-plot.png)  
-  `examples/parasitePlot`  
+<a class="qwt-gallery-item" href="en/use-guide/scale-builtin-action/">
+<img src="assets/screenshots/qwt-scale-builtin-action-zoom.gif" alt="Axis Zoom" loading="lazy">
+<span>Axis Interaction</span>
+</a>
 
 </div>
 
-### 动态演示
-
-<div class="grid cards" markdown>
-
-- ![Animated Demo](assets/screenshots/animated.png)  
-  `examples/animated`  
-
-- ![Curve Tracker](assets/screenshots/curvetracker.png)  
-  `playground/curvetracker`  
-
-- ![Refresh Test](assets/screenshots/refreshtest.png)  
-  `examples/refreshtest`  
-
 </div>
 
-### 样式与符号
+<div class="qwt-quickstart">
 
-<div class="grid cards" markdown>
+<div class="qwt-quickstart-inner">
 
-- ![Legends Demo](assets/screenshots/legends.png)  
-  `examples/legends`  
-
-- ![Symbols Demo](assets/screenshots/symbols.png)  
-  `playground/symbols`  
-
-- ![Shape Rendering](assets/screenshots/shapes.png)  
-  `playground/shapes`  
-
+<div class="qwt-section-head">
+<h2>Quick Start</h2>
+<p>Integrate QWT into your project in minutes.</p>
 </div>
 
-### 控件窗口
+=== "CMake (Recommended)"
 
-<div class="grid cards" markdown>
+    ```cmake
+    # Find and link QWT
+    find_package(qwt REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot)
 
-- ![Dial Controls](assets/screenshots/controls-dial.png)  
-  `examples/controls`  
+    # For 3D plotting
+    target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
+    ```
 
-- ![Knob Controls](assets/screenshots/controls-knob.png)  
-  `examples/controls`  
+=== "Single File"
 
-- ![Slider Controls](assets/screenshots/controls-sliders.png)  
-  `examples/controls`  
+    ```cpp
+    // Add two files to your project:
+    //   src-amalgamate/QwtPlot.h
+    //   src-amalgamate/QwtPlot.cpp
 
-- ![Wheel & Thermo](assets/screenshots/controls-wheel-thermo.png)  
-  `examples/controls`  
+    #include "QwtPlot.h"
 
-- ![Radio Buttons](assets/screenshots/radio.png)  
-  `examples/radio`  
+    auto* plot = new QwtPlot();
+    auto* curve = new QwtPlotCurve("My Data");
+    ```
 
-- ![Time Scale Demo](assets/screenshots/timescale.png)  
-  `playground/timescale`  
+=== "First Plot"
+
+    ```cpp
+    #include <qwt_plot.h>
+    #include <qwt_plot_curve.h>
+
+    auto* plot = new QwtPlot("My First Plot");
+    auto* curve = new QwtPlotCurve("Sine Wave");
+
+    QVector<QPointF> data;
+    for (double x = 0; x < 10.0; x += 0.1)
+        data.append(QPointF(x, std::sin(x)));
+    curve->setSamples(data);
+
+    curve->attach(plot);
+    plot->resize(600, 400);
+    plot->show();
+    ```
 
 </div>
+</div>
 
-### 仪表盘
+<div class="qwt-footer">
+<div class="qwt-footer-inner">
 
-<div class="grid cards" markdown>
+<h2>Start Building Today</h2>
+<p>Explore the documentation or browse the source code.</p>
 
-- ![Compass Dial](assets/screenshots/dials-compass.png)  
-  `examples/dials`  
+<div class="qwt-footer-links">
+<a href="en/use-guide/qwt7-new-features/" class="qwt-btn qwt-btn-primary">Read the Docs</a>
+<a href="zh/use-guide/qwt7-new-features/" class="qwt-btn qwt-btn-ghost">中文文档</a>
+<a href="https://github.com/czyt1988/QWT" class="qwt-btn qwt-btn-ghost">GitHub</a>
+<a href="https://gitee.com/czyt1988/QWT" class="qwt-btn qwt-btn-ghost">Gitee</a>
+</div>
 
-- ![Cockpit Dials](assets/screenshots/dials-cockpit.png)  
-  `examples/dials`  
-
+</div>
 </div>
