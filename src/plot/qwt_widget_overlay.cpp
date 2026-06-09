@@ -122,15 +122,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param widget Parent widget, where the overlay is aligned to
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param widget 父控件，覆盖层与其对齐
- * \endif
  */
 QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 {
@@ -147,13 +141,8 @@ QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtWidgetOverlay::~QwtWidgetOverlay()
 {
@@ -161,17 +150,10 @@ QwtWidgetOverlay::~QwtWidgetOverlay()
 }
 
 /**
- * \if ENGLISH
  * @brief Specify how to find the mask for the overlay
  * @param mode New mode
- * \sa maskMode()
- * \endif
+ * @sa maskMode()
  *
- * \if CHINESE
- * @brief 指定如何为覆盖层查找掩码
- * @param mode 新模式
- * \sa maskMode()
- * \endif
  */
 void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 {
@@ -182,15 +164,9 @@ void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 }
 
 /**
- * \if ENGLISH
  * @return Mode how to find the mask for the overlay
- * \sa setMaskMode()
- * \endif
+ * @sa setMaskMode()
  *
- * \if CHINESE
- * @return 如何为覆盖层查找掩码的模式
- * \sa setMaskMode()
- * \endif
  */
 QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 {
@@ -198,17 +174,10 @@ QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the render mode
  * @param[in] mode Render mode
- * \sa RenderMode, renderMode()
- * \endif
+ * @sa RenderMode, renderMode()
  *
- * \if CHINESE
- * @brief 设置渲染模式
- * @param[in] mode 渲染模式
- * \sa RenderMode, renderMode()
- * \endif
  */
 void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
@@ -216,15 +185,9 @@ void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 }
 
 /**
- * \if ENGLISH
  * @return Render mode
- * \sa RenderMode, setRenderMode()
- * \endif
+ * @sa RenderMode, setRenderMode()
  *
- * \if CHINESE
- * @return 渲染模式
- * \sa RenderMode, setRenderMode()
- * \endif
  */
 QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 {
@@ -232,13 +195,8 @@ QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Recalculate the mask and repaint the overlay
- * \endif
  *
- * \if CHINESE
- * @brief 重新计算掩码并重绘覆盖层
- * \endif
  */
 void QwtWidgetOverlay::updateOverlay()
 {
@@ -296,17 +254,10 @@ void QwtWidgetOverlay::updateMask()
 }
 
 /*!
-   \if ENGLISH
    Paint event
    @param event Paint event
-   \sa drawOverlay()
-   \endif
+   @sa drawOverlay()
    *
-   \if CHINESE
-   绘制事件
-   @param event 绘制事件
-   \sa drawOverlay()
-   \endif
  */
 void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 {
@@ -353,15 +304,9 @@ void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \if ENGLISH
    Resize event
    @param event Resize event
-   \endif
    *
-   \if CHINESE
-   调整大小事件
-   @param event 调整大小事件
-   \endif
  */
 void QwtWidgetOverlay::resizeEvent(QResizeEvent* event)
 {
@@ -393,7 +338,7 @@ void QwtWidgetOverlay::draw(QPainter* painter) const
 }
 
 /*!
-   \brief Calculate an approximation for the mask
+   @brief Calculate an approximation for the mask
 
    - MaskHint
      The hint is used as mask.
@@ -408,7 +353,7 @@ void QwtWidgetOverlay::draw(QPainter* painter) const
    The default implementation returns an invalid region
    indicating no hint.
 
-   \return Hint for the mask
+   @return Hint for the mask
  */
 QRegion QwtWidgetOverlay::maskHint() const
 {
@@ -416,7 +361,6 @@ QRegion QwtWidgetOverlay::maskHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Event filter
  *
  * @details Resize the overlay according to the size of the parent widget.
@@ -424,17 +368,7 @@ QRegion QwtWidgetOverlay::maskHint() const
  * @param[in] object Object to be filtered
  * @param[in] event Event
  * @return See QObject::eventFilter()
- * \endif
  *
- * \if CHINESE
- * @brief 事件过滤器
- *
- * @details 根据父控件的大小调整覆盖层的大小。
- *
- * @param[in] object 要过滤的对象
- * @param[in] event 事件
- * @return 参见 QObject::eventFilter()
- * \endif
  */
 
 bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)

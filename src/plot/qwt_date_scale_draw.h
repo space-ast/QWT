@@ -32,7 +32,6 @@
 #include "qwt_date.h"
 
 /**
- * \if ENGLISH
  * @brief A class for drawing datetime scales
  * @details QwtDateScaleDraw displays values as datetime labels.
  *          The format of the labels depends on the alignment of
@@ -54,30 +53,7 @@
  *          Usually QwtDateScaleDraw is used in combination with
  *          QwtDateScaleEngine, that calculates scales for datetime intervals.
  * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
- * \endif
  *
- * \if CHINESE
- * @brief 用于绘制日期时间刻度的类
- * @details QwtDateScaleDraw 将值显示为日期时间标签。
- *          标签的格式取决于主要刻度标签的对齐方式。
- *
- *          默认格式字符串为：
- *          - 毫秒: "hh:mm:ss:zzz\nddd dd MMM yyyy"
- *          - 秒: "hh:mm:ss\nddd dd MMM yyyy"
- *          - 分钟: "hh:mm\nddd dd MMM yyyy"
- *          - 小时: "hh:mm\nddd dd MMM yyyy"
- *          - 天: "ddd dd MMM yyyy"
- *          - 周: "Www yyyy"
- *          - 月: "MMM yyyy"
- *          - 年: "yyyy"
- *
- *          格式字符串可以通过 setDateFormat() 修改，
- *          或者通过重载 dateFormatOfDate() 为每个刻度标签单独设置。
- *
- *          通常 QwtDateScaleDraw 与 QwtDateScaleEngine 配合使用，
- *          QwtDateScaleEngine 为日期时间间隔计算刻度。
- * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
- * \endif
  */
 class QWT_EXPORT QwtDateScaleDraw : public QwtScaleDraw
 {

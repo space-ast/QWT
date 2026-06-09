@@ -182,8 +182,8 @@ QwtPlot::~QwtPlot()
 }
 
 /*!
-   \brief Initializes a QwtPlot instance
-   \param title Title text
+   @brief Initializes a QwtPlot instance
+   @param title Title text
  */
 void QwtPlot::initPlot(const QwtText& title)
 {
@@ -265,7 +265,7 @@ void QwtPlot::topParasiteTriggerHostUpdateAxisMargins()
 }
 
 /*!
-   \brief Set the drawing canvas of the plot widget
+   @brief Set the drawing canvas of the plot widget
 
    QwtPlot invokes methods of the canvas as meta methods ( see QMetaObject ).
    In opposite to using conventional C++ techniques like virtual methods
@@ -285,8 +285,8 @@ void QwtPlot::topParasiteTriggerHostUpdateAxisMargins()
 
    The default canvas is a QwtPlotCanvas
 
-   \param canvas Canvas Widget
-   \sa canvas()
+   @param canvas Canvas Widget
+   @sa canvas()
  */
 void QwtPlot::setCanvas(QWidget* canvas)
 {
@@ -306,10 +306,10 @@ void QwtPlot::setCanvas(QWidget* canvas)
 }
 
 /*!
-   \brief Adds handling of layout requests
-   \param event Event
+   @brief Adds handling of layout requests
+   @param event Event
 
-   \return See QFrame::event()
+   @return See QFrame::event()
  */
 bool QwtPlot::event(QEvent* event)
 {
@@ -328,7 +328,7 @@ bool QwtPlot::event(QEvent* event)
 }
 
 /*!
-   \brief Event filter
+   @brief Event filter
 
    The plot handles the following events for the canvas:
 
@@ -340,12 +340,12 @@ bool QwtPlot::event(QEvent* event)
 
    - For parasite axes, the parasite axis filters the host axis dimensions and adjusts its own dimensions
 
-   \param object Object to be filtered
-   \param event Event
+   @param object Object to be filtered
+   @param event Event
 
-   \return See QFrame::eventFilter()
+   @return See QFrame::eventFilter()
 
-   \sa updateCanvasMargins(), updateLayout()
+   @sa updateCanvasMargins(), updateLayout()
  */
 bool QwtPlot::eventFilter(QObject* object, QEvent* e)
 {
@@ -372,7 +372,7 @@ void QwtPlot::autoRefresh()
 }
 
 /*!
-   \brief Set or reset the autoReplot option
+   @brief Set or reset the autoReplot option
 
    If the autoReplot option is set, the plot will be
    updated implicitly by manipulating member functions.
@@ -383,8 +383,8 @@ void QwtPlot::autoRefresh()
    The autoReplot option is set to false by default, which
    means that the user has to call replot() in order to make
    changes visible.
-   \param tf \c true or \c false. Defaults to \c true.
-   \sa replot()
+   @param tf \c true or \c false. Defaults to \c true.
+   @sa replot()
  */
 void QwtPlot::setAutoReplot(bool tf)
 {
@@ -520,10 +520,10 @@ const QwtTextLabel* QwtPlot::footerLabel() const
 }
 
 /*!
-   \brief Assign a new plot layout
+   @brief Assign a new plot layout
 
-   \param layout Layout()
-   \sa plotLayout()
+   @param layout Layout()
+   @sa plotLayout()
  */
 void QwtPlot::setPlotLayout(QwtPlotLayout* layout)
 {
@@ -592,8 +592,8 @@ const QWidget* QwtPlot::canvas() const
 }
 
 /*!
-   \return Size hint for the plot widget
-   \sa minimumSizeHint()
+   @return Size hint for the plot widget
+   @sa minimumSizeHint()
  */
 QSize QwtPlot::sizeHint() const
 {
@@ -626,7 +626,7 @@ QSize QwtPlot::sizeHint() const
 }
 
 /*!
-   \brief Return a minimum size hint
+   @brief Return a minimum size hint
  */
 QSize QwtPlot::minimumSizeHint() const
 {
@@ -638,7 +638,7 @@ QSize QwtPlot::minimumSizeHint() const
 
 /*!
    Resize and update internal layout
-   \param e Resize event
+   @param e Resize event
  */
 void QwtPlot::resizeEvent(QResizeEvent* e)
 {
@@ -651,13 +651,13 @@ void QwtPlot::resizeEvent(QResizeEvent* e)
 }
 
 /*!
-   \brief Redraw the plot
+   @brief Redraw the plot
 
    If the autoReplot option is not set (which is the default)
    or if any curves are attached to raw data, the plot has to
    be refreshed explicitly in order to make changes visible.
 
-   \sa updateAxes(), setAutoReplot()
+   @sa updateAxes(), setAutoReplot()
  */
 void QwtPlot::replot()
 {
@@ -702,8 +702,8 @@ void QwtPlot::autoRefreshAll()
 }
 
 /*!
-   \brief Adjust plot content to its current size.
-   \sa resizeEvent()
+   @brief Adjust plot content to its current size.
+   @sa resizeEvent()
  */
 void QwtPlot::updateLayout()
 {
@@ -807,7 +807,7 @@ void QwtPlot::doLayout()
 /**
  * set the plot id.
  * 
- * \param id 
+ * @param id 
  */
 void QwtPlot::setPlotId(const QString& id)
 {
@@ -815,14 +815,14 @@ void QwtPlot::setPlotId(const QString& id)
 }
 
 /*!
-   \brief Calculate the canvas margins
+   @brief Calculate the canvas margins
 
-   \param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
-   \param canvasRect Bounding rectangle where to paint
-   \param left Return parameter for the left margin
-   \param top Return parameter for the top margin
-   \param right Return parameter for the right margin
-   \param bottom Return parameter for the bottom margin
+   @param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
+   @param canvasRect Bounding rectangle where to paint
+   @param left Return parameter for the left margin
+   @param top Return parameter for the top margin
+   @param right Return parameter for the right margin
+   @param bottom Return parameter for the bottom margin
 
    Plot items might indicate, that they need some extra space
    at the borders of the canvas by the QwtPlotItem::Margins flag.
@@ -855,7 +855,7 @@ void QwtPlot::getCanvasMarginsHint(
 }
 
 /*!
-   \brief Update the canvas margins
+   @brief Update the canvas margins
 
    Plot items might indicate, that they need some extra space
    at the borders of the canvas by the QwtPlotItem::Margins flag.
@@ -887,13 +887,13 @@ void QwtPlot::updateCanvasMargins()
 }
 
 /*!
-   \brief Draw a single inside tick
+   @brief Draw a single inside tick
 
-   \param painter Painter
-   \param tickPixelPos Tick position in pixels
-   \param tickLength Tick length
-   \param backbonePos Backbone position (canvas edge)
-   \param axisPos Axis position (YLeft, YRight, XTop, XBottom)
+   @param painter Painter
+   @param tickPixelPos Tick position in pixels
+   @param tickLength Tick length
+   @param backbonePos Backbone position (canvas edge)
+   @param axisPos Axis position (YLeft, YRight, XTop, XBottom)
  */
 void QwtPlot::drawSingleInsideTick(QPainter* painter,
                                    double tickPixelPos,
@@ -937,14 +937,14 @@ void QwtPlot::drawSingleInsideTick(QPainter* painter,
 }
 
 /*!
-   \brief Draw inside ticks for axes with TickInside direction
+   @brief Draw inside ticks for axes with TickInside direction
 
    This method is called after drawItems() to draw tick marks that
    extend from the canvas edge toward the interior.
 
-   \param painter Painter
-   \param canvasRect Canvas rectangle
-   \param maps Scale maps for all axes
+   @param painter Painter
+   @param canvasRect Canvas rectangle
+   @param maps Scale maps for all axes
  */
 void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
                               const QwtScaleMap maps[QwtAxis::AxisPositions]) const
@@ -1030,12 +1030,12 @@ void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
 
 /*!
    Redraw the canvas.
-   \param painter Painter used for drawing
+   @param painter Painter used for drawing
 
-   \warning drawCanvas calls drawItems what is also used
+   @warning drawCanvas calls drawItems what is also used
            for printing. Applications that like to add individual
            plot items better overload drawItems()
-   \sa drawItems()
+   @sa drawItems()
  */
 void QwtPlot::drawCanvas(QPainter* painter)
 {
@@ -1052,11 +1052,11 @@ void QwtPlot::drawCanvas(QPainter* painter)
 /*!
    Redraw the canvas items.
 
-   \param painter Painter used for drawing
-   \param canvasRect Bounding rectangle where to paint
-   \param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
+   @param painter Painter used for drawing
+   @param canvasRect Bounding rectangle where to paint
+   @param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
 
-   \note Usually canvasRect is contentsRect() of the plot canvas.
+   @note Usually canvasRect is contentsRect() of the plot canvas.
         Due to a bug in Qt this rectangle might be wrong for certain
         frame styles ( f.e QFrame::Box ) and it might be necessary to
         fix the margins manually using QWidget::setContentsMargins()
@@ -1087,10 +1087,10 @@ void QwtPlot::drawItems(QPainter* painter, const QRectF& canvasRect, const QwtSc
 }
 
 /*!
-   \param axisId Axis
-   \return Map for the axis on the canvas. With this map pixel coordinates can
+   @param axisId Axis
+   @return Map for the axis on the canvas. With this map pixel coordinates can
           translated to plot coordinates and vice versa.
-   \sa QwtScaleMap, transform(), invTransform()
+   @sa QwtScaleMap, transform(), invTransform()
  */
 QwtScaleMap QwtPlot::canvasMap(QwtAxisId axisId) const
 {
@@ -1145,14 +1145,14 @@ QwtScaleMap QwtPlot::canvasMap(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Change the background of the plotting area
+   @brief Change the background of the plotting area
 
    Sets brush to QPalette::Window of all color groups of
    the palette of the canvas. Using canvas()->setPalette()
    is a more powerful way to set these colors.
 
-   \param brush New background brush
-   \sa canvasBackground()
+   @param brush New background brush
+   @sa canvasBackground()
  */
 void QwtPlot::setCanvasBackground(const QBrush& brush)
 {
@@ -1166,8 +1166,8 @@ void QwtPlot::setCanvasBackground(const QBrush& brush)
    Nothing else than: canvas()->palette().brush(
         QPalette::Normal, QPalette::Window);
 
-   \return Background brush of the plotting area.
-   \sa setCanvasBackground()
+   @return Background brush of the plotting area.
+   @sa setCanvasBackground()
  */
 QBrush QwtPlot::canvasBackground() const
 {
@@ -1175,7 +1175,7 @@ QBrush QwtPlot::canvasBackground() const
 }
 
 /*!
-   \brief Insert a legend
+   @brief Insert a legend
 
    If the position legend is \c QwtPlot::LeftLegend or \c QwtPlot::RightLegend
    the legend will be organized in one column from top to down.
@@ -1192,19 +1192,19 @@ QBrush QwtPlot::canvasBackground() const
    wants to implement its own layout this also needs to be done for
    rendering plots to a document ( see QwtPlotRenderer ).
 
-   \param legend Legend
-   \param pos The legend's position. For top/left position the number
+   @param legend Legend
+   @param pos The legend's position. For top/left position the number
              of columns will be limited to 1, otherwise it will be set to
              unlimited.
 
-   \param ratio Ratio between legend and the bounding rectangle
+   @param ratio Ratio between legend and the bounding rectangle
                of title, canvas and axes. The legend will be shrunk
                if it would need more space than the given ratio.
                The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0
                it will be reset to the default ratio.
                The default vertical/horizontal ratio is 0.33/0.5.
 
-   \sa legend(), QwtPlotLayout::legendPosition(),
+   @sa legend(), QwtPlotLayout::legendPosition(),
       QwtPlotLayout::setLegendPosition()
  */
 void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition pos, double ratio)
@@ -1278,7 +1278,7 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
 /*!
    Emit legendDataChanged() for all plot item
 
-   \sa QwtPlotItem::legendData(), legendDataChanged()
+   @sa QwtPlotItem::legendData(), legendDataChanged()
  */
 void QwtPlot::updateLegend()
 {
@@ -1291,8 +1291,8 @@ void QwtPlot::updateLegend()
 /*!
    Emit legendDataChanged() for a plot item
 
-   \param plotItem Plot item
-   \sa QwtPlotItem::legendData(), legendDataChanged()
+   @param plotItem Plot item
+   @sa QwtPlotItem::legendData(), legendDataChanged()
  */
 void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 {
@@ -1309,15 +1309,15 @@ void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 }
 
 /*!
-   \brief Update all plot items interested in legend attributes
+   @brief Update all plot items interested in legend attributes
 
    Call QwtPlotItem::updateLegend(), when the QwtPlotItem::LegendInterest
    flag is set.
 
-   \param itemInfo Info about the plot item
-   \param legendData Entries to be displayed for the plot item ( usually 1 )
+   @param itemInfo Info about the plot item
+   @param legendData Entries to be displayed for the plot item ( usually 1 )
 
-   \sa QwtPlotItem::LegendInterest,
+   @sa QwtPlotItem::LegendInterest,
       QwtPlotLegendItem, QwtPlotItem::updateLegend()
  */
 void QwtPlot::updateLegendItems(const QVariant& itemInfo, const QList< QwtLegendData >& legendData)
@@ -1912,16 +1912,16 @@ void QwtPlot::setAxisToLinearScale(QwtAxisId axisId)
 }
 
 /*!
-   \brief Set the tick direction for an axis
+   @brief Set the tick direction for an axis
 
    When set to TickInside, the tick marks are drawn from the canvas edge
    toward the interior. The outside tick component is disabled on the
    QwtScaleWidget, and inside ticks are drawn in drawCanvas.
 
-   \param axisId Axis identifier
-   \param direction Tick direction (TickOutside or TickInside)
+   @param axisId Axis identifier
+   @param direction Tick direction (TickOutside or TickInside)
 
-   \sa axisTickDirection()
+   @sa axisTickDirection()
  */
 void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
 {
@@ -1963,12 +1963,12 @@ void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
 }
 
 /*!
-   \brief Get the tick direction for an axis
+   @brief Get the tick direction for an axis
 
-   \param axisId Axis identifier
-   \return Current tick direction
+   @param axisId Axis identifier
+   @return Current tick direction
 
-   \sa setAxisTickDirection()
+   @sa setAxisTickDirection()
  */
 QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
 {
@@ -2187,10 +2187,10 @@ void QwtPlot::updateAllAxisEdgeMargin()
 }
 
 /*!
-   \brief Attach/Detach a plot item
+   @brief Attach/Detach a plot item
 
-   \param plotItem Plot item
-   \param on When true attach the item, otherwise detach it
+   @param plotItem Plot item
+   @param on When true attach the item, otherwise detach it
  */
 void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
 {
@@ -2231,16 +2231,16 @@ void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
 }
 
 /*!
-   \brief Build an information, that can be used to identify
+   @brief Build an information, that can be used to identify
          a plot item on the legend.
 
    The default implementation simply wraps the plot item
    into a QVariant object. When overloading itemToInfo()
    usually infoToItem() needs to reimplemeted too.
 
-   \param plotItem Plot item
-   \return Plot item embedded in a QVariant
-   \sa infoToItem()
+   @param plotItem Plot item
+   @return Plot item embedded in a QVariant
+   @sa infoToItem()
  */
 QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
 {
@@ -2248,19 +2248,19 @@ QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
 }
 
 /*!
-   \brief Identify the plot item according to an item info object,
+   @brief Identify the plot item according to an item info object,
          that has bee generated from itemToInfo().
 
    The default implementation simply tries to unwrap a QwtPlotItem
    pointer:
 
-   \code
+   @code
     if ( itemInfo.canConvert<QwtPlotItem *>() )
         return qvariant_cast<QwtPlotItem *>( itemInfo );
-   \endcode
-   \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a nullptr pointer.
-   \sa itemToInfo()
+   @endcode
+   @param itemInfo Plot item
+   @return A plot item, when successful, otherwise a nullptr pointer.
+   @sa itemToInfo()
  */
 QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
 {

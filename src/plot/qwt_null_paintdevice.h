@@ -33,7 +33,6 @@
 #include <qpaintengine.h>
 
 /**
- * \if ENGLISH
  * @brief A null paint device that does nothing
  * @details Sometimes important layout/rendering geometries are not
  *          available or changeable from the public Qt class interface
@@ -42,27 +41,13 @@
  *          this information by analyzing the stream of paint primitives.
  *          For example, QwtNullPaintDevice is used by QwtPlotCanvas to identify
  *          styled backgrounds with rounded corners.
- * \endif
- * \if CHINESE
- * @brief 一个不执行任何操作的空绘制设备
- * @details 有时重要的布局/渲染几何信息无法从公共 Qt 类接口获取或修改
- *          （例如隐藏在样式实现中）。
- *          QwtNullPaintDevice 可用于通过分析绘制原语流来操作或过滤这些信息。
- *          例如，QwtPlotCanvas 使用 QwtNullPaintDevice 来识别带有圆角的样式背景。
- * \endif
  */
 class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 {
   public:
 /**
-     * \if ENGLISH
      * @brief Render mode for the paint device
      * @details Controls how vector graphic primitives are processed.
-     * \endif
-     * \if CHINESE
-     * @brief 绘制设备的渲染模式
-     * @details 控制矢量图形原语的处理方式。
-     * \endif
      */
     enum Mode
     {
@@ -142,7 +127,7 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     virtual void updateState( const QPaintEngineState& );
 
   protected:
-    //! \return Size needed to implement metric()
+    //! @return Size needed to implement metric()
     virtual QSize sizeMetrics() const = 0;
 
   private:

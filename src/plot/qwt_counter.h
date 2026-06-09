@@ -31,7 +31,6 @@
 #include <qwidget.h>
 
 /**
- * \if ENGLISH
  * @brief The Counter Widget
  * @details A Counter consists of a label displaying a number and
  *          one or more (up to three) push buttons on each side
@@ -54,27 +53,6 @@
  *          counter->setIncSteps(QwtCounter::Button2, 20);  // Button 2 increments 20 steps
  *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
  *          @endcode
- * \endif
- * \if CHINESE
- * @brief 计数器控件
- * @details 计数器由一个显示数字的标签和标签两侧的一个或多个（最多三个）按钮组成，
- *          这些按钮可用于增加或减少计数器的值。
- *          计数器有一个最小值到最大值的范围和一个步长。当设置了循环属性时，
- *          计数器是循环的。
- *          使用 setIncSteps() 可以指定按钮增加或减少值的步数。
- *          使用 setNumButtons() 可以更改按钮数量。
- *          示例：
- *          @code
- *          #include <qwt_counter.h>
- *          QwtCounter *counter = new QwtCounter(parent);
- *          counter->setRange(0.0, 100.0);                  // 从 0.0 到 100
- *          counter->setSingleStep( 1.0 );                  // 步长 1.0
- *          counter->setNumButtons(2);                      // 每侧两个按钮
- *          counter->setIncSteps(QwtCounter::Button1, 1);   // 按钮 1 增加 1 步
- *          counter->setIncSteps(QwtCounter::Button2, 20);  // 按钮 2 增加 20 步
- *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
- *          @endcode
- * \endif
  */
 
 class QWT_EXPORT QwtCounter : public QWidget
@@ -96,12 +74,7 @@ class QWT_EXPORT QwtCounter : public QWidget
 
   public:
     /**
-     * \if ENGLISH
      * @brief Button index
-     * \endif
-     * \if CHINESE
-     * @brief 按钮索引
-     * \endif
      */
     enum Button
     {
@@ -193,26 +166,14 @@ class QWT_EXPORT QwtCounter : public QWidget
 
   Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted when a button has been released
      * @param value The new value
-     * \endif
-     * \if CHINESE
-     * @brief 当按钮释放时发出的信号
-     * @param value 新值
-     * \endif
      */
     void buttonReleased ( double value );
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the counter's value has changed
      * @param value The new value
-     * \endif
-     * \if CHINESE
-     * @brief 当计数器值改变时发出的信号
-     * @param value 新值
-     * \endif
      */
     void valueChanged ( double value );
 

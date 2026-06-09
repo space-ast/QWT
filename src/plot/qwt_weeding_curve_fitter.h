@@ -30,7 +30,7 @@
 #include "qwt_curve_fitter.h"
 
 /*!
-   \brief A curve fitter implementing Douglas and Peucker algorithm
+   @brief A curve fitter implementing Douglas and Peucker algorithm
 
    The purpose of the Douglas and Peucker algorithm is that given a 'curve'
    composed of line segments to find a curve not too dissimilar but that

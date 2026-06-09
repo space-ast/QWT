@@ -60,22 +60,22 @@ public:
         IgnoreScrollbars = 0x02,
 
         /**
-         * \brief Ignore all frames
+         * @brief Ignore all frames
          */
         IgnoreFrames = 0x04,
 
         /**
-         * \brief Ignore the legend
+         * @brief Ignore the legend
          */
         IgnoreLegend = 0x08,
 
         /**
-         * \brief Ignore the title
+         * @brief Ignore the title
          */
         IgnoreTitle = 0x10,
 
         /**
-         * \brief Ignore the footer
+         * @brief Ignore the footer
          */
         IgnoreFooter = 0x20
     };

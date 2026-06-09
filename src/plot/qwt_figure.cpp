@@ -206,7 +206,6 @@ void QwtFigure::setWidgetNormPos(QWidget* widget, const QRectF& rect)
 }
 
 /**
- * \if ENGLISH
  * @brief Get all axes (plots) in the figure (not including parasite axes)
  * @details This method returns a list of all QwtPlot objects added to the figure.
  * @param byZOrder If true, sort by z-order from top to bottom
@@ -252,7 +251,6 @@ QList< QwtPlot* > QwtFigure::allAxes(bool byZOrder) const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the figure has any axes
  * @details This method returns true if the figure contains at least one QwtPlot.
  * @return true if the figure has axes, false otherwise
@@ -275,7 +273,6 @@ bool QwtFigure::hasAxes() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the figure contains a specific plot
  * @details This method returns true if the figure contains the specified QwtPlot.
  * @param plot QwtPlot to check
@@ -302,7 +299,6 @@ bool QwtFigure::hasAxes(QwtPlot* plot) const
 }
 
 /**
- * \if ENGLISH
  * @brief Remove a specific axes (plot) from the figure
  * @details This method removes the specified QwtPlot from the figure.
  * @param plot QwtPlot to remove
@@ -315,7 +311,6 @@ void QwtFigure::removeAxes(QwtPlot* plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Take a specific axes (plot) from the figure without deleting it
  * @param plot Pointer to the QwtPlot to take
  * @return true if successfully taken, false otherwise
@@ -385,7 +380,6 @@ bool QwtFigure::takeAxes(QwtPlot* plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Clear all axes from the figure
  * @details This method removes all QwtPlot objects from the figure and deletes them.
  *
@@ -430,7 +424,6 @@ void QwtFigure::clear()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the size of the figure in inches
  * @details This method calculates the physical size of the figure in inches based on
  *          the current pixel size and screen DPI.
@@ -446,7 +439,6 @@ QSize QwtFigure::getSizeInches() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the size of the figure in inches
  * @details This method sets the size of the figure in inches, converting to pixels
  *          based on the screen DPI.
@@ -465,7 +457,6 @@ void QwtFigure::setSizeInches(float width, float height)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the size of the figure in inches
  * @details This method sets the size of the figure in inches, converting to pixels
  *          based on the screen DPI.
@@ -477,7 +468,6 @@ void QwtFigure::setSizeInches(const QSizeF& size)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the face color of the figure
  * @details This method sets the background color of the figure.
  * @param color Background color
@@ -488,7 +478,6 @@ void QwtFigure::setFaceColor(const QColor& color)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the face color of the figure
  * @details This method returns the background color of the figure.
  * @return Background color
@@ -499,7 +488,6 @@ QColor QwtFigure::faceColor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the face brush of the figure
  * @details This method sets the background brush of the figure, allowing for
  *          more complex backgrounds (gradients, textures, etc.).
@@ -511,7 +499,6 @@ void QwtFigure::setFaceBrush(const QBrush& brush)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the face brush of the figure
  * @details This method returns the background brush of the figure.
  * @return Background brush
@@ -522,7 +509,6 @@ QBrush QwtFigure::faceBrush() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the edge color of the figure
  * @details This method sets the border color of the figure.
  * @param color Border color
@@ -533,7 +519,6 @@ void QwtFigure::setEdgeColor(const QColor& color)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the edge color of the figure
  * @details This method returns the border color of the figure.
  * @return Border color
@@ -544,7 +529,6 @@ QColor QwtFigure::edgeColor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the edge line width of the figure
  * @details This method sets the border line width of the figure.
  * @param width Border line width in pixels
@@ -555,7 +539,6 @@ void QwtFigure::setEdgeLineWidth(int width)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the edge line width of the figure
  * @details This method returns the border line width of the figure.
  * @return Border line width in pixels
@@ -566,7 +549,6 @@ int QwtFigure::edgeLineWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Create parasite axes for a host plot
  * @details This method creates a parasite axes that shares the same plotting area as the host plot
  *          but with independent axis scaling and labeling. The parasite axes will be positioned
@@ -597,7 +579,6 @@ QwtPlot* QwtFigure::createParasiteAxes(QwtPlot* hostPlot, QwtAxis::Position enab
 }
 
 /**
- * \if ENGLISH
  * @brief Get all parasite axes for a host plot
  * @details This method returns a list of all parasite axes associated with the specified host plot.
  * @param hostPlot Pointer to the host QwtPlot
@@ -613,7 +594,6 @@ QList< QwtPlot* > QwtFigure::getParasiteAxes(QwtPlot* hostPlot) const
 }
 
 /**
- * \if ENGLISH
  * @brief Save the figure to a QPixmap with specified DPI
  * @details This method renders the figure to a QPixmap with the specified DPI.
  *          If DPI is -1, the current screen DPI is used.
@@ -676,7 +656,6 @@ QPixmap QwtFigure::saveFig(int dpi) const
 }
 
 /**
- * \if ENGLISH
  * @brief Save the figure to a QPixmap with specified size in inches
  * @details This method renders the figure to a QPixmap with the specified physical size in inches.
  *          The current DPI setting of the figure is used to calculate the pixel size.
@@ -720,7 +699,6 @@ QPixmap QwtFigure::saveFig(QSizeF& inchesSize) const
 }
 
 /**
- * \if ENGLISH
  * @brief Save the figure to a file with specified DPI
  * @details This method saves the figure to an image file with the specified DPI.
  * @param filename Name of the file to save
@@ -734,7 +712,6 @@ bool QwtFigure::saveFig(const QString& filename, int dpi) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the current axes (plot)
  * @details This method sets the specified QwtPlot as the current active axes in the figure.
  * @param plot QwtPlot to set as current
@@ -749,7 +726,6 @@ void QwtFigure::setCurrentAxes(QwtPlot* plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the current axes (plot)
  * @details This is a convenience method that calls setCurrentAxes.
  * @param plot QwtPlot to set as current
@@ -760,7 +736,6 @@ void QwtFigure::sca(QwtPlot* plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current axes (plot)
  * @details This method returns the current active QwtPlot in the figure.
  *          The current axes is typically the last axes that was added, modified, or plotted on.
@@ -772,7 +747,6 @@ QwtPlot* QwtFigure::currentAxes() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current axes (plot)
  * @details This is a convenience method that calls currentAxes.
  * @return Pointer to the current QwtPlot, or nullptr if no axes exist
@@ -783,7 +757,6 @@ QwtPlot* QwtFigure::gca() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the normalized rectangle for a axes
  * @details This method returns the normalized coordinates [0,1] for the specified axes
  *          in the figure. If the axes is not found in the figure, an invalid QRectF is returned.
@@ -797,7 +770,6 @@ QRectF QwtFigure::axesNormRect(QwtPlot* plot) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the normalized rectangle for a widget
  * @details This method returns the normalized coordinates [0,1] for the specified axes
  *          in the figure. If the widget is not found in the figure, an invalid QRectF is returned.
@@ -836,7 +808,6 @@ QwtPlot* QwtFigure::plotUnderPos(const QPoint& pos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate normalized coordinates from actual window coordinates
  * @details This method converts actual window coordinates (geometry) to normalized coordinates.
  * @param geoRect Actual window coordinates (geometry)
@@ -848,7 +819,6 @@ QRectF QwtFigure::calcNormRect(const QRect& geoRect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate actual rectangle from normalized coordinates
  * @details This method converts normalized coordinates to actual window coordinates.
  * @param normRect Normalized coordinates QRectF
@@ -861,7 +831,6 @@ QRect QwtFigure::calcActualRect(const QRectF& normRect)
 }
 
 /**
- * \if ENGLISH
  * @brief Update all plots in the figure
  * @details This method calls replot on all plots in the figure.
  */
@@ -874,7 +843,6 @@ void QwtFigure::replotAll()
 }
 
 /**
- * \if ENGLISH
  * @brief Add axis alignment configuration
  * @details This method adds an alignment configuration for the specified plots and axis.
  * @param plots List of plots to align
@@ -906,7 +874,6 @@ void QwtFigure::addAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
 }
 
 /**
- * \if ENGLISH
  * @brief Remove specified axis alignment configuration
  * @details This method removes the alignment configuration for the specified plots and axis.
  * @param plots List of plots to remove from alignment
@@ -932,7 +899,6 @@ bool QwtFigure::removeAxisAlignment(const QList< QwtPlot* >& plots, int axisId)
     return removed;
 }
 /**
- * \if ENGLISH
  * @brief Clear all axis alignment configurations
  * @details This method removes all alignment configurations from the figure.
  */
@@ -942,7 +908,6 @@ void QwtFigure::clearAxisAlignment()
 }
 
 /**
- * \if ENGLISH
  * @brief Apply all axis alignment configurations
  * @details This method applies all recorded alignment configurations to the plots.
  * @param replot If true, replot all affected plots after alignment
@@ -955,7 +920,6 @@ void QwtFigure::applyAllAxisAlignments(bool replot)
 }
 
 /**
- * \if ENGLISH
  * @brief Apply alignment configurations for a specific axis
  * @details This method applies all alignment configurations for the specified axis ID.
  * @param axisId Axis ID to apply alignments for
@@ -974,7 +938,6 @@ void QwtFigure::applyAlignmentsForAxis(int axisId)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the number of axis alignment configurations
  * @details This method returns the count of alignment configurations added via addAxisAlignment.
  * @return Number of alignment configurations
@@ -985,7 +948,6 @@ int QwtFigure::axisAligmentCount() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get axis alignment information by index
  * @details This method returns the alignment configuration at the specified index.
  * @param index Index of the alignment configuration to retrieve

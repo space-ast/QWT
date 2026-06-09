@@ -30,26 +30,16 @@
 #include <qpainterpath.h>
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtVectorFieldSymbol::QwtVectorFieldSymbol()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtVectorFieldSymbol::~QwtVectorFieldSymbol()
 {
@@ -95,7 +85,6 @@ class QwtVectorFieldArrow::PrivateData
 };
 
 /*!
-    \if ENGLISH
     @brief Constructor
 
     The length is initialized by headWidth + 4
@@ -103,19 +92,8 @@ class QwtVectorFieldArrow::PrivateData
     @param headWidth Width of the triangular head
     @param tailWidth Width of the arrow tail
 
-    \sa setLength()
-    \endif
+    @sa setLength()
     *
-    \if CHINESE
-    @brief 构造函数
-
-    长度初始化为 headWidth + 4
-
-    @param headWidth 三角形头部的宽度
-    @param tailWidth 箭头尾部的宽度
-
-    \sa setLength()
-    \endif
  */
 QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
 {
@@ -123,13 +101,8 @@ QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtVectorFieldArrow::~QwtVectorFieldArrow()
 {
@@ -137,16 +110,9 @@ QwtVectorFieldArrow::~QwtVectorFieldArrow()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the length of the arrow
  * @param[in] length Length of the arrow in pixels
  * @sa length()
- * \endif
- * \if CHINESE
- * @brief 设置箭头的长度
- * @param[in] length 箭头的长度（像素）
- * @sa length()
- * \endif
  */
 void QwtVectorFieldArrow::setLength( qreal length )
 {
@@ -154,16 +120,9 @@ void QwtVectorFieldArrow::setLength( qreal length )
 }
 
 /**
- * \if ENGLISH
  * @brief Return the length of the arrow
  * @return Length of the arrow in pixels
  * @sa setLength()
- * \endif
- * \if CHINESE
- * @brief 返回箭头的长度
- * @return 箭头的长度（像素）
- * @sa setLength()
- * \endif
  */
 qreal QwtVectorFieldArrow::length() const
 {
@@ -171,14 +130,8 @@ qreal QwtVectorFieldArrow::length() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the arrow using QPainter
  * @param[in] painter Painter to use for drawing
- * \endif
- * \if CHINESE
- * @brief 使用 QPainter 绘制箭头
- * @param[in] painter 用于绘制的画笔
- * \endif
  */
 void QwtVectorFieldArrow::paint( QPainter* painter ) const
 {
@@ -206,23 +159,13 @@ class QwtVectorFieldThinArrow::PrivateData
 };
 
 /*!
-    \if ENGLISH
     @brief Constructor
 
     The length is initialized by headWidth + 4
 
     @param headWidth Width of the triangular head
-    \sa setLength()
-    \endif
+    @sa setLength()
     *
-    \if CHINESE
-    @brief 构造函数
-
-    长度初始化为 headWidth + 4
-
-    @param headWidth 三角形头部的宽度
-    \sa setLength()
-    \endif
  */
 QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
 {
@@ -230,13 +173,8 @@ QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
 {
@@ -244,18 +182,10 @@ QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the length of the arrow
  * @details Adjusts the head width proportionally when length is very small
  * @param[in] length Length of the arrow in pixels
  * @sa length()
- * \endif
- * \if CHINESE
- * @brief 设置箭头的长度
- * @details 当长度非常小时，会按比例调整头部宽度
- * @param[in] length 箭头的长度（像素）
- * @sa length()
- * \endif
  */
 void QwtVectorFieldThinArrow::setLength( qreal length )
 {
@@ -271,16 +201,9 @@ void QwtVectorFieldThinArrow::setLength( qreal length )
 }
 
 /**
- * \if ENGLISH
  * @brief Return the length of the arrow
  * @return Length of the arrow in pixels
  * @sa setLength()
- * \endif
- * \if CHINESE
- * @brief 返回箭头的长度
- * @return 箭头的长度（像素）
- * @sa setLength()
- * \endif
  */
 qreal QwtVectorFieldThinArrow::length() const
 {
@@ -288,14 +211,8 @@ qreal QwtVectorFieldThinArrow::length() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the arrow using QPainter
  * @param[in] p Painter to use for drawing
- * \endif
- * \if CHINESE
- * @brief 使用 QPainter 绘制箭头
- * @param[in] p 用于绘制的画笔
- * \endif
  */
 void QwtVectorFieldThinArrow::paint(QPainter* p) const
 {

@@ -64,8 +64,8 @@ bool Plot3D::lightingEnabled() const
 }
 
 /**
-  \param light light number [0..7]
-  \see setLight
+  @param light light number [0..7]
+  @see setLight
 */
 void Plot3D::illuminate(unsigned light)
 {
@@ -74,8 +74,8 @@ void Plot3D::illuminate(unsigned light)
     lights_[ light ].unlit = false;
 }
 /**
-  \param light light number [0..7]
-  \see setLight
+  @param light light number [0..7]
+  @see setLight
 */
 void Plot3D::blowout(unsigned light)
 {
@@ -137,10 +137,10 @@ void Plot3D::setLightComponent(GLenum property, double intensity, unsigned light
 
 /**
   Set the rotation angle of the light source. If you look along the respective axis towards
-  ascending values, the rotation is performed in mathematical \e negative sense \param xVal angle in
-  \e degree to rotate around the X axis \param yVal angle in \e degree to rotate around the Y axis
-        \param zVal angle in \e degree to rotate around the Z axis
-  \param light light number
+  ascending values, the rotation is performed in mathematical \e negative sense @param xVal angle in
+  \e degree to rotate around the X axis @param yVal angle in \e degree to rotate around the Y axis
+        @param zVal angle in \e degree to rotate around the Z axis
+  @param light light number
 */
 void Plot3D::setLightRotation(double xVal, double yVal, double zVal, unsigned light)
 {
@@ -153,11 +153,11 @@ void Plot3D::setLightRotation(double xVal, double yVal, double zVal, unsigned li
 
 /**
   Set the shift in light source (world) coordinates.
-        \param xVal shift along (world) X axis
-        \param yVal shift along (world) Y axis
-        \param zVal shift along (world) Z axis
-  \param light light number
-        \see setViewportShift()
+        @param xVal shift along (world) X axis
+        @param yVal shift along (world) Y axis
+        @param zVal shift along (world) Z axis
+  @param light light number
+        @see setViewportShift()
 */
 void Plot3D::setLightShift(double xVal, double yVal, double zVal, unsigned light)
 {

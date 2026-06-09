@@ -65,18 +65,10 @@ static QStyleOptionButton styleOpt(const QwtArrowButton* btn)
 }
 
 /**
- * \if ENGLISH
- *   \brief Constructor
- *   \param[in] num Number of arrows (1-3)
- *   \param[in] arrowType Direction of arrows (see Qt::ArrowType)
- *   \param[in] parent Parent widget
- * \endif
- * \if CHINESE
- *   \brief 构造函数
- *   \param[in] num 箭头数量（1-3）
- *   \param[in] arrowType 箭头方向（参见Qt::ArrowType）
- *   \param[in] parent 父控件
- * \endif
+ *   @brief Constructor
+ *   @param[in] num Number of arrows (1-3)
+ *   @param[in] arrowType Direction of arrows (see Qt::ArrowType)
+ *   @param[in] parent Parent widget
  */
 QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent) : QPushButton(parent)
 {
@@ -98,12 +90,7 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
 }
 
 /**
- * \if ENGLISH
- *   \brief Destructor
- * \endif
- * \if CHINESE
- *   \brief 析构函数
- * \endif
+ *   @brief Destructor
  */
 QwtArrowButton::~QwtArrowButton()
 {
@@ -112,14 +99,8 @@ QwtArrowButton::~QwtArrowButton()
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the direction of the arrows
- *   \return Arrow direction
- * \endif
- * \if CHINESE
- *   \brief 获取箭头的方向
- *   \return 箭头方向
- * \endif
+ *   @brief Get the direction of the arrows
+ *   @return Arrow direction
  */
 Qt::ArrowType QwtArrowButton::arrowType() const
 {
@@ -127,14 +108,8 @@ Qt::ArrowType QwtArrowButton::arrowType() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the number of arrows
- *   \return Number of arrows
- * \endif
- * \if CHINESE
- *   \brief 获取箭头的数量
- *   \return 箭头数量
- * \endif
+ *   @brief Get the number of arrows
+ *   @return Number of arrows
  */
 int QwtArrowButton::num() const
 {
@@ -142,7 +117,7 @@ int QwtArrowButton::num() const
 }
 
 /*!
-   \return the bounding rectangle for the label
+   @return the bounding rectangle for the label
  */
 QRect QwtArrowButton::labelRect() const
 {
@@ -164,7 +139,7 @@ QRect QwtArrowButton::labelRect() const
 
 /*!
    Paint event handler
-   \param event Paint event
+   @param event Paint event
  */
 void QwtArrowButton::paintEvent(QPaintEvent* event)
 {
@@ -174,10 +149,10 @@ void QwtArrowButton::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \brief Draw the button label
+   @brief Draw the button label
 
-   \param painter Painter
-   \sa The Qt Manual for QPushButton
+   @param painter Painter
+   @sa The Qt Manual for QPushButton
  */
 void QwtArrowButton::drawButtonLabel(QPainter* painter)
 {
@@ -236,9 +211,9 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
 /*!
     Draw an arrow int a bounding rectangle
 
-    \param painter Painter
-    \param r Rectangle where to paint the arrow
-    \param arrowType Arrow type
+    @param painter Painter
+    @param r Rectangle where to paint the arrow
+    @param arrowType Arrow type
  */
 void QwtArrowButton::drawArrow(QPainter* painter, const QRect& r, Qt::ArrowType arrowType) const
 {
@@ -280,14 +255,8 @@ void QwtArrowButton::drawArrow(QPainter* painter, const QRect& r, Qt::ArrowType 
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a size hint for the button
- *   \return Size hint
- * \endif
- * \if CHINESE
- *   \brief 获取按钮的大小提示
- *   \return 大小提示
- * \endif
+ *   @brief Get a size hint for the button
+ *   @return Size hint
  */
 QSize QwtArrowButton::sizeHint() const
 {
@@ -296,14 +265,8 @@ QSize QwtArrowButton::sizeHint() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a minimum size hint for the button
- *   \return Minimum size hint
- * \endif
- * \if CHINESE
- *   \brief 获取按钮的最小大小提示
- *   \return 最小大小提示
- * \endif
+ *   @brief Get a minimum size hint for the button
+ *   @return Minimum size hint
  */
 QSize QwtArrowButton::minimumSizeHint() const
 {
@@ -327,9 +290,9 @@ QSize QwtArrowButton::minimumSizeHint() const
 /*!
    Calculate the size for a arrow that fits into a rectangle of a given size
 
-   \param arrowType Arrow type
-   \param boundingSize Bounding size
-   \return Size of the arrow
+   @param arrowType Arrow type
+   @param boundingSize Bounding size
+   @return Size of the arrow
  */
 QSize QwtArrowButton::arrowSize(Qt::ArrowType arrowType, const QSize& boundingSize) const
 {
@@ -356,7 +319,7 @@ QSize QwtArrowButton::arrowSize(Qt::ArrowType arrowType, const QSize& boundingSi
 }
 
 /*!
-   \brief autoRepeat for the space keys
+   @brief autoRepeat for the space keys
  */
 void QwtArrowButton::keyPressEvent(QKeyEvent* event)
 {

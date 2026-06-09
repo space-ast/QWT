@@ -49,7 +49,6 @@ class QwtTransform;
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief A Widget which contains a scale
  * @details This Widget can be used to decorate composite widgets with a scale.
  *
@@ -68,27 +67,6 @@ class QwtColorMap;
  * │      │       │      │ 2  -│       │
  * │      │       │      │     │       │
  * │      │       │      │ 1  -│       │_________________________________
- * \endif
- * \if CHINESE
- * @brief 包含刻度的控件
- * @details 此控件可用于为复合控件添加刻度装饰。
- *
- * 布局示意图：
- * │<----------------------------- plot yleft edge
- * │      │       │      │tick ┌       ┌-----------------------------------
- * │      │       │      │label│       │
- * │edge  │YLeft  │space │ 6  -│margin │
- * │margin│Title  │      │     │       │
- * │      │       │      │ 5  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 4  -│       │ plot cavans
- * │      │       │      │     │       │
- * │      │       │      │ 3  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 2  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 1  -│       │_________________________________
- * \endif
  */
 
 class QWT_EXPORT QwtScaleWidget : public QWidget
@@ -106,12 +84,7 @@ public:
     Q_DECLARE_FLAGS(LayoutFlags, LayoutFlag)
 
     /**
-     * \if ENGLISH
      * @brief Built-in actions
-     * \endif
-     * \if CHINESE
-     * @brief 内置的动作
-     * \endif
      */
     enum BuiltinActions
     {
@@ -136,43 +109,23 @@ public:
 Q_SIGNALS:
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted whenever the scale division changes
-     * \endif
-     * \if CHINESE
-     * @brief 当刻度分度发生变化时发出的信号
-     * \endif
      */
     void scaleDivChanged();
 
     /**
-     * \if ENGLISH
      * @brief Request to change the axis scale division
      * @details Emitted when built-in actions (zoom/pan) need to alter the scale.
      *          Unlike normal QwtPlot updates, here the axis drives the change:
      *          QwtPlot receives this signal and adjusts item bounds accordingly.
      * @param min Minimum scale division requested
      * @param max Maximum scale division requested
-     * \endif
-     * \if CHINESE
-     * @brief 坐标轴主动请求变更刻度范围
-     * @details 内置动作（缩放/平移）需要改变刻度时发射此信号。
-     *          与常规 QwtPlot 更新不同，此处由轴驱动变更：QwtPlot 接收信号后调整图元范围。
-     * @param min 请求的最小刻度范围
-     * @param max 请求的最大刻度范围
-     * \endif
      */
     void requestScaleRangeUpdate(double min, double max);
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the axis selection state changes
      * @param selected True if the axis is selected, false otherwise
-     * \endif
-     * \if CHINESE
-     * @brief 当前轴被选中状态发生变化发射信号
-     * @param selected true 表示选中，false 表示取消选中
-     * \endif
      */
     void selectionChanged(bool selected);
 
@@ -181,19 +134,19 @@ public:
     void setTitle(const QString& title);
     /// Set the title
     void setTitle(const QwtText& title);
-    /// \return the title
+    /// @return the title
     QwtText title() const;
 
     /// Set a layout flag
     void setLayoutFlag(LayoutFlag, bool on);
-    /// \return true if a layout flag is set
+    /// @return true if a layout flag is set
     bool testLayoutFlag(LayoutFlag) const;
 
     /// Set the border distances
     void setBorderDist(int dist1, int dist2);
-    /// \return the start border distance
+    /// @return the start border distance
     int startBorderDist() const;
-    /// \return the end border distance
+    /// @return the end border distance
     int endBorderDist() const;
 
     /// Get the border distance hint
@@ -203,24 +156,24 @@ public:
     void getMinBorderDist(int& start, int& end) const;
     /// Set the minimum border distances
     void setMinBorderDist(int start, int end);
-    /// \return the start minimum border distance
+    /// @return the start minimum border distance
     int startMinBorderDist() const;
-    /// \return the end minimum border distance
+    /// @return the end minimum border distance
     int endMinBorderDist() const;
 
     /// Set the margin
     void setMargin(int);
-    /// \return the margin
+    /// @return the margin
     int margin() const;
 
     /// Set the spacing
     void setSpacing(int);
-    /// \return the spacing
+    /// @return the spacing
     int spacing() const;
 
     /// Set the edge margin (offset between axis and plot canvas)
     void setEdgeMargin(int offset);
-    /// \return the edge margin
+    /// @return the edge margin
     int edgeMargin() const;
 
     /// Set the scale division
@@ -230,9 +183,9 @@ public:
 
     /// Set the scale draw
     void setScaleDraw(QwtScaleDraw*);
-    /// \return the scale draw (const version)
+    /// @return the scale draw (const version)
     const QwtScaleDraw* scaleDraw() const;
-    /// \return the scale draw
+    /// @return the scale draw
     QwtScaleDraw* scaleDraw();
 
     /// Set the label alignment
@@ -242,28 +195,28 @@ public:
 
     /// Enable/disable the color bar
     void setColorBarEnabled(bool);
-    /// \return true if color bar is enabled
+    /// @return true if color bar is enabled
     bool isColorBarEnabled() const;
 
     /// Set the color bar width
     void setColorBarWidth(int);
-    /// \return the color bar width
+    /// @return the color bar width
     int colorBarWidth() const;
 
     /// Set the color map
     void setColorMap(const QwtInterval&, QwtColorMap*);
 
-    /// \return the color bar interval
+    /// @return the color bar interval
     QwtInterval colorBarInterval() const;
-    /// \return the color map
+    /// @return the color map
     const QwtColorMap* colorMap() const;
 
     virtual QSize sizeHint() const override;
     virtual QSize minimumSizeHint() const override;
 
-    /// \return the height required for the title for a given width
+    /// @return the height required for the title for a given width
     int titleHeightForWidth(int width) const;
-    /// \return the dimension required for a given length
+    /// @return the dimension required for a given length
     int dimForLength(int length, const QFont& scaleFont) const;
 
     /// Draw the color bar
@@ -273,32 +226,32 @@ public:
 
     /// Set the alignment
     void setAlignment(QwtScaleDraw::Alignment);
-    /// \return the alignment
+    /// @return the alignment
     QwtScaleDraw::Alignment alignment() const;
 
-    /// \return the rectangle for the color bar
+    /// @return the rectangle for the color bar
     QRectF colorBarRect(const QRectF&) const;
 
-    /// \return the scale rectangle (excluding color bar, margin, edge margin, border distances)
+    /// @return the scale rectangle (excluding color bar, margin, edge margin, border distances)
     QRect scaleRect() const;
     /// Set the text color (font color of the coordinate axis)
     void setTextColor(const QColor& c);
-    /// \return the text color
+    /// @return the text color
     QColor textColor() const;
 
     /// Set the scale color (color of the coordinate axis)
     void setScaleColor(const QColor& c);
-    /// \return the scale color
+    /// @return the scale color
     QColor scaleColor() const;
 
     /// Layout the scale
     void layoutScale(bool update_geometry = true);
 
-    /// \return the axis ID for this scale widget
+    /// @return the axis ID for this scale widget
     QwtAxisId axisID() const;
-    /// \return true if this is an X axis
+    /// @return true if this is an X axis
     bool isXAxis() const;
-    /// \return true if this is a Y axis
+    /// @return true if this is a Y axis
     bool isYAxis() const;
     //===============================================
     // Built-in action methods
@@ -306,29 +259,29 @@ public:
 
     /// Enable/disable built-in actions
     void setBuildinActions(BuiltinActionsFlags acts);
-    /// \return the built-in actions flags
+    /// @return the built-in actions flags
     BuiltinActionsFlags buildinActions() const;
-    /// \return true if a built-in action is active
+    /// @return true if a built-in action is active
     bool testBuildinActions(BuiltinActions ba) const;
 
     /// Set the selected state
     void setSelected(bool selected);
-    /// \return true if selected
+    /// @return true if selected
     bool isSelected() const;
 
     /// Set the selection color
     void setSelectionColor(const QColor& color);
-    /// \return the selection color
+    /// @return the selection color
     QColor selectionColor() const;
 
     /// Set the zoom factor (default 1.2)
     void setZoomFactor(double factor);
-    /// \return the zoom factor
+    /// @return the zoom factor
     double zoomFactor() const;
 
     /// Set the selected pen width offset
     void setSelectedPenWidthOffset(qreal offset = 1);
-    /// \return the selected pen width offset
+    /// @return the selected pen width offset
     qreal selectedPenWidthOffset() const;
 
     /// Check if a point is on the scale area

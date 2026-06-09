@@ -106,8 +106,8 @@ void QwtPlotGLCanvas::init()
 /*!
    Paint event
 
-   \param event Paint event
-   \sa QwtPlot::drawCanvas()
+   @param event Paint event
+   @sa QwtPlot::drawCanvas()
  */
 void QwtPlotGLCanvas::paintEvent(QPaintEvent* event)
 {

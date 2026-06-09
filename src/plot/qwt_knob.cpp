@@ -112,7 +112,7 @@ public:
  *          QwtKnob::Raised and the marker style is QwtKnob::Notch.
  *          The width of the knob is set to 50 pixels.
  * @param parent Parent widget
- * \sa setTotalAngle()
+ * @sa setTotalAngle()
  */
 QwtKnob::QwtKnob(QWidget* parent) : QwtAbstractSlider(parent)
 {
@@ -137,7 +137,7 @@ QwtKnob::~QwtKnob()
 /**
  * @brief Set the knob type
  * @param knobStyle Knob type
- * \sa knobStyle(), setBorderWidth()
+ * @sa knobStyle(), setBorderWidth()
  */
 void QwtKnob::setKnobStyle(KnobStyle knobStyle)
 {
@@ -150,7 +150,7 @@ void QwtKnob::setKnobStyle(KnobStyle knobStyle)
 /**
  * @brief Return the knob style
  * @return Knob type
- * \sa setKnobStyle(), setBorderWidth()
+ * @sa setKnobStyle(), setBorderWidth()
  */
 QwtKnob::KnobStyle QwtKnob::knobStyle() const
 {
@@ -160,7 +160,7 @@ QwtKnob::KnobStyle QwtKnob::knobStyle() const
 /**
  * @brief Set the marker type of the knob
  * @param markerStyle Marker type
- * \sa markerStyle(), setMarkerSize()
+ * @sa markerStyle(), setMarkerSize()
  */
 void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
 {
@@ -173,7 +173,7 @@ void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
 /**
  * @brief Return the marker style
  * @return Marker type of the knob
- * \sa setMarkerStyle(), setMarkerSize()
+ * @sa setMarkerStyle(), setMarkerSize()
  */
 QwtKnob::MarkerStyle QwtKnob::markerStyle() const
 {
@@ -187,7 +187,7 @@ QwtKnob::MarkerStyle QwtKnob::markerStyle() const
  *          have to be set using setNumTurns().
  *          The default angle is 270 degrees.
  * @param angle Angle in degrees
- * \sa totalAngle(), setNumTurns()
+ * @sa totalAngle(), setNumTurns()
  */
 void QwtKnob::setTotalAngle(double angle)
 {
@@ -206,7 +206,7 @@ void QwtKnob::setTotalAngle(double angle)
 /**
  * @brief Return the total angle
  * @return Total angle in degrees
- * \sa setTotalAngle(), setNumTurns(), numTurns()
+ * @sa setTotalAngle(), setNumTurns(), numTurns()
  */
 double QwtKnob::totalAngle() const
 {
@@ -218,7 +218,7 @@ double QwtKnob::totalAngle() const
  * @details When numTurns > 1 the knob can be turned several times around its axis.
  *          Otherwise the total angle is floored to 360°.
  * @param numTurns Number of turns
- * \sa numTurns(), totalAngle(), setTotalAngle()
+ * @sa numTurns(), totalAngle(), setTotalAngle()
  */
 void QwtKnob::setNumTurns(int numTurns)
 {
@@ -241,7 +241,7 @@ void QwtKnob::setNumTurns(int numTurns)
 /**
  * @brief Return the number of turns
  * @return Number of turns. When the total angle is below 360°, numTurns() is ceiled to 1.
- * \sa setNumTurns(), setTotalAngle(), totalAngle()
+ * @sa setNumTurns(), setTotalAngle(), totalAngle()
  */
 int QwtKnob::numTurns() const
 {
@@ -253,7 +253,7 @@ int QwtKnob::numTurns() const
  * @details For changing the labels of the scales, it is necessary to derive
  *          from QwtRoundScaleDraw and overload QwtRoundScaleDraw::label().
  * @param scaleDraw Scale draw object
- * \sa scaleDraw()
+ * @sa scaleDraw()
  */
 void QwtKnob::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {
@@ -267,7 +267,7 @@ void QwtKnob::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 /**
  * @brief Return the scale draw of the knob (const version)
  * @return The scale draw
- * \sa setScaleDraw()
+ * @sa setScaleDraw()
  */
 const QwtRoundScaleDraw* QwtKnob::scaleDraw() const
 {
@@ -277,7 +277,7 @@ const QwtRoundScaleDraw* QwtKnob::scaleDraw() const
 /**
  * @brief Return the scale draw of the knob (non-const version)
  * @return The scale draw
- * \sa setScaleDraw()
+ * @sa setScaleDraw()
  */
 QwtRoundScaleDraw* QwtKnob::scaleDraw()
 {
@@ -287,7 +287,7 @@ QwtRoundScaleDraw* QwtKnob::scaleDraw()
 /**
  * @brief Calculate the bounding rectangle of the knob without the scale
  * @return Bounding rectangle of the knob
- * \sa knobWidth(), alignment(), QWidget::contentsRect()
+ * @sa knobWidth(), alignment(), QWidget::contentsRect()
  */
 QRect QwtKnob::knobRect() const
 {
@@ -326,12 +326,12 @@ QRect QwtKnob::knobRect() const
 }
 
 /*!
-   \brief Determine what to do when the user presses a mouse button.
+   @brief Determine what to do when the user presses a mouse button.
 
-   \param pos Mouse position
+   @param pos Mouse position
 
-   \retval True, when pos is inside the circle of the knob.
-   \sa scrolledTo()
+   @retval True, when pos is inside the circle of the knob.
+   @sa scrolledTo()
  */
 bool QwtKnob::isScrollPosition(const QPoint& pos) const
 {
@@ -351,12 +351,12 @@ bool QwtKnob::isScrollPosition(const QPoint& pos) const
 }
 
 /*!
-   \brief Determine the value for a new position of the mouse
+   @brief Determine the value for a new position of the mouse
 
-   \param pos Mouse position
+   @param pos Mouse position
 
-   \return Value for the mouse position
-   \sa isScrollPosition()
+   @return Value for the mouse position
+   @sa isScrollPosition()
  */
 double QwtKnob::scrolledTo(const QPoint& pos) const
 {
@@ -407,7 +407,7 @@ double QwtKnob::scrolledTo(const QPoint& pos) const
 
 /*!
    Handle QEvent::StyleChange and QEvent::FontChange;
-   \param event Change event
+   @param event Change event
  */
 void QwtKnob::changeEvent(QEvent* event)
 {
@@ -425,7 +425,7 @@ void QwtKnob::changeEvent(QEvent* event)
 
 /*!
    Repaint the knob
-   \param event Paint event
+   @param event Paint event
  */
 void QwtKnob::paintEvent(QPaintEvent* event)
 {
@@ -458,10 +458,10 @@ void QwtKnob::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \brief Draw the knob
+   @brief Draw the knob
 
-   \param painter painter
-   \param knobRect Bounding rectangle of the knob (without scale)
+   @param painter painter
+   @param knobRect Bounding rectangle of the knob (without scale)
  */
 void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
 {
@@ -535,11 +535,11 @@ void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
 }
 
 /*!
-   \brief Draw the marker at the knob's front
+   @brief Draw the marker at the knob's front
 
-   \param painter Painter
-   \param rect Bounding rectangle of the knob without scale
-   \param angle Angle of the marker in degrees
+   @param painter Painter
+   @param rect Bounding rectangle of the knob without scale
+   @param angle Angle of the marker in degrees
                ( clockwise, 0 at the 12 o'clock position )
  */
 void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) const
@@ -649,7 +649,7 @@ void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) co
 
 /*!
    Draw the focus indicator
-   \param painter Painter
+   @param painter Painter
  */
 void QwtKnob::drawFocusIndicator(QPainter* painter) const
 {
@@ -674,7 +674,7 @@ void QwtKnob::drawFocusIndicator(QPainter* painter) const
  * @details Similar to QLabel::alignment(), the flags decide how to align the knob inside of contentsRect().
  *          The default setting is Qt::AlignCenter.
  * @param alignment Or'd alignment flags
- * \sa alignment(), setKnobWidth(), knobRect()
+ * @sa alignment(), setKnobWidth(), knobRect()
  */
 void QwtKnob::setAlignment(Qt::Alignment alignment)
 {
@@ -687,7 +687,7 @@ void QwtKnob::setAlignment(Qt::Alignment alignment)
 /**
  * @brief Return alignment of the knob inside contentsRect()
  * @return Alignment flags
- * \sa setAlignment(), knobWidth(), knobRect()
+ * @sa setAlignment(), knobWidth(), knobRect()
  */
 Qt::Alignment QwtKnob::alignment() const
 {
@@ -698,7 +698,7 @@ Qt::Alignment QwtKnob::alignment() const
  * @brief Change the knob's width
  * @details Setting a fixed value for the diameter of the knob is helpful for aligning several knobs in a row.
  * @param width New width
- * \sa knobWidth(), setAlignment()
+ * @sa knobWidth(), setAlignment()
  * @note Modifies the sizePolicy()
  */
 void QwtKnob::setKnobWidth(int width)
@@ -749,7 +749,7 @@ int QwtKnob::borderWidth() const
  * @brief Set the size of the marker
  * @details When setting a size <= 0 the marker will automatically be scaled to 40% of the radius of the knob.
  * @param size Marker size
- * \sa markerSize(), markerStyle()
+ * @sa markerSize(), markerStyle()
  */
 void QwtKnob::setMarkerSize(int size)
 {
@@ -762,7 +762,7 @@ void QwtKnob::setMarkerSize(int size)
 /**
  * @brief Return the marker size
  * @return Marker size
- * \sa setMarkerSize()
+ * @sa setMarkerSize()
  */
 int QwtKnob::markerSize() const
 {
@@ -782,7 +782,7 @@ QSize QwtKnob::sizeHint() const
 /**
  * @brief Return the minimum size hint
  * @return Minimum size hint
- * \sa sizeHint()
+ * @sa sizeHint()
  */
 QSize QwtKnob::minimumSizeHint() const
 {

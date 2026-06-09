@@ -109,7 +109,7 @@ void QwtPolarCachePanner::movePlot(int dx, int dy)
 /*!
    Block panning when the plot zoom factor is >= 1.0.
 
-   \param event Mouse event
+   @param event Mouse event
  */
 void QwtPolarCachePanner::widgetMousePressEvent(QMouseEvent* event)
 {

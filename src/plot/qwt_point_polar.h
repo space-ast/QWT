@@ -24,7 +24,7 @@
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
  *****************************************************************************/
 
-/*! \file */
+/*! @file */
 #ifndef QWT_POINT_POLAR_H
 #define QWT_POINT_POLAR_H
 
@@ -36,16 +36,9 @@
 #include <qmath.h>
 
 /**
- * \if ENGLISH
  * @brief A point in polar coordinates
  * @details In polar coordinates a point is determined by an angle and a distance.
  *          See http://en.wikipedia.org/wiki/Polar_coordinate_system
- * \endif
- * \if CHINESE
- * @brief 极坐标点
- * @details 在极坐标中，点由角度和距离确定。
- *          参见 http://en.wikipedia.org/wiki/Polar_coordinate_system
- * \endif
  */
 
 class QWT_EXPORT QwtPointPolar
@@ -88,14 +81,8 @@ QWT_EXPORT QDebug operator<<( QDebug, const QwtPointPolar& );
 #endif
 
 /**
- * \if ENGLISH
  * @brief Default constructor - constructs a null point with radius and azimuth set to 0.0
- * \sa QPointF::isNull()
- * \endif
- * \if CHINESE
- * @brief 默认构造函数 - 构造一个空点，半径和方位角都设置为 0.0
- * \sa QPointF::isNull()
- * \endif
+ * @sa QPointF::isNull()
  */
 inline QwtPointPolar::QwtPointPolar()
     : m_azimuth( 0.0 )
@@ -104,16 +91,9 @@ inline QwtPointPolar::QwtPointPolar()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a point with coordinates specified by radius and azimuth
  * @param azimuth Azimuth (angle)
  * @param radius Radius (distance)
- * \endif
- * \if CHINESE
- * @brief 构造一个由半径和方位角指定坐标的点
- * @param azimuth 方位角（角度）
- * @param radius 半径（距离）
- * \endif
  */
 inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
     : m_azimuth( azimuth )
@@ -121,49 +101,49 @@ inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
 {
 }
 
-//! \if ENGLISH Return true if radius() >= 0.0 \endif \if CHINESE 如果 radius() >= 0.0 则返回 true \endif
+//! Return true if radius() >= 0.0
 inline bool QwtPointPolar::isValid() const
 {
     return m_radius >= 0.0;
 }
 
-//! \if ENGLISH Return true if radius() == 0.0 \endif \if CHINESE 如果 radius() == 0.0 则返回 true \endif
+//! Return true if radius() == 0.0
 inline bool QwtPointPolar::isNull() const
 {
     return m_radius == 0.0;
 }
 
-//! \if ENGLISH Return the radius \endif \if CHINESE 返回半径 \endif
+//! Return the radius
 inline double QwtPointPolar::radius() const
 {
     return m_radius;
 }
 
-//! \if ENGLISH Return the azimuth \endif \if CHINESE 返回方位角 \endif
+//! Return the azimuth
 inline double QwtPointPolar::azimuth() const
 {
     return m_azimuth;
 }
 
-//! \if ENGLISH Return a reference to the radius \endif \if CHINESE 返回半径的引用 \endif
+//! Return a reference to the radius
 inline double& QwtPointPolar::rRadius()
 {
     return m_radius;
 }
 
-//! \if ENGLISH Return a reference to the azimuth \endif \if CHINESE 返回方位角的引用 \endif
+//! Return a reference to the azimuth
 inline double& QwtPointPolar::rAzimuth()
 {
     return m_azimuth;
 }
 
-//! \if ENGLISH Set the radius to radius \endif \if CHINESE 将半径设置为 radius \endif
+//! Set the radius to radius
 inline void QwtPointPolar::setRadius( double radius )
 {
     m_radius = radius;
 }
 
-//! \if ENGLISH Set the azimuth to azimuth \endif \if CHINESE 将方位角设置为 azimuth \endif
+//! Set the azimuth to azimuth
 inline void QwtPointPolar::setAzimuth( double azimuth )
 {
     m_azimuth = azimuth;

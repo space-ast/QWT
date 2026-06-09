@@ -124,8 +124,8 @@ bool QwtPlotDict::autoDelete() const
 /*!
    Insert a plot item
 
-   \param item PlotItem
-   \sa removeItem()
+   @param item PlotItem
+   @sa removeItem()
  */
 void QwtPlotDict::insertItem( QwtPlotItem* item )
 {
@@ -135,8 +135,8 @@ void QwtPlotDict::insertItem( QwtPlotItem* item )
 /*!
    Remove a plot item
 
-   \param item PlotItem
-   \sa insertItem()
+   @param item PlotItem
+   @sa insertItem()
  */
 void QwtPlotDict::removeItem( QwtPlotItem* item )
 {

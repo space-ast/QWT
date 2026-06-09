@@ -45,145 +45,103 @@ class QByteArray;
 class QwtGraphic;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing symbols
- * \endif
- * \if CHINESE
- * @brief 用于绘制符号的类
- * \endif
  */
 class QWT_EXPORT QwtSymbol
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Symbol Style
      * @sa setStyle(), style()
-     * \endif
-     * \if CHINESE
-     * @brief 符号样式
-     * @sa setStyle(), style()
-     * \endif
      */
     enum Style
     {
-        //! \if ENGLISH No Style. The symbol cannot be drawn. \endif \if CHINESE 无样式，符号无法绘制。 \endif
+        //! No Style. The symbol cannot be drawn.
         NoSymbol = -1,
 
-        //! \if ENGLISH Ellipse or circle \endif \if CHINESE 椭圆或圆形 \endif
+        //! Ellipse or circle
         Ellipse,
 
-        //! \if ENGLISH Rectangle \endif \if CHINESE 矩形 \endif
+        //! Rectangle
         Rect,
 
-        //! \if ENGLISH Diamond \endif \if CHINESE 菱形 \endif
+        //! Diamond
         Diamond,
 
-        //! \if ENGLISH Triangle pointing upwards \endif \if CHINESE 向上指向的三角形 \endif
+        //! Triangle pointing upwards
         Triangle,
 
-        //! \if ENGLISH Triangle pointing downwards \endif \if CHINESE 向下指向的三角形 \endif
+        //! Triangle pointing downwards
         DTriangle,
 
-        //! \if ENGLISH Triangle pointing upwards \endif \if CHINESE 向上指向的三角形 \endif
+        //! Triangle pointing upwards
         UTriangle,
 
-        //! \if ENGLISH Triangle pointing left \endif \if CHINESE 向左指向的三角形 \endif
+        //! Triangle pointing left
         LTriangle,
 
-        //! \if ENGLISH Triangle pointing right \endif \if CHINESE 向右指向的三角形 \endif
+        //! Triangle pointing right
         RTriangle,
 
-        //! \if ENGLISH Cross (+) \endif \if CHINESE 十字 (+) \endif
+        //! Cross (+)
         Cross,
 
-        //! \if ENGLISH Diagonal cross (X) \endif \if CHINESE 对角十字 (X) \endif
+        //! Diagonal cross (X)
         XCross,
 
-        //! \if ENGLISH Horizontal line \endif \if CHINESE 水平线 \endif
+        //! Horizontal line
         HLine,
 
-        //! \if ENGLISH Vertical line \endif \if CHINESE 垂直线 \endif
+        //! Vertical line
         VLine,
 
-        //! \if ENGLISH X combined with + \endif \if CHINESE X 与 + 组合 \endif
+        //! X combined with +
         Star1,
 
-        //! \if ENGLISH Six-pointed star \endif \if CHINESE 六角星 \endif
+        //! Six-pointed star
         Star2,
 
-        //! \if ENGLISH Hexagon \endif \if CHINESE 六边形 \endif
+        //! Hexagon
         Hexagon,
 
         /**
-         * \if ENGLISH
          * The symbol is represented by a painter path, where the
          * origin ( 0, 0 ) of the path coordinate system is mapped to
          * the position of the symbol.
          * @sa setPath(), path()
-         * \endif
-         * \if CHINESE
-         * 符号由绘图路径表示，其中路径坐标系的原点 (0, 0) 映射到符号的位置。
-         * @sa setPath(), path()
-         * \endif
          */
         Path,
 
         /**
-         * \if ENGLISH
          * The symbol is represented by a pixmap. The pixmap is centered
          * or aligned to its pin point.
          * @sa setPinPoint()
-         * \endif
-         * \if CHINESE
-         * 符号由像素图表示。像素图居中或对齐到其锚点。
-         * @sa setPinPoint()
-         * \endif
          */
         Pixmap,
 
         /**
-         * \if ENGLISH
          * The symbol is represented by a graphic. The graphic is centered
          * or aligned to its pin point.
          * @sa setPinPoint()
-         * \endif
-         * \if CHINESE
-         * 符号由图形表示。图形居中或对齐到其锚点。
-         * @sa setPinPoint()
-         * \endif
          */
         Graphic,
 
         /**
-         * \if ENGLISH
          * The symbol is represented by a SVG graphic. The graphic is centered
          * or aligned to its pin point.
          * @sa setPinPoint()
-         * \endif
-         * \if CHINESE
-         * 符号由 SVG 图形表示。图形居中或对齐到其锚点。
-         * @sa setPinPoint()
-         * \endif
          */
         SvgDocument,
 
         /**
-         * \if ENGLISH
          * Styles >= QwtSymbol::UserSymbol are reserved for derived
          * classes of QwtSymbol that overload drawSymbols() with
          * additional application specific symbol types.
-         * \endif
-         * \if CHINESE
-         * 样式 >= QwtSymbol::UserSymbol 保留给 QwtSymbol 的派生类，
-         * 这些派生类使用额外的应用程序特定符号类型重载 drawSymbols()。
-         * \endif
          */
         UserStyle = 1000
     };
 
     /**
-     * \if ENGLISH
      * @brief Cache policy for symbol rendering
      *
      * Depending on the render engine and the complexity of the
@@ -204,40 +162,18 @@ class QWT_EXPORT QwtSymbol
      * @note The policy has no effect, when the symbol is painted
      *       to a vector graphics format ( PDF, SVG ).
      * @warning Since Qt 4.8 raster is the default backend on X11
-     * \endif
-     * \if CHINESE
-     * @brief 符号渲染的缓存策略
-     *
-     * 根据渲染引擎和符号形状的复杂性，将符号渲染到像素图然后绘制该像素图可能更快。
-     *
-     * 例如，光栅绘制引擎是纯软件渲染器，在缓存模式下，绘制操作通常以与后备存储区的光栅操作结束，
-     * 这通常比渲染多边形的算法更快。但对于可以利用硬件加速的图形管道，情况可能相反。
-     *
-     * 默认设置是 AutoCache
-     *
-     * @sa setCachePolicy(), cachePolicy()
-     *
-     * @note 当符号绘制到矢量图形格式（PDF、SVG）时，此策略无效。
-     * @warning 从 Qt 4.8 开始，光栅是 X11 上的默认后端
-     * \endif
      */
     enum CachePolicy
     {
-        //! \if ENGLISH Don't use a pixmap cache \endif \if CHINESE 不使用像素图缓存 \endif
+        //! Don't use a pixmap cache
         NoCache,
 
-        //! \if ENGLISH Always use a pixmap cache \endif \if CHINESE 始终使用像素图缓存 \endif
+        //! Always use a pixmap cache
         Cache,
 
         /**
-         * \if ENGLISH
          * Use a cache when one of the following conditions is true:
          * - The symbol is rendered with the software renderer ( QPaintEngine::Raster )
-         * \endif
-         * \if CHINESE
-         * 当以下条件之一为真时使用缓存：
-         * - 符号使用软件渲染器渲染 ( QPaintEngine::Raster )
-         * \endif
          */
         AutoCache
     };
@@ -342,19 +278,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Draw the symbol at a specified position
  * @param painter Painter
  * @param pos Position of the symbol in screen coordinates
  * @sa drawSymbols()
- * \endif
  *
- * \if CHINESE
- * @brief 在指定位置绘制符号
- * @param painter 绘制器
- * @param pos 符号在屏幕坐标中的位置
- * @sa drawSymbols()
- * \endif
  */
 inline void QwtSymbol::drawSymbol(
     QPainter* painter, const QPointF& pos ) const
@@ -363,19 +291,11 @@ inline void QwtSymbol::drawSymbol(
 }
 
 /**
- * \if ENGLISH
  * @brief Draw symbols at the specified points
  * @param painter Painter
  * @param points Positions of the symbols in screen coordinates
  * @sa drawSymbol()
- * \endif
  *
- * \if CHINESE
- * @brief 在指定点处绘制符号
- * @param painter 绘制器
- * @param points 符号在屏幕坐标中的位置
- * @sa drawSymbol()
- * \endif
  */
 inline void QwtSymbol::drawSymbols(
     QPainter* painter, const QPolygonF& points ) const

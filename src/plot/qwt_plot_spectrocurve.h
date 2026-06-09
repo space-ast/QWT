@@ -33,16 +33,10 @@
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief Curve that displays 3D points as dots, where the z coordinate is mapped to a color
  * @details QwtPlotSpectroCurve displays 3D points as dots, with the z coordinate mapped to a color
  *          using a color map.
- * \endif
  * 
- * \if CHINESE
- * @brief 将 3D 点显示为点的曲线，其中 z 坐标映射到颜色
- * @details QwtPlotSpectroCurve 将 3D 点显示为点，使用颜色映射将 z 坐标映射到颜色。
- * \endif
  */
 class QWT_EXPORT QwtPlotSpectroCurve
     : public QwtPlotSeriesItem
@@ -50,13 +44,8 @@ class QWT_EXPORT QwtPlotSpectroCurve
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Paint attributes
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 绘制属性
-     * \endif
      */
     enum PaintAttribute
     {

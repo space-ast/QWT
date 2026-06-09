@@ -483,15 +483,15 @@ class QwtSpline::PrivateData
 };
 
 /*!
-   \fn QPainterPath QwtSpline::painterPath( const QPolygonF &points ) const
+   @fn QPainterPath QwtSpline::painterPath( const QPolygonF &points ) const
 
    Approximates a polygon piecewise with cubic Bezier curves
    and returns them as QPainterPath.
 
-   \param points Control points
-   \return Painter path, that can be rendered by QPainter
+   @param points Control points
+   @return Painter path, that can be rendered by QPainter
 
-   \sa polygon(), QwtBezier
+   @sa polygon(), QwtBezier
  */
 
 /**
@@ -753,15 +753,15 @@ QwtSplineInterpolating::~QwtSplineInterpolating()
 {
 }
 
-/*! \fn QVector<QLineF> QwtSplineInterpolating::bezierControlLines( const QPolygonF &points ) const
+/*! @fn QVector<QLineF> QwtSplineInterpolating::bezierControlLines( const QPolygonF &points ) const
 
-   \brief Interpolate a curve with Bezier curves
+   @brief Interpolate a curve with Bezier curves
 
    Interpolates a polygon piecewise with cubic Bezier curves
    and returns the 2 control points of each curve as QLineF.
 
-   \param points Control points
-   \return Control points of the interpolating Bezier curves
+   @param points Control points
+   @return Control points of the interpolating Bezier curves
  */
 
 /**
@@ -1051,14 +1051,14 @@ double QwtSplineC1::slopeAtEnd( const QPolygonF& points, double slopeBefore ) co
     return -slope;
 }
 
-/*! \fn QVector<double> QwtSplineC1::slopes( const QPolygonF &points ) const
+/*! @fn QVector<double> QwtSplineC1::slopes( const QPolygonF &points ) const
 
-   \brief Find the first derivative at the control points
+   @brief Find the first derivative at the control points
 
-   \param points Control nodes of the spline
-   \return Vector with the values of the 2nd derivate at the control points
+   @param points Control nodes of the spline
+   @return Vector with the values of the 2nd derivate at the control points
 
-   \note The x coordinates need to be increasing or decreasing
+   @note The x coordinates need to be increasing or decreasing
  */
 
 /**
@@ -1341,15 +1341,15 @@ QPolygonF QwtSplineC2::equidistantPolygon( const QPolygonF& points,
     return QwtSplineInterpolating::equidistantPolygon( points, distance, withNodes );
 }
 
-/*! \fn QVector<double> QwtSplineC2::curvatures( const QPolygonF &points ) const
+/*! @fn QVector<double> QwtSplineC2::curvatures( const QPolygonF &points ) const
 
-   \brief Find the second derivative at the control points
+   @brief Find the second derivative at the control points
 
-   \param points Control nodes of the spline
-   \return Vector with the values of the 2nd derivate at the control points
+   @param points Control nodes of the spline
+   @return Vector with the values of the 2nd derivate at the control points
 
-   \sa slopes()
-   \note The x coordinates need to be increasing or decreasing
+   @sa slopes()
+   @note The x coordinates need to be increasing or decreasing
  */
 
 /**

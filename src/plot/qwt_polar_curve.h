@@ -169,15 +169,15 @@ private:
     PrivateData* m_data;
 };
 
-//! \return the the curve data
+//! @return the the curve data
 inline const QwtSeriesData< QwtPointPolar >* QwtPolarCurve::data() const
 {
     return m_series;
 }
 
 /*!
-    \param i index
-    \return point at position i
+    @param i index
+    @return point at position i
  */
 inline QwtPointPolar QwtPolarCurve::sample(int i) const
 {

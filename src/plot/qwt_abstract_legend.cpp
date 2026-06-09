@@ -28,44 +28,25 @@
 #include "qwt_legend_data.h"
 
 /**
- * \if ENGLISH
  * @brief Constructor for QwtAbstractLegend
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief QwtAbstractLegend 构造函数
- * @param parent 父控件
- * \endif
  */
 QwtAbstractLegend::QwtAbstractLegend(QWidget* parent) : QFrame(parent)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor for QwtAbstractLegend
- * \endif
- * \if CHINESE
- * @brief QwtAbstractLegend 析构函数
- * \endif
  */
 QwtAbstractLegend::~QwtAbstractLegend()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Return the extent needed for scroll elements
  * @details Returns the space needed for elements to scroll the legend (usually scrollbars).
  * @param orientation Orientation (Horizontal or Vertical)
  * @return Extent of the corresponding scroll element (0 by default)
- * \endif
- * \if CHINESE
- * @brief 返回滚动元素所需的空间范围
- * @details 返回滚动图例所需元素（通常是滚动条）的空间。
- * @param orientation 方向（水平或垂直）
- * @return 对应滚动元素的范围（默认为 0）
- * \endif
  */
 int QwtAbstractLegend::scrollExtent(Qt::Orientation orientation) const
 {

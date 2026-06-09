@@ -15,12 +15,12 @@ class QwtPlotScaleEventDispatcher::PrivateData
     QWT_DECLARE_PUBLIC(QwtPlotScaleEventDispatcher)
 public:
     PrivateData(QwtPlotScaleEventDispatcher* p);
-    // 缓存结构
+    // Cache structure
     struct ScaleCache
     {
         QwtScaleWidget* scaleWidget;
-        QRect eventRect;    // 在基准绘图坐标系中的矩形，也就是当前事件对象所在的坐标系
-        QwtPlot* basePlot;  // 基准绘图，也就是当前事件过滤器对应的绘图
+        QRect eventRect;    // Rectangle in the base plot coordinate system, i.e., the coordinate system of the current event object
+        QwtPlot* basePlot;  // Base plot, i.e., the plot corresponding to the current event filter
         bool isValid;
 
         ScaleCache() : scaleWidget(nullptr), basePlot(nullptr), isValid(false)
@@ -49,7 +49,7 @@ public:
         }
     };
     ScaleCache findScaleCache(const QPoint& pos);
-    // 重置状态
+    // Reset state
     void resetRecord();
     void updateCursorForMousePress(QwtPlot* p);
     void updateCursorForHover(QwtPlot* p, bool isOnScale);
@@ -58,16 +58,16 @@ public:
 
 public:
     bool isEnable { true };
-    QwtPlot* bindedPlot { nullptr };  ///< 绑定的绘图
+    QwtPlot* bindedPlot { nullptr };  ///< Bound plot
     QwtPlot* currentPlot { nullptr };
-    QwtScaleWidget* currentScale { nullptr };            ///< 当前正在操作的 scale widget
-    QwtAxisId currentAxisId { QwtAxis::AxisPositions };  ///< 当前坐标轴id
-    QPoint lastMousePos;                                 ///< 上一次鼠标位置（用于拖拽计算）
-    bool isMousePressed { false };                       ///< 记录鼠标是否按下
-    // 缓存相关
+    QwtScaleWidget* currentScale { nullptr };            ///< Scale widget currently being operated
+    QwtAxisId currentAxisId { QwtAxis::AxisPositions };  ///< Current axis ID
+    QPoint lastMousePos;                                 ///< Last mouse position (for drag calculation)
+    bool isMousePressed { false };                       ///< Track whether mouse button is pressed
+    // Cache related
     QList< ScaleCache > scaleCaches;
-    bool cacheDirty { true };   ///< 缓存是否需要重建
-    double zoomFactor { 1.5 };  ///< 缩放比例
+    bool cacheDirty { true };   ///< Whether cache needs rebuild
+    double zoomFactor { 1.5 };  ///< Zoom factor
 };
 
 QwtPlotScaleEventDispatcher::PrivateData::PrivateData(QwtPlotScaleEventDispatcher* p) : q_ptr(p)
@@ -151,17 +151,10 @@ QwtPlot* QwtPlotScaleEventDispatcher::PrivateData::scalePlot(QwtScaleWidget* sca
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] plot Plot widget
  * @param[in] par Parent object
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 绘图控件
- * @param[in] par 父对象
- * \endif
  */
 QwtPlotScaleEventDispatcher::QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject* par)
     : QObject(par), QWT_PIMPL_CONSTRUCT
@@ -174,28 +167,17 @@ QwtPlotScaleEventDispatcher::QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject*
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotScaleEventDispatcher::~QwtPlotScaleEventDispatcher()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Set enabled state
  * @param[in] on Enable/disable
- * \endif
  *
- * \if CHINESE
- * @brief 设置可用状态
- * @param[in] on 启用/禁用
- * \endif
  */
 void QwtPlotScaleEventDispatcher::setEnable(bool on)
 {
@@ -203,15 +185,9 @@ void QwtPlotScaleEventDispatcher::setEnable(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if enabled
  * @return True if enabled
- * \endif
  *
- * \if CHINESE
- * @brief 检查是否启用
- * @return 启用时返回 true
- * \endif
  */
 bool QwtPlotScaleEventDispatcher::isEnable() const
 {
@@ -219,19 +195,11 @@ bool QwtPlotScaleEventDispatcher::isEnable() const
 }
 
 /**
- * \if ENGLISH
  * @brief Find axis ID corresponding to QwtScaleWidget
  * @param[in] plot QwtPlot pointer
  * @param[in] scaleWidget QwtScaleWidget to find
  * @return Axis ID, returns QwtAxis::AxisPositions if not found
- * \endif
  *
- * \if CHINESE
- * @brief 获取 QwtScaleWidget 对应的轴 ID
- * @param[in] plot QwtPlot 指针
- * @param[in] scaleWidget 要查找的 QwtScaleWidget
- * @return 轴 ID，如果找不到返回 QwtAxis::AxisPositions
- * \endif
  */
 QwtAxisId QwtPlotScaleEventDispatcher::findAxisIdByScaleWidget(const QwtPlot* plot, const QwtScaleWidget* scaleWidget)
 {
@@ -239,18 +207,18 @@ QwtAxisId QwtPlotScaleEventDispatcher::findAxisIdByScaleWidget(const QwtPlot* pl
         return QwtAxis::AxisPositions;
     }
 
-    // 遍历所有可能的轴
+    // Iterate over all possible axes
     for (int axis = 0; axis < QwtAxis::AxisPositions; axis++) {
         if (plot->axisWidget(axis) == scaleWidget) {
             return axis;
         }
     }
 
-    return QwtAxis::AxisPositions;  // 未找到
+    return QwtAxis::AxisPositions;  // Not found
 }
 
 /**
- * @brief 重建所有缓存数据，在有新的寄生绘图添加时，都需要调用此函数，把绘图的坐标轴缓存
+ * @brief Rebuild all cache data; must be called when a new parasite plot is added to cache the plot's axes
  */
 void QwtPlotScaleEventDispatcher::rebuildCache()
 {
@@ -258,7 +226,7 @@ void QwtPlotScaleEventDispatcher::rebuildCache()
     d->scaleCaches.clear();
     const QList< QwtPlot* > plotslist = d->bindedPlot->plotList();
     for (QwtPlot* plot : plotslist) {
-        // 检查该绘图的所有 scale widget
+        // Check all scale widgets of this plot
         for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; ++axisPos) {
             QwtAxisId axisId(axisPos);
             QwtScaleWidget* scale = plot->axisWidget(axisId);
@@ -271,22 +239,16 @@ void QwtPlotScaleEventDispatcher::rebuildCache()
 }
 
 /**
- * \if ENGLISH
  * @brief Update cache, rebuild if necessary
  * @details Called when cache is dirty or needs refresh.
- * \endif
  *
- * \if CHINESE
- * @brief 更新缓存，必要时会调用 rebuildCache 进行重建
- * @details 当缓存需要刷新或标记为脏时调用。
- * \endif
  */
 void QwtPlotScaleEventDispatcher::updateCache()
 {
     if (m_data->cacheDirty) {
         rebuildCache();
     } else {
-        // 只更新现有的缓存项
+        // Only update existing cache entries
         for (PrivateData::ScaleCache& cache : m_data->scaleCaches) {
             if (cache.scaleWidget) {
                 cache.updateRect();
@@ -308,7 +270,7 @@ bool QwtPlotScaleEventDispatcher::eventFilter(QObject* obj, QEvent* e)
     case QEvent::Resize:
     case QEvent::LayoutRequest:
     case QEvent::Polish: {
-        // 处理可能影响缓存的事件
+        // Handle events that may affect the cache
         m_data->cacheDirty = true;
         updateCache();
         break;
@@ -334,18 +296,18 @@ bool QwtPlotScaleEventDispatcher::handleMousePress(QwtPlot* bindPlot, QMouseEven
     }
     QWT_D(d);
 
-    // 检查当前绘图是否有 scale widget 应该处理此事件
+    // Check if any scale widget on the current plot should handle this event
     QwtScaleWidget* targetScale = findTargetOnScale(e->pos());
     if (!targetScale) {
-        // 没有在scale上
+        // Not on any scale
         if (d->currentScale) {
-            // 说明已经有选中了scale，则取消选中
+            // A scale was already selected, deselect it
             d->currentScale->setSelected(false);
         }
         d->resetRecord();
         return false;
     }
-    // 这里说明点击在了scale上面，首先看看点击的scale和currentScale是否一样，不一样则把currentScale的选中状态取消
+    // Click is on a scale; check if it differs from currentScale, and deselect currentScale if so
 
     if (targetScale != d->currentScale) {
         if (d->currentScale) {
@@ -354,7 +316,7 @@ bool QwtPlotScaleEventDispatcher::handleMousePress(QwtPlot* bindPlot, QMouseEven
         d->currentScale  = targetScale;
         d->currentPlot   = PrivateData::scalePlot(targetScale);
         d->currentAxisId = findAxisIdByScaleWidget(d->currentPlot, targetScale);
-        // 记录当前选中的内容
+        // Record current selection
         d->currentScale->setSelected(true);
     }
     d->lastMousePos   = e->pos();
@@ -362,16 +324,16 @@ bool QwtPlotScaleEventDispatcher::handleMousePress(QwtPlot* bindPlot, QMouseEven
 
     d->updateCursorForMousePress(bindPlot);
 
-    return true;  // 我们已经处理了事件转发逻辑
+    return true;  // Event forwarding logic has been handled
 }
 
 bool QwtPlotScaleEventDispatcher::handleMouseMove(QwtPlot* bindPlot, QMouseEvent* e)
 {
-    // 检查当前绘图是否有 scale widget 应该处理此事件
+    // Check if any scale widget on the current plot should handle this event
     QWT_D(d);
     if (d->currentScale) {
         if (d->isMousePressed) {
-            // 说明当前已经选中了一个scale,且鼠标是按下状态，这个时候处于移动过程中
+            // A scale is selected and mouse is pressed, currently in dragging state
             if (d->currentScale->testBuildinActions(QwtScaleWidget::ActionClickPan)) {
 
                 d->updateCursorForHover(bindPlot, true);
@@ -379,15 +341,15 @@ bool QwtPlotScaleEventDispatcher::handleMouseMove(QwtPlot* bindPlot, QMouseEvent
                 const int deltaPixel = QwtAxis::isYAxis(d->currentAxisId) ? delta.y() : delta.x();
                 if (deltaPixel != 0) {
                     d->currentPlot->panAxis(d->currentAxisId, deltaPixel);
-                    // 需要手动触发重绘
+                    // Manually trigger a repaint
                     d->currentPlot->replotAll();
                     d->lastMousePos = e->pos();
                     return true;
                 }
             }
         } else {
-            // 之前已经选中一个scael
-            // 但没有按下
+            // A scale was previously selected
+            // but mouse is not pressed
             QwtScaleWidget* targetScale = findTargetOnScale(e->pos());
             if (targetScale == d->currentScale) {
                 d->updateCursorForHover(bindPlot, true);
@@ -396,7 +358,7 @@ bool QwtPlotScaleEventDispatcher::handleMouseMove(QwtPlot* bindPlot, QMouseEvent
             }
         }
     } else {
-        // 没有选中任何scale，正常处理
+        // No scale selected, normal handling
         bindPlot->unsetCursor();
     }
     return false;
@@ -413,10 +375,10 @@ bool QwtPlotScaleEventDispatcher::handleMouseRelease(QwtPlot* bindPlot, QMouseEv
         if (!targetScale) {
             return false;
         }
-        // 右键：如果在当前scale区域则处理，否则忽略
+        // Right button: handle if in current scale area, otherwise ignore
         if (d->currentScale == targetScale) {
             d->isMousePressed = false;
-            d->currentScale->setSelected(false);  // 此函数做了变更检查，重复设置不会重复触发信号
+            d->currentScale->setSelected(false);  // This function checks for changes; repeated calls won't re-trigger the signal
             return true;
         }
         return false;
@@ -424,8 +386,8 @@ bool QwtPlotScaleEventDispatcher::handleMouseRelease(QwtPlot* bindPlot, QMouseEv
 
     if (e->button() == Qt::LeftButton) {
         d->isMousePressed = false;
-        // 左键：只有之前按下且在当前scale区域才处理,这里不要联合onMyScale判断，拖曳出去 绘图区域就识别不了
-        return (targetScale != nullptr);  // targetScale不为空时返回true代表截断事件，这样上层的事件才能处理，例如QwtFigureWidgetOverlay
+        // Left button: only handle if previously pressed and in current scale area; do not combine with onMyScale check here, dragging outside the plot area would not be recognized
+        return (targetScale != nullptr);  // Return true when targetScale is non-null to intercept the event, so upper-level handlers can process it, e.g., QwtFigureWidgetOverlay
     }
     return false;
 }
@@ -434,7 +396,7 @@ bool QwtPlotScaleEventDispatcher::handleWheelEvent(QwtPlot* bindPlot, QWheelEven
 {
     QWT_D(d);
     Q_UNUSED(bindPlot);
-    // 检查当前绘图是否有 scale widget 应该处理此事件
+    // Check if any scale widget on the current plot should handle this event
     QwtScaleWidget* targetScale = findTargetOnScale(qwt::compat::eventPos(e));
     if (d->currentScale && d->currentScale == targetScale) {
         if (d->currentScale->testBuildinActions(QwtScaleWidget::ActionWheelZoom)) {
@@ -454,7 +416,7 @@ bool QwtPlotScaleEventDispatcher::handleWheelEvent(QwtPlot* bindPlot, QWheelEven
 
 QwtScaleWidget* QwtPlotScaleEventDispatcher::findTargetOnScale(const QPoint& pos)
 {
-    // 按层级从高到低检查（缓存列表已经按层级排序）
+    // Check from highest to lowest z-order (cache list is already sorted by z-order)
     for (const auto& cache : qwt_as_const(m_data->scaleCaches)) {
         if (cache.contains(pos)) {
             return cache.scaleWidget;

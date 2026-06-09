@@ -621,12 +621,12 @@ void QwtPolarGrid::draw(QPainter* painter,
 /*!
    Draw lines from the pole
 
-   \param painter Painter
-   \param canvasRect Contents rect of the canvas in painter coordinates
-   \param pole Position of the pole in painter coordinates
-   \param radius Length of the lines in painter coordinates
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param values Azimuth values, indicating the direction of the lines
+   @param painter Painter
+   @param canvasRect Contents rect of the canvas in painter coordinates
+   @param pole Position of the pole in painter coordinates
+   @param radius Length of the lines in painter coordinates
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param values Azimuth values, indicating the direction of the lines
  */
 void QwtPolarGrid::drawRays(QPainter* painter,
                             const QRectF& canvasRect,
@@ -683,11 +683,11 @@ void QwtPolarGrid::drawRays(QPainter* painter,
 /*!
    Draw circles
 
-   \param painter Painter
-   \param canvasRect Contents rect of the canvas in painter coordinates
-   \param pole Position of the pole in painter coordinates
-   \param radialMap Maps radius values into painter coordinates.
-   \param values Radial values, indicating the distances from the pole
+   @param painter Painter
+   @param canvasRect Contents rect of the canvas in painter coordinates
+   @param pole Position of the pole in painter coordinates
+   @param radialMap Maps radius values into painter coordinates.
+   @param values Radial values, indicating the distances from the pole
  */
 void QwtPolarGrid::drawCircles(QPainter* painter,
                                const QRectF& canvasRect,
@@ -753,8 +753,8 @@ void QwtPolarGrid::drawCircles(QPainter* painter,
 /*!
    Paint an axis
 
-   \param painter Painter
-   \param axisId Axis id (QwtPolar::Axis)
+   @param painter Painter
+   @param axisId Axis id (QwtPolar::Axis)
  */
 void QwtPolarGrid::drawAxis(QPainter* painter, int axisId) const
 {
@@ -776,12 +776,12 @@ void QwtPolarGrid::drawAxis(QPainter* painter, int axisId) const
 /*!
    Update the axis scale draw geometries
 
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param radius Radius of the complete plot area in painter coordinates
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param radius Radius of the complete plot area in painter coordinates
 
-   \sa updateScaleDiv()
+   @sa updateScaleDiv()
  */
 void QwtPolarGrid::updateScaleDraws(const QwtScaleMap& azimuthMap,
                                     const QwtScaleMap& radialMap,

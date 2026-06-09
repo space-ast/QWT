@@ -345,8 +345,8 @@ bool QwtMagnifier::eventFilter(QObject* object, QEvent* event)
 /*!
    Handle a mouse press event for the observed widget.
 
-   \param mouseEvent Mouse event
-   \sa eventFilter(), widgetMouseReleaseEvent(), widgetMouseMoveEvent()
+   @param mouseEvent Mouse event
+   @sa eventFilter(), widgetMouseReleaseEvent(), widgetMouseMoveEvent()
  */
 void QwtMagnifier::widgetMousePressEvent(QMouseEvent* mouseEvent)
 {
@@ -367,9 +367,9 @@ void QwtMagnifier::widgetMousePressEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse release event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseMoveEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseMoveEvent(),
  */
 void QwtMagnifier::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
 {
@@ -384,8 +384,8 @@ void QwtMagnifier::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse move event for the observed widget.
 
-   \param mouseEvent Mouse event
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @param mouseEvent Mouse event
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
  */
 void QwtMagnifier::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 {
@@ -407,8 +407,8 @@ void QwtMagnifier::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a wheel event for the observed widget.
 
-   \param wheelEvent Wheel event
-   \sa eventFilter()
+   @param wheelEvent Wheel event
+   @sa eventFilter()
  */
 void QwtMagnifier::widgetWheelEvent(QWheelEvent* wheelEvent)
 {
@@ -445,8 +445,8 @@ void QwtMagnifier::widgetWheelEvent(QWheelEvent* wheelEvent)
 /*!
    Handle a key press event for the observed widget.
 
-   \param keyEvent Key event
-   \sa eventFilter(), widgetKeyReleaseEvent()
+   @param keyEvent Key event
+   @sa eventFilter(), widgetKeyReleaseEvent()
  */
 void QwtMagnifier::widgetKeyPressEvent(QKeyEvent* keyEvent)
 {
@@ -460,8 +460,8 @@ void QwtMagnifier::widgetKeyPressEvent(QKeyEvent* keyEvent)
 /*!
    Handle a key release event for the observed widget.
 
-   \param keyEvent Key event
-   \sa eventFilter(), widgetKeyReleaseEvent()
+   @param keyEvent Key event
+   @sa eventFilter(), widgetKeyReleaseEvent()
  */
 void QwtMagnifier::widgetKeyReleaseEvent(QKeyEvent* keyEvent)
 {

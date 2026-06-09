@@ -87,7 +87,7 @@ public:
     int maxMajor;
     int maxMinor;
 
-    bool isValid;  ///< 用于表征scaleDiv是否有效
+    bool isValid;  ///< Indicates whether scaleDiv is valid
 
     QwtScaleDiv scaleDiv;
     QwtScaleEngine* scaleEngine;
@@ -150,17 +150,14 @@ void QwtPlot::deleteAxesData()
 }
 
 /*!
-   \brief Checks if an axis is valid/检查轴是否有效
-   \param axisId axis/轴 ID
-   \return \c true if the specified axis exists, otherwise \c false/指定轴存在返回 true，否则返回 false
+   @brief Checks if an axis is valid
+   @param axisId axis ID
+   @return \c true if the specified axis exists, otherwise \c false
 
-   \note This method is equivalent to QwtAxis::isValid( axisId ) and simply checks
+   @note This method is equivalent to QwtAxis::isValid( axisId ) and simply checks
          if axisId is one of the values of QwtAxis::Position. It is a placeholder
          for future releases, where it will be possible to have a customizable number
          of axes ( multiaxes branch ) at each side.
-
-         本方法等价于 QwtAxis::isValid(axisId)，仅检查 axisId 是否为 QwtAxis::Position 中的值。
-         为未来多轴分支预留接口。
  */
 bool QwtPlot::isAxisValid(QwtAxisId axisId) const
 {
@@ -168,9 +165,9 @@ bool QwtPlot::isAxisValid(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
-   \param axisId Axis/轴 ID
-   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
+   @brief Return the scale widget of the specified axis
+   @param axisId Axis ID
+   @return Scale widget, or nullptr if axisId is invalid
  */
 const QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId) const
 {
@@ -181,9 +178,9 @@ const QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return the scale widget of the specified axis/返回指定轴的刻度控件
-   \param axisId Axis/轴 ID
-   \return Scale widget, or nullptr if axisId is invalid/刻度控件指针；轴无效时返回 nullptr
+   @brief Return the scale widget of the specified axis
+   @param axisId Axis ID
+   @return Scale widget, or nullptr if axisId is invalid
  */
 QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
 {
@@ -194,8 +191,7 @@ QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
 }
 
 /**
- * \if ENGLISH
- * \brief Return the currently visible X axis
+ * @brief Return the currently visible X axis
  *
  * Selection policy (descending priority):
  * 1. Axis must be visible (isAxisVisible() == true);
@@ -203,20 +199,8 @@ QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
  * 3. If only one X axis is visible, return it;
  * 4. If both are invisible, return default QwtAxis::XBottom.
  * 
- * \return Selected X axis ID/选中的 X 轴 ID
- * \endif
+ * @return Selected X axis ID
  *
- * \if CHINESE
- * \brief 返回当前可用的 X 轴
- * 
- * 选择策略（按优先级递减）:
- * 1. 轴必须可见（isAxisVisible() == true）；
- * 2. 若 XBottom 与 XTop 均可见，优先返回 XBottom；
- * 3. 若仅一条 X 轴可见，返回该轴；
- * 4. 若两条 X 轴均不可见，返回默认 QwtAxis::XBottom。
- *
- * \return 选中的 X 轴 ID
- * \endif
  */
 QwtAxisId QwtPlot::visibleXAxisId() const
 {
@@ -229,8 +213,7 @@ QwtAxisId QwtPlot::visibleXAxisId() const
 }
 
 /**
- * \if ENGLISH
- * \brief Return the currently usable Y axis/返回当前可用的 Y 轴
+ * @brief Return the currently usable Y axis
  *
  * Selection policy (descending priority):
  * 1. Axis must be visible;
@@ -238,19 +221,8 @@ QwtAxisId QwtPlot::visibleXAxisId() const
  * 3. If only one Y axis is visible, return it;
  * 4. If both are invisible, return default QwtAxis::YLeft.
  * 
- * \return Selected Y axis ID
- * \endif
+ * @return Selected Y axis ID
  *
- * \if CHINESE
- * \brief 返回当前可用的 Y 轴
- * 
- * 选择策略（按优先级递减）:
- * 1. 轴必须可见；
- * 2. 若 YLeft 与 YRight 均可见，优先返回 YLeft；
- * 3. 若仅一条 Y 轴可见，返回该轴；
- * 4. 若两条 Y 轴均不可见，返回默认 QwtAxis::YLeft。
- *
- * @return 选中的 Y 轴 ID
  */
 QwtAxisId QwtPlot::visibleYAxisId() const
 {
@@ -263,11 +235,11 @@ QwtAxisId QwtPlot::visibleYAxisId() const
 }
 
 /*!
-   \brief Change the scale engine for an axis/更改指定轴的刻度引擎
-   \param axisId Axis/轴 ID
-   \param scaleEngine Scale engine/刻度引擎指针
-   \note The old scale engine will be deleted/旧的刻度引擎将被删除
-   \sa axisScaleEngine()
+   @brief Change the scale engine for an axis
+   @param axisId Axis ID
+   @param scaleEngine Scale engine
+   @note The old scale engine will be deleted
+   @sa axisScaleEngine()
  */
 void QwtPlot::setAxisScaleEngine(QwtAxisId axisId, QwtScaleEngine* scaleEngine)
 {
@@ -286,9 +258,9 @@ void QwtPlot::setAxisScaleEngine(QwtAxisId axisId, QwtScaleEngine* scaleEngine)
 }
 
 /*!
-   \brief Return the scale engine for a specific axis/返回指定轴的刻度引擎
-   \param axisId Axis/轴 ID
-   \return Scale engine/刻度引擎指针
+   @brief Return the scale engine for a specific axis
+   @param axisId Axis ID
+   @return Scale engine
  */
 QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId)
 {
@@ -299,9 +271,9 @@ QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId)
 }
 
 /*!
-   \brief Return the scale engine for a specific axis/返回指定轴的刻度引擎（const 重载）
-   \param axisId Axis/轴 ID
-   \return Scale engine/刻度引擎指针
+   @brief Return the scale engine for a specific axis (const overload)
+   @param axisId Axis ID
+   @return Scale engine
  */
 const QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId) const
 {
@@ -312,9 +284,9 @@ const QwtScaleEngine* QwtPlot::axisScaleEngine(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return whether autoscaling is enabled/返回指定轴是否启用自动缩放
-   \param axisId Axis/轴 ID
-   \return \c true if autoscaling is enabled/启用自动缩放返回 true
+   @brief Return whether autoscaling is enabled
+   @param axisId Axis ID
+   @return \c true if autoscaling is enabled
  */
 bool QwtPlot::axisAutoScale(QwtAxisId axisId) const
 {
@@ -325,9 +297,9 @@ bool QwtPlot::axisAutoScale(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return whether the specified axis is visible/返回指定轴是否可见
-   \param axisId Axis/轴 ID
-   \return \c true if the axis is visible/轴可见返回 true
+   @brief Return whether the specified axis is visible
+   @param axisId Axis ID
+   @return \c true if the axis is visible
  */
 bool QwtPlot::isAxisVisible(QwtAxisId axisId) const
 {
@@ -338,9 +310,9 @@ bool QwtPlot::isAxisVisible(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return the font of the scale labels for a specified axis/返回指定轴刻度标签的字体
-   \param axisId Axis/轴 ID
-   \return Font/字体
+   @brief Return the font of the scale labels for a specified axis
+   @param axisId Axis ID
+   @return Font
  */
 QFont QwtPlot::axisFont(QwtAxisId axisId) const
 {
@@ -351,9 +323,9 @@ QFont QwtPlot::axisFont(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return the maximum number of major ticks for a specified axis/返回指定轴主刻度的最大数量
-   \param axisId Axis/轴 ID
-   \sa setAxisMaxMajor(), QwtScaleEngine::divideScale()
+   @brief Return the maximum number of major ticks for a specified axis
+   @param axisId Axis ID
+   @sa setAxisMaxMajor(), QwtScaleEngine::divideScale()
  */
 int QwtPlot::axisMaxMajor(QwtAxisId axisId) const
 {
@@ -364,9 +336,9 @@ int QwtPlot::axisMaxMajor(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Return the maximum number of minor ticks for a specified axis/返回指定轴副刻度的最大数量
-   \param axisId Axis/轴 ID
-   \sa setAxisMaxMinor(), QwtScaleEngine::divideScale()
+   @brief Return the maximum number of minor ticks for a specified axis
+   @param axisId Axis ID
+   @sa setAxisMaxMinor(), QwtScaleEngine::divideScale()
  */
 int QwtPlot::axisMaxMinor(QwtAxisId axisId) const
 {
@@ -377,16 +349,13 @@ int QwtPlot::axisMaxMinor(QwtAxisId axisId) const
 }
 
 /**
- * @brief Return the scale division of a specified axis/返回指定轴的刻度划分
+ * @brief Return the scale division of a specified axis
  *
  * axisScaleDiv(axisId).lowerBound(), axisScaleDiv(axisId).upperBound()
  * are the current limits of the axis scale.
  *
- * axisScaleDiv(axisId).lowerBound()、axisScaleDiv(axisId).upperBound()
- * 分别为该轴刻度当前的下限值和上限值。
- *
- * @param axisId Axis/轴标识
- * @return Scale division/刻度划分
+ * @param axisId Axis ID
+ * @return Scale division
  *
  * @sa QwtScaleDiv, setAxisScaleDiv(), QwtScaleEngine::divideScale()
  */
@@ -396,10 +365,10 @@ const QwtScaleDiv& QwtPlot::axisScaleDiv(QwtAxisId axisId) const
 }
 
 /**
- * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
+ * @brief Return the scale draw of a specified axis
  *
- * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @param axisId Axis ID
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid.
  */
 const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
 {
@@ -410,10 +379,10 @@ const QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId) const
 }
 
 /**
- * @brief Return the scale draw of a specified axis/返回指定轴的刻度绘制对象
+ * @brief Return the scale draw of a specified axis
  *
- * @param axisId Axis/轴标识
- * @return Specified scaleDraw for axis, or nullptr if axis is invalid./指定轴的刻度绘制对象；若轴无效则返回NULL
+ * @param axisId Axis ID
+ * @return Specified scaleDraw for axis, or nullptr if axis is invalid.
  */
 QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId)
 {
@@ -425,14 +394,12 @@ QwtScaleDraw* QwtPlot::axisScaleDraw(QwtAxisId axisId)
 }
 
 /**
- * @brief Return the step size parameter that has been set in setAxisScale./返回在 setAxisScale 中设置的步长参数
+ * @brief Return the step size parameter that has been set in setAxisScale.
  *
  * This doesn't need to be the step size of the current scale.
  *
- * 该参数不一定是当前刻度的实际步长。
- *
- * @param axisId Axis/轴标识
- * @return step size parameter value/步长参数值
+ * @param axisId Axis ID
+ * @return step size parameter value
  *
  * @sa setAxisScale(), QwtScaleEngine::divideScale()
  */
@@ -445,14 +412,12 @@ double QwtPlot::axisStepSize(QwtAxisId axisId) const
 }
 
 /**
- * @brief Return the current interval of the specified axis/返回指定轴的当前区间
+ * @brief Return the current interval of the specified axis
  *
  * This is only a convenience function for axisScaleDiv( axisId )->interval();
  *
- * 此函数仅为 axisScaleDiv( axisId )->interval() 的便捷封装函数。
- *
- * @param axisId Axis/轴标识
- * @return Scale interval/刻度区间
+ * @param axisId Axis ID
+ * @return Scale interval
  *
  * @sa QwtScaleDiv, axisScaleDiv()
  */
@@ -465,10 +430,10 @@ QwtInterval QwtPlot::axisInterval(QwtAxisId axisId) const
 }
 
 /**
- * @brief Get the title of a specified axis/获取指定轴的标题
+ * @brief Get the title of a specified axis
  *
- * @param axisId Axis/轴标识
- * @return Title of a specified axis/指定轴的标题
+ * @param axisId Axis ID
+ * @return Title of a specified axis
  */
 QwtText QwtPlot::axisTitle(QwtAxisId axisId) const
 {
@@ -479,21 +444,16 @@ QwtText QwtPlot::axisTitle(QwtAxisId axisId) const
 }
 
 /**
- * @brief Hide or show a specified axis/显示或隐藏指定轴
+ * @brief Hide or show a specified axis
  *
  * Curves, markers and other items can be attached
  * to hidden axes, and transformation of screen coordinates
  * into values works as normal.
  *
- * 曲线、标记点及其他元素仍可关联至隐藏的轴，且屏幕坐标与数值之间的转换
- * 仍正常生效。
- *
  * Only QwtAxis::XBottom and QwtAxis::YLeft are enabled by default.
  *
- * 默认情况下，仅启用 QwtAxis::XBottom（下X轴）和 QwtAxis::YLeft（左Y轴）。
- *
- * @param axisId Axis/轴标识
- * @param on \c true (visible) or \c false (hidden)/\c true 表示显示，\c false 表示隐藏
+ * @param axisId Axis ID
+ * @param on \c true (visible) or \c false (hidden)
  */
 void QwtPlot::setAxisVisible(QwtAxisId axisId, bool on)
 {
@@ -504,20 +464,17 @@ void QwtPlot::setAxisVisible(QwtAxisId axisId, bool on)
 }
 
 /**
- * @brief Transform the x or y coordinate of a position in the drawing region into a value./将绘图区域中某个位置的X或Y坐标转换为轴对应的值
+ * @brief Transform the x or y coordinate of a position in the drawing region into a value.
  *
  * Transform the x or y coordinate of a position in the
  * drawing region into a value.
  *
- * 将绘图区域中某个位置的X坐标或Y坐标，转换为对应轴上的数值。
- *
- * @param axisId Axis/轴标识
- * @param pos position/位置坐标
- * @return Position as axis coordinate/转换后的轴坐标值
+ * @param axisId Axis ID
+ * @param pos position
+ * @return Position as axis coordinate
  *
  * @warning The position can be an x or a y coordinate,
  *           depending on the specified axis.
- * @warning 该位置坐标可能是X坐标或Y坐标，具体取决于指定的轴类型。
  */
 double QwtPlot::invTransform(QwtAxisId axisId, double pos) const
 {
@@ -528,11 +485,11 @@ double QwtPlot::invTransform(QwtAxisId axisId, double pos) const
 }
 
 /**
- * @brief Transform a value into a coordinate in the plotting region/将数值转换为绘图区域中的坐标
+ * @brief Transform a value into a coordinate in the plotting region
  *
- * @param axisId Axis/轴标识
- * @param value value/待转换的数值
- * @return X or Y coordinate in the plotting region corresponding to the value./与该数值对应的绘图区域中的X坐标或Y坐标
+ * @param axisId Axis ID
+ * @param value value
+ * @return X or Y coordinate in the plotting region corresponding to the value.
  */
 double QwtPlot::transform(QwtAxisId axisId, double value) const
 {
@@ -543,14 +500,13 @@ double QwtPlot::transform(QwtAxisId axisId, double value) const
 }
 
 /**
- * @brief Change the font of an axis/修改轴的字体
+ * @brief Change the font of an axis
  *
- * @param axisId Axis/轴标识
- * @param font Font/要设置的字体
+ * @param axisId Axis ID
+ * @param font Font
  *
  * @warning This function changes the font of the tick labels,
  *           not of the axis title.
- * @warning 此函数仅修改刻度标签的字体，不会改变轴标题的字体。
  */
 void QwtPlot::setAxisFont(QwtAxisId axisId, const QFont& font)
 {
@@ -559,22 +515,18 @@ void QwtPlot::setAxisFont(QwtAxisId axisId, const QFont& font)
 }
 
 /**
- * @brief Enable autoscaling for a specified axis/为指定轴启用自动缩放
+ * @brief Enable autoscaling for a specified axis
  *
  * This member function is used to switch back to autoscaling mode
  * after a fixed scale has been set. Autoscaling is enabled by default.
  *
- * 此成员函数用于在设置了固定刻度后，切换回自动缩放模式。默认情况下自动缩放处于启用状态。
- *
- * @param axisId Axis/轴标识
- * @param on On/Off/启用（true）或禁用（false）
+ * @param axisId Axis ID
+ * @param on On/Off
  *
  * @sa setAxisScale(), setAxisScaleDiv(), updateAxes()
  *
  * @note The autoscaling flag has no effect until updateAxes() is executed
  *        ( called by replot() ).
- *
- *       自动缩放标志在执行 updateAxes() 函数（由 replot() 调用）之前不会生效。
  */
 void QwtPlot::setAxisAutoScale(QwtAxisId axisId, bool on)
 {
@@ -585,21 +537,17 @@ void QwtPlot::setAxisAutoScale(QwtAxisId axisId, bool on)
 }
 
 /**
- * @brief Disable autoscaling and specify a fixed scale for a selected axis/为指定坐标轴关闭自动缩放并设定固定刻度范围
+ * @brief Disable autoscaling and specify a fixed scale for a selected axis
  *
  * In updateAxes() the scale engine calculates a scale division from the
  * specified parameters, that will be assigned to the scale widget. So
  * updates of the scale widget usually happen delayed with the next replot.
  *
- * 在 updateAxes() 中，刻度引擎会根据给定参数计算出刻度分段，并将其赋给刻度控件。
- * 因此，刻度控件的更新通常会延迟到下一次重绘时才发生。
- *
- * @param axisId Axis/坐标轴索引
- * @param min Minimum of the scale/刻度最小值
- * @param max Maximum of the scale/刻度最大值
+ * @param axisId Axis ID
+ * @param min Minimum of the scale
+ * @param max Maximum of the scale
  * @param stepSize Major step size. If <code>step == 0</code>, the step size is
  *                 calculated automatically using the maxMajor setting.
- *                 主步长。若 <code>step == 0</code>，则使用 maxMajor 设置自动计算步长。
  *
  * @sa setAxisMaxMajor(), setAxisAutoScale(), axisStepSize(), QwtScaleEngine::divideScale()
  */
@@ -609,7 +557,7 @@ void QwtPlot::setAxisScale(QwtAxisId axisId, double min, double max, double step
 
         AxisData& d = m_scaleData->axisData(axisId);
         if (qFuzzyCompare(d.minValue, min) && qFuzzyCompare(d.maxValue, max) && qFuzzyCompare(d.stepSize, stepSize)) {
-            // 都一样就不设置
+            // Nothing to change
             return;
         }
 
@@ -625,17 +573,14 @@ void QwtPlot::setAxisScale(QwtAxisId axisId, double min, double max, double step
 }
 
 /**
- * @brief Disable autoscaling and specify a fixed scale for a selected axis./禁用自动缩放并为选定轴指定固定刻度
+ * @brief Disable autoscaling and specify a fixed scale for a selected axis.
  *
  * The scale division will be stored locally only until the next call
  * of updateAxes(). So updates of the scale widget usually happen delayed with
  * the next replot.
  *
- * 该刻度划分仅在本地存储，直至下一次调用 updateAxes() 为止。因此，刻度部件的更新通常会延迟至
- * 下一次 replot() 时执行。
- *
- * @param axisId Axis/轴标识
- * @param scaleDiv Scale division/刻度划分
+ * @param axisId Axis ID
+ * @param scaleDiv Scale division
  *
  * @sa setAxisScale(), setAxisAutoScale()
  */
@@ -644,7 +589,7 @@ void QwtPlot::setAxisScaleDiv(QwtAxisId axisId, const QwtScaleDiv& scaleDiv)
     if (isAxisValid(axisId)) {
         AxisData& d = m_scaleData->axisData(axisId);
         if (d.scaleDiv.fuzzyCompare(scaleDiv)) {
-            // 都一样就不设置
+            // Nothing to change
             return;
         }
         d.doAutoScale = false;
@@ -656,24 +601,20 @@ void QwtPlot::setAxisScaleDiv(QwtAxisId axisId, const QwtScaleDiv& scaleDiv)
 }
 
 /**
- * @brief Set a scale draw/设置刻度绘制对象
+ * @brief Set a scale draw
  *
  * By passing scaleDraw it is possible to extend QwtScaleDraw
  * functionality and let it take place in QwtPlot. Please note
  * that scaleDraw has to be created with new and will be deleted
  * by the corresponding QwtScale member ( like a child object ).
  *
- * 通过传入 scaleDraw 对象，可以扩展 QwtScaleDraw 的功能并使其在 QwtPlot 中生效。
- * 请注意，scaleDraw 必须通过 new 关键字创建，且会由对应的 QwtScale 成员（类似子对象）自动销毁。
- *
- * @param axisId Axis/轴标识
- * @param scaleDraw Object responsible for drawing scales./负责刻度绘制的对象
+ * @param axisId Axis ID
+ * @param scaleDraw Object responsible for drawing scales.
  *
  * @sa QwtScaleDraw, QwtScaleWidget
  *
  * @warning The attributes of scaleDraw will be overwritten by those of the
  *           previous QwtScaleDraw.
- * @warning scaleDraw 的属性会被之前的 QwtScaleDraw 对象的属性覆盖。
  */
 void QwtPlot::setAxisScaleDraw(QwtAxisId axisId, QwtScaleDraw* scaleDraw)
 {
@@ -684,10 +625,10 @@ void QwtPlot::setAxisScaleDraw(QwtAxisId axisId, QwtScaleDraw* scaleDraw)
 }
 
 /**
- * @brief Change the alignment of the tick labels/修改刻度标签的对齐方式
+ * @brief Change the alignment of the tick labels
  *
- * @param axisId Axis/轴标识
- * @param alignment Or'd Qt::AlignmentFlags see <qnamespace.h>/Qt::AlignmentFlags 组合值（详见 <qnamespace.h>）
+ * @param axisId Axis ID
+ * @param alignment Or'd Qt::AlignmentFlags see <qnamespace.h>
  *
  * @sa QwtScaleDraw::setLabelAlignment()
  */
@@ -698,11 +639,11 @@ void QwtPlot::setAxisLabelAlignment(QwtAxisId axisId, Qt::Alignment alignment)
 }
 
 /**
- * @brief Rotate all tick labels/旋转所有刻度标签
+ * @brief Rotate all tick labels
  *
- * @param axisId Axis/轴标识
+ * @param axisId Axis ID
  * @param rotation Angle in degrees. When changing the label rotation, the label alignment might be adjusted
- * too./旋转角度（以度为单位）。修改标签旋转角度时，标签对齐方式可能也会随之调整
+ * too.
  *
  * @sa QwtScaleDraw::setLabelRotation(), setAxisLabelAlignment()
  */
@@ -713,10 +654,10 @@ void QwtPlot::setAxisLabelRotation(QwtAxisId axisId, double rotation)
 }
 
 /**
- * @brief Set the maximum number of minor scale intervals for a specified axis/为指定轴设置次要刻度区间的最大数量
+ * @brief Set the maximum number of minor scale intervals for a specified axis
  *
- * @param axisId Axis/轴标识
- * @param maxMinor Maximum number of minor steps/次要刻度的最大数量
+ * @param axisId Axis ID
+ * @param maxMinor Maximum number of minor steps
  *
  * @sa axisMaxMinor()
  */
@@ -735,10 +676,10 @@ void QwtPlot::setAxisMaxMinor(QwtAxisId axisId, int maxMinor)
 }
 
 /**
- * @brief Set the maximum number of major scale intervals for a specified axis/为指定轴设置主要刻度区间的最大数量
+ * @brief Set the maximum number of major scale intervals for a specified axis
  *
- * @param axisId Axis/轴标识
- * @param maxMajor Maximum number of major steps/主要刻度的最大数量
+ * @param axisId Axis ID
+ * @param maxMajor Maximum number of major steps
  *
  * @sa axisMaxMajor()
  */
@@ -757,10 +698,10 @@ void QwtPlot::setAxisMaxMajor(QwtAxisId axisId, int maxMajor)
 }
 
 /**
- * @brief Change the title of a specified axis/修改指定轴的标题
+ * @brief Change the title of a specified axis
  *
- * @param axisId Axis/轴标识
- * @param title axis title/轴标题
+ * @param axisId Axis ID
+ * @param title axis title
  */
 void QwtPlot::setAxisTitle(QwtAxisId axisId, const QString& title)
 {
@@ -769,10 +710,10 @@ void QwtPlot::setAxisTitle(QwtAxisId axisId, const QString& title)
 }
 
 /**
- * @brief Change the title of a specified axis/修改指定轴的标题
+ * @brief Change the title of a specified axis
  *
- * @param axisId Axis/轴标识
- * @param title Axis title/轴标题
+ * @param axisId Axis ID
+ * @param title Axis title
  */
 void QwtPlot::setAxisTitle(QwtAxisId axisId, const QwtText& title)
 {
@@ -781,7 +722,7 @@ void QwtPlot::setAxisTitle(QwtAxisId axisId, const QwtText& title)
 }
 
 /**
- * @brief Rebuild the axes scales/重建坐标轴刻度
+ * @brief Rebuild the axes scales
  *
  * In case of autoscaling the boundaries of a scale are calculated
  * from the bounding rectangles of all plot items, having the
@@ -789,30 +730,17 @@ void QwtPlot::setAxisTitle(QwtAxisId axisId, const QwtText& title)
  * Then a scale division is calculated ( QwtScaleEngine::divideScale() )
  * and assigned to scale widget.
  *
- * 若启用自动缩放，刻度的边界将根据所有启用了 QwtPlotItem::AutoScale 标志的绘图项的边界矩形计算得出
- *（调用 QwtScaleEngine::autoScale() 方法）。随后会计算刻度划分（调用 QwtScaleEngine::divideScale() 方法），
- * 并将其分配给刻度部件。
- *
  * When the scale boundaries have been assigned with setAxisScale() a
  * scale division is calculated ( QwtScaleEngine::divideScale() )
  * for this interval and assigned to the scale widget.
  *
- * 若已通过 setAxisScale() 方法指定了刻度边界，则会针对该区间计算刻度划分（调用 QwtScaleEngine::divideScale() 方法），
- * 并将其分配给刻度部件。
- *
  * When the scale has been set explicitly by setAxisScaleDiv() the
  * locally stored scale division gets assigned to the scale widget.
- *
- * 若已通过 setAxisScaleDiv() 方法显式设置了刻度，则会将本地存储的刻度划分直接分配给刻度部件。
  *
  * The scale widget indicates modifications by emitting a
  * QwtScaleWidget::scaleDivChanged() signal.
  *
- * 刻度部件会通过发送 QwtScaleWidget::scaleDivChanged() 信号来通知刻度的修改。
- *
  * updateAxes() is usually called by replot().
- *
- * updateAxes() 方法通常由 replot() 方法调用。
  *
  * @sa setAxisAutoScale(), setAxisScale(), setAxisScaleDiv(), replot(),
  *     QwtPlotItem::boundingRect()
@@ -892,7 +820,9 @@ void QwtPlot::updateAxes()
 }
 
 /**
- * @brief 把plot item的范围更新为坐标轴的范围，这个函数一般是用于坐标轴变动的时候，强制让所有绘图范围进行更新
+ * @brief Update the scale range of all plot items to match the current axis scales.
+ *
+ * This is typically called when axes change, forcing all plot items to update their ranges.
  */
 void QwtPlot::updateItemsToScaleDiv()
 {
@@ -905,9 +835,9 @@ void QwtPlot::updateItemsToScaleDiv()
 }
 
 /**
- * @brief yleft轴请求改变坐标轴范围更新
- * @param min
- * @param max
+ * @brief Request scale range update for the YLeft axis
+ * @param min Minimum scale value
+ * @param max Maximum scale value
  */
 void QwtPlot::yLeftRequestScaleRangeUpdate(double min, double max)
 {
@@ -917,9 +847,9 @@ void QwtPlot::yLeftRequestScaleRangeUpdate(double min, double max)
 }
 
 /**
- * @brief yright轴请求改变坐标轴范围更新
- * @param min
- * @param max
+ * @brief Request scale range update for the YRight axis
+ * @param min Minimum scale value
+ * @param max Maximum scale value
  */
 void QwtPlot::yRightRequestScaleRangeUpdate(double min, double max)
 {
@@ -928,9 +858,9 @@ void QwtPlot::yRightRequestScaleRangeUpdate(double min, double max)
 }
 
 /**
- * @brief xbottom轴请求改变坐标轴范围更新
- * @param min
- * @param max
+ * @brief Request scale range update for the XBottom axis
+ * @param min Minimum scale value
+ * @param max Maximum scale value
  */
 void QwtPlot::xBottomRequestScaleRangeUpdate(double min, double max)
 {
@@ -939,9 +869,9 @@ void QwtPlot::xBottomRequestScaleRangeUpdate(double min, double max)
 }
 
 /**
- * @brief xtop轴请求改变坐标轴范围更新
- * @param min
- * @param max
+ * @brief Request scale range update for the XTop axis
+ * @param min Minimum scale value
+ * @param max Maximum scale value
  */
 void QwtPlot::xTopRequestScaleRangeUpdate(double min, double max)
 {

@@ -31,7 +31,6 @@
 #include <qthread.h>
 
 /**
- * \if ENGLISH
  * @brief A thread collecting samples at regular intervals.
  *
  * Continuous signals are converted into a discrete signal by
@@ -42,17 +41,7 @@
  * to collect and store ( or emit ) a single sample.
  *
  * @sa QwtPlotCurve, QwtPlotSeriesItem
- * \endif
  *
- * \if CHINESE
- * @brief 定期收集样本的线程
- *
- * 通过定期收集样本，将连续信号转换为离散信号。离散信号可以通过 QwtPlotSeriesItem 在 QwtPlot 部件上显示。
- *
- * QwtSamplingThread 启动一个线程，定期调用 sample() 方法来收集和存储（或发出）单个样本。
- *
- * @sa QwtPlotCurve, QwtPlotSeriesItem
- * \endif
  */
 class QWT_EXPORT QwtSamplingThread : public QThread
 {
@@ -81,21 +70,13 @@ protected:
     virtual void run() override;
 
     /**
-     * \if ENGLISH
      * @brief Collect a sample
      *
      * @param elapsed Time since the thread was started in seconds
      * @note Due to a bug in previous version elapsed was passed as
      *       seconds instead of miliseconds. To avoid breaking existing
      *       code we stay with seconds for now.
-     * \endif
      *
-     * \if CHINESE
-     * @brief 收集样本
-     *
-     * @param elapsed 线程启动以来的时间（秒）
-     * @note 由于之前版本的 bug，elapsed 被作为秒而不是毫秒传递。为了避免破坏现有代码，我们现在仍然使用秒。
-     * \endif
      */
     virtual void sample(double elapsed) = 0;
 

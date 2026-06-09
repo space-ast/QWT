@@ -339,13 +339,13 @@ void QwtPlotBarChart::drawSeries(QPainter* painter,
 /*!
    Calculate the geometry of a bar in widget coordinates
 
-   \param xMap x map
-   \param yMap y map
-   \param canvasRect Contents rect of the canvas
-   \param boundingInterval Bounding interval of sample values
-   \param sample Value of the sample
+   @param xMap x map
+   @param yMap y map
+   @param canvasRect Contents rect of the canvas
+   @param boundingInterval Bounding interval of sample values
+   @param sample Value of the sample
 
-   \return Geometry of the column
+   @return Geometry of the column
  */
 QwtColumnRect QwtPlotBarChart::columnRect(const QwtScaleMap& xMap,
                                           const QwtScaleMap& yMap,
@@ -391,15 +391,15 @@ QwtColumnRect QwtPlotBarChart::columnRect(const QwtScaleMap& xMap,
 /*!
    Draw a sample
 
-   \param painter Painter
-   \param xMap x map
-   \param yMap y map
-   \param canvasRect Contents rect of the canvas
-   \param boundingInterval Bounding interval of sample values
-   \param index Index of the sample
-   \param sample Value of the sample
+   @param painter Painter
+   @param xMap x map
+   @param yMap y map
+   @param canvasRect Contents rect of the canvas
+   @param boundingInterval Bounding interval of sample values
+   @param index Index of the sample
+   @param sample Value of the sample
 
-   \sa drawSeries()
+   @sa drawSeries()
  */
 void QwtPlotBarChart::drawSample(QPainter* painter,
                                  const QwtScaleMap& xMap,
@@ -417,10 +417,10 @@ void QwtPlotBarChart::drawSample(QPainter* painter,
 /*!
    Draw a bar
 
-   \param painter Painter
-   \param sampleIndex Index of the sample represented by the bar
-   \param sample Value of the sample
-   \param rect Bounding rectangle of the bar
+   @param painter Painter
+   @param sampleIndex Index of the sample represented by the bar
+   @param sample Value of the sample
+   @param rect Bounding rectangle of the bar
  */
 void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF& sample, const QwtColumnRect& rect) const
 {
@@ -475,15 +475,15 @@ QwtText QwtPlotBarChart::barTitle(int sampleIndex) const
 }
 
 /*!
-   \brief Return all information, that is needed to represent
+   @brief Return all information, that is needed to represent
           the item on the legend
 
    In case of LegendBarTitles an entry for each bar is returned,
    otherwise the chart is represented like any other plot item
    from its title() and the legendIcon().
 
-   \return Information, that is needed to represent the item on the legend
-   \sa title(), setLegendMode(), barTitle(), QwtLegend, QwtPlotLegendItem
+   @return Information, that is needed to represent the item on the legend
+   @sa title(), setLegendMode(), barTitle(), QwtLegend, QwtPlotLegendItem
  */
 QList< QwtLegendData > QwtPlotBarChart::legendData() const
 {
@@ -512,16 +512,16 @@ QList< QwtLegendData > QwtPlotBarChart::legendData() const
 }
 
 /*!
-   \return Icon representing a bar or the chart on the legend
+   @return Icon representing a bar or the chart on the legend
 
    When the legendMode() is LegendBarTitles the icon shows
    the bar corresponding to index - otherwise the bar
    displays the default symbol.
 
-   \param index Index of the legend entry
-   \param size Icon size
+   @param index Index of the legend entry
+   @param size Icon size
 
-   \sa setLegendMode(), drawBar(),
+   @sa setLegendMode(), drawBar(),
        QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
  */
 QwtGraphic QwtPlotBarChart::legendIcon(int index, const QSizeF& size) const

@@ -275,7 +275,6 @@ int QwtPlotLayout::canvasMargin(int axisPos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the align-canvas-to-axis-scales flag for all axes
  * @param on True to align canvas to scales, false otherwise
  * @sa setAlignCanvasToScale(), alignCanvasToScale()
@@ -287,7 +286,6 @@ void QwtPlotLayout::setAlignCanvasToScales(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the align-canvas-to-axis-scales setting for a specific axis
  * @param axisPos Axis position. This identifies a border of the plot.
  *                For example, QwtAxis::YLeft aligns the left end of X-axes.
@@ -422,12 +420,12 @@ double QwtPlotLayout::legendRatio() const
 }
 
 /*!
-   \brief Set the geometry for the title
+   @brief Set the geometry for the title
 
    This method is intended to be used from derived layouts
    overloading activate()
 
-   \sa titleRect(), activate()
+   @sa titleRect(), activate()
  */
 void QwtPlotLayout::setTitleRect(const QRectF& rect)
 {
@@ -445,12 +443,12 @@ QRectF QwtPlotLayout::titleRect() const
 }
 
 /*!
-   \brief Set the geometry for the footer
+   @brief Set the geometry for the footer
 
    This method is intended to be used from derived layouts
    overloading activate()
 
-   \sa footerRect(), activate()
+   @sa footerRect(), activate()
  */
 void QwtPlotLayout::setFooterRect(const QRectF& rect)
 {
@@ -468,14 +466,14 @@ QRectF QwtPlotLayout::footerRect() const
 }
 
 /*!
-   \brief Set the geometry for the legend
+   @brief Set the geometry for the legend
 
    This method is intended to be used from derived layouts
    overloading activate()
 
-   \param rect Rectangle for the legend
+   @param rect Rectangle for the legend
 
-   \sa legendRect(), activate()
+   @sa legendRect(), activate()
  */
 void QwtPlotLayout::setLegendRect(const QRectF& rect)
 {
@@ -493,15 +491,15 @@ QRectF QwtPlotLayout::legendRect() const
 }
 
 /*!
-   \brief Set the geometry for an axis
+   @brief Set the geometry for an axis
 
    This method is intended to be used from derived layouts
    overloading activate()
 
-   \param axisId Axis
-   \param rect Rectangle for the scale
+   @param axisId Axis
+   @param rect Rectangle for the scale
 
-   \sa scaleRect(), activate()
+   @sa scaleRect(), activate()
  */
 void QwtPlotLayout::setScaleRect(QwtAxisId axisId, const QRectF& rect)
 {
@@ -524,12 +522,12 @@ QRectF QwtPlotLayout::scaleRect(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Set the geometry for the canvas
+   @brief Set the geometry for the canvas
 
    This method is intended to be used from derived layouts
    overloading activate()
 
-   \sa canvasRect(), activate()
+   @sa canvasRect(), activate()
  */
 void QwtPlotLayout::setCanvasRect(const QRectF& rect)
 {
@@ -552,7 +550,6 @@ QRectF QwtPlotLayout::canvasRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the geometry of all components
  * @details Resets all geometry rectangles (title, footer, legend, canvas, and scales)
  *          to empty rectangles. Must call activate() to recalculate geometries.
@@ -567,7 +564,6 @@ void QwtPlotLayout::invalidate()
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the minimum size hint for the plot
  * @param plot The plot widget to calculate size hint for
  * @return The minimum size hint
@@ -659,7 +655,6 @@ QSize QwtPlotLayout::minimumSizeHint(const QwtPlot* plot) const
 }
 
 /**
- * \if ENGLISH
  * @brief Recalculate the geometry of all plot components
  * @param plot The plot widget to layout
  * @param plotRect The rectangle where to place the components (in pixels)
@@ -676,9 +671,9 @@ void QwtPlotLayout::activate(const QwtPlot* plot, const QRectF& plotRect, Option
 }
 
 /*!
- * \brief Concrete implementation of QwtPlotLayout::activate
- * \param plotRect
- * \param options
+ * @brief Concrete implementation of QwtPlotLayout::activate
+ * @param plotRect
+ * @param options
  */
 void QwtPlotLayout::doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options)
 {

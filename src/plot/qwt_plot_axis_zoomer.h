@@ -35,7 +35,6 @@ template< typename T >
 class QStack;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotAxisZoomer provides stacked zooming for a plot widget
  * @details QwtPlotAxisZoomer selects rectangles from user inputs ( mouse or keyboard )
  *          translates them into plot coordinates and adjusts the axes to them.
@@ -91,57 +90,7 @@ class QStack;
  * @note The realtime example includes an derived zoomer class that adds
  *       scrollbars to the plot canvas.
  * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  * 
- * \if CHINESE
- * @brief QwtPlotAxisZoomer 为绘图部件提供堆叠式缩放功能
- * @details QwtPlotAxisZoomer 根据用户输入（鼠标或键盘）选择矩形区域，
- *          将其转换为绘图坐标，并相应地调整坐标轴。
- *          选择操作由"橡皮筋"辅助，并可选择显示当前鼠标位置的坐标。
- * 
- *          缩放操作可以无限次重复，仅受 maxStackDepth() 或 minZoomSize() 的限制。
- *          每个矩形都会被压入一个堆栈中。
- * 
- *          默认的矩形选择方式是一个 QwtPickerDragRectMachine，
- *          其绑定方式如下：
- * 
- *          - QwtEventPattern::MouseSelect1
- *           缩放矩形的第一个点通过鼠标按下选择，第二个点则根据鼠标释放时的位置确定。
- * 
- *          - QwtEventPattern::KeySelect1
- *           第一次按键选择第一个点，第二次按键选择第二个点。
- * 
- *          - QwtEventPattern::KeyAbort
- *           在已选择第一个点的状态下，放弃当前选择。
- * 
- *          要遍历缩放堆栈，可使用以下绑定方式：
- * 
- *          - QwtEventPattern::MouseSelect3, QwtEventPattern::KeyUndo
- *           在缩放堆栈中后退一步（缩小）
- * 
- *          - QwtEventPattern::MouseSelect6, QwtEventPattern::KeyRedo
- *           在缩放堆栈中前进一步（放大）
- * 
- *          - QwtEventPattern::MouseSelect2, QwtEventPattern::KeyHome
- *           缩放到基准视图（完全缩小）
- * 
- *          可通过 setKeyPattern() 和 setMousePattern() 函数配置缩放器的行为。
- *          以下示例展示了如何将 'I' 和 'O' 键配置为在缩放堆栈中前进和后退一步，
- *          并使用 "Home" 键将绘图"取消缩放"到初始状态。
- * 
- *          @code
- *          zoomer = new QwtPlotAxisZoomer( plot );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyRedo, Qt::Key_I, Qt::ShiftModifier );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyUndo, Qt::Key_O, Qt::ShiftModifier );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyHome, Qt::Key_Home );
- *          @endcode
- * 
- *          QwtPlotAxisZoomer 专为具有一个 x 轴和一个 y 轴的绘图设计，
- *          但也允许附加第二个 QwtPlotAxisZoomer（不带橡皮筋和追踪器）用于其他轴。
- * 
- * @note realtime 示例包含一个派生的缩放器类，为绘图画布添加了滚动条。
- * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotAxisZoomer : public QwtPlotPicker
 {
@@ -194,16 +143,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * A signal emitting the zoomRect(), when the plot has been
      * zoomed in or out.
      * @param rect Current zoom rectangle.
-     * \endif
      * 
-     * \if CHINESE
-     * 当绘图被放大或缩小时发出的信号，包含当前的缩放矩形。
-     * @param rect 当前缩放矩形。
-     * \endif
      */
     void zoomed(const QRectF& rect);
 

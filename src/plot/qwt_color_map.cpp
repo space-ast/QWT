@@ -236,14 +236,8 @@ inline QRgb QwtLinearColorMap::ColorStops::rgb(QwtLinearColorMap::Mode mode, dou
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor.
  * @param[in] format Format of the color map.
- * \endif
- * \if CHINESE
- * @brief 构造函数。
- * @param[in] format 颜色映射的格式。
- * \endif
  */
 QwtColorMap::QwtColorMap(Format format) : m_format(format)
 {
@@ -255,14 +249,8 @@ QwtColorMap::~QwtColorMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the format of the color map.
  * @param[in] format Format of the color map.
- * \endif
- * \if CHINESE
- * @brief 设置颜色映射的格式。
- * @param[in] format 颜色映射的格式。
- * \endif
  */
 void QwtColorMap::setFormat(Format format)
 {
@@ -270,20 +258,11 @@ void QwtColorMap::setFormat(Format format)
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Number of colors.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and numColors - 1, or -1 for an invalid value.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为颜色索引。
- * @param[in] numColors 颜色数量。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为颜色索引的数值。
- * @return 索引值，范围在 0 到 numColors - 1 之间，无效值返回 -1。
- * \endif
  */
 uint QwtColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
 {
@@ -303,17 +282,10 @@ uint QwtColorMap::colorIndex(int numColors, const QwtInterval& interval, double 
 }
 
 /**
- * \if ENGLISH
  * @brief Build and return a color map of 256 colors.
  * @details The color table is needed for rendering indexed images in combination
  *          with using colorIndex().
  * @return A color table, that can be used for a QImage.
- * \endif
- * \if CHINESE
- * @brief 构建并返回包含 256 种颜色的颜色映射表。
- * @details 颜色表用于渲染索引图像，配合 colorIndex() 使用。
- * @return 可用于 QImage 的颜色表。
- * \endif
  */
 QVector< QRgb > QwtColorMap::colorTable256() const
 {
@@ -328,19 +300,11 @@ QVector< QRgb > QwtColorMap::colorTable256() const
 }
 
 /**
- * \if ENGLISH
  * @brief Build and return a color map of arbitrary number of colors.
  * @details The color table is needed for rendering indexed images in combination
  *          with using colorIndex().
  * @param[in] numColors Number of colors.
  * @return A color table.
- * \endif
- * \if CHINESE
- * @brief 构建并返回任意数量颜色的颜色映射表。
- * @details 颜色表用于渲染索引图像，配合 colorIndex() 使用。
- * @param[in] numColors 颜色数量。
- * @return 颜色表。
- * \endif
  */
 QVector< QRgb > QwtColorMap::colorTable(int numColors) const
 {
@@ -363,16 +327,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Build a color map with two stops at 0.0 and 1.0.
  * @details The color at 0.0 is Qt::blue, at 1.0 it is Qt::yellow.
  * @param[in] format Preferred format of the color map.
- * \endif
- * \if CHINESE
- * @brief 构建具有两个停止点的颜色映射，位置在 0.0 和 1.0。
- * @details 0.0 位置的颜色为 Qt::blue，1.0 位置的颜色为 Qt::yellow。
- * @param[in] format 颜色映射的首选格式。
- * \endif
  */
 QwtLinearColorMap::QwtLinearColorMap(QwtColorMap::Format format) : QwtColorMap(format)
 {
@@ -383,18 +340,10 @@ QwtLinearColorMap::QwtLinearColorMap(QwtColorMap::Format format) : QwtColorMap(f
 }
 
 /**
- * \if ENGLISH
  * @brief Build a color map with two stops at 0.0 and 1.0.
  * @param[in] color1 Color used for the minimum value of the value interval.
  * @param[in] color2 Color used for the maximum value of the value interval.
  * @param[in] format Preferred format for the color map.
- * \endif
- * \if CHINESE
- * @brief 构建具有两个停止点的颜色映射，位置在 0.0 和 1.0。
- * @param[in] color1 用于数值区间最小值的颜色。
- * @param[in] color2 用于数值区间最大值的颜色。
- * @param[in] format 颜色映射的首选格式。
- * \endif
  */
 QwtLinearColorMap::QwtLinearColorMap(const QColor& color1, const QColor& color2, QwtColorMap::Format format)
     : QwtColorMap(format)
@@ -411,20 +360,11 @@ QwtLinearColorMap::~QwtLinearColorMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the mode of the color map.
  * @details FixedColors means the color is calculated from the next lower color stop.
  *          ScaledColors means the color is calculated by interpolating the colors of the adjacent stops.
  * @param[in] mode Resampling mode.
  * @sa mode()
- * \endif
- * \if CHINESE
- * @brief 设置颜色映射的模式。
- * @details FixedColors 表示从下一个较低的颜色停止点计算颜色。
- *          ScaledColors 表示通过相邻停止点的颜色插值计算颜色。
- * @param[in] mode 重采样模式。
- * @sa mode()
- * \endif
  */
 void QwtLinearColorMap::setMode(Mode mode)
 {
@@ -432,16 +372,9 @@ void QwtLinearColorMap::setMode(Mode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the mode of the color map.
  * @return Mode of the color map.
  * @sa setMode()
- * \endif
- * \if CHINESE
- * @brief 返回颜色映射的模式。
- * @return 颜色映射的模式。
- * @sa setMode()
- * \endif
  */
 QwtLinearColorMap::Mode QwtLinearColorMap::mode() const
 {
@@ -449,20 +382,11 @@ QwtLinearColorMap::Mode QwtLinearColorMap::mode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the color range.
  * @details Add stops at 0.0 and 1.0.
  * @param[in] color1 Color used for the minimum value of the value interval.
  * @param[in] color2 Color used for the maximum value of the value interval.
  * @sa color1(), color2()
- * \endif
- * \if CHINESE
- * @brief 设置颜色范围。
- * @details 在 0.0 和 1.0 处添加停止点。
- * @param[in] color1 用于数值区间最小值的颜色。
- * @param[in] color2 用于数值区间最大值的颜色。
- * @sa color1(), color2()
- * \endif
  */
 void QwtLinearColorMap::setColorInterval(const QColor& color1, const QColor& color2)
 {
@@ -472,20 +396,11 @@ void QwtLinearColorMap::setColorInterval(const QColor& color1, const QColor& col
 }
 
 /**
- * \if ENGLISH
  * @brief Add a color stop.
  * @details The value has to be in the range [0.0, 1.0].
  *          F.e. a stop at position 17.0 for a range [10.0,20.0] must be passed as: (17.0 - 10.0) / (20.0 - 10.0).
  * @param[in] value Value between [0.0, 1.0].
  * @param[in] color Color stop.
- * \endif
- * \if CHINESE
- * @brief 添加颜色停止点。
- * @details value 必须在 [0.0, 1.0] 范围内。
- *          例如，对于范围 [10.0,20.0]，位置 17.0 处的停止点应传入: (17.0 - 10.0) / (20.0 - 10.0)。
- * @param[in] value [0.0, 1.0] 范围内的值。
- * @param[in] color 颜色停止点。
- * \endif
  */
 void QwtLinearColorMap::addColorStop(double value, const QColor& color)
 {
@@ -494,14 +409,8 @@ void QwtLinearColorMap::addColorStop(double value, const QColor& color)
 }
 
 /**
- * \if ENGLISH
  * @brief Return positions of color stops in increasing order.
  * @return Positions of color stops.
- * \endif
- * \if CHINESE
- * @brief 返回按升序排列的颜色停止点位置。
- * @return 颜色停止点的位置。
- * \endif
  */
 QVector< double > QwtLinearColorMap::stopPos() const
 {
@@ -509,14 +418,8 @@ QVector< double > QwtLinearColorMap::stopPos() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the colors of the color stops.
  * @return Colors of color stops.
- * \endif
- * \if CHINESE
- * @brief 返回颜色停止点对应的颜色。
- * @return 颜色停止点的颜色。
- * \endif
  */
 QVector< QColor > QwtLinearColorMap::stopColors() const
 {
@@ -524,16 +427,9 @@ QVector< QColor > QwtLinearColorMap::stopColors() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the first color of the color range.
  * @return First color of the color range.
  * @sa setColorInterval()
- * \endif
- * \if CHINESE
- * @brief 返回颜色范围的第一个颜色。
- * @return 颜色范围的第一个颜色。
- * @sa setColorInterval()
- * \endif
  */
 QColor QwtLinearColorMap::color1() const
 {
@@ -541,16 +437,9 @@ QColor QwtLinearColorMap::color1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the second color of the color range.
  * @return Second color of the color range.
  * @sa setColorInterval()
- * \endif
- * \if CHINESE
- * @brief 返回颜色范围的第二个颜色。
- * @return 颜色范围的第二个颜色。
- * @sa setColorInterval()
- * \endif
  */
 QColor QwtLinearColorMap::color2() const
 {
@@ -558,18 +447,10 @@ QColor QwtLinearColorMap::color2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a RGB value.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为 RGB 值。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为 RGB 值的数值。
- * @return 对应数值的 RGB 值。
- * \endif
  */
 QRgb QwtLinearColorMap::rgb(const QwtInterval& interval, double value) const
 {
@@ -582,22 +463,12 @@ QRgb QwtLinearColorMap::rgb(const QwtInterval& interval, double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Size of the color table.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and 255.
  * @note NaN values are mapped to 0.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为颜色索引。
- * @param[in] numColors 颜色表的大小。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为颜色索引的数值。
- * @return 索引值，范围在 0 到 255 之间。
- * @note NaN 值映射为 0。
- * \endif
  */
 uint QwtLinearColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
 {
@@ -632,18 +503,10 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor.
  * @details The alpha interval is initialized by 0 to 255.
  * @param[in] color Color of the map.
  * @sa setColor(), setAlphaInterval()
- * \endif
- * \if CHINESE
- * @brief 构造函数。
- * @details 透明度区间初始化为 0 到 255。
- * @param[in] color 映射的颜色。
- * @sa setColor(), setAlphaInterval()
- * \endif
  */
 QwtAlphaColorMap::QwtAlphaColorMap(const QColor& color) : QwtColorMap(QwtColorMap::RGB)
 {
@@ -658,16 +521,9 @@ QwtAlphaColorMap::~QwtAlphaColorMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the color.
  * @param[in] color Color.
  * @sa color()
- * \endif
- * \if CHINESE
- * @brief 设置颜色。
- * @param[in] color 颜色。
- * @sa color()
- * \endif
  */
 void QwtAlphaColorMap::setColor(const QColor& color)
 {
@@ -679,16 +535,9 @@ void QwtAlphaColorMap::setColor(const QColor& color)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the color.
  * @return The color.
  * @sa setColor()
- * \endif
- * \if CHINESE
- * @brief 返回颜色。
- * @return 颜色。
- * @sa setColor()
- * \endif
  */
 QColor QwtAlphaColorMap::color() const
 {
@@ -696,20 +545,11 @@ QColor QwtAlphaColorMap::color() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval for the alpha coordinate.
  * @details alpha1/alpha2 need to be in the range 0 to 255, where 255 means opaque and 0 means transparent.
  * @param[in] alpha1 First alpha coordinate.
  * @param[in] alpha2 Second alpha coordinate.
  * @sa alpha1(), alpha2()
- * \endif
- * \if CHINESE
- * @brief 设置透明度坐标的区间。
- * @details alpha1/alpha2 需在 0 到 255 范围内，其中 255 表示不透明，0 表示透明。
- * @param[in] alpha1 第一个透明度坐标。
- * @param[in] alpha2 第二个透明度坐标。
- * @sa alpha1(), alpha2()
- * \endif
  */
 void QwtAlphaColorMap::setAlphaInterval(int alpha1, int alpha2)
 {
@@ -721,16 +561,9 @@ void QwtAlphaColorMap::setAlphaInterval(int alpha1, int alpha2)
 }
 
 /**
- * \if ENGLISH
  * @brief Return first alpha coordinate.
  * @return First alpha coordinate.
  * @sa setAlphaInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第一个透明度坐标。
- * @return 第一个透明度坐标。
- * @sa setAlphaInterval()
- * \endif
  */
 int QwtAlphaColorMap::alpha1() const
 {
@@ -738,16 +571,9 @@ int QwtAlphaColorMap::alpha1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second alpha coordinate.
  * @return Second alpha coordinate.
  * @sa setAlphaInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第二个透明度坐标。
- * @return 第二个透明度坐标。
- * @sa setAlphaInterval()
- * \endif
  */
 int QwtAlphaColorMap::alpha2() const
 {
@@ -755,18 +581,10 @@ int QwtAlphaColorMap::alpha2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a alpha value.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value, with an alpha value.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为透明度值。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为 RGB 值的数值。
- * @return 带有透明度值的 RGB 值。
- * \endif
  */
 QRgb QwtAlphaColorMap::rgb(const QwtInterval& interval, double value) const
 {
@@ -849,18 +667,10 @@ void QwtHueColorMap::PrivateData::updateTable()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor.
  * @details The hue interval is initialized by 0 to 359. All other coordinates are set to 255.
  * @param[in] format Format of the color map.
  * @sa setHueInterval(), setSaturation(), setValue(), setAlpha()
- * \endif
- * \if CHINESE
- * @brief 构造函数。
- * @details 色调区间初始化为 0 到 359。其他坐标均设置为 255。
- * @param[in] format 颜色映射的格式。
- * @sa setHueInterval(), setSaturation(), setValue(), setAlpha()
- * \endif
  */
 QwtHueColorMap::QwtHueColorMap(QwtColorMap::Format format) : QwtColorMap(format)
 {
@@ -874,22 +684,12 @@ QwtHueColorMap::~QwtHueColorMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval for the hue coordinate.
  * @details hue1/hue2 need to be positive number and can be > 360 to define cycles.
  *          F.e. 420 to 240 defines a map yellow/red/magenta/blue.
  * @param[in] hue1 First hue coordinate.
  * @param[in] hue2 Second hue coordinate.
  * @sa hue1(), hue2()
- * \endif
- * \if CHINESE
- * @brief 设置色调坐标的区间。
- * @details hue1/hue2 需为正数，可超过 360 以定义周期。
- *          例如 420 到 240 定义了 yellow/red/magenta/blue 映射。
- * @param[in] hue1 第一个色调坐标。
- * @param[in] hue2 第二个色调坐标。
- * @sa hue1(), hue2()
- * \endif
  */
 void QwtHueColorMap::setHueInterval(int hue1, int hue2)
 {
@@ -901,18 +701,10 @@ void QwtHueColorMap::setHueInterval(int hue1, int hue2)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the saturation coordinate.
  * @details saturation needs to be in the range 0 to 255.
  * @param[in] saturation Saturation coordinate.
  * @sa saturation()
- * \endif
- * \if CHINESE
- * @brief 设置饱和度坐标。
- * @details saturation 需在 0 到 255 范围内。
- * @param[in] saturation 饱和度坐标。
- * @sa saturation()
- * \endif
  */
 void QwtHueColorMap::setSaturation(int saturation)
 {
@@ -925,18 +717,10 @@ void QwtHueColorMap::setSaturation(int saturation)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the value coordinate.
  * @details value needs to be in the range 0 to 255.
  * @param[in] value Value coordinate.
  * @sa value()
- * \endif
- * \if CHINESE
- * @brief 设置明度坐标。
- * @details value 需在 0 到 255 范围内。
- * @param[in] value 明度坐标。
- * @sa value()
- * \endif
  */
 void QwtHueColorMap::setValue(int value)
 {
@@ -949,18 +733,10 @@ void QwtHueColorMap::setValue(int value)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the alpha coordinate.
  * @details alpha needs to be in the range 0 to 255, where 255 means opaque and 0 means transparent.
  * @param[in] alpha Alpha coordinate.
  * @sa alpha()
- * \endif
- * \if CHINESE
- * @brief 设置透明度坐标。
- * @details alpha 需在 0 到 255 范围内，其中 255 表示不透明，0 表示透明。
- * @param[in] alpha 透明度坐标。
- * @sa alpha()
- * \endif
  */
 void QwtHueColorMap::setAlpha(int alpha)
 {
@@ -973,16 +749,9 @@ void QwtHueColorMap::setAlpha(int alpha)
 }
 
 /**
- * \if ENGLISH
  * @brief Return first hue coordinate.
  * @return First hue coordinate.
  * @sa setHueInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第一个色调坐标。
- * @return 第一个色调坐标。
- * @sa setHueInterval()
- * \endif
  */
 int QwtHueColorMap::hue1() const
 {
@@ -990,16 +759,9 @@ int QwtHueColorMap::hue1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second hue coordinate.
  * @return Second hue coordinate.
  * @sa setHueInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第二个色调坐标。
- * @return 第二个色调坐标。
- * @sa setHueInterval()
- * \endif
  */
 int QwtHueColorMap::hue2() const
 {
@@ -1007,16 +769,9 @@ int QwtHueColorMap::hue2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return saturation coordinate.
  * @return Saturation coordinate.
  * @sa setSaturation()
- * \endif
- * \if CHINESE
- * @brief 返回饱和度坐标。
- * @return 饱和度坐标。
- * @sa setSaturation()
- * \endif
  */
 int QwtHueColorMap::saturation() const
 {
@@ -1024,16 +779,9 @@ int QwtHueColorMap::saturation() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return value coordinate.
  * @return Value coordinate.
  * @sa setValue()
- * \endif
- * \if CHINESE
- * @brief 返回明度坐标。
- * @return 明度坐标。
- * @sa setValue()
- * \endif
  */
 int QwtHueColorMap::value() const
 {
@@ -1041,16 +789,9 @@ int QwtHueColorMap::value() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return alpha coordinate.
  * @return Alpha coordinate.
  * @sa setAlpha()
- * \endif
- * \if CHINESE
- * @brief 返回透明度坐标。
- * @return 透明度坐标。
- * @sa setAlpha()
- * \endif
  */
 int QwtHueColorMap::alpha() const
 {
@@ -1058,18 +799,10 @@ int QwtHueColorMap::alpha() const
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a RGB value.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为 RGB 值。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为 RGB 值的数值。
- * @return 对应数值的 RGB 值。
- * \endif
  */
 QRgb QwtHueColorMap::rgb(const QwtInterval& interval, double value) const
 {
@@ -1151,18 +884,10 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor.
  * @details The value interval is initialized by 0 to 255, saturation by 255 to 255. Hue to 0 and alpha to 255.
  *          So the default setting interpolates the value coordinate only.
  * @sa setHue(), setSaturationInterval(), setValueInterval(), setAlpha()
- * \endif
- * \if CHINESE
- * @brief 构造函数。
- * @details 明度区间初始化为 0 到 255，饱和度为 255 到 255。色调为 0，透明度为 255。
- *          因此默认设置只对明度坐标进行插值。
- * @sa setHue(), setSaturationInterval(), setValueInterval(), setAlpha()
- * \endif
  */
 QwtSaturationValueColorMap::QwtSaturationValueColorMap()
 {
@@ -1176,18 +901,10 @@ QwtSaturationValueColorMap::~QwtSaturationValueColorMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the hue coordinate.
  * @details Hue coordinates outside 0 to 359 will be interpreted as hue % 360.
  * @param[in] hue Hue coordinate.
  * @sa hue()
- * \endif
- * \if CHINESE
- * @brief 设置色调坐标。
- * @details 超出 0 到 359 范围的色调坐标将被解释为 hue % 360。
- * @param[in] hue 色调坐标。
- * @sa hue()
- * \endif
  */
 void QwtSaturationValueColorMap::setHue(int hue)
 {
@@ -1200,22 +917,12 @@ void QwtSaturationValueColorMap::setHue(int hue)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval for the saturation coordinate.
  * @details When saturation1 == saturation2 the map interpolates between the value coordinates only.
  *          saturation1/saturation2 need to be in the range 0 to 255.
  * @param[in] saturation1 First saturation.
  * @param[in] saturation2 Second saturation.
  * @sa saturation1(), saturation2(), setValueInterval()
- * \endif
- * \if CHINESE
- * @brief 设置饱和度坐标的区间。
- * @details 当 saturation1 == saturation2 时，映射只对明度坐标进行插值。
- *          saturation1/saturation2 需在 0 到 255 范围内。
- * @param[in] saturation1 第一个饱和度。
- * @param[in] saturation2 第二个饱和度。
- * @sa saturation1(), saturation2(), setValueInterval()
- * \endif
  */
 void QwtSaturationValueColorMap::setSaturationInterval(int saturation1, int saturation2)
 {
@@ -1231,22 +938,12 @@ void QwtSaturationValueColorMap::setSaturationInterval(int saturation1, int satu
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval for the value coordinate.
  * @details When value1 == value2 the map interpolates between the saturation coordinates only.
  *          value1/value2 need to be in the range 0 to 255.
  * @param[in] value1 First value.
  * @param[in] value2 Second value.
  * @sa value1(), value2(), setSaturationInterval()
- * \endif
- * \if CHINESE
- * @brief 设置明度坐标的区间。
- * @details 当 value1 == value2 时，映射只对饱和度坐标进行插值。
- *          value1/value2 需在 0 到 255 范围内。
- * @param[in] value1 第一个明度值。
- * @param[in] value2 第二个明度值。
- * @sa value1(), value2(), setSaturationInterval()
- * \endif
  */
 void QwtSaturationValueColorMap::setValueInterval(int value1, int value2)
 {
@@ -1262,18 +959,10 @@ void QwtSaturationValueColorMap::setValueInterval(int value1, int value2)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the alpha coordinate.
  * @details alpha needs to be in the range 0 to 255, where 255 means opaque and 0 means transparent.
  * @param[in] alpha Alpha coordinate.
  * @sa alpha()
- * \endif
- * \if CHINESE
- * @brief 设置透明度坐标。
- * @details alpha 需在 0 到 255 范围内，其中 255 表示不透明，0 表示透明。
- * @param[in] alpha 透明度坐标。
- * @sa alpha()
- * \endif
  */
 void QwtSaturationValueColorMap::setAlpha(int alpha)
 {
@@ -1286,16 +975,9 @@ void QwtSaturationValueColorMap::setAlpha(int alpha)
 }
 
 /**
- * \if ENGLISH
  * @brief Return hue coordinate.
  * @return Hue coordinate.
  * @sa setHue()
- * \endif
- * \if CHINESE
- * @brief 返回色调坐标。
- * @return 色调坐标。
- * @sa setHue()
- * \endif
  */
 int QwtSaturationValueColorMap::hue() const
 {
@@ -1303,16 +985,9 @@ int QwtSaturationValueColorMap::hue() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return first saturation coordinate.
  * @return First saturation coordinate.
  * @sa setSaturationInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第一个饱和度坐标。
- * @return 第一个饱和度坐标。
- * @sa setSaturationInterval()
- * \endif
  */
 int QwtSaturationValueColorMap::saturation1() const
 {
@@ -1320,16 +995,9 @@ int QwtSaturationValueColorMap::saturation1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second saturation coordinate.
  * @return Second saturation coordinate.
  * @sa setSaturationInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第二个饱和度坐标。
- * @return 第二个饱和度坐标。
- * @sa setSaturationInterval()
- * \endif
  */
 int QwtSaturationValueColorMap::saturation2() const
 {
@@ -1337,16 +1005,9 @@ int QwtSaturationValueColorMap::saturation2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return first value coordinate.
  * @return First value coordinate.
  * @sa setValueInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第一个明度坐标。
- * @return 第一个明度坐标。
- * @sa setValueInterval()
- * \endif
  */
 int QwtSaturationValueColorMap::value1() const
 {
@@ -1354,16 +1015,9 @@ int QwtSaturationValueColorMap::value1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second value coordinate.
  * @return Second value coordinate.
  * @sa setValueInterval()
- * \endif
- * \if CHINESE
- * @brief 返回第二个明度坐标。
- * @return 第二个明度坐标。
- * @sa setValueInterval()
- * \endif
  */
 int QwtSaturationValueColorMap::value2() const
 {
@@ -1371,16 +1025,9 @@ int QwtSaturationValueColorMap::value2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return alpha coordinate.
  * @return Alpha coordinate.
  * @sa setAlpha()
- * \endif
- * \if CHINESE
- * @brief 返回透明度坐标。
- * @return 透明度坐标。
- * @sa setAlpha()
- * \endif
  */
 int QwtSaturationValueColorMap::alpha() const
 {
@@ -1388,18 +1035,10 @@ int QwtSaturationValueColorMap::alpha() const
 }
 
 /**
- * \if ENGLISH
  * @brief Map a value of a given interval into a RGB value.
  * @param[in] interval Range for all values.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
- * \endif
- * \if CHINESE
- * @brief 将给定区间内的数值映射为 RGB 值。
- * @param[in] interval 所有数值的范围。
- * @param[in] value 要映射为 RGB 值的数值。
- * @return 对应数值的 RGB 值。
- * \endif
  */
 QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) const
 {

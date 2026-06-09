@@ -63,7 +63,6 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details The counter is initialized with a range set to [0.0, 1.0] with
  *          0.01 as single step size. The value is invalid.
@@ -72,16 +71,6 @@ public:
  *          - Button 2: 10 steps
  *          - Button 3: 100 steps
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 计数器初始化时范围设置为 [0.0, 1.0]，单步大小为 0.01。
- *          值无效。默认按钮数量为 2。默认增量为：
- *          - 按钮 1：1 步
- *          - 按钮 2：10 步
- *          - 按钮 3：100 步
- * @param parent 父控件
- * \endif
  */
 QwtCounter::QwtCounter(QWidget* parent) : QWidget(parent)
 {
@@ -139,12 +128,7 @@ void QwtCounter::initCounter()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtCounter::~QwtCounter()
 {
@@ -152,19 +136,11 @@ QwtCounter::~QwtCounter()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the counter to be in valid/invalid state
  * @details When the counter is set to invalid, no numbers are displayed and
  *          the buttons are disabled.
  * @param on If true the counter will be set as valid
- * \sa setValue(), isValid()
- * \endif
- * \if CHINESE
- * @brief 设置计数器的有效/无效状态
- * @details 当计数器设置为无效时，不显示数字，按钮被禁用。
- * @param on 如果为 true，计数器将被设置为有效
- * \sa setValue(), isValid()
- * \endif
+ * @sa setValue(), isValid()
  */
 void QwtCounter::setValid(bool on)
 {
@@ -183,14 +159,8 @@ void QwtCounter::setValid(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true if the value is valid
- * \sa setValid(), setValue()
- * \endif
- * \if CHINESE
- * @brief 如果值有效则返回 true
- * \sa setValid(), setValue()
- * \endif
+ * @sa setValid(), setValue()
  */
 bool QwtCounter::isValid() const
 {
@@ -198,16 +168,9 @@ bool QwtCounter::isValid() const
 }
 
 /**
- * \if ENGLISH
  * @brief Allow/disallow the user to manually edit the value
  * @param on True disable editing
- * \sa isReadOnly()
- * \endif
- * \if CHINESE
- * @brief 允许/禁止用户手动编辑值
- * @param on true 禁用编辑
- * \sa isReadOnly()
- * \endif
+ * @sa isReadOnly()
  */
 void QwtCounter::setReadOnly(bool on)
 {
@@ -215,14 +178,8 @@ void QwtCounter::setReadOnly(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true when the line edit is read only
- * \sa setReadOnly()
- * \endif
- * \if CHINESE
- * @brief 当行编辑器为只读时返回 true
- * \sa setReadOnly()
- * \endif
+ * @sa setReadOnly()
  */
 bool QwtCounter::isReadOnly() const
 {
@@ -230,20 +187,11 @@ bool QwtCounter::isReadOnly() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a new value without adjusting to the step raster
  * @details The state of the counter is set to be valid.
  * @param value New value
- * \sa isValid(), value(), valueChanged()
+ * @sa isValid(), value(), valueChanged()
  * @warning The value is clipped when it lies outside the range.
- * \endif
- * \if CHINESE
- * @brief 设置新值，不调整到步长网格
- * @details 计数器的状态设置为有效。
- * @param value 新值
- * \sa isValid(), value(), valueChanged()
- * @warning 当值超出范围时会被裁剪。
- * \endif
  */
 
 void QwtCounter::setValue(double value)
@@ -265,14 +213,8 @@ void QwtCounter::setValue(double value)
 }
 
 /**
- * \if ENGLISH
  * @brief Return current value of the counter
- * \sa setValue(), valueChanged()
- * \endif
- * \if CHINESE
- * @brief 返回计数器的当前值
- * \sa setValue(), valueChanged()
- * \endif
+ * @sa setValue(), valueChanged()
  */
 double QwtCounter::value() const
 {
@@ -280,22 +222,12 @@ double QwtCounter::value() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the minimum and maximum values
  * @details The maximum is adjusted if necessary to ensure that the range remains valid.
  *          The value might be modified to be inside of the range.
  * @param[in] min Minimum value
  * @param[in] max Maximum value
- * \sa minimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 设置最小值和最大值
- * @details 如果需要，会调整最大值以确保范围有效。
- *          值可能会被修改到范围内。
- * @param[in] min 最小值
- * @param[in] max 最大值
- * \sa minimum(), maximum()
- * \endif
+ * @sa minimum(), maximum()
  */
 void QwtCounter::setRange(double min, double max)
 {
@@ -324,18 +256,10 @@ void QwtCounter::setRange(double min, double max)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the minimum value of the range
  * @param value Minimum value
- * \sa setRange(), setMaximum(), minimum()
+ * @sa setRange(), setMaximum(), minimum()
  * @note The maximum is adjusted if necessary to ensure that the range remains valid.
- * \endif
- * \if CHINESE
- * @brief 设置范围的最小值
- * @param value 最小值
- * \sa setRange(), setMaximum(), minimum()
- * @note 如果需要，会调整最大值以确保范围有效。
- * \endif
  */
 void QwtCounter::setMinimum(double value)
 {
@@ -343,14 +267,8 @@ void QwtCounter::setMinimum(double value)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the minimum of the range
- * \sa setRange(), setMinimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 返回范围的最小值
- * \sa setRange(), setMinimum(), maximum()
- * \endif
+ * @sa setRange(), setMinimum(), maximum()
  */
 double QwtCounter::minimum() const
 {
@@ -358,16 +276,9 @@ double QwtCounter::minimum() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the maximum value of the range
  * @param value Maximum value
- * \sa setRange(), setMinimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 设置范围的最大值
- * @param value 最大值
- * \sa setRange(), setMinimum(), maximum()
- * \endif
+ * @sa setRange(), setMinimum(), maximum()
  */
 void QwtCounter::setMaximum(double value)
 {
@@ -375,14 +286,8 @@ void QwtCounter::setMaximum(double value)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the maximum of the range
- * \sa setRange(), setMaximum(), minimum()
- * \endif
- * \if CHINESE
- * @brief 返回范围的最大值
- * \sa setRange(), setMaximum(), minimum()
- * \endif
+ * @sa setRange(), setMaximum(), minimum()
  */
 double QwtCounter::maximum() const
 {
@@ -390,18 +295,10 @@ double QwtCounter::maximum() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the step size of the counter
  * @details A value <= 0.0 disables stepping
  * @param stepSize Single step size
- * \sa singleStep()
- * \endif
- * \if CHINESE
- * @brief 设置计数器的步长
- * @details 值 <= 0.0 时禁用步进
- * @param stepSize 单步大小
- * \sa singleStep()
- * \endif
+ * @sa singleStep()
  */
 void QwtCounter::setSingleStep(double stepSize)
 {
@@ -409,14 +306,8 @@ void QwtCounter::setSingleStep(double stepSize)
 }
 
 /**
- * \if ENGLISH
  * @brief Return single step size
- * \sa setSingleStep()
- * \endif
- * \if CHINESE
- * @brief 返回单步大小
- * \sa setSingleStep()
- * \endif
+ * @sa setSingleStep()
  */
 double QwtCounter::singleStep() const
 {
@@ -424,19 +315,11 @@ double QwtCounter::singleStep() const
 }
 
 /**
- * \if ENGLISH
  * @brief Enable/disable wrapping
  * @details If wrapping is true stepping up from maximum() value will take
  *          you to the minimum() value and vice versa.
  * @param on Enable/disable wrapping
- * \sa wrapping()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用循环
- * @details 如果 wrapping 为 true，从 maximum() 值向上步进将到达 minimum() 值，反之亦然。
- * @param on 启用/禁用循环
- * \sa wrapping()
- * \endif
+ * @sa wrapping()
  */
 void QwtCounter::setWrapping(bool on)
 {
@@ -444,14 +327,8 @@ void QwtCounter::setWrapping(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true when wrapping is set
- * \sa setWrapping()
- * \endif
- * \if CHINESE
- * @brief 当设置了循环时返回 true
- * \sa setWrapping()
- * \endif
+ * @sa setWrapping()
  */
 bool QwtCounter::wrapping() const
 {
@@ -459,16 +336,9 @@ bool QwtCounter::wrapping() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the number of buttons on each side of the label
  * @param numButtons Number of buttons
- * \sa numButtons()
- * \endif
- * \if CHINESE
- * @brief 指定标签两侧的按钮数量
- * @param numButtons 钮数量
- * \sa numButtons()
- * \endif
+ * @sa numButtons()
  */
 void QwtCounter::setNumButtons(int numButtons)
 {
@@ -489,14 +359,8 @@ void QwtCounter::setNumButtons(int numButtons)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the number of buttons on each side of the widget
- * \sa setNumButtons()
- * \endif
- * \if CHINESE
- * @brief 返回控件两侧的按钮数量
- * \sa setNumButtons()
- * \endif
+ * @sa setNumButtons()
  */
 int QwtCounter::numButtons() const
 {
@@ -504,18 +368,10 @@ int QwtCounter::numButtons() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the number of steps by which the value is incremented or decremented when a specified button is pushed
  * @param[in] button Button index
  * @param[in] numSteps Number of steps
- * \sa incSteps()
- * \endif
- * \if CHINESE
- * @brief 指定按下特定按钮时值增加或减少的步数
- * @param[in] button 按钮索引
- * @param[in] numSteps 步数
- * \sa incSteps()
- * \endif
+ * @sa incSteps()
  */
 void QwtCounter::setIncSteps(QwtCounter::Button button, int numSteps)
 {
@@ -524,18 +380,10 @@ void QwtCounter::setIncSteps(QwtCounter::Button button, int numSteps)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the number of steps by which a specified button increments the value, or 0 if the button is invalid
  * @param button Button index
- * \return Number of increment steps
- * \sa setIncSteps()
- * \endif
- * \if CHINESE
- * @brief 返回指定按钮增加值的步数，如果按钮无效则返回 0
- * @param button 按钮索引
- * \return 增加步数
- * \sa setIncSteps()
- * \endif
+ * @return Number of increment steps
+ * @sa setIncSteps()
  */
 int QwtCounter::incSteps(QwtCounter::Button button) const
 {
@@ -546,16 +394,9 @@ int QwtCounter::incSteps(QwtCounter::Button button) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the number of increment steps for button 1
  * @param nSteps Number of steps
- * \sa stepButton1()
- * \endif
- * \if CHINESE
- * @brief 设置按钮 1 的增加步数
- * @param nSteps 步数
- * \sa stepButton1()
- * \endif
+ * @sa stepButton1()
  */
 void QwtCounter::setStepButton1(int nSteps)
 {
@@ -563,14 +404,8 @@ void QwtCounter::setStepButton1(int nSteps)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the number of increment steps for button 1
- * \sa setStepButton1()
- * \endif
- * \if CHINESE
- * @brief 返回按钮 1 的增加步数
- * \sa setStepButton1()
- * \endif
+ * @sa setStepButton1()
  */
 int QwtCounter::stepButton1() const
 {
@@ -578,16 +413,9 @@ int QwtCounter::stepButton1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the number of increment steps for button 2
  * @param nSteps Number of steps
- * \sa stepButton2()
- * \endif
- * \if CHINESE
- * @brief 设置按钮 2 的增加步数
- * @param nSteps 步数
- * \sa stepButton2()
- * \endif
+ * @sa stepButton2()
  */
 void QwtCounter::setStepButton2(int nSteps)
 {
@@ -595,14 +423,8 @@ void QwtCounter::setStepButton2(int nSteps)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the number of increment steps for button 2
- * \sa setStepButton2()
- * \endif
- * \if CHINESE
- * @brief 返回按钮 2 的增加步数
- * \sa setStepButton2()
- * \endif
+ * @sa setStepButton2()
  */
 int QwtCounter::stepButton2() const
 {
@@ -610,16 +432,9 @@ int QwtCounter::stepButton2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the number of increment steps for button 3
  * @param nSteps Number of steps
- * \sa stepButton3()
- * \endif
- * \if CHINESE
- * @brief 设置按钮 3 的增加步数
- * @param nSteps 步数
- * \sa stepButton3()
- * \endif
+ * @sa stepButton3()
  */
 void QwtCounter::setStepButton3(int nSteps)
 {
@@ -627,14 +442,8 @@ void QwtCounter::setStepButton3(int nSteps)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the number of increment steps for button 3
- * \sa setStepButton3()
- * \endif
- * \if CHINESE
- * @brief 返回按钮 3 的增加步数
- * \sa setStepButton3()
- * \endif
+ * @sa setStepButton3()
  */
 int QwtCounter::stepButton3() const
 {
@@ -653,8 +462,8 @@ void QwtCounter::textChanged()
 
 /*!
    Handle QEvent::PolishRequest events
-   \param event Event
-   \return see QWidget::event()
+   @param event Event
+   @return see QWidget::event()
  */
 bool QwtCounter::event(QEvent* event)
 {
@@ -691,7 +500,7 @@ bool QwtCounter::event(QEvent* event)
    - Shift + Qt::Key_PageDown\n
     Decrement by incSteps(QwtCounter::Button3)
 
-   \param event Key event
+   @param event Key event
  */
 void QwtCounter::keyPressEvent(QKeyEvent* event)
 {
@@ -749,7 +558,7 @@ void QwtCounter::keyPressEvent(QKeyEvent* event)
 
 /*!
    Handle wheel events
-   \param event Wheel event
+   @param event Wheel event
  */
 void QwtCounter::wheelEvent(QWheelEvent* event)
 {
@@ -836,7 +645,7 @@ void QwtCounter::incrementValue(int numSteps)
 }
 
 /*!
-   \brief Update buttons according to the current value
+   @brief Update buttons according to the current value
 
    When the QwtCounter under- or over-flows, the focus is set to the smallest
    up- or down-button and counting is disabled.
@@ -863,7 +672,7 @@ void QwtCounter::updateButtons()
 /*!
    Display number string
 
-   \param number Number
+   @param number Number
  */
 void QwtCounter::showNumber(double number)
 {
@@ -894,12 +703,7 @@ void QwtCounter::btnReleased()
 }
 
 /**
- * \if ENGLISH
  * @brief Return a size hint
- * \endif
- * \if CHINESE
- * @brief 返回尺寸提示
- * \endif
  */
 QSize QwtCounter::sizeHint() const
 {

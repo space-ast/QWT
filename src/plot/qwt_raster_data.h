@@ -40,7 +40,6 @@ template< class Key, class T >
 class QMap;
 
 /**
- * \if ENGLISH
  * @brief QwtRasterData defines an interface to any type of raster data.
  * 
  * QwtRasterData is an abstract interface, that is used by
@@ -58,22 +57,7 @@ class QMap;
  * a given 2D matrix.
  * 
  * @sa QwtMatrixRasterData
- * \endif
  * 
- * \if CHINESE
- * @brief QwtRasterData 定义了任何类型栅格数据的接口
- * 
- * QwtRasterData 是一个抽象接口，被 QwtPlotRasterItem 用于查找其栅格像素处的值。
- * 
- * 数据边界矩形内的间隙可以通过 NaN 值表示（当 WithoutGaps 被禁用时）。
- * 
- * 栅格项通常用于显示矩阵中的值。然后派生的栅格数据类需要实现某种重采样，
- * 将矩阵的栅格映射到栅格项的请求栅格中（取决于画布的分辨率和比例）。
- * 
- * QwtMatrixRasterData 实现了栅格数据，从给定的 2D 矩阵返回值。
- * 
- * @sa QwtMatrixRasterData
- * \endif
  */
 class QWT_EXPORT QwtRasterData
 {
@@ -82,23 +66,15 @@ public:
     using ContourLines = QMap< double, QPolygonF >;
 
     /**
-     * \if ENGLISH
      * @brief Raster data attributes
      * 
      * Additional information that is used to improve processing
      * of the data.
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 栅格数据属性
-     * 
-     * 用于改进数据处理的附加信息。
-     * \endif
      */
     enum Attribute
     {
         /**
-         * \if ENGLISH
          * The bounding rectangle of the data is spanned by
          * the interval(Qt::XAxis) and interval(Qt::YAxis).
          * 
@@ -112,20 +88,7 @@ public:
          * The default setting is false.
          * 
          * @note NaN values indicate an undefined value
-         * \endif
          * 
-         * \if CHINESE
-         * 数据的边界矩形由 interval(Qt::XAxis) 和 interval(Qt::YAxis) 跨越。
-         * 
-         * WithoutGaps 表示数据在该区域没有间隙（未知值），
-         * value() 的结果不需要检查 NaN 值。
-         * 
-         * 启用此标志将对渲染 QwtPlotSpectrogram 的性能产生积极影响。
-         * 
-         * 默认设置为 false。
-         * 
-         * @note NaN 值表示未定义值
-         * \endif
          */
         WithoutGaps = 0x01
     };
@@ -133,13 +96,8 @@ public:
     Q_DECLARE_FLAGS(Attributes, Attribute)
 
     /**
-     * \if ENGLISH
      * @brief Flags to modify the contour algorithm
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 修改等高线算法的标志
-     * \endif
      */
     enum ConrecFlag
     {

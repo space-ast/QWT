@@ -217,21 +217,21 @@ void QwtPolarSpectrogram::draw( QPainter* painter,
 }
 
 /*!
-   \brief Render an image from the data and color map.
+   @brief Render an image from the data and color map.
 
    The area is translated into a rect of the paint device.
    For each pixel of this rect the intensity is mapped
    into a color.
 
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param rect Target rectangle of the image in painter coordinates
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param rect Target rectangle of the image in painter coordinates
 
-   \return A QImage::Format_Indexed8 or QImage::Format_ARGB32 depending
+   @return A QImage::Format_Indexed8 or QImage::Format_ARGB32 depending
            on the color map.
 
-   \sa QwtRasterData::intensity(), QwtColorMap::rgb(),
+   @sa QwtRasterData::intensity(), QwtColorMap::rgb(),
        QwtColorMap::colorIndex()
  */
 QImage QwtPolarSpectrogram::renderImage(
@@ -327,20 +327,20 @@ void QwtPolarSpectrogram::renderTileInfo(
 }
 
 /*!
-   \brief Render a sub-rectangle of an image
+   @brief Render a sub-rectangle of an image
 
    renderTile() is called by renderImage() to render different parts
    of the image by concurrent threads.
 
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param imagePos Top/left position of the image in painter coordinates
-   \param tile Sub-rectangle of the tile in painter coordinates
-   \param image Image to be rendered
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param imagePos Top/left position of the image in painter coordinates
+   @param tile Sub-rectangle of the tile in painter coordinates
+   @param image Image to be rendered
 
-   \sa setRenderThreadCount()
-   \note renderTile needs to be reentrant
+   @sa setRenderThreadCount()
+   @note renderTile needs to be reentrant
  */
 void QwtPolarSpectrogram::renderTile(
     const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,

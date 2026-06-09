@@ -51,7 +51,6 @@ class QwtPlotZoneItem::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Initializes the zone with no pen and a semi transparent gray brush.
  *          Sets the following item attributes:
@@ -59,17 +58,7 @@ class QwtPlotZoneItem::PrivateData
  *          - QwtPlotItem::Legend: false
  *          The z value is initialized by 5.
  * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 初始化区域，无画笔和半透明灰色画刷。
- *          设置以下项目属性：
- *          - QwtPlotItem::AutoScale: false
- *          - QwtPlotItem::Legend: false
- *          z 值初始化为 5。
- * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  */
 QwtPlotZoneItem::QwtPlotZoneItem()
     : QwtPlotItem( QwtText( "Zone" ) )
@@ -83,13 +72,8 @@ QwtPlotZoneItem::QwtPlotZoneItem()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotZoneItem::~QwtPlotZoneItem()
 {
@@ -97,15 +81,9 @@ QwtPlotZoneItem::~QwtPlotZoneItem()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotZone
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotZone
- * \endif
  */
 int QwtPlotZoneItem::rtti() const
 {
@@ -113,7 +91,6 @@ int QwtPlotZoneItem::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen
  * @param[in] color Pen color
  * @param[in] width Pen width
@@ -121,17 +98,7 @@ int QwtPlotZoneItem::rtti() const
  * @details In Qt5 the default pen width is 1.0 ( 0.0 in Qt4 ) what makes it non cosmetic.
  *          This method has been introduced to hide this incompatibility.
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配画笔
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性。
- *          此方法已引入以隐藏此不兼容性。
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotZoneItem::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -139,19 +106,11 @@ void QwtPlotZoneItem::setPen( const QColor& color, qreal width, Qt::PenStyle sty
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen
  * @param[in] pen Pen
  * @details The pen is used to draw the border lines of the zone.
  * @sa pen(), setBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画笔
- * @param[in] pen 画笔
- * @details 画笔用于绘制区域的边界线。
- * @sa pen(), setBrush()
- * \endif
  */
 void QwtPlotZoneItem::setPen( const QPen& pen )
 {
@@ -163,17 +122,10 @@ void QwtPlotZoneItem::setPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen used to draw the border lines
  * @return Pen used to draw the border lines
  * @sa setPen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取用于绘制边界线的画笔
- * @return 用于绘制边界线的画笔
- * @sa setPen(), brush()
- * \endif
  */
 const QPen& QwtPlotZoneItem::pen() const
 {
@@ -181,19 +133,11 @@ const QPen& QwtPlotZoneItem::pen() const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a brush
  * @param[in] brush Brush
  * @details The brush is used to fill the zone.
  * @sa pen(), setBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画刷
- * @param[in] brush 画刷
- * @details 画刷用于填充区域。
- * @sa pen(), setBrush()
- * \endif
  */
 void QwtPlotZoneItem::setBrush( const QBrush& brush )
 {
@@ -205,17 +149,10 @@ void QwtPlotZoneItem::setBrush( const QBrush& brush )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the brush used to fill the zone
  * @return Brush used to fill the zone
  * @sa setPen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取用于填充区域的画刷
- * @return 用于填充区域的画刷
- * @sa setPen(), brush()
- * \endif
  */
 const QBrush& QwtPlotZoneItem::brush() const
 {
@@ -223,21 +160,12 @@ const QBrush& QwtPlotZoneItem::brush() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the orientation of the zone
  * @param[in] orientation Orientation
  * @details A horizontal zone highlights an interval of the y axis,
  *          a vertical zone of the x axis. It is unbounded in the opposite direction.
  * @sa orientation(), QwtPlotItem::setAxes()
- * \endif
  *
- * \if CHINESE
- * @brief 设置区域的方向
- * @param[in] orientation 方向
- * @details 水平区域高亮显示 y 轴的一个区间，垂直区域高亮显示 x 轴的一个区间，
- *          在相反方向上无限延伸。
- * @sa orientation(), QwtPlotItem::setAxes()
- * \endif
  */
 void QwtPlotZoneItem::setOrientation( Qt::Orientation orientation )
 {
@@ -249,17 +177,10 @@ void QwtPlotZoneItem::setOrientation( Qt::Orientation orientation )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the orientation of the zone
  * @return Orientation of the zone
  * @sa setOrientation()
- * \endif
  *
- * \if CHINESE
- * @brief 获取区域的方向
- * @return 区域的方向
- * @sa setOrientation()
- * \endif
  */
 Qt::Orientation QwtPlotZoneItem::orientation() const
 {
@@ -267,22 +188,13 @@ Qt::Orientation QwtPlotZoneItem::orientation() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval of the zone
  * @param[in] min Minimum of the interval
  * @param[in] max Maximum of the interval
  * @details For a horizontal zone the interval is related to the y axis,
  *          for a vertical zone it is related to the x axis.
  * @sa interval(), setOrientation()
- * \endif
  *
- * \if CHINESE
- * @brief 设置区域的区间
- * @param[in] min 区间的最小值
- * @param[in] max 区间的最大值
- * @details 对于水平区域，区间与 y 轴相关，对于垂直区域，区间与 x 轴相关。
- * @sa interval(), setOrientation()
- * \endif
  */
 void QwtPlotZoneItem::setInterval( double min, double max )
 {
@@ -290,20 +202,12 @@ void QwtPlotZoneItem::setInterval( double min, double max )
 }
 
 /**
- * \if ENGLISH
  * @brief Set the interval of the zone
  * @param[in] interval Zone interval
  * @details For a horizontal zone the interval is related to the y axis,
  *          for a vertical zone it is related to the x axis.
  * @sa interval(), setOrientation()
- * \endif
  *
- * \if CHINESE
- * @brief 设置区域的区间
- * @param[in] interval 区域区间
- * @details 对于水平区域，区间与 y 轴相关，对于垂直区域，区间与 x 轴相关。
- * @sa interval(), setOrientation()
- * \endif
  */
 void QwtPlotZoneItem::setInterval( const QwtInterval& interval )
 {
@@ -315,17 +219,10 @@ void QwtPlotZoneItem::setInterval( const QwtInterval& interval )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the interval of the zone
  * @return Zone interval
  * @sa setInterval(), orientation()
- * \endif
  *
- * \if CHINESE
- * @brief 获取区域的区间
- * @return 区域区间
- * @sa setInterval(), orientation()
- * \endif
  */
 QwtInterval QwtPlotZoneItem::interval() const
 {
@@ -333,21 +230,12 @@ QwtInterval QwtPlotZoneItem::interval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the zone
  * @param[in] painter Painter
  * @param[in] xMap x Scale Map
  * @param[in] yMap y Scale Map
  * @param[in] canvasRect Contents rectangle of the canvas in painter coordinates
- * \endif
  *
- * \if CHINESE
- * @brief 绘制区域
- * @param[in] painter 画笔
- * @param[in] xMap x 轴比例映射
- * @param[in] yMap y 轴比例映射
- * @param[in] canvasRect 画布的内容矩形（画笔坐标）
- * \endif
  */
 void QwtPlotZoneItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -418,18 +306,11 @@ void QwtPlotZoneItem::draw( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  * @details The bounding rectangle is built from the interval in one direction
  *          and something invalid for the opposite direction.
  * @return An invalid rectangle with valid boundaries in one direction
- * \endif
  *
- * \if CHINESE
- * @brief 获取边界矩形
- * @details 边界矩形由一个方向的区间和相反方向的无效值构成。
- * @return 一个在一个方向上有有效边界的无效矩形
- * \endif
  */
 QRectF QwtPlotZoneItem::boundingRect() const
 {

@@ -35,38 +35,22 @@ class QPen;
 class QBrush;
 
 /**
- * \if ENGLISH
  * @brief A plot item, that represents a vector field
  * @details A vector field is a representation of a points with a given magnitude and direction
  *          as arrows. While the direction affects the direction of the arrow, the magnitude
  *          might be represented as a color or by the length of the arrow.
  *
  * @sa QwtVectorFieldSymbol, QwtVectorFieldSample
- * \endif
  *
- * \if CHINESE
- * @brief 表示矢量场的绘图项
- * @details 矢量场是点的表示，这些点具有给定的大小和方向，以箭头形式显示。
- *          方向影响箭头的方向，大小可以通过颜色或箭头长度来表示。
- *
- * @sa QwtVectorFieldSymbol, QwtVectorFieldSample
- * \endif
  */
 class QWT_EXPORT QwtPlotVectorField : public QwtPlotSeriesItem, public QwtSeriesStore< QwtVectorFieldSample >
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Indicator origin
      * @details Depending on the origin the indicator symbol ( usually an arrow )
      *          will be to the position of the corresponding sample.
-     * \endif
      *
-     * \if CHINESE
-     * @brief 指示器原点
-     * @details 根据原点的不同，指示器符号（通常是箭头）
-     *          将指向对应样本的位置。
-     * \endif
      */
     enum IndicatorOrigin
     {
@@ -81,35 +65,20 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Paint attributes
      * @details Attributes to modify the rendering
      * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 绘制属性
-     * @details 用于修改渲染的属性
-     * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      */
     enum PaintAttribute
     {
         /**
-         * \if ENGLISH
          * FilterVectors calculates an average sample from all samples
          * that lie in the same cell of a grid that is determined by
          * setting the rasterSize().
          *
          * @sa setRasterSize()
-         * \endif
          *
-         * \if CHINESE
-         * FilterVectors 计算同一网格单元中所有样本的平均样本，
-         * 网格由设置 rasterSize() 确定。
-         *
-         * @sa setRasterSize()
-         * \endif
          */
         FilterVectors = 0x01
     };
@@ -117,46 +86,26 @@ public:
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     /**
-     * \if ENGLISH
      * @brief Magnitude mode
      * @details Depending on the MagnitudeMode the magnitude component will have
      *          an impact on the attributes of the symbol/arrow.
      *
      * @sa setMagnitudeMode()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 大小模式
-     * @details 根据 MagnitudeMode，大小分量将对符号/箭头的属性产生影响。
-     *
-     * @sa setMagnitudeMode()
-     * \endif
      */
     enum MagnitudeMode
     {
         /**
-         * \if ENGLISH
          * The magnitude will be mapped to a color using a color map
          * @sa magnitudeRange(), colorMap()
-         * \endif
          *
-         * \if CHINESE
-         * 大小将使用颜色映射映射到颜色
-         * @sa magnitudeRange(), colorMap()
-         * \endif
          */
         MagnitudeAsColor = 0x01,
 
         /**
-         * \if ENGLISH
          * The magnitude will have an impact on the length of the arrow/symbol
          * @sa arrowLength(), magnitudeScaleFactor()
-         * \endif
          *
-         * \if CHINESE
-         * 大小将对箭头/符号的长度产生影响
-         * @sa arrowLength(), magnitudeScaleFactor()
-         * \endif
          */
         MagnitudeAsLength = 0x02
     };

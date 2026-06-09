@@ -6,17 +6,10 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A class representing surfaces
  * @details SurfacePlot provides visualization of surface data in 3D space,
  *          supporting both grid-based and cell-based data representations.
- * \endif
  *
- * \if CHINESE
- * @brief 表示表面的类
- * @details SurfacePlot 提供三维空间中表面数据的可视化，
- *          支持基于网格和基于单元格的数据表示。
- * \endif
  */
 class QWT3D_EXPORT SurfacePlot : public Plot3D
 {
@@ -78,15 +71,9 @@ public:
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the resolution changes
      * @param resolution The new resolution value
-     * \endif
      *
-     * \if CHINESE
-     * @brief 分辨率变化时发出的信号
-     * @param resolution 新的分辨率值
-     * \endif
      */
     void resolutionChanged(int);
 

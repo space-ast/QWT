@@ -130,7 +130,6 @@ void QwtPlotLayoutEngine::LayoutData::LegendData::init(const QwtAbstractLegend* 
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate optimal legend size for given rectangle
  * @details Determines the best size for the legend within the available space, considering both width and height constraints.
  * @param legend Pointer to the legend widget
@@ -153,7 +152,6 @@ QSize QwtPlotLayoutEngine::LayoutData::LegendData::legendHint(const QwtAbstractL
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Initialize label data from a QwtTextLabel
  * @details Extracts text content and frame width from the label widget.
  * @param label Pointer to the text label widget
@@ -177,7 +175,6 @@ void QwtPlotLayoutEngine::LayoutData::LabelData::init(const QwtTextLabel* label)
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Initialize scale data from a QwtScaleWidget
  * @details Extracts various geometric properties from the scale widget including border distances, tick offsets, and dimensions without title.
  * @param axisWidget Pointer to the scale widget
@@ -204,7 +201,6 @@ void QwtPlotLayoutEngine::LayoutData::ScaleData::init(const QwtScaleWidget* axis
 }
 
 /**
- * \if ENGLISH
  * @brief Reset scale data to default values
  * @details Sets all scale data properties to zero or false, effectively making the axis invisible in layout calculations.
  */
@@ -223,7 +219,6 @@ void QwtPlotLayoutEngine::LayoutData::ScaleData::reset()
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Initialize canvas data from a QWidget
  * @details Extracts content margins from the canvas widget for all four sides.
  * @param canvas Pointer to the canvas widget
@@ -242,7 +237,6 @@ void QwtPlotLayoutEngine::LayoutData::CanvasData::init(const QWidget* canvas)
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Construct LayoutData from a QwtPlot
  * @details Initializes all layout data by extracting information from the plot's components including legend, labels, axes and canvas.
  * @param plot Pointer to the QwtPlot
@@ -272,7 +266,6 @@ QwtPlotLayoutEngine::LayoutData::LayoutData(const QwtPlot* plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if Y axes are symmetric
  * @details Determines if both left and right Y axes are visible or both are hidden.
  * @return True if both Y axes have the same visibility state
@@ -324,7 +317,6 @@ QwtPlotLayoutEngine::QwtPlotLayoutEngine() : m_legendPos(QwtPlot::BottomLegend),
 {
 }
 /**
- * \if ENGLISH
  * @brief Calculate legend rectangle within available space
  * @details Determines the optimal position and size for the legend based on the specified legend position and ratio constraints.
  * @param[in] plotLayoutOptions Layout options bitmask
@@ -385,7 +377,6 @@ QRectF QwtPlotLayoutEngine::layoutLegend(int plotLayoutOptions,
 }
 
 /**
- * \if ENGLISH
  * @brief Align legend rectangle relative to canvas
  * @details Adjusts the legend rectangle to be properly aligned with the canvas, ensuring it doesn't extend beyond the canvas boundaries when possible.
  * @param[in] legendHint Preferred size hint for the legend
@@ -412,7 +403,6 @@ QRectF QwtPlotLayoutEngine::alignLegend(const QSize& legendHint, const QRectF& c
 	return alignedRect;
 }
 /**
- * \if ENGLISH
  * @brief Align scale rectangles with canvas
  * @details Adjusts the positions of scale rectangles to ensure proper alignment with the canvas, taking into account border distances and tick offsets.
  *          This function handles the complex layout calculation involving multiple axes and canvas spatial coordination.
@@ -460,15 +450,15 @@ void QwtPlotLayoutEngine::alignScales(int plotLayoutOptions,
 
 			const int startDist = layoutData.axisData(axisId).start;
 			const int endDist   = layoutData.axisData(axisId).end;
-			//! 对于X轴（水平轴）：
-			//! 检查左侧Y轴和右侧Y轴的影响
-			//! 计算左右偏移量，考虑轴起始/结束距离和骨干偏移
-			//! 调整X轴矩形位置，必要时调整画布矩形
+			//! For X axes (horizontal):
+			//! Check the influence of left and right Y axes
+			//! Calculate left/right offsets, considering axis start/end distances and backbone offsets
+			//! Adjust X axis rectangle position, and canvas rectangle if necessary
 			//!
-			//! 对于Y轴（垂直轴）：
-			//! 检查底部X轴和顶部X轴的影响
-			//! 计算上下偏移量，考虑轴起始/结束距离和骨干偏移
-			//! 调整Y轴矩形位置，必要时调整画布矩形
+			//! For Y axes (vertical):
+			//! Check the influence of bottom and top X axes
+			//! Calculate top/bottom offsets, considering axis start/end distances and backbone offsets
+			//! Adjust Y axis rectangle position, and canvas rectangle if necessary
 			if (isXAxis(axisPos)) {
 				const QRectF& leftScaleRect = scaleRect[ YLeft ];
 				const int leftOffset        = backboneOffset[ YLeft ] - startDist;
@@ -649,7 +639,6 @@ void QwtPlotLayoutEngine::alignScales(int plotLayoutOptions,
 	}
 }
 /**
- * \if ENGLISH
  * @brief Align scale rectangles to canvas boundaries
  * @details Adjusts the positions of scale rectangles to align with canvas boundaries, taking into account border distances and tick offsets.
  *          Unlike alignScales, this function does not modify the canvas rectangle.
@@ -697,15 +686,15 @@ void QwtPlotLayoutEngine::alignScalesToCanvas(int plotLayoutOptions,
 
 			const int startDist = layoutData.axisData(axisId).start;
 			const int endDist   = layoutData.axisData(axisId).end;
-			//! 对于X轴（水平轴）：
-			//! 检查左侧Y轴和右侧Y轴的影响
-			//! 计算左右偏移量，考虑轴起始/结束距离和骨干偏移
-			//! 调整X轴矩形位置，必要时调整画布矩形
+			//! For X axes (horizontal):
+			//! Check the influence of left and right Y axes
+			//! Calculate left/right offsets, considering axis start/end distances and backbone offsets
+			//! Adjust X axis rectangle position, and canvas rectangle if necessary
 			//!
-			//! 对于Y轴（垂直轴）：
-			//! 检查底部X轴和顶部X轴的影响
-			//! 计算上下偏移量，考虑轴起始/结束距离和骨干偏移
-			//! 调整Y轴矩形位置，必要时调整画布矩形
+			//! For Y axes (vertical):
+			//! Check the influence of bottom and top X axes
+			//! Calculate top/bottom offsets, considering axis start/end distances and backbone offsets
+			//! Adjust Y axis rectangle position, and canvas rectangle if necessary
 			if (isXAxis(axisPos)) {
 				const QRectF& leftScaleRect = scaleRect[ YLeft ];
 				const int leftOffset        = backboneOffset[ YLeft ] - startDist;
@@ -831,7 +820,6 @@ void QwtPlotLayoutEngine::alignScalesToCanvas(int plotLayoutOptions,
 	}
 }
 /**
- * \if ENGLISH
  * @brief Iteratively calculate the layout dimensions for a QwtPlot
  * @details Determines the exact space (in pixels) that every visual component of a QwtPlot—title, footer, and the four axes—needs inside a given rectangle.
  *          Because the required size of one component affects the available space for all others, the algorithm loops until the dimensions stabilize.
@@ -839,17 +827,7 @@ void QwtPlotLayoutEngine::alignScalesToCanvas(int plotLayoutOptions,
  * @param[in] layoutData Precalculated layout data
  * @param[in] rect Available rectangle for layout
  * @return Dimensions structure with calculated sizes
- * \endif
  *
- * \if CHINESE
- * @brief 迭代计算QwtPlot的布局尺寸
- * @details 本函数在给定矩形区域内，精确地计算QwtPlot中每一个可视部件（标题、页脚以及四个坐标轴）所占用的像素尺寸。
- *          由于各部件相互影响，因此采用迭代方式，直到所有尺寸不再变化。
- * @param[in] plotLayoutOptions 布局选项位掩码
- * @param[in] layoutData 预计算的布局数据
- * @param[in] rect 布局的可用矩形区域
- * @return 包含计算尺寸的Dimensions结构体
- * \endif
  */
 QwtPlotLayoutEngine::Dimensions QwtPlotLayoutEngine::layoutDimensions(int plotLayoutOptions,
                                                                        const LayoutData& layoutData,
@@ -880,11 +858,12 @@ QwtPlotLayoutEngine::Dimensions QwtPlotLayoutEngine::layoutDimensions(int plotLa
 		// width and results in shrinking the width of a horizontal
 		// axis what might result in a line break of a horizontal
 		// axis ... . So we loop as long until no size changes.
-        // 四个坐标轴的尺寸彼此相互影响：
-        // 增加水平轴的高度会压缩垂直轴的高度；
-        // 垂直轴高度一旦减小，就可能引发换行，从而增加其宽度，
-        // 进而压缩水平轴的可用宽度，又可能导致水平轴换行……
-        // 因此需要循环计算，直到所有尺寸都不再变化为止。
+        // The sizes of the four axes are interdependent:
+        // increasing the height of a horizontal axis will compress the vertical axis;
+        // a reduced vertical axis height may cause a line break, increasing its width,
+        // which in turn compresses the available width for horizontal axes, potentially
+        // causing horizontal axis line breaks...
+        // Therefore, iterative calculation is needed until all sizes stabilize.
 
 		if (!(options & QwtPlotLayout::IgnoreTitle)) {
 			const int d = heightForWidth(LayoutData::Title, layoutData, options, rect.width(), dimensions.dimYAxes());
@@ -968,15 +947,9 @@ QwtPlotLayoutEngine::Dimensions QwtPlotLayoutEngine::layoutDimensions(int plotLa
 	return dimensions;
 }
 /**
- * \if ENGLISH
  * @brief Get the legend ratio
  * @return Current legend ratio value
- * \endif
  *
- * \if CHINESE
- * @brief 获取图例比例
- * @return 当前图例比例值
- * \endif
  */
 double QwtPlotLayoutEngine::legendRatio() const
 {
@@ -984,15 +957,9 @@ double QwtPlotLayoutEngine::legendRatio() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the legend ratio
  * @param[in] ratio New legend ratio value
- * \endif
  *
- * \if CHINESE
- * @brief 设置图例比例
- * @param[in] ratio 新的图例比例值
- * \endif
  */
 void QwtPlotLayoutEngine::setLegendRatio(double ratio)
 {
@@ -1000,15 +967,9 @@ void QwtPlotLayoutEngine::setLegendRatio(double ratio)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the legend position
  * @return Current legend position
- * \endif
  *
- * \if CHINESE
- * @brief 获取图例位置
- * @return 当前图例位置
- * \endif
  */
 QwtPlot::LegendPosition QwtPlotLayoutEngine::legendPos() const
 {
@@ -1016,15 +977,9 @@ QwtPlot::LegendPosition QwtPlotLayoutEngine::legendPos() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the legend position
  * @param[in] pos New legend position
- * \endif
  *
- * \if CHINESE
- * @brief 设置图例位置
- * @param[in] pos 新的图例位置
- * \endif
  */
 void QwtPlotLayoutEngine::setLegendPos(QwtPlot::LegendPosition pos)
 {
@@ -1032,17 +987,10 @@ void QwtPlotLayoutEngine::setLegendPos(QwtPlot::LegendPosition pos)
 }
 
 /**
- * \if ENGLISH
  * @brief Get canvas margin for a specific axis position
  * @param[in] axisPos Axis position (0-3)
  * @return Canvas margin value
- * \endif
  *
- * \if CHINESE
- * @brief 获取特定轴位置的画布边距
- * @param[in] axisPos 轴位置（0-3）
- * @return 画布边距值
- * \endif
  */
 int QwtPlotLayoutEngine::canvasMargin(int axisPos) const
 {
@@ -1050,17 +998,10 @@ int QwtPlotLayoutEngine::canvasMargin(int axisPos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set canvas margin for a specific axis position
  * @param[in] axisPos Axis position (0-3)
  * @param[in] margin New canvas margin value
- * \endif
  *
- * \if CHINESE
- * @brief 设置特定轴位置的画布边距
- * @param[in] axisPos 轴位置（0-3）
- * @param[in] margin 新的画布边距值
- * \endif
  */
 void QwtPlotLayoutEngine::setCanvasMargin(int axisPos, int margin)
 {
@@ -1068,17 +1009,10 @@ void QwtPlotLayoutEngine::setCanvasMargin(int axisPos, int margin)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if canvas is aligned to scale for a specific axis position
  * @param[in] axisPos Axis position (0-3)
  * @return True if canvas is aligned to scale
- * \endif
  *
- * \if CHINESE
- * @brief 检查画布是否对齐到特定轴位置的刻度
- * @param[in] axisPos 轴位置（0-3）
- * @return 如果画布对齐到刻度，则返回true
- * \endif
  */
 bool QwtPlotLayoutEngine::alignCanvas(int axisPos) const
 {
@@ -1086,17 +1020,10 @@ bool QwtPlotLayoutEngine::alignCanvas(int axisPos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set canvas alignment to scale for a specific axis position
  * @param[in] axisPos Axis position (0-3)
  * @param[in] on True to align canvas to scale
- * \endif
  *
- * \if CHINESE
- * @brief 设置画布对齐到特定轴位置的刻度
- * @param[in] axisPos 轴位置（0-3）
- * @param[in] on 为true时对齐画布到刻度
- * \endif
  */
 void QwtPlotLayoutEngine::setAlignCanvas(int axisPos, bool on)
 {
@@ -1104,15 +1031,9 @@ void QwtPlotLayoutEngine::setAlignCanvas(int axisPos, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Get spacing value
  * @return Current spacing value in pixels
- * \endif
  *
- * \if CHINESE
- * @brief 获取间距值
- * @return 当前的间距值（像素）
- * \endif
  */
 unsigned int QwtPlotLayoutEngine::spacing() const
 {
@@ -1120,34 +1041,26 @@ unsigned int QwtPlotLayoutEngine::spacing() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set spacing value
  * @param[in] spacing New spacing value in pixels
- * \endif
  *
- * \if CHINESE
- * @brief 设置间距值
- * @param[in] spacing 新的间距值（像素）
- * \endif
  */
 void QwtPlotLayoutEngine::setSpacing(unsigned int spacing)
 {
     m_spacing = spacing;
 }
 /**
- * @brief Calculate height for width for a label / 计算标签的宽度对应高度
+ * @brief Calculate height for width for a label
  *
  * Determines the required height for a label given a specific width,
  * taking into account text wrapping and frame width.
  *
- * 在给定特定宽度的情况下确定标签所需的高度，考虑文本换行和边框宽度。
- *
- * @param labelType Type of label (Title or Footer) / 标签类型（标题或页脚）
- * @param layoutData Precalculated layout data / 预计算的布局数据
- * @param plotLayoutOptions Layout options bitmask / 布局选项位掩码
- * @param width Available width / 可用宽度
- * @param axesWidth Total width of axes / 轴的总宽度
- * @return Calculated height / 计算出的高度
+ * @param labelType Type of label (Title or Footer)
+ * @param layoutData Precalculated layout data
+ * @param plotLayoutOptions Layout options bitmask
+ * @param width Available width
+ * @param axesWidth Total width of axes
+ * @return Calculated height
  */
 int QwtPlotLayoutEngine::heightForWidth(LayoutData::Label labelType,
                                          const LayoutData& layoutData,

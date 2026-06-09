@@ -65,7 +65,7 @@ public:
 
 #ifndef QWT_PYTHON_WRAPPER
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t size() const = 0;
 
     /// Return a sample
@@ -135,13 +135,13 @@ public:
     void setSamples(const QVector< T >& samples);
     void setSamples(QVector< T >&& samples);
 
-    /// \return Array of samples
+    /// @return Array of samples
     const QVector< T > samples() const;
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t size() const override;
 
-    /// \return Sample at a specific position
+    /// @return Sample at a specific position
     virtual T sample(size_t index) const override;
 
 protected:

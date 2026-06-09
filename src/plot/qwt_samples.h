@@ -34,30 +34,17 @@
 #include <qrect.h>
 
 /**
- * \if ENGLISH
  * @brief Base class for statistical samples with position and range
  * @details Provides common fields for samples that have a position on one axis
  *          and a statistical range on the other axis (used by boxplots, OHLC charts).
- * \endif
  * 
- * \if CHINESE
- * @brief 统计样本的基类，包含位置和范围
- * @details 为在一个轴上有位置、在另一个轴上有统计范围的样本提供公共字段
- *          （用于箱线图、OHLC 图表等）。
- * \endif
  */
 class QWT_EXPORT QwtStatisticalSample
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Default constructor
      * @details All values set to 0.0
-     * \endif
-     * \if CHINESE
-     * @brief 默认构造函数
-     * @details 所有值设置为 0.0
-     * \endif
      */
     QwtStatisticalSample(double position = 0.0);
     
@@ -83,15 +70,9 @@ inline QwtStatisticalSample::QwtStatisticalSample(double pos)
 }
 
 /**
- * \if ENGLISH
  * @brief A sample of the types (x1-x2, y) or (x, y1-y2)
  * @details Used for interval-based samples where one dimension has a range
  *          instead of a single value.
- * \endif
- * \if CHINESE
- * @brief 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本
- * @details 用于基于区间的样本，其中一个维度是范围而不是单个值。
- * \endif
  */
 class QWT_EXPORT QwtIntervalSample
 {
@@ -111,60 +92,34 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details The value is set to 0.0, the interval is invalid
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 值设置为 0.0，区间无效
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample() : value(0.0)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and interval
  * @param v Value
  * @param intv Interval
- * \endif
- * \if CHINESE
- * @brief 带值和区间的构造函数
- * @param v 值
- * @param intv 区间
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample(double v, const QwtInterval& intv) : value(v), interval(intv)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and min/max
  * @param v Value
  * @param min Minimum value
  * @param max Maximum value
- * \endif
- * \if CHINESE
- * @brief 带值、最小值和最大值的构造函数
- * @param v 值
- * @param min 最小值
- * @param max 最大值
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample(double v, double min, double max) : value(v), interval(min, max)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Equality comparison operator
- * \endif
- * \if CHINESE
- * @brief 相等比较运算符
- * \endif
  */
 inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
 {
@@ -172,12 +127,7 @@ inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inequality comparison operator
- * \endif
- * \if CHINESE
- * @brief 不相等比较运算符
- * \endif
  */
 inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
 {
@@ -185,16 +135,9 @@ inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief A sample of the types (x1...xn, y) or (x, y1..yn)
  * @details Used for set-based samples where one dimension has multiple values.
  *          Commonly used for bar charts with multiple bars at each position.
- * \endif
- * \if CHINESE
- * @brief 类型为 (x1...xn, y) 或 (x, y1..yn) 的样本
- * @details 用于基于集合的样本，其中一个维度有多个值。
- *          通常用于在每个位置有多个柱的柱状图。
- * \endif
  */
 class QWT_EXPORT QwtSetSample
 {
@@ -215,42 +158,24 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details The value is set to 0.0
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 值设置为 0.0
- * \endif
  */
 inline QwtSetSample::QwtSetSample() : value(0.0)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and set
  * @param v Value
  * @param s Set of values
- * \endif
- * \if CHINESE
- * @brief 带值和集合的构造函数
- * @param v 值
- * @param s 值的集合
- * \endif
  */
 inline QwtSetSample::QwtSetSample(double v, const QVector< double >& s) : value(v), set(s)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Equality comparison operator
- * \endif
- * \if CHINESE
- * @brief 相等比较运算符
- * \endif
  */
 inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 {
@@ -258,12 +183,7 @@ inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inequality comparison operator
- * \endif
- * \if CHINESE
- * @brief 不相等比较运算符
- * \endif
  */
 inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 {
@@ -271,14 +191,8 @@ inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Return all values of the set added together
  * @return Sum of all values in the set
- * \endif
- * \if CHINESE
- * @brief 返回集合中所有值的总和
- * @return 集合中所有值的总和
- * \endif
  */
 inline double QwtSetSample::added() const
 {
@@ -290,19 +204,11 @@ inline double QwtSetSample::added() const
 }
 
 /**
- * \if ENGLISH
  * @brief Open-High-Low-Close sample used in financial charts
  * @details In financial charts the movement of a price in a time interval is often
  *          represented by the opening/closing prices and the lowest/highest prices
  *          in this interval.
  * @sa QwtTradingChartData
- * \endif
- * \if CHINESE
- * @brief 用于金融图表的开盘-最高-最低-收盘样本
- * @details 在金融图表中，时间间隔内的价格变动通常由开盘/收盘价格
- *          和该间隔内的最低/最高价格表示。
- * @sa QwtTradingChartData
- * \endif
  */
 class QWT_EXPORT QwtOHLCSample
 {
@@ -333,22 +239,12 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor with all OHLC values
  * @param t Time value
  * @param o Open value
  * @param h High value
  * @param l Low value
  * @param c Close value
- * \endif
- * \if CHINESE
- * @brief 包含所有 OHLC 值的构造函数
- * @param t 时间值
- * @param o 开盘值
- * @param h 最高值
- * @param l 最低值
- * @param c 收盘值
- * \endif
  */
 inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, double c)
     : time(t), open(o), high(h), low(l), close(c)
@@ -356,22 +252,12 @@ inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, doub
 }
 
 /**
- * \if ENGLISH
  * @brief Check if a sample is valid
  * @details A sample is valid, when all of the following checks are true:
  *          - low <= high
  *          - low <= open <= high
  *          - low <= close <= high
  * @return True, when the sample is valid
- * \endif
- * \if CHINESE
- * @brief 检查样本是否有效
- * @details 当以下所有检查都为真时，样本有效：
- *          - low <= high
- *          - low <= open <= high
- *          - low <= close <= high
- * @return 当样本有效时返回 true
- * \endif
  */
 inline bool QwtOHLCSample::isValid() const
 {
@@ -379,18 +265,10 @@ inline bool QwtOHLCSample::isValid() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the bounding interval of the OHLC values
  * @details For valid samples the limits of this interval are always low/high.
  * @return Bounding interval
  * @sa isValid()
- * \endif
- * \if CHINESE
- * @brief 计算 OHLC 值的边界区间
- * @details 对于有效样本，此区间的边界始终是 low/high。
- * @return 边界区间
- * @sa isValid()
- * \endif
  */
 inline QwtInterval QwtOHLCSample::boundingInterval() const
 {
@@ -408,18 +286,10 @@ inline QwtInterval QwtOHLCSample::boundingInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Sample used in vector fields
  * @details A vector field sample is a position and a vector - usually
  *          representing some direction and magnitude - attached to this position.
  * @sa QwtVectorFieldData
- * \endif
- * \if CHINESE
- * @brief 用于向量场的样本
- * @details 向量场样本是一个位置和一个向量——通常表示某个方向和大小——
- *          附在该位置上。
- * @sa QwtVectorFieldData
- * \endif
  */
 class QWT_EXPORT QwtVectorFieldSample
 {
@@ -446,20 +316,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor with position and vector coordinates
  * @param posX x coordinate of the position
  * @param posY y coordinate of the position
  * @param vectorX x coordinate of the vector
  * @param vectorY y coordinate of the vector
- * \endif
- * \if CHINESE
- * @brief 带位置和向量坐标的构造函数
- * @param posX 位置的 x 坐标
- * @param posY 位置的 y 坐标
- * @param vectorX 向量的 x 坐标
- * @param vectorY 向量的 y 坐标
- * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, double vectorX, double vectorY)
     : x(posX), y(posY), vx(vectorX), vy(vectorY)
@@ -467,18 +328,10 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, doub
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with QPointF position and vector coordinates
  * @param pos Position as QPointF
  * @param vectorX x coordinate of the vector
  * @param vectorY y coordinate of the vector
- * \endif
- * \if CHINESE
- * @brief 带 QPointF 位置和向量坐标的构造函数
- * @param pos 作为 QPointF 的位置
- * @param vectorX 向量的 x 坐标
- * @param vectorY 向量的 y 坐标
- * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vectorX, double vectorY)
     : x(pos.x()), y(pos.y()), vx(vectorX), vy(vectorY)
@@ -486,14 +339,8 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vec
 }
 
 /**
- * \if ENGLISH
  * @brief Return position as QPointF
  * @return x/y coordinates as QPointF
- * \endif
- * \if CHINESE
- * @brief 返回 QPointF 格式的位置
- * @return x/y 坐标作为 QPointF
- * \endif
  */
 inline QPointF QwtVectorFieldSample::pos() const
 {
@@ -501,14 +348,8 @@ inline QPointF QwtVectorFieldSample::pos() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the vector is null
  * @return true, if vx and vy are 0
- * \endif
- * \if CHINESE
- * @brief 检查向量是否为空
- * @return 如果 vx 和 vy 为 0 则返回 true
- * \endif
  */
 inline bool QwtVectorFieldSample::isNull() const
 {
@@ -516,37 +357,22 @@ inline bool QwtVectorFieldSample::isNull() const
 }
 
 /**
- * \if ENGLISH
  * @brief Sample for box-and-whisker plot (boxplot) visualization
  * @details Contains all statistical values needed to render a boxplot:
  *          whisker endpoints, quartiles, median, and outlier count.
  *          Actual outlier values are stored separately in QwtBoxOutlierSample.
- * \endif
  * 
- * \if CHINESE
- * @brief 箱线图（boxplot）样本
- * @details 包含绘制箱线图所需的所有统计值：
- *          须须端点、四分位数、中位数和异常值计数。
- *          实际异常值单独存储在 QwtBoxOutlierSample 中。
- * \endif
  */
 class QWT_EXPORT QwtBoxSample : public QwtStatisticalSample
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Default constructor
      * @details All values set to 0.0
-     * \endif
-     * \if CHINESE
-     * @brief 默认构造函数
-     * @details 所有值设置为 0.0
-     * \endif
      */
     QwtBoxSample(double position = 0.0);
     
     /**
-     * \if ENGLISH
      * @brief Full constructor with all statistical values
      * @param position Position on the axis
      * @param whiskerLower Lower whisker endpoint
@@ -554,53 +380,25 @@ public:
      * @param median Median value (50th percentile)
      * @param q3 Third quartile (75th percentile)
      * @param whiskerUpper Upper whisker endpoint
-     * \endif
-     * \if CHINESE
-     * @brief 包含所有统计值的完整构造函数
-     * @param position 轴上的位置
-     * @param whiskerLower 下须须端点
-     * @param q1 第一四分位数（第25百分位）
-     * @param median 中位数（第50百分位）
-     * @param q3 第三四分位数（第75百分位）
-     * @param whiskerUpper 上须须端点
-     * \endif
      */
     QwtBoxSample(double position, double whiskerLower, double q1,
                  double median, double q3, double whiskerUpper);
     
     /**
-     * \if ENGLISH
      * @brief Check if sample has valid ordering
      * @details Returns true if whiskerLower <= q1 <= median <= q3 <= whiskerUpper
-     * \endif
-     * \if CHINESE
-     * @brief 检查样本顺序是否有效
-     * @details 当 whiskerLower <= q1 <= median <= q3 <= whiskerUpper 时返回 true
-     * \endif
      */
     bool isValid() const;
     
     /**
-     * \if ENGLISH
      * @brief Get bounding interval including whiskers
      * @return Interval from whiskerLower to whiskerUpper
-     * \endif
-     * \if CHINESE
-     * @brief 获取包含须须的边界区间
-     * @return 从 whiskerLower 到 whiskerUpper 的区间
-     * \endif
      */
     QwtInterval boundingInterval() const;
     
     /**
-     * \if ENGLISH
      * @brief Get box body interval (Q1 to Q3)
      * @return Interval from q1 to q3
-     * \endif
-     * \if CHINESE
-     * @brief 获取箱体区间（Q1 到 Q3）
-     * @return 从 q1 到 q3 的区间
-     * \endif
      */
     QwtInterval boxInterval() const;
     
@@ -664,52 +462,28 @@ inline QwtInterval QwtBoxSample::boxInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Outlier values for a single boxplot position
  * @details Contains all outlier values associated with one box position.
  *          One QwtBoxOutlierSample corresponds to one QwtBoxSample.
- * \endif
  * 
- * \if CHINESE
- * @brief 单个箱线图位置的异常值
- * @details 包含与一个箱位置关联的所有异常值。
- *          一个 QwtBoxOutlierSample 对应一个 QwtBoxSample。
- * \endif
  */
 class QWT_EXPORT QwtBoxOutlierSample
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Default constructor
-     * \endif
-     * \if CHINESE
-     * @brief 默认构造函数
-     * \endif
      */
     QwtBoxOutlierSample(double boxPosition = 0.0);
     
     /**
-     * \if ENGLISH
      * @brief Constructor with position and outlier values
      * @param boxPosition Position matching parent QwtBoxSample
      * @param values All outlier values for this box
-     * \endif
-     * \if CHINESE
-     * @brief 包含位置和异常值的构造函数
-     * @param boxPosition 匹配父 QwtBoxSample 的位置
-     * @param values 此箱的所有异常值
-     * \endif
      */
     QwtBoxOutlierSample(double boxPosition, const QVector<double>& values);
     
     /**
-     * \if ENGLISH
      * @brief Constructor with move semantics
-     * \endif
-     * \if CHINESE
-     * @brief 移动语义构造函数
-     * \endif
      */
     QwtBoxOutlierSample(double boxPosition, QVector<double>&& values);
     

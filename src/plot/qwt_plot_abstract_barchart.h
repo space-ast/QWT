@@ -41,7 +41,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
   public:
     /*!
-        \brief Mode how to calculate the bar width
+        @brief Mode how to calculate the bar width
 
         setLayoutPolicy(), setLayoutHint(), barWidthHint()
      */
@@ -52,7 +52,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
            by the number of samples. The layoutHint() is used as a minimum width
            in paint device coordinates.
 
-           \sa boundingRectangle()
+           @sa boundingRectangle()
          */
         AutoAdjustSamples,
 
@@ -65,7 +65,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
            The bar width is calculated by multiplying layoutHint()
            with the height or width of the canvas.
 
-           \sa boundingRectangle()
+           @sa boundingRectangle()
          */
         ScaleSampleToCanvas,
 

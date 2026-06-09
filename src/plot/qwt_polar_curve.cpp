@@ -305,14 +305,14 @@ void QwtPolarCurve::draw(QPainter* painter,
 /*!
    Draw the line part (without symbols) of a curve interval.
 
-   \param painter Painter
-   \param style Curve style, see QwtPolarCurve::CurveStyle
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
-   \sa draw(), drawLines()
+   @param painter Painter
+   @param style Curve style, see QwtPolarCurve::CurveStyle
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
+   @sa draw(), drawLines()
  */
 void QwtPolarCurve::drawCurve(QPainter* painter,
                               int style,
@@ -335,13 +335,13 @@ void QwtPolarCurve::drawCurve(QPainter* painter,
 /*!
    Draw lines
 
-   \param painter Painter
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
-   \sa draw(), drawLines(), setCurveFitter()
+   @param painter Painter
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
+   @sa draw(), drawLines(), setCurveFitter()
  */
 void QwtPolarCurve::drawLines(QPainter* painter,
                               const QwtScaleMap& azimuthMap,
@@ -415,15 +415,15 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 /*!
    Draw symbols
 
-   \param painter Painter
-   \param symbol Curve symbol
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
+   @param painter Painter
+   @param symbol Curve symbol
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
 
-   \sa setSymbol(), draw(), drawCurve()
+   @sa setSymbol(), draw(), drawCurve()
  */
 void QwtPolarCurve::drawSymbols(QPainter* painter,
                                 const QwtSymbol& symbol,

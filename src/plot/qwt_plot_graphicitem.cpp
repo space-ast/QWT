@@ -38,21 +38,12 @@ class QwtPlotGraphicItem::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Sets the following item attributes:
  *          - QwtPlotItem::AutoScale: true
  *          - QwtPlotItem::Legend: false
  * @param[in] title Title
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 设置以下项目属性：
- *          - QwtPlotItem::AutoScale: true
- *          - QwtPlotItem::Legend: false
- * @param[in] title 标题
- * \endif
  */
 QwtPlotGraphicItem::QwtPlotGraphicItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
@@ -61,21 +52,12 @@ QwtPlotGraphicItem::QwtPlotGraphicItem( const QString& title )
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Sets the following item attributes:
  *          - QwtPlotItem::AutoScale: true
  *          - QwtPlotItem::Legend: false
  * @param[in] title Title
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 设置以下项目属性：
- *          - QwtPlotItem::AutoScale: true
- *          - QwtPlotItem::Legend: false
- * @param[in] title 标题
- * \endif
  */
 QwtPlotGraphicItem::QwtPlotGraphicItem( const QwtText& title )
     : QwtPlotItem( title )
@@ -84,13 +66,8 @@ QwtPlotGraphicItem::QwtPlotGraphicItem( const QwtText& title )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotGraphicItem::~QwtPlotGraphicItem()
 {
@@ -109,15 +86,9 @@ void QwtPlotGraphicItem::init()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotGraphic
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotGraphic
- * \endif
  */
 int QwtPlotGraphicItem::rtti() const
 {
@@ -125,17 +96,10 @@ int QwtPlotGraphicItem::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the graphic to be displayed
  * @param[in] rect Rectangle in plot coordinates
  * @param[in] graphic Recorded sequence of painter commands
- * \endif
  *
- * \if CHINESE
- * @brief 设置要显示的图形
- * @param[in] rect 绘图坐标中的矩形
- * @param[in] graphic 记录的绘制命令序列
- * \endif
  */
 void QwtPlotGraphicItem::setGraphic(
     const QRectF& rect, const QwtGraphic& graphic )
@@ -148,17 +112,10 @@ void QwtPlotGraphicItem::setGraphic(
 }
 
 /**
- * \if ENGLISH
  * @brief Get the recorded sequence of painter commands
  * @return Recorded sequence of painter commands
  * @sa setGraphic()
- * \endif
  *
- * \if CHINESE
- * @brief 获取记录的绘制命令序列
- * @return 记录的绘制命令序列
- * @sa setGraphic()
- * \endif
  */
 QwtGraphic QwtPlotGraphicItem::graphic() const
 {
@@ -166,15 +123,9 @@ QwtGraphic QwtPlotGraphicItem::graphic() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of the item
  * @return Bounding rectangle of the item
- * \endif
  *
- * \if CHINESE
- * @brief 获取项目的边界矩形
- * @return 项目的边界矩形
- * \endif
  */
 QRectF QwtPlotGraphicItem::boundingRect() const
 {
@@ -182,21 +133,12 @@ QRectF QwtPlotGraphicItem::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the item
  * @param[in] painter Painter
  * @param[in] xMap X-Scale Map
  * @param[in] yMap Y-Scale Map
  * @param[in] canvasRect Contents rect of the plot canvas
- * \endif
  *
- * \if CHINESE
- * @brief 绘制项目
- * @param[in] painter 画笔
- * @param[in] xMap X 比例尺映射
- * @param[in] yMap Y 比例尺映射
- * @param[in] canvasRect 绘图画布的内容矩形
- * \endif
  */
 void QwtPlotGraphicItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,

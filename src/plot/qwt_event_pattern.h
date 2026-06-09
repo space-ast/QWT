@@ -46,7 +46,7 @@ class QWT_EXPORT QwtEventPattern
 {
   public:
     /*!
-       \brief Symbolic mouse input codes
+       @brief Symbolic mouse input codes
 
        QwtEventPattern implements 3 different settings for
        mice with 1, 2, or 3 buttons that can be activated
@@ -55,7 +55,7 @@ class QWT_EXPORT QwtEventPattern
 
        Individual settings can be configured using setMousePattern().
 
-       \sa initMousePattern(), setMousePattern(), setKeyPattern()
+       @sa initMousePattern(), setMousePattern(), setKeyPattern()
      */
     enum MousePatternCode
     {
@@ -118,11 +118,11 @@ class QWT_EXPORT QwtEventPattern
     };
 
     /*!
-       \brief Symbolic keyboard input codes
+       @brief Symbolic keyboard input codes
 
        Individual settings can be configured using setKeyPattern()
 
-       \sa setKeyPattern(), setMousePattern()
+       @sa setKeyPattern(), setMousePattern()
      */
     enum KeyPatternCode
     {

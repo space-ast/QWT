@@ -33,25 +33,15 @@
 #include "qwt_legend_data.h"
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for legend widgets
  * @details Legends that need to be under control of the QwtPlot layout system
  *          need to be derived from QwtAbstractLegend.
- * \note Other type of legends can be implemented by connecting to
+ * @note Other type of legends can be implemented by connecting to
  *       the QwtPlot::legendDataChanged() signal. But as these legends
  *       are unknown to the plot layout system the layout code
  *       (on screen and for QwtPlotRenderer) need to be organized
  *       in application code.
- * \sa QwtLegend
- * \endif
- * \if CHINESE
- * @brief 图例控件的抽象基类
- * @details 需要受 QwtPlot 布局系统控制的图例需要继承自 QwtAbstractLegend。
- * \note 其他类型的图例可以通过连接到 QwtPlot::legendDataChanged() 信号来实现。
- *       但由于这些图例对绘图布局系统未知，布局代码（屏幕上和 QwtPlotRenderer）
- *       需要在应用程序代码中组织。
- * \sa QwtLegend
- * \endif
+ * @sa QwtLegend
  */
 class QWT_EXPORT QwtAbstractLegend : public QFrame
 {
@@ -64,22 +54,7 @@ public:
         // Destructor for QwtAbstractLegend
         virtual ~QwtAbstractLegend();
 
-        /**
-         * \if ENGLISH
-         * @brief Render the legend into a given rectangle
-         * @param painter Painter
-         * @param rect Bounding rectangle
-         * @param fillBackground When true, fill rect with the widget background
-         * \sa renderLegend() is used by QwtPlotRenderer
-         * \endif
-         * \if CHINESE
-         * @brief 将图例渲染到给定的矩形中
-         * @param painter 绘制器
-         * @param rect 边界矩形
-         * @param fillBackground 如果为 true，用控件背景填充矩形
-         * \sa renderLegend() 由 QwtPlotRenderer 使用
-         * \endif
-         */
+        // Render the legend into a given rectangle
         virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
         // Return true when no plot item is inserted
@@ -90,18 +65,7 @@ public:
 
 public Q_SLOTS:
 
-        /**
-         * \if ENGLISH
-         * @brief Update the entries for a plot item
-         * @param itemInfo Info about an item
-         * @param data List of legend entry attributes for the item
-         * \endif
-         * \if CHINESE
-         * @brief 更新绘图项的条目
-         * @param itemInfo 关于项的信息
-         * @param data 该项的图例条目属性列表
-         * \endif
-         */
+        // Update the entries for a plot item
         virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
 };
 

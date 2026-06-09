@@ -183,7 +183,7 @@ public:
         /*!
            The item needs extra space to display something outside
            its bounding rectangle.
-           \sa getCanvasMarginHint()
+           @sa getCanvasMarginHint()
          */
         Margins = 0x04
     };

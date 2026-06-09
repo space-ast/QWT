@@ -37,20 +37,11 @@ template< class Key, class T > class QMap;
 
 
 /**
- * \if ENGLISH
- *   \brief A special scale draw made for QwtCompass
- *   \details QwtCompassScaleDraw maps values to strings using a special map,
+ *   @brief A special scale draw made for QwtCompass
+ *   @details QwtCompassScaleDraw maps values to strings using a special map,
  *            that can be modified by the application.
  *            The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
- *   \sa QwtCompass
- * \endif
- * \if CHINESE
- *   \brief 专为QwtCompass设计的特殊刻度绘制类
- *   \details QwtCompassScaleDraw使用特殊映射将数值转换为字符串，
- *            该映射可由应用程序修改。
- *            默认映射包含标签N、NE、E、SE、S、SW、W、NW。
- *   \sa QwtCompass
- * \endif
+ *   @sa QwtCompass
  */
 class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 {
@@ -77,20 +68,11 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 };
 
 /**
- * \if ENGLISH
- *   \brief A Compass Widget
- *   \details QwtCompass is a widget to display and enter directions.
+ *   @brief A Compass Widget
+ *   @details QwtCompass is a widget to display and enter directions.
  *            It consists of a scale, an optional needle and rose.
- *   \image html dials1.png
- *   \note The examples/dials example shows how to use QwtCompass.
- * \endif
- * \if CHINESE
- *   \brief 指南针控件
- *   \details QwtCompass是一个用于显示和输入方向的控件。
- *            它由刻度盘、可选的指针和罗盘花组成。
- *   \image html dials1.png
- *   \note examples/dials示例展示了如何使用QwtCompass。
- * \endif
+ *   @image html dials1.png
+ *   @note The examples/dials example shows how to use QwtCompass.
  */
 
 class QWT_EXPORT QwtCompass : public QwtDial

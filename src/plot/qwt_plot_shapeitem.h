@@ -36,7 +36,6 @@ class QPainterPath;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays any graphical shape that can be defined by a QPainterPath
  * @details QwtPlotShapeItem displays a shape composed from intersecting and uniting
  *          regions, rectangles, ellipses or irregular areas defined by lines, and curves.
@@ -50,43 +49,21 @@ class QPolygonF;
  *          using QwtPlotGraphicItem.
  *
  * @sa QwtPlotZone, QwtPlotGraphicItem
- * \endif
  *
- * \if CHINESE
- * @brief 显示可由 QPainterPath 定义的任何图形形状的绘图项
- * @details QwtPlotShapeItem 显示由相交和联合的区域、矩形、椭圆或由线条和曲线定义的不规则区域组成的形状。
- *          形状使用钢笔和画笔显示。
- *
- *          QwtPlotShapeItem 提供了一些优化，如裁剪或除草。
- *          这些算法需要将绘制路径转换为多边形，这对于由曲线和椭圆构建的路径可能性能较低。
- *
- *          无法由 QPainterPath 表达的更复杂形状可以使用 QwtPlotGraphicItem 显示。
- *
- * @sa QwtPlotZone, QwtPlotGraphicItem
- * \endif
  */
 class QWT_EXPORT QwtPlotShapeItem : public QwtPlotItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Paint attributes
      * @details Attributes to modify the drawing algorithm.
      *          The default disables all attributes
      * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 绘制属性
-     * @details 用于修改绘制算法的属性。
-     *          默认禁用所有属性
-     * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      */
     enum PaintAttribute
     {
         /**
-         * \if ENGLISH
          * Clip polygons before painting them. In situations, where points
          * are far outside the visible area (f.e when zooming deep) this
          * might be a substantial improvement for the painting performance
@@ -94,14 +71,7 @@ public:
          * But polygon clipping will convert the painter path into
          * polygons what might introduce a negative impact on the
          * performance of paths composed from curves or ellipses.
-         * \endif
          *
-         * \if CHINESE
-         * 在绘制多边形之前对其进行裁剪。在点远离可见区域的情况下（例如深度缩放时），
-         * 这可能会显著提高绘制性能
-         *
-         * 但多边形裁剪会将绘制路径转换为多边形，这可能会对由曲线或椭圆组成的路径的性能产生负面影响。
-         * \endif
          */
         ClipPolygons = 0x01,
     };
@@ -109,15 +79,9 @@ public:
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     /**
-     * \if ENGLISH
      * @brief Legend modes
      * @details Mode how to display the item on the legend
-     * \endif
      *
-     * \if CHINESE
-     * @brief 图例模式
-     * @details 在图例上显示项目的模式
-     * \endif
      */
     enum LegendMode
     {
@@ -187,9 +151,7 @@ public:
 
 private:
     /**
-     * \if ENGLISH
      * @brief Initialize the shape item
-     * \endif
      */
     void init();
 

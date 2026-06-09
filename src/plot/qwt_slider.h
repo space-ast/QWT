@@ -38,7 +38,7 @@ class QwtScaleDraw;
  *          of type double. Its position is related to a scale showing
  *          the current value.
  *          The slider can be customized by having a through, a groove - or both.
- * \image html sliders.png
+ * @image html sliders.png
  */
 
 class QWT_EXPORT QwtSlider : public QwtAbstractSlider
@@ -63,7 +63,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 
     /**
      * @brief Position of the scale
-     * \sa QwtSlider(), setScalePosition(), setOrientation()
+     * @sa QwtSlider(), setScalePosition(), setOrientation()
      */
     enum ScalePosition
     {

@@ -105,8 +105,8 @@ QwtPlotOpenGLCanvas::~QwtPlotOpenGLCanvas()
 /*!
    Paint event
 
-   \param event Paint event
-   \sa QwtPlot::drawCanvas()
+   @param event Paint event
+   @sa QwtPlot::drawCanvas()
  */
 void QwtPlotOpenGLCanvas::paintEvent(QPaintEvent* event)
 {

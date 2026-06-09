@@ -28,15 +28,9 @@
 #include <qelapsedtimer.h>
 
 /**
- * \if ENGLISH
  * @brief Check if the elapsed timer is valid
  * @return true if the timer is valid, false otherwise
- * \endif
  *
- * \if CHINESE
- * @brief 检查计时器是否有效
- * @return 如果计时器有效返回 true，否则返回 false
- * \endif
  */
 bool QwtSystemClock::isNull() const
 {
@@ -44,13 +38,8 @@ bool QwtSystemClock::isNull() const
 }
 
 /**
- * \if ENGLISH
  * @brief Start the elapsed timer
- * \endif
  *
- * \if CHINESE
- * @brief 启动计时器
- * \endif
  */
 void QwtSystemClock::start()
 {
@@ -58,15 +47,9 @@ void QwtSystemClock::start()
 }
 
 /**
- * \if ENGLISH
  * @brief Restart the elapsed timer
  * @return Elapsed time in multiples of milliseconds
- * \endif
  *
- * \if CHINESE
- * @brief 重启计时器
- * @return 经过的时间，以毫秒为单位
- * \endif
  */
 double QwtSystemClock::restart()
 {
@@ -75,15 +58,9 @@ double QwtSystemClock::restart()
 }
 
 /**
- * \if ENGLISH
  * @brief Get elapsed time in multiples of milliseconds
  * @return Elapsed time since the timer was started
- * \endif
  *
- * \if CHINESE
- * @brief 获取经过的时间，以毫秒为单位
- * @return 自计时器启动以来经过的时间
- * \endif
  */
 double QwtSystemClock::elapsed() const
 {

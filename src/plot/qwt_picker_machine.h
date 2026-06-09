@@ -45,7 +45,7 @@ class QWT_EXPORT QwtPickerMachine
   public:
     /*!
        Type of a selection.
-       \sa selectionType()
+       @sa selectionType()
      */
     enum SelectionType
     {

@@ -214,12 +214,7 @@ public:
     // Get the sample at a specific index
     virtual QPointF sample(size_t index) const override;
 
-    /**
-     * @brief Calculate a y value for a x value
-     *
-     * @param x x value
-     * @return Corresponding y value
-     */
+    // Calculate a y value for a x value
     virtual double y(double x) const = 0;
     // Calculate the x value for a given index
     virtual double x(size_t index) const;

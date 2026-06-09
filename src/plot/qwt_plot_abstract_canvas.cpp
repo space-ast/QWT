@@ -257,7 +257,7 @@ QwtPlotAbstractCanvas::FocusIndicator QwtPlotAbstractCanvas::focusIndicator() co
 
 /*!
    Draw the focus indication
-   \param painter Painter
+   @param painter Painter
  */
 void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
 {
@@ -292,7 +292,7 @@ double QwtPlotAbstractCanvas::borderRadius() const
     return m_data->borderRadius;
 }
 
-//! \return Path for the canvas border
+//! @return Path for the canvas border
 QPainterPath QwtPlotAbstractCanvas::canvasBorderPath(const QRect& rect) const
 {
     return qwtBorderPath(canvasWidget(), rect);
@@ -300,7 +300,7 @@ QPainterPath QwtPlotAbstractCanvas::canvasBorderPath(const QRect& rect) const
 
 /*!
    Draw the border of the canvas
-   \param painter Painter
+   @param painter Painter
  */
 void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 {
@@ -460,7 +460,7 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
     }
 }
 
-//!  \brief Draw the plot to the canvas
+//!  @brief Draw the plot to the canvas
 void QwtPlotAbstractCanvas::drawCanvas(QPainter* painter)
 {
     QWidget* w = canvasWidget();
@@ -517,13 +517,13 @@ void QwtPlotAbstractCanvas::updateStyleSheetInfo()
     }
 }
 
-//! \return canvas widget
+//! @return canvas widget
 QWidget* QwtPlotAbstractCanvas::canvasWidget()
 {
     return m_data->canvasWidget;
 }
 
-//! \return canvas widget
+//! @return canvas widget
 const QWidget* QwtPlotAbstractCanvas::canvasWidget() const
 {
     return m_data->canvasWidget;

@@ -141,8 +141,8 @@ const QwtPlot* QwtPlotPicker::plot() const
 }
 
 /*!
-   \return Normalized bounding rectangle of the axes
-   \sa QwtPlot::autoReplot(), QwtPlot::replot().
+   @return Normalized bounding rectangle of the axes
+   @sa QwtPlot::autoReplot(), QwtPlot::replot().
  */
 QRectF QwtPlotPicker::scaleRect() const
 {
@@ -198,8 +198,8 @@ QwtAxisId QwtPlotPicker::yAxis() const
 /*!
    Translate a pixel position into a position string
 
-   \param pos Position in pixel coordinates
-   \return Position string
+   @param pos Position in pixel coordinates
+   @return Position string
  */
 QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 {
@@ -210,7 +210,7 @@ QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 }
 
 /*!
-   \brief Translate a position into a position string
+   @brief Translate a position into a position string
 
    In case of HLineRubberBand the label is the value of the
    y position, in case of VLineRubberBand the value of the x position.
@@ -218,8 +218,8 @@ QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 
    The format for the double to string conversion is "%.4f".
 
-   \param pos Position
-   \return Position string
+   @param pos Position
+   @return Position string
  */
 QwtText QwtPlotPicker::trackerTextF(const QPointF& pos) const
 {
@@ -241,10 +241,10 @@ QwtText QwtPlotPicker::trackerTextF(const QPointF& pos) const
 /*!
    Append a point to the selection and update rubber band and tracker.
 
-   \param pos Additional point
-   \sa isActive, begin(), end(), move(), appended()
+   @param pos Additional point
+   @sa isActive, begin(), end(), move(), appended()
 
-   \note The appended(const QPoint &), appended(const QDoublePoint &)
+   @note The appended(const QPoint &), appended(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPlotPicker::append(const QPoint& pos)
@@ -256,10 +256,10 @@ void QwtPlotPicker::append(const QPoint& pos)
 /*!
    Move the last point of the selection
 
-   \param pos New position
-   \sa isActive, begin(), end(), append()
+   @param pos New position
+   @sa isActive, begin(), end(), append()
 
-   \note The moved(const QPoint &), moved(const QDoublePoint &)
+   @note The moved(const QPoint &), moved(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPlotPicker::move(const QPoint& pos)
@@ -271,9 +271,9 @@ void QwtPlotPicker::move(const QPoint& pos)
 /*!
    Close a selection setting the state to inactive.
 
-   \param ok If true, complete the selection and emit selected signals
+   @param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
-   \return True if the selection has been accepted, false otherwise
+   @return True if the selection has been accepted, false otherwise
  */
 
 bool QwtPlotPicker::end(bool ok)
@@ -328,8 +328,8 @@ bool QwtPlotPicker::end(bool ok)
 /*!
     Translate a rectangle from pixel into plot coordinates
 
-    \return Rectangle in plot coordinates
-    \sa transform()
+    @return Rectangle in plot coordinates
+    @sa transform()
  */
 QRectF QwtPlotPicker::invTransform(const QRect& rect) const
 {
@@ -341,8 +341,8 @@ QRectF QwtPlotPicker::invTransform(const QRect& rect) const
 
 /*!
     Translate a rectangle from plot into pixel coordinates
-    \return Rectangle in pixel coordinates
-    \sa invTransform()
+    @return Rectangle in pixel coordinates
+    @sa invTransform()
  */
 QRect QwtPlotPicker::transform(const QRectF& rect) const
 {
@@ -354,8 +354,8 @@ QRect QwtPlotPicker::transform(const QRectF& rect) const
 
 /*!
     Translate a point from pixel into plot coordinates
-    \return Point in plot coordinates
-    \sa transform()
+    @return Point in plot coordinates
+    @sa transform()
  */
 QPointF QwtPlotPicker::invTransform(const QPoint& pos) const
 {
@@ -367,8 +367,8 @@ QPointF QwtPlotPicker::invTransform(const QPoint& pos) const
 
 /*!
     Translate a point from plot into pixel coordinates
-    \return Point in pixel coordinates
-    \sa invTransform()
+    @return Point in pixel coordinates
+    @sa invTransform()
  */
 QPoint QwtPlotPicker::transform(const QPointF& pos) const
 {

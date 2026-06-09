@@ -10,8 +10,8 @@ using namespace Qwt3D;
 
 /**
   Set the rotation angle of the object. If you look along the respective axis towards ascending
-  values, the rotation is performed in mathematical \e negative sense \param xVal angle in \e degree
-  to rotate around the X axis \param yVal angle in \e degree to rotate around the Y axis \param zVal
+  values, the rotation is performed in mathematical \e negative sense @param xVal angle in \e degree
+  to rotate around the X axis @param yVal angle in \e degree to rotate around the Y axis @param zVal
   angle in \e degree to rotate around the Z axis
 */
 void Plot3D::setRotation(double xVal, double yVal, double zVal)
@@ -29,10 +29,10 @@ void Plot3D::setRotation(double xVal, double yVal, double zVal)
 
 /**
   Set the shift in object (world) coordinates.
-        \param xVal shift along (world) X axis
-        \param yVal shift along (world) Y axis
-        \param zVal shift along (world) Z axis
-        \see setViewportShift()
+        @param xVal shift along (world) X axis
+        @param yVal shift along (world) Y axis
+        @param zVal shift along (world) Z axis
+        @see setViewportShift()
 */
 void Plot3D::setShift(double xVal, double yVal, double zVal)
 {
@@ -52,9 +52,9 @@ void Plot3D::setShift(double xVal, double yVal, double zVal)
   which encloses the unscaled and unzoomed data
         by multiples of the spheres diameter
 
-        \param xVal shift along (view) X axis
-        \param yVal shift along (view) Y axis
-        \see setShift()
+        @param xVal shift along (view) X axis
+        @param yVal shift along (view) Y axis
+        @see setShift()
 */
 void Plot3D::setViewportShift(double xVal, double yVal)
 {
@@ -70,9 +70,9 @@ void Plot3D::setViewportShift(double xVal, double yVal)
 
 /**
   Set the scale in object (world) coordinates.
-        \param xVal scaling for X values
-        \param yVal scaling for Y values
-        \param zVal scaling for Z values
+        @param xVal scaling for X values
+        @param yVal scaling for Y values
+        @param zVal scaling for Z values
 
         A respective value of 1 represents no scaling;
 */
@@ -91,7 +91,7 @@ void Plot3D::setScale(double xVal, double yVal, double zVal)
 
 /**
   Set the (zoom in addition to scale).
-        \param val zoom value (value == 1 indicates no zooming)
+        @param val zoom value (value == 1 indicates no zooming)
 */
 void Plot3D::setZoom(double val)
 {

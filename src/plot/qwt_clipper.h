@@ -41,12 +41,7 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Namespace for clipping algorithms
- * \endif
- * \if CHINESE
- * @brief 裁剪算法的命名空间
- * \endif
  */
 namespace QwtClipper
 {

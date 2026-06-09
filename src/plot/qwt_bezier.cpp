@@ -116,16 +116,9 @@ private:
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param tolerance Termination criterion for the subdivision
- * \sa setTolerance()
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @param tolerance 细分的终止判据
- * \sa setTolerance()
- * \endif
+ * @sa setTolerance()
  */
 QwtBezier::QwtBezier(double tolerance)
     : m_tolerance(qwtMaxF(tolerance, 0.0)), m_flatness(BezierData::minFlatness(m_tolerance))
@@ -133,19 +126,13 @@ QwtBezier::QwtBezier(double tolerance)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtBezier::~QwtBezier()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Set the tolerance for curve subdivision
  * @details The tolerance is a measurement for the flatness of a curve.
  *          A curve with a flatness below the tolerance is considered as being flat,
@@ -154,17 +141,7 @@ QwtBezier::~QwtBezier()
  *          to some sort of raster (e.g., to screen), a value of 0.5 of the pixel size
  *          is a good value for the tolerance.
  * @param tolerance Termination criterion for the subdivision
- * \sa tolerance()
- * \endif
- * \if CHINESE
- * @brief 设置曲线细分的容差
- * @details 容差是曲线平坦度的度量。
- *          平坦度低于容差的曲线被认为是平坦的，从而终止细分算法。
- *          当插值 Bézier 曲线并将其渲染为一系列线条到某种光栅（例如屏幕）时，
- *          像素大小的 0.5 倍是容差的良好值。
- * @param tolerance 细分的终止判据
- * \sa tolerance()
- * \endif
+ * @sa tolerance()
  */
 void QwtBezier::setTolerance(double tolerance)
 {
@@ -173,22 +150,12 @@ void QwtBezier::setTolerance(double tolerance)
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a Bézier curve by a polygon
  * @param p1 Start point
  * @param cp1 First control point
  * @param cp2 Second control point
  * @param p2 End point
  * @return Interpolating polygon
- * \endif
- * \if CHINESE
- * @brief 用多边形插值 Bézier 曲线
- * @param p1 起点
- * @param cp1 第一个控制点
- * @param cp2 第二个控制点
- * @param p2 终点
- * @return 插值多边形
- * \endif
  */
 QPolygonF QwtBezier::toPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2) const
 {
@@ -203,7 +170,6 @@ QPolygonF QwtBezier::toPolygon(const QPointF& p1, const QPointF& cp1, const QPoi
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a Bézier curve by adding points to a polygon
  * @details appendToPolygon() is tailored for accumulating points from a sequence
  *          of Bézier curves, such as those created by spline interpolation.
@@ -213,18 +179,6 @@ QPolygonF QwtBezier::toPolygon(const QPointF& p1, const QPointF& cp1, const QPoi
  * @param p2 End point
  * @param polygon Polygon where the interpolating points are added
  * @note If the last point of the incoming polygon matches p1, it won't be inserted a second time.
- * \endif
- * \if CHINESE
- * @brief 通过将点添加到多边形来插值 Bézier 曲线
- * @details appendToPolygon() 专为累积一系列 Bézier 曲线的点而定制，
- *          例如由样条插值创建的曲线。
- * @param p1 起点
- * @param cp1 第一个控制点
- * @param cp2 第二个控制点
- * @param p2 终点
- * @param polygon 添加插值点的多边形
- * @note 如果输入多边形的最后一个点与 p1 匹配，则不会再次插入它。
- * \endif
  */
 void QwtBezier::appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, QPolygonF& polygon) const
 {
@@ -261,7 +215,6 @@ void QwtBezier::appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPo
 }
 
 /**
- * \if ENGLISH
  * @brief Find a point on a Bézier curve
  * @param p1 Start point
  * @param cp1 First control point
@@ -269,16 +222,6 @@ void QwtBezier::appendToPolygon(const QPointF& p1, const QPointF& cp1, const QPo
  * @param p2 End point
  * @param t Parameter value in range [0,1]
  * @return Point on the curve
- * \endif
- * \if CHINESE
- * @brief 查找 Bézier 曲线上的点
- * @param p1 起点
- * @param cp1 第一个控制点
- * @param cp2 第二个控制点
- * @param p2 终点
- * @param t 参数值，范围 [0,1]
- * @return 曲线上的点
- * \endif
  */
 QPointF QwtBezier::pointAt(const QPointF& p1, const QPointF& cp1, const QPointF& cp2, const QPointF& p2, double t)
 {

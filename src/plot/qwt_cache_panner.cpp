@@ -372,8 +372,8 @@ bool QwtCachePanner::eventFilter(QObject* object, QEvent* event)
 /*!
    Handle a mouse press event for the observed widget.
 
-   \param mouseEvent Mouse event
-   \sa eventFilter(), widgetMouseReleaseEvent(),
+   @param mouseEvent Mouse event
+   @sa eventFilter(), widgetMouseReleaseEvent(),
       widgetMouseMoveEvent(),
  */
 void QwtCachePanner::widgetMousePressEvent(QMouseEvent* mouseEvent)
@@ -411,8 +411,8 @@ void QwtCachePanner::widgetMousePressEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse move event for the observed widget.
 
-   \param mouseEvent Mouse event
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent()
+   @param mouseEvent Mouse event
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent()
  */
 void QwtCachePanner::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 {
@@ -436,8 +436,8 @@ void QwtCachePanner::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse release event for the observed widget.
 
-   \param mouseEvent Mouse event
-   \sa eventFilter(), widgetMousePressEvent(),
+   @param mouseEvent Mouse event
+   @sa eventFilter(), widgetMousePressEvent(),
       widgetMouseMoveEvent(),
  */
 void QwtCachePanner::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
@@ -467,8 +467,8 @@ void QwtCachePanner::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a key press event for the observed widget.
 
-   \param keyEvent Key event
-   \sa eventFilter(), widgetKeyReleaseEvent()
+   @param keyEvent Key event
+   @sa eventFilter(), widgetKeyReleaseEvent()
  */
 void QwtCachePanner::widgetKeyPressEvent(QKeyEvent* keyEvent)
 {
@@ -485,8 +485,8 @@ void QwtCachePanner::widgetKeyPressEvent(QKeyEvent* keyEvent)
 /*!
    Handle a key release event for the observed widget.
 
-   \param keyEvent Key event
-   \sa eventFilter(), widgetKeyReleaseEvent()
+   @param keyEvent Key event
+   @sa eventFilter(), widgetKeyReleaseEvent()
  */
 void QwtCachePanner::widgetKeyReleaseEvent(QKeyEvent* keyEvent)
 {

@@ -105,10 +105,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
     virtual bool eventFilter( QObject*, QEvent* ) override;
 
   protected:
-    /**
-     * @brief Rescale the parent widget
-     * @param[in] factor Scale factor (>1 for zoom in, <1 for zoom out)
-     */
+    // Rescale the parent widget
     virtual void rescale( double factor ) = 0;
 
     virtual void widgetMousePressEvent( QMouseEvent* );

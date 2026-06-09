@@ -95,7 +95,7 @@ enum DATATYPE
 
 /**
  * @brief The 12 axes
- * \image html axes.png
+ * @image html axes.png
  */
 enum AXIS
 {

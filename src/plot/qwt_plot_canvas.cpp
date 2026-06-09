@@ -176,7 +176,7 @@ bool QwtPlotCanvas::event(QEvent* event)
 
 /*!
    Paint event
-   \param event Paint event
+   @param event Paint event
  */
 void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 {
@@ -252,8 +252,8 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 /*!
    Draw the border of the plot canvas
 
-   \param painter Painter
-   \sa setBorderRadius()
+   @param painter Painter
+   @sa setBorderRadius()
  */
 void QwtPlotCanvas::drawBorder(QPainter* painter)
 {
@@ -267,7 +267,7 @@ void QwtPlotCanvas::drawBorder(QPainter* painter)
 
 /*!
    Resize event
-   \param event Resize event
+   @param event Resize event
  */
 void QwtPlotCanvas::resizeEvent(QResizeEvent* event)
 {

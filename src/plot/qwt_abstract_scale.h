@@ -37,7 +37,6 @@ class QwtScaleMap;
 class QwtInterval;
 
 /**
- * \if ENGLISH
  * @brief An abstract base class for widgets having a scale
  * @details The scale of an QwtAbstractScale is determined by a QwtScaleDiv
  *          definition that contains the boundaries and the ticks of the scale.
@@ -46,16 +45,6 @@ class QwtInterval;
  *          it is calculated from the boundaries using a QwtScaleEngine.
  *          The scale engine also decides the type of transformation of the scale
  *          (linear, logarithmic ...).
- * \endif
- * \if CHINESE
- * @brief 具有刻度的控件的抽象基类
- * @details QwtAbstractScale 的刻度由 QwtScaleDiv 定义确定，
- *          其中包含刻度的边界和刻度线。
- *          刻度使用 QwtScaleDraw 对象绘制。
- *          刻度划分可以显式分配 - 但通常
- *          它使用 QwtScaleEngine 从边界计算得出。
- *          刻度引擎还决定刻度的变换类型（线性、对数...）。
- * \endif
  */
 
 class QWT_EXPORT QwtAbstractScale : public QWidget

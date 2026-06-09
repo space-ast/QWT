@@ -75,14 +75,14 @@ class QWT_EXPORT QwtSpline
     /**
      * @brief Boundary type specifying the spline at its endpoints
      *
-     * \sa setBoundaryType(), boundaryType()
+     * @sa setBoundaryType(), boundaryType()
      */
     enum BoundaryType
     {
         /**
          * The polynomials at the start/endpoint depend on specific conditions
          *
-         * \sa QwtSpline::BoundaryCondition
+         * @sa QwtSpline::BoundaryCondition
          */
         ConditionalBoundaries,
 
@@ -98,7 +98,7 @@ class QWT_EXPORT QwtSpline
          * the interpolation includes the connection between the last
          * and the first control point.
          *
-         * \note Only works for parametrizations, where the parameter increment
+         * @note Only works for parametrizations, where the parameter increment
          *      for the the final closing line is positive.
          *      This excludes QwtSplineParametrization::ParameterX and
          *      QwtSplineParametrization::ParameterY
@@ -109,7 +109,7 @@ class QWT_EXPORT QwtSpline
 
     /**
      * @brief position of a boundary condition
-     * \sa boundaryCondition(), boundaryValue()
+     * @sa boundaryCondition(), boundaryValue()
      */
     enum BoundaryPosition
     {
@@ -128,22 +128,22 @@ class QWT_EXPORT QwtSpline
      * additional rules are necessary to compensate the missing
      * points.
      *
-     * \sa boundaryCondition(), boundaryValue()
-     * \sa QwtSplineC2::BoundaryConditionC2
+     * @sa boundaryCondition(), boundaryValue()
+     * @sa QwtSplineC2::BoundaryConditionC2
      */
     enum BoundaryCondition
     {
         /**
          * The first derivative at the end point is given
-         * \sa boundaryValue()
+         * @sa boundaryValue()
          */
         Clamped1,
 
         /**
          * The second derivative at the end point is given
          *
-         * \sa boundaryValue()
-         * \note a condition having a second derivative of 0
+         * @sa boundaryValue()
+         * @note a condition having a second derivative of 0
          *      is also called "natural".
          */
         Clamped2,
@@ -151,8 +151,8 @@ class QWT_EXPORT QwtSpline
         /**
          * The third derivative at the end point is given
          *
-         * \sa boundaryValue()
-         * \note a condition having a third derivative of 0
+         * @sa boundaryValue()
+         * @note a condition having a third derivative of 0
          *      is also called "parabolic runout".
          */
         Clamped3,
@@ -163,7 +163,7 @@ class QWT_EXPORT QwtSpline
          * value at the end is 1.0 then the slope at the last 2 points is
          * the same.
          *
-         * \sa boundaryValue().
+         * @sa boundaryValue().
          */
         LinearRunout
     };
@@ -260,7 +260,7 @@ class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
  * For non-parametric splines those points are the curve points, while
  * for parametric splines the calculation is done twice using a parameter value t.
  *
- * \sa QwtSplineParametrization
+ * @sa QwtSplineParametrization
  */
 class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
@@ -291,7 +291,7 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
  * For non-parametric splines those points are the curve points, while
  * for parametric splines the calculation is done twice using a parameter value t.
  *
- * \sa QwtSplineParametrization
+ * @sa QwtSplineParametrization
  */
 class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 {
@@ -299,7 +299,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
     /*!
        Boundary condition that requires C2 continuity
 
-       \sa QwtSpline::boundaryCondition, QwtSpline::BoundaryCondition
+       @sa QwtSpline::boundaryCondition, QwtSpline::BoundaryCondition
      */
     enum BoundaryConditionC2
     {
@@ -307,7 +307,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
            The second derivate at the endpoint is related to the second derivatives
            at the 2 neighbours: cv[0] := 2.0 * cv[1] - cv[2].
 
-           \note boundaryValue() is ignored
+           @note boundaryValue() is ignored
          */
         CubicRunout = LinearRunout + 1,
 
@@ -316,7 +316,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
            Or in other words: the first/last curve segment extents the polynomial of its
            neighboured polynomial
 
-           \note boundaryValue() is ignored
+           @note boundaryValue() is ignored
          */
         NotAKnot
     };

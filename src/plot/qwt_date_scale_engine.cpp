@@ -750,7 +750,6 @@ class QwtDateScaleEngine::PrivateData
 
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details The engine is initialized to build scales for the
  *          given time specification. It classifies intervals > 4 weeks
@@ -758,16 +757,7 @@ class QwtDateScaleEngine::PrivateData
  *          for QwtDate::FirstThursday.
  * @param[in] timeSpec Time specification
  * @sa setTimeSpec(), setMaxWeeks(), setWeek0Type()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 引擎初始化为根据给定的时间规范构建刻度。
- *          它将超过4周的间隔分类为 >= Qt::Month。
- *          一年的第一周按照 QwtDate::FirstThursday 定义。
- * @param[in] timeSpec 时间规范
- * @sa setTimeSpec(), setMaxWeeks(), setWeek0Type()
- * \endif
  */
 QwtDateScaleEngine::QwtDateScaleEngine( Qt::TimeSpec timeSpec )
     : QwtLinearScaleEngine( 10 )
@@ -776,13 +766,8 @@ QwtDateScaleEngine::QwtDateScaleEngine( Qt::TimeSpec timeSpec )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtDateScaleEngine::~QwtDateScaleEngine()
 {
@@ -790,17 +775,10 @@ QwtDateScaleEngine::~QwtDateScaleEngine()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the time specification used by the engine
  * @param[in] timeSpec Time specification
  * @sa timeSpec(), setUtcOffset(), toDateTime()
- * \endif
  *
- * \if CHINESE
- * @brief 设置引擎使用的时间规范
- * @param[in] timeSpec 时间规范
- * @sa timeSpec(), setUtcOffset(), toDateTime()
- * \endif
  */
 void QwtDateScaleEngine::setTimeSpec( Qt::TimeSpec timeSpec )
 {
@@ -808,17 +786,10 @@ void QwtDateScaleEngine::setTimeSpec( Qt::TimeSpec timeSpec )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the time specification used by the engine
  * @return Time specification used by the engine
  * @sa setTimeSpec(), utcOffset(), toDateTime()
- * \endif
  *
- * \if CHINESE
- * @brief 获取引擎使用的时间规范
- * @return 引擎使用的时间规范
- * @sa setTimeSpec(), utcOffset(), toDateTime()
- * \endif
  */
 Qt::TimeSpec QwtDateScaleEngine::timeSpec() const
 {
@@ -826,19 +797,11 @@ Qt::TimeSpec QwtDateScaleEngine::timeSpec() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the offset in seconds from Coordinated Universal Time
  * @param[in] seconds Offset in seconds
  * @note The offset has no effect beside for the time specification Qt::OffsetFromUTC.
  * @sa utcOffset(), setTimeSpec(), toDateTime()
- * \endif
  *
- * \if CHINESE
- * @brief 设置与世界协调时间的偏移量（秒）
- * @param[in] seconds 偏移量（秒）
- * @note 该偏移量仅对 Qt::OffsetFromUTC 时间规范有效。
- * @sa utcOffset(), setTimeSpec(), toDateTime()
- * \endif
  */
 void QwtDateScaleEngine::setUtcOffset( int seconds )
 {
@@ -846,19 +809,11 @@ void QwtDateScaleEngine::setUtcOffset( int seconds )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the offset in seconds from Coordinated Universal Time
  * @return Offset in seconds from Coordinated Universal Time
  * @note The offset has no effect beside for the time specification Qt::OffsetFromUTC.
  * @sa setUtcOffset(), setTimeSpec(), toDateTime()
- * \endif
  *
- * \if CHINESE
- * @brief 获取与世界协调时间的偏移量（秒）
- * @return 与世界协调时间的偏移量（秒）
- * @note 该偏移量仅对 Qt::OffsetFromUTC 时间规范有效。
- * @sa setUtcOffset(), setTimeSpec(), toDateTime()
- * \endif
  */
 int QwtDateScaleEngine::utcOffset() const
 {
@@ -866,19 +821,11 @@ int QwtDateScaleEngine::utcOffset() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set how to identify the first week of a year
  * @param[in] week0Type Mode how to identify the first week of a year
  * @note week0Type has no effect beside for intervals classified as QwtDate::Week.
  * @sa week0Type(), setMaxWeeks()
- * \endif
  *
- * \if CHINESE
- * @brief 设置如何确定一年的第一周
- * @param[in] week0Type 确定一年第一周的模式
- * @note week0Type 仅对被分类为 QwtDate::Week 的间隔有效。
- * @sa week0Type(), setMaxWeeks()
- * \endif
  */
 void QwtDateScaleEngine::setWeek0Type( QwtDate::Week0Type week0Type )
 {
@@ -886,17 +833,10 @@ void QwtDateScaleEngine::setWeek0Type( QwtDate::Week0Type week0Type )
 }
 
 /**
- * \if ENGLISH
  * @brief Get how to identify the first week of a year
  * @return Setting how to identify the first week of a year
  * @sa setWeek0Type(), maxWeeks()
- * \endif
  *
- * \if CHINESE
- * @brief 获取如何确定一年的第一周
- * @return 确定一年第一周的设置
- * @sa setWeek0Type(), maxWeeks()
- * \endif
  */
 QwtDate::Week0Type QwtDateScaleEngine::week0Type() const
 {
@@ -904,22 +844,13 @@ QwtDate::Week0Type QwtDateScaleEngine::week0Type() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set an upper limit for the number of weeks
  * @details Set an upper limit for the number of weeks, when an interval
  *          can be classified as Qt::Week. The default setting is 4 weeks.
  * @param[in] weeks Upper limit for the number of weeks
  * @note In business charts a year is often divided into weeks [1-52]
  * @sa maxWeeks(), setWeek0Type()
- * \endif
  *
- * \if CHINESE
- * @brief 设置周数的上限
- * @details 设置间隔被分类为 Qt::Week 时周数的上限。默认设置为4周。
- * @param[in] weeks 周数的上限
- * @note 在商业图表中，一年通常被划分为周 [1-52]
- * @sa maxWeeks(), setWeek0Type()
- * \endif
  */
 void QwtDateScaleEngine::setMaxWeeks( int weeks )
 {
@@ -927,17 +858,10 @@ void QwtDateScaleEngine::setMaxWeeks( int weeks )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the upper limit for the number of weeks
  * @return Upper limit for the number of weeks, when an interval can be classified as Qt::Week
  * @sa setMaxWeeks(), week0Type()
- * \endif
  *
- * \if CHINESE
- * @brief 获取周数的上限
- * @return 间隔被分类为 Qt::Week 时周数的上限
- * @sa setMaxWeeks(), week0Type()
- * \endif
  */
 int QwtDateScaleEngine::maxWeeks() const
 {
@@ -945,21 +869,12 @@ int QwtDateScaleEngine::maxWeeks() const
 }
 
 /**
- * \if ENGLISH
  * @brief Classification of a date/time interval division
  * @param[in] minDate Minimum ( = earlier ) of the interval
  * @param[in] maxDate Maximum ( = later ) of the interval
  * @param[in] maxSteps Maximum for the number of steps
  * @return Interval classification
- * \endif
  *
- * \if CHINESE
- * @brief 日期/时间间隔划分的分类
- * @param[in] minDate 间隔的最小值（较早）
- * @param[in] maxDate 间隔的最大值（较晚）
- * @param[in] maxSteps 步数的最大值
- * @return 间隔分类
- * \endif
  */
 QwtDate::IntervalType QwtDateScaleEngine::intervalType(
     const QDateTime& minDate, const QDateTime& maxDate,
@@ -1006,7 +921,6 @@ QwtDate::IntervalType QwtDateScaleEngine::intervalType(
 }
 
 /**
- * \if ENGLISH
  * @brief Align and divide an interval
  * @details The algorithm aligns and divides the interval into steps.
  *          Datetime interval divisions are usually not equidistant and the
@@ -1017,19 +931,7 @@ QwtDate::IntervalType QwtDateScaleEngine::intervalType(
  * @param[out] x2 Second limit of the interval (In/Out)
  * @param[out] stepSize Step size (Out)
  * @sa QwtScaleEngine::setAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 对齐并划分间隔
- * @details 算法对齐并将间隔划分为步长。
- *          日期时间间隔划分通常不等距，计算的 stepSize 只能作为
- *          divideScale() 计算步长的近似值。
- * @param[in] maxNumSteps 最大步数
- * @param[out] x1 间隔的第一边界（输入/输出）
- * @param[out] x2 间隔的第二边界（输入/输出）
- * @param[out] stepSize 步长（输出）
- * @sa QwtScaleEngine::setAttribute()
- * \endif
  */
 void QwtDateScaleEngine::autoScale( int maxNumSteps,
     double& x1, double& x2, double& stepSize ) const
@@ -1088,7 +990,6 @@ void QwtDateScaleEngine::autoScale( int maxNumSteps,
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate a scale division for a date/time interval
  * @param[in] x1 First interval limit
  * @param[in] x2 Second interval limit
@@ -1096,17 +997,7 @@ void QwtDateScaleEngine::autoScale( int maxNumSteps,
  * @param[in] maxMinorSteps Maximum number of minor steps
  * @param[in] stepSize Step size. If stepSize == 0, the scaleEngine calculates one.
  * @return Calculated scale division
- * \endif
  *
- * \if CHINESE
- * @brief 计算日期/时间间隔的刻度划分
- * @param[in] x1 第一间隔边界
- * @param[in] x2 第二间隔边界
- * @param[in] maxMajorSteps 主要步数的最大值
- * @param[in] maxMinorSteps 次要步数的最大值
- * @param[in] stepSize 步长。如果 stepSize == 0，引擎将自动计算。
- * @return 计算的刻度划分
- * \endif
  */
 QwtScaleDiv QwtDateScaleEngine::divideScale( double x1, double x2,
     int maxMajorSteps, int maxMinorSteps, double stepSize ) const
@@ -1217,12 +1108,12 @@ QwtScaleDiv QwtDateScaleEngine::buildScaleDiv(
    ( f.e according to the first day of the month ) alignDate()
    has to be overloaded.
 
-   \param dateTime Date/time value
-   \param stepSize Step size
-   \param intervalType Interval type
-   \param up When true dateTime is ceiled - otherwise it is floored
+   @param dateTime Date/time value
+   @param stepSize Step size
+   @param intervalType Interval type
+   @param up When true dateTime is ceiled - otherwise it is floored
 
-   \return Aligned date/time value
+   @return Aligned date/time value
  */
 QDateTime QwtDateScaleEngine::alignDate(
     const QDateTime& dateTime, double stepSize,
@@ -1407,21 +1298,12 @@ QDateTime QwtDateScaleEngine::alignDate(
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a double value into a QDateTime object
  * @details For QDateTime result is bounded by QwtDate::minDate() and QwtDate::maxDate()
  * @param[in] value Double value to convert
  * @return QDateTime object initialized with timeSpec() and utcOffset()
  * @sa timeSpec(), utcOffset(), QwtDate::toDateTime()
- * \endif
  *
- * \if CHINESE
- * @brief 将 double 值转换为 QDateTime 对象
- * @details QDateTime 结果受 QwtDate::minDate() 和 QwtDate::maxDate() 限制
- * @param[in] value 要转换的 double 值
- * @return 使用 timeSpec() 和 utcOffset() 初始化的 QDateTime 对象
- * @sa timeSpec(), utcOffset(), QwtDate::toDateTime()
- * \endif
  */
 QDateTime QwtDateScaleEngine::toDateTime( double value ) const
 {

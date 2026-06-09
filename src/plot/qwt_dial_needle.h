@@ -36,7 +36,7 @@ class QPainter;
  * @brief Base class for needles that can be used in a QwtDial
  * @details QwtDialNeedle is a pointer that indicates a value by pointing
  *          to a specific direction.
- * \sa QwtDial, QwtCompass
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtDialNeedle
@@ -59,7 +59,7 @@ class QWT_EXPORT QwtDialNeedle
 
   protected:
     /*!
-       \brief Draw the needle
+       @brief Draw the needle
 
        The origin of the needle is at position (0.0, 0.0 )
        pointing in direction 0.0 ( = east ).
@@ -67,11 +67,11 @@ class QWT_EXPORT QwtDialNeedle
        The painter is already initialized with translation and
        rotation.
 
-       \param painter Painter
-       \param length Length of the needle
-       \param colorGroup Color group, used for painting
+       @param painter Painter
+       @param length Length of the needle
+       @param colorGroup Color group, used for painting
 
-       \sa setPalette(), palette()
+       @sa setPalette(), palette()
      */
     virtual void drawNeedle( QPainter* painter,
         double length, QPalette::ColorGroup colorGroup ) const = 0;
@@ -90,7 +90,7 @@ class QWT_EXPORT QwtDialNeedle
  * @details The following colors are used:
  *          - QPalette::Mid: Pointer
  *          - QPalette::Base: Knob
- * \sa QwtDial, QwtCompass
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
@@ -135,7 +135,7 @@ class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
  *          - QPalette::Light: Used for pointing south
  *          - QPalette::Dark: Used for pointing north
  *          - QPalette::Base: Knob (ThinStyle only)
- * \sa QwtDial, QwtCompass
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
@@ -171,7 +171,7 @@ class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
  *          The following colors are used:
  *          - QPalette::Light: Used for Style1, or the light half of Style2
  *          - QPalette::Dark: Used for the dark half of Style2
- * \sa QwtDial, QwtCompass
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtCompassWindArrow : public QwtDialNeedle

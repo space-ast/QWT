@@ -75,15 +75,9 @@ class QwtPlotHistogram::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor with QwtText title
  * @param[in] title Title of the histogram
- * \endif
  *
- * \if CHINESE
- * @brief QwtText标题的构造函数
- * @param[in] title 直方图标题
- * \endif
  */
 QwtPlotHistogram::QwtPlotHistogram( const QwtText& title )
     : QwtPlotSeriesItem( title )
@@ -92,15 +86,9 @@ QwtPlotHistogram::QwtPlotHistogram( const QwtText& title )
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with QString title
  * @param[in] title Title of the histogram
- * \endif
  *
- * \if CHINESE
- * @brief QString标题的构造函数
- * @param[in] title 直方图标题
- * \endif
  */
 QwtPlotHistogram::QwtPlotHistogram( const QString& title )
     : QwtPlotSeriesItem( title )
@@ -109,13 +97,8 @@ QwtPlotHistogram::QwtPlotHistogram( const QString& title )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotHistogram::~QwtPlotHistogram()
 {
@@ -123,13 +106,8 @@ QwtPlotHistogram::~QwtPlotHistogram()
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize data members
- * \endif
  *
- * \if CHINESE
- * @brief 初始化数据成员
- * \endif
  */
 void QwtPlotHistogram::init()
 {
@@ -143,17 +121,10 @@ void QwtPlotHistogram::init()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the histogram's drawing style
  * @param[in] style Histogram style
  * @sa HistogramStyle, style()
- * \endif
  *
- * \if CHINESE
- * @brief 设置直方图的绘制样式
- * @param[in] style 直方图样式
- * @sa HistogramStyle, style()
- * \endif
  */
 void QwtPlotHistogram::setStyle( HistogramStyle style )
 {
@@ -167,17 +138,10 @@ void QwtPlotHistogram::setStyle( HistogramStyle style )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the histogram's drawing style
  * @return Style of the histogram
  * @sa HistogramStyle, setStyle()
- * \endif
  *
- * \if CHINESE
- * @brief 获取直方图的绘制样式
- * @return 直方图样式
- * @sa HistogramStyle, setStyle()
- * \endif
  */
 QwtPlotHistogram::HistogramStyle QwtPlotHistogram::style() const
 {
@@ -185,7 +149,6 @@ QwtPlotHistogram::HistogramStyle QwtPlotHistogram::style() const
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) which makes it
  *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
@@ -194,17 +157,7 @@ QwtPlotHistogram::HistogramStyle QwtPlotHistogram::style() const
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配画笔
- * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性
- *          （见 QPen::isCosmetic()）。此方法用于隐藏此不兼容性。
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotHistogram::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -212,17 +165,10 @@ void QwtPlotHistogram::setPen( const QColor& color, qreal width, Qt::PenStyle st
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen, that is used in a style() depending way
  * @param[in] pen New pen
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画笔，根据 style() 的不同而使用
- * @param[in] pen 新画笔
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotHistogram::setPen( const QPen& pen )
 {
@@ -236,17 +182,10 @@ void QwtPlotHistogram::setPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen used in a style() depending way
  * @return Pen used in a style() depending way
  * @sa setPen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取根据 style() 不同使用的画笔
- * @return 根据 style() 不同使用的画笔
- * @sa setPen(), brush()
- * \endif
  */
 const QPen& QwtPlotHistogram::pen() const
 {
@@ -254,17 +193,10 @@ const QPen& QwtPlotHistogram::pen() const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a brush, that is used in a style() depending way
  * @param[in] brush New brush
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画刷，根据 style() 的不同而使用
- * @param[in] brush 新画刷
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotHistogram::setBrush( const QBrush& brush )
 {
@@ -278,17 +210,10 @@ void QwtPlotHistogram::setBrush( const QBrush& brush )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the brush used in a style() depending way
  * @return Brush used in a style() depending way
  * @sa setPen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取根据 style() 不同使用的画刷
- * @return 根据 style() 不同使用的画刷
- * @sa setPen(), brush()
- * \endif
  */
 const QBrush& QwtPlotHistogram::brush() const
 {
@@ -296,7 +221,6 @@ const QBrush& QwtPlotHistogram::brush() const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a symbol
  * @details In Column style an optional symbol can be assigned, that is responsible
  *          for displaying the rectangle that is defined by the interval and
@@ -306,15 +230,7 @@ const QBrush& QwtPlotHistogram::brush() const
  *       in a different way (e.g. different colors or even using different symbols)
  *       it is recommended to overload drawColumn().
  * @sa style(), symbol(), drawColumn(), pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配符号
- * @details 在 Column 样式中，可以分配可选符号，负责显示由区间和 baseline() 与 value 之间距离定义的矩形。
- *          当没有定义符号时，区域使用 pen() 和 brush() 显示为普通矩形。
- * @note 在需要以不同方式显示不同区间（例如不同颜色甚至不同符号）的应用中，建议重载 drawColumn()。
- * @sa style(), symbol(), drawColumn(), pen(), brush()
- * \endif
  */
 void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
 {
@@ -329,17 +245,10 @@ void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current symbol
  * @return Current symbol or nullptr when no symbol has been assigned
  * @sa setSymbol()
- * \endif
  *
- * \if CHINESE
- * @brief 获取当前符号
- * @return 当前符号或 nullptr（未分配符号时）
- * @sa setSymbol()
- * \endif
  */
 const QwtColumnSymbol* QwtPlotHistogram::symbol() const
 {
@@ -347,22 +256,13 @@ const QwtColumnSymbol* QwtPlotHistogram::symbol() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the value of the baseline
  * @details Each column representing an QwtIntervalSample is defined by its
  *          interval and the interval between baseline and the value of the sample.
  *          The default value of the baseline is 0.0.
  * @param[in] value Value of the baseline
  * @sa baseline()
- * \endif
  *
- * \if CHINESE
- * @brief 设置基线的值
- * @details 表示 QwtIntervalSample 的每个列由其区间和基线与样本值之间的区间定义。
- *          基线的默认值为 0.0。
- * @param[in] value 基线的值
- * @sa baseline()
- * \endif
  */
 void QwtPlotHistogram::setBaseline( double value )
 {
@@ -374,17 +274,10 @@ void QwtPlotHistogram::setBaseline( double value )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the value of the baseline
  * @return Value of the baseline
  * @sa setBaseline()
- * \endif
  *
- * \if CHINESE
- * @brief 获取基线的值
- * @return 基线的值
- * @sa setBaseline()
- * \endif
  */
 double QwtPlotHistogram::baseline() const
 {
@@ -392,15 +285,9 @@ double QwtPlotHistogram::baseline() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of all samples
  * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
- * \endif
  *
- * \if CHINESE
- * @brief 获取所有样本的边界矩形
- * @return 所有样本的边界矩形。对于空序列，矩形无效。
- * \endif
  */
 QRectF QwtPlotHistogram::boundingRect() const
 {
@@ -430,15 +317,9 @@ QRectF QwtPlotHistogram::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotHistogram
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotHistogram
- * \endif
  */
 int QwtPlotHistogram::rtti() const
 {
@@ -446,15 +327,9 @@ int QwtPlotHistogram::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize data with an array of samples
  * @param[in] samples Vector of points
- * \endif
  *
- * \if CHINESE
- * @brief 用样本数组初始化数据
- * @param[in] samples 点向量
- * \endif
  */
 void QwtPlotHistogram::setSamples(
     const QVector< QwtIntervalSample >& samples )
@@ -463,21 +338,12 @@ void QwtPlotHistogram::setSamples(
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a series of samples
  * @details setSamples() is just a wrapper for setData() without any additional
  *          value - beside that it is easier to find for the developer.
  * @param[in] data Data
  * @warning The item takes ownership of the data object, deleting it when it's not used anymore.
- * \endif
  *
- * \if CHINESE
- * @brief 分配样本序列
- * @details setSamples() 只是 setData() 的包装器，没有额外价值 - 
- *          除了方便开发者查找。
- * @param[in] data 数据
- * @warning 该项拥有数据对象的所有权，不再使用时会删除它。
- * \endif
  */
 void QwtPlotHistogram::setSamples(
     QwtSeriesData< QwtIntervalSample >* data )
@@ -486,7 +352,6 @@ void QwtPlotHistogram::setSamples(
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a subset of the histogram samples
  * @param[in] painter Painter
  * @param[in] xMap Maps x-values into pixel coordinates
@@ -495,18 +360,7 @@ void QwtPlotHistogram::setSamples(
  * @param[in] from Index of the first sample to be painted
  * @param[in] to Index of the last sample to be painted. If to < 0 the series will be painted to its last sample.
  * @sa drawOutline(), drawLines(), drawColumns
- * \endif
  *
- * \if CHINESE
- * @brief 绘制直方图样本的子集
- * @param[in] painter 绘图器
- * @param[in] xMap 将x值映射到像素坐标
- * @param[in] yMap 将y值映射到像素坐标
- * @param[in] canvasRect 画布的内容矩形
- * @param[in] from 第一个要绘制的样本的索引
- * @param[in] to 最后一个要绘制的样本的索引。如果to < 0，序列将绘制到最后一个样本。
- * @sa drawOutline(), drawLines(), drawColumns
- * \endif
  */
 void QwtPlotHistogram::drawSeries( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -539,15 +393,15 @@ void QwtPlotHistogram::drawSeries( QPainter* painter,
 /*!
    Draw a histogram in Outline style()
 
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
+   @param painter Painter
+   @param xMap Maps x-values into pixel coordinates.
+   @param yMap Maps y-values into pixel coordinates.
+   @param from Index of the first sample to be painted
+   @param to Index of the last sample to be painted. If to < 0 the
          histogram will be painted to its last point.
 
-   \sa setStyle(), style()
-   \warning The outline style requires, that the intervals are in increasing
+   @sa setStyle(), style()
+   @warning The outline style requires, that the intervals are in increasing
            order and not overlapping.
  */
 void QwtPlotHistogram::drawOutline( QPainter* painter,
@@ -626,14 +480,14 @@ void QwtPlotHistogram::drawOutline( QPainter* painter,
 /*!
    Draw a histogram in Columns style()
 
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
+   @param painter Painter
+   @param xMap Maps x-values into pixel coordinates.
+   @param yMap Maps y-values into pixel coordinates.
+   @param from Index of the first sample to be painted
+   @param to Index of the last sample to be painted. If to < 0 the
          histogram will be painted to its last point.
 
-   \sa setStyle(), style(), setSymbol(), drawColumn()
+   @sa setStyle(), style(), setSymbol(), drawColumn()
  */
 void QwtPlotHistogram::drawColumns( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -658,14 +512,14 @@ void QwtPlotHistogram::drawColumns( QPainter* painter,
 /*!
    Draw a histogram in Lines style()
 
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
+   @param painter Painter
+   @param xMap Maps x-values into pixel coordinates.
+   @param yMap Maps y-values into pixel coordinates.
+   @param from Index of the first sample to be painted
+   @param to Index of the last sample to be painted. If to < 0 the
          histogram will be painted to its last point.
 
-   \sa setStyle(), style(), setPen()
+   @sa setStyle(), style(), setPen()
  */
 void QwtPlotHistogram::drawLines( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -770,11 +624,11 @@ void QwtPlotHistogram::flushPolygon( QPainter* painter,
 /*!
    Calculate the area that is covered by a sample
 
-   \param sample Sample
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
+   @param sample Sample
+   @param xMap Maps x-values into pixel coordinates.
+   @param yMap Maps y-values into pixel coordinates.
 
-   \return Rectangle, that is covered by a sample
+   @return Rectangle, that is covered by a sample
  */
 QwtColumnRect QwtPlotHistogram::columnRect( const QwtIntervalSample& sample,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap ) const
@@ -819,11 +673,11 @@ QwtColumnRect QwtPlotHistogram::columnRect( const QwtIntervalSample& sample,
    When a symbol() has been set the symbol is used otherwise the
    column is displayed as plain rectangle using pen() and brush().
 
-   \param painter Painter
-   \param rect Rectangle where to paint the column in paint device coordinates
-   \param sample Sample to be displayed
+   @param painter Painter
+   @param rect Rectangle where to paint the column in paint device coordinates
+   @param sample Sample to be displayed
 
-   \note In applications, where different intervals need to be displayed
+   @note In applications, where different intervals need to be displayed
         in a different way ( f.e different colors or even using different symbols)
         it is recommended to overload drawColumn().
  */
@@ -855,12 +709,12 @@ void QwtPlotHistogram::drawColumn( QPainter* painter,
 /*!
    A plain rectangle without pen using the brush()
 
-   \param index Index of the legend entry
+   @param index Index of the legend entry
                 ( ignored as there is only one )
-   \param size Icon size
-   \return A graphic displaying the icon
+   @param size Icon size
+   @return A graphic displaying the icon
 
-   \sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
+   @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
  */
 QwtGraphic QwtPlotHistogram::legendIcon( int index, const QSizeF& size ) const
 {

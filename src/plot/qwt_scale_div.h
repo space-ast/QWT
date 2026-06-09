@@ -33,19 +33,13 @@
 class QwtInterval;
 
 /**
- * @brief A class representing a scale division/表示刻度划分的类
+ * @brief A class representing a scale division
  *
  * A Qwt scale is defined by its boundaries and 3 list for the positions of the major, medium and minor ticks.
  *
  * The upperBound() might be smaller than the lowerBound() to indicate inverted scales.
  *
  * Scale divisions can be calculated from a QwtScaleEngine.
- *
- * Qwt 刻度由其边界以及分别表示主刻度、中刻度和次刻度位置的三个列表定义。
- *
- * upperBound() 可能小于 lowerBound()，以此表示刻度是反向的。
- *
- * 刻度划分可通过 QwtScaleEngine 计算得出。
  *
  * @sa QwtScaleEngine::divideScale(), QwtPlot::setAxisScaleDiv(), QwtAbstractSlider::setScaleDiv()
  */

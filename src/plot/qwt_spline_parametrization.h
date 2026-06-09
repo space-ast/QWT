@@ -66,13 +66,13 @@ class QWT_EXPORT QwtSplineParametrization
     {
         /*!
            No parametrization: t[i] = x[i]
-           \sa valueIncrementX()
+           @sa valueIncrementX()
          */
         ParameterX,
 
         /*!
            No parametrization: t[i] = y[i]
-           \sa valueIncrementY()
+           @sa valueIncrementY()
          */
         ParameterY,
 
@@ -84,7 +84,7 @@ class QWT_EXPORT QwtSplineParametrization
            recording the position of a body, that is moving with constant
            speed every n seconds.
 
-           \sa valueIncrementUniform()
+           @sa valueIncrementUniform()
          */
         ParameterUniform,
 
@@ -94,7 +94,7 @@ class QWT_EXPORT QwtSplineParametrization
            The chordal length is the most commonly used approximation for
            the curve length.
 
-           \sa valueIncrementChordal()
+           @sa valueIncrementChordal()
          */
         ParameterChordal,
 
@@ -106,7 +106,7 @@ class QWT_EXPORT QwtSplineParametrization
            Its name stems from the physical observations regarding
            the centripetal force, of a body moving along the curve.
 
-           \sa valueIncrementCentripetal()
+           @sa valueIncrementCentripetal()
          */
         ParameterCentripetal,
 
@@ -117,7 +117,7 @@ class QWT_EXPORT QwtSplineParametrization
            Approximating the curve length by the manhattan length is faster
            than the chordal length, but usually gives worse results.
 
-           \sa valueIncrementManhattan()
+           @sa valueIncrementManhattan()
          */
         ParameterManhattan
     };

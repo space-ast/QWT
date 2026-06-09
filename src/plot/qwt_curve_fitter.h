@@ -39,8 +39,8 @@ class QWT_EXPORT QwtCurveFitter
 {
   public:
     /*!
-       \brief Preferred mode of the fitting algorithm
-       \details Even if a QPainterPath can always be created from a QPolygonF,
+       @brief Preferred mode of the fitting algorithm
+       @details Even if a QPainterPath can always be created from a QPolygonF,
                 the overhead of the conversion can be avoided by indicating
                 the preference of the implementation to the application code.
      */
@@ -49,14 +49,14 @@ class QWT_EXPORT QwtCurveFitter
         /*!
            The fitting algorithm creates a polygon - the implementation
            of fitCurvePath() simply wraps the polygon into a path.
-           \sa QwtWeedingCurveFitter
+           @sa QwtWeedingCurveFitter
          */
         Polygon,
 
         /*!
            The fitting algorithm creates a painter path - the implementation
            of fitCurve() extracts a polygon from the path.
-           \sa QwtSplineCurveFitter
+           @sa QwtSplineCurveFitter
          */
         Path
     };

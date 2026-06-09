@@ -31,14 +31,8 @@
 #include <qdebug.h>
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details The scale and paint device intervals are both set to [0,1].
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 刻度和绘制设备区间都设置为 [0,1]。
- * \endif
  */
 QwtScaleMap::QwtScaleMap()
     : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
@@ -46,12 +40,7 @@ QwtScaleMap::QwtScaleMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Copy constructor
- * \endif
- * \if CHINESE
- * @brief 复制构造函数
- * \endif
  */
 QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
     : m_s1(other.m_s1), m_s2(other.m_s2), m_p1(other.m_p1), m_p2(other.m_p2), m_cnv(other.m_cnv), m_ts1(other.m_ts1), m_transform(nullptr)
@@ -66,12 +55,7 @@ QwtScaleMap::QwtScaleMap(QwtScaleMap&& other) : QwtScaleMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtScaleMap::~QwtScaleMap()
 {
@@ -79,12 +63,7 @@ QwtScaleMap::~QwtScaleMap()
 }
 
 /**
- * \if ENGLISH
  * @brief Assignment operator
- * \endif
- * \if CHINESE
- * @brief 赋值运算符
- * \endif
  */
 QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
 {
@@ -106,19 +85,13 @@ QwtScaleMap& QwtScaleMap::operator=(const QwtScaleMap& other)
 
 QwtScaleMap& QwtScaleMap::operator=(QwtScaleMap&& other)
 {
-    // 交换后，other会析构，这时原来的m_transform会在other那里析构掉
+    // After swap, 'other' will be destructed, and the original m_transform will be destroyed there
     swap(other);
     return *this;
 }
 /**
- * \if ENGLISH
  * @brief Initialize the map with a transformation
  * @param transform Transformation object (takes ownership)
- * \endif
- * \if CHINESE
- * @brief 使用变换初始化映射
- * @param transform 变换对象（获取所有权）
- * \endif
  */
 void QwtScaleMap::setTransformation(QwtTransform* transform)
 {
@@ -131,14 +104,8 @@ void QwtScaleMap::setTransformation(QwtTransform* transform)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the transformation
  * @return Transformation object
- * \endif
- * \if CHINESE
- * @brief 获取变换
- * @return 变换对象
- * \endif
  */
 const QwtTransform* QwtScaleMap::transformation() const
 {
@@ -146,18 +113,10 @@ const QwtTransform* QwtScaleMap::transformation() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the borders of the scale interval
  * @details Scales might be aligned to transformation depending boundaries
  * @param s1 First border
  * @param s2 Second border
- * \endif
- * \if CHINESE
- * @brief 指定刻度区间的边界
- * @details 刻度可能会根据变换的依赖边界进行对齐
- * @param s1 第一个边界
- * @param s2 第二个边界
- * \endif
  */
 void QwtScaleMap::setScaleInterval(double s1, double s2)
 {
@@ -173,16 +132,9 @@ void QwtScaleMap::setScaleInterval(double s1, double s2)
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the borders of the paint device interval
  * @param p1 First border
  * @param p2 Second border
- * \endif
- * \if CHINESE
- * @brief 指定绘制设备区间的边界
- * @param p1 第一个边界
- * @param p2 第二个边界
- * \endif
  */
 void QwtScaleMap::setPaintInterval(double p1, double p2)
 {
@@ -208,22 +160,12 @@ void QwtScaleMap::updateFactor()
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a rectangle from scale to paint coordinates
  * @param xMap X axis scale map
  * @param yMap Y axis scale map
  * @param rect Rectangle in scale coordinates
  * @return Rectangle in paint coordinates
  * @sa invTransform()
- * \endif
- * \if CHINESE
- * @brief 将矩形从刻度坐标转换为绘制坐标
- * @param xMap X 轴刻度映射
- * @param yMap Y 轴刻度映射
- * @param rect 刻度坐标系中的矩形
- * @return 绘制坐标系中的矩形
- * @sa invTransform()
- * \endif
  */
 QRectF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& rect)
 {
@@ -250,22 +192,12 @@ QRectF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, 
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a point from paint to scale coordinates
  * @param xMap X axis scale map
  * @param yMap Y axis scale map
  * @param pos Position in paint coordinates
  * @return Position in scale coordinates
  * @sa transform()
- * \endif
- * \if CHINESE
- * @brief 将点从绘制坐标转换为刻度坐标
- * @param xMap X 轴刻度映射
- * @param yMap Y 轴刻度映射
- * @param pos 绘制坐标系中的位置
- * @return 刻度坐标系中的位置
- * @sa transform()
- * \endif
  */
 QPointF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QPointF& pos)
 {
@@ -273,26 +205,19 @@ QPointF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yM
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the scale is linear (no transformation)
  * @param sm Scale map to check
  * @return True if the scale has no transformation (linear scale)
- * \endif
- * \if CHINESE
- * @brief 检查刻度是否为线性（无变换）
- * @param sm 要检查的刻度映射
- * @return 如果刻度没有变换（线性刻度）则返回 true
- * \endif
  */
 bool QwtScaleMap::isLinerScale(const QwtScaleMap& sm)
 {
-    // 检查变换是否为对数变换
+    // Check if the transformation is a logarithmic transform
     return sm.transformation() == nullptr;
 }
 
 void QwtScaleMap::swap(QwtScaleMap& other) noexcept
 {
-    // 基本类型，直接换
+    // Primitive types, swap directly
     std::swap(m_s1, other.m_s1);
     std::swap(m_s2, other.m_s2);
     std::swap(m_p1, other.m_p1);
@@ -303,22 +228,12 @@ void QwtScaleMap::swap(QwtScaleMap& other) noexcept
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a point from scale to paint coordinates
  * @param xMap X axis scale map
  * @param yMap Y axis scale map
  * @param pos Position in scale coordinates
  * @return Position in paint coordinates
  * @sa invTransform()
- * \endif
- * \if CHINESE
- * @brief 将点从刻度坐标转换为绘制坐标
- * @param xMap X 轴刻度映射
- * @param yMap Y 轴刻度映射
- * @param pos 刻度坐标系中的位置
- * @return 绘制坐标系中的位置
- * @sa invTransform()
- * \endif
  */
 QPointF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QPointF& pos)
 {
@@ -326,22 +241,12 @@ QPointF QwtScaleMap::transform(const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a rectangle from paint to scale coordinates
  * @param xMap X axis scale map
  * @param yMap Y axis scale map
  * @param rect Rectangle in paint coordinates
  * @return Rectangle in scale coordinates
  * @sa transform()
- * \endif
- * \if CHINESE
- * @brief 将矩形从绘制坐标转换为刻度坐标
- * @param xMap X 轴刻度映射
- * @param yMap Y 轴刻度映射
- * @param rect 绘制坐标系中的矩形
- * @return 刻度坐标系中的矩形
- * @sa transform()
- * \endif
  */
 QRectF QwtScaleMap::invTransform(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& rect)
 {

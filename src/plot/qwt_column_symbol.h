@@ -37,54 +37,42 @@ class QPalette;
 class QRectF;
 
 /**
- * \if ENGLISH
  * @brief Directed rectangle representing bounding rectangle and orientation of a column
  * @details QwtColumnRect is a data structure that stores the horizontal and vertical
  *          intervals defining a column's extent, along with a direction that indicates
  *          how the column should be drawn. It is used by QwtColumnSymbol to determine
  *          the column's orientation and boundaries.
- * \endif
- * \if CHINESE
- * @brief 表示柱的边界矩形和方向的方向矩形
- * @details QwtColumnRect 是一个数据结构，存储定义柱范围的水平区间和垂直区间，
- *          以及指示柱绘制方式的方向。QwtColumnSymbol 使用它来确定柱的方向和边界。
- * \endif
  */
 class QWT_EXPORT QwtColumnRect
 {
 public:
-    //! \if ENGLISH Direction of the column \endif \if CHINESE 柱的方向 \endif
+    //! Direction of the column
     enum Direction
     {
-        //! \if ENGLISH From left to right \endif \if CHINESE 从左到右 \endif
+        //! From left to right
         LeftToRight,
 
-        //! \if ENGLISH From right to left \endif \if CHINESE 从右到左 \endif
+        //! From right to left
         RightToLeft,
 
-        //! \if ENGLISH From bottom to top \endif \if CHINESE 从下到上 \endif
+        //! From bottom to top
         BottomToTop,
 
-        //! \if ENGLISH From top to bottom \endif \if CHINESE 从上到下 \endif
+        //! From top to bottom
         TopToBottom
     };
 
     /**
-     * \if ENGLISH
      * @brief Build a rectangle with invalid intervals directed BottomToTop
-     * \endif
-     * \if CHINESE
-     * @brief 构建一个具有无效区间、方向为 BottomToTop 的矩形
-     * \endif
      */
     QwtColumnRect() : direction(BottomToTop)
     {
     }
 
-    //! \if ENGLISH Return a normalized QRect built from the intervals \endif \if CHINESE 返回从区间构建的标准化 QRect \endif
+    //! Return a normalized QRect built from the intervals
     QRectF toRect() const;
 
-    //! \if ENGLISH Return Orientation \endif \if CHINESE 返回方向 \endif
+    //! Return Orientation
     Qt::Orientation orientation() const
     {
         if (direction == LeftToRight || direction == RightToLeft)
@@ -93,91 +81,60 @@ public:
         return Qt::Vertical;
     }
 
-    //! \if ENGLISH Interval for the horizontal coordinates \endif \if CHINESE 水平坐标的区间 \endif
+    //! Interval for the horizontal coordinates
     QwtInterval hInterval;
 
-    //! \if ENGLISH Interval for the vertical coordinates \endif \if CHINESE 垂直坐标的区间 \endif
+    //! Interval for the vertical coordinates
     QwtInterval vInterval;
 
-    //! \if ENGLISH Direction \endif \if CHINESE 方向 \endif
+    //! Direction
     Direction direction;
 };
 
 /**
- * \if ENGLISH
  * @brief A drawing primitive for columns
  * @details QwtColumnSymbol defines how columns are rendered in column-based charts
  *          like bar charts. It provides different styles (Box, etc.) and frame styles
  *          (Plain, Raised, NoFrame) to customize the appearance of column graphics.
  *          The symbol can be extended by deriving new types with UserStyle.
- * \endif
- * \if CHINESE
- * @brief 柱的绘图基元
- * @details QwtColumnSymbol 定义了柱状图等图表中柱的渲染方式。它提供不同的样式
- *          （Box 等）和框架样式（Plain、Raised、NoFrame）来定制柱图形的外观。
- *          可以通过派生带有 UserStyle 的新类型来扩展符号。
- * \endif
  */
 class QWT_EXPORT QwtColumnSymbol
 {
 public:
     /*!
-       \if ENGLISH
-       \brief Style
-       \sa setStyle(), style()
-       \endif
-       \if CHINESE
-       \brief 样式
-       \sa setStyle(), style()
-       \endif
+       @brief Style
+       @sa setStyle(), style()
      */
     enum Style
     {
-        //! \if ENGLISH No Style, the symbol draws nothing \endif \if CHINESE 无样式，符号不绘制任何内容 \endif
+        //! No Style, the symbol draws nothing
         NoStyle = -1,
 
         /*!
-           \if ENGLISH
            The column is painted with a frame depending on the frameStyle() and lineWidth() using the palette().
-           \endif
-           \if CHINESE
-           柱根据 frameStyle() 和 lineWidth() 使用 palette() 绘制一个框架。
-           \endif
          */
         Box,
 
         /*!
-           \if ENGLISH
            Styles >= QwtColumnSymbol::UserStyle are reserved for derived classes of QwtColumnSymbol
            that overload draw() with additional application specific symbol types.
-           \endif
-           \if CHINESE
-           样式 >= QwtColumnSymbol::UserStyle 保留给 QwtColumnSymbol 的派生类，
-           这些类重载 draw() 以添加特定于应用程序的符号类型。
-           \endif
          */
         UserStyle = 1000
     };
 
     /*!
-       \if ENGLISH
-       \brief Frame Style used in Box style()
-       \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
-       \endif
-       \if CHINESE
-       \brief Box 样式中使用的框架样式
-       \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
-       \endif
+       @brief Frame Style used in Box style()
+       @sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
      */
     enum FrameStyle
     {
-        //! \if ENGLISH No frame \endif \if CHINESE 无框架 \endif
+        //! No frame
         NoFrame,
 
-        //! \if ENGLISH A plain frame style \endif \if CHINESE 普通框架样式 \endif
+        //! A plain frame style
         Plain,
 
-        //! \if ENGLISH A raised frame style \endif \if CHINESE 凸起框架样式 \endif
+        //! A raised frame style
         Raised
     };
 

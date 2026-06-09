@@ -151,7 +151,7 @@ void QwtPolarCanvas::invalidateBackingStore()
 
 /*!
    Paint event
-   \param event Paint event
+   @param event Paint event
  */
 void QwtPolarCanvas::paintEvent(QPaintEvent* event)
 {
@@ -204,7 +204,7 @@ void QwtPolarCanvas::paintEvent(QPaintEvent* event)
 
 /*!
    Resize event
-   \param event Resize event
+   @param event Resize event
  */
 void QwtPolarCanvas::resizeEvent(QResizeEvent* event)
 {

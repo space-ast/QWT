@@ -87,9 +87,9 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
    Increasing the tolerance will reduce the number of the
    resulting points.
 
-   \param tolerance Tolerance
+   @param tolerance Tolerance
 
-   \sa tolerance()
+   @sa tolerance()
  */
 void QwtWeedingCurveFitter::setTolerance( double tolerance )
 {
@@ -97,8 +97,8 @@ void QwtWeedingCurveFitter::setTolerance( double tolerance )
 }
 
 /*!
-   \return Tolerance
-   \sa setTolerance()
+   @return Tolerance
+   @sa setTolerance()
  */
 double QwtWeedingCurveFitter::tolerance() const
 {
@@ -112,9 +112,9 @@ double QwtWeedingCurveFitter::tolerance() const
    with the number of points. For a chunk size > 0 the polygon
    is split into pieces passed to the algorithm one by one.
 
-   \param numPoints Maximum for the number of points passed to the algorithm
+   @param numPoints Maximum for the number of points passed to the algorithm
 
-   \sa chunkSize()
+   @sa chunkSize()
  */
 void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 {
@@ -125,9 +125,9 @@ void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 }
 
 /*!
-   \return Maximum for the number of points passed to a run
+   @return Maximum for the number of points passed to a run
           of the algorithm - or 0, when unlimited
-   \sa setChunkSize()
+   @sa setChunkSize()
  */
 uint QwtWeedingCurveFitter::chunkSize() const
 {
@@ -137,7 +137,7 @@ uint QwtWeedingCurveFitter::chunkSize() const
 /*!
    @param points Series of data points
    @return Curve points
-   \sa fitCurvePath()
+   @sa fitCurvePath()
  */
 QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 {
@@ -164,7 +164,7 @@ QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 /*!
    @param points Series of data points
    @return Curve path
-   \sa fitCurve()
+   @sa fitCurve()
  */
 QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
 {

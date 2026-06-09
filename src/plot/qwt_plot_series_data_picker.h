@@ -104,13 +104,7 @@ public:
     /// Get feature point size
     int drawFeaturePointSize() const;
 
-    /**
-     * @brief Returns the list of feature points currently picked by the tracker
-     * @return List of FeaturePoint structures containing picked data coordinates
-     * @note The returned points correspond to the current tracker position.
-     *       Call this method from a clicked/doubleClicked signal handler to
-     *       get data at the click position.
-     */
+    // Returns the list of feature points currently picked by the tracker
     QList<FeaturePoint> featurePoints() const;
 
     /// Set text background brush

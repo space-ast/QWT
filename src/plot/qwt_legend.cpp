@@ -253,14 +253,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor for QwtLegend
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief QwtLegend 构造函数
- * @param parent 父控件
- * \endif
  */
 QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
 {
@@ -283,12 +277,7 @@ QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtLegend::~QwtLegend()
 {
@@ -296,19 +285,11 @@ QwtLegend::~QwtLegend()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the maximum number of entries in a row
  * @details F.e when the maximum is set to 1 all items are aligned
  *          vertically. 0 means unlimited
  * @param numColums Maximum number of entries in a row
- * \sa maxColumns(), QwtDynGridLayout::setMaxColumns()
- * \endif
- * \if CHINESE
- * @brief 设置每行的最大条目数
- * @details 例如，当最大值设置为 1 时，所有条目垂直排列。0 表示无限制
- * @param numColums 每行最大条目数
- * \sa maxColumns(), QwtDynGridLayout::setMaxColumns()
- * \endif
+ * @sa maxColumns(), QwtDynGridLayout::setMaxColumns()
  */
 void QwtLegend::setMaxColumns(uint numColums)
 {
@@ -320,16 +301,9 @@ void QwtLegend::setMaxColumns(uint numColums)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the maximum number of entries in a row
  * @return Maximum number of entries in a row
- * \sa setMaxColumns(), QwtDynGridLayout::maxColumns()
- * \endif
- * \if CHINESE
- * @brief 返回每行的最大条目数
- * @return 每行最大条目数
- * \sa setMaxColumns(), QwtDynGridLayout::maxColumns()
- * \endif
+ * @sa setMaxColumns(), QwtDynGridLayout::maxColumns()
  */
 uint QwtLegend::maxColumns() const
 {
@@ -343,25 +317,14 @@ uint QwtLegend::maxColumns() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the default mode for legend labels
  * @details Legend labels will be constructed according to the
  *          attributes in a QwtLegendData object. When it doesn't
  *          contain a value for the QwtLegendData::ModeRole the
  *          label will be initialized with the default mode of the legend.
  * @param mode Default item mode
- * \sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
+ * @sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
  * @note Changing the mode doesn't have any effect on existing labels.
- * \endif
- * \if CHINESE
- * @brief 设置图例标签的默认模式
- * @details 图例标签将根据 QwtLegendData 对象中的属性构建。
- *          当它不包含 QwtLegendData::ModeRole 的值时，
- *          标签将使用图例的默认模式初始化。
- * @param mode 默认条目模式
- * \sa itemMode(), QwtLegendData::value(), QwtPlotItem::legendData()
- * @note 更改模式不会对现有标签产生任何影响
- * \endif
  */
 void QwtLegend::setDefaultItemMode(QwtLegendData::Mode mode)
 {
@@ -369,16 +332,9 @@ void QwtLegend::setDefaultItemMode(QwtLegendData::Mode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the default item mode
  * @return Default item mode
- * \sa setDefaultItemMode()
- * \endif
- * \if CHINESE
- * @brief 返回默认条目模式
- * @return 默认条目模式
- * \sa setDefaultItemMode()
- * \endif
+ * @sa setDefaultItemMode()
  */
 QwtLegendData::Mode QwtLegend::defaultItemMode() const
 {
@@ -386,18 +342,10 @@ QwtLegendData::Mode QwtLegend::defaultItemMode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the contents widget
  * @details The contents widget is the only child of the viewport of
  *          the internal QScrollArea and the parent widget of all legend items.
  * @return Container widget of the legend items
- * \endif
- * \if CHINESE
- * @brief 返回内容控件
- * @details 内容控件是内部 QScrollArea 视口的唯一子控件，
- *          也是所有图例条目的父控件。
- * @return 图例条目的容器控件
- * \endif
  */
 QWidget* QwtLegend::contentsWidget()
 {
@@ -405,16 +353,9 @@ QWidget* QwtLegend::contentsWidget()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the horizontal scrollbar
  * @return Horizontal scrollbar
- * \sa verticalScrollBar()
- * \endif
- * \if CHINESE
- * @brief 返回水平滚动条
- * @return 水平滚动条
- * \sa verticalScrollBar()
- * \endif
+ * @sa verticalScrollBar()
  */
 QScrollBar* QwtLegend::horizontalScrollBar() const
 {
@@ -422,16 +363,9 @@ QScrollBar* QwtLegend::horizontalScrollBar() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the vertical scrollbar
  * @return Vertical scrollbar
- * \sa horizontalScrollBar()
- * \endif
- * \if CHINESE
- * @brief 返回垂直滚动条
- * @return 垂直滚动条
- * \sa horizontalScrollBar()
- * \endif
+ * @sa horizontalScrollBar()
  */
 QScrollBar* QwtLegend::verticalScrollBar() const
 {
@@ -439,18 +373,10 @@ QScrollBar* QwtLegend::verticalScrollBar() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the contents widget (const version)
  * @details The contents widget is the only child of the viewport of
  *          the internal QScrollArea and the parent widget of all legend items.
  * @return Container widget of the legend items
- * \endif
- * \if CHINESE
- * @brief 返回内容控件（const 版本）
- * @details 内容控件是内部 QScrollArea 视口的唯一子控件，
- *          也是所有图例条目的父控件。
- * @return 图例条目的容器控件
- * \endif
  */
 const QWidget* QwtLegend::contentsWidget() const
 {
@@ -458,18 +384,10 @@ const QWidget* QwtLegend::contentsWidget() const
 }
 
 /**
- * \if ENGLISH
  * @brief Update the entries for an item
  * @param itemInfo Info for an item
  * @param legendData List of legend entry attributes for the item
- * \sa updateWidget(), createWidget()
- * \endif
- * \if CHINESE
- * @brief 更新项的条目
- * @param itemInfo 项的信息
- * @param legendData 项的图例条目属性列表
- * \sa updateWidget(), createWidget()
- * \endif
+ * @sa updateWidget(), createWidget()
  */
 void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& legendData)
 {
@@ -524,23 +442,13 @@ void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendDat
 }
 
 /**
- * \if ENGLISH
  * @brief Create a widget to be inserted into the legend
  * @details The default implementation returns a QwtLegendLabel.
  * @param legendData Attributes of the legend entry
  * @return Widget representing data on the legend
  * @note updateWidget() will called soon after createWidget()
  *       with the same attributes.
- * \sa updateWidget()
- * \endif
- * \if CHINESE
- * @brief 创建要插入到图例中的控件
- * @details 默认实现返回一个 QwtLegendLabel。
- * @param legendData 图例条目的属性
- * @return 在图例上表示数据的控件
- * @note updateWidget() 将在 createWidget() 后不久使用相同的属性调用
- * \sa updateWidget()
- * \endif
+ * @sa updateWidget()
  */
 QWidget* QwtLegend::createWidget(const QwtLegendData& legendData) const
 {
@@ -556,20 +464,11 @@ QWidget* QwtLegend::createWidget(const QwtLegendData& legendData) const
 }
 
 /**
- * \if ENGLISH
  * @brief Update the widget
  * @param widget Usually a QwtLegendLabel
  * @param legendData Attributes to be displayed
- * \sa createWidget()
+ * @sa createWidget()
  * @note When widget is no QwtLegendLabel updateWidget() does nothing.
- * \endif
- * \if CHINESE
- * @brief 更新控件
- * @param widget 通常是 QwtLegendLabel
- * @param legendData 要显示的属性
- * \sa createWidget()
- * @note 当 widget 不是 QwtLegendLabel 时 updateWidget() 不执行任何操作
- * \endif
  */
 void QwtLegend::updateWidget(QWidget* widget, const QwtLegendData& legendData)
 {
@@ -604,16 +503,9 @@ void QwtLegend::updateTabOrder()
 }
 
 /**
- * \if ENGLISH
  * @brief Return a size hint
  * @return Size hint
- * \sa heightForWidth()
- * \endif
- * \if CHINESE
- * @brief 返回大小提示
- * @return 大小提示
- * \sa heightForWidth()
- * \endif
+ * @sa heightForWidth()
  */
 QSize QwtLegend::sizeHint() const
 {
@@ -624,18 +516,10 @@ QSize QwtLegend::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the preferred height for a given width
  * @param width Width
  * @return Preferred height
- * \sa sizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回给定宽度的首选高度
- * @param width 宽度
- * @return 首选高度
- * \sa sizeHint()
- * \endif
+ * @sa sizeHint()
  */
 int QwtLegend::heightForWidth(int width) const
 {
@@ -649,21 +533,12 @@ int QwtLegend::heightForWidth(int width) const
 }
 
 /**
- * \if ENGLISH
  * @brief Handle QEvent::ChildRemoved and QEvent::LayoutRequest events
  * @details Handle QEvent::ChildRemoved and QEvent::LayoutRequest events
  *          for the contentsWidget().
  * @param object Object to be filtered
  * @param event Event
  * @return Forwarded to QwtAbstractLegend::eventFilter()
- * \endif
- * \if CHINESE
- * @brief 处理 QEvent::ChildRemoved 和 QEvent::LayoutRequest 事件
- * @details 处理 contentsWidget() 的 QEvent::ChildRemoved 和 QEvent::LayoutRequest 事件。
- * @param object 要过滤的对象
- * @param event 事件
- * @return 转发到 QwtAbstractLegend::eventFilter()
- * \endif
  */
 bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 {
@@ -711,16 +586,9 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Called internally when the legend has been clicked on
  * @details Emits a clicked() signal.
- * \sa clicked(), itemChecked()
- * \endif
- * \if CHINESE
- * @brief 当图例被点击时在内部调用
- * @details 发出 clicked() 信号。
- * \sa clicked(), itemChecked()
- * \endif
+ * @sa clicked(), itemChecked()
  */
 void QwtLegend::itemClicked()
 {
@@ -738,16 +606,9 @@ void QwtLegend::itemClicked()
 }
 
 /**
- * \if ENGLISH
  * @brief Called internally when the legend has been checked
  * @details Emits a checked() signal.
- * \sa checked(), itemClicked()
- * \endif
- * \if CHINESE
- * @brief 当图例被选中时在内部调用
- * @details 发出 checked() 信号。
- * \sa checked(), itemClicked()
- * \endif
+ * @sa checked(), itemClicked()
  */
 void QwtLegend::itemChecked(bool on)
 {
@@ -765,20 +626,11 @@ void QwtLegend::itemChecked(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Render the legend into a given rectangle
  * @param painter Painter
  * @param rect Bounding rectangle
  * @param fillBackground When true, fill rect with the widget background
- * \sa renderLegend() is used by QwtPlotRenderer - not by QwtLegend itself
- * \endif
- * \if CHINESE
- * @brief 将图例渲染到给定的矩形中
- * @param painter 绘制器
- * @param rect 边界矩形
- * @param fillBackground 为 true 时用控件背景填充矩形
- * \sa renderLegend() 被 QwtPlotRenderer 使用 - 而不是 QwtLegend 本身
- * \endif
+ * @sa renderLegend() is used by QwtPlotRenderer - not by QwtLegend itself
  */
 void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const
 {
@@ -824,7 +676,6 @@ void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBac
 }
 
 /**
- * \if ENGLISH
  * @brief Render a legend entry into a given rectangle
  * @param painter Painter
  * @param widget Widget representing a legend entry
@@ -832,16 +683,6 @@ void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBac
  * @param fillBackground When true, fill rect with the widget background
  * @note When widget is not derived from QwtLegendLabel renderItem
  *       does nothing beside the background
- * \endif
- * \if CHINESE
- * @brief 将图例条目渲染到给定的矩形中
- * @param painter 绘制器
- * @param widget 表示图例条目的控件
- * @param rect 边界矩形
- * @param fillBackground 为 true 时用控件背景填充矩形
- * @note 当 widget 不是从 QwtLegendLabel 派生时 renderItem
- *       除了背景外不执行任何操作
- * \endif
  */
 void QwtLegend::renderItem(QPainter* painter, const QWidget* widget, const QRectF& rect, bool fillBackground) const
 {
@@ -882,18 +723,10 @@ void QwtLegend::renderItem(QPainter* painter, const QWidget* widget, const QRect
 }
 
 /**
- * \if ENGLISH
  * @brief Return list of widgets associated to an item
  * @param itemInfo Info about an item
  * @return List of widgets associated to an item
- * \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
- * \endif
- * \if CHINESE
- * @brief 返回与项关联的控件列表
- * @param itemInfo 项的信息
- * @return 与项关联的控件列表
- * \sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
- * \endif
+ * @sa legendWidget(), itemInfo(), QwtPlot::itemToInfo()
  */
 QList< QWidget* > QwtLegend::legendWidgets(const QVariant& itemInfo) const
 {
@@ -901,20 +734,11 @@ QList< QWidget* > QwtLegend::legendWidgets(const QVariant& itemInfo) const
 }
 
 /**
- * \if ENGLISH
  * @brief Return first widget in the list of widgets associated to an item
  * @param itemInfo Info about an item
  * @return First widget in the list of widgets associated to an item
- * \sa itemInfo(), QwtPlot::itemToInfo()
+ * @sa itemInfo(), QwtPlot::itemToInfo()
  * @note Almost all types of items have only one widget
- * \endif
- * \if CHINESE
- * @brief 返回与项关联的控件列表中的第一个控件
- * @param itemInfo 项的信息
- * @return 与项关联的控件列表中的第一个控件
- * \sa itemInfo(), QwtPlot::itemToInfo()
- * @note 几乎所有类型的项都只有一个控件
- * \endif
  */
 QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 {
@@ -926,18 +750,10 @@ QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the item that is associated to a widget
  * @param widget Widget on the legend
  * @return Associated item info
- * \sa legendWidget()
- * \endif
- * \if CHINESE
- * @brief 查找与控件关联的项
- * @param widget 图例上的控件
- * @return 关联的项信息
- * \sa legendWidget()
- * \endif
+ * @sa legendWidget()
  */
 QVariant QwtLegend::itemInfo(const QWidget* widget) const
 {
@@ -945,14 +761,8 @@ QVariant QwtLegend::itemInfo(const QWidget* widget) const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the legend is empty
  * @return True, when no item is inserted
- * \endif
- * \if CHINESE
- * @brief 检查图例是否为空
- * @return 当没有条目插入时返回 true
- * \endif
  */
 bool QwtLegend::isEmpty() const
 {
@@ -960,16 +770,9 @@ bool QwtLegend::isEmpty() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the extent that is needed for the scrollbars
  * @param orientation Orientation
  * @return The width of the vertical scrollbar for Qt::Horizontal and v.v.
- * \endif
- * \if CHINESE
- * @brief 返回滚动条所需的范围
- * @param orientation 方向
- * @return Qt::Horizontal 时返回垂直滚动条的宽度，反之亦然
- * \endif
  */
 int QwtLegend::scrollExtent(Qt::Orientation orientation) const
 {

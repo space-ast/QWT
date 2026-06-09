@@ -31,18 +31,10 @@
 #include <qpushbutton.h>
 
 /**
- * \if ENGLISH
- *   \brief Arrow Button
- *   \details A push button with one or more filled triangles on its front.
+ *   @brief Arrow Button
+ *   @details A push button with one or more filled triangles on its front.
  *            An Arrow button can have 1 to 3 arrows in a row, pointing
  *            up, down, left or right.
- * \endif
- * \if CHINESE
- *   \brief 箭头按钮
- *   \details 一个带有一个或多个填充三角形的前面板按钮。
- *            箭头按钮可以有1到3个箭头排列成一行，
- *            指向上、下、左或右方向。
- * \endif
  */
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {

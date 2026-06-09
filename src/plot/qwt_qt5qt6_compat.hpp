@@ -12,17 +12,17 @@ namespace qwt
 {
 
 /**
- * @brief 处理Qt5与Qt6中的差异
+ * @brief Handle differences between Qt5 and Qt6
  *
  */
 namespace compat
 {
 
 /**
- * @brief 获取事件的位置（QPoint）
- * @tparam EventType 事件类型（需支持pos()或position()方法）
- * @param event 事件指针
- * @return 事件位置的QPoint表示
+ * @brief Get the event position (QPoint)
+ * @tparam EventType Event type (must support pos() or position() method)
+ * @param event Event pointer
+ * @return Event position as QPoint
  */
 template< typename EventType >
 inline QPoint eventPos(EventType* event)
@@ -35,10 +35,10 @@ inline QPoint eventPos(EventType* event)
 }
 
 /**
- * @brief 获取事件的x坐标
- * @tparam EventType 事件类型
- * @param event 事件指针
- * @return x坐标（整数）
+ * @brief Get the x coordinate of the event
+ * @tparam EventType Event type
+ * @param event Event pointer
+ * @return x coordinate (integer)
  */
 template< typename EventType >
 inline int eventPosX(EventType* event)
@@ -51,10 +51,10 @@ inline int eventPosX(EventType* event)
 }
 
 /**
- * @brief 获取事件的y坐标
- * @tparam EventType 事件类型
- * @param event 事件指针
- * @return y坐标（整数）
+ * @brief Get the y coordinate of the event
+ * @tparam EventType Event type
+ * @param event Event pointer
+ * @return y coordinate (integer)
  */
 template< typename EventType >
 inline int eventPosY(EventType* event)
@@ -67,10 +67,10 @@ inline int eventPosY(EventType* event)
 }
 
 /**
- * @brief 计算字符串的水平宽度（整数版本）
- * @param fm QFontMetrics对象
- * @param str 目标字符串
- * @return 宽度（整数）
+ * @brief Calculate the horizontal advance of a string (integer version)
+ * @param fm QFontMetrics object
+ * @param str Target string
+ * @return Width (integer)
  */
 inline int horizontalAdvance(const QFontMetrics& fm, const QString& str)
 {
@@ -82,10 +82,10 @@ inline int horizontalAdvance(const QFontMetrics& fm, const QString& str)
 }
 
 /**
- * @brief 计算字符串的水平宽度（浮点数版本）
- * @param fm QFontMetricsF对象
- * @param str 目标字符串
- * @return 宽度（浮点数）
+ * @brief Calculate the horizontal advance of a string (floating-point version)
+ * @param fm QFontMetricsF object
+ * @param str Target string
+ * @return Width (floating-point)
  */
 inline qreal horizontalAdvanceF(const QFontMetricsF& fm, const QString& str)
 {

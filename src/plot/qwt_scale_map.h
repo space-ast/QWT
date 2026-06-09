@@ -34,19 +34,11 @@ class QPointF;
 class QRectF;
 
 /**
- * \if ENGLISH
  * @brief A scale map
  * @details QwtScaleMap offers transformations from the coordinate system
  *          of a scale into the linear coordinate system of a paint device
  *          and vice versa.
  * @sa QwtTransform, QwtScaleDiv
- * \endif
- * \if CHINESE
- * @brief 刻度映射
- * @details QwtScaleMap 提供从刻度坐标系到绘制设备线性坐标系之间的变换，
- *          以及反向变换。
- * @sa QwtTransform, QwtScaleDiv
- * \endif
  */
 class QWT_EXPORT QwtScaleMap
 {
@@ -115,7 +107,7 @@ public:
     bool isInverting() const;
 
 protected:
-    void swap(QwtScaleMap& other) noexcept;  // 辅助
+    void swap(QwtScaleMap& other) noexcept;  // helper
 private:
     void updateFactor();
 
@@ -129,12 +121,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Return first border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第一个边界
- * \endif
  */
 inline double QwtScaleMap::s1() const
 {
@@ -142,12 +129,7 @@ inline double QwtScaleMap::s1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第二个边界
- * \endif
  */
 inline double QwtScaleMap::s2() const
 {
@@ -155,12 +137,7 @@ inline double QwtScaleMap::s2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return first border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第一个边界
- * \endif
  */
 inline double QwtScaleMap::p1() const
 {
@@ -168,12 +145,7 @@ inline double QwtScaleMap::p1() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第二个边界
- * \endif
  */
 inline double QwtScaleMap::p2() const
 {
@@ -181,12 +153,7 @@ inline double QwtScaleMap::p2() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(p2() - p1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(p2() - p1())
- * \endif
  */
 inline double QwtScaleMap::pDist() const
 {
@@ -194,12 +161,7 @@ inline double QwtScaleMap::pDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(s2() - s1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(s2() - s1())
- * \endif
  */
 inline double QwtScaleMap::sDist() const
 {
@@ -207,18 +169,10 @@ inline double QwtScaleMap::sDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a point related to the scale interval into a point related to the paint device interval
  * @param s Value relative to the coordinates of the scale
  * @return Transformed value
- * \sa invTransform()
- * \endif
- * \if CHINESE
- * @brief 将相对于刻度区间的点转换为相对于绘制设备区间的点
- * @param s 相对于刻度坐标的值
- * @return 转换后的值
- * \sa invTransform()
- * \endif
+ * @sa invTransform()
  */
 inline double QwtScaleMap::transform(double s) const
 {
@@ -229,18 +183,10 @@ inline double QwtScaleMap::transform(double s) const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a paint device value into a value in the interval of the scale
  * @param p Value relative to the coordinates of the paint device
  * @return Transformed value
- * \sa transform()
- * \endif
- * \if CHINESE
- * @brief 将绘制设备值转换为刻度区间中的值
- * @param p 相对于绘制设备坐标的值
- * @return 转换后的值
- * \sa transform()
- * \endif
+ * @sa transform()
  */
 inline double QwtScaleMap::invTransform(double p) const
 {
@@ -251,7 +197,7 @@ inline double QwtScaleMap::invTransform(double p) const
     return s;
 }
 
-//! \if ENGLISH Return true when ( p1() < p2() ) != ( s1() < s2() ) \endif \if CHINESE 当 ( p1() < p2() ) != ( s1() < s2() ) 时返回 true \endif
+//! Return true when ( p1() < p2() ) != ( s1() < s2() )
 inline bool QwtScaleMap::isInverting() const
 {
     return ((m_p1 < m_p2) != (m_s1 < m_s2));

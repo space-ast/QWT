@@ -53,9 +53,9 @@ class QwtAbstractScaleDraw;
  *          devices. For these high refresh rates QwtDial caches as much as possible.
  *          For derived classes it might be necessary to clear these caches manually
  *          according to attribute changes using invalidateCache().
- * \sa QwtCompass, QwtAnalogClock, QwtDialNeedle
- * \note The controls and dials examples shows different types of dials.
- * \note QDial is more similar to QwtKnob than to QwtDial
+ * @sa QwtCompass, QwtAnalogClock, QwtDialNeedle
+ * @note The controls and dials examples shows different types of dials.
+ * @note QDial is more similar to QwtKnob than to QwtDial
  */
 
 class QWT_EXPORT QwtDial : public QwtAbstractSlider

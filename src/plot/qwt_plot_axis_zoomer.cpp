@@ -97,7 +97,6 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Creates a zoomer for a plot canvas.
  * @details The zoomer is set to those x- and y-axis of the parent plot of the
  *          canvas that are enabled. If both or no x-axis are enabled, the picker
@@ -112,21 +111,7 @@ public:
  *                     the zoomer with its scales. This might be necessary,
  *                     when the plot is in a state with pending scale changes.
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * \endif
  * 
- * \if CHINESE
- * @brief 为绘图画布创建缩放器。
- * @details 缩放器被设置为画布父绘图中启用的 x 轴和 y 轴。
- *          如果两个 x 轴都启用或都未启用，拾取器设置为 QwtAxis::XBottom。
- *          如果两个 y 轴都启用或都未启用，则设置为 QwtAxis::YLeft。
- * 
- *          缩放器使用 QwtPickerDragRectMachine 初始化，
- *          追踪模式设置为 QwtPicker::ActiveOnly，橡皮筋设置为 QwtPicker::RectRubberBand。
- * @param[in] canvas 要观察的绘图画布，也是父对象。
- * @param[in] doReplot 是否在初始化缩放器之前调用 QwtPlot::replot()。
- *                     当绘图处于有待处理的刻度更改状态时，这可能是必要的。
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * \endif
  */
 QwtPlotAxisZoomer::QwtPlotAxisZoomer(QWidget* canvas, bool doReplot) : QwtPlotPicker(canvas)
 {
@@ -135,7 +120,6 @@ QwtPlotAxisZoomer::QwtPlotAxisZoomer(QWidget* canvas, bool doReplot) : QwtPlotPi
 }
 
 /**
- * \if ENGLISH
  * @brief Creates a zoomer for a plot canvas with specified axes.
  * @details The zoomer is initialized with a QwtPickerDragRectMachine,
  *          the tracker mode is set to QwtPicker::ActiveOnly and the rubber band
@@ -147,19 +131,7 @@ QwtPlotAxisZoomer::QwtPlotAxisZoomer(QWidget* canvas, bool doReplot) : QwtPlotPi
  *                     the zoomer with its scales. This might be necessary,
  *                     when the plot is in a state with pending scale changes.
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * \endif
  * 
- * \if CHINESE
- * @brief 使用指定的坐标轴为绘图画布创建缩放器。
- * @details 缩放器使用 QwtPickerDragRectMachine 初始化，
- *          追踪模式设置为 QwtPicker::ActiveOnly，橡皮筋设置为 QwtPicker::RectRubberBand。
- * @param[in] xAxisId 缩放器的 X 轴。
- * @param[in] yAxisId 缩放器的 Y 轴。
- * @param[in] canvas 要观察的绘图画布，也是父对象。
- * @param[in] doReplot 是否在初始化缩放器之前调用 QwtPlot::replot()。
- *                     当绘图处于有待处理的刻度更改状态时，这可能是必要的。
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * \endif
  */
 
 QwtPlotAxisZoomer::QwtPlotAxisZoomer(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas, bool doReplot)
@@ -192,7 +164,6 @@ QwtPlotAxisZoomer::~QwtPlotAxisZoomer()
 }
 
 /**
- * \if ENGLISH
  * @brief Limits the number of recursive zoom operations to depth.
  * @details A value of -1 sets the depth to unlimited, 0 disables zooming.
  *          If the current zoom rectangle is below depth, the plot is unzoomed.
@@ -200,16 +171,7 @@ QwtPlotAxisZoomer::~QwtPlotAxisZoomer()
  * @sa maxStackDepth()
  * @note depth doesn't include the zoom base, so zoomStack().count() might be
  *       maxStackDepth() + 1.
- * \endif
  * 
- * \if CHINESE
- * @brief 限制递归缩放操作的数量。
- * @details 值为 -1 表示深度无限制，0 表示禁用缩放。
- *          如果当前缩放矩形低于深度，则取消缩放。
- * @param[in] depth 堆栈的最大深度。
- * @sa maxStackDepth()
- * @note depth 不包括缩放基准，因此 zoomStack().count() 可能是 maxStackDepth() + 1。
- * \endif
  */
 void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
 {
@@ -230,17 +192,10 @@ void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the maximal depth of the zoom stack.
  * @return Maximal depth of the zoom stack.
  * @sa setMaxStackDepth()
- * \endif
  * 
- * \if CHINESE
- * @brief 返回缩放堆栈的最大深度。
- * @return 缩放堆栈的最大深度。
- * @sa setMaxStackDepth()
- * \endif
  */
 int QwtPlotAxisZoomer::maxStackDepth() const
 {
@@ -248,19 +203,11 @@ int QwtPlotAxisZoomer::maxStackDepth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the zoom stack.
  * @return The zoom stack. zoomStack()[0] is the zoom base,
  *         zoomStack()[1] the first zoomed rectangle.
  * @sa setZoomStack(), zoomRectIndex()
- * \endif
  * 
- * \if CHINESE
- * @brief 返回缩放堆栈。
- * @return 缩放堆栈。zoomStack()[0] 是缩放基准，
- *         zoomStack()[1] 是第一个缩放的矩形。
- * @sa setZoomStack(), zoomRectIndex()
- * \endif
  */
 const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
 {
@@ -268,17 +215,10 @@ const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the initial rectangle of the zoomer.
  * @return Initial rectangle of the zoomer.
  * @sa setZoomBase(), zoomRect()
- * \endif
  * 
- * \if CHINESE
- * @brief 返回缩放器的初始矩形。
- * @return 缩放器的初始矩形。
- * @sa setZoomBase(), zoomRect()
- * \endif
  */
 QRectF QwtPlotAxisZoomer::zoomBase() const
 {
@@ -286,20 +226,12 @@ QRectF QwtPlotAxisZoomer::zoomBase() const
 }
 
 /**
- * \if ENGLISH
  * @brief Reinitializes the zoom stack with scaleRect() as base.
  * @param[in] doReplot Call QwtPlot::replot() for the attached plot before initializing
  *                      the zoomer with its scales. This might be necessary,
  *                      when the plot is in a state with pending scale changes.
  * @sa zoomBase(), scaleRect(), QwtPlot::autoReplot(), QwtPlot::replot()
- * \endif
  * 
- * \if CHINESE
- * @brief 使用 scaleRect() 作为基准重新初始化缩放堆栈。
- * @param[in] doReplot 是否在初始化缩放器之前调用 QwtPlot::replot()。
- *                     当绘图处于有待处理的刻度更改状态时，这可能是必要的。
- * @sa zoomBase(), scaleRect(), QwtPlot::autoReplot(), QwtPlot::replot()
- * \endif
  */
 void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 {
@@ -318,21 +250,12 @@ void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the initial size of the zoomer.
  * @details base is united with the current scaleRect() and the zoom stack is
  *          reinitialized with it as zoom base. plot is zoomed to scaleRect().
  * @param[in] base Zoom base rectangle.
  * @sa zoomBase(), scaleRect()
- * \endif
  * 
- * \if CHINESE
- * @brief 设置缩放器的初始大小。
- * @details base 与当前 scaleRect() 合并，并以它作为缩放基准重新初始化缩放堆栈。
- *          绘图被缩放到 scaleRect()。
- * @param[in] base 缩放基准矩形。
- * @sa zoomBase(), scaleRect()
- * \endif
  */
 void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
 {
@@ -356,17 +279,10 @@ void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the rectangle at the current position on the zoom stack.
  * @return Rectangle at the current position on the zoom stack.
  * @sa zoomRectIndex(), scaleRect()
- * \endif
  * 
- * \if CHINESE
- * @brief 返回缩放堆栈当前位置的矩形。
- * @return 缩放堆栈当前位置的矩形。
- * @sa zoomRectIndex(), scaleRect()
- * \endif
  */
 QRectF QwtPlotAxisZoomer::zoomRect() const
 {
@@ -374,15 +290,9 @@ QRectF QwtPlotAxisZoomer::zoomRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the index of current position of zoom stack.
  * @return Index of current position of zoom stack.
- * \endif
  * 
- * \if CHINESE
- * @brief 返回缩放堆栈当前位置的索引。
- * @return 缩放堆栈当前位置的索引。
- * \endif
  */
 uint QwtPlotAxisZoomer::zoomRectIndex() const
 {
@@ -390,22 +300,13 @@ uint QwtPlotAxisZoomer::zoomRectIndex() const
 }
 
 /**
- * \if ENGLISH
  * @brief Zooms in to a rectangle.
  * @details Clears all rectangles above the current position of the
  *          zoom stack and pushes the normalized rectangle on it.
  * @param[in] rect Rectangle to zoom to.
  * @note If the maximal stack depth is reached, zoom is ignored.
  * @note The zoomed signal is emitted.
- * \endif
  * 
- * \if CHINESE
- * @brief 放大到指定矩形。
- * @details 清除缩放堆栈当前位置上方的所有矩形，并将规范化后的矩形压入堆栈。
- * @param[in] rect 要缩放到的矩形。
- * @note 如果达到最大堆栈深度，缩放将被忽略。
- * @note 会发出 zoomed 信号。
- * \endif
  */
 
 void QwtPlotAxisZoomer::zoom(const QRectF& rect)
@@ -430,7 +331,6 @@ void QwtPlotAxisZoomer::zoom(const QRectF& rect)
 }
 
 /**
- * \if ENGLISH
  * @brief Zooms in or out by an offset.
  * @details Activates a rectangle on the zoom stack with an offset relative
  *          to the current position. Negative values of offset will zoom out,
@@ -438,16 +338,7 @@ void QwtPlotAxisZoomer::zoom(const QRectF& rect)
  * @param[in] offset Offset relative to the current position of the zoom stack.
  * @note The zoomed signal is emitted.
  * @sa zoomRectIndex()
- * \endif
  * 
- * \if CHINESE
- * @brief 通过偏移量放大或缩小。
- * @details 激活缩放堆栈上相对于当前位置有偏移的矩形。
- *          偏移量为负值将缩小，正值将放大。值为 0 表示缩放到基准视图。
- * @param[in] offset 相对于缩放堆栈当前位置的偏移量。
- * @note 会发出 zoomed 信号。
- * @sa zoomRectIndex()
- * \endif
  */
 void QwtPlotAxisZoomer::zoom(int offset)
 {
@@ -468,7 +359,6 @@ void QwtPlotAxisZoomer::zoom(int offset)
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns a zoom stack.
  * @details In combination with other types of navigation it might be useful to
  *          modify to manipulate the complete zoom stack.
@@ -478,17 +368,7 @@ void QwtPlotAxisZoomer::zoom(int offset)
  *                          of the stack.
  * @note The zoomed signal might be emitted.
  * @sa zoomStack(), zoomRectIndex()
- * \endif
  * 
- * \if CHINESE
- * @brief 设置缩放堆栈。
- * @details 与其他类型的导航结合使用时，操作完整的缩放堆栈可能很有用。
- * @param[in] zoomStack 新的缩放堆栈。
- * @param[in] zoomRectIndex 缩放堆栈当前位置的索引。
- *                          如果为 -1，当前位置在堆栈顶部。
- * @note 可能会发出 zoomed 信号。
- * @sa zoomStack(), zoomRectIndex()
- * \endif
  */
 void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoomRectIndex)
 {
@@ -516,7 +396,7 @@ void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoom
 /*!
    Adjust the observed plot to zoomRect()
 
-   \note Initiates QwtPlot::replot()
+   @note Initiates QwtPlot::replot()
  */
 
 void QwtPlotAxisZoomer::rescale()
@@ -551,17 +431,10 @@ void QwtPlotAxisZoomer::rescale()
 }
 
 /**
- * \if ENGLISH
  * @brief Reinitializes the axes, and sets the zoom base to their scales.
  * @param[in] xAxisId X axis.
  * @param[in] yAxisId Y axis.
- * \endif
  * 
- * \if CHINESE
- * @brief 重新初始化坐标轴，并将缩放基准设置为它们的刻度。
- * @param[in] xAxisId X 轴。
- * @param[in] yAxisId Y 轴。
- * \endif
  */
 
 void QwtPlotAxisZoomer::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
@@ -579,7 +452,7 @@ void QwtPlotAxisZoomer::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
    Changes the current position on the stack, but doesn't pop
    any rectangle.
 
-   \note The mouse events can be changed, using
+   @note The mouse events can be changed, using
          QwtEventPattern::setMousePattern: 2, 1
  */
 void QwtPlotAxisZoomer::widgetMouseReleaseEvent(QMouseEvent* me)
@@ -601,7 +474,7 @@ void QwtPlotAxisZoomer::widgetMouseReleaseEvent(QMouseEvent* me)
    Changes the current position on the stack, but doesn't pop
    any rectangle.
 
-   \note The keys codes can be changed, using
+   @note The keys codes can be changed, using
          QwtEventPattern::setKeyPattern: 3, 4, 5
  */
 
@@ -620,19 +493,11 @@ void QwtPlotAxisZoomer::widgetKeyPressEvent(QKeyEvent* ke)
 }
 
 /**
- * \if ENGLISH
  * @brief Moves the current zoom rectangle by an offset.
  * @param[in] dx X offset.
  * @param[in] dy Y offset.
  * @note The changed rectangle is limited by the zoom base.
- * \endif
  * 
- * \if CHINESE
- * @brief 通过偏移量移动当前缩放矩形。
- * @param[in] dx X 方向偏移量。
- * @param[in] dy Y 方向偏移量。
- * @note 更改后的矩形受缩放基准限制。
- * \endif
  */
 void QwtPlotAxisZoomer::moveBy(double dx, double dy)
 {
@@ -641,19 +506,11 @@ void QwtPlotAxisZoomer::moveBy(double dx, double dy)
 }
 
 /**
- * \if ENGLISH
  * @brief Moves the current zoom rectangle.
  * @param[in] pos New position.
  * @sa QRectF::moveTo()
  * @note The changed rectangle is limited by the zoom base.
- * \endif
  * 
- * \if CHINESE
- * @brief 移动当前缩放矩形。
- * @param[in] pos 新位置。
- * @sa QRectF::moveTo()
- * @note 更改后的矩形受缩放基准限制。
- * \endif
  */
 void QwtPlotAxisZoomer::moveTo(const QPointF& pos)
 {
@@ -677,13 +534,13 @@ void QwtPlotAxisZoomer::moveTo(const QPointF& pos)
 }
 
 /*!
-   \brief Check and correct a selected rectangle
+   @brief Check and correct a selected rectangle
 
    Reject rectangles with a height or width < 2, otherwise
    expand the selected rectangle to a minimum size of 11x11
    and accept it.
 
-   \return true If the rectangle is accepted, or has been changed
+   @return true If the rectangle is accepted, or has been changed
           to an accepted one.
  */
 
@@ -713,9 +570,9 @@ bool QwtPlotAxisZoomer::accept(QPolygon& pa) const
 }
 
 /*!
-   \brief Limit zooming by a minimum rectangle
+   @brief Limit zooming by a minimum rectangle
 
-   \return zoomBase().width() / 10e4, zoomBase().height() / 10e4
+   @return zoomBase().width() / 10e4, zoomBase().height() / 10e4
  */
 QSizeF QwtPlotAxisZoomer::minZoomSize() const
 {
@@ -726,7 +583,7 @@ QSizeF QwtPlotAxisZoomer::minZoomSize() const
    Rejects selections, when the stack depth is too deep, or
    the zoomed rectangle is minZoomSize().
 
-   \sa minZoomSize(), maxStackDepth()
+   @sa minZoomSize(), maxStackDepth()
  */
 void QwtPlotAxisZoomer::begin()
 {
@@ -751,11 +608,11 @@ void QwtPlotAxisZoomer::begin()
    Expand the selected rectangle to minZoomSize() and zoom in
    if accepted.
 
-   \param ok If true, complete the selection and emit selected signals
+   @param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
 
-   \sa accept(), minZoomSize()
-   \return True if the selection has been accepted, false otherwise
+   @sa accept(), minZoomSize()
+   @return True if the selection has been accepted, false otherwise
  */
 bool QwtPlotAxisZoomer::end(bool ok)
 {

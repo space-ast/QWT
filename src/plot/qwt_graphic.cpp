@@ -371,17 +371,10 @@ class QwtGraphic::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @details Initializes a null graphic.
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- *
- * @details 初始化一个空图形。
- * \endif
  */
 QwtGraphic::QwtGraphic()
 {
@@ -390,17 +383,10 @@ QwtGraphic::QwtGraphic()
 }
 
 /**
- * \if ENGLISH
  * @brief Copy constructor
  *
  * @param[in] other Source graphic to copy from
- * \endif
  *
- * \if CHINESE
- * @brief 复制构造函数
- *
- * @param[in] other 要复制的源图形
- * \endif
  */
 QwtGraphic::QwtGraphic( const QwtGraphic& other )
 {
@@ -409,17 +395,10 @@ QwtGraphic::QwtGraphic( const QwtGraphic& other )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  *
  * @details Deletes private data.
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- *
- * @details 删除私有数据。
- * \endif
  */
 QwtGraphic::~QwtGraphic()
 {
@@ -427,19 +406,11 @@ QwtGraphic::~QwtGraphic()
 }
 
 /**
- * \if ENGLISH
  * @brief Assignment operator
  *
  * @param[in] other Source graphic to assign from
  * @return Reference to this object
- * \endif
  *
- * \if CHINESE
- * @brief 赋值运算符
- *
- * @param[in] other 要赋值的源图形
- * @return 此对象的引用
- * \endif
  */
 QwtGraphic& QwtGraphic::operator=( const QwtGraphic& other )
 {
@@ -450,17 +421,10 @@ QwtGraphic& QwtGraphic::operator=( const QwtGraphic& other )
 }
 
 /**
- * \if ENGLISH
  * @brief Clear all stored commands
  *
  * @details Resets the graphic to its initial null state.
- * \endif
  *
- * \if CHINESE
- * @brief 清除所有存储的命令
- *
- * @details 将图形重置为初始空状态。
- * \endif
  */
 void QwtGraphic::reset()
 {
@@ -475,17 +439,10 @@ void QwtGraphic::reset()
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the graphic is null
  *
  * @return True when no painter commands have been stored
- * \endif
  *
- * \if CHINESE
- * @brief 检查图形是否为空
- *
- * @return 当没有存储绘制命令时返回 true
- * \endif
  */
 bool QwtGraphic::isNull() const
 {
@@ -493,17 +450,10 @@ bool QwtGraphic::isNull() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the graphic is empty
  *
  * @return True when the bounding rectangle is empty
- * \endif
  *
- * \if CHINESE
- * @brief 检查图形是否为空
- *
- * @return 当边界矩形为空时返回 true
- * \endif
  */
 bool QwtGraphic::isEmpty() const
 {
@@ -511,17 +461,10 @@ bool QwtGraphic::isEmpty() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the types of painter commands being used
  *
  * @return Types of painter commands
- * \endif
  *
- * \if CHINESE
- * @brief 获取正在使用的绘制命令类型
- *
- * @return 绘制命令的类型
- * \endif
  */
 QwtGraphic::CommandTypes QwtGraphic::commandTypes() const
 {
@@ -529,19 +472,11 @@ QwtGraphic::CommandTypes QwtGraphic::commandTypes() const
 }
 
 /**
- * \if ENGLISH
  * @brief Toggle a render hint
  *
  * @param[in] hint Render hint to toggle
  * @param[in] on true to enable, false to disable
- * \endif
  *
- * \if CHINESE
- * @brief 切换渲染提示
- *
- * @param[in] hint 要切换的渲染提示
- * @param[in] on true 表示启用，false 表示禁用
- * \endif
  */
 void QwtGraphic::setRenderHint( RenderHint hint, bool on )
 {
@@ -552,19 +487,11 @@ void QwtGraphic::setRenderHint( RenderHint hint, bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Test a render hint
  *
  * @param[in] hint Render hint to test
  * @return true if the hint is enabled, false otherwise
- * \endif
  *
- * \if CHINESE
- * @brief 测试渲染提示
- *
- * @param[in] hint 要测试的渲染提示
- * @return 如果提示已启用则返回 true，否则返回 false
- * \endif
  */
 bool QwtGraphic::testRenderHint( RenderHint hint ) const
 {
@@ -572,17 +499,10 @@ bool QwtGraphic::testRenderHint( RenderHint hint ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the render hints
  *
  * @return Render hints
- * \endif
  *
- * \if CHINESE
- * @brief 获取渲染提示
- *
- * @return 渲染提示
- * \endif
  */
 QwtGraphic::RenderHints QwtGraphic::renderHints() const
 {
@@ -590,7 +510,6 @@ QwtGraphic::RenderHints QwtGraphic::renderHints() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  *
  * @details The bounding rectangle is the controlPointRect()
@@ -598,16 +517,7 @@ QwtGraphic::RenderHints QwtGraphic::renderHints() const
  * with unscaled pens.
  *
  * @return Bounding rectangle of the graphic
- * \endif
  *
- * \if CHINESE
- * @brief 获取边界矩形
- *
- * @details 边界矩形是 controlPointRect() 扩展后的区域，
- * 包含使用未缩放画笔渲染轮廓所需的区域。
- *
- * @return 图形的边界矩形
- * \endif
  */
 QRectF QwtGraphic::boundingRect() const
 {
@@ -618,7 +528,6 @@ QRectF QwtGraphic::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the control point rectangle
  *
  * @details The control point rectangle is the bounding rectangle
@@ -626,16 +535,7 @@ QRectF QwtGraphic::boundingRect() const
  * rectangles of the images/pixmaps.
  *
  * @return Control point rectangle
- * \endif
  *
- * \if CHINESE
- * @brief 获取控制点矩形
- *
- * @details 控制点矩形是所有路径控制点的边界矩形，
- * 以及 pixmap/image 的目标矩形。
- *
- * @return 控制点矩形
- * \endif
  */
 QRectF QwtGraphic::controlPointRect() const
 {
@@ -646,7 +546,6 @@ QRectF QwtGraphic::controlPointRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the target rectangle for scaling the graphic
  *
  * @param[in] sx Horizontal scaling factor
@@ -657,19 +556,7 @@ QRectF QwtGraphic::controlPointRect() const
  *       multiplying the bounding rectangle.
  *
  * @return Scaled bounding rectangle
- * \endif
  *
- * \if CHINESE
- * @brief 计算缩放图形的目标矩形
- *
- * @param[in] sx 水平缩放因子
- * @param[in] sy 垂直缩放因子
- *
- * @note 对于使用装饰性画笔绘制的路径
- *       （参见 QPen::isCosmetic()），目标矩形与边界矩形的乘积不同。
- *
- * @return 缩放后的边界矩形
- * \endif
  */
 QRectF QwtGraphic::scaledBoundingRect( qreal sx, qreal sy ) const
 {
@@ -689,7 +576,7 @@ QRectF QwtGraphic::scaledBoundingRect( qreal sx, qreal sy ) const
     return rect;
 }
 
-//! \return Ceiled defaultSize()
+//! @return Ceiled defaultSize()
 QSize QwtGraphic::sizeMetrics() const
 {
     const QSizeF sz = defaultSize();
@@ -697,7 +584,6 @@ QSize QwtGraphic::sizeMetrics() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a default size
  *
  * @details The default size is used in all methods rendering the graphic,
@@ -708,18 +594,7 @@ QSize QwtGraphic::sizeMetrics() const
  * The default setting is an empty size.
  *
  * @param[in] size Default size
- * \endif
  *
- * \if CHINESE
- * @brief 设置默认大小
- *
- * @details 默认大小用于所有未明确指定大小的渲染方法。
- * 设置空大小意味着默认大小将从边界矩形计算。
- *
- * 默认设置为空大小。
- *
- * @param[in] size 默认大小
- * \endif
  */
 void QwtGraphic::setDefaultSize( const QSizeF& size )
 {
@@ -730,7 +605,6 @@ void QwtGraphic::setDefaultSize( const QSizeF& size )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the default size
  *
  * @details When a non empty size has been assigned by setDefaultSize() this
@@ -741,18 +615,7 @@ void QwtGraphic::setDefaultSize( const QSizeF& size )
  * where no size is explicitly specified.
  *
  * @return Default size
- * \endif
  *
- * \if CHINESE
- * @brief 获取默认大小
- *
- * @details 如果已通过 setDefaultSize() 设置了非空大小，
- * 将返回该大小。否则默认大小为边界矩形的大小。
- *
- * 默认大小用于所有未明确指定大小的渲染方法。
- *
- * @return 默认大小
- * \endif
  */
 QSizeF QwtGraphic::defaultSize() const
 {
@@ -763,23 +626,13 @@ QSizeF QwtGraphic::defaultSize() const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the height for a given width
  *
  * @details The height is calculated using the aspect ratio of defaultSize().
  *
  * @param[in] width Width to calculate height for
  * @return Calculated height
- * \endif
  *
- * \if CHINESE
- * @brief 根据给定宽度查找高度
- *
- * @details 使用 defaultSize() 的纵横比计算高度。
- *
- * @param[in] width 要计算高度的宽度
- * @return 计算出的高度
- * \endif
  */
 qreal QwtGraphic::heightForWidth( qreal width ) const
 {
@@ -791,23 +644,13 @@ qreal QwtGraphic::heightForWidth( qreal width ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the width for a given height
  *
  * @details The width is calculated using the aspect ratio of defaultSize().
  *
  * @param[in] height Height to calculate width for
  * @return Calculated width
- * \endif
  *
- * \if CHINESE
- * @brief 根据给定高度查找宽度
- *
- * @details 使用 defaultSize() 的纵横比计算宽度。
- *
- * @param[in] height 要计算宽度的高度
- * @return 计算出的宽度
- * \endif
  */
 qreal QwtGraphic::widthForHeight( qreal height ) const
 {
@@ -819,17 +662,10 @@ qreal QwtGraphic::widthForHeight( qreal height ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Replay all recorded painter commands
  *
  * @param[in] painter Qt painter
- * \endif
  *
- * \if CHINESE
- * @brief 重放所有记录的绘制命令
- *
- * @param[in] painter Qt 绘制器
- * \endif
  */
 void QwtGraphic::render( QPainter* painter ) const
 {
@@ -858,7 +694,6 @@ void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform 
 }
 
 /**
- * \if ENGLISH
  * @brief Replay all recorded painter commands scaled to fit into given size
  *
  * @details The graphic is scaled to fit into the rectangle
@@ -867,17 +702,7 @@ void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform 
  * @param[in] painter Qt painter
  * @param[in] size Size for the scaled graphic
  * @param[in] aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
- * \endif
  *
- * \if CHINESE
- * @brief 重放所有记录的绘制命令，缩放以适应给定大小
- *
- * @details 图形被缩放以适应从 (0, 0) 开始的给定大小的矩形。
- *
- * @param[in] painter Qt 绘制器
- * @param[in] size 缩放图形的大小
- * @param[in] aspectRatioMode 缩放模式 - 参见 Qt::AspectRatioMode
- * \endif
  */
 void QwtGraphic::render( QPainter* painter, const QSizeF& size,
     Qt::AspectRatioMode aspectRatioMode ) const
@@ -887,21 +712,12 @@ void QwtGraphic::render( QPainter* painter, const QSizeF& size,
 }
 
 /**
- * \if ENGLISH
  * @brief Replay all recorded painter commands scaled to fit into given rectangle
  *
  * @param[in] painter Qt painter
  * @param[in] rect Rectangle for the scaled graphic
  * @param[in] aspectRatioMode Mode how to scale - See Qt::AspectRatioMode
- * \endif
  *
- * \if CHINESE
- * @brief 重放所有记录的绘制命令，缩放以适应给定矩形
- *
- * @param[in] painter Qt 绘制器
- * @param[in] rect 缩放图形的矩形区域
- * @param[in] aspectRatioMode 缩放模式 - 参见 Qt::AspectRatioMode
- * \endif
  */
 void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     Qt::AspectRatioMode aspectRatioMode ) const
@@ -990,7 +806,6 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
 }
 
 /**
- * \if ENGLISH
  * @brief Replay all recorded painter commands aligned to a position
  *
  * @details The graphic is scaled to the defaultSize() and aligned
@@ -999,17 +814,7 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
  * @param[in] painter Qt painter
  * @param[in] pos Reference point, where to render
  * @param[in] alignment Flags how to align the target rectangle to pos
- * \endif
  *
- * \if CHINESE
- * @brief 重放所有记录的绘制命令，对齐到指定位置
- *
- * @details 图形被缩放为 defaultSize() 并对齐到指定位置。
- *
- * @param[in] painter Qt 绘制器
- * @param[in] pos 渲染的参考点
- * @param[in] alignment 目标矩形相对于 pos 的对齐方式
- * \endif
  */
 void QwtGraphic::render( QPainter* painter,
     const QPointF& pos, Qt::Alignment alignment ) const
@@ -1046,7 +851,6 @@ void QwtGraphic::render( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Convert the graphic to a QPixmap in default size
  *
  * @details All pixels of the pixmap get initialized by Qt::transparent
@@ -1060,21 +864,7 @@ void QwtGraphic::render( QPainter* painter,
  *                              is initialized with the system default.
  *
  * @return The graphic as pixmap in default size
- * \endif
  *
- * \if CHINESE
- * @brief 将图形转换为默认大小的 QPixmap
- *
- * @details pixmap 的所有像素在图形缩放和渲染之前被初始化为 Qt::transparent。
- *
- * pixmap 的大小是图形的默认大小（取整到整数）。
- *
- * @param[in] devicePixelRatio pixmap 的设备像素比。
- *                              如果 devicePixelRatio <= 0.0，
- *                              pixmap 将使用系统默认值初始化。
- *
- * @return 默认大小的图形作为 pixmap
- * \endif
  */
 QPixmap QwtGraphic::toPixmap( qreal devicePixelRatio ) const
 {
@@ -1109,7 +899,6 @@ QPixmap QwtGraphic::toPixmap( qreal devicePixelRatio ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Convert the graphic to a QPixmap with specified size
  *
  * @details All pixels of the pixmap get initialized by Qt::transparent
@@ -1122,21 +911,7 @@ QPixmap QwtGraphic::toPixmap( qreal devicePixelRatio ) const
  *                              is initialized with the system default.
  *
  * @return The graphic as pixmap
- * \endif
  *
- * \if CHINESE
- * @brief 将图形转换为指定大小的 QPixmap
- *
- * @details pixmap 的所有像素在图形缩放和渲染之前被初始化为 Qt::transparent。
- *
- * @param[in] size 图像的大小
- * @param[in] aspectRatioMode 缩放图形的纵横比模式
- * @param[in] devicePixelRatio pixmap 的设备像素比。
- *                              如果 devicePixelRatio <= 0.0，
- *                              pixmap 将使用系统默认值初始化。
- *
- * @return 图形作为 pixmap
- * \endif
  */
 QPixmap QwtGraphic::toPixmap( const QSize& size,
     Qt::AspectRatioMode aspectRatioMode, qreal devicePixelRatio ) const
@@ -1163,7 +938,6 @@ QPixmap QwtGraphic::toPixmap( const QSize& size,
 }
 
 /**
- * \if ENGLISH
  * @brief Convert the graphic to a QImage with specified size
  *
  * @details All pixels of the image get initialized by 0 ( transparent )
@@ -1178,23 +952,7 @@ QPixmap QwtGraphic::toPixmap( const QSize& size,
  *                              is initialized with the system default.
  *
  * @return The graphic as image
- * \endif
  *
- * \if CHINESE
- * @brief 将图形转换为指定大小的 QImage
- *
- * @details 图像的所有像素在图形缩放和渲染之前被初始化为 0（透明）。
- *
- * 图像格式为 QImage::Format_ARGB32_Premultiplied。
- *
- * @param[in] size 图像大小（将乘以设备像素比）
- * @param[in] aspectRatioMode 缩放图形的纵横比模式
- * @param[in] devicePixelRatio 图像的设备像素比。
- *                              如果 devicePixelRatio <= 0.0，
- *                              图像将使用系统默认值初始化。
- *
- * @return 图形作为图像
- * \endif
  */
 QImage QwtGraphic::toImage( const QSize& size,
     Qt::AspectRatioMode aspectRatioMode, qreal devicePixelRatio  ) const
@@ -1222,7 +980,6 @@ QImage QwtGraphic::toImage( const QSize& size,
 }
 
 /**
- * \if ENGLISH
  * @brief Convert the graphic to a QImage in default size
  *
  * @details All pixels of the image get initialized by 0 ( transparent )
@@ -1238,23 +995,7 @@ QImage QwtGraphic::toImage( const QSize& size,
  *                              is initialized with the system default.
  *
  * @return The graphic as image in default size
- * \endif
  *
- * \if CHINESE
- * @brief 将图形转换为默认大小的 QImage
- *
- * @details 图像的所有像素在图形缩放和渲染之前被初始化为 0（透明）。
- *
- * 图像格式为 QImage::Format_ARGB32_Premultiplied。
- *
- * 图像大小是图形的默认大小（取整到整数）乘以设备像素比。
- *
- * @param[in] devicePixelRatio 图像的设备像素比。
- *                              如果 devicePixelRatio <= 0.0，
- *                              图像将使用系统默认值初始化。
- *
- * @return 默认大小的图形作为图像
- * \endif
  */
 QImage QwtGraphic::toImage( qreal devicePixelRatio ) const
 {
@@ -1294,8 +1035,8 @@ QImage QwtGraphic::toImage( qreal devicePixelRatio ) const
 /*!
    Store a path command in the command list
 
-   \param path Painter path
-   \sa QPaintEngine::drawPath()
+   @param path Painter path
+   @sa QPaintEngine::drawPath()
  */
 void QwtGraphic::drawPath( const QPainterPath& path )
 {
@@ -1336,13 +1077,13 @@ void QwtGraphic::drawPath( const QPainterPath& path )
 }
 
 /*!
-   \brief Store a pixmap command in the command list
+   @brief Store a pixmap command in the command list
 
-   \param rect target rectangle
-   \param pixmap Pixmap to be painted
-   \param subRect Reactangle of the pixmap to be painted
+   @param rect target rectangle
+   @param pixmap Pixmap to be painted
+   @param subRect Reactangle of the pixmap to be painted
 
-   \sa QPaintEngine::drawPixmap()
+   @sa QPaintEngine::drawPixmap()
  */
 void QwtGraphic::drawPixmap( const QRectF& rect,
     const QPixmap& pixmap, const QRectF& subRect )
@@ -1360,14 +1101,14 @@ void QwtGraphic::drawPixmap( const QRectF& rect,
 }
 
 /*!
-   \brief Store a image command in the command list
+   @brief Store a image command in the command list
 
-   \param rect target rectangle
-   \param image Image to be painted
-   \param subRect Reactangle of the pixmap to be painted
-   \param flags Image conversion flags
+   @param rect target rectangle
+   @param image Image to be painted
+   @param subRect Reactangle of the pixmap to be painted
+   @param flags Image conversion flags
 
-   \sa QPaintEngine::drawImage()
+   @sa QPaintEngine::drawImage()
  */
 void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
     const QRectF& subRect, Qt::ImageConversionFlags flags )
@@ -1386,10 +1127,10 @@ void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
 }
 
 /*!
-   \brief Store a state command in the command list
+   @brief Store a state command in the command list
 
-   \param state State to be stored
-   \sa QPaintEngine::updateState()
+   @param state State to be stored
+   @sa QPaintEngine::updateState()
  */
 void QwtGraphic::updateState( const QPaintEngineState& state )
 {
@@ -1438,17 +1179,10 @@ void QwtGraphic::updateControlPointRect( const QRectF& rect )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the list of recorded paint commands
  *
  * @return List of recorded paint commands
- * \endif
  *
- * \if CHINESE
- * @brief 获取记录的绘制命令列表
- *
- * @return 记录的绘制命令列表
- * \endif
  */
 const QVector< QwtPainterCommand >& QwtGraphic::commands() const
 {
@@ -1456,17 +1190,10 @@ const QVector< QwtPainterCommand >& QwtGraphic::commands() const
 }
 
 /**
- * \if ENGLISH
  * @brief Append paint commands
  *
  * @param[in] commands Paint commands to append
- * \endif
  *
- * \if CHINESE
- * @brief 追加绘制命令
- *
- * @param[in] commands 要追加的绘制命令
- * \endif
  */
 void QwtGraphic::setCommands( const QVector< QwtPainterCommand >& commands )
 {

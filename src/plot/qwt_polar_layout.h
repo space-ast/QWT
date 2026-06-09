@@ -23,7 +23,7 @@ class QWT_EXPORT QwtPolarLayout
 {
   public:
 
-    //! \brief Options to configure the plot layout engine
+    //! @brief Options to configure the plot layout engine
     enum Option
     {
         //! Ignore the dimension of the scrollbars.

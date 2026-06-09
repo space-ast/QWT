@@ -261,23 +261,13 @@ QwtPlotRenderer::LayoutFlags QwtPlotRenderer::layoutFlags() const
 }
 
 /**
- * \if ENGLISH
  * @brief Render a plot to a file
  * @details The format of the document will be auto-detected from the suffix of the file name.
  * @param[in] plot Plot widget
  * @param[in] fileName Path of the file where the document will be stored
  * @param[in] sizeMM Size for the document in millimeters
  * @param[in] resolution Resolution in dots per Inch (dpi)
- * \endif
  *
- * \if CHINESE
- * @brief 将绘图渲染到文件
- * @details 文档格式将从文件名后缀自动检测。
- * @param[in] plot 绘图控件
- * @param[in] fileName 存储文档的文件路径
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * \endif
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QSizeF& sizeMM, int resolution)
 {
@@ -285,7 +275,6 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
 }
 
 /**
- * \if ENGLISH
  * @brief Render a plot to a file with specified format
  * @details Supported formats are:
  *          - pdf: Portable Document Format PDF
@@ -299,23 +288,7 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
  * @param[in] sizeMM Size for the document in millimeters
  * @param[in] resolution Resolution in dots per Inch (dpi)
  * @sa renderTo(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  *
- * \if CHINESE
- * @brief 将绘图渲染到指定格式的文件
- * @details 支持的格式有：
- *          - pdf：便携式文档格式 PDF
- *          - ps：PostScript
- *          - svg：可缩放矢量图形 SVG
- *          - Qt 支持的所有图像格式（参见 QImageWriter::supportedImageFormats()）
- *          像 PDF 或 SVG 这样的可缩放矢量图形格式优于栅格图形格式。
- * @param[in] plot 绘图控件
- * @param[in] fileName 存储文档的文件路径
- * @param[in] format 文档格式
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * @sa renderTo(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution)
 {
@@ -639,19 +612,11 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 }
 
 /**
- * \if ENGLISH
  * @brief Render the title into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] titleRect Bounding rectangle for the title
- * \endif
  *
- * \if CHINESE
- * @brief 将标题渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] titleRect 标题的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderTitle(const QwtPlot* plot, QPainter* painter, const QRectF& titleRect) const
 {
@@ -664,19 +629,11 @@ void QwtPlotRenderer::renderTitle(const QwtPlot* plot, QPainter* painter, const 
 }
 
 /**
- * \if ENGLISH
  * @brief Render the footer into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] footerRect Bounding rectangle for the footer
- * \endif
  *
- * \if CHINESE
- * @brief 将页脚渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] footerRect 页脚的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderFooter(const QwtPlot* plot, QPainter* painter, const QRectF& footerRect) const
 {
@@ -689,19 +646,11 @@ void QwtPlotRenderer::renderFooter(const QwtPlot* plot, QPainter* painter, const
 }
 
 /**
- * \if ENGLISH
  * @brief Render the legend into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] legendRect Bounding rectangle for the legend
- * \endif
  *
- * \if CHINESE
- * @brief 将图例渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] legendRect 图例的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const QRectF& legendRect) const
 {
@@ -712,7 +661,6 @@ void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const
 }
 
 /**
- * \if ENGLISH
  * @brief Paint a scale into a given rectangle
  * @details Render the scale into a given rectangle.
  * @param[in] plot Plot widget
@@ -722,19 +670,7 @@ void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const
  * @param[in] endDist End border distance
  * @param[in] baseDist Base distance
  * @param[in] scaleRect Bounding rectangle for the scale
- * \endif
  *
- * \if CHINESE
- * @brief 将比例尺绘制到给定矩形中
- * @details 将比例尺渲染到给定矩形。
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] axisId 坐标轴标识
- * @param[in] startDist 起始边距离
- * @param[in] endDist 结束边距离
- * @param[in] baseDist 基础距离
- * @param[in] scaleRect 比例尺的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderScale(const QwtPlot* plot,
                                   QPainter* painter,
@@ -824,21 +760,12 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
 }
 
 /**
- * \if ENGLISH
  * @brief Render the canvas into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] canvasRect Canvas rectangle
  * @param[in] maps Maps mapping between plot and paint device coordinates
- * \endif
  *
- * \if CHINESE
- * @brief 将画布渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] canvasRect 画布矩形
- * @param[in] maps 绘图与绘制设备坐标之间的映射
- * \endif
  */
 void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const QRectF& canvasRect, const QwtScaleMap* maps) const
 {
@@ -954,9 +881,9 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 /*!
    Calculated the scale maps for rendering the canvas
 
-   \param plot Plot widget
-   \param canvasRect Target rectangle
-   \param maps Scale maps to be calculated
+   @param plot Plot widget
+   @param canvasRect Target rectangle
+   @param maps Scale maps to be calculated
  */
 void QwtPlotRenderer::buildCanvasMaps(const QwtPlot* plot, const QRectF& canvasRect, QwtScaleMap maps[]) const
 {
@@ -1022,7 +949,6 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
 }
 
 /**
- * \if ENGLISH
  * @brief Execute a file dialog and render the plot to the selected file
  * @param[in] plot Plot widget
  * @param[in] documentName Default document name
@@ -1030,17 +956,7 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
  * @param[in] resolution Resolution in dots per Inch (dpi)
  * @return True when exporting was successful
  * @sa renderDocument()
- * \endif
  *
- * \if CHINESE
- * @brief 执行文件对话框并将绘图渲染到选定文件
- * @param[in] plot 绘图控件
- * @param[in] documentName 默认文档名称
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * @return 导出成功返回 true
- * @sa renderDocument()
- * \endif
  */
 bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {

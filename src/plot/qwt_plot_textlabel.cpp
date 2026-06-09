@@ -82,7 +82,6 @@ class QwtPlotTextLabel::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Initializes an text label with an empty text.
  *          Sets the following item attributes:
@@ -90,17 +89,7 @@ class QwtPlotTextLabel::PrivateData
  *          - QwtPlotItem::Legend: false
  *          The z value is initialized by 150.
  * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 初始化一个带有空文本的文本标签。
- *          设置以下项目属性：
- *          - QwtPlotItem::AutoScale: false
- *          - QwtPlotItem::Legend: false
- *          z 值初始化为 150。
- * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  */
 QwtPlotTextLabel::QwtPlotTextLabel()
     : QwtPlotItem( QwtText( "Label" ) )
@@ -114,13 +103,8 @@ QwtPlotTextLabel::QwtPlotTextLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotTextLabel::~QwtPlotTextLabel()
 {
@@ -128,15 +112,9 @@ QwtPlotTextLabel::~QwtPlotTextLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotTextLabel
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotTextLabel
- * \endif
  */
 int QwtPlotTextLabel::rtti() const
 {
@@ -144,19 +122,11 @@ int QwtPlotTextLabel::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the text
  * @param[in] text Text to be displayed
  * @details The label will be aligned to the plot canvas according to the alignment flags of text.
  * @sa text(), QwtText::renderFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 设置文本
- * @param[in] text 要显示的文本
- * @details 标签将根据文本的对齐标志与绘图画布对齐。
- * @sa text(), QwtText::renderFlags()
- * \endif
  */
 void QwtPlotTextLabel::setText( const QwtText& text )
 {
@@ -170,17 +140,10 @@ void QwtPlotTextLabel::setText( const QwtText& text )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the text
  * @return Text to be displayed
  * @sa setText()
- * \endif
  *
- * \if CHINESE
- * @brief 获取文本
- * @return 要显示的文本
- * @sa setText()
- * \endif
  */
 QwtText QwtPlotTextLabel::text() const
 {
@@ -188,20 +151,12 @@ QwtText QwtPlotTextLabel::text() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the margin
  * @param[in] margin Margin
  * @details The margin is the distance between the contentsRect() of the plot canvas
  *          and the rectangle where the label can be displayed.
  * @sa margin(), textRect()
- * \endif
  *
- * \if CHINESE
- * @brief 设置边距
- * @param[in] margin 边距
- * @details 边距是绘图画布的 contentsRect() 与标签可显示的矩形之间的距离。
- * @sa margin(), textRect()
- * \endif
  */
 void QwtPlotTextLabel::setMargin( int margin )
 {
@@ -214,17 +169,10 @@ void QwtPlotTextLabel::setMargin( int margin )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the margin
  * @return Margin added to the contentsMargins() of the canvas
  * @sa setMargin()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边距
- * @return 添加到画布 contentsMargins() 的边距
- * @sa setMargin()
- * \endif
  */
 int QwtPlotTextLabel::margin() const
 {
@@ -234,12 +182,12 @@ int QwtPlotTextLabel::margin() const
 /*!
    Draw the text label
 
-   \param painter Painter
-   \param xMap x Scale Map
-   \param yMap y Scale Map
-   \param canvasRect Contents rectangle of the canvas in painter coordinates
+   @param painter Painter
+   @param xMap x Scale Map
+   @param yMap y Scale Map
+   @param canvasRect Contents rectangle of the canvas in painter coordinates
 
-   \sa textRect()
+   @sa textRect()
  */
 
 void QwtPlotTextLabel::draw( QPainter* painter,
@@ -319,21 +267,12 @@ void QwtPlotTextLabel::draw( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Align the text label
  * @param[in] rect Canvas rectangle with margins subtracted
  * @param[in] textSize Size required to draw the text
  * @return A rectangle aligned according the the alignment flags of the text.
  * @sa setMargin(), QwtText::renderFlags(), QwtText::textSize()
- * \endif
  *
- * \if CHINESE
- * @brief 对齐文本标签
- * @param[in] rect 画布矩形（已减去边距）
- * @param[in] textSize 绘制文本所需的尺寸
- * @return 根据文本对齐标志对齐的矩形
- * @sa setMargin(), QwtText::renderFlags(), QwtText::textSize()
- * \endif
  */
 QRectF QwtPlotTextLabel::textRect(
     const QRectF& rect, const QSizeF& textSize ) const
@@ -342,13 +281,8 @@ QRectF QwtPlotTextLabel::textRect(
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the cached pixmap
- * \endif
  *
- * \if CHINESE
- * @brief 使缓存的 pixmap 无效
- * \endif
  */
 void QwtPlotTextLabel::invalidateCache()
 {

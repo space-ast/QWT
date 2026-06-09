@@ -30,24 +30,14 @@
 #include "qwt_global.h"
 
 /**
- * \if ENGLISH
  * @brief Enums and methods for axes
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴的枚举和方法
- * \endif
  */
 namespace QwtAxis
 {
 /**
- * \if ENGLISH
  * @brief Axis position
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置
- * \endif
  */
 enum Position
 {
@@ -65,13 +55,8 @@ enum Position
 };
 
 /**
- * \if ENGLISH
  * @brief Number of axis positions
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置数量
- * \endif
  */
 enum
 {

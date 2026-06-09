@@ -900,9 +900,9 @@ bool QwtPicker::eventFilter(QObject* object, QEvent* event)
 /*!
    Handle a mouse press event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -914,9 +914,9 @@ void QwtPicker::widgetMousePressEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse move event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -936,9 +936,9 @@ void QwtPicker::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a enter event for the observed widget.
 
-   \param event Qt event
+   @param event Qt event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -950,9 +950,9 @@ void QwtPicker::widgetEnterEvent(QEvent* event)
 /*!
    Handle a leave event for the observed widget.
 
-   \param event Qt event
+   @param event Qt event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -968,9 +968,9 @@ void QwtPicker::widgetLeaveEvent(QEvent* event)
 /*!
    Handle a mouse release event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(),
+   @sa eventFilter(), widgetMousePressEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -982,9 +982,9 @@ void QwtPicker::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
 /*!
    Handle mouse double click event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -998,9 +998,9 @@ void QwtPicker::widgetMouseDoubleClickEvent(QMouseEvent* mouseEvent)
 
    Move the last point of the selection in case of isActive() == true
 
-   \param wheelEvent Wheel event
+   @param wheelEvent Wheel event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1028,9 +1028,9 @@ void QwtPicker::widgetWheelEvent(QWheelEvent* wheelEvent)
    move the cursor, the abort key aborts a selection. All other keys
    are handled by the current state machine.
 
-   \param keyEvent Key event
+   @param keyEvent Key event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyReleaseEvent(), stateMachine(),
       QwtEventPattern::KeyPatternCode
@@ -1078,9 +1078,9 @@ void QwtPicker::widgetKeyPressEvent(QKeyEvent* keyEvent)
 
    Passes the event to the state machine.
 
-   \param keyEvent Key event
+   @param keyEvent Key event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), stateMachine()
  */
@@ -1094,7 +1094,7 @@ void QwtPicker::widgetKeyReleaseEvent(QKeyEvent* keyEvent)
    commands. Append and Move commands use the current position
    of the cursor ( QCursor::pos() ).
 
-   \param event Event
+   @param event Event
  */
 void QwtPicker::transition(const QEvent* event)
 {
@@ -1146,7 +1146,7 @@ void QwtPicker::transition(const QEvent* event)
 /*!
    Open a selection setting the state to active
 
-   \sa isActive(), end(), append(), move()
+   @sa isActive(), end(), append(), move()
  */
 void QwtPicker::begin()
 {
@@ -1170,14 +1170,14 @@ void QwtPicker::begin()
 }
 
 /*!
-   \brief Close a selection setting the state to inactive.
+   @brief Close a selection setting the state to inactive.
 
    The selection is validated and maybe fixed by accept().
 
-   \param ok If true, complete the selection and emit a selected signal
+   @param ok If true, complete the selection and emit a selected signal
             otherwise discard the selection.
-   \return true if the selection is accepted, false otherwise
-   \sa isActive(), begin(), append(), move(), selected(), accept()
+   @return true if the selection is accepted, false otherwise
+   @sa isActive(), begin(), append(), move(), selected(), accept()
  */
 bool QwtPicker::end(bool ok)
 {
@@ -1221,9 +1221,9 @@ void QwtPicker::reset()
    Append a point to the selection and update rubber band and tracker.
    The appended() signal is emitted.
 
-   \param pos Additional point
+   @param pos Additional point
 
-   \sa isActive(), begin(), end(), move(), appended()
+   @sa isActive(), begin(), end(), move(), appended()
  */
 void QwtPicker::append(const QPoint& pos)
 {
@@ -1239,8 +1239,8 @@ void QwtPicker::append(const QPoint& pos)
    Move the last point of the selection
    The moved() signal is emitted.
 
-   \param pos New position
-   \sa isActive(), begin(), end(), append()
+   @param pos New position
+   @sa isActive(), begin(), end(), append()
  */
 void QwtPicker::move(const QPoint& pos)
 {
@@ -1259,7 +1259,7 @@ void QwtPicker::move(const QPoint& pos)
    Remove the last point of the selection
    The removed() signal is emitted.
 
-   \sa isActive(), begin(), end(), append(), move()
+   @sa isActive(), begin(), end(), append(), move()
  */
 void QwtPicker::remove()
 {
@@ -1277,12 +1277,12 @@ void QwtPicker::remove()
 }
 
 /*!
-   \brief Validate and fix up the selection
+   @brief Validate and fix up the selection
 
    Accepts all selections unmodified
 
-   \param selection Selection to validate and fix up
-   \return true, when accepted, false otherwise
+   @param selection Selection to validate and fix up
+   @return true, when accepted, false otherwise
  */
 bool QwtPicker::accept(QPolygon& selection) const
 {
@@ -1313,10 +1313,10 @@ const QPolygon& QwtPicker::pickedPoints() const
    Scale the selection by the ratios of oldSize and newSize
    The changed() signal is emitted.
 
-   \param oldSize Previous size
-   \param newSize Current size
+   @param oldSize Previous size
+   @param newSize Current size
 
-   \sa ResizeMode, setResizeMode(), resizeMode()
+   @sa ResizeMode, setResizeMode(), resizeMode()
  */
 void QwtPicker::stretchSelection(const QSize& oldSize, const QSize& newSize)
 {
@@ -1344,7 +1344,7 @@ void QwtPicker::stretchSelection(const QSize& oldSize, const QSize& newSize)
    In case of enable is true, the previous value
    is saved, that is restored when enable is false.
 
-   \warning Even when enable is false, mouse tracking might be restored
+   @warning Even when enable is false, mouse tracking might be restored
            to true. When mouseTracking for the observed widget
            has been changed directly by QWidget::setMouseTracking
            while mouse tracking has been set to true, this value can't

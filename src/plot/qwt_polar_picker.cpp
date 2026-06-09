@@ -92,8 +92,8 @@ const QwtPolarPlot* QwtPolarPicker::plot() const
 /*!
    Translate a pixel position into a position string
 
-   \param pos Position in pixel coordinates
-   \return Position string
+   @param pos Position in pixel coordinates
+   @return Position string
  */
 QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 {
@@ -102,7 +102,7 @@ QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 }
 
 /*!
-   \brief Translate a position into a position string
+   @brief Translate a position into a position string
 
    In case of HLineRubberBand the label is the value of the
    y position, in case of VLineRubberBand the value of the x position.
@@ -110,8 +110,8 @@ QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 
    The format for the double to string conversion is "%.4f".
 
-   \param pos Position
-   \return Position string
+   @param pos Position
+   @return Position string
  */
 QwtText QwtPolarPicker::trackerTextPolar(const QwtPointPolar& pos) const
 {
@@ -123,10 +123,10 @@ QwtText QwtPolarPicker::trackerTextPolar(const QwtPointPolar& pos) const
 /*!
    Append a point to the selection and update rubberband and tracker.
 
-   \param pos Additional point
-   \sa isActive, begin(), end(), move(), appended()
+   @param pos Additional point
+   @sa isActive, begin(), end(), move(), appended()
 
-   \note The appended(const QPoint &), appended(const QDoublePoint &)
+   @note The appended(const QPoint &), appended(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPolarPicker::append(const QPoint& pos)
@@ -138,10 +138,10 @@ void QwtPolarPicker::append(const QPoint& pos)
 /*!
    Move the last point of the selection
 
-   \param pos New position
-   \sa isActive, begin(), end(), append()
+   @param pos New position
+   @sa isActive, begin(), end(), append()
 
-   \note The moved(const QPoint &), moved(const QDoublePoint &)
+   @note The moved(const QPoint &), moved(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPolarPicker::move(const QPoint& pos)
@@ -153,9 +153,9 @@ void QwtPolarPicker::move(const QPoint& pos)
 /*!
    Close a selection setting the state to inactive.
 
-   \param ok If true, complete the selection and emit selected signals
+   @param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
-   \return true if the selection is accepted, false otherwise
+   @return true if the selection is accepted, false otherwise
  */
 
 bool QwtPolarPicker::end(bool ok)
@@ -201,9 +201,9 @@ bool QwtPolarPicker::end(bool ok)
 /*!
     Translate a point from widget into plot coordinates
 
-    \param pos Point in widget coordinates of the plot canvas
-    \return Point in plot coordinates
-    \sa transform(), canvas()
+    @param pos Point in widget coordinates of the plot canvas
+    @return Point in plot coordinates
+    @sa transform(), canvas()
  */
 QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
 {

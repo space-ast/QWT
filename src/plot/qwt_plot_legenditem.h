@@ -33,7 +33,6 @@
 class QFont;
 
 /**
- * \if ENGLISH
  * @brief A class which draws a legend inside the plot canvas
  * @details QwtPlotLegendItem can be used to draw a legend inside the plot canvas.
  *          It can be used together with a QwtLegend or instead of it
@@ -53,31 +52,13 @@ class QFont;
  * @note An external QwtLegend with a transparent background
  *       on top the plot canvas might be another option
  *       with a similar effect.
- * \endif
  *
- * \if CHINESE
- * @brief 在绘图画布内绘制图例的类
- * @details QwtPlotLegendItem 可用于在绘图画布内绘制图例。
- *          它可以与 QwtLegend 一起使用，或替代它，
- *          为绘图画布留出更多空间。
- *
- *          与 QwtLegend 不同，图例项是非交互式的。
- *          要识别对图例项的鼠标点击，需要安装事件过滤器来捕获绘图画布上的鼠标事件。
- *          图例项的几何形状可通过 legendGeometries() 获取。
- *
- *          图例项根据其 alignment() 标志与绘图画布对齐。
- *          它可能为整个图例（通常是半透明的）或每个图例项设置背景。
- *
- * @note 在绘图画布顶部使用具有透明背景的外部 QwtLegend
- *       可能是另一个具有类似效果的选项。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotLegendItem : public QwtPlotItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Background mode
      * @details Depending on the mode the complete legend or each item
      *          might have an background.
@@ -85,16 +66,7 @@ public:
      *          The default setting is LegendBackground.
      *
      * @sa setBackgroundMode(), setBackgroundBrush(), drawBackground()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 背景模式
-     * @details 根据模式，整个图例或每个项目可能有背景。
-     *
-     *          默认设置是 LegendBackground。
-     *
-     * @sa setBackgroundMode(), setBackgroundBrush(), drawBackground()
-     * \endif
      */
     enum BackgroundMode
     {

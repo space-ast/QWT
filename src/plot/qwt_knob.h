@@ -43,7 +43,7 @@ class QwtRoundScaleDraw;
  *          - width <= 0: The knob is extended to the minimum of width/height of
  *            the contentsRect() and aligned in the other direction according to alignment().
  *          Setting a fixed knobWidth() is helpful to align several knobs with different scale labels.
- * \image html knob.png
+ * @image html knob.png
  */
 
 class QWT_EXPORT QwtKnob : public QwtAbstractSlider
@@ -66,7 +66,7 @@ public:
      * @brief Style of the knob surface
      * @details Depending on the KnobStyle the surface of the knob is
      *          filled from the brushes of the widget palette().
-     * \sa setKnobStyle(), knobStyle()
+     * @sa setKnobStyle(), knobStyle()
      */
     enum KnobStyle
     {
@@ -87,7 +87,7 @@ public:
      * @brief Marker type
      * @details The marker indicates the current value on the knob.
      *          The default setting is a Notch marker.
-     * \sa setMarkerStyle(), setMarkerSize()
+     * @sa setMarkerStyle(), setMarkerSize()
      */
     enum MarkerStyle
     {

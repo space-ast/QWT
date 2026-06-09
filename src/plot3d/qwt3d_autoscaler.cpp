@@ -33,11 +33,11 @@ double floorExt(int& exponent, double x, std::vector< double >& sortedmantissi)
 }
 
 /*
-  \brief Find the largest value out of {1,2,5}*10^n with an integer number n
+  @brief Find the largest value out of {1,2,5}*10^n with an integer number n
   which is smaller than or equal to x
-  \param exponent n
-  \param x Input value
-  \return Mantissa
+  @param exponent n
+  @param x Input value
+  @return Mantissa
 */
 double floor125(int& exponent, double x)
 {
@@ -97,15 +97,15 @@ void LinearAutoScaler::init(double start, double stop, int ivals)
 }
 
 /*!
-\return Anchor value
+@return Anchor value
 
-\verbatim
+@verbatim
 |_______|____________ _ _ _ _  _____|_____________|________________
 
 0     m*10^n                      start         anchor := c*m*10^n
 
 c 'minimal' (anchor-start < m*10^n)
-\endverbatim
+@endverbatim
 */
 double LinearAutoScaler::anchorvalue(double start, double m, int n)
 {
@@ -114,11 +114,11 @@ double LinearAutoScaler::anchorvalue(double start, double m, int n)
 }
 
 /*!
-\return New number of intervals (:= l_intervals + r_intervals)
-\param l_intervals  Number of intervals left from anchor
-\param r_intervals  Number of intervals right from anchor
+@return New number of intervals (:= l_intervals + r_intervals)
+@param l_intervals  Number of intervals left from anchor
+@param r_intervals  Number of intervals right from anchor
 
-\verbatim
+@verbatim
                           -l_intervals * i    -2 * i    -i                 +r_intervals * i
                                                                                    |
 |______|_______ _ _ _ ____|____|___ _ _ _ _ _ _ _|_______|_______|_ _ _ _ _ _ _____|__|_____
@@ -126,7 +126,7 @@ double LinearAutoScaler::anchorvalue(double start, double m, int n)
 0   i := m*10^n         start                                  anchor	              stop
 
 c 'minimal' (anchor-start < m*10^n)
-\endverbatim
+@endverbatim
 */
 int LinearAutoScaler::segments(int& l_intervals, int& r_intervals, double start, double stop, double anchor, double m, int n)
 {
@@ -143,15 +143,15 @@ int LinearAutoScaler::segments(int& l_intervals, int& r_intervals, double start,
 }
 
 /*!
-        \brief Does the actual scaling
-        \return Number of intervals after rescaling. This will in the most cases differ
+        @brief Does the actual scaling
+        @return Number of intervals after rescaling. This will in the most cases differ
         from the requested interval number!  Always >0.
-        \param a Start value after scaling (always >= start)
-        \param b Stop value after scaling  (always <= stop)
-  \param start Start value
-  \param stop Stop value
-  \param ivals Requested intervals
-  \return Number of intervals after autoscaling
+        @param a Start value after scaling (always >= start)
+        @param b Stop value after scaling  (always <= stop)
+  @param start Start value
+  @param stop Stop value
+  @param ivals Requested intervals
+  @return Number of intervals after autoscaling
 
         If the given interval has zero length the function returns the current
         interval number and a and b remain unchanged.

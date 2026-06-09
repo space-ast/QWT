@@ -53,10 +53,10 @@ protected:
     /// Set a the "rectangle of interest" for the stored series
     virtual void setRectOfInterest(const QRectF&) = 0;
 
-    /// \return Bounding rectangle of the stored series
+    /// @return Bounding rectangle of the stored series
     virtual QRectF dataRect() const = 0;
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t dataSize() const = 0;
 #else
     // Needed for generating the python bindings, but not for using them !

@@ -48,38 +48,22 @@ static QPointF qwtIntersection(
 }
 
 /**
- * \if ENGLISH
- *   \brief Constructor
- * \endif
- * \if CHINESE
- *   \brief 构造函数
- * \endif
+ *   @brief Constructor
  */
 QwtCompassRose::QwtCompassRose()
 {
 }
 
 /**
- * \if ENGLISH
- *   \brief Destructor
- * \endif
- * \if CHINESE
- *   \brief 析构函数
- * \endif
+ *   @brief Destructor
  */
 QwtCompassRose::~QwtCompassRose()
 {
 }
 
 /**
- * \if ENGLISH
- *   \brief Assign a palette
- *   \param[in] p Palette to assign
- * \endif
- * \if CHINESE
- *   \brief 设置调色板
- *   \param[in] p 要设置的调色板
- * \endif
+ *   @brief Assign a palette
+ *   @param[in] p Palette to assign
  */
 void QwtCompassRose::setPalette( const QPalette& p )
 {
@@ -87,14 +71,8 @@ void QwtCompassRose::setPalette( const QPalette& p )
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the current palette
- *   \return Current palette
- * \endif
- * \if CHINESE
- *   \brief 获取当前调色板
- *   \return 当前调色板
- * \endif
+ *   @brief Get the current palette
+ *   @return Current palette
  */
 const QPalette& QwtCompassRose::palette() const
 {
@@ -119,16 +97,9 @@ class QwtSimpleCompassRose::PrivateData
 };
 
 /**
- * \if ENGLISH
- *   \brief Constructor
- *   \param[in] numThorns Number of thorns
- *   \param[in] numThornLevels Number of thorn levels (-1 means auto)
- * \endif
- * \if CHINESE
- *   \brief 构造函数
- *   \param[in] numThorns 刺的数量
- *   \param[in] numThornLevels 刺的层级数（-1表示自动）
- * \endif
+ *   @brief Constructor
+ *   @param[in] numThorns Number of thorns
+ *   @param[in] numThornLevels Number of thorn levels (-1 means auto)
  */
 QwtSimpleCompassRose::QwtSimpleCompassRose(
     int numThorns, int numThornLevels )
@@ -148,12 +119,7 @@ QwtSimpleCompassRose::QwtSimpleCompassRose(
 }
 
 /**
- * \if ENGLISH
- *   \brief Destructor
- * \endif
- * \if CHINESE
- *   \brief 析构函数
- * \endif
+ *   @brief Destructor
  */
 QwtSimpleCompassRose::~QwtSimpleCompassRose()
 {
@@ -161,16 +127,9 @@ QwtSimpleCompassRose::~QwtSimpleCompassRose()
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the shrink factor for thorns with each level
- *   \param[in] factor Shrink factor (default: 0.9)
- *   \sa shrinkFactor()
- * \endif
- * \if CHINESE
- *   \brief 设置每个层级刺的收缩因子
- *   \param[in] factor 收缩因子（默认值：0.9）
- *   \sa shrinkFactor()
- * \endif
+ *   @brief Set the shrink factor for thorns with each level
+ *   @param[in] factor Shrink factor (default: 0.9)
+ *   @sa shrinkFactor()
  */
 void QwtSimpleCompassRose::setShrinkFactor( double factor )
 {
@@ -178,16 +137,9 @@ void QwtSimpleCompassRose::setShrinkFactor( double factor )
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the shrink factor for thorns with each level
- *   \return Shrink factor
- *   \sa setShrinkFactor()
- * \endif
- * \if CHINESE
- *   \brief 获取每个层级刺的收缩因子
- *   \return 收缩因子
- *   \sa setShrinkFactor()
- * \endif
+ *   @brief Get the shrink factor for thorns with each level
+ *   @return Shrink factor
+ *   @sa setShrinkFactor()
  */
 double QwtSimpleCompassRose::shrinkFactor() const
 {
@@ -195,22 +147,12 @@ double QwtSimpleCompassRose::shrinkFactor() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Draw the rose
- *   \param[in] painter Painter
- *   \param[in] center Center point
- *   \param[in] radius Radius of the rose
- *   \param[in] north Position pointing north
- *   \param[in] cg Color group
- * \endif
- * \if CHINESE
- *   \brief 绘制罗盘花
- *   \param[in] painter 绘图设备
- *   \param[in] center 中心点
- *   \param[in] radius 罗盘花的半径
- *   \param[in] north 指向北方的位置
- *   \param[in] cg 颜色组
- * \endif
+ *   @brief Draw the rose
+ *   @param[in] painter Painter
+ *   @param[in] center Center point
+ *   @param[in] radius Radius of the rose
+ *   @param[in] north Position pointing north
+ *   @param[in] cg Color group
  */
 void QwtSimpleCompassRose::draw( QPainter* painter, const QPointF& center,
     double radius, double north, QPalette::ColorGroup cg ) const
@@ -223,30 +165,16 @@ void QwtSimpleCompassRose::draw( QPainter* painter, const QPointF& center,
 }
 
 /**
- * \if ENGLISH
- *   \brief Static helper to draw a rose with specified parameters
- *   \param[in] painter Painter
- *   \param[in] palette Palette for drawing
- *   \param[in] center Center of the rose
- *   \param[in] radius Radius of the rose
- *   \param[in] north Position pointing to north
- *   \param[in] width Width of the rose heads
- *   \param[in] numThorns Number of thorns
- *   \param[in] numThornLevels Number of thorn levels
- *   \param[in] shrinkFactor Factor to shrink the thorns with each level
- * \endif
- * \if CHINESE
- *   \brief 静态辅助函数：使用指定参数绘制罗盘花
- *   \param[in] painter 绘图设备
- *   \param[in] palette 绘制用的调色板
- *   \param[in] center 罗盘花的中心
- *   \param[in] radius 罗盘花的半径
- *   \param[in] north 指向北方的位置
- *   \param[in] width 罗盘花头的宽度
- *   \param[in] numThorns 刺的数量
- *   \param[in] numThornLevels 刺的层级数
- *   \param[in] shrinkFactor 每个层级刺的收缩因子
- * \endif
+ *   @brief Static helper to draw a rose with specified parameters
+ *   @param[in] painter Painter
+ *   @param[in] palette Palette for drawing
+ *   @param[in] center Center of the rose
+ *   @param[in] radius Radius of the rose
+ *   @param[in] north Position pointing to north
+ *   @param[in] width Width of the rose heads
+ *   @param[in] numThorns Number of thorns
+ *   @param[in] numThornLevels Number of thorn levels
+ *   @param[in] shrinkFactor Factor to shrink the thorns with each level
  */
 void QwtSimpleCompassRose::drawRose(
     QPainter* painter,
@@ -321,14 +249,8 @@ void QwtSimpleCompassRose::drawRose(
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the width of the rose heads
- *   \param[in] width Width (range: 0.03 to 0.4, lower values make thinner heads)
- * \endif
- * \if CHINESE
- *   \brief 设置罗盘花头的宽度
- *   \param[in] width 宽度（范围：0.03到0.4，较低的值会产生更细的花头）
- * \endif
+ *   @brief Set the width of the rose heads
+ *   @param[in] width Width (range: 0.03 to 0.4, lower values make thinner heads)
  */
 void QwtSimpleCompassRose::setWidth( double width )
 {
@@ -341,16 +263,9 @@ void QwtSimpleCompassRose::setWidth( double width )
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the width of the rose heads
- *   \return Width of the rose heads
- *   \sa setWidth()
- * \endif
- * \if CHINESE
- *   \brief 获取罗盘花头的宽度
- *   \return 罗盘花头的宽度
- *   \sa setWidth()
- * \endif
+ *   @brief Get the width of the rose heads
+ *   @return Width of the rose heads
+ *   @sa setWidth()
  */
 double QwtSimpleCompassRose::width() const
 {
@@ -358,16 +273,9 @@ double QwtSimpleCompassRose::width() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the number of thorns on one level
- *   \param[in] numThorns Number of thorns (aligned to multiple of 4, minimum 4)
- *   \sa numThorns(), setNumThornLevels()
- * \endif
- * \if CHINESE
- *   \brief 设置一个层级上的刺数
- *   \param[in] numThorns 刺的数量（对齐到4的倍数，最小为4）
- *   \sa numThorns(), setNumThornLevels()
- * \endif
+ *   @brief Set the number of thorns on one level
+ *   @param[in] numThorns Number of thorns (aligned to multiple of 4, minimum 4)
+ *   @sa numThorns(), setNumThornLevels()
  */
 void QwtSimpleCompassRose::setNumThorns( int numThorns )
 {
@@ -381,16 +289,9 @@ void QwtSimpleCompassRose::setNumThorns( int numThorns )
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the number of thorns
- *   \return Number of thorns
- *   \sa setNumThorns(), setNumThornLevels()
- * \endif
- * \if CHINESE
- *   \brief 获取刺的数量
- *   \return 刺的数量
- *   \sa setNumThorns(), setNumThornLevels()
- * \endif
+ *   @brief Get the number of thorns
+ *   @return Number of thorns
+ *   @sa setNumThorns(), setNumThornLevels()
  */
 int QwtSimpleCompassRose::numThorns() const
 {
@@ -398,16 +299,9 @@ int QwtSimpleCompassRose::numThorns() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the number of thorn levels
- *   \param[in] numThornLevels Number of thorn levels
- *   \sa setNumThorns(), numThornLevels()
- * \endif
- * \if CHINESE
- *   \brief 设置刺的层级数
- *   \param[in] numThornLevels 刺的层级数
- *   \sa setNumThorns(), numThornLevels()
- * \endif
+ *   @brief Set the number of thorn levels
+ *   @param[in] numThornLevels Number of thorn levels
+ *   @sa setNumThorns(), numThornLevels()
  */
 void QwtSimpleCompassRose::setNumThornLevels( int numThornLevels )
 {
@@ -415,16 +309,9 @@ void QwtSimpleCompassRose::setNumThornLevels( int numThornLevels )
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the number of thorn levels
- *   \return Number of thorn levels
- *   \sa setNumThorns(), setNumThornLevels()
- * \endif
- * \if CHINESE
- *   \brief 获取刺的层级数
- *   \return 刺的层级数
- *   \sa setNumThorns(), setNumThornLevels()
- * \endif
+ *   @brief Get the number of thorn levels
+ *   @return Number of thorn levels
+ *   @sa setNumThorns(), setNumThornLevels()
  */
 int QwtSimpleCompassRose::numThornLevels() const
 {

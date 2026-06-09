@@ -35,7 +35,6 @@ class QwtScaleDraw;
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief The Thermometer Widget
  * @details QwtThermo is a widget which displays a value in an interval. It supports:
  *          - a horizontal or vertical layout;
@@ -50,24 +49,7 @@ class QwtColorMap;
  *          - QPalette::Highlight: Fill brush for the values above the alarm level
  *          - QPalette::WindowText: For the axis of the scale
  *          - QPalette::Text: For the labels of the scale
- * \sa QwtAbstractScale
- * \endif
- * \if CHINESE
- * @brief 温度计控件
- * @details QwtThermo 是一个在区间内显示值的控件。它支持：
- *          - 水平或垂直布局；
- *          - 范围；
- *          - 刻度；
- *          - 报警级别。
- *          填充颜色可以从可选的颜色映射计算。
- *          如果没有分配颜色映射，QwtThermo 使用控件调色板的以下颜色/画刷：
- *          - QPalette::Base：管道背景
- *          - QPalette::ButtonText：报警级别以下的填充画刷
- *          - QPalette::Highlight：报警级别以上的值的填充画刷
- *          - QPalette::WindowText：用于刻度轴
- *          - QPalette::Text：用于刻度标签
- * \sa QwtAbstractScale
- * \endif
+ * @sa QwtAbstractScale
  */
 class QWT_EXPORT QwtThermo : public QwtAbstractScale
 {
@@ -93,14 +75,8 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
   public:
 
     /**
-     * \if ENGLISH
      * @brief Position of the scale
-     * \sa setScalePosition(), setOrientation()
-     * \endif
-     * \if CHINESE
-     * @brief 刻度的位置
-     * \sa setScalePosition(), setOrientation()
-     * \endif
+     * @sa setScalePosition(), setOrientation()
      */
     enum ScalePosition
     {
@@ -115,14 +91,8 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     };
 
     /**
-     * \if ENGLISH
      * @brief Origin mode. This property specifies where the beginning of the liquid is placed.
-     * \sa setOriginMode(), setOrigin()
-     * \endif
-     * \if CHINESE
-     * @brief 原点模式。此属性指定液体的起始位置。
-     * \sa setOriginMode(), setOrigin()
-     * \endif
+     * @sa setOriginMode(), setOrigin()
      */
     enum OriginMode
     {

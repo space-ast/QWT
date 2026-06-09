@@ -202,7 +202,7 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
 {
     int realFrom    = from;
     QPointF sample0 = series->sample(from);
-    // check nan/检查 NaN
+    // check nan
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
     }
@@ -213,7 +213,7 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     Polygon polyline;
     for (int i = realFrom; i <= to; i++) {
         const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -311,7 +311,7 @@ qwtRenderDots(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtDotsCom
 
     for (int i = command.from; i <= command.to; i++) {
         const QPointF sample = command.series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -372,7 +372,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
         for (int i = from; i <= to; i++) {
             const QPointF sample = series->sample(i);
-            // check nan/检查 NaN
+            // check nan
             if (qwt_is_nan_or_inf(sample)) {
                 continue;
             }
@@ -394,7 +394,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
         for (int i = from; i <= to; i++) {
             const QPointF sample = series->sample(i);
-            // check nan/检查 NaN
+            // check nan
             if (qwt_is_nan_or_inf(sample)) {
                 continue;
             }
@@ -406,7 +406,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
             numPoints++;
         }
-        // Since NaN value checking has been added, resizing is also required here./由于增加了nan值的检测，这里也需要进行resize
+        // Since NaN value checking has been added, resizing is also required here.
         polyline.resize(numPoints);
     }
 
@@ -456,7 +456,7 @@ static inline Polygon qwtToPolylineFiltered(const QwtScaleMap& xMap,
 
     int realFrom    = from;
     QPointF sample0 = series->sample(from);
-    // check nan/检查 NaN
+    // check nan
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
     }
@@ -467,7 +467,7 @@ static inline Polygon qwtToPolylineFiltered(const QwtScaleMap& xMap,
     int pos = 0;
     for (int i = realFrom + 1; i <= to; i++) {
         const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -520,7 +520,7 @@ static inline Polygon qwtToPointsFiltered(const QRectF& boundingRect,
     int numPoints = 0;
     for (int i = from; i <= to; i++) {
         const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -571,17 +571,10 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @details Creates a QwtPointMapper with default settings.
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- *
- * @details 创建一个具有默认设置的 QwtPointMapper。
- * \endif
  */
 QwtPointMapper::QwtPointMapper()
 {
@@ -589,17 +582,10 @@ QwtPointMapper::QwtPointMapper()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  *
  * @details Destroys the QwtPointMapper and frees all allocated resources.
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- *
- * @details 销毁 QwtPointMapper 并释放所有已分配的资源。
- * \endif
  */
 QwtPointMapper::~QwtPointMapper()
 {
@@ -607,21 +593,12 @@ QwtPointMapper::~QwtPointMapper()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the flags affecting the transformation process
  *
  * @param[in] flags Flags
  *
  * @sa flags(), setFlag()
- * \endif
  *
- * \if CHINESE
- * @brief 设置影响转换过程的标志
- *
- * @param[in] flags 标志
- *
- * @sa flags(), setFlag()
- * \endif
  */
 void QwtPointMapper::setFlags(TransformationFlags flags)
 {
@@ -629,21 +606,12 @@ void QwtPointMapper::setFlags(TransformationFlags flags)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the flags affecting the transformation process
  *
  * @return Flags affecting the transformation process
  *
  * @sa setFlags(), setFlag()
- * \endif
  *
- * \if CHINESE
- * @brief 获取影响转换过程的标志
- *
- * @return 影响转换过程的标志
- *
- * @sa setFlags(), setFlag()
- * \endif
  */
 QwtPointMapper::TransformationFlags QwtPointMapper::flags() const
 {
@@ -651,23 +619,13 @@ QwtPointMapper::TransformationFlags QwtPointMapper::flags() const
 }
 
 /**
- * \if ENGLISH
  * @brief Modify a flag affecting the transformation process
  *
  * @param[in] flag Flag type
  * @param[in] on Value
  *
  * @sa testFlag(), setFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 修改影响转换过程的标志
- *
- * @param[in] flag 标志类型
- * @param[in] on 值
- *
- * @sa testFlag(), setFlags()
- * \endif
  */
 void QwtPointMapper::setFlag(TransformationFlag flag, bool on)
 {
@@ -678,7 +636,6 @@ void QwtPointMapper::setFlag(TransformationFlag flag, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a flag is set
  *
  * @param[in] flag Flag type
@@ -686,17 +643,7 @@ void QwtPointMapper::setFlag(TransformationFlag flag, bool on)
  * @return True when the flag is set
  *
  * @sa setFlag(), setFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 测试标志是否已设置
- *
- * @param[in] flag 标志类型
- *
- * @return 如果标志已设置则返回 true
- *
- * @sa setFlag(), setFlags()
- * \endif
  */
 bool QwtPointMapper::testFlag(TransformationFlag flag) const
 {
@@ -704,7 +651,6 @@ bool QwtPointMapper::testFlag(TransformationFlag flag) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a bounding rectangle for the point mapping algorithm
  *
  * @details A valid bounding rectangle can be used for optimizations.
@@ -712,17 +658,7 @@ bool QwtPointMapper::testFlag(TransformationFlag flag) const
  * @param[in] rect Bounding rectangle
  *
  * @sa boundingRect()
- * \endif
  *
- * \if CHINESE
- * @brief 为点映射算法设置边界矩形
- *
- * @details 有效的边界矩形可用于优化。
- *
- * @param[in] rect 边界矩形
- *
- * @sa boundingRect()
- * \endif
  */
 void QwtPointMapper::setBoundingRect(const QRectF& rect)
 {
@@ -730,21 +666,12 @@ void QwtPointMapper::setBoundingRect(const QRectF& rect)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  *
  * @return Bounding rectangle
  *
  * @sa setBoundingRect()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边界矩形
- *
- * @return 边界矩形
- *
- * @sa setBoundingRect()
- * \endif
  */
 QRectF QwtPointMapper::boundingRect() const
 {
@@ -752,7 +679,6 @@ QRectF QwtPointMapper::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygonF
  *
  * @details When the WeedOutPoints flag is enabled, consecutive points
@@ -770,24 +696,7 @@ QRectF QwtPointMapper::boundingRect() const
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygonF
- *
- * @details 当启用 WeedOutPoints 标志时，映射到相同位置的连续点将合并为一个点。
- *          当设置 RoundPoints 时，所有点被舍入为整数，但返回为 PolygonF ——
- *          这仅在对值的进一步处理需要 QPolygonF 时有意义。
- *          当启用 RoundPoints & WeedOutIntermediatePoints 时，启用更激进的剔除算法。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
                                      const QwtScaleMap& yMap,
@@ -817,7 +726,6 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygon
  *
  * @details When the WeedOutPoints flag is enabled, consecutive points
@@ -830,21 +738,7 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygon
- *
- * @details 当启用 WeedOutPoints 标志时，映射到相同位置的连续点将合并为一个点。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
                                    const QwtScaleMap& yMap,
@@ -867,7 +761,6 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series into a QPolygonF (scattered points)
  *
  * @details
@@ -892,32 +785,7 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将序列转换为 QPolygonF（散点）
- *
- * @details
- * - WeedOutPoints & RoundPoints & boundingRect().isValid()：
- *   所有映射到相同位置的点将合并为一个点，边界矩形外的点被忽略。
- * - WeedOutPoints & RoundPoints & !boundingRect().isValid()：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - WeedOutPoints & !RoundPoints：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - !WeedOutPoints & boundingRect().isValid()：
- *   边界矩形外的点被忽略。
- *
- *   当设置 RoundPoints 时，所有点被舍入为整数，但返回为 PolygonF ——
- *   这仅在对值的进一步处理需要 QPolygonF 时有意义。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
                                     const QwtScaleMap& yMap,
@@ -956,7 +824,6 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygon (scattered points)
  *
  * @details
@@ -975,27 +842,7 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygon（散点）
- *
- * @details
- * - WeedOutPoints & boundingRect().isValid()：
- *   所有映射到相同位置的点将合并为一个点，边界矩形外的点被忽略。
- * - WeedOutPoints & !boundingRect().isValid()：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - !WeedOutPoints & boundingRect().isValid()：
- *   边界矩形外的点被忽略。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
                                   const QwtScaleMap& yMap,
@@ -1022,7 +869,6 @@ QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series into a QImage
  *
  * @param[in] xMap x map
@@ -1036,23 +882,7 @@ QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
  *                       If numThreads is set to 0, the system specific ideal thread count is used.
  *
  * @return Image displaying the series
- * \endif
  *
- * \if CHINESE
- * @brief 将序列转换为 QImage
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- * @param[in] pen 用于绘制图像点的画笔，即点映射到的位置
- * @param[in] antialiased 当点应以抗锯齿方式显示时为 true
- * @param[in] numThreads 用于渲染的线程数。
- *                       如果 numThreads 设置为 0，则使用系统特定的理想线程数。
- *
- * @return 显示序列的图像
- * \endif
  */
 QImage QwtPointMapper::toImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,

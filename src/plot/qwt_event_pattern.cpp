@@ -222,17 +222,17 @@ bool QwtEventPattern::mouseMatch( MousePatternCode code,
 }
 
 /*!
-   \brief Compare a mouse event with an event pattern.
+   @brief Compare a mouse event with an event pattern.
 
    A mouse event matches the pattern when both have the same button
    value and in the state value the same key flags(Qt::KeyButtonMask)
    are set.
 
-   \param pattern Mouse event pattern
-   \param event Mouse event
-   \return true if matches
+   @param pattern Mouse event pattern
+   @param event Mouse event
+   @return true if matches
 
-   \sa keyMatch()
+   @sa keyMatch()
  */
 
 bool QwtEventPattern::mouseMatch( const MousePattern& pattern,
@@ -265,17 +265,17 @@ bool QwtEventPattern::keyMatch( KeyPatternCode code,
 }
 
 /*!
-   \brief Compare a key event with an event pattern.
+   @brief Compare a key event with an event pattern.
 
    A key event matches the pattern when both have the same key
    value and in the state value the same key flags (Qt::KeyButtonMask)
    are set.
 
-   \param pattern Key event pattern
-   \param event Key event
-   \return true if matches
+   @param pattern Key event pattern
+   @param event Key event
+   @return true if matches
 
-   \sa mouseMatch()
+   @sa mouseMatch()
  */
 
 bool QwtEventPattern::keyMatch(

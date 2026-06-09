@@ -11,18 +11,11 @@
 #include <QPointF>
 
 /**
- * \if ENGLISH
  * @brief A paint device that records style sheet information for rendering.
  * 
  * QwtStyleSheetRecorder is used to capture style information (borders, backgrounds, etc.)
  * for rendering styled widgets or elements.
- * \endif
  * 
- * \if CHINESE
- * @brief 用于记录样式表信息的绘图设备
- * 
- * QwtStyleSheetRecorder 用于捕获样式信息（边框、背景等），以便渲染带样式的部件或元素。
- * \endif
  */
 class QWT_EXPORT QwtStyleSheetRecorder final : public QwtNullPaintDevice
 {

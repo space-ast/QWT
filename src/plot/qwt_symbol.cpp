@@ -851,20 +851,12 @@ class QwtSymbol::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Default Constructor
  * @param style Symbol Style
  *
  * The symbol is constructed with gray interior,
  * black outline with zero width, no size and style 'NoSymbol'.
- * \endif
  *
- * \if CHINESE
- * @brief 默认构造函数
- * @param style 符号样式
- *
- * 符号使用灰色内部、零宽度的黑色轮廓、无大小和 'NoSymbol' 样式构造。
- * \endif
  */
 QwtSymbol::QwtSymbol( Style style )
 {
@@ -873,7 +865,6 @@ QwtSymbol::QwtSymbol( Style style )
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param style Symbol Style
  * @param brush brush to fill the interior
@@ -881,17 +872,7 @@ QwtSymbol::QwtSymbol( Style style )
  * @param size size
  *
  * @sa setStyle(), setBrush(), setPen(), setSize()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param style 符号样式
- * @param brush 填充内部的画刷
- * @param pen 轮廓画笔
- * @param size 大小
- *
- * @sa setStyle(), setBrush(), setPen(), setSize()
- * \endif
  */
 QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
     const QPen& pen, const QSize& size )
@@ -900,7 +881,6 @@ QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * The symbol gets initialized by a painter path. The style is
@@ -912,20 +892,7 @@ QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
  * @param pen outline pen
  *
  * @sa setPath(), setBrush(), setPen(), setSize()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- *
- * 符号通过绘图路径初始化。样式设置为 QwtSymbol::Path，
- * 大小设置为空（路径显示时不缩放）。
- *
- * @param path 绘图路径
- * @param brush 填充内部的画刷
- * @param pen 轮廓画笔
- *
- * @sa setPath(), setBrush(), setPen(), setSize()
- * \endif
  */
 QwtSymbol::QwtSymbol( const QPainterPath& path,
     const QBrush& brush, const QPen& pen )
@@ -935,13 +902,8 @@ QwtSymbol::QwtSymbol( const QPainterPath& path,
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSymbol::~QwtSymbol()
 {
@@ -949,19 +911,11 @@ QwtSymbol::~QwtSymbol()
 }
 
 /**
- * \if ENGLISH
  * @brief Change the cache policy
  * @details The default policy is AutoCache
  * @param policy Cache policy
  * @sa CachePolicy, cachePolicy()
- * \endif
  *
- * \if CHINESE
- * @brief 更改缓存策略
- * @details 默认策略是 AutoCache
- * @param policy 缓存策略
- * @sa CachePolicy, cachePolicy()
- * \endif
  */
 void QwtSymbol::setCachePolicy(
     QwtSymbol::CachePolicy policy )
@@ -974,17 +928,10 @@ void QwtSymbol::setCachePolicy(
 }
 
 /**
- * \if ENGLISH
  * @brief Get the cache policy
  * @return Cache policy
  * @sa CachePolicy, setCachePolicy()
- * \endif
  *
- * \if CHINESE
- * @brief 获取缓存策略
- * @return 缓存策略
- * @sa CachePolicy, setCachePolicy()
- * \endif
  */
 QwtSymbol::CachePolicy QwtSymbol::cachePolicy() const
 {
@@ -992,7 +939,6 @@ QwtSymbol::CachePolicy QwtSymbol::cachePolicy() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a painter path as symbol
  * @details The symbol is represented by a painter path, where the origin (0, 0) of the path coordinate system
  *          is mapped to the position of the symbol.
@@ -1003,7 +949,7 @@ QwtSymbol::CachePolicy QwtSymbol::cachePolicy() const
  * @sa path(), setSize()
  *
  * Example code defining a symbol drawing an arrow:
- * \code
+ * @code
  * #include <qwt_symbol.h>
  *
  * QwtSymbol *symbol = new QwtSymbol();
@@ -1030,48 +976,8 @@ QwtSymbol::CachePolicy QwtSymbol::cachePolicy() const
  * symbol->setPinPoint( QPointF( 0.0, 0.0 ) );
  *
  * setSize( 10, 14 );
- * \endcode
- * \endif
+ * @endcode
  *
- * \if CHINESE
- * @brief 设置绘图路径作为符号
- * @details 符号由绘图路径表示，其中路径坐标系的原点 (0, 0) 映射到符号的位置。
- *          当符号有有效大小时，绘图路径会被缩放以适应大小。
- *          否则，符号大小取决于路径的边界矩形。
- * @param path 绘图路径
- * @note 样式隐式设置为 QwtSymbol::Path。
- * @sa path(), setSize()
- *
- * 定义绘制箭头的符号示例代码：
- * \code
- * #include <qwt_symbol.h>
- *
- * QwtSymbol *symbol = new QwtSymbol();
- *
- * QPen pen( Qt::black, 2 );
- * pen.setJoinStyle( Qt::MiterJoin );
- *
- * symbol->setPen( pen );
- * symbol->setBrush( Qt::red );
- *
- * QPainterPath path;
- * path.moveTo( 0, 8 );
- * path.lineTo( 0, 5 );
- * path.lineTo( -3, 5 );
- * path.lineTo( 0, 0 );
- * path.lineTo( 3, 5 );
- * path.lineTo( 0, 5 );
- *
- * QTransform transform;
- * transform.rotate( -30.0 );
- * path = transform.map( path );
- *
- * symbol->setPath( path );
- * symbol->setPinPoint( QPointF( 0.0, 0.0 ) );
- *
- * setSize( 10, 14 );
- * \endcode
- * \endif
  */
 void QwtSymbol::setPath( const QPainterPath& path )
 {
@@ -1081,17 +987,10 @@ void QwtSymbol::setPath( const QPainterPath& path )
 }
 
 /**
- * \if ENGLISH
  * @brief Get painter path for displaying the symbol
  * @return Painter path for displaying the symbol
  * @sa setPath()
- * \endif
  *
- * \if CHINESE
- * @brief 获取显示符号的绘图路径
- * @return 显示符号的绘图路径
- * @sa setPath()
- * \endif
  */
 const QPainterPath& QwtSymbol::path() const
 {
@@ -1099,21 +998,12 @@ const QPainterPath& QwtSymbol::path() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a pixmap as symbol
  * @param pixmap Pixmap to set
  * @sa pixmap(), setGraphic()
  * @note The style() is set to QwtSymbol::Pixmap
  * @note brush() and pen() have no effect
- * \endif
  *
- * \if CHINESE
- * @brief 设置像素图作为符号
- * @param pixmap 要设置的像素图
- * @sa pixmap(), setGraphic()
- * @note style() 被设置为 QwtSymbol::Pixmap
- * @note brush() 和 pen() 无效
- * \endif
  */
 void QwtSymbol::setPixmap( const QPixmap& pixmap )
 {
@@ -1122,17 +1012,10 @@ void QwtSymbol::setPixmap( const QPixmap& pixmap )
 }
 
 /**
- * \if ENGLISH
  * @brief Get assigned pixmap
  * @return Assigned pixmap
  * @sa setPixmap()
- * \endif
  *
- * \if CHINESE
- * @brief 获取分配的像素图
- * @return 分配的像素图
- * @sa setPixmap()
- * \endif
  */
 const QPixmap& QwtSymbol::pixmap() const
 {
@@ -1140,7 +1023,6 @@ const QPixmap& QwtSymbol::pixmap() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a graphic as symbol
  *
  * @param graphic Graphic
@@ -1149,18 +1031,7 @@ const QPixmap& QwtSymbol::pixmap() const
  *
  * @note the style() is set to QwtSymbol::Graphic
  * @note brush() and pen() have no effect
- * \endif
  *
- * \if CHINESE
- * @brief 设置图形作为符号
- *
- * @param graphic 图形
- *
- * @sa graphic(), setPixmap()
- *
- * @note style() 被设置为 QwtSymbol::Graphic
- * @note brush() 和 pen() 无效
- * \endif
  */
 void QwtSymbol::setGraphic( const QwtGraphic& graphic )
 {
@@ -1169,17 +1040,10 @@ void QwtSymbol::setGraphic( const QwtGraphic& graphic )
 }
 
 /**
- * \if ENGLISH
  * @brief Get assigned graphic
  * @return Assigned graphic
  * @sa setGraphic()
- * \endif
  *
- * \if CHINESE
- * @brief 获取分配的图形
- * @return 分配的图形
- * @sa setGraphic()
- * \endif
  */
 const QwtGraphic& QwtSymbol::graphic() const
 {
@@ -1189,21 +1053,12 @@ const QwtGraphic& QwtSymbol::graphic() const
 #ifndef QWT_NO_SVG
 
 /**
- * \if ENGLISH
  * @brief Set a SVG icon as symbol
  * @param svgDocument SVG icon data
  * @sa setGraphic(), setPixmap()
  * @note The style() is set to QwtSymbol::SvgDocument
  * @note brush() and pen() have no effect
- * \endif
  *
- * \if CHINESE
- * @brief 设置 SVG 图标作为符号
- * @param svgDocument SVG 图标数据
- * @sa setGraphic(), setPixmap()
- * @note style() 被设置为 QwtSymbol::SvgDocument
- * @note brush() 和 pen() 无效
- * \endif
  */
 void QwtSymbol::setSvgDocument( const QByteArray& svgDocument )
 {
@@ -1217,23 +1072,13 @@ void QwtSymbol::setSvgDocument( const QByteArray& svgDocument )
 #endif
 
 /**
- * \if ENGLISH
  * @brief Specify the symbol's size
  * @details If the 'height' parameter is left out or less than 0, and the 'width' parameter is greater than or equal to 0,
  *          the symbol size will be set to (width, width).
  * @param width Width
  * @param height Height (defaults to -1)
  * @sa size(), setSize(const QSize&)
- * \endif
  *
- * \if CHINESE
- * @brief 指定符号的大小
- * @details 如果 'height' 参数省略或小于 0，且 'width' 参数大于或等于 0，
- *          符号大小将被设置为 (width, width)。
- * @param width 宽度
- * @param height 高度（默认为 -1）
- * @sa size(), setSize(const QSize&)
- * \endif
  */
 void QwtSymbol::setSize( int width, int height )
 {
@@ -1244,17 +1089,10 @@ void QwtSymbol::setSize( int width, int height )
 }
 
 /**
- * \if ENGLISH
  * @brief Set the symbol's size
  * @param size Size to set
  * @sa size(), setSize(int, int)
- * \endif
  *
- * \if CHINESE
- * @brief 设置符号的大小
- * @param size 要设置的大小
- * @sa size(), setSize(int, int)
- * \endif
  */
 void QwtSymbol::setSize( const QSize& size )
 {
@@ -1266,17 +1104,10 @@ void QwtSymbol::setSize( const QSize& size )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the symbol's size
  * @return Current size
  * @sa setSize()
- * \endif
  *
- * \if CHINESE
- * @brief 获取符号的大小
- * @return 当前大小
- * @sa setSize()
- * \endif
  */
 const QSize& QwtSymbol::size() const
 {
@@ -1284,19 +1115,11 @@ const QSize& QwtSymbol::size() const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a brush
  * @details The brush is used to draw the interior of the symbol.
  * @param brush Brush to assign
  * @sa brush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画刷
- * @details 画刷用于绘制符号的内部。
- * @param brush 要分配的画刷
- * @sa brush()
- * \endif
  */
 void QwtSymbol::setBrush( const QBrush& brush )
 {
@@ -1311,17 +1134,10 @@ void QwtSymbol::setBrush( const QBrush& brush )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the brush
  * @return Current brush
  * @sa setBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取画刷
- * @return 当前画刷
- * @sa setBrush()
- * \endif
  */
 const QBrush& QwtSymbol::brush() const
 {
@@ -1329,7 +1145,6 @@ const QBrush& QwtSymbol::brush() const
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) what makes it non cosmetic (see QPen::isCosmetic()).
  *          This method has been introduced to hide this incompatibility.
@@ -1337,17 +1152,7 @@ const QBrush& QwtSymbol::brush() const
  * @param width Pen width
  * @param style Pen style
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配画笔
- * @details 在 Qt5 中默认画笔宽度是 1.0（Qt4 中是 0.0），这使得它不是装饰性的（参见 QPen::isCosmetic()）。
- *          此方法是为了隐藏这种不兼容性而引入的。
- * @param color 画笔颜色
- * @param width 画笔宽度
- * @param style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtSymbol::setPen( const QColor& color,
     qreal width, Qt::PenStyle style )
@@ -1356,19 +1161,11 @@ void QwtSymbol::setPen( const QColor& color,
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen
  * @details The pen is used to draw the symbol's outline.
  * @param pen Pen to assign
  * @sa pen(), setBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 分配画笔
- * @details 画笔用于绘制符号的轮廓。
- * @param pen 要分配的画笔
- * @sa pen(), setBrush()
- * \endif
  */
 void QwtSymbol::setPen( const QPen& pen )
 {
@@ -1383,17 +1180,10 @@ void QwtSymbol::setPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen
  * @return Current pen
  * @sa setPen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取画笔
- * @return 当前画笔
- * @sa setPen(), brush()
- * \endif
  */
 const QPen& QwtSymbol::pen() const
 {
@@ -1401,21 +1191,12 @@ const QPen& QwtSymbol::pen() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the color of the symbol
  * @details Change the color of the brush for symbol types with a filled area.
  *          For all other symbol types the color will be assigned to the pen.
  * @param color Color to set
  * @sa setBrush(), setPen(), brush(), pen()
- * \endif
  *
- * \if CHINESE
- * @brief 设置符号的颜色
- * @details 更改有填充区域的符号类型的画刷颜色。
- *          对于所有其他符号类型，颜色将分配给画笔。
- * @param color 要设置的颜色
- * @sa setBrush(), setPen(), brush(), pen()
- * \endif
  */
 void QwtSymbol::setColor( const QColor& color )
 {
@@ -1467,7 +1248,6 @@ void QwtSymbol::setColor( const QColor& color )
 }
 
 /**
- * \if ENGLISH
  * @brief Set and enable a pin point
  * @details The position of a complex symbol is not always aligned to its center (e.g. an arrow, where the peak points to a position).
  *          The pin point defines the position inside of a Pixmap, Graphic, SvgDocument or PainterPath symbol
@@ -1475,17 +1255,7 @@ void QwtSymbol::setColor( const QColor& color )
  * @param pos Position
  * @param enable Enable/disable the pin point alignment
  * @sa pinPoint(), setPinPointEnabled()
- * \endif
  *
- * \if CHINESE
- * @brief 设置并启用锚点
- * @details 复杂符号的位置并不总是与其中心对齐（例如箭头，其尖端指向一个位置）。
- *          锚点定义了在 Pixmap、Graphic、SvgDocument 或 PainterPath 符号内部，
- *          表示点需要对齐到的位置。
- * @param pos 位置
- * @param enable 启用/禁用锚点对齐
- * @sa pinPoint(), setPinPointEnabled()
- * \endif
  */
 void QwtSymbol::setPinPoint( const QPointF& pos, bool enable )
 {
@@ -1502,17 +1272,10 @@ void QwtSymbol::setPinPoint( const QPointF& pos, bool enable )
 }
 
 /**
- * \if ENGLISH
  * @brief Get pin point
  * @return Current pin point
  * @sa setPinPoint(), setPinPointEnabled()
- * \endif
  *
- * \if CHINESE
- * @brief 获取锚点
- * @return 当前锚点
- * @sa setPinPoint(), setPinPointEnabled()
- * \endif
  */
 QPointF QwtSymbol::pinPoint() const
 {
@@ -1520,17 +1283,10 @@ QPointF QwtSymbol::pinPoint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Enable/disable the pin point alignment
  * @param on Enabled when on is true
  * @sa setPinPoint(), isPinPointEnabled()
- * \endif
  *
- * \if CHINESE
- * @brief 启用/禁用锚点对齐
- * @param on 当 on 为 true 时启用
- * @sa setPinPoint(), isPinPointEnabled()
- * \endif
  */
 void QwtSymbol::setPinPointEnabled( bool on )
 {
@@ -1542,17 +1298,10 @@ void QwtSymbol::setPinPointEnabled( bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Check if pin point is enabled
  * @return True when the pin point translation is enabled
  * @sa setPinPoint(), setPinPointEnabled()
- * \endif
  *
- * \if CHINESE
- * @brief 检查锚点是否启用
- * @return 当锚点转换启用时返回 true
- * @sa setPinPoint(), setPinPointEnabled()
- * \endif
  */
 bool QwtSymbol::isPinPointEnabled() const
 {
@@ -1560,7 +1309,6 @@ bool QwtSymbol::isPinPointEnabled() const
 }
 
 /**
- * \if ENGLISH
  * @brief Render an array of symbols
  * @details Painting several symbols is more effective than drawing symbols one by one,
  *          as a couple of layout calculations and setting of pen/brush can be done once for the complete array.
@@ -1568,17 +1316,7 @@ bool QwtSymbol::isPinPointEnabled() const
  * @param points Array of points
  * @param numPoints Number of points
  * @sa drawSymbol()
- * \endif
  *
- * \if CHINESE
- * @brief 渲染符号数组
- * @details 绘制多个符号比逐个绘制更有效，
- *          因为布局计算和画笔/画刷设置可以一次性为整个数组完成。
- * @param painter 绘制器
- * @param points 点数组
- * @param numPoints 点的数量
- * @sa drawSymbol()
- * \endif
  */
 void QwtSymbol::drawSymbols( QPainter* painter,
     const QPointF* points, int numPoints ) const
@@ -1696,7 +1434,6 @@ void QwtSymbol::drawSymbols( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the symbol into a rectangle
  * @details The symbol is painted centered and scaled into the target rectangle.
  *          It is always painted uncached and the pin point is ignored.
@@ -1704,17 +1441,7 @@ void QwtSymbol::drawSymbols( QPainter* painter,
  * @param painter Painter
  * @param rect Target rectangle for the symbol
  * @sa drawSymbols()
- * \endif
  *
- * \if CHINESE
- * @brief 在矩形中绘制符号
- * @details 符号居中并缩放绘制到目标矩形中。
- *          它始终不使用缓存绘制，并忽略锚点。
- *          此方法主要用于在图例中绘制符号。
- * @param painter 绘制器
- * @param rect 符号的目标矩形
- * @sa drawSymbols()
- * \endif
  */
 void QwtSymbol::drawSymbol( QPainter* painter, const QRectF& rect ) const
 {
@@ -1791,9 +1518,9 @@ void QwtSymbol::drawSymbol( QPainter* painter, const QRectF& rect ) const
 /*!
    Render the symbol to series of points
 
-   \param painter Qt painter
-   \param points Positions of the symbols
-   \param numPoints Number of points
+   @param painter Qt painter
+   @param points Positions of the symbols
+   @param numPoints Number of points
  */
 void QwtSymbol::renderSymbols( QPainter* painter,
     const QPointF* points, int numPoints ) const
@@ -1914,17 +1641,10 @@ void QwtSymbol::renderSymbols( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the bounding rectangle for a symbol at position (0,0)
  * @return Bounding rectangle
  * @sa drawSymbols()
- * \endif
  *
- * \if CHINESE
- * @brief 计算符号在位置 (0,0) 的边界矩形
- * @return 边界矩形
- * @sa drawSymbols()
- * \endif
  */
 QRect QwtSymbol::boundingRect() const
 {
@@ -2049,21 +1769,12 @@ QRect QwtSymbol::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the cached symbol pixmap
  * @details The symbol invalidates its cache, whenever an attribute is changed that has an effect on how to display a symbol.
  *          In case of derived classes with individual styles (>= QwtSymbol::UserStyle) it might be necessary
  *          to call invalidateCache() for attributes that are relevant for this style.
  * @sa CachePolicy, setCachePolicy(), drawSymbols()
- * \endif
  *
- * \if CHINESE
- * @brief 使缓存的符号像素图无效
- * @details 当影响符号显示方式的属性更改时，符号会使其缓存无效。
- *          对于具有单独样式的派生类（>= QwtSymbol::UserStyle），
- *          可能需要为与此样式相关的属性调用 invalidateCache()。
- * @sa CachePolicy, setCachePolicy(), drawSymbols()
- * \endif
  */
 void QwtSymbol::invalidateCache()
 {
@@ -2072,17 +1783,10 @@ void QwtSymbol::invalidateCache()
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the symbol style
  * @param style Style to set
  * @sa style()
- * \endif
  *
- * \if CHINESE
- * @brief 指定符号样式
- * @param style 要设置的样式
- * @sa style()
- * \endif
  */
 void QwtSymbol::setStyle( QwtSymbol::Style style )
 {
@@ -2094,17 +1798,10 @@ void QwtSymbol::setStyle( QwtSymbol::Style style )
 }
 
 /**
- * \if ENGLISH
  * @brief Get current symbol style
  * @return Current symbol style
  * @sa setStyle()
- * \endif
  *
- * \if CHINESE
- * @brief 获取当前符号样式
- * @return 当前符号样式
- * @sa setStyle()
- * \endif
  */
 QwtSymbol::Style QwtSymbol::style() const
 {

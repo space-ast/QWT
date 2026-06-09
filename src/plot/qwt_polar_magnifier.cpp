@@ -114,7 +114,7 @@ const QwtPolarPlot* QwtPolarMagnifier::plot() const
 /*!
    Handle a key press event for the observed widget.
 
-   \param event Key event
+   @param event Key event
  */
 void QwtPolarMagnifier::widgetKeyPressEvent(QKeyEvent* event)
 {

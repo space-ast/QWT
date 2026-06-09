@@ -10,7 +10,7 @@ using namespace Qwt3D;
 
 /**
         Standard mouse button Function. Prepares the call to mouseMoveEvent
-        \see mouseMoveEvent()
+        @see mouseMoveEvent()
 */
 void Plot3D::mousePressEvent(QMouseEvent *e)
 {
@@ -20,7 +20,7 @@ void Plot3D::mousePressEvent(QMouseEvent *e)
 
 /**
         Standard mouse button Function. Completes the call to mouseMoveEvent
-        \see mouseMoveEvent()
+        @see mouseMoveEvent()
 */
 void Plot3D::mouseReleaseEvent(QMouseEvent *)
 {
@@ -29,7 +29,7 @@ void Plot3D::mouseReleaseEvent(QMouseEvent *)
 
 /**
         Standard mouse button Function
-        \see assignMouse()
+        @see assignMouse()
 */
 void Plot3D::mouseMoveEvent(QMouseEvent *e)
 {
@@ -143,7 +143,7 @@ void Plot3D::wheelEvent(QWheelEvent *e)
         Sets the key/mousebutton combination for data/coordinatesystem moves inside the widget\n\n
         default behaviour:\n
 
-        \verbatim
+        @verbatim
         rotate around x axis: Qt::LeftButton
         rotate around y axis: Qt::LeftButton | Qt::ShiftButton
         rotate around z axis: Qt::LeftButton
@@ -153,7 +153,7 @@ void Plot3D::wheelEvent(QWheelEvent *e)
         zoom:                 Qt::LeftButton | Qt::AltButton | Qt::ControlButton
         shifting along x:     Qt::LeftButton | Qt::ControlButton
         shifting along y:     Qt::LeftButton | Qt::ControlButton
-        \endverbatim
+        @endverbatim
 
         mouseMoveEvent() evaluates this function - if overridden, their usefulness becomes somehow
    limited
@@ -185,7 +185,7 @@ void Plot3D::enableMouse(bool val)
 }
 
 /**
-\see enableMouse()
+@see enableMouse()
 */
 void Plot3D::disableMouse(bool val)
 {
@@ -303,7 +303,7 @@ void Plot3D::setShiftKeyboard(KeyboardState kseq, double speed)
         Sets the keybutton combination for data/coordinatesystem moves inside the widget\n\n
         default behaviour:\n
 
-        \verbatim
+        @verbatim
         rotate around x axis: [Key_Down, Key_Up]
         rotate around y axis: SHIFT+[Key_Right, Key_Left]
         rotate around z axis: [Key_Right, Key_Left]
@@ -313,7 +313,7 @@ void Plot3D::setShiftKeyboard(KeyboardState kseq, double speed)
         zoom:                 ALT+CTRL+[Key_Down, Key_Up]
         shifting along x:     CTRL+[Key_Right, Key_Left]
         shifting along z:     CTRL+[Key_Down, Key_Up]
-        \endverbatim
+        @endverbatim
 */
 void Plot3D::assignKeyboard(KeyboardState xrot_n, KeyboardState xrot_p, KeyboardState yrot_n,
                             KeyboardState yrot_p, KeyboardState zrot_n, KeyboardState zrot_p,
@@ -355,7 +355,7 @@ void Plot3D::enableKeyboard(bool val)
 }
 
 /**
-\see enableKeyboard()
+@see enableKeyboard()
 */
 void Plot3D::disableKeyboard(bool val)
 {
