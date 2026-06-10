@@ -352,9 +352,11 @@ class QwtGraphic::PathInfo
 
 class QwtGraphic::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtGraphic)
   public:
-    PrivateData()
-        : boundingRect( 0.0, 0.0, -1.0, -1.0 )
+    PrivateData( QwtGraphic* p )
+        : q_ptr( p )
+        , boundingRect( 0.0, 0.0, -1.0, -1.0 )
         , pointRect( 0.0, 0.0, -1.0, -1.0 )
     {
     }
@@ -377,9 +379,9 @@ class QwtGraphic::PrivateData
  *
  */
 QwtGraphic::QwtGraphic()
+    : QWT_PIMPL_CONSTRUCT
 {
     setMode( QwtNullPaintDevice::PathMode );
-    m_data = new PrivateData;
 }
 
 /**
@@ -389,9 +391,10 @@ QwtGraphic::QwtGraphic()
  *
  */
 QwtGraphic::QwtGraphic( const QwtGraphic& other )
+    : QWT_PIMPL_CONSTRUCT
 {
     setMode( other.mode() );
-    m_data = new PrivateData( *other.m_data );
+    *m_data = *other.m_data;
 }
 
 /**
@@ -402,7 +405,6 @@ QwtGraphic::QwtGraphic( const QwtGraphic& other )
  */
 QwtGraphic::~QwtGraphic()
 {
-    delete m_data;
 }
 
 /**
@@ -414,8 +416,9 @@ QwtGraphic::~QwtGraphic()
  */
 QwtGraphic& QwtGraphic::operator=( const QwtGraphic& other )
 {
+    QWT_D(d);
     setMode( other.mode() );
-    *m_data = *other.m_data;
+    *d = *other.m_data;
 
     return *this;
 }
@@ -428,14 +431,15 @@ QwtGraphic& QwtGraphic::operator=( const QwtGraphic& other )
  */
 void QwtGraphic::reset()
 {
-    m_data->commands.clear();
-    m_data->pathInfos.clear();
+    QWT_D(d);
+    d->commands.clear();
+    d->pathInfos.clear();
 
-    m_data->commandTypes = CommandTypes();
+    d->commandTypes = CommandTypes();
 
-    m_data->boundingRect = QRectF( 0.0, 0.0, -1.0, -1.0 );
-    m_data->pointRect = QRectF( 0.0, 0.0, -1.0, -1.0 );
-    m_data->defaultSize = QSizeF();
+    d->boundingRect = QRectF( 0.0, 0.0, -1.0, -1.0 );
+    d->pointRect = QRectF( 0.0, 0.0, -1.0, -1.0 );
+    d->defaultSize = QSizeF();
 }
 
 /**
@@ -446,7 +450,8 @@ void QwtGraphic::reset()
  */
 bool QwtGraphic::isNull() const
 {
-    return m_data->commands.isEmpty();
+    QWT_DC(d);
+    return d->commands.isEmpty();
 }
 
 /**
@@ -457,7 +462,8 @@ bool QwtGraphic::isNull() const
  */
 bool QwtGraphic::isEmpty() const
 {
-    return m_data->boundingRect.isEmpty();
+    QWT_DC(d);
+    return d->boundingRect.isEmpty();
 }
 
 /**
@@ -468,7 +474,8 @@ bool QwtGraphic::isEmpty() const
  */
 QwtGraphic::CommandTypes QwtGraphic::commandTypes() const
 {
-    return m_data->commandTypes;
+    QWT_DC(d);
+    return d->commandTypes;
 }
 
 /**
@@ -480,10 +487,11 @@ QwtGraphic::CommandTypes QwtGraphic::commandTypes() const
  */
 void QwtGraphic::setRenderHint( RenderHint hint, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->renderHints |= hint;
+        d->renderHints |= hint;
     else
-        m_data->renderHints &= ~hint;
+        d->renderHints &= ~hint;
 }
 
 /**
@@ -495,7 +503,8 @@ void QwtGraphic::setRenderHint( RenderHint hint, bool on )
  */
 bool QwtGraphic::testRenderHint( RenderHint hint ) const
 {
-    return m_data->renderHints.testFlag( hint );
+    QWT_DC(d);
+    return d->renderHints.testFlag( hint );
 }
 
 /**
@@ -506,7 +515,8 @@ bool QwtGraphic::testRenderHint( RenderHint hint ) const
  */
 QwtGraphic::RenderHints QwtGraphic::renderHints() const
 {
-    return m_data->renderHints;
+    QWT_DC(d);
+    return d->renderHints;
 }
 
 /**
@@ -521,10 +531,11 @@ QwtGraphic::RenderHints QwtGraphic::renderHints() const
  */
 QRectF QwtGraphic::boundingRect() const
 {
-    if ( m_data->boundingRect.width() < 0 )
+    QWT_DC(d);
+    if ( d->boundingRect.width() < 0 )
         return QRectF();
 
-    return m_data->boundingRect;
+    return d->boundingRect;
 }
 
 /**
@@ -539,10 +550,11 @@ QRectF QwtGraphic::boundingRect() const
  */
 QRectF QwtGraphic::controlPointRect() const
 {
-    if ( m_data->pointRect.width() < 0 )
+    QWT_DC(d);
+    if ( d->pointRect.width() < 0 )
         return QRectF();
 
-    return m_data->pointRect;
+    return d->pointRect;
 }
 
 /**
@@ -560,18 +572,19 @@ QRectF QwtGraphic::controlPointRect() const
  */
 QRectF QwtGraphic::scaledBoundingRect( qreal sx, qreal sy ) const
 {
+    QWT_DC(d);
     if ( sx == 1.0 && sy == 1.0 )
-        return m_data->boundingRect;
+        return d->boundingRect;
 
-    const bool scalePens = !( m_data->renderHints & RenderPensUnscaled );
+    const bool scalePens = !( d->renderHints & RenderPensUnscaled );
 
     QTransform transform;
     transform.scale( sx, sy );
 
-    QRectF rect = transform.mapRect( m_data->pointRect );
+    QRectF rect = transform.mapRect( d->pointRect );
 
-    for ( int i = 0; i < m_data->pathInfos.size(); i++ )
-        rect |= m_data->pathInfos[i].scaledBoundingRect( sx, sy, scalePens );
+    for ( int i = 0; i < d->pathInfos.size(); i++ )
+        rect |= d->pathInfos[i].scaledBoundingRect( sx, sy, scalePens );
 
     return rect;
 }
@@ -598,10 +611,11 @@ QSize QwtGraphic::sizeMetrics() const
  */
 void QwtGraphic::setDefaultSize( const QSizeF& size )
 {
+    QWT_D(d);
     const double w = qwtMaxF( 0.0, size.width() );
     const double h = qwtMaxF( 0.0, size.height() );
 
-    m_data->defaultSize = QSizeF( w, h );
+    d->defaultSize = QSizeF( w, h );
 }
 
 /**
@@ -619,8 +633,9 @@ void QwtGraphic::setDefaultSize( const QSizeF& size )
  */
 QSizeF QwtGraphic::defaultSize() const
 {
-    if ( !m_data->defaultSize.isEmpty() )
-        return m_data->defaultSize;
+    QWT_DC(d);
+    if ( !d->defaultSize.isEmpty() )
+        return d->defaultSize;
 
     return boundingRect().size();
 }
@@ -674,11 +689,12 @@ void QwtGraphic::render( QPainter* painter ) const
 
 void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform ) const
 {
+    QWT_DC(d);
     if ( isNull() )
         return;
 
-    const int numCommands = m_data->commands.size();
-    const QwtPainterCommand* commands = m_data->commands.constData();
+    const int numCommands = d->commands.size();
+    const QwtPainterCommand* commands = d->commands.constData();
 
     const QTransform transform = painter->transform();
 
@@ -687,7 +703,7 @@ void QwtGraphic::renderGraphic( QPainter* painter, QTransform* initialTransform 
     for ( int i = 0; i < numCommands; i++ )
     {
         qwtExecCommand( painter, commands[i],
-            m_data->renderHints, transform, initialTransform );
+            d->renderHints, transform, initialTransform );
     }
 
     painter->restore();
@@ -722,6 +738,7 @@ void QwtGraphic::render( QPainter* painter, const QSizeF& size,
 void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     Qt::AspectRatioMode aspectRatioMode ) const
 {
+    QWT_DC(d);
     if ( isEmpty() || rect.isEmpty() )
     {
 #ifdef QWT_GRAPHIC_DEBUG
@@ -729,7 +746,7 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
                  << "isEmpty()=" << isEmpty()
                  << "rect.isEmpty()=" << rect.isEmpty()
                  << "boundingRect()=" << boundingRect()
-                 << "commands count=" << m_data->commands.size()
+                 << "commands count=" << d->commands.size()
                  << "defaultSize()=" << defaultSize();
 #endif
         return;
@@ -738,26 +755,26 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     double sx = 1.0;
     double sy = 1.0;
 
-    if ( m_data->pointRect.width() > 0.0 )
-        sx = rect.width() / m_data->pointRect.width();
+    if ( d->pointRect.width() > 0.0 )
+        sx = rect.width() / d->pointRect.width();
 
-    if ( m_data->pointRect.height() > 0.0 )
-        sy = rect.height() / m_data->pointRect.height();
+    if ( d->pointRect.height() > 0.0 )
+        sy = rect.height() / d->pointRect.height();
 
-    const bool scalePens = !m_data->renderHints.testFlag( RenderPensUnscaled );
+    const bool scalePens = !d->renderHints.testFlag( RenderPensUnscaled );
 
-    for ( int i = 0; i < m_data->pathInfos.size(); i++ )
+    for ( int i = 0; i < d->pathInfos.size(); i++ )
     {
-        const PathInfo& info = m_data->pathInfos[i];
+        const PathInfo& info = d->pathInfos[i];
 
         const double ssx = info.scaleFactorX(
-            m_data->pointRect, rect, scalePens );
+            d->pointRect, rect, scalePens );
 
         if ( ssx > 0.0 )
             sx = qwtMinF( sx, ssx );
 
         const double ssy = info.scaleFactorY(
-            m_data->pointRect, rect, scalePens );
+            d->pointRect, rect, scalePens );
 
         if ( ssy > 0.0 )
             sy = qwtMinF( sy, ssy );
@@ -777,10 +794,10 @@ void QwtGraphic::render( QPainter* painter, const QRectF& rect,
     }
 
     QTransform tr;
-    tr.translate( rect.center().x() - 0.5 * sx * m_data->pointRect.width(),
-        rect.center().y() - 0.5 * sy * m_data->pointRect.height() );
+    tr.translate( rect.center().x() - 0.5 * sx * d->pointRect.width(),
+        rect.center().y() - 0.5 * sy * d->pointRect.height() );
     tr.scale( sx, sy );
-    tr.translate( -m_data->pointRect.x(), -m_data->pointRect.y() );
+    tr.translate( -d->pointRect.x(), -d->pointRect.y() );
 
     const QTransform transform = painter->transform();
 
@@ -1040,12 +1057,13 @@ QImage QwtGraphic::toImage( qreal devicePixelRatio ) const
  */
 void QwtGraphic::drawPath( const QPainterPath& path )
 {
+    QWT_D(d);
     const QPainter* painter = paintEngine()->painter();
     if ( painter == nullptr )
         return;
 
-    m_data->commands += QwtPainterCommand( path );
-    m_data->commandTypes |= QwtGraphic::VectorData;
+    d->commands += QwtPainterCommand( path );
+    d->commandTypes |= QwtGraphic::VectorData;
 
     if ( !path.isEmpty() )
     {
@@ -1071,7 +1089,7 @@ void QwtGraphic::drawPath( const QPainterPath& path )
         updateControlPointRect( pointRect );
         updateBoundingRect( boundingRect );
 
-        m_data->pathInfos += PathInfo( pointRect,
+        d->pathInfos += PathInfo( pointRect,
             boundingRect, qwtHasScalablePen( painter ) );
     }
 }
@@ -1088,12 +1106,13 @@ void QwtGraphic::drawPath( const QPainterPath& path )
 void QwtGraphic::drawPixmap( const QRectF& rect,
     const QPixmap& pixmap, const QRectF& subRect )
 {
+    QWT_D(d);
     const QPainter* painter = paintEngine()->painter();
     if ( painter == nullptr )
         return;
 
-    m_data->commands += QwtPainterCommand( rect, pixmap, subRect );
-    m_data->commandTypes |= QwtGraphic::RasterData;
+    d->commands += QwtPainterCommand( rect, pixmap, subRect );
+    d->commandTypes |= QwtGraphic::RasterData;
 
     const QRectF r = painter->transform().mapRect( rect );
     updateControlPointRect( r );
@@ -1113,12 +1132,13 @@ void QwtGraphic::drawPixmap( const QRectF& rect,
 void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
     const QRectF& subRect, Qt::ImageConversionFlags flags )
 {
+    QWT_D(d);
     const QPainter* painter = paintEngine()->painter();
     if ( painter == nullptr )
         return;
 
-    m_data->commands += QwtPainterCommand( rect, image, subRect, flags );
-    m_data->commandTypes |= QwtGraphic::RasterData;
+    d->commands += QwtPainterCommand( rect, image, subRect, flags );
+    d->commandTypes |= QwtGraphic::RasterData;
 
     const QRectF r = painter->transform().mapRect( rect );
 
@@ -1134,11 +1154,12 @@ void QwtGraphic::drawImage( const QRectF& rect, const QImage& image,
  */
 void QwtGraphic::updateState( const QPaintEngineState& state )
 {
-    m_data->commands += QwtPainterCommand( state );
+    QWT_D(d);
+    d->commands += QwtPainterCommand( state );
 
     if ( state.state() & QPaintEngine::DirtyTransform )
     {
-        if ( !( m_data->commandTypes & QwtGraphic::Transformation ) )
+        if ( !( d->commandTypes & QwtGraphic::Transformation ) )
         {
             /*
                 QTransform::isScaling() returns true for all type
@@ -1146,13 +1167,14 @@ void QwtGraphic::updateState( const QPaintEngineState& state )
                 even if it is f.e a rotation
              */
             if ( state.transform().isScaling() )
-                m_data->commandTypes |= QwtGraphic::Transformation;
+                d->commandTypes |= QwtGraphic::Transformation;
         }
     }
 }
 
 void QwtGraphic::updateBoundingRect( const QRectF& rect )
 {
+    QWT_D(d);
     QRectF br = rect;
 
     const QPainter* painter = paintEngine()->painter();
@@ -1164,18 +1186,19 @@ void QwtGraphic::updateBoundingRect( const QRectF& rect )
         br &= cr;
     }
 
-    if ( m_data->boundingRect.width() < 0 )
-        m_data->boundingRect = br;
+    if ( d->boundingRect.width() < 0 )
+        d->boundingRect = br;
     else
-        m_data->boundingRect |= br;
+        d->boundingRect |= br;
 }
 
 void QwtGraphic::updateControlPointRect( const QRectF& rect )
 {
-    if ( m_data->pointRect.width() < 0.0 )
-        m_data->pointRect = rect;
+    QWT_D(d);
+    if ( d->pointRect.width() < 0.0 )
+        d->pointRect = rect;
     else
-        m_data->pointRect |= rect;
+        d->pointRect |= rect;
 }
 
 /**
@@ -1186,7 +1209,8 @@ void QwtGraphic::updateControlPointRect( const QRectF& rect )
  */
 const QVector< QwtPainterCommand >& QwtGraphic::commands() const
 {
-    return m_data->commands;
+    QWT_DC(d);
+    return d->commands;
 }
 
 /**

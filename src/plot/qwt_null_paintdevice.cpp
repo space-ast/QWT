@@ -30,8 +30,10 @@
 
 class QwtNullPaintDevice::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtNullPaintDevice)
   public:
-    PrivateData():
+    PrivateData( QwtNullPaintDevice* p ):
+        q_ptr( p ),
         mode( QwtNullPaintDevice::NormalMode )
     {
     }
@@ -386,7 +388,7 @@ inline QwtNullPaintDevice* QwtNullPaintDevice::PaintEngine::nullDevice()
 QwtNullPaintDevice::QwtNullPaintDevice():
     m_engine( nullptr )
 {
-    m_data = new PrivateData;
+    QWT_PIMPL_CONSTRUCT_INIT();
 }
 
 /**
@@ -395,7 +397,6 @@ QwtNullPaintDevice::QwtNullPaintDevice():
 QwtNullPaintDevice::~QwtNullPaintDevice()
 {
     delete m_engine;
-    delete m_data;
 }
 
 /**
@@ -404,7 +405,8 @@ QwtNullPaintDevice::~QwtNullPaintDevice()
  */
 void QwtNullPaintDevice::setMode( Mode mode )
 {
-    m_data->mode = mode;
+    QWT_D(d);
+    d->mode = mode;
 }
 
 /**
@@ -413,7 +415,8 @@ void QwtNullPaintDevice::setMode( Mode mode )
  */
 QwtNullPaintDevice::Mode QwtNullPaintDevice::mode() const
 {
-    return m_data->mode;
+    QWT_DC(d);
+    return d->mode;
 }
 
 /**

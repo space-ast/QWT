@@ -116,8 +116,7 @@ void reset();
 virtual bool eventFilter( QObject*, QEvent* ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotDirectPainter)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotDirectPainter::Attributes )

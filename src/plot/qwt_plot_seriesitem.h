@@ -87,8 +87,7 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
     virtual void dataChanged() override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotSeriesItem)
 };
 
 #endif

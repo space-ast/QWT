@@ -36,9 +36,11 @@
 
 class QwtPlotMarker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotMarker)
   public:
-    PrivateData()
-        : labelAlignment( Qt::AlignCenter )
+    PrivateData( QwtPlotMarker* p )
+        : q_ptr( p )
+        , labelAlignment( Qt::AlignCenter )
         , labelOrientation( Qt::Horizontal )
         , spacing( 2 )
         , symbol( nullptr )
@@ -72,8 +74,8 @@ class QwtPlotMarker::PrivateData
  *
  */
 QwtPlotMarker::QwtPlotMarker()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ( 30.0 );
 }
 
@@ -85,8 +87,8 @@ QwtPlotMarker::QwtPlotMarker()
  */
 QwtPlotMarker::QwtPlotMarker( const QString& title )
     : QwtPlotItem( QwtText( title ) )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ( 30.0 );
 }
 
@@ -98,8 +100,8 @@ QwtPlotMarker::QwtPlotMarker( const QString& title )
  */
 QwtPlotMarker::QwtPlotMarker( const QwtText& title )
     : QwtPlotItem( title )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ( 30.0 );
 }
 
@@ -109,7 +111,6 @@ QwtPlotMarker::QwtPlotMarker( const QwtText& title )
  */
 QwtPlotMarker::~QwtPlotMarker()
 {
-    delete m_data;
 }
 
 /**
@@ -129,7 +130,8 @@ int QwtPlotMarker::rtti() const
  */
 QPointF QwtPlotMarker::value() const
 {
-    return QPointF( m_data->xValue, m_data->yValue );
+    QWT_DC( d );
+    return QPointF( d->xValue, d->yValue );
 }
 
 /**
@@ -139,7 +141,8 @@ QPointF QwtPlotMarker::value() const
  */
 double QwtPlotMarker::xValue() const
 {
-    return m_data->xValue;
+    QWT_DC( d );
+    return d->xValue;
 }
 
 /**
@@ -149,7 +152,8 @@ double QwtPlotMarker::xValue() const
  */
 double QwtPlotMarker::yValue() const
 {
-    return m_data->yValue;
+    QWT_DC( d );
+    return d->yValue;
 }
 
 /**
@@ -170,10 +174,11 @@ void QwtPlotMarker::setValue( const QPointF& pos )
  */
 void QwtPlotMarker::setValue( double x, double y )
 {
-    if ( x != m_data->xValue || y != m_data->yValue )
+    QWT_D( d );
+    if ( x != d->xValue || y != d->yValue )
     {
-        m_data->xValue = x;
-        m_data->yValue = y;
+        d->xValue = x;
+        d->yValue = y;
         itemChanged();
     }
 }
@@ -185,7 +190,8 @@ void QwtPlotMarker::setValue( double x, double y )
  */
 void QwtPlotMarker::setXValue( double x )
 {
-    setValue( x, m_data->yValue );
+    QWT_D( d );
+    setValue( x, d->yValue );
 }
 
 /**
@@ -195,7 +201,8 @@ void QwtPlotMarker::setXValue( double x )
  */
 void QwtPlotMarker::setYValue( double y )
 {
-    setValue( m_data->xValue, y );
+    QWT_D( d );
+    setValue( d->xValue, y );
 }
 
 /**
@@ -210,8 +217,9 @@ void QwtPlotMarker::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
-    const QPointF pos( xMap.transform( m_data->xValue ),
-        yMap.transform( m_data->yValue ) );
+    QWT_DC( d );
+    const QPointF pos( xMap.transform( d->xValue ),
+        yMap.transform( d->yValue ) );
 
     drawLines( painter, canvasRect, pos );
     drawSymbol( painter, canvasRect, pos );
@@ -230,14 +238,15 @@ void QwtPlotMarker::draw( QPainter* painter,
 void QwtPlotMarker::drawLines( QPainter* painter,
     const QRectF& canvasRect, const QPointF& pos ) const
 {
-    if ( m_data->style == NoLine )
+    QWT_DC( d );
+    if ( d->style == NoLine )
         return;
 
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
-    painter->setPen( m_data->pen );
-    if ( m_data->style == QwtPlotMarker::HLine ||
-        m_data->style == QwtPlotMarker::Cross )
+    painter->setPen( d->pen );
+    if ( d->style == QwtPlotMarker::HLine ||
+        d->style == QwtPlotMarker::Cross )
     {
         double y = pos.y();
         if ( doAlign )
@@ -246,8 +255,8 @@ void QwtPlotMarker::drawLines( QPainter* painter,
         QwtPainter::drawLine( painter, canvasRect.left(),
             y, canvasRect.right() - 1.0, y );
     }
-    if ( m_data->style == QwtPlotMarker::VLine ||
-        m_data->style == QwtPlotMarker::Cross )
+    if ( d->style == QwtPlotMarker::VLine ||
+        d->style == QwtPlotMarker::Cross )
     {
         double x = pos.x();
         if ( doAlign )
@@ -270,10 +279,11 @@ void QwtPlotMarker::drawLines( QPainter* painter,
 void QwtPlotMarker::drawSymbol( QPainter* painter,
     const QRectF& canvasRect, const QPointF& pos ) const
 {
-    if ( m_data->symbol == nullptr )
+    QWT_DC( d );
+    if ( d->symbol == nullptr )
         return;
 
-    const QwtSymbol& symbol = *m_data->symbol;
+    const QwtSymbol& symbol = *d->symbol;
 
     if ( symbol.style() != QwtSymbol::NoSymbol )
     {
@@ -299,28 +309,29 @@ void QwtPlotMarker::drawSymbol( QPainter* painter,
 void QwtPlotMarker::drawLabel( QPainter* painter,
     const QRectF& canvasRect, const QPointF& pos ) const
 {
-    if ( m_data->label.isEmpty() )
+    QWT_DC( d );
+    if ( d->label.isEmpty() )
         return;
 
-    Qt::Alignment align = m_data->labelAlignment;
+    Qt::Alignment align = d->labelAlignment;
     QPointF alignPos = pos;
 
     QSizeF symbolOff( 0, 0 );
 
-    switch ( m_data->style )
+    switch ( d->style )
     {
         case QwtPlotMarker::VLine:
         {
             // In VLine-style the y-position is pointless and
             // the alignment flags are relative to the canvas
 
-            if ( m_data->labelAlignment & Qt::AlignTop )
+            if ( d->labelAlignment & Qt::AlignTop )
             {
                 alignPos.setY( canvasRect.top() );
                 align &= ~Qt::AlignTop;
                 align |= Qt::AlignBottom;
             }
-            else if ( m_data->labelAlignment & Qt::AlignBottom )
+            else if ( d->labelAlignment & Qt::AlignBottom )
             {
                 // In HLine-style the x-position is pointless and
                 // the alignment flags are relative to the canvas
@@ -337,13 +348,13 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
         }
         case QwtPlotMarker::HLine:
         {
-            if ( m_data->labelAlignment & Qt::AlignLeft )
+            if ( d->labelAlignment & Qt::AlignLeft )
             {
                 alignPos.setX( canvasRect.left() );
                 align &= ~Qt::AlignLeft;
                 align |= Qt::AlignRight;
             }
-            else if ( m_data->labelAlignment & Qt::AlignRight )
+            else if ( d->labelAlignment & Qt::AlignRight )
             {
                 alignPos.setX( canvasRect.right() - 1 );
                 align &= ~Qt::AlignRight;
@@ -357,30 +368,30 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
         }
         default:
         {
-            if ( m_data->symbol &&
-                ( m_data->symbol->style() != QwtSymbol::NoSymbol ) )
+            if ( d->symbol &&
+                ( d->symbol->style() != QwtSymbol::NoSymbol ) )
             {
-                symbolOff = m_data->symbol->size() + QSizeF( 1, 1 );
+                symbolOff = d->symbol->size() + QSizeF( 1, 1 );
                 symbolOff /= 2;
             }
         }
     }
 
-    qreal pw2 = m_data->pen.widthF() / 2.0;
+    qreal pw2 = d->pen.widthF() / 2.0;
     if ( pw2 == 0.0 )
         pw2 = 0.5;
 
-    const int spacing = m_data->spacing;
+    const int spacing = d->spacing;
 
     const qreal xOff = qwtMaxF( pw2, symbolOff.width() );
     const qreal yOff = qwtMaxF( pw2, symbolOff.height() );
 
-    const QSizeF textSize = m_data->label.textSize( painter->font() );
+    const QSizeF textSize = d->label.textSize( painter->font() );
 
     if ( align & Qt::AlignLeft )
     {
         alignPos.rx() -= xOff + spacing;
-        if ( m_data->labelOrientation == Qt::Vertical )
+        if ( d->labelOrientation == Qt::Vertical )
             alignPos.rx() -= textSize.height();
         else
             alignPos.rx() -= textSize.width();
@@ -391,7 +402,7 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
     }
     else
     {
-        if ( m_data->labelOrientation == Qt::Vertical )
+        if ( d->labelOrientation == Qt::Vertical )
             alignPos.rx() -= textSize.height() / 2;
         else
             alignPos.rx() -= textSize.width() / 2;
@@ -400,29 +411,29 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
     if ( align & Qt::AlignTop )
     {
         alignPos.ry() -= yOff + spacing;
-        if ( m_data->labelOrientation != Qt::Vertical )
+        if ( d->labelOrientation != Qt::Vertical )
             alignPos.ry() -= textSize.height();
     }
     else if ( align & Qt::AlignBottom )
     {
         alignPos.ry() += yOff + spacing;
-        if ( m_data->labelOrientation == Qt::Vertical )
+        if ( d->labelOrientation == Qt::Vertical )
             alignPos.ry() += textSize.width();
     }
     else
     {
-        if ( m_data->labelOrientation == Qt::Vertical )
+        if ( d->labelOrientation == Qt::Vertical )
             alignPos.ry() += textSize.width() / 2;
         else
             alignPos.ry() -= textSize.height() / 2;
     }
 
     painter->translate( alignPos.x(), alignPos.y() );
-    if ( m_data->labelOrientation == Qt::Vertical )
+    if ( d->labelOrientation == Qt::Vertical )
         painter->rotate( -90.0 );
 
     const QRectF textRect( 0, 0, textSize.width(), textSize.height() );
-    m_data->label.draw( painter, textRect );
+    d->label.draw( painter, textRect );
 }
 
 /**
@@ -433,9 +444,10 @@ void QwtPlotMarker::drawLabel( QPainter* painter,
  */
 void QwtPlotMarker::setLineStyle( LineStyle style )
 {
-    if ( style != m_data->style )
+    QWT_D( d );
+    if ( style != d->style )
     {
-        m_data->style = style;
+        d->style = style;
 
         legendChanged();
         itemChanged();
@@ -450,7 +462,8 @@ void QwtPlotMarker::setLineStyle( LineStyle style )
  */
 QwtPlotMarker::LineStyle QwtPlotMarker::lineStyle() const
 {
-    return m_data->style;
+    QWT_DC( d );
+    return d->style;
 }
 
 /**
@@ -461,10 +474,11 @@ QwtPlotMarker::LineStyle QwtPlotMarker::lineStyle() const
  */
 void QwtPlotMarker::setSymbol( const QwtSymbol* symbol )
 {
-    if ( symbol != m_data->symbol )
+    QWT_D( d );
+    if ( symbol != d->symbol )
     {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+        delete d->symbol;
+        d->symbol = symbol;
 
         if ( symbol )
             setLegendIconSize( symbol->boundingRect().size() );
@@ -482,7 +496,8 @@ void QwtPlotMarker::setSymbol( const QwtSymbol* symbol )
  */
 const QwtSymbol* QwtPlotMarker::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC( d );
+    return d->symbol;
 }
 
 /**
@@ -493,9 +508,10 @@ const QwtSymbol* QwtPlotMarker::symbol() const
  */
 void QwtPlotMarker::setLabel( const QwtText& label )
 {
-    if ( label != m_data->label )
+    QWT_D( d );
+    if ( label != d->label )
     {
-        m_data->label = label;
+        d->label = label;
         itemChanged();
     }
 }
@@ -508,7 +524,8 @@ void QwtPlotMarker::setLabel( const QwtText& label )
  */
 QwtText QwtPlotMarker::label() const
 {
-    return m_data->label;
+    QWT_DC( d );
+    return d->label;
 }
 
 /**
@@ -525,9 +542,10 @@ QwtText QwtPlotMarker::label() const
  */
 void QwtPlotMarker::setLabelAlignment( Qt::Alignment align )
 {
-    if ( align != m_data->labelAlignment )
+    QWT_D( d );
+    if ( align != d->labelAlignment )
     {
-        m_data->labelAlignment = align;
+        d->labelAlignment = align;
         itemChanged();
     }
 }
@@ -540,7 +558,8 @@ void QwtPlotMarker::setLabelAlignment( Qt::Alignment align )
  */
 Qt::Alignment QwtPlotMarker::labelAlignment() const
 {
-    return m_data->labelAlignment;
+    QWT_DC( d );
+    return d->labelAlignment;
 }
 
 /**
@@ -553,9 +572,10 @@ Qt::Alignment QwtPlotMarker::labelAlignment() const
  */
 void QwtPlotMarker::setLabelOrientation( Qt::Orientation orientation )
 {
-    if ( orientation != m_data->labelOrientation )
+    QWT_D( d );
+    if ( orientation != d->labelOrientation )
     {
-        m_data->labelOrientation = orientation;
+        d->labelOrientation = orientation;
         itemChanged();
     }
 }
@@ -568,7 +588,8 @@ void QwtPlotMarker::setLabelOrientation( Qt::Orientation orientation )
  */
 Qt::Orientation QwtPlotMarker::labelOrientation() const
 {
-    return m_data->labelOrientation;
+    QWT_DC( d );
+    return d->labelOrientation;
 }
 
 /**
@@ -581,13 +602,14 @@ Qt::Orientation QwtPlotMarker::labelOrientation() const
  */
 void QwtPlotMarker::setSpacing( int spacing )
 {
+    QWT_D( d );
     if ( spacing < 0 )
         spacing = 0;
 
-    if ( spacing == m_data->spacing )
+    if ( spacing == d->spacing )
         return;
 
-    m_data->spacing = spacing;
+    d->spacing = spacing;
     itemChanged();
 }
 
@@ -599,7 +621,8 @@ void QwtPlotMarker::setSpacing( int spacing )
  */
 int QwtPlotMarker::spacing() const
 {
-    return m_data->spacing;
+    QWT_DC( d );
+    return d->spacing;
 }
 
 /**
@@ -626,9 +649,10 @@ void QwtPlotMarker::setLinePen( const QColor& color, qreal width, Qt::PenStyle s
  */
 void QwtPlotMarker::setLinePen( const QPen& pen )
 {
-    if ( pen != m_data->pen )
+    QWT_D( d );
+    if ( pen != d->pen )
     {
-        m_data->pen = pen;
+        d->pen = pen;
 
         legendChanged();
         itemChanged();
@@ -643,7 +667,8 @@ void QwtPlotMarker::setLinePen( const QPen& pen )
  */
 const QPen& QwtPlotMarker::linePen() const
 {
-    return m_data->pen;
+    QWT_DC( d );
+    return d->pen;
 }
 
 /**
@@ -654,18 +679,19 @@ const QPen& QwtPlotMarker::linePen() const
  */
 QRectF QwtPlotMarker::boundingRect() const
 {
+    QWT_DC( d );
     // width/height of -1 does not affect the autoscale calculation
 
-    switch (m_data->style)
+    switch ( d->style )
     {
         case QwtPlotMarker::HLine:
-            return QRectF( m_data->xValue, m_data->yValue, -1.0, 0.0 );
+            return QRectF( d->xValue, d->yValue, -1.0, 0.0 );
 
         case QwtPlotMarker::VLine:
-            return QRectF( m_data->xValue, m_data->yValue, 0.0, -1.0 );
+            return QRectF( d->xValue, d->yValue, 0.0, -1.0 );
 
         default:
-            return QRectF( m_data->xValue, m_data->yValue, 0.0, 0.0 );
+            return QRectF( d->xValue, d->yValue, 0.0, 0.0 );
     }
 }
 
@@ -679,6 +705,7 @@ QRectF QwtPlotMarker::boundingRect() const
  */
 QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
 {
+    QWT_DC( d );
     Q_UNUSED( index );
 
     if ( size.isEmpty() )
@@ -692,12 +719,12 @@ QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
     painter.setRenderHint( QPainter::Antialiasing,
         testRenderHint( QwtPlotItem::RenderAntialiased ) );
 
-    if ( m_data->style != QwtPlotMarker::NoLine )
+    if ( d->style != QwtPlotMarker::NoLine )
     {
-        painter.setPen( m_data->pen );
+        painter.setPen( d->pen );
 
-        if ( m_data->style == QwtPlotMarker::HLine ||
-            m_data->style == QwtPlotMarker::Cross )
+        if ( d->style == QwtPlotMarker::HLine ||
+            d->style == QwtPlotMarker::Cross )
         {
             const double y = 0.5 * size.height();
 
@@ -705,8 +732,8 @@ QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
                 0.0, y, size.width(), y );
         }
 
-        if ( m_data->style == QwtPlotMarker::VLine ||
-            m_data->style == QwtPlotMarker::Cross )
+        if ( d->style == QwtPlotMarker::VLine ||
+            d->style == QwtPlotMarker::Cross )
         {
             const double x = 0.5 * size.width();
 
@@ -715,12 +742,11 @@ QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
         }
     }
 
-    if ( m_data->symbol )
+    if ( d->symbol )
     {
         const QRect r( 0.0, 0.0, size.width(), size.height() );
-        m_data->symbol->drawSymbol( &painter, r );
+        d->symbol->drawSymbol( &painter, r );
     }
 
     return icon;
 }
-

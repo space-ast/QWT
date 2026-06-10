@@ -119,8 +119,7 @@ private:
     void showCursor(bool);
 #endif
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtCachePanner)
 };
 
 #endif

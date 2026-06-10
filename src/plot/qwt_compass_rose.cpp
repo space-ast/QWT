@@ -81,9 +81,11 @@ const QPalette& QwtCompassRose::palette() const
 
 class QwtSimpleCompassRose::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtSimpleCompassRose)
   public:
-    PrivateData()
-        : width( 0.2 )
+    PrivateData( QwtSimpleCompassRose* p )
+        : q_ptr( p )
+        , width( 0.2 )
         , numThorns( 8 )
         , numThornLevels( -1 )
         , shrinkFactor( 0.9 )
@@ -103,10 +105,11 @@ class QwtSimpleCompassRose::PrivateData
  */
 QwtSimpleCompassRose::QwtSimpleCompassRose(
     int numThorns, int numThornLevels )
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
-    m_data->numThorns = numThorns;
-    m_data->numThornLevels = numThornLevels;
+    QWT_D(d);
+    d->numThorns = numThorns;
+    d->numThornLevels = numThornLevels;
 
     const QColor dark( 128, 128, 255 );
     const QColor light( 192, 255, 255 );
@@ -123,7 +126,6 @@ QwtSimpleCompassRose::QwtSimpleCompassRose(
  */
 QwtSimpleCompassRose::~QwtSimpleCompassRose()
 {
-    delete m_data;
 }
 
 /**
@@ -133,7 +135,8 @@ QwtSimpleCompassRose::~QwtSimpleCompassRose()
  */
 void QwtSimpleCompassRose::setShrinkFactor( double factor )
 {
-    m_data->shrinkFactor = factor;
+    QWT_D(d);
+    d->shrinkFactor = factor;
 }
 
 /**
@@ -143,7 +146,8 @@ void QwtSimpleCompassRose::setShrinkFactor( double factor )
  */
 double QwtSimpleCompassRose::shrinkFactor() const
 {
-    return m_data->shrinkFactor;
+    QWT_DC(d);
+    return d->shrinkFactor;
 }
 
 /**
@@ -157,11 +161,12 @@ double QwtSimpleCompassRose::shrinkFactor() const
 void QwtSimpleCompassRose::draw( QPainter* painter, const QPointF& center,
     double radius, double north, QPalette::ColorGroup cg ) const
 {
+    QWT_DC(d);
     QPalette pal = palette();
     pal.setCurrentColorGroup( cg );
 
-    drawRose( painter, pal, center, radius, north, m_data->width,
-        m_data->numThorns, m_data->numThornLevels, m_data->shrinkFactor );
+    drawRose( painter, pal, center, radius, north, d->width,
+        d->numThorns, d->numThornLevels, d->shrinkFactor );
 }
 
 /**
@@ -254,12 +259,13 @@ void QwtSimpleCompassRose::drawRose(
  */
 void QwtSimpleCompassRose::setWidth( double width )
 {
-    m_data->width = width;
-    if ( m_data->width < 0.03 )
-        m_data->width = 0.03;
+    QWT_D(d);
+    d->width = width;
+    if ( d->width < 0.03 )
+        d->width = 0.03;
 
-    if ( m_data->width > 0.4 )
-        m_data->width = 0.4;
+    if ( d->width > 0.4 )
+        d->width = 0.4;
 }
 
 /**
@@ -269,7 +275,8 @@ void QwtSimpleCompassRose::setWidth( double width )
  */
 double QwtSimpleCompassRose::width() const
 {
-    return m_data->width;
+    QWT_DC(d);
+    return d->width;
 }
 
 /**
@@ -279,13 +286,14 @@ double QwtSimpleCompassRose::width() const
  */
 void QwtSimpleCompassRose::setNumThorns( int numThorns )
 {
+    QWT_D(d);
     if ( numThorns < 4 )
         numThorns = 4;
 
     if ( numThorns % 4 )
         numThorns += 4 - numThorns % 4;
 
-    m_data->numThorns = numThorns;
+    d->numThorns = numThorns;
 }
 
 /**
@@ -295,7 +303,8 @@ void QwtSimpleCompassRose::setNumThorns( int numThorns )
  */
 int QwtSimpleCompassRose::numThorns() const
 {
-    return m_data->numThorns;
+    QWT_DC(d);
+    return d->numThorns;
 }
 
 /**
@@ -305,7 +314,8 @@ int QwtSimpleCompassRose::numThorns() const
  */
 void QwtSimpleCompassRose::setNumThornLevels( int numThornLevels )
 {
-    m_data->numThornLevels = numThornLevels;
+    QWT_D(d);
+    d->numThornLevels = numThornLevels;
 }
 
 /**
@@ -315,5 +325,6 @@ void QwtSimpleCompassRose::setNumThornLevels( int numThornLevels )
  */
 int QwtSimpleCompassRose::numThornLevels() const
 {
-    return m_data->numThornLevels;
+    QWT_DC(d);
+    return d->numThornLevels;
 }

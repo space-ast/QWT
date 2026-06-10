@@ -76,8 +76,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
     virtual void resizeEvent( QResizeEvent* ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarCanvas::PaintAttributes )

@@ -81,8 +81,7 @@ protected:
     virtual QPixmap grab() const override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotCachePanner)
 };
 
 #endif

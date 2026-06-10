@@ -99,8 +99,7 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
   private:
     virtual QPainterPath pickArea() const override;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarPicker)
 };
 
 #endif

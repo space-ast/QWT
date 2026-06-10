@@ -216,8 +216,7 @@ protected:
 private:
     void init();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotVectorField)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotVectorField::PaintAttributes)

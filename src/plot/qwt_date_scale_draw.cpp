@@ -29,8 +29,13 @@
 
 class QwtDateScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtDateScaleDraw)
 public:
-    explicit PrivateData(Qt::TimeSpec spec) : timeSpec(spec), utcOffset(0), week0Type(QwtDate::FirstThursday)
+    PrivateData( QwtDateScaleDraw* p, Qt::TimeSpec spec )
+        : q_ptr( p )
+        , timeSpec(spec)
+        , utcOffset(0)
+        , week0Type(QwtDate::FirstThursday)
     {
         // modify by qwt7.0 change to ISO datetime format
         /**
@@ -70,8 +75,8 @@ public:
  *
  */
 QwtDateScaleDraw::QwtDateScaleDraw(Qt::TimeSpec timeSpec)
+    : m_data( qwt_make_unique< PrivateData >( this, timeSpec ) )
 {
-    m_data = new PrivateData(timeSpec);
 }
 
 /**
@@ -80,7 +85,6 @@ QwtDateScaleDraw::QwtDateScaleDraw(Qt::TimeSpec timeSpec)
  */
 QwtDateScaleDraw::~QwtDateScaleDraw()
 {
-    delete m_data;
 }
 
 /**
@@ -91,7 +95,8 @@ QwtDateScaleDraw::~QwtDateScaleDraw()
  */
 void QwtDateScaleDraw::setTimeSpec(Qt::TimeSpec timeSpec)
 {
-    m_data->timeSpec = timeSpec;
+    QWT_D(d);
+    d->timeSpec = timeSpec;
 }
 
 /**
@@ -102,7 +107,8 @@ void QwtDateScaleDraw::setTimeSpec(Qt::TimeSpec timeSpec)
  */
 Qt::TimeSpec QwtDateScaleDraw::timeSpec() const
 {
-    return m_data->timeSpec;
+    QWT_DC(d);
+    return d->timeSpec;
 }
 
 /**
@@ -114,7 +120,8 @@ Qt::TimeSpec QwtDateScaleDraw::timeSpec() const
  */
 void QwtDateScaleDraw::setUtcOffset(int seconds)
 {
-    m_data->utcOffset = seconds;
+    QWT_D(d);
+    d->utcOffset = seconds;
 }
 
 /**
@@ -126,7 +133,8 @@ void QwtDateScaleDraw::setUtcOffset(int seconds)
  */
 int QwtDateScaleDraw::utcOffset() const
 {
-    return m_data->utcOffset;
+    QWT_DC(d);
+    return d->utcOffset;
 }
 
 /**
@@ -138,7 +146,8 @@ int QwtDateScaleDraw::utcOffset() const
  */
 void QwtDateScaleDraw::setWeek0Type(QwtDate::Week0Type week0Type)
 {
-    m_data->week0Type = week0Type;
+    QWT_D(d);
+    d->week0Type = week0Type;
 }
 
 /**
@@ -149,7 +158,8 @@ void QwtDateScaleDraw::setWeek0Type(QwtDate::Week0Type week0Type)
  */
 QwtDate::Week0Type QwtDateScaleDraw::week0Type() const
 {
-    return m_data->week0Type;
+    QWT_DC(d);
+    return d->week0Type;
 }
 
 /**
@@ -161,8 +171,9 @@ QwtDate::Week0Type QwtDateScaleDraw::week0Type() const
  */
 void QwtDateScaleDraw::setDateFormat(QwtDate::IntervalType intervalType, const QString& format)
 {
+    QWT_D(d);
     if (intervalType >= QwtDate::Millisecond && intervalType <= QwtDate::Year) {
-        m_data->dateFormats[ intervalType ] = format;
+        d->dateFormats[ intervalType ] = format;
     }
 }
 
@@ -175,8 +186,9 @@ void QwtDateScaleDraw::setDateFormat(QwtDate::IntervalType intervalType, const Q
  */
 QString QwtDateScaleDraw::dateFormat(QwtDate::IntervalType intervalType) const
 {
+    QWT_DC(d);
     if (intervalType >= QwtDate::Millisecond && intervalType <= QwtDate::Year) {
-        return m_data->dateFormats[ intervalType ];
+        return d->dateFormats[ intervalType ];
     }
 
     return QString();
@@ -200,13 +212,14 @@ QString QwtDateScaleDraw::dateFormat(QwtDate::IntervalType intervalType) const
  */
 QString QwtDateScaleDraw::dateFormatOfDate(const QDateTime& dateTime, QwtDate::IntervalType intervalType) const
 {
+    QWT_DC(d);
     Q_UNUSED(dateTime)
 
     if (intervalType >= QwtDate::Millisecond && intervalType <= QwtDate::Year) {
-        return m_data->dateFormats[ intervalType ];
+        return d->dateFormats[ intervalType ];
     }
 
-    return m_data->dateFormats[ QwtDate::Second ];
+    return d->dateFormats[ QwtDate::Second ];
 }
 
 /**
@@ -220,10 +233,11 @@ QString QwtDateScaleDraw::dateFormatOfDate(const QDateTime& dateTime, QwtDate::I
  */
 QwtText QwtDateScaleDraw::label(double value) const
 {
+    QWT_DC(d);
     const QDateTime dt = toDateTime(value);
     const QString fmt  = dateFormatOfDate(dt, intervalType(scaleDiv()));
 
-    return QwtDate::toString(dt, fmt, m_data->week0Type);
+    return QwtDate::toString(dt, fmt, d->week0Type);
 }
 
 /*!
@@ -275,13 +289,14 @@ QwtDate::IntervalType QwtDateScaleDraw::intervalType(const QwtScaleDiv& scaleDiv
  */
 QDateTime QwtDateScaleDraw::toDateTime(double value) const
 {
-    QDateTime dt = QwtDate::toDateTime(value, m_data->timeSpec);
-    if (m_data->timeSpec == Qt::OffsetFromUTC) {
-        dt = dt.addSecs(m_data->utcOffset);
+    QWT_DC(d);
+    QDateTime dt = QwtDate::toDateTime(value, d->timeSpec);
+    if (d->timeSpec == Qt::OffsetFromUTC) {
+        dt = dt.addSecs(d->utcOffset);
 #if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc(m_data->utcOffset);
+        dt.setOffsetFromUtc(d->utcOffset);
 #else
-        dt.setUtcOffset(m_data->utcOffset);
+        dt.setUtcOffset(d->utcOffset);
 #endif
     }
 

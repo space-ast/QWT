@@ -111,8 +111,7 @@ class QWT_EXPORT QwtIntervalSymbol
         const QPointF& from, const QPointF& to ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtIntervalSymbol)
 };
 
 #endif

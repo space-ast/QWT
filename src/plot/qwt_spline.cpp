@@ -450,9 +450,11 @@ static QPolygonF qwtPolygonParametric( double distance,
 
 class QwtSpline::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtSpline)
   public:
-    PrivateData()
-        : boundaryType( QwtSpline::ConditionalBoundaries )
+    PrivateData( QwtSpline* p )
+        : q_ptr( p )
+        , boundaryType( QwtSpline::ConditionalBoundaries )
     {
         parametrization = new QwtSplineParametrization(
             QwtSplineParametrization::ParameterChordal );
@@ -554,8 +556,8 @@ QPolygonF QwtSpline::polygon( const QPolygonF& points, double tolerance ) const
  * @sa setParametrization(), setBoundaryType()
  */
 QwtSpline::QwtSpline()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
@@ -563,7 +565,6 @@ QwtSpline::QwtSpline()
  */
 QwtSpline::~QwtSpline()
 {
-    delete m_data;
 }
 
 /**
@@ -597,10 +598,11 @@ uint QwtSpline::locality() const
  */
 void QwtSpline::setParametrization( int type )
 {
-    if ( m_data->parametrization->type() != type )
+    QWT_D(d);
+    if ( d->parametrization->type() != type )
     {
-        delete m_data->parametrization;
-        m_data->parametrization = new QwtSplineParametrization( type );
+        delete d->parametrization;
+        d->parametrization = new QwtSplineParametrization( type );
     }
 }
 
@@ -615,10 +617,11 @@ void QwtSpline::setParametrization( int type )
  */
 void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
 {
-    if ( ( parametrization != nullptr ) && ( m_data->parametrization != parametrization ) )
+    QWT_D(d);
+    if ( ( parametrization != nullptr ) && ( d->parametrization != parametrization ) )
     {
-        delete m_data->parametrization;
-        m_data->parametrization = parametrization;
+        delete d->parametrization;
+        d->parametrization = parametrization;
     }
 }
 
@@ -630,7 +633,8 @@ void QwtSpline::setParametrization( QwtSplineParametrization* parametrization )
  */
 const QwtSplineParametrization* QwtSpline::parametrization() const
 {
-    return m_data->parametrization;
+    QWT_DC(d);
+    return d->parametrization;
 }
 
 /**
@@ -643,7 +647,8 @@ const QwtSplineParametrization* QwtSpline::parametrization() const
  */
 void QwtSpline::setBoundaryType( BoundaryType boundaryType )
 {
-    m_data->boundaryType = boundaryType;
+    QWT_D(d);
+    d->boundaryType = boundaryType;
 }
 
 /**
@@ -654,7 +659,8 @@ void QwtSpline::setBoundaryType( BoundaryType boundaryType )
  */
 QwtSpline::BoundaryType QwtSpline::boundaryType() const
 {
-    return m_data->boundaryType;
+    QWT_DC(d);
+    return d->boundaryType;
 }
 
 /**
@@ -668,8 +674,9 @@ QwtSpline::BoundaryType QwtSpline::boundaryType() const
  */
 void QwtSpline::setBoundaryCondition( BoundaryPosition position, int condition )
 {
+    QWT_D(d);
     if ( ( position == QwtSpline::AtBeginning ) || ( position == QwtSpline::AtEnd ) )
-        m_data->boundaryConditions[position].type = condition;
+        d->boundaryConditions[position].type = condition;
 }
 
 /**
@@ -681,10 +688,11 @@ void QwtSpline::setBoundaryCondition( BoundaryPosition position, int condition )
  */
 int QwtSpline::boundaryCondition( BoundaryPosition position ) const
 {
+    QWT_DC(d);
     if ( ( position == QwtSpline::AtBeginning ) || ( position == QwtSpline::AtEnd ) )
-        return m_data->boundaryConditions[position].type;
+        return d->boundaryConditions[position].type;
 
-    return m_data->boundaryConditions[0].type; // should never happen
+    return d->boundaryConditions[0].type; // should never happen
 }
 
 /**
@@ -699,8 +707,9 @@ int QwtSpline::boundaryCondition( BoundaryPosition position ) const
  */
 void QwtSpline::setBoundaryValue( BoundaryPosition position, double value )
 {
+    QWT_D(d);
     if ( ( position == QwtSpline::AtBeginning ) || ( position == QwtSpline::AtEnd ) )
-        m_data->boundaryConditions[position].value = value;
+        d->boundaryConditions[position].value = value;
 }
 
 /**
@@ -712,10 +721,11 @@ void QwtSpline::setBoundaryValue( BoundaryPosition position, double value )
  */
 double QwtSpline::boundaryValue( BoundaryPosition position ) const
 {
+    QWT_DC(d);
     if ( ( position == QwtSpline::AtBeginning ) || ( position == QwtSpline::AtEnd ) )
-        return m_data->boundaryConditions[position].value;
+        return d->boundaryConditions[position].value;
 
-    return m_data->boundaryConditions[0].value; // should never happen
+    return d->boundaryConditions[0].value; // should never happen
 }
 
 /**

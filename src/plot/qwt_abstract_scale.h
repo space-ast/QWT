@@ -159,8 +159,7 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
     virtual void scaleChange();
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtAbstractScale)
 };
 
 #endif

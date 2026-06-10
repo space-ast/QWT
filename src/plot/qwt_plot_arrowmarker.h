@@ -295,8 +295,7 @@ private:
     QwtPlotArrowMarker(const QwtPlotArrowMarker&);
     QwtPlotArrowMarker& operator=(const QwtPlotArrowMarker&);
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotArrowMarker)
 };
 
 #endif  // QWT_PLOT_ARROWMARKER_H

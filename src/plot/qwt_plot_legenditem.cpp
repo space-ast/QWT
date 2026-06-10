@@ -148,9 +148,11 @@ namespace
 
 class QwtPlotLegendItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotLegendItem)
   public:
-    PrivateData()
-        : itemMargin( 4 )
+    PrivateData(QwtPlotLegendItem* p)
+        : q_ptr(p)
+        , itemMargin( 4 )
         , itemSpacing( 4 )
         , borderRadius( 0.0 )
         , borderPen( Qt::NoPen )
@@ -196,10 +198,8 @@ class QwtPlotLegendItem::PrivateData
  *
  */
 QwtPlotLegendItem::QwtPlotLegendItem()
-    : QwtPlotItem( QwtText( "Legend" ) )
+    : QwtPlotItem( QwtText( "Legend" ) ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemInterest( QwtPlotItem::LegendInterest, true );
     setZ( 100.0 );
 }
@@ -211,7 +211,6 @@ QwtPlotLegendItem::QwtPlotLegendItem()
 QwtPlotLegendItem::~QwtPlotLegendItem()
 {
     clearLegend();
-    delete m_data;
 }
 
 /**
@@ -236,9 +235,10 @@ int QwtPlotLegendItem::rtti() const
  */
 void QwtPlotLegendItem::setAlignmentInCanvas( Qt::Alignment alignment )
 {
-    if ( m_data->canvasAlignment != alignment )
+    QWT_D(d);
+    if ( d->canvasAlignment != alignment )
     {
-        m_data->canvasAlignment = alignment;
+        d->canvasAlignment = alignment;
         itemChanged();
     }
 }
@@ -251,7 +251,8 @@ void QwtPlotLegendItem::setAlignmentInCanvas( Qt::Alignment alignment )
  */
 Qt::Alignment QwtPlotLegendItem::alignmentInCanvas() const
 {
-    return m_data->canvasAlignment;
+    QWT_DC(d);
+    return d->canvasAlignment;
 }
 
 /**
@@ -265,9 +266,10 @@ Qt::Alignment QwtPlotLegendItem::alignmentInCanvas() const
  */
 void QwtPlotLegendItem::setMaxColumns( uint maxColumns )
 {
-    if ( maxColumns != m_data->layout->maxColumns() )
+    QWT_D(d);
+    if ( maxColumns != d->layout->maxColumns() )
     {
-        m_data->layout->setMaxColumns( maxColumns );
+        d->layout->setMaxColumns( maxColumns );
         itemChanged();
     }
 }
@@ -280,7 +282,8 @@ void QwtPlotLegendItem::setMaxColumns( uint maxColumns )
  */
 uint QwtPlotLegendItem::maxColumns() const
 {
-    return m_data->layout->maxColumns();
+    QWT_DC(d);
+    return d->layout->maxColumns();
 }
 
 /**
@@ -292,10 +295,11 @@ uint QwtPlotLegendItem::maxColumns() const
  */
 void QwtPlotLegendItem::setMargin( int margin )
 {
+    QWT_D(d);
     margin = qMax( margin, 0 );
     if ( margin != this->margin() )
     {
-        m_data->layout->setContentsMargins(
+        d->layout->setContentsMargins(
             margin, margin, margin, margin );
 
         itemChanged();
@@ -310,8 +314,9 @@ void QwtPlotLegendItem::setMargin( int margin )
  */
 int QwtPlotLegendItem::margin() const
 {
+    QWT_DC(d);
     int left;
-    m_data->layout->getContentsMargins( &left, nullptr, nullptr, nullptr );
+    d->layout->getContentsMargins( &left, nullptr, nullptr, nullptr );
 
     return left;
 }
@@ -324,10 +329,11 @@ int QwtPlotLegendItem::margin() const
  */
 void QwtPlotLegendItem::setSpacing( int spacing )
 {
+    QWT_D(d);
     spacing = qMax( spacing, 0 );
-    if ( spacing != m_data->layout->spacing() )
+    if ( spacing != d->layout->spacing() )
     {
-        m_data->layout->setSpacing( spacing );
+        d->layout->setSpacing( spacing );
         itemChanged();
     }
 }
@@ -340,7 +346,8 @@ void QwtPlotLegendItem::setSpacing( int spacing )
  */
 int QwtPlotLegendItem::spacing() const
 {
-    return m_data->layout->spacing();
+    QWT_DC(d);
+    return d->layout->spacing();
 }
 
 /**
@@ -351,12 +358,13 @@ int QwtPlotLegendItem::spacing() const
  */
 void QwtPlotLegendItem::setItemMargin( int margin )
 {
+    QWT_D(d);
     margin = qMax( margin, 0 );
-    if ( margin != m_data->itemMargin )
+    if ( margin != d->itemMargin )
     {
-        m_data->itemMargin = margin;
+        d->itemMargin = margin;
 
-        m_data->layout->invalidate();
+        d->layout->invalidate();
         itemChanged();
     }
 }
@@ -369,7 +377,8 @@ void QwtPlotLegendItem::setItemMargin( int margin )
  */
 int QwtPlotLegendItem::itemMargin() const
 {
-    return m_data->itemMargin;
+    QWT_DC(d);
+    return d->itemMargin;
 }
 
 /**
@@ -380,12 +389,13 @@ int QwtPlotLegendItem::itemMargin() const
  */
 void QwtPlotLegendItem::setItemSpacing( int spacing )
 {
+    QWT_D(d);
     spacing = qMax( spacing, 0 );
-    if ( spacing != m_data->itemSpacing )
+    if ( spacing != d->itemSpacing )
     {
-        m_data->itemSpacing = spacing;
+        d->itemSpacing = spacing;
 
-        m_data->layout->invalidate();
+        d->layout->invalidate();
         itemChanged();
     }
 
@@ -399,7 +409,8 @@ void QwtPlotLegendItem::setItemSpacing( int spacing )
  */
 int QwtPlotLegendItem::itemSpacing() const
 {
-    return m_data->itemSpacing;
+    QWT_DC(d);
+    return d->itemSpacing;
 }
 
 /**
@@ -410,11 +421,12 @@ int QwtPlotLegendItem::itemSpacing() const
  */
 void QwtPlotLegendItem::setFont( const QFont& font )
 {
-    if ( font != m_data->font )
+    QWT_D(d);
+    if ( font != d->font )
     {
-        m_data->font = font;
+        d->font = font;
 
-        m_data->layout->invalidate();
+        d->layout->invalidate();
         itemChanged();
     }
 }
@@ -427,7 +439,8 @@ void QwtPlotLegendItem::setFont( const QFont& font )
  */
 QFont QwtPlotLegendItem::font() const
 {
-    return m_data->font;
+    QWT_DC(d);
+    return d->font;
 }
 
 /**
@@ -441,12 +454,13 @@ QFont QwtPlotLegendItem::font() const
 void QwtPlotLegendItem::setOffsetInCanvas(
     Qt::Orientations orientations, int numPixels )
 {
+    QWT_D(d);
     if ( numPixels < 0 )
         numPixels = -1;
 
     bool isChanged = false;
 
-    int* offset = m_data->canvasOffset;
+    int* offset = d->canvasOffset;
 
     if ( orientations & Qt::Horizontal )
     {
@@ -480,8 +494,9 @@ void QwtPlotLegendItem::setOffsetInCanvas(
 int QwtPlotLegendItem::offsetInCanvas(
     Qt::Orientation orientation ) const
 {
+    QWT_DC(d);
     const int index = ( orientation == Qt::Vertical ) ? 1 : 0;
-    return m_data->canvasOffset[index];
+    return d->canvasOffset[index];
 }
 
 /**
@@ -492,11 +507,12 @@ int QwtPlotLegendItem::offsetInCanvas(
  */
 void QwtPlotLegendItem::setBorderRadius( double radius )
 {
+    QWT_D(d);
     radius = qwtMaxF( 0.0, radius );
 
-    if ( radius != m_data->borderRadius )
+    if ( radius != d->borderRadius )
     {
-        m_data->borderRadius = radius;
+        d->borderRadius = radius;
         itemChanged();
     }
 }
@@ -509,7 +525,8 @@ void QwtPlotLegendItem::setBorderRadius( double radius )
  */
 double QwtPlotLegendItem::borderRadius() const
 {
-    return m_data->borderRadius;
+    QWT_DC(d);
+    return d->borderRadius;
 }
 
 /**
@@ -520,9 +537,10 @@ double QwtPlotLegendItem::borderRadius() const
  */
 void QwtPlotLegendItem::setBorderPen( const QPen& pen )
 {
-    if ( m_data->borderPen != pen )
+    QWT_D(d);
+    if ( d->borderPen != pen )
     {
-        m_data->borderPen = pen;
+        d->borderPen = pen;
         itemChanged();
     }
 }
@@ -535,7 +553,8 @@ void QwtPlotLegendItem::setBorderPen( const QPen& pen )
  */
 QPen QwtPlotLegendItem::borderPen() const
 {
-    return m_data->borderPen;
+    QWT_DC(d);
+    return d->borderPen;
 }
 
 /**
@@ -546,9 +565,10 @@ QPen QwtPlotLegendItem::borderPen() const
  */
 void QwtPlotLegendItem::setBackgroundBrush( const QBrush& brush )
 {
-    if ( m_data->backgroundBrush != brush )
+    QWT_D(d);
+    if ( d->backgroundBrush != brush )
     {
-        m_data->backgroundBrush = brush;
+        d->backgroundBrush = brush;
         itemChanged();
     }
 }
@@ -561,7 +581,8 @@ void QwtPlotLegendItem::setBackgroundBrush( const QBrush& brush )
  */
 QBrush QwtPlotLegendItem::backgroundBrush() const
 {
-    return m_data->backgroundBrush;
+    QWT_DC(d);
+    return d->backgroundBrush;
 }
 
 /**
@@ -574,9 +595,10 @@ QBrush QwtPlotLegendItem::backgroundBrush() const
  */
 void QwtPlotLegendItem::setBackgroundMode( BackgroundMode mode )
 {
-    if ( mode != m_data->backgroundMode )
+    QWT_D(d);
+    if ( mode != d->backgroundMode )
     {
-        m_data->backgroundMode = mode;
+        d->backgroundMode = mode;
         itemChanged();
     }
 }
@@ -589,7 +611,8 @@ void QwtPlotLegendItem::setBackgroundMode( BackgroundMode mode )
  */
 QwtPlotLegendItem::BackgroundMode QwtPlotLegendItem::backgroundMode() const
 {
-    return m_data->backgroundMode;
+    QWT_DC(d);
+    return d->backgroundMode;
 }
 
 /**
@@ -600,9 +623,10 @@ QwtPlotLegendItem::BackgroundMode QwtPlotLegendItem::backgroundMode() const
  */
 void QwtPlotLegendItem::setTextPen( const QPen& pen )
 {
-    if ( m_data->textPen != pen )
+    QWT_D(d);
+    if ( d->textPen != pen )
     {
-        m_data->textPen = pen;
+        d->textPen = pen;
         itemChanged();
     }
 }
@@ -615,7 +639,8 @@ void QwtPlotLegendItem::setTextPen( const QPen& pen )
  */
 QPen QwtPlotLegendItem::textPen() const
 {
-    return m_data->textPen;
+    QWT_DC(d);
+    return d->textPen;
 }
 
 /**
@@ -630,25 +655,26 @@ void QwtPlotLegendItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
+    QWT_DC(d);
     Q_UNUSED( xMap );
     Q_UNUSED( yMap );
 
-    m_data->layout->setGeometry( geometry( canvasRect ) );
-    if ( m_data->layout->geometry().isEmpty() )
+    d->layout->setGeometry( geometry( canvasRect ) );
+    if ( d->layout->geometry().isEmpty() )
     {
         // don't draw a legend when having no content
         return;
     }
 
-    if ( m_data->backgroundMode == QwtPlotLegendItem::LegendBackground )
-        drawBackground( painter, m_data->layout->geometry() );
+    if ( d->backgroundMode == QwtPlotLegendItem::LegendBackground )
+        drawBackground( painter, d->layout->geometry() );
 
-    for ( int i = 0; i < m_data->layout->count(); i++ )
+    for ( int i = 0; i < d->layout->count(); i++ )
     {
         const LayoutItem* layoutItem =
-            static_cast< LayoutItem* >( m_data->layout->itemAt( i ) );
+            static_cast< LayoutItem* >( d->layout->itemAt( i ) );
 
-        if ( m_data->backgroundMode == QwtPlotLegendItem::ItemBackground )
+        if ( d->backgroundMode == QwtPlotLegendItem::ItemBackground )
             drawBackground( painter, layoutItem->geometry() );
 
         painter->save();
@@ -672,12 +698,13 @@ void QwtPlotLegendItem::draw( QPainter* painter,
 void QwtPlotLegendItem::drawBackground(
     QPainter* painter, const QRectF& rect ) const
 {
+    QWT_DC(d);
     painter->save();
 
-    painter->setPen( m_data->borderPen );
-    painter->setBrush( m_data->backgroundBrush );
+    painter->setPen( d->borderPen );
+    painter->setBrush( d->backgroundBrush );
 
-    const double radius = m_data->borderRadius;
+    const double radius = d->borderRadius;
     painter->drawRoundedRect( rect, radius, radius );
 
     painter->restore();
@@ -691,15 +718,16 @@ void QwtPlotLegendItem::drawBackground(
  */
 QRect QwtPlotLegendItem::geometry( const QRectF& canvasRect ) const
 {
+    QWT_DC(d);
     QRect rect;
-    rect.setSize( m_data->layout->sizeHint() );
+    rect.setSize( d->layout->sizeHint() );
 
-    if ( m_data->canvasAlignment & Qt::AlignHCenter )
+    if ( d->canvasAlignment & Qt::AlignHCenter )
     {
         int x = qRound( canvasRect.center().x() );
         rect.moveCenter( QPoint( x, rect.center().y() ) );
     }
-    else if ( m_data->canvasAlignment & Qt::AlignRight )
+    else if ( d->canvasAlignment & Qt::AlignRight )
     {
         const int offset = offsetInCanvas( Qt::Horizontal );
         rect.moveRight( qwtFloor( canvasRect.right() - offset ) );
@@ -710,12 +738,12 @@ QRect QwtPlotLegendItem::geometry( const QRectF& canvasRect ) const
         rect.moveLeft( qwtCeil( canvasRect.left() + offset ) );
     }
 
-    if ( m_data->canvasAlignment & Qt::AlignVCenter )
+    if ( d->canvasAlignment & Qt::AlignVCenter )
     {
         int y = qRound( canvasRect.center().y() );
         rect.moveCenter( QPoint( rect.center().x(), y ) );
     }
-    else if ( m_data->canvasAlignment & Qt::AlignBottom )
+    else if ( d->canvasAlignment & Qt::AlignBottom )
     {
         const int offset = offsetInCanvas( Qt::Vertical );
         rect.moveBottom( qwtFloor( canvasRect.bottom() - offset ) );
@@ -738,14 +766,15 @@ QRect QwtPlotLegendItem::geometry( const QRectF& canvasRect ) const
 void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
     const QList< QwtLegendData >& data )
 {
+    QWT_D(d);
     if ( plotItem == nullptr )
         return;
 
     QList< LayoutItem* > layoutItems;
 
     QMap< const QwtPlotItem*, QList< LayoutItem* > >::const_iterator it =
-        m_data->map.constFind( plotItem );
-    if ( it != m_data->map.constEnd() )
+        d->map.constFind( plotItem );
+    if ( it != d->map.constEnd() )
         layoutItems = it.value();
 
     bool changed = false;
@@ -756,13 +785,13 @@ void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
 
         for ( int i = 0; i < layoutItems.size(); i++ )
         {
-            m_data->layout->removeItem( layoutItems[i] );
+            d->layout->removeItem( layoutItems[i] );
             delete layoutItems[i];
         }
         layoutItems.clear();
 
-        if ( it != m_data->map.constEnd() )
-            m_data->map.remove( plotItem );
+        if ( it != d->map.constEnd() )
+            d->map.remove( plotItem );
 
         if ( !data.isEmpty() )
         {
@@ -772,11 +801,11 @@ void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
             {
                 LayoutItem* layoutItem =
                     new LayoutItem( this, plotItem );
-                m_data->layout->addItem( layoutItem );
+                d->layout->addItem( layoutItem );
                 layoutItems += layoutItem;
             }
 
-            m_data->map.insert( plotItem, layoutItems );
+            d->map.insert( plotItem, layoutItems );
         }
     }
 
@@ -791,7 +820,7 @@ void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
 
     if ( changed )
     {
-        m_data->layout->invalidate();
+        d->layout->invalidate();
         itemChanged();
     }
 }
@@ -802,12 +831,13 @@ void QwtPlotLegendItem::updateLegend( const QwtPlotItem* plotItem,
  */
 void QwtPlotLegendItem::clearLegend()
 {
-    if ( !m_data->map.isEmpty() )
+    QWT_D(d);
+    if ( !d->map.isEmpty() )
     {
-        m_data->map.clear();
+        d->map.clear();
 
-        for ( int i = m_data->layout->count() - 1; i >= 0; i-- )
-            delete m_data->layout->takeAt( i );
+        for ( int i = d->layout->count() - 1; i >= 0; i-- )
+            delete d->layout->takeAt( i );
 
         itemChanged();
     }
@@ -825,9 +855,10 @@ void QwtPlotLegendItem::drawLegendData( QPainter* painter,
     const QwtPlotItem* plotItem, const QwtLegendData& data,
     const QRectF& rect ) const
 {
+    QWT_DC(d);
     Q_UNUSED( plotItem );
 
-    const int m = m_data->itemMargin;
+    const int m = d->itemMargin;
     const QRectF r = rect.toRect().adjusted( m, m, -m, -m );
 
     painter->setClipRect( r, Qt::IntersectClip );
@@ -844,7 +875,7 @@ void QwtPlotLegendItem::drawLegendData( QPainter* painter,
 
         graphic.render( painter, iconRect, Qt::KeepAspectRatio );
 
-        titleOff += iconRect.width() + m_data->itemSpacing;
+        titleOff += iconRect.width() + d->itemSpacing;
     }
 
     const QwtText text = data.title();
@@ -866,7 +897,8 @@ void QwtPlotLegendItem::drawLegendData( QPainter* painter,
  */
 QSize QwtPlotLegendItem::minimumSize( const QwtLegendData& data ) const
 {
-    QSize size( 2 * m_data->itemMargin, 2 * m_data->itemMargin );
+    QWT_DC(d);
+    QSize size( 2 * d->itemMargin, 2 * d->itemMargin );
 
     if ( !data.isValid() )
         return size;
@@ -892,7 +924,7 @@ QSize QwtPlotLegendItem::minimumSize( const QwtLegendData& data ) const
     }
 
     if ( graphic.width() > 0 && !text.isEmpty() )
-        w += m_data->itemSpacing;
+        w += d->itemSpacing;
 
     size += QSize( w, h );
     return size;
@@ -908,7 +940,8 @@ QSize QwtPlotLegendItem::minimumSize( const QwtLegendData& data ) const
 int QwtPlotLegendItem::heightForWidth(
     const QwtLegendData& data, int width ) const
 {
-    width -= 2 * m_data->itemMargin;
+    QWT_DC(d);
+    width -= 2 * d->itemMargin;
 
     const QwtGraphic graphic = data.icon();
     const QwtText text = data.title();
@@ -917,10 +950,10 @@ int QwtPlotLegendItem::heightForWidth(
         return graphic.height();
 
     if ( graphic.width() > 0 )
-        width -= graphic.width() + m_data->itemSpacing;
+        width -= graphic.width() + d->itemSpacing;
 
     int h = text.heightForWidth( width, font() );
-    h += 2 * m_data->itemMargin;
+    h += 2 * d->itemMargin;
 
     return qMax( graphic.height(), h );
 }
@@ -933,7 +966,8 @@ int QwtPlotLegendItem::heightForWidth(
  */
 QList< const QwtPlotItem* > QwtPlotLegendItem::plotItems() const
 {
-    return m_data->map.keys();
+    QWT_DC(d);
+    return d->map.keys();
 }
 
 /**
@@ -946,11 +980,12 @@ QList< const QwtPlotItem* > QwtPlotLegendItem::plotItems() const
 QList< QRect > QwtPlotLegendItem::legendGeometries(
     const QwtPlotItem* plotItem ) const
 {
+    QWT_DC(d);
     QList< LayoutItem* > layoutItems;
 
     QMap< const QwtPlotItem*, QList< LayoutItem* > >::const_iterator it =
-        m_data->map.constFind( plotItem );
-    if ( it != m_data->map.constEnd() )
+        d->map.constFind( plotItem );
+    if ( it != d->map.constEnd() )
         layoutItems = it.value();
 
     QList< QRect > geometries;

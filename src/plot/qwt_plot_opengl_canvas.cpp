@@ -36,8 +36,9 @@
 
 class QwtPlotOpenGLCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotOpenGLCanvas)
 public:
-    PrivateData() : isPolished(false), fboDirty(true), fbo(nullptr)
+    PrivateData(QwtPlotOpenGLCanvas* p) : q_ptr(p), numSamples(0), isPolished(false), fboDirty(true), fbo(nullptr)
     {
     }
 
@@ -58,7 +59,7 @@ public:
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
  */
-QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
+QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     QSurfaceFormat fmt = format();
     fmt.setSamples(4);
@@ -73,15 +74,15 @@ QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), Q
  * @sa QwtPlot::setCanvas()
  */
 QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(const QSurfaceFormat& format, QwtPlot* plot)
-    : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
+    : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     init(format);
 }
 
 void QwtPlotOpenGLCanvas::init(const QSurfaceFormat& format)
 {
-    m_data             = new PrivateData;
-    m_data->numSamples = format.samples();
+    QWT_D(d);
+    d->numSamples = format.samples();
 
     setFormat(format);
 
@@ -99,7 +100,6 @@ void QwtPlotOpenGLCanvas::init(const QSurfaceFormat& format)
  */
 QwtPlotOpenGLCanvas::~QwtPlotOpenGLCanvas()
 {
-    delete m_data;
 }
 
 /*!
@@ -110,7 +110,8 @@ QwtPlotOpenGLCanvas::~QwtPlotOpenGLCanvas()
  */
 void QwtPlotOpenGLCanvas::paintEvent(QPaintEvent* event)
 {
-    if (m_data->isPolished)
+    QWT_D(d);
+    if (d->isPolished)
         QOpenGLWidget::paintEvent(event);
 }
 
@@ -121,6 +122,7 @@ void QwtPlotOpenGLCanvas::paintEvent(QPaintEvent* event)
  */
 bool QwtPlotOpenGLCanvas::event(QEvent* event)
 {
+    QWT_D(d);
     const bool ok = QOpenGLWidget::event(event);
 
     if (event->type() == QEvent::PolishRequest) {
@@ -128,7 +130,7 @@ bool QwtPlotOpenGLCanvas::event(QEvent* event)
         // early repaints. As we always have a QEvent::PolishRequest
         // followed by QEvent::Paint, we can ignore all these repaints.
 
-        m_data->isPolished = true;
+        d->isPolished = true;
     }
 
     if (event->type() == QEvent::PolishRequest || event->type() == QEvent::StyleChange) {
@@ -155,13 +157,15 @@ void QwtPlotOpenGLCanvas::replot()
  */
 void QwtPlotOpenGLCanvas::invalidateBackingStore()
 {
-    m_data->fboDirty = true;
+    QWT_D(d);
+    d->fboDirty = true;
 }
 
 void QwtPlotOpenGLCanvas::clearBackingStore()
 {
-    delete m_data->fbo;
-    m_data->fbo = nullptr;
+    QWT_D(d);
+    delete d->fbo;
+    d->fbo = nullptr;
 }
 
 /**
@@ -184,6 +188,7 @@ void QwtPlotOpenGLCanvas::initializeGL()
 //! Paint the plot
 void QwtPlotOpenGLCanvas::paintGL()
 {
+    QWT_D(d);
     const bool hasFocusIndicator = hasFocus() && focusIndicator() == CanvasFocusIndicator;
 
     QPainter painter;
@@ -205,24 +210,24 @@ void QwtPlotOpenGLCanvas::paintGL()
                - ???
          */
 
-        if (m_data->fbo) {
-            if (m_data->fbo->size() != fboSize) {
-                delete m_data->fbo;
-                m_data->fbo = nullptr;
+        if (d->fbo) {
+            if (d->fbo->size() != fboSize) {
+                delete d->fbo;
+                d->fbo = nullptr;
             }
         }
 
-        if (m_data->fbo == nullptr) {
+        if (d->fbo == nullptr) {
             QOpenGLFramebufferObjectFormat fboFormat;
-            fboFormat.setSamples(m_data->numSamples);
+            fboFormat.setSamples(d->numSamples);
             fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
 
-            m_data->fbo      = new QOpenGLFramebufferObject(fboSize, fboFormat);
-            m_data->fboDirty = true;
+            d->fbo      = new QOpenGLFramebufferObject(fboSize, fboFormat);
+            d->fboDirty = true;
         }
 
-        if (m_data->fboDirty) {
-            m_data->fbo->bind();
+        if (d->fboDirty) {
+            d->fbo->bind();
 
             QOpenGLPaintDevice pd(fboSize);
 
@@ -231,10 +236,10 @@ void QwtPlotOpenGLCanvas::paintGL()
             draw(&fboPainter);
             fboPainter.end();
 
-            m_data->fboDirty = false;
+            d->fboDirty = false;
         }
 
-        QOpenGLFramebufferObject::blitFramebuffer(nullptr, m_data->fbo);
+        QOpenGLFramebufferObject::blitFramebuffer(nullptr, d->fbo);
     } else {
         painter.begin(this);
         draw(&painter);

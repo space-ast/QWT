@@ -173,8 +173,7 @@ private:
     /// Initialize the zoomer
     void init(bool doReplot);
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotAxisZoomer)
 };
 
 #endif

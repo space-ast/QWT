@@ -144,8 +144,12 @@ static inline QFont qwtResolvedFont(const QWidget* widget)
 
 class QwtPlotRenderer::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotRenderer)
 public:
-    PrivateData() : discardFlags(QwtPlotRenderer::DiscardNone), layoutFlags(QwtPlotRenderer::DefaultLayout)
+    PrivateData(QwtPlotRenderer* p)
+        : q_ptr(p)
+        , discardFlags(QwtPlotRenderer::DiscardNone)
+        , layoutFlags(QwtPlotRenderer::DefaultLayout)
     {
     }
 
@@ -157,9 +161,8 @@ public:
  * @brief Constructor
  * @param[in] parent Parent object
  */
-QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent)
+QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
@@ -167,7 +170,6 @@ QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent)
  */
 QwtPlotRenderer::~QwtPlotRenderer()
 {
-    delete m_data;
 }
 
 /**
@@ -178,10 +180,11 @@ QwtPlotRenderer::~QwtPlotRenderer()
  */
 void QwtPlotRenderer::setDiscardFlag(DiscardFlag flag, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->discardFlags |= flag;
+        d->discardFlags |= flag;
     else
-        m_data->discardFlags &= ~flag;
+        d->discardFlags &= ~flag;
 }
 
 /**
@@ -192,7 +195,8 @@ void QwtPlotRenderer::setDiscardFlag(DiscardFlag flag, bool on)
  */
 bool QwtPlotRenderer::testDiscardFlag(DiscardFlag flag) const
 {
-    return m_data->discardFlags & flag;
+    QWT_DC(d);
+    return d->discardFlags & flag;
 }
 
 /**
@@ -202,7 +206,8 @@ bool QwtPlotRenderer::testDiscardFlag(DiscardFlag flag) const
  */
 void QwtPlotRenderer::setDiscardFlags(DiscardFlags flags)
 {
-    m_data->discardFlags = flags;
+    QWT_D(d);
+    d->discardFlags = flags;
 }
 
 /**
@@ -212,7 +217,8 @@ void QwtPlotRenderer::setDiscardFlags(DiscardFlags flags)
  */
 QwtPlotRenderer::DiscardFlags QwtPlotRenderer::discardFlags() const
 {
-    return m_data->discardFlags;
+    QWT_DC(d);
+    return d->discardFlags;
 }
 
 /**
@@ -223,10 +229,11 @@ QwtPlotRenderer::DiscardFlags QwtPlotRenderer::discardFlags() const
  */
 void QwtPlotRenderer::setLayoutFlag(LayoutFlag flag, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->layoutFlags |= flag;
+        d->layoutFlags |= flag;
     else
-        m_data->layoutFlags &= ~flag;
+        d->layoutFlags &= ~flag;
 }
 
 /**
@@ -237,7 +244,8 @@ void QwtPlotRenderer::setLayoutFlag(LayoutFlag flag, bool on)
  */
 bool QwtPlotRenderer::testLayoutFlag(LayoutFlag flag) const
 {
-    return m_data->layoutFlags & flag;
+    QWT_DC(d);
+    return d->layoutFlags & flag;
 }
 
 /**
@@ -247,7 +255,8 @@ bool QwtPlotRenderer::testLayoutFlag(LayoutFlag flag) const
  */
 void QwtPlotRenderer::setLayoutFlags(LayoutFlags flags)
 {
-    m_data->layoutFlags = flags;
+    QWT_D(d);
+    d->layoutFlags = flags;
 }
 
 /**
@@ -257,7 +266,8 @@ void QwtPlotRenderer::setLayoutFlags(LayoutFlags flags)
  */
 QwtPlotRenderer::LayoutFlags QwtPlotRenderer::layoutFlags() const
 {
-    return m_data->layoutFlags;
+    QWT_DC(d);
+    return d->layoutFlags;
 }
 
 /**
@@ -455,11 +465,12 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QSvgGenerator& generator) const
  */
 void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {
+    QWT_DC(d);
     if (painter == 0 || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
         return;
     }
 
-    if (!(m_data->discardFlags & DiscardBackground))
+    if (!(d->discardFlags & DiscardBackground))
         QwtPainter::drawBackgound(painter, plotRect, plot);
 
     /*
@@ -473,7 +484,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     QRectF layoutRect = transform.inverted().mapRect(plotRect);
 
-    if (!(m_data->discardFlags & DiscardBackground)) {
+    if (!(d->discardFlags & DiscardBackground)) {
         // subtract the contents margins
 
         const QMargins m = plot->contentsMargins();
@@ -488,7 +499,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
     for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++) {
         canvasMargins[ axisPos ] = layout->canvasMargin(axisPos);
 
-        if (m_data->layoutFlags & FrameWithScales) {
+        if (d->layoutFlags & FrameWithScales) {
             const QwtAxisId axisId(axisPos);
 
             QwtScaleWidget* scaleWidget = plot->axisWidget(axisId);
@@ -531,17 +542,17 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     QwtPlotLayout::Options layoutOptions = QwtPlotLayout::IgnoreScrollbars;
 
-    if ((m_data->layoutFlags & FrameWithScales) || (m_data->discardFlags & DiscardCanvasFrame)) {
+    if ((d->layoutFlags & FrameWithScales) || (d->discardFlags & DiscardCanvasFrame)) {
         layoutOptions |= QwtPlotLayout::IgnoreFrames;
     }
 
-    if (m_data->discardFlags & DiscardLegend)
+    if (d->discardFlags & DiscardLegend)
         layoutOptions |= QwtPlotLayout::IgnoreLegend;
 
-    if (m_data->discardFlags & DiscardTitle)
+    if (d->discardFlags & DiscardTitle)
         layoutOptions |= QwtPlotLayout::IgnoreTitle;
 
-    if (m_data->discardFlags & DiscardFooter)
+    if (d->discardFlags & DiscardFooter)
         layoutOptions |= QwtPlotLayout::IgnoreFooter;
 
     layout->activate(plot, layoutRect, layoutOptions);
@@ -565,15 +576,15 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     renderCanvas(plot, painter, layout->canvasRect(), maps);
 
-    if (!(m_data->discardFlags & DiscardTitle) && (!plot->titleLabel()->text().isEmpty())) {
+    if (!(d->discardFlags & DiscardTitle) && (!plot->titleLabel()->text().isEmpty())) {
         renderTitle(plot, painter, layout->titleRect());
     }
 
-    if (!(m_data->discardFlags & DiscardFooter) && (!plot->footerLabel()->text().isEmpty())) {
+    if (!(d->discardFlags & DiscardFooter) && (!plot->footerLabel()->text().isEmpty())) {
         renderFooter(plot, painter, layout->footerRect());
     }
 
-    if (!(m_data->discardFlags & DiscardLegend) && plot->legend() && !plot->legend()->isEmpty()) {
+    if (!(d->discardFlags & DiscardLegend) && plot->legend() && !plot->legend()->isEmpty()) {
         renderLegend(plot, painter, layout->legendRect());
     }
 
@@ -597,7 +608,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     // restore all setting to their original attributes.
     for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++) {
-        if (m_data->layoutFlags & FrameWithScales) {
+        if (d->layoutFlags & FrameWithScales) {
             const QwtAxisId axisId(axisPos);
 
             QwtScaleWidget* scaleWidget = plot->axisWidget(axisId);
@@ -654,8 +665,9 @@ void QwtPlotRenderer::renderFooter(const QwtPlot* plot, QPainter* painter, const
  */
 void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const QRectF& legendRect) const
 {
+    QWT_DC(d);
     if (plot->legend()) {
-        bool fillBackground = !(m_data->discardFlags & DiscardBackground);
+        bool fillBackground = !(d->discardFlags & DiscardBackground);
         plot->legend()->renderLegend(painter, legendRect, fillBackground);
     }
 }
@@ -680,6 +692,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
                                   int baseDist,
                                   const QRectF& scaleRect) const
 {
+    QWT_DC(d);
     if (!plot->isAxisVisible(axisId))
         return;
 
@@ -695,7 +708,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
     double x, y, w;
 
     qreal off = 0.0;
-    if (m_data->layoutFlags & FrameWithScales)
+    if (d->layoutFlags & FrameWithScales)
         off = qwtScalePenWidth(plot);
 
     switch (axisId) {
@@ -741,7 +754,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
 
     const bool hasBackbone = sd->hasComponent(QwtAbstractScaleDraw::Backbone);
 
-    if (m_data->layoutFlags & FrameWithScales)
+    if (d->layoutFlags & FrameWithScales)
         sd->enableComponent(QwtAbstractScaleDraw::Backbone, false);
 
     sd->move(x, y);
@@ -769,11 +782,12 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
  */
 void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const QRectF& canvasRect, const QwtScaleMap* maps) const
 {
+    QWT_DC(d);
     const QWidget* canvas = plot->canvas();
 
     QRectF r = canvasRect.adjusted(0.0, 0.0, -1.0, -1.0);
 
-    if (m_data->layoutFlags & FrameWithScales) {
+    if (d->layoutFlags & FrameWithScales) {
         painter->save();
 
         QPen pen;
@@ -786,7 +800,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
         const qreal pw2 = 0.5 * pen.widthF();
         r.adjust(-pw2, -pw2, pw2, pw2);
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             const QBrush bgBrush = canvas->palette().brush(plot->backgroundRole());
             painter->setBrush(bgBrush);
         }
@@ -805,7 +819,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 
         painter->save();
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             QwtPainter::drawBackgound(painter, r, canvas);
             clipPath = qwtCanvasClip(canvas, canvasRect);
         }
@@ -826,7 +840,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 
         double frameWidth = 0.0;
 
-        if (!(m_data->discardFlags & DiscardCanvasFrame)) {
+        if (!(d->discardFlags & DiscardCanvasFrame)) {
             const QVariant fw = canvas->property("frameWidth");
             if (fw.canConvert< double >())
                 frameWidth = fw.value< double >();
@@ -844,7 +858,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
             painter->setClipPath(clipPath);
         }
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             QwtPainter::drawBackgound(painter, innerRect, canvas);
         }
 

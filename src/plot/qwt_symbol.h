@@ -272,9 +272,7 @@ public:
 
   private:
     Q_DISABLE_COPY(QwtSymbol)
-
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSymbol)
 };
 
 /**

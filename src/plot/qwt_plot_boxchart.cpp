@@ -22,9 +22,12 @@
 
 class QwtPlotBoxChart::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotBoxChart)
+
 public:
-    PrivateData()
-        : boxStyle(Rect)
+    PrivateData(QwtPlotBoxChart* p)
+        : q_ptr(p)
+        , boxStyle(Rect)
         , whiskerStyle(StandardWhisker)
         , orientation(Qt::Vertical)
         , boxExtent(0.6)
@@ -62,10 +65,11 @@ public:
 /**
  * @brief Constructor
  * @param[in] title Title of the chart
- * 
+ *
  */
 QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
     : QwtPlotSeriesItem(QwtText(title))
+    , QWT_PIMPL_CONSTRUCT
     , m_outlierData(nullptr)
 {
     init();
@@ -74,10 +78,11 @@ QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
 /**
  * @brief Constructor
  * @param[in] title Title of the chart
- * 
+ *
  */
 QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
     : QwtPlotSeriesItem(title)
+    , QWT_PIMPL_CONSTRUCT
     , m_outlierData(nullptr)
 {
     init();
@@ -85,18 +90,15 @@ QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
 
 /**
  * @brief Destructor
- * 
+ *
  */
 QwtPlotBoxChart::~QwtPlotBoxChart()
 {
-    delete m_data;
     delete m_outlierData;
 }
 
 void QwtPlotBoxChart::init()
 {
-    m_data = new PrivateData();
-
     setItemAttribute(QwtPlotItem::Legend, true);
     setItemAttribute(QwtPlotItem::AutoScale, true);
 
@@ -122,10 +124,11 @@ int QwtPlotBoxChart::rtti() const
  */
 void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->paintAttributes |= attr;
+        d->paintAttributes |= attr;
     else
-        m_data->paintAttributes &= ~attr;
+        d->paintAttributes &= ~attr;
 }
 
 /**
@@ -136,7 +139,8 @@ void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
  */
 bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
 {
-    return (m_data->paintAttributes & attr);
+    QWT_DC(d);
+    return (d->paintAttributes & attr);
 }
 
 /**
@@ -146,9 +150,10 @@ bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
  */
 void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
 {
-    if (m_data->boxStyle != style)
+    QWT_D(d);
+    if (d->boxStyle != style)
     {
-        m_data->boxStyle = style;
+        d->boxStyle = style;
         legendChanged();
         itemChanged();
     }
@@ -161,7 +166,8 @@ void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
  */
 QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
 {
-    return m_data->boxStyle;
+    QWT_DC(d);
+    return d->boxStyle;
 }
 
 /**
@@ -171,9 +177,10 @@ QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
  */
 void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
 {
-    if (m_data->whiskerStyle != style)
+    QWT_D(d);
+    if (d->whiskerStyle != style)
     {
-        m_data->whiskerStyle = style;
+        d->whiskerStyle = style;
         legendChanged();
         itemChanged();
     }
@@ -186,7 +193,8 @@ void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
  */
 QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
 {
-    return m_data->whiskerStyle;
+    QWT_DC(d);
+    return d->whiskerStyle;
 }
 
 /**
@@ -197,9 +205,10 @@ QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
  */
 void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
 {
-    if (m_data->orientation != orient)
+    QWT_D(d);
+    if (d->orientation != orient)
     {
-        m_data->orientation = orient;
+        d->orientation = orient;
         legendChanged();
         itemChanged();
     }
@@ -212,7 +221,8 @@ void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
  */
 Qt::Orientation QwtPlotBoxChart::orientation() const
 {
-    return m_data->orientation;
+    QWT_DC(d);
+    return d->orientation;
 }
 
 /**
@@ -222,10 +232,11 @@ Qt::Orientation QwtPlotBoxChart::orientation() const
  */
 void QwtPlotBoxChart::setBoxExtent(double extent)
 {
+    QWT_D(d);
     extent = qwtMaxF(0.0, extent);
-    if (m_data->boxExtent != extent)
+    if (d->boxExtent != extent)
     {
-        m_data->boxExtent = extent;
+        d->boxExtent = extent;
         legendChanged();
         itemChanged();
     }
@@ -238,7 +249,8 @@ void QwtPlotBoxChart::setBoxExtent(double extent)
  */
 double QwtPlotBoxChart::boxExtent() const
 {
-    return m_data->boxExtent;
+    QWT_DC(d);
+    return d->boxExtent;
 }
 
 /**
@@ -248,10 +260,11 @@ double QwtPlotBoxChart::boxExtent() const
  */
 void QwtPlotBoxChart::setMinBoxWidth(double pixels)
 {
+    QWT_D(d);
     pixels = qwtMaxF(0.0, pixels);
-    if (m_data->minBoxWidth != pixels)
+    if (d->minBoxWidth != pixels)
     {
-        m_data->minBoxWidth = pixels;
+        d->minBoxWidth = pixels;
         legendChanged();
         itemChanged();
     }
@@ -264,7 +277,8 @@ void QwtPlotBoxChart::setMinBoxWidth(double pixels)
  */
 double QwtPlotBoxChart::minBoxWidth() const
 {
-    return m_data->minBoxWidth;
+    QWT_DC(d);
+    return d->minBoxWidth;
 }
 
 /**
@@ -274,9 +288,10 @@ double QwtPlotBoxChart::minBoxWidth() const
  */
 void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
 {
-    if (m_data->maxBoxWidth != pixels)
+    QWT_D(d);
+    if (d->maxBoxWidth != pixels)
     {
-        m_data->maxBoxWidth = pixels;
+        d->maxBoxWidth = pixels;
         legendChanged();
         itemChanged();
     }
@@ -289,7 +304,8 @@ void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
  */
 double QwtPlotBoxChart::maxBoxWidth() const
 {
-    return m_data->maxBoxWidth;
+    QWT_DC(d);
+    return d->maxBoxWidth;
 }
 
 /**
@@ -311,9 +327,10 @@ void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle styl
  */
 void QwtPlotBoxChart::setPen(const QPen& pen)
 {
-    if (m_data->pen != pen)
+    QWT_D(d);
+    if (d->pen != pen)
     {
-        m_data->pen = pen;
+        d->pen = pen;
         legendChanged();
         itemChanged();
     }
@@ -326,7 +343,8 @@ void QwtPlotBoxChart::setPen(const QPen& pen)
  */
 const QPen& QwtPlotBoxChart::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -336,9 +354,10 @@ const QPen& QwtPlotBoxChart::pen() const
  */
 void QwtPlotBoxChart::setBrush(const QBrush& brush)
 {
-    if (m_data->brush != brush)
+    QWT_D(d);
+    if (d->brush != brush)
     {
-        m_data->brush = brush;
+        d->brush = brush;
         legendChanged();
         itemChanged();
     }
@@ -351,7 +370,8 @@ void QwtPlotBoxChart::setBrush(const QBrush& brush)
  */
 const QBrush& QwtPlotBoxChart::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -361,9 +381,10 @@ const QBrush& QwtPlotBoxChart::brush() const
  */
 void QwtPlotBoxChart::setMedianPen(const QPen& pen)
 {
-    if (m_data->medianPen != pen)
+    QWT_D(d);
+    if (d->medianPen != pen)
     {
-        m_data->medianPen = pen;
+        d->medianPen = pen;
         legendChanged();
         itemChanged();
     }
@@ -376,7 +397,8 @@ void QwtPlotBoxChart::setMedianPen(const QPen& pen)
  */
 QPen QwtPlotBoxChart::medianPen() const
 {
-    return m_data->medianPen;
+    QWT_DC(d);
+    return d->medianPen;
 }
 
 /**
@@ -386,10 +408,11 @@ QPen QwtPlotBoxChart::medianPen() const
  */
 void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
 {
-    if (m_data->outlierSymbol != symbol)
+    QWT_D(d);
+    if (d->outlierSymbol != symbol)
     {
-        delete m_data->outlierSymbol;
-        m_data->outlierSymbol = symbol;
+        delete d->outlierSymbol;
+        d->outlierSymbol = symbol;
         legendChanged();
         itemChanged();
     }
@@ -402,7 +425,8 @@ void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
  */
 const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
 {
-    return m_data->outlierSymbol;
+    QWT_DC(d);
+    return d->outlierSymbol;
 }
 
 /**
@@ -412,10 +436,11 @@ const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
  */
 void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
 {
-    if (m_data->meanSymbol != symbol)
+    QWT_D(d);
+    if (d->meanSymbol != symbol)
     {
-        delete m_data->meanSymbol;
-        m_data->meanSymbol = symbol;
+        delete d->meanSymbol;
+        d->meanSymbol = symbol;
         legendChanged();
         itemChanged();
     }
@@ -428,7 +453,8 @@ void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
  */
 const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
 {
-    return m_data->meanSymbol;
+    QWT_DC(d);
+    return d->meanSymbol;
 }
 
 /**
@@ -438,9 +464,10 @@ const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
  */
 void QwtPlotBoxChart::setMedianVisible(bool visible)
 {
-    if (m_data->medianVisible != visible)
+    QWT_D(d);
+    if (d->medianVisible != visible)
     {
-        m_data->medianVisible = visible;
+        d->medianVisible = visible;
         itemChanged();
     }
 }
@@ -452,7 +479,8 @@ void QwtPlotBoxChart::setMedianVisible(bool visible)
  */
 bool QwtPlotBoxChart::isMedianVisible() const
 {
-    return m_data->medianVisible;
+    QWT_DC(d);
+    return d->medianVisible;
 }
 
 /**
@@ -462,9 +490,10 @@ bool QwtPlotBoxChart::isMedianVisible() const
  */
 void QwtPlotBoxChart::setMeanVisible(bool visible)
 {
-    if (m_data->meanVisible != visible)
+    QWT_D(d);
+    if (d->meanVisible != visible)
     {
-        m_data->meanVisible = visible;
+        d->meanVisible = visible;
         itemChanged();
     }
 }
@@ -476,7 +505,8 @@ void QwtPlotBoxChart::setMeanVisible(bool visible)
  */
 bool QwtPlotBoxChart::isMeanVisible() const
 {
-    return m_data->meanVisible;
+    QWT_DC(d);
+    return d->meanVisible;
 }
 
 /**
@@ -486,7 +516,8 @@ bool QwtPlotBoxChart::isMeanVisible() const
  */
 void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
 {
-    m_data->outlierJitter = qwtMaxF(0.0, jitterWidth);
+    QWT_D(d);
+    d->outlierJitter = qwtMaxF(0.0, jitterWidth);
 }
 
 /**
@@ -496,7 +527,8 @@ void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
  */
 double QwtPlotBoxChart::outlierJitter() const
 {
-    return m_data->outlierJitter;
+    QWT_DC(d);
+    return d->outlierJitter;
 }
 
 /**
@@ -560,12 +592,13 @@ const QwtSeriesData<QwtBoxOutlierSample>* QwtPlotBoxChart::outlierData() const
  */
 QRectF QwtPlotBoxChart::boundingRect() const
 {
+    QWT_DC(d);
     QRectF rect = QwtPlotSeriesItem::boundingRect();
 
     if (rect.isValid())
     {
-        const double padding = m_data->boxExtent * 0.5;
-        if (m_data->orientation == Qt::Vertical)
+        const double padding = d->boxExtent * 0.5;
+        if (d->orientation == Qt::Vertical)
         {
             rect.setLeft(rect.left() - padding);
             rect.setRight(rect.right() + padding);
@@ -594,18 +627,19 @@ double QwtPlotBoxChart::scaledBoxWidth(
     const QwtScaleMap& valueMap,
     const QRectF& canvasRect) const
 {
+    QWT_DC(d);
     Q_UNUSED(valueMap);
     Q_UNUSED(canvasRect);
 
-    if (m_data->maxBoxWidth > 0.0 && m_data->minBoxWidth >= m_data->maxBoxWidth)
-        return m_data->minBoxWidth;
+    if (d->maxBoxWidth > 0.0 && d->minBoxWidth >= d->maxBoxWidth)
+        return d->minBoxWidth;
 
-    const double pos = posMap.transform(posMap.s1() + m_data->boxExtent);
+    const double pos = posMap.transform(posMap.s1() + d->boxExtent);
     double width = qAbs(pos - posMap.p1());
 
-    width = qwtMaxF(width, m_data->minBoxWidth);
-    if (m_data->maxBoxWidth > 0.0)
-        width = qwtMinF(width, m_data->maxBoxWidth);
+    width = qwtMaxF(width, d->minBoxWidth);
+    if (d->maxBoxWidth > 0.0)
+        width = qwtMinF(width, d->maxBoxWidth);
 
     return width;
 }
@@ -624,6 +658,8 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to) const
 {
+    QWT_DC(d);
+
     if (to < 0)
         to = dataSize() - 1;
 
@@ -635,14 +671,14 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
 
     painter->save();
 
-    const Qt::Orientation orient = m_data->orientation;
+    const Qt::Orientation orient = d->orientation;
     const QwtScaleMap* posMap = (orient == Qt::Vertical) ? &xMap : &yMap;
     const QwtScaleMap* valueMap = (orient == Qt::Vertical) ? &yMap : &xMap;
 
     const double boxWidth = scaledBoxWidth(*posMap, *valueMap, canvasRect);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
-    painter->setPen(m_data->pen);
+    painter->setPen(d->pen);
 
     for (int i = from; i <= to; i++)
     {
@@ -652,29 +688,29 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
         if (doAlign)
             posPixel = qRound(posPixel);
 
-        if (m_data->boxStyle != NoBox)
+        if (d->boxStyle != NoBox)
         {
-            painter->setBrush(m_data->brush);
+            painter->setBrush(d->brush);
             drawBox(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (m_data->whiskerStyle != NoWhiskers)
+        if (d->whiskerStyle != NoWhiskers)
         {
             drawWhiskers(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (m_data->medianVisible)
+        if (d->medianVisible)
         {
             drawMedian(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (m_data->meanVisible && m_data->meanSymbol)
+        if (d->meanVisible && d->meanSymbol)
         {
             double medianPixel = valueMap->transform(sample.median);
             if (doAlign)
                 medianPixel = qRound(medianPixel);
 
-            m_data->meanSymbol->drawSymbol(painter,
+            d->meanSymbol->drawSymbol(painter,
                 (orient == Qt::Vertical) ? QPointF(posPixel, medianPixel)
                                          : QPointF(medianPixel, posPixel));
         }
@@ -692,6 +728,7 @@ void QwtPlotBoxChart::drawBox(QPainter* painter, const QwtBoxSample& sample,
     Qt::Orientation orient, double boxWidth, double posPixel,
     const QwtScaleMap& valueMap) const
 {
+    QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
     const double q1Pixel = valueMap.transform(sample.q1);
@@ -706,7 +743,7 @@ void QwtPlotBoxChart::drawBox(QPainter* painter, const QwtBoxSample& sample,
 
     const double halfWidth = boxWidth * 0.5;
 
-    switch (m_data->boxStyle)
+    switch (d->boxStyle)
     {
         case Rect:
         {
@@ -791,6 +828,7 @@ void QwtPlotBoxChart::drawWhiskers(QPainter* painter, const QwtBoxSample& sample
     Qt::Orientation orient, double boxWidth, double posPixel,
     const QwtScaleMap& valueMap) const
 {
+    QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
     const double whiskerLowerPixel = valueMap.transform(sample.whiskerLower);
@@ -804,11 +842,11 @@ void QwtPlotBoxChart::drawWhiskers(QPainter* painter, const QwtBoxSample& sample
 
     const double capWidth = boxWidth * 0.3;
 
-    QPen whiskerPen = m_data->pen;
+    QPen whiskerPen = d->pen;
     whiskerPen.setCapStyle(Qt::FlatCap);
     painter->setPen(whiskerPen);
 
-    switch (m_data->whiskerStyle)
+    switch (d->whiskerStyle)
     {
         case StandardWhisker:
         {
@@ -863,6 +901,7 @@ void QwtPlotBoxChart::drawMedian(QPainter* painter, const QwtBoxSample& sample,
     Qt::Orientation orient, double boxWidth, double posPixel,
     const QwtScaleMap& valueMap) const
 {
+    QWT_DC(d);
     const double medianPixel = valueMap.transform(sample.median);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
@@ -872,14 +911,14 @@ void QwtPlotBoxChart::drawMedian(QPainter* painter, const QwtBoxSample& sample,
 
     const double halfWidth = boxWidth * 0.5;
 
-    QPen medPen = m_data->medianPen;
+    QPen medPen = d->medianPen;
     medPen.setCapStyle(Qt::FlatCap);
     painter->setPen(medPen);
 
     double lineHalfWidth = halfWidth;
-    if (m_data->boxStyle == Diamond)
+    if (d->boxStyle == Diamond)
         lineHalfWidth *= 0.5;
-    else if (m_data->boxStyle == Notch)
+    else if (d->boxStyle == Notch)
         lineHalfWidth *= 0.8;
 
     if (orient == Qt::Vertical)
@@ -898,19 +937,21 @@ void QwtPlotBoxChart::drawOutliers(QPainter* painter,
     const QwtScaleMap& posMap, const QwtScaleMap& valueMap,
     const QRectF& canvasRect, int from, int to) const
 {
+    QWT_DC(d);
+
     if (!m_outlierData || m_outlierData->size() == 0)
         return;
 
-    const QwtSymbol* symbol = m_data->outlierSymbol;
+    const QwtSymbol* symbol = d->outlierSymbol;
     if (!symbol)
     {
         static QwtSymbol defaultSymbol(QwtSymbol::XCross, QBrush(), QPen(Qt::black), QSize(8, 8));
         symbol = &defaultSymbol;
     }
 
-    const Qt::Orientation orient = m_data->orientation;
+    const Qt::Orientation orient = d->orientation;
     const bool doAlign = QwtPainter::roundingAlignment(painter);
-    const double jitter = m_data->outlierJitter;
+    const double jitter = d->outlierJitter;
 
     QRandomGenerator* rng = nullptr;
     if (jitter > 0)
@@ -941,7 +982,7 @@ void QwtPlotBoxChart::drawOutliers(QPainter* painter,
                 ? QPointF(posPixel, valuePixel)
                 : QPointF(valuePixel, posPixel);
 
-            if (m_data->paintAttributes & ClipOutliers)
+            if (d->paintAttributes & ClipOutliers)
             {
                 if (!canvasRect.contains(point))
                     continue;
@@ -955,7 +996,8 @@ void QwtPlotBoxChart::drawOutliers(QPainter* painter,
 void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, double valuePixel,
     const QwtSymbol& symbol) const
 {
-    const Qt::Orientation orient = m_data->orientation;
+    QWT_DC(d);
+    const Qt::Orientation orient = d->orientation;
     QPointF point = (orient == Qt::Vertical)
         ? QPointF(posPixel, valuePixel)
         : QPointF(valuePixel, posPixel);
@@ -971,6 +1013,7 @@ void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, doub
  */
 QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
 {
+    QWT_DC(d);
     Q_UNUSED(index);
 
     QwtGraphic graphic;
@@ -985,17 +1028,17 @@ QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
     const double boxHeight = rect.height() * 0.4;
     const double boxWidth = rect.width() * 0.3;
 
-    painter.setPen(m_data->pen);
-    painter.setBrush(m_data->brush);
+    painter.setPen(d->pen);
+    painter.setBrush(d->brush);
 
-    if (m_data->boxStyle != NoBox)
+    if (d->boxStyle != NoBox)
     {
         QRectF boxRect(centerX - boxWidth * 0.5, centerY - boxHeight * 0.5,
                        boxWidth, boxHeight);
         painter.drawRect(boxRect);
     }
 
-    if (m_data->whiskerStyle != NoWhiskers)
+    if (d->whiskerStyle != NoWhiskers)
     {
         const double whiskerLen = rect.height() * 0.2;
         painter.drawLine(centerX, centerY - boxHeight * 0.5,
@@ -1008,9 +1051,9 @@ QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
                          centerX + boxWidth * 0.15, centerY + boxHeight * 0.5 + whiskerLen);
     }
 
-    if (m_data->medianVisible)
+    if (d->medianVisible)
     {
-        painter.setPen(m_data->medianPen);
+        painter.setPen(d->medianPen);
         painter.drawLine(centerX - boxWidth * 0.5, centerY,
                          centerX + boxWidth * 0.5, centerY);
     }

@@ -71,8 +71,7 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
     virtual QVector< double > curvatures( const QPolygonF& ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSplineCubic)
 };
 
 #endif

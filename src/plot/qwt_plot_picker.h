@@ -129,8 +129,7 @@ protected:
     virtual bool end(bool ok = true) override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotPicker)
 };
 
 #endif

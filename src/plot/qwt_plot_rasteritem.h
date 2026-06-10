@@ -166,8 +166,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
         const QSize& imageSize, bool doCache) const;
 
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotRasterItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRasterItem::PaintAttributes )

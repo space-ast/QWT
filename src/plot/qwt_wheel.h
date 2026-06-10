@@ -216,8 +216,7 @@ class QWT_EXPORT QwtWheel : public QWidget
     double alignedValue( double ) const;
     double boundedValue( double ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtWheel)
 };
 
 #endif

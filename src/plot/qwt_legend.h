@@ -137,8 +137,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
   private:
     void updateTabOrder();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtLegend)
 };
 
 #endif

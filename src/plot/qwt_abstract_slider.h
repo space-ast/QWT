@@ -196,8 +196,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     double alignedValue( double ) const;
     double boundedValue( double ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtAbstractSlider)
 };
 
 #endif

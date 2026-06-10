@@ -63,8 +63,7 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
     virtual QwtText label( double value ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtCompassScaleDraw)
 };
 
 /**
@@ -102,8 +101,7 @@ class QWT_EXPORT QwtCompass : public QwtDial
     virtual void keyPressEvent( QKeyEvent* ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtCompass)
 };
 
 #endif

@@ -75,8 +75,7 @@ public:
     virtual QwtInterval boundingInterval(int scaleId) const override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarMarker)
 };
 
 #endif

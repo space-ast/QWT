@@ -38,7 +38,13 @@ static const int cs_arrowButton_spacing = 1;
 
 class QwtArrowButton::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtArrowButton)
 public:
+    PrivateData( QwtArrowButton* p )
+        : q_ptr( p )
+    {
+    }
+
     int num;
     Qt::ArrowType arrowType;
 };
@@ -70,16 +76,18 @@ static QStyleOptionButton styleOpt(const QwtArrowButton* btn)
  *   @param[in] arrowType Direction of arrows (see Qt::ArrowType)
  *   @param[in] parent Parent widget
  */
-QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent) : QPushButton(parent)
+QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent)
+    : QPushButton(parent)
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data            = new PrivateData;
-    m_data->num       = qBound(1, num, cs_arrowButton_maxNum);
-    m_data->arrowType = arrowType;
+    QWT_D(d);
+    d->num       = qBound(1, num, cs_arrowButton_maxNum);
+    d->arrowType = arrowType;
 
     setAutoRepeat(true);
     setAutoDefault(false);
 
-    switch (m_data->arrowType) {
+    switch (d->arrowType) {
     case Qt::LeftArrow:
     case Qt::RightArrow:
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -94,8 +102,6 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
  */
 QwtArrowButton::~QwtArrowButton()
 {
-    delete m_data;
-    m_data = nullptr;
 }
 
 /**
@@ -104,7 +110,8 @@ QwtArrowButton::~QwtArrowButton()
  */
 Qt::ArrowType QwtArrowButton::arrowType() const
 {
-    return m_data->arrowType;
+    QWT_DC(d);
+    return d->arrowType;
 }
 
 /**
@@ -113,7 +120,8 @@ Qt::ArrowType QwtArrowButton::arrowType() const
  */
 int QwtArrowButton::num() const
 {
-    return m_data->num;
+    QWT_DC(d);
+    return d->num;
 }
 
 /*!
@@ -156,7 +164,8 @@ void QwtArrowButton::paintEvent(QPaintEvent* event)
  */
 void QwtArrowButton::drawButtonLabel(QPainter* painter)
 {
-    const bool isVertical = m_data->arrowType == Qt::UpArrow || m_data->arrowType == Qt::DownArrow;
+    QWT_D(d);
+    const bool isVertical = d->arrowType == Qt::UpArrow || d->arrowType == Qt::DownArrow;
 
     const QRect r      = labelRect();
     QSize boundingSize = labelRect().size();
@@ -171,12 +180,12 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
         arrow.transpose();
 
     QRect contentsSize;  // aligned rect where to paint all arrows
-    if (m_data->arrowType == Qt::LeftArrow || m_data->arrowType == Qt::RightArrow) {
-        contentsSize.setWidth(m_data->num * arrow.width() + (m_data->num - 1) * cs_arrowButton_spacing);
+    if (d->arrowType == Qt::LeftArrow || d->arrowType == Qt::RightArrow) {
+        contentsSize.setWidth(d->num * arrow.width() + (d->num - 1) * cs_arrowButton_spacing);
         contentsSize.setHeight(arrow.height());
     } else {
         contentsSize.setWidth(arrow.width());
-        contentsSize.setHeight(m_data->num * arrow.height() + (m_data->num - 1) * cs_arrowButton_spacing);
+        contentsSize.setHeight(d->num * arrow.height() + (d->num - 1) * cs_arrowButton_spacing);
     }
 
     QRect arrowRect(contentsSize);
@@ -184,8 +193,8 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
     arrowRect.setSize(arrow);
 
     painter->save();
-    for (int i = 0; i < m_data->num; i++) {
-        drawArrow(painter, arrowRect, m_data->arrowType);
+    for (int i = 0; i < d->num; i++) {
+        drawArrow(painter, arrowRect, d->arrowType);
 
         int dx = 0;
         int dy = 0;
@@ -270,13 +279,14 @@ QSize QwtArrowButton::sizeHint() const
  */
 QSize QwtArrowButton::minimumSizeHint() const
 {
+    QWT_DC(d);
     const QSize asz = arrowSize(Qt::RightArrow, QSize());
 
     QSize sz(2 * cs_arrowButton_margin + (cs_arrowButton_maxNum - 1) * cs_arrowButton_spacing
                  + cs_arrowButton_maxNum * asz.width(),
              2 * cs_arrowButton_margin + asz.height());
 
-    if (m_data->arrowType == Qt::UpArrow || m_data->arrowType == Qt::DownArrow)
+    if (d->arrowType == Qt::UpArrow || d->arrowType == Qt::DownArrow)
         sz.transpose();
 
     QStyleOption styleOption;

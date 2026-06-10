@@ -29,7 +29,14 @@
 
 class QwtSamplingThread::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtSamplingThread)
 public:
+    PrivateData( QwtSamplingThread* p )
+        : q_ptr( p )
+        , msecsInterval( 1e3 )
+    {
+    }
+
     QElapsedTimer timer;
     double msecsInterval;
 };
@@ -39,10 +46,10 @@ public:
  * @param parent Parent object
  * 
  */
-QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent)
+QwtSamplingThread::QwtSamplingThread(QObject* parent)
+    : QThread(parent)
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data                = new PrivateData;
-    m_data->msecsInterval = 1e3;  // 1 second
 }
 
 /**
@@ -51,7 +58,6 @@ QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent)
  */
 QwtSamplingThread::~QwtSamplingThread()
 {
-    delete m_data;
 }
 
 /**
@@ -65,10 +71,11 @@ QwtSamplingThread::~QwtSamplingThread()
  */
 void QwtSamplingThread::setInterval(double msecs)
 {
+    QWT_D(d);
     if (msecs < 0.0)
         msecs = 0.0;
 
-    m_data->msecsInterval = msecs;
+    d->msecsInterval = msecs;
 }
 
 /**
@@ -79,7 +86,8 @@ void QwtSamplingThread::setInterval(double msecs)
  */
 double QwtSamplingThread::interval() const
 {
-    return m_data->msecsInterval;
+    QWT_DC(d);
+    return d->msecsInterval;
 }
 
 /**
@@ -90,8 +98,9 @@ double QwtSamplingThread::interval() const
  */
 double QwtSamplingThread::elapsed() const
 {
-    if (m_data->timer.isValid())
-        return m_data->timer.nsecsElapsed() / 1e6;
+    QWT_DC(d);
+    if (d->timer.isValid())
+        return d->timer.nsecsElapsed() / 1e6;
 
     return 0.0;
 }
@@ -103,7 +112,8 @@ double QwtSamplingThread::elapsed() const
  */
 void QwtSamplingThread::stop()
 {
-    m_data->timer.invalidate();
+    QWT_D(d);
+    d->timer.invalidate();
 }
 
 /**
@@ -113,20 +123,21 @@ void QwtSamplingThread::stop()
  */
 void QwtSamplingThread::run()
 {
-    m_data->timer.start();
+    QWT_D(d);
+    d->timer.start();
 
     /*
         We should have all values in nsecs/qint64, but
         this would break existing code. TODO ...
         Anyway - for QThread::usleep we even need microseconds( usecs )
      */
-    while (m_data->timer.isValid()) {
-        const qint64 timestamp = m_data->timer.nsecsElapsed();
+    while (d->timer.isValid()) {
+        const qint64 timestamp = d->timer.nsecsElapsed();
         sample(timestamp / 1e9);  // seconds
 
-        if (m_data->msecsInterval > 0.0) {
-            const double interval = m_data->msecsInterval * 1e3;
-            const double elapsed  = (m_data->timer.nsecsElapsed() - timestamp) / 1e3;
+        if (d->msecsInterval > 0.0) {
+            const double interval = d->msecsInterval * 1e3;
+            const double elapsed  = (d->timer.nsecsElapsed() - timestamp) / 1e3;
 
             const double usecs = interval - elapsed;
 

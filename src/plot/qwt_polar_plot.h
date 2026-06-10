@@ -261,8 +261,7 @@ private:
 
     void initPlot(const QwtText&);
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarPlot)
 };
 
 #endif

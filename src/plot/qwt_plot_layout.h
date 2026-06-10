@@ -126,8 +126,7 @@ protected:
 private:
     Q_DISABLE_COPY( QwtPlotLayout )
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )

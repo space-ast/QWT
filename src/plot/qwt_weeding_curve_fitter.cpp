@@ -34,9 +34,11 @@
 
 class QwtWeedingCurveFitter::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtWeedingCurveFitter)
   public:
-    PrivateData()
-        : tolerance( 1.0 )
+    PrivateData( QwtWeedingCurveFitter* p )
+        : q_ptr( p )
+        , tolerance( 1.0 )
         , chunkSize( 0 )
     {
     }
@@ -65,8 +67,8 @@ class QwtWeedingCurveFitter::Line
  */
 QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
     : QwtCurveFitter( QwtCurveFitter::Polygon )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setTolerance( tolerance );
 }
 
@@ -75,7 +77,6 @@ QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
  */
 QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 {
-    delete m_data;
 }
 
 /*!
@@ -93,7 +94,8 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
  */
 void QwtWeedingCurveFitter::setTolerance( double tolerance )
 {
-    m_data->tolerance = qwtMaxF( tolerance, 0.0 );
+    QWT_D(d);
+    d->tolerance = qwtMaxF( tolerance, 0.0 );
 }
 
 /*!
@@ -102,7 +104,8 @@ void QwtWeedingCurveFitter::setTolerance( double tolerance )
  */
 double QwtWeedingCurveFitter::tolerance() const
 {
-    return m_data->tolerance;
+    QWT_DC(d);
+    return d->tolerance;
 }
 
 /*!
@@ -118,10 +121,11 @@ double QwtWeedingCurveFitter::tolerance() const
  */
 void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 {
+    QWT_D(d);
     if ( numPoints > 0 )
         numPoints = qMax( numPoints, 3U );
 
-    m_data->chunkSize = numPoints;
+    d->chunkSize = numPoints;
 }
 
 /*!
@@ -131,7 +135,8 @@ void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
  */
 uint QwtWeedingCurveFitter::chunkSize() const
 {
-    return m_data->chunkSize;
+    QWT_DC(d);
+    return d->chunkSize;
 }
 
 /*!
@@ -141,19 +146,20 @@ uint QwtWeedingCurveFitter::chunkSize() const
  */
 QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 {
+    QWT_DC(d);
     if ( points.isEmpty() )
         return points;
 
     QPolygonF fittedPoints;
-    if ( m_data->chunkSize == 0 )
+    if ( d->chunkSize == 0 )
     {
         fittedPoints = simplify( points );
     }
     else
     {
-        for ( int i = 0; i < points.size(); i += m_data->chunkSize )
+        for ( int i = 0; i < points.size(); i += d->chunkSize )
         {
-            const QPolygonF p = points.mid( i, m_data->chunkSize );
+            const QPolygonF p = points.mid( i, d->chunkSize );
             fittedPoints += simplify( p );
         }
     }
@@ -175,7 +181,8 @@ QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) cons
 
 QPolygonF QwtWeedingCurveFitter::simplify( const QPolygonF& points ) const
 {
-    const double toleranceSqr = m_data->tolerance * m_data->tolerance;
+    QWT_DC(d);
+    const double toleranceSqr = d->tolerance * d->tolerance;
 
     QStack< Line > stack;
     stack.reserve( 500 );

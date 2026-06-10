@@ -99,7 +99,12 @@ namespace
 
 class QwtPlainTextEngine::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlainTextEngine)
   public:
+    PrivateData(QwtPlainTextEngine* p) : q_ptr(p)
+    {
+    }
+
     int effectiveAscent( const QFont& font ) const
     {
         const QString fontKey = font.key();
@@ -172,8 +177,8 @@ QwtTextEngine::~QwtTextEngine()
  * @brief Constructor
  */
 QwtPlainTextEngine::QwtPlainTextEngine()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
@@ -181,7 +186,6 @@ QwtPlainTextEngine::QwtPlainTextEngine()
  */
 QwtPlainTextEngine::~QwtPlainTextEngine()
 {
-    delete m_data;
 }
 
 /**
@@ -233,10 +237,11 @@ QSizeF QwtPlainTextEngine::textSize( const QFont& font,
 void QwtPlainTextEngine::textMargins( const QFont& font, const QString&,
     double& left, double& right, double& top, double& bottom ) const
 {
+    QWT_DC(d);
     left = right = top = 0;
 
     const QFontMetricsF fm( font );
-    top = fm.ascent() - m_data->effectiveAscent( font );
+    top = fm.ascent() - d->effectiveAscent( font );
     bottom = fm.descent();
 }
 

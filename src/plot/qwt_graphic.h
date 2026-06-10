@@ -229,8 +229,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 
     class PathInfo;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtGraphic)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::RenderHints )

@@ -29,7 +29,13 @@
 
 class QwtPlotDict::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotDict)
   public:
+    PrivateData(QwtPlotDict* p)
+        : q_ptr(p)
+        , autoDelete(true)
+    {
+    }
 
     class ItemList : public QList< QwtPlotItem* >
     {
@@ -83,9 +89,8 @@ class QwtPlotDict::PrivateData
  * @sa setAutoDelete(), QwtPlotItem::attach()
  */
 QwtPlotDict::QwtPlotDict()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtPlotDict::PrivateData;
-    m_data->autoDelete = true;
 }
 
 /**
@@ -95,8 +100,8 @@ QwtPlotDict::QwtPlotDict()
  */
 QwtPlotDict::~QwtPlotDict()
 {
-    detachItems( QwtPlotItem::Rtti_PlotItem, m_data->autoDelete );
-    delete m_data;
+    QWT_D(d);
+    detachItems( QwtPlotItem::Rtti_PlotItem, d->autoDelete );
 }
 
 /**
@@ -108,7 +113,8 @@ QwtPlotDict::~QwtPlotDict()
  */
 void QwtPlotDict::setAutoDelete( bool autoDelete )
 {
-    m_data->autoDelete = autoDelete;
+    QWT_D(d);
+    d->autoDelete = autoDelete;
 }
 
 /**
@@ -118,7 +124,8 @@ void QwtPlotDict::setAutoDelete( bool autoDelete )
  */
 bool QwtPlotDict::autoDelete() const
 {
-    return m_data->autoDelete;
+    QWT_DC(d);
+    return d->autoDelete;
 }
 
 /*!
@@ -129,7 +136,8 @@ bool QwtPlotDict::autoDelete() const
  */
 void QwtPlotDict::insertItem( QwtPlotItem* item )
 {
-    m_data->itemList.insertItem( item );
+    QWT_D(d);
+    d->itemList.insertItem( item );
 }
 
 /*!
@@ -140,7 +148,8 @@ void QwtPlotDict::insertItem( QwtPlotItem* item )
  */
 void QwtPlotDict::removeItem( QwtPlotItem* item )
 {
-    m_data->itemList.removeItem( item );
+    QWT_D(d);
+    d->itemList.removeItem( item );
 }
 
 /**
@@ -151,7 +160,8 @@ void QwtPlotDict::removeItem( QwtPlotItem* item )
  */
 void QwtPlotDict::detachItems( int rtti, bool autoDelete )
 {
-    PrivateData::ItemList list = m_data->itemList;
+    QWT_D(d);
+    PrivateData::ItemList list = d->itemList;
     QwtPlotItemIterator it = list.constBegin();
     while ( it != list.constEnd() )
     {
@@ -177,7 +187,8 @@ void QwtPlotDict::detachItems( int rtti, bool autoDelete )
  */
 const QwtPlotItemList& QwtPlotDict::itemList() const
 {
-    return m_data->itemList;
+    QWT_DC(d);
+    return d->itemList;
 }
 
 /**
@@ -188,12 +199,13 @@ const QwtPlotItemList& QwtPlotDict::itemList() const
  */
 QwtPlotItemList QwtPlotDict::itemList( int rtti ) const
 {
+    QWT_DC(d);
     if ( rtti == QwtPlotItem::Rtti_PlotItem )
-        return m_data->itemList;
+        return d->itemList;
 
     QwtPlotItemList items;
 
-    PrivateData::ItemList list = m_data->itemList;
+    PrivateData::ItemList list = d->itemList;
     for ( QwtPlotItemIterator it = list.constBegin(); it != list.constEnd(); ++it )
     {
         QwtPlotItem* item = *it;

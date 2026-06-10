@@ -123,8 +123,7 @@ protected:
 private:
     Q_DISABLE_COPY(QwtAbstractScaleDraw)
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtAbstractScaleDraw)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtAbstractScaleDraw::ScaleComponents)

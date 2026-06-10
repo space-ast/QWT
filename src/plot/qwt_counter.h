@@ -193,8 +193,7 @@ class QWT_EXPORT QwtCounter : public QWidget
     void updateButtons();
     void showNumber( double );
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtCounter)
 };
 
 #endif

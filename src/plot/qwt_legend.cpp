@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -138,8 +138,10 @@ QList< QWidget* > LegendMap::legendWidgets(const QVariant& itemInfo) const
 
 class QwtLegend::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtLegend)
+
 public:
-    PrivateData() : itemMode(QwtLegendData::ReadOnly), view(nullptr)
+    PrivateData(QwtLegend* p) : q_ptr(p), itemMode(QwtLegendData::ReadOnly), view(nullptr)
     {
     }
 
@@ -256,11 +258,9 @@ public:
  * @brief Constructor for QwtLegend
  * @param parent Parent widget
  */
-QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
+QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent), QWT_PIMPL_CONSTRUCT
 {
     setFrameStyle(NoFrame);
-
-    m_data = new QwtLegend::PrivateData;
 
     m_data->view = new QwtLegend::PrivateData::LegendView(this);
     m_data->view->setObjectName("QwtLegendView");
@@ -281,7 +281,6 @@ QwtLegend::QwtLegend(QWidget* parent) : QwtAbstractLegend(parent)
  */
 QwtLegend::~QwtLegend()
 {
-    delete m_data;
 }
 
 /**
@@ -293,7 +292,8 @@ QwtLegend::~QwtLegend()
  */
 void QwtLegend::setMaxColumns(uint numColums)
 {
-    QwtDynGridLayout* tl = qobject_cast< QwtDynGridLayout* >(m_data->view->contentsWidget->layout());
+    QWT_D(d);
+    QwtDynGridLayout* tl = qobject_cast< QwtDynGridLayout* >(d->view->contentsWidget->layout());
     if (tl)
         tl->setMaxColumns(numColums);
 
@@ -307,9 +307,10 @@ void QwtLegend::setMaxColumns(uint numColums)
  */
 uint QwtLegend::maxColumns() const
 {
+    QWT_DC(d);
     uint maxCols = 0;
 
-    const QwtDynGridLayout* tl = qobject_cast< const QwtDynGridLayout* >(m_data->view->contentsWidget->layout());
+    const QwtDynGridLayout* tl = qobject_cast< const QwtDynGridLayout* >(d->view->contentsWidget->layout());
     if (tl)
         maxCols = tl->maxColumns();
 
@@ -328,7 +329,8 @@ uint QwtLegend::maxColumns() const
  */
 void QwtLegend::setDefaultItemMode(QwtLegendData::Mode mode)
 {
-    m_data->itemMode = mode;
+    QWT_D(d);
+    d->itemMode = mode;
 }
 
 /**
@@ -338,7 +340,8 @@ void QwtLegend::setDefaultItemMode(QwtLegendData::Mode mode)
  */
 QwtLegendData::Mode QwtLegend::defaultItemMode() const
 {
-    return m_data->itemMode;
+    QWT_DC(d);
+    return d->itemMode;
 }
 
 /**
@@ -349,7 +352,8 @@ QwtLegendData::Mode QwtLegend::defaultItemMode() const
  */
 QWidget* QwtLegend::contentsWidget()
 {
-    return m_data->view->contentsWidget;
+    QWT_D(d);
+    return d->view->contentsWidget;
 }
 
 /**
@@ -359,7 +363,8 @@ QWidget* QwtLegend::contentsWidget()
  */
 QScrollBar* QwtLegend::horizontalScrollBar() const
 {
-    return m_data->view->horizontalScrollBar();
+    QWT_DC(d);
+    return d->view->horizontalScrollBar();
 }
 
 /**
@@ -369,7 +374,8 @@ QScrollBar* QwtLegend::horizontalScrollBar() const
  */
 QScrollBar* QwtLegend::verticalScrollBar() const
 {
-    return m_data->view->verticalScrollBar();
+    QWT_DC(d);
+    return d->view->verticalScrollBar();
 }
 
 /**
@@ -380,7 +386,8 @@ QScrollBar* QwtLegend::verticalScrollBar() const
  */
 const QWidget* QwtLegend::contentsWidget() const
 {
-    return m_data->view->contentsWidget;
+    QWT_DC(d);
+    return d->view->contentsWidget;
 }
 
 /**
@@ -391,10 +398,11 @@ const QWidget* QwtLegend::contentsWidget() const
  */
 void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& legendData)
 {
+    QWT_D(d);
     QList< QWidget* > widgetList = legendWidgets(itemInfo);
 
     if (widgetList.size() != legendData.size()) {
-        QLayout* contentsLayout = m_data->view->contentsWidget->layout();
+        QLayout* contentsLayout = d->view->contentsWidget->layout();
 
         while (widgetList.size() > legendData.size()) {
             QWidget* w = widgetList.takeLast();
@@ -429,9 +437,9 @@ void QwtLegend::updateLegend(const QVariant& itemInfo, const QList< QwtLegendDat
         }
 
         if (widgetList.isEmpty()) {
-            m_data->itemMap.remove(itemInfo);
+            d->itemMap.remove(itemInfo);
         } else {
-            m_data->itemMap.insert(itemInfo, widgetList);
+            d->itemMap.insert(itemInfo, widgetList);
         }
 
         updateTabOrder();
@@ -486,7 +494,8 @@ void QwtLegend::updateWidget(QWidget* widget, const QwtLegendData& legendData)
 
 void QwtLegend::updateTabOrder()
 {
-    QLayout* contentsLayout = m_data->view->contentsWidget->layout();
+    QWT_D(d);
+    QLayout* contentsLayout = d->view->contentsWidget->layout();
     if (contentsLayout) {
         // set tab focus chain
 
@@ -509,7 +518,8 @@ void QwtLegend::updateTabOrder()
  */
 QSize QwtLegend::sizeHint() const
 {
-    QSize hint = m_data->view->contentsWidget->sizeHint();
+    QWT_DC(d);
+    QSize hint = d->view->contentsWidget->sizeHint();
     hint += QSize(2 * frameWidth(), 2 * frameWidth());
 
     return hint;
@@ -523,9 +533,10 @@ QSize QwtLegend::sizeHint() const
  */
 int QwtLegend::heightForWidth(int width) const
 {
+    QWT_DC(d);
     width -= 2 * frameWidth();
 
-    int h = m_data->view->contentsWidget->heightForWidth(width);
+    int h = d->view->contentsWidget->heightForWidth(width);
     if (h >= 0)
         h += 2 * frameWidth();
 
@@ -542,7 +553,8 @@ int QwtLegend::heightForWidth(int width) const
  */
 bool QwtLegend::eventFilter(QObject* object, QEvent* event)
 {
-    if (object == m_data->view->contentsWidget) {
+    QWT_D(d);
+    if (object == d->view->contentsWidget) {
         switch (event->type()) {
         case QEvent::ChildRemoved: {
             const QChildEvent* ce = static_cast< const QChildEvent* >(event);
@@ -554,12 +566,12 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
                     to remove it from the map.
                  */
                 QWidget* w = reinterpret_cast< QWidget* >(ce->child());
-                m_data->itemMap.removeWidget(w);
+                d->itemMap.removeWidget(w);
             }
             break;
         }
         case QEvent::LayoutRequest: {
-            m_data->view->layoutContents();
+            d->view->layoutContents();
 
             if (parentWidget() && parentWidget()->layout() == nullptr) {
                 /*
@@ -592,11 +604,12 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
  */
 void QwtLegend::itemClicked()
 {
+    QWT_D(d);
     QWidget* w = qobject_cast< QWidget* >(sender());
     if (w) {
-        const QVariant itemInfo = m_data->itemMap.itemInfo(w);
+        const QVariant itemInfo = d->itemMap.itemInfo(w);
         if (itemInfo.isValid()) {
-            const QList< QWidget* > widgetList = m_data->itemMap.legendWidgets(itemInfo);
+            const QList< QWidget* > widgetList = d->itemMap.legendWidgets(itemInfo);
 
             const int index = widgetList.indexOf(w);
             if (index >= 0)
@@ -612,11 +625,12 @@ void QwtLegend::itemClicked()
  */
 void QwtLegend::itemChecked(bool on)
 {
+    QWT_D(d);
     QWidget* w = qobject_cast< QWidget* >(sender());
     if (w) {
-        const QVariant itemInfo = m_data->itemMap.itemInfo(w);
+        const QVariant itemInfo = d->itemMap.itemInfo(w);
         if (itemInfo.isValid()) {
-            const QList< QWidget* > widgetList = m_data->itemMap.legendWidgets(itemInfo);
+            const QList< QWidget* > widgetList = d->itemMap.legendWidgets(itemInfo);
 
             const int index = widgetList.indexOf(w);
             if (index >= 0)
@@ -634,7 +648,8 @@ void QwtLegend::itemChecked(bool on)
  */
 void QwtLegend::renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const
 {
-    if (m_data->itemMap.isEmpty())
+    QWT_DC(d);
+    if (d->itemMap.isEmpty())
         return;
 
     if (fillBackground) {
@@ -730,7 +745,8 @@ void QwtLegend::renderItem(QPainter* painter, const QWidget* widget, const QRect
  */
 QList< QWidget* > QwtLegend::legendWidgets(const QVariant& itemInfo) const
 {
-    return m_data->itemMap.legendWidgets(itemInfo);
+    QWT_DC(d);
+    return d->itemMap.legendWidgets(itemInfo);
 }
 
 /**
@@ -742,7 +758,8 @@ QList< QWidget* > QwtLegend::legendWidgets(const QVariant& itemInfo) const
  */
 QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
 {
-    const QList< QWidget* > list = m_data->itemMap.legendWidgets(itemInfo);
+    QWT_DC(d);
+    const QList< QWidget* > list = d->itemMap.legendWidgets(itemInfo);
     if (list.isEmpty())
         return nullptr;
 
@@ -757,7 +774,8 @@ QWidget* QwtLegend::legendWidget(const QVariant& itemInfo) const
  */
 QVariant QwtLegend::itemInfo(const QWidget* widget) const
 {
-    return m_data->itemMap.itemInfo(widget);
+    QWT_DC(d);
+    return d->itemMap.itemInfo(widget);
 }
 
 /**
@@ -766,7 +784,8 @@ QVariant QwtLegend::itemInfo(const QWidget* widget) const
  */
 bool QwtLegend::isEmpty() const
 {
-    return m_data->itemMap.isEmpty();
+    QWT_DC(d);
+    return d->itemMap.isEmpty();
 }
 
 /**

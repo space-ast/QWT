@@ -74,9 +74,11 @@ static double qwtToDegrees(double value)
 
 class QwtKnob::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtKnob)
 public:
-    PrivateData()
-        : knobStyle(QwtKnob::Raised)
+    PrivateData(QwtKnob* p)
+        : q_ptr(p)
+        , knobStyle(QwtKnob::Raised)
         , markerStyle(QwtKnob::Notch)
         , borderWidth(2)
         , borderDist(4)
@@ -103,7 +105,7 @@ public:
 
     double totalAngle;
 
-    double mouseOffset;
+    mutable double mouseOffset;
 };
 
 /**
@@ -114,10 +116,8 @@ public:
  * @param parent Parent widget
  * @sa setTotalAngle()
  */
-QwtKnob::QwtKnob(QWidget* parent) : QwtAbstractSlider(parent)
+QwtKnob::QwtKnob(QWidget* parent) : QwtAbstractSlider(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setScaleDraw(new QwtRoundScaleDraw());
 
     setTotalAngle(270.0);
@@ -131,7 +131,6 @@ QwtKnob::QwtKnob(QWidget* parent) : QwtAbstractSlider(parent)
 //! Destructor
 QwtKnob::~QwtKnob()
 {
-    delete m_data;
 }
 
 /**
@@ -141,8 +140,9 @@ QwtKnob::~QwtKnob()
  */
 void QwtKnob::setKnobStyle(KnobStyle knobStyle)
 {
-    if (m_data->knobStyle != knobStyle) {
-        m_data->knobStyle = knobStyle;
+    QWT_D(d);
+    if (d->knobStyle != knobStyle) {
+        d->knobStyle = knobStyle;
         update();
     }
 }
@@ -154,7 +154,8 @@ void QwtKnob::setKnobStyle(KnobStyle knobStyle)
  */
 QwtKnob::KnobStyle QwtKnob::knobStyle() const
 {
-    return m_data->knobStyle;
+    QWT_DC(d);
+    return d->knobStyle;
 }
 
 /**
@@ -164,8 +165,9 @@ QwtKnob::KnobStyle QwtKnob::knobStyle() const
  */
 void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
 {
-    if (m_data->markerStyle != markerStyle) {
-        m_data->markerStyle = markerStyle;
+    QWT_D(d);
+    if (d->markerStyle != markerStyle) {
+        d->markerStyle = markerStyle;
         update();
     }
 }
@@ -177,7 +179,8 @@ void QwtKnob::setMarkerStyle(MarkerStyle markerStyle)
  */
 QwtKnob::MarkerStyle QwtKnob::markerStyle() const
 {
-    return m_data->markerStyle;
+    QWT_DC(d);
+    return d->markerStyle;
 }
 
 /**
@@ -191,12 +194,13 @@ QwtKnob::MarkerStyle QwtKnob::markerStyle() const
  */
 void QwtKnob::setTotalAngle(double angle)
 {
+    QWT_D(d);
     angle = qBound(10.0, angle, 360.0);
 
-    if (angle != m_data->totalAngle) {
-        m_data->totalAngle = angle;
+    if (angle != d->totalAngle) {
+        d->totalAngle = angle;
 
-        scaleDraw()->setAngleRange(-0.5 * m_data->totalAngle, 0.5 * m_data->totalAngle);
+        scaleDraw()->setAngleRange(-0.5 * d->totalAngle, 0.5 * d->totalAngle);
 
         updateGeometry();
         update();
@@ -210,7 +214,8 @@ void QwtKnob::setTotalAngle(double angle)
  */
 double QwtKnob::totalAngle() const
 {
-    return m_data->totalAngle;
+    QWT_DC(d);
+    return d->totalAngle;
 }
 
 /**
@@ -222,16 +227,17 @@ double QwtKnob::totalAngle() const
  */
 void QwtKnob::setNumTurns(int numTurns)
 {
+    QWT_D(d);
     numTurns = qMax(numTurns, 1);
 
-    if (numTurns == 1 && m_data->totalAngle <= 360.0)
+    if (numTurns == 1 && d->totalAngle <= 360.0)
         return;
 
     const double angle = numTurns * 360.0;
-    if (angle != m_data->totalAngle) {
-        m_data->totalAngle = angle;
+    if (angle != d->totalAngle) {
+        d->totalAngle = angle;
 
-        scaleDraw()->setAngleRange(-0.5 * m_data->totalAngle, 0.5 * m_data->totalAngle);
+        scaleDraw()->setAngleRange(-0.5 * d->totalAngle, 0.5 * d->totalAngle);
 
         updateGeometry();
         update();
@@ -245,7 +251,8 @@ void QwtKnob::setNumTurns(int numTurns)
  */
 int QwtKnob::numTurns() const
 {
-    return qwtCeil(m_data->totalAngle / 360.0);
+    QWT_DC(d);
+    return qwtCeil(d->totalAngle / 360.0);
 }
 
 /**
@@ -257,8 +264,9 @@ int QwtKnob::numTurns() const
  */
 void QwtKnob::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {
+    QWT_D(d);
     setAbstractScaleDraw(scaleDraw);
-    setTotalAngle(m_data->totalAngle);
+    setTotalAngle(d->totalAngle);
 
     updateGeometry();
     update();
@@ -291,33 +299,34 @@ QwtRoundScaleDraw* QwtKnob::scaleDraw()
  */
 QRect QwtKnob::knobRect() const
 {
+    QWT_DC(d);
     const QRect cr = contentsRect();
 
     const int extent = qwtCeil(scaleDraw()->extent(font()));
-    const int d      = extent + m_data->scaleDist;
+    const int dist   = extent + d->scaleDist;
 
-    int w = m_data->knobWidth;
+    int w = d->knobWidth;
     if (w <= 0) {
         const int dim = qMin(cr.width(), cr.height());
 
-        w = dim - 2 * (d);
+        w = dim - 2 * (dist);
         w = qMax(0, w);
     }
 
     QRect r(0, 0, w, w);
 
-    if (m_data->alignment & Qt::AlignLeft) {
-        r.moveLeft(cr.left() + d);
-    } else if (m_data->alignment & Qt::AlignRight) {
-        r.moveRight(cr.right() - d);
+    if (d->alignment & Qt::AlignLeft) {
+        r.moveLeft(cr.left() + dist);
+    } else if (d->alignment & Qt::AlignRight) {
+        r.moveRight(cr.right() - dist);
     } else {
         r.moveCenter(QPoint(cr.center().x(), r.center().y()));
     }
 
-    if (m_data->alignment & Qt::AlignTop) {
-        r.moveTop(cr.top() + d);
-    } else if (m_data->alignment & Qt::AlignBottom) {
-        r.moveBottom(cr.bottom() - d);
+    if (d->alignment & Qt::AlignTop) {
+        r.moveTop(cr.top() + dist);
+    } else if (d->alignment & Qt::AlignBottom) {
+        r.moveBottom(cr.bottom() - dist);
     } else {
         r.moveCenter(QPoint(r.center().x(), cr.center().y()));
     }
@@ -335,6 +344,7 @@ QRect QwtKnob::knobRect() const
  */
 bool QwtKnob::isScrollPosition(const QPoint& pos) const
 {
+    QWT_DC(d);
     const QRect kr = knobRect();
 
     const QRegion region(kr, QRegion::Ellipse);
@@ -342,7 +352,7 @@ bool QwtKnob::isScrollPosition(const QPoint& pos) const
         const double angle      = QLineF(kr.center(), pos).angle();
         const double valueAngle = qwtToDegrees(scaleMap().transform(value()));
 
-        m_data->mouseOffset = qwtNormalizeDegrees(angle - valueAngle);
+        d->mouseOffset = qwtNormalizeDegrees(angle - valueAngle);
 
         return true;
     }
@@ -360,8 +370,9 @@ bool QwtKnob::isScrollPosition(const QPoint& pos) const
  */
 double QwtKnob::scrolledTo(const QPoint& pos) const
 {
+    QWT_DC(d);
     double angle = QLineF(rect().center(), pos).angle();
-    angle        = qwtNormalizeDegrees(angle - m_data->mouseOffset);
+    angle        = qwtNormalizeDegrees(angle - d->mouseOffset);
 
     if (scaleMap().pDist() > 360.0) {
         angle = qwtToDegrees(angle);
@@ -380,7 +391,7 @@ double QwtKnob::scrolledTo(const QPoint& pos) const
         if (!wrapping()) {
             const double boundedAngle = qBound(scaleMap().p1(), angle, scaleMap().p2());
 
-            m_data->mouseOffset += (boundedAngle - angle);
+            d->mouseOffset += (boundedAngle - angle);
             angle = boundedAngle;
         }
     } else {
@@ -396,7 +407,7 @@ double QwtKnob::scrolledTo(const QPoint& pos) const
             else if ((currentAngle < -90.0) && (boundedAngle > 90.0))
                 boundedAngle = scaleMap().p1();
 
-            m_data->mouseOffset += (boundedAngle - angle);
+            d->mouseOffset += (boundedAngle - angle);
         }
 
         angle = boundedAngle;
@@ -429,6 +440,7 @@ void QwtKnob::changeEvent(QEvent* event)
  */
 void QwtKnob::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
     const QRectF knobRect = this->knobRect();
 
     QPainter painter(this);
@@ -441,7 +453,7 @@ void QwtKnob::paintEvent(QPaintEvent* event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     if (!knobRect.contains(event->region().boundingRect())) {
-        scaleDraw()->setRadius(0.5 * knobRect.width() + m_data->scaleDist);
+        scaleDraw()->setRadius(0.5 * knobRect.width() + d->scaleDist);
         scaleDraw()->moveCenter(knobRect.center());
 
         scaleDraw()->draw(&painter, palette());
@@ -465,14 +477,15 @@ void QwtKnob::paintEvent(QPaintEvent* event)
  */
 void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
 {
+    QWT_DC(d);
     double dim = qMin(knobRect.width(), knobRect.height());
-    dim -= m_data->borderWidth * 0.5;
+    dim -= d->borderWidth * 0.5;
 
     QRectF aRect(0, 0, dim, dim);
     aRect.moveCenter(knobRect.center());
 
     QPen pen(Qt::NoPen);
-    if (m_data->borderWidth > 0) {
+    if (d->borderWidth > 0) {
         QColor c1 = palette().color(QPalette::Light);
         QColor c2 = palette().color(QPalette::Dark);
 
@@ -482,11 +495,11 @@ void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
         gradient.setColorAt(0.7, c2);
         gradient.setColorAt(1.0, c2);
 
-        pen = QPen(gradient, m_data->borderWidth);
+        pen = QPen(gradient, d->borderWidth);
     }
 
     QBrush brush;
-    switch (m_data->knobStyle) {
+    switch (d->knobStyle) {
     case QwtKnob::Raised: {
         double off = 0.3 * knobRect.width();
         QRadialGradient gradient(knobRect.center(), knobRect.width(), knobRect.topLeft() + QPointF(off, off));
@@ -544,7 +557,8 @@ void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
  */
 void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) const
 {
-    if (m_data->markerStyle == NoMarker || !isValid())
+    QWT_DC(d);
+    if (d->markerStyle == NoMarker || !isValid())
         return;
 
     const double radians = qwtRadians(angle);
@@ -555,15 +569,15 @@ void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) co
     const double ym     = rect.center().y();
     const double margin = 4.0;
 
-    double radius = 0.5 * (rect.width() - m_data->borderWidth) - margin;
+    double radius = 0.5 * (rect.width() - d->borderWidth) - margin;
     if (radius < 1.0)
         radius = 1.0;
 
-    double markerSize = m_data->markerSize;
+    double markerSize = d->markerSize;
     if (markerSize <= 0)
         markerSize = qRound(0.4 * radius);
 
-    switch (m_data->markerStyle) {
+    switch (d->markerStyle) {
     case Notch:
     case Nub: {
         const double dotWidth = qwtMinF(markerSize, radius);
@@ -578,7 +592,7 @@ void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) co
             QColor c1 = palette().color(QPalette::Light);
             QColor c2 = palette().color(QPalette::Mid);
 
-            if (m_data->markerStyle == Notch)
+            if (d->markerStyle == Notch)
                 qSwap(c1, c2);
 
             QLinearGradient gradient(ellipse.topLeft(), ellipse.bottomRight());
@@ -653,14 +667,15 @@ void QwtKnob::drawMarker(QPainter* painter, const QRectF& rect, double angle) co
  */
 void QwtKnob::drawFocusIndicator(QPainter* painter) const
 {
+    QWT_DC(d);
     const QRect cr = contentsRect();
 
-    int w = m_data->knobWidth;
+    int w = d->knobWidth;
     if (w <= 0) {
         w = qMin(cr.width(), cr.height());
     } else {
         const int extent = qCeil(scaleDraw()->extent(font()));
-        w += 2 * (extent + m_data->scaleDist);
+        w += 2 * (extent + d->scaleDist);
     }
 
     QRect focusRect(0, 0, w, w);
@@ -678,8 +693,9 @@ void QwtKnob::drawFocusIndicator(QPainter* painter) const
  */
 void QwtKnob::setAlignment(Qt::Alignment alignment)
 {
-    if (m_data->alignment != alignment) {
-        m_data->alignment = alignment;
+    QWT_D(d);
+    if (d->alignment != alignment) {
+        d->alignment = alignment;
         update();
     }
 }
@@ -691,7 +707,8 @@ void QwtKnob::setAlignment(Qt::Alignment alignment)
  */
 Qt::Alignment QwtKnob::alignment() const
 {
-    return m_data->alignment;
+    QWT_DC(d);
+    return d->alignment;
 }
 
 /**
@@ -703,9 +720,10 @@ Qt::Alignment QwtKnob::alignment() const
  */
 void QwtKnob::setKnobWidth(int width)
 {
+    QWT_D(d);
     width = qMax(width, 0);
 
-    if (width != m_data->knobWidth) {
+    if (width != d->knobWidth) {
         QSizePolicy::Policy policy;
         if (width > 0)
             policy = QSizePolicy::Minimum;
@@ -714,7 +732,7 @@ void QwtKnob::setKnobWidth(int width)
 
         setSizePolicy(policy, policy);
 
-        m_data->knobWidth = width;
+        d->knobWidth = width;
 
         updateGeometry();
         update();
@@ -724,7 +742,8 @@ void QwtKnob::setKnobWidth(int width)
 //! Return the width of the knob
 int QwtKnob::knobWidth() const
 {
-    return m_data->knobWidth;
+    QWT_DC(d);
+    return d->knobWidth;
 }
 
 /**
@@ -733,7 +752,8 @@ int QwtKnob::knobWidth() const
  */
 void QwtKnob::setBorderWidth(int borderWidth)
 {
-    m_data->borderWidth = qMax(borderWidth, 0);
+    QWT_D(d);
+    d->borderWidth = qMax(borderWidth, 0);
 
     updateGeometry();
     update();
@@ -742,7 +762,8 @@ void QwtKnob::setBorderWidth(int borderWidth)
 //! Return the border width
 int QwtKnob::borderWidth() const
 {
-    return m_data->borderWidth;
+    QWT_DC(d);
+    return d->borderWidth;
 }
 
 /**
@@ -753,8 +774,9 @@ int QwtKnob::borderWidth() const
  */
 void QwtKnob::setMarkerSize(int size)
 {
-    if (m_data->markerSize != size) {
-        m_data->markerSize = size;
+    QWT_D(d);
+    if (d->markerSize != size) {
+        d->markerSize = size;
         update();
     }
 }
@@ -766,7 +788,8 @@ void QwtKnob::setMarkerSize(int size)
  */
 int QwtKnob::markerSize() const
 {
-    return m_data->markerSize;
+    QWT_DC(d);
+    return d->markerSize;
 }
 
 /**

@@ -84,7 +84,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
     /// Set the color range
     void setColorRange( const QwtInterval& );
     /// Get the color range
-    QwtInterval& colorRange() const;
+    const QwtInterval& colorRange() const;
 
     /// Draw the series
     virtual void drawSeries( QPainter*,
@@ -106,8 +106,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
     /// Initialize the spectro curve
     void init();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotSpectroCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotSpectroCurve::PaintAttributes )

@@ -47,9 +47,11 @@ QwtVectorFieldSymbol::~QwtVectorFieldSymbol()
 
 class QwtVectorFieldArrow::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtVectorFieldArrow)
   public:
-    PrivateData( qreal headW, qreal tailW )
-        : headWidth( headW )
+    PrivateData( QwtVectorFieldArrow* p, qreal headW, qreal tailW )
+        : q_ptr( p )
+        , headWidth( headW )
         , tailWidth( tailW )
         , length( headW + 4.0 )
     {
@@ -96,8 +98,8 @@ class QwtVectorFieldArrow::PrivateData
     *
  */
 QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
+    : m_data( qwt_make_unique< PrivateData >( this, headWidth, tailWidth ) )
 {
-    m_data = new PrivateData( headWidth, tailWidth );
 }
 
 /**
@@ -106,7 +108,6 @@ QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
  */
 QwtVectorFieldArrow::~QwtVectorFieldArrow()
 {
-    delete m_data;
 }
 
 /**
@@ -116,7 +117,8 @@ QwtVectorFieldArrow::~QwtVectorFieldArrow()
  */
 void QwtVectorFieldArrow::setLength( qreal length )
 {
-    m_data->setLength( length );
+    QWT_D(d);
+    d->setLength( length );
 }
 
 /**
@@ -126,7 +128,8 @@ void QwtVectorFieldArrow::setLength( qreal length )
  */
 qreal QwtVectorFieldArrow::length() const
 {
-    return m_data->length;
+    QWT_DC(d);
+    return d->length;
 }
 
 /**
@@ -135,14 +138,17 @@ qreal QwtVectorFieldArrow::length() const
  */
 void QwtVectorFieldArrow::paint( QPainter* painter ) const
 {
-    painter->drawPath( m_data->path );
+    QWT_DC(d);
+    painter->drawPath( d->path );
 }
 
 class QwtVectorFieldThinArrow::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtVectorFieldThinArrow)
   public:
-    PrivateData( qreal headW )
-        : headWidth( headW )
+    PrivateData( QwtVectorFieldThinArrow* p, qreal headW )
+        : q_ptr( p )
+        , headWidth( headW )
         , length( headW + 4.0 )
     {
         path.lineTo( -headWidth, headWidth * 0.6 );
@@ -168,8 +174,8 @@ class QwtVectorFieldThinArrow::PrivateData
     *
  */
 QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
+    : m_data( qwt_make_unique< PrivateData >( this, headWidth ) )
 {
-    m_data = new PrivateData( headWidth );
 }
 
 /**
@@ -178,7 +184,6 @@ QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
  */
 QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
 {
-    delete m_data;
 }
 
 /**
@@ -189,11 +194,12 @@ QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
  */
 void QwtVectorFieldThinArrow::setLength( qreal length )
 {
-    m_data->length = length;
+    QWT_D(d);
+    d->length = length;
 
-    const qreal headWidth = qMin( m_data->headWidth, length / 3.0 );
+    const qreal headWidth = qMin( d->headWidth, length / 3.0 );
 
-    QPainterPath& path = m_data->path;
+    QPainterPath& path = d->path;
 
     path.setElementPositionAt( 1, -headWidth, headWidth * 0.6 );
     path.setElementPositionAt( 3, -headWidth, -headWidth * 0.6 );
@@ -207,7 +213,8 @@ void QwtVectorFieldThinArrow::setLength( qreal length )
  */
 qreal QwtVectorFieldThinArrow::length() const
 {
-    return m_data->length;
+    QWT_DC(d);
+    return d->length;
 }
 
 /**
@@ -216,5 +223,6 @@ qreal QwtVectorFieldThinArrow::length() const
  */
 void QwtVectorFieldThinArrow::paint(QPainter* p) const
 {
-    p->drawPath( m_data->path );
+    QWT_DC(d);
+    p->drawPath( d->path );
 }

@@ -134,8 +134,7 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     class PaintEngine;
     PaintEngine* m_engine;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtNullPaintDevice)
 };
 
 #endif

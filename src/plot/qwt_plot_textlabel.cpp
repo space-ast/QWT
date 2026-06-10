@@ -69,16 +69,18 @@ static QRect qwtItemRect( int renderFlags,
 
 class QwtPlotTextLabel::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotTextLabel)
   public:
-    PrivateData()
-        : margin( 5 )
+    PrivateData(QwtPlotTextLabel* p)
+        : q_ptr(p)
+        , margin( 5 )
     {
     }
 
     QwtText text;
     int margin;
 
-    QPixmap pixmap;
+    mutable QPixmap pixmap;
 };
 
 /**
@@ -92,10 +94,8 @@ class QwtPlotTextLabel::PrivateData
  *
  */
 QwtPlotTextLabel::QwtPlotTextLabel()
-    : QwtPlotItem( QwtText( "Label" ) )
+    : QwtPlotItem( QwtText( "Label" ) ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemAttribute( QwtPlotItem::AutoScale, false );
     setItemAttribute( QwtPlotItem::Legend, false );
 
@@ -108,7 +108,6 @@ QwtPlotTextLabel::QwtPlotTextLabel()
  */
 QwtPlotTextLabel::~QwtPlotTextLabel()
 {
-    delete m_data;
 }
 
 /**
@@ -130,9 +129,10 @@ int QwtPlotTextLabel::rtti() const
  */
 void QwtPlotTextLabel::setText( const QwtText& text )
 {
-    if ( m_data->text != text )
+    QWT_D(d);
+    if ( d->text != text )
     {
-        m_data->text = text;
+        d->text = text;
 
         invalidateCache();
         itemChanged();
@@ -147,7 +147,8 @@ void QwtPlotTextLabel::setText( const QwtText& text )
  */
 QwtText QwtPlotTextLabel::text() const
 {
-    return m_data->text;
+    QWT_DC(d);
+    return d->text;
 }
 
 /**
@@ -160,10 +161,11 @@ QwtText QwtPlotTextLabel::text() const
  */
 void QwtPlotTextLabel::setMargin( int margin )
 {
+    QWT_D(d);
     margin = qMax( margin, 0 );
-    if ( m_data->margin != margin )
+    if ( d->margin != margin )
     {
-        m_data->margin = margin;
+        d->margin = margin;
         itemChanged();
     }
 }
@@ -176,7 +178,8 @@ void QwtPlotTextLabel::setMargin( int margin )
  */
 int QwtPlotTextLabel::margin() const
 {
-    return m_data->margin;
+    QWT_DC(d);
+    return d->margin;
 }
 
 /*!
@@ -194,13 +197,14 @@ void QwtPlotTextLabel::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
+    QWT_DC(d);
     Q_UNUSED( xMap );
     Q_UNUSED( yMap );
 
-    const int m = m_data->margin;
+    const int m = d->margin;
 
     const QRectF rect = textRect( canvasRect.adjusted( m, m, -m, -m ),
-        m_data->text.textSize( painter->font() ) );
+        d->text.textSize( painter->font() ) );
 
     bool doCache = QwtPainter::roundingAlignment( painter );
     if ( doCache )
@@ -226,8 +230,8 @@ void QwtPlotTextLabel::draw( QPainter* painter,
         // we use a cache.
 
         int pw = 0;
-        if ( m_data->text.borderPen().style() != Qt::NoPen )
-            pw = qMax( m_data->text.borderPen().width(), 1 );
+        if ( d->text.borderPen().style() != Qt::NoPen )
+            pw = qMax( d->text.borderPen().width(), 1 );
 
         QRect pixmapRect;
         pixmapRect.setLeft( qwtFloor( rect.left() ) - pw );
@@ -242,27 +246,27 @@ void QwtPlotTextLabel::draw( QPainter* painter,
         const QSize scaledSize = pixmapRect.size();
 #endif
 
-        if ( m_data->pixmap.isNull() ||
-            ( scaledSize != m_data->pixmap.size() ) )
+        if ( d->pixmap.isNull() ||
+            ( scaledSize != d->pixmap.size() ) )
         {
-            m_data->pixmap = QPixmap( scaledSize );
+            d->pixmap = QPixmap( scaledSize );
 #if QT_VERSION >= 0x050000
-            m_data->pixmap.setDevicePixelRatio( pixelRatio );
+            d->pixmap.setDevicePixelRatio( pixelRatio );
 #endif
-            m_data->pixmap.fill( Qt::transparent );
+            d->pixmap.fill( Qt::transparent );
 
             const QRect r( pw, pw,
                 pixmapRect.width() - 2 * pw, pixmapRect.height() - 2 * pw );
 
-            QPainter pmPainter( &m_data->pixmap );
-            m_data->text.draw( &pmPainter, r );
+            QPainter pmPainter( &d->pixmap );
+            d->text.draw( &pmPainter, r );
         }
 
-        painter->drawPixmap( pixmapRect, m_data->pixmap );
+        painter->drawPixmap( pixmapRect, d->pixmap );
     }
     else
     {
-        m_data->text.draw( painter, rect );
+        d->text.draw( painter, rect );
     }
 }
 
@@ -277,7 +281,8 @@ void QwtPlotTextLabel::draw( QPainter* painter,
 QRectF QwtPlotTextLabel::textRect(
     const QRectF& rect, const QSizeF& textSize ) const
 {
-    return qwtItemRect( m_data->text.renderFlags(), rect, textSize );
+    QWT_DC(d);
+    return qwtItemRect( d->text.renderFlags(), rect, textSize );
 }
 
 /**
@@ -286,5 +291,6 @@ QRectF QwtPlotTextLabel::textRect(
  */
 void QwtPlotTextLabel::invalidateCache()
 {
-    m_data->pixmap = QPixmap();
+    QWT_D(d);
+    d->pixmap = QPixmap();
 }

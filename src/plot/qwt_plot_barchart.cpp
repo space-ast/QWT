@@ -35,8 +35,13 @@
 
 class QwtPlotBarChart::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotBarChart)
+
 public:
-    PrivateData() : symbol(new QwtColumnSymbol(QwtColumnSymbol::Box)), legendMode(QwtPlotBarChart::LegendChartTitle)
+    PrivateData(QwtPlotBarChart* p)
+        : q_ptr(p)
+        , symbol(new QwtColumnSymbol(QwtColumnSymbol::Box))
+        , legendMode(QwtPlotBarChart::LegendChartTitle)
     {
     }
 
@@ -53,7 +58,9 @@ public:
  * @brief Constructor
  * @param[in] title Title of the chart
  */
-QwtPlotBarChart::QwtPlotBarChart(const QwtText& title) : QwtPlotAbstractBarChart(title)
+QwtPlotBarChart::QwtPlotBarChart(const QwtText& title)
+    : QwtPlotAbstractBarChart(title)
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -62,7 +69,9 @@ QwtPlotBarChart::QwtPlotBarChart(const QwtText& title) : QwtPlotAbstractBarChart
  * @brief Constructor
  * @param[in] title Title of the chart
  */
-QwtPlotBarChart::QwtPlotBarChart(const QString& title) : QwtPlotAbstractBarChart(QwtText(title))
+QwtPlotBarChart::QwtPlotBarChart(const QString& title)
+    : QwtPlotAbstractBarChart(QwtText(title))
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -72,12 +81,10 @@ QwtPlotBarChart::QwtPlotBarChart(const QString& title) : QwtPlotAbstractBarChart
  */
 QwtPlotBarChart::~QwtPlotBarChart()
 {
-    delete m_data;
 }
 
 void QwtPlotBarChart::init()
 {
-    m_data = new PrivateData;
     setData(new QwtPointSeriesData());
 }
 
@@ -142,9 +149,10 @@ void QwtPlotBarChart::setSamples(QwtSeriesData< QPointF >* data)
  */
 void QwtPlotBarChart::setSymbol(QwtColumnSymbol* symbol)
 {
-    if (symbol != m_data->symbol) {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+    QWT_D(d);
+    if (symbol != d->symbol) {
+        delete d->symbol;
+        d->symbol = symbol;
 
         legendChanged();
         itemChanged();
@@ -158,7 +166,8 @@ void QwtPlotBarChart::setSymbol(QwtColumnSymbol* symbol)
  */
 const QwtColumnSymbol* QwtPlotBarChart::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
@@ -167,11 +176,12 @@ const QwtColumnSymbol* QwtPlotBarChart::symbol() const
  */
 void QwtPlotBarChart::setPen(const QPen& p)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setPen(p);
+    d->symbol->setPen(p);
 
     legendChanged();
     itemChanged();
@@ -183,8 +193,9 @@ void QwtPlotBarChart::setPen(const QPen& p)
  */
 QPen QwtPlotBarChart::pen() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->pen();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->pen();
     }
     return QPen();
 }
@@ -195,11 +206,12 @@ QPen QwtPlotBarChart::pen() const
  */
 void QwtPlotBarChart::setBrush(const QBrush& b)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setBrush(b);
+    d->symbol->setBrush(b);
 
     legendChanged();
     itemChanged();
@@ -211,8 +223,9 @@ void QwtPlotBarChart::setBrush(const QBrush& b)
  */
 QBrush QwtPlotBarChart::brush() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->brush();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->brush();
     }
     return QBrush();
 }
@@ -223,11 +236,12 @@ QBrush QwtPlotBarChart::brush() const
  */
 void QwtPlotBarChart::setFrameStyle(QwtColumnSymbol::FrameStyle f)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setFrameStyle(f);
+    d->symbol->setFrameStyle(f);
 
     legendChanged();
     itemChanged();
@@ -239,8 +253,9 @@ void QwtPlotBarChart::setFrameStyle(QwtColumnSymbol::FrameStyle f)
  */
 QwtColumnSymbol::FrameStyle QwtPlotBarChart::frameStyle() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->frameStyle();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->frameStyle();
     }
     return QwtColumnSymbol::NoFrame;
 }
@@ -254,8 +269,9 @@ QwtColumnSymbol::FrameStyle QwtPlotBarChart::frameStyle() const
  */
 void QwtPlotBarChart::setLegendMode(LegendMode mode)
 {
-    if (mode != m_data->legendMode) {
-        m_data->legendMode = mode;
+    QWT_D(d);
+    if (mode != d->legendMode) {
+        d->legendMode = mode;
         legendChanged();
     }
 }
@@ -267,7 +283,8 @@ void QwtPlotBarChart::setLegendMode(LegendMode mode)
  */
 QwtPlotBarChart::LegendMode QwtPlotBarChart::legendMode() const
 {
-    return m_data->legendMode;
+    QWT_DC(d);
+    return d->legendMode;
 }
 
 /**
@@ -424,11 +441,12 @@ void QwtPlotBarChart::drawSample(QPainter* painter,
  */
 void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF& sample, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     const QwtColumnSymbol* specialSym = specialSymbol(sampleIndex, sample);
 
     const QwtColumnSymbol* sym = specialSym;
     if (sym == nullptr)
-        sym = m_data->symbol;
+        sym = d->symbol;
 
     if (sym) {
         sym->draw(painter, rect);
@@ -487,9 +505,10 @@ QwtText QwtPlotBarChart::barTitle(int sampleIndex) const
  */
 QList< QwtLegendData > QwtPlotBarChart::legendData() const
 {
+    QWT_DC(d);
     QList< QwtLegendData > list;
 
-    if (m_data->legendMode == LegendBarTitles) {
+    if (d->legendMode == LegendBarTitles) {
         const size_t numSamples = dataSize();
         list.reserve(numSamples);
 
@@ -526,6 +545,7 @@ QList< QwtLegendData > QwtPlotBarChart::legendData() const
  */
 QwtGraphic QwtPlotBarChart::legendIcon(int index, const QSizeF& size) const
 {
+    QWT_DC(d);
     QwtColumnRect column;
     column.hInterval = QwtInterval(0.0, size.width() - 1.0);
     column.vInterval = QwtInterval(0.0, size.height() - 1.0);
@@ -538,7 +558,7 @@ QwtGraphic QwtPlotBarChart::legendIcon(int index, const QSizeF& size) const
     painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
 
     int barIndex = -1;
-    if (m_data->legendMode == QwtPlotBarChart::LegendBarTitles)
+    if (d->legendMode == QwtPlotBarChart::LegendBarTitles)
         barIndex = index;
 
     drawBar(&painter, barIndex, QPointF(), column);

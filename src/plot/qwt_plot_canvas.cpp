@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -34,8 +34,9 @@
 
 class QwtPlotCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotCanvas)
 public:
-    PrivateData() : backingStore(nullptr)
+    PrivateData(QwtPlotCanvas* p) : q_ptr(p), backingStore(nullptr)
     {
     }
 
@@ -53,10 +54,8 @@ public:
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
  */
-QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
+QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setPaintAttribute(QwtPlotCanvas::BackingStore, true);
     setPaintAttribute(QwtPlotCanvas::Opaque, true);
     setPaintAttribute(QwtPlotCanvas::HackStyledBackground, true);
@@ -71,7 +70,6 @@ QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanva
  */
 QwtPlotCanvas::~QwtPlotCanvas()
 {
-    delete m_data;
 }
 
 /**
@@ -82,30 +80,32 @@ QwtPlotCanvas::~QwtPlotCanvas()
  */
 void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
-    if (bool(m_data->paintAttributes & attribute) == on)
+    QWT_D(d);
+
+    if (bool(d->paintAttributes & attribute) == on)
         return;
 
     if (on)
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 
     switch (attribute) {
     case BackingStore: {
         if (on) {
-            if (m_data->backingStore == nullptr)
-                m_data->backingStore = new QPixmap();
+            if (d->backingStore == nullptr)
+                d->backingStore = new QPixmap();
 
             if (isVisible()) {
 #if QT_VERSION >= 0x050000
-                *m_data->backingStore = grab(rect());
+                *d->backingStore = grab(rect());
 #else
-                *m_data->backingStore = QPixmap::grabWidget(this, rect());
+                *d->backingStore = QPixmap::grabWidget(this, rect());
 #endif
             }
         } else {
-            delete m_data->backingStore;
-            m_data->backingStore = nullptr;
+            delete d->backingStore;
+            d->backingStore = nullptr;
         }
         break;
     }
@@ -129,7 +129,8 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
  */
 bool QwtPlotCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
@@ -138,7 +139,8 @@ bool QwtPlotCanvas::testPaintAttribute(PaintAttribute attribute) const
  */
 const QPixmap* QwtPlotCanvas::backingStore() const
 {
-    return m_data->backingStore;
+    QWT_DC(d);
+    return d->backingStore;
 }
 
 /**
@@ -146,8 +148,10 @@ const QPixmap* QwtPlotCanvas::backingStore() const
  */
 void QwtPlotCanvas::invalidateBackingStore()
 {
-    if (m_data->backingStore)
-        *m_data->backingStore = QPixmap();
+    QWT_D(d);
+
+    if (d->backingStore)
+        *d->backingStore = QPixmap();
 }
 
 /**
@@ -180,11 +184,13 @@ bool QwtPlotCanvas::event(QEvent* event)
  */
 void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
+
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
-    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != nullptr) {
-        QPixmap& bs = *m_data->backingStore;
+    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && d->backingStore != nullptr) {
+        QPixmap& bs = *d->backingStore;
         if (bs.size() != size() * QwtPainter::devicePixelRatio(&bs)) {
             bs = QwtPainter::backingStore(this, size());
             // Initialize with full transparency first
@@ -208,7 +214,7 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
                     drawBorder(&p);
             }
         }
-        painter.drawPixmap(0, 0, *m_data->backingStore);
+        painter.drawPixmap(0, 0, *d->backingStore);
     } else {
         if (testAttribute(Qt::WA_StyledBackground)) {
             if (testAttribute(Qt::WA_OpaquePaintEvent)) {

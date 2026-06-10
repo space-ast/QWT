@@ -118,12 +118,12 @@ public:
     }
 
     // Cache management
-    void invalidatePath()
+    void invalidatePath() const
     {
         pathValid = false;
     }
 
-    void updatePath()
+    void updatePath() const
     {
         if (!pathValid) {
             cachedPath = createEndpointPath(style, size, customPath);
@@ -234,15 +234,17 @@ private:
     QPainterPath customPath;
 
     // Cached path for performance optimization
-    QPainterPath cachedPath;
-    bool pathValid;
+    mutable QPainterPath cachedPath;
+    mutable bool pathValid;
 };
 
 class QwtPlotArrowMarker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotArrowMarker)
 public:
-    PrivateData()
-        : startPoint(0.0, 0.0)
+    PrivateData(QwtPlotArrowMarker* p)
+        : q_ptr(p)
+        , startPoint(0.0, 0.0)
         , endPoint(0.0, 0.0)
         , length(50.0)
         , angle(45.0)
@@ -266,25 +268,25 @@ public:
     EndpointParams tailParams;
 
     // Convenience methods for backward compatibility
-    void invalidateHeadPath()
+    void invalidateHeadPath() const
     {
         headParams.invalidatePath();
     }
-    void invalidateTailPath()
+    void invalidateTailPath() const
     {
         tailParams.invalidatePath();
     }
-    void invalidateAllPaths()
+    void invalidateAllPaths() const
     {
         headParams.invalidatePath();
         tailParams.invalidatePath();
     }
 
-    void updateHeadPath()
+    void updateHeadPath() const
     {
         headParams.updatePath();
     }
-    void updateTailPath()
+    void updateTailPath() const
     {
         tailParams.updatePath();
     }
@@ -297,9 +299,8 @@ public:
  *          arrow head style, and default colors.
  *
  */
-QwtPlotArrowMarker::QwtPlotArrowMarker()
+QwtPlotArrowMarker::QwtPlotArrowMarker() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
@@ -309,9 +310,8 @@ QwtPlotArrowMarker::QwtPlotArrowMarker()
  * @param[in] title Title of the marker
  *
  */
-QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtText(title))
+QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtText(title)), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
@@ -321,9 +321,8 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtTe
  * @param[in] title Title of the marker
  *
  */
-QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title)
+QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
 }
@@ -334,7 +333,6 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title
  */
 QwtPlotArrowMarker::~QwtPlotArrowMarker()
 {
-    delete m_data;
 }
 
 /**
@@ -356,7 +354,8 @@ int QwtPlotArrowMarker::rtti() const
  */
 QPointF QwtPlotArrowMarker::startPoint() const
 {
-    return m_data->startPoint;
+    QWT_DC(d);
+    return d->startPoint;
 }
 
 /**
@@ -366,8 +365,9 @@ QPointF QwtPlotArrowMarker::startPoint() const
  */
 QPointF QwtPlotArrowMarker::endPoint() const
 {
-    if (m_data->positionMode == ExplicitPoints)
-        return m_data->endPoint;
+    QWT_DC(d);
+    if (d->positionMode == ExplicitPoints)
+        return d->endPoint;
     else
         return calculateEndPoint();
 }
@@ -379,8 +379,9 @@ QPointF QwtPlotArrowMarker::endPoint() const
  */
 void QwtPlotArrowMarker::setStartPoint(const QPointF& point)
 {
-    if (m_data->startPoint != point) {
-        m_data->startPoint = point;
+    QWT_D(d);
+    if (d->startPoint != point) {
+        d->startPoint = point;
         itemChanged();
     }
 }
@@ -392,8 +393,9 @@ void QwtPlotArrowMarker::setStartPoint(const QPointF& point)
  */
 void QwtPlotArrowMarker::setEndPoint(const QPointF& point)
 {
-    if (m_data->endPoint != point) {
-        m_data->endPoint = point;
+    QWT_D(d);
+    if (d->endPoint != point) {
+        d->endPoint = point;
         itemChanged();
     }
 }
@@ -406,15 +408,16 @@ void QwtPlotArrowMarker::setEndPoint(const QPointF& point)
  */
 void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
 {
+    QWT_D(d);
     bool changed = false;
 
-    if (m_data->startPoint != start) {
-        m_data->startPoint = start;
+    if (d->startPoint != start) {
+        d->startPoint = start;
         changed            = true;
     }
 
-    if (m_data->endPoint != end) {
-        m_data->endPoint = end;
+    if (d->endPoint != end) {
+        d->endPoint = end;
         changed          = true;
     }
 
@@ -430,7 +433,8 @@ void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
  */
 double QwtPlotArrowMarker::length() const
 {
-    return m_data->length;
+    QWT_DC(d);
+    return d->length;
 }
 
 /**
@@ -442,6 +446,7 @@ double QwtPlotArrowMarker::length() const
  */
 void QwtPlotArrowMarker::setLength(double length)
 {
+    QWT_D(d);
     // Validate input
     if (qIsNaN(length) || qIsInf(length)) {
         qWarning("QwtPlotArrowMarker::setLength: Invalid length value");
@@ -451,8 +456,8 @@ void QwtPlotArrowMarker::setLength(double length)
     if (length < 0.0)
         length = 0.0;
 
-    if (m_data->length != length) {
-        m_data->length = length;
+    if (d->length != length) {
+        d->length = length;
         itemChanged();
     }
 }
@@ -464,7 +469,8 @@ void QwtPlotArrowMarker::setLength(double length)
  */
 double QwtPlotArrowMarker::angle() const
 {
-    return m_data->angle;
+    QWT_DC(d);
+    return d->angle;
 }
 
 /**
@@ -474,6 +480,7 @@ double QwtPlotArrowMarker::angle() const
  */
 void QwtPlotArrowMarker::setAngle(double angle)
 {
+    QWT_D(d);
     // Validate input
     if (qIsNaN(angle) || qIsInf(angle)) {
         qWarning("QwtPlotArrowMarker::setAngle: Invalid angle value");
@@ -485,8 +492,8 @@ void QwtPlotArrowMarker::setAngle(double angle)
     if (angle < 0.0)
         angle += 360.0;
 
-    if (m_data->angle != angle) {
-        m_data->angle = angle;
+    if (d->angle != angle) {
+        d->angle = angle;
         itemChanged();
     }
 }
@@ -498,7 +505,8 @@ void QwtPlotArrowMarker::setAngle(double angle)
  */
 QwtPlotArrowMarker::PositionMode QwtPlotArrowMarker::positionMode() const
 {
-    return m_data->positionMode;
+    QWT_DC(d);
+    return d->positionMode;
 }
 
 /**
@@ -508,8 +516,9 @@ QwtPlotArrowMarker::PositionMode QwtPlotArrowMarker::positionMode() const
  */
 void QwtPlotArrowMarker::setPositionMode(PositionMode mode)
 {
-    if (m_data->positionMode != mode) {
-        m_data->positionMode = mode;
+    QWT_D(d);
+    if (d->positionMode != mode) {
+        d->positionMode = mode;
         itemChanged();
     }
 }
@@ -523,7 +532,8 @@ void QwtPlotArrowMarker::setPositionMode(PositionMode mode)
  */
 const QPen& QwtPlotArrowMarker::linePen() const
 {
-    return m_data->linePen;
+    QWT_DC(d);
+    return d->linePen;
 }
 
 /**
@@ -533,8 +543,9 @@ const QPen& QwtPlotArrowMarker::linePen() const
  */
 void QwtPlotArrowMarker::setLinePen(const QPen& pen)
 {
-    if (m_data->linePen != pen) {
-        m_data->linePen = pen;
+    QWT_D(d);
+    if (d->linePen != pen) {
+        d->linePen = pen;
         itemChanged();
     }
 }
@@ -558,7 +569,8 @@ void QwtPlotArrowMarker::setLinePen(const QColor& color, qreal width, Qt::PenSty
  */
 QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::headStyle() const
 {
-    return m_data->headParams.getStyle();
+    QWT_DC(d);
+    return d->headParams.getStyle();
 }
 
 /**
@@ -568,9 +580,10 @@ QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::headStyle() const
  */
 void QwtPlotArrowMarker::setHeadStyle(EndpointStyle style)
 {
-    if (m_data->headParams.getStyle() != style) {
-        m_data->headParams.setStyle(style);
-        m_data->invalidateHeadPath();
+    QWT_D(d);
+    if (d->headParams.getStyle() != style) {
+        d->headParams.setStyle(style);
+        d->invalidateHeadPath();
         itemChanged();
     }
 }
@@ -582,7 +595,8 @@ void QwtPlotArrowMarker::setHeadStyle(EndpointStyle style)
  */
 QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::tailStyle() const
 {
-    return m_data->tailParams.getStyle();
+    QWT_DC(d);
+    return d->tailParams.getStyle();
 }
 
 /**
@@ -592,9 +606,10 @@ QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::tailStyle() const
  */
 void QwtPlotArrowMarker::setTailStyle(EndpointStyle style)
 {
-    if (m_data->tailParams.getStyle() != style) {
-        m_data->tailParams.setStyle(style);
-        m_data->invalidateTailPath();
+    QWT_D(d);
+    if (d->tailParams.getStyle() != style) {
+        d->tailParams.setStyle(style);
+        d->invalidateTailPath();
         itemChanged();
     }
 }
@@ -606,7 +621,8 @@ void QwtPlotArrowMarker::setTailStyle(EndpointStyle style)
  */
 QSizeF QwtPlotArrowMarker::headSize() const
 {
-    return m_data->headParams.getSize();
+    QWT_DC(d);
+    return d->headParams.getSize();
 }
 
 /**
@@ -616,15 +632,16 @@ QSizeF QwtPlotArrowMarker::headSize() const
  */
 void QwtPlotArrowMarker::setHeadSize(const QSizeF& size)
 {
+    QWT_D(d);
     QSizeF newSize = size;
     if (newSize.width() < 0.0)
         newSize.setWidth(0.0);
     if (newSize.height() < 0.0)
         newSize.setHeight(0.0);
 
-    if (m_data->headParams.getSize() != newSize) {
-        m_data->headParams.setSize(newSize);
-        m_data->invalidateHeadPath();
+    if (d->headParams.getSize() != newSize) {
+        d->headParams.setSize(newSize);
+        d->invalidateHeadPath();
         itemChanged();
     }
 }
@@ -646,7 +663,8 @@ void QwtPlotArrowMarker::setHeadSize(qreal size)
  */
 QSizeF QwtPlotArrowMarker::tailSize() const
 {
-    return m_data->tailParams.getSize();
+    QWT_DC(d);
+    return d->tailParams.getSize();
 }
 
 /**
@@ -656,15 +674,16 @@ QSizeF QwtPlotArrowMarker::tailSize() const
  */
 void QwtPlotArrowMarker::setTailSize(const QSizeF& size)
 {
+    QWT_D(d);
     QSizeF newSize = size;
     if (newSize.width() < 0.0)
         newSize.setWidth(0.0);
     if (newSize.height() < 0.0)
         newSize.setHeight(0.0);
 
-    if (m_data->tailParams.getSize() != newSize) {
-        m_data->tailParams.setSize(newSize);
-        m_data->invalidateTailPath();
+    if (d->tailParams.getSize() != newSize) {
+        d->tailParams.setSize(newSize);
+        d->invalidateTailPath();
         itemChanged();
     }
 }
@@ -686,7 +705,8 @@ void QwtPlotArrowMarker::setTailSize(qreal size)
  */
 const QBrush& QwtPlotArrowMarker::headBrush() const
 {
-    return m_data->headParams.getBrush();
+    QWT_DC(d);
+    return d->headParams.getBrush();
 }
 
 /**
@@ -696,8 +716,9 @@ const QBrush& QwtPlotArrowMarker::headBrush() const
  */
 void QwtPlotArrowMarker::setHeadBrush(const QBrush& brush)
 {
-    if (m_data->headParams.getBrush() != brush) {
-        m_data->headParams.setBrush(brush);
+    QWT_D(d);
+    if (d->headParams.getBrush() != brush) {
+        d->headParams.setBrush(brush);
         itemChanged();
     }
 }
@@ -709,7 +730,8 @@ void QwtPlotArrowMarker::setHeadBrush(const QBrush& brush)
  */
 const QBrush& QwtPlotArrowMarker::tailBrush() const
 {
-    return m_data->tailParams.getBrush();
+    QWT_DC(d);
+    return d->tailParams.getBrush();
 }
 
 /**
@@ -719,8 +741,9 @@ const QBrush& QwtPlotArrowMarker::tailBrush() const
  */
 void QwtPlotArrowMarker::setTailBrush(const QBrush& brush)
 {
-    if (m_data->tailParams.getBrush() != brush) {
-        m_data->tailParams.setBrush(brush);
+    QWT_D(d);
+    if (d->tailParams.getBrush() != brush) {
+        d->tailParams.setBrush(brush);
         itemChanged();
     }
 }
@@ -732,7 +755,8 @@ void QwtPlotArrowMarker::setTailBrush(const QBrush& brush)
  */
 const QPen& QwtPlotArrowMarker::headPen() const
 {
-    return m_data->headParams.getPen();
+    QWT_DC(d);
+    return d->headParams.getPen();
 }
 
 /**
@@ -742,8 +766,9 @@ const QPen& QwtPlotArrowMarker::headPen() const
  */
 void QwtPlotArrowMarker::setHeadPen(const QPen& pen)
 {
-    if (m_data->headParams.getPen() != pen) {
-        m_data->headParams.setPen(pen);
+    QWT_D(d);
+    if (d->headParams.getPen() != pen) {
+        d->headParams.setPen(pen);
         itemChanged();
     }
 }
@@ -755,7 +780,8 @@ void QwtPlotArrowMarker::setHeadPen(const QPen& pen)
  */
 const QPen& QwtPlotArrowMarker::tailPen() const
 {
-    return m_data->tailParams.getPen();
+    QWT_DC(d);
+    return d->tailParams.getPen();
 }
 
 /**
@@ -765,8 +791,9 @@ const QPen& QwtPlotArrowMarker::tailPen() const
  */
 void QwtPlotArrowMarker::setTailPen(const QPen& pen)
 {
-    if (m_data->tailParams.getPen() != pen) {
-        m_data->tailParams.setPen(pen);
+    QWT_D(d);
+    if (d->tailParams.getPen() != pen) {
+        d->tailParams.setPen(pen);
         itemChanged();
     }
 }
@@ -778,9 +805,10 @@ void QwtPlotArrowMarker::setTailPen(const QPen& pen)
  */
 void QwtPlotArrowMarker::setHeadCustomPath(const QPainterPath& path)
 {
-    if (m_data->headParams.getCustomPath() != path) {
-        m_data->headParams.setCustomPath(path);
-        m_data->invalidateHeadPath();
+    QWT_D(d);
+    if (d->headParams.getCustomPath() != path) {
+        d->headParams.setCustomPath(path);
+        d->invalidateHeadPath();
         itemChanged();
     }
 }
@@ -792,7 +820,8 @@ void QwtPlotArrowMarker::setHeadCustomPath(const QPainterPath& path)
  */
 QPainterPath QwtPlotArrowMarker::headCustomPath() const
 {
-    return m_data->headParams.getCustomPath();
+    QWT_DC(d);
+    return d->headParams.getCustomPath();
 }
 
 /**
@@ -802,9 +831,10 @@ QPainterPath QwtPlotArrowMarker::headCustomPath() const
  */
 void QwtPlotArrowMarker::setTailCustomPath(const QPainterPath& path)
 {
-    if (m_data->tailParams.getCustomPath() != path) {
-        m_data->tailParams.setCustomPath(path);
-        m_data->invalidateTailPath();
+    QWT_D(d);
+    if (d->tailParams.getCustomPath() != path) {
+        d->tailParams.setCustomPath(path);
+        d->invalidateTailPath();
         itemChanged();
     }
 }
@@ -816,7 +846,8 @@ void QwtPlotArrowMarker::setTailCustomPath(const QPainterPath& path)
  */
 QPainterPath QwtPlotArrowMarker::tailCustomPath() const
 {
-    return m_data->tailParams.getCustomPath();
+    QWT_DC(d);
+    return d->tailParams.getCustomPath();
 }
 
 // Drawing methods
@@ -835,24 +866,25 @@ QPainterPath QwtPlotArrowMarker::tailCustomPath() const
  */
 void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const
 {
+    QWT_DC(d);
     if (!painter || !painter->isActive())
         return;
 
     // Convert start point to canvas coordinates
-    QPointF canvasStart = toCanvasPoint(m_data->startPoint, xMap, yMap);
+    QPointF canvasStart = toCanvasPoint(d->startPoint, xMap, yMap);
 
     // Calculate or get end point
     QPointF canvasEnd;
-    if (m_data->positionMode == ExplicitPoints) {
-        canvasEnd = toCanvasPoint(m_data->endPoint, xMap, yMap);
+    if (d->positionMode == ExplicitPoints) {
+        canvasEnd = toCanvasPoint(d->endPoint, xMap, yMap);
     } else {
         // For StartLengthAngle mode, we need to calculate end point in canvas coordinates
         // Since length is in pixels, we can calculate directly in canvas space
-        double angleRad = qDegreesToRadians(m_data->angle);
+        double angleRad = qDegreesToRadians(d->angle);
         canvasEnd =
             canvasStart
-            + QPointF(m_data->length * qCos(angleRad),
-                      -m_data->length
+            + QPointF(d->length * qCos(angleRad),
+                      -d->length
                           * qSin(angleRad)  // Negative because y increases downward in canvas coordinates
             );
     }
@@ -865,28 +897,28 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
     double lineAngle  = qRadiansToDegrees(qAtan2(direction.y(), direction.x()));  // qAtan2 returns radians in range [-pi, pi]
 
     // Draw tail (at start point)
-    if (m_data->tailParams.getStyle() != NoEndpoint) {
+    if (d->tailParams.getStyle() != NoEndpoint) {
         // Update cached path if needed
-        m_data->updateTailPath();
+        d->updateTailPath();
         drawCachedEndpoint(painter,
                            canvasEnd,
-                           m_data->tailParams.getCachedPath(),
-                           m_data->tailParams.getSize(),
-                           m_data->tailParams.getPen(),
-                           m_data->tailParams.getBrush(),
+                           d->tailParams.getCachedPath(),
+                           d->tailParams.getSize(),
+                           d->tailParams.getPen(),
+                           d->tailParams.getBrush(),
                            lineAngle);
     }
 
     // Draw head (at end point)
-    if (m_data->headParams.getStyle() != NoEndpoint) {
+    if (d->headParams.getStyle() != NoEndpoint) {
         // Update cached path if needed
-        m_data->updateHeadPath();
+        d->updateHeadPath();
         drawCachedEndpoint(painter,
                            canvasStart,
-                           m_data->headParams.getCachedPath(),
-                           m_data->headParams.getSize(),
-                           m_data->headParams.getPen(),
-                           m_data->headParams.getBrush(),
+                           d->headParams.getCachedPath(),
+                           d->headParams.getSize(),
+                           d->headParams.getPen(),
+                           d->headParams.getBrush(),
                            lineAngle + 180.0);
     }
 }
@@ -898,14 +930,15 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
  */
 QRectF QwtPlotArrowMarker::boundingRect() const
 {
-    QPointF endPoint = (m_data->positionMode == ExplicitPoints) ? m_data->endPoint : calculateEndPoint();
+    QWT_DC(d);
+    QPointF endPoint = (d->positionMode == ExplicitPoints) ? d->endPoint : calculateEndPoint();
 
-    QRectF rect(m_data->startPoint, endPoint);
+    QRectF rect(d->startPoint, endPoint);
     rect = rect.normalized();
 
     // Add some margin for endpoint sizes
-    double margin = qMax(m_data->headParams.getSize().width(), m_data->headParams.getSize().height());
-    margin        = qMax(margin, qMax(m_data->tailParams.getSize().width(), m_data->tailParams.getSize().height()));
+    double margin = qMax(d->headParams.getSize().width(), d->headParams.getSize().height());
+    margin        = qMax(margin, qMax(d->tailParams.getSize().width(), d->tailParams.getSize().height()));
 
     if (margin > 0.0) {
         rect.adjust(-margin, -margin, margin, margin);
@@ -923,6 +956,7 @@ QRectF QwtPlotArrowMarker::boundingRect() const
  */
 QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
 {
+    QWT_DC(d);
     Q_UNUSED(index);
 
     QwtGraphic icon;
@@ -939,22 +973,22 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
     QPointF end(rect.right(), rect.center().y());
 
     // Draw line
-    painter.setPen(m_data->linePen);
+    painter.setPen(d->linePen);
     painter.drawLine(start, end);
 
     // Draw head
-    if (m_data->headParams.getStyle() != NoEndpoint) {
-        QSizeF headSize = m_data->headParams.getSize();
+    if (d->headParams.getStyle() != NoEndpoint) {
+        QSizeF headSize = d->headParams.getSize();
         headSize        = headSize.scaled(rect.height() * 0.6, rect.height() * 0.6, Qt::KeepAspectRatio);
 
         // Update cached path if needed
-        m_data->updateHeadPath();
+        d->updateHeadPath();
         drawCachedEndpoint(&painter,
                            end,
-                           m_data->headParams.getCachedPath(),
+                           d->headParams.getCachedPath(),
                            headSize,
-                           m_data->headParams.getPen(),
-                           m_data->headParams.getBrush(),
+                           d->headParams.getPen(),
+                           d->headParams.getBrush(),
                            0.0);
     }
 
@@ -966,6 +1000,7 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
 //! Draw the arrow line
 void QwtPlotArrowMarker::drawArrowLine(QPainter* painter, const QPointF& canvasStart, const QPointF& canvasEnd) const
 {
+    QWT_DC(d);
     if (!painter || !painter->isActive())
         return;
 
@@ -979,7 +1014,7 @@ void QwtPlotArrowMarker::drawArrowLine(QPainter* painter, const QPointF& canvasS
         return;
 
     painter->save();
-    painter->setPen(m_data->linePen);
+    painter->setPen(d->linePen);
     painter->drawLine(canvasStart, canvasEnd);
     painter->restore();
 }
@@ -993,8 +1028,9 @@ QPointF QwtPlotArrowMarker::toCanvasPoint(const QPointF& plotPoint, const QwtSca
 //! Calculate end point based on start point, length, and angle
 QPointF QwtPlotArrowMarker::calculateEndPoint() const
 {
-    double angleRad = qDegreesToRadians(m_data->angle);
-    return m_data->startPoint + QPointF(m_data->length * qCos(angleRad), m_data->length * qSin(angleRad));
+    QWT_DC(d);
+    double angleRad = qDegreesToRadians(d->angle);
+    return d->startPoint + QPointF(d->length * qCos(angleRad), d->length * qSin(angleRad));
 }
 
 /**

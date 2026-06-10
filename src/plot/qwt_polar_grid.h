@@ -208,8 +208,7 @@ private:
                           const double radius) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarGrid)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::DisplayFlags)

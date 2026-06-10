@@ -12,8 +12,9 @@
 
 class QwtPlotPicker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotPicker)
 public:
-    PrivateData() : xAxisId(-1), yAxisId(-1)
+    PrivateData(QwtPlotPicker* p) : q_ptr(p), xAxisId(-1), yAxisId(-1)
     {
     }
 
@@ -30,10 +31,8 @@ public:
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
  */
-QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
+QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     if (!canvas)
         return;
 
@@ -61,11 +60,11 @@ QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
  */
-QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas)
+QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data          = new PrivateData;
-    m_data->xAxisId = xAxisId;
-    m_data->yAxisId = yAxisId;
+    QWT_D(d);
+    d->xAxisId = xAxisId;
+    d->yAxisId = yAxisId;
 }
 
 /**
@@ -80,11 +79,11 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canv
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
  */
 QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand rubberBand, DisplayMode trackerMode, QWidget* canvas)
-    : QwtPicker(rubberBand, trackerMode, canvas)
+    : QwtPicker(rubberBand, trackerMode, canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data          = new PrivateData;
-    m_data->xAxisId = xAxisId;
-    m_data->yAxisId = yAxisId;
+    QWT_D(d);
+    d->xAxisId = xAxisId;
+    d->yAxisId = yAxisId;
 }
 
 /**
@@ -93,7 +92,6 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand ru
  */
 QwtPlotPicker::~QwtPlotPicker()
 {
-    delete m_data;
 }
 
 /**
@@ -167,13 +165,14 @@ QRectF QwtPlotPicker::scaleRect() const
  */
 void QwtPlotPicker::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
 {
+    QWT_D(d);
     const QwtPlot* plt = plot();
     if (!plt)
         return;
 
-    if (xAxisId != m_data->xAxisId || yAxisId != m_data->yAxisId) {
-        m_data->xAxisId = xAxisId;
-        m_data->yAxisId = yAxisId;
+    if (xAxisId != d->xAxisId || yAxisId != d->yAxisId) {
+        d->xAxisId = xAxisId;
+        d->yAxisId = yAxisId;
     }
 }
 
@@ -183,7 +182,8 @@ void QwtPlotPicker::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
  */
 QwtAxisId QwtPlotPicker::xAxis() const
 {
-    return m_data->xAxisId;
+    QWT_DC(d);
+    return d->xAxisId;
 }
 
 /**
@@ -192,7 +192,8 @@ QwtAxisId QwtPlotPicker::xAxis() const
  */
 QwtAxisId QwtPlotPicker::yAxis() const
 {
-    return m_data->yAxisId;
+    QWT_DC(d);
+    return d->yAxisId;
 }
 
 /*!

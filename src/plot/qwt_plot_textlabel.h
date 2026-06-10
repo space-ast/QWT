@@ -99,8 +99,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
     void invalidateCache();
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotTextLabel)
 };
 
 #endif

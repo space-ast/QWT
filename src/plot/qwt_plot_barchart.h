@@ -169,8 +169,7 @@ private:
     /// Initialize the bar chart
     void init();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotBarChart)
 };
 
 #endif

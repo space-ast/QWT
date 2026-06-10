@@ -443,8 +443,7 @@ virtual void fillCurve(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const 
 void closePolyline(QPainter*, const QwtScaleMap&, const QwtScaleMap&, QPolygonF&) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotCurve)
 };
 
 //! boundingRect().left()

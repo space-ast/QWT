@@ -118,8 +118,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
         double value ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotAbstractBarChart)
 };
 
 #endif

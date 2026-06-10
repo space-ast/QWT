@@ -16,8 +16,9 @@
 
 class QwtPolarMagnifier::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarMagnifier)
 public:
-    PrivateData() : unzoomKey(Qt::Key_Home), unzoomKeyModifiers(Qt::NoModifier)
+    PrivateData(QwtPolarMagnifier* p) : q_ptr(p), unzoomKey(Qt::Key_Home), unzoomKeyModifiers(Qt::NoModifier)
     {
     }
 
@@ -29,9 +30,8 @@ public:
  * @brief Constructor
  * @param canvas Plot canvas to be magnified
  */
-QwtPolarMagnifier::QwtPolarMagnifier(QwtPolarCanvas* canvas) : QwtMagnifier(canvas)
+QwtPolarMagnifier::QwtPolarMagnifier(QwtPolarCanvas* canvas) : QwtMagnifier(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
 }
 
 /**
@@ -39,7 +39,6 @@ QwtPolarMagnifier::QwtPolarMagnifier(QwtPolarCanvas* canvas) : QwtMagnifier(canv
  */
 QwtPolarMagnifier::~QwtPolarMagnifier()
 {
-    delete m_data;
 }
 
 /**
@@ -51,8 +50,9 @@ QwtPolarMagnifier::~QwtPolarMagnifier()
  */
 void QwtPolarMagnifier::setUnzoomKey(int key, int modifiers)
 {
-    m_data->unzoomKey          = key;
-    m_data->unzoomKeyModifiers = modifiers;
+    QWT_D(d);
+    d->unzoomKey          = key;
+    d->unzoomKeyModifiers = modifiers;
 }
 
 /**
@@ -63,8 +63,9 @@ void QwtPolarMagnifier::setUnzoomKey(int key, int modifiers)
  */
 void QwtPolarMagnifier::getUnzoomKey(int& key, int& modifiers) const
 {
-    key       = m_data->unzoomKey;
-    modifiers = m_data->unzoomKeyModifiers;
+    QWT_DC(d);
+    key       = d->unzoomKey;
+    modifiers = d->unzoomKeyModifiers;
 }
 
 /**
@@ -118,10 +119,12 @@ const QwtPolarPlot* QwtPolarMagnifier::plot() const
  */
 void QwtPolarMagnifier::widgetKeyPressEvent(QKeyEvent* event)
 {
+    QWT_D(d);
+
     const int key   = event->key();
     const int state = event->modifiers();
 
-    if (key == m_data->unzoomKey && state == m_data->unzoomKeyModifiers) {
+    if (key == d->unzoomKey && state == d->unzoomKeyModifiers) {
         unzoom();
         return;
     }

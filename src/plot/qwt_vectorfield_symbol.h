@@ -87,8 +87,7 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtVectorFieldArrow)
 };
 
 /*!
@@ -112,8 +111,7 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtVectorFieldThinArrow)
 };
 
 #endif

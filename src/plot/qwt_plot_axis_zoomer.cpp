@@ -89,7 +89,13 @@ static QRectF qwtExpandedZoomRect(const QRectF& zoomRect,
 
 class QwtPlotAxisZoomer::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAxisZoomer)
 public:
+    PrivateData(QwtPlotAxisZoomer* p)
+        : q_ptr(p)
+    {
+    }
+
     uint zoomRectIndex;
     QStack< QRectF > zoomStack;
 
@@ -144,9 +150,10 @@ QwtPlotAxisZoomer::QwtPlotAxisZoomer(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidg
 //! Init the zoomer, used by the constructors
 void QwtPlotAxisZoomer::init(bool doReplot)
 {
-    m_data = new PrivateData;
+    QWT_PIMPL_CONSTRUCT_INIT();
 
-    m_data->maxStackDepth = -1;
+    QWT_D(d);
+    d->maxStackDepth = -1;
 
     setTrackerMode(ActiveOnly);
     setRubberBand(RectRubberBand);
@@ -160,7 +167,6 @@ void QwtPlotAxisZoomer::init(bool doReplot)
 
 QwtPlotAxisZoomer::~QwtPlotAxisZoomer()
 {
-    delete m_data;
 }
 
 /**
@@ -175,17 +181,18 @@ QwtPlotAxisZoomer::~QwtPlotAxisZoomer()
  */
 void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
 {
-    m_data->maxStackDepth = depth;
+    QWT_D(d);
+    d->maxStackDepth = depth;
 
     if (depth >= 0) {
-        // unzoom if the current depth is below m_data->maxStackDepth
+        // unzoom if the current depth is below d->maxStackDepth
 
-        const int zoomOut = m_data->zoomStack.count() - 1 - depth;  // -1 for the zoom base
+        const int zoomOut = d->zoomStack.count() - 1 - depth;  // -1 for the zoom base
 
         if (zoomOut > 0) {
             zoom(-zoomOut);
-            for (int i = m_data->zoomStack.count() - 1; i > int(m_data->zoomRectIndex); i--) {
-                (void)m_data->zoomStack.pop();  // remove trailing rects
+            for (int i = d->zoomStack.count() - 1; i > int(d->zoomRectIndex); i--) {
+                (void)d->zoomStack.pop();  // remove trailing rects
             }
         }
     }
@@ -199,7 +206,8 @@ void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
  */
 int QwtPlotAxisZoomer::maxStackDepth() const
 {
-    return m_data->maxStackDepth;
+    QWT_DC(d);
+    return d->maxStackDepth;
 }
 
 /**
@@ -211,7 +219,8 @@ int QwtPlotAxisZoomer::maxStackDepth() const
  */
 const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
 {
-    return m_data->zoomStack;
+    QWT_DC(d);
+    return d->zoomStack;
 }
 
 /**
@@ -222,7 +231,8 @@ const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
  */
 QRectF QwtPlotAxisZoomer::zoomBase() const
 {
-    return m_data->zoomStack[ 0 ];
+    QWT_DC(d);
+    return d->zoomStack[ 0 ];
 }
 
 /**
@@ -235,6 +245,7 @@ QRectF QwtPlotAxisZoomer::zoomBase() const
  */
 void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 {
+    QWT_D(d);
     QwtPlot* plt = plot();
     if (plt == nullptr)
         return;
@@ -242,9 +253,9 @@ void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
     if (doReplot)
         plt->replot();
 
-    m_data->zoomStack.clear();
-    m_data->zoomStack.push(scaleRect());
-    m_data->zoomRectIndex = 0;
+    d->zoomStack.clear();
+    d->zoomStack.push(scaleRect());
+    d->zoomRectIndex = 0;
 
     rescale();
 }
@@ -259,6 +270,7 @@ void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
  */
 void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
 {
+    QWT_D(d);
     const QwtPlot* plt = plot();
     if (!plt)
         return;
@@ -266,13 +278,13 @@ void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
     const QRectF sRect = scaleRect();
     const QRectF bRect = base | sRect;
 
-    m_data->zoomStack.clear();
-    m_data->zoomStack.push(bRect);
-    m_data->zoomRectIndex = 0;
+    d->zoomStack.clear();
+    d->zoomStack.push(bRect);
+    d->zoomRectIndex = 0;
 
     if (base != sRect) {
-        m_data->zoomStack.push(sRect);
-        m_data->zoomRectIndex++;
+        d->zoomStack.push(sRect);
+        d->zoomRectIndex++;
     }
 
     rescale();
@@ -286,7 +298,8 @@ void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
  */
 QRectF QwtPlotAxisZoomer::zoomRect() const
 {
-    return m_data->zoomStack[ m_data->zoomRectIndex ];
+    QWT_DC(d);
+    return d->zoomStack[ d->zoomRectIndex ];
 }
 
 /**
@@ -296,7 +309,8 @@ QRectF QwtPlotAxisZoomer::zoomRect() const
  */
 uint QwtPlotAxisZoomer::zoomRectIndex() const
 {
-    return m_data->zoomRectIndex;
+    QWT_DC(d);
+    return d->zoomRectIndex;
 }
 
 /**
@@ -311,18 +325,19 @@ uint QwtPlotAxisZoomer::zoomRectIndex() const
 
 void QwtPlotAxisZoomer::zoom(const QRectF& rect)
 {
-    if (m_data->maxStackDepth >= 0 && int(m_data->zoomRectIndex) >= m_data->maxStackDepth) {
+    QWT_D(d);
+    if (d->maxStackDepth >= 0 && int(d->zoomRectIndex) >= d->maxStackDepth) {
         return;
     }
 
     const QRectF zoomRect = rect.normalized();
-    if (zoomRect != m_data->zoomStack[ m_data->zoomRectIndex ]) {
-        for (uint i = m_data->zoomStack.count() - 1; i > m_data->zoomRectIndex; i--) {
-            (void)m_data->zoomStack.pop();
+    if (zoomRect != d->zoomStack[ d->zoomRectIndex ]) {
+        for (uint i = d->zoomStack.count() - 1; i > d->zoomRectIndex; i--) {
+            (void)d->zoomStack.pop();
         }
 
-        m_data->zoomStack.push(zoomRect);
-        m_data->zoomRectIndex++;
+        d->zoomStack.push(zoomRect);
+        d->zoomRectIndex++;
 
         rescale();
 
@@ -342,17 +357,18 @@ void QwtPlotAxisZoomer::zoom(const QRectF& rect)
  */
 void QwtPlotAxisZoomer::zoom(int offset)
 {
+    QWT_D(d);
     int newIndex;
 
     if (offset == 0) {
         newIndex = 0;
     } else {
-        newIndex = m_data->zoomRectIndex + offset;
-        newIndex = qBound(0, newIndex, m_data->zoomStack.count() - 1);
+        newIndex = d->zoomRectIndex + offset;
+        newIndex = qBound(0, newIndex, d->zoomStack.count() - 1);
     }
 
-    if (newIndex != static_cast< int >(m_data->zoomRectIndex)) {
-        m_data->zoomRectIndex = newIndex;
+    if (newIndex != static_cast< int >(d->zoomRectIndex)) {
+        d->zoomRectIndex = newIndex;
         rescale();
         Q_EMIT zoomed(zoomRect());
     }
@@ -372,10 +388,11 @@ void QwtPlotAxisZoomer::zoom(int offset)
  */
 void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoomRectIndex)
 {
+    QWT_D(d);
     if (zoomStack.isEmpty())
         return;
 
-    if (m_data->maxStackDepth >= 0 && zoomStack.count() > m_data->maxStackDepth) {
+    if (d->maxStackDepth >= 0 && zoomStack.count() > d->maxStackDepth) {
         return;
     }
 
@@ -384,8 +401,8 @@ void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoom
 
     const bool doRescale = zoomStack[ zoomRectIndex ] != zoomRect();
 
-    m_data->zoomStack     = zoomStack;
-    m_data->zoomRectIndex = uint(zoomRectIndex);
+    d->zoomStack     = zoomStack;
+    d->zoomRectIndex = uint(zoomRectIndex);
 
     if (doRescale) {
         rescale();
@@ -401,11 +418,12 @@ void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoom
 
 void QwtPlotAxisZoomer::rescale()
 {
+    QWT_D(d);
     QwtPlot* plt = plot();
     if (!plt)
         return;
 
-    const QRectF& rect = m_data->zoomStack[ m_data->zoomRectIndex ];
+    const QRectF& rect = d->zoomStack[ d->zoomRectIndex ];
     if (rect != scaleRect()) {
         plt->saveAutoReplotState();
         plt->setAutoReplot(false);
@@ -501,7 +519,8 @@ void QwtPlotAxisZoomer::widgetKeyPressEvent(QKeyEvent* ke)
  */
 void QwtPlotAxisZoomer::moveBy(double dx, double dy)
 {
-    const QRectF& rect = m_data->zoomStack[ m_data->zoomRectIndex ];
+    QWT_D(d);
+    const QRectF& rect = d->zoomStack[ d->zoomRectIndex ];
     moveTo(QPointF(rect.left() + dx, rect.top() + dy));
 }
 
@@ -528,7 +547,8 @@ void QwtPlotAxisZoomer::moveTo(const QPointF& pos)
         y = zoomBase().bottom() - zoomRect().height();
 
     if (x != zoomRect().left() || y != zoomRect().top()) {
-        m_data->zoomStack[ m_data->zoomRectIndex ].moveTo(x, y);
+        QWT_D(d);
+        d->zoomStack[ d->zoomRectIndex ].moveTo(x, y);
         rescale();
     }
 }
@@ -576,7 +596,8 @@ bool QwtPlotAxisZoomer::accept(QPolygon& pa) const
  */
 QSizeF QwtPlotAxisZoomer::minZoomSize() const
 {
-    return QSizeF(m_data->zoomStack[ 0 ].width() / 10e4, m_data->zoomStack[ 0 ].height() / 10e4);
+    QWT_DC(d);
+    return QSizeF(d->zoomStack[ 0 ].width() / 10e4, d->zoomStack[ 0 ].height() / 10e4);
 }
 
 /*!
@@ -587,14 +608,15 @@ QSizeF QwtPlotAxisZoomer::minZoomSize() const
  */
 void QwtPlotAxisZoomer::begin()
 {
-    if (m_data->maxStackDepth >= 0) {
-        if (m_data->zoomRectIndex >= uint(m_data->maxStackDepth))
+    QWT_D(d);
+    if (d->maxStackDepth >= 0) {
+        if (d->zoomRectIndex >= uint(d->maxStackDepth))
             return;
     }
 
     const QSizeF minSize = minZoomSize();
     if (minSize.isValid()) {
-        const QSizeF sz = m_data->zoomStack[ m_data->zoomRectIndex ].size() * 0.9999;
+        const QSizeF sz = d->zoomStack[ d->zoomRectIndex ].size() * 0.9999;
 
         if (minSize.width() >= sz.width() && minSize.height() >= sz.height()) {
             return;

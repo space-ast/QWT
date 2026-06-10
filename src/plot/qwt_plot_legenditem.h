@@ -180,8 +180,7 @@ protected:
     virtual void drawBackground(QPainter*, const QRectF& rect) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotLegendItem)
 };
 
 #endif

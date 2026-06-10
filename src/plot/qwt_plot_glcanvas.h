@@ -134,8 +134,7 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
      */
     virtual void clearBackingStore() override;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotGLCanvas)
 };
 
 #endif

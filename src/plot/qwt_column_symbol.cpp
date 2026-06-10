@@ -122,8 +122,12 @@ static void qwtDrawPanel(QPainter* painter, const QRectF& rect, const QPen& pen,
 
 class QwtColumnSymbol::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtColumnSymbol)
 public:
-    PrivateData() : style(QwtColumnSymbol::Box), frameStyle(QwtColumnSymbol::Plain)
+    PrivateData( QwtColumnSymbol* p )
+        : q_ptr( p )
+        , style(QwtColumnSymbol::Box)
+        , frameStyle(QwtColumnSymbol::Plain)
     {
     }
 
@@ -140,11 +144,12 @@ public:
  * @sa setStyle(), style(), Style
  */
 QwtColumnSymbol::QwtColumnSymbol(Style style)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data        = new PrivateData();
-    m_data->style = style;
-    m_data->pen   = QPen(Qt::black, 1);
-    m_data->brush = QBrush(Qt::gray);
+    QWT_D(d);
+    d->style = style;
+    d->pen   = QPen(Qt::black, 1);
+    d->brush = QBrush(Qt::gray);
 }
 
 /**
@@ -152,7 +157,6 @@ QwtColumnSymbol::QwtColumnSymbol(Style style)
  */
 QwtColumnSymbol::~QwtColumnSymbol()
 {
-    delete m_data;
 }
 
 /**
@@ -162,7 +166,8 @@ QwtColumnSymbol::~QwtColumnSymbol()
  */
 void QwtColumnSymbol::setStyle(Style style)
 {
-    m_data->style = style;
+    QWT_D(d);
+    d->style = style;
 }
 
 /**
@@ -172,7 +177,8 @@ void QwtColumnSymbol::setStyle(Style style)
  */
 QwtColumnSymbol::Style QwtColumnSymbol::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
@@ -181,7 +187,8 @@ QwtColumnSymbol::Style QwtColumnSymbol::style() const
  */
 void QwtColumnSymbol::setPen(const QPen& pen)
 {
-    m_data->pen = pen;
+    QWT_D(d);
+    d->pen = pen;
 }
 
 /**
@@ -190,7 +197,8 @@ void QwtColumnSymbol::setPen(const QPen& pen)
  */
 QPen QwtColumnSymbol::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -199,7 +207,8 @@ QPen QwtColumnSymbol::pen() const
  */
 void QwtColumnSymbol::setBrush(const QBrush& b)
 {
-    m_data->brush = b;
+    QWT_D(d);
+    d->brush = b;
 }
 
 /**
@@ -208,7 +217,8 @@ void QwtColumnSymbol::setBrush(const QBrush& b)
  */
 QBrush QwtColumnSymbol::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -218,7 +228,8 @@ QBrush QwtColumnSymbol::brush() const
  */
 void QwtColumnSymbol::setFrameStyle(FrameStyle frameStyle)
 {
-    m_data->frameStyle = frameStyle;
+    QWT_D(d);
+    d->frameStyle = frameStyle;
 }
 
 /**
@@ -228,7 +239,8 @@ void QwtColumnSymbol::setFrameStyle(FrameStyle frameStyle)
  */
 QwtColumnSymbol::FrameStyle QwtColumnSymbol::frameStyle() const
 {
-    return m_data->frameStyle;
+    QWT_DC(d);
+    return d->frameStyle;
 }
 
 /**
@@ -238,10 +250,11 @@ QwtColumnSymbol::FrameStyle QwtColumnSymbol::frameStyle() const
  */
 void QwtColumnSymbol::setLineWidth(int width)
 {
+    QWT_D(d);
     if (width < 0)
         width = 0;
 
-    m_data->pen.setWidth(width);
+    d->pen.setWidth(width);
 }
 
 /**
@@ -251,7 +264,8 @@ void QwtColumnSymbol::setLineWidth(int width)
  */
 int QwtColumnSymbol::lineWidth() const
 {
-    return m_data->pen.width();
+    QWT_DC(d);
+    return d->pen.width();
 }
 
 /**
@@ -262,9 +276,10 @@ int QwtColumnSymbol::lineWidth() const
  */
 void QwtColumnSymbol::draw(QPainter* painter, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     painter->save();
 
-    switch (m_data->style) {
+    switch (d->style) {
     case QwtColumnSymbol::Box: {
         drawBox(painter, rect);
         break;
@@ -277,6 +292,7 @@ void QwtColumnSymbol::draw(QPainter* painter, const QwtColumnRect& rect) const
 
 void QwtColumnSymbol::drawBox(QPainter* painter, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     QRectF r = rect.toRect();
     if (QwtPainter::roundingAlignment(painter)) {
         r.setLeft(qRound(r.left()));
@@ -285,18 +301,18 @@ void QwtColumnSymbol::drawBox(QPainter* painter, const QwtColumnRect& rect) cons
         r.setBottom(qRound(r.bottom()));
     }
 
-    switch (m_data->frameStyle) {
+    switch (d->frameStyle) {
     case QwtColumnSymbol::Raised: {
-        qwtDrawPanel(painter, r, m_data->pen, m_data->brush);
+        qwtDrawPanel(painter, r, d->pen, d->brush);
         break;
     }
     case QwtColumnSymbol::Plain: {
-        // qwtDrawBox(painter, r, m_data->palette, m_data->lineWidth);
-        qwtDrawBox(painter, r, m_data->pen, m_data->brush);
+        // qwtDrawBox(painter, r, d->palette, d->lineWidth);
+        qwtDrawBox(painter, r, d->pen, d->brush);
         break;
     }
     default: {
-        painter->fillRect(r.adjusted(0, 0, 1, 1), m_data->brush);
+        painter->fillRect(r.adjusted(0, 0, 1, 1), d->brush);
     }
     }
 }

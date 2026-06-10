@@ -54,7 +54,12 @@ public:
 
 class QwtPolarPlot::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarPlot)
 public:
+    PrivateData(QwtPolarPlot* p) : q_ptr(p)
+    {
+    }
+
     QBrush canvasBrush;
 
     bool autoReplot;
@@ -95,10 +100,11 @@ QwtPolarPlot::QwtPolarPlot(const QwtText& title, QWidget* parent) : QFrame(paren
  */
 QwtPolarPlot::~QwtPolarPlot()
 {
+    QWT_D(d);
+
     detachItems(QwtPolarItem::Rtti_PolarItem, autoDelete());
 
-    delete m_data->layout;
-    delete m_data;
+    delete d->layout;
 }
 
 /**
@@ -107,12 +113,14 @@ QwtPolarPlot::~QwtPolarPlot()
  */
 void QwtPolarPlot::setTitle(const QString& title)
 {
-    if (title != m_data->titleLabel->text().text()) {
-        m_data->titleLabel->setText(title);
+    QWT_D(d);
+
+    if (title != d->titleLabel->text().text()) {
+        d->titleLabel->setText(title);
         if (!title.isEmpty())
-            m_data->titleLabel->show();
+            d->titleLabel->show();
         else
-            m_data->titleLabel->hide();
+            d->titleLabel->hide();
     }
 }
 
@@ -122,12 +130,14 @@ void QwtPolarPlot::setTitle(const QString& title)
  */
 void QwtPolarPlot::setTitle(const QwtText& title)
 {
-    if (title != m_data->titleLabel->text()) {
-        m_data->titleLabel->setText(title);
+    QWT_D(d);
+
+    if (title != d->titleLabel->text()) {
+        d->titleLabel->setText(title);
         if (!title.isEmpty())
-            m_data->titleLabel->show();
+            d->titleLabel->show();
         else
-            m_data->titleLabel->hide();
+            d->titleLabel->hide();
     }
 }
 
@@ -137,7 +147,8 @@ void QwtPolarPlot::setTitle(const QwtText& title)
  */
 QwtText QwtPolarPlot::title() const
 {
-    return m_data->titleLabel->text();
+    QWT_DC(d);
+    return d->titleLabel->text();
 }
 
 /**
@@ -146,7 +157,8 @@ QwtText QwtPolarPlot::title() const
  */
 QwtTextLabel* QwtPolarPlot::titleLabel()
 {
-    return m_data->titleLabel;
+    QWT_D(d);
+    return d->titleLabel;
 }
 
 /**
@@ -155,7 +167,8 @@ QwtTextLabel* QwtPolarPlot::titleLabel()
  */
 const QwtTextLabel* QwtPolarPlot::titleLabel() const
 {
-    return m_data->titleLabel;
+    QWT_DC(d);
+    return d->titleLabel;
 }
 
 /**
@@ -178,28 +191,30 @@ const QwtTextLabel* QwtPolarPlot::titleLabel() const
  */
 void QwtPolarPlot::insertLegend(QwtAbstractLegend* legend, QwtPolarPlot::LegendPosition pos, double ratio)
 {
-    m_data->layout->setLegendPosition(pos, ratio);
+    QWT_D(d);
 
-    if (legend != m_data->legend) {
-        if (m_data->legend && m_data->legend->parent() == this)
-            delete m_data->legend;
+    d->layout->setLegendPosition(pos, ratio);
 
-        m_data->legend = legend;
+    if (legend != d->legend) {
+        if (d->legend && d->legend->parent() == this)
+            delete d->legend;
 
-        if (m_data->legend) {
+        d->legend = legend;
+
+        if (d->legend) {
             connect(this,
                     SIGNAL(legendDataChanged(const QVariant&, const QList< QwtLegendData >&)),
-                    m_data->legend,
+                    d->legend,
                     SLOT(updateLegend(const QVariant&, const QList< QwtLegendData >&)));
 
-            if (m_data->legend->parent() != this)
-                m_data->legend->setParent(this);
+            if (d->legend->parent() != this)
+                d->legend->setParent(this);
 
             updateLegend();
 
             QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
             if (lgd) {
-                switch (m_data->layout->legendPosition()) {
+                switch (d->layout->legendPosition()) {
                 case LeftLegend:
                 case RightLegend: {
                     if (lgd->maxColumns() == 0)
@@ -259,7 +274,8 @@ void QwtPolarPlot::updateLegend(const QwtPolarItem* plotItem)
  */
 QwtAbstractLegend* QwtPolarPlot::legend()
 {
-    return m_data->legend;
+    QWT_D(d);
+    return d->legend;
 }
 
 /**
@@ -269,7 +285,8 @@ QwtAbstractLegend* QwtPolarPlot::legend()
  */
 const QwtAbstractLegend* QwtPolarPlot::legend() const
 {
-    return m_data->legend;
+    QWT_DC(d);
+    return d->legend;
 }
 
 /**
@@ -280,8 +297,10 @@ const QwtAbstractLegend* QwtPolarPlot::legend() const
  */
 void QwtPolarPlot::setPlotBackground(const QBrush& brush)
 {
-    if (brush != m_data->canvasBrush) {
-        m_data->canvasBrush = brush;
+    QWT_D(d);
+
+    if (brush != d->canvasBrush) {
+        d->canvasBrush = brush;
         autoRefresh();
     }
 }
@@ -293,7 +312,8 @@ void QwtPolarPlot::setPlotBackground(const QBrush& brush)
  */
 const QBrush& QwtPolarPlot::plotBackground() const
 {
-    return m_data->canvasBrush;
+    QWT_DC(d);
+    return d->canvasBrush;
 }
 
 /**
@@ -308,7 +328,8 @@ const QBrush& QwtPolarPlot::plotBackground() const
  */
 void QwtPolarPlot::setAutoReplot(bool enable)
 {
-    m_data->autoReplot = enable;
+    QWT_D(d);
+    d->autoReplot = enable;
 }
 
 /**
@@ -318,7 +339,8 @@ void QwtPolarPlot::setAutoReplot(bool enable)
  */
 bool QwtPolarPlot::autoReplot() const
 {
-    return m_data->autoReplot;
+    QWT_DC(d);
+    return d->autoReplot;
 }
 
 /**
@@ -332,10 +354,12 @@ bool QwtPolarPlot::autoReplot() const
  */
 void QwtPolarPlot::setAutoScale(int scaleId)
 {
+    QWT_D(d);
+
     if (scaleId != QwtPolar::ScaleRadius)
         return;
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
     if (!scaleData.doAutoScale) {
         scaleData.doAutoScale = true;
         autoRefresh();
@@ -350,10 +374,12 @@ void QwtPolarPlot::setAutoScale(int scaleId)
  */
 bool QwtPolarPlot::hasAutoScale(int scaleId) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return false;
 
-    return m_data->scaleData[ scaleId ].doAutoScale;
+    return d->scaleData[ scaleId ].doAutoScale;
 }
 
 /**
@@ -364,12 +390,14 @@ bool QwtPolarPlot::hasAutoScale(int scaleId) const
  */
 void QwtPolarPlot::setScaleMaxMinor(int scaleId, int maxMinor)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
     maxMinor = qBound(0, maxMinor, 100);
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
 
     if (maxMinor != scaleData.maxMinor) {
         scaleData.maxMinor = maxMinor;
@@ -386,10 +414,12 @@ void QwtPolarPlot::setScaleMaxMinor(int scaleId, int maxMinor)
  */
 int QwtPolarPlot::scaleMaxMinor(int scaleId) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return 0;
 
-    return m_data->scaleData[ scaleId ].maxMinor;
+    return d->scaleData[ scaleId ].maxMinor;
 }
 
 /**
@@ -400,12 +430,14 @@ int QwtPolarPlot::scaleMaxMinor(int scaleId) const
  */
 void QwtPolarPlot::setScaleMaxMajor(int scaleId, int maxMajor)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
     maxMajor = qBound(1, maxMajor, 10000);
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
     if (maxMajor != scaleData.maxMinor) {
         scaleData.maxMajor = maxMajor;
         scaleData.isValid  = false;
@@ -421,10 +453,12 @@ void QwtPolarPlot::setScaleMaxMajor(int scaleId, int maxMajor)
  */
 int QwtPolarPlot::scaleMaxMajor(int scaleId) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return 0;
 
-    return m_data->scaleData[ scaleId ].maxMajor;
+    return d->scaleData[ scaleId ].maxMajor;
 }
 
 /**
@@ -435,10 +469,12 @@ int QwtPolarPlot::scaleMaxMajor(int scaleId) const
  */
 void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
     if (scaleEngine == nullptr || scaleEngine == scaleData.scaleEngine)
         return;
 
@@ -458,10 +494,12 @@ void QwtPolarPlot::setScaleEngine(int scaleId, QwtScaleEngine* scaleEngine)
  */
 QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return nullptr;
 
-    return m_data->scaleData[ scaleId ].scaleEngine;
+    return d->scaleData[ scaleId ].scaleEngine;
 }
 
 /**
@@ -472,10 +510,12 @@ QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId)
  */
 const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return nullptr;
 
-    return m_data->scaleData[ scaleId ].scaleEngine;
+    return d->scaleData[ scaleId ].scaleEngine;
 }
 
 /**
@@ -488,10 +528,12 @@ const QwtScaleEngine* QwtPolarPlot::scaleEngine(int scaleId) const
  */
 void QwtPolarPlot::setScale(int scaleId, double min, double max, double stepSize)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
 
     scaleData.isValid = false;
 
@@ -511,10 +553,12 @@ void QwtPolarPlot::setScale(int scaleId, double min, double max, double stepSize
  */
 void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
-    QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
 
     scaleData.scaleDiv    = scaleDiv;
     scaleData.isValid     = true;
@@ -532,10 +576,12 @@ void QwtPolarPlot::setScaleDiv(int scaleId, const QwtScaleDiv& scaleDiv)
  */
 const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return nullptr;
 
-    return &m_data->scaleData[ scaleId ].scaleDiv;
+    return &d->scaleData[ scaleId ].scaleDiv;
 }
 
 /**
@@ -547,10 +593,12 @@ const QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId) const
  */
 QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return nullptr;
 
-    return &m_data->scaleData[ scaleId ].scaleDiv;
+    return &d->scaleData[ scaleId ].scaleDiv;
 }
 
 /**
@@ -561,9 +609,11 @@ QwtScaleDiv* QwtPolarPlot::scaleDiv(int scaleId)
  */
 void QwtPolarPlot::setAzimuthOrigin(double origin)
 {
+    QWT_D(d);
+
     origin = ::fmod(origin, 2 * M_PI);
-    if (origin != m_data->azimuthOrigin) {
-        m_data->azimuthOrigin = origin;
+    if (origin != d->azimuthOrigin) {
+        d->azimuthOrigin = origin;
         autoRefresh();
     }
 }
@@ -576,7 +626,8 @@ void QwtPolarPlot::setAzimuthOrigin(double origin)
  */
 double QwtPolarPlot::azimuthOrigin() const
 {
-    return m_data->azimuthOrigin;
+    QWT_DC(d);
+    return d->azimuthOrigin;
 }
 
 /**
@@ -591,10 +642,12 @@ double QwtPolarPlot::azimuthOrigin() const
  */
 void QwtPolarPlot::zoom(const QwtPointPolar& zoomPos, double zoomFactor)
 {
+    QWT_D(d);
+
     zoomFactor = qAbs(zoomFactor);
-    if (zoomPos != m_data->zoomPos || zoomFactor != m_data->zoomFactor) {
-        m_data->zoomPos    = zoomPos;
-        m_data->zoomFactor = zoomFactor;
+    if (zoomPos != d->zoomPos || zoomFactor != d->zoomFactor) {
+        d->zoomPos    = zoomPos;
+        d->zoomFactor = zoomFactor;
         updateLayout();
         autoRefresh();
     }
@@ -606,9 +659,11 @@ void QwtPolarPlot::zoom(const QwtPointPolar& zoomPos, double zoomFactor)
  */
 void QwtPolarPlot::unzoom()
 {
-    if (m_data->zoomFactor != 1.0 || m_data->zoomPos.isValid()) {
-        m_data->zoomFactor = 1.0;
-        m_data->zoomPos    = QwtPointPolar();
+    QWT_D(d);
+
+    if (d->zoomFactor != 1.0 || d->zoomPos.isValid()) {
+        d->zoomFactor = 1.0;
+        d->zoomPos    = QwtPointPolar();
         autoRefresh();
     }
 }
@@ -620,7 +675,8 @@ void QwtPolarPlot::unzoom()
  */
 QwtPointPolar QwtPolarPlot::zoomPos() const
 {
-    return m_data->zoomPos;
+    QWT_DC(d);
+    return d->zoomPos;
 }
 
 /**
@@ -630,7 +686,8 @@ QwtPointPolar QwtPolarPlot::zoomPos() const
  */
 double QwtPolarPlot::zoomFactor() const
 {
-    return m_data->zoomFactor;
+    QWT_DC(d);
+    return d->zoomFactor;
 }
 
 /**
@@ -659,6 +716,8 @@ QwtScaleMap QwtPolarPlot::scaleMap(int scaleId) const
  */
 QwtScaleMap QwtPolarPlot::scaleMap(int scaleId, const double radius) const
 {
+    QWT_DC(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return QwtScaleMap();
 
@@ -669,7 +728,7 @@ QwtScaleMap QwtPolarPlot::scaleMap(int scaleId, const double radius) const
     map.setScaleInterval(sd->lowerBound(), sd->upperBound());
 
     if (scaleId == QwtPolar::Azimuth) {
-        map.setPaintInterval(m_data->azimuthOrigin, m_data->azimuthOrigin + 2 * M_PI);
+        map.setPaintInterval(d->azimuthOrigin, d->azimuthOrigin + 2 * M_PI);
     } else {
         map.setPaintInterval(0.0, radius);
     }
@@ -713,26 +772,28 @@ void QwtPolarPlot::resizeEvent(QResizeEvent* e)
 
 void QwtPolarPlot::initPlot(const QwtText& title)
 {
-    m_data         = new PrivateData;
-    m_data->layout = new QwtPolarLayout;
+    QWT_PIMPL_CONSTRUCT_INIT();
+    QWT_D(d);
+
+    d->layout = new QwtPolarLayout;
 
     QwtText text(title);
     text.setRenderFlags(Qt::AlignCenter | Qt::TextWordWrap);
 
-    m_data->titleLabel = new QwtTextLabel(text, this);
-    m_data->titleLabel->setFont(QFont(fontInfo().family(), 14, QFont::Bold));
+    d->titleLabel = new QwtTextLabel(text, this);
+    d->titleLabel->setFont(QFont(fontInfo().family(), 14, QFont::Bold));
     if (!text.isEmpty())
-        m_data->titleLabel->show();
+        d->titleLabel->show();
     else
-        m_data->titleLabel->hide();
+        d->titleLabel->hide();
 
-    m_data->canvas = new QwtPolarCanvas(this);
+    d->canvas = new QwtPolarCanvas(this);
 
-    m_data->autoReplot  = false;
-    m_data->canvasBrush = QBrush(Qt::white);
+    d->autoReplot  = false;
+    d->canvasBrush = QBrush(Qt::white);
 
     for (int scaleId = 0; scaleId < QwtPolar::ScaleCount; scaleId++) {
-        QwtPolarPlotScaleData& scaleData = m_data->scaleData[ scaleId ];
+        QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];
 
         if (scaleId == QwtPolar::Azimuth) {
             scaleData.minValue = 0.0;
@@ -753,8 +814,8 @@ void QwtPolarPlot::initPlot(const QwtText& title)
 
         scaleData.scaleEngine = new QwtLinearScaleEngine;
     }
-    m_data->zoomFactor    = 1.0;
-    m_data->azimuthOrigin = 0.0;
+    d->zoomFactor    = 1.0;
+    d->azimuthOrigin = 0.0;
 
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
@@ -767,7 +828,9 @@ void QwtPolarPlot::initPlot(const QwtText& title)
  */
 void QwtPolarPlot::autoRefresh()
 {
-    if (m_data->autoReplot)
+    QWT_D(d);
+
+    if (d->autoReplot)
         replot();
 }
 
@@ -776,29 +839,31 @@ void QwtPolarPlot::autoRefresh()
  */
 void QwtPolarPlot::updateLayout()
 {
-    m_data->layout->activate(this, contentsRect());
+    QWT_D(d);
+
+    d->layout->activate(this, contentsRect());
 
     // resize and show the visible widgets
-    if (m_data->titleLabel) {
-        if (!m_data->titleLabel->text().isEmpty()) {
-            m_data->titleLabel->setGeometry(m_data->layout->titleRect().toRect());
-            if (!m_data->titleLabel->isVisible())
-                m_data->titleLabel->show();
+    if (d->titleLabel) {
+        if (!d->titleLabel->text().isEmpty()) {
+            d->titleLabel->setGeometry(d->layout->titleRect().toRect());
+            if (!d->titleLabel->isVisible())
+                d->titleLabel->show();
         } else
-            m_data->titleLabel->hide();
+            d->titleLabel->hide();
     }
 
-    if (m_data->legend) {
-        if (m_data->legend->isEmpty()) {
-            m_data->legend->hide();
+    if (d->legend) {
+        if (d->legend->isEmpty()) {
+            d->legend->hide();
         } else {
-            const QRectF legendRect = m_data->layout->legendRect();
-            m_data->legend->setGeometry(legendRect.toRect());
-            m_data->legend->show();
+            const QRectF legendRect = d->layout->legendRect();
+            d->legend->setGeometry(legendRect.toRect());
+            d->legend->show();
         }
     }
 
-    m_data->canvas->setGeometry(m_data->layout->canvasRect().toRect());
+    d->canvas->setGeometry(d->layout->canvasRect().toRect());
     Q_EMIT layoutChanged();
 }
 
@@ -811,14 +876,16 @@ void QwtPolarPlot::updateLayout()
  */
 void QwtPolarPlot::replot()
 {
+    QWT_D(d);
+
     bool doAutoReplot = autoReplot();
     setAutoReplot(false);
 
     for (int scaleId = 0; scaleId < QwtPolar::ScaleCount; scaleId++)
         updateScale(scaleId);
 
-    m_data->canvas->invalidateBackingStore();
-    m_data->canvas->repaint();
+    d->canvas->invalidateBackingStore();
+    d->canvas->repaint();
 
     setAutoReplot(doAutoReplot);
 }
@@ -829,7 +896,8 @@ void QwtPolarPlot::replot()
  */
 QwtPolarCanvas* QwtPolarPlot::canvas()
 {
-    return m_data->canvas;
+    QWT_D(d);
+    return d->canvas;
 }
 
 /**
@@ -838,7 +906,8 @@ QwtPolarCanvas* QwtPolarPlot::canvas()
  */
 const QwtPolarCanvas* QwtPolarPlot::canvas() const
 {
-    return m_data->canvas;
+    QWT_DC(d);
+    return d->canvas;
 }
 
 /**
@@ -848,15 +917,17 @@ const QwtPolarCanvas* QwtPolarPlot::canvas() const
  */
 void QwtPolarPlot::drawCanvas(QPainter* painter, const QRectF& canvasRect) const
 {
+    QWT_DC(d);
+
     const QRectF cr = canvasRect;
     const QRectF pr = plotRect(cr);
 
     const double radius = pr.width() / 2.0;
 
-    if (m_data->canvasBrush.style() != Qt::NoBrush) {
+    if (d->canvasBrush.style() != Qt::NoBrush) {
         painter->save();
         painter->setPen(Qt::NoPen);
-        painter->setBrush(m_data->canvasBrush);
+        painter->setBrush(d->canvasBrush);
 
         if (qwtDistance(pr.center(), cr.topLeft()) < radius && qwtDistance(pr.center(), cr.topRight()) < radius
             && qwtDistance(pr.center(), cr.bottomRight()) < radius && qwtDistance(pr.center(), cr.bottomLeft()) < radius) {
@@ -937,16 +1008,18 @@ void QwtPolarPlot::drawItems(QPainter* painter,
  */
 void QwtPolarPlot::updateScale(int scaleId)
 {
+    QWT_D(d);
+
     if (scaleId < 0 || scaleId >= QwtPolar::ScaleCount)
         return;
 
-    QwtPolarPlotScaleData& d = m_data->scaleData[ scaleId ];
+    QwtPolarPlotScaleData& sd = d->scaleData[ scaleId ];
 
-    double minValue = d.minValue;
-    double maxValue = d.maxValue;
-    double stepSize = d.stepSize;
+    double minValue = sd.minValue;
+    double maxValue = sd.maxValue;
+    double stepSize = sd.stepSize;
 
-    if (scaleId == QwtPolar::ScaleRadius && d.doAutoScale) {
+    if (scaleId == QwtPolar::ScaleRadius && sd.doAutoScale) {
         QwtInterval interval;
 
         const QwtPolarItemList& itmList = itemList();
@@ -959,13 +1032,13 @@ void QwtPolarPlot::updateScale(int scaleId)
         minValue = interval.minValue();
         maxValue = interval.maxValue();
 
-        d.scaleEngine->autoScale(d.maxMajor, minValue, maxValue, stepSize);
-        d.isValid = false;
+        sd.scaleEngine->autoScale(sd.maxMajor, minValue, maxValue, stepSize);
+        sd.isValid = false;
     }
 
-    if (!d.isValid) {
-        d.scaleDiv = d.scaleEngine->divideScale(minValue, maxValue, d.maxMajor, d.maxMinor, stepSize);
-        d.isValid  = true;
+    if (!sd.isValid) {
+        sd.scaleDiv = sd.scaleEngine->divideScale(minValue, maxValue, sd.maxMajor, sd.maxMinor, stepSize);
+        sd.isValid  = true;
     }
 
     const QwtInterval interval = visibleInterval();
@@ -1015,6 +1088,8 @@ QRectF QwtPolarPlot::plotRect() const
  */
 QRectF QwtPolarPlot::plotRect(const QRectF& canvasRect) const
 {
+    QWT_DC(d);
+
     const QwtScaleDiv* sd    = scaleDiv(QwtPolar::Radius);
     const QwtScaleEngine* se = scaleEngine(QwtPolar::Radius);
 
@@ -1024,17 +1099,17 @@ QRectF QwtPolarPlot::plotRect(const QRectF& canvasRect) const
 
     QwtScaleMap map;
     map.setTransformation(se->transformation());
-    map.setPaintInterval(0.0, radius / m_data->zoomFactor);
+    map.setPaintInterval(0.0, radius / d->zoomFactor);
     map.setScaleInterval(sd->lowerBound(), sd->upperBound());
 
     double v = map.s1();
     if (map.s1() <= map.s2())
-        v += m_data->zoomPos.radius();
+        v += d->zoomPos.radius();
     else
-        v -= m_data->zoomPos.radius();
+        v -= d->zoomPos.radius();
     v = map.transform(v);
 
-    const QPointF off = QwtPointPolar(m_data->zoomPos.azimuth(), v).toPoint();
+    const QPointF off = QwtPointPolar(d->zoomPos.azimuth(), v).toPoint();
 
     QPointF center(cr.center().x(), cr.top() + margin + radius);
     center -= QPointF(off.x(), -off.y());
@@ -1130,7 +1205,8 @@ QwtInterval QwtPolarPlot::visibleInterval() const
  */
 QwtPolarLayout* QwtPolarPlot::plotLayout()
 {
-    return m_data->layout;
+    QWT_D(d);
+    return d->layout;
 }
 
 /**
@@ -1139,7 +1215,8 @@ QwtPolarLayout* QwtPolarPlot::plotLayout()
  */
 const QwtPolarLayout* QwtPolarPlot::plotLayout() const
 {
-    return m_data->layout;
+    QWT_DC(d);
+    return d->layout;
 }
 
 /**

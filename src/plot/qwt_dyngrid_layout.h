@@ -117,8 +117,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
     void init();
     int maxRowWidth( int numColumns ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtDynGridLayout)
 };
 
 #endif

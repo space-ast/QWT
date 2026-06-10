@@ -189,8 +189,7 @@ private:
     void draw(QPainter*) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtWidgetOverlay)
 };
 
 #endif

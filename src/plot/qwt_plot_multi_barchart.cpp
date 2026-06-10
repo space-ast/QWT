@@ -51,9 +51,12 @@ inline static bool qwtIsIncreasing(
 
 class QwtPlotMultiBarChart::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotMultiBarChart)
+
   public:
-    PrivateData()
-        : style( QwtPlotMultiBarChart::Grouped )
+    PrivateData(QwtPlotMultiBarChart* p)
+        : q_ptr(p)
+        , style( QwtPlotMultiBarChart::Grouped )
     {
     }
 
@@ -65,10 +68,11 @@ class QwtPlotMultiBarChart::PrivateData
 /**
  * @brief Constructor
  * @param[in] title Title of the chart
- * 
+ *
  */
 QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
     : QwtPlotAbstractBarChart( title )
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -76,27 +80,26 @@ QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
 /**
  * @brief Constructor
  * @param[in] title Title of the chart
- * 
+ *
  */
 QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QString& title )
     : QwtPlotAbstractBarChart( QwtText( title ) )
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
  * @brief Destructor
- * 
+ *
  */
 QwtPlotMultiBarChart::~QwtPlotMultiBarChart()
 {
     resetSymbolMap();
-    delete m_data;
 }
 
 void QwtPlotMultiBarChart::init()
 {
-    m_data = new PrivateData;
     setData( new QwtSetSeriesData() );
 }
 
@@ -162,7 +165,8 @@ void QwtPlotMultiBarChart::setSamples(
  */
 void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
 {
-    m_data->barTitles = titles;
+    QWT_D(d);
+    d->barTitles = titles;
     itemChanged();
 }
 
@@ -174,7 +178,8 @@ void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
  */
 QList< QwtText > QwtPlotMultiBarChart::barTitles() const
 {
-    return m_data->barTitles;
+    QWT_DC(d);
+    return d->barTitles;
 }
 
 /**
@@ -188,16 +193,17 @@ QList< QwtText > QwtPlotMultiBarChart::barTitles() const
  */
 void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 {
+    QWT_D(d);
     if ( valueIndex < 0 )
         return;
 
     QMap< int, QwtColumnSymbol* >::iterator it =
-        m_data->symbolMap.find(valueIndex);
-    if ( it == m_data->symbolMap.end() )
+        d->symbolMap.find(valueIndex);
+    if ( it == d->symbolMap.end() )
     {
         if ( symbol != nullptr )
         {
-            m_data->symbolMap.insert( valueIndex, symbol );
+            d->symbolMap.insert( valueIndex, symbol );
 
             legendChanged();
             itemChanged();
@@ -211,7 +217,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 
             if ( symbol == nullptr )
             {
-                m_data->symbolMap.remove( valueIndex );
+                d->symbolMap.remove( valueIndex );
             }
             else
             {
@@ -233,10 +239,11 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
  */
 const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
 {
+    QWT_DC(d);
     QMap< int, QwtColumnSymbol* >::const_iterator it =
-        m_data->symbolMap.constFind( valueIndex );
+        d->symbolMap.constFind( valueIndex );
 
-    return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
+    return ( it == d->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /*!
@@ -249,10 +256,11 @@ const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
  */
 QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
 {
+    QWT_D(d);
     QMap< int, QwtColumnSymbol* >::const_iterator it =
-        m_data->symbolMap.constFind( valueIndex );
+        d->symbolMap.constFind( valueIndex );
 
-    return ( it == m_data->symbolMap.constEnd() ) ? nullptr : it.value();
+    return ( it == d->symbolMap.constEnd() ) ? nullptr : it.value();
 }
 
 /**
@@ -261,8 +269,9 @@ QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
  */
 void QwtPlotMultiBarChart::resetSymbolMap()
 {
-    qDeleteAll( m_data->symbolMap );
-    m_data->symbolMap.clear();
+    QWT_D(d);
+    qDeleteAll( d->symbolMap );
+    d->symbolMap.clear();
 }
 
 /*!
@@ -302,9 +311,10 @@ QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
  */
 void QwtPlotMultiBarChart::setStyle( ChartStyle style )
 {
-    if ( style != m_data->style )
+    QWT_D(d);
+    if ( style != d->style )
     {
-        m_data->style = style;
+        d->style = style;
 
         legendChanged();
         itemChanged();
@@ -319,7 +329,8 @@ void QwtPlotMultiBarChart::setStyle( ChartStyle style )
  */
 QwtPlotMultiBarChart::ChartStyle QwtPlotMultiBarChart::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
@@ -329,6 +340,7 @@ QwtPlotMultiBarChart::ChartStyle QwtPlotMultiBarChart::style() const
  */
 QRectF QwtPlotMultiBarChart::boundingRect() const
 {
+    QWT_DC(d);
     const size_t numSamples = dataSize();
 
     if ( numSamples == 0 )
@@ -338,7 +350,7 @@ QRectF QwtPlotMultiBarChart::boundingRect() const
 
     QRectF rect;
 
-    if ( m_data->style != QwtPlotMultiBarChart::Stacked )
+    if ( d->style != QwtPlotMultiBarChart::Stacked )
     {
         rect = QwtPlotSeriesItem::boundingRect();
 
@@ -443,6 +455,7 @@ void QwtPlotMultiBarChart::drawSample( QPainter* painter,
     const QRectF& canvasRect, const QwtInterval& boundingInterval,
     int index, const QwtSetSample& sample ) const
 {
+    QWT_DC(d);
     if ( sample.set.size() <= 0 )
         return;
 
@@ -459,7 +472,7 @@ void QwtPlotMultiBarChart::drawSample( QPainter* painter,
             boundingInterval.width(), sample.value );
     }
 
-    if ( m_data->style == Stacked )
+    if ( d->style == Stacked )
     {
         drawStackedBars( painter, xMap, yMap,
             canvasRect, index, sampleW, sample );
@@ -712,15 +725,16 @@ void QwtPlotMultiBarChart::drawBar( QPainter* painter,
  */
 QList< QwtLegendData > QwtPlotMultiBarChart::legendData() const
 {
+    QWT_DC(d);
     QList< QwtLegendData > list;
-    list.reserve( m_data->barTitles.size() );
+    list.reserve( d->barTitles.size() );
 
-    for ( int i = 0; i < m_data->barTitles.size(); i++ )
+    for ( int i = 0; i < d->barTitles.size(); i++ )
     {
         QwtLegendData data;
 
         data.setValue( QwtLegendData::TitleRole,
-            QVariant::fromValue( m_data->barTitles[i] ) );
+            QVariant::fromValue( d->barTitles[i] ) );
 
         if ( !legendIconSize().isEmpty() )
         {

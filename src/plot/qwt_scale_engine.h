@@ -146,8 +146,7 @@ protected:
 private:
     Q_DISABLE_COPY(QwtScaleEngine)
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtScaleEngine)
 };
 
 /**

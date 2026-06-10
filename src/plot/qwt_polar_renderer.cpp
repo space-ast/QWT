@@ -67,8 +67,9 @@
 
 class QwtPolarRenderer::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarRenderer)
 public:
-    PrivateData() : plot(nullptr)
+    PrivateData(QwtPolarRenderer* p) : q_ptr(p), plot(nullptr)
     {
     }
 
@@ -79,9 +80,8 @@ public:
  * @brief Constructor
  * @param parent Parent object
  */
-QwtPolarRenderer::QwtPolarRenderer(QObject* parent) : QObject(parent)
+QwtPolarRenderer::QwtPolarRenderer(QObject* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
@@ -89,7 +89,6 @@ QwtPolarRenderer::QwtPolarRenderer(QObject* parent) : QObject(parent)
  */
 QwtPolarRenderer::~QwtPolarRenderer()
 {
-    delete m_data;
 }
 
 /**
@@ -280,11 +279,13 @@ void QwtPolarRenderer::renderTo(QwtPolarPlot* plot, QSvgGenerator& generator) co
  */
 void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {
+    PrivateData* d = const_cast< PrivateData* >(d_func());
+
     if (plot == nullptr || painter == nullptr || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
         return;
     }
 
-    m_data->plot = plot;
+    d->plot = plot;
 
     /*
        The layout engine uses the same methods as they are used
@@ -328,7 +329,7 @@ void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRect
 
     layout->invalidate();
 
-    m_data->plot = nullptr;
+    d->plot = nullptr;
 }
 
 /**
@@ -338,7 +339,9 @@ void QwtPolarRenderer::render(QwtPolarPlot* plot, QPainter* painter, const QRect
  */
 void QwtPolarRenderer::renderTitle(QPainter* painter, const QRectF& rect) const
 {
-    QwtTextLabel* title = m_data->plot->titleLabel();
+    QWT_DC(d);
+
+    QwtTextLabel* title = d->plot->titleLabel();
 
     painter->setFont(title->font());
 

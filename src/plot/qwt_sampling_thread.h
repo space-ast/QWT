@@ -81,8 +81,7 @@ protected:
     virtual void sample(double elapsed) = 0;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSamplingThread)
 };
 
 #endif

@@ -181,6 +181,12 @@ inline QPointF QwtRasterData::ContourPlane::intersection(
 class QwtRasterData::PrivateData
 {
   public:
+    QWT_DECLARE_PUBLIC(QwtRasterData)
+
+    PrivateData(QwtRasterData* p) : q_ptr(p)
+    {
+    }
+
     QwtRasterData::Attributes attributes;
 };
 
@@ -188,9 +194,8 @@ class QwtRasterData::PrivateData
  * @brief Constructor
  * @details Creates a QwtRasterData object with default attributes.
  */
-QwtRasterData::QwtRasterData()
+QwtRasterData::QwtRasterData() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
 }
 
 /**
@@ -198,7 +203,6 @@ QwtRasterData::QwtRasterData()
  */
 QwtRasterData::~QwtRasterData()
 {
-    delete m_data;
 }
 
 /**
@@ -209,10 +213,11 @@ QwtRasterData::~QwtRasterData()
  */
 void QwtRasterData::setAttribute( Attribute attribute, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->attributes |= attribute;
+        d->attributes |= attribute;
     else
-        m_data->attributes &= ~attribute;
+        d->attributes &= ~attribute;
 }
 
 /**
@@ -223,7 +228,8 @@ void QwtRasterData::setAttribute( Attribute attribute, bool on )
  */
 bool QwtRasterData::testAttribute( Attribute attribute ) const
 {
-    return m_data->attributes & attribute;
+    QWT_DC(d);
+    return d->attributes & attribute;
 }
 
 /**

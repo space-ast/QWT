@@ -127,8 +127,7 @@ private:
      */
     virtual void clearBackingStore() override;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotOpenGLCanvas)
 };
 
 #endif

@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -37,8 +37,9 @@
 
 class QwtTextLabel::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtTextLabel)
 public:
-    PrivateData() : indent(4), margin(0)
+    PrivateData(QwtTextLabel* p) : q_ptr(p), indent(4), margin(0)
     {
     }
 
@@ -72,12 +73,11 @@ QwtTextLabel::QwtTextLabel(const QwtText& text, QWidget* parent) : QFrame(parent
  */
 QwtTextLabel::~QwtTextLabel()
 {
-    delete m_data;
 }
 
 void QwtTextLabel::init()
 {
-    m_data = new PrivateData();
+    QWT_PIMPL_CONSTRUCT_INIT();
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
@@ -98,7 +98,8 @@ void QwtTextLabel::setPlainText(const QString& text)
  */
 QString QwtTextLabel::plainText() const
 {
-    return m_data->text.text();
+    QWT_DC(d);
+    return d->text.text();
 }
 
 /**
@@ -109,7 +110,8 @@ QString QwtTextLabel::plainText() const
  */
 void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
 {
-    m_data->text.setText(text, textFormat);
+    QWT_D(d);
+    d->text.setText(text, textFormat);
 
     update();
     updateGeometry();
@@ -122,7 +124,8 @@ void QwtTextLabel::setText(const QString& text, QwtText::TextFormat textFormat)
  */
 void QwtTextLabel::setText(const QwtText& text)
 {
-    m_data->text = text;
+    QWT_D(d);
+    d->text = text;
 
     update();
     updateGeometry();
@@ -135,7 +138,8 @@ void QwtTextLabel::setText(const QwtText& text)
  */
 const QwtText& QwtTextLabel::text() const
 {
-    return m_data->text;
+    QWT_DC(d);
+    return d->text;
 }
 
 /**
@@ -144,7 +148,8 @@ const QwtText& QwtTextLabel::text() const
  */
 void QwtTextLabel::clear()
 {
-    m_data->text = QwtText();
+    QWT_D(d);
+    d->text = QwtText();
 
     update();
     updateGeometry();
@@ -157,7 +162,8 @@ void QwtTextLabel::clear()
  */
 int QwtTextLabel::indent() const
 {
-    return m_data->indent;
+    QWT_DC(d);
+    return d->indent;
 }
 
 /**
@@ -167,10 +173,11 @@ int QwtTextLabel::indent() const
  */
 void QwtTextLabel::setIndent(int indent)
 {
+    QWT_D(d);
     if (indent < 0)
         indent = 0;
 
-    m_data->indent = indent;
+    d->indent = indent;
 
     update();
     updateGeometry();
@@ -183,7 +190,8 @@ void QwtTextLabel::setIndent(int indent)
  */
 int QwtTextLabel::margin() const
 {
-    return m_data->margin;
+    QWT_DC(d);
+    return d->margin;
 }
 
 /**
@@ -193,7 +201,8 @@ int QwtTextLabel::margin() const
  */
 void QwtTextLabel::setMargin(int margin)
 {
-    m_data->margin = margin;
+    QWT_D(d);
+    d->margin = margin;
 
     update();
     updateGeometry();
@@ -216,23 +225,24 @@ QSize QwtTextLabel::sizeHint() const
  */
 QSize QwtTextLabel::minimumSizeHint() const
 {
-    QSizeF sz = m_data->text.textSize(font());
+    QWT_DC(d);
+    QSizeF sz = d->text.textSize(font());
 
     const QMargins m = contentsMargins();
 
-    int mw = m.left() + m.right() + 2 * m_data->margin;
-    int mh = m.top() + m.bottom() + 2 * m_data->margin;
+    int mw = m.left() + m.right() + 2 * d->margin;
+    int mh = m.top() + m.bottom() + 2 * d->margin;
 
-    int indent = m_data->indent;
+    int indent = d->indent;
     if (indent <= 0)
         indent = defaultIndent();
 
     if (indent > 0) {
-        const int align = m_data->text.renderFlags();
+        const int align = d->text.renderFlags();
         if (align & Qt::AlignLeft || align & Qt::AlignRight)
-            mw += m_data->indent;
+            mw += d->indent;
         else if (align & Qt::AlignTop || align & Qt::AlignBottom)
-            mh += m_data->indent;
+            mh += d->indent;
     }
 
     sz += QSizeF(mw, mh);
@@ -248,23 +258,24 @@ QSize QwtTextLabel::minimumSizeHint() const
  */
 int QwtTextLabel::heightForWidth(int width) const
 {
-    const int renderFlags = m_data->text.renderFlags();
+    QWT_DC(d);
+    const int renderFlags = d->text.renderFlags();
 
-    int indent = m_data->indent;
+    int indent = d->indent;
     if (indent <= 0)
         indent = defaultIndent();
 
     const QMargins m = contentsMargins();
 
-    width -= m.left() + m.right() - 2 * m_data->margin;
+    width -= m.left() + m.right() - 2 * d->margin;
     if (renderFlags & Qt::AlignLeft || renderFlags & Qt::AlignRight)
         width -= indent;
 
-    int height = qwtCeil(m_data->text.heightForWidth(width, font()));
+    int height = qwtCeil(d->text.heightForWidth(width, font()));
     if ((renderFlags & Qt::AlignTop) || (renderFlags & Qt::AlignBottom))
         height += indent;
 
-    height += m.top() + m.bottom() + 2 * m_data->margin;
+    height += m.top() + m.bottom() + 2 * d->margin;
 
     return height;
 }
@@ -322,7 +333,8 @@ void QwtTextLabel::drawContents(QPainter* painter)
  */
 void QwtTextLabel::drawText(QPainter* painter, const QRectF& textRect)
 {
-    m_data->text.draw(painter, textRect);
+    QWT_D(d);
+    d->text.draw(painter, textRect);
 }
 
 /**
@@ -332,20 +344,21 @@ void QwtTextLabel::drawText(QPainter* painter, const QRectF& textRect)
  */
 QRect QwtTextLabel::textRect() const
 {
+    QWT_DC(d);
     QRect r = contentsRect();
 
-    if (!r.isEmpty() && m_data->margin > 0) {
-        const int m = m_data->margin;
+    if (!r.isEmpty() && d->margin > 0) {
+        const int m = d->margin;
         r.adjust(m, m, -m, -m);
     }
 
     if (!r.isEmpty()) {
-        int indent = m_data->indent;
+        int indent = d->indent;
         if (indent <= 0)
             indent = defaultIndent();
 
         if (indent > 0) {
-            const int renderFlags = m_data->text.renderFlags();
+            const int renderFlags = d->text.renderFlags();
 
             if (renderFlags & Qt::AlignLeft) {
                 r.setX(r.x() + indent);
@@ -369,12 +382,13 @@ QRect QwtTextLabel::textRect() const
  */
 int QwtTextLabel::defaultIndent() const
 {
+    QWT_DC(d);
     if (frameWidth() <= 0)
         return 0;
 
     QFont fnt;
-    if (m_data->text.testPaintAttribute(QwtText::PaintUsingTextFont))
-        fnt = m_data->text.font();
+    if (d->text.testPaintAttribute(QwtText::PaintUsingTextFont))
+        fnt = d->text.font();
     else
         fnt = font();
 

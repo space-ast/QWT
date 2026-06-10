@@ -136,8 +136,7 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
   private:
     void updateMap();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtScaleDraw)
 };
 
 /**

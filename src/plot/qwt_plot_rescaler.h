@@ -190,8 +190,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
     double pixelDist( QwtAxisId, const QSize& ) const;
 
     class AxisData;
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotRescaler)
 };
 
 #endif

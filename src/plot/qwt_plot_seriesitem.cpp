@@ -30,9 +30,12 @@
 
 class QwtPlotSeriesItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotSeriesItem)
+
   public:
-    PrivateData()
-        : orientation( Qt::Vertical )
+    PrivateData( QwtPlotSeriesItem* p )
+        : q_ptr( p )
+        , orientation( Qt::Vertical )
     {
     }
 
@@ -45,8 +48,8 @@ class QwtPlotSeriesItem::PrivateData
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QwtText& title )
     : QwtPlotItem( title )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
@@ -56,8 +59,8 @@ QwtPlotSeriesItem::QwtPlotSeriesItem( const QwtText& title )
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
@@ -66,7 +69,6 @@ QwtPlotSeriesItem::QwtPlotSeriesItem( const QString& title )
  */
 QwtPlotSeriesItem::~QwtPlotSeriesItem()
 {
-    delete m_data;
 }
 
 /**
@@ -79,9 +81,10 @@ QwtPlotSeriesItem::~QwtPlotSeriesItem()
  */
 void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
 {
-    if ( m_data->orientation != orientation )
+    QWT_D(d);
+    if ( d->orientation != orientation )
     {
-        m_data->orientation = orientation;
+        d->orientation = orientation;
 
         legendChanged();
         itemChanged();
@@ -95,7 +98,8 @@ void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
  */
 Qt::Orientation QwtPlotSeriesItem::orientation() const
 {
-    return m_data->orientation;
+    QWT_DC(d);
+    return d->orientation;
 }
 
 /**

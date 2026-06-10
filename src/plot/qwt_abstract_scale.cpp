@@ -35,8 +35,9 @@
 
 class QwtAbstractScale::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtAbstractScale)
 public:
-    PrivateData() : maxMajor(5), maxMinor(3), stepSize(0.0)
+    PrivateData(QwtAbstractScale* p) : q_ptr(p), maxMajor(5), maxMinor(3), stepSize(0.0)
     {
         scaleEngine = new QwtLinearScaleEngine();
         scaleDraw   = new QwtScaleDraw();
@@ -64,10 +65,10 @@ public:
  *          The scaleStepSize() is initialized to 0.0, scaleMaxMajor() to 5
  *          and scaleMaxMinor to 3.
  */
-QwtAbstractScale::QwtAbstractScale(QWidget* parent) : QWidget(parent)
+QwtAbstractScale::QwtAbstractScale(QWidget* parent) : QWidget(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-    rescale(0.0, 100.0, m_data->stepSize);
+    QWT_D(d);
+    rescale(0.0, 100.0, d->stepSize);
 }
 
 /**
@@ -75,7 +76,6 @@ QwtAbstractScale::QwtAbstractScale(QWidget* parent) : QWidget(parent)
  */
 QwtAbstractScale::~QwtAbstractScale()
 {
-    delete m_data;
 }
 
 /**
@@ -96,7 +96,8 @@ void QwtAbstractScale::setLowerBound(double value)
  */
 double QwtAbstractScale::lowerBound() const
 {
-    return m_data->scaleDraw->scaleDiv().lowerBound();
+    QWT_DC(d);
+    return d->scaleDraw->scaleDiv().lowerBound();
 }
 
 /**
@@ -117,7 +118,8 @@ void QwtAbstractScale::setUpperBound(double value)
  */
 double QwtAbstractScale::upperBound() const
 {
-    return m_data->scaleDraw->scaleDiv().upperBound();
+    QWT_DC(d);
+    return d->scaleDraw->scaleDiv().upperBound();
 }
 
 /**
@@ -131,7 +133,8 @@ double QwtAbstractScale::upperBound() const
  */
 void QwtAbstractScale::setScale(double lowerBound, double upperBound)
 {
-    rescale(lowerBound, upperBound, m_data->stepSize);
+    QWT_D(d);
+    rescale(lowerBound, upperBound, d->stepSize);
 }
 
 /**
@@ -155,14 +158,15 @@ void QwtAbstractScale::setScale(const QwtInterval& interval)
  */
 void QwtAbstractScale::setScale(const QwtScaleDiv& scaleDiv)
 {
-    if (scaleDiv != m_data->scaleDraw->scaleDiv()) {
+    QWT_D(d);
+    if (scaleDiv != d->scaleDraw->scaleDiv()) {
 #if 1
-        if (m_data->scaleEngine) {
-            m_data->scaleDraw->setTransformation(m_data->scaleEngine->transformation());
+        if (d->scaleEngine) {
+            d->scaleDraw->setTransformation(d->scaleEngine->transformation());
         }
 #endif
 
-        m_data->scaleDraw->setScaleDiv(scaleDiv);
+        d->scaleDraw->setScaleDiv(scaleDiv);
 
         scaleChange();
     }
@@ -178,8 +182,9 @@ void QwtAbstractScale::setScale(const QwtScaleDiv& scaleDiv)
  */
 void QwtAbstractScale::setScaleMaxMajor(int ticks)
 {
-    if (ticks != m_data->maxMajor) {
-        m_data->maxMajor = ticks;
+    QWT_D(d);
+    if (ticks != d->maxMajor) {
+        d->maxMajor = ticks;
         updateScaleDraw();
     }
 }
@@ -191,7 +196,8 @@ void QwtAbstractScale::setScaleMaxMajor(int ticks)
  */
 int QwtAbstractScale::scaleMaxMajor() const
 {
-    return m_data->maxMajor;
+    QWT_DC(d);
+    return d->maxMajor;
 }
 
 /**
@@ -204,8 +210,9 @@ int QwtAbstractScale::scaleMaxMajor() const
  */
 void QwtAbstractScale::setScaleMaxMinor(int ticks)
 {
-    if (ticks != m_data->maxMinor) {
-        m_data->maxMinor = ticks;
+    QWT_D(d);
+    if (ticks != d->maxMinor) {
+        d->maxMinor = ticks;
         updateScaleDraw();
     }
 }
@@ -217,7 +224,8 @@ void QwtAbstractScale::setScaleMaxMinor(int ticks)
  */
 int QwtAbstractScale::scaleMaxMinor() const
 {
-    return m_data->maxMinor;
+    QWT_DC(d);
+    return d->maxMinor;
 }
 
 /**
@@ -231,8 +239,9 @@ int QwtAbstractScale::scaleMaxMinor() const
  */
 void QwtAbstractScale::setScaleStepSize(double stepSize)
 {
-    if (stepSize != m_data->stepSize) {
-        m_data->stepSize = stepSize;
+    QWT_D(d);
+    if (stepSize != d->stepSize) {
+        d->stepSize = stepSize;
         updateScaleDraw();
     }
 }
@@ -244,7 +253,8 @@ void QwtAbstractScale::setScaleStepSize(double stepSize)
  */
 double QwtAbstractScale::scaleStepSize() const
 {
-    return m_data->stepSize;
+    QWT_DC(d);
+    return d->stepSize;
 }
 
 /**
@@ -255,14 +265,15 @@ double QwtAbstractScale::scaleStepSize() const
  */
 void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
 {
-    if (scaleDraw == nullptr || scaleDraw == m_data->scaleDraw)
+    QWT_D(d);
+    if (scaleDraw == nullptr || scaleDraw == d->scaleDraw)
         return;
 
-    if (m_data->scaleDraw != nullptr)
-        scaleDraw->setScaleDiv(m_data->scaleDraw->scaleDiv());
+    if (d->scaleDraw != nullptr)
+        scaleDraw->setScaleDiv(d->scaleDraw->scaleDiv());
 
-    delete m_data->scaleDraw;
-    m_data->scaleDraw = scaleDraw;
+    delete d->scaleDraw;
+    d->scaleDraw = scaleDraw;
 }
 
 /**
@@ -272,7 +283,8 @@ void QwtAbstractScale::setAbstractScaleDraw(QwtAbstractScaleDraw* scaleDraw)
  */
 QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw()
 {
-    return m_data->scaleDraw;
+    QWT_D(d);
+    return d->scaleDraw;
 }
 
 /**
@@ -282,7 +294,8 @@ QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw()
  */
 const QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw() const
 {
-    return m_data->scaleDraw;
+    QWT_DC(d);
+    return d->scaleDraw;
 }
 
 /**
@@ -295,9 +308,10 @@ const QwtAbstractScaleDraw* QwtAbstractScale::abstractScaleDraw() const
  */
 void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
 {
-    if (scaleEngine != nullptr && scaleEngine != m_data->scaleEngine) {
-        delete m_data->scaleEngine;
-        m_data->scaleEngine = scaleEngine;
+    QWT_D(d);
+    if (scaleEngine != nullptr && scaleEngine != d->scaleEngine) {
+        delete d->scaleEngine;
+        d->scaleEngine = scaleEngine;
     }
 }
 
@@ -308,7 +322,8 @@ void QwtAbstractScale::setScaleEngine(QwtScaleEngine* scaleEngine)
  */
 const QwtScaleEngine* QwtAbstractScale::scaleEngine() const
 {
-    return m_data->scaleEngine;
+    QWT_DC(d);
+    return d->scaleEngine;
 }
 
 /**
@@ -318,7 +333,8 @@ const QwtScaleEngine* QwtAbstractScale::scaleEngine() const
  */
 QwtScaleEngine* QwtAbstractScale::scaleEngine()
 {
-    return m_data->scaleEngine;
+    QWT_D(d);
+    return d->scaleEngine;
 }
 
 /**
@@ -329,7 +345,8 @@ QwtScaleEngine* QwtAbstractScale::scaleEngine()
  */
 const QwtScaleDiv& QwtAbstractScale::scaleDiv() const
 {
-    return m_data->scaleDraw->scaleDiv();
+    QWT_DC(d);
+    return d->scaleDraw->scaleDiv();
 }
 
 /**
@@ -338,7 +355,8 @@ const QwtScaleDiv& QwtAbstractScale::scaleDiv() const
  */
 const QwtScaleMap& QwtAbstractScale::scaleMap() const
 {
-    return m_data->scaleDraw->scaleMap();
+    QWT_DC(d);
+    return d->scaleDraw->scaleMap();
 }
 
 /**
@@ -349,7 +367,8 @@ const QwtScaleMap& QwtAbstractScale::scaleMap() const
  */
 int QwtAbstractScale::transform(double value) const
 {
-    return qRound(m_data->scaleDraw->scaleMap().transform(value));
+    QWT_DC(d);
+    return qRound(d->scaleDraw->scaleMap().transform(value));
 }
 
 /**
@@ -360,7 +379,8 @@ int QwtAbstractScale::transform(double value) const
  */
 double QwtAbstractScale::invTransform(int value) const
 {
-    return m_data->scaleDraw->scaleMap().invTransform(value);
+    QWT_DC(d);
+    return d->scaleDraw->scaleMap().invTransform(value);
 }
 
 /**
@@ -369,7 +389,8 @@ double QwtAbstractScale::invTransform(int value) const
  */
 bool QwtAbstractScale::isInverted() const
 {
-    return m_data->scaleDraw->scaleMap().isInverting();
+    QWT_DC(d);
+    return d->scaleDraw->scaleMap().isInverting();
 }
 
 /**
@@ -379,7 +400,8 @@ bool QwtAbstractScale::isInverted() const
  */
 double QwtAbstractScale::minimum() const
 {
-    return qMin(m_data->scaleDraw->scaleDiv().lowerBound(), m_data->scaleDraw->scaleDiv().upperBound());
+    QWT_DC(d);
+    return qMin(d->scaleDraw->scaleDiv().lowerBound(), d->scaleDraw->scaleDiv().upperBound());
 }
 
 /**
@@ -389,7 +411,8 @@ double QwtAbstractScale::minimum() const
  */
 double QwtAbstractScale::maximum() const
 {
-    return qMax(m_data->scaleDraw->scaleDiv().lowerBound(), m_data->scaleDraw->scaleDiv().upperBound());
+    QWT_DC(d);
+    return qMax(d->scaleDraw->scaleDiv().lowerBound(), d->scaleDraw->scaleDiv().upperBound());
 }
 
 /**
@@ -410,18 +433,19 @@ void QwtAbstractScale::scaleChange()
  */
 void QwtAbstractScale::rescale(double lowerBound, double upperBound, double stepSize)
 {
-    const QwtScaleDiv scaleDiv = m_data->scaleEngine->divideScale(lowerBound,
+    QWT_D(d);
+    const QwtScaleDiv scaleDiv = d->scaleEngine->divideScale(lowerBound,
                                                                   upperBound,
-                                                                  m_data->maxMajor,
-                                                                  m_data->maxMinor,
+                                                                  d->maxMajor,
+                                                                  d->maxMinor,
                                                                   stepSize);
 
-    if (scaleDiv != m_data->scaleDraw->scaleDiv()) {
+    if (scaleDiv != d->scaleDraw->scaleDiv()) {
 #if 1
-        m_data->scaleDraw->setTransformation(m_data->scaleEngine->transformation());
+        d->scaleDraw->setTransformation(d->scaleEngine->transformation());
 #endif
 
-        m_data->scaleDraw->setScaleDiv(scaleDiv);
+        d->scaleDraw->setScaleDiv(scaleDiv);
         scaleChange();
     }
 }
@@ -433,8 +457,9 @@ void QwtAbstractScale::rescale(double lowerBound, double upperBound, double step
  */
 void QwtAbstractScale::changeEvent(QEvent* event)
 {
+    QWT_D(d);
     if (event->type() == QEvent::LocaleChange) {
-        m_data->scaleDraw->invalidateCache();
+        d->scaleDraw->invalidateCache();
     }
 
     QWidget::changeEvent(event);
@@ -447,5 +472,6 @@ void QwtAbstractScale::changeEvent(QEvent* event)
  */
 void QwtAbstractScale::updateScaleDraw()
 {
-    rescale(m_data->scaleDraw->scaleDiv().lowerBound(), m_data->scaleDraw->scaleDiv().upperBound(), m_data->stepSize);
+    QWT_D(d);
+    rescale(d->scaleDraw->scaleDiv().lowerBound(), d->scaleDraw->scaleDiv().upperBound(), d->stepSize);
 }

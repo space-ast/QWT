@@ -114,8 +114,7 @@ public:
     virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotScaleItem)
 };
 
 #endif

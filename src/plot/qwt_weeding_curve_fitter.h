@@ -80,8 +80,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 
     class Line;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtWeedingCurveFitter)
 };
 
 #endif

@@ -30,8 +30,10 @@
 
 class QwtPlotMagnifier::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotMagnifier)
 public:
-    PrivateData()
+    PrivateData(QwtPlotMagnifier* p)
+        : q_ptr(p)
     {
         for (int axis = 0; axis < QwtAxis::AxisPositions; axis++)
             isAxisEnabled[ axis ] = true;
@@ -47,9 +49,8 @@ public:
  * Creates a magnifier attached to the given plot canvas.
  * All axes are enabled by default.
  */
-QwtPlotMagnifier::QwtPlotMagnifier(QWidget* canvas) : QwtMagnifier(canvas)
+QwtPlotMagnifier::QwtPlotMagnifier(QWidget* canvas) : QwtMagnifier(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
 }
 
 /*!
@@ -57,7 +58,6 @@ QwtPlotMagnifier::QwtPlotMagnifier(QWidget* canvas) : QwtMagnifier(canvas)
  */
 QwtPlotMagnifier::~QwtPlotMagnifier()
 {
-    delete m_data;
 }
 
 /*!
@@ -74,8 +74,9 @@ QwtPlotMagnifier::~QwtPlotMagnifier()
  */
 void QwtPlotMagnifier::setAxisEnabled(QwtAxisId axisId, bool on)
 {
+    QWT_D(d);
     if (QwtAxis::isValid(axisId))
-        m_data->isAxisEnabled[ axisId ] = on;
+        d->isAxisEnabled[ axisId ] = on;
 }
 
 /*!
@@ -87,8 +88,9 @@ void QwtPlotMagnifier::setAxisEnabled(QwtAxisId axisId, bool on)
  */
 bool QwtPlotMagnifier::isAxisEnabled(QwtAxisId axisId) const
 {
+    QWT_DC(d);
     if (QwtAxis::isValid(axisId))
-        return m_data->isAxisEnabled[ axisId ];
+        return d->isAxisEnabled[ axisId ];
 
     return true;
 }

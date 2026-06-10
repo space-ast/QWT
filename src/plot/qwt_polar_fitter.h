@@ -39,8 +39,7 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
     virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarFitter)
 };
 
 #endif

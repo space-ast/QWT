@@ -184,8 +184,7 @@ virtual void drawSymbols( QPainter*, const QwtIntervalSymbol&,
     const QRectF& canvasRect, int from, int to ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotIntervalCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotIntervalCurve::PaintAttributes )

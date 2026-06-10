@@ -210,8 +210,7 @@ class QWT_EXPORT QwtSpline
   private:
     Q_DISABLE_COPY(QwtSpline)
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSpline)
 };
 
 /**

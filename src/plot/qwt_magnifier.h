@@ -116,8 +116,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
     virtual void widgetKeyReleaseEvent( QKeyEvent* );
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtMagnifier)
 };
 
 #endif

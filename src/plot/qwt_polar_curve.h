@@ -165,8 +165,7 @@ protected:
 private:
     QwtSeriesData< QwtPointPolar >* m_series;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarCurve)
 };
 
 //! @return the the curve data

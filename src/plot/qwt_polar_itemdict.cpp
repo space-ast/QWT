@@ -10,7 +10,12 @@
 
 class QwtPolarItemDict::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarItemDict)
   public:
+    PrivateData(QwtPolarItemDict* p) : q_ptr(p)
+    {
+    }
+
     class ItemList : public QList< QwtPolarItem* >
     {
       public:
@@ -69,8 +74,9 @@ class QwtPolarItemDict::PrivateData
  */
 QwtPolarItemDict::QwtPolarItemDict()
 {
-    m_data = new QwtPolarItemDict::PrivateData;
-    m_data->autoDelete = true;
+    QWT_PIMPL_CONSTRUCT_INIT();
+    QWT_D(d);
+    d->autoDelete = true;
 }
 
 /**
@@ -80,8 +86,8 @@ QwtPolarItemDict::QwtPolarItemDict()
  */
 QwtPolarItemDict::~QwtPolarItemDict()
 {
-    detachItems( QwtPolarItem::Rtti_PolarItem, m_data->autoDelete );
-    delete m_data;
+    QWT_D(d);
+    detachItems( QwtPolarItem::Rtti_PolarItem, d->autoDelete );
 }
 
 /**
@@ -93,7 +99,8 @@ QwtPolarItemDict::~QwtPolarItemDict()
  */
 void QwtPolarItemDict::setAutoDelete( bool autoDelete )
 {
-    m_data->autoDelete = autoDelete;
+    QWT_D(d);
+    d->autoDelete = autoDelete;
 }
 
 /**
@@ -103,7 +110,8 @@ void QwtPolarItemDict::setAutoDelete( bool autoDelete )
  */
 bool QwtPolarItemDict::autoDelete() const
 {
-    return m_data->autoDelete;
+    QWT_DC(d);
+    return d->autoDelete;
 }
 
 /**
@@ -113,7 +121,8 @@ bool QwtPolarItemDict::autoDelete() const
  */
 void QwtPolarItemDict::insertItem( QwtPolarItem* item )
 {
-    m_data->itemList.insertItem( item );
+    QWT_D(d);
+    d->itemList.insertItem( item );
 }
 
 /**
@@ -123,7 +132,8 @@ void QwtPolarItemDict::insertItem( QwtPolarItem* item )
  */
 void QwtPolarItemDict::removeItem( QwtPolarItem* item )
 {
-    m_data->itemList.removeItem( item );
+    QWT_D(d);
+    d->itemList.removeItem( item );
 }
 
 /**
@@ -134,7 +144,8 @@ void QwtPolarItemDict::removeItem( QwtPolarItem* item )
  */
 void QwtPolarItemDict::detachItems( int rtti, bool autoDelete )
 {
-    PrivateData::ItemList list = m_data->itemList;
+    QWT_D(d);
+    PrivateData::ItemList list = d->itemList;
     QwtPolarItemIterator it = list.constBegin();
     while ( it != list.constEnd() )
     {
@@ -159,5 +170,6 @@ void QwtPolarItemDict::detachItems( int rtti, bool autoDelete )
  */
 const QwtPolarItemList& QwtPolarItemDict::itemList() const
 {
-    return m_data->itemList;
+    QWT_DC(d);
+    return d->itemList;
 }

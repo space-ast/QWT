@@ -32,7 +32,10 @@
 
 class QwtPlotGraphicItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotGraphicItem)
   public:
+    PrivateData(QwtPlotGraphicItem* p) : q_ptr(p) {}
+
     QRectF boundingRect;
     QwtGraphic graphic;
 };
@@ -46,7 +49,7 @@ class QwtPlotGraphicItem::PrivateData
  *
  */
 QwtPlotGraphicItem::QwtPlotGraphicItem( const QString& title )
-    : QwtPlotItem( QwtText( title ) )
+    : QwtPlotItem( QwtText( title ) ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -60,7 +63,7 @@ QwtPlotGraphicItem::QwtPlotGraphicItem( const QString& title )
  *
  */
 QwtPlotGraphicItem::QwtPlotGraphicItem( const QwtText& title )
-    : QwtPlotItem( title )
+    : QwtPlotItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -71,13 +74,12 @@ QwtPlotGraphicItem::QwtPlotGraphicItem( const QwtText& title )
  */
 QwtPlotGraphicItem::~QwtPlotGraphicItem()
 {
-    delete m_data;
 }
 
 void QwtPlotGraphicItem::init()
 {
-    m_data = new PrivateData();
-    m_data->boundingRect = QwtPlotItem::boundingRect();
+    QWT_D(d);
+    d->boundingRect = QwtPlotItem::boundingRect();
 
     setItemAttribute( QwtPlotItem::AutoScale, true );
     setItemAttribute( QwtPlotItem::Legend, false );
@@ -104,8 +106,9 @@ int QwtPlotGraphicItem::rtti() const
 void QwtPlotGraphicItem::setGraphic(
     const QRectF& rect, const QwtGraphic& graphic )
 {
-    m_data->boundingRect = rect;
-    m_data->graphic = graphic;
+    QWT_D(d);
+    d->boundingRect = rect;
+    d->graphic = graphic;
 
     legendChanged();
     itemChanged();
@@ -119,7 +122,8 @@ void QwtPlotGraphicItem::setGraphic(
  */
 QwtGraphic QwtPlotGraphicItem::graphic() const
 {
-    return m_data->graphic;
+    QWT_DC(d);
+    return d->graphic;
 }
 
 /**
@@ -129,7 +133,8 @@ QwtGraphic QwtPlotGraphicItem::graphic() const
  */
 QRectF QwtPlotGraphicItem::boundingRect() const
 {
-    return m_data->boundingRect;
+    QWT_DC(d);
+    return d->boundingRect;
 }
 
 /**
@@ -144,7 +149,8 @@ void QwtPlotGraphicItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
-    if ( m_data->graphic.isEmpty() )
+    QWT_DC(d);
+    if ( d->graphic.isEmpty() )
         return;
 
     QRectF r = QwtScaleMap::transform( xMap, yMap, boundingRect() );
@@ -160,5 +166,5 @@ void QwtPlotGraphicItem::draw( QPainter* painter,
         r.setBottom ( qRound( r.bottom() ) );
     }
 
-    m_data->graphic.render( painter, r );
+    d->graphic.render( painter, r );
 }

@@ -53,9 +53,11 @@ static inline bool qwtIsCombinable( const QwtInterval& d1,
 
 class QwtPlotHistogram::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotHistogram)
   public:
-    PrivateData()
-        : baseline( 0.0 )
+    PrivateData(QwtPlotHistogram* p)
+        : q_ptr(p)
+        , baseline( 0.0 )
         , style( Columns )
         , symbol( nullptr )
     {
@@ -80,7 +82,7 @@ class QwtPlotHistogram::PrivateData
  *
  */
 QwtPlotHistogram::QwtPlotHistogram( const QwtText& title )
-    : QwtPlotSeriesItem( title )
+    : QwtPlotSeriesItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -91,7 +93,7 @@ QwtPlotHistogram::QwtPlotHistogram( const QwtText& title )
  *
  */
 QwtPlotHistogram::QwtPlotHistogram( const QString& title )
-    : QwtPlotSeriesItem( title )
+    : QwtPlotSeriesItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -102,7 +104,6 @@ QwtPlotHistogram::QwtPlotHistogram( const QString& title )
  */
 QwtPlotHistogram::~QwtPlotHistogram()
 {
-    delete m_data;
 }
 
 /**
@@ -111,7 +112,6 @@ QwtPlotHistogram::~QwtPlotHistogram()
  */
 void QwtPlotHistogram::init()
 {
-    m_data = new PrivateData();
     setData( new QwtIntervalSeriesData() );
 
     setItemAttribute( QwtPlotItem::AutoScale, true );
@@ -128,9 +128,10 @@ void QwtPlotHistogram::init()
  */
 void QwtPlotHistogram::setStyle( HistogramStyle style )
 {
-    if ( style != m_data->style )
+    QWT_D(d);
+    if ( style != d->style )
     {
-        m_data->style = style;
+        d->style = style;
 
         legendChanged();
         itemChanged();
@@ -145,7 +146,8 @@ void QwtPlotHistogram::setStyle( HistogramStyle style )
  */
 QwtPlotHistogram::HistogramStyle QwtPlotHistogram::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
@@ -172,9 +174,10 @@ void QwtPlotHistogram::setPen( const QColor& color, qreal width, Qt::PenStyle st
  */
 void QwtPlotHistogram::setPen( const QPen& pen )
 {
-    if ( pen != m_data->pen )
+    QWT_D(d);
+    if ( pen != d->pen )
     {
-        m_data->pen = pen;
+        d->pen = pen;
 
         legendChanged();
         itemChanged();
@@ -189,7 +192,8 @@ void QwtPlotHistogram::setPen( const QPen& pen )
  */
 const QPen& QwtPlotHistogram::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -200,9 +204,10 @@ const QPen& QwtPlotHistogram::pen() const
  */
 void QwtPlotHistogram::setBrush( const QBrush& brush )
 {
-    if ( brush != m_data->brush )
+    QWT_D(d);
+    if ( brush != d->brush )
     {
-        m_data->brush = brush;
+        d->brush = brush;
 
         legendChanged();
         itemChanged();
@@ -217,7 +222,8 @@ void QwtPlotHistogram::setBrush( const QBrush& brush )
  */
 const QBrush& QwtPlotHistogram::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -234,10 +240,11 @@ const QBrush& QwtPlotHistogram::brush() const
  */
 void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
 {
-    if ( symbol != m_data->symbol )
+    QWT_D(d);
+    if ( symbol != d->symbol )
     {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+        delete d->symbol;
+        d->symbol = symbol;
 
         legendChanged();
         itemChanged();
@@ -252,7 +259,8 @@ void QwtPlotHistogram::setSymbol( const QwtColumnSymbol* symbol )
  */
 const QwtColumnSymbol* QwtPlotHistogram::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
@@ -266,9 +274,10 @@ const QwtColumnSymbol* QwtPlotHistogram::symbol() const
  */
 void QwtPlotHistogram::setBaseline( double value )
 {
-    if ( m_data->baseline != value )
+    QWT_D(d);
+    if ( d->baseline != value )
     {
-        m_data->baseline = value;
+        d->baseline = value;
         itemChanged();
     }
 }
@@ -281,7 +290,8 @@ void QwtPlotHistogram::setBaseline( double value )
  */
 double QwtPlotHistogram::baseline() const
 {
-    return m_data->baseline;
+    QWT_DC(d);
+    return d->baseline;
 }
 
 /**
@@ -291,6 +301,7 @@ double QwtPlotHistogram::baseline() const
  */
 QRectF QwtPlotHistogram::boundingRect() const
 {
+    QWT_DC(d);
     QRectF rect = data()->boundingRect();
     if ( !rect.isValid() )
         return rect;
@@ -300,17 +311,17 @@ QRectF QwtPlotHistogram::boundingRect() const
         rect = QRectF( rect.y(), rect.x(),
             rect.height(), rect.width() );
 
-        if ( rect.left() > m_data->baseline )
-            rect.setLeft( m_data->baseline );
-        else if ( rect.right() < m_data->baseline )
-            rect.setRight( m_data->baseline );
+        if ( rect.left() > d->baseline )
+            rect.setLeft( d->baseline );
+        else if ( rect.right() < d->baseline )
+            rect.setRight( d->baseline );
     }
     else
     {
-        if ( rect.bottom() < m_data->baseline )
-            rect.setBottom( m_data->baseline );
-        else if ( rect.top() > m_data->baseline )
-            rect.setTop( m_data->baseline );
+        if ( rect.bottom() < d->baseline )
+            rect.setBottom( d->baseline );
+        else if ( rect.top() > d->baseline )
+            rect.setTop( d->baseline );
     }
 
     return rect;
@@ -371,10 +382,11 @@ void QwtPlotHistogram::drawSeries( QPainter* painter,
     if ( !painter || dataSize() <= 0 )
         return;
 
+    QWT_DC(d);
     if ( to < 0 )
         to = dataSize() - 1;
 
-    switch ( m_data->style )
+    switch ( d->style )
     {
         case Outline:
             drawOutline( painter, xMap, yMap, from, to );
@@ -493,8 +505,9 @@ void QwtPlotHistogram::drawColumns( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     int from, int to ) const
 {
-    painter->setPen( m_data->pen );
-    painter->setBrush( m_data->brush );
+    QWT_DC(d);
+    painter->setPen( d->pen );
+    painter->setBrush( d->brush );
 
     const QwtSeriesData< QwtIntervalSample >* series = data();
 
@@ -525,9 +538,10 @@ void QwtPlotHistogram::drawLines( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     int from, int to ) const
 {
+    QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
-    painter->setPen( m_data->pen );
+    painter->setPen( d->pen );
     painter->setBrush( Qt::NoBrush );
 
     const QwtSeriesData< QwtIntervalSample >* series = data();
@@ -583,6 +597,7 @@ void QwtPlotHistogram::drawLines( QPainter* painter,
 void QwtPlotHistogram::flushPolygon( QPainter* painter,
     double baseLine, QPolygonF& polygon ) const
 {
+    QWT_DC(d);
     if ( polygon.size() == 0 )
         return;
 
@@ -591,10 +606,10 @@ void QwtPlotHistogram::flushPolygon( QPainter* painter,
     else
         polygon += QPointF( polygon.last().x(), baseLine );
 
-    if ( m_data->brush.style() != Qt::NoBrush )
+    if ( d->brush.style() != Qt::NoBrush )
     {
         painter->setPen( Qt::NoPen );
-        painter->setBrush( m_data->brush );
+        painter->setBrush( d->brush );
 
         if ( orientation() == Qt::Horizontal )
         {
@@ -612,10 +627,10 @@ void QwtPlotHistogram::flushPolygon( QPainter* painter,
         polygon.pop_back();
         polygon.pop_back();
     }
-    if ( m_data->pen.style() != Qt::NoPen )
+    if ( d->pen.style() != Qt::NoPen )
     {
         painter->setBrush( Qt::NoBrush );
-        painter->setPen( m_data->pen );
+        painter->setPen( d->pen );
         QwtPainter::drawPolyline( painter, polygon );
     }
     polygon.clear();
@@ -684,12 +699,13 @@ QwtColumnRect QwtPlotHistogram::columnRect( const QwtIntervalSample& sample,
 void QwtPlotHistogram::drawColumn( QPainter* painter,
     const QwtColumnRect& rect, const QwtIntervalSample& sample ) const
 {
+    QWT_DC(d);
     Q_UNUSED( sample );
 
-    if ( m_data->symbol &&
-        ( m_data->symbol->style() != QwtColumnSymbol::NoStyle ) )
+    if ( d->symbol &&
+        ( d->symbol->style() != QwtColumnSymbol::NoStyle ) )
     {
-        m_data->symbol->draw( painter, rect );
+        d->symbol->draw( painter, rect );
     }
     else
     {
@@ -718,6 +734,7 @@ void QwtPlotHistogram::drawColumn( QPainter* painter,
  */
 QwtGraphic QwtPlotHistogram::legendIcon( int index, const QSizeF& size ) const
 {
+    QWT_DC(d);
     Q_UNUSED( index );
-    return defaultIcon( m_data->brush, size );
+    return defaultIcon( d->brush, size );
 }

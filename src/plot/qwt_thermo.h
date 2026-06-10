@@ -222,8 +222,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     /// Layout the thermo
     void layoutThermo( bool );
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtThermo)
 };
 
 #endif

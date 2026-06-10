@@ -76,8 +76,7 @@ class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
     virtual void drawLabel( QPainter*, double value ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtRoundScaleDraw)
 };
 
 /// Move the center of the scale draw, leaving the radius unchanged

@@ -140,8 +140,7 @@ public:
     class ColorStops;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtLinearColorMap)
 };
 
 /**
@@ -164,8 +163,7 @@ public:
     virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtAlphaColorMap)
 };
 
 /**
@@ -196,8 +194,7 @@ public:
     virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtHueColorMap)
 };
 
 /**
@@ -226,8 +223,7 @@ public:
     virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSaturationValueColorMap)
 };
 
 // Map a value into a color.

@@ -15,13 +15,18 @@
 
 class QwtPolarPicker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarPicker)
+public:
+    PrivateData(QwtPolarPicker* p) : q_ptr(p)
+    {
+    }
 };
 
 /**
  * @brief Create a polar plot picker
  * @param canvas Plot canvas to observe, also the parent object
  */
-QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), m_data(nullptr)
+QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -34,7 +39,7 @@ QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), m_da
  *     QwtPicker::setTrackerMode, QwtPolarPlot::autoReplot(), QwtPolarPlot::replot()
  */
 QwtPolarPicker::QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPolarCanvas* canvas)
-    : QwtPicker(rubberBand, trackerMode, canvas), m_data(nullptr)
+    : QwtPicker(rubberBand, trackerMode, canvas), QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -44,6 +49,7 @@ QwtPolarPicker::QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, Q
 QwtPolarPicker::~QwtPolarPicker()
 {
 }
+
 
 /**
  * @brief Get the observed plot canvas

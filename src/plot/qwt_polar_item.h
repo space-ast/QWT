@@ -186,8 +186,7 @@ class QWT_EXPORT QwtPolarItem
   private:
     Q_DISABLE_COPY( QwtPolarItem )
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::ItemAttributes )

@@ -113,8 +113,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     /// Return the default indent
     int defaultIndent() const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtTextLabel)
 };
 
 #endif

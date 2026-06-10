@@ -974,6 +974,12 @@ static void qwtSetupEndEquations(
 
 class QwtSplineCubic::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtSplineCubic)
+  public:
+    PrivateData( QwtSplineCubic* p )
+        : q_ptr( p )
+    {
+    }
 };
 
 /**
@@ -982,7 +988,7 @@ class QwtSplineCubic::PrivateData
  * The default setting is a non-closing natural spline with no parametrization.
  */
 QwtSplineCubic::QwtSplineCubic()
-    : m_data( nullptr )
+    : QWT_PIMPL_CONSTRUCT
 {
     // a natural spline
 

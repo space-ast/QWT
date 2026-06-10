@@ -63,8 +63,10 @@ static inline bool qwtIsVSampleInside( const QwtIntervalSample& sample,
 
 class QwtPlotIntervalCurve::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotIntervalCurve)
   public:
-    PrivateData():
+    PrivateData(QwtPlotIntervalCurve* p):
+        q_ptr(p),
         style( QwtPlotIntervalCurve::Tube ),
         symbol( nullptr ),
         pen( Qt::black ),
@@ -96,7 +98,7 @@ class QwtPlotIntervalCurve::PrivateData
  * 
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QwtText& title )
-    : QwtPlotSeriesItem( title )
+    : QwtPlotSeriesItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -104,21 +106,20 @@ QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QwtText& title )
 /**
  * @brief Constructor
  * @param[in] title Title of the curve
- * 
+ *
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QString& title )
-    : QwtPlotSeriesItem( QwtText( title ) )
+    : QwtPlotSeriesItem( QwtText( title ) ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
  * @brief Destructor
- * 
+ *
  */
 QwtPlotIntervalCurve::~QwtPlotIntervalCurve()
 {
-    delete m_data;
 }
 
 //! Initialize internal members
@@ -126,8 +127,6 @@ void QwtPlotIntervalCurve::init()
 {
     setItemAttribute( QwtPlotItem::Legend, true );
     setItemAttribute( QwtPlotItem::AutoScale, true );
-
-    m_data = new PrivateData;
     setData( new QwtIntervalSeriesData() );
 
     setZ( 19.0 );
@@ -153,10 +152,11 @@ int QwtPlotIntervalCurve::rtti() const
 void QwtPlotIntervalCurve::setPaintAttribute(
     PaintAttribute attribute, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 }
 
 /**
@@ -168,7 +168,8 @@ void QwtPlotIntervalCurve::setPaintAttribute(
 bool QwtPlotIntervalCurve::testPaintAttribute(
     PaintAttribute attribute ) const
 {
-    return ( m_data->paintAttributes & attribute );
+    QWT_DC(d);
+    return ( d->paintAttributes & attribute );
 }
 
 /**
@@ -205,9 +206,10 @@ void QwtPlotIntervalCurve::setSamples(
  */
 void QwtPlotIntervalCurve::setStyle( CurveStyle style )
 {
-    if ( style != m_data->style )
+    QWT_D(d);
+    if ( style != d->style )
     {
-        m_data->style = style;
+        d->style = style;
 
         legendChanged();
         itemChanged();
@@ -222,7 +224,8 @@ void QwtPlotIntervalCurve::setStyle( CurveStyle style )
  */
 QwtPlotIntervalCurve::CurveStyle QwtPlotIntervalCurve::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
@@ -233,10 +236,11 @@ QwtPlotIntervalCurve::CurveStyle QwtPlotIntervalCurve::style() const
  */
 void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 {
-    if ( symbol != m_data->symbol )
+    QWT_D(d);
+    if ( symbol != d->symbol )
     {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+        delete d->symbol;
+        d->symbol = symbol;
 
         legendChanged();
         itemChanged();
@@ -251,7 +255,8 @@ void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
  */
 const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
@@ -278,9 +283,10 @@ void QwtPlotIntervalCurve::setPen( const QColor& color, qreal width, Qt::PenStyl
  */
 void QwtPlotIntervalCurve::setPen( const QPen& pen )
 {
-    if ( pen != m_data->pen )
+    QWT_D(d);
+    if ( pen != d->pen )
     {
-        m_data->pen = pen;
+        d->pen = pen;
 
         legendChanged();
         itemChanged();
@@ -295,7 +301,8 @@ void QwtPlotIntervalCurve::setPen( const QPen& pen )
  */
 const QPen& QwtPlotIntervalCurve::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -307,9 +314,10 @@ const QPen& QwtPlotIntervalCurve::pen() const
  */
 void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
 {
-    if ( brush != m_data->brush )
+    QWT_D(d);
+    if ( brush != d->brush )
     {
-        m_data->brush = brush;
+        d->brush = brush;
 
         legendChanged();
         itemChanged();
@@ -324,7 +332,8 @@ void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
  */
 const QBrush& QwtPlotIntervalCurve::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -365,7 +374,8 @@ void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
     if ( from > to )
         return;
 
-    switch ( m_data->style )
+    QWT_DC(d);
+    switch ( d->style )
     {
         case Tube:
             drawTube( painter, xMap, yMap, canvasRect, from, to );
@@ -376,10 +386,10 @@ void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
             break;
     }
 
-    if ( m_data->symbol &&
-        ( m_data->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
+    if ( d->symbol &&
+        ( d->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
     {
-        drawSymbols( painter, *m_data->symbol,
+        drawSymbols( painter, *d->symbol,
             xMap, yMap, canvasRect, from, to );
     }
 }
@@ -405,6 +415,7 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to ) const
 {
+    QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
     painter->save();
@@ -455,12 +466,12 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
         }
     }
 
-    if ( m_data->brush.style() != Qt::NoBrush )
+    if ( d->brush.style() != Qt::NoBrush )
     {
         painter->setPen( QPen( Qt::NoPen ) );
-        painter->setBrush( m_data->brush );
+        painter->setBrush( d->brush );
 
-        if ( m_data->paintAttributes & ClipPolygons )
+        if ( d->paintAttributes & ClipPolygons )
         {
             const qreal m = 1.0;
             const QPolygonF p = QwtClipper::clippedPolygonF(
@@ -474,12 +485,12 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
         }
     }
 
-    if ( m_data->pen.style() != Qt::NoPen )
+    if ( d->pen.style() != Qt::NoPen )
     {
-        painter->setPen( m_data->pen );
+        painter->setPen( d->pen );
         painter->setBrush( Qt::NoBrush );
 
-        if ( m_data->paintAttributes & ClipPolygons )
+        if ( d->paintAttributes & ClipPolygons )
         {
             qreal pw = QwtPainter::effectivePenWidth( painter->pen() );
             const QRectF clipRect = canvasRect.adjusted( -pw, -pw, pw, pw );
@@ -522,6 +533,7 @@ void QwtPlotIntervalCurve::drawSymbols(
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to ) const
 {
+    QWT_DC(d);
     painter->save();
 
     QPen pen = symbol.pen();
@@ -537,7 +549,7 @@ void QwtPlotIntervalCurve::drawSymbols(
     const double yMin = tr.top();
     const double yMax = tr.bottom();
 
-    const bool doClip = m_data->paintAttributes & ClipSymbol;
+    const bool doClip = d->paintAttributes & ClipSymbol;
 
     for ( int i = from; i <= to; i++ )
     {
@@ -585,6 +597,7 @@ void QwtPlotIntervalCurve::drawSymbols(
 QwtGraphic QwtPlotIntervalCurve::legendIcon(
     int index, const QSizeF& size ) const
 {
+    QWT_DC(d);
     Q_UNUSED( index );
 
     if ( size.isEmpty() )
@@ -598,34 +611,34 @@ QwtGraphic QwtPlotIntervalCurve::legendIcon(
     painter.setRenderHint( QPainter::Antialiasing,
         testRenderHint( QwtPlotItem::RenderAntialiased ) );
 
-    if ( m_data->style == Tube )
+    if ( d->style == Tube )
     {
         QRectF r( 0, 0, size.width(), size.height() );
-        painter.fillRect( r, m_data->brush );
+        painter.fillRect( r, d->brush );
     }
 
-    if ( m_data->symbol &&
-        ( m_data->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
+    if ( d->symbol &&
+        ( d->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
     {
-        QPen pen = m_data->symbol->pen();
+        QPen pen = d->symbol->pen();
         pen.setWidthF( pen.widthF() );
         pen.setCapStyle( Qt::FlatCap );
 
         painter.setPen( pen );
-        painter.setBrush( m_data->symbol->brush() );
+        painter.setBrush( d->symbol->brush() );
 
         if ( orientation() == Qt::Vertical )
         {
             const double x = 0.5 * size.width();
 
-            m_data->symbol->draw( &painter, orientation(),
+            d->symbol->draw( &painter, orientation(),
                 QPointF( x, 0 ), QPointF( x, size.height() - 1.0 ) );
         }
         else
         {
             const double y = 0.5 * size.height();
 
-            m_data->symbol->draw( &painter, orientation(),
+            d->symbol->draw( &painter, orientation(),
                 QPointF( 0.0, y ), QPointF( size.width() - 1.0, y ) );
         }
     }

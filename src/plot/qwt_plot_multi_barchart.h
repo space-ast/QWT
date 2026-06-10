@@ -164,8 +164,7 @@ class QWT_EXPORT QwtPlotMultiBarChart
     /// Initialize the multi-bar chart
     void init();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotMultiBarChart)
 };
 
 #endif

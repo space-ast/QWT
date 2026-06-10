@@ -34,9 +34,11 @@
 
 class QwtPlotZoneItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotZoneItem)
   public:
-    PrivateData()
-        : orientation( Qt::Vertical )
+    PrivateData(QwtPlotZoneItem* p)
+        : q_ptr(p)
+        , orientation( Qt::Vertical )
         , pen( Qt::NoPen )
     {
         QColor c( Qt::darkGray );
@@ -61,10 +63,8 @@ class QwtPlotZoneItem::PrivateData
  *
  */
 QwtPlotZoneItem::QwtPlotZoneItem()
-    : QwtPlotItem( QwtText( "Zone" ) )
+    : QwtPlotItem( QwtText( "Zone" ) ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemAttribute( QwtPlotItem::AutoScale, false );
     setItemAttribute( QwtPlotItem::Legend, false );
 
@@ -77,7 +77,6 @@ QwtPlotZoneItem::QwtPlotZoneItem()
  */
 QwtPlotZoneItem::~QwtPlotZoneItem()
 {
-    delete m_data;
 }
 
 /**
@@ -114,9 +113,10 @@ void QwtPlotZoneItem::setPen( const QColor& color, qreal width, Qt::PenStyle sty
  */
 void QwtPlotZoneItem::setPen( const QPen& pen )
 {
-    if ( m_data->pen != pen )
+    QWT_D(d);
+    if ( d->pen != pen )
     {
-        m_data->pen = pen;
+        d->pen = pen;
         itemChanged();
     }
 }
@@ -129,7 +129,8 @@ void QwtPlotZoneItem::setPen( const QPen& pen )
  */
 const QPen& QwtPlotZoneItem::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -141,9 +142,10 @@ const QPen& QwtPlotZoneItem::pen() const
  */
 void QwtPlotZoneItem::setBrush( const QBrush& brush )
 {
-    if ( m_data->brush != brush )
+    QWT_D(d);
+    if ( d->brush != brush )
     {
-        m_data->brush = brush;
+        d->brush = brush;
         itemChanged();
     }
 }
@@ -156,7 +158,8 @@ void QwtPlotZoneItem::setBrush( const QBrush& brush )
  */
 const QBrush& QwtPlotZoneItem::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -169,9 +172,10 @@ const QBrush& QwtPlotZoneItem::brush() const
  */
 void QwtPlotZoneItem::setOrientation( Qt::Orientation orientation )
 {
-    if ( m_data->orientation != orientation )
+    QWT_D(d);
+    if ( d->orientation != orientation )
     {
-        m_data->orientation = orientation;
+        d->orientation = orientation;
         itemChanged();
     }
 }
@@ -184,7 +188,8 @@ void QwtPlotZoneItem::setOrientation( Qt::Orientation orientation )
  */
 Qt::Orientation QwtPlotZoneItem::orientation() const
 {
-    return m_data->orientation;
+    QWT_DC(d);
+    return d->orientation;
 }
 
 /**
@@ -211,9 +216,10 @@ void QwtPlotZoneItem::setInterval( double min, double max )
  */
 void QwtPlotZoneItem::setInterval( const QwtInterval& interval )
 {
-    if ( m_data->interval != interval )
+    QWT_D(d);
+    if ( d->interval != interval )
     {
-        m_data->interval = interval;
+        d->interval = interval;
         itemChanged();
     }
 }
@@ -226,7 +232,8 @@ void QwtPlotZoneItem::setInterval( const QwtInterval& interval )
  */
 QwtInterval QwtPlotZoneItem::interval() const
 {
-    return m_data->interval;
+    QWT_DC(d);
+    return d->interval;
 }
 
 /**
@@ -241,18 +248,19 @@ void QwtPlotZoneItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
-    if ( !m_data->interval.isValid() )
+    QWT_DC(d);
+    if ( !d->interval.isValid() )
         return;
 
-    QPen pen = m_data->pen;
+    QPen pen = d->pen;
     pen.setCapStyle( Qt::FlatCap );
 
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
-    if ( m_data->orientation == Qt::Horizontal )
+    if ( d->orientation == Qt::Horizontal )
     {
-        double y1 = yMap.transform( m_data->interval.minValue() );
-        double y2 = yMap.transform( m_data->interval.maxValue() );
+        double y1 = yMap.transform( d->interval.minValue() );
+        double y2 = yMap.transform( d->interval.maxValue() );
 
         if ( doAlign )
         {
@@ -263,14 +271,14 @@ void QwtPlotZoneItem::draw( QPainter* painter,
         QRectF r( canvasRect.left(), y1, canvasRect.width(), y2 - y1 );
         r = r.normalized();
 
-        if ( ( m_data->brush.style() != Qt::NoBrush ) && ( y1 != y2 ) )
+        if ( ( d->brush.style() != Qt::NoBrush ) && ( y1 != y2 ) )
         {
-            QwtPainter::fillRect( painter, r, m_data->brush );
+            QwtPainter::fillRect( painter, r, d->brush );
         }
 
-        if ( m_data->pen.style() != Qt::NoPen )
+        if ( d->pen.style() != Qt::NoPen )
         {
-            painter->setPen( m_data->pen );
+            painter->setPen( d->pen );
 
             QwtPainter::drawLine( painter, r.left(), r.top(), r.right(), r.top() );
             QwtPainter::drawLine( painter, r.left(), r.bottom(), r.right(), r.bottom() );
@@ -278,8 +286,8 @@ void QwtPlotZoneItem::draw( QPainter* painter,
     }
     else
     {
-        double x1 = xMap.transform( m_data->interval.minValue() );
-        double x2 = xMap.transform( m_data->interval.maxValue() );
+        double x1 = xMap.transform( d->interval.minValue() );
+        double x2 = xMap.transform( d->interval.maxValue() );
 
         if ( doAlign )
         {
@@ -290,14 +298,14 @@ void QwtPlotZoneItem::draw( QPainter* painter,
         QRectF r( x1, canvasRect.top(), x2 - x1, canvasRect.height() );
         r = r.normalized();
 
-        if ( ( m_data->brush.style() != Qt::NoBrush ) && ( x1 != x2 ) )
+        if ( ( d->brush.style() != Qt::NoBrush ) && ( x1 != x2 ) )
         {
-            QwtPainter::fillRect( painter, r, m_data->brush );
+            QwtPainter::fillRect( painter, r, d->brush );
         }
 
-        if ( m_data->pen.style() != Qt::NoPen )
+        if ( d->pen.style() != Qt::NoPen )
         {
-            painter->setPen( m_data->pen );
+            painter->setPen( d->pen );
 
             QwtPainter::drawLine( painter, r.left(), r.top(), r.left(), r.bottom() );
             QwtPainter::drawLine( painter, r.right(), r.top(), r.right(), r.bottom() );
@@ -314,13 +322,14 @@ void QwtPlotZoneItem::draw( QPainter* painter,
  */
 QRectF QwtPlotZoneItem::boundingRect() const
 {
+    QWT_DC(d);
     QRectF br = QwtPlotItem::boundingRect();
 
-    const QwtInterval& intv = m_data->interval;
+    const QwtInterval& intv = d->interval;
 
     if ( intv.isValid() )
     {
-        if ( m_data->orientation == Qt::Horizontal )
+        if ( d->orientation == Qt::Horizontal )
         {
             br.setTop( intv.minValue() );
             br.setBottom( intv.maxValue() );

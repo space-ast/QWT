@@ -104,8 +104,7 @@ class QWT_EXPORT QwtPlotAbstractCanvas
   private:
     Q_DISABLE_COPY(QwtPlotAbstractCanvas)
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotAbstractCanvas)
 };
 
 /**
@@ -191,8 +190,7 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
   private:
     virtual void clearBackingStore() = 0;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotAbstractGLCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotAbstractGLCanvas::PaintAttributes )

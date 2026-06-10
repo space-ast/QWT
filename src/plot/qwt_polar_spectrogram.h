@@ -92,8 +92,7 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
     void renderTileInfo( const QwtScaleMap&, const QwtScaleMap&,
         const QPointF& pole, TileInfo* ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarSpectrogram)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarSpectrogram::PaintAttributes )

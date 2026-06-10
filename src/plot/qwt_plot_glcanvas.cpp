@@ -47,8 +47,9 @@ public:
 
 class QwtPlotGLCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotGLCanvas)
 public:
-    PrivateData() : fboDirty(true), fbo(nullptr)
+    PrivateData(QwtPlotGLCanvas* p) : q_ptr(p), fboDirty(true), fbo(nullptr)
     {
     }
 
@@ -67,7 +68,7 @@ public:
  * @sa QwtPlot::setCanvas()
  */
 QwtPlotGLCanvas::QwtPlotGLCanvas(QwtPlot* plot)
-    : QGLWidget(QwtPlotGLCanvasFormat(), plot), QwtPlotAbstractGLCanvas(this)
+    : QGLWidget(QwtPlotGLCanvasFormat(), plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -78,7 +79,7 @@ QwtPlotGLCanvas::QwtPlotGLCanvas(QwtPlot* plot)
  * @sa QwtPlot::setCanvas()
  */
 QwtPlotGLCanvas::QwtPlotGLCanvas(const QGLFormat& format, QwtPlot* plot)
-    : QGLWidget(format, plot), QwtPlotAbstractGLCanvas(this)
+    : QGLWidget(format, plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -88,13 +89,10 @@ QwtPlotGLCanvas::QwtPlotGLCanvas(const QGLFormat& format, QwtPlot* plot)
  */
 QwtPlotGLCanvas::~QwtPlotGLCanvas()
 {
-    delete m_data;
 }
 
 void QwtPlotGLCanvas::init()
 {
-    m_data = new PrivateData;
-
 #if 1
     setAttribute(Qt::WA_OpaquePaintEvent, true);
 #endif
@@ -147,13 +145,15 @@ void QwtPlotGLCanvas::replot()
  */
 void QwtPlotGLCanvas::invalidateBackingStore()
 {
-    m_data->fboDirty = true;
+    QWT_D(d);
+    d->fboDirty = true;
 }
 
 void QwtPlotGLCanvas::clearBackingStore()
 {
-    delete m_data->fbo;
-    m_data->fbo = nullptr;
+    QWT_D(d);
+    delete d->fbo;
+    d->fbo = nullptr;
 }
 
 /**
@@ -176,6 +176,7 @@ void QwtPlotGLCanvas::initializeGL()
 //! Paint the plot
 void QwtPlotGLCanvas::paintGL()
 {
+    QWT_D(d);
     const bool hasFocusIndicator = hasFocus() && focusIndicator() == CanvasFocusIndicator;
 
     QPainter painter;
@@ -187,29 +188,29 @@ void QwtPlotGLCanvas::paintGL()
         if (hasFocusIndicator)
             painter.begin(this);
 
-        if (m_data->fbo) {
-            if (m_data->fbo->size() != rect.size()) {
-                delete m_data->fbo;
-                m_data->fbo = nullptr;
+        if (d->fbo) {
+            if (d->fbo->size() != rect.size()) {
+                delete d->fbo;
+                d->fbo = nullptr;
             }
         }
 
-        if (m_data->fbo == nullptr) {
+        if (d->fbo == nullptr) {
             QGLFramebufferObjectFormat format;
             format.setSamples(4);
             format.setAttachment(QGLFramebufferObject::CombinedDepthStencil);
 
-            m_data->fbo      = new QGLFramebufferObject(rect.size(), format);
-            m_data->fboDirty = true;
+            d->fbo      = new QGLFramebufferObject(rect.size(), format);
+            d->fboDirty = true;
         }
 
-        if (m_data->fboDirty) {
-            QPainter fboPainter(m_data->fbo);
+        if (d->fboDirty) {
+            QPainter fboPainter(d->fbo);
             fboPainter.scale(pixelRatio, pixelRatio);
             draw(&fboPainter);
             fboPainter.end();
 
-            m_data->fboDirty = false;
+            d->fboDirty = false;
         }
 
         /*
@@ -219,7 +220,7 @@ void QwtPlotGLCanvas::paintGL()
             usually makes more sense then.
          */
 
-        QGLFramebufferObject::blitFramebuffer(nullptr, rect.translated(0, height() - rect.height()), m_data->fbo, rect);
+        QGLFramebufferObject::blitFramebuffer(nullptr, rect.translated(0, height() - rect.height()), d->fbo, rect);
     } else {
         painter.begin(this);
         draw(&painter);

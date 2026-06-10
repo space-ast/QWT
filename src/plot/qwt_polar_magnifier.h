@@ -61,8 +61,7 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
     virtual void widgetKeyPressEvent( QKeyEvent* ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarMagnifier)
 };
 
 #endif

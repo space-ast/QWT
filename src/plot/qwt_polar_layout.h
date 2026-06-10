@@ -78,8 +78,7 @@ class QWT_EXPORT QwtPolarLayout
     QRectF layoutLegend( Options options, QRectF& ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )

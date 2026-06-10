@@ -161,8 +161,7 @@ protected:
     void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotSpectrogram)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectrogram::DisplayModes)

@@ -179,8 +179,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     /// Initialize slider
     void initSlider( Qt::Orientation );
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSlider)
 };
 
 #endif

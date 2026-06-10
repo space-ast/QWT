@@ -176,8 +176,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 
   private:
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotMarker)
 };
 
 #endif

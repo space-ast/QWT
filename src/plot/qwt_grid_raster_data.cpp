@@ -10,11 +10,13 @@
 class QwtGridRasterData::PrivateData
 {
 public:
+    QWT_DECLARE_PUBLIC(QwtGridRasterData)
+
     using GridData =
         QwtGridData< double, QVector< double >, QVector< double >, QVector< double >, QVector< QVector< double > > >;
 
 public:
-    PrivateData() : resampleMode(QwtGridRasterData::NearestNeighbour)
+    PrivateData(QwtGridRasterData* p) : q_ptr(p), resampleMode(QwtGridRasterData::NearestNeighbour)
     {
     }
 
@@ -61,7 +63,7 @@ QwtGridRasterData::PrivateData::GridData::ResampleMode QwtGridRasterData::Privat
 /**
  * @brief Constructor.
  */
-QwtGridRasterData::QwtGridRasterData() : m_data(new QwtGridRasterData::PrivateData())
+QwtGridRasterData::QwtGridRasterData() : QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -70,7 +72,6 @@ QwtGridRasterData::QwtGridRasterData() : m_data(new QwtGridRasterData::PrivateDa
  */
 QwtGridRasterData::~QwtGridRasterData()
 {
-    delete m_data;
 }
 
 /**
@@ -81,7 +82,8 @@ QwtGridRasterData::~QwtGridRasterData()
  */
 void QwtGridRasterData::setResampleMode(QwtGridRasterData::ResampleMode mode)
 {
-    m_data->gridData.setResampleMode(PrivateData::resampleModeCast(mode));
+    QWT_D(d);
+    d->gridData.setResampleMode(PrivateData::resampleModeCast(mode));
 }
 
 /**
@@ -91,7 +93,8 @@ void QwtGridRasterData::setResampleMode(QwtGridRasterData::ResampleMode mode)
  */
 QwtGridRasterData::ResampleMode QwtGridRasterData::resampleMode() const
 {
-    return PrivateData::resampleModeCast(m_data->gridData.resampleMode());
+    QWT_DC(d);
+    return PrivateData::resampleModeCast(d->gridData.resampleMode());
 }
 
 /**
@@ -101,13 +104,14 @@ QwtGridRasterData::ResampleMode QwtGridRasterData::resampleMode() const
  */
 QwtInterval QwtGridRasterData::interval(Qt::Axis axis) const
 {
+    QWT_DC(d);
     switch (axis) {
     case Qt::XAxis:
-        return QwtInterval(m_data->gridData.xMin(), m_data->gridData.xMax());
+        return QwtInterval(d->gridData.xMin(), d->gridData.xMax());
     case Qt::YAxis:
-        return QwtInterval(m_data->gridData.yMin(), m_data->gridData.yMax());
+        return QwtInterval(d->gridData.yMin(), d->gridData.yMax());
     case Qt::ZAxis:
-        return QwtInterval(m_data->gridData.dataMin(), m_data->gridData.dataMax());
+        return QwtInterval(d->gridData.dataMin(), d->gridData.dataMax());
     default:
         break;
     }
@@ -125,9 +129,10 @@ QwtInterval QwtGridRasterData::interval(Qt::Axis axis) const
  */
 void QwtGridRasterData::setValue(const QVector< double >& x, const QVector< double >& y, const QVector< QVector< double > >& v)
 {
-    m_data->gridData.setValue(x, y, v);
-    const QVector< double >& sortedX = m_data->gridData.xAxis();
-    const QVector< double >& sortedY = m_data->gridData.yAxis();
+    QWT_D(d);
+    d->gridData.setValue(x, y, v);
+    const QVector< double >& sortedX = d->gridData.xAxis();
+    const QVector< double >& sortedY = d->gridData.yAxis();
     // Calculate dxMin and dyMin
     QVector< double > dx, dy;
     dx.reserve(x.size());
@@ -141,15 +146,15 @@ void QwtGridRasterData::setValue(const QVector< double >& x, const QVector< doub
         dy.push_back(delta);
     }
     if (dx.empty()) {
-        m_data->dxMin = 0;
+        d->dxMin = 0;
     } else {
-        m_data->dxMin = *std::min_element(dx.begin(), dx.end());
+        d->dxMin = *std::min_element(dx.begin(), dx.end());
     }
 
     if (dy.empty()) {
-        m_data->dyMin = 0;
+        d->dyMin = 0;
     } else {
-        m_data->dyMin = *std::max_element(dy.begin(), dy.end());
+        d->dyMin = *std::max_element(dy.begin(), dy.end());
     }
 }
 
@@ -161,7 +166,8 @@ void QwtGridRasterData::setValue(const QVector< double >& x, const QVector< doub
  */
 double QwtGridRasterData::value(double x, double y) const
 {
-    return m_data->gridData.value(x, y);
+    QWT_DC(d);
+    return d->gridData.value(x, y);
 }
 
 /**
@@ -175,6 +181,7 @@ double QwtGridRasterData::value(double x, double y) const
  */
 QRectF QwtGridRasterData::pixelHint(const QRectF& area) const
 {
+    QWT_DC(d);
     Q_UNUSED(area)
 
     QRectF rect;
@@ -182,7 +189,7 @@ QRectF QwtGridRasterData::pixelHint(const QRectF& area) const
         const QwtInterval intervalX = interval(Qt::XAxis);
         const QwtInterval intervalY = interval(Qt::YAxis);
         if (intervalX.isValid() && intervalY.isValid()) {
-            rect = QRectF(intervalX.minValue(), intervalY.minValue(), m_data->dxMin, m_data->dyMin);
+            rect = QRectF(intervalX.minValue(), intervalY.minValue(), d->dxMin, d->dyMin);
         }
     }
 
@@ -195,7 +202,8 @@ QRectF QwtGridRasterData::pixelHint(const QRectF& area) const
  */
 int QwtGridRasterData::xSize() const
 {
-    return m_data->gridData.xSize();
+    QWT_DC(d);
+    return d->gridData.xSize();
 }
 
 /**
@@ -204,7 +212,8 @@ int QwtGridRasterData::xSize() const
  */
 int QwtGridRasterData::ySize() const
 {
-    return m_data->gridData.ySize();
+    QWT_DC(d);
+    return d->gridData.ySize();
 }
 
 /**
@@ -213,7 +222,8 @@ int QwtGridRasterData::ySize() const
  */
 std::pair< int, int > QwtGridRasterData::valueSize() const
 {
-    return m_data->gridData.valueSize();
+    QWT_DC(d);
+    return d->gridData.valueSize();
 }
 
 /**
@@ -224,7 +234,8 @@ std::pair< int, int > QwtGridRasterData::valueSize() const
  */
 double QwtGridRasterData::atValue(int xIndex, int yIndex) const
 {
-    return m_data->gridData.atValue(xIndex, yIndex);
+    QWT_DC(d);
+    return d->gridData.atValue(xIndex, yIndex);
 }
 
 /**
@@ -234,7 +245,8 @@ double QwtGridRasterData::atValue(int xIndex, int yIndex) const
  */
 double QwtGridRasterData::atX(int xIndex) const
 {
-    return m_data->gridData.atX(xIndex);
+    QWT_DC(d);
+    return d->gridData.atX(xIndex);
 }
 
 /**
@@ -244,5 +256,6 @@ double QwtGridRasterData::atX(int xIndex) const
  */
 double QwtGridRasterData::atY(int yIndex) const
 {
-    return m_data->gridData.atY(yIndex);
+    QWT_DC(d);
+    return d->gridData.atY(yIndex);
 }

@@ -112,8 +112,7 @@ class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
         double& top, double& bottom ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlainTextEngine)
 };
 
 

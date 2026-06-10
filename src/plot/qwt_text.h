@@ -260,8 +260,7 @@ public:
     static void setTextEngine(QwtText::TextFormat, QwtTextEngine*);
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtText)
 
     class LayoutCache;
     LayoutCache* m_layoutCache;

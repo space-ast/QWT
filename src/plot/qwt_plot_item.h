@@ -359,9 +359,7 @@ protected:
 
 private:
     Q_DISABLE_COPY(QwtPlotItem)
-
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotItem::ItemAttributes)

@@ -12,9 +12,10 @@
 
 class QwtPolarFitter::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarFitter)
   public:
-    PrivateData()
-        : stepCount( 5 )
+    PrivateData(QwtPolarFitter* p)
+        : q_ptr(p), stepCount( 5 )
     {
     }
 
@@ -27,10 +28,10 @@ class QwtPolarFitter::PrivateData
  * @sa setStepCount()
  */
 QwtPolarFitter::QwtPolarFitter( int stepCount )
-    : QwtCurveFitter( QwtPolarFitter::Polygon )
+    : QwtCurveFitter( QwtPolarFitter::Polygon ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-    m_data->stepCount = stepCount;
+    QWT_D(d);
+    d->stepCount = stepCount;
 }
 
 /**
@@ -38,7 +39,6 @@ QwtPolarFitter::QwtPolarFitter( int stepCount )
  */
 QwtPolarFitter::~QwtPolarFitter()
 {
-    delete m_data;
 }
 
 /**
@@ -49,7 +49,8 @@ QwtPolarFitter::~QwtPolarFitter()
  */
 void QwtPolarFitter::setStepCount( int stepCount )
 {
-    m_data->stepCount = qMax( stepCount, 0 );
+    QWT_D(d);
+    d->stepCount = qMax( stepCount, 0 );
 }
 
 /**
@@ -59,7 +60,8 @@ void QwtPolarFitter::setStepCount( int stepCount )
  */
 int QwtPolarFitter::stepCount() const
 {
-    return m_data->stepCount;
+    QWT_DC(d);
+    return d->stepCount;
 }
 
 /**
@@ -69,12 +71,14 @@ int QwtPolarFitter::stepCount() const
  */
 QPolygonF QwtPolarFitter::fitCurve( const QPolygonF& points ) const
 {
-    if ( m_data->stepCount <= 0 || points.size() <= 1 )
+    QWT_DC(d);
+
+    if ( d->stepCount <= 0 || points.size() <= 1 )
         return points;
 
     QPolygonF fittedPoints;
 
-    int numPoints = points.size() + ( points.size() - 1 ) * m_data->stepCount;
+    int numPoints = points.size() + ( points.size() - 1 ) * d->stepCount;
 
     fittedPoints.resize( numPoints );
 
@@ -85,9 +89,9 @@ QPolygonF QwtPolarFitter::fitCurve( const QPolygonF& points ) const
         const QPointF& p1 = points[i - 1];
         const QPointF& p2 = points[i];
 
-        const double dx = ( p2.x() - p1.x() ) / m_data->stepCount;
-        const double dy = ( p2.y() - p1.y() ) / m_data->stepCount;
-        for ( int j = 1; j <= m_data->stepCount; j++ )
+        const double dx = ( p2.x() - p1.x() ) / d->stepCount;
+        const double dy = ( p2.y() - p1.y() ) / d->stepCount;
+        for ( int j = 1; j <= d->stepCount; j++ )
         {
             const double x = p1.x() + j * dx;
             const double y = p1.y() + j * dy;

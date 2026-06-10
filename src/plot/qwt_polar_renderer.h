@@ -82,8 +82,7 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
         const QwtPolarPlot*, QPainter*, const QRectF& ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarRenderer)
 };
 
 #endif

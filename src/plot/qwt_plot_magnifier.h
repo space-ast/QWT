@@ -77,8 +77,7 @@ public Q_SLOTS:
     virtual void rescale( double factor ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotMagnifier)
 };
 
 #endif

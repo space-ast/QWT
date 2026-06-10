@@ -200,8 +200,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     void setAngleRange( double angle, double span );
     void drawNeedle( QPainter* ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtDial)
 };
 
 #endif

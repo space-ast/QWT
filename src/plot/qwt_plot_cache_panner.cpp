@@ -118,8 +118,10 @@ static QBitmap qwtBorderMask(const QWidget* canvas, const QSize& size)
 
 class QwtPlotCachePanner::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotCachePanner)
 public:
-    PrivateData()
+    PrivateData(QwtPlotCachePanner* p)
+        : q_ptr(p)
     {
         for (int axis = 0; axis < QwtAxis::AxisPositions; axis++)
             isAxisEnabled[ axis ] = true;
@@ -136,9 +138,8 @@ public:
    @param canvas Plot canvas to pan, also becomes the parent object
    @sa setAxisEnabled()
  */
-QwtPlotCachePanner::QwtPlotCachePanner(QWidget* canvas) : QwtCachePanner(canvas)
+QwtPlotCachePanner::QwtPlotCachePanner(QWidget* canvas) : QwtCachePanner(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     connect(this, &QwtPlotCachePanner::panned, this, &QwtPlotCachePanner::moveCanvas);
     // connect(this, SIGNAL(panned(int, int)), SLOT(moveCanvas(int, int)));
 }
@@ -149,7 +150,6 @@ QwtPlotCachePanner::QwtPlotCachePanner(QWidget* canvas) : QwtCachePanner(canvas)
  */
 QwtPlotCachePanner::~QwtPlotCachePanner()
 {
-    delete m_data;
 }
 
 /*!
@@ -163,8 +163,9 @@ QwtPlotCachePanner::~QwtPlotCachePanner()
  */
 void QwtPlotCachePanner::setAxisEnabled(QwtAxisId axisId, bool on)
 {
+    QWT_D(d);
     if (QwtAxis::isValid(axisId))
-        m_data->isAxisEnabled[ axisId ] = on;
+        d->isAxisEnabled[ axisId ] = on;
 }
 
 /*!
@@ -175,8 +176,9 @@ void QwtPlotCachePanner::setAxisEnabled(QwtAxisId axisId, bool on)
  */
 bool QwtPlotCachePanner::isAxisEnabled(QwtAxisId axisId) const
 {
+    QWT_DC(d);
     if (QwtAxis::isValid(axisId))
-        return m_data->isAxisEnabled[ axisId ];
+        return d->isAxisEnabled[ axisId ];
 
     return true;
 }
@@ -236,6 +238,7 @@ const QwtPlot* QwtPlotCachePanner::plot() const
  */
 void QwtPlotCachePanner::moveCanvas(int dx, int dy)
 {
+    QWT_D(d);
     if (dx == 0 && dy == 0)
         return;
 
@@ -250,7 +253,7 @@ void QwtPlotCachePanner::moveCanvas(int dx, int dy)
         {
             const QwtAxisId axisId(axisPos);
 
-            if (!m_data->isAxisEnabled[ axisId ])
+            if (!d->isAxisEnabled[ axisId ])
                 continue;
 
             const QwtScaleMap map = plot->canvasMap(axisId);

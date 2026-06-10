@@ -733,9 +733,11 @@ static QwtScaleDiv qwtDivideToYears(
 
 class QwtDateScaleEngine::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtDateScaleEngine)
   public:
-    explicit PrivateData( Qt::TimeSpec spec )
-        : timeSpec( spec )
+    PrivateData( QwtDateScaleEngine* p, Qt::TimeSpec spec )
+        : q_ptr( p )
+        , timeSpec( spec )
         , utcOffset( 0 )
         , week0Type( QwtDate::FirstThursday )
         , maxWeeks( 4 )
@@ -761,8 +763,8 @@ class QwtDateScaleEngine::PrivateData
  */
 QwtDateScaleEngine::QwtDateScaleEngine( Qt::TimeSpec timeSpec )
     : QwtLinearScaleEngine( 10 )
+    , m_data( qwt_make_unique< PrivateData >( this, timeSpec ) )
 {
-    m_data = new PrivateData( timeSpec );
 }
 
 /**
@@ -771,7 +773,6 @@ QwtDateScaleEngine::QwtDateScaleEngine( Qt::TimeSpec timeSpec )
  */
 QwtDateScaleEngine::~QwtDateScaleEngine()
 {
-    delete m_data;
 }
 
 /**
@@ -782,7 +783,8 @@ QwtDateScaleEngine::~QwtDateScaleEngine()
  */
 void QwtDateScaleEngine::setTimeSpec( Qt::TimeSpec timeSpec )
 {
-    m_data->timeSpec = timeSpec;
+    QWT_D(d);
+    d->timeSpec = timeSpec;
 }
 
 /**
@@ -793,7 +795,8 @@ void QwtDateScaleEngine::setTimeSpec( Qt::TimeSpec timeSpec )
  */
 Qt::TimeSpec QwtDateScaleEngine::timeSpec() const
 {
-    return m_data->timeSpec;
+    QWT_DC(d);
+    return d->timeSpec;
 }
 
 /**
@@ -805,7 +808,8 @@ Qt::TimeSpec QwtDateScaleEngine::timeSpec() const
  */
 void QwtDateScaleEngine::setUtcOffset( int seconds )
 {
-    m_data->utcOffset = seconds;
+    QWT_D(d);
+    d->utcOffset = seconds;
 }
 
 /**
@@ -817,7 +821,8 @@ void QwtDateScaleEngine::setUtcOffset( int seconds )
  */
 int QwtDateScaleEngine::utcOffset() const
 {
-    return m_data->utcOffset;
+    QWT_DC(d);
+    return d->utcOffset;
 }
 
 /**
@@ -829,7 +834,8 @@ int QwtDateScaleEngine::utcOffset() const
  */
 void QwtDateScaleEngine::setWeek0Type( QwtDate::Week0Type week0Type )
 {
-    m_data->week0Type = week0Type;
+    QWT_D(d);
+    d->week0Type = week0Type;
 }
 
 /**
@@ -840,7 +846,8 @@ void QwtDateScaleEngine::setWeek0Type( QwtDate::Week0Type week0Type )
  */
 QwtDate::Week0Type QwtDateScaleEngine::week0Type() const
 {
-    return m_data->week0Type;
+    QWT_DC(d);
+    return d->week0Type;
 }
 
 /**
@@ -854,7 +861,8 @@ QwtDate::Week0Type QwtDateScaleEngine::week0Type() const
  */
 void QwtDateScaleEngine::setMaxWeeks( int weeks )
 {
-    m_data->maxWeeks = qMax( weeks, 0 );
+    QWT_D(d);
+    d->maxWeeks = qMax( weeks, 0 );
 }
 
 /**
@@ -865,7 +873,8 @@ void QwtDateScaleEngine::setMaxWeeks( int weeks )
  */
 int QwtDateScaleEngine::maxWeeks() const
 {
-    return m_data->maxWeeks;
+    QWT_DC(d);
+    return d->maxWeeks;
 }
 
 /**
@@ -880,6 +889,7 @@ QwtDate::IntervalType QwtDateScaleEngine::intervalType(
     const QDateTime& minDate, const QDateTime& maxDate,
     int maxSteps ) const
 {
+    QWT_DC(d);
     const double jdMin = minDate.date().toJulianDay();
     const double jdMax = maxDate.date().toJulianDay();
 
@@ -893,7 +903,7 @@ QwtDate::IntervalType QwtDateScaleEngine::intervalType(
     const int days = qwtRoundedIntervalWidth( minDate, maxDate, QwtDate::Day );
     const int weeks = qwtRoundedIntervalWidth( minDate, maxDate, QwtDate::Week );
 
-    if ( weeks > m_data->maxWeeks )
+    if ( weeks > d->maxWeeks )
     {
         if ( days > 4 * maxSteps * 7 )
             return QwtDate::Month;
@@ -1119,6 +1129,7 @@ QDateTime QwtDateScaleEngine::alignDate(
     const QDateTime& dateTime, double stepSize,
     QwtDate::IntervalType intervalType, bool up ) const
 {
+    QWT_DC(d);
     // what about: (year == 1582 && month == 10 && day > 4 && day < 15) ??
 
     QDateTime dt = dateTime;
@@ -1217,7 +1228,7 @@ QDateTime QwtDateScaleEngine::alignDate(
         case QwtDate::Week:
         {
             const QDate date = QwtDate::dateOfWeek0(
-                dt.date().year(), m_data->week0Type );
+                dt.date().year(), d->week0Type );
 
             int numWeeks = date.daysTo( dt.date() ) / 7;
             if ( up )
@@ -1307,22 +1318,23 @@ QDateTime QwtDateScaleEngine::alignDate(
  */
 QDateTime QwtDateScaleEngine::toDateTime( double value ) const
 {
-    QDateTime dt = QwtDate::toDateTime( value, m_data->timeSpec );
+    QWT_DC(d);
+    QDateTime dt = QwtDate::toDateTime( value, d->timeSpec );
     if ( !dt.isValid() )
     {
         const QDate date = ( value <= 0.0 )
             ? QwtDate::minDate() : QwtDate::maxDate();
 
-        dt = QDateTime( date, QTime( 0, 0 ), m_data->timeSpec );
+        dt = QDateTime( date, QTime( 0, 0 ), d->timeSpec );
     }
 
-    if ( m_data->timeSpec == Qt::OffsetFromUTC )
+    if ( d->timeSpec == Qt::OffsetFromUTC )
     {
-        dt = dt.addSecs( m_data->utcOffset );
+        dt = dt.addSecs( d->utcOffset );
 #if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc( m_data->utcOffset );
+        dt.setOffsetFromUtc( d->utcOffset );
 #else
-        dt.setUtcOffset( m_data->utcOffset );
+        dt.setUtcOffset( d->utcOffset );
 #endif
     }
 

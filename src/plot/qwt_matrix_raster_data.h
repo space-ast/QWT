@@ -107,8 +107,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
   private:
     void update();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtMatrixRasterData)
 };
 
 #endif

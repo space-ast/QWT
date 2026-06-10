@@ -225,9 +225,8 @@ protected:
         const QwtSymbol& symbol) const;
     
 private:
-    class PrivateData;
-    PrivateData* m_data;
-    
+    QWT_DECLARE_PRIVATE(QwtPlotBoxChart)
+
     QwtSeriesData<QwtBoxOutlierSample>* m_outlierData;
 };
 

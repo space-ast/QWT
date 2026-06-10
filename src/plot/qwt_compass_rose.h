@@ -112,8 +112,7 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
         int numThorns, int numThornLevels, double shrinkFactor );
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSimpleCompassRose)
 };
 
 #endif

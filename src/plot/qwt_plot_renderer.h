@@ -195,8 +195,7 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
         const QRectF&, const QwtScaleMap maps[] ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotRenderer)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::DiscardFlags )

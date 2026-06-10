@@ -66,8 +66,7 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
         const QSize& boundingSize ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtArrowButton)
 };
 
 #endif

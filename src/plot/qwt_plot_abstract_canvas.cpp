@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -168,8 +168,9 @@ static QPainterPath qwtBorderPath(const QWidget* canvas, const QRect& rect)
 
 class QwtPlotAbstractCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAbstractCanvas)
 public:
-    PrivateData() : focusIndicator(NoFocusIndicator), borderRadius(0)
+    PrivateData(QwtPlotAbstractCanvas* p) : q_ptr(p), focusIndicator(NoFocusIndicator), borderRadius(0)
     {
         styleSheet.hasBorder = false;
     }
@@ -198,9 +199,8 @@ public:
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
  */
-QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
+QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget) : QWT_PIMPL_CONSTRUCT
 {
-    m_data               = new PrivateData;
     m_data->canvasWidget = canvasWidget;
 
 #ifndef QT_NO_CURSOR
@@ -214,7 +214,6 @@ QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
  */
 QwtPlotAbstractCanvas::~QwtPlotAbstractCanvas()
 {
-    delete m_data;
 }
 
 /**
@@ -223,7 +222,8 @@ QwtPlotAbstractCanvas::~QwtPlotAbstractCanvas()
  */
 QwtPlot* QwtPlotAbstractCanvas::plot()
 {
-    return qobject_cast< QwtPlot* >(m_data->canvasWidget->parent());
+    QWT_D(d);
+    return qobject_cast< QwtPlot* >(d->canvasWidget->parent());
 }
 
 /**
@@ -232,7 +232,8 @@ QwtPlot* QwtPlotAbstractCanvas::plot()
  */
 const QwtPlot* QwtPlotAbstractCanvas::plot() const
 {
-    return qobject_cast< const QwtPlot* >(m_data->canvasWidget->parent());
+    QWT_DC(d);
+    return qobject_cast< const QwtPlot* >(d->canvasWidget->parent());
 }
 
 /**
@@ -242,7 +243,8 @@ const QwtPlot* QwtPlotAbstractCanvas::plot() const
  */
 void QwtPlotAbstractCanvas::setFocusIndicator(FocusIndicator focusIndicator)
 {
-    m_data->focusIndicator = focusIndicator;
+    QWT_D(d);
+    d->focusIndicator = focusIndicator;
 }
 
 /**
@@ -252,7 +254,8 @@ void QwtPlotAbstractCanvas::setFocusIndicator(FocusIndicator focusIndicator)
  */
 QwtPlotAbstractCanvas::FocusIndicator QwtPlotAbstractCanvas::focusIndicator() const
 {
-    return m_data->focusIndicator;
+    QWT_DC(d);
+    return d->focusIndicator;
 }
 
 /*!
@@ -261,15 +264,17 @@ QwtPlotAbstractCanvas::FocusIndicator QwtPlotAbstractCanvas::focusIndicator() co
  */
 void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
 {
+    QWT_D(d);
+
     const int margin = 1;
 
-    QRect focusRect = m_data->canvasWidget->contentsRect();
+    QRect focusRect = d->canvasWidget->contentsRect();
     focusRect.setRect(focusRect.x() + margin,
                       focusRect.y() + margin,
                       focusRect.width() - 2 * margin,
                       focusRect.height() - 2 * margin);
 
-    QwtPainter::drawFocusRect(painter, m_data->canvasWidget, focusRect);
+    QwtPainter::drawFocusRect(painter, d->canvasWidget, focusRect);
 }
 
 /**
@@ -279,7 +284,8 @@ void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
  */
 void QwtPlotAbstractCanvas::setBorderRadius(double radius)
 {
-    m_data->borderRadius = qwtMaxF(0.0, radius);
+    QWT_D(d);
+    d->borderRadius = qwtMaxF(0.0, radius);
 }
 
 /**
@@ -289,7 +295,8 @@ void QwtPlotAbstractCanvas::setBorderRadius(double radius)
  */
 double QwtPlotAbstractCanvas::borderRadius() const
 {
-    return m_data->borderRadius;
+    QWT_DC(d);
+    return d->borderRadius;
 }
 
 //! @return Path for the canvas border
@@ -304,9 +311,11 @@ QPainterPath QwtPlotAbstractCanvas::canvasBorderPath(const QRect& rect) const
  */
 void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 {
+    QWT_D(d);
+
     const QWidget* w = canvasWidget();
 
-    if (m_data->borderRadius > 0) {
+    if (d->borderRadius > 0) {
         const int frameWidth = w->property("frameWidth").toInt();
         if (frameWidth > 0) {
             const int frameShape  = w->property("frameShape").toInt();
@@ -316,8 +325,8 @@ void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 
             QwtPainter::drawRoundedFrame(painter,
                                          frameRect,
-                                         m_data->borderRadius,
-                                         m_data->borderRadius,
+                                         d->borderRadius,
+                                         d->borderRadius,
                                          w->palette(),
                                          frameWidth,
                                          frameShape | frameShadow);
@@ -410,6 +419,8 @@ void QwtPlotAbstractCanvas::drawUnstyled(QPainter* painter)
 //! Helper function for the derived plot canvas
 void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackground)
 {
+    QWT_D(d);
+
     fillBackground(painter);
 
     if (hackStyledBackground) {
@@ -425,7 +436,7 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
         // The only way to avoid these annoying "artefacts"
         // is to paint the border on top of the plot items.
 
-        if (!m_data->styleSheet.hasBorder || m_data->styleSheet.borderPath.isEmpty()) {
+        if (!d->styleSheet.hasBorder || d->styleSheet.borderPath.isEmpty()) {
             // We have no border with at least one rounded corner
             hackStyledBackground = false;
         }
@@ -438,9 +449,9 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
 
         // paint background without border
         painter->setPen(Qt::NoPen);
-        painter->setBrush(m_data->styleSheet.background.brush);
-        painter->setBrushOrigin(m_data->styleSheet.background.origin);
-        painter->setClipPath(m_data->styleSheet.borderPath);
+        painter->setBrush(d->styleSheet.background.brush);
+        painter->setBrushOrigin(d->styleSheet.background.origin);
+        painter->setClipPath(d->styleSheet.borderPath);
         painter->drawRect(w->contentsRect());
 
         painter->restore();
@@ -463,12 +474,14 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
 //!  @brief Draw the plot to the canvas
 void QwtPlotAbstractCanvas::drawCanvas(QPainter* painter)
 {
+    QWT_D(d);
+
     QWidget* w = canvasWidget();
 
     painter->save();
 
-    if (!m_data->styleSheet.borderPath.isEmpty()) {
-        painter->setClipPath(m_data->styleSheet.borderPath, Qt::IntersectClip);
+    if (!d->styleSheet.borderPath.isEmpty()) {
+        painter->setClipPath(d->styleSheet.borderPath, Qt::IntersectClip);
     } else {
         if (borderRadius() > 0.0) {
             const QRect frameRect = w->property("frameRect").toRect();
@@ -488,6 +501,8 @@ void QwtPlotAbstractCanvas::drawCanvas(QPainter* painter)
 //! Update the cached information about the current style sheet
 void QwtPlotAbstractCanvas::updateStyleSheetInfo()
 {
+    QWT_D(d);
+
     QWidget* w = canvasWidget();
 
     if (!w->testAttribute(Qt::WA_StyledBackground))
@@ -503,36 +518,39 @@ void QwtPlotAbstractCanvas::updateStyleSheetInfo()
 
     painter.end();
 
-    m_data->styleSheet.hasBorder   = !recorder.border.rectList.isEmpty();
-    m_data->styleSheet.cornerRects = recorder.clipRects;
+    d->styleSheet.hasBorder   = !recorder.border.rectList.isEmpty();
+    d->styleSheet.cornerRects = recorder.clipRects;
 
     if (recorder.background.path.isEmpty()) {
         if (!recorder.border.rectList.isEmpty()) {
-            m_data->styleSheet.borderPath = qwtCombinePathList(w->rect(), recorder.border.pathList);
+            d->styleSheet.borderPath = qwtCombinePathList(w->rect(), recorder.border.pathList);
         }
     } else {
-        m_data->styleSheet.borderPath        = recorder.background.path;
-        m_data->styleSheet.background.brush  = recorder.background.brush;
-        m_data->styleSheet.background.origin = recorder.background.origin;
+        d->styleSheet.borderPath        = recorder.background.path;
+        d->styleSheet.background.brush  = recorder.background.brush;
+        d->styleSheet.background.origin = recorder.background.origin;
     }
 }
 
 //! @return canvas widget
 QWidget* QwtPlotAbstractCanvas::canvasWidget()
 {
-    return m_data->canvasWidget;
+    QWT_D(d);
+    return d->canvasWidget;
 }
 
 //! @return canvas widget
 const QWidget* QwtPlotAbstractCanvas::canvasWidget() const
 {
-    return m_data->canvasWidget;
+    QWT_DC(d);
+    return d->canvasWidget;
 }
 
 class QwtPlotAbstractGLCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAbstractGLCanvas)
 public:
-    PrivateData() : frameStyle(QFrame::Panel | QFrame::Sunken), lineWidth(2), midLineWidth(0)
+    PrivateData(QwtPlotAbstractGLCanvas* p) : q_ptr(p), frameStyle(QFrame::Panel | QFrame::Sunken), lineWidth(2), midLineWidth(0)
     {
     }
 
@@ -547,10 +565,8 @@ public:
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
  */
-QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget)
+QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     qwtUpdateContentsRect(frameWidth(), canvasWidget);
     m_data->paintAttributes = QwtPlotAbstractGLCanvas::BackingStore;
 }
@@ -560,7 +576,6 @@ QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlo
  */
 QwtPlotAbstractGLCanvas::~QwtPlotAbstractGLCanvas()
 {
-    delete m_data;
 }
 
 /**
@@ -571,13 +586,15 @@ QwtPlotAbstractGLCanvas::~QwtPlotAbstractGLCanvas()
  */
 void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
-    if (bool(m_data->paintAttributes & attribute) == on)
+    QWT_D(d);
+
+    if (bool(d->paintAttributes & attribute) == on)
         return;
 
     if (on) {
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     } else {
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 
         if (attribute == BackingStore)
             clearBackingStore();
@@ -592,7 +609,8 @@ void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool o
  */
 bool QwtPlotAbstractGLCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
@@ -602,8 +620,10 @@ bool QwtPlotAbstractGLCanvas::testPaintAttribute(PaintAttribute attribute) const
  */
 void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
 {
-    if (style != m_data->frameStyle) {
-        m_data->frameStyle = style;
+    QWT_D(d);
+
+    if (style != d->frameStyle) {
+        d->frameStyle = style;
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
 
         canvasWidget()->update();
@@ -617,7 +637,8 @@ void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
  */
 int QwtPlotAbstractGLCanvas::frameStyle() const
 {
-    return m_data->frameStyle;
+    QWT_DC(d);
+    return d->frameStyle;
 }
 
 /**
@@ -627,7 +648,8 @@ int QwtPlotAbstractGLCanvas::frameStyle() const
  */
 void QwtPlotAbstractGLCanvas::setFrameShadow(QFrame::Shadow shadow)
 {
-    setFrameStyle((m_data->frameStyle & QFrame::Shape_Mask) | shadow);
+    QWT_D(d);
+    setFrameStyle((d->frameStyle & QFrame::Shape_Mask) | shadow);
 }
 
 /**
@@ -637,7 +659,8 @@ void QwtPlotAbstractGLCanvas::setFrameShadow(QFrame::Shadow shadow)
  */
 QFrame::Shadow QwtPlotAbstractGLCanvas::frameShadow() const
 {
-    return (QFrame::Shadow)(m_data->frameStyle & QFrame::Shadow_Mask);
+    QWT_DC(d);
+    return (QFrame::Shadow)(d->frameStyle & QFrame::Shadow_Mask);
 }
 
 /**
@@ -647,7 +670,8 @@ QFrame::Shadow QwtPlotAbstractGLCanvas::frameShadow() const
  */
 void QwtPlotAbstractGLCanvas::setFrameShape(QFrame::Shape shape)
 {
-    setFrameStyle((m_data->frameStyle & QFrame::Shadow_Mask) | shape);
+    QWT_D(d);
+    setFrameStyle((d->frameStyle & QFrame::Shadow_Mask) | shape);
 }
 
 /**
@@ -657,7 +681,8 @@ void QwtPlotAbstractGLCanvas::setFrameShape(QFrame::Shape shape)
  */
 QFrame::Shape QwtPlotAbstractGLCanvas::frameShape() const
 {
-    return (QFrame::Shape)(m_data->frameStyle & QFrame::Shape_Mask);
+    QWT_DC(d);
+    return (QFrame::Shape)(d->frameStyle & QFrame::Shape_Mask);
 }
 
 /**
@@ -668,9 +693,11 @@ QFrame::Shape QwtPlotAbstractGLCanvas::frameShape() const
  */
 void QwtPlotAbstractGLCanvas::setLineWidth(int width)
 {
+    QWT_D(d);
+
     width = qMax(width, 0);
-    if (width != m_data->lineWidth) {
-        m_data->lineWidth = qMax(width, 0);
+    if (width != d->lineWidth) {
+        d->lineWidth = qMax(width, 0);
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
         canvasWidget()->update();
     }
@@ -683,7 +710,8 @@ void QwtPlotAbstractGLCanvas::setLineWidth(int width)
  */
 int QwtPlotAbstractGLCanvas::lineWidth() const
 {
-    return m_data->lineWidth;
+    QWT_DC(d);
+    return d->lineWidth;
 }
 
 /**
@@ -694,9 +722,11 @@ int QwtPlotAbstractGLCanvas::lineWidth() const
  */
 void QwtPlotAbstractGLCanvas::setMidLineWidth(int width)
 {
+    QWT_D(d);
+
     width = qMax(width, 0);
-    if (width != m_data->midLineWidth) {
-        m_data->midLineWidth = width;
+    if (width != d->midLineWidth) {
+        d->midLineWidth = width;
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
         canvasWidget()->update();
     }
@@ -709,7 +739,8 @@ void QwtPlotAbstractGLCanvas::setMidLineWidth(int width)
  */
 int QwtPlotAbstractGLCanvas::midLineWidth() const
 {
-    return m_data->midLineWidth;
+    QWT_DC(d);
+    return d->midLineWidth;
 }
 
 /**
@@ -718,7 +749,8 @@ int QwtPlotAbstractGLCanvas::midLineWidth() const
  */
 int QwtPlotAbstractGLCanvas::frameWidth() const
 {
-    return (frameStyle() != QFrame::NoFrame) ? m_data->lineWidth : 0;
+    QWT_DC(d);
+    return (frameStyle() != QFrame::NoFrame) ? d->lineWidth : 0;
 }
 
 /**

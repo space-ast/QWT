@@ -33,9 +33,11 @@
 
 class QwtIntervalSymbol::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtIntervalSymbol)
   public:
-    PrivateData()
-        : style( QwtIntervalSymbol::NoSymbol )
+    PrivateData( QwtIntervalSymbol* p )
+        : q_ptr( p )
+        , style( QwtIntervalSymbol::NoSymbol )
         , width( 6 )
     {
     }
@@ -61,9 +63,10 @@ class QwtIntervalSymbol::PrivateData
  * @sa setStyle(), style(), Style
  */
 QwtIntervalSymbol::QwtIntervalSymbol( Style style )
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
-    m_data->style = style;
+    QWT_D(d);
+    d->style = style;
 }
 
 /**
@@ -71,8 +74,8 @@ QwtIntervalSymbol::QwtIntervalSymbol( Style style )
  * @param[in] other Symbol to copy
  */
 QwtIntervalSymbol::QwtIntervalSymbol( const QwtIntervalSymbol& other )
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     *m_data = *other.m_data;
 }
 
@@ -81,7 +84,6 @@ QwtIntervalSymbol::QwtIntervalSymbol( const QwtIntervalSymbol& other )
  */
 QwtIntervalSymbol::~QwtIntervalSymbol()
 {
-    delete m_data;
 }
 
 /**
@@ -92,7 +94,8 @@ QwtIntervalSymbol::~QwtIntervalSymbol()
 QwtIntervalSymbol& QwtIntervalSymbol::operator=(
     const QwtIntervalSymbol& other )
 {
-    *m_data = *other.m_data;
+    QWT_D(d);
+    *d = *other.m_data;
     return *this;
 }
 
@@ -104,7 +107,8 @@ QwtIntervalSymbol& QwtIntervalSymbol::operator=(
 bool QwtIntervalSymbol::operator==(
     const QwtIntervalSymbol& other ) const
 {
-    return *m_data == *other.m_data;
+    QWT_DC(d);
+    return *d == *other.m_data;
 }
 
 /**
@@ -115,7 +119,8 @@ bool QwtIntervalSymbol::operator==(
 bool QwtIntervalSymbol::operator!=(
     const QwtIntervalSymbol& other ) const
 {
-    return !( *m_data == *other.m_data );
+    QWT_DC(d);
+    return !( *d == *other.m_data );
 }
 
 /**
@@ -125,7 +130,8 @@ bool QwtIntervalSymbol::operator!=(
  */
 void QwtIntervalSymbol::setStyle( Style style )
 {
-    m_data->style = style;
+    QWT_D(d);
+    d->style = style;
 }
 
 /**
@@ -135,7 +141,8 @@ void QwtIntervalSymbol::setStyle( Style style )
  */
 QwtIntervalSymbol::Style QwtIntervalSymbol::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
@@ -146,7 +153,8 @@ QwtIntervalSymbol::Style QwtIntervalSymbol::style() const
  */
 void QwtIntervalSymbol::setWidth( int width )
 {
-    m_data->width = width;
+    QWT_D(d);
+    d->width = width;
 }
 
 /**
@@ -156,7 +164,8 @@ void QwtIntervalSymbol::setWidth( int width )
  */
 int QwtIntervalSymbol::width() const
 {
-    return m_data->width;
+    QWT_DC(d);
+    return d->width;
 }
 
 /**
@@ -167,7 +176,8 @@ int QwtIntervalSymbol::width() const
  */
 void QwtIntervalSymbol::setBrush( const QBrush& brush )
 {
-    m_data->brush = brush;
+    QWT_D(d);
+    d->brush = brush;
 }
 
 /**
@@ -177,7 +187,8 @@ void QwtIntervalSymbol::setBrush( const QBrush& brush )
  */
 const QBrush& QwtIntervalSymbol::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
@@ -203,7 +214,8 @@ void QwtIntervalSymbol::setPen( const QColor& color,
  */
 void QwtIntervalSymbol::setPen( const QPen& pen )
 {
-    m_data->pen = pen;
+    QWT_D(d);
+    d->pen = pen;
 }
 
 /**
@@ -213,7 +225,8 @@ void QwtIntervalSymbol::setPen( const QPen& pen )
  */
 const QPen& QwtIntervalSymbol::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
@@ -227,6 +240,7 @@ const QPen& QwtIntervalSymbol::pen() const
 void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
     const QPointF& from, const QPointF& to ) const
 {
+    QWT_DC(d);
     const qreal pw = QwtPainter::effectivePenWidth( painter->pen() );
 
     QPointF p1 = from;
@@ -237,17 +251,17 @@ void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
         p2 = p2.toPoint();
     }
 
-    switch ( m_data->style )
+    switch ( d->style )
     {
         case QwtIntervalSymbol::Bar:
         {
             QwtPainter::drawLine( painter, p1, p2 );
-            if ( m_data->width > pw )
+            if ( d->width > pw )
             {
                 if ( ( orientation == Qt::Horizontal )
                     && ( p1.y() == p2.y() ) )
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
                     const double y = p1.y() - sw / 2;
                     QwtPainter::drawLine( painter,
@@ -258,7 +272,7 @@ void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
                 else if ( ( orientation == Qt::Vertical )
                     && ( p1.x() == p2.x() ) )
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
                     const double x = p1.x() - sw / 2;
                     QwtPainter::drawLine( painter,
@@ -268,7 +282,7 @@ void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
                 }
                 else
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
                     const double dx = p2.x() - p1.x();
                     const double dy = p2.y() - p1.y();
@@ -290,7 +304,7 @@ void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
         }
         case QwtIntervalSymbol::Box:
         {
-            if ( m_data->width <= pw )
+            if ( d->width <= pw )
             {
                 QwtPainter::drawLine( painter, p1, p2 );
             }
@@ -299,24 +313,24 @@ void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
                 if ( ( orientation == Qt::Horizontal )
                     && ( p1.y() == p2.y() ) )
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
-                    const double y = p1.y() - m_data->width / 2;
+                    const double y = p1.y() - d->width / 2;
                     QwtPainter::drawRect( painter,
                         p1.x(), y, p2.x() - p1.x(),  sw );
                 }
                 else if ( ( orientation == Qt::Vertical )
                     && ( p1.x() == p2.x() ) )
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
-                    const double x = p1.x() - m_data->width / 2;
+                    const double x = p1.x() - d->width / 2;
                     QwtPainter::drawRect( painter,
                         x, p1.y(), sw, p2.y() - p1.y() );
                 }
                 else
                 {
-                    const double sw = m_data->width;
+                    const double sw = d->width;
 
                     const double dx = p2.x() - p1.x();
                     const double dy = p2.y() - p1.y();

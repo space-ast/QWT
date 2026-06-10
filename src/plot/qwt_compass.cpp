@@ -33,7 +33,12 @@
 
 class QwtCompassScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtCompassScaleDraw)
 public:
+    PrivateData(QwtCompassScaleDraw* p) : q_ptr(p)
+    {
+    }
+
     QMap< double, QString > labelMap;
 };
 
@@ -42,14 +47,13 @@ public:
  *   @details Initializes a label map for multiples of 45 degrees.
  *            The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
  */
-QwtCompassScaleDraw::QwtCompassScaleDraw()
+QwtCompassScaleDraw::QwtCompassScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
+    QWT_D(d);
     enableComponent(QwtAbstractScaleDraw::Backbone, false);
     enableComponent(QwtAbstractScaleDraw::Ticks, false);
 
-    QMap< double, QString >& map = m_data->labelMap;
+    QMap< double, QString >& map = d->labelMap;
 
     map.insert(0.0, QString::fromLatin1("N"));
     map.insert(45.0, QString::fromLatin1("NE"));
@@ -76,10 +80,10 @@ QwtCompassScaleDraw::QwtCompassScaleDraw()
  *   @brief Constructor
  *   @param[in] map Value to label map
  */
-QwtCompassScaleDraw::QwtCompassScaleDraw(const QMap< double, QString >& map)
+QwtCompassScaleDraw::QwtCompassScaleDraw(const QMap< double, QString >& map) : QWT_PIMPL_CONSTRUCT
 {
-    m_data           = new PrivateData;
-    m_data->labelMap = map;
+    QWT_D(d);
+    d->labelMap = map;
 
     enableComponent(QwtAbstractScaleDraw::Backbone, false);
     enableComponent(QwtAbstractScaleDraw::Ticks, false);
@@ -90,7 +94,6 @@ QwtCompassScaleDraw::QwtCompassScaleDraw(const QMap< double, QString >& map)
  */
 QwtCompassScaleDraw::~QwtCompassScaleDraw()
 {
-    delete m_data;
 }
 
 /**
@@ -104,7 +107,8 @@ QwtCompassScaleDraw::~QwtCompassScaleDraw()
  */
 void QwtCompassScaleDraw::setLabelMap(const QMap< double, QString >& map)
 {
-    m_data->labelMap = map;
+    QWT_D(d);
+    d->labelMap = map;
 }
 
 /**
@@ -114,7 +118,8 @@ void QwtCompassScaleDraw::setLabelMap(const QMap< double, QString >& map)
  */
 QMap< double, QString > QwtCompassScaleDraw::labelMap() const
 {
-    return m_data->labelMap;
+    QWT_DC(d);
+    return d->labelMap;
 }
 
 /**
@@ -127,15 +132,16 @@ QMap< double, QString > QwtCompassScaleDraw::labelMap() const
  */
 QwtText QwtCompassScaleDraw::label(double value) const
 {
+    QWT_DC(d);
     if (qFuzzyCompare(value + 1.0, 1.0))
         value = 0.0;
 
     if (value < 0.0)
         value += 360.0;
 
-    QMap< double, QString >::const_iterator it = m_data->labelMap.constFind(value);
+    QMap< double, QString >::const_iterator it = d->labelMap.constFind(value);
 
-    if (it != m_data->labelMap.constEnd())
+    if (it != d->labelMap.constEnd())
         return *it;
 
     return QwtText();
@@ -143,8 +149,9 @@ QwtText QwtCompassScaleDraw::label(double value) const
 
 class QwtCompass::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtCompass)
 public:
-    PrivateData() : rose(nullptr)
+    PrivateData(QwtCompass* p) : q_ptr(p), rose(nullptr)
     {
     }
 
@@ -164,10 +171,8 @@ public:
  *            mouse and keyboard inputs and has no step size. The default mode
  *            is QwtDial::RotateNeedle.
  */
-QwtCompass::QwtCompass(QWidget* parent) : QwtDial(parent)
+QwtCompass::QwtCompass(QWidget* parent) : QwtDial(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setScaleDraw(new QwtCompassScaleDraw());
 
     setOrigin(270.0);
@@ -185,7 +190,6 @@ QwtCompass::QwtCompass(QWidget* parent) : QwtDial(parent)
  */
 QwtCompass::~QwtCompass()
 {
-    delete m_data;
 }
 
 /*!
@@ -224,8 +228,9 @@ void QwtCompass::drawScaleContents(QPainter* painter, const QPointF& center, dou
  */
 void QwtCompass::drawRose(QPainter* painter, const QPointF& center, double radius, double north, QPalette::ColorGroup cg) const
 {
-    if (m_data->rose)
-        m_data->rose->draw(painter, center, radius, north, cg);
+    QWT_DC(d);
+    if (d->rose)
+        d->rose->draw(painter, center, radius, north, cg);
 }
 
 /**
@@ -236,11 +241,12 @@ void QwtCompass::drawRose(QPainter* painter, const QPointF& center, double radiu
  */
 void QwtCompass::setRose(QwtCompassRose* rose)
 {
-    if (rose != m_data->rose) {
-        if (m_data->rose)
-            delete m_data->rose;
+    QWT_D(d);
+    if (rose != d->rose) {
+        if (d->rose)
+            delete d->rose;
 
-        m_data->rose = rose;
+        d->rose = rose;
         update();
     }
 }
@@ -252,7 +258,8 @@ void QwtCompass::setRose(QwtCompassRose* rose)
  */
 const QwtCompassRose* QwtCompass::rose() const
 {
-    return m_data->rose;
+    QWT_DC(d);
+    return d->rose;
 }
 
 /**
@@ -262,7 +269,8 @@ const QwtCompassRose* QwtCompass::rose() const
  */
 QwtCompassRose* QwtCompass::rose()
 {
-    return m_data->rose;
+    QWT_D(d);
+    return d->rose;
 }
 
 /*!

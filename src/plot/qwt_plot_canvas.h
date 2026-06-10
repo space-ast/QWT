@@ -138,8 +138,7 @@ protected:
     virtual void drawBorder(QPainter*) override;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotCanvas::PaintAttributes)

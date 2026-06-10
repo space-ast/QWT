@@ -15,9 +15,11 @@
 
 class QwtPolarItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarItem)
   public:
-    PrivateData()
-        : plot( nullptr )
+    PrivateData(QwtPolarItem* p)
+        : q_ptr(p)
+        , plot( nullptr )
         , isVisible( true )
         , renderThreadCount( 1 )
         , z( 0.0 )
@@ -45,8 +47,9 @@ class QwtPolarItem::PrivateData
  */
 QwtPolarItem::QwtPolarItem( const QwtText& title )
 {
-    m_data = new PrivateData;
-    m_data->title = title;
+    QWT_PIMPL_CONSTRUCT_INIT();
+    QWT_D(d);
+    d->title = title;
 }
 
 /**
@@ -55,7 +58,6 @@ QwtPolarItem::QwtPolarItem( const QwtText& title )
 QwtPolarItem::~QwtPolarItem()
 {
     attach( nullptr );
-    delete m_data;
 }
 
 /**
@@ -69,16 +71,18 @@ QwtPolarItem::~QwtPolarItem()
  */
 void QwtPolarItem::attach( QwtPolarPlot* plot )
 {
-    if ( plot == m_data->plot )
+    QWT_D(d);
+
+    if ( plot == d->plot )
         return;
 
-    if ( m_data->plot )
-        m_data->plot->attachItem( this, false );
+    if ( d->plot )
+        d->plot->attachItem( this, false );
 
-    m_data->plot = plot;
+    d->plot = plot;
 
-    if ( m_data->plot )
-        m_data->plot->attachItem( this, true );
+    if ( d->plot )
+        d->plot->attachItem( this, true );
 }
 
 /**
@@ -112,7 +116,8 @@ int QwtPolarItem::rtti() const
  */
 QwtPolarPlot* QwtPolarItem::plot() const
 {
-    return m_data->plot;
+    QWT_DC(d);
+    return d->plot;
 }
 
 /**
@@ -123,7 +128,8 @@ QwtPolarPlot* QwtPolarItem::plot() const
  */
 double QwtPolarItem::z() const
 {
-    return m_data->z;
+    QWT_DC(d);
+    return d->z;
 }
 
 /**
@@ -134,15 +140,17 @@ double QwtPolarItem::z() const
  */
 void QwtPolarItem::setZ( double z )
 {
-    if ( m_data->z != z )
+    QWT_D(d);
+
+    if ( d->z != z )
     {
-        if ( m_data->plot )
-            m_data->plot->attachItem( this, false );
+        if ( d->plot )
+            d->plot->attachItem( this, false );
 
-        m_data->z = z;
+        d->z = z;
 
-        if ( m_data->plot )
-            m_data->plot->attachItem( this, true );
+        if ( d->plot )
+            d->plot->attachItem( this, true );
 
         itemChanged();
     }
@@ -165,9 +173,11 @@ void QwtPolarItem::setTitle( const QString& title )
  */
 void QwtPolarItem::setTitle( const QwtText& title )
 {
-    if ( m_data->title != title )
+    QWT_D(d);
+
+    if ( d->title != title )
     {
-        m_data->title = title;
+        d->title = title;
         itemChanged();
     }
 }
@@ -179,7 +189,8 @@ void QwtPolarItem::setTitle( const QwtText& title )
  */
 const QwtText& QwtPolarItem::title() const
 {
-    return m_data->title;
+    QWT_DC(d);
+    return d->title;
 }
 
 /**
@@ -190,12 +201,14 @@ const QwtText& QwtPolarItem::title() const
  */
 void QwtPolarItem::setItemAttribute( ItemAttribute attribute, bool on )
 {
-    if ( bool( m_data->attributes & attribute ) != on )
+    QWT_D(d);
+
+    if ( bool( d->attributes & attribute ) != on )
     {
         if ( on )
-            m_data->attributes |= attribute;
+            d->attributes |= attribute;
         else
-            m_data->attributes &= ~attribute;
+            d->attributes &= ~attribute;
 
         itemChanged();
     }
@@ -209,7 +222,8 @@ void QwtPolarItem::setItemAttribute( ItemAttribute attribute, bool on )
  */
 bool QwtPolarItem::testItemAttribute( ItemAttribute attribute ) const
 {
-    return m_data->attributes & attribute;
+    QWT_DC(d);
+    return d->attributes & attribute;
 }
 
 /**
@@ -220,12 +234,14 @@ bool QwtPolarItem::testItemAttribute( ItemAttribute attribute ) const
  */
 void QwtPolarItem::setRenderHint( RenderHint hint, bool on )
 {
-    if ( ( ( m_data->renderHints & hint ) != 0 ) != on )
+    QWT_D(d);
+
+    if ( ( ( d->renderHints & hint ) != 0 ) != on )
     {
         if ( on )
-            m_data->renderHints |= hint;
+            d->renderHints |= hint;
         else
-            m_data->renderHints &= ~hint;
+            d->renderHints &= ~hint;
 
         itemChanged();
     }
@@ -239,7 +255,8 @@ void QwtPolarItem::setRenderHint( RenderHint hint, bool on )
  */
 bool QwtPolarItem::testRenderHint( RenderHint hint ) const
 {
-    return ( m_data->renderHints & hint );
+    QWT_DC(d);
+    return ( d->renderHints & hint );
 }
 
 /**
@@ -252,7 +269,8 @@ bool QwtPolarItem::testRenderHint( RenderHint hint ) const
  */
 void QwtPolarItem::setRenderThreadCount( uint numThreads )
 {
-    m_data->renderThreadCount = numThreads;
+    QWT_D(d);
+    d->renderThreadCount = numThreads;
 }
 
 /**
@@ -262,7 +280,8 @@ void QwtPolarItem::setRenderThreadCount( uint numThreads )
  */
 uint QwtPolarItem::renderThreadCount() const
 {
-    return m_data->renderThreadCount;
+    QWT_DC(d);
+    return d->renderThreadCount;
 }
 
 /**
@@ -273,9 +292,11 @@ uint QwtPolarItem::renderThreadCount() const
  */
 void QwtPolarItem::setLegendIconSize( const QSize& size )
 {
-    if ( m_data->legendIconSize != size )
+    QWT_D(d);
+
+    if ( d->legendIconSize != size )
     {
-        m_data->legendIconSize = size;
+        d->legendIconSize = size;
         legendChanged();
     }
 }
@@ -287,7 +308,8 @@ void QwtPolarItem::setLegendIconSize( const QSize& size )
  */
 QSize QwtPolarItem::legendIconSize() const
 {
-    return m_data->legendIconSize;
+    QWT_DC(d);
+    return d->legendIconSize;
 }
 
 //! Show the item
@@ -309,9 +331,11 @@ void QwtPolarItem::hide()
  */
 void QwtPolarItem::setVisible( bool on )
 {
-    if ( on != m_data->isVisible )
+    QWT_D(d);
+
+    if ( on != d->isVisible )
     {
-        m_data->isVisible = on;
+        d->isVisible = on;
         itemChanged();
     }
 }
@@ -323,7 +347,8 @@ void QwtPolarItem::setVisible( bool on )
  */
 bool QwtPolarItem::isVisible() const
 {
-    return m_data->isVisible;
+    QWT_DC(d);
+    return d->isVisible;
 }
 
 /**
@@ -332,8 +357,9 @@ bool QwtPolarItem::isVisible() const
  */
 void QwtPolarItem::itemChanged()
 {
-    if ( m_data->plot )
-        m_data->plot->autoRefresh();
+    QWT_D(d);
+    if ( d->plot )
+        d->plot->autoRefresh();
 }
 
 /**
@@ -342,8 +368,9 @@ void QwtPolarItem::itemChanged()
  */
 void QwtPolarItem::legendChanged()
 {
-    if ( testItemAttribute( QwtPolarItem::Legend ) && m_data->plot )
-        m_data->plot->updateLegend( this );
+    QWT_D(d);
+    if ( testItemAttribute( QwtPolarItem::Legend ) && d->plot )
+        d->plot->updateLegend( this );
 }
 
 /**

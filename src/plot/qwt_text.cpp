@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -164,9 +164,10 @@ const QwtTextEngine* TextEngineDict::textEngine(QwtText::TextFormat format) cons
 
 class QwtText::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtText)
 public:
-    PrivateData()
-        : renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
+    PrivateData(QwtText* p)
+        : q_ptr(p), renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
     {
     }
 
@@ -202,8 +203,8 @@ public:
  *
  */
 QwtText::QwtText()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data             = new PrivateData;
     m_data->textEngine = textEngine(m_data->text, PlainText);
 
     m_layoutCache = new LayoutCache;
@@ -217,8 +218,8 @@ QwtText::QwtText()
  *
  */
 QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data             = new PrivateData;
     m_data->text       = text;
     m_data->format     = textFormat;
     m_data->textEngine = textEngine(text, textFormat);
@@ -232,8 +233,8 @@ QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
  *
  */
 QwtText::QwtText(const QwtText& other)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data  = new PrivateData;
     *m_data = *other.m_data;
 
     m_layoutCache  = new LayoutCache;
@@ -246,7 +247,6 @@ QwtText::QwtText(const QwtText& other)
  */
 QwtText::~QwtText()
 {
-    delete m_data;
     delete m_layoutCache;
 }
 
@@ -258,7 +258,9 @@ QwtText::~QwtText()
  */
 QwtText& QwtText::operator=(const QwtText& other)
 {
-    *m_data        = *other.m_data;
+    QWT_D(d);
+    const PrivateData* od = other.d_func();
+    *d             = *od;
     *m_layoutCache = *other.m_layoutCache;
     return *this;
 }
@@ -271,11 +273,13 @@ QwtText& QwtText::operator=(const QwtText& other)
  */
 bool QwtText::operator==(const QwtText& other) const
 {
-    return m_data->renderFlags == other.m_data->renderFlags && m_data->text == other.m_data->text
-           && m_data->font == other.m_data->font && m_data->color == other.m_data->color
-           && m_data->borderRadius == other.m_data->borderRadius && m_data->borderPen == other.m_data->borderPen
-           && m_data->backgroundBrush == other.m_data->backgroundBrush
-           && m_data->paintAttributes == other.m_data->paintAttributes && m_data->textEngine == other.m_data->textEngine;
+    QWT_DC(d);
+    const PrivateData* od = other.d_func();
+    return d->renderFlags == od->renderFlags && d->text == od->text
+           && d->font == od->font && d->color == od->color
+           && d->borderRadius == od->borderRadius && d->borderPen == od->borderPen
+           && d->backgroundBrush == od->backgroundBrush
+           && d->paintAttributes == od->paintAttributes && d->textEngine == od->textEngine;
 }
 
 /**
@@ -300,9 +304,10 @@ bool QwtText::operator!=(const QwtText& other) const
  */
 void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
 {
-    m_data->text       = text;
-    m_data->format     = textFormat;
-    m_data->textEngine = textEngine(text, textFormat);
+    QWT_D(d);
+    d->text       = text;
+    d->format     = textFormat;
+    d->textEngine = textEngine(text, textFormat);
     m_layoutCache->invalidate();
 }
 
@@ -314,7 +319,8 @@ void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
  */
 QString QwtText::text() const
 {
-    return m_data->text;
+    QWT_DC(d);
+    return d->text;
 }
 
 /**
@@ -330,8 +336,9 @@ QString QwtText::text() const
  */
 void QwtText::setRenderFlags(int renderFlags)
 {
-    if (renderFlags != m_data->renderFlags) {
-        m_data->renderFlags = renderFlags;
+    QWT_D(d);
+    if (renderFlags != d->renderFlags) {
+        d->renderFlags = renderFlags;
         m_layoutCache->invalidate();
     }
 }
@@ -344,7 +351,8 @@ void QwtText::setRenderFlags(int renderFlags)
  */
 int QwtText::renderFlags() const
 {
-    return m_data->renderFlags;
+    QWT_DC(d);
+    return d->renderFlags;
 }
 
 /**
@@ -356,7 +364,8 @@ int QwtText::renderFlags() const
  */
 void QwtText::setFont(const QFont& font)
 {
-    m_data->font = font;
+    QWT_D(d);
+    d->font = font;
     setPaintAttribute(PaintUsingTextFont);
 }
 
@@ -368,7 +377,8 @@ void QwtText::setFont(const QFont& font)
  */
 QFont QwtText::font() const
 {
-    return m_data->font;
+    QWT_DC(d);
+    return d->font;
 }
 
 /**
@@ -380,8 +390,9 @@ QFont QwtText::font() const
  */
 QFont QwtText::usedFont(const QFont& defaultFont) const
 {
-    if (m_data->paintAttributes & PaintUsingTextFont)
-        return m_data->font;
+    QWT_DC(d);
+    if (d->paintAttributes & PaintUsingTextFont)
+        return d->font;
 
     return defaultFont;
 }
@@ -394,7 +405,8 @@ QFont QwtText::usedFont(const QFont& defaultFont) const
  */
 QwtText::TextFormat QwtText::format() const
 {
-    return m_data->format;
+    QWT_DC(d);
+    return d->format;
 }
 
 /**
@@ -406,7 +418,8 @@ QwtText::TextFormat QwtText::format() const
  */
 void QwtText::setColor(const QColor& color)
 {
-    m_data->color = color;
+    QWT_D(d);
+    d->color = color;
     setPaintAttribute(PaintUsingTextColor);
 }
 
@@ -418,7 +431,8 @@ void QwtText::setColor(const QColor& color)
  */
 QColor QwtText::color() const
 {
-    return m_data->color;
+    QWT_DC(d);
+    return d->color;
 }
 
 /**
@@ -430,8 +444,9 @@ QColor QwtText::color() const
  */
 QColor QwtText::usedColor(const QColor& defaultColor) const
 {
-    if (m_data->paintAttributes & PaintUsingTextColor)
-        return m_data->color;
+    QWT_DC(d);
+    if (d->paintAttributes & PaintUsingTextColor)
+        return d->color;
 
     return defaultColor;
 }
@@ -444,7 +459,8 @@ QColor QwtText::usedColor(const QColor& defaultColor) const
  */
 void QwtText::setBorderRadius(double radius)
 {
-    m_data->borderRadius = qwtMaxF(0.0, radius);
+    QWT_D(d);
+    d->borderRadius = qwtMaxF(0.0, radius);
 }
 
 /**
@@ -455,7 +471,8 @@ void QwtText::setBorderRadius(double radius)
  */
 double QwtText::borderRadius() const
 {
-    return m_data->borderRadius;
+    QWT_DC(d);
+    return d->borderRadius;
 }
 
 /**
@@ -466,7 +483,8 @@ double QwtText::borderRadius() const
  */
 void QwtText::setBorderPen(const QPen& pen)
 {
-    m_data->borderPen = pen;
+    QWT_D(d);
+    d->borderPen = pen;
     setPaintAttribute(PaintBackground);
 }
 
@@ -478,7 +496,8 @@ void QwtText::setBorderPen(const QPen& pen)
  */
 QPen QwtText::borderPen() const
 {
-    return m_data->borderPen;
+    QWT_DC(d);
+    return d->borderPen;
 }
 
 /**
@@ -489,7 +508,8 @@ QPen QwtText::borderPen() const
  */
 void QwtText::setBackgroundBrush(const QBrush& brush)
 {
-    m_data->backgroundBrush = brush;
+    QWT_D(d);
+    d->backgroundBrush = brush;
     setPaintAttribute(PaintBackground);
 }
 
@@ -501,7 +521,8 @@ void QwtText::setBackgroundBrush(const QBrush& brush)
  */
 QBrush QwtText::backgroundBrush() const
 {
-    return m_data->backgroundBrush;
+    QWT_DC(d);
+    return d->backgroundBrush;
 }
 
 /**
@@ -514,10 +535,11 @@ QBrush QwtText::backgroundBrush() const
  */
 void QwtText::setPaintAttribute(PaintAttribute attribute, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 }
 
 /**
@@ -529,7 +551,8 @@ void QwtText::setPaintAttribute(PaintAttribute attribute, bool on)
  */
 bool QwtText::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
@@ -541,10 +564,11 @@ bool QwtText::testPaintAttribute(PaintAttribute attribute) const
  */
 void QwtText::setLayoutAttribute(LayoutAttribute attribute, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->layoutAttributes |= attribute;
+        d->layoutAttributes |= attribute;
     else
-        m_data->layoutAttributes &= ~attribute;
+        d->layoutAttributes &= ~attribute;
 }
 
 /**
@@ -556,7 +580,8 @@ void QwtText::setLayoutAttribute(LayoutAttribute attribute, bool on)
  */
 bool QwtText::testLayoutAttribute(LayoutAttribute attribute) const
 {
-    return m_data->layoutAttributes | attribute;
+    QWT_DC(d);
+    return d->layoutAttributes | attribute;
 }
 
 /**
@@ -581,6 +606,7 @@ double QwtText::heightForWidth(double width) const
  */
 double QwtText::heightForWidth(double width, const QFont& defaultFont) const
 {
+    QWT_DC(d);
     // We want to calculate in screen metrics. So
     // we need a font that uses screen metrics
 
@@ -588,15 +614,15 @@ double QwtText::heightForWidth(double width, const QFont& defaultFont) const
 
     double h = 0;
 
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
 
-        h = m_data->textEngine->heightForWidth(font, m_data->renderFlags, m_data->text, width + left + right);
+        h = d->textEngine->heightForWidth(font, d->renderFlags, d->text, width + left + right);
 
         h -= top + bottom;
     } else {
-        h = m_data->textEngine->heightForWidth(font, m_data->renderFlags, m_data->text, width);
+        h = d->textEngine->heightForWidth(font, d->renderFlags, d->text, width);
     }
 
     return h;
@@ -622,21 +648,22 @@ QSizeF QwtText::textSize() const
  */
 QSizeF QwtText::textSize(const QFont& defaultFont) const
 {
+    QWT_DC(d);
     // We want to calculate in screen metrics. So
     // we need a font that uses screen metrics
 
     const QFont font = QwtPainter::scaledFont(usedFont(defaultFont));
 
     if (!m_layoutCache->textSize.isValid() || m_layoutCache->font != font) {
-        m_layoutCache->textSize = m_data->textEngine->textSize(font, m_data->renderFlags, m_data->text);
+        m_layoutCache->textSize = d->textEngine->textSize(font, d->renderFlags, d->text);
         m_layoutCache->font     = font;
     }
 
     QSizeF sz = m_layoutCache->textSize;
 
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
         sz -= QSizeF(left + right, top + bottom);
     }
 
@@ -652,18 +679,19 @@ QSizeF QwtText::textSize(const QFont& defaultFont) const
  */
 void QwtText::draw(QPainter* painter, const QRectF& rect) const
 {
-    if (m_data->paintAttributes & PaintBackground) {
-        if (m_data->borderPen != Qt::NoPen || m_data->backgroundBrush != Qt::NoBrush) {
+    QWT_DC(d);
+    if (d->paintAttributes & PaintBackground) {
+        if (d->borderPen != Qt::NoPen || d->backgroundBrush != Qt::NoBrush) {
             painter->save();
 
-            painter->setPen(m_data->borderPen);
-            painter->setBrush(m_data->backgroundBrush);
+            painter->setPen(d->borderPen);
+            painter->setBrush(d->backgroundBrush);
 
-            if (m_data->borderRadius == 0) {
+            if (d->borderRadius == 0) {
                 QwtPainter::drawRect(painter, rect);
             } else {
                 painter->setRenderHint(QPainter::Antialiasing, true);
-                painter->drawRoundedRect(rect, m_data->borderRadius, m_data->borderRadius);
+                painter->drawRoundedRect(rect, d->borderRadius, d->borderRadius);
             }
 
             painter->restore();
@@ -672,24 +700,24 @@ void QwtText::draw(QPainter* painter, const QRectF& rect) const
 
     painter->save();
 
-    if (m_data->paintAttributes & PaintUsingTextFont) {
-        painter->setFont(m_data->font);
+    if (d->paintAttributes & PaintUsingTextFont) {
+        painter->setFont(d->font);
     }
 
-    if (m_data->paintAttributes & PaintUsingTextColor) {
-        if (m_data->color.isValid())
-            painter->setPen(m_data->color);
+    if (d->paintAttributes & PaintUsingTextColor) {
+        if (d->color.isValid())
+            painter->setPen(d->color);
     }
 
     QRectF expandedRect = rect;
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         // We want to calculate in screen metrics. So
         // we need a font that uses screen metrics
 
         const QFont font = QwtPainter::scaledFont(painter->font());
 
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
 
         expandedRect.setTop(rect.top() - top);
         expandedRect.setBottom(rect.bottom() + bottom);
@@ -697,7 +725,7 @@ void QwtText::draw(QPainter* painter, const QRectF& rect) const
         expandedRect.setRight(rect.right() + right);
     }
 
-    m_data->textEngine->draw(painter, expandedRect, m_data->renderFlags, m_data->text);
+    d->textEngine->draw(painter, expandedRect, d->renderFlags, d->text);
 
     painter->restore();
 }
@@ -753,7 +781,8 @@ const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
  */
 bool QwtText::isNull() const
 {
-    return m_data->text.isNull();
+    QWT_DC(d);
+    return d->text.isNull();
 }
 
 /**
@@ -763,5 +792,6 @@ bool QwtText::isNull() const
  */
 bool QwtText::isEmpty() const
 {
-    return m_data->text.isEmpty();
+    QWT_DC(d);
+    return d->text.isEmpty();
 }

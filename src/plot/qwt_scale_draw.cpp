@@ -254,8 +254,9 @@ inline void drawTick(QPainter* painter, const QwtScaleDraw* scaleDraw, qreal tic
 
 class QwtScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtScaleDraw)
 public:
-    PrivateData() : len(0), alignment(QwtScaleDraw::BottomScale), labelRotation(0.0)
+    PrivateData(QwtScaleDraw* p) : q_ptr(p), len(0), alignment(QwtScaleDraw::BottomScale), labelRotation(0.0)
     {
     }
 
@@ -273,16 +274,14 @@ public:
  * @details The range of the scale is initialized to [0, 100], the position is at (0, 0)
  *          with a length of 100. The orientation is QwtAbstractScaleDraw::Bottom.
  */
-QwtScaleDraw::QwtScaleDraw()
+QwtScaleDraw::QwtScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtScaleDraw::PrivateData;
     setLength(100);
 }
 
 //! Destructor
 QwtScaleDraw::~QwtScaleDraw()
 {
-    delete m_data;
 }
 
 /**
@@ -292,7 +291,8 @@ QwtScaleDraw::~QwtScaleDraw()
  */
 QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 {
-    return m_data->alignment;
+    QWT_DC(d);
+    return d->alignment;
 }
 
 /**
@@ -303,7 +303,8 @@ QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
  */
 void QwtScaleDraw::setAlignment(Alignment align)
 {
-    m_data->alignment = align;
+    QWT_D(d);
+    d->alignment = align;
 }
 
 /**
@@ -315,7 +316,8 @@ void QwtScaleDraw::setAlignment(Alignment align)
  */
 Qt::Orientation QwtScaleDraw::orientation() const
 {
-    switch (m_data->alignment) {
+    QWT_DC(d);
+    switch (d->alignment) {
     case TopScale:
     case BottomScale:
         return Qt::Horizontal;
@@ -561,6 +563,7 @@ int QwtScaleDraw::minLength(const QFont& font) const
  */
 QPointF QwtScaleDraw::labelPosition(double value) const
 {
+    QWT_DC(d);
     const double tval = scaleMap().transform(value);
     double dist       = spacing();
     if (hasComponent(QwtAbstractScaleDraw::Backbone))
@@ -574,23 +577,23 @@ QPointF QwtScaleDraw::labelPosition(double value) const
 
     switch (alignment()) {
     case RightScale: {
-        px = m_data->pos.x() + dist;
+        px = d->pos.x() + dist;
         py = tval;
         break;
     }
     case LeftScale: {
-        px = m_data->pos.x() - dist;
+        px = d->pos.x() - dist;
         py = tval;
         break;
     }
     case BottomScale: {
         px = tval;
-        py = m_data->pos.y() + dist;
+        py = d->pos.y() + dist;
         break;
     }
     case TopScale: {
         px = tval;
-        py = m_data->pos.y() - dist;
+        py = d->pos.y() - dist;
         break;
     }
     }
@@ -661,7 +664,8 @@ void QwtScaleDraw::drawBackbone(QPainter* painter) const
  */
 void QwtScaleDraw::move(const QPointF& pos)
 {
-    m_data->pos = pos;
+    QWT_D(d);
+    d->pos = pos;
     updateMap();
 }
 
@@ -673,7 +677,8 @@ void QwtScaleDraw::move(const QPointF& pos)
  */
 QPointF QwtScaleDraw::pos() const
 {
-    return m_data->pos;
+    QWT_DC(d);
+    return d->pos;
 }
 
 /**
@@ -689,6 +694,7 @@ QPointF QwtScaleDraw::pos() const
  */
 void QwtScaleDraw::setLength(double length)
 {
+    QWT_D(d);
 #if 0
     if ( length >= 0 && length < 10 )
         length = 10;
@@ -700,7 +706,7 @@ void QwtScaleDraw::setLength(double length)
     length = qwtMaxF(length, 10.0);
 #endif
 
-    m_data->len = length;
+    d->len = length;
     updateMap();
 }
 
@@ -712,7 +718,8 @@ void QwtScaleDraw::setLength(double length)
  */
 double QwtScaleDraw::length() const
 {
-    return m_data->len;
+    QWT_DC(d);
+    return d->len;
 }
 
 /**
@@ -894,7 +901,8 @@ QSizeF QwtScaleDraw::labelSize(const QFont& font, double value) const
  */
 void QwtScaleDraw::setLabelRotation(double rotation)
 {
-    m_data->labelRotation = rotation;
+    QWT_D(d);
+    d->labelRotation = rotation;
 }
 
 /**
@@ -905,7 +913,8 @@ void QwtScaleDraw::setLabelRotation(double rotation)
  */
 double QwtScaleDraw::labelRotation() const
 {
-    return m_data->labelRotation;
+    QWT_DC(d);
+    return d->labelRotation;
 }
 
 /**
@@ -936,7 +945,8 @@ double QwtScaleDraw::labelRotation() const
 
 void QwtScaleDraw::setLabelAlignment(Qt::Alignment alignment)
 {
-    m_data->labelAlignment = alignment;
+    QWT_D(d);
+    d->labelAlignment = alignment;
 }
 
 /**
@@ -947,7 +957,8 @@ void QwtScaleDraw::setLabelAlignment(Qt::Alignment alignment)
  */
 Qt::Alignment QwtScaleDraw::labelAlignment() const
 {
-    return m_data->labelAlignment;
+    QWT_DC(d);
+    return d->labelAlignment;
 }
 
 /**
@@ -1002,8 +1013,9 @@ int QwtScaleDraw::maxLabelHeight(const QFont& font) const
  */
 void QwtScaleDraw::updateMap()
 {
-    const QPointF pos = m_data->pos;
-    double len        = m_data->len;
+    QWT_D(d);
+    const QPointF pos = d->pos;
+    double len        = d->len;
 
     QwtScaleMap& sm = scaleMap();
     if (orientation() == Qt::Vertical)

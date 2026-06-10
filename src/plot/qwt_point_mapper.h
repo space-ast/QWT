@@ -133,8 +133,7 @@ public:
 private:
     Q_DISABLE_COPY(QwtPointMapper)
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPointMapper)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPointMapper::TransformationFlags)

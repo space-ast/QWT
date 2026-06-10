@@ -38,8 +38,9 @@
 
 class QwtAbstractScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtAbstractScaleDraw)
 public:
-    PrivateData() : spacing(4.0), penWidthF(0.0), minExtent(0.0)
+    PrivateData(QwtAbstractScaleDraw* p) : q_ptr(p), spacing(4.0), penWidthF(0.0), minExtent(0.0)
     {
         components = QwtAbstractScaleDraw::Backbone | QwtAbstractScaleDraw::Ticks | QwtAbstractScaleDraw::Labels;
 
@@ -62,7 +63,7 @@ public:
 
     double minExtent;
 
-    QMap< double, QwtText > labelCache;
+    mutable QMap< double, QwtText > labelCache;
 };
 
 /**
@@ -71,9 +72,8 @@ public:
  *          the spacing (distance between ticks and labels) is set to 4,
  *          the tick lengths are set to 4, 6 and 8 pixels.
  */
-QwtAbstractScaleDraw::QwtAbstractScaleDraw()
+QwtAbstractScaleDraw::QwtAbstractScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtAbstractScaleDraw::PrivateData;
 }
 
 /**
@@ -81,7 +81,6 @@ QwtAbstractScaleDraw::QwtAbstractScaleDraw()
  */
 QwtAbstractScaleDraw::~QwtAbstractScaleDraw()
 {
-    delete m_data;
 }
 
 /**
@@ -92,10 +91,11 @@ QwtAbstractScaleDraw::~QwtAbstractScaleDraw()
  */
 void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable)
 {
+    QWT_D(d);
     if (enable)
-        m_data->components |= component;
+        d->components |= component;
     else
-        m_data->components &= ~component;
+        d->components &= ~component;
 }
 
 /**
@@ -106,7 +106,8 @@ void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable
  */
 bool QwtAbstractScaleDraw::hasComponent(ScaleComponent component) const
 {
-    return (m_data->components & component);
+    QWT_DC(d);
+    return (d->components & component);
 }
 
 /**
@@ -116,9 +117,10 @@ bool QwtAbstractScaleDraw::hasComponent(ScaleComponent component) const
  */
 void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
 {
-    m_data->scaleDiv = scaleDiv;
-    m_data->map.setScaleInterval(scaleDiv.lowerBound(), scaleDiv.upperBound());
-    m_data->labelCache.clear();
+    QWT_D(d);
+    d->scaleDiv = scaleDiv;
+    d->map.setScaleInterval(scaleDiv.lowerBound(), scaleDiv.upperBound());
+    d->labelCache.clear();
 }
 
 /**
@@ -127,7 +129,8 @@ void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
  */
 void QwtAbstractScaleDraw::setTransformation(QwtTransform* transformation)
 {
-    m_data->map.setTransformation(transformation);
+    QWT_D(d);
+    d->map.setTransformation(transformation);
 }
 
 /**
@@ -136,7 +139,8 @@ void QwtAbstractScaleDraw::setTransformation(QwtTransform* transformation)
  */
 const QwtScaleMap& QwtAbstractScaleDraw::scaleMap() const
 {
-    return m_data->map;
+    QWT_DC(d);
+    return d->map;
 }
 
 /**
@@ -145,7 +149,8 @@ const QwtScaleMap& QwtAbstractScaleDraw::scaleMap() const
  */
 QwtScaleMap& QwtAbstractScaleDraw::scaleMap()
 {
-    return m_data->map;
+    QWT_D(d);
+    return d->map;
 }
 
 /**
@@ -154,7 +159,8 @@ QwtScaleMap& QwtAbstractScaleDraw::scaleMap()
  */
 const QwtScaleDiv& QwtAbstractScaleDraw::scaleDiv() const
 {
-    return m_data->scaleDiv;
+    QWT_DC(d);
+    return d->scaleDiv;
 }
 
 /**
@@ -164,10 +170,11 @@ const QwtScaleDiv& QwtAbstractScaleDraw::scaleDiv() const
  */
 void QwtAbstractScaleDraw::setPenWidthF(qreal width)
 {
+    QWT_D(d);
     if (width < 0.0)
         width = 0.0;
 
-    m_data->penWidthF = width;
+    d->penWidthF = width;
 }
 
 /**
@@ -177,7 +184,8 @@ void QwtAbstractScaleDraw::setPenWidthF(qreal width)
  */
 qreal QwtAbstractScaleDraw::penWidthF() const
 {
-    return m_data->penWidthF;
+    QWT_DC(d);
+    return d->penWidthF;
 }
 
 /**
@@ -186,7 +194,8 @@ qreal QwtAbstractScaleDraw::penWidthF() const
  */
 void QwtAbstractScaleDraw::setSelected(bool on)
 {
-    m_data->isSelected = on;
+    QWT_D(d);
+    d->isSelected = on;
 }
 
 /**
@@ -195,7 +204,8 @@ void QwtAbstractScaleDraw::setSelected(bool on)
  */
 bool QwtAbstractScaleDraw::isSelected() const
 {
-    return m_data->isSelected;
+    QWT_DC(d);
+    return d->isSelected;
 }
 
 /**
@@ -209,7 +219,8 @@ bool QwtAbstractScaleDraw::isSelected() const
  */
 void QwtAbstractScaleDraw::setSelectedPenWidthOffset(qreal offset)
 {
-    m_data->penWidthOffset = offset;
+    QWT_D(d);
+    d->penWidthOffset = offset;
 }
 
 /**
@@ -219,7 +230,8 @@ void QwtAbstractScaleDraw::setSelectedPenWidthOffset(qreal offset)
  */
 qreal QwtAbstractScaleDraw::selectedPenWidthOffset() const
 {
-    return m_data->penWidthOffset;
+    QWT_DC(d);
+    return d->penWidthOffset;
 }
 
 /**
@@ -229,15 +241,16 @@ qreal QwtAbstractScaleDraw::selectedPenWidthOffset() const
  */
 void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) const
 {
+    QWT_DC(d);
     painter->save();
 
     QPen pen = painter->pen();
-    pen.setWidthF(m_data->penWidthF);
+    pen.setWidthF(d->penWidthF);
     if (isSelected()) {
-        if (qFuzzyIsNull(m_data->penWidthF)) {
-            pen.setWidthF(1.0 + m_data->penWidthOffset);
+        if (qFuzzyIsNull(d->penWidthF)) {
+            pen.setWidthF(1.0 + d->penWidthOffset);
         } else {
-            pen.setWidthF(m_data->penWidthF + m_data->penWidthOffset);
+            pen.setWidthF(d->penWidthF + d->penWidthOffset);
         }
     }
     painter->setPen(pen);
@@ -246,11 +259,11 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
         painter->save();
         painter->setPen(palette.color(QPalette::Text));  // ignore pen style
 
-        const QList< double >& majorTicks = m_data->scaleDiv.ticks(QwtScaleDiv::MajorTick);
+        const QList< double >& majorTicks = d->scaleDiv.ticks(QwtScaleDiv::MajorTick);
 
         for (int i = 0; i < majorTicks.count(); i++) {
             const double v = majorTicks[ i ];
-            if (m_data->scaleDiv.contains(v))
+            if (d->scaleDiv.contains(v))
                 drawLabel(painter, v);
         }
 
@@ -267,14 +280,14 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
         painter->setPen(pen);
 
         for (int tickType = QwtScaleDiv::MinorTick; tickType < QwtScaleDiv::NTickTypes; tickType++) {
-            const double tickLen = m_data->tickLength[ tickType ];
+            const double tickLen = d->tickLength[ tickType ];
             if (tickLen <= 0.0)
                 continue;
 
-            const QList< double >& ticks = m_data->scaleDiv.ticks(tickType);
+            const QList< double >& ticks = d->scaleDiv.ticks(tickType);
             for (int i = 0; i < ticks.count(); i++) {
                 const double v = ticks[ i ];
-                if (m_data->scaleDiv.contains(v))
+                if (d->scaleDiv.contains(v))
                     drawTick(painter, v, tickLen);
             }
         }
@@ -307,10 +320,11 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
  */
 void QwtAbstractScaleDraw::setSpacing(double spacing)
 {
+    QWT_D(d);
     if (spacing < 0)
         spacing = 0;
 
-    m_data->spacing = spacing;
+    d->spacing = spacing;
 }
 
 /**
@@ -321,7 +335,8 @@ void QwtAbstractScaleDraw::setSpacing(double spacing)
  */
 double QwtAbstractScaleDraw::spacing() const
 {
-    return m_data->spacing;
+    QWT_DC(d);
+    return d->spacing;
 }
 
 /**
@@ -334,10 +349,11 @@ double QwtAbstractScaleDraw::spacing() const
  */
 void QwtAbstractScaleDraw::setMinimumExtent(double minExtent)
 {
+    QWT_D(d);
     if (minExtent < 0.0)
         minExtent = 0.0;
 
-    m_data->minExtent = minExtent;
+    d->minExtent = minExtent;
 }
 
 /**
@@ -347,7 +363,8 @@ void QwtAbstractScaleDraw::setMinimumExtent(double minExtent)
  */
 double QwtAbstractScaleDraw::minimumExtent() const
 {
-    return m_data->minExtent;
+    QWT_DC(d);
+    return d->minExtent;
 }
 
 /**
@@ -358,6 +375,7 @@ double QwtAbstractScaleDraw::minimumExtent() const
  */
 void QwtAbstractScaleDraw::setTickLength(QwtScaleDiv::TickType tickType, double length)
 {
+    QWT_D(d);
     if (tickType < QwtScaleDiv::MinorTick || tickType > QwtScaleDiv::MajorTick) {
         return;
     }
@@ -369,7 +387,7 @@ void QwtAbstractScaleDraw::setTickLength(QwtScaleDiv::TickType tickType, double 
     if (length > maxTickLen)
         length = maxTickLen;
 
-    m_data->tickLength[ tickType ] = length;
+    d->tickLength[ tickType ] = length;
 }
 
 /**
@@ -379,11 +397,12 @@ void QwtAbstractScaleDraw::setTickLength(QwtScaleDiv::TickType tickType, double 
  */
 double QwtAbstractScaleDraw::tickLength(QwtScaleDiv::TickType tickType) const
 {
+    QWT_DC(d);
     if (tickType < QwtScaleDiv::MinorTick || tickType > QwtScaleDiv::MajorTick) {
         return 0;
     }
 
-    return m_data->tickLength[ tickType ];
+    return d->tickLength[ tickType ];
 }
 
 /**
@@ -394,9 +413,10 @@ double QwtAbstractScaleDraw::tickLength(QwtScaleDiv::TickType tickType) const
  */
 double QwtAbstractScaleDraw::maxTickLength() const
 {
+    QWT_DC(d);
     double length = 0.0;
     for (int i = 0; i < QwtScaleDiv::NTickTypes; i++)
-        length = qwtMaxF(length, m_data->tickLength[ i ]);
+        length = qwtMaxF(length, d->tickLength[ i ]);
 
     return length;
 }
@@ -424,8 +444,9 @@ QwtText QwtAbstractScaleDraw::label(double value) const
  */
 const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) const
 {
-    QMap< double, QwtText >::const_iterator it1 = m_data->labelCache.constFind(value);
-    if (it1 != m_data->labelCache.constEnd())
+    QWT_DC(d);
+    QMap< double, QwtText >::const_iterator it1 = d->labelCache.constFind(value);
+    if (it1 != d->labelCache.constEnd())
         return *it1;
 
     QwtText lbl = label(value);
@@ -434,7 +455,7 @@ const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) 
 
     (void)lbl.textSize(font);  // initialize the internal cache
 
-    QMap< double, QwtText >::iterator it2 = m_data->labelCache.insert(value, lbl);
+    QMap< double, QwtText >::iterator it2 = d->labelCache.insert(value, lbl);
     return *it2;
 }
 
@@ -446,5 +467,6 @@ const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) 
  */
 void QwtAbstractScaleDraw::invalidateCache()
 {
-    m_data->labelCache.clear();
+    QWT_D(d);
+    d->labelCache.clear();
 }

@@ -138,8 +138,7 @@ void drawLines( QPainter*, const QRectF&,
     Qt::Orientation, const QwtScaleMap&,
     const QList< double >& ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotGrid)
 };
 
 #endif

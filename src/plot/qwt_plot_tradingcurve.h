@@ -203,8 +203,7 @@ void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double wi
 virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotTradingCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotTradingCurve::PaintAttributes)
