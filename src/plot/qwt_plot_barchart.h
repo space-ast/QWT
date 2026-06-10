@@ -91,6 +91,9 @@ public:
     // Get the runtime type information
     virtual int rtti() const override;
 
+    // Attach the bar chart to a plot (applies color cycle if pen/brush not user-set)
+    void attach(QwtPlot* plot) override;
+
     // Set samples from QVector<QPointF>
     void setSamples(const QVector< QPointF >&);
     // Set samples from QVector<double>

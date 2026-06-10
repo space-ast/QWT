@@ -47,6 +47,7 @@
 #include "qwt_plot_scale_event_dispatcher.h"
 #include "qwt_painter.h"
 #include "qwt_scale_draw.h"
+#include "qwt_color_cycle.h"
 // qt
 #include <qpainter.h>
 #include <qpointer.h>
@@ -138,6 +139,10 @@ public:
     TickDirection tickDirection[QwtAxis::AxisPositions] = {
         TickOutside, TickOutside, TickOutside, TickOutside
     };
+
+    // Color cycle for automatic item coloring
+    QwtColorCycle colorCycle;
+    int colorCycleCounters[20] = {};  // per-rtti counter for built-in types
 };
 
 QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
@@ -218,6 +223,7 @@ void QwtPlot::initPlot(const QwtText& title)
     m_data->canvas = new QwtPlotCanvas(this);
     m_data->canvas->setObjectName("QwtPlotCanvas");
     m_data->canvas->installEventFilter(this);
+    setCanvasBackground(QBrush(Qt::white));
 
     //create uuid
     m_data->plotId = QUuid::createUuid().toString();
@@ -1172,6 +1178,50 @@ void QwtPlot::setCanvasBackground(const QBrush& brush)
 QBrush QwtPlot::canvasBackground() const
 {
     return canvas()->palette().brush(QPalette::Normal, QPalette::Window);
+}
+
+/**
+ * @brief Set the color cycle used for automatic item coloring
+ * @details When plot items (curves, bar charts, etc.) are attached without
+ *          a user-specified pen or brush, they automatically receive a color
+ *          from this color cycle.
+ * @param colorCycle Color cycle object
+ * @sa colorCycle(), nextColorForItem()
+ */
+void QwtPlot::setColorCycle(const QwtColorCycle& colorCycle)
+{
+    QWT_D(d);
+    d->colorCycle = colorCycle;
+}
+
+/**
+ * @brief Get the current color cycle
+ * @return Current color cycle
+ * @sa setColorCycle()
+ */
+QwtColorCycle QwtPlot::colorCycle() const
+{
+    QWT_DC(d);
+    return d->colorCycle;
+}
+
+/**
+ * @brief Get the next auto-assigned color for a plot item type
+ * @details Returns the next color from the color cycle for the given rtti type.
+ *          Each rtti type maintains an independent counter, so curves and bar
+ *          charts each start from the first palette color.
+ * @param rtti The rtti value of the plot item (e.g. QwtPlotItem::Rtti_PlotCurve)
+ * @return Next color from the cycle
+ * @sa colorCycle(), QwtPlotItem::rtti()
+ */
+QColor QwtPlot::nextColorForItem(int rtti)
+{
+    QWT_D(d);
+    int idx = 0;
+    if (rtti >= 0 && rtti < 20)
+        idx = d->colorCycleCounters[rtti]++;
+
+    return d->colorCycle.color(idx);
 }
 
 /*!

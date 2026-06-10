@@ -98,6 +98,7 @@ public:
 
     QPen pen;
     QBrush brush;
+    bool m_userSetPen = false;
 
     QwtPlotCurve::CurveAttributes attributes;
     QwtPlotCurve::PaintAttributes paintAttributes;
@@ -155,6 +156,23 @@ void QwtPlotCurve::init()
 int QwtPlotCurve::rtti() const
 {
     return QwtPlotItem::Rtti_PlotCurve;
+}
+
+/**
+ * @brief Attach the curve to a plot
+ * @details If the pen has not been explicitly set by the user via setPen(),
+ *          the curve automatically receives a color from the plot's color cycle.
+ * @param plot Plot to attach to (nullptr to detach)
+ * @sa QwtPlot::nextColorForItem(), QwtPlot::setColorCycle()
+ */
+void QwtPlotCurve::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
+        const QColor c = plot->nextColorForItem(rtti());
+        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**
@@ -326,6 +344,7 @@ void QwtPlotCurve::setPen(const QColor& color, qreal width, Qt::PenStyle style)
 void QwtPlotCurve::setPen(const QPen& pen)
 {
     QWT_D(d);
+    d->m_userSetPen = true;
     if (pen != d->pen) {
         d->pen = pen;
 

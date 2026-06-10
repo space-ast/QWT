@@ -44,6 +44,7 @@ class QwtTextLabel;
 class QwtInterval;
 class QwtText;
 class QwtPlotScaleEventDispatcher;
+class QwtColorCycle;
 
 template< typename T >
 class QList;
@@ -211,6 +212,15 @@ public:
     void setCanvasBackground(const QBrush&);
     // Get canvas background
     QBrush canvasBackground() const;
+
+    // Color cycle
+
+    // Set color cycle for automatic item coloring
+    void setColorCycle(const QwtColorCycle&);
+    // Get the current color cycle
+    QwtColorCycle colorCycle() const;
+    // Get the next auto-assigned color for a plot item type
+    QColor nextColorForItem(int rtti);
 
     // Get canvas map for axis
     virtual QwtScaleMap canvasMap(QwtAxisId) const;

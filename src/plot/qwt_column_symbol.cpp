@@ -148,8 +148,8 @@ QwtColumnSymbol::QwtColumnSymbol(Style style)
 {
     QWT_D(d);
     d->style = style;
-    d->pen   = QPen(Qt::black, 1);
-    d->brush = QBrush(Qt::gray);
+    d->pen   = QPen(QColor("#888888"), 1);
+    d->brush = QBrush(QColor("#c0c0c0"));
 }
 
 /**

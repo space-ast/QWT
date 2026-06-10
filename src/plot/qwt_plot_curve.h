@@ -258,6 +258,9 @@ virtual ~QwtPlotCurve();
     // Get the runtime type information
 virtual int rtti() const override;
 
+    // Attach the curve to a plot (applies color cycle if pen not user-set)
+    void attach(QwtPlot* plot) override;
+
     // Set paint attribute
 void setPaintAttribute(PaintAttribute, bool on = true);
 

@@ -10,6 +10,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_boxchart.h"
+#include "qwt_plot.h"
 #include "qwt_scale_map.h"
 #include "qwt_painter.h"
 #include "qwt_symbol.h"
@@ -60,6 +61,7 @@ public:
     bool meanVisible;
     double outlierJitter;
     PaintAttributes paintAttributes;
+    bool m_userSetPen = false;
 };
 
 /**
@@ -114,6 +116,24 @@ void QwtPlotBoxChart::init()
 int QwtPlotBoxChart::rtti() const
 {
     return Rtti_PlotBoxChart;
+}
+
+/**
+ * @brief Attach the box chart to a plot
+ * @details If the pen has not been explicitly set by the user, the box chart
+ *          automatically receives a color from the plot's color cycle.
+ *          The brush is set to a semi-transparent version of the same color.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotBoxChart::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
+        const QColor c = plot->nextColorForItem(rtti());
+        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+        d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**
@@ -328,6 +348,7 @@ void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle styl
 void QwtPlotBoxChart::setPen(const QPen& pen)
 {
     QWT_D(d);
+    d->m_userSetPen = true;
     if (d->pen != pen)
     {
         d->pen = pen;

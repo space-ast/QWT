@@ -90,6 +90,9 @@ class QWT_EXPORT QwtPlotMultiBarChart
     /// Get the runtime type information
     virtual int rtti() const override;
 
+    /// Attach to a plot (applies color cycle to symbols if none user-set)
+    void attach(QwtPlot* plot) override;
+
     /// Set the bar titles
     void setBarTitles( const QList< QwtText >& );
     /// Get the bar titles

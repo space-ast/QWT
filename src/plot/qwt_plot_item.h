@@ -240,7 +240,7 @@ public:
     virtual ~QwtPlotItem();
 
     /// Attach the item to a plot
-    void attach(QwtPlot* plot);
+    virtual void attach(QwtPlot* plot);
     /// Detach the item from the plot
     void detach();
 

@@ -25,6 +25,8 @@
  *****************************************************************************/
 
 #include "qwt_plot_multi_barchart.h"
+#include "qwt_plot.h"
+#include "qwt_color_cycle.h"
 #include "qwt_scale_map.h"
 #include "qwt_column_symbol.h"
 #include "qwt_text.h"
@@ -63,6 +65,7 @@ class QwtPlotMultiBarChart::PrivateData
     QwtPlotMultiBarChart::ChartStyle style;
     QList< QwtText > barTitles;
     QMap< int, QwtColumnSymbol* > symbolMap;
+    bool m_userSetSymbols = false;
 };
 
 /**
@@ -111,6 +114,37 @@ void QwtPlotMultiBarChart::init()
 int QwtPlotMultiBarChart::rtti() const
 {
     return QwtPlotItem::Rtti_PlotMultiBarChart;
+}
+
+/**
+ * @brief Attach the multi bar chart to a plot
+ * @details If no symbols have been set by the user, the chart automatically
+ *          creates colored symbols from the plot's color cycle.
+ *          The number of value indices is determined from the first sample.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotMultiBarChart::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && !d->m_userSetSymbols && d->symbolMap.isEmpty()) {
+        int numValues = 0;
+        if (dataSize() > 0) {
+            const QwtSetSample s = sample(0);
+            numValues = s.set.size();
+        }
+
+        const QwtColorCycle cc = plot->colorCycle();
+        plot->nextColorForItem(rtti());
+
+        for (int i = 0; i < numValues; i++) {
+            auto* sym = new QwtColumnSymbol(QwtColumnSymbol::Box);
+            const QColor c = cc.color(i);
+            sym->setBrush(c);
+            sym->setPen(QPen(c.darker(150), 1));
+            d->symbolMap.insert(i, sym);
+        }
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**
@@ -194,6 +228,7 @@ QList< QwtText > QwtPlotMultiBarChart::barTitles() const
 void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 {
     QWT_D(d);
+    d->m_userSetSymbols = true;
     if ( valueIndex < 0 )
         return;
 

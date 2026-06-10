@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_histogram.h"
+#include "qwt_plot.h"
 #include "qwt_painter.h"
 #include "qwt_column_symbol.h"
 #include "qwt_scale_map.h"
@@ -58,6 +59,7 @@ class QwtPlotHistogram::PrivateData
     PrivateData(QwtPlotHistogram* p)
         : q_ptr(p)
         , baseline( 0.0 )
+        , pen( QColor("#555555"), 0 )
         , style( Columns )
         , symbol( nullptr )
     {
@@ -74,6 +76,8 @@ class QwtPlotHistogram::PrivateData
     QBrush brush;
     QwtPlotHistogram::HistogramStyle style;
     const QwtColumnSymbol* symbol;
+    bool m_userSetPen = false;
+    bool m_userSetBrush = false;
 };
 
 /**
@@ -175,6 +179,7 @@ void QwtPlotHistogram::setPen( const QColor& color, qreal width, Qt::PenStyle st
 void QwtPlotHistogram::setPen( const QPen& pen )
 {
     QWT_D(d);
+    d->m_userSetPen = true;
     if ( pen != d->pen )
     {
         d->pen = pen;
@@ -205,6 +210,7 @@ const QPen& QwtPlotHistogram::pen() const
 void QwtPlotHistogram::setBrush( const QBrush& brush )
 {
     QWT_D(d);
+    d->m_userSetBrush = true;
     if ( brush != d->brush )
     {
         d->brush = brush;
@@ -335,6 +341,25 @@ QRectF QwtPlotHistogram::boundingRect() const
 int QwtPlotHistogram::rtti() const
 {
     return QwtPlotItem::Rtti_PlotHistogram;
+}
+
+/**
+ * @brief Attach the histogram to a plot
+ * @details If pen/brush have not been explicitly set by the user, the histogram
+ *          automatically receives colors from the plot's color cycle.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotHistogram::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && (!d->m_userSetPen || !d->m_userSetBrush)) {
+        const QColor c = plot->nextColorForItem(rtti());
+        if (!d->m_userSetPen)
+            d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+        if (!d->m_userSetBrush)
+            d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**

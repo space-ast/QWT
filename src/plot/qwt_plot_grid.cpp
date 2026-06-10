@@ -32,6 +32,7 @@
 
 #include <qpainter.h>
 #include <qpen.h>
+#include <qcolor.h>
 
 static inline bool qwtFuzzyGreaterOrEqual( double d1, double d2 )
 {
@@ -49,6 +50,8 @@ class QwtPlotGrid::PrivateData
         , yEnabled( true )
         , xMinEnabled( false )
         , yMinEnabled( false )
+        , majorPen( QColor("#c0c0c0"), 0.5, Qt::SolidLine )
+        , minorPen( QColor("#e0e0e0"), 0.5, Qt::DotLine )
     {
     }
 

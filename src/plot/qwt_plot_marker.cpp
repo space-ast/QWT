@@ -43,6 +43,7 @@ class QwtPlotMarker::PrivateData
         , labelAlignment( Qt::AlignCenter )
         , labelOrientation( Qt::Horizontal )
         , spacing( 2 )
+        , pen( QColor("#555555"), 0 )
         , symbol( nullptr )
         , style( QwtPlotMarker::NoLine )
         , xValue( 0.0 )

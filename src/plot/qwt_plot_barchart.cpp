@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_barchart.h"
+#include "qwt_plot.h"
 #include "qwt_scale_map.h"
 #include "qwt_column_symbol.h"
 #include "qwt_text.h"
@@ -52,6 +53,8 @@ public:
 
     QwtColumnSymbol* symbol;
     QwtPlotBarChart::LegendMode legendMode;
+    bool m_userSetPen = false;
+    bool m_userSetBrush = false;
 };
 
 /**
@@ -95,6 +98,29 @@ void QwtPlotBarChart::init()
 int QwtPlotBarChart::rtti() const
 {
     return QwtPlotItem::Rtti_PlotBarChart;
+}
+
+/**
+ * @brief Attach the bar chart to a plot
+ * @details If the brush has not been explicitly set by the user, the bar chart
+ *          automatically receives a color from the plot's color cycle.
+ *          The pen is set to a darker shade of the fill color unless user-set.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotBarChart::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && (!d->m_userSetBrush || !d->m_userSetPen)) {
+        if (!d->symbol)
+            d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+
+        const QColor c = plot->nextColorForItem(rtti());
+        if (!d->m_userSetBrush)
+            d->symbol->setBrush(c);
+        if (!d->m_userSetPen)
+            d->symbol->setPen(QPen(c.darker(150), 1));
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**
@@ -177,6 +203,7 @@ const QwtColumnSymbol* QwtPlotBarChart::symbol() const
 void QwtPlotBarChart::setPen(const QPen& p)
 {
     QWT_D(d);
+    d->m_userSetPen = true;
     if (!d->symbol) {
         d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
@@ -207,6 +234,7 @@ QPen QwtPlotBarChart::pen() const
 void QwtPlotBarChart::setBrush(const QBrush& b)
 {
     QWT_D(d);
+    d->m_userSetBrush = true;
     if (!d->symbol) {
         d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }

@@ -792,8 +792,8 @@ class QwtSymbol::PrivateData
     PrivateData( QwtSymbol* p )
         : q_ptr( p )
         , style( QwtSymbol::NoSymbol )
-        , brush( Qt::gray )
-        , pen( Qt::black, 0 )
+        , brush( Qt::NoBrush )
+        , pen( QColor("#555555"), 0 )
         , isPinPointEnabled( false )
     {
         cache.policy = QwtSymbol::AutoCache;

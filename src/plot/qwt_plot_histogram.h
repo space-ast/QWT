@@ -112,6 +112,9 @@ virtual ~QwtPlotHistogram();
     // Get the runtime type information
 virtual int rtti() const override;
 
+    // Attach the histogram to a plot (applies color cycle if pen/brush not user-set)
+    void attach(QwtPlot* plot) override;
+
     // Set pen
 void setPen( const QColor&,
     qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );

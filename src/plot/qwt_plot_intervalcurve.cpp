@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_intervalcurve.h"
+#include "qwt_plot.h"
 #include "qwt_interval_symbol.h"
 #include "qwt_scale_map.h"
 #include "qwt_clipper.h"
@@ -69,8 +70,8 @@ class QwtPlotIntervalCurve::PrivateData
         q_ptr(p),
         style( QwtPlotIntervalCurve::Tube ),
         symbol( nullptr ),
-        pen( Qt::black ),
-        brush( Qt::white )
+        pen( QColor("#555555") ),
+        brush( Qt::NoBrush )
     {
         paintAttributes = QwtPlotIntervalCurve::ClipPolygons;
         paintAttributes |= QwtPlotIntervalCurve::ClipSymbol;
@@ -88,6 +89,7 @@ class QwtPlotIntervalCurve::PrivateData
 
     QPen pen;
     QBrush brush;
+    bool m_userSetPen = false;
 
     QwtPlotIntervalCurve::PaintAttributes paintAttributes;
 };
@@ -140,6 +142,25 @@ void QwtPlotIntervalCurve::init()
 int QwtPlotIntervalCurve::rtti() const
 {
     return QwtPlotIntervalCurve::Rtti_PlotIntervalCurve;
+}
+
+/**
+ * @brief Attach the interval curve to a plot
+ * @details If the pen has not been explicitly set by the user, the interval curve
+ *          automatically receives a color from the plot's color cycle.
+ *          The brush is set to a semi-transparent version of the same color.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotIntervalCurve::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
+        const QColor c = plot->nextColorForItem(rtti());
+        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+        d->pen.setCapStyle(Qt::FlatCap);
+        d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+    }
+    QwtPlotItem::attach(plot);
 }
 
 /**
@@ -284,6 +305,7 @@ void QwtPlotIntervalCurve::setPen( const QColor& color, qreal width, Qt::PenStyl
 void QwtPlotIntervalCurve::setPen( const QPen& pen )
 {
     QWT_D(d);
+    d->m_userSetPen = true;
     if ( pen != d->pen )
     {
         d->pen = pen;
