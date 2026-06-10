@@ -6,6 +6,7 @@
 #include "../../src/plot/qwt_algorithm.hpp"
 #include "../../src/plot/qwt_interval.h"
 #include "../../src/plot/qwt_color_map.h"
+#include "../../src/plot/qwt_color_cycle.h"
 #include "../../src/plot/qwt_pixel_matrix.h"
 #include "../../src/plot/qwt_transform.h"
 #include "../../src/plot/qwt_scale_map.h"

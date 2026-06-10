@@ -14,6 +14,7 @@
 #include "../../src/plot/qwt_math.cpp"
 #include "../../src/plot/qwt_interval.cpp"
 #include "../../src/plot/qwt_color_map.cpp"
+#include "../../src/plot/qwt_color_cycle.cpp"
 #include "../../src/plot/qwt_pixel_matrix.cpp"
 #include "../../src/plot/qwt_transform.cpp"
 #include "../../src/plot/qwt_scale_map.cpp"
