@@ -2,7 +2,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <time.h>
+#include <ctime>
 #include "qwt3d_openglhelper.h"
 #include "gl2ps.h"
 #include "qwt3d_io_gl2ps.h"
@@ -11,31 +11,96 @@
 
 using namespace Qwt3D;
 
+class VectorWriter::PrivateData
+{
+    QWT_DECLARE_PUBLIC(VectorWriter)
+
+public:
+    PrivateData(VectorWriter* q)
+        : q_ptr(q)
+        , m_gl2psFormat(GL2PS_EPS)
+        , m_formatError(false)
+#ifdef GL2PS_HAVE_ZLIB
+        , m_compressed(true)
+#else
+        , m_compressed(false)
+#endif
+        , m_sortMode(VectorWriter::SIMPLESORT)
+        , m_landscape(VectorWriter::AUTO)
+        , m_textMode(VectorWriter::PIXEL)
+    {
+    }
+
+    GLint m_gl2psFormat;
+    bool m_formatError;
+    bool m_compressed;
+    VectorWriter::SORTMODE m_sortMode;
+    VectorWriter::LANDSCAPEMODE m_landscape;
+    VectorWriter::TEXTMODE m_textMode;
+    QString m_texFname;
+};
+
+VectorWriter::VectorWriter() : QWT_PIMPL_CONSTRUCT
+{
+}
+
+VectorWriter::~VectorWriter() = default;
+
 /**
  * @brief Provides a new VectorWriter object
  * @return A cloned copy of this VectorWriter as Functor pointer
  */
 IO::Functor* VectorWriter::clone() const
 {
-    return new VectorWriter(*this);
+    auto* copy = new VectorWriter();
+    QWT_DC(d);
+    auto* copyD = copy->d_func();
+    copyD->m_gl2psFormat = d->m_gl2psFormat;
+    copyD->m_formatError = d->m_formatError;
+    copyD->m_compressed = d->m_compressed;
+    copyD->m_sortMode = d->m_sortMode;
+    copyD->m_landscape = d->m_landscape;
+    copyD->m_textMode = d->m_textMode;
+    copyD->m_texFname = d->m_texFname;
+    return copy;
 }
 
-VectorWriter::VectorWriter()
-    : gl2ps_format_(GL2PS_EPS)
-    , formaterror_(false)
-    ,
-#ifdef GL2PS_HAVE_ZLIB
-    compressed_(true)
-    ,
-#else
-    compressed_(false)
-    ,
-#endif
-    sortmode_(SIMPLESORT)
-    , landscape_(VectorWriter::AUTO)
-    , textmode_(VectorWriter::PIXEL)
-    , texfname_("")
+/**
+ * @brief Sets landscape mode
+ * @param val Landscape mode (ON, OFF, or AUTO)
+ */
+void VectorWriter::setLandscape(LANDSCAPEMODE val)
 {
+    QWT_D(d);
+    d->m_landscape = val;
+}
+
+/**
+ * @brief Returns the current landscape mode
+ */
+VectorWriter::LANDSCAPEMODE VectorWriter::landscape() const
+{
+    QWT_DC(d);
+    return d->m_landscape;
+}
+
+/**
+ * @brief Sets the sorting mode
+ * @param val Sort mode (NOSORT, SIMPLESORT, or BSPSORT)
+ */
+void VectorWriter::setSortMode(SORTMODE val)
+{
+    QWT_D(d);
+    d->m_sortMode = val;
+}
+
+/**
+ * @brief Returns the current sorting mode
+ */
+VectorWriter::SORTMODE VectorWriter::sortMode() const
+{
+    QWT_DC(d);
+    return d->m_sortMode;
 }
 
 /**
@@ -55,8 +120,18 @@ VectorWriter::VectorWriter()
  */
 void VectorWriter::setTextMode(TEXTMODE val, QString fname)
 {
-    textmode_ = val;
-    texfname_ = (fname.isEmpty()) ? QString("") : fname;
+    QWT_D(d);
+    d->m_textMode = val;
+    d->m_texFname = (fname.isEmpty()) ? QString("") : fname;
+}
+
+/**
+ * @brief Returns the current text output mode
+ */
+VectorWriter::TEXTMODE VectorWriter::textMode() const
+{
+    QWT_DC(d);
+    return d->m_textMode;
 }
 
 #ifdef GL2PS_HAVE_ZLIB
@@ -67,7 +142,8 @@ void VectorWriter::setTextMode(TEXTMODE val, QString fname)
  */
 void VectorWriter::setCompressed(bool val)
 {
-    compressed_ = val;
+    QWT_D(d);
+    d->m_compressed = val;
 }
 #else
 /**
@@ -75,9 +151,19 @@ void VectorWriter::setCompressed(bool val)
  */
 void VectorWriter::setCompressed(bool)
 {
-    compressed_ = false;
+    QWT_D(d);
+    d->m_compressed = false;
 }
 #endif
+
+/**
+ * @brief Returns compression mode
+ */
+bool VectorWriter::compressed() const
+{
+    QWT_DC(d);
+    return d->m_compressed;
+}
 
 /**
  * @brief Sets output format
@@ -86,29 +172,30 @@ void VectorWriter::setCompressed(bool)
  */
 bool VectorWriter::setFormat(QString const& format)
 {
+    QWT_D(d);
     if (format == QString("EPS")) {
-        gl2ps_format_ = GL2PS_EPS;
+        d->m_gl2psFormat = GL2PS_EPS;
     } else if (format == QString("PS")) {
-        gl2ps_format_ = GL2PS_PS;
+        d->m_gl2psFormat = GL2PS_PS;
     } else if (format == QString("PDF")) {
-        gl2ps_format_ = GL2PS_PDF;
+        d->m_gl2psFormat = GL2PS_PDF;
     } else if (format == QString("SVG")) {
-        gl2ps_format_ = GL2PS_SVG;
+        d->m_gl2psFormat = GL2PS_SVG;
     } else if (format == QString("PGF")) {
-        gl2ps_format_ = GL2PS_PGF;
+        d->m_gl2psFormat = GL2PS_PGF;
     }
 #ifdef GL2PS_HAVE_ZLIB
     else if (format == QString("EPS_GZ")) {
-        gl2ps_format_ = GL2PS_EPS;
+        d->m_gl2psFormat = GL2PS_EPS;
     } else if (format == QString("PS_GZ")) {
-        gl2ps_format_ = GL2PS_PS;
+        d->m_gl2psFormat = GL2PS_PS;
     }
 #endif
     else {
-        formaterror_ = true;
+        d->m_formatError = true;
         return false;
     }
-    formaterror_ = false;
+    d->m_formatError = false;
     return true;
 }
 
@@ -120,7 +207,8 @@ bool VectorWriter::setFormat(QString const& format)
  */
 bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 {
-    if (formaterror_)
+    QWT_D(d);
+    if (d->m_formatError)
         return false;
 
     plot->makeCurrent();
@@ -132,10 +220,10 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 
     GLint options = GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT | GL2PS_DRAW_BACKGROUND | GL2PS_OCCLUSION_CULL | GL2PS_BEST_ROOT;
 
-    if (compressed_)
+    if (d->m_compressed)
         options |= GL2PS_COMPRESS;
 
-    switch (landscape_) {
+    switch (d->m_landscape) {
     case VectorWriter::AUTO:
         if (viewport[ 2 ] - viewport[ 0 ] > viewport[ 3 ] - viewport[ 0 ])
             options |= GL2PS_LANDSCAPE;
@@ -148,7 +236,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
     }
 
     int sortmode = GL2PS_SIMPLE_SORT;
-    switch (sortmode_) {
+    switch (d->m_sortMode) {
     case VectorWriter::NOSORT:
         sortmode = GL2PS_NO_SORT;
         break;
@@ -162,7 +250,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
         break;
     }
 
-    switch (textmode_) {
+    switch (d->m_textMode) {
     case NATIVE:
         Label::useDeviceFonts(true);
         break;
@@ -191,7 +279,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
         gl2psBeginPage("---",
                        QWT3DLOCAL8BIT(producer),
                        viewport,
-                       gl2ps_format_,
+                       d->m_gl2psFormat,
                        sortmode,
                        options,
                        GL_RGBA,
@@ -210,8 +298,8 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
     fclose(fp);
 
     // extra TeX file
-    if (textmode_ == TEX) {
-        QString fn = (texfname_.isEmpty()) ? fname + ".tex" : texfname_;
+    if (d->m_textMode == TEX) {
+        QString fn = (d->m_texFname.isEmpty()) ? fname + ".tex" : d->m_texFname;
 
         fp = fopen(QWT3DLOCAL8BIT(fn), "wb");
         if (!fp) {
@@ -325,9 +413,6 @@ GLint Qwt3D::drawDeviceText(const char* str, const char* fontname, int fontsize,
     glGetDoublev(GL_CURRENT_COLOR, fcol);
     GLdouble bcol[ 4 ];
     glGetDoublev(GL_COLOR_CLEAR_VALUE, bcol);
-
-    //	glColor4d(color.r, color.g, color.b, color.a);
-    //		glClearColor(color.r, color.g, color.b, color.a);
 
     GLint ret = GL2PS_SUCCESS;
 

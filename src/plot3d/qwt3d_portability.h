@@ -1,5 +1,5 @@
-#ifndef qwt3d_portability_h
-#define qwt3d_portability_h
+#ifndef QWT3D_PORTABILITY_H
+#define QWT3D_PORTABILITY_H
 
 #include <qnamespace.h>
 #include "qwt3d_global.h"
@@ -72,4 +72,4 @@ private:
 };
 }  // ns
 
-#endif
+#endif // QWT3D_PORTABILITY_H

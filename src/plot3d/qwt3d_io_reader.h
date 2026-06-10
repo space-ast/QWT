@@ -1,5 +1,5 @@
-#ifndef qwt3d_reader_h
-#define qwt3d_reader_h
+#ifndef QWT3D_IO_READER_H
+#define QWT3D_IO_READER_H
 
 #include "qwt3d_io.h"
 
@@ -12,19 +12,20 @@ namespace Qwt3D {
 class QWT3D_EXPORT NativeReader : public IO::Functor
 {
     friend class IO;
+    QWT_DECLARE_PRIVATE(NativeReader)
 
 public:
     NativeReader();
+    ~NativeReader() override;
 
 private:
-    IO::Functor *clone() const { return new NativeReader(*this); }
-    bool operator()(Plot3D *plot, QString const &fname);
+    IO::Functor *clone() const override;
+    bool operator()(Plot3D *plot, QString const &fname) override;
     static const char *magicstring;
-    double minz_, maxz_;
     bool collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
                      double &minx, double &maxx, double &miny, double &maxy);
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_IO_READER_H

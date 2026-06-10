@@ -1,5 +1,5 @@
-#ifndef qwt3d_graphplot_h
-#define qwt3d_graphplot_h
+#ifndef QWT3D_GRAPHPLOT_H
+#define QWT3D_GRAPHPLOT_H
 
 #include "qwt3d_plot.h"
 
@@ -12,11 +12,9 @@ namespace Qwt3D {
  */
 class QWT3D_EXPORT GraphPlot : public Plot3D
 {
-    //    Q_OBJECT
-
 public:
     // Constructor
-    GraphPlot(QWidget *parent = 0, const char *name = 0);
+    explicit GraphPlot(QWidget* parent = nullptr);
 
 protected:
     virtual void createData() = 0;
@@ -24,4 +22,4 @@ protected:
 
 } // ns
 
-#endif
+#endif // QWT3D_GRAPHPLOT_H

@@ -1,5 +1,5 @@
-#ifndef qwt3d_function_h
-#define qwt3d_function_h
+#ifndef QWT3D_FUNCTION_H
+#define QWT3D_FUNCTION_H
 
 #include "qwt3d_gridmapping.h"
 
@@ -43,4 +43,4 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_FUNCTION_H

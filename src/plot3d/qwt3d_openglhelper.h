@@ -1,5 +1,5 @@
-#ifndef __openglhelper__
-#define __openglhelper__
+#ifndef QWT3D_OPENGLHELPER_H
+#define QWT3D_OPENGLHELPER_H
 
 #include "qglobal.h"
 
@@ -65,7 +65,7 @@ private:
 inline const GLubyte *gl_error()
 {
     GLenum errcode;
-    const GLubyte *err = 0;
+    const GLubyte *err = nullptr;
 
     if ((errcode = glGetError()) != GL_NO_ERROR) {
         err = gluErrorString(errcode);
@@ -131,4 +131,4 @@ inline bool World2ViewPort(double &winx, double &winy, double &winz, double objx
 
 } // ns
 
-#endif
+#endif // QWT3D_OPENGLHELPER_H

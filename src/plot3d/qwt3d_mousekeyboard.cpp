@@ -3,7 +3,9 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include "qwt3d_plot.h"
+#include "qwt3d_plot_p.h"
+
+#include <cmath>
 
 using namespace std;
 using namespace Qwt3D;
@@ -14,8 +16,9 @@ using namespace Qwt3D;
 */
 void Plot3D::mousePressEvent(QMouseEvent *e)
 {
-    lastMouseMovePosition_ = e->pos();
-    mpressed_ = true;
+    QWT_D(d);
+    d->m_lastMouseMovePosition = e->pos();
+    d->m_pressed = true;
 }
 
 /**
@@ -24,7 +27,8 @@ void Plot3D::mousePressEvent(QMouseEvent *e)
 */
 void Plot3D::mouseReleaseEvent(QMouseEvent *)
 {
-    mpressed_ = false;
+    QWT_D(d);
+    d->m_pressed = false;
 }
 
 /**
@@ -33,24 +37,26 @@ void Plot3D::mouseReleaseEvent(QMouseEvent *)
 */
 void Plot3D::mouseMoveEvent(QMouseEvent *e)
 {
-    if (!mpressed_ || !mouseEnabled()) {
+    QWT_D(d);
+    if (!d->m_pressed || !mouseEnabled()) {
         e->ignore();
         return;
     }
 
     MouseState bstate(e->buttons(), e->modifiers());
 
-    QPoint diff = e->pos() - lastMouseMovePosition_;
+    QPoint diff = e->pos() - d->m_lastMouseMovePosition;
 
     setRotationMouse(bstate, 3, diff);
     setScaleMouse(bstate, 5, diff);
     setShiftMouse(bstate, 2, diff);
 
-    lastMouseMovePosition_ = e->pos();
+    d->m_lastMouseMovePosition = e->pos();
 }
 
 void Plot3D::setRotationMouse(MouseState bstate, double accel, QPoint diff)
 {
+    QWT_D(d);
     // Rotation
     double w = max(1, width());
     double h = max(1, height());
@@ -62,18 +68,19 @@ void Plot3D::setRotationMouse(MouseState bstate, double accel, QPoint diff)
     double new_yrot = yRotation();
     double new_zrot = zRotation();
 
-    if (bstate == xrot_mstate_)
-        new_xrot = round(xRotation() + relyz) % 360;
-    if (bstate == yrot_mstate_)
-        new_yrot = round(yRotation() + relx) % 360;
-    if (bstate == zrot_mstate_)
-        new_zrot = round(zRotation() + relx) % 360;
+    if (bstate == d->m_xrotMState)
+        new_xrot = static_cast<int>(std::round(xRotation() + relyz)) % 360;
+    if (bstate == d->m_yrotMState)
+        new_yrot = static_cast<int>(std::round(yRotation() + relx)) % 360;
+    if (bstate == d->m_zrotMState)
+        new_zrot = static_cast<int>(std::round(zRotation() + relx)) % 360;
 
     setRotation(new_xrot, new_yrot, new_zrot);
 }
 
 void Plot3D::setScaleMouse(MouseState bstate, double accel, QPoint diff)
 {
+    QWT_D(d);
     // Scale
     double w = max(1, width());
     double h = max(1, height());
@@ -87,21 +94,22 @@ void Plot3D::setScaleMouse(MouseState bstate, double accel, QPoint diff)
     double new_yscale = yScale();
     double new_zscale = zScale();
 
-    if (bstate == xscale_mstate_)
+    if (bstate == d->m_xscaleMState)
         new_xscale = max(0.0, xScale() + relx);
-    if (bstate == yscale_mstate_)
+    if (bstate == d->m_yscaleMState)
         new_yscale = max(0.0, yScale() - relyz);
-    if (bstate == zscale_mstate_)
+    if (bstate == d->m_zscaleMState)
         new_zscale = max(0.0, zScale() - relyz);
 
     setScale(new_xscale, new_yscale, new_zscale);
 
-    if (bstate == zoom_mstate_)
+    if (bstate == d->m_zoomMState)
         setZoom(max(0.0, zoom() - relyz));
 }
 
 void Plot3D::setShiftMouse(MouseState bstate, double accel, QPoint diff)
 {
+    QWT_D(d);
     // Shift
     double w = max(1, width());
     double h = max(1, height());
@@ -112,9 +120,9 @@ void Plot3D::setShiftMouse(MouseState bstate, double accel, QPoint diff)
     double new_xshift = xViewportShift();
     double new_yshift = yViewportShift();
 
-    if (bstate == xshift_mstate_)
+    if (bstate == d->m_xshiftMState)
         new_xshift = xViewportShift() + relx;
-    if (bstate == yshift_mstate_)
+    if (bstate == d->m_yshiftMState)
         new_yshift = yViewportShift() - relyz;
 
     setViewportShift(new_xshift, new_yshift);
@@ -162,15 +170,16 @@ void Plot3D::assignMouse(MouseState xrot, MouseState yrot, MouseState zrot, Mous
                          MouseState yscale, MouseState zscale, MouseState zoom, MouseState xshift,
                          MouseState yshift)
 {
-    xrot_mstate_ = xrot;
-    yrot_mstate_ = yrot;
-    zrot_mstate_ = zrot;
-    xscale_mstate_ = xscale;
-    yscale_mstate_ = yscale;
-    zscale_mstate_ = zscale;
-    zoom_mstate_ = zoom;
-    xshift_mstate_ = xshift;
-    yshift_mstate_ = yshift;
+    QWT_D(d);
+    d->m_xrotMState = xrot;
+    d->m_yrotMState = yrot;
+    d->m_zrotMState = zrot;
+    d->m_xscaleMState = xscale;
+    d->m_yscaleMState = yscale;
+    d->m_zscaleMState = zscale;
+    d->m_zoomMState = zoom;
+    d->m_xshiftMState = xshift;
+    d->m_yshiftMState = yshift;
 }
 
 /**
@@ -181,7 +190,8 @@ enableMouse().
 */
 void Plot3D::enableMouse(bool val)
 {
-    mouse_input_enabled_ = val;
+    QWT_D(d);
+    d->m_mouseInputEnabled = val;
 }
 
 /**
@@ -189,15 +199,19 @@ void Plot3D::enableMouse(bool val)
 */
 void Plot3D::disableMouse(bool val)
 {
-    mouse_input_enabled_ = !val;
+    QWT_D(d);
+    d->m_mouseInputEnabled = !val;
 }
+
 bool Plot3D::mouseEnabled() const
 {
-    return mouse_input_enabled_;
+    QWT_DC(d);
+    return d->m_mouseInputEnabled;
 }
 
 void Plot3D::keyPressEvent(QKeyEvent *e)
 {
+    QWT_D(d);
     if (!keyboardEnabled()) {
         e->ignore();
         return;
@@ -205,13 +219,14 @@ void Plot3D::keyPressEvent(QKeyEvent *e)
 
     KeyboardState keyseq(e->key(), e->modifiers());
 
-    setRotationKeyboard(keyseq, kbd_rot_speed_);
-    setScaleKeyboard(keyseq, kbd_scale_speed_);
-    setShiftKeyboard(keyseq, kbd_shift_speed_);
+    setRotationKeyboard(keyseq, d->m_kbdRotSpeed);
+    setScaleKeyboard(keyseq, d->m_kbdScaleSpeed);
+    setShiftKeyboard(keyseq, d->m_kbdShiftSpeed);
 }
 
 void Plot3D::setRotationKeyboard(KeyboardState kseq, double speed)
 {
+    QWT_D(d);
     // Rotation
     double w = max(1, width());
     double h = max(1, height());
@@ -223,24 +238,25 @@ void Plot3D::setRotationKeyboard(KeyboardState kseq, double speed)
     double new_yrot = yRotation();
     double new_zrot = zRotation();
 
-    if (kseq == xrot_kstate_[0])
-        new_xrot = round(xRotation() + relyz) % 360;
-    if (kseq == xrot_kstate_[1])
-        new_xrot = round(xRotation() - relyz) % 360;
-    if (kseq == yrot_kstate_[0])
-        new_yrot = round(yRotation() + relx) % 360;
-    if (kseq == yrot_kstate_[1])
-        new_yrot = round(yRotation() - relx) % 360;
-    if (kseq == zrot_kstate_[0])
-        new_zrot = round(zRotation() + relx) % 360;
-    if (kseq == zrot_kstate_[1])
-        new_zrot = round(zRotation() - relx) % 360;
+    if (kseq == d->m_xrotKState[0])
+        new_xrot = static_cast<int>(std::round(xRotation() + relyz)) % 360;
+    if (kseq == d->m_xrotKState[1])
+        new_xrot = static_cast<int>(std::round(xRotation() - relyz)) % 360;
+    if (kseq == d->m_yrotKState[0])
+        new_yrot = static_cast<int>(std::round(yRotation() + relx)) % 360;
+    if (kseq == d->m_yrotKState[1])
+        new_yrot = static_cast<int>(std::round(yRotation() - relx)) % 360;
+    if (kseq == d->m_zrotKState[0])
+        new_zrot = static_cast<int>(std::round(zRotation() + relx)) % 360;
+    if (kseq == d->m_zrotKState[1])
+        new_zrot = static_cast<int>(std::round(zRotation() - relx)) % 360;
 
     setRotation(new_xrot, new_yrot, new_zrot);
 }
 
 void Plot3D::setScaleKeyboard(KeyboardState kseq, double speed)
 {
+    QWT_D(d);
     // Scale
     double w = max(1, width());
     double h = max(1, height());
@@ -254,29 +270,30 @@ void Plot3D::setScaleKeyboard(KeyboardState kseq, double speed)
     double new_yscale = yScale();
     double new_zscale = zScale();
 
-    if (kseq == xscale_kstate_[0])
+    if (kseq == d->m_xscaleKState[0])
         new_xscale = max(0.0, xScale() + relx);
-    if (kseq == xscale_kstate_[1])
+    if (kseq == d->m_xscaleKState[1])
         new_xscale = max(0.0, xScale() - relx);
-    if (kseq == yscale_kstate_[0])
+    if (kseq == d->m_yscaleKState[0])
         new_yscale = max(0.0, yScale() - relyz);
-    if (kseq == yscale_kstate_[1])
+    if (kseq == d->m_yscaleKState[1])
         new_yscale = max(0.0, yScale() + relyz);
-    if (kseq == zscale_kstate_[0])
+    if (kseq == d->m_zscaleKState[0])
         new_zscale = max(0.0, zScale() - relyz);
-    if (kseq == zscale_kstate_[1])
+    if (kseq == d->m_zscaleKState[1])
         new_zscale = max(0.0, zScale() + relyz);
 
     setScale(new_xscale, new_yscale, new_zscale);
 
-    if (kseq == zoom_kstate_[0])
+    if (kseq == d->m_zoomKState[0])
         setZoom(max(0.0, zoom() - relyz));
-    if (kseq == zoom_kstate_[1])
+    if (kseq == d->m_zoomKState[1])
         setZoom(max(0.0, zoom() + relyz));
 }
 
 void Plot3D::setShiftKeyboard(KeyboardState kseq, double speed)
 {
+    QWT_D(d);
     // Shift
     double w = max(1, width());
     double h = max(1, height());
@@ -287,13 +304,13 @@ void Plot3D::setShiftKeyboard(KeyboardState kseq, double speed)
     double new_xshift = xViewportShift();
     double new_yshift = yViewportShift();
 
-    if (kseq == xshift_kstate_[0])
+    if (kseq == d->m_xshiftKState[0])
         new_xshift = xViewportShift() + relx;
-    if (kseq == xshift_kstate_[1])
+    if (kseq == d->m_xshiftKState[1])
         new_xshift = xViewportShift() - relx;
-    if (kseq == yshift_kstate_[0])
+    if (kseq == d->m_yshiftKState[0])
         new_yshift = yViewportShift() - relyz;
-    if (kseq == yshift_kstate_[1])
+    if (kseq == d->m_yshiftKState[1])
         new_yshift = yViewportShift() + relyz;
 
     setViewportShift(new_xshift, new_yshift);
@@ -322,26 +339,27 @@ void Plot3D::assignKeyboard(KeyboardState xrot_n, KeyboardState xrot_p, Keyboard
                             KeyboardState zoom_n, KeyboardState zoom_p, KeyboardState xshift_n,
                             KeyboardState xshift_p, KeyboardState yshift_n, KeyboardState yshift_p)
 {
-    xrot_kstate_[0] = xrot_n;
-    yrot_kstate_[0] = yrot_n;
-    zrot_kstate_[0] = zrot_n;
-    xrot_kstate_[1] = xrot_p;
-    yrot_kstate_[1] = yrot_p;
-    zrot_kstate_[1] = zrot_p;
+    QWT_D(d);
+    d->m_xrotKState[0] = xrot_n;
+    d->m_yrotKState[0] = yrot_n;
+    d->m_zrotKState[0] = zrot_n;
+    d->m_xrotKState[1] = xrot_p;
+    d->m_yrotKState[1] = yrot_p;
+    d->m_zrotKState[1] = zrot_p;
 
-    xscale_kstate_[0] = xscale_n;
-    yscale_kstate_[0] = yscale_n;
-    zscale_kstate_[0] = zscale_n;
-    xscale_kstate_[1] = xscale_p;
-    yscale_kstate_[1] = yscale_p;
-    zscale_kstate_[1] = zscale_p;
+    d->m_xscaleKState[0] = xscale_n;
+    d->m_yscaleKState[0] = yscale_n;
+    d->m_zscaleKState[0] = zscale_n;
+    d->m_xscaleKState[1] = xscale_p;
+    d->m_yscaleKState[1] = yscale_p;
+    d->m_zscaleKState[1] = zscale_p;
 
-    zoom_kstate_[0] = zoom_n;
-    xshift_kstate_[0] = xshift_n;
-    yshift_kstate_[0] = yshift_n;
-    zoom_kstate_[1] = zoom_p;
-    xshift_kstate_[1] = xshift_p;
-    yshift_kstate_[1] = yshift_p;
+    d->m_zoomKState[0] = zoom_n;
+    d->m_xshiftKState[0] = xshift_n;
+    d->m_yshiftKState[0] = yshift_n;
+    d->m_zoomKState[1] = zoom_p;
+    d->m_xshiftKState[1] = xshift_p;
+    d->m_yshiftKState[1] = yshift_p;
 }
 
 /**
@@ -351,7 +369,8 @@ more fine grained input control can be achieved by combining assignKeyboard() wi
 */
 void Plot3D::enableKeyboard(bool val)
 {
-    kbd_input_enabled_ = val;
+    QWT_D(d);
+    d->m_kbdInputEnabled = val;
 }
 
 /**
@@ -359,11 +378,14 @@ void Plot3D::enableKeyboard(bool val)
 */
 void Plot3D::disableKeyboard(bool val)
 {
-    kbd_input_enabled_ = !val;
+    QWT_D(d);
+    d->m_kbdInputEnabled = !val;
 }
+
 bool Plot3D::keyboardEnabled() const
 {
-    return kbd_input_enabled_;
+    QWT_DC(d);
+    return d->m_kbdInputEnabled;
 }
 
 /**
@@ -371,17 +393,19 @@ Values < 0 are ignored. Default is (3,5,5)
 */
 void Plot3D::setKeySpeed(double rot, double scale, double shift)
 {
+    QWT_D(d);
     if (rot > 0)
-        kbd_rot_speed_ = rot;
+        d->m_kbdRotSpeed = rot;
     if (scale > 0)
-        kbd_scale_speed_ = scale;
+        d->m_kbdScaleSpeed = scale;
     if (shift > 0)
-        kbd_shift_speed_ = shift;
+        d->m_kbdShiftSpeed = shift;
 }
 
 void Plot3D::keySpeed(double &rot, double &scale, double &shift) const
 {
-    rot = kbd_rot_speed_;
-    scale = kbd_scale_speed_;
-    shift = kbd_shift_speed_;
+    QWT_DC(d);
+    rot = d->m_kbdRotSpeed;
+    scale = d->m_kbdScaleSpeed;
+    shift = d->m_kbdShiftSpeed;
 }

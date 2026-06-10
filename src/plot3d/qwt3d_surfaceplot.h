@@ -1,5 +1,5 @@
-#ifndef qwt3d_SurfacePlot_h
-#define qwt3d_SurfacePlot_h
+#ifndef QWT3D_SURFACEPLOT_H
+#define QWT3D_SURFACEPLOT_H
 
 #include "qwt3d_plot.h"
 
@@ -16,12 +16,12 @@ class QWT3D_EXPORT SurfacePlot : public Plot3D
     Q_OBJECT
 
 public:
-    SurfacePlot(QWidget *parent = 0);
-    ~SurfacePlot();
+    SurfacePlot(QWidget *parent = nullptr);
+    ~SurfacePlot() override;
     // Recalculates surface normals
     void updateNormals();
     // Returns data resolution (1 means all data)
-    int resolution() const { return resolution_p; }
+    int resolution() const;
     // Returns the number of mesh cells for the ORIGINAL data
     std::pair<int, int> facets() const;
     bool loadFromData(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
@@ -49,25 +49,22 @@ public:
     }
 
     // Return floor style
-    Qwt3D::FLOORSTYLE floorStyle() const { return floorstyle_; }
+    Qwt3D::FLOORSTYLE floorStyle() const;
     // Sets floor style
-    void setFloorStyle(Qwt3D::FLOORSTYLE val) { floorstyle_ = val; }
+    void setFloorStyle(Qwt3D::FLOORSTYLE val);
     // Draw normals to every vertex
     void showNormals(bool);
     // Returns true, if normal drawing is on
-    bool normals() const { return datanormals_p; }
+    bool normals() const;
 
     // Sets length of normals in percent per hull diagonale
     void setNormalLength(double val);
     // Returns relative length of normals
-    double normalLength() const { return normalLength_p; }
+    double normalLength() const;
     // Increases plotting quality of normal arrows
     void setNormalQuality(int val);
     // Returns plotting quality of normal arrows
-    int normalQuality() const
-    {
-        return normalQuality_p;
-    }
+    int normalQuality() const;
 
 Q_SIGNALS:
     /**
@@ -81,18 +78,14 @@ public Q_SLOTS:
     void setResolution(int);
 
 protected:
-    bool datanormals_p;
-    double normalLength_p;
-    int normalQuality_p;
+    QWT_DECLARE_PRIVATE(SurfacePlot)
 
-    virtual void calculateHull();
-    virtual void createData();
-    virtual void createEnrichment(Qwt3D::Enrichment &p);
+    void calculateHull() override;
+    void createData() override;
+    void createEnrichment(Qwt3D::Enrichment &p) override;
     virtual void createFloorData();
     void createNormals();
     void createPoints();
-
-    int resolution_p;
 
     void readIn(Qwt3D::GridData &gdata, Triple **data, unsigned int columns, unsigned int rows);
     void readIn(Qwt3D::GridData &gdata, double **data, unsigned int columns, unsigned int rows,
@@ -104,9 +97,6 @@ private:
     void Data2Floor();
     void Isolines2Floor();
 
-    Qwt3D::FLOORSTYLE floorstyle_;
-
-    Qwt3D::GridData *actualDataG_;
     virtual void createDataG();
     virtual void createFloorDataG();
     void createNormalsG();
@@ -114,7 +104,6 @@ private:
     void Isolines2FloorG();
     void setColorFromVertexG(int ix, int iy, bool skip = false);
 
-    Qwt3D::CellData *actualDataC_;
     virtual void createDataC();
     virtual void createFloorDataC();
     void createNormalsC();
@@ -125,4 +114,4 @@ private:
 
 } // ns
 
-#endif
+#endif // QWT3D_SURFACEPLOT_H

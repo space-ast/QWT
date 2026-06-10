@@ -2,8 +2,8 @@
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -394,30 +394,18 @@ using DataMatrix = std::vector< DataRow >;
  */
 class Data
 {
+    QWT_DECLARE_PRIVATE(Data)
+
 public:
     Qwt3D::DATATYPE datatype;
-    Data()
-    {
-        datatype = Qwt3D::POLYGON;
-    }
-    virtual ~Data()
-    {
-    }
+    Data();
+    virtual ~Data();
     // Destroy content
     virtual void clear()       = 0;
     // No data
     virtual bool empty() const = 0;
-    void setHull(Qwt3D::ParallelEpiped const& h)
-    {
-        hull_p = h;
-    }
-    Qwt3D::ParallelEpiped const& hull() const
-    {
-        return hull_p;
-    }
-
-protected:
-    Qwt3D::ParallelEpiped hull_p;
+    void setHull(Qwt3D::ParallelEpiped const& h);
+    Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
@@ -427,24 +415,20 @@ protected:
  */
 class GridData : public Data
 {
+    QWT_DECLARE_PRIVATE(GridData)
+
 public:
     GridData();
     // See setSize()
     GridData(unsigned int columns, unsigned int rows);
-    ~GridData()
-    {
-        clear();
-    }
+    ~GridData();
 
     int columns() const;
     int rows() const;
 
     // Destroy content
     void clear();
-    bool empty() const
-    {
-        return vertices.empty();
-    }
+    bool empty() const;
     // Destroys content and set new size, elements are uninitialized
     void setSize(unsigned int columns,
                  unsigned int rows);
@@ -453,22 +437,9 @@ public:
     DataMatrix vertices;
     // Mesh normals
     DataMatrix normals;
-    void setPeriodic(bool u, bool v)
-    {
-        uperiodic_ = u;
-        vperiodic_ = v;
-    }
-    bool uperiodic() const
-    {
-        return uperiodic_;
-    }
-    bool vperiodic() const
-    {
-        return vperiodic_;
-    }
-
-private:
-    bool uperiodic_, vperiodic_;
+    void setPeriodic(bool u, bool v);
+    bool uperiodic() const;
+    bool vperiodic() const;
 };
 
 /**

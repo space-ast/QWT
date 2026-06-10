@@ -1,5 +1,5 @@
-#ifndef qwt3d_autoptr_h
-#define qwt3d_autoptr_h
+#ifndef QWT3D_AUTOPTR_H
+#define QWT3D_AUTOPTR_H
 
 namespace Qwt3D {
 
@@ -14,19 +14,19 @@ namespace Qwt3D {
  *          argument in order to be able to get ownership and control over destruction.
  */
 template<typename T>
-class qwt3d_ptr
+class ClonePtr
 {
 public:
     // Standard ctor
-    explicit qwt3d_ptr(T *ptr = 0) : rawptr_(ptr) { }
+    explicit ClonePtr(T *ptr = nullptr) : rawptr_(ptr) { }
     // Dtor (calls T::destroy)
-    ~qwt3d_ptr() { destroyRawPtr(); }
+    ~ClonePtr() { destroyRawPtr(); }
 
     // Copy ctor (calls (virtual) clone())
-    qwt3d_ptr(qwt3d_ptr const &val) { rawptr_ = val.rawptr_->clone(); }
+    ClonePtr(ClonePtr const &val) { rawptr_ = val.rawptr_->clone(); }
 
     // Assignment in the same spirit as copy ctor
-    qwt3d_ptr<T> &operator=(qwt3d_ptr const &val)
+    ClonePtr<T> &operator=(ClonePtr const &val)
     {
         if (this == &val)
             return *this;
@@ -49,10 +49,10 @@ private:
     {
         if (rawptr_)
             rawptr_->destroy();
-        rawptr_ = 0;
+        rawptr_ = nullptr;
     }
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_AUTOPTR_H

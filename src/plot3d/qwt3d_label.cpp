@@ -3,12 +3,46 @@
 
 using namespace Qwt3D;
 
-bool Label::devicefonts_ = false;
+namespace {
+bool deviceFonts = false;
+}
+
+class Label::PrivateData
+{
+    QWT_DECLARE_PUBLIC(Label)
+
+public:
+    PrivateData(Label* q)
+        : q_ptr(q)
+        , m_beg(0.0, 0.0, 0.0)
+        , m_end(0.0, 0.0, 0.0)
+        , m_pos(0.0, 0.0, 0.0)
+        , m_pm(0, 0)
+        , m_font()
+        , m_anchor(BottomLeft)
+        , m_gap(0)
+        , m_flagForUpdate(true)
+    {
+    }
+
+    Triple m_beg;
+    Triple m_end;
+    Triple m_pos;
+    QPixmap m_pm;
+    QImage m_buf;
+    QImage m_tex;
+    QFont m_font;
+    QString m_text;
+    ANCHOR m_anchor;
+    int m_gap;
+    bool m_flagForUpdate;
+};
 
 /**
  * @brief Default constructor
  */
 Label::Label()
+    : QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -20,28 +54,104 @@ Label::Label()
  * @param weight Font weight
  * @param italic Whether font is italic
  */
-Label::Label(const QString &family, int pointSize, int weight, bool italic)
+Label::Label(const QString& family, int pointSize, int weight, bool italic)
+    : QWT_PIMPL_CONSTRUCT
 {
     init(family, pointSize, weight, italic);
 }
 
-void Label::init(const QString &family, int pointSize, int weight, bool italic)
+/**
+ * @brief Destructor
+ */
+Label::~Label() = default;
+
+/**
+ * @brief Copy constructor
+ */
+Label::Label(const Label& other)
+    : Drawable()
+    , QWT_PIMPL_CONSTRUCT
+{
+    QWT_D(d);
+    const PrivateData* od = other.d_func();
+    d->m_beg = od->m_beg;
+    d->m_end = od->m_end;
+    d->m_pos = od->m_pos;
+    d->m_pm = od->m_pm;
+    d->m_buf = od->m_buf;
+    d->m_tex = od->m_tex;
+    d->m_font = od->m_font;
+    d->m_text = od->m_text;
+    d->m_anchor = od->m_anchor;
+    d->m_gap = od->m_gap;
+    d->m_flagForUpdate = od->m_flagForUpdate;
+    color = other.color;
+}
+
+/**
+ * @brief Move constructor
+ */
+Label::Label(Label&& other) noexcept
+    : Drawable(std::move(other))
+    , m_data(std::move(other.m_data))
+{
+}
+
+/**
+ * @brief Copy assignment operator
+ */
+Label& Label::operator=(const Label& other)
+{
+    if (this != &other) {
+        QWT_D(d);
+        const PrivateData* od = other.d_func();
+        d->m_beg = od->m_beg;
+        d->m_end = od->m_end;
+        d->m_pos = od->m_pos;
+        d->m_pm = od->m_pm;
+        d->m_buf = od->m_buf;
+        d->m_tex = od->m_tex;
+        d->m_font = od->m_font;
+        d->m_text = od->m_text;
+        d->m_anchor = od->m_anchor;
+        d->m_gap = od->m_gap;
+        d->m_flagForUpdate = od->m_flagForUpdate;
+        color = other.color;
+    }
+    return *this;
+}
+
+/**
+ * @brief Move assignment operator
+ */
+Label& Label::operator=(Label&& other) noexcept
+{
+    if (this != &other) {
+        Drawable::operator=(std::move(other));
+        m_data = std::move(other.m_data);
+    }
+    return *this;
+}
+
+void Label::init(const QString& family, int pointSize, int weight, bool italic)
 {
     init();
-    font_ = QFont(family, pointSize, weight, italic);
+    QWT_D(d);
+    d->m_font = QFont(family, pointSize, weight, italic);
 }
 
 void Label::init()
 {
-    beg_ = Triple(0.0, 0.0, 0.0);
-    end_ = beg_;
-    pos_ = beg_;
+    QWT_D(d);
+    d->m_beg = Triple(0.0, 0.0, 0.0);
+    d->m_end = d->m_beg;
+    d->m_pos = d->m_beg;
     setColor(0, 0, 0);
-    pm_ = QPixmap(0, 0);
-    font_ = QFont();
-    anchor_ = BottomLeft;
-    gap_ = 0;
-    flagforupdate_ = true;
+    d->m_pm = QPixmap(0, 0);
+    d->m_font = QFont();
+    d->m_anchor = BottomLeft;
+    d->m_gap = 0;
+    d->m_flagForUpdate = true;
 }
 
 /**
@@ -50,7 +160,7 @@ void Label::init()
  */
 void Label::useDeviceFonts(bool val)
 {
-    devicefonts_ = val;
+    deviceFonts = val;
 }
 
 /**
@@ -60,20 +170,22 @@ void Label::useDeviceFonts(bool val)
  * @param weight Font weight
  * @param italic Whether font is italic
  */
-void Label::setFont(const QString &family, int pointSize, int weight, bool italic)
+void Label::setFont(const QString& family, int pointSize, int weight, bool italic)
 {
-    font_ = QFont(family, pointSize, weight, italic);
-    flagforupdate_ = true;
+    QWT_D(d);
+    d->m_font = QFont(family, pointSize, weight, italic);
+    d->m_flagForUpdate = true;
 }
 
 /**
  * @brief Sets the label text string
  * @param s Text string to display
  */
-void Label::setString(QString const &s)
+void Label::setString(QString const& s)
 {
-    text_ = s;
-    flagforupdate_ = true;
+    QWT_D(d);
+    d->m_text = s;
+    d->m_flagForUpdate = true;
 }
 
 /**
@@ -86,7 +198,8 @@ void Label::setString(QString const &s)
 void Label::setColor(double r, double g, double b, double a)
 {
     Drawable::setColor(r, g, b, a);
-    flagforupdate_ = true;
+    QWT_D(d);
+    d->m_flagForUpdate = true;
 }
 
 /**
@@ -96,7 +209,8 @@ void Label::setColor(double r, double g, double b, double a)
 void Label::setColor(Qwt3D::RGBA rgba)
 {
     Drawable::setColor(rgba);
-    flagforupdate_ = true;
+    QWT_D(d);
+    d->m_flagForUpdate = true;
 }
 
 /**
@@ -111,8 +225,9 @@ void Label::setColor(Qwt3D::RGBA rgba)
  */
 void Label::setPosition(Triple pos, ANCHOR a)
 {
-    anchor_ = a;
-    pos_ = pos;
+    QWT_D(d);
+    d->m_anchor = a;
+    d->m_pos = pos;
 }
 
 /**
@@ -122,55 +237,57 @@ void Label::setPosition(Triple pos, ANCHOR a)
  */
 void Label::setRelPosition(Tuple rpos, ANCHOR a)
 {
+    QWT_D(d);
     double ot = 0.99;
 
     getMatrices(modelMatrix, projMatrix, viewport);
-    beg_ = relativePosition(Triple(rpos.x, rpos.y, ot));
-    setPosition(beg_, a);
+    d->m_beg = relativePosition(Triple(rpos.x, rpos.y, ot));
+    setPosition(d->m_beg, a);
 }
 
 void Label::update()
 {
+    QWT_D(d);
     QPainter p;
-    QFontMetrics fm(font_);
+    QFontMetrics fm(d->m_font);
 
-    QFontInfo info(font_);
+    QFontInfo info(d->m_font);
 
     QRect r = QRect(
             QPoint(0, 0),
-            fm.size(Qwt3D::SingleLine, text_)); // fm.boundingRect(text_)  misbehaviour under linux;
+            fm.size(Qwt3D::SingleLine, d->m_text)); // fm.boundingRect(text_)  misbehaviour under linux;
 
     r.translate(0, -r.top());
 
-    pm_ = QPixmap(r.width(), r.bottom());
+    d->m_pm = QPixmap(r.width(), r.bottom());
 
-    if (pm_.isNull()) // else crash under linux
+    if (d->m_pm.isNull()) // else crash under linux
     {
         r = QRect(QPoint(0, 0),
                   fm.size(Qwt3D::SingleLine, QString(" "))); // draw empty space else //todo
         r.translate(0, -r.top());
-        pm_ = QPixmap(r.width(), r.bottom());
+        d->m_pm = QPixmap(r.width(), r.bottom());
     }
 
-    QBitmap bm(pm_.width(), pm_.height());
+    QBitmap bm(d->m_pm.width(), d->m_pm.height());
     bm.fill(Qt::color0);
     p.begin(&bm);
     p.setPen(Qt::color1);
-    p.setFont(font_);
-    p.drawText(0, r.height() - fm.descent() - 1, text_);
+    p.setFont(d->m_font);
+    p.drawText(0, r.height() - fm.descent() - 1, d->m_text);
     p.end();
 
-    pm_.setMask(bm);
+    d->m_pm.setMask(bm);
 
-    p.begin(&pm_);
-    p.setFont(font_);
+    p.begin(&d->m_pm);
+    p.setFont(d->m_font);
     p.setPen(Qt::SolidLine);
     p.setPen(GL2Qt(color.r, color.g, color.b));
 
-    p.drawText(0, r.height() - fm.descent() - 1, text_);
+    p.drawText(0, r.height() - fm.descent() - 1, d->m_text);
     p.end();
-    buf_ = pm_.toImage();
-    tex_ = buf_.mirrored();
+    d->m_buf = d->m_pm.toImage();
+    d->m_tex = d->m_buf.mirrored();
 }
 
 /**
@@ -183,46 +300,48 @@ void Label::update()
  */
 void Label::adjust(int gap)
 {
-    gap_ = gap;
+    QWT_D(d);
+    d->m_gap = gap;
 }
 
 void Label::convert2screen()
 {
-    Triple start = World2ViewPort(pos_);
+    QWT_D(d);
+    Triple start = World2ViewPort(d->m_pos);
 
-    switch (anchor_) {
+    switch (d->m_anchor) {
     case BottomLeft:
-        beg_ = pos_;
+        d->m_beg = d->m_pos;
         break;
     case BottomRight:
-        beg_ = ViewPort2World(start - Triple(width() + gap_, 0, 0));
+        d->m_beg = ViewPort2World(start - Triple(width() + d->m_gap, 0, 0));
         break;
     case BottomCenter:
-        beg_ = ViewPort2World(start - Triple(width() / 2, -gap_, 0));
+        d->m_beg = ViewPort2World(start - Triple(width() / 2, -d->m_gap, 0));
         break;
     case TopRight:
-        beg_ = ViewPort2World(start - Triple(width() + gap_, height(), 0));
+        d->m_beg = ViewPort2World(start - Triple(width() + d->m_gap, height(), 0));
         break;
     case TopLeft:
-        beg_ = ViewPort2World(start - Triple(-gap_, height(), 0));
+        d->m_beg = ViewPort2World(start - Triple(-d->m_gap, height(), 0));
         break;
     case TopCenter:
-        beg_ = ViewPort2World(start - Triple(width() / 2, height() + gap_, 0));
+        d->m_beg = ViewPort2World(start - Triple(width() / 2, height() + d->m_gap, 0));
         break;
     case CenterLeft:
-        beg_ = ViewPort2World(start - Triple(-gap_, height() / 2, 0));
+        d->m_beg = ViewPort2World(start - Triple(-d->m_gap, height() / 2, 0));
         break;
     case CenterRight:
-        beg_ = ViewPort2World(start - Triple(width() + gap_, height() / 2, 0));
+        d->m_beg = ViewPort2World(start - Triple(width() + d->m_gap, height() / 2, 0));
         break;
     case Center:
-        beg_ = ViewPort2World(start - Triple(width() / 2, height() / 2, 0));
+        d->m_beg = ViewPort2World(start - Triple(width() / 2, height() / 2, 0));
         break;
     default:
         break;
     }
-    start = World2ViewPort(beg_);
-    end_ = ViewPort2World(start + Triple(width(), height(), 0));
+    start = World2ViewPort(d->m_beg);
+    d->m_end = ViewPort2World(start + Triple(width(), height(), 0));
 }
 
 /**
@@ -230,12 +349,13 @@ void Label::convert2screen()
  */
 void Label::draw()
 {
-    if (flagforupdate_) {
+    QWT_D(d);
+    if (d->m_flagForUpdate) {
         update();
-        flagforupdate_ = false;
+        d->m_flagForUpdate = false;
     }
 
-    if (buf_.isNull())
+    if (d->m_buf.isNull())
         return;
 
     GLboolean b;
@@ -249,16 +369,16 @@ void Label::draw()
     glAlphaFunc(GL_NOTEQUAL, 0.0);
 
     convert2screen();
-    glRasterPos3d(beg_.x, beg_.y, beg_.z);
+    glRasterPos3d(d->m_beg.x, d->m_beg.y, d->m_beg.z);
 
-    int w = tex_.width();
-    int h = tex_.height();
+    int w = d->m_tex.width();
+    int h = d->m_tex.height();
 
-    if (devicefonts_) {
-        drawDeviceText(QWT3DLOCAL8BIT(text_), "Courier", font_.pointSize(), pos_, color, anchor_,
-                       gap_);
+    if (deviceFonts) {
+        drawDeviceText(QWT3DLOCAL8BIT(d->m_text), "Courier", d->m_font.pointSize(), d->m_pos,
+                       color, d->m_anchor, d->m_gap);
     } else {
-        drawDevicePixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, tex_.bits());
+        drawDevicePixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, d->m_tex.bits());
     }
 
     glAlphaFunc(func, v);
@@ -271,7 +391,8 @@ void Label::draw()
  */
 double Label::width() const
 {
-    return pm_.width();
+    QWT_DC(d);
+    return d->m_pm.width();
 }
 
 /**
@@ -280,5 +401,30 @@ double Label::width() const
  */
 double Label::height() const
 {
-    return pm_.height();
+    QWT_DC(d);
+    return d->m_pm.height();
+}
+
+double Label::gap() const
+{
+    QWT_DC(d);
+    return d->m_gap;
+}
+
+Qwt3D::Triple Label::first() const
+{
+    QWT_DC(d);
+    return d->m_beg;
+}
+
+Qwt3D::Triple Label::second() const
+{
+    QWT_DC(d);
+    return d->m_end;
+}
+
+ANCHOR Label::anchor() const
+{
+    QWT_DC(d);
+    return d->m_anchor;
 }

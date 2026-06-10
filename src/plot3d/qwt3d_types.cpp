@@ -2,14 +2,57 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <stdlib.h>  // qsort
+#include <cstdlib>  // qsort
 #include <algorithm>
-#include <float.h>
+#include <cfloat>
 #include "qwt3d_types.h"
+
+#include <cmath>
 
 using namespace Qwt3D;
 
 #ifndef QWT3D_NOT_FOR_DOXYGEN
+
+class Data::PrivateData
+{
+    QWT_DECLARE_PUBLIC(Data)
+
+public:
+    PrivateData(Data* q) : q_ptr(q) {}
+
+    Qwt3D::ParallelEpiped m_hull;
+};
+
+Data::Data()
+    : QWT_PIMPL_CONSTRUCT
+    , datatype(Qwt3D::POLYGON)
+{
+}
+
+Data::~Data() = default;
+
+void Data::setHull(Qwt3D::ParallelEpiped const& h)
+{
+    QWT_D(d);
+    d->m_hull = h;
+}
+
+Qwt3D::ParallelEpiped const& Data::hull() const
+{
+    QWT_DC(d);
+    return d->m_hull;
+}
+
+class GridData::PrivateData
+{
+    QWT_DECLARE_PUBLIC(GridData)
+
+public:
+    PrivateData(GridData* q) : q_ptr(q), m_uperiodic(false), m_vperiodic(false) {}
+
+    bool m_uperiodic;
+    bool m_vperiodic;
+};
 
 namespace
 {
@@ -72,6 +115,7 @@ int _ch2d(coordinate_type** P, int n)
 }  // ns anon
 
 GridData::GridData()
+    : QWT_PIMPL_CONSTRUCT
 {
     datatype = Qwt3D::GRID;
     setSize(0, 0);
@@ -79,10 +123,16 @@ GridData::GridData()
 }
 
 GridData::GridData(unsigned int columns, unsigned int rows)
+    : QWT_PIMPL_CONSTRUCT
 {
     datatype = Qwt3D::GRID;
     setSize(columns, rows);
     setPeriodic(false, false);
+}
+
+GridData::~GridData()
+{
+    clear();
 }
 
 int GridData::columns() const
@@ -93,6 +143,30 @@ int GridData::columns() const
 int GridData::rows() const
 {
     return (empty()) ? 0 : static_cast< int >(vertices[ 0 ].size());
+}
+
+bool GridData::empty() const
+{
+    return vertices.empty();
+}
+
+void GridData::setPeriodic(bool u, bool v)
+{
+    QWT_D(d);
+    d->m_uperiodic = u;
+    d->m_vperiodic = v;
+}
+
+bool GridData::uperiodic() const
+{
+    QWT_DC(d);
+    return d->m_uperiodic;
+}
+
+bool GridData::vperiodic() const
+{
+    QWT_DC(d);
+    return d->m_vperiodic;
 }
 
 void GridData::clear()
@@ -166,7 +240,7 @@ void CellData::clear()
  */
 QColor Qwt3D::GL2Qt(GLdouble r, GLdouble g, GLdouble b)
 {
-    return QColor(round(r * 255), round(g * 255), round(b * 255));
+    return QColor(static_cast<int>(std::round(r * 255)), static_cast<int>(std::round(g * 255)), static_cast<int>(std::round(b * 255)));
 }
 
 /**

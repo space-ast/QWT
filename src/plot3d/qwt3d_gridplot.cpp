@@ -3,7 +3,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include "qwt3d_surfaceplot.h"
+#include "qwt3d_surfaceplot_p.h"
 #include "qwt3d_enrichment_std.h"
 
 using namespace std;
@@ -11,6 +11,7 @@ using namespace Qwt3D;
 
 void SurfacePlot::createDataG()
 {
+    QWT_D(d);
     createFloorData();
 
     if (plotStyle() == NOPLOT)
@@ -24,8 +25,8 @@ void SurfacePlot::createDataG()
         createPoints();
         return;
     } else if (plotStyle() == Qwt3D::USER) {
-        if (userplotstyle_p)
-            createEnrichment(*userplotstyle_p);
+        if (userStyle())
+            createEnrichment(*userStyle());
         return;
     }
 
@@ -37,8 +38,8 @@ void SurfacePlot::createDataG()
     GLStateBewarer sb2(GL_LINE_SMOOTH, smoothDataMesh());
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    int lastcol = actualDataG_->columns();
-    int lastrow = actualDataG_->rows();
+    int lastcol = d->m_actualDataG->columns();
+    int lastrow = d->m_actualDataG->rows();
 
     if (plotStyle() != WIREFRAME) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_QUADS);
@@ -52,21 +53,21 @@ void SurfacePlot::createDataG()
         for (i = 0; i < lastcol - step; i += step) {
             glBegin(GL_TRIANGLE_STRIP);
             setColorFromVertexG(i, 0, hl);
-            glNormal3dv(actualDataG_->normals[i][0]);
-            glVertex3dv(actualDataG_->vertices[i][0]);
+            glNormal3dv(d->m_actualDataG->normals[i][0]);
+            glVertex3dv(d->m_actualDataG->vertices[i][0]);
 
             setColorFromVertexG(i + step, 0, hl);
-            glNormal3dv(actualDataG_->normals[i + step][0]);
-            glVertex3dv(actualDataG_->vertices[i + step][0]);
+            glNormal3dv(d->m_actualDataG->normals[i + step][0]);
+            glVertex3dv(d->m_actualDataG->vertices[i + step][0]);
 
             for (j = 0; j < lastrow - step; j += step) {
                 setColorFromVertexG(i, j + step, hl);
-                glNormal3dv(actualDataG_->normals[i][j + step]);
-                glVertex3dv(actualDataG_->vertices[i][j + step]);
+                glNormal3dv(d->m_actualDataG->normals[i][j + step]);
+                glVertex3dv(d->m_actualDataG->vertices[i][j + step]);
 
                 setColorFromVertexG(i + step, j + step, hl);
-                glNormal3dv(actualDataG_->normals[i + step][j + step]);
-                glVertex3dv(actualDataG_->vertices[i + step][j + step]);
+                glNormal3dv(d->m_actualDataG->normals[i + step][j + step]);
+                glVertex3dv(d->m_actualDataG->vertices[i + step][j + step]);
             }
             glEnd();
         }
@@ -75,30 +76,30 @@ void SurfacePlot::createDataG()
     if (plotStyle() == FILLEDMESH || plotStyle() == WIREFRAME || plotStyle() == HIDDENLINE) {
         glColor4d(meshColor().r, meshColor().g, meshColor().b, meshColor().a);
 
-        if (step < actualDataG_->columns() && step < actualDataG_->rows()) {
+        if (step < d->m_actualDataG->columns() && step < d->m_actualDataG->rows()) {
             glBegin(GL_LINE_LOOP);
-            for (i = 0; i < actualDataG_->columns() - step; i += step)
-                glVertex3dv(actualDataG_->vertices[i][0]);
-            for (j = 0; j < actualDataG_->rows() - step; j += step)
-                glVertex3dv(actualDataG_->vertices[i][j]);
+            for (i = 0; i < d->m_actualDataG->columns() - step; i += step)
+                glVertex3dv(d->m_actualDataG->vertices[i][0]);
+            for (j = 0; j < d->m_actualDataG->rows() - step; j += step)
+                glVertex3dv(d->m_actualDataG->vertices[i][j]);
             for (; i >= 0; i -= step)
-                glVertex3dv(actualDataG_->vertices[i][j]);
+                glVertex3dv(d->m_actualDataG->vertices[i][j]);
             for (; j >= 0; j -= step)
-                glVertex3dv(actualDataG_->vertices[0][j]);
+                glVertex3dv(d->m_actualDataG->vertices[0][j]);
             glEnd();
         }
 
         // weaving
-        for (i = step; i < actualDataG_->columns() - step; i += step) {
+        for (i = step; i < d->m_actualDataG->columns() - step; i += step) {
             glBegin(GL_LINE_STRIP);
-            for (j = 0; j < actualDataG_->rows(); j += step)
-                glVertex3dv(actualDataG_->vertices[i][j]);
+            for (j = 0; j < d->m_actualDataG->rows(); j += step)
+                glVertex3dv(d->m_actualDataG->vertices[i][j]);
             glEnd();
         }
-        for (j = step; j < actualDataG_->rows() - step; j += step) {
+        for (j = step; j < d->m_actualDataG->rows() - step; j += step) {
             glBegin(GL_LINE_STRIP);
-            for (i = 0; i < actualDataG_->columns(); i += step)
-                glVertex3dv(actualDataG_->vertices[i][j]);
+            for (i = 0; i < d->m_actualDataG->columns(); i += step)
+                glVertex3dv(d->m_actualDataG->vertices[i][j]);
             glEnd();
         }
     }
@@ -106,18 +107,20 @@ void SurfacePlot::createDataG()
 
 void SurfacePlot::setColorFromVertexG(int ix, int iy, bool skip)
 {
+    QWT_D(d);
     if (skip)
         return;
 
-    RGBA col = (*datacolor_p)(actualDataG_->vertices[ix][iy][0], actualDataG_->vertices[ix][iy][1],
-                              actualDataG_->vertices[ix][iy][2]);
+    RGBA col = (*dataColor())(d->m_actualDataG->vertices[ix][iy][0], d->m_actualDataG->vertices[ix][iy][1],
+                              d->m_actualDataG->vertices[ix][iy][2]);
 
     glColor4d(col.r, col.g, col.b, col.a);
 }
 
 void SurfacePlot::createNormalsG()
 {
-    if (!normals() || actualDataG_->empty())
+    QWT_D(d);
+    if (!normals() || d->m_actualDataG->empty())
         return;
 
     Arrow arrow;
@@ -127,25 +130,25 @@ void SurfacePlot::createNormalsG()
 
     int step = resolution();
 
-    double diag = (actualDataG_->hull().maxVertex - actualDataG_->hull().minVertex).length()
+    double diag = (d->m_actualDataG->hull().maxVertex - d->m_actualDataG->hull().minVertex).length()
             * normalLength();
 
     arrow.assign(*this);
     arrow.drawBegin();
-    for (int i = 0; i <= actualDataG_->columns() - step; i += step) {
-        for (int j = 0; j <= actualDataG_->rows() - step; j += step) {
-            basev = Triple(actualDataG_->vertices[i][j][0], actualDataG_->vertices[i][j][1],
-                           actualDataG_->vertices[i][j][2]);
-            topv = Triple(actualDataG_->vertices[i][j][0] + actualDataG_->normals[i][j][0],
-                          actualDataG_->vertices[i][j][1] + actualDataG_->normals[i][j][1],
-                          actualDataG_->vertices[i][j][2] + actualDataG_->normals[i][j][2]);
+    for (int i = 0; i <= d->m_actualDataG->columns() - step; i += step) {
+        for (int j = 0; j <= d->m_actualDataG->rows() - step; j += step) {
+            basev = Triple(d->m_actualDataG->vertices[i][j][0], d->m_actualDataG->vertices[i][j][1],
+                           d->m_actualDataG->vertices[i][j][2]);
+            topv = Triple(d->m_actualDataG->vertices[i][j][0] + d->m_actualDataG->normals[i][j][0],
+                          d->m_actualDataG->vertices[i][j][1] + d->m_actualDataG->normals[i][j][1],
+                          d->m_actualDataG->vertices[i][j][2] + d->m_actualDataG->normals[i][j][2]);
 
             norm = topv - basev;
             norm.normalize();
             norm *= diag;
 
             arrow.setTop(basev + norm);
-            arrow.setColor((*datacolor_p)(basev.x, basev.y, basev.z));
+            arrow.setColor((*dataColor())(basev.x, basev.y, basev.z));
             arrow.draw(basev);
         }
     }
@@ -324,13 +327,14 @@ void SurfacePlot::sewPeriodic(GridData &gdata)
 bool SurfacePlot::loadFromData(Triple **data, unsigned int columns, unsigned int rows,
                                bool uperiodic, bool vperiodic)
 {
-    actualDataC_->clear();
-    actualData_p = actualDataG_;
+    QWT_D(d);
+    d->m_actualDataC->clear();
+    setActualData(d->m_actualDataG);
 
-    readIn(*actualDataG_, data, columns, rows);
-    calcNormals(*actualDataG_);
-    actualDataG_->setPeriodic(uperiodic, vperiodic);
-    sewPeriodic(*actualDataG_);
+    readIn(*d->m_actualDataG, data, columns, rows);
+    calcNormals(*d->m_actualDataG);
+    d->m_actualDataG->setPeriodic(uperiodic, vperiodic);
+    sewPeriodic(*d->m_actualDataG);
 
     updateData();
     updateNormals();
@@ -346,13 +350,14 @@ bool SurfacePlot::loadFromData(Triple **data, unsigned int columns, unsigned int
 bool SurfacePlot::loadFromData(double **data, unsigned int columns, unsigned int rows, double minx,
                                double maxx, double miny, double maxy)
 {
-    actualDataC_->clear();
-    actualData_p = actualDataG_;
+    QWT_D(d);
+    d->m_actualDataC->clear();
+    setActualData(d->m_actualDataG);
 
-    actualDataG_->setPeriodic(false, false);
-    actualDataG_->setSize(columns, rows);
-    readIn(*actualDataG_, data, columns, rows, minx, maxx, miny, maxy);
-    calcNormals(*actualDataG_);
+    d->m_actualDataG->setPeriodic(false, false);
+    d->m_actualDataG->setSize(columns, rows);
+    readIn(*d->m_actualDataG, data, columns, rows, minx, maxx, miny, maxy);
+    calcNormals(*d->m_actualDataG);
 
     updateData();
     updateNormals();
@@ -377,7 +382,9 @@ void SurfacePlot::createFloorDataG()
 
 void SurfacePlot::Data2FloorG()
 {
-    if (actualData_p->empty())
+    QWT_D(d);
+    Qwt3D::Data* data = actualData();
+    if (!data || data->empty())
         return;
 
     int step = resolution();
@@ -385,23 +392,23 @@ void SurfacePlot::Data2FloorG()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPolygonMode(GL_FRONT_AND_BACK, GL_QUADS);
 
-    double zshift = actualData_p->hull().minVertex.z;
-    for (int i = 0; i < actualDataG_->columns() - step; i += step) {
+    double zshift = data->hull().minVertex.z;
+    for (int i = 0; i < d->m_actualDataG->columns() - step; i += step) {
         glBegin(GL_TRIANGLE_STRIP);
         setColorFromVertexG(i, 0);
-        glVertex3d(actualDataG_->vertices[i][0][0], actualDataG_->vertices[i][0][1], zshift);
+        glVertex3d(d->m_actualDataG->vertices[i][0][0], d->m_actualDataG->vertices[i][0][1], zshift);
 
         setColorFromVertexG(i + step, 0);
-        glVertex3d(actualDataG_->vertices[i + step][0][0], actualDataG_->vertices[i + step][0][1],
+        glVertex3d(d->m_actualDataG->vertices[i + step][0][0], d->m_actualDataG->vertices[i + step][0][1],
                    zshift);
-        for (int j = 0; j < actualDataG_->rows() - step; j += step) {
+        for (int j = 0; j < d->m_actualDataG->rows() - step; j += step) {
             setColorFromVertexG(i, j + step);
-            glVertex3d(actualDataG_->vertices[i][j + step][0],
-                       actualDataG_->vertices[i][j + step][1], zshift);
+            glVertex3d(d->m_actualDataG->vertices[i][j + step][0],
+                       d->m_actualDataG->vertices[i][j + step][1], zshift);
 
             setColorFromVertexG(i + step, j + step);
-            glVertex3d(actualDataG_->vertices[i + step][j + step][0],
-                       actualDataG_->vertices[i + step][j + step][1], zshift);
+            glVertex3d(d->m_actualDataG->vertices[i + step][j + step][0],
+                       d->m_actualDataG->vertices[i + step][j + step][1], zshift);
         }
         glEnd();
     }
@@ -409,20 +416,22 @@ void SurfacePlot::Data2FloorG()
 
 void SurfacePlot::Isolines2FloorG()
 {
-    if (isolines() <= 0 || actualData_p->empty())
+    QWT_D(d);
+    Qwt3D::Data* data = actualData();
+    if (isolines() <= 0 || !data || data->empty())
         return;
 
     double count =
-            (actualData_p->hull().maxVertex.z - actualData_p->hull().minVertex.z) / isolines();
+            (data->hull().maxVertex.z - data->hull().minVertex.z) / isolines();
 
     RGBA col;
 
     int step = resolution();
 
-    double zshift = actualData_p->hull().minVertex.z;
+    double zshift = data->hull().minVertex.z;
 
-    int cols = actualDataG_->columns();
-    int rows = actualDataG_->rows();
+    int cols = d->m_actualDataG->columns();
+    int rows = d->m_actualDataG->rows();
 
     Triple t[4];
     vector<Triple> intersection;
@@ -436,22 +445,21 @@ void SurfacePlot::Isolines2FloorG()
 
         for (int i = 0; i < cols - step; i += step) {
             for (int j = 0; j < rows - step; j += step) {
-                t[0] = Triple(actualDataG_->vertices[i][j][0], actualDataG_->vertices[i][j][1],
-                              actualDataG_->vertices[i][j][2]);
+                t[0] = Triple(d->m_actualDataG->vertices[i][j][0], d->m_actualDataG->vertices[i][j][1],
+                              d->m_actualDataG->vertices[i][j][2]);
 
-                col = (*datacolor_p)(t[0].x, t[0].y, t[0].z);
+                col = (*dataColor())(t[0].x, t[0].y, t[0].z);
                 glColor4d(col.r, col.g, col.b, col.a);
-                //  			glColor4d(0,0,0,1);
 
-                t[1] = Triple(actualDataG_->vertices[i + step][j][0],
-                              actualDataG_->vertices[i + step][j][1],
-                              actualDataG_->vertices[i + step][j][2]);
-                t[2] = Triple(actualDataG_->vertices[i + step][j + step][0],
-                              actualDataG_->vertices[i + step][j + step][1],
-                              actualDataG_->vertices[i + step][j + step][2]);
-                t[3] = Triple(actualDataG_->vertices[i][j + step][0],
-                              actualDataG_->vertices[i][j + step][1],
-                              actualDataG_->vertices[i][j + step][2]);
+                t[1] = Triple(d->m_actualDataG->vertices[i + step][j][0],
+                              d->m_actualDataG->vertices[i + step][j][1],
+                              d->m_actualDataG->vertices[i + step][j][2]);
+                t[2] = Triple(d->m_actualDataG->vertices[i + step][j + step][0],
+                              d->m_actualDataG->vertices[i + step][j + step][1],
+                              d->m_actualDataG->vertices[i + step][j + step][2]);
+                t[3] = Triple(d->m_actualDataG->vertices[i][j + step][0],
+                              d->m_actualDataG->vertices[i][j + step][1],
+                              d->m_actualDataG->vertices[i][j + step][2]);
 
                 double diff = 0;
                 for (int m = 0; m != 4; ++m) {
@@ -499,22 +507,3 @@ void SurfacePlot::Isolines2FloorG()
         }
     }
 }
-
-/*
-void SurfacePlot::calcLowResolution()
-{
-  if (!actualDataG_)
-    return;
-
-  int res = resolution();
-  if (res == 1)
-  {
-    lowresData_p = *actualDataG_;
-    return;
-  }
-
-  GridData const& src = *actualDataG_;
-  result.clear();
-
-
-}*/

@@ -1,13 +1,43 @@
-#include <time.h>
+#include "qwt3d_io.h"
+
+#include <QImageWriter>
+
+#include <ctime>
 
 #include "qwt3d_plot.h"
 #include "qwt3d_io_gl2ps.h"
 #include "qwt3d_io_reader.h"
-#include <QImageWriter>
 
 using namespace Qwt3D;
 
-IO::Entry::Entry() : iofunc(0)
+class PixmapWriter::PrivateData
+{
+    QWT_DECLARE_PUBLIC(PixmapWriter)
+
+public:
+    PrivateData(PixmapWriter* q) : q_ptr(q), m_quality(-1) {}
+
+    QString m_fmt;
+    int m_quality;
+};
+
+PixmapWriter::PixmapWriter() : QWT_PIMPL_CONSTRUCT
+{
+}
+
+PixmapWriter::~PixmapWriter() = default;
+
+IO::Functor* PixmapWriter::clone() const
+{
+    auto* copy = new PixmapWriter();
+    QWT_DC(d);
+    auto* copyD = copy->d_func();
+    copyD->m_fmt = d->m_fmt;
+    copyD->m_quality = d->m_quality;
+    return copy;
+}
+
+IO::Entry::Entry() : iofunc(nullptr)
 {
 }
 
@@ -223,7 +253,7 @@ IO::Functor* IO::inputHandler(QString const& format)
     IO::IT it = IO::find(rlist(), format);
 
     if (it == rlist().end())
-        return 0;
+        return nullptr;
 
     return it->iofunc;
 }
@@ -238,18 +268,19 @@ IO::Functor* IO::outputHandler(QString const& format)
     IO::IT it = IO::find(wlist(), format);
 
     if (it == wlist().end())
-        return 0;
+        return nullptr;
 
     return it->iofunc;
 }
 
 bool PixmapWriter::operator()(Plot3D* plot, QString const& fname)
 {
+    QWT_D(d);
     QImage im = plot->grabFramebuffer();
 
     QImageWriter iio;
-    iio.setFormat(QWT3DLOCAL8BIT(fmt_));
-    iio.setQuality(quality_);
+    iio.setFormat(QWT3DLOCAL8BIT(d->m_fmt));
+    iio.setQuality(d->m_quality);
     iio.setFileName(fname);
     return iio.write(im);
 }
@@ -260,18 +291,17 @@ bool PixmapWriter::operator()(Plot3D* plot, QString const& fname)
  */
 void PixmapWriter::setQuality(int val)
 {
-    quality_ = val;
+    QWT_D(d);
+    d->m_quality = val;
 }
 
 void IO::setupHandler()
 {
-    QList< QByteArray > list         = QImageWriter::supportedImageFormats();
-    QList< QByteArray >::Iterator it = list.begin();
+    const QList< QByteArray > list = QImageWriter::supportedImageFormats();
     PixmapWriter qtw;
-    while (it != list.end()) {
-        qtw.fmt_ = *it;
-        defineOutputHandler(*it, qtw);
-        ++it;
+    for (const auto& fmt : list) {
+        qtw.d_func()->m_fmt = fmt;
+        defineOutputHandler(fmt, qtw);
     }
     VectorWriter vecfunc;
     vecfunc.setCompressed(false);

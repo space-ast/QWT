@@ -1,5 +1,5 @@
-#ifndef __qwt3d_io__
-#define __qwt3d_io__
+#ifndef QWT3D_IO_H
+#define QWT3D_IO_H
 
 #include <vector>
 #include <algorithm>
@@ -75,7 +75,7 @@ private:
     {
     public:
         // Performs actual input
-        Functor* clone() const
+        Functor* clone() const override
         {
             return new Wrapper(*this);
         }
@@ -84,7 +84,7 @@ private:
         {
         }
         // Returns a pointer to the wrapped function
-        bool operator()(Plot3D* plot, QString const& fname)
+        bool operator()(Plot3D* plot, QString const& fname) override
         {
             return (hdl) ? (*hdl)(plot, fname) : false;
         }
@@ -140,22 +140,18 @@ private:
 class QWT3D_EXPORT PixmapWriter : public IO::Functor
 {
     friend class IO;
+    QWT_DECLARE_PRIVATE(PixmapWriter)
 
 public:
-    PixmapWriter() : quality_(-1)
-    {
-    }
+    PixmapWriter();
+    ~PixmapWriter() override;
+
     // Set output quality
     void setQuality(int val);
 
 private:
-    IO::Functor* clone() const
-    {
-        return new PixmapWriter(*this);
-    }
-    bool operator()(Plot3D* plot, QString const& fname);
-    QString fmt_;
-    int quality_;
+    IO::Functor* clone() const override;
+    bool operator()(Plot3D* plot, QString const& fname) override;
 };
 
 }  // ns

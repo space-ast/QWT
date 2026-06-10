@@ -1,5 +1,5 @@
-#ifndef qwt3d_enrichment_h
-#define qwt3d_enrichment_h
+#ifndef QWT3D_ENRICHMENT_H
+#define QWT3D_ENRICHMENT_H
 
 #include "qwt3d_global.h"
 #include "qwt3d_types.h"
@@ -26,7 +26,7 @@ public:
         VOXELENRICHMENT
     };
 
-    Enrichment() : plot(0) { }
+    Enrichment() : plot(nullptr) { }
     virtual ~Enrichment() { }
     // The derived class should give back a new Derived(something) here
     virtual Enrichment *clone() const = 0;
@@ -58,7 +58,7 @@ public:
     // Overwrite this
     virtual void draw(Qwt3D::Triple const &) = 0;
     // This gives VERTEXENRICHMENT
-    virtual TYPE type() const
+    TYPE type() const override
     {
         return Qwt3D::Enrichment::VERTEXENRICHMENT;
     }
@@ -66,4 +66,4 @@ public:
 
 } // ns
 
-#endif
+#endif // QWT3D_ENRICHMENT_H

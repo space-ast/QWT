@@ -1,5 +1,5 @@
-#ifndef __LABELPIXMAP_H__
-#define __LABELPIXMAP_H__
+#ifndef QWT3D_LABEL_H
+#define QWT3D_LABEL_H
 
 #include <qpixmap.h>
 #include <qimage.h>
@@ -18,9 +18,15 @@ namespace Qwt3D {
  */
 class QWT3D_EXPORT Label : public Drawable
 {
+    QWT_DECLARE_PRIVATE(Label)
 
 public:
     Label();
+    ~Label() override;
+    Label(const Label& other);
+    Label(Label&& other) noexcept;
+    Label& operator=(const Label& other);
+    Label& operator=(Label&& other) noexcept;
     // Construct label and initialize with font
     Label(const QString &family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
@@ -31,20 +37,17 @@ public:
     // Fine tunes label
     void adjust(int gap);
     // Returns the gap caused by adjust()
-    double gap() const { return gap_; }
+    double gap() const;
     // Sets the labels position
     void setPosition(Qwt3D::Triple pos, ANCHOR a = BottomLeft);
     // Sets the labels position relative to screen
     void setRelPosition(Tuple rpos, ANCHOR a);
     // Receives bottom left label position
-    Qwt3D::Triple first() const { return beg_; }
+    Qwt3D::Triple first() const;
     // Receives top right label position
-    Qwt3D::Triple second() const { return end_; }
+    Qwt3D::Triple second() const;
     // Defines an anchor point for the labels surrounding rectangle
-    ANCHOR anchor() const
-    {
-        return anchor_;
-    }
+    ANCHOR anchor() const;
     virtual void setColor(double r, double g, double b, double a = 1);
     virtual void setColor(Qwt3D::RGBA rgba);
 
@@ -57,14 +60,6 @@ public:
     static void useDeviceFonts(bool val);
 
 private:
-    Qwt3D::Triple beg_, end_, pos_;
-    QPixmap pm_;
-    QImage buf_, tex_;
-    QFont font_;
-    QString text_;
-
-    ANCHOR anchor_;
-
     void init();
     void init(const QString &family, int pointSize, int weight = QFont::Normal,
               bool italic = false);
@@ -72,14 +67,8 @@ private:
     void convert2screen();
     double width() const;
     double height() const;
-
-    int gap_;
-
-    bool flagforupdate_;
-
-    static bool devicefonts_;
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_LABEL_H

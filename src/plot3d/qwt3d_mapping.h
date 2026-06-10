@@ -1,5 +1,5 @@
-#ifndef qwt3d_mapping_h
-#define qwt3d_mapping_h
+#ifndef QWT3D_MAPPING_H
+#define QWT3D_MAPPING_H
 
 #include <qstring.h>
 #include "qwt3d_global.h"
@@ -22,4 +22,4 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_MAPPING_H

@@ -16,7 +16,7 @@ Function::Function() : GridMapping()
  */
 Function::Function(SurfacePlot& pw) : GridMapping()
 {
-    plotwidget_p = &pw;
+    setPlotWidget(&pw);
 }
 
 /**
@@ -25,7 +25,7 @@ Function::Function(SurfacePlot& pw) : GridMapping()
  */
 Function::Function(SurfacePlot* pw) : GridMapping()
 {
-    plotwidget_p = pw;
+    setPlotWidget(pw);
 }
 
 /**
@@ -34,8 +34,8 @@ Function::Function(SurfacePlot* pw) : GridMapping()
  */
 void Function::assign(SurfacePlot& plotWidget)
 {
-    if (&plotWidget != plotwidget_p)
-        plotwidget_p = &plotWidget;
+    if (&plotWidget != this->plotWidget())
+        setPlotWidget(&plotWidget);
 }
 
 /**
@@ -44,8 +44,8 @@ void Function::assign(SurfacePlot& plotWidget)
  */
 void Function::assign(SurfacePlot* plotWidget)
 {
-    if (plotWidget != plotwidget_p)
-        plotwidget_p = plotWidget;
+    if (plotWidget != this->plotWidget())
+        setPlotWidget(plotWidget);
 }
 
 /**
@@ -54,7 +54,7 @@ void Function::assign(SurfacePlot* plotWidget)
  */
 void Function::setMinZ(double val)
 {
-    range_p.minVertex.z = val;
+    range().minVertex.z = val;
 }
 
 /**
@@ -63,7 +63,7 @@ void Function::setMinZ(double val)
  */
 void Function::setMaxZ(double val)
 {
-    range_p.maxVertex.z = val;
+    range().maxVertex.z = val;
 }
 
 /**
@@ -75,41 +75,44 @@ void Function::setMaxZ(double val)
  */
 bool Function::create()
 {
-    if ((umesh_p <= 2) || (vmesh_p <= 2) || !plotwidget_p)
+    const unsigned int um = meshU();
+    const unsigned int vm = meshV();
+
+    if ((um <= 2) || (vm <= 2) || !plotWidget())
         return false;
 
     /* allocate some space for the mesh */
-    double** data = new double*[ umesh_p ];
+    double** data = new double*[ um ];
 
     unsigned i, j;
-    for (i = 0; i < umesh_p; i++) {
-        data[ i ] = new double[ vmesh_p ];
+    for (i = 0; i < um; i++) {
+        data[ i ] = new double[ vm ];
     }
 
     /* get the data */
 
-    double dx = (maxu_p - minu_p) / (umesh_p - 1);
-    double dy = (maxv_p - minv_p) / (vmesh_p - 1);
+    double dx = (maxU() - minU()) / (um - 1);
+    double dy = (maxV() - minV()) / (vm - 1);
 
-    for (i = 0; i < umesh_p; ++i) {
-        for (j = 0; j < vmesh_p; ++j) {
-            data[ i ][ j ] = operator()(minu_p + i * dx, minv_p + j * dy);
+    for (i = 0; i < um; ++i) {
+        for (j = 0; j < vm; ++j) {
+            data[ i ][ j ] = operator()(minU() + i * dx, minV() + j * dy);
 
-            if (data[ i ][ j ] > range_p.maxVertex.z)
-                data[ i ][ j ] = range_p.maxVertex.z;
-            else if (data[ i ][ j ] < range_p.minVertex.z)
-                data[ i ][ j ] = range_p.minVertex.z;
+            if (data[ i ][ j ] > range().maxVertex.z)
+                data[ i ][ j ] = range().maxVertex.z;
+            else if (data[ i ][ j ] < range().minVertex.z)
+                data[ i ][ j ] = range().minVertex.z;
         }
     }
 
-    Q_ASSERT(plotwidget_p);
-    if (!plotwidget_p) {
+    Q_ASSERT(plotWidget());
+    if (!plotWidget()) {
         fprintf(stderr, "Function: no valid Plot3D Widget assigned");
     } else {
-        static_cast< SurfacePlot* >(plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, minu_p, maxu_p, minv_p, maxv_p);
+        static_cast< SurfacePlot* >(plotWidget())->loadFromData(data, um, vm, minU(), maxU(), minV(), maxV());
     }
 
-    for (i = 0; i < umesh_p; i++) {
+    for (i = 0; i < um; i++) {
         delete[] data[ i ];
     }
 

@@ -3,6 +3,17 @@
 
 using namespace Qwt3D;
 
+class StandardColor::PrivateData
+{
+    QWT_DECLARE_PUBLIC(StandardColor)
+
+public:
+    PrivateData(StandardColor* q) : q_ptr(q), m_data(nullptr) {}
+
+    Qwt3D::ColorVector m_colors;
+    Qwt3D::Plot3D* m_data;
+};
+
 /**
  * @brief Constructs a StandardColor object
  * @param data Plot3D data source for color mapping
@@ -10,12 +21,17 @@ using namespace Qwt3D;
  * @details Creates a standard color mapping with the specified size and resets
  *          the color vector to default gradient values.
  */
-StandardColor::StandardColor(Plot3D* data, unsigned size) : data_(data)
+StandardColor::StandardColor(Plot3D* data, unsigned size)
+    : QWT_PIMPL_CONSTRUCT
 {
-    Q_ASSERT(data_);
+    QWT_D(d);
+    Q_ASSERT(data);
+    d->m_data = data;
 
     reset(size);
 }
+
+StandardColor::~StandardColor() = default;
 
 /**
  * @brief Resets the color vector to a default gradient
@@ -24,17 +40,18 @@ StandardColor::StandardColor(Plot3D* data, unsigned size) : data_(data)
  */
 void StandardColor::reset(unsigned size)
 {
-    colors_ = ColorVector(size);
+    QWT_D(d);
+    d->m_colors = ColorVector(size);
     RGBA elem;
 
     double dsize = size;
 
     for (unsigned int i = 0; i != size; ++i) {
-        elem.r       = i / dsize;
-        elem.g       = i / dsize / 4;
-        elem.b       = 1 - i / dsize;
-        elem.a       = 1.0;
-        colors_[ i ] = elem;
+        elem.r           = i / dsize;
+        elem.g           = i / dsize / 4;
+        elem.b           = 1 - i / dsize;
+        elem.a           = 1.0;
+        d->m_colors[ i ] = elem;
     }
 }
 
@@ -44,7 +61,8 @@ void StandardColor::reset(unsigned size)
  */
 void StandardColor::setColorVector(ColorVector const& cv)
 {
-    colors_ = cv;
+    QWT_D(d);
+    d->m_colors = cv;
 }
 
 /**
@@ -53,16 +71,29 @@ void StandardColor::setColorVector(ColorVector const& cv)
  */
 void StandardColor::setAlpha(double a)
 {
+    QWT_D(d);
     if (a < 0 || a > 1)
         return;
 
     RGBA elem;
 
-    for (unsigned int i = 0; i != colors_.size(); ++i) {
-        elem         = colors_[ i ];
-        elem.a       = a;
-        colors_[ i ] = elem;
+    for (unsigned int i = 0; i != d->m_colors.size(); ++i) {
+        elem               = d->m_colors[ i ];
+        elem.a             = a;
+        d->m_colors[ i ]   = elem;
     }
+}
+
+/**
+ * @brief Creates color vector for ColorLegend - essentially a copy from the internal vector
+ * @param vec The vector to fill
+ * @return Reference to the filled color vector
+ */
+Qwt3D::ColorVector& StandardColor::createVector(Qwt3D::ColorVector& vec)
+{
+    QWT_D(d);
+    vec = d->m_colors;
+    return vec;
 }
 
 /**
@@ -73,12 +104,13 @@ void StandardColor::setAlpha(double a)
  */
 RGBA StandardColor::operator()(double, double, double z) const
 {
-    Q_ASSERT(data_);
-    int index = static_cast< int >((colors_.size() - 1) * (z - data_->hull().minVertex.z)
-                                   / (data_->hull().maxVertex.z - data_->hull().minVertex.z));
+    QWT_DC(d);
+    Q_ASSERT(d->m_data);
+    int index = static_cast< int >((d->m_colors.size() - 1) * (z - d->m_data->hull().minVertex.z)
+                                   / (d->m_data->hull().maxVertex.z - d->m_data->hull().minVertex.z));
     if (index < 0)
         index = 0;
-    if (static_cast< unsigned int >(index) > colors_.size() - 1)
-        index = static_cast< int >(colors_.size() - 1);
-    return colors_[ index ];
+    if (static_cast< unsigned int >(index) > d->m_colors.size() - 1)
+        index = static_cast< int >(d->m_colors.size() - 1);
+    return d->m_colors[ index ];
 }

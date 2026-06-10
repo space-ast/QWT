@@ -1,5 +1,5 @@
-#ifndef __COLORGENERATOR_H__
-#define __COLORGENERATOR_H__
+#ifndef QWT3D_COLOR_H
+#define QWT3D_COLOR_H
 
 #include <qstring.h>
 #include "qwt3d_global.h"
@@ -42,27 +42,22 @@ class Plot3D;
  */
 class QWT3D_EXPORT StandardColor : public Color
 {
+    QWT_DECLARE_PRIVATE(StandardColor)
+
 public:
     // Initializes with data and set up a ColorVector with a size of 100 z values (default)
     explicit StandardColor(Qwt3D::Plot3D *data, unsigned size = 100);
+    ~StandardColor();
     // Receives z-dependent color from ColorVector
     Qwt3D::RGBA operator()(double x, double y,
-                           double z) const;
+                           double z) const override;
     void setColorVector(Qwt3D::ColorVector const &cv);
     // Resets the standard colors
     void reset(unsigned size = 100);
     // Sets unitary alpha value for all colors
     void setAlpha(double a);
     // Creates color vector for ColorLegend - essentially a copy from the internal vector
-    Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec)
-    {
-        vec = colors_;
-        return vec;
-    }
-
-protected:
-    Qwt3D::ColorVector colors_;
-    Qwt3D::Plot3D *data_;
+    Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) override;
 };
 
 } // ns

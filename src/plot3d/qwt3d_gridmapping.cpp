@@ -3,19 +3,48 @@
 
 using namespace Qwt3D;
 
+class GridMapping::PrivateData
+{
+    QWT_DECLARE_PUBLIC(GridMapping)
+
+public:
+    PrivateData(GridMapping *q)
+        : q_ptr(q)
+        , m_plotwidget(nullptr)
+        , m_umesh(0)
+        , m_vmesh(0)
+        , m_minu(0.0)
+        , m_maxu(0.0)
+        , m_minv(0.0)
+        , m_maxv(0.0)
+    {
+    }
+
+    Qwt3D::ParallelEpiped m_range;
+    Qwt3D::SurfacePlot *m_plotwidget;
+    unsigned int m_umesh;
+    unsigned int m_vmesh;
+    double m_minu;
+    double m_maxu;
+    double m_minv;
+    double m_maxv;
+};
+
 /**
  * @brief Default constructor
  * @details Initializes with no plot widget, zero mesh dimensions, zero domain,
  *          and unrestricted z range.
  */
 GridMapping::GridMapping()
+    : QWT_PIMPL_CONSTRUCT
 {
-    plotwidget_p = 0;
     setMesh(0, 0);
     setDomain(0, 0, 0, 0);
     restrictRange(ParallelEpiped(Triple(-DBL_MAX, -DBL_MAX, -DBL_MAX),
                                  Triple(DBL_MAX, DBL_MAX, DBL_MAX)));
 }
+
+GridMapping::~GridMapping() = default;
 
 /**
  * @brief Sets the number of mesh columns and rows
@@ -24,8 +53,9 @@ GridMapping::GridMapping()
  */
 void GridMapping::setMesh(unsigned int columns, unsigned int rows)
 {
-    umesh_p = columns;
-    vmesh_p = rows;
+    QWT_D(d);
+    d->m_umesh = columns;
+    d->m_vmesh = rows;
 }
 
 /**
@@ -37,10 +67,11 @@ void GridMapping::setMesh(unsigned int columns, unsigned int rows)
  */
 void GridMapping::setDomain(double minu, double maxu, double minv, double maxv)
 {
-    minu_p = minu;
-    maxu_p = maxu;
-    minv_p = minv;
-    maxv_p = maxv;
+    QWT_D(d);
+    d->m_minu = minu;
+    d->m_maxu = maxu;
+    d->m_minv = minv;
+    d->m_maxv = maxv;
 }
 
 /**
@@ -49,5 +80,66 @@ void GridMapping::setDomain(double minu, double maxu, double minv, double maxv)
  */
 void GridMapping::restrictRange(Qwt3D::ParallelEpiped const &p)
 {
-    range_p = p;
+    QWT_D(d);
+    d->m_range = p;
+}
+
+Qwt3D::SurfacePlot *GridMapping::plotWidget() const
+{
+    QWT_DC(d);
+    return d->m_plotwidget;
+}
+
+void GridMapping::setPlotWidget(Qwt3D::SurfacePlot *pw)
+{
+    QWT_D(d);
+    d->m_plotwidget = pw;
+}
+
+Qwt3D::ParallelEpiped &GridMapping::range()
+{
+    QWT_D(d);
+    return d->m_range;
+}
+
+const Qwt3D::ParallelEpiped &GridMapping::range() const
+{
+    QWT_DC(d);
+    return d->m_range;
+}
+
+unsigned int GridMapping::meshU() const
+{
+    QWT_DC(d);
+    return d->m_umesh;
+}
+
+unsigned int GridMapping::meshV() const
+{
+    QWT_DC(d);
+    return d->m_vmesh;
+}
+
+double GridMapping::minU() const
+{
+    QWT_DC(d);
+    return d->m_minu;
+}
+
+double GridMapping::maxU() const
+{
+    QWT_DC(d);
+    return d->m_maxu;
+}
+
+double GridMapping::minV() const
+{
+    QWT_DC(d);
+    return d->m_minv;
+}
+
+double GridMapping::maxV() const
+{
+    QWT_DC(d);
+    return d->m_maxv;
 }

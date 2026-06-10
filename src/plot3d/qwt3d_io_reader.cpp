@@ -2,17 +2,30 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <float.h>
-#include <stdio.h>
+#include "qwt3d_io_reader.h"
+
 #include <qtextstream.h>
 
+#include <cfloat>
+#include <cstdio>
+
 #include "qwt3d_surfaceplot.h"
-#include "qwt3d_io_reader.h"
 
 using namespace std;
 using namespace Qwt3D;
 
 const char* NativeReader::magicstring = "jk:11051895-17021986";
+
+class NativeReader::PrivateData
+{
+    QWT_DECLARE_PUBLIC(NativeReader)
+
+public:
+    PrivateData(NativeReader* q) : q_ptr(q), m_minZ(-DBL_MAX), m_maxZ(DBL_MAX) {}
+
+    double m_minZ;
+    double m_maxZ;
+};
 
 namespace
 {
@@ -66,11 +79,11 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
     char* p;
 
     // find out the size
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmesh = static_cast< unsigned int >(atoi(p));
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymesh = static_cast< unsigned int >(atoi(p));
 
@@ -78,19 +91,19 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
         return false;
 
     // ... and the limits
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmin = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmax = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymin = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymax = atof(p);
 
@@ -104,7 +117,7 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
 bool check_magic(FILE* fp, const char* val)
 {
     char* p;
-    if ((p = read_field(fp, false)) == 0)
+    if ((p = read_field(fp, false)) == nullptr)
         return false;
 
     if (strcmp(p, val) != 0)
@@ -116,7 +129,7 @@ bool check_magic(FILE* fp, const char* val)
 bool check_type(FILE* fp, const char* val)
 {
     char* p;
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
 
     if (strcmp(p, val) != 0)
@@ -146,8 +159,20 @@ void deleteData(double** data, int columns)
 /**
  * @brief Default constructor
  */
-NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
+NativeReader::NativeReader() : QWT_PIMPL_CONSTRUCT
 {
+}
+
+NativeReader::~NativeReader() = default;
+
+IO::Functor* NativeReader::clone() const
+{
+    auto* copy = new NativeReader();
+    QWT_DC(d);
+    auto* copyD = copy->d_func();
+    copyD->m_minZ = d->m_minZ;
+    copyD->m_maxZ = d->m_maxZ;
+    return copy;
 }
 
 /**
@@ -196,6 +221,7 @@ bool NativeReader::collectInfo(FILE*& file,
  */
 bool NativeReader::operator()(Plot3D* plot, QString const& fname)
 {
+    QWT_D(d);
 
     FILE* file;
     unsigned int xmesh, ymesh;
@@ -214,10 +240,10 @@ bool NativeReader::operator()(Plot3D* plot, QString const& fname)
                 return false;
             }
 
-            if (data[ i ][ j ] > maxz_)
-                data[ i ][ j ] = maxz_;
-            else if (data[ i ][ j ] < minz_)
-                data[ i ][ j ] = minz_;
+            if (data[ i ][ j ] > d->m_maxZ)
+                data[ i ][ j ] = d->m_maxZ;
+            else if (data[ i ][ j ] < d->m_minZ)
+                data[ i ][ j ] = d->m_minZ;
         }
     }
 

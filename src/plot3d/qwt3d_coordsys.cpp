@@ -3,18 +3,40 @@
 using namespace std;
 using namespace Qwt3D;
 
+class CoordinateSystem::PrivateData
+{
+    QWT_DECLARE_PUBLIC(CoordinateSystem)
+
+public:
+    PrivateData(CoordinateSystem* p) : q_ptr(p)
+        , m_style(BOX)
+        , m_smooth(true)
+        , m_autodecoration(true)
+        , m_majorgridlines(false)
+        , m_minorgridlines(false)
+        , m_sides(0)
+    {
+    }
+
+    Triple m_first, m_second;
+    COORDSTYLE m_style;
+    RGBA m_gridlinecolor;
+    bool m_smooth;
+    bool m_autodecoration;
+    bool m_majorgridlines, m_minorgridlines;
+    int m_sides;
+};
+
 /**
  * @brief Constructs a coordinate system with specified boundaries and style
  * @param first Minimum vertex of the coordinate system box
  * @param second Maximum vertex of the coordinate system box
  * @param st Coordinate system style (NOCOORD, BOX, or FRAME)
  */
-CoordinateSystem::CoordinateSystem(Triple first, Triple second, COORDSTYLE st)
+CoordinateSystem::CoordinateSystem(Triple first, Triple second, COORDSTYLE st) : QWT_PIMPL_CONSTRUCT
 {
-    autodecoration_ = true;
-    axes            = std::vector< Axis >(12);
+    axes = std::vector< Axis >(12);
     setStyle(st);
-    setLineSmooth(true);
     init(first, second);
 
     setAxesColor(RGBA(0, 0, 0, 1));
@@ -43,6 +65,8 @@ void CoordinateSystem::destroy()
 
 void CoordinateSystem::init(Triple first, Triple second)
 {
+    QWT_D(d);
+
     destroy();
 
     for (unsigned i = 0; i != axes.size(); ++i)
@@ -101,38 +125,43 @@ void CoordinateSystem::init(Triple first, Triple second)
     axes[ Z4 ].setTicOrientation(1, 0, 0);
     axes[ Z3 ].setTicOrientation(1, 0, 0);
 
-    setStyle(style_);
+    setStyle(d->m_style);
 }
 
+/**
+ * @brief Draws the coordinate system, including grid lines if enabled
+ * @details Chooses visible axes automatically when auto-decoration is on,
+ *          then draws major and minor grid lines as configured.
+ */
 void CoordinateSystem::draw()
 {
-    //	saveGLState();
+    QWT_D(d);
 
     GLStateBewarer sb(GL_LINE_SMOOTH, true);
 
-    if (!lineSmooth())
+    if (!d->m_smooth)
         sb.turnOff();
 
-    if (autoDecoration())
+    if (d->m_autodecoration)
         chooseAxes();
 
     Drawable::draw();
 
-    if (style_ == NOCOORD)
+    if (d->m_style == NOCOORD)
         return;
 
-    if (majorgridlines_ || minorgridlines_)
+    if (d->m_majorgridlines || d->m_minorgridlines)
         recalculateAxesTics();
-    if (majorgridlines_)
+    if (d->m_majorgridlines)
         drawMajorGridLines();
-    if (minorgridlines_)
+    if (d->m_minorgridlines)
         drawMinorGridLines();
-
-    //	restoreGLState();
 }
 
 void CoordinateSystem::chooseAxes()
 {
+    QWT_D(d);
+
     vector< Triple > beg(axes.size());
     vector< Triple > end(axes.size());
     vector< Tuple > src(2 * axes.size());
@@ -140,7 +169,7 @@ void CoordinateSystem::chooseAxes()
     unsigned i;
     // collect axes viewport coordinates and initialize
     for (i = 0; i != axes.size(); ++i) {
-        if (style() != NOCOORD)
+        if (d->m_style != NOCOORD)
             attach(&axes[ i ]);
 
         beg[ i ]               = World2ViewPort(axes[ i ].begin());
@@ -188,11 +217,11 @@ void CoordinateSystem::chooseAxes()
 
         for (i = 0; i != axes.size(); ++i) {
             if ((one == beg[ i ] && two == end[ i ]) || (two == beg[ i ] && one == end[ i ])) {
-                if (i == X1 || i == X2 || i == X3 || i == X4)  // x Achsen
+                if (i == X1 || i == X2 || i == X3 || i == X4)  // x axes
                 {
-                    if (rem_x >= 0)  // schon zweite Achse der konvexen Huelle ?
+                    if (rem_x >= 0)  // already second axis of the convex hull?
                     {
-                        // untere der beiden x Achsen
+                        // lower of the two x axes
                         double y = min(min(end[ rem_x ].y, end[ i ].y), min(beg[ rem_x ].y, beg[ i ].y));
                         choice_x = (y == beg[ i ].y || y == end[ i ].y) ? i : rem_x;
 
@@ -207,7 +236,7 @@ void CoordinateSystem::chooseAxes()
                     }
                 } else if (i == Y1 || i == Y2 || i == Y3 || i == Y4) {
                     if (rem_y >= 0) {
-                        // untere der beiden y Achsen
+                        // lower of the two y axes
                         double y = min(min(end[ rem_y ].y, end[ i ].y), min(beg[ rem_y ].y, beg[ i ].y));
                         choice_y = (y == beg[ i ].y || y == end[ i ].y) ? i : rem_y;
 
@@ -221,7 +250,7 @@ void CoordinateSystem::chooseAxes()
                     }
                 } else if (i == Z1 || i == Z2 || i == Z3 || i == Z4) {
                     if (rem_z >= 0) {
-                        // hintere der beiden z Achsen
+                        // rear of the two z axes
                         double z = max(max(end[ rem_z ].z, end[ i ].z), max(beg[ rem_z ].z, beg[ i ].z));
                         choice_z = (z == beg[ i ].z || z == end[ i ].z) ? i : rem_z;
 
@@ -257,7 +286,7 @@ void CoordinateSystem::chooseAxes()
         }
     }
 
-    if (style() == FRAME) {
+    if (d->m_style == FRAME) {
         for (i = 0; i != axes.size(); ++i) {
             if (static_cast< int >(i) != choice_x && static_cast< int >(i) != choice_y && static_cast< int >(i) != choice_z)
                 detach(&axes[ i ]);
@@ -333,98 +362,178 @@ void CoordinateSystem::autoDecorateExposedAxis(Axis& ax, bool left)
     }
 }
 
+/**
+ * @brief Sets the position of the coordinate system box
+ * @param first Front-left-bottom corner of the bounding box
+ * @param second Back-right-top corner of the bounding box
+ */
 void CoordinateSystem::setPosition(Triple first, Triple second)
 {
-    first_  = first;
-    second_ = second;
+    QWT_D(d);
+    d->m_first  = first;
+    d->m_second = second;
 }
 
+/**
+ * @brief Sets the length of major and minor tic marks for all axes
+ * @param major Length of major tic marks
+ * @param minor Length of minor tic marks
+ */
 void CoordinateSystem::setTicLength(double major, double minor)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setTicLength(major, minor);
 }
 
+/**
+ * @brief Adjusts the distance between axis numbering and axis body for all axes
+ * @param val Offset value to fine-tune number positioning
+ */
 void CoordinateSystem::adjustNumbers(int val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].adjustNumbers(val);
 }
 
+/**
+ * @brief Adjusts the distance between axis labels and axis body for all axes
+ * @param val Offset value to fine-tune label positioning
+ */
 void CoordinateSystem::adjustLabels(int val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].adjustLabel(val);
 }
 
+/**
+ * @brief Enables or disables automatic scaling for all axes
+ * @param val True to enable auto-scaling, false to disable
+ */
 void CoordinateSystem::setAutoScale(bool val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setAutoScale(val);
 }
 
+/**
+ * @brief Sets a common color for all axes
+ * @param val RGBA color value to apply to all axes
+ */
 void CoordinateSystem::setAxesColor(RGBA val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setColor(val);
 }
 
+/**
+ * @brief Recalculates tic positions for all axes
+ */
 void CoordinateSystem::recalculateAxesTics()
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].recalculateTics();
 }
 
+/**
+ * @brief Sets the font used for axis numbering across all axes
+ * @param family Font family name
+ * @param pointSize Font size in points
+ * @param weight Font weight (e.g., QFont::Normal, QFont::Bold)
+ * @param italic Whether to use italic style
+ */
 void CoordinateSystem::setNumberFont(QString const& family, int pointSize, int weight, bool italic)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setNumberFont(family, pointSize, weight, italic);
 }
 
+/**
+ * @brief Sets the font used for axis numbering across all axes
+ * @param font QFont object to apply to all axis numberings
+ */
 void CoordinateSystem::setNumberFont(QFont const& font)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setNumberFont(font);
 }
 
+/**
+ * @brief Sets a common color for all axis numberings
+ * @param val RGBA color value to apply to axis numbers
+ */
 void CoordinateSystem::setNumberColor(RGBA val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setNumberColor(val);
 }
 
+/**
+ * @brief Sets all axes to use linear scaling with real number items
+ */
 void CoordinateSystem::setStandardScale()
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setScale(LINEARSCALE);
 }
 
+/**
+ * @brief Sets the font used for axis labels across all axes
+ * @param font QFont object to apply to all axis labels
+ */
 void CoordinateSystem::setLabelFont(QFont const& font)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setLabelFont(font);
 }
 
+/**
+ * @brief Sets the font used for axis labels across all axes
+ * @param family Font family name
+ * @param pointSize Font size in points
+ * @param weight Font weight (e.g., QFont::Normal, QFont::Bold)
+ * @param italic Whether to use italic style
+ */
 void CoordinateSystem::setLabelFont(QString const& family, int pointSize, int weight, bool italic)
 {
     setLabelFont(QFont(family, pointSize, weight, italic));
 }
 
+/**
+ * @brief Sets a common color for all axis labels
+ * @param val RGBA color value to apply to axis labels
+ */
 void CoordinateSystem::setLabelColor(RGBA val)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setLabelColor(val);
 }
 
+/**
+ * @brief Sets line width for axes and tic marks
+ * @param val Base line width for axes
+ * @param majfac Scaling factor for major tic line width
+ * @param minfac Scaling factor for minor tic line width
+ */
 void CoordinateSystem::setLineWidth(double val, double majfac, double minfac)
 {
     for (unsigned i = 0; i != axes.size(); ++i)
         axes[ i ].setLineWidth(val, majfac, minfac);
 }
 
+/**
+ * @brief Sets the coordinate system style and selects which axes to display in FRAME mode
+ * @param s Coordinate system style (NOCOORD, BOX, or FRAME)
+ * @param frame_1 First axis to display when using FRAME style
+ * @param frame_2 Second axis to display when using FRAME style
+ * @param frame_3 Third axis to display when using FRAME style
+ * @details In BOX mode all 12 axes are drawn. In FRAME mode only the three
+ *          specified axes are drawn (unless auto-decoration is enabled).
+ *          NOCOORD disables all coordinate system rendering.
+ */
 void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS frame_3)
 {
-    style_ = s;
+    QWT_D(d);
+    d->m_style = s;
 
     switch (s) {
     case NOCOORD: {
@@ -438,7 +547,7 @@ void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS f
     case FRAME: {
         for (unsigned i = 0; i != axes.size(); ++i)
             detach(&axes[ i ]);
-        if (!autoDecoration()) {
+        if (!d->m_autodecoration) {
             attach(&axes[ frame_1 ]);
             attach(&axes[ frame_2 ]);
             attach(&axes[ frame_3 ]);
@@ -459,39 +568,42 @@ void CoordinateSystem::setStyle(COORDSTYLE s, AXIS frame_1, AXIS frame_2, AXIS f
  */
 void CoordinateSystem::setGridLines(bool majors, bool minors, int sides)
 {
-    sides_          = sides;
-    majorgridlines_ = majors;
-    minorgridlines_ = minors;
+    QWT_D(d);
+    d->m_sides          = sides;
+    d->m_majorgridlines = majors;
+    d->m_minorgridlines = minors;
 }
 
 void CoordinateSystem::drawMajorGridLines()
 {
+    QWT_D(d);
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4d(gridlinecolor_.r, gridlinecolor_.g, gridlinecolor_.b, gridlinecolor_.a);
+    glColor4d(d->m_gridlinecolor.r, d->m_gridlinecolor.g, d->m_gridlinecolor.b, d->m_gridlinecolor.a);
     setDeviceLineWidth(axes[ X1 ].majLineWidth());
 
     glBegin(GL_LINES);
-    if (sides_ & Qwt3D::FLOOR) {
+    if (d->m_sides & Qwt3D::FLOOR) {
         drawMajorGridLines(axes[ X1 ], axes[ X4 ]);
         drawMajorGridLines(axes[ Y1 ], axes[ Y2 ]);
     }
-    if (sides_ & Qwt3D::CEIL) {
+    if (d->m_sides & Qwt3D::CEIL) {
         drawMajorGridLines(axes[ X2 ], axes[ X3 ]);
         drawMajorGridLines(axes[ Y3 ], axes[ Y4 ]);
     }
-    if (sides_ & Qwt3D::LEFT) {
+    if (d->m_sides & Qwt3D::LEFT) {
         drawMajorGridLines(axes[ Y1 ], axes[ Y4 ]);
         drawMajorGridLines(axes[ Z1 ], axes[ Z2 ]);
     }
-    if (sides_ & Qwt3D::RIGHT) {
+    if (d->m_sides & Qwt3D::RIGHT) {
         drawMajorGridLines(axes[ Y2 ], axes[ Y3 ]);
         drawMajorGridLines(axes[ Z3 ], axes[ Z4 ]);
     }
-    if (sides_ & Qwt3D::FRONT) {
+    if (d->m_sides & Qwt3D::FRONT) {
         drawMajorGridLines(axes[ X1 ], axes[ X2 ]);
         drawMajorGridLines(axes[ Z2 ], axes[ Z3 ]);
     }
-    if (sides_ & Qwt3D::BACK) {
+    if (d->m_sides & Qwt3D::BACK) {
         drawMajorGridLines(axes[ X3 ], axes[ X4 ]);
         drawMajorGridLines(axes[ Z4 ], axes[ Z1 ]);
     }
@@ -500,32 +612,34 @@ void CoordinateSystem::drawMajorGridLines()
 
 void CoordinateSystem::drawMinorGridLines()
 {
+    QWT_D(d);
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4d(gridlinecolor_.r, gridlinecolor_.g, gridlinecolor_.b, gridlinecolor_.a);
+    glColor4d(d->m_gridlinecolor.r, d->m_gridlinecolor.g, d->m_gridlinecolor.b, d->m_gridlinecolor.a);
     setDeviceLineWidth(axes[ X1 ].minLineWidth());
 
     glBegin(GL_LINES);
-    if (sides_ & Qwt3D::FLOOR) {
+    if (d->m_sides & Qwt3D::FLOOR) {
         drawMinorGridLines(axes[ X1 ], axes[ X4 ]);
         drawMinorGridLines(axes[ Y1 ], axes[ Y2 ]);
     }
-    if (sides_ & Qwt3D::CEIL) {
+    if (d->m_sides & Qwt3D::CEIL) {
         drawMinorGridLines(axes[ X2 ], axes[ X3 ]);
         drawMinorGridLines(axes[ Y3 ], axes[ Y4 ]);
     }
-    if (sides_ & Qwt3D::LEFT) {
+    if (d->m_sides & Qwt3D::LEFT) {
         drawMinorGridLines(axes[ Y1 ], axes[ Y4 ]);
         drawMinorGridLines(axes[ Z1 ], axes[ Z2 ]);
     }
-    if (sides_ & Qwt3D::RIGHT) {
+    if (d->m_sides & Qwt3D::RIGHT) {
         drawMinorGridLines(axes[ Y2 ], axes[ Y3 ]);
         drawMinorGridLines(axes[ Z3 ], axes[ Z4 ]);
     }
-    if (sides_ & Qwt3D::FRONT) {
+    if (d->m_sides & Qwt3D::FRONT) {
         drawMinorGridLines(axes[ X1 ], axes[ X2 ]);
         drawMinorGridLines(axes[ Z2 ], axes[ Z3 ]);
     }
-    if (sides_ & Qwt3D::BACK) {
+    if (d->m_sides & Qwt3D::BACK) {
         drawMinorGridLines(axes[ X3 ], axes[ X4 ]);
         drawMinorGridLines(axes[ Z4 ], axes[ Z1 ]);
     }
@@ -550,4 +664,58 @@ void CoordinateSystem::drawMinorGridLines(Axis& a0, Axis& a1)
         glVertex3d(a0.minorPositions()[ i ].x, a0.minorPositions()[ i ].y, a0.minorPositions()[ i ].z);
         glVertex3d(a0.minorPositions()[ i ].x + d.x, a0.minorPositions()[ i ].y + d.y, a0.minorPositions()[ i ].z + d.z);
     }
+}
+
+Qwt3D::COORDSTYLE CoordinateSystem::style() const
+{
+    QWT_DC(d);
+    return d->m_style;
+}
+
+void CoordinateSystem::setGridLinesColor(Qwt3D::RGBA val)
+{
+    QWT_D(d);
+    d->m_gridlinecolor = val;
+}
+
+Qwt3D::Triple CoordinateSystem::first() const
+{
+    QWT_DC(d);
+    return d->m_first;
+}
+
+Qwt3D::Triple CoordinateSystem::second() const
+{
+    QWT_DC(d);
+    return d->m_second;
+}
+
+void CoordinateSystem::setAutoDecoration(bool val)
+{
+    QWT_D(d);
+    d->m_autodecoration = val;
+}
+
+bool CoordinateSystem::autoDecoration() const
+{
+    QWT_DC(d);
+    return d->m_autodecoration;
+}
+
+void CoordinateSystem::setLineSmooth(bool val)
+{
+    QWT_D(d);
+    d->m_smooth = val;
+}
+
+bool CoordinateSystem::lineSmooth() const
+{
+    QWT_DC(d);
+    return d->m_smooth;
+}
+
+int CoordinateSystem::grids() const
+{
+    QWT_DC(d);
+    return d->m_sides;
 }

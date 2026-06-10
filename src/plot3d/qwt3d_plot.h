@@ -1,5 +1,5 @@
-#ifndef __plot3d__
-#define __plot3d__
+#ifndef QWT3D_PLOT_H
+#define QWT3D_PLOT_H
 
 #include <QOpenGLWidget>
 
@@ -23,7 +23,7 @@ class QWT3D_EXPORT Plot3D : public QOpenGLWidget
 
 public:
     // Constructor
-    Plot3D(QWidget* parent = 0);
+    Plot3D(QWidget* parent = nullptr);
     // Destructor
     virtual ~Plot3D();
 
@@ -34,153 +34,78 @@ public:
     // Create coordinate system between two points
     void createCoordinateSystem(Qwt3D::Triple beg, Qwt3D::Triple end);
     // Returns pointer to CoordinateSystem object
-    Qwt3D::CoordinateSystem* coordinates()
-    {
-        return &coordinates_p;
-    }
+    Qwt3D::CoordinateSystem* coordinates();
     // Returns pointer to ColorLegend object
-    Qwt3D::ColorLegend* legend()
-    {
-        return &legend_;
-    }
+    Qwt3D::ColorLegend* legend();
 
     // Returns rotation around X axis [-360..360] (some angles are equivalent)
-    double xRotation() const
-    {
-        return xRot_;
-    }
+    double xRotation() const;
     // Returns rotation around Y axis [-360..360] (some angles are equivalent)
-    double yRotation() const
-    {
-        return yRot_;
-    }
+    double yRotation() const;
     // Returns rotation around Z axis [-360..360] (some angles are equivalent)
-    double zRotation() const
-    {
-        return zRot_;
-    }
+    double zRotation() const;
 
     // Returns shift along X axis (object coordinates)
-    double xShift() const
-    {
-        return xShift_;
-    }
+    double xShift() const;
     // Returns shift along Y axis (object coordinates)
-    double yShift() const
-    {
-        return yShift_;
-    }
+    double yShift() const;
     // Returns shift along Z axis (object coordinates)
-    double zShift() const
-    {
-        return zShift_;
-    }
+    double zShift() const;
 
     // Returns relative shift [-1..1] along X axis (view coordinates)
-    double xViewportShift() const
-    {
-        return xVPShift_;
-    }
+    double xViewportShift() const;
     // Returns relative shift [-1..1] along Y axis (view coordinates)
-    double yViewportShift() const
-    {
-        return yVPShift_;
-    }
+    double yViewportShift() const;
 
     // Returns scaling for X values [0..inf]
-    double xScale() const
-    {
-        return xScale_;
-    }
+    double xScale() const;
     // Returns scaling for Y values [0..inf]
-    double yScale() const
-    {
-        return yScale_;
-    }
+    double yScale() const;
     // Returns scaling for Z values [0..inf]
-    double zScale() const
-    {
-        return zScale_;
-    }
+    double zScale() const;
 
     // Returns zoom (0..inf)
-    double zoom() const
-    {
-        return zoom_;
-    }
+    double zoom() const;
 
     // Returns orthogonal (true) or perspective (false) projection
-    bool ortho() const
-    {
-        return ortho_;
-    }
+    bool ortho() const;
     // Set plot style
     void setPlotStyle(Qwt3D::PLOTSTYLE val);
     // Set plot style with Enrichment
     Qwt3D::Enrichment* setPlotStyle(Qwt3D::Enrichment const& val);
     // Returns plotting style
-    Qwt3D::PLOTSTYLE plotStyle() const
-    {
-        return plotstyle_;
-    }
+    Qwt3D::PLOTSTYLE plotStyle() const;
     // Returns current Enrichment object used for plotting styles (if set, zero else)
-    Qwt3D::Enrichment* userStyle() const
-    {
-        return userplotstyle_p;
-    }
+    Qwt3D::Enrichment* userStyle() const;
     // Set shading style
     void setShading(Qwt3D::SHADINGSTYLE val);
     // Returns shading style
-    Qwt3D::SHADINGSTYLE shading() const
-    {
-        return shading_;
-    }
+    Qwt3D::SHADINGSTYLE shading() const;
     // Set number of isolines
     void setIsolines(int isolines);
     // Returns number of isolines
-    int isolines() const
-    {
-        return isolines_;
-    }
+    int isolines() const;
 
     // Enables/disables smooth data mesh lines. Default is false
-    void setSmoothMesh(bool val)
-    {
-        smoothdatamesh_p = val;
-    }
+    void setSmoothMesh(bool val);
     // True if mesh antialiasing is on
-    bool smoothDataMesh() const
-    {
-        return smoothdatamesh_p;
-    }
+    bool smoothDataMesh() const;
     // Sets widgets background color
     void setBackgroundColor(Qwt3D::RGBA rgba);
     // Returns the widgets background color
-    Qwt3D::RGBA backgroundRGBAColor() const
-    {
-        return bgcolor_;
-    }
+    Qwt3D::RGBA backgroundRGBAColor() const;
     // Sets color for data mesh
     void setMeshColor(Qwt3D::RGBA rgba);
     // Returns color for data mesh
-    Qwt3D::RGBA meshColor() const
-    {
-        return meshcolor_;
-    }
+    Qwt3D::RGBA meshColor() const;
     // Sets line width for data mesh
     void setMeshLineWidth(double lw);
     // Returns line width for data mesh
-    double meshLineWidth() const
-    {
-        return meshLineWidth_;
-    }
+    double meshLineWidth() const;
     // Sets new data color object
     void setDataColor(Color* col);
     // Returns data color object
-    const Color* dataColor() const
-    {
-        return datacolor_p;
-    }
+    const Color* dataColor() const;
 
     // Add an Enrichment
     virtual Qwt3D::Enrichment* addEnrichment(Qwt3D::Enrichment const&);
@@ -188,10 +113,7 @@ public:
     virtual bool degrade(Qwt3D::Enrichment*);
 
     // Returns rectangular hull
-    Qwt3D::ParallelEpiped hull() const
-    {
-        return hull_;
-    }
+    Qwt3D::ParallelEpiped hull() const;
 
     // Show/hide color legend
     void showColorLegend(bool);
@@ -201,25 +123,16 @@ public:
     // Set polygon offset
     void setPolygonOffset(double d);
     // Returns relative value for polygon offset [0..1]
-    double polygonOffset() const
-    {
-        return polygonOffset_;
-    }
+    double polygonOffset() const;
 
     // Set title position
     void setTitlePosition(double rely, double relx = 0.5, Qwt3D::ANCHOR = Qwt3D::TopCenter);
     // Set title font
     void setTitleFont(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
     // Set caption color
-    void setTitleColor(Qwt3D::RGBA col)
-    {
-        title_.setColor(col);
-    }
+    void setTitleColor(Qwt3D::RGBA col);
     // Set caption text (one row only)
-    void setTitle(const QString& title)
-    {
-        title_.setString(title);
-    }
+    void setTitle(const QString& title);
 
     // Assign mouse states for rotations, scales, zoom and shifts
     void assignMouse(MouseState xrot,
@@ -280,41 +193,20 @@ public:
     void setLightComponent(GLenum property, double intensity, unsigned light = 0);
 
     // Returns Light 'idx' rotation around X axis [-360..360] (some angles are equivalent)
-    double xLightRotation(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].rot.x : 0;
-    }
+    double xLightRotation(unsigned idx = 0) const;
     // Returns Light 'idx' rotation around Y axis [-360..360] (some angles are equivalent)
-    double yLightRotation(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].rot.y : 0;
-    }
+    double yLightRotation(unsigned idx = 0) const;
     // Returns Light 'idx' rotation around Z axis [-360..360] (some angles are equivalent)
-    double zLightRotation(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].rot.z : 0;
-    }
+    double zLightRotation(unsigned idx = 0) const;
 
     // Returns shift of Light 'idx' along X axis (object coordinates)
-    double xLightShift(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].shift.x : 0;
-    }
+    double xLightShift(unsigned idx = 0) const;
     // Returns shift of Light 'idx' along Y axis (object coordinates)
-    double yLightShift(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].shift.y : 0;
-    }
+    double yLightShift(unsigned idx = 0) const;
     // Returns shift of Light 'idx' along Z axis (object coordinates)
-    double zLightShift(unsigned idx = 0) const
-    {
-        return (idx < 8) ? lights_[ idx ].shift.z : 0;
-    }
+    double zLightShift(unsigned idx = 0) const;
     // Returns true if valid data available, false else
-    bool hasData() const
-    {
-        return (actualData_p) ? !actualData_p->empty() : false;
-    }
+    bool hasData() const;
 
 Q_SIGNALS:
 
@@ -408,24 +300,26 @@ public Q_SLOTS:
     virtual bool save(QString const& fileName, QString const& format);
 
 protected:
+    QWT_DECLARE_PRIVATE(Plot3D)
+
     using EnrichmentList = std::list< Qwt3D::Enrichment* >;
     using ELIT           = EnrichmentList::iterator;
 
-    void initializeGL();
-    void paintGL();
-    void resizeGL(int w, int h);
+    void initializeGL() override;
+    void paintGL() override;
+    void resizeGL(int w, int h) override;
 
-    void mousePressEvent(QMouseEvent* e);
-    void mouseReleaseEvent(QMouseEvent* e);
-    void mouseMoveEvent(QMouseEvent* e);
-    void wheelEvent(QWheelEvent* e);
+    void mousePressEvent(QMouseEvent* e) override;
+    void mouseReleaseEvent(QMouseEvent* e) override;
+    void mouseMoveEvent(QMouseEvent* e) override;
+    void wheelEvent(QWheelEvent* e) override;
 
-    void keyPressEvent(QKeyEvent* e);
+    void keyPressEvent(QKeyEvent* e) override;
 
-    Qwt3D::CoordinateSystem coordinates_p;
-    Qwt3D::Color* datacolor_p;
-    Qwt3D::Enrichment* userplotstyle_p;
-    EnrichmentList elist_p;
+    // Protected accessors for derived classes
+    std::vector< GLuint >& displayLists();
+    Qwt3D::Data* actualData() const;
+    void setActualData(Qwt3D::Data* data);
 
     virtual void calculateHull() = 0;
     virtual void createData()    = 0;
@@ -435,15 +329,9 @@ protected:
     virtual void createEnrichments();
 
     void createCoordinateSystem();
-    void setHull(Qwt3D::ParallelEpiped p)
-    {
-        hull_ = p;
-    }
+    void setHull(Qwt3D::ParallelEpiped p);
 
-    bool initializedGL() const
-    {
-        return initializedGL_;
-    }
+    bool initializedGL() const;
 
     enum OBJECTS
     {
@@ -452,79 +340,20 @@ protected:
         NormalObject,
         DisplayListSize  // only to have a vector length ...
     };
-    std::vector< GLuint > displaylists_p;
-    Qwt3D::Data* actualData_p;
 
 private:
-    struct Light
-    {
-        Light() : unlit(true)
-        {
-        }
-        bool unlit;
-        Qwt3D::Triple rot;
-        Qwt3D::Triple shift;
-    };
-    std::vector< Light > lights_;
-
-    GLdouble xRot_, yRot_, zRot_, xShift_, yShift_, zShift_, zoom_, xScale_, yScale_, zScale_, xVPShift_, yVPShift_;
-
-    Qwt3D::RGBA meshcolor_;
-    double meshLineWidth_;
-    Qwt3D::RGBA bgcolor_;
-    Qwt3D::PLOTSTYLE plotstyle_;
-    Qwt3D::SHADINGSTYLE shading_;
-    Qwt3D::FLOORSTYLE floorstyle_;
-    bool ortho_;
-    double polygonOffset_;
-    int isolines_;
-    bool displaylegend_;
-    bool smoothdatamesh_p;
-
-    Qwt3D::ParallelEpiped hull_;
-
-    Qwt3D::ColorLegend legend_;
-
-    Label title_;
-    Qwt3D::Tuple titlerel_;
-    Qwt3D::ANCHOR titleanchor_;
-
-    // mouse
-
-    QPoint lastMouseMovePosition_;
-    bool mpressed_;
-
-    MouseState xrot_mstate_, yrot_mstate_, zrot_mstate_, xscale_mstate_, yscale_mstate_, zscale_mstate_, zoom_mstate_,
-        xshift_mstate_, yshift_mstate_;
-
-    bool mouse_input_enabled_;
-
     void setRotationMouse(MouseState bstate, double accel, QPoint diff);
     void setScaleMouse(MouseState bstate, double accel, QPoint diff);
     void setShiftMouse(MouseState bstate, double accel, QPoint diff);
-
-    // keyboard
-
-    bool kpressed_;
-
-    KeyboardState xrot_kstate_[ 2 ], yrot_kstate_[ 2 ], zrot_kstate_[ 2 ], xscale_kstate_[ 2 ], yscale_kstate_[ 2 ],
-        zscale_kstate_[ 2 ], zoom_kstate_[ 2 ], xshift_kstate_[ 2 ], yshift_kstate_[ 2 ];
-
-    bool kbd_input_enabled_;
-    double kbd_rot_speed_, kbd_scale_speed_, kbd_shift_speed_;
 
     void setRotationKeyboard(KeyboardState kseq, double speed);
     void setScaleKeyboard(KeyboardState kseq, double speed);
     void setShiftKeyboard(KeyboardState kseq, double speed);
 
-    bool lighting_enabled_;
     void applyLight(unsigned idx);
     void applyLights();
-
-    bool initializedGL_;
-    bool renderpixmaprequest_;
 };
 
 }  // ns
 
-#endif
+#endif // QWT3D_PLOT_H

@@ -1,8 +1,8 @@
-#ifndef __HELPER_H__
-#define __HELPER_H__
+#ifndef QWT3D_HELPER_H
+#define QWT3D_HELPER_H
 
-#include <math.h>
-#include <float.h>
+#include <cmath>
+#include <cfloat>
 #include <vector>
 #include <algorithm>
 
@@ -23,12 +23,6 @@ inline bool isPracticallyZero(double a, double b = 0)
         return (fabs(a) <= DBL_MIN);
 
     return (fabs(a - b) <= Min_(fabs(a), fabs(b)) * DBL_EPSILON);
-}
-
-// Rounds a double value to the nearest integer
-inline int round(double d)
-{
-    return (d > 0) ? int(d + 0.5) : int(d - 0.5);
 }
 
 } // ns

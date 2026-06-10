@@ -6,26 +6,47 @@
 
 using namespace Qwt3D;
 
+class ColorLegend::PrivateData
+{
+    QWT_DECLARE_PUBLIC(ColorLegend)
+
+public:
+    PrivateData(ColorLegend* p) : q_ptr(p)
+    {
+        m_axisposition = ColorLegend::Left;
+        m_orientation = ColorLegend::BottomTop;
+        m_showaxis = true;
+    }
+
+    Label m_caption;
+    ParallelEpiped m_pe;
+    Tuple m_relMin, m_relMax;
+    Axis m_axis;
+    ColorLegend::SCALEPOSITION m_axisposition;
+    ColorLegend::ORIENTATION m_orientation;
+    bool m_showaxis;
+};
+
 /**
  * @brief Constructs a legend object with an axis at the left side
  * @details The legend resides in the top-right area and has no caption.
  *          Scale numbering is shown.
  */
-ColorLegend::ColorLegend()
+ColorLegend::ColorLegend() : QWT_PIMPL_CONSTRUCT
 {
-    axis_.setNumbers(true);
-    axis_.setScaling(true);
-    axis_.setNumberColor(RGBA(0, 0, 0, 1));
-    axis_.setNumberAnchor(CenterRight);
-    axis_.setNumberFont(QFont("Courier", 8));
+    QWT_D(d);
+    d->m_axis.setNumbers(true);
+    d->m_axis.setScaling(true);
+    d->m_axis.setNumberColor(RGBA(0, 0, 0, 1));
+    d->m_axis.setNumberAnchor(CenterRight);
+    d->m_axis.setNumberFont(QFont("Courier", 8));
 
-    caption_.setFont("Courier", 10, QFont::Bold);
-    caption_.setColor(RGBA(0, 0, 0, 1));
-    axisposition_ = ColorLegend::Left;
-    orientation_ = ColorLegend::BottomTop;
-    showaxis_ = true;
+    d->m_caption.setFont("Courier", 10, QFont::Bold);
+    d->m_caption.setColor(RGBA(0, 0, 0, 1));
     setRelPosition(Tuple(0.94, 1 - 0.36), Tuple(0.97, 1 - 0.04));
 }
+
+ColorLegend::~ColorLegend() = default;
 
 /**
  * @brief Sets the legend title string
@@ -33,7 +54,8 @@ ColorLegend::ColorLegend()
  */
 void ColorLegend::setTitleString(QString const &s)
 {
-    caption_.setString(s);
+    QWT_D(d);
+    d->m_caption.setString(s);
 }
 
 /**
@@ -45,7 +67,8 @@ void ColorLegend::setTitleString(QString const &s)
  */
 void ColorLegend::setTitleFont(QString const &family, int pointSize, int weight, bool italic)
 {
-    caption_.setFont(family, pointSize, weight, italic);
+    QWT_D(d);
+    d->m_caption.setFont(family, pointSize, weight, italic);
 }
 
 /**
@@ -55,7 +78,8 @@ void ColorLegend::setTitleFont(QString const &family, int pointSize, int weight,
  */
 void ColorLegend::setLimits(double start, double stop)
 {
-    axis_.setLimits(start, stop);
+    QWT_D(d);
+    d->m_axis.setLimits(start, stop);
 }
 
 /**
@@ -64,7 +88,8 @@ void ColorLegend::setLimits(double start, double stop)
  */
 void ColorLegend::setMajors(int majors)
 {
-    axis_.setMajors(majors);
+    QWT_D(d);
+    d->m_axis.setMajors(majors);
 }
 
 /**
@@ -73,7 +98,8 @@ void ColorLegend::setMajors(int majors)
  */
 void ColorLegend::setMinors(int minors)
 {
-    axis_.setMinors(minors);
+    QWT_D(d);
+    d->m_axis.setMinors(minors);
 }
 
 /**
@@ -82,7 +108,8 @@ void ColorLegend::setMinors(int minors)
  */
 void ColorLegend::setAutoScale(bool val)
 {
-    axis_.setAutoScale(val);
+    QWT_D(d);
+    d->m_axis.setAutoScale(val);
 }
 
 /**
@@ -91,7 +118,8 @@ void ColorLegend::setAutoScale(bool val)
  */
 void ColorLegend::setScale(SCALETYPE val)
 {
-    axis_.setScale(val);
+    QWT_D(d);
+    d->m_axis.setScale(val);
 }
 
 /**
@@ -100,7 +128,8 @@ void ColorLegend::setScale(SCALETYPE val)
  */
 void ColorLegend::setScale(Scale *val)
 {
-    axis_.setScale(val);
+    QWT_D(d);
+    d->m_axis.setScale(val);
 }
 
 /**
@@ -110,15 +139,16 @@ void ColorLegend::setScale(Scale *val)
  */
 void ColorLegend::setOrientation(ORIENTATION orientation, SCALEPOSITION pos)
 {
-    orientation_ = orientation;
-    axisposition_ = pos;
+    QWT_D(d);
+    d->m_orientation = orientation;
+    d->m_axisposition = pos;
 
-    if (orientation_ == BottomTop) {
-        if (axisposition_ == Bottom || axisposition_ == Top)
-            axisposition_ = Left;
+    if (d->m_orientation == BottomTop) {
+        if (d->m_axisposition == Bottom || d->m_axisposition == Top)
+            d->m_axisposition = Left;
     } else {
-        if (axisposition_ == Left || axisposition_ == Right)
-            axisposition_ = Bottom;
+        if (d->m_axisposition == Left || d->m_axisposition == Right)
+            d->m_axisposition = Bottom;
     }
 }
 
@@ -129,71 +159,92 @@ void ColorLegend::setOrientation(ORIENTATION orientation, SCALEPOSITION pos)
  */
 void ColorLegend::setRelPosition(Tuple relMin, Tuple relMax)
 {
-    relMin_ = relMin;
-    relMax_ = relMax;
+    QWT_D(d);
+    d->m_relMin = relMin;
+    d->m_relMax = relMax;
 }
 
 void ColorLegend::setGeometryInternal()
 {
+    QWT_D(d);
+
     double ot = .99;
 
     getMatrices(modelMatrix, projMatrix, viewport);
-    pe_.minVertex = relativePosition(Triple(relMin_.x, relMin_.y, ot));
-    pe_.maxVertex = relativePosition(Triple(relMax_.x, relMax_.y, ot));
+    d->m_pe.minVertex = relativePosition(Triple(d->m_relMin.x, d->m_relMin.y, ot));
+    d->m_pe.maxVertex = relativePosition(Triple(d->m_relMax.x, d->m_relMax.y, ot));
 
     double diff = 0;
     Triple b;
     Triple e;
 
-    switch (axisposition_) {
+    switch (d->m_axisposition) {
     case ColorLegend::Left:
-        b = pe_.minVertex;
-        e = pe_.maxVertex;
+        b = d->m_pe.minVertex;
+        e = d->m_pe.maxVertex;
         e.x = b.x;
-        axis_.setTicOrientation(-1, 0, 0);
-        axis_.setNumberAnchor(CenterRight);
-        diff = pe_.maxVertex.x - pe_.minVertex.x;
+        d->m_axis.setTicOrientation(-1, 0, 0);
+        d->m_axis.setNumberAnchor(CenterRight);
+        diff = d->m_pe.maxVertex.x - d->m_pe.minVertex.x;
         break;
     case ColorLegend::Right:
-        e = pe_.maxVertex;
-        b = pe_.minVertex;
+        e = d->m_pe.maxVertex;
+        b = d->m_pe.minVertex;
         b.x = e.x;
-        axis_.setTicOrientation(+1, 0, 0);
-        axis_.setNumberAnchor(CenterLeft);
-        diff = pe_.maxVertex.x - pe_.minVertex.x;
+        d->m_axis.setTicOrientation(+1, 0, 0);
+        d->m_axis.setNumberAnchor(CenterLeft);
+        diff = d->m_pe.maxVertex.x - d->m_pe.minVertex.x;
         break;
     case ColorLegend::Top:
-        e = pe_.maxVertex;
-        b = pe_.minVertex;
+        e = d->m_pe.maxVertex;
+        b = d->m_pe.minVertex;
         b.z = e.z;
-        axis_.setTicOrientation(0, 0, +1);
-        axis_.setNumberAnchor(BottomCenter);
-        diff = pe_.maxVertex.z - pe_.minVertex.z;
+        d->m_axis.setTicOrientation(0, 0, +1);
+        d->m_axis.setNumberAnchor(BottomCenter);
+        diff = d->m_pe.maxVertex.z - d->m_pe.minVertex.z;
         break;
     case ColorLegend::Bottom:
-        b = pe_.minVertex;
-        e = pe_.maxVertex;
+        b = d->m_pe.minVertex;
+        e = d->m_pe.maxVertex;
         e.z = b.z;
-        axis_.setTicOrientation(0, 0, -1);
-        axis_.setNumberAnchor(TopCenter);
-        diff = pe_.maxVertex.z - pe_.minVertex.z;
+        d->m_axis.setTicOrientation(0, 0, -1);
+        d->m_axis.setNumberAnchor(TopCenter);
+        diff = d->m_pe.maxVertex.z - d->m_pe.minVertex.z;
         break;
     default:
         break;
     }
 
-    axis_.setPosition(b, e);
+    d->m_axis.setPosition(b, e);
     diff /= 10;
 
-    axis_.setTicLength(diff, 0.6 * diff);
+    d->m_axis.setTicLength(diff, 0.6 * diff);
 
     Triple c;
-    c.x = pe_.minVertex.x + ((pe_.maxVertex - pe_.minVertex) / 2).x;
-    c.z = pe_.maxVertex.z;
-    c.z += (pe_.maxVertex.z - pe_.minVertex.z) / 20;
-    c.y = pe_.maxVertex.y;
+    c.x = d->m_pe.minVertex.x + ((d->m_pe.maxVertex - d->m_pe.minVertex) / 2).x;
+    c.z = d->m_pe.maxVertex.z;
+    c.z += (d->m_pe.maxVertex.z - d->m_pe.minVertex.z) / 20;
+    c.y = d->m_pe.maxVertex.y;
 
-    caption_.setPosition(c, BottomCenter);
+    d->m_caption.setPosition(c, BottomCenter);
+}
+
+Qwt3D::ParallelEpiped ColorLegend::geometry() const
+{
+    QWT_DC(d);
+    return d->m_pe;
+}
+
+void ColorLegend::drawScale(bool val)
+{
+    QWT_D(d);
+    d->m_showaxis = val;
+}
+
+void ColorLegend::drawNumbers(bool val)
+{
+    QWT_D(d);
+    d->m_axis.setNumbers(val);
 }
 
 /**
@@ -205,21 +256,21 @@ void ColorLegend::draw()
     if (colors.empty())
         return;
 
+    QWT_D(d);
+
     setGeometryInternal();
 
     saveGLState();
 
-    Triple one = pe_.minVertex;
-    Triple two = pe_.maxVertex;
+    Triple one = d->m_pe.minVertex;
+    Triple two = d->m_pe.maxVertex;
 
-    double h = (orientation_ == ColorLegend::BottomTop) ? (two - one).z / colors.size()
+    double h = (d->m_orientation == ColorLegend::BottomTop) ? (two - one).z / colors.size()
                                                         : (two - one).x / colors.size();
 
-    // glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     GLStateBewarer(GL_POLYGON_OFFSET_FILL, true);
-    //	glPolygonOffset(0.0, 0.0);
 
     glColor4d(0, 0, 0, 1);
     glBegin(GL_LINE_LOOP);
@@ -232,7 +283,7 @@ void ColorLegend::draw()
     size_t size = colors.size();
     RGBA rgb;
 
-    if (orientation_ == ColorLegend::BottomTop) {
+    if (d->m_orientation == ColorLegend::BottomTop) {
         for (unsigned i = 1; i <= size; ++i) {
             rgb = colors[i - 1];
             glColor4d(rgb.r, rgb.g, rgb.b, rgb.a);
@@ -258,8 +309,8 @@ void ColorLegend::draw()
 
     restoreGLState();
 
-    if (showaxis_)
-        axis_.draw();
+    if (d->m_showaxis)
+        d->m_axis.draw();
 
-    caption_.draw();
+    d->m_caption.draw();
 }
