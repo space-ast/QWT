@@ -78,7 +78,7 @@ class QwtKnob::PrivateData
 public:
     PrivateData(QwtKnob* p)
         : q_ptr(p)
-        , knobStyle(QwtKnob::Raised)
+        , knobStyle(QwtKnob::Flat)
         , markerStyle(QwtKnob::Notch)
         , borderWidth(2)
         , borderDist(4)
@@ -486,16 +486,20 @@ void QwtKnob::drawKnob(QPainter* painter, const QRectF& knobRect) const
 
     QPen pen(Qt::NoPen);
     if (d->borderWidth > 0) {
-        QColor c1 = palette().color(QPalette::Light);
-        QColor c2 = palette().color(QPalette::Dark);
+        if (d->knobStyle == QwtKnob::Flat) {
+            pen = QPen(palette().color(QPalette::Mid), d->borderWidth);
+        } else {
+            QColor c1 = palette().color(QPalette::Light);
+            QColor c2 = palette().color(QPalette::Dark);
 
-        QLinearGradient gradient(aRect.topLeft(), aRect.bottomRight());
-        gradient.setColorAt(0.0, c1);
-        gradient.setColorAt(0.3, c1);
-        gradient.setColorAt(0.7, c2);
-        gradient.setColorAt(1.0, c2);
+            QLinearGradient gradient(aRect.topLeft(), aRect.bottomRight());
+            gradient.setColorAt(0.0, c1);
+            gradient.setColorAt(0.3, c1);
+            gradient.setColorAt(0.7, c2);
+            gradient.setColorAt(1.0, c2);
 
-        pen = QPen(gradient, d->borderWidth);
+            pen = QPen(gradient, d->borderWidth);
+        }
     }
 
     QBrush brush;

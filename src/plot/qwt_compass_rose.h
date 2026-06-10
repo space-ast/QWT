@@ -101,6 +101,11 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Returns the shrink factor for thorns
     double shrinkFactor() const;
 
+    // Set flat style
+    void setFlatStyle( bool );
+    // Return flat style
+    bool flatStyle() const;
+
     // Draw the rose (override from base class)
     virtual void draw( QPainter*,
         const QPointF& center, double radius, double north,
@@ -109,7 +114,8 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Static helper to draw a rose with specified parameters
     static void drawRose( QPainter*, const QPalette&,
         const QPointF& center, double radius, double north, double width,
-        int numThorns, int numThornLevels, double shrinkFactor );
+        int numThorns, int numThornLevels, double shrinkFactor,
+        bool flatStyle = true );
 
   private:
     QWT_DECLARE_PRIVATE(QwtSimpleCompassRose)

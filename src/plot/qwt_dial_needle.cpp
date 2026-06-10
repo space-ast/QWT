@@ -56,7 +56,8 @@ static void qwtDrawStyle1Needle( QPainter* painter,
 }
 
 static void qwtDrawStyle2Needle( QPainter* painter,
-    const QPalette& palette, QPalette::ColorGroup colorGroup, qreal length )
+    const QPalette& palette, QPalette::ColorGroup colorGroup, qreal length,
+    bool flatStyle )
 {
     const qreal ratioX = 0.7;
     const qreal ratioY = 0.3;
@@ -71,16 +72,22 @@ static void qwtDrawStyle2Needle( QPainter* painter,
 
     painter->setPen( Qt::NoPen );
 
-    painter->setBrush( palette.brush( colorGroup, QPalette::Light ) );
-    painter->drawPath( path1 );
+    if ( flatStyle ) {
+        painter->setBrush( palette.brush( colorGroup, QPalette::Mid ) );
+        painter->drawPath( path1 );
+        painter->drawPath( path2 );
+    } else {
+        painter->setBrush( palette.brush( colorGroup, QPalette::Light ) );
+        painter->drawPath( path1 );
 
-    painter->setBrush( palette.brush( colorGroup, QPalette::Dark ) );
-    painter->drawPath( path2 );
+        painter->setBrush( palette.brush( colorGroup, QPalette::Dark ) );
+        painter->drawPath( path2 );
+    }
 }
 
 static void qwtDrawShadedPointer( QPainter* painter,
     const QColor& lightColor, const QColor& darkColor,
-    qreal length, qreal width )
+    qreal length, qreal width, bool flatStyle )
 {
     const qreal peak = qwtMaxF( length / 10.0, 5.0 );
 
@@ -112,16 +119,21 @@ static void qwtDrawShadedPointer( QPainter* painter,
 
     painter->setPen( Qt::NoPen );
 
-    painter->setBrush( lightColor );
-    painter->drawPath( path1 );
+    if ( flatStyle ) {
+        painter->setBrush( lightColor );
+        painter->drawPath( path1.united( path2 ) );
+    } else {
+        painter->setBrush( lightColor );
+        painter->drawPath( path1 );
 
-    painter->setBrush( darkColor );
-    painter->drawPath( path2 );
+        painter->setBrush( darkColor );
+        painter->drawPath( path2 );
+    }
 }
 
 static void qwtDrawArrowNeedle( QPainter* painter,
     const QPalette& palette, QPalette::ColorGroup colorGroup,
-    qreal length, qreal width )
+    qreal length, qreal width, bool flatStyle )
 {
     if ( width <= 0 )
         width = qwtMaxF( length * 0.06, 9.0 );
@@ -135,29 +147,38 @@ static void qwtDrawArrowNeedle( QPainter* painter,
     path.lineTo( length - peak, -0.3 * width );
     path.lineTo( 0.0, -0.5 * width );
 
-    QRectF br = path.boundingRect();
+    if ( flatStyle ) {
+        QPen pen( palette.color( QPalette::Mid ), 1 );
+        pen.setJoinStyle( Qt::MiterJoin );
+        painter->setPen( pen );
+        painter->setBrush( palette.brush( colorGroup, QPalette::Mid ) );
+        painter->drawPath( path );
+    } else {
+        QRectF br = path.boundingRect();
 
-    QPalette pal( palette.color( QPalette::Mid ) );
-    QColor c1 = pal.color( QPalette::Light );
-    QColor c2 = pal.color( QPalette::Dark );
+        QPalette pal( palette.color( QPalette::Mid ) );
+        QColor c1 = pal.color( QPalette::Light );
+        QColor c2 = pal.color( QPalette::Dark );
 
-    QLinearGradient gradient( br.topLeft(), br.bottomLeft() );
-    gradient.setColorAt( 0.0, c1 );
-    gradient.setColorAt( 0.5, c1 );
-    gradient.setColorAt( 0.5001, c2 );
-    gradient.setColorAt( 1.0, c2 );
+        QLinearGradient gradient( br.topLeft(), br.bottomLeft() );
+        gradient.setColorAt( 0.0, c1 );
+        gradient.setColorAt( 0.5, c1 );
+        gradient.setColorAt( 0.5001, c2 );
+        gradient.setColorAt( 1.0, c2 );
 
-    QPen pen( gradient, 1 );
-    pen.setJoinStyle( Qt::MiterJoin );
+        QPen pen( gradient, 1 );
+        pen.setJoinStyle( Qt::MiterJoin );
 
-    painter->setPen( pen );
-    painter->setBrush( palette.brush( colorGroup, QPalette::Mid ) );
+        painter->setPen( pen );
+        painter->setBrush( palette.brush( colorGroup, QPalette::Mid ) );
 
-    painter->drawPath( path );
+        painter->drawPath( path );
+    }
 }
 
 static void qwtDrawTriangleNeedle( QPainter* painter,
-    const QPalette& palette, QPalette::ColorGroup colorGroup, qreal length )
+    const QPalette& palette, QPalette::ColorGroup colorGroup, qreal length,
+    bool flatStyle )
 {
     const qreal width = qRound( length / 3.0 );
 
@@ -175,23 +196,35 @@ static void qwtDrawTriangleNeedle( QPainter* painter,
     path[3].lineTo( -length, 0.0 );
     path[3].lineTo( 0.0, -width / 2 );
 
-
-    const int colorOffset = 10;
-    const QColor darkColor = palette.color( colorGroup, QPalette::Dark );
-    const QColor lightColor = palette.color( colorGroup, QPalette::Light );
-
-    QColor color[4];
-    color[0] = darkColor.lighter( 100 + colorOffset );
-    color[1] = darkColor.darker( 100 + colorOffset );
-    color[2] = lightColor.lighter( 100 + colorOffset );
-    color[3] = lightColor.darker( 100 + colorOffset );
-
     painter->setPen( Qt::NoPen );
 
-    for ( int i = 0; i < 4; i++ )
-    {
-        painter->setBrush( color[i] );
-        painter->drawPath( path[i] );
+    if ( flatStyle ) {
+        const QColor darkColor = palette.color( colorGroup, QPalette::Dark );
+        const QColor lightColor = palette.color( colorGroup, QPalette::Light );
+
+        painter->setBrush( darkColor );
+        painter->drawPath( path[0] );
+        painter->drawPath( path[1] );
+
+        painter->setBrush( lightColor );
+        painter->drawPath( path[2] );
+        painter->drawPath( path[3] );
+    } else {
+        const int colorOffset = 10;
+        const QColor darkColor = palette.color( colorGroup, QPalette::Dark );
+        const QColor lightColor = palette.color( colorGroup, QPalette::Light );
+
+        QColor color[4];
+        color[0] = darkColor.lighter( 100 + colorOffset );
+        color[1] = darkColor.darker( 100 + colorOffset );
+        color[2] = lightColor.lighter( 100 + colorOffset );
+        color[3] = lightColor.darker( 100 + colorOffset );
+
+        for ( int i = 0; i < 4; i++ )
+        {
+            painter->setBrush( color[i] );
+            painter->drawPath( path[i] );
+        }
     }
 }
 
@@ -200,6 +233,7 @@ static void qwtDrawTriangleNeedle( QPainter* painter,
  */
 QwtDialNeedle::QwtDialNeedle()
     : m_palette( QApplication::palette() )
+    , m_flatStyle( true )
 {
 }
 
@@ -226,6 +260,27 @@ void QwtDialNeedle::setPalette( const QPalette& palette )
 const QPalette& QwtDialNeedle::palette() const
 {
     return m_palette;
+}
+
+/**
+ * @brief Set flat style
+ * @details When enabled (default), needles and knobs are drawn with flat colors
+ *          instead of 3D shaded effects (Light/Dark gradients).
+ * @param on true for flat style, false for classic 3D style
+ * @sa flatStyle()
+ */
+void QwtDialNeedle::setFlatStyle( bool on )
+{
+    m_flatStyle = on;
+}
+
+/**
+ * @brief Return whether flat style is enabled
+ * @sa setFlatStyle()
+ */
+bool QwtDialNeedle::flatStyle() const
+{
+    return m_flatStyle;
 }
 
 /**
@@ -256,28 +311,33 @@ void QwtDialNeedle::drawKnob( QPainter* painter,
 {
     QPalette palette( brush.color() );
 
-    QColor c1 = palette.color( QPalette::Light );
-    QColor c2 = palette.color( QPalette::Dark );
-
-    if ( sunken )
-        qSwap( c1, c2 );
-
     QRectF rect( 0.0, 0.0, width, width );
     rect.moveCenter( painter->combinedTransform().map( QPointF() ) );
 
-    QLinearGradient gradient( rect.topLeft(), rect.bottomRight() );
-    gradient.setColorAt( 0.0, c1 );
-    gradient.setColorAt( 0.3, c1 );
-    gradient.setColorAt( 0.7, c2 );
-    gradient.setColorAt( 1.0, c2 );
-
     painter->save();
-
     painter->resetTransform();
 
-    painter->setPen( QPen( gradient, 1 ) );
-    painter->setBrush( brush );
-    painter->drawEllipse( rect );
+    if ( m_flatStyle ) {
+        painter->setPen( QPen( palette.color( QPalette::Mid ), 1 ) );
+        painter->setBrush( brush );
+        painter->drawEllipse( rect );
+    } else {
+        QColor c1 = palette.color( QPalette::Light );
+        QColor c2 = palette.color( QPalette::Dark );
+
+        if ( sunken )
+            qSwap( c1, c2 );
+
+        QLinearGradient gradient( rect.topLeft(), rect.bottomRight() );
+        gradient.setColorAt( 0.0, c1 );
+        gradient.setColorAt( 0.3, c1 );
+        gradient.setColorAt( 0.7, c2 );
+        gradient.setColorAt( 1.0, c2 );
+
+        painter->setPen( QPen( gradient, 1 ) );
+        painter->setBrush( brush );
+        painter->drawEllipse( rect );
+    }
 
     painter->restore();
 }
@@ -341,7 +401,7 @@ void QwtDialSimpleNeedle::drawNeedle( QPainter* painter,
             width = qwtMaxF( length * 0.06, 6.0 );
 
         qwtDrawArrowNeedle( painter,
-            palette(), colorGroup, length, width );
+            palette(), colorGroup, length, width, m_flatStyle );
 
         knobWidth = qwtMinF( width * 2.0, 0.2 * length );
     }
@@ -406,21 +466,21 @@ void QwtCompassMagnetNeedle::drawNeedle( QPainter* painter,
         qwtDrawShadedPointer( painter,
             dark.lighter( 100 + colorOffset ),
             dark.darker( 100 + colorOffset ),
-            length, width );
+            length, width, m_flatStyle );
 
         painter->rotate( 180.0 );
 
         qwtDrawShadedPointer( painter,
             light.lighter( 100 + colorOffset ),
             light.darker( 100 + colorOffset ),
-            length, width );
+            length, width, m_flatStyle );
 
         const QBrush baseBrush = palette().brush( colorGroup, QPalette::Base );
         drawKnob( painter, width, baseBrush, true );
     }
     else
     {
-        qwtDrawTriangleNeedle( painter, palette(), colorGroup, length );
+        qwtDrawTriangleNeedle( painter, palette(), colorGroup, length, m_flatStyle );
     }
 }
 
@@ -454,5 +514,5 @@ void QwtCompassWindArrow::drawNeedle( QPainter* painter,
     if ( m_style == Style1 )
         qwtDrawStyle1Needle( painter, palette(), colorGroup, length );
     else
-        qwtDrawStyle2Needle( painter, palette(), colorGroup, length );
+        qwtDrawStyle2Needle( painter, palette(), colorGroup, length, m_flatStyle );
 }

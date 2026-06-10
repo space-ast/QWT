@@ -93,6 +93,7 @@ public:
         , scalePosition(QwtSlider::TrailingScale)
         , hasTrough(true)
         , hasGroove(false)
+        , flatStyle(true)
         , mouseOffset(0)
     {
     }
@@ -114,6 +115,7 @@ public:
 
     bool hasTrough;
     bool hasGroove;
+    bool flatStyle;
 
     mutable int mouseOffset;
 
@@ -302,9 +304,35 @@ int QwtSlider::spacing() const
 }
 
 /**
+ * @brief Set flat style
+ * @details When enabled (default), the slider is drawn with flat colors
+ *          instead of 3D embossed effects (qDrawShadePanel/qDrawShadeLine).
+ * @param on true for flat style, false for classic 3D style
+ * @sa flatStyle()
+ */
+void QwtSlider::setFlatStyle(bool on)
+{
+    QWT_D(d);
+    if (d->flatStyle != on) {
+        d->flatStyle = on;
+        update();
+    }
+}
+
+/**
+ * @brief Return whether flat style is enabled
+ * @sa setFlatStyle()
+ */
+bool QwtSlider::flatStyle() const
+{
+    QWT_DC(d);
+    return d->flatStyle;
+}
+
+/**
  * @brief Set the slider's handle size
  * @details When the size is empty the slider handle will be painted with a
- *          default size depending on its orientation() and backgroundStyle().
+ *          default size depending on its orientation().
  * @param size New size
  * @sa handleSize()
  */
@@ -406,7 +434,16 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
         innerRect    = sliderRect.adjusted(bw, bw, -bw, -bw);
 
         painter->fillRect(innerRect, palette().brush(QPalette::Mid));
-        qDrawShadePanel(painter, sliderRect, palette(), true, bw, nullptr);
+
+        if (d->flatStyle) {
+            painter->save();
+            painter->setPen(QPen(palette().color(QPalette::Mid), bw));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(sliderRect.adjusted(bw / 2, bw / 2, -bw / 2 - 1, -bw / 2 - 1));
+            painter->restore();
+        } else {
+            qDrawShadePanel(painter, sliderRect, palette(), true, bw, nullptr);
+        }
     }
 
     if (d->hasGroove) {
@@ -432,8 +469,16 @@ void QwtSlider::drawSlider(QPainter* painter, const QRect& sliderRect) const
 
         slotRect.moveCenter(innerRect.center());
 
-        QBrush brush = palette().brush(QPalette::Dark);
-        qDrawShadePanel(painter, slotRect, palette(), true, 1, &brush);
+        if (d->flatStyle) {
+            painter->save();
+            painter->setPen(QPen(palette().color(QPalette::Dark), 1));
+            painter->setBrush(palette().brush(QPalette::Dark));
+            painter->drawRect(slotRect);
+            painter->restore();
+        } else {
+            QBrush brush = palette().brush(QPalette::Dark);
+            qDrawShadePanel(painter, slotRect, palette(), true, 1, &brush);
+        }
     }
 
     if (isValid())
@@ -445,14 +490,31 @@ void QwtSlider::drawHandle(QPainter* painter, const QRect& handleRect, int pos) 
     QWT_DC(d);
     const int bw = d->borderWidth;
 
-    qDrawShadePanel(painter, handleRect, palette(), false, bw, &palette().brush(QPalette::Button));
+    if (d->flatStyle) {
+        painter->save();
+        painter->fillRect(handleRect, palette().brush(QPalette::Button));
+        painter->setPen(QPen(palette().color(QPalette::Mid), bw));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(handleRect.adjusted(bw / 2, bw / 2, -bw / 2 - 1, -bw / 2 - 1));
 
-    pos++;  // shade line points one pixel below
-    if (orientation() == Qt::Horizontal) {
-        qDrawShadeLine(painter, pos, handleRect.top() + bw, pos, handleRect.bottom() - bw, palette(), true, 1);
-    } else  // Vertical
-    {
-        qDrawShadeLine(painter, handleRect.left() + bw, pos, handleRect.right() - bw, pos, palette(), true, 1);
+        // marker line
+        painter->setPen(QPen(palette().color(QPalette::Mid), 1));
+        if (orientation() == Qt::Horizontal) {
+            painter->drawLine(pos, handleRect.top() + bw, pos, handleRect.bottom() - bw);
+        } else {
+            painter->drawLine(handleRect.left() + bw, pos, handleRect.right() - bw, pos);
+        }
+        painter->restore();
+    } else {
+        qDrawShadePanel(painter, handleRect, palette(), false, bw, &palette().brush(QPalette::Button));
+
+        pos++;  // shade line points one pixel below
+        if (orientation() == Qt::Horizontal) {
+            qDrawShadeLine(painter, pos, handleRect.top() + bw, pos, handleRect.bottom() - bw, palette(), true, 1);
+        } else  // Vertical
+        {
+            qDrawShadeLine(painter, handleRect.left() + bw, pos, handleRect.right() - bw, pos, palette(), true, 1);
+        }
     }
 }
 

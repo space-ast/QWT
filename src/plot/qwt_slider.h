@@ -45,7 +45,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 {
     Q_OBJECT
 
-    Q_ENUMS( ScalePosition BackgroundStyle )
+    Q_ENUMS( ScalePosition )
 
     Q_PROPERTY( Qt::Orientation orientation
         READ orientation WRITE setOrientation )
@@ -58,6 +58,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     Q_PROPERTY( QSize handleSize READ handleSize WRITE setHandleSize )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
+    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
 
@@ -119,6 +120,11 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     void setSpacing( int );
     /// Return spacing
     int spacing() const;
+
+    /// Set flat style
+    void setFlatStyle( bool );
+    /// Return flat style
+    bool flatStyle() const;
 
     /// Return size hint
     virtual QSize sizeHint() const override;

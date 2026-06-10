@@ -52,6 +52,11 @@ class QWT_EXPORT QwtDialNeedle
     /// Return the palette of the needle
     const QPalette& palette() const;
 
+    /// Set flat style
+    void setFlatStyle( bool );
+    /// Return flat style
+    bool flatStyle() const;
+
     /// Draw the needle
     virtual void draw( QPainter*, const QPointF& center,
         double length, double direction,
@@ -79,10 +84,12 @@ class QWT_EXPORT QwtDialNeedle
     virtual void drawKnob( QPainter*, double width,
         const QBrush&, bool sunken ) const;
 
+  protected:
+    QPalette m_palette;
+    bool m_flatStyle;
+
   private:
     Q_DISABLE_COPY(QwtDialNeedle)
-
-    QPalette m_palette;
 };
 
 /**

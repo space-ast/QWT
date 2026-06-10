@@ -70,6 +70,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int pipeWidth READ pipeWidth WRITE setPipeWidth )
+    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
     Q_PROPERTY( double value READ value WRITE setValue USER true )
 
   public:
@@ -172,6 +173,11 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     void setPipeWidth( int );
     // Return the pipe width
     int pipeWidth() const;
+
+    // Set flat style
+    void setFlatStyle( bool );
+    // Return flat style
+    bool flatStyle() const;
 
     // Set the range flags
     void setRangeFlags( QwtInterval::BorderFlags );

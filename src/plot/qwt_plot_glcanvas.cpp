@@ -96,9 +96,9 @@ void QwtPlotGLCanvas::init()
 #if 1
     setAttribute(Qt::WA_OpaquePaintEvent, true);
 #endif
-    setLineWidth(2);
-    setFrameShadow(QFrame::Sunken);
-    setFrameShape(QFrame::Panel);
+    setLineWidth(1);
+    setFrameShadow(QFrame::Plain);
+    setFrameShape(QFrame::Box);
 }
 
 /*!

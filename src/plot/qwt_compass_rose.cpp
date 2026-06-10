@@ -89,6 +89,7 @@ class QwtSimpleCompassRose::PrivateData
         , numThorns( 8 )
         , numThornLevels( -1 )
         , shrinkFactor( 0.9 )
+        , flatStyle( true )
     {
     }
 
@@ -96,6 +97,7 @@ class QwtSimpleCompassRose::PrivateData
     int numThorns;
     int numThornLevels;
     double shrinkFactor;
+    bool flatStyle;
 };
 
 /**
@@ -166,7 +168,30 @@ void QwtSimpleCompassRose::draw( QPainter* painter, const QPointF& center,
     pal.setCurrentColorGroup( cg );
 
     drawRose( painter, pal, center, radius, north, d->width,
-        d->numThorns, d->numThornLevels, d->shrinkFactor );
+        d->numThorns, d->numThornLevels, d->shrinkFactor, d->flatStyle );
+}
+
+/**
+ *   @brief Set flat style
+ *   @details When enabled (default), thorns are drawn with a single solid color
+ *            instead of the two-tone Light/Dark 3D effect.
+ *   @param on true for flat style, false for classic 3D style
+ *   @sa flatStyle()
+ */
+void QwtSimpleCompassRose::setFlatStyle( bool on )
+{
+    QWT_D(d);
+    d->flatStyle = on;
+}
+
+/**
+ *   @brief Return whether flat style is enabled
+ *   @sa setFlatStyle()
+ */
+bool QwtSimpleCompassRose::flatStyle() const
+{
+    QWT_DC(d);
+    return d->flatStyle;
 }
 
 /**
@@ -185,7 +210,8 @@ void QwtSimpleCompassRose::drawRose(
     QPainter* painter,
     const QPalette& palette,
     const QPointF& center, double radius, double north, double width,
-    int numThorns, int numThornLevels, double shrinkFactor )
+    int numThorns, int numThornLevels, double shrinkFactor,
+    bool flatStyle )
 {
     if ( numThorns < 4 )
         numThorns = 4;
@@ -233,21 +259,33 @@ void QwtSimpleCompassRose::drawRose(
             const QPointF p3 = qwtPolar2Pos( center, r, angle + step / 2.0 );
             const QPointF p4 = qwtPolar2Pos( center, r, angle - step / 2.0 );
 
-            QPainterPath darkPath;
-            darkPath.moveTo( center );
-            darkPath.lineTo( p );
-            darkPath.lineTo( qwtIntersection( center, p3, p1, p ) );
+            if ( flatStyle ) {
+                QPainterPath path;
+                path.moveTo( center );
+                path.lineTo( qwtIntersection( center, p3, p1, p ) );
+                path.lineTo( p );
+                path.lineTo( qwtIntersection( center, p4, p2, p ) );
+                path.closeSubpath();
 
-            painter->setBrush( palette.brush( QPalette::Dark ) );
-            painter->drawPath( darkPath );
+                painter->setBrush( palette.brush( QPalette::Mid ) );
+                painter->drawPath( path );
+            } else {
+                QPainterPath darkPath;
+                darkPath.moveTo( center );
+                darkPath.lineTo( p );
+                darkPath.lineTo( qwtIntersection( center, p3, p1, p ) );
 
-            QPainterPath lightPath;
-            lightPath.moveTo( center );
-            lightPath.lineTo( p );
-            lightPath.lineTo( qwtIntersection( center, p4, p2, p ) );
+                painter->setBrush( palette.brush( QPalette::Dark ) );
+                painter->drawPath( darkPath );
 
-            painter->setBrush( palette.brush( QPalette::Light ) );
-            painter->drawPath( lightPath );
+                QPainterPath lightPath;
+                lightPath.moveTo( center );
+                lightPath.lineTo( p );
+                lightPath.lineTo( qwtIntersection( center, p4, p2, p ) );
+
+                painter->setBrush( palette.brush( QPalette::Light ) );
+                painter->drawPath( lightPath );
+            }
         }
     }
     painter->restore();

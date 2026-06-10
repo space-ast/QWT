@@ -98,6 +98,7 @@ public:
         , alarmLevel(0.0)
         , alarmEnabled(false)
         , autoFillPipe(true)
+        , flatStyle(true)
         , originMode(QwtThermo::OriginMinimum)
         , origin(0.0)
         , colorMap(nullptr)
@@ -122,6 +123,7 @@ public:
     double alarmLevel;
     bool alarmEnabled;
     bool autoFillPipe;
+    bool flatStyle;
     QwtThermo::OriginMode originMode;
     double origin;
 
@@ -265,8 +267,19 @@ void QwtThermo::paintEvent(QPaintEvent* event)
 
     const int bw = d->borderWidth;
 
-    const QBrush brush = palette().brush(QPalette::Base);
-    qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, d->autoFillPipe ? &brush : nullptr);
+    if (d->flatStyle) {
+        const QRect frameRect = tRect.adjusted(-bw, -bw, bw, bw);
+        if (d->autoFillPipe)
+            painter.fillRect(frameRect, palette().brush(QPalette::Base));
+        painter.save();
+        painter.setPen(QPen(palette().color(QPalette::Mid), bw));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(frameRect.adjusted(bw / 2, bw / 2, -bw / 2 - 1, -bw / 2 - 1));
+        painter.restore();
+    } else {
+        const QBrush brush = palette().brush(QPalette::Base);
+        qDrawShadePanel(&painter, tRect.adjusted(-bw, -bw, bw, bw), palette(), true, bw, d->autoFillPipe ? &brush : nullptr);
+    }
 
     drawLiquid(&painter, tRect);
 }
@@ -658,6 +671,32 @@ int QwtThermo::borderWidth() const
 {
     QWT_DC(d);
     return d->borderWidth;
+}
+
+/**
+ * @brief Set flat style
+ * @details When enabled (default), the pipe border is drawn with a flat solid-color
+ *          line instead of a 3D embossed effect (qDrawShadePanel).
+ * @param on true for flat style, false for classic 3D style
+ * @sa flatStyle()
+ */
+void QwtThermo::setFlatStyle(bool on)
+{
+    QWT_D(d);
+    if (d->flatStyle != on) {
+        d->flatStyle = on;
+        update();
+    }
+}
+
+/**
+ * @brief Return whether flat style is enabled
+ * @sa setFlatStyle()
+ */
+bool QwtThermo::flatStyle() const
+{
+    QWT_DC(d);
+    return d->flatStyle;
 }
 
 /**

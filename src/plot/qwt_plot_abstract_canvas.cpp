@@ -550,7 +550,7 @@ class QwtPlotAbstractGLCanvas::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotAbstractGLCanvas)
 public:
-    PrivateData(QwtPlotAbstractGLCanvas* p) : q_ptr(p), frameStyle(QFrame::Panel | QFrame::Sunken), lineWidth(2), midLineWidth(0)
+    PrivateData(QwtPlotAbstractGLCanvas* p) : q_ptr(p), frameStyle(QFrame::Box | QFrame::Plain), lineWidth(1), midLineWidth(0)
     {
     }
 

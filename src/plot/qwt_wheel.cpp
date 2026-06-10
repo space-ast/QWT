@@ -68,6 +68,7 @@ public:
         , pendingValueChanged(false)
         , inverted(false)
         , wrapping(false)
+        , flatStyle(true)
     {
     }
 
@@ -105,6 +106,7 @@ public:
     bool pendingValueChanged;  // when not tracking
     bool inverted;
     bool wrapping;
+    bool flatStyle;
 };
 
 //! Constructor
@@ -601,6 +603,32 @@ int QwtWheel::borderWidth() const
     return d->borderWidth;
 }
 
+/**
+ * @brief Set flat style
+ * @details When enabled (default), the wheel is drawn with flat colors
+ *          instead of 3D embossed effects.
+ * @param on true for flat style, false for classic 3D style
+ * @sa flatStyle()
+ */
+void QwtWheel::setFlatStyle(bool on)
+{
+    QWT_D(d);
+    if (d->flatStyle != on) {
+        d->flatStyle = on;
+        update();
+    }
+}
+
+/**
+ * @brief Return whether flat style is enabled
+ * @sa setFlatStyle()
+ */
+bool QwtWheel::flatStyle() const
+{
+    QWT_DC(d);
+    return d->flatStyle;
+}
+
 /*!
    @return Rectangle of the wheel without the outer border
  */
@@ -759,7 +787,17 @@ void QwtWheel::paintEvent(QPaintEvent* event)
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 
-    qDrawShadePanel(&painter, contentsRect(), palette(), true, d->borderWidth);
+    if (d->flatStyle) {
+        const QRect r = contentsRect();
+        const int bw = d->borderWidth;
+        painter.save();
+        painter.setPen(QPen(palette().color(QPalette::Mid), bw));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(r.adjusted(bw / 2, bw / 2, -bw / 2 - 1, -bw / 2 - 1));
+        painter.restore();
+    } else {
+        qDrawShadePanel(&painter, contentsRect(), palette(), true, d->borderWidth);
+    }
 
     drawWheelBackground(&painter, wheelRect());
     drawTicks(&painter, wheelRect());
@@ -781,35 +819,52 @@ void QwtWheel::drawWheelBackground(QPainter* painter, const QRectF& rect)
 
     QPalette pal = palette();
 
-    //  draw shaded background
-    QLinearGradient gradient(rect.topLeft(), (d->orientation == Qt::Horizontal) ? rect.topRight() : rect.bottomLeft());
-    gradient.setColorAt(0.0, pal.color(QPalette::Button));
-    gradient.setColorAt(0.2, pal.color(QPalette::Midlight));
-    gradient.setColorAt(0.7, pal.color(QPalette::Mid));
-    gradient.setColorAt(1.0, pal.color(QPalette::Dark));
+    if (d->flatStyle) {
+        painter->fillRect(rect, pal.brush(QPalette::Button));
 
-    painter->fillRect(rect, gradient);
+        const QPen borderPen(pal.color(QPalette::Mid), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        const double bw2 = 0.5 * d->wheelBorderWidth;
 
-    // draw internal border
+        if (d->orientation == Qt::Horizontal) {
+            painter->setPen(borderPen);
+            painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+            painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
+        } else {
+            painter->setPen(borderPen);
+            painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+            painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        }
+    } else {
+        //  draw shaded background
+        QLinearGradient gradient(rect.topLeft(), (d->orientation == Qt::Horizontal) ? rect.topRight() : rect.bottomLeft());
+        gradient.setColorAt(0.0, pal.color(QPalette::Button));
+        gradient.setColorAt(0.2, pal.color(QPalette::Midlight));
+        gradient.setColorAt(0.7, pal.color(QPalette::Mid));
+        gradient.setColorAt(1.0, pal.color(QPalette::Dark));
 
-    const QPen lightPen(palette().color(QPalette::Light), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
-    const QPen darkPen(pal.color(QPalette::Dark), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        painter->fillRect(rect, gradient);
 
-    const double bw2 = 0.5 * d->wheelBorderWidth;
+        // draw internal border
 
-    if (d->orientation == Qt::Horizontal) {
-        painter->setPen(lightPen);
-        painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+        const QPen lightPen(palette().color(QPalette::Light), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        const QPen darkPen(pal.color(QPalette::Dark), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
 
-        painter->setPen(darkPen);
-        painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
-    } else  // Qt::Vertical
-    {
-        painter->setPen(lightPen);
-        painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+        const double bw2 = 0.5 * d->wheelBorderWidth;
 
-        painter->setPen(darkPen);
-        painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        if (d->orientation == Qt::Horizontal) {
+            painter->setPen(lightPen);
+            painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+
+            painter->setPen(darkPen);
+            painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
+        } else  // Qt::Vertical
+        {
+            painter->setPen(lightPen);
+            painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+
+            painter->setPen(darkPen);
+            painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        }
     }
 
     painter->restore();
@@ -832,6 +887,7 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
 
     const QPen lightPen(palette().color(QPalette::Light), 0, Qt::SolidLine, Qt::FlatCap);
     const QPen darkPen(palette().color(QPalette::Dark), 0, Qt::SolidLine, Qt::FlatCap);
+    const QPen flatPen(palette().color(QPalette::Mid), 0, Qt::SolidLine, Qt::FlatCap);
 
     const double cnvFactor = qAbs(d->totalAngle / range);
     const double halfIntv  = 0.5 * d->viewAngle / cnvFactor;
@@ -869,10 +925,15 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
                 tickPos = rect.right() - off;
 
             if ((tickPos <= maxpos) && (tickPos > minpos)) {
-                painter->setPen(darkPen);
-                painter->drawLine(QPointF(tickPos - 1, l1), QPointF(tickPos - 1, l2));
-                painter->setPen(lightPen);
-                painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                if (d->flatStyle) {
+                    painter->setPen(flatPen);
+                    painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                } else {
+                    painter->setPen(darkPen);
+                    painter->drawLine(QPointF(tickPos - 1, l1), QPointF(tickPos - 1, l2));
+                    painter->setPen(lightPen);
+                    painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                }
             }
         }
     } else  // Qt::Vertical
@@ -904,10 +965,15 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
                 tickPos = rect.top() + off;
 
             if ((tickPos <= maxpos) && (tickPos > minpos)) {
-                painter->setPen(darkPen);
-                painter->drawLine(QPointF(l1, tickPos - 1), QPointF(l2, tickPos - 1));
-                painter->setPen(lightPen);
-                painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                if (d->flatStyle) {
+                    painter->setPen(flatPen);
+                    painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                } else {
+                    painter->setPen(darkPen);
+                    painter->drawLine(QPointF(l1, tickPos - 1), QPointF(l2, tickPos - 1));
+                    painter->setPen(lightPen);
+                    painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                }
             }
         }
     }

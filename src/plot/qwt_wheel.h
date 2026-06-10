@@ -67,6 +67,7 @@ class QWT_EXPORT QwtWheel : public QWidget
     Q_PROPERTY( int wheelWidth READ wheelWidth WRITE setWheelWidth )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
+    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
     /// Constructor
@@ -106,6 +107,11 @@ class QWT_EXPORT QwtWheel : public QWidget
     void setBorderWidth( int );
     /// Return the outer border width
     int borderWidth() const;
+
+    /// Set flat style
+    void setFlatStyle( bool );
+    /// Return flat style
+    bool flatStyle() const;
 
     /// Set inverted appearance
     void setInverted( bool );
