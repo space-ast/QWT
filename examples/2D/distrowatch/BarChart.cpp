@@ -81,7 +81,7 @@ public:
 
         QwtColumnSymbol* symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
         symbol->setLineWidth(2);
-        symbol->setFrameStyle(QwtColumnSymbol::Raised);
+        symbol->setFrameStyle(QwtColumnSymbol::Plain);
 
         QColor c(Qt::white);
         if (index >= 0 && index < m_colors.size())
@@ -126,7 +126,7 @@ BarChart::BarChart(QWidget* parent) : QwtPlot(parent)
 
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
     canvas->setLineWidth(2);
-    canvas->setFrameStyle(QFrame::Box | QFrame::Sunken);
+    canvas->setFrameStyle(QFrame::Box | QFrame::Plain);
     canvas->setBorderRadius(10);
 
     QPalette canvasPalette(QColor("Plum"));

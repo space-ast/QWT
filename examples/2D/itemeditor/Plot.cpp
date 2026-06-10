@@ -56,7 +56,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
             "stop: 0 LemonChiffon, stop: 0.5 PaleGoldenrod, stop: 1 LemonChiffon );"
     );
 #else
-    canvas->setStyleSheet("border: 2px inset DimGray;"
+    canvas->setStyleSheet("border: 2px solid DimGray;"
                           "border-radius: 15px;"
                           "background: LemonChiffon;");
 #endif

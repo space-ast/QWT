@@ -107,8 +107,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
 
     // canvas
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
-    canvas->setLineWidth(1);
-    canvas->setFrameStyle(QFrame::Box | QFrame::Plain);
+    canvas->setFrameStyle(QFrame::NoFrame);
     // canvas->setBorderRadius( 15 );
 
     QPalette canvasPalette(Qt::white);

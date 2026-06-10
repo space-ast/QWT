@@ -55,7 +55,7 @@ TVPlot::TVPlot(QWidget* parent) : QwtPlot(parent)
     setTitle("Watching TV during a weekend");
 
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
-    canvas->setPalette(Qt::gray);
+    canvas->setPalette(Qt::white);
     canvas->setBorderRadius(0);
     setCanvas(canvas);
 
@@ -99,7 +99,7 @@ void TVPlot::populate()
     grid->enableY(true);
     grid->enableXMin(false);
     grid->enableYMin(false);
-    grid->setMajorPen(Qt::black, 0, Qt::DotLine);
+    grid->setMajorPen(QColor("#c0c0c0"), 0.5, Qt::SolidLine);
     grid->attach(this);
 
     const double juneValues[]     = { 7, 19, 24, 32, 10, 5, 3 };

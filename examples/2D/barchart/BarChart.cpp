@@ -59,7 +59,7 @@ void BarChart::populate()
     for (int i = 0; i < numBars; i++) {
         QwtColumnSymbol* symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
         symbol->setLineWidth(2);
-        symbol->setFrameStyle(QwtColumnSymbol::Raised);
+        symbol->setFrameStyle(QwtColumnSymbol::Plain);
         symbol->setBrush(QColor(colors[ i ]));
 
         m_barChartItem->setSymbol(i, symbol);

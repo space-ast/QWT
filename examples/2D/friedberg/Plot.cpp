@@ -29,8 +29,8 @@ public:
     Grid()
     {
         enableXMin(true);
-        setMajorPen(Qt::white, 0, Qt::DotLine);
-        setMinorPen(Qt::gray, 0, Qt::DotLine);
+        setMajorPen(QColor("#c0c0c0"), 0.5, Qt::SolidLine);
+        setMinorPen(QColor("#e0e0e0"), 0.5, Qt::DotLine);
     }
 
     virtual void updateScaleDiv(const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv) override
@@ -80,7 +80,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
     setAxisTitle(QwtAxis::YLeft, QString("Temperature [%1C]").arg(QChar(0x00B0)));
 
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
-    canvas->setPalette(Qt::darkGray);
+    canvas->setPalette(Qt::white);
     canvas->setBorderRadius(0);
 
     setCanvas(canvas);
@@ -101,8 +101,8 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
         rangeData[ i ]       = QwtIntervalSample(double(i), QwtInterval(t.minValue, t.maxValue));
     }
 
-    insertCurve("Average", averageData, Qt::black);
-    insertErrorBars("Range", rangeData, Qt::blue);
+    insertCurve("Average", averageData, QColor("#1f77b4"));
+    insertErrorBars("Range", rangeData, QColor("#ff7f0e"));
 
     /*
         LeftButton for the zooming
@@ -162,7 +162,7 @@ void Plot::insertErrorBars(const QString& title, const QVector< QwtIntervalSampl
 {
     m_intervalCurve = new QwtPlotIntervalCurve(title);
     m_intervalCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_intervalCurve->setPen(Qt::white);
+    m_intervalCurve->setPen(color);
 
     QColor bg(color);
     bg.setAlpha(150);
