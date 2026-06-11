@@ -76,7 +76,7 @@ public:
     /**
      * @brief Destructor
      */
-    virtual ~QwtPlotOpenGLCanvas();
+    ~QwtPlotOpenGLCanvas() override;
 
     /**
      * @brief Invalidate the backing store

@@ -63,7 +63,8 @@ class QWT_EXPORT QwtCompassRose
         QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
 
   private:
-    Q_DISABLE_COPY(QwtCompassRose)
+    QwtCompassRose(const QwtCompassRose&) = delete;
+    QwtCompassRose& operator=(const QwtCompassRose&) = delete;
 
     QPalette m_palette;
 };
@@ -79,7 +80,7 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Constructs a simple compass rose with specified number of thorns and levels
     QwtSimpleCompassRose( int numThorns = 8, int numThornLevels = -1 );
     // Destructor
-    virtual ~QwtSimpleCompassRose();
+    ~QwtSimpleCompassRose() override;
 
     // Sets the width of the rose heads (range: 0.03 to 0.4)
     void setWidth( double );

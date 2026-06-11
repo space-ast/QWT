@@ -58,7 +58,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
     // Constructor with tolerance parameter
     explicit QwtWeedingCurveFitter( double tolerance = 1.0 );
     // Destructor
-    virtual ~QwtWeedingCurveFitter();
+    ~QwtWeedingCurveFitter() override;
 
     // Set the tolerance for curve fitting
     void setTolerance( double );

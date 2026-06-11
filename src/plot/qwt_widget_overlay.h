@@ -149,7 +149,7 @@ public:
     // Constructor with parent widget
     explicit QwtWidgetOverlay(QWidget*);
     // Destructor
-    virtual ~QwtWidgetOverlay();
+    ~QwtWidgetOverlay() override;
 
     // Set the mask mode for the overlay
     void setMaskMode(MaskMode);

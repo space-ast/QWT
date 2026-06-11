@@ -61,7 +61,7 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
     explicit QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
     
     /// Destructor
-    virtual ~QwtDateScaleEngine();
+    ~QwtDateScaleEngine() override;
 
     /// Set the time specification used by the engine
     void setTimeSpec( Qt::TimeSpec );

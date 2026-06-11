@@ -67,7 +67,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
     // Constructor
     QwtPlotTextLabel();
     // Destructor
-    virtual ~QwtPlotTextLabel();
+    ~QwtPlotTextLabel() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

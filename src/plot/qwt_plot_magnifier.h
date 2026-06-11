@@ -52,7 +52,7 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
     explicit QwtPlotMagnifier( QWidget* );
 
     // Destructor
-    virtual ~QwtPlotMagnifier();
+    ~QwtPlotMagnifier() override;
 
     // Enable or disable an axis for magnification
     void setAxisEnabled( QwtAxisId, bool on );

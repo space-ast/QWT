@@ -59,7 +59,7 @@ public:
 public:
     /// Constructor, passing nullptr is not allowed
     explicit QwtFigureWidgetOverlay(QwtFigure* fig);
-    ~QwtFigureWidgetOverlay();
+    ~QwtFigureWidgetOverlay() override;
     /// Returns the associated QwtFigure
     QwtFigure* figure() const;
     void setTransparentForMouseEvents(bool on);

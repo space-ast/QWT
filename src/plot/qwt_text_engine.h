@@ -72,7 +72,8 @@ class QWT_EXPORT QwtTextEngine
     QwtTextEngine();
 
   private:
-    Q_DISABLE_COPY(QwtTextEngine)
+    QwtTextEngine(const QwtTextEngine&) = delete;
+    QwtTextEngine& operator=(const QwtTextEngine&) = delete;
 };
 
 
@@ -88,7 +89,7 @@ class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
     // Constructor
     QwtPlainTextEngine();
     // Destructor
-    virtual ~QwtPlainTextEngine();
+    ~QwtPlainTextEngine() override;
 
     // Calculate height for a given width
     virtual double heightForWidth( const QFont& font, int flags,

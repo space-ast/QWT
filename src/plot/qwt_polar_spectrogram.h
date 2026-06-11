@@ -46,7 +46,7 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
     /// Constructor
     explicit QwtPolarSpectrogram();
     /// Destructor
-    virtual ~QwtPolarSpectrogram();
+    ~QwtPolarSpectrogram() override;
 
     /// Set the data
     void setData( QwtRasterData* data );

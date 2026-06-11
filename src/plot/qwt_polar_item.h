@@ -184,7 +184,8 @@ class QWT_EXPORT QwtPolarItem
     virtual QwtGraphic legendIcon( int index, const QSizeF& ) const;
 
   private:
-    Q_DISABLE_COPY( QwtPolarItem )
+    QwtPolarItem(const QwtPolarItem&) = delete;
+    QwtPolarItem& operator=(const QwtPolarItem&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPolarItem)
 };

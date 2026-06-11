@@ -98,7 +98,7 @@ public:
     explicit QwtPlotShapeItem(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotShapeItem();
+    ~QwtPlotShapeItem() override;
 
     // Set a paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);

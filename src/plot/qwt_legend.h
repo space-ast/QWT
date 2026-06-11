@@ -51,7 +51,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     // Constructor for QwtLegend
     explicit QwtLegend( QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtLegend();
+    ~QwtLegend() override;
 
     // Set the maximum number of columns
     void setMaxColumns( uint numColums );

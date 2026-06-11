@@ -53,7 +53,7 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
     //! Constructor
     QwtSplineCubic();
     //! Destructor
-    virtual ~QwtSplineCubic();
+    ~QwtSplineCubic() override;
 
     //! Get locality (always 0 - non-local)
     virtual uint locality() const override;

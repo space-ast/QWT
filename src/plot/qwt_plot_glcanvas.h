@@ -83,7 +83,7 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     /**
      * @brief Destructor
      */
-    virtual ~QwtPlotGLCanvas();
+    ~QwtPlotGLCanvas() override;
 
     /**
      * @brief Invalidate the backing store

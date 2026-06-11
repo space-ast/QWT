@@ -17,7 +17,7 @@ public:
     explicit MultiPlot(QWidget* parent = nullptr) { }
 
 protected:
-    virtual void createData() = 0;
+    virtual void createData() override = 0;
 };
 
 } // ns

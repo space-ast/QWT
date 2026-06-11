@@ -54,7 +54,7 @@ public:
     // Constructor with parent widget
     explicit QwtCachePanner(QWidget* parent);
     // Destructor
-    virtual ~QwtCachePanner();
+    ~QwtCachePanner() override;
 
     // Enable or disable the panner
     void setEnabled(bool);

@@ -91,7 +91,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
     explicit QwtPlotMarker( const QwtText& title );
 
     /// Destructor
-    virtual ~QwtPlotMarker();
+    ~QwtPlotMarker() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

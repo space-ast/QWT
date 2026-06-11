@@ -78,7 +78,7 @@ public:
     explicit QwtPolarCurve(const QString& title);
 
     /// Destructor
-    virtual ~QwtPolarCurve();
+    ~QwtPolarCurve() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

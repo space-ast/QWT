@@ -112,8 +112,8 @@ void QwtPlotSeriesDataPickerGroup::onPickerMove(const QPoint& pos)
     if (!canvas) {
         return;
     }
-    double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
-    double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
+    double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+    double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
     // Have other pickers also set position at this location
     for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
         if (p == pick) {
@@ -169,8 +169,8 @@ void QwtPlotSeriesDataPickerGroup::onPickerClicked(QwtPlotSeriesDataPicker* pick
     }
 
     // Sync all other pickers to the proportional position
-    double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
-    double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
+    double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+    double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
 
     for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
         if (p != picker) {
@@ -204,8 +204,8 @@ void QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked(QwtPlotSeriesDataPicker
     }
 
     // Sync all other pickers to the proportional position
-    double xPresent = qBound(0.0, (double)pos.x() / canvas->width(), 1.0);
-    double yPresent = qBound(0.0, (double)pos.y() / canvas->height(), 1.0);
+    double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+    double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
 
     for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
         if (p != picker) {

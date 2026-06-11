@@ -191,7 +191,7 @@ public:
     explicit QwtPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget*);
 
     // Destructor
-    virtual ~QwtPicker();
+    ~QwtPicker() override;
 
     // Set the state machine
     void setStateMachine(QwtPickerMachine*);

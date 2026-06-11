@@ -51,7 +51,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
     explicit QwtDynGridLayout( int spacing = -1 );
 
     // Destructor
-    virtual ~QwtDynGridLayout();
+    ~QwtDynGridLayout() override;
 
     // Invalidate all internal caches
     virtual void invalidate() override;

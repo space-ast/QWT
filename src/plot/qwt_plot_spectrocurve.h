@@ -61,7 +61,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
     explicit QwtPlotSpectroCurve( const QwtText& title );
 
     /// Destructor
-    virtual ~QwtPlotSpectroCurve();
+    ~QwtPlotSpectroCurve() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

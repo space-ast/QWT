@@ -87,7 +87,7 @@ public:
     explicit QwtPlotCanvasZoomer(QWidget* canvas, bool doReplot = true);
     
     // Destructor
-    virtual ~QwtPlotCanvasZoomer();
+    ~QwtPlotCanvasZoomer() override;
 
     // Set zoom base to current axis ranges, min zoom size is calculated based on this
     virtual void setZoomBase(bool doReplot = true);

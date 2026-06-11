@@ -32,7 +32,7 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
     /// Constructor
     explicit QwtPolarPicker( QwtPolarCanvas* );
     /// Destructor
-    virtual ~QwtPolarPicker();
+    ~QwtPolarPicker() override;
 
     /// Constructor with rubber band and tracker mode
     explicit QwtPolarPicker(

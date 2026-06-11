@@ -104,7 +104,7 @@ public:
     /// Constructor with alignment
     explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = nullptr);
     /// Destructor
-    virtual ~QwtScaleWidget();
+    ~QwtScaleWidget() override;
 
 Q_SIGNALS:
 

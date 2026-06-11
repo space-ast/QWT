@@ -23,7 +23,7 @@ public:
     // Constructor with canvas widget
     explicit QwtCanvasPicker(QWidget* canvas);
     // Destructor
-    ~QwtCanvasPicker();
+    ~QwtCanvasPicker() override;
 
     // Get the associated plot (non-const version)
     QwtPlot* plot();

@@ -32,7 +32,7 @@ public:
     /// Constructor
     explicit QwtPolarCachePanner(QwtPolarCanvas*);
     /// Destructor
-    virtual ~QwtPolarCachePanner();
+    ~QwtPolarCachePanner() override;
 
     /// Get the plot
     QwtPolarPlot* plot();

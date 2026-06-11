@@ -202,17 +202,17 @@ void QwtPolarPlot::insertLegend(QwtAbstractLegend* legend, QwtPolarPlot::LegendP
         d->legend = legend;
 
         if (d->legend) {
-            connect(this,
-                    SIGNAL(legendDataChanged(const QVariant&, const QList< QwtLegendData >&)),
-                    d->legend,
-                    SLOT(updateLegend(const QVariant&, const QList< QwtLegendData >&)));
+            QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
+            if (lgd) {
+                connect(this, &QwtPolarPlot::legendDataChanged,
+                        lgd, &QwtLegend::updateLegend);
+            }
 
             if (d->legend->parent() != this)
                 d->legend->setParent(this);
 
             updateLegend();
 
-            QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
             if (lgd) {
                 switch (d->layout->legendPosition()) {
                 case LeftLegend:

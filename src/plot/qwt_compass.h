@@ -52,7 +52,7 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
     explicit QwtCompassScaleDraw( const QMap< double, QString >& map );
 
     // Destructor
-    virtual ~QwtCompassScaleDraw();
+    ~QwtCompassScaleDraw() override;
 
     // Sets the map that maps values to labels
     void setLabelMap( const QMap< double, QString >& map );
@@ -82,7 +82,7 @@ class QWT_EXPORT QwtCompass : public QwtDial
     // Constructs a compass widget with a scale, no needle and no rose
     explicit QwtCompass( QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtCompass();
+    ~QwtCompass() override;
 
     // Sets a compass rose that will be drawn inside the compass
     void setRose( QwtCompassRose* rose );

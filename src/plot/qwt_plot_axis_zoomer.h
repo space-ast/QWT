@@ -102,7 +102,7 @@ public:
     explicit QwtPlotAxisZoomer(QwtAxisId xAxis, QwtAxisId yAxis, QWidget*, bool doReplot = true);
 
     // Destructor
-    virtual ~QwtPlotAxisZoomer();
+    ~QwtPlotAxisZoomer() override;
 
     // Set zoom base from current scales
     virtual void setZoomBase(bool doReplot = true);

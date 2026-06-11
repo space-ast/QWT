@@ -130,7 +130,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     QwtGraphic( const QwtGraphic& );
 
     // Destructor
-    virtual ~QwtGraphic();
+    ~QwtGraphic() override;
 
     // Assignment operator
     QwtGraphic& operator=( const QwtGraphic& );

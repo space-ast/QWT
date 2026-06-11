@@ -89,7 +89,8 @@ class QWT_EXPORT QwtDialNeedle
     bool m_flatStyle;
 
   private:
-    Q_DISABLE_COPY(QwtDialNeedle)
+    QwtDialNeedle(const QwtDialNeedle&) = delete;
+    QwtDialNeedle& operator=(const QwtDialNeedle&) = delete;
 };
 
 /**

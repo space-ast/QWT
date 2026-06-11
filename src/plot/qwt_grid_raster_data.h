@@ -45,7 +45,7 @@ public:
     // Constructor
     QwtGridRasterData();
     // Destructor
-    virtual ~QwtGridRasterData();
+    ~QwtGridRasterData() override;
 
     // Set the resampling algorithm
     void setResampleMode(ResampleMode mode);

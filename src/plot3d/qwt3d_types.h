@@ -421,7 +421,7 @@ public:
     GridData();
     // See setSize()
     GridData(unsigned int columns, unsigned int rows);
-    ~GridData();
+    ~GridData() override;
 
     int columns() const;
     int rows() const;

@@ -16,7 +16,7 @@ public:
     CrossHair();
     CrossHair(double rad, double linewidth, bool smooth, bool boxed);
     CrossHair(const CrossHair &other);
-    ~CrossHair();
+    ~CrossHair() override;
 
     Qwt3D::Enrichment *clone() const override;
 
@@ -38,7 +38,7 @@ public:
     Dot();
     Dot(double pointsize, bool smooth);
     Dot(const Dot &other);
-    ~Dot();
+    ~Dot() override;
 
     Qwt3D::Enrichment *clone() const override;
 
@@ -60,7 +60,7 @@ public:
     Cone();
     Cone(double rad, unsigned quality);
     Cone(const Cone &other);
-    ~Cone();
+    ~Cone() override;
 
     Qwt3D::Enrichment *clone() const override;
 
@@ -81,7 +81,7 @@ class QWT3D_EXPORT Arrow : public VertexEnrichment
 public:
     Arrow();
     Arrow(const Arrow &other);
-    ~Arrow();
+    ~Arrow() override;
 
     Qwt3D::Enrichment *clone() const override;
 

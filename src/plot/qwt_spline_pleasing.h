@@ -43,7 +43,7 @@ public:
     // Constructor
     QwtSplinePleasing();
     // Destructor
-    virtual ~QwtSplinePleasing();
+    ~QwtSplinePleasing() override;
 
     // Get locality (number of points used for calculation)
     virtual uint locality() const override;

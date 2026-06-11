@@ -110,7 +110,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     // Constructor
     explicit QwtThermo( QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtThermo();
+    ~QwtThermo() override;
 
     // Set the orientation
     void setOrientation( Qt::Orientation );

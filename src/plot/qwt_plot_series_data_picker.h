@@ -70,7 +70,7 @@ public:
     /// Constructor
     explicit QwtPlotSeriesDataPicker(QWidget* canvas);
     /// Destructor
-    ~QwtPlotSeriesDataPicker();
+    ~QwtPlotSeriesDataPicker() override;
 
     /// Set pick mode
     void setPickMode(PickSeriesMode mode);

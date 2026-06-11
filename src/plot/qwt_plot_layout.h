@@ -124,7 +124,8 @@ protected:
         Options options = Options() );
 
 private:
-    Q_DISABLE_COPY( QwtPlotLayout )
+    QwtPlotLayout(const QwtPlotLayout&) = delete;
+    QwtPlotLayout& operator=(const QwtPlotLayout&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPlotLayout)
 };

@@ -33,7 +33,7 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
     /// Constructor
     explicit QwtPolarMagnifier( QwtPolarCanvas* );
     /// Destructor
-    virtual ~QwtPolarMagnifier();
+    ~QwtPolarMagnifier() override;
 
     /// Set the unzoom key
     void setUnzoomKey( int key, int modifiers );

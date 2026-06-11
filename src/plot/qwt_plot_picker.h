@@ -34,7 +34,7 @@ public:
     explicit QwtPlotPicker(QWidget* canvas);
 
     //! Destructor
-    virtual ~QwtPlotPicker();
+    ~QwtPlotPicker() override;
 
     //! Constructor with axes
     explicit QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget*);

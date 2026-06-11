@@ -22,7 +22,7 @@ public:
     // Constructor
     explicit QwtPlotPanner(QWidget* canvas);
     // Destructor
-    virtual ~QwtPlotPanner();
+    ~QwtPlotPanner() override;
 
     // Get the canvas widget
     QWidget* canvas();

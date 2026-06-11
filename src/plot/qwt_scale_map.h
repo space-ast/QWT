@@ -103,8 +103,17 @@ public:
     //! Check if the scale is linear (no transformation)
     static bool isLinerScale(const QwtScaleMap& sm);
 
+    //! Check if this scale has no nonlinear transformation
+    bool isLinear() const;
+
     //! Check if the mapping direction is inverted
     bool isInverting() const;
+
+    //! Conversion factor for linear fast-path: result = p1() + (value - ts1()) * cnv()
+    double cnv() const;
+
+    //! Transformed scale origin for linear fast-path
+    double ts1() const;
 
 protected:
     void swap(QwtScaleMap& other) noexcept;  // helper
@@ -201,6 +210,24 @@ inline double QwtScaleMap::invTransform(double p) const
 inline bool QwtScaleMap::isInverting() const
 {
     return ((m_p1 < m_p2) != (m_s1 < m_s2));
+}
+
+//! Return true when there is no nonlinear transformation
+inline bool QwtScaleMap::isLinear() const
+{
+    return m_transform == nullptr;
+}
+
+//! Return the conversion factor for linear fast-path transform
+inline double QwtScaleMap::cnv() const
+{
+    return m_cnv;
+}
+
+//! Return the transformed scale origin for linear fast-path transform
+inline double QwtScaleMap::ts1() const
+{
+    return m_ts1;
 }
 
 #ifndef QT_NO_DEBUG_STREAM

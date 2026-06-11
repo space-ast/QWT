@@ -25,7 +25,7 @@ class QWT_EXPORT QwtFigureLayout : public QLayout
 public:
     QwtFigureLayout();
     explicit QwtFigureLayout(QWidget* parent);
-    virtual ~QwtFigureLayout();
+    ~QwtFigureLayout() override;
 
     virtual void addItem(QLayoutItem* item) override;
     virtual QLayoutItem* itemAt(int index) const override;

@@ -94,7 +94,7 @@ class QWT_EXPORT QwtCounter : public QWidget
     /// Constructor
     explicit QwtCounter( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtCounter();
+    ~QwtCounter() override;
 
     /// Set the counter to be in valid/invalid state
     void setValid( bool );

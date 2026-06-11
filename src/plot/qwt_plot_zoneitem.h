@@ -51,7 +51,7 @@ public:
     // Constructor
     explicit QwtPlotZoneItem();
     // Destructor
-    virtual ~QwtPlotZoneItem();
+    ~QwtPlotZoneItem() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

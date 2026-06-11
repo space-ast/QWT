@@ -65,7 +65,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     explicit QwtAbstractSlider( QWidget* parent = nullptr );
     
     /// Destructor for QwtAbstractSlider (English only)
-    virtual ~QwtAbstractSlider();
+    ~QwtAbstractSlider() override;
 
     /// Set whether the slider is valid (English only)
     void setValid( bool );

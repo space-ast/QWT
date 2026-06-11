@@ -21,7 +21,7 @@ public:
     /**
      * @brief Destructor
      */
-    virtual ~QwtPlotTransparentCanvas();
+    ~QwtPlotTransparentCanvas() override;
 public Q_SLOTS:
     /**
      * @brief Replot the canvas

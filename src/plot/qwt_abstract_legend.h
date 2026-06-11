@@ -52,7 +52,7 @@ public:
         explicit QwtAbstractLegend(QWidget* parent = nullptr);
         
         // Destructor for QwtAbstractLegend
-        virtual ~QwtAbstractLegend();
+        ~QwtAbstractLegend() override;
 
         // Render the legend into a given rectangle
         virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;

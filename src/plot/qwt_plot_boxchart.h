@@ -100,7 +100,7 @@ public:
     /**
      * @brief Destructor
      */
-    virtual ~QwtPlotBoxChart();
+    ~QwtPlotBoxChart() override;
     
     // Get runtime type information
     virtual int rtti() const override;

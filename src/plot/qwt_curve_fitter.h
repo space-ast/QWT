@@ -76,7 +76,8 @@ class QWT_EXPORT QwtCurveFitter
     explicit QwtCurveFitter( Mode mode );
 
   private:
-    Q_DISABLE_COPY(QwtCurveFitter)
+    QwtCurveFitter(const QwtCurveFitter&) = delete;
+    QwtCurveFitter& operator=(const QwtCurveFitter&) = delete;
 
     const Mode m_mode;
 };

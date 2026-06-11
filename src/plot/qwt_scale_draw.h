@@ -71,7 +71,7 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     };
 
     QwtScaleDraw();
-    virtual ~QwtScaleDraw();
+    ~QwtScaleDraw() override;
 
     /// Get the border distance hint
     void getBorderDistHint( const QFont&, int& start, int& end ) const;

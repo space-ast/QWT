@@ -54,7 +54,7 @@ class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 explicit QwtPlotGrid();
 
     // Destructor
-virtual ~QwtPlotGrid();
+~QwtPlotGrid() override;
 
     // Get the runtime type information
 virtual int rtti() const override;

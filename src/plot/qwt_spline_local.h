@@ -82,7 +82,7 @@ public:
     //! Constructor with spline type
     explicit QwtSplineLocal(Type type);
     //! Destructor
-    virtual ~QwtSplineLocal();
+    ~QwtSplineLocal() override;
 
     //! Get spline type
     Type type() const;

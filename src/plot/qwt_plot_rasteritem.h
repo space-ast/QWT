@@ -109,7 +109,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
     // Constructor with title
     explicit QwtPlotRasterItem( const QwtText& title );
     // Destructor
-    virtual ~QwtPlotRasterItem();
+    ~QwtPlotRasterItem() override;
 
     // Set a paint attribute
     void setPaintAttribute( PaintAttribute, bool on = true );

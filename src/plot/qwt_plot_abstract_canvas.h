@@ -68,7 +68,7 @@ class QWT_EXPORT QwtPlotAbstractCanvas
     // Constructor
     explicit QwtPlotAbstractCanvas( QWidget* canvasWidget );
     // Destructor
-    virtual ~QwtPlotAbstractCanvas();
+    ~QwtPlotAbstractCanvas();
 
     // Get the parent plot widget
     QwtPlot* plot();
@@ -102,7 +102,8 @@ class QWT_EXPORT QwtPlotAbstractCanvas
     void updateStyleSheetInfo();
 
   private:
-    Q_DISABLE_COPY(QwtPlotAbstractCanvas)
+    QwtPlotAbstractCanvas(const QwtPlotAbstractCanvas&) = delete;
+    QwtPlotAbstractCanvas& operator=(const QwtPlotAbstractCanvas&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPlotAbstractCanvas)
 };
@@ -143,7 +144,7 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
     // Constructor
     explicit QwtPlotAbstractGLCanvas( QWidget* canvasWidget );
     // Destructor
-    virtual ~QwtPlotAbstractGLCanvas();
+    ~QwtPlotAbstractGLCanvas();
 
     // Set a paint attribute
     void setPaintAttribute( PaintAttribute, bool on = true );

@@ -64,7 +64,7 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     //! Constructor
     QwtNullPaintDevice();
     //! Destructor
-    virtual ~QwtNullPaintDevice();
+    ~QwtNullPaintDevice() override;
 
     //! Set the render mode
     void setMode( Mode );

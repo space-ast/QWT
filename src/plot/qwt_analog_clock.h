@@ -81,7 +81,7 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
     // Constructs an analog clock widget
     explicit QwtAnalogClock( QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtAnalogClock();
+    ~QwtAnalogClock() override;
 
     // Sets a specific clock hand needle
     void setHand( Hand, QwtDialNeedle* );

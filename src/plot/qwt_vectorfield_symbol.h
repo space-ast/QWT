@@ -63,7 +63,8 @@ class QWT_EXPORT QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const = 0;
 
   private:
-    Q_DISABLE_COPY(QwtVectorFieldSymbol)
+    QwtVectorFieldSymbol(const QwtVectorFieldSymbol&) = delete;
+    QwtVectorFieldSymbol& operator=(const QwtVectorFieldSymbol&) = delete;
 };
 
 /*!

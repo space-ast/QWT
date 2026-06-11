@@ -92,8 +92,8 @@ void QwtCounter::initCounter()
         btn->setFocusPolicy(Qt::NoFocus);
         layout->addWidget(btn);
 
-        connect(btn, SIGNAL(released()), SLOT(btnReleased()));
-        connect(btn, SIGNAL(clicked()), SLOT(btnClicked()));
+        connect(btn, &QAbstractButton::released, this, &QwtCounter::btnReleased);
+        connect(btn, &QAbstractButton::clicked, this, &QwtCounter::btnClicked);
 
         d->buttonDown[ i ] = btn;
     }
@@ -103,7 +103,7 @@ void QwtCounter::initCounter()
     d->valueEdit->setValidator(new QDoubleValidator(d->valueEdit));
     layout->addWidget(d->valueEdit);
 
-    connect(d->valueEdit, SIGNAL(editingFinished()), SLOT(textChanged()));
+    connect(d->valueEdit, &QLineEdit::editingFinished, this, &QwtCounter::textChanged);
 
     layout->setStretchFactor(d->valueEdit, 10);
 
@@ -112,8 +112,8 @@ void QwtCounter::initCounter()
         btn->setFocusPolicy(Qt::NoFocus);
         layout->addWidget(btn);
 
-        connect(btn, SIGNAL(released()), SLOT(btnReleased()));
-        connect(btn, SIGNAL(clicked()), SLOT(btnClicked()));
+        connect(btn, &QAbstractButton::released, this, &QwtCounter::btnReleased);
+        connect(btn, &QAbstractButton::clicked, this, &QwtCounter::btnClicked);
 
         d->buttonUp[ i ] = btn;
     }

@@ -143,7 +143,7 @@ public:
     explicit QwtPlotArrowMarker(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotArrowMarker();
+    ~QwtPlotArrowMarker() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

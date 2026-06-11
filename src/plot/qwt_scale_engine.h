@@ -144,7 +144,8 @@ protected:
     QwtInterval buildInterval(double value) const;
 
 private:
-    Q_DISABLE_COPY(QwtScaleEngine)
+    QwtScaleEngine(const QwtScaleEngine&) = delete;
+    QwtScaleEngine& operator=(const QwtScaleEngine&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtScaleEngine)
 };
@@ -158,7 +159,7 @@ class QWT_EXPORT QwtLinearScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLinearScaleEngine(uint base = 10);
-    virtual ~QwtLinearScaleEngine();
+    ~QwtLinearScaleEngine() override;
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
@@ -187,7 +188,7 @@ class QWT_EXPORT QwtLogScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLogScaleEngine(uint base = 10);
-    virtual ~QwtLogScaleEngine();
+    ~QwtLogScaleEngine() override;
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 

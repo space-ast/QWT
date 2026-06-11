@@ -85,7 +85,7 @@ class QWT_EXPORT QwtPlotMultiBarChart
     explicit QwtPlotMultiBarChart( const QwtText& title );
 
     /// Destructor
-    virtual ~QwtPlotMultiBarChart();
+    ~QwtPlotMultiBarChart() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

@@ -25,7 +25,7 @@ public:
     // Constructor
     Plot3D(QWidget* parent = nullptr);
     // Destructor
-    virtual ~Plot3D();
+    ~Plot3D() override;
 
     // Render to pixmap
     QPixmap renderPixmap(int w = 0, int h = 0, bool useContext = false);

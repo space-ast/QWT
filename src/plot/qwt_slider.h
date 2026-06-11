@@ -84,7 +84,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     explicit QwtSlider( Qt::Orientation, QWidget* parent = nullptr );
 
     /// Destructor
-    virtual ~QwtSlider();
+    ~QwtSlider() override;
 
     /// Set orientation
     void setOrientation( Qt::Orientation );

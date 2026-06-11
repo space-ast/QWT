@@ -47,7 +47,7 @@ class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
     // Constructor with QwtText title
     explicit QwtPlotSvgItem( const QwtText& title );
     // Destructor
-    virtual ~QwtPlotSvgItem();
+    ~QwtPlotSvgItem() override;
 
     // Load an SVG file
     bool loadFile( const QRectF&, const QString& fileName );

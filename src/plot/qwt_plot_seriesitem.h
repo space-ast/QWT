@@ -50,7 +50,7 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
     explicit QwtPlotSeriesItem( const QwtText& title );
 
     // Destructor
-    virtual ~QwtPlotSeriesItem();
+    ~QwtPlotSeriesItem() override;
 
     // Set the orientation
     void setOrientation( Qt::Orientation );

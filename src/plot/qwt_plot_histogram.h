@@ -107,7 +107,7 @@ explicit QwtPlotHistogram( const QString& title = QString() );
 explicit QwtPlotHistogram( const QwtText& title );
 
     // Destructor
-virtual ~QwtPlotHistogram();
+~QwtPlotHistogram() override;
 
     // Get the runtime type information
 virtual int rtti() const override;

@@ -208,7 +208,8 @@ class QWT_EXPORT QwtSpline
     virtual uint locality() const;
 
   private:
-    Q_DISABLE_COPY(QwtSpline)
+    QwtSpline(const QwtSpline&) = delete;
+    QwtSpline& operator=(const QwtSpline&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtSpline)
 };
@@ -223,7 +224,7 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 {
   public:
     QwtSplineInterpolating();
-    virtual ~QwtSplineInterpolating();
+    ~QwtSplineInterpolating() override;
 
     virtual QPolygonF equidistantPolygon( const QPolygonF&,
         double distance, bool withNodes ) const;
@@ -235,7 +236,8 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const = 0;
 
   private:
-    Q_DISABLE_COPY(QwtSplineInterpolating)
+    QwtSplineInterpolating(const QwtSplineInterpolating&) = delete;
+    QwtSplineInterpolating& operator=(const QwtSplineInterpolating&) = delete;
 };
 
 /**
@@ -247,7 +249,7 @@ class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
 {
   public:
     QwtSplineG1();
-    virtual ~QwtSplineG1();
+    ~QwtSplineG1() override;
 };
 
 /**
@@ -265,7 +267,7 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
   public:
     QwtSplineC1();
-    virtual ~QwtSplineC1();
+    ~QwtSplineC1() override;
 
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
@@ -321,7 +323,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
     };
 
     QwtSplineC2();
-    virtual ~QwtSplineC2();
+    ~QwtSplineC2() override;
 
     virtual QPainterPath painterPath( const QPolygonF& ) const override;
     virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;

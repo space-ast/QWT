@@ -49,7 +49,7 @@ class QWT_EXPORT QwtFigure : public QFrame
     QWT_DECLARE_PRIVATE(QwtFigure)
 public:
     QwtFigure(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-    virtual ~QwtFigure();
+    ~QwtFigure() override;
 
     // Add a widget with normalized coordinates
     void addWidget(QWidget* widget, qreal left, qreal top, qreal width, qreal height);

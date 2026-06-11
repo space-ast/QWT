@@ -45,7 +45,7 @@ public:
     // Constructor
     QwtSplineCurveFitter();
     // Destructor
-    virtual ~QwtSplineCurveFitter();
+    ~QwtSplineCurveFitter() override;
 
     // Set spline
     void setSpline(QwtSpline*);

@@ -18,7 +18,7 @@
  */
 QwtPolarCachePanner::QwtPolarCachePanner(QwtPolarCanvas* canvas) : QwtCachePanner(canvas)
 {
-    connect(this, SIGNAL(panned(int, int)), SLOT(movePlot(int, int)));
+    connect(this, &QwtCachePanner::panned, this, &QwtPolarCachePanner::movePlot);
 }
 
 /**

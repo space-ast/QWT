@@ -16,7 +16,7 @@ class QWT_EXPORT QwtParasitePlotLayout : public QwtPlotLayout
 {
 public:
     QwtParasitePlotLayout();
-    ~QwtParasitePlotLayout();
+    ~QwtParasitePlotLayout() override;
 	virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options()) override;
 
 	virtual QSize minimumSizeHint(const QwtPlot* plot) const override;

@@ -75,7 +75,7 @@ public:
     // Constructor
     explicit QwtPlotSpectrogram(const QString& title = QString());
     // Destructor
-    virtual ~QwtPlotSpectrogram();
+    ~QwtPlotSpectrogram() override;
 
     // Set a display mode
     void setDisplayMode(DisplayMode, bool on = true);

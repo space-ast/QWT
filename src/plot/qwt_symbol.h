@@ -271,7 +271,8 @@ public:
         const QPointF*, int numPoints ) const;
 
   private:
-    Q_DISABLE_COPY(QwtSymbol)
+    QwtSymbol(const QwtSymbol&) = delete;
+    QwtSymbol& operator=(const QwtSymbol&) = delete;
     QWT_DECLARE_PRIVATE(QwtSymbol)
 };
 

@@ -40,7 +40,7 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
     /// Constructor
     explicit QwtPolarRenderer( QObject* parent = nullptr );
     /// Destructor
-    virtual ~QwtPolarRenderer();
+    ~QwtPolarRenderer() override;
 
     /// Render a polar plot to a document
     void renderDocument( QwtPolarPlot*, const QString& format,

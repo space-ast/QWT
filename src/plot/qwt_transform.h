@@ -61,7 +61,8 @@ public:
     virtual QwtTransform* copy() const = 0;
 
 private:
-    Q_DISABLE_COPY(QwtTransform)
+    QwtTransform(const QwtTransform&) = delete;
+    QwtTransform& operator=(const QwtTransform&) = delete;
 };
 
 /**
@@ -74,7 +75,7 @@ public:
     //! Constructor
     QwtNullTransform();
     //! Destructor
-    virtual ~QwtNullTransform();
+    ~QwtNullTransform() override;
 
     //! Transformation function - returns value unmodified
     virtual double transform(double value) const override;
@@ -96,7 +97,7 @@ public:
     //! Constructor
     QwtLogTransform();
     //! Destructor
-    virtual ~QwtLogTransform();
+    ~QwtLogTransform() override;
 
     //! Transformation function - log(value)
     virtual double transform(double value) const override;
@@ -126,7 +127,7 @@ public:
     //! Constructor with exponent parameter
     explicit QwtPowerTransform(double exponent);
     //! Destructor
-    virtual ~QwtPowerTransform();
+    ~QwtPowerTransform() override;
 
     //! Transformation function - pow() preserving sign
     virtual double transform(double value) const override;

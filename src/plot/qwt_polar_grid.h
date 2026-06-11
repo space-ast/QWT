@@ -100,7 +100,7 @@ public:
     /// Constructor
     explicit QwtPolarGrid();
     /// Destructor
-    virtual ~QwtPolarGrid();
+    ~QwtPolarGrid() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

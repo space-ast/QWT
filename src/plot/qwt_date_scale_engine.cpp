@@ -627,7 +627,7 @@ static QwtScaleDiv qwtDivideToMonths(
         }
         else if ( minStepSize > 0.0 )
         {
-            const int numMinorSteps = qRound( stepSize / (double) minStepSize );
+            const int numMinorSteps = qRound( stepSize / minStepSize );
 
             for ( int i = 1; i < numMinorSteps; i++ )
             {

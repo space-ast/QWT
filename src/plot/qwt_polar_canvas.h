@@ -47,7 +47,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
     /// Constructor
     explicit QwtPolarCanvas( QwtPolarPlot* );
     /// Destructor
-    virtual ~QwtPolarCanvas();
+    ~QwtPolarCanvas() override;
 
     /// Get the plot
     QwtPolarPlot* plot();

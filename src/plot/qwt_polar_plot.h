@@ -85,7 +85,7 @@ public:
     QwtPolarPlot(const QwtText& title, QWidget* parent = nullptr);
 
     /// Destructor
-    virtual ~QwtPolarPlot();
+    ~QwtPolarPlot() override;
 
     /// Set the title
     void setTitle(const QString&);

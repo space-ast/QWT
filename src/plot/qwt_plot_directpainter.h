@@ -86,7 +86,7 @@ Q_DECLARE_FLAGS( Attributes, Attribute )
 explicit QwtPlotDirectPainter( QObject* parent = nullptr );
 
     // Destructor
-virtual ~QwtPlotDirectPainter();
+~QwtPlotDirectPainter() override;
 
     // Set attribute
 void setAttribute( Attribute, bool on );

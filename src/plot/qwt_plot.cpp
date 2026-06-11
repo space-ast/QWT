@@ -62,7 +62,8 @@
 
 static inline void qwtEnableLegendItems(QwtPlot* plot, bool on)
 {
-    // gcc seems to have problems with const char sig[] in combination with certain options
+    // Old-style SIGNAL/SLOT required: updateLegendItems is a private slot,
+    // and this is a free function that cannot access private members.
     const char* sig  = SIGNAL(legendDataChanged(QVariant, QList< QwtLegendData >));
     const char* slot = SLOT(updateLegendItems(QVariant, QList< QwtLegendData >));
 

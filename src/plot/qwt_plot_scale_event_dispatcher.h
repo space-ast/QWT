@@ -27,7 +27,7 @@ public:
     /// Constructor
     explicit QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject* par = nullptr);
     /// Destructor
-    ~QwtPlotScaleEventDispatcher();
+    ~QwtPlotScaleEventDispatcher() override;
     /// Check if enabled
     bool isEnable() const;
     /// Find axis ID corresponding to QwtScaleWidget

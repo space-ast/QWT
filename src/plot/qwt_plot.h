@@ -148,7 +148,7 @@ public:
     explicit QwtPlot(const QwtText& title, QWidget* = nullptr);
 
     // Destructor
-    virtual ~QwtPlot();
+    ~QwtPlot() override;
 
     // Set auto replot
     void setAutoReplot(bool = true);

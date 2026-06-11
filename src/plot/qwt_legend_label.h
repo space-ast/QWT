@@ -45,10 +45,10 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
     Q_OBJECT
   public:
     // Constructor for QwtLegendLabel
-    explicit QwtLegendLabel( QWidget* parent = 0 );
+    explicit QwtLegendLabel( QWidget* parent = nullptr );
     
     // Destructor for QwtLegendLabel
-    virtual ~QwtLegendLabel();
+    ~QwtLegendLabel() override;
 
     // Set the legend data
     void setData( const QwtLegendData& );

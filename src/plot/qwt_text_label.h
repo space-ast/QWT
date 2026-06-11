@@ -57,7 +57,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     // Constructor with text and parent
     explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtTextLabel();
+    ~QwtTextLabel() override;
 
     // Set the text as plain text
     void setPlainText( const QString& );

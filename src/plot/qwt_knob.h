@@ -113,7 +113,7 @@ public:
     /// Constructor
     explicit QwtKnob( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtKnob();
+    ~QwtKnob() override;
 
     /// Set alignment of the knob inside contentsRect()
     void setAlignment( Qt::Alignment );

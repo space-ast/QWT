@@ -64,7 +64,7 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
     explicit QwtAbstractScale( QWidget* parent = nullptr );
     
     // Destructor for QwtAbstractScale
-    virtual ~QwtAbstractScale();
+    ~QwtAbstractScale() override;
 
     // Set scale by lower and upper bounds
     void setScale( double lowerBound, double upperBound );

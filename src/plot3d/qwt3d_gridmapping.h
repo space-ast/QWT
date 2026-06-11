@@ -15,7 +15,7 @@ class QWT3D_EXPORT GridMapping : public Mapping
 public:
     // Constructs GridMapping object w/o assigned SurfacePlot
     GridMapping();
-    ~GridMapping();
+    ~GridMapping() override;
 
     // Sets number of rows and columns
     void setMesh(unsigned int columns, unsigned int rows);

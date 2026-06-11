@@ -106,7 +106,7 @@ public:
     // Constructor
     explicit QwtPlotCanvas(QwtPlot* = nullptr);
     // Destructor
-    virtual ~QwtPlotCanvas();
+    ~QwtPlotCanvas() override;
 
     // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);

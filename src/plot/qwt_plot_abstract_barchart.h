@@ -78,7 +78,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
     // Constructor with title
     explicit QwtPlotAbstractBarChart( const QwtText& title );
     // Destructor
-    virtual ~QwtPlotAbstractBarChart();
+    ~QwtPlotAbstractBarChart() override;
 
     // Set the layout policy for bar width calculation
     void setLayoutPolicy( LayoutPolicy );

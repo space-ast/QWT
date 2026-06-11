@@ -284,7 +284,7 @@ explicit QwtPlotCurve(const QString& title = QString());
 explicit QwtPlotCurve(const QwtText& title);
 
     // Destructor
-virtual ~QwtPlotCurve();
+~QwtPlotCurve() override;
 
     // Get the runtime type information
 virtual int rtti() const override;

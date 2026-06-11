@@ -151,7 +151,8 @@ public:
                    uint numThreads) const;
 
 private:
-    Q_DISABLE_COPY(QwtPointMapper)
+    QwtPointMapper(const QwtPointMapper&) = delete;
+    QwtPointMapper& operator=(const QwtPointMapper&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPointMapper)
 };

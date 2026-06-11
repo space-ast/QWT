@@ -90,7 +90,8 @@ public:
     virtual QVector< QRgb > colorTable256() const;
 
 private:
-    Q_DISABLE_COPY(QwtColorMap)
+    QwtColorMap(const QwtColorMap&) = delete;
+    QwtColorMap& operator=(const QwtColorMap&) = delete;
 
     Format m_format;
 };
@@ -121,7 +122,7 @@ public:
 
     QwtLinearColorMap(const QColor& from, const QColor& to, QwtColorMap::Format = QwtColorMap::RGB);
 
-    virtual ~QwtLinearColorMap();
+    ~QwtLinearColorMap() override;
 
     void setMode(Mode);
     Mode mode() const;
@@ -150,7 +151,7 @@ class QWT_EXPORT QwtAlphaColorMap : public QwtColorMap
 {
 public:
     explicit QwtAlphaColorMap(const QColor& = QColor(Qt::gray));
-    virtual ~QwtAlphaColorMap();
+    ~QwtAlphaColorMap() override;
 
     void setAlphaInterval(int alpha1, int alpha2);
 
@@ -178,7 +179,7 @@ class QWT_EXPORT QwtHueColorMap : public QwtColorMap
 {
 public:
     explicit QwtHueColorMap(QwtColorMap::Format = QwtColorMap::RGB);
-    virtual ~QwtHueColorMap();
+    ~QwtHueColorMap() override;
 
     void setHueInterval(int hue1, int hue2);  // direction ?
     void setSaturation(int saturation);
@@ -206,7 +207,7 @@ class QWT_EXPORT QwtSaturationValueColorMap : public QwtColorMap
 {
 public:
     QwtSaturationValueColorMap();
-    virtual ~QwtSaturationValueColorMap();
+    ~QwtSaturationValueColorMap() override;
 
     void setHue(int hue);
     void setSaturationInterval(int sat1, int sat2);

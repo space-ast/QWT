@@ -34,10 +34,10 @@ public:
 
     // Standard constructor
     ColorLegend();
-    ~ColorLegend();
+    ~ColorLegend() override;
 
     // Draws the object - called by updateGL()
-    void draw();
+    virtual void draw() override;
 
     // Sets the relative position of the legend inside widget
     void setRelPosition(Qwt3D::Tuple relMin,

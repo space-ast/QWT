@@ -49,7 +49,7 @@ class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
     /// Constructor
     QwtRoundScaleDraw();
     /// Destructor
-    virtual ~QwtRoundScaleDraw();
+    ~QwtRoundScaleDraw() override;
 
     /// Set the radius
     void setRadius( double radius );

@@ -118,7 +118,7 @@ public:
     explicit QwtPlotVectorField(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotVectorField();
+    ~QwtPlotVectorField() override;
 
     // Set a paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);

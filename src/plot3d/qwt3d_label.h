@@ -48,13 +48,13 @@ public:
     Qwt3D::Triple second() const;
     // Defines an anchor point for the labels surrounding rectangle
     ANCHOR anchor() const;
-    virtual void setColor(double r, double g, double b, double a = 1);
-    virtual void setColor(Qwt3D::RGBA rgba);
+    virtual void setColor(double r, double g, double b, double a = 1) override;
+    virtual void setColor(Qwt3D::RGBA rgba) override;
 
     // Sets the labels string
     void setString(QString const &s);
     // Actual drawing
-    void draw();
+    virtual void draw() override;
 
     // Decides about use of PDF standard fonts for PDF output
     static void useDeviceFonts(bool val);

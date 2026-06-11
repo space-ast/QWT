@@ -109,7 +109,7 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
     // Constructor
     explicit QwtPlotRenderer( QObject* = nullptr );
     // Destructor
-    virtual ~QwtPlotRenderer();
+    ~QwtPlotRenderer() override;
 
     // Set a discard flag
     void setDiscardFlag( DiscardFlag flag, bool on = true );

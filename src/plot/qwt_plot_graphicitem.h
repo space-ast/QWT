@@ -61,7 +61,7 @@ explicit QwtPlotGraphicItem( const QwtText& title );
      * @brief Destructor
      *
      */
-virtual ~QwtPlotGraphicItem();
+~QwtPlotGraphicItem() override;
 
     /**
      * @brief Set graphic with its bounding rectangle

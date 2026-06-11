@@ -21,7 +21,7 @@ public:
     explicit ParametricSurface(Qwt3D::SurfacePlot &plotWidget);
     // Constructs ParametricSurface object and assigns a SurfacePlot
     explicit ParametricSurface(Qwt3D::SurfacePlot *plotWidget);
-    ~ParametricSurface();
+    ~ParametricSurface() override;
     // Overwrite this
     virtual Qwt3D::Triple operator()(double u, double v) = 0;
     // Assigns a new SurfacePlot and creates a data representation for it

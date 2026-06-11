@@ -107,7 +107,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     /// Constructor
     explicit QwtDial( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtDial();
+    ~QwtDial() override;
 
     /// Set the frame shadow
     void setFrameShadow( Shadow );

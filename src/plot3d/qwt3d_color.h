@@ -47,7 +47,7 @@ class QWT3D_EXPORT StandardColor : public Color
 public:
     // Initializes with data and set up a ColorVector with a size of 100 z values (default)
     explicit StandardColor(Qwt3D::Plot3D *data, unsigned size = 100);
-    ~StandardColor();
+    ~StandardColor() override;
     // Receives z-dependent color from ColorVector
     Qwt3D::RGBA operator()(double x, double y,
                            double z) const override;

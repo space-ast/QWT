@@ -126,7 +126,7 @@ public:
     explicit QwtPlotTradingCurve(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotTradingCurve();
+    ~QwtPlotTradingCurve() override;
 
 // Get the runtime type information
     virtual int rtti() const override;

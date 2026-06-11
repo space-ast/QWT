@@ -48,7 +48,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
     // Constructor
     explicit QwtMagnifier( QWidget* );
     // Destructor
-    virtual ~QwtMagnifier();
+    ~QwtMagnifier() override;
 
     // Return the parent widget (non-const version)
     QWidget* parentWidget();

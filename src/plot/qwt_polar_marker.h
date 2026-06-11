@@ -38,7 +38,7 @@ public:
     /// Constructor
     explicit QwtPolarMarker();
     /// Destructor
-    virtual ~QwtPolarMarker();
+    ~QwtPolarMarker() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

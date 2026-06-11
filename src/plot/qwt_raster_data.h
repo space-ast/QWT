@@ -141,7 +141,8 @@ public:
     class ContourPlane;
 
 private:
-    Q_DISABLE_COPY(QwtRasterData)
+    QwtRasterData(const QwtRasterData&) = delete;
+    QwtRasterData& operator=(const QwtRasterData&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtRasterData)
 };

@@ -73,7 +73,7 @@ class QWT_EXPORT QwtWheel : public QWidget
     /// Constructor
     explicit QwtWheel( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtWheel();
+    ~QwtWheel() override;
 
     /// Return the current value
     double value() const;

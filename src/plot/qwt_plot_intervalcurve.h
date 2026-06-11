@@ -105,7 +105,7 @@ class QWT_EXPORT QwtPlotIntervalCurve
     explicit QwtPlotIntervalCurve( const QwtText& title );
 
     // Destructor
-    virtual ~QwtPlotIntervalCurve();
+    ~QwtPlotIntervalCurve() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

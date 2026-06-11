@@ -107,7 +107,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
         RescalePolicy = Expanding );
 
     // Destructs the rescaler
-    virtual ~QwtPlotRescaler();
+    ~QwtPlotRescaler() override;
 
     // Enable or disable the rescaler
     void setEnabled( bool );

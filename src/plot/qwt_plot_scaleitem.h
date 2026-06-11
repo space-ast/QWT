@@ -61,7 +61,7 @@ public:
     explicit QwtPlotScaleItem(QwtScaleDraw::Alignment = QwtScaleDraw::BottomScale, const double pos = 0.0);
 
     // Destructor
-    virtual ~QwtPlotScaleItem();
+    ~QwtPlotScaleItem() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

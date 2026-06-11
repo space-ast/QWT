@@ -42,7 +42,7 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
     // Constructs an arrow button with specified number of arrows and arrow type
     explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtArrowButton();
+    ~QwtArrowButton() override;
 
     // Returns the direction of the arrows
     Qt::ArrowType arrowType() const;

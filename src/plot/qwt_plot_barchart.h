@@ -86,7 +86,7 @@ public:
     explicit QwtPlotBarChart(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotBarChart();
+    ~QwtPlotBarChart() override;
 
     // Get the runtime type information
     virtual int rtti() const override;

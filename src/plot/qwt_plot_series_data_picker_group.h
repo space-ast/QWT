@@ -29,7 +29,7 @@ public:
     /// Constructor
     QwtPlotSeriesDataPickerGroup(QObject* par = nullptr);
     /// Destructor
-    ~QwtPlotSeriesDataPickerGroup();
+    ~QwtPlotSeriesDataPickerGroup() override;
     /// Add a picker to the group
     void addPicker(QwtPlotSeriesDataPicker* pick);
     /// Remove a picker from the group

@@ -49,7 +49,7 @@ class QWT_EXPORT QwtSamplingThread : public QThread
 
 public:
     // Destructor
-    virtual ~QwtSamplingThread();
+    ~QwtSamplingThread() override;
 
     // Get the interval in seconds
     double interval() const;

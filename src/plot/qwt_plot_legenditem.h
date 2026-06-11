@@ -80,7 +80,7 @@ public:
     /// Constructor
     explicit QwtPlotLegendItem();
     /// Destructor
-    virtual ~QwtPlotLegendItem();
+    ~QwtPlotLegendItem() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;

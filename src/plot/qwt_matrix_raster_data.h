@@ -73,7 +73,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
     // Constructor
     QwtMatrixRasterData();
     // Destructor
-    virtual ~QwtMatrixRasterData();
+    ~QwtMatrixRasterData() override;
 
     // Set the resampling algorithm
     void setResampleMode(ResampleMode mode);

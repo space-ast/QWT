@@ -121,7 +121,8 @@ protected:
     const QwtText& tickLabel(const QFont&, double value) const;
 
 private:
-    Q_DISABLE_COPY(QwtAbstractScaleDraw)
+    QwtAbstractScaleDraw(const QwtAbstractScaleDraw&) = delete;
+    QwtAbstractScaleDraw& operator=(const QwtAbstractScaleDraw&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtAbstractScaleDraw)
 };

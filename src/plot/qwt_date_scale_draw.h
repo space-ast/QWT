@@ -62,7 +62,7 @@ public:
     explicit QwtDateScaleDraw(Qt::TimeSpec timeSpec = Qt::LocalTime);
     
     /// Destructor
-    virtual ~QwtDateScaleDraw();
+    ~QwtDateScaleDraw() override;
 
     /// Set the default format string for a datetime interval type
     void setDateFormat(QwtDate::IntervalType, const QString&);

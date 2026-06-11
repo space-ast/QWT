@@ -53,7 +53,7 @@ public:
     //! Constructor
     explicit QwtPlotCachePanner(QWidget*);
     //! Destructor
-    virtual ~QwtPlotCachePanner();
+    ~QwtPlotCachePanner() override;
 
     //! Get the canvas widget
     QWidget* canvas();
