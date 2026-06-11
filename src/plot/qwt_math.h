@@ -212,7 +212,7 @@ inline int qwtSign(double x)
 }
 
 //! Return the square of a number
-inline double qwtSqr(double x)
+inline constexpr double qwtSqr(double x)
 {
     return x * x;
 }
@@ -258,19 +258,19 @@ inline double qwtFastAtan2(double y, double x)
  * @param[in] d Constant offset
  * @return Value of the polynomial for x
  */
-inline double qwtCubicPolynomial(double x, double a, double b, double c, double d)
+inline constexpr double qwtCubicPolynomial(double x, double a, double b, double c, double d)
 {
     return (((a * x) + b) * x + c) * x + d;
 }
 
 //! Translate degrees into radians
-inline double qwtRadians(double degrees)
+inline constexpr double qwtRadians(double degrees)
 {
     return degrees * M_PI / 180.0;
 }
 
 //! Translate radians into degrees
-inline double qwtDegrees(double degrees)
+inline constexpr double qwtDegrees(double degrees)
 {
     return degrees * 180.0 / M_PI;
 }

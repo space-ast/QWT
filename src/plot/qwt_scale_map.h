@@ -74,14 +74,14 @@ public:
     double invTransform(double p) const;
 
     //! Return first border of paint interval
-    double p1() const;
+    constexpr double p1() const;
     //! Return second border of paint interval
-    double p2() const;
+    constexpr double p2() const;
 
     //! Return first border of scale interval
-    double s1() const;
+    constexpr double s1() const;
     //! Return second border of scale interval
-    double s2() const;
+    constexpr double s2() const;
 
     //! Return distance between paint interval boundaries
     double pDist() const;
@@ -104,16 +104,16 @@ public:
     static bool isLinerScale(const QwtScaleMap& sm);
 
     //! Check if this scale has no nonlinear transformation
-    bool isLinear() const;
+    constexpr bool isLinear() const;
 
     //! Check if the mapping direction is inverted
-    bool isInverting() const;
+    constexpr bool isInverting() const;
 
     //! Conversion factor for linear fast-path: result = p1() + (value - ts1()) * cnv()
-    double cnv() const;
+    constexpr double cnv() const;
 
     //! Transformed scale origin for linear fast-path
-    double ts1() const;
+    constexpr double ts1() const;
 
 protected:
     void swap(QwtScaleMap& other) noexcept;  // helper
@@ -132,7 +132,7 @@ private:
 /**
  * @brief Return first border of the scale interval
  */
-inline double QwtScaleMap::s1() const
+inline constexpr double QwtScaleMap::s1() const
 {
     return m_s1;
 }
@@ -140,7 +140,7 @@ inline double QwtScaleMap::s1() const
 /**
  * @brief Return second border of the scale interval
  */
-inline double QwtScaleMap::s2() const
+inline constexpr double QwtScaleMap::s2() const
 {
     return m_s2;
 }
@@ -148,7 +148,7 @@ inline double QwtScaleMap::s2() const
 /**
  * @brief Return first border of the paint interval
  */
-inline double QwtScaleMap::p1() const
+inline constexpr double QwtScaleMap::p1() const
 {
     return m_p1;
 }
@@ -156,7 +156,7 @@ inline double QwtScaleMap::p1() const
 /**
  * @brief Return second border of the paint interval
  */
-inline double QwtScaleMap::p2() const
+inline constexpr double QwtScaleMap::p2() const
 {
     return m_p2;
 }
@@ -207,25 +207,25 @@ inline double QwtScaleMap::invTransform(double p) const
 }
 
 //! Return true when ( p1() < p2() ) != ( s1() < s2() )
-inline bool QwtScaleMap::isInverting() const
+inline constexpr bool QwtScaleMap::isInverting() const
 {
     return ((m_p1 < m_p2) != (m_s1 < m_s2));
 }
 
 //! Return true when there is no nonlinear transformation
-inline bool QwtScaleMap::isLinear() const
+inline constexpr bool QwtScaleMap::isLinear() const
 {
     return m_transform == nullptr;
 }
 
 //! Return the conversion factor for linear fast-path transform
-inline double QwtScaleMap::cnv() const
+inline constexpr double QwtScaleMap::cnv() const
 {
     return m_cnv;
 }
 
 //! Return the transformed scale origin for linear fast-path transform
-inline double QwtScaleMap::ts1() const
+inline constexpr double QwtScaleMap::ts1() const
 {
     return m_ts1;
 }

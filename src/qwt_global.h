@@ -53,8 +53,6 @@
 #define QWT_EXPORT
 #endif
 
-#define QWT_CONSTEXPR constexpr
-
 #ifndef QWT_DEBUG_DRAW
 #define QWT_DEBUG_DRAW 0
 #endif
