@@ -52,9 +52,9 @@ Qwt7.0已经支持`CMake`，并且未来将考虑抛弃`QMake`
 ```cmake
 find_package(qwt)
 # 引入2d绘图
-target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot)
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot)
 # 引入3d绘图
-target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot3d)
 ```
 
 ### 单一头文件和源文件
@@ -228,8 +228,8 @@ target_link_libraries(${YOU_APP_TARGET} PUBLIC qwt::plot3d)
   
 |  |  |  |
 |:---:|:---:|:---:|
-|![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![parasite plot](./docs/assets/screenshots/parasite-plot.png)|
-|`examples/rasterview`|`playground/svgmap`|`examples/parasitePlot`|
+|![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![Item Editor](./docs/assets/screenshots/itemeditor.png)|
+|`examples/rasterview`|`playground/svgmap`|`examples/itemeditor`|
 
 ### 动态演示
 

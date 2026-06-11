@@ -1,6 +1,6 @@
 # QWT构建说明
 
-!!! tips "提示"
+!!! tip
     你可以不把QWT编译为动态库，只需把`QwtPlot.h`和`QwtPlot.cpp`（这两个文件位于`src-amalgamate`目录下）引入你的工程即可
 
 此文会详细介绍如何构建QWT为**动态库**，如果你不熟悉C++的构建，你只需把`QwtPlot.h`和`QwtPlot.cpp`引入你的工程即可使用
@@ -22,7 +22,7 @@
 | `QWT_CONFIG_BUILD_STATIC_EXAMPLE` | `ON` | 构建静态链接示例。注意：构建静态示例会需要相对较长的编译时间 |
 | `QWT_CONFIG_BUILD_TESTS` | `OFF` | 构建测试程序 |
 
-!!! tips "提示"
+!!! tip
     QWT 7.1之后的版本把QwtPlot3D的代码整合，实现了2D和3D图表，QwtPlot3D的代码来自[https://github.com/SciDAVis/qwtplot3d](https://github.com/SciDAVis/qwtplot3d)
 
 ### 基本构建步骤
@@ -37,7 +37,7 @@
     cmake -B build -S . -G "Visual Studio 15 2017" -A x64 -DQt5_DIR="C:\Qt\Qt5.14.2\5.14.2\msvc2017_64\lib\cmake\Qt5"
     ```
  
-    !!! tips "提示"
+    !!! tip
         如果`cmake.exe`不在环境变量中，上例子需指定完整的程序路径。例如cmake安装路径为`C:\Program Files (x86)\cmake3.27.9\bin\cmake.exe`,那 么上例子应该写为：
         ```shell
         "C:\Program Files (x86)\cmake3.27.9\bin\cmake.exe" -B build -S . -G "Visual Studio 15 2017" -A x64 -DQt5_DIR="C:\Qt\Qt5.14. 2\5.14.2\msvc2017_64\lib\cmake\Qt5"
@@ -50,5 +50,5 @@ cmake --build build --target install --config Debug
 cmake --build build --target install --config Release
 ```
 
-!!! tips "提示"
+!!! tip
     如果你对cmake命令行不熟悉，可以使用`Qt Creator`或`Visual Studio`等工具进行构建。

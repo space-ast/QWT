@@ -1,6 +1,6 @@
 # Qwt 项目 AI Agent 指引
 
-Qwt 7.x（v7.2.1）是基于原版 Qwt 6.2.0 的维护分支。
+Qwt 7.x（v7.3.0）是基于原版 Qwt 6.2.0 的维护分支。
 基于 Qt 的高性能 2D/3D 绘图库，适用于科学计算和工程数据可视化。许可证：LGPL（Qwt License v1.0）。
 
 快速链接：[GitHub](https://github.com/czyt1988/QWT) | [Gitee](https://gitee.com/czyt1988/QWT) | [文档](https://czyt1988.github.io/QWT/zh/)
@@ -52,6 +52,9 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 | `QWT_CONFIG_QWTSVG` | ON | SVG 导出/渲染 |
 | `QWT_CONFIG_QWTOPENGL` | ON | OpenGL 画布 |
 | `QWT_CONFIG_QWTPLOT_3D` | ON | 3D 绘图模块 |
+| `QWT_CONFIG_BUILD_EXAMPLE` | ON | 构建示例程序 |
+| `QWT_CONFIG_BUILD_PLAYGROUND` | ON | 构建实验性代码 |
+| `QWT_CONFIG_BUILD_STATIC_EXAMPLE` | ON | 构建静态链接示例 |
 | `QWT_CONFIG_BUILD_TESTS` | OFF | 测试构建 |
 
 ### PIMPL 模式（自定义宏）

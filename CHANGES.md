@@ -191,7 +191,7 @@ v7.0.7 naming changes:
 
 - Added `QwtFigure` — manages multiple `QwtPlot` instances in a grid layout (similar to Matplotlib Figure)
 
-![figure](docs/screenshots/qwt_figure.png)
+![figure](docs/assets/screenshots/qwt_figure.png)
 
 - Added `figure` example demonstrating `QwtFigure` usage
 - Added `QwtFigureWidgetOverlay` for interactive actions on `QwtFigure` — supports dragging and zooming sub-plots

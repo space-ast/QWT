@@ -198,7 +198,7 @@ v7.0.7对Qwt的命名进行了调整
 
 `QwtFigure`类的效果如下：
 
-![figure](docs/screenshots/qwt_figure.png)
+![figure](docs/assets/screenshots/qwt_figure.png)
 
 - example增加figure例子，用于演示`QwtFigure`的使用
 - 新增`QwtFigureWidgetOverlay`，可以实现在`QwtFigure`上面进行一些动作，目前支持拖动绘图，缩放绘图的功能
