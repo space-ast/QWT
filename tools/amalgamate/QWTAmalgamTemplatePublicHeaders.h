@@ -122,6 +122,7 @@
 #include "../../src/plot/qwt_plot_textlabel.h"
 #include "../../src/plot/qwt_plot_tradingcurve.h"
 #include "../../src/plot/qwt_plot_vectorfield.h"
+#include "../../src/plot/qwt_plot_boxchart.h"
 #include "../../src/plot/qwt_plot_zoneitem.h"
 #include "../../src/plot/qwt_plot_panner.h"
 #include "../../src/plot/qwt_plot_axis_zoomer.h"

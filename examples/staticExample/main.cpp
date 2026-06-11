@@ -314,7 +314,7 @@ static QwtPlot* createSpectrogramPlot()
 }
 
 // ---------------------------------------------------------------------------
-// ④ Box chart (drawn with ShapeItem for boxes + Curve for outliers)
+// ④ Box chart (native QwtPlotBoxChart)
 // ---------------------------------------------------------------------------
 
 static QwtPlot* createBoxChartPlot()
@@ -323,86 +323,35 @@ static QwtPlot* createBoxChartPlot()
     plot->setTitle("Box Chart");
     setupGrid(plot);
 
-    // Box data: {position, whiskerLow, Q1, median, Q3, whiskerHigh}
-    struct BoxInfo { double pos, wLow, q1, median, q3, wHigh; };
-    QVector<BoxInfo> boxes = {
-        { 0, 5, 15, 25, 35, 50 },
-        { 1, 10, 20, 30, 40, 55 },
-        { 2, 8, 18, 28, 38, 48 },
-        { 3, 12, 22, 32, 42, 60 },
-        { 4, 3, 13, 23, 33, 45 },
-    };
-    const double halfW = 0.3;
+    QVector<QwtBoxSample> samples;
+    samples << QwtBoxSample(0, 5, 15, 25, 35, 50)
+            << QwtBoxSample(1, 10, 20, 30, 40, 55)
+            << QwtBoxSample(2, 8, 18, 28, 38, 48)
+            << QwtBoxSample(3, 12, 22, 32, 42, 60)
+            << QwtBoxSample(4, 3, 13, 23, 33, 45);
 
-    for (const auto& b : boxes) {
-        // IQR box (Q1 to Q3) as shape rectangle
-        auto* boxItem = new QwtPlotShapeItem();
-        QPainterPath boxPath;
-        boxPath.addRect(QRectF(b.pos - halfW, b.q1, 2 * halfW, b.q3 - b.q1));
-        boxItem->setShape(boxPath);
-        boxItem->setBrush(QBrush(QColor(70, 130, 180, 150)));
-        boxItem->setPen(QPen(QColor(40, 80, 120), 1.5));
-        boxItem->attach(plot);
+    auto* boxChart = new QwtPlotBoxChart("Distribution");
+    boxChart->setSamples(samples);
+    boxChart->setBoxStyle(QwtPlotBoxChart::Rect);
+    boxChart->setWhiskerStyle(QwtPlotBoxChart::StandardWhisker);
+    boxChart->setBrush(QBrush(QColor(70, 130, 180, 150)));
+    boxChart->setPen(QPen(QColor(40, 80, 120), 1.5));
+    boxChart->setMedianPen(QPen(Qt::red, 2));
+    boxChart->setMedianVisible(true);
+    boxChart->setBoxExtent(0.5);
 
-        // Median line
-        auto* medianCurve = new QwtPlotCurve();
-        medianCurve->setSamples(QVector<QPointF>{
-            QPointF(b.pos - halfW, b.median),
-            QPointF(b.pos + halfW, b.median)
-        });
-        medianCurve->setPen(QPen(Qt::red, 2.5));
-        medianCurve->attach(plot);
+    // Outliers
+    QVector<QwtBoxOutlierSample> outliers;
+    outliers << QwtBoxOutlierSample(0, { 2.0, 55.0 })
+             << QwtBoxOutlierSample(2, { 1.0, 54.0 })
+             << QwtBoxOutlierSample(4, { 50.0, 53.0 });
+    boxChart->setOutliers(outliers);
+    boxChart->setOutlierSymbol(
+        new QwtSymbol(QwtSymbol::Diamond, QBrush(Qt::red),
+                      QPen(Qt::darkRed, 1), QSize(6, 6)));
+    boxChart->setOutlierJitter(0.1);
 
-        // Lower whisker (wLow to Q1)
-        auto* lowerWhisker = new QwtPlotCurve();
-        lowerWhisker->setSamples(QVector<QPointF>{
-            QPointF(b.pos, b.wLow), QPointF(b.pos, b.q1)
-        });
-        lowerWhisker->setPen(QPen(QColor(40, 80, 120), 1));
-        lowerWhisker->setStyle(QwtPlotCurve::Lines);
-        lowerWhisker->attach(plot);
-
-        // Upper whisker (Q3 to wHigh)
-        auto* upperWhisker = new QwtPlotCurve();
-        upperWhisker->setSamples(QVector<QPointF>{
-            QPointF(b.pos, b.q3), QPointF(b.pos, b.wHigh)
-        });
-        upperWhisker->setPen(QPen(QColor(40, 80, 120), 1));
-        upperWhisker->setStyle(QwtPlotCurve::Lines);
-        upperWhisker->attach(plot);
-
-        // Whisker caps
-        auto* lowerCap = new QwtPlotCurve();
-        lowerCap->setSamples(QVector<QPointF>{
-            QPointF(b.pos - halfW * 0.5, b.wLow),
-            QPointF(b.pos + halfW * 0.5, b.wLow)
-        });
-        lowerCap->setPen(QPen(QColor(40, 80, 120), 1));
-        lowerCap->attach(plot);
-
-        auto* upperCap = new QwtPlotCurve();
-        upperCap->setSamples(QVector<QPointF>{
-            QPointF(b.pos - halfW * 0.5, b.wHigh),
-            QPointF(b.pos + halfW * 0.5, b.wHigh)
-        });
-        upperCap->setPen(QPen(QColor(40, 80, 120), 1));
-        upperCap->attach(plot);
-    }
-
-    // Outlier symbols
-    QVector<QPointF> outliers = {
-        { 0, 2.0 }, { 0, 55.0 },
-        { 2, 1.0 }, { 2, 54.0 },
-        { 4, 50.0 }, { 4, 53.0 },
-    };
-    auto* outlierCurve = new QwtPlotCurve("Outliers");
-    outlierCurve->setSamples(outliers);
-    outlierCurve->setStyle(QwtPlotCurve::NoCurve);
-    outlierCurve->setSymbol(new QwtSymbol(QwtSymbol::Diamond,
-                                          QBrush(Qt::red),
-                                          QPen(Qt::darkRed, 1),
-                                          QSize(6, 6)));
-    outlierCurve->attach(plot);
+    boxChart->attach(plot);
 
     plot->setAxisScale(QwtAxis::XBottom, -0.5, 4.5, 1.0);
     plot->setAxisTitle(QwtAxis::XBottom, "Group");

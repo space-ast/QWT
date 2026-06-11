@@ -47197,6 +47197,192 @@ QPair< size_t, size_t > calculateSearchWindow(
 	return qMakePair(startIndex, endIndex);
 }
 
+// ============================================================================
+// Helper functions for multi-type series item support
+// ============================================================================
+
+// Get data size from any QwtPlotSeriesItem via type-specific cast
+static size_t seriesItemDataSize(QwtPlotItem* item)
+{
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return static_cast<QwtPlotCurve*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return static_cast<QwtPlotIntervalCurve*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return static_cast<QwtPlotHistogram*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		return static_cast<QwtPlotTradingCurve*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotVectorField:
+		return static_cast<QwtPlotVectorField*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return static_cast<QwtPlotSpectroCurve*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return static_cast<QwtPlotBarChart*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+		return static_cast<QwtPlotMultiBarChart*>(item)->dataSize();
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return static_cast<QwtPlotBoxChart*>(item)->dataSize();
+	default:
+		return 0;
+	}
+}
+
+// Extract the X-axis value from a sample at the given index (for binary/linear search)
+static double extractXValue(QwtPlotItem* item, size_t index)
+{
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return static_cast<QwtPlotCurve*>(item)->sample(index).x();
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return static_cast<QwtPlotBarChart*>(item)->sample(index).x();
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return static_cast<QwtPlotSpectroCurve*>(item)->sample(index).x();
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return static_cast<QwtPlotIntervalCurve*>(item)->sample(index).value;
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return static_cast<QwtPlotHistogram*>(item)->sample(index).value;
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		return static_cast<QwtPlotTradingCurve*>(item)->sample(index).time;
+	case QwtPlotItem::Rtti_PlotVectorField:
+		return static_cast<QwtPlotVectorField*>(item)->sample(index).x;
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+		return static_cast<QwtPlotMultiBarChart*>(item)->sample(index).value;
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return static_cast<QwtPlotBoxChart*>(item)->sample(index).position;
+	default:
+		return 0.0;
+	}
+}
+
+// Extract position (for screen drawing) and full sample data from any series item
+struct SampleInfo {
+	QPointF position;
+	QVariant sampleData;
+};
+
+static SampleInfo extractSampleInfo(QwtPlotItem* item, size_t index)
+{
+	SampleInfo info;
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve: {
+		QPointF p = static_cast<QwtPlotCurve*>(item)->sample(index);
+		info.position = p;
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotBarChart: {
+		QPointF p = static_cast<QwtPlotBarChart*>(item)->sample(index);
+		info.position = p;
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotSpectroCurve: {
+		QwtPoint3D p = static_cast<QwtPlotSpectroCurve*>(item)->sample(index);
+		info.position = p.toPoint();
+		info.sampleData = QVariant::fromValue(p);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotIntervalCurve: {
+		QwtIntervalSample s = static_cast<QwtPlotIntervalCurve*>(item)->sample(index);
+		info.position = QPointF(s.value, s.interval.minValue());
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotHistogram: {
+		QwtIntervalSample s = static_cast<QwtPlotHistogram*>(item)->sample(index);
+		info.position = QPointF(s.value, s.interval.minValue());
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotTradingCurve: {
+		QwtOHLCSample s = static_cast<QwtPlotTradingCurve*>(item)->sample(index);
+		info.position = QPointF(s.time, s.close);
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotVectorField: {
+		QwtVectorFieldSample s = static_cast<QwtPlotVectorField*>(item)->sample(index);
+		info.position = s.pos();
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotMultiBarChart: {
+		QwtSetSample s = static_cast<QwtPlotMultiBarChart*>(item)->sample(index);
+		info.position = QPointF(s.value, s.added());
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	case QwtPlotItem::Rtti_PlotBoxChart: {
+		QwtBoxSample s = static_cast<QwtPlotBoxChart*>(item)->sample(index);
+		info.position = QPointF(s.position, s.median);
+		info.sampleData = QVariant::fromValue(s);
+		break;
+	}
+	default:
+		break;
+	}
+	return info;
+}
+
+// Check if an item is a supported series item (visible, with data)
+static bool isSupportedSeriesItem(QwtPlotItem* item)
+{
+	if (!item || !item->isVisible()) {
+		return false;
+	}
+	const int rtti = item->rtti();
+	switch (rtti) {
+	case QwtPlotItem::Rtti_PlotCurve:
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+	case QwtPlotItem::Rtti_PlotHistogram:
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+	case QwtPlotItem::Rtti_PlotVectorField:
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+	case QwtPlotItem::Rtti_PlotBarChart:
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return seriesItemDataSize(item) > 0;
+	default:
+		return false;
+	}
+}
+
+// Generic binary search: find first index where extractXValue(item, index) > targetX
+static size_t genericUpperSampleIndex(QwtPlotItem* item, size_t size, double targetX)
+{
+	size_t lo = 0;
+	size_t hi = size;
+	while (lo < hi) {
+		size_t mid = lo + (hi - lo) / 2;
+		if (extractXValue(item, mid) <= targetX) {
+			lo = mid + 1;
+		} else {
+			hi = mid;
+		}
+	}
+	return lo;
+}
+
+// Find the sample index at or just after targetX for any series item type
+static size_t findUpperIndex(QwtPlotItem* item, double targetX)
+{
+	const size_t size = seriesItemDataSize(item);
+	if (size == 0) {
+		return 0;
+	}
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return qwtUpperSampleIndex<QPointF>(
+			*static_cast<QwtPlotCurve*>(item)->data(), targetX,
+			[](double x, const QPointF& p) -> bool { return x < p.x(); });
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return qwtUpperSampleIndex<QPointF>(
+			*static_cast<QwtPlotBarChart*>(item)->data(), targetX,
+			[](double x, const QPointF& p) -> bool { return x < p.x(); });
+	default:
+		return genericUpperSampleIndex(item, size, targetX);
+	}
+}
+
 class QwtPlotSeriesDataPicker::PrivateData
 {
 	QWT_DECLARE_PUBLIC(QwtPlotSeriesDataPicker)
@@ -47246,7 +47432,7 @@ public:
 	{
 		GroupKey key;
 		QString xValue;  // Common X value
-		QList< const FeaturePoint* > fps;
+		QList< int > fps;  // Indices into featurePoints list (not pointers, to avoid Qt6 QList reallocation issues)
 	};
 	QVector< XGroup > xGroups;
 #endif
@@ -47601,6 +47787,54 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 		return formatAxisValue(fp.feature.y(), fp.item->yAxis(), p);
 	};
 
+	// Format type-specific sample detail (returns empty for simple QPointF types)
+	auto sampleDetail = [&fmtY](const FeaturePoint& fp) -> QString {
+		if (!fp.sampleData.isValid()) {
+			return fmtY(fp);
+		}
+		if (fp.sampleData.canConvert<QwtOHLCSample>()) {
+			auto s = fp.sampleData.value<QwtOHLCSample>();
+			return QString("O:%1 H:%2 L:%3 C:%4")
+				.arg(QString::number(s.open, 'g', 6), QString::number(s.high, 'g', 6),
+					 QString::number(s.low, 'g', 6), QString::number(s.close, 'g', 6));
+		}
+		if (fp.sampleData.canConvert<QwtIntervalSample>()) {
+			auto s = fp.sampleData.value<QwtIntervalSample>();
+			return QString("[%1, %2]")
+				.arg(QString::number(s.interval.minValue(), 'g', 6),
+					 QString::number(s.interval.maxValue(), 'g', 6));
+		}
+		if (fp.sampleData.canConvert<QwtVectorFieldSample>()) {
+			auto s = fp.sampleData.value<QwtVectorFieldSample>();
+			double mag = std::sqrt(s.vx * s.vx + s.vy * s.vy);
+			return QString("v:(%1,%2) |v|=%3")
+				.arg(QString::number(s.vx, 'g', 4), QString::number(s.vy, 'g', 4),
+					 QString::number(mag, 'g', 4));
+		}
+		if (fp.sampleData.canConvert<QwtBoxSample>()) {
+			auto s = fp.sampleData.value<QwtBoxSample>();
+			return QString("Med:%1 Q1:%2 Q3:%3 [%4-%5]")
+				.arg(QString::number(s.median, 'g', 6), QString::number(s.q1, 'g', 6),
+					 QString::number(s.q3, 'g', 6), QString::number(s.whiskerLower, 'g', 6),
+					 QString::number(s.whiskerUpper, 'g', 6));
+		}
+		if (fp.sampleData.canConvert<QwtSetSample>()) {
+			auto s = fp.sampleData.value<QwtSetSample>();
+			QStringList parts;
+			for (double v : s.set) {
+				parts << QString::number(v, 'g', 4);
+			}
+			return QString("[%1]").arg(parts.join(","));
+		}
+		if (fp.sampleData.canConvert<QwtPoint3D>()) {
+			auto p = fp.sampleData.value<QwtPoint3D>();
+			return QString("(%1, %2, %3)")
+				.arg(QString::number(p.x(), 'g', 6), QString::number(p.y(), 'g', 6),
+					 QString::number(p.z(), 'g', 6));
+		}
+		return fmtY(fp);
+	};
+
 	QString out;
 
 	if (pickMode() == PickYValue) {
@@ -47612,7 +47846,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 				if (i > 0)
 					out += "<br/>";
 				const FeaturePoint& fp = fps[ i ];
-				QString stry           = fmtY(fp);
+				QString stry           = sampleDetail(fp);
 				out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
 						   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
 			}
@@ -47641,12 +47875,12 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 				if (!isAxisVisible) {
 					// Directly show curve data without X axis title
 					for (int il = 0; il < g.fps.size(); ++il) {
-						const FeaturePoint* fp = g.fps[ il ];
+						const FeaturePoint& fp = fps[ g.fps[ il ] ];
 						if (!out.isEmpty())
 							out += "<br/>";
-						QString stry = fmtY(*fp);
+						QString stry = sampleDetail(fp);
 						out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-								   .arg(Qwt::plotItemColor(fp->item).name(), fp->item->title().text(), stry);
+								   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
 					}
 				} else {
 					// X axis visible, show group header
@@ -47670,11 +47904,11 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 
 					// Add all curves and their Y values within this group
 					for (int il = 0; il < g.fps.size(); ++il) {
-						const FeaturePoint* fp = g.fps[ il ];
+						const FeaturePoint& fp = fps[ g.fps[ il ] ];
 						out += "<br/>";
-						QString stry = fmtY(*fp);
+						QString stry = sampleDetail(fp);
 						out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-								   .arg(Qwt::plotItemColor(fp->item).name(), fp->item->title().text(), stry);
+								   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
 					}
 				}
 			}
@@ -47703,7 +47937,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 				out += "<br/>";
 			}
 			const FeaturePoint& fp = fps[ i ];
-			QString stry           = fmtY(fp);
+			QString stry           = sampleDetail(fp);
 			out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
 					   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
 		}
@@ -47711,19 +47945,23 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 	} else {
 		// PickNearestPoint mode
 		if (!isEnableShowXValue()) {
-			// Show Y value only
+			// Show Y/detail value only
 			for (int i = 0; i < fps.size(); ++i) {
 				if (i > 0)
 					out += "<br/>";
-				out += fmtY(fps[ i ]);
+				out += sampleDetail(fps[ i ]);
 			}
 		} else {
-			// Show full coordinates (X, Y)
+			// Show full coordinates (X, Y) with type-specific detail
 			for (int i = 0; i < fps.size(); ++i) {
 				if (i > 0)
 					out += "<br/>";
 				const FeaturePoint& fp = fps[ i ];
-				out += QString("(%1, %2)").arg(fmtX(fp), fmtY(fp));
+				if (fp.sampleData.isValid()) {
+					out += QString("%1 %2").arg(fmtX(fp), sampleDetail(fp));
+				} else {
+					out += QString("(%1, %2)").arg(fmtX(fp), fmtY(fp));
+				}
 			}
 		}
 	}
@@ -48181,7 +48419,7 @@ int QwtPlotSeriesDataPicker::pickYValue(const QwtPlot* p, const QPoint& pos, boo
 				}
 
 				featurePoints.append(fp);
-				group.fps.append(&featurePoints.last());
+				group.fps.append(featurePoints.size() - 1);
 			}
 
 			// If the group has feature points, add to group list
@@ -48245,61 +48483,60 @@ int QwtPlotSeriesDataPicker::pickYValue(const QwtPlot* p, const QPoint& pos, boo
 		}
 	}
 #else
-	for (QwtPlotCurve* curve : allCurves) {
-		const size_t curveSize = curve->dataSize();
-		if (curveSize == 0) {
-			continue;
-		}
-
-		QwtPlot* oneplot = curve->plot();
-
-		// Get curve axis maps
-		const QwtScaleMap xMap = oneplot->canvasMap(curve->xAxis());
-
-		// Convert screen coordinates to curve coordinate space
-		double x = xMap.invTransform(pos.x());
-
-		// Pre-compute and cache bounding rectangle
-		const QRectF br = curve->boundingRect();
-		if (x < br.left() || x > br.right()) {
-			continue;
-		}
-
-		// Fast bounds check
-		if (x < br.left() || x > br.right()) {
-			continue;
-		}
-
-		size_t index = qwtUpperSampleIndex< QPointF >(*curve->data(), x, [](const double x, const QPointF& pos) -> bool {
-			return (x < pos.x());
-		});
-
-		if (index == curveSize) {
-			continue;
-		}
-
-		FeaturePoint fp;
-		fp.item  = curve;
-		fp.index = index;
-
-		if (interpolate && curveSize > 2 && index > 0) {
-			// Interpolation computation
-			const QPointF& p2 = curve->sample(index);
-			const QPointF& p1 = curve->sample(index - 1);
-			if (qFuzzyCompare(p1.x(), p2.x())) {
-				fp.feature = p2;
-			} else {
-				double t = (x - p1.x()) / (p2.x() - p1.x());
-				QPointF interPoint;
-				interPoint.setX(x);
-				interPoint.setY(p1.y() + t * (p2.y() - p1.y()));
-				fp.feature = interPoint;
+	// Iterate over all supported series item types (not just QwtPlotCurve)
+	for (QwtPlot* oneplot : plotList) {
+		const QwtPlotItemList& items = oneplot->itemList();
+		for (QwtPlotItem* item : items) {
+			if (!isSupportedSeriesItem(item)) {
+				continue;
 			}
-		} else {
-			fp.feature = curve->sample(index);
-		}
+			const size_t dataSize = seriesItemDataSize(item);
 
-		featurePoints.append(fp);
+			// Get axis maps
+			const QwtScaleMap xMap = oneplot->canvasMap(item->xAxis());
+
+			// Convert screen coordinates to data coordinate space
+			double x = xMap.invTransform(pos.x());
+
+			// Bounds check via boundingRect
+			const QRectF br = item->boundingRect();
+			if (x < br.left() || x > br.right()) {
+				continue;
+			}
+
+			size_t index = findUpperIndex(item, x);
+			if (index == dataSize) {
+				continue;
+			}
+
+			FeaturePoint fp;
+			fp.item  = item;
+			fp.index = index;
+
+			// Interpolation only for QPointF-based types (Curve, BarChart)
+			const bool canInterpolate = interpolate && dataSize > 2 && index > 0
+				&& (item->rtti() == QwtPlotItem::Rtti_PlotCurve
+					|| item->rtti() == QwtPlotItem::Rtti_PlotBarChart);
+
+			if (canInterpolate) {
+				const double x2 = extractXValue(item, index);
+				const double x1 = extractXValue(item, index - 1);
+				SampleInfo s2 = extractSampleInfo(item, index);
+				SampleInfo s1 = extractSampleInfo(item, index - 1);
+				if (qFuzzyCompare(x1, x2)) {
+					fp.feature = s2.position;
+				} else {
+					double t = (x - x1) / (x2 - x1);
+					fp.feature = QPointF(x, s1.position.y() + t * (s2.position.y() - s1.position.y()));
+				}
+			} else {
+				SampleInfo info = extractSampleInfo(item, index);
+				fp.feature = info.position;
+				fp.sampleData = info.sampleData;
+			}
+
+			featurePoints.append(fp);
+		}
 	}
 #endif
 	return featurePoints.size();
@@ -48334,54 +48571,82 @@ int QwtPlotSeriesDataPicker::pickNearestPoint(const QwtPlot* plot, const QPoint&
 	double minScreenDistance         = std::numeric_limits< double >::max();
 	const QList< QwtPlot* > plotList = plot->plotList();
 	for (QwtPlot* oneplot : plotList) {
-		const auto items = oneplot->itemList(QwtPlotItem::Rtti_PlotCurve);
-		for (auto* item : items) {
-			auto* curve            = static_cast< QwtPlotCurve* >(item);
-			const size_t curveSize = static_cast< int >(curve->dataSize());
-			if (!curve->isVisible() || curveSize == 0) {
+		const QwtPlotItemList& items = oneplot->itemList();
+		for (QwtPlotItem* item : items) {
+			if (!isSupportedSeriesItem(item)) {
 				continue;
 			}
-			const auto* series = curve->data();
+			const size_t dataSize = seriesItemDataSize(item);
 
-			/* Binary search for the segment closest to x, then compare distance squared */
-			const QwtScaleMap xMap = oneplot->canvasMap(curve->xAxis());
-			const QwtScaleMap yMap = oneplot->canvasMap(curve->yAxis());
+			const QwtScaleMap xMap = oneplot->canvasMap(item->xAxis());
+			const QwtScaleMap yMap = oneplot->canvasMap(item->yAxis());
 
-			// Calculate search window
-			double targetX      = xMap.invTransform(pos.x());
-			auto searchWinIndex = calculateSearchWindow(curveSize, targetX, *series, windowSize);
-			size_t startIndex   = searchWinIndex.first;
-			size_t endIndex     = searchWinIndex.second;
+			// Convert mouse position to data space
+			double targetX = xMap.invTransform(pos.x());
 
-			// Search for the nearest point within the calculated window
-			double minDistance = std::numeric_limits< double >::max();
-			QPointF candidateNearestPoint;
+			// Compute search window via binary search
+			size_t centerIndex = findUpperIndex(item, targetX);
+
+			// Calculate actual window size
+			size_t realWindowSize;
+			if (dataSize < 1000 || windowSize == 0) {
+				realWindowSize = dataSize;
+			} else if (windowSize < 0) {
+				double pct = std::abs(windowSize) / 100.0;
+				realWindowSize = static_cast<size_t>(dataSize * pct);
+				realWindowSize = std::max<size_t>(realWindowSize, 50);
+				realWindowSize = std::min<size_t>(realWindowSize, 1000);
+			} else {
+				realWindowSize = static_cast<size_t>(windowSize);
+			}
+			realWindowSize = std::min<size_t>(realWindowSize, dataSize);
+
+			size_t halfWindow = realWindowSize / 2;
+			size_t startIndex = (centerIndex > halfWindow) ? centerIndex - halfWindow : 0;
+			size_t endIndex = std::min(centerIndex + halfWindow, dataSize - 1);
+
+			// Pre-compute scale factors to avoid per-point QwtScaleMap::transform calls
+			// QwtScaleMap::transform(v) = p1 + (v - s1) * (p2 - p1) / (s2 - s1)
+			const double xScale = (xMap.s2() != xMap.s1())
+				? (xMap.p2() - xMap.p1()) / (xMap.s2() - xMap.s1()) : 1.0;
+			const double xOff = xMap.p1() - xMap.s1() * xScale;
+			const double yScale = (yMap.s2() != yMap.s1())
+				? (yMap.p2() - yMap.p1()) / (yMap.s2() - yMap.s1()) : 1.0;
+			const double yOff = yMap.p1() - yMap.s1() * yScale;
+
+			// Search for the nearest point within the window
+			double minDistance = std::numeric_limits<double>::max();
 			size_t candidateIndex = startIndex;
+			QPointF candidatePosition;
+			QVariant candidateSampleData;
 
 			for (size_t i = startIndex; i <= endIndex; ++i) {
-				QPointF point         = curve->sample(i);
-				int screenX           = qRound(xMap.transform(point.x()));
-				int screenY           = qRound(yMap.transform(point.y()));
-				double dx             = double(screenX) - pos.x();
-				double dy             = double(screenY) - pos.y();
+				SampleInfo info = extractSampleInfo(item, i);
+				// Inline screen transform using pre-computed scale factors
+				double screenX = info.position.x() * xScale + xOff;
+				double screenY = info.position.y() * yScale + yOff;
+				double dx = screenX - pos.x();
+				double dy = screenY - pos.y();
 				double screenDistance = dx * dx + dy * dy;
 
 				if (screenDistance < minDistance) {
-					minDistance           = screenDistance;
-					candidateNearestPoint = point;
-					candidateIndex        = i;
+					minDistance = screenDistance;
+					candidateIndex = i;
+					candidatePosition = info.position;
+					candidateSampleData = info.sampleData;
 				}
 			}
 
 			if (minDistance < minScreenDistance) {
 				minScreenDistance = minDistance;
-				fp.item           = item;
-				fp.feature        = candidateNearestPoint;
-				fp.index          = candidateIndex;
+				fp.item    = item;
+				fp.feature = candidatePosition;
+				fp.index   = candidateIndex;
+				fp.sampleData = candidateSampleData;
 			}
 		}
 	}
-	if (minScreenDistance < std::numeric_limits< double >::max()) {
+	if (minScreenDistance < std::numeric_limits<double>::max()) {
 		featurePoints.append(fp);
 		return 1;
 	}
@@ -48402,8 +48667,14 @@ void QwtPlotSeriesDataPicker::onPlotItemDetached(QwtPlotItem* item, bool on)
 				for (int j = d->xGroups.size() - 1; j >= 0; --j) {
 					PrivateData::XGroup& g = d->xGroups[ j ];
 					for (int k = g.fps.size() - 1; k >= 0; --k) {
-						if (g.fps[ k ] == &fp) {
+						if (g.fps[ k ] == i) {
 							g.fps.removeAt(k);
+						}
+					}
+					// Adjust remaining indices after removal
+					for (int k = 0; k < g.fps.size(); ++k) {
+						if (g.fps[ k ] > i) {
+							g.fps[ k ]--;
 						}
 					}
 				}
@@ -48426,7 +48697,6 @@ void QwtPlotSeriesDataPicker::onParasitePlotAttached(QwtPlot* parasiteplot, bool
 		d->featurePoints.clear();
 #if QwtPlotSeriesDataPicker_XGroup
 		// Synchronously remove existing info
-		QWT_D(d);
 		for (int i = d->xGroups.size() - 1; i >= 0; --i) {
 			PrivateData::XGroup& g = d->xGroups[ i ];
 			if (g.key.plot == parasiteplot) {
@@ -54619,6 +54889,1075 @@ void QwtPlotVectorField::dataChanged()
 }
 
 /*** End of inlined file: qwt_plot_vectorfield.cpp ***/
+
+
+/*** Start of inlined file: qwt_plot_boxchart.cpp ***/
+#include <qpainter.h>
+#include <qrandom.h>
+
+class QwtPlotBoxChart::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtPlotBoxChart)
+
+public:
+	PrivateData(QwtPlotBoxChart* p)
+		: q_ptr(p)
+		, boxStyle(Rect)
+		, whiskerStyle(StandardWhisker)
+		, orientation(Qt::Vertical)
+		, boxExtent(0.6)
+		, minBoxWidth(2.0)
+		, maxBoxWidth(-1.0)
+		, medianVisible(true)
+		, meanVisible(false)
+		, outlierJitter(0.0)
+		, paintAttributes(ClipBoxes | ClipOutliers)
+	{
+		pen = QPen(Qt::black, 1.0);
+		brush = QBrush(Qt::NoBrush);
+		medianPen = QPen(Qt::black, 2.0);
+		outlierSymbol = nullptr;
+		meanSymbol = nullptr;
+	}
+
+	BoxStyle boxStyle;
+	WhiskerStyle whiskerStyle;
+	Qt::Orientation orientation;
+	double boxExtent;
+	double minBoxWidth;
+	double maxBoxWidth;
+	QPen pen;
+	QPen medianPen;
+	QBrush brush;
+	const QwtSymbol* outlierSymbol;
+	const QwtSymbol* meanSymbol;
+	bool medianVisible;
+	bool meanVisible;
+	double outlierJitter;
+	PaintAttributes paintAttributes;
+	bool m_userSetPen = false;
+};
+
+/**
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ *
+ */
+QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
+	: QwtPlotSeriesItem(QwtText(title))
+	, QWT_PIMPL_CONSTRUCT
+	, m_outlierData(nullptr)
+{
+	init();
+}
+
+/**
+ * @brief Constructor
+ * @param[in] title Title of the chart
+ *
+ */
+QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
+	: QwtPlotSeriesItem(title)
+	, QWT_PIMPL_CONSTRUCT
+	, m_outlierData(nullptr)
+{
+	init();
+}
+
+/**
+ * @brief Destructor
+ *
+ */
+QwtPlotBoxChart::~QwtPlotBoxChart()
+{
+	delete m_outlierData;
+}
+
+void QwtPlotBoxChart::init()
+{
+	setItemAttribute(QwtPlotItem::Legend, true);
+	setItemAttribute(QwtPlotItem::AutoScale, true);
+
+	setData(new QwtBoxChartData());
+	setZ(20.0);
+}
+
+/**
+ * @brief Get the runtime type information
+ * @return Rtti_PlotBoxChart
+ *
+ */
+int QwtPlotBoxChart::rtti() const
+{
+	return Rtti_PlotBoxChart;
+}
+
+/**
+ * @brief Attach the box chart to a plot
+ * @details If the pen has not been explicitly set by the user, the box chart
+ *          automatically receives a color from the plot's color cycle.
+ *          The brush is set to a semi-transparent version of the same color.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotBoxChart::attach(QwtPlot* plot)
+{
+	QWT_D(d);
+	if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
+		const QColor c = plot->nextColorForItem(rtti());
+		d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+		d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+	}
+	QwtPlotItem::attach(plot);
+}
+
+/**
+ * @brief Set a paint attribute
+ * @param[in] attr Paint attribute to set
+ * @param[in] on True to enable, false to disable
+ *
+ */
+void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
+{
+	QWT_D(d);
+	if (on)
+		d->paintAttributes |= attr;
+	else
+		d->paintAttributes &= ~attr;
+}
+
+/**
+ * @brief Test if a paint attribute is enabled
+ * @param[in] attr Paint attribute to test
+ * @return True if the attribute is enabled
+ *
+ */
+bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
+{
+	QWT_DC(d);
+	return (d->paintAttributes & attr);
+}
+
+/**
+ * @brief Set the box style
+ * @param[in] style Box style to set
+ *
+ */
+void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
+{
+	QWT_D(d);
+	if (d->boxStyle != style)
+	{
+		d->boxStyle = style;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the box style
+ * @return Current box style
+ *
+ */
+QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
+{
+	QWT_DC(d);
+	return d->boxStyle;
+}
+
+/**
+ * @brief Set the whisker style
+ * @param[in] style Whisker style to set
+ *
+ */
+void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
+{
+	QWT_D(d);
+	if (d->whiskerStyle != style)
+	{
+		d->whiskerStyle = style;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the whisker style
+ * @return Current whisker style
+ *
+ */
+QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
+{
+	QWT_DC(d);
+	return d->whiskerStyle;
+}
+
+/**
+ * @brief Set the orientation
+ * @details Vertical orientation means x-position, horizontal means y-position.
+ * @param[in] orient Orientation to set
+ *
+ */
+void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
+{
+	QWT_D(d);
+	if (d->orientation != orient)
+	{
+		d->orientation = orient;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the orientation
+ * @return Current orientation
+ *
+ */
+Qt::Orientation QwtPlotBoxChart::orientation() const
+{
+	QWT_DC(d);
+	return d->orientation;
+}
+
+/**
+ * @brief Set the box extent (width in scale coordinates)
+ * @param[in] extent Box extent to set
+ *
+ */
+void QwtPlotBoxChart::setBoxExtent(double extent)
+{
+	QWT_D(d);
+	extent = qwtMaxF(0.0, extent);
+	if (d->boxExtent != extent)
+	{
+		d->boxExtent = extent;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the box extent
+ * @return Current box extent
+ *
+ */
+double QwtPlotBoxChart::boxExtent() const
+{
+	QWT_DC(d);
+	return d->boxExtent;
+}
+
+/**
+ * @brief Set the minimum box width in pixels
+ * @param[in] pixels Minimum width to set
+ *
+ */
+void QwtPlotBoxChart::setMinBoxWidth(double pixels)
+{
+	QWT_D(d);
+	pixels = qwtMaxF(0.0, pixels);
+	if (d->minBoxWidth != pixels)
+	{
+		d->minBoxWidth = pixels;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the minimum box width
+ * @return Minimum box width in pixels
+ *
+ */
+double QwtPlotBoxChart::minBoxWidth() const
+{
+	QWT_DC(d);
+	return d->minBoxWidth;
+}
+
+/**
+ * @brief Set the maximum box width in pixels
+ * @param[in] pixels Maximum width to set (negative = unlimited)
+ *
+ */
+void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
+{
+	QWT_D(d);
+	if (d->maxBoxWidth != pixels)
+	{
+		d->maxBoxWidth = pixels;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the maximum box width
+ * @return Maximum box width in pixels (negative = unlimited)
+ *
+ */
+double QwtPlotBoxChart::maxBoxWidth() const
+{
+	QWT_DC(d);
+	return d->maxBoxWidth;
+}
+
+/**
+ * @brief Set the pen for box outline and whiskers
+ * @param[in] color Pen color
+ * @param[in] width Pen width
+ * @param[in] style Pen style
+ *
+ */
+void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle style)
+{
+	setPen(QPen(color, width, style));
+}
+
+/**
+ * @brief Set the pen for box outline and whiskers
+ * @param[in] pen Pen to set
+ *
+ */
+void QwtPlotBoxChart::setPen(const QPen& pen)
+{
+	QWT_D(d);
+	d->m_userSetPen = true;
+	if (d->pen != pen)
+	{
+		d->pen = pen;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the pen for box outline and whiskers
+ * @return Current pen
+ *
+ */
+const QPen& QwtPlotBoxChart::pen() const
+{
+	QWT_DC(d);
+	return d->pen;
+}
+
+/**
+ * @brief Set the brush for box body fill
+ * @param[in] brush Brush to set
+ *
+ */
+void QwtPlotBoxChart::setBrush(const QBrush& brush)
+{
+	QWT_D(d);
+	if (d->brush != brush)
+	{
+		d->brush = brush;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the brush for box body fill
+ * @return Current brush
+ *
+ */
+const QBrush& QwtPlotBoxChart::brush() const
+{
+	QWT_DC(d);
+	return d->brush;
+}
+
+/**
+ * @brief Set the pen for median line
+ * @param[in] pen Pen to set
+ *
+ */
+void QwtPlotBoxChart::setMedianPen(const QPen& pen)
+{
+	QWT_D(d);
+	if (d->medianPen != pen)
+	{
+		d->medianPen = pen;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the pen for median line
+ * @return Current median pen
+ *
+ */
+QPen QwtPlotBoxChart::medianPen() const
+{
+	QWT_DC(d);
+	return d->medianPen;
+}
+
+/**
+ * @brief Set the symbol for outliers
+ * @param[in] symbol Symbol to set
+ *
+ */
+void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
+{
+	QWT_D(d);
+	if (d->outlierSymbol != symbol)
+	{
+		delete d->outlierSymbol;
+		d->outlierSymbol = symbol;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the symbol for outliers
+ * @return Current outlier symbol
+ *
+ */
+const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
+{
+	QWT_DC(d);
+	return d->outlierSymbol;
+}
+
+/**
+ * @brief Set the symbol for mean marker
+ * @param[in] symbol Symbol to set
+ *
+ */
+void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
+{
+	QWT_D(d);
+	if (d->meanSymbol != symbol)
+	{
+		delete d->meanSymbol;
+		d->meanSymbol = symbol;
+		legendChanged();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the symbol for mean marker
+ * @return Current mean symbol
+ *
+ */
+const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
+{
+	QWT_DC(d);
+	return d->meanSymbol;
+}
+
+/**
+ * @brief Set whether the median line is visible
+ * @param[in] visible True to show, false to hide
+ *
+ */
+void QwtPlotBoxChart::setMedianVisible(bool visible)
+{
+	QWT_D(d);
+	if (d->medianVisible != visible)
+	{
+		d->medianVisible = visible;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Check if the median line is visible
+ * @return True if visible
+ *
+ */
+bool QwtPlotBoxChart::isMedianVisible() const
+{
+	QWT_DC(d);
+	return d->medianVisible;
+}
+
+/**
+ * @brief Set whether the mean marker is visible
+ * @param[in] visible True to show, false to hide
+ *
+ */
+void QwtPlotBoxChart::setMeanVisible(bool visible)
+{
+	QWT_D(d);
+	if (d->meanVisible != visible)
+	{
+		d->meanVisible = visible;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Check if the mean marker is visible
+ * @return True if visible
+ *
+ */
+bool QwtPlotBoxChart::isMeanVisible() const
+{
+	QWT_DC(d);
+	return d->meanVisible;
+}
+
+/**
+ * @brief Set the outlier jitter width
+ * @param[in] jitterWidth Jitter width for overlapping outliers
+ *
+ */
+void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
+{
+	QWT_D(d);
+	d->outlierJitter = qwtMaxF(0.0, jitterWidth);
+}
+
+/**
+ * @brief Get the outlier jitter width
+ * @return Jitter width for overlapping outliers
+ *
+ */
+double QwtPlotBoxChart::outlierJitter() const
+{
+	QWT_DC(d);
+	return d->outlierJitter;
+}
+
+/**
+ * @brief Set box samples from a vector
+ * @param[in] samples Vector of box samples
+ *
+ */
+void QwtPlotBoxChart::setSamples(const QVector<QwtBoxSample>& samples)
+{
+	setData(new QwtBoxChartData(samples));
+}
+
+/**
+ * @brief Set box samples from series data
+ * @param[in] data Series data to set
+ *
+ */
+void QwtPlotBoxChart::setSamples(QwtSeriesData<QwtBoxSample>* data)
+{
+	setData(data);
+}
+
+/**
+ * @brief Set outlier samples from a vector
+ * @param[in] samples Vector of outlier samples
+ *
+ */
+void QwtPlotBoxChart::setOutliers(const QVector<QwtBoxOutlierSample>& samples)
+{
+	delete m_outlierData;
+	m_outlierData = new QwtBoxOutlierChartData(samples);
+	itemChanged();
+}
+
+/**
+ * @brief Set outlier samples from series data
+ * @param[in] data Series data to set
+ *
+ */
+void QwtPlotBoxChart::setOutliers(QwtSeriesData<QwtBoxOutlierSample>* data)
+{
+	delete m_outlierData;
+	m_outlierData = data;
+	itemChanged();
+}
+
+/**
+ * @brief Get the outlier data
+ * @return Current outlier data
+ *
+ */
+const QwtSeriesData<QwtBoxOutlierSample>* QwtPlotBoxChart::outlierData() const
+{
+	return m_outlierData;
+}
+
+/**
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle of all samples
+ *
+ */
+QRectF QwtPlotBoxChart::boundingRect() const
+{
+	QWT_DC(d);
+	QRectF rect = QwtPlotSeriesItem::boundingRect();
+
+	if (rect.isValid())
+	{
+		const double padding = d->boxExtent * 0.5;
+		if (d->orientation == Qt::Vertical)
+		{
+			rect.setLeft(rect.left() - padding);
+			rect.setRight(rect.right() + padding);
+		}
+		else
+		{
+			rect.setTop(rect.top() - padding);
+			rect.setBottom(rect.bottom() + padding);
+		}
+	}
+
+	if (m_outlierData && m_outlierData->size() > 0)
+	{
+		const QRectF outlierRect = m_outlierData->boundingRect();
+		if (outlierRect.isValid())
+		{
+			rect = rect.united(outlierRect);
+		}
+	}
+
+	return rect;
+}
+
+double QwtPlotBoxChart::scaledBoxWidth(
+	const QwtScaleMap& posMap,
+	const QwtScaleMap& valueMap,
+	const QRectF& canvasRect) const
+{
+	QWT_DC(d);
+	Q_UNUSED(valueMap);
+	Q_UNUSED(canvasRect);
+
+	if (d->maxBoxWidth > 0.0 && d->minBoxWidth >= d->maxBoxWidth)
+		return d->minBoxWidth;
+
+	const double pos = posMap.transform(posMap.s1() + d->boxExtent);
+	double width = qAbs(pos - posMap.p1());
+
+	width = qwtMaxF(width, d->minBoxWidth);
+	if (d->maxBoxWidth > 0.0)
+		width = qwtMinF(width, d->maxBoxWidth);
+
+	return width;
+}
+
+/**
+ * @brief Draw the series
+ * @param[in] painter Painter
+ * @param[in] xMap X-axis scale map
+ * @param[in] yMap Y-axis scale map
+ * @param[in] canvasRect Canvas rectangle
+ * @param[in] from Starting index
+ * @param[in] to Ending index
+ *
+ */
+void QwtPlotBoxChart::drawSeries(QPainter* painter,
+	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
+	const QRectF& canvasRect, int from, int to) const
+{
+	QWT_DC(d);
+
+	if (to < 0)
+		to = dataSize() - 1;
+
+	if (from < 0)
+		from = 0;
+
+	if (from > to || dataSize() == 0)
+		return;
+
+	painter->save();
+
+	const Qt::Orientation orient = d->orientation;
+	const QwtScaleMap* posMap = (orient == Qt::Vertical) ? &xMap : &yMap;
+	const QwtScaleMap* valueMap = (orient == Qt::Vertical) ? &yMap : &xMap;
+
+	const double boxWidth = scaledBoxWidth(*posMap, *valueMap, canvasRect);
+	const bool doAlign = QwtPainter::roundingAlignment(painter);
+
+	painter->setPen(d->pen);
+
+	for (int i = from; i <= to; i++)
+	{
+		const QwtBoxSample& sample = this->sample(i);
+
+		double posPixel = posMap->transform(sample.position);
+		if (doAlign)
+			posPixel = qRound(posPixel);
+
+		if (d->boxStyle != NoBox)
+		{
+			painter->setBrush(d->brush);
+			drawBox(painter, sample, orient, boxWidth, posPixel, *valueMap);
+		}
+
+		if (d->whiskerStyle != NoWhiskers)
+		{
+			drawWhiskers(painter, sample, orient, boxWidth, posPixel, *valueMap);
+		}
+
+		if (d->medianVisible)
+		{
+			drawMedian(painter, sample, orient, boxWidth, posPixel, *valueMap);
+		}
+
+		if (d->meanVisible && d->meanSymbol)
+		{
+			double medianPixel = valueMap->transform(sample.median);
+			if (doAlign)
+				medianPixel = qRound(medianPixel);
+
+			d->meanSymbol->drawSymbol(painter,
+				(orient == Qt::Vertical) ? QPointF(posPixel, medianPixel)
+										 : QPointF(medianPixel, posPixel));
+		}
+	}
+
+	if (m_outlierData && m_outlierData->size() > 0)
+	{
+		drawOutliers(painter, *posMap, *valueMap, canvasRect, from, to);
+	}
+
+	painter->restore();
+}
+
+void QwtPlotBoxChart::drawBox(QPainter* painter, const QwtBoxSample& sample,
+	Qt::Orientation orient, double boxWidth, double posPixel,
+	const QwtScaleMap& valueMap) const
+{
+	QWT_DC(d);
+	const bool doAlign = QwtPainter::roundingAlignment(painter);
+
+	const double q1Pixel = valueMap.transform(sample.q1);
+	const double q3Pixel = valueMap.transform(sample.q3);
+	const double medianPixel = valueMap.transform(sample.median);
+
+	if (doAlign)
+	{
+		const double aligned = qRound(posPixel);
+		posPixel = aligned;
+	}
+
+	const double halfWidth = boxWidth * 0.5;
+
+	switch (d->boxStyle)
+	{
+		case Rect:
+		{
+			if (orient == Qt::Vertical)
+			{
+				QRectF rect(posPixel - halfWidth, q3Pixel,
+						   boxWidth, q1Pixel - q3Pixel);
+				QwtPainter::drawRect(painter, rect);
+			}
+			else
+			{
+				QRectF rect(q1Pixel, posPixel - halfWidth,
+						   q3Pixel - q1Pixel, boxWidth);
+				QwtPainter::drawRect(painter, rect);
+			}
+			break;
+		}
+
+		case Diamond:
+		{
+			QPolygonF poly(4);
+			if (orient == Qt::Vertical)
+			{
+				poly[0] = QPointF(posPixel, q3Pixel);
+				poly[1] = QPointF(posPixel + halfWidth, medianPixel);
+				poly[2] = QPointF(posPixel, q1Pixel);
+				poly[3] = QPointF(posPixel - halfWidth, medianPixel);
+			}
+			else
+			{
+				poly[0] = QPointF(q3Pixel, posPixel);
+				poly[1] = QPointF(medianPixel, posPixel + halfWidth);
+				poly[2] = QPointF(q1Pixel, posPixel);
+				poly[3] = QPointF(medianPixel, posPixel - halfWidth);
+			}
+			QwtPainter::drawPolygon(painter, poly);
+			break;
+		}
+
+		case Notch:
+		{
+			const double notchWidth = halfWidth * 0.25;
+			const double notchOffset = (q3Pixel - q1Pixel) * 0.1;
+
+			QPolygonF poly(10);
+			if (orient == Qt::Vertical)
+			{
+				poly[0] = QPointF(posPixel - halfWidth, q3Pixel);
+				poly[1] = QPointF(posPixel - halfWidth, medianPixel - notchOffset);
+				poly[2] = QPointF(posPixel - notchWidth, medianPixel);
+				poly[3] = QPointF(posPixel - halfWidth, medianPixel + notchOffset);
+				poly[4] = QPointF(posPixel - halfWidth, q1Pixel);
+				poly[5] = QPointF(posPixel + halfWidth, q1Pixel);
+				poly[6] = QPointF(posPixel + halfWidth, medianPixel + notchOffset);
+				poly[7] = QPointF(posPixel + notchWidth, medianPixel);
+				poly[8] = QPointF(posPixel + halfWidth, medianPixel - notchOffset);
+				poly[9] = QPointF(posPixel + halfWidth, q3Pixel);
+			}
+			else
+			{
+				poly[0] = QPointF(q1Pixel, posPixel - halfWidth);
+				poly[1] = QPointF(medianPixel - notchOffset, posPixel - halfWidth);
+				poly[2] = QPointF(medianPixel, posPixel - notchWidth);
+				poly[3] = QPointF(medianPixel + notchOffset, posPixel - halfWidth);
+				poly[4] = QPointF(q3Pixel, posPixel - halfWidth);
+				poly[5] = QPointF(q3Pixel, posPixel + halfWidth);
+				poly[6] = QPointF(medianPixel + notchOffset, posPixel + halfWidth);
+				poly[7] = QPointF(medianPixel, posPixel + notchWidth);
+				poly[8] = QPointF(medianPixel - notchOffset, posPixel + halfWidth);
+				poly[9] = QPointF(q1Pixel, posPixel + halfWidth);
+			}
+			QwtPainter::drawPolygon(painter, poly);
+			break;
+		}
+
+		default:
+			break;
+	}
+}
+
+void QwtPlotBoxChart::drawWhiskers(QPainter* painter, const QwtBoxSample& sample,
+	Qt::Orientation orient, double boxWidth, double posPixel,
+	const QwtScaleMap& valueMap) const
+{
+	QWT_DC(d);
+	const bool doAlign = QwtPainter::roundingAlignment(painter);
+
+	const double whiskerLowerPixel = valueMap.transform(sample.whiskerLower);
+	const double whiskerUpperPixel = valueMap.transform(sample.whiskerUpper);
+	const double q1Pixel = valueMap.transform(sample.q1);
+	const double q3Pixel = valueMap.transform(sample.q3);
+
+	if (doAlign)
+	{
+	}
+
+	const double capWidth = boxWidth * 0.3;
+
+	QPen whiskerPen = d->pen;
+	whiskerPen.setCapStyle(Qt::FlatCap);
+	painter->setPen(whiskerPen);
+
+	switch (d->whiskerStyle)
+	{
+		case StandardWhisker:
+		{
+			if (orient == Qt::Vertical)
+			{
+				QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel,
+									 posPixel, q1Pixel);
+				QwtPainter::drawLine(painter, posPixel - capWidth * 0.5, whiskerLowerPixel,
+									 posPixel + capWidth * 0.5, whiskerLowerPixel);
+
+				QwtPainter::drawLine(painter, posPixel, q3Pixel,
+									 posPixel, whiskerUpperPixel);
+				QwtPainter::drawLine(painter, posPixel - capWidth * 0.5, whiskerUpperPixel,
+									 posPixel + capWidth * 0.5, whiskerUpperPixel);
+			}
+			else
+			{
+				QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel,
+									 q1Pixel, posPixel);
+				QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel - capWidth * 0.5,
+									 whiskerLowerPixel, posPixel + capWidth * 0.5);
+
+				QwtPainter::drawLine(painter, q3Pixel, posPixel,
+									 whiskerUpperPixel, posPixel);
+				QwtPainter::drawLine(painter, whiskerUpperPixel, posPixel - capWidth * 0.5,
+									 whiskerUpperPixel, posPixel + capWidth * 0.5);
+			}
+			break;
+		}
+
+		case MinMaxLine:
+		{
+			if (orient == Qt::Vertical)
+			{
+				QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel,
+									 posPixel, whiskerUpperPixel);
+			}
+			else
+			{
+				QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel,
+									 whiskerUpperPixel, posPixel);
+			}
+			break;
+		}
+
+		default:
+			break;
+	}
+}
+
+void QwtPlotBoxChart::drawMedian(QPainter* painter, const QwtBoxSample& sample,
+	Qt::Orientation orient, double boxWidth, double posPixel,
+	const QwtScaleMap& valueMap) const
+{
+	QWT_DC(d);
+	const double medianPixel = valueMap.transform(sample.median);
+	const bool doAlign = QwtPainter::roundingAlignment(painter);
+
+	if (doAlign)
+	{
+	}
+
+	const double halfWidth = boxWidth * 0.5;
+
+	QPen medPen = d->medianPen;
+	medPen.setCapStyle(Qt::FlatCap);
+	painter->setPen(medPen);
+
+	double lineHalfWidth = halfWidth;
+	if (d->boxStyle == Diamond)
+		lineHalfWidth *= 0.5;
+	else if (d->boxStyle == Notch)
+		lineHalfWidth *= 0.8;
+
+	if (orient == Qt::Vertical)
+	{
+		QwtPainter::drawLine(painter, posPixel - lineHalfWidth, medianPixel,
+							 posPixel + lineHalfWidth, medianPixel);
+	}
+	else
+	{
+		QwtPainter::drawLine(painter, medianPixel, posPixel - lineHalfWidth,
+							 medianPixel, posPixel + lineHalfWidth);
+	}
+}
+
+void QwtPlotBoxChart::drawOutliers(QPainter* painter,
+	const QwtScaleMap& posMap, const QwtScaleMap& valueMap,
+	const QRectF& canvasRect, int from, int to) const
+{
+	QWT_DC(d);
+
+	if (!m_outlierData || m_outlierData->size() == 0)
+		return;
+
+	const QwtSymbol* symbol = d->outlierSymbol;
+	if (!symbol)
+	{
+		static QwtSymbol defaultSymbol(QwtSymbol::XCross, QBrush(), QPen(Qt::black), QSize(8, 8));
+		symbol = &defaultSymbol;
+	}
+
+	const Qt::Orientation orient = d->orientation;
+	const bool doAlign = QwtPainter::roundingAlignment(painter);
+	const double jitter = d->outlierJitter;
+
+	QRandomGenerator* rng = nullptr;
+	if (jitter > 0)
+		rng = QRandomGenerator::global();
+
+	for (size_t i = 0; i < m_outlierData->size(); ++i)
+	{
+		const QwtBoxOutlierSample& outlierSample = m_outlierData->sample(i);
+
+		double basePosPixel = posMap.transform(outlierSample.boxPosition);
+		if (doAlign)
+			basePosPixel = qRound(basePosPixel);
+
+		for (int j = 0; j < outlierSample.count(); ++j)
+		{
+			double valuePixel = valueMap.transform(outlierSample.values[j]);
+			if (doAlign)
+				valuePixel = qRound(valuePixel);
+
+			double posPixel = basePosPixel;
+			if (jitter > 0 && rng)
+			{
+				const double offset = rng->bounded(jitter) - jitter * 0.5;
+				posPixel += offset;
+			}
+
+			QPointF point = (orient == Qt::Vertical)
+				? QPointF(posPixel, valuePixel)
+				: QPointF(valuePixel, posPixel);
+
+			if (d->paintAttributes & ClipOutliers)
+			{
+				if (!canvasRect.contains(point))
+					continue;
+			}
+
+			symbol->drawSymbol(painter, point);
+		}
+	}
+}
+
+void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, double valuePixel,
+	const QwtSymbol& symbol) const
+{
+	QWT_DC(d);
+	const Qt::Orientation orient = d->orientation;
+	QPointF point = (orient == Qt::Vertical)
+		? QPointF(posPixel, valuePixel)
+		: QPointF(valuePixel, posPixel);
+	symbol.drawSymbol(painter, point);
+}
+
+/**
+ * @brief Get the legend icon
+ * @param[in] index Legend entry index
+ * @param[in] size Icon size
+ * @return Legend icon graphic
+ *
+ */
+QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
+{
+	QWT_DC(d);
+	Q_UNUSED(index);
+
+	QwtGraphic graphic;
+	graphic.setDefaultSize(size);
+
+	QPainter painter(&graphic);
+
+	const QRectF rect(0, 0, size.width(), size.height());
+
+	const double centerX = rect.center().x();
+	const double centerY = rect.center().y();
+	const double boxHeight = rect.height() * 0.4;
+	const double boxWidth = rect.width() * 0.3;
+
+	painter.setPen(d->pen);
+	painter.setBrush(d->brush);
+
+	if (d->boxStyle != NoBox)
+	{
+		QRectF boxRect(centerX - boxWidth * 0.5, centerY - boxHeight * 0.5,
+					   boxWidth, boxHeight);
+		painter.drawRect(boxRect);
+	}
+
+	if (d->whiskerStyle != NoWhiskers)
+	{
+		const double whiskerLen = rect.height() * 0.2;
+		painter.drawLine(centerX, centerY - boxHeight * 0.5,
+						 centerX, centerY - boxHeight * 0.5 - whiskerLen);
+		painter.drawLine(centerX - boxWidth * 0.15, centerY - boxHeight * 0.5 - whiskerLen,
+						 centerX + boxWidth * 0.15, centerY - boxHeight * 0.5 - whiskerLen);
+		painter.drawLine(centerX, centerY + boxHeight * 0.5,
+						 centerX, centerY + boxHeight * 0.5 + whiskerLen);
+		painter.drawLine(centerX - boxWidth * 0.15, centerY + boxHeight * 0.5 + whiskerLen,
+						 centerX + boxWidth * 0.15, centerY + boxHeight * 0.5 + whiskerLen);
+	}
+
+	if (d->medianVisible)
+	{
+		painter.setPen(d->medianPen);
+		painter.drawLine(centerX - boxWidth * 0.5, centerY,
+						 centerX + boxWidth * 0.5, centerY);
+	}
+
+	painter.end();
+
+	return graphic;
+}
+/*** End of inlined file: qwt_plot_boxchart.cpp ***/
 
 
 /*** Start of inlined file: qwt_plot_panner.cpp ***/

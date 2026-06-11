@@ -116,6 +116,7 @@
 #include "../../src/plot/qwt_plot_textlabel.cpp"
 #include "../../src/plot/qwt_plot_tradingcurve.cpp"
 #include "../../src/plot/qwt_plot_vectorfield.cpp"
+#include "../../src/plot/qwt_plot_boxchart.cpp"
 #include "../../src/plot/qwt_plot_panner.cpp"
 #include "../../src/plot/qwt_plot_zoneitem.cpp"
 #include "../../src/plot/qwt_plot_axis_zoomer.cpp"
