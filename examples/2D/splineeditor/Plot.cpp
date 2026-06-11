@@ -240,7 +240,7 @@ Plot::Plot(bool parametric, QWidget* parent) : QwtPlot(parent), m_boundaryCondit
     sd->setMinimumExtent(sd->extent(axisWidget(QwtAxis::YLeft)->font()));
 
     // pointless marker
-    m_marker = new LineMarker("Marker", Qt::darkRed);
+    m_marker = new LineMarker("Marker", QColor("#d62728"));
     m_marker->attach(this);
 
     // curves
@@ -302,31 +302,31 @@ Plot::Plot(bool parametric, QWidget* parent) : QwtPlot(parent), m_boundaryCondit
 
     QVector< Curve* > curves;
 
-    curve = new Curve("Pleasing", "DarkGoldenRod");
+    curve = new Curve("Pleasing", QColor("#ff7f0e"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::PleasingSpline));
     curves += curve;
 
-    curve = new Curve("Cardinal", Qt::darkGreen);
+    curve = new Curve("Cardinal", QColor("#2ca02c"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::CardinalSpline));
     curves += curve;
 
-    curve = new Curve("PChip", Qt::darkYellow);
+    curve = new Curve("PChip", QColor("#9467bd"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::PChipSpline));
     curves += curve;
 
-    curve = new Curve("Parabolic Blending", Qt::darkBlue);
+    curve = new Curve("Parabolic Blending", QColor("#1f77b4"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::ParabolicBlendingSpline));
     curves += curve;
 
-    curve = new Curve("Akima", Qt::darkCyan);
+    curve = new Curve("Akima", QColor("#8c564b"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::AkimaSpline));
     curves += curve;
 
-    curve = new Curve("Cubic", Qt::darkRed);
+    curve = new Curve("Cubic", QColor("#d62728"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::CubicSpline));
     curves += curve;
 
-    curve = new Curve("Basis", QColor("DarkOliveGreen"));
+    curve = new Curve("Basis", QColor("#e377c2"));
     curve->setCurveFitter(new SplineFitter(SplineFitter::BasisSpline));
     curves += curve;
 

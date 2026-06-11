@@ -48,7 +48,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
     canvas->setBorderRadius(0);
 
     setCanvas(canvas);
-    setCanvasBackground(QColor("MidnightBlue"));
+    setCanvasBackground(Qt::white);
 
     // legend
     QwtLegend* legend = new QwtLegend;
@@ -57,8 +57,8 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
     // grid
     QwtPlotGrid* grid = new QwtPlotGrid;
     grid->enableXMin(true);
-    grid->setMajorPen(Qt::white, 0, Qt::DotLine);
-    grid->setMinorPen(Qt::gray, 0, Qt::DotLine);
+    grid->setMajorPen(QColor("#c0c0c0"), 0.5, Qt::DotLine);
+    grid->setMinorPen(QColor("#e0e0e0"), 0.5, Qt::DotLine);
     grid->attach(this);
 
     // axes
@@ -74,14 +74,14 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
     // curves
     m_curve1 = new QwtPlotCurve("Amplitude");
     m_curve1->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve1->setPen(Qt::yellow);
+    m_curve1->setPen(QColor("#1f77b4"), 2);
     m_curve1->setLegendAttribute(QwtPlotCurve::LegendShowLine);
     m_curve1->setYAxis(QwtAxis::YLeft);
     m_curve1->attach(this);
 
     m_curve2 = new QwtPlotCurve("Phase");
     m_curve2->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve2->setPen(Qt::cyan);
+    m_curve2->setPen(QColor("#ff7f0e"), 2);
     m_curve2->setLegendAttribute(QwtPlotCurve::LegendShowLine);
     m_curve2->setYAxis(QwtAxis::YRight);
     m_curve2->attach(this);
@@ -91,14 +91,14 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent)
     m_marker1->setValue(0.0, 0.0);
     m_marker1->setLineStyle(QwtPlotMarker::VLine);
     m_marker1->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-    m_marker1->setLinePen(Qt::green, 0, Qt::DashDotLine);
+    m_marker1->setLinePen(QColor("#2ca02c"), 0, Qt::DashDotLine);
     m_marker1->attach(this);
 
     m_marker2 = new QwtPlotMarker();
     m_marker2->setLineStyle(QwtPlotMarker::HLine);
     m_marker2->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-    m_marker2->setLinePen(QColor(200, 150, 0), 0, Qt::DashDotLine);
-    m_marker2->setSymbol(new QwtSymbol(QwtSymbol::Diamond, QColor(Qt::yellow), QColor(Qt::green), QSize(8, 8)));
+    m_marker2->setLinePen(QColor("#ff7f0e"), 0, Qt::DashDotLine);
+    m_marker2->setSymbol(new QwtSymbol(QwtSymbol::Diamond, QColor("#ff7f0e"), QColor("#1f77b4"), QSize(8, 8)));
     m_marker2->attach(this);
 
     setDamp(0.0);
@@ -120,7 +120,7 @@ void Plot::showPeak(double freq, double amplitude)
 
     QwtText text(label);
     text.setFont(QFont("Helvetica", 10, QFont::Bold));
-    text.setColor(QColor(200, 150, 0));
+    text.setColor(QColor("#ff7f0e"));
 
     m_marker2->setValue(freq, amplitude);
     m_marker2->setLabel(text);
@@ -133,7 +133,7 @@ void Plot::show3dB(double freq)
 
     QwtText text(label);
     text.setFont(QFont("Helvetica", 10, QFont::Bold));
-    text.setColor(Qt::green);
+    text.setColor(QColor("#2ca02c"));
 
     m_marker1->setValue(freq, 0.0);
     m_marker1->setLabel(text);

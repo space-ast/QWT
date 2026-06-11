@@ -39,7 +39,7 @@ class Curve1 : public Curve
 public:
     Curve1()
     {
-        setPen(QColor(150, 150, 200), 2);
+        setPen(QColor(130, 170, 227), 2);
         setStyle(QwtPlotCurve::Lines);
 
         setCurveAttribute(QwtPlotCurve::Fitted, true);
@@ -78,7 +78,7 @@ public:
     Curve2()
     {
         setStyle(QwtPlotCurve::Sticks);
-        setPen(QColor(200, 150, 50));
+        setPen(QColor(255, 183, 77));
 
         setSymbol(new QwtSymbol(QwtSymbol::Ellipse, QColor(Qt::gray), QColor(Qt::yellow), QSize(5, 5)));
     }
@@ -104,7 +104,7 @@ public:
     Curve3()
     {
         setStyle(QwtPlotCurve::Lines);
-        setPen(QColor(100, 200, 150), 2);
+        setPen(QColor(102, 187, 106), 2);
 
         setCurveAttribute(QwtPlotCurve::Fitted, true);
 
@@ -137,7 +137,7 @@ public:
     Curve4()
     {
         setStyle(QwtPlotCurve::Lines);
-        setPen(Qt::red, 2);
+        setPen(QColor(239, 83, 80), 2);
 
         initSamples();
 

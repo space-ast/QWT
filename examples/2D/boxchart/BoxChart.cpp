@@ -23,7 +23,7 @@ BoxChart::BoxChart( QWidget* parent )
 {
     setAutoFillBackground( true );
     setPalette( Qt::white );
-    canvas()->setPalette( QColor( "LemonChiffon" ) );
+    canvas()->setPalette( Qt::white );
 
     setTitle( "Box Chart Example" );
     setAxisTitle( QwtAxis::YLeft, "Value" );
@@ -47,14 +47,14 @@ void BoxChart::populate()
     samples1 += QwtBoxSample( 3.0, 8.0, 25.0, 40.0, 55.0, 70.0 );
     samples1 += QwtBoxSample( 4.0, 12.0, 18.0, 28.0, 42.0, 58.0 );
     m_boxChartItem1->setSamples( samples1 );
-    m_boxChartItem1->setBrush( QColor( 100, 150, 200, 150 ) );
-    m_boxChartItem1->setPen( QPen( Qt::darkBlue, 2.0 ) );
+    m_boxChartItem1->setBrush( QColor( 31, 119, 180, 150 ) );
+    m_boxChartItem1->setPen( QPen( QColor("#1f77b4"), 2.0 ) );
     m_boxChartItem1->setBoxExtent( 0.35 );
 
     QwtSymbol* outlierSymbol1 = new QwtSymbol( QwtSymbol::Diamond );
     outlierSymbol1->setSize( 8, 8 );
-    outlierSymbol1->setBrush( Qt::red );
-    outlierSymbol1->setPen( QPen( Qt::darkRed, 1.0 ) );
+    outlierSymbol1->setBrush( QColor("#d62728") );
+    outlierSymbol1->setPen( QPen( QColor("#d62728"), 1.0 ) );
     m_boxChartItem1->setOutlierSymbol( outlierSymbol1 );
     m_boxChartItem1->setOutlierJitter( 0.1 );
 
@@ -100,14 +100,14 @@ void BoxChart::populate()
 
     m_boxChartItem2->setSamples( samples2 );
     m_boxChartItem2->setOutliers( outlierSamples );
-    m_boxChartItem2->setBrush( QColor( 200, 100, 100, 150 ) );
-    m_boxChartItem2->setPen( QPen( Qt::darkRed, 2.0 ) );
+    m_boxChartItem2->setBrush( QColor( 214, 39, 40, 150 ) );
+    m_boxChartItem2->setPen( QPen( QColor("#d62728"), 2.0 ) );
     m_boxChartItem2->setBoxExtent( 0.35 );
 
     QwtSymbol* outlierSymbol2 = new QwtSymbol( QwtSymbol::Ellipse );
     outlierSymbol2->setSize( 6, 6 );
-    outlierSymbol2->setBrush( Qt::blue );
-    outlierSymbol2->setPen( QPen( Qt::darkBlue, 1.0 ) );
+    outlierSymbol2->setBrush( QColor("#1f77b4") );
+    outlierSymbol2->setPen( QPen( QColor("#1f77b4"), 1.0 ) );
     m_boxChartItem2->setOutlierSymbol( outlierSymbol2 );
     m_boxChartItem2->setOutlierJitter( 0.08 );
 }

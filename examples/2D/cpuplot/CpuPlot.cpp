@@ -48,18 +48,9 @@ public:
         return QwtPlotItem::Rtti_PlotUserItem;
     }
 
-    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap& yMap, const QRectF& canvasRect) const override
+    virtual void draw(QPainter* painter, const QwtScaleMap&, const QwtScaleMap&, const QRectF&) const override
     {
-        QColor c(Qt::white);
-        QRectF r = canvasRect;
-
-        for (int i = 100; i > 0; i -= 10) {
-            r.setBottom(yMap.transform(i - 10));
-            r.setTop(yMap.transform(i));
-            painter->fillRect(r, c);
-
-            c = c.darker(110);
-        }
+        Q_UNUSED(painter)
     }
 };
 
@@ -92,6 +83,7 @@ CpuPlot::CpuPlot(QWidget* parent) : QwtPlot(parent), m_dataCount(0)
     canvas->setBorderRadius(0);
 
     setCanvas(canvas);
+    setCanvasBackground(Qt::white);
 
     plotLayout()->setAlignCanvasToScales(true);
 
@@ -130,24 +122,24 @@ CpuPlot::CpuPlot(QWidget* parent) : QwtPlot(parent), m_dataCount(0)
     CpuCurve* curve;
 
     curve = new CpuCurve("System");
-    curve->setColor(Qt::red);
+    curve->setColor(QColor("#d62728"));
     curve->attach(this);
     m_data[ System ].curve = curve;
 
     curve = new CpuCurve("User");
-    curve->setColor(Qt::blue);
+    curve->setColor(QColor("#1f77b4"));
     curve->setZ(curve->z() - 1);
     curve->attach(this);
     m_data[ User ].curve = curve;
 
     curve = new CpuCurve("Total");
-    curve->setColor(Qt::black);
+    curve->setColor(QColor("#333333"));
     curve->setZ(curve->z() - 2);
     curve->attach(this);
     m_data[ Total ].curve = curve;
 
     curve = new CpuCurve("Idle");
-    curve->setColor(Qt::darkCyan);
+    curve->setColor(QColor("#2ca02c"));
     curve->setZ(curve->z() - 3);
     curve->attach(this);
     m_data[ Idle ].curve = curve;

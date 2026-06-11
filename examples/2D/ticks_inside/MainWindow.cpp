@@ -74,13 +74,13 @@ void MainWindow::setupPlot()
 
     // Add grid
     QwtPlotGrid* grid = new QwtPlotGrid();
-    grid->setPen(Qt::gray, 0.5, Qt::DotLine);
+    grid->setPen(QColor("#c0c0c0"), 0.5, Qt::DotLine);
     grid->attach(m_plot);
 
     // Add curve for YLeft (inverted axis) - values mapped to inverted YLeft
     m_curveInverted = new QwtPlotCurve();
     m_curveInverted->setTitle("Inverted Axis Curve (YLeft)");
-    m_curveInverted->setPen(Qt::blue, 2);
+    m_curveInverted->setPen(QColor("#1f77b4"), 2);
     m_curveInverted->setRenderHint(QwtPlotItem::RenderAntialiased, true);
     m_curveInverted->setYAxis(QwtAxis::YLeft);
 
@@ -96,7 +96,7 @@ void MainWindow::setupPlot()
     // Add curve for YRight (logarithmic axis) - exponential growth
     m_curveLog = new QwtPlotCurve();
     m_curveLog->setTitle("Log Axis Curve (YRight)");
-    m_curveLog->setPen(Qt::red, 2);
+    m_curveLog->setPen(QColor("#d62728"), 2);
     m_curveLog->setRenderHint(QwtPlotItem::RenderAntialiased, true);
     m_curveLog->setYAxis(QwtAxis::YRight);
 
@@ -112,7 +112,7 @@ void MainWindow::setupPlot()
     // Regular curve for XBottom
     m_curve = new QwtPlotCurve();
     m_curve->setTitle("Regular Curve (XBottom)");
-    m_curve->setPen(Qt::darkGreen, 2);
+    m_curve->setPen(QColor("#2ca02c"), 2);
     m_curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
 
     QPolygonF points;

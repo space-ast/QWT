@@ -48,13 +48,11 @@ public:
 
 Plot::Plot(QWidget* parent) : QwtPlot(parent), m_curve(NULL)
 {
-    canvas()->setStyleSheet("border: 2px solid Black;"
-                            "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1,"
-                            "stop: 0 LemonChiffon, stop: 1 PaleGoldenrod );");
+    setCanvasBackground(Qt::white);
 
     // attach curve
     m_curve = new QwtPlotCurve("Scattered Points");
-    m_curve->setPen(QColor("Purple"));
+    m_curve->setPen(QColor("#9467bd"));
 
     // when using QwtPlotCurve::ImageBuffer simple dots can be
     // rendered in parallel on multicore systems.
@@ -74,7 +72,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent), m_curve(NULL)
     // distanve measurement with the right mouse button
     DistancePicker* picker = new DistancePicker(canvas());
     picker->setMousePattern(QwtPlotPicker::MouseSelect1, Qt::RightButton);
-    picker->setRubberBandPen(QPen(Qt::blue));
+    picker->setRubberBandPen(QPen(QColor("#1f77b4")));
 }
 
 void Plot::setSymbol(QwtSymbol* symbol)

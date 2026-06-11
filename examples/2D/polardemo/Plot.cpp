@@ -98,7 +98,7 @@ public:
 Plot::Plot(QWidget* parent) : QwtPolarPlot(QwtText("Polar Plot Demo"), parent)
 {
     setAutoReplot(false);
-    setPlotBackground(Qt::darkBlue);
+    setPlotBackground(Qt::white);
 
     // scales
     setScale(QwtPolar::Azimuth, s_azimuthInterval.minValue(), s_azimuthInterval.maxValue(), s_azimuthInterval.width() / 12);
@@ -109,12 +109,12 @@ Plot::Plot(QWidget* parent) : QwtPolarPlot(QwtText("Polar Plot Demo"), parent)
     // grids, axes
 
     m_grid = new QwtPolarGrid();
-    m_grid->setPen(QPen(Qt::white));
+    m_grid->setPen(QPen(QColor("#c0c0c0"), 0.5));
     for (int scaleId = 0; scaleId < QwtPolar::ScaleCount; scaleId++) {
         m_grid->showGrid(scaleId);
         m_grid->showMinorGrid(scaleId);
 
-        QPen minorPen(Qt::gray);
+        QPen minorPen(QColor("#e0e0e0"), 0.5);
 #if 0
         minorPen.setStyle( Qt::DotLine );
 #endif
@@ -141,7 +141,7 @@ Plot::Plot(QWidget* parent) : QwtPolarPlot(QwtText("Polar Plot Demo"), parent)
     // markers
     QwtPolarMarker* marker = new QwtPolarMarker();
     marker->setPosition(QwtPointPolar(57.3, 4.72));
-    marker->setSymbol(new QwtSymbol(QwtSymbol::Ellipse, QBrush(Qt::white), QPen(Qt::green), QSize(9, 9)));
+    marker->setSymbol(new QwtSymbol(QwtSymbol::Ellipse, QBrush(QColor("#1f77b4")), QPen(QColor("#2ca02c")), QSize(9, 9)));
     marker->setLabelAlignment(Qt::AlignHCenter | Qt::AlignTop);
 
     QwtText text("Marker");
@@ -232,15 +232,15 @@ QwtPolarCurve* Plot::createCurve(int id) const
     switch (id) {
     case PlotSettings::Spiral: {
         curve->setTitle("Spiral");
-        curve->setPen(QPen(Qt::yellow, 2));
-        curve->setSymbol(new QwtSymbol(QwtSymbol::Rect, QBrush(Qt::cyan), QPen(Qt::white), QSize(3, 3)));
+        curve->setPen(QPen(QColor("#1f77b4"), 2));
+        curve->setSymbol(new QwtSymbol(QwtSymbol::Rect, QBrush(QColor("#ff7f0e")), QPen(QColor("#1f77b4")), QSize(3, 3)));
         curve->setData(new SpiralData(s_radialInterval, s_azimuthInterval, numPoints));
         break;
     }
     case PlotSettings::Rose: {
         curve->setTitle("Rose");
-        curve->setPen(QPen(Qt::red, 2));
-        curve->setSymbol(new QwtSymbol(QwtSymbol::Rect, QBrush(Qt::cyan), QPen(Qt::white), QSize(3, 3)));
+        curve->setPen(QPen(QColor("#d62728"), 2));
+        curve->setSymbol(new QwtSymbol(QwtSymbol::Rect, QBrush(QColor("#ff7f0e")), QPen(QColor("#d62728")), QSize(3, 3)));
         curve->setData(new RoseData(s_radialInterval, s_azimuthInterval, numPoints));
         break;
     }

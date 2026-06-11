@@ -25,7 +25,7 @@ class Zoomer : public ScrollZoomer
 public:
     Zoomer(QWidget* canvas) : ScrollZoomer(canvas)
     {
-        setRubberBandPen(QPen(Qt::red));
+        setRubberBandPen(QPen(QColor("#d62728")));
     }
 
     virtual QwtText trackerTextF(const QPointF& pos) const override
@@ -68,10 +68,10 @@ RandomPlot::RandomPlot(QWidget* parent) : IncrementalPlot(parent), m_timer(0), m
     plotLayout()->setAlignCanvasToScales(true);
 
     QwtPlotGrid* grid = new QwtPlotGrid;
-    grid->setMajorPen(Qt::gray, 0, Qt::DotLine);
+    grid->setMajorPen(QColor("#c0c0c0"), 0.5, Qt::DotLine);
     grid->attach(this);
 
-    setCanvasBackground(QColor(29, 100, 141));  // nice blue
+    setCanvasBackground(Qt::white);
 
     setAxisScale(QwtAxis::XBottom, 0, c_rangeMax);
     setAxisScale(QwtAxis::YLeft, 0, c_rangeMax);

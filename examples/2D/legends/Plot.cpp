@@ -25,13 +25,13 @@ namespace
         {
             setRenderHint( QwtPlotItem::RenderAntialiased );
 
-            const QColor c1( Qt::white );
+            const QColor c1( "#333333" );
 
             setTextPen( c1 );
-            setBorderPen( c1 );
+            setBorderPen( QColor("#c0c0c0") );
 
-            QColor c2( Qt::gray );
-            c2.setAlpha( 200 );
+            QColor c2( Qt::white );
+            c2.setAlpha( 220 );
 
             setBackgroundBrush( c2 );
         }
@@ -87,7 +87,7 @@ Plot::Plot( QWidget* parent )
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
     canvas->setFocusIndicator( QwtPlotCanvas::CanvasFocusIndicator );
     canvas->setFocusPolicy( Qt::StrongFocus );
-    canvas->setPalette( Qt::black );
+    canvas->setPalette( Qt::white );
     setCanvas( canvas );
 
     setAutoReplot( false );
@@ -98,8 +98,8 @@ Plot::Plot( QWidget* parent )
     // grid
     QwtPlotGrid* grid = new QwtPlotGrid;
     grid->enableXMin( true );
-    grid->setMajorPen( Qt::gray, 0, Qt::DotLine );
-    grid->setMinorPen( Qt::darkGray, 0, Qt::DotLine );
+    grid->setMajorPen( QColor("#c0c0c0"), 0.5, Qt::DotLine );
+    grid->setMinorPen( QColor("#e0e0e0"), 0.5, Qt::DotLine );
     grid->attach( this );
 
     // axis
@@ -118,16 +118,16 @@ void Plot::insertCurve()
 
     const char* colors[] =
     {
-        "LightSalmon",
-        "SteelBlue",
-        "Yellow",
-        "Fuchsia",
-        "PaleGreen",
-        "PaleTurquoise",
-        "Cornsilk",
-        "HotPink",
-        "Peru",
-        "Maroon"
+        "#1f77b4",
+        "#ff7f0e",
+        "#2ca02c",
+        "#d62728",
+        "#9467bd",
+        "#8c564b",
+        "#e377c2",
+        "#7f7f7f",
+        "#bcbd22",
+        "#17becf"
     };
     const int numColors = sizeof( colors ) / sizeof( colors[0] );
 

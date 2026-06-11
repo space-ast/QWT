@@ -26,11 +26,11 @@ int main( int argc, char* argv[] )
 
     QwtPlotCurve* curve = new QwtPlotCurve();
     curve->setTitle( "Some Points" );
-    curve->setPen( Qt::blue, 4 ),
+    curve->setPen( QColor("#1f77b4"), 2.5 ),
     curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
 
     QwtSymbol* symbol = new QwtSymbol( QwtSymbol::Ellipse,
-        QBrush( Qt::yellow ), QPen( Qt::red, 2 ), QSize( 8, 8 ) );
+        QBrush( QColor("#ff7f0e") ), QPen( QColor("#d62728"), 2 ), QSize( 8, 8 ) );
     curve->setSymbol( symbol );
 
     QPolygonF points;
