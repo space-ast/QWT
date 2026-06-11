@@ -8,18 +8,24 @@ Qwt 7.x（v7.2.1）是基于原版 Qwt 6.2.0 的维护分支。
 ## 构建命令
 
 ```powershell
-# 推荐：Visual Studio 生成器（自动处理 MSVC 环境变量）
-cd build
-cmake .. -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="D:/Qt/6.7.3/msvc2019_64"
-cmake --build . --config Debug
+# 推荐：使用 build.ps1 一键构建（自动探测 Qt、VS、CMake）
+.\build.ps1                          # 全量构建 (Release)
+.\build.ps1 build                    # 增量编译
+.\build.ps1 rebuild                  # 清除 + 重配 + 编译
+.\build.ps1 configure -Examples OFF -Playground OFF  # 仅主库
+
+# 手动构建：Visual Studio 生成器（自动处理 MSVC 环境变量）
+cmake -S . -B build -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH="D:/Qt/6.7.3/msvc2019_64"
+cmake --build build --config Debug
 
 # Ninja（需先初始化 MSVC 环境变量：INCLUDE, LIB, PATH）
-cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 ```
 
 - CMake 3.5+, Qt 5.12+ / Qt 6.x, MSVC 2019+
 - 先检查 `build/CMakeCache.txt` 中 Qt 路径是否正确，清理构建只需删 `CMakeCache.txt` 和 `CMakeFiles/`
 - CI 使用 GitHub Actions（Linux + Windows, Qt6.8），构建时跳过 examples/playground
+- `build.ps1` 参数：`-Examples`、`-Playground`、`-Tests`、`-OpenGL`、`-Plot3D`（均接受 `ON`/`OFF`）
 
 ## 架构关键点
 
