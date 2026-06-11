@@ -330,31 +330,31 @@ Based on QwtPointMapper's Quad Reduce algorithm. Merges consecutive points that 
 - **Best for**: General large-dataset scenarios with good waveform fidelity
 - **Time complexity**: O(n)
 
-##### FilterPointsPixel — Pixel-Column Downsampling (Maximum Speed)
+##### FilterPointsPixel — Pixel-Column Downsampling
 
 Bins data by screen pixel columns, keeping only first/min/max/last Y values per column. Automatically uses binary search to locate the visible range for monotonically increasing X data.
 
 - **Principle**: Allocates a Bin array as wide as the canvas, iterates all data points into corresponding column buckets
 - **Output size**: At most `4 × canvas_width`, completely independent of data size
-- **Best for**: Ultra-large datasets over 100K points where maximum rendering speed is needed
-- **Time complexity**: O(n) with very small constant factor
+- **Best for**: Trend observation in large datasets
+- **Time complexity**: O(n)
 - **Limitation**: Only applicable to `Lines` style
 
 ```cpp
-// Maximum speed rendering: ideal for real-time display of massive data
+// Pixel-column downsampling
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
 ```
 
 !!! warning "FilterPointsPixel Caveats"
     This algorithm overrides `FilterPointsAggressive` when both are set (Pixel takes priority). Since only 4 points per column are retained, high-frequency details may be lost — suitable for trend observation rather than precise analysis.
 
-##### FilterPointsLTTB — MinMax Bucket Downsampling (Waveform Preservation)
+##### FilterPointsLTTB — MinMax Bucket Downsampling (Recommended)
 
-Divides the visible data range into N equal-count buckets (N = 2 × canvas width), retaining the Y-minimum and Y-maximum point from each bucket. Similar to a simplified LTTB (Largest Triangle Three Buckets) algorithm.
+Divides the visible data range into N equal-count buckets (N = 2 × canvas width), retaining the Y-minimum and Y-maximum point from each bucket. Similar to a simplified LTTB (Largest Triangle Three Buckets) algorithm. Benchmarks show this is the fastest rendering method for million-level data.
 
 - **Principle**: Splits data into equal-sized buckets by index, finds extrema in each bucket, preserves original X coordinates
 - **Output size**: Approximately `2 × N = 4 × canvas_width`
-- **Best for**: Data with uneven X distribution, scenarios requiring visual waveform preservation
+- **Best for**: Data with uneven X distribution, scenarios requiring visual waveform preservation, and best overall performance with large datasets
 - **Time complexity**: O(n)
 - **Limitation**: Only applicable to `Lines` style
 
@@ -365,8 +365,9 @@ curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
 
 !!! note "FilterPointsLTTB vs FilterPointsPixel"
     - LTTB preserves original X coordinates (not pixel-aligned), producing more accurate waveform contours
-    - Pixel forces all points to pixel columns — faster but loses X-direction detail
+    - Pixel forces all points to pixel columns — simpler implementation but not necessarily faster
     - When data is too small to benefit from downsampling, LTTB automatically falls back to the Quad algorithm
+    - Benchmarks show LTTB outperforms Pixel on million-level data (see benchmark results below)
 
 #### How to Choose a Rendering Method
 
@@ -379,12 +380,12 @@ graph TD
     C -->|Yes| D[FilterPointsLTTB]
     C -->|No| E[FilterPointsAggressive<br/>already enabled by default]
     A -->|"100K ~ 1M"| F{Primary goal?}
-    F -->|Maximum speed| G[FilterPointsPixel]
-    F -->|Preserve waveform| D
+    F -->|Best performance| D
+    F -->|Trend observation| G[FilterPointsPixel]
     A -->|"> 1M"| H{Display mode?}
-    H -->|Trend overview| G
+    H -->|Best performance| D
     H -->|Scatter distribution| I["Dots style + ImageBuffer"]
-    H -->|Signal analysis| D
+    H -->|Trend observation| G
 ```
 
 **Quick Reference Table:**
@@ -394,18 +395,18 @@ graph TD
 | < 10K | General plotting | Default (`FilterPointsAggressive`) | No extra optimization needed |
 | 10K–100K | Real-time curves | `FilterPointsAggressive` (default) | Default algorithm is efficient enough |
 | 10K–100K | Signal analysis | `FilterPointsLTTB` | Preserves waveform detail |
-| 100K–1M | Real-time scrolling | `FilterPointsPixel` | Fastest rendering for trend monitoring |
+| 100K–1M | Real-time scrolling | `FilterPointsLTTB` | Benchmarked as fastest |
 | 100K–1M | Offline playback | `FilterPointsLTTB` | Balances speed and waveform fidelity |
-| > 1M | Trend overview | `FilterPointsPixel` | Extreme speed for million-level data |
+| > 1M | Trend overview | `FilterPointsLTTB` | Benchmarked as fastest for million-level data |
 | > 1M | Scatter distribution | `Dots` + `ImageBuffer` | Optimized for massive scatter plots |
-| > 1M | Signal analysis | `FilterPointsLTTB` | Preserves signal characteristics |
+| > 1M | Trend observation | `FilterPointsPixel` | Alternative, slightly slower than LTTB |
 
 **Usage Examples:**
 
 ```cpp
-// === Scenario 1: Real-time monitoring of million-level sensor data ===
+// === Scenario 1: Real-time monitoring of million-level sensor data (LTTB recommended) ===
 QwtPlotCurve* sensorCurve = new QwtPlotCurve("Sensor Data");
-sensorCurve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
+sensorCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
 sensorCurve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);  // already on by default
 
 // === Scenario 2: Oscilloscope waveform analysis (preserve waveform features) ===
@@ -427,8 +428,29 @@ debugCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, false);
 !!! tip "Comprehensive Tips for Large Datasets"
     - Real-time updates: Disable `setAutoReplot()`, call `replot()` manually after batch updates
     - Monotonically increasing X data: `FilterPointsPixel` and `FilterPointsLTTB` automatically use binary search for visible range — no manual data trimming needed
-    - Frequent zoom/pan scenarios: `FilterPointsPixel` is recommended for fastest response
+    - Frequent zoom/pan scenarios: `FilterPointsLTTB` is recommended, benchmarked as fastest
     - High-quality screenshots or exports: Temporarily disable downsampling, use `FilterPointsAggressive` for the most accurate output
+
+#### Benchmark Results
+
+Below is a real-world performance comparison with 1,000,000 data points (canvas size 680×490 px, 100 frames):
+
+| Method | Total Time (ms) | Avg Frame Time (ms) | FPS |
+|--------|-----------------|---------------------|-----|
+| None (no optimization) | 26,212 | 262.12 | 3.8 |
+| FilterPoints | 44,472 | 444.72 | 2.2 |
+| FilterPointsAggressive (default) | 17,539 | 175.39 | 5.7 |
+| FilterPointsPixel | 23,216 | 232.16 | 4.3 |
+| **FilterPointsLTTB** | **13,349** | **133.49** | **7.5** |
+
+**Conclusions:**
+- `FilterPointsLTTB` delivers the best performance at 7.5 FPS, 32% faster than the default method
+- `FilterPointsAggressive` is the second-best choice and is already efficient as the default
+- `FilterPoints` basic filtering is actually the slowest — overhead exceeds benefit
+- No optimization (None) is faster than `FilterPoints`, confirming basic filtering is counterproductive at this scale
+
+!!! note "Run Your Own Tests"
+    You can run the `examples/bench/renderbench` example to benchmark rendering methods on your own hardware. The tool supports configurable data size, frame count, and waveform type, with both single-method and batch comparison modes. It generates a detailed Markdown report upon completion.
 
 ### 7. Legend Style Configuration
 

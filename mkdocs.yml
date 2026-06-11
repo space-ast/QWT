@@ -84,6 +84,7 @@ plugins:
             - Charts:
                 - Core Plot Items:
                     - Curve: en/use-guide/curve.md
+                    - Curve Downsampling: en/use-guide/curve-downsampling.md
                     - Scatter: en/use-guide/scatter.md
                     - Grid: en/use-guide/grid.md
                     - Marker: en/use-guide/marker.md
@@ -153,6 +154,7 @@ plugins:
             - 图表类型:
                 - 核心绘图项:
                     - 曲线图: zh/use-guide/curve.md
+                    - 曲线降采样算法: zh/use-guide/curve-downsampling.md
                     - 散点图: zh/use-guide/scatter.md
                     - 网格线: zh/use-guide/grid.md
                     - 标记点: zh/use-guide/marker.md
