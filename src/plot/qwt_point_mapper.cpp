@@ -198,31 +198,57 @@ private:
 
 template< class Polygon, class Point, class PolygonQuadrupel >
 static Polygon
-qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to,
+                 int reserveSize = 0)
 {
+    Polygon polyline;
+
+    // find first non-NaN sample
     int realFrom    = from;
     QPointF sample0 = series->sample(from);
-    // check nan
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
+        sample0 = series->sample(realFrom);
     }
+    if (realFrom >= to && qwt_is_nan_or_inf(sample0))
+        return polyline;
+
+    if (reserveSize > 0)
+        polyline.reserve(reserveSize);
 
     PolygonQuadrupel q;
     q.start(qwtRoundValue(xMap.transform(sample0.x())), qwtRoundValue(yMap.transform(sample0.y())));
 
-    Polygon polyline;
-    for (int i = realFrom; i <= to; i++) {
-        const QPointF sample = series->sample(i);
-        // check nan
-        if (qwt_is_nan_or_inf(sample)) {
-            continue;
-        }
-        const int x = qwtRoundValue(xMap.transform(sample.x()));
-        const int y = qwtRoundValue(yMap.transform(sample.y()));
+    // linear scale fast path: avoid virtual transform() call per point
+    const bool linearPath = xMap.isLinear() && yMap.isLinear();
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
 
-        if (!q.append(x, y)) {
-            q.flush(polyline);
-            q.start(x, y);
+        for (int i = realFrom; i <= to; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qRound(sample.x() * xCnv + xOff);
+            const int y = qRound(sample.y() * yCnv + yOff);
+
+            if (!q.append(x, y)) {
+                q.flush(polyline);
+                q.start(x, y);
+            }
+        }
+    } else {
+        for (int i = realFrom; i <= to; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qwtRoundValue(xMap.transform(sample.x()));
+            const int y = qwtRoundValue(yMap.transform(sample.y()));
+
+            if (!q.append(x, y)) {
+                q.flush(polyline);
+                q.start(x, y);
+            }
         }
     }
     q.flush(polyline);
@@ -231,7 +257,7 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
 }
 
 template< class Polygon, class Point, class PolygonQuadrupel >
-static Polygon qwtMapPointsQuad(const Polygon& polyline)
+static Polygon qwtMapPointsQuad(const Polygon& polyline, int reserveSize = 0)
 {
     const int numPoints = polyline.size();
 
@@ -241,6 +267,8 @@ static Polygon qwtMapPointsQuad(const Polygon& polyline)
     const Point* points = polyline.constData();
 
     Polygon polylineXY;
+    if (reserveSize > 0)
+        polylineXY.reserve(reserveSize);
 
     PolygonQuadrupel q;
     q.start(points[ 0 ].x(), points[ 0 ].y());
@@ -267,6 +295,12 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     if (from > to)
         return polyline;
 
+    // estimate reserve sizes: 4 points per pixel dimension
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int yPixels = qAbs(qRound(yMap.p2() - yMap.p1())) + 1;
+    const int reserve1 = 4 * qMax(xPixels, yPixels) + 16;
+    const int reserve2 = 4 * qMin(xPixels, yPixels) + 16;
+
     /*
         probing some values, to decide if it is better
         to start with x or y coordinates
@@ -274,13 +308,320 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     const Qt::Orientation orientation = qwtProbeOrientation(series, from, to);
 
     if (orientation == Qt::Horizontal) {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(xMap, yMap, series, from, to);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
 
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(polyline);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(polyline, reserve2);
     } else {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(xMap, yMap, series, from, to);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
 
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(polyline);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(polyline, reserve2);
+    }
+
+    return polyline;
+}
+
+// Binary search for visible range in monotonic X data with linear scale.
+// Returns true if the range was successfully narrowed.
+static bool qwtFindVisibleRange(const QwtScaleMap& xMap, const QwtSeriesData< QPointF >* series, int from, int to, int& visFrom,
+                                int& visTo)
+{
+    if (!xMap.isLinear() || to - from < 20)
+        return false;
+
+    const double x0 = series->sample(from).x();
+    const double xn = series->sample(to).x();
+    if (x0 == xn)
+        return false;
+
+    const bool increasing = xn > x0;
+
+    // quick monotonicity check by sampling
+    const int step = (to - from) / 10;
+    double prev    = x0;
+    for (int i = from + step; i < to; i += step) {
+        const double xi = series->sample(i).x();
+        if ((xi > prev) != increasing && xi != prev)
+            return false;
+        prev = xi;
+    }
+
+    const double visMin = qMin(xMap.s1(), xMap.s2());
+    const double visMax = qMax(xMap.s1(), xMap.s2());
+
+    // binary search for first visible index
+    int lo = from, hi = to;
+    if (increasing) {
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (series->sample(mid).x() < visMin)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        visFrom = qMax(from, lo - 1);
+
+        hi = to;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo + 1) / 2;
+            if (series->sample(mid).x() > visMax)
+                hi = mid - 1;
+            else
+                lo = mid;
+        }
+        visTo = qMin(to, hi + 1);
+    } else {
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (series->sample(mid).x() > visMax)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        visFrom = qMax(from, lo - 1);
+
+        hi = to;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo + 1) / 2;
+            if (series->sample(mid).x() < visMin)
+                hi = mid - 1;
+            else
+                lo = mid;
+        }
+        visTo = qMin(to, hi + 1);
+    }
+
+    return visFrom <= visTo;
+}
+
+// Pixel-column downsampling: bin points by screen X column, keep first/min/max/last Y.
+// Output: at most 4 points per pixel column.
+template< class Polygon, class Point >
+static Polygon
+qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+{
+    Polygon polyline;
+    if (from > to)
+        return polyline;
+
+    int visFrom = from, visTo = to;
+    qwtFindVisibleRange(xMap, series, from, to, visFrom, visTo);
+
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    if (xPixels <= 0)
+        return polyline;
+
+    struct Bin
+    {
+        int firstY, minY, maxY, lastY;
+        int count;
+    };
+
+    QVector< Bin > bins(xPixels);
+    for (int i = 0; i < xPixels; i++) {
+        bins[ i ].count = 0;
+    }
+
+    const bool linearPath = xMap.isLinear() && yMap.isLinear();
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
+        const int xMin    = qRound(xMap.p1());
+
+        for (int i = visFrom; i <= visTo; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qRound(sample.x() * xCnv + xOff);
+            const int y = qRound(sample.y() * yCnv + yOff);
+            const int col = x - xMin;
+            if (col < 0 || col >= xPixels)
+                continue;
+            Bin& bin = bins[ col ];
+            if (bin.count == 0) {
+                bin.firstY = bin.minY = bin.maxY = bin.lastY = y;
+            } else {
+                if (y < bin.minY)
+                    bin.minY = y;
+                else if (y > bin.maxY)
+                    bin.maxY = y;
+                bin.lastY = y;
+            }
+            bin.count++;
+        }
+    } else {
+        const int xMin = qRound(xMap.p1());
+
+        for (int i = visFrom; i <= visTo; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x   = qwtRoundValue(xMap.transform(sample.x()));
+            const int y   = qwtRoundValue(yMap.transform(sample.y()));
+            const int col = x - xMin;
+            if (col < 0 || col >= xPixels)
+                continue;
+            Bin& bin = bins[ col ];
+            if (bin.count == 0) {
+                bin.firstY = bin.minY = bin.maxY = bin.lastY = y;
+            } else {
+                if (y < bin.minY)
+                    bin.minY = y;
+                else if (y > bin.maxY)
+                    bin.maxY = y;
+                bin.lastY = y;
+            }
+            bin.count++;
+        }
+    }
+
+    polyline.reserve(4 * xPixels);
+    const int xMin = qRound(xMap.p1());
+    for (int col = 0; col < xPixels; col++) {
+        const Bin& bin = bins[ col ];
+        if (bin.count == 0)
+            continue;
+        const int x = xMin + col;
+        polyline += Point(x, bin.firstY);
+        if (bin.count < 4) {
+            // for very few points in a column, just emit them in order
+            if (bin.count == 2)
+                polyline += Point(x, bin.lastY);
+            else if (bin.count >= 3) {
+                polyline += Point(x, bin.minY);
+                polyline += Point(x, bin.maxY);
+                polyline += Point(x, bin.lastY);
+            }
+        } else {
+            int yMin = bin.minY, yMax = bin.maxY;
+            if (bin.lastY > bin.firstY)
+                qSwap(yMin, yMax);
+            if (yMax != bin.firstY)
+                polyline += Point(x, yMax);
+            if (yMin != yMax)
+                polyline += Point(x, yMin);
+            if (bin.lastY != bin.minY)
+                polyline += Point(x, bin.lastY);
+        }
+    }
+
+    return polyline;
+}
+
+// MinMax bucket downsampling: divide data into N equal-count buckets,
+// keep min-Y and max-Y from each bucket. O(n) time, O(N) output.
+template< class Polygon, class Point >
+static Polygon
+qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+{
+    Polygon polyline;
+    if (from > to)
+        return polyline;
+
+    int visFrom = from, visTo = to;
+    qwtFindVisibleRange(xMap, series, from, to, visFrom, visTo);
+
+    const int numPoints = visTo - visFrom + 1;
+    if (numPoints <= 0)
+        return polyline;
+
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int numBuckets = qMax(2, 2 * xPixels); // 2 points per bucket (min + max)
+
+    if (numPoints <= numBuckets * 2) {
+        // not enough points to benefit from bucketing, fall back to quad
+        return qwtMapPointsQuad< Polygon, Point >(xMap, yMap, series, visFrom, visTo);
+    }
+
+    const double bucketSize = static_cast< double >(numPoints) / numBuckets;
+    const bool linearPath   = xMap.isLinear() && yMap.isLinear();
+
+    polyline.reserve(2 * numBuckets + 4);
+
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
+
+        for (int b = 0; b < numBuckets; b++) {
+            const int start = visFrom + static_cast< int >(b * bucketSize);
+            const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+
+            int minX = 0, maxX = 0;
+            double minY = 1e300, maxY = -1e300;
+            bool first = true;
+
+            for (int i = start; i <= qMin(end, visTo); i++) {
+                const QPointF sample = series->sample(i);
+                if (qwt_is_nan_or_inf(sample))
+                    continue;
+                const double y = sample.y();
+                const int sx   = qRound(sample.x() * xCnv + xOff);
+                const int sy   = qRound(y * yCnv + yOff);
+
+                if (first) {
+                    minX = maxX = sx;
+                    minY = maxY = y;
+                    first       = false;
+                } else {
+                    if (y < minY) {
+                        minY = y;
+                        minX = sx;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                        maxX = sx;
+                    }
+                }
+            }
+
+            if (!first) {
+                const int syMin = qRound(minY * yCnv + yOff);
+                const int syMax = qRound(maxY * yCnv + yOff);
+                polyline += Point(minX, syMin);
+                if (syMax != syMin || maxX != minX)
+                    polyline += Point(maxX, syMax);
+            }
+        }
+    } else {
+        for (int b = 0; b < numBuckets; b++) {
+            const int start = visFrom + static_cast< int >(b * bucketSize);
+            const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+
+            int minX = 0, maxX = 0;
+            double minY = 1e300, maxY = -1e300;
+            bool first = true;
+
+            for (int i = start; i <= qMin(end, visTo); i++) {
+                const QPointF sample = series->sample(i);
+                if (qwt_is_nan_or_inf(sample))
+                    continue;
+                const double y = sample.y();
+                const int sx   = qwtRoundValue(xMap.transform(sample.x()));
+                const int sy   = qwtRoundValue(yMap.transform(y));
+
+                if (first) {
+                    minX = maxX = sx;
+                    minY = maxY = y;
+                    first       = false;
+                } else {
+                    if (y < minY) {
+                        minY = y;
+                        minX = sx;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                        maxX = sx;
+                    }
+                }
+            }
+
+            if (!first) {
+                const int syMin = qwtRoundValue(yMap.transform(minY));
+                const int syMax = qwtRoundValue(yMap.transform(maxY));
+                polyline += Point(minX, syMin);
+                if (syMax != syMin || maxX != minX)
+                    polyline += Point(maxX, syMax);
+            }
+        }
     }
 
     return polyline;
@@ -459,6 +800,7 @@ static inline Polygon qwtToPolylineFiltered(const QwtScaleMap& xMap,
     // check nan
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
+        sample0 = series->sample(realFrom);
     }
 
     points[ 0 ].rx() = round(xMap.transform(sample0.x()));
@@ -713,7 +1055,12 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
     QWT_DC(d);
     QPolygonF polyline;
 
-    if (d->flags & RoundPoints) {
+    // priority: PixelColumnReduce > MinMaxReduce > WeedOutIntermediatePoints > WeedOutPoints
+    if (d->flags & PixelColumnReduce) {
+        polyline = qwtPixelColumnReduce< QPolygonF, QPointF >(xMap, yMap, series, from, to);
+    } else if (d->flags & MinMaxReduce) {
+        polyline = qwtMinMaxBucketReduce< QPolygonF, QPointF >(xMap, yMap, series, from, to);
+    } else if (d->flags & RoundPoints) {
         if (d->flags & WeedOutIntermediatePoints) {
             polyline = qwtMapPointsQuad< QPolygonF, QPointF >(xMap, yMap, series, from, to);
         } else if (d->flags & WeedOutPoints) {
@@ -756,8 +1103,11 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
     QWT_DC(d);
     QPolygon polyline;
 
-    if (d->flags & WeedOutIntermediatePoints) {
-        // TODO WeedOutIntermediatePointsY ...
+    if (d->flags & PixelColumnReduce) {
+        polyline = qwtPixelColumnReduce< QPolygon, QPoint >(xMap, yMap, series, from, to);
+    } else if (d->flags & MinMaxReduce) {
+        polyline = qwtMinMaxBucketReduce< QPolygon, QPoint >(xMap, yMap, series, from, to);
+    } else if (d->flags & WeedOutIntermediatePoints) {
         polyline = qwtMapPointsQuad< QPolygon, QPoint >(xMap, yMap, series, from, to);
     } else if (d->flags & WeedOutPoints) {
         polyline = qwtToPolylineFilteredI(xMap, yMap, series, from, to);

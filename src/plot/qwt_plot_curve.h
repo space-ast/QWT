@@ -183,7 +183,7 @@ public:
 
     /**
      * @brief Attributes to modify the drawing algorithm
-     * @details The default setting enables ClipPolygons | FilterPoints
+     * @details The default setting enables ClipPolygons | FilterPoints | FilterPointsAggressive
      * @sa setPaintAttribute(), testPaintAttribute()
      */
     enum PaintAttribute
@@ -242,6 +242,37 @@ public:
          *      worked around by enabling the QwtPainter::polylineSplitting() mode.
          */
         FilterPointsAggressive = 0x10,
+
+        /**
+         * Pixel-column based downsampling for extreme performance.
+         *
+         * Allocates a bin array indexed by pixel column and stores
+         * first/min/max/last Y per column. Each column produces at most 4 points.
+         * Combined with binary-search visible range for monotonic X data.
+         *
+         * Output size: ~4 * canvasWidth points regardless of input size.
+         * This is the fastest algorithm for datasets exceeding 100k points.
+         *
+         * @note Implemented for QwtPlotCurve::Lines only
+         * @note Overrides FilterPointsAggressive when both are set
+         */
+        FilterPointsPixel = 0x20,
+
+        /**
+         * MinMax bucket downsampling (simplified LTTB variant).
+         *
+         * Divides the visible data range into N equal-count buckets
+         * and keeps the min-Y and max-Y point from each bucket.
+         * N is auto-calculated as 2 * canvasWidth.
+         *
+         * Output size: ~2 * N points. O(n) time complexity.
+         * Preserves visual shape better than FilterPointsPixel for
+         * data with uneven X distribution.
+         *
+         * @note Implemented for QwtPlotCurve::Lines only
+         * @note Overrides FilterPointsAggressive when both are set
+         */
+        FilterPointsLTTB = 0x40,
     };
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)

@@ -79,7 +79,7 @@ public:
         , baseline(0.0)
         , symbol(nullptr)
         , pen(Qt::black)
-        , paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPoints)
+        , paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPointsAggressive)
     {
         curveFitter = new QwtSplineCurveFitter;
     }
@@ -529,6 +529,9 @@ void QwtPlotCurve::drawLines(QPainter* painter,
         mapper.setFlag(QwtPointMapper::RoundPoints, true);
         mapper.setFlag(QwtPointMapper::WeedOutIntermediatePoints, testPaintAttribute(FilterPointsAggressive));
     }
+
+    mapper.setFlag(QwtPointMapper::PixelColumnReduce, testPaintAttribute(FilterPointsPixel));
+    mapper.setFlag(QwtPointMapper::MinMaxReduce, testPaintAttribute(FilterPointsLTTB));
 
     mapper.setFlag(QwtPointMapper::WeedOutPoints,
                    testPaintAttribute(FilterPoints) || testPaintAttribute(FilterPointsAggressive));

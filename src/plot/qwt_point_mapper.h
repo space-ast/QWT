@@ -79,7 +79,27 @@ public:
          *          As the algorithm is fast it can be used inside of a polyline render cycle.
          *
          */
-        WeedOutIntermediatePoints = 0x04
+        WeedOutIntermediatePoints = 0x04,
+
+        /**
+         * @brief Pixel-column based downsampling
+         *
+         * @details Allocates a bin array indexed by pixel column and stores
+         *          first/min/max/last Y per column. Output is at most 4 points per column.
+         *          Requires a valid boundingRect() to determine the canvas width.
+         *          Overrides WeedOutIntermediatePoints when both are set.
+         */
+        PixelColumnReduce = 0x08,
+
+        /**
+         * @brief MinMax bucket downsampling
+         *
+         * @details Divides the visible data into equal-count buckets and keeps
+         *          the min-Y and max-Y point from each bucket. Target bucket count
+         *          is derived from boundingRect() width.
+         *          Overrides WeedOutIntermediatePoints when both are set.
+         */
+        MinMaxReduce = 0x10
     };
 
     Q_DECLARE_FLAGS(TransformationFlags, TransformationFlag)
