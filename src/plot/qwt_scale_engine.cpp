@@ -345,9 +345,9 @@ QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInt
     }
 
     QList< double > strippedTicks;
-    for (int i = 0; i < ticks.count(); i++) {
-        if (contains(interval, ticks[ i ]))
-            strippedTicks += ticks[ i ];
+    for (const double tick : ticks) {
+        if (contains(interval, tick))
+            strippedTicks += tick;
     }
     return strippedTicks;
 }

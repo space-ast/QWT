@@ -269,8 +269,8 @@ QVector< QwtInterval > QwtCircleClipper::clipCircle(const QPointF& pos, double r
         QVector< double > angles;
         angles.reserve(points.size());
 
-        for (int i = 0; i < points.size(); i++)
-            angles += toAngle(pos, points[ i ]);
+        for (const auto& pt : points)
+            angles += toAngle(pos, pt);
 
         std::sort(angles.begin(), angles.end());
 

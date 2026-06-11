@@ -59,7 +59,7 @@ void QwtDynGridLayout::PrivateData::updateLayoutCache() const
 
     int index = 0;
 
-    for (QList< QLayoutItem* >::const_iterator it = itemList.constBegin(); it != itemList.constEnd(); ++it, index++) {
+    for (auto it = itemList.constBegin(); it != itemList.constEnd(); ++it, index++) {
         itemSizeHints[ index ] = (*it)->sizeHint();
     }
 

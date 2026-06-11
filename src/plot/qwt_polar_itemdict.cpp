@@ -28,8 +28,7 @@ class QwtPolarItemDict::PrivateData
             // for lists in Qt4. The implementation below
             // is slow, but there shouldn't be many plot items.
 
-            QList< QwtPolarItem* >::Iterator it;
-            for ( it = begin(); it != end(); ++it )
+            for ( auto it = begin(); it != end(); ++it )
             {
                 if ( *it == item )
                     return;
@@ -50,8 +49,7 @@ class QwtPolarItemDict::PrivateData
 
             int i = 0;
 
-            QList< QwtPolarItem* >::Iterator it;
-            for ( it = begin(); it != end(); ++it )
+            for ( auto it = begin(); it != end(); ++it )
             {
                 if ( item == *it )
                 {

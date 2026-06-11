@@ -1274,8 +1274,8 @@ void QwtPainter::fillBackground(QPainter* painter, QWidget* widget, const QVecto
 
     QWidget* bgWidget = QwtPainter::findBackgroundWidget(widget->parentWidget());
 
-    for (int i = 0; i < fillRects.size(); i++) {
-        const QRect rect = fillRects[ i ].toAlignedRect();
+    for (const auto& r : fillRects) {
+        const QRect rect = r.toAlignedRect();
         if (clipRegion.intersects(rect)) {
             QPixmap pm(rect.size());
             QwtPainter::fillPixmap(bgWidget, pm, widget->mapTo(bgWidget, rect.topLeft()));

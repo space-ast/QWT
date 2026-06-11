@@ -230,7 +230,7 @@ public:
 
     void layoutContents()
     {
-        const QwtDynGridLayout* tl = qobject_cast< QwtDynGridLayout* >(contentsWidget->layout());
+        const auto* tl = qobject_cast< QwtDynGridLayout* >(contentsWidget->layout());
         if (tl == nullptr)
             return;
 
@@ -557,7 +557,7 @@ bool QwtLegend::eventFilter(QObject* object, QEvent* event)
     if (object == d->view->contentsWidget) {
         switch (event->type()) {
         case QEvent::ChildRemoved: {
-            const QChildEvent* ce = static_cast< const QChildEvent* >(event);
+            const auto* ce = static_cast< const QChildEvent* >(event);
 
             if (ce->child()->isWidgetType()) {
                 /*

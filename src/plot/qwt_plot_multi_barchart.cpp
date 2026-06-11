@@ -232,7 +232,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
     if ( valueIndex < 0 )
         return;
 
-    QMap< int, QwtColumnSymbol* >::iterator it =
+    auto it =
         d->symbolMap.find(valueIndex);
     if ( it == d->symbolMap.end() )
     {
@@ -275,7 +275,7 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
 const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
 {
     QWT_DC(d);
-    QMap< int, QwtColumnSymbol* >::const_iterator it =
+    auto it =
         d->symbolMap.constFind( valueIndex );
 
     return ( it == d->symbolMap.constEnd() ) ? nullptr : it.value();

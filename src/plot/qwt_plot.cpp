@@ -843,8 +843,7 @@ void QwtPlot::getCanvasMarginsHint(
     left = top = right = bottom = -1.0;
 
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        const QwtPlotItem* item = *it;
+    for (const QwtPlotItem* item : itmList) {
         if (item->testItemAttribute(QwtPlotItem::Margins)) {
             using namespace QwtAxis;
 
@@ -1072,8 +1071,7 @@ void QwtPlot::drawCanvas(QPainter* painter)
 void QwtPlot::drawItems(QPainter* painter, const QRectF& canvasRect, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const
 {
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        QwtPlotItem* item = *it;
+    for (QwtPlotItem* item : itmList) {
         if (item && item->isVisible()) {
             const QwtAxisId xAxis = item->xAxis();
             const QwtAxisId yAxis = item->yAxis();
@@ -1277,7 +1275,7 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
             updateLegend();
             qwtEnableLegendItems(this, true);
 
-            QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
+            auto* lgd = qobject_cast< QwtLegend* >(legend);
             if (lgd) {
                 switch (m_data->layout->legendPosition()) {
                 case LeftLegend:
@@ -1334,8 +1332,8 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
 void QwtPlot::updateLegend()
 {
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        updateLegend(*it);
+    for (const QwtPlotItem* item : itmList) {
+        updateLegend(item);
     }
 }
 
@@ -1376,8 +1374,7 @@ void QwtPlot::updateLegendItems(const QVariant& itemInfo, const QList< QwtLegend
     QwtPlotItem* plotItem = infoToItem(itemInfo);
     if (plotItem) {
         const QwtPlotItemList& itmList = itemList();
-        for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-            QwtPlotItem* item = *it;
+        for (QwtPlotItem* item : itmList) {
             if (item->testItemInterest(QwtPlotItem::LegendInterest))
                 item->updateLegend(plotItem, legendData);
         }
@@ -1820,9 +1817,7 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
 
     // Iterate through all plot items
     const QwtPlotItemList& items = itemList();
-    for (QwtPlotItemIterator it = items.begin(); it != items.end(); ++it) {
-        QwtPlotItem* item = *it;
-
+    for (QwtPlotItem* item : items) {
         // If only processing visible items
         if (onlyVisibleItems && !item->isVisible()) {
             continue;
@@ -2249,9 +2244,7 @@ void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
         // plotItem is some sort of legend
 
         const QwtPlotItemList& itmList = itemList();
-        for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-            QwtPlotItem* item = *it;
-
+        for (QwtPlotItem* item : itmList) {
             QList< QwtLegendData > legendData;
             if (on && item->testItemAttribute(QwtPlotItem::Legend)) {
                 legendData = item->legendData();

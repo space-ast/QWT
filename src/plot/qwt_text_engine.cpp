@@ -109,7 +109,7 @@ class QwtPlainTextEngine::PrivateData
     {
         const QString fontKey = font.key();
 
-        QMap< QString, int >::const_iterator it =
+        auto it =
             m_ascentCache.constFind( fontKey );
 
         if ( it != m_ascentCache.constEnd() )

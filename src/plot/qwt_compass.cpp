@@ -139,7 +139,7 @@ QwtText QwtCompassScaleDraw::label(double value) const
     if (value < 0.0)
         value += 360.0;
 
-    QMap< double, QString >::const_iterator it = d->labelMap.constFind(value);
+    auto it = d->labelMap.constFind(value);
 
     if (it != d->labelMap.constEnd())
         return *it;

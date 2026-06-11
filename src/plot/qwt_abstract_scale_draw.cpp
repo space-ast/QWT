@@ -445,7 +445,7 @@ QwtText QwtAbstractScaleDraw::label(double value) const
 const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) const
 {
     QWT_DC(d);
-    QMap< double, QwtText >::const_iterator it1 = d->labelCache.constFind(value);
+    auto it1 = d->labelCache.constFind(value);
     if (it1 != d->labelCache.constEnd())
         return *it1;
 
@@ -455,7 +455,7 @@ const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) 
 
     (void)lbl.textSize(font);  // initialize the internal cache
 
-    QMap< double, QwtText >::iterator it2 = d->labelCache.insert(value, lbl);
+    auto it2 = d->labelCache.insert(value, lbl);
     return *it2;
 }
 

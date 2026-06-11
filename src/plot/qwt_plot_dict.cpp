@@ -45,7 +45,7 @@ class QwtPlotDict::PrivateData
             if ( item == nullptr )
                 return;
 
-            QList< QwtPlotItem* >::iterator it =
+            auto it =
                 std::upper_bound( begin(), end(), item, LessZThan() );
             insert( it, item );
         }
@@ -55,7 +55,7 @@ class QwtPlotDict::PrivateData
             if ( item == nullptr )
                 return;
 
-            QList< QwtPlotItem* >::iterator it =
+            auto it =
                 std::lower_bound( begin(), end(), item, LessZThan() );
 
             for ( ; it != end(); ++it )
