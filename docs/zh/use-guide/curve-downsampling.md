@@ -36,6 +36,7 @@ flowchart TD
 |------|------|
 | `src/plot/qwt_point_mapper.h` | `QwtPointMapper` 类声明，`TransformationFlag` 枚举定义 |
 | `src/plot/qwt_point_mapper.cpp` | 全部降采样算法实现（`qwtMapPointsQuad`、`qwtPixelColumnReduce`、`qwtMinMaxBucketReduce` 等） |
+| `src/plot/qwt_simd_argminmax.h/.cpp` | SIMD 加速 argmin/argmax（AVX2/SSE4.2/标量，运行时 CPU 检测） |
 | `src/plot/qwt_plot_curve.h` | `QwtPlotCurve::PaintAttribute` 枚举，面向用户的渲染属性接口 |
 | `src/plot/qwt_plot_curve.cpp` | `drawLines()` 中将 `PaintAttribute` 映射为 `TransformationFlag` |
 
@@ -302,6 +303,31 @@ flowchart LR
 ### 自动回退机制
 
 当可见数据点数不足以从桶化简中获益时（`numPoints ≤ numBuckets × 2`），算法自动回退到 Quad Reduce，避免在低数据密度场景下产生不合理的降采样。
+
+### SIMD 加速快速路径
+
+在线性缩放模式下，算法会尝试从数据源中提取原始 Y 值指针（`QwtPointArrayData`、`QwtCPointerData` 等连续存储类型）。成功提取后，执行以下优化：
+
+1. **NaN 预扫描**：对可见范围的 Y 数组做一次快速扫描，检测是否存在 NaN 值
+2. **无 NaN 时**：使用 SIMD 加速的 `qwtSimdArgMinMax()` 在每桶内同时查找 argmin/argmax，运行时自动选择 AVX2 / SSE4.2 / 标量实现
+3. **有 NaN 时**：回退到标量路径，逐点检查 NaN 后比较
+
+```mermaid
+flowchart TD
+    A["提取原始 Y 指针"] --> B{"提取成功?"}
+    B -->|否| G["标量路径\nvirtual sample() 访问"]
+    B -->|是| C["NaN 预扫描"]
+    C --> D{"存在 NaN?"}
+    D -->|否| E["SIMD 快速路径\nqwtSimdArgMinMax()"]
+    D -->|是| F["标量快速路径\n原始指针 + NaN 检查"]
+
+    style B fill:#4a90d9,color:#fff
+    style D fill:#4a90d9,color:#fff
+    style E fill:#5cb85c,color:#fff
+    style G fill:#999,color:#fff
+```
+
+SIMD 模块（`qwt_simd_argminmax.h/.cpp`）使用运行时 CPU 特性检测，通过函数指针分发消除分支开销。NaN 值利用 IEEE 754 比较语义被自然忽略。
 
 ### 特征分析
 
