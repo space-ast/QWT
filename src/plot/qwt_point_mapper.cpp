@@ -73,7 +73,7 @@ static Qt::Orientation qwtProbeOrientation(const QwtSeriesData< QPointF >* serie
     if (x0 == xn)
         return Qt::Vertical;
 
-    const int step          = (to - from) / 10;
+    const int step          = qMax(1, (to - from) / 50);
     const bool isIncreasing = xn > x0;
 
     double x1 = x0;
@@ -335,8 +335,8 @@ static bool qwtFindVisibleRange(const QwtScaleMap& xMap, const QwtSeriesData< QP
 
     const bool increasing = xn > x0;
 
-    // quick monotonicity check by sampling
-    const int step = (to - from) / 10;
+    // quick monotonicity check by sampling (up to 50 probe points)
+    const int step = qMax(1, (to - from) / 50);
     double prev    = x0;
     for (int i = from + step; i < to; i += step) {
         const double xi = series->sample(i).x();
@@ -416,16 +416,13 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
         int count;
     };
 
-    QVector< Bin > bins(xPixels);
-    for (int i = 0; i < xPixels; i++) {
-        bins[ i ].count = 0;
-    }
+    QVector< Bin > bins(xPixels, Bin{0, 0, 0, 0, 0});
 
+    const int xMin        = qRound(xMap.p1());
     const bool linearPath = xMap.isLinear() && yMap.isLinear();
     if (linearPath) {
         const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
         const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
-        const int xMin    = qRound(xMap.p1());
 
         for (int i = visFrom; i <= visTo; i++) {
             const QPointF sample = series->sample(i);
@@ -449,8 +446,6 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
             bin.count++;
         }
     } else {
-        const int xMin = qRound(xMap.p1());
-
         for (int i = visFrom; i <= visTo; i++) {
             const QPointF sample = series->sample(i);
             if (qwt_is_nan_or_inf(sample))
@@ -474,35 +469,37 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
         }
     }
 
-    polyline.reserve(4 * xPixels);
-    const int xMin = qRound(xMap.p1());
+    polyline.resize(4 * xPixels);
+    Point* outPts = polyline.data();
+    int n         = 0;
     for (int col = 0; col < xPixels; col++) {
         const Bin& bin = bins[ col ];
         if (bin.count == 0)
             continue;
         const int x = xMin + col;
-        polyline += Point(x, bin.firstY);
+        outPts[ n++ ] = Point(x, bin.firstY);
         if (bin.count < 4) {
             // for very few points in a column, just emit them in order
             if (bin.count == 2)
-                polyline += Point(x, bin.lastY);
+                outPts[ n++ ] = Point(x, bin.lastY);
             else if (bin.count >= 3) {
-                polyline += Point(x, bin.minY);
-                polyline += Point(x, bin.maxY);
-                polyline += Point(x, bin.lastY);
+                outPts[ n++ ] = Point(x, bin.minY);
+                outPts[ n++ ] = Point(x, bin.maxY);
+                outPts[ n++ ] = Point(x, bin.lastY);
             }
         } else {
             int yMin = bin.minY, yMax = bin.maxY;
             if (bin.lastY > bin.firstY)
                 qSwap(yMin, yMax);
             if (yMax != bin.firstY)
-                polyline += Point(x, yMax);
+                outPts[ n++ ] = Point(x, yMax);
             if (yMin != yMax)
-                polyline += Point(x, yMin);
+                outPts[ n++ ] = Point(x, yMin);
             if (bin.lastY != bin.minY)
-                polyline += Point(x, bin.lastY);
+                outPts[ n++ ] = Point(x, bin.lastY);
         }
     }
+    polyline.resize(n);
 
     return polyline;
 }
@@ -535,7 +532,9 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
     const double bucketSize = static_cast< double >(numPoints) / numBuckets;
     const bool linearPath   = xMap.isLinear() && yMap.isLinear();
 
-    polyline.reserve(2 * numBuckets + 4);
+    polyline.resize(2 * numBuckets);
+    Point* outPts = polyline.data();
+    int n         = 0;
 
     if (linearPath) {
         const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
@@ -547,6 +546,7 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
 
             int minX = 0, maxX = 0;
             double minY = 1e300, maxY = -1e300;
+            int minIdx = 0, maxIdx = 0;
             bool first = true;
 
             for (int i = start; i <= qMin(end, visTo); i++) {
@@ -555,20 +555,22 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
                     continue;
                 const double y = sample.y();
                 const int sx   = qRound(sample.x() * xCnv + xOff);
-                const int sy   = qRound(y * yCnv + yOff);
 
                 if (first) {
                     minX = maxX = sx;
                     minY = maxY = y;
-                    first       = false;
+                    minIdx = maxIdx = i;
+                    first           = false;
                 } else {
                     if (y < minY) {
-                        minY = y;
-                        minX = sx;
+                        minY   = y;
+                        minX   = sx;
+                        minIdx = i;
                     }
                     if (y > maxY) {
-                        maxY = y;
-                        maxX = sx;
+                        maxY   = y;
+                        maxX   = sx;
+                        maxIdx = i;
                     }
                 }
             }
@@ -576,9 +578,15 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
             if (!first) {
                 const int syMin = qRound(minY * yCnv + yOff);
                 const int syMax = qRound(maxY * yCnv + yOff);
-                polyline += Point(minX, syMin);
-                if (syMax != syMin || maxX != minX)
-                    polyline += Point(maxX, syMax);
+                if (minIdx <= maxIdx) {
+                    outPts[ n++ ] = Point(minX, syMin);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(maxX, syMax);
+                } else {
+                    outPts[ n++ ] = Point(maxX, syMax);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(minX, syMin);
+                }
             }
         }
     } else {
@@ -588,6 +596,7 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
 
             int minX = 0, maxX = 0;
             double minY = 1e300, maxY = -1e300;
+            int minIdx = 0, maxIdx = 0;
             bool first = true;
 
             for (int i = start; i <= qMin(end, visTo); i++) {
@@ -596,20 +605,22 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
                     continue;
                 const double y = sample.y();
                 const int sx   = qwtRoundValue(xMap.transform(sample.x()));
-                const int sy   = qwtRoundValue(yMap.transform(y));
 
                 if (first) {
                     minX = maxX = sx;
                     minY = maxY = y;
-                    first       = false;
+                    minIdx = maxIdx = i;
+                    first           = false;
                 } else {
                     if (y < minY) {
-                        minY = y;
-                        minX = sx;
+                        minY   = y;
+                        minX   = sx;
+                        minIdx = i;
                     }
                     if (y > maxY) {
-                        maxY = y;
-                        maxX = sx;
+                        maxY   = y;
+                        maxX   = sx;
+                        maxIdx = i;
                     }
                 }
             }
@@ -617,13 +628,20 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
             if (!first) {
                 const int syMin = qwtRoundValue(yMap.transform(minY));
                 const int syMax = qwtRoundValue(yMap.transform(maxY));
-                polyline += Point(minX, syMin);
-                if (syMax != syMin || maxX != minX)
-                    polyline += Point(maxX, syMax);
+                if (minIdx <= maxIdx) {
+                    outPts[ n++ ] = Point(minX, syMin);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(maxX, syMax);
+                } else {
+                    outPts[ n++ ] = Point(maxX, syMax);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(minX, syMin);
+                }
             }
         }
     }
 
+    polyline.resize(n);
     return polyline;
 }
 

@@ -11,7 +11,6 @@
 #include <QwtPlotCanvas>
 #include <QwtPlotLayout>
 #include <QwtScaleWidget>
-#include <QwtScaleDraw>
 
 Plot::Plot(QWidget* parent)
     : QwtPlot(parent)
@@ -28,9 +27,6 @@ Plot::Plot(QWidget* parent)
         QwtScaleWidget* sw = axisWidget(i);
         if (sw)
             sw->setMargin(0);
-        QwtScaleDraw* sd = axisScaleDraw(i);
-        if (sd)
-            sd->enableComponent(QwtAbstractScaleDraw::Backbone, false);
     }
     plotLayout()->setAlignCanvasToScales(true);
 

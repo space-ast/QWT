@@ -13,7 +13,6 @@
 #include <QwtPlotCurve>
 #include <QwtPlotLayout>
 #include <QwtScaleWidget>
-#include <QwtScaleDraw>
 #include <QwtMath>
 
 #ifndef QWT_NO_OPENGL
@@ -97,10 +96,6 @@ void Plot::alignScales()
         QwtScaleWidget* scaleWidget = axisWidget(axisPos);
         if (scaleWidget)
             scaleWidget->setMargin(0);
-
-        QwtScaleDraw* scaleDraw = axisScaleDraw(axisPos);
-        if (scaleDraw)
-            scaleDraw->enableComponent(QwtAbstractScaleDraw::Backbone, false);
     }
 
     plotLayout()->setAlignCanvasToScales(true);
