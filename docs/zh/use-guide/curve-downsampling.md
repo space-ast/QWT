@@ -329,6 +329,34 @@ flowchart TD
 
 SIMD 模块（`qwt_simd_argminmax.h/.cpp`）使用运行时 CPU 特性检测，通过函数指针分发消除分支开销。NaN 值利用 IEEE 754 比较语义被自然忽略。
 
+#### 原始指针提取
+
+`qwtTryGetRawPointData()` 辅助函数通过 `dynamic_cast` 检测 `QwtSeriesData` 子类，获取直接内存访问：
+
+| 数据类型 | X 指针 | Y 指针 |
+|---------|--------|--------|
+| `QwtPointArrayData<double>` | `xData().constData()` | `yData().constData()` |
+| `QwtCPointerData<double>` | `xData()` | `yData()` |
+| `QwtValuePointData<double>` | `nullptr`（索引作为 X） | `yData().constData()` |
+| `QwtCPointerValueData<double>` | `nullptr`（索引作为 X） | `yData()` |
+| 其他 `QwtSeriesData` 子类 | — | 提取失败，使用虚函数路径 |
+
+当 X 指针为 `nullptr` 时（基于值的数据，X = 索引），屏幕 X 坐标直接从数据索引计算：`sx = qRound(index × xCnv + xOff)`。
+
+#### SIMD 实现细节
+
+argmin/argmax 搜索在连续 `double` 数组上按以下策略执行：
+
+| CPU 特性 | 向量化宽度 | 每次迭代处理 | 关键指令 |
+|---------|-----------|-------------|---------|
+| AVX2 | 256-bit | 4 个 double | `_mm256_loadu_pd`、`_mm256_cmp_pd`、`_mm256_blendv_pd` |
+| SSE4.2 | 128-bit | 2 个 double | `_mm_loadu_pd`、`_mm_cmp_pd`、`_mm_blendv_pd` |
+| 标量 | — | 1 个 double | 标准 C++ 比较 |
+
+每次 SIMD 迭代维护运行中的 min/max 值向量和对应的索引向量（以 `double` 存储以兼容 `_mm256_blendv_pd`）。向量化循环结束后，通过水平归约（horizontal reduction）得到最终结果。当数据量不是向量宽度的整数倍时，剩余尾部元素由标量尾循环处理。
+
+运行时 CPU 检测在程序启动时仅执行一次，使用 `__cpuid`/`__cpuidex`（MSVC）或 `__builtin_cpu_supports`（GCC/Clang）。选中的实现缓存在函数指针中，避免重复检测开销。
+
 ### 特征分析
 
 - **输出点数**：约 `2 × numBuckets = 4 × W`（每桶最多 2 个点）
@@ -372,6 +400,92 @@ flowchart TD
 ### 源码位置
 
 `src/plot/qwt_point_mapper.cpp` 中的 `qwtFindVisibleRange()` 静态函数。
+
+## SIMD 模块参考：qwtSimdArgMinMax
+
+`qwt_simd_argminmax.h/.cpp` 提供了通用的 SIMD 加速 argmin/argmax 搜索功能，当前被 MinMax Bucket Reduce 算法内部使用。
+
+### 公共 API
+
+```cpp
+#include "qwt_simd_argminmax.h"
+
+struct QwtArgMinMaxResult
+{
+    int minIdx;     // 最小值的局部索引（相对于输入指针）
+    int maxIdx;     // 最大值的局部索引（相对于输入指针）
+    double minVal;  // 最小值
+    double maxVal;  // 最大值
+};
+
+QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count);
+```
+
+**前置条件**：`data != nullptr` 且 `count >= 1`。
+
+**NaN 行为**：NaN 值通过 IEEE 754 比较语义被自然忽略（`NaN < x` 和 `NaN > x` 均返回 false）。如果数组全部为 NaN，返回 `{0, 0, DBL_MAX, -DBL_MAX}`。
+
+### 三路径架构
+
+```mermaid
+flowchart TD
+    A["qwtSimdArgMinMax(data, count)"] --> B{"运行时 CPU 检测\n（程序启动时一次性）"}
+    B -->|AVX2| C["argMinMaxAVX2()\n4 doubles / 次\n_mm256_loadu_pd"]
+    B -->|SSE4.2| D["argMinMaxSSE42()\n2 doubles / 次\n_mm_loadu_pd"]
+    B -->|标量| E["argMinMaxScalar()\n逐一比较"]
+
+    C --> F["水平归约 → QwtArgMinMaxResult"]
+    D --> F
+    E --> F
+    F --> G{"结果含 NaN?"}
+    G -->|是| H["返回 {0,0,DBL_MAX,-DBL_MAX}"]
+    G -->|否| I["返回实际结果"]
+
+    style B fill:#4a90d9,color:#fff
+    style C fill:#5cb85c,color:#fff
+    style D fill:#f0ad4e,color:#fff
+    style E fill:#999,color:#fff
+```
+
+**分发机制**：使用函数指针实现零分支开销的分发。`detectSimdLevel()` 在程序首次加载时执行一次，结果缓存在 `static const` 变量中：
+
+```cpp
+QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count)
+{
+    using Fn = QwtArgMinMaxResult (*)(const double*, int);
+    static const Fn kFn = []() -> Fn {
+        switch (kSimdLevel) {
+        case AVX2:  return argMinMaxAVX2;
+        case SSE42: return argMinMaxSSE42;
+        default:    return argMinMaxScalar;
+        }
+    }();
+    return kFn(data, count);
+}
+```
+
+### CPU 检测
+
+| 编译器 | 检测方法 |
+|--------|---------|
+| MSVC | `__cpuid` / `__cpuidex` 内建函数 |
+| GCC / Clang | `__builtin_cpu_supports("avx2" / "sse4.2")` |
+
+检测逻辑：先检查 AVX2 支持（CPUID leaf 7, EBX bit 5），再检查 SSE4.2（CPUID leaf 1, ECX bit 20），最终回退到标量。
+
+### 性能特征
+
+| 路径 | 向量化宽度 | 每次迭代处理 | 理论加速比 |
+|------|-----------|-------------|-----------|
+| AVX2 | 256-bit | 4 个 double | 3-4× vs 标量 |
+| SSE4.2 | 128-bit | 2 个 double | 1.5-2× vs 标量 |
+| 标量 | — | 1 个 double | 1× (基准) |
+
+实测加速取决于数据规模、CPU 型号和编译器优化。当桶内数据量较小时（如每桶 < 16 个点），SIMD 的固定开销（向量加载、水平归约）可能抵消并行收益，此时标量路径同样高效。
+
+### 扩展性
+
+`qwtSimdArgMinMax` 模块设计为独立的 SIMD 工具单元。未来可在其他需要 argmin/argmax 操作的场景（如 `qwtPixelColumnReduce` 的桶内搜索）中复用。如需扩展至 `float` 类型，只需添加 `__m256`/`__m128` 版本的实现即可。
 
 ## 性能对比
 

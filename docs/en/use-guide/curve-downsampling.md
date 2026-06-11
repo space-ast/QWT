@@ -36,6 +36,7 @@ flowchart TD
 |------|---------|
 | `src/plot/qwt_point_mapper.h` | `QwtPointMapper` class declaration, `TransformationFlag` enum |
 | `src/plot/qwt_point_mapper.cpp` | All downsampling algorithm implementations (`qwtMapPointsQuad`, `qwtPixelColumnReduce`, `qwtMinMaxBucketReduce`, etc.) |
+| `src/plot/qwt_simd_argminmax.h/.cpp` | SIMD-accelerated argmin/argmax (AVX2/SSE4.2/Scalar, runtime CPU detection) |
 | `src/plot/qwt_plot_curve.h` | `QwtPlotCurve::PaintAttribute` enum — the user-facing rendering attribute interface |
 | `src/plot/qwt_plot_curve.cpp` | `drawLines()` — maps `PaintAttribute` to `TransformationFlag` |
 
@@ -303,6 +304,59 @@ Equal division, each bucket has `bucketSize` points. If `minY == maxY`, only one
 
 When the visible data count is too small to benefit from bucketing (`numPoints ≤ numBuckets × 2`), the algorithm automatically falls back to Quad Reduce, avoiding unreasonable downsampling in low data density scenarios.
 
+### SIMD Accelerated Fast Path
+
+In linear scaling mode, the algorithm attempts to extract raw Y-value pointers from the data source (contiguous storage types such as `QwtPointArrayData`, `QwtCPointerData`, etc.). When extraction succeeds, the following optimizations are applied:
+
+1. **NaN pre-scan**: A single quick pass over the visible Y range to detect whether any NaN values exist
+2. **No NaN**: Uses the SIMD-accelerated `qwtSimdArgMinMax()` to simultaneously find argmin/argmax within each bucket, with the implementation automatically selected at runtime (AVX2 / SSE4.2 / Scalar)
+3. **Has NaN**: Falls back to a scalar path that checks NaN per-element before comparison
+
+```mermaid
+flowchart TD
+    A["Extract raw Y pointer"] --> B{"Extraction\nsucceeded?"}
+    B -->|No| G["Scalar path\nvirtual sample() access"]
+    B -->|Yes| C["NaN pre-scan"]
+    C --> D{"Any NaN found?"}
+    D -->|No| E["SIMD fast path\nqwtSimdArgMinMax()"]
+    D -->|Yes| F["Scalar fast path\nraw pointer + NaN check"]
+
+    style B fill:#4a90d9,color:#fff
+    style D fill:#4a90d9,color:#fff
+    style E fill:#5cb85c,color:#fff
+    style G fill:#999,color:#fff
+```
+
+The SIMD module (`qwt_simd_argminmax.h/.cpp`) uses runtime CPU feature detection and dispatches via function pointers to eliminate branch overhead. NaN values are naturally ignored through IEEE 754 comparison semantics (`NaN < x` and `NaN > x` both evaluate to false).
+
+#### Raw Pointer Extraction
+
+The `qwtTryGetRawPointData()` helper inspects the `QwtSeriesData` subclass via `dynamic_cast` to obtain direct memory access:
+
+| Data Type | X Pointer | Y Pointer |
+|-----------|-----------|-----------|
+| `QwtPointArrayData<double>` | `xData().constData()` | `yData().constData()` |
+| `QwtCPointerData<double>` | `xData()` | `yData()` |
+| `QwtValuePointData<double>` | `nullptr` (index-based) | `yData().constData()` |
+| `QwtCPointerValueData<double>` | `nullptr` (index-based) | `yData()` |
+| Other `QwtSeriesData` subclasses | — | Extraction fails, virtual path used |
+
+When X pointer is `nullptr` (value-based data where X = index), screen X coordinates are computed directly from the data index: `sx = qRound(index × xCnv + xOff)`.
+
+#### SIMD Implementation Details
+
+The argmin/argmax search operates on contiguous `double` arrays using the following strategy:
+
+| CPU Feature | Vector Width | Elements per Iteration | Instruction Examples |
+|-------------|-------------|----------------------|---------------------|
+| AVX2 | 256-bit | 4 doubles | `_mm256_loadu_pd`, `_mm256_cmp_pd`, `_mm256_blendv_pd` |
+| SSE4.2 | 128-bit | 2 doubles | `_mm_loadu_pd`, `_mm_cmp_pd`, `_mm_blendv_pd` |
+| Scalar | — | 1 double | Standard C++ comparison |
+
+Each SIMD iteration maintains running min/max value vectors and corresponding index vectors (stored as `double` for `_mm256_blendv_pd` compatibility). After the vectorized loop, a horizontal reduction across vector lanes yields the final result. Any remaining tail elements (when `count` is not a multiple of vector width) are processed by a scalar tail loop.
+
+Runtime CPU detection is performed once at program startup using `__cpuid`/`__cpuidex` (MSVC) or `__builtin_cpu_supports` (GCC/Clang). The selected implementation is cached in a function pointer to avoid repeated detection overhead.
+
 ### Characteristics
 
 - **Output size**: Approximately `2 × numBuckets = 4 × W` (at most 2 points per bucket)
@@ -346,6 +400,92 @@ flowchart TD
 ### Source Location
 
 `qwtFindVisibleRange()` static function in `src/plot/qwt_point_mapper.cpp`.
+
+## SIMD Module Reference: qwtSimdArgMinMax
+
+`qwt_simd_argminmax.h/.cpp` provides a general-purpose SIMD-accelerated argmin/argmax search, currently used internally by the MinMax Bucket Reduce algorithm.
+
+### Public API
+
+```cpp
+#include "qwt_simd_argminmax.h"
+
+struct QwtArgMinMaxResult
+{
+    int minIdx;     // Local index of the minimum (relative to input pointer)
+    int maxIdx;     // Local index of the maximum (relative to input pointer)
+    double minVal;  // Minimum value
+    double maxVal;  // Maximum value
+};
+
+QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count);
+```
+
+**Preconditions**: `data != nullptr` and `count >= 1`.
+
+**NaN behavior**: NaN values are naturally ignored through IEEE 754 comparison semantics (`NaN < x` and `NaN > x` both evaluate to false). For an all-NaN array, returns `{0, 0, DBL_MAX, -DBL_MAX}`.
+
+### Three-Path Architecture
+
+```mermaid
+flowchart TD
+    A["qwtSimdArgMinMax(data, count)"] --> B{"Runtime CPU detection\n(once at program startup)"}
+    B -->|AVX2| C["argMinMaxAVX2()\n4 doubles / iter\n_mm256_loadu_pd"]
+    B -->|SSE4.2| D["argMinMaxSSE42()\n2 doubles / iter\n_mm_loadu_pd"]
+    B -->|Scalar| E["argMinMaxScalar()\nelement-wise comparison"]
+
+    C --> F["Horizontal reduction → QwtArgMinMaxResult"]
+    D --> F
+    E --> F
+    F --> G{"Result contains NaN?"}
+    G -->|Yes| H["Return {0,0,DBL_MAX,-DBL_MAX}"]
+    G -->|No| I["Return actual result"]
+
+    style B fill:#4a90d9,color:#fff
+    style C fill:#5cb85c,color:#fff
+    style D fill:#f0ad4e,color:#fff
+    style E fill:#999,color:#fff
+```
+
+**Dispatch mechanism**: Function-pointer based dispatch with zero branch overhead. `detectSimdLevel()` executes once at program startup, and the result is cached in a `static const` variable:
+
+```cpp
+QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count)
+{
+    using Fn = QwtArgMinMaxResult (*)(const double*, int);
+    static const Fn kFn = []() -> Fn {
+        switch (kSimdLevel) {
+        case AVX2:  return argMinMaxAVX2;
+        case SSE42: return argMinMaxSSE42;
+        default:    return argMinMaxScalar;
+        }
+    }();
+    return kFn(data, count);
+}
+```
+
+### CPU Detection
+
+| Compiler | Detection Method |
+|----------|-----------------|
+| MSVC | `__cpuid` / `__cpuidex` built-in intrinsics |
+| GCC / Clang | `__builtin_cpu_supports("avx2" / "sse4.2")` |
+
+Detection logic: first checks for AVX2 support (CPUID leaf 7, EBX bit 5), then SSE4.2 (CPUID leaf 1, ECX bit 20), falling back to scalar.
+
+### Performance Characteristics
+
+| Path | Vector Width | Elements per Iteration | Theoretical Speedup |
+|------|-------------|----------------------|---------------------|
+| AVX2 | 256-bit | 4 doubles | 3-4× vs scalar |
+| SSE4.2 | 128-bit | 2 doubles | 1.5-2× vs scalar |
+| Scalar | — | 1 double | 1× (baseline) |
+
+Actual speedup depends on data size, CPU model, and compiler optimization. When per-bucket data is small (e.g., fewer than 16 elements per bucket), the fixed overhead of SIMD (vector load, horizontal reduction) may offset the parallelism benefit, making the scalar path equally efficient.
+
+### Extensibility
+
+The `qwtSimdArgMinMax` module is designed as a standalone SIMD utility. It can be reused in other scenarios requiring argmin/argmax operations (e.g., bucket searches within `qwtPixelColumnReduce`). To extend to `float` type, only `__m256`/`__m128` variants need to be added.
 
 ## Performance Comparison
 
