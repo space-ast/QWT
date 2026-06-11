@@ -1,134 +1,211 @@
+## tag:v7.3.0 (Unreleased)
+
+### New Features
+
+- **QwtColorCycle — Color Cycle System**
+    - Added `QwtColorCycle` class for managing color palettes with cyclic wrap-around, 7 built-in presets plus custom palettes
+    - Integrated with `QwtPlot` — plot items automatically acquire colors from the color cycle on `attach()`
+    - Supported items: `QwtPlotCurve`, `QwtPlotMultiBarChart`, `QwtPlotBoxChart`, `QwtPlotHistogram`, `QwtPlotIntervalCurve`, `QwtPlotBarChart`
+    - Added color cycle unit tests
+
+- **Curve Downsampling Filters**
+    - Added `FilterPointsPixel` and `FilterPointsLTTB` paint attributes to `QwtPlotCurve`
+        - `FilterPointsPixel`: pixel-column based downsampling for maximum rendering speed on very large datasets
+        - `FilterPointsLTTB`: simplified LTTB (MinMax bucket) algorithm that preserves visual shape while downsampling
+    - Changed default paint attribute from `FilterPoints` to `FilterPointsAggressive`
+    - `qwtMapPointsQuad` improved NaN/Inf skipping logic and polygon memory pre-allocation
+
+- **SIMD-Accelerated MinMax Bucket Downsampling**
+    - Added `qwt_simd_argminmax` module providing SIMD-accelerated argmin/argmax computation
+    - Supports SSE2/AVX2/NEON instruction sets with automatic runtime detection
+    - Significantly boosts MinMax bucket downsampling performance
+
+- **Picker Enhancements**
+    - `QwtPlotSeriesDataPickerGroup` now provides click position (screen and data coordinates) on click events
+    - `QwtPlotSeriesDataPicker` extended to handle all `QwtPlotSeriesItem` subtypes:
+        - Trading curves (candlestick), interval curves, histograms, vector fields
+        - Bar charts, box charts, spectro curves
+    - `FeaturePoint` gained a `sampleData` field (QVariant) carrying full sample data (OHLC, interval, vector, etc.)
+    - Sample types registered via `Q_DECLARE_METATYPE` for cross-module passing
+
+- **Flat Style Controls**
+    - `QwtSimpleCompassRose` — new `flatStyle` property replaces classic two-tone 3D effect with solid colors
+    - `QwtWheel` — new `flatStyle` property replaces 3D gradients and borders with flat colors and simple lines
+    - `QwtSlider` and `QwtThermo` — new `flatStyle` property for modern flat UI themes
+    - `QwtDialNeedle` — multiple flat-style needle designs added
+    - `QwtKnob` — defaults to `Flat` mode
+
+### Performance
+
+- `qwtProbeOrientation` and `qwtFindVisibleRange` optimized sampling strategy — probes up to 50 points with a minimum step of 1
+- `qwtPixelColumnReduce` — pre-sized polyline vector, direct pointer assignment instead of dynamic appends
+- Bins initialization simplified via `QVector` constructor
+
+### Refactoring
+
+- **PIMPL Macro Unification** (180+ files)
+    - All classes migrated from manual PIMPL (raw `PrivateData* m_data`) to standard macro pattern
+    - Headers use `QWT_DECLARE_PRIVATE(ClassName)`, implementations use `QWT_DECLARE_PUBLIC` + `QWT_PIMPL_CONSTRUCT` + `QWT_D/QWT_DC`
+    - `unique_ptr` manages lifetime automatically; all `delete m_data` removed
+    - Covers all modules: plot core, axes, text/legend, color maps, canvas, bar charts, interaction, data, splines, widgets, polar, etc.
+
+- **3D Plot Module Overhaul** (53 files)
+    - Added `override` specifiers to all virtual functions and destructors
+    - `nullptr` replaces `0` for null pointer constants
+    - `SurfacePlot` refactored to PIMPL pattern (`QWT_DECLARE_PRIVATE`)
+    - `qwt3d_ptr` renamed to `ClonePtr`, unified include guards
+
+- **Modern C++ Adoption**
+    - `auto` keyword and range-based for loops throughout the codebase
+    - Move semantics and C++11 default member initializers
+    - `noexcept` added to trivial getters, setters, and constructors
+    - `constexpr` expanded to intervals, axes, scale maps, and math utilities
+    - C++ idiom modernization across `src/plot` and `src/plot3d`
+
+### New Examples
+
+- **renderbench** — curve rendering performance benchmark
+    - `WindowedSeriesData` for real-time data stream simulation
+    - Control panel for adjusting data size, downsampling mode, line width, etc.
+    - Generates Markdown-formatted performance reports
+    - Located at `examples/bench/renderbench/`
+
+### Documentation
+
+- Complete curve downsampling algorithm documentation
+- Added `QWEN.md` AI Agent guidelines, updated build instructions
+- Added English documentation and restructured bilingual documentation site
+- Enforced English-only Doxygen comments across all source files
+- Large-scale bilingual Doxygen comment completion (40+ batches) covering all core headers
+
+### Bug Fixes
+
+- Fixed Qt6 legend icon appearing blank due to `QwtNullPaintDevice::metric()` returning 0 for device pixel ratio
+
 ## tag:v7.2.1
 
-- 新增刻度朝内显示功能
-    - 新增`QwtPlot::TickDirection`枚举，支持`TickOutside`（刻度朝外，默认）和`TickInside`（刻度朝内）
-    - 新增`QwtPlot::setAxisTickDirection()`和`QwtPlot::axisTickDirection()`方法，可独立控制每个坐标轴的刻度方向
-    - 刻度朝内时，刻度线从画布边缘向内延伸，主干和标签保持在画布外
-    - 朝内刻度与朝外刻度共享相同的样式设置（长度、颜色、线宽）
-    - 新增示例程序：`examples/2D/ticks_inside/`
+- **Inside Tick Display**
+    - Added `QwtPlot::TickDirection` enum: `TickOutside` (default) and `TickInside`
+    - Added `QwtPlot::setAxisTickDirection()` and `QwtPlot::axisTickDirection()` to control tick direction per axis
+    - Inside ticks extend from the canvas edge inward; the backbone and labels remain outside the canvas
+    - Inside and outside ticks share the same style settings (length, color, pen width)
+    - New example: `examples/2D/ticks_inside/`
     ![ticks_inside](./docs/assets/screenshots/ticks_inside.png)
 
 ## tag:v7.2.0
 
-- 新增箱线图(Box Chart)支持
-    - 新增`QwtPlotBoxChart`类，用于绘制箱线图（Box-and-Whisker Plot）
-    - 新增`QwtBoxStatisticsCalculator`类，用于自动计算统计量
-    - 新增数据结构：`QwtBoxSample`、`QwtBoxOutlierSample`、`QwtBoxChartData`、`QwtBoxOutlierChartData`
-    - 支持预计算数据和原始数据两种输入方式
-    - 支持多种箱体样式：矩形(Rect)、菱形(Diamond)、缺口形(Notch)
-    - 支持多种须须计算方法：Tukey(1.5×IQR)、百分位数、最小最大值、标准差、标准误
-    - 支持垂直和水平两种显示方向
-    - 支持异常值自动检测、自定义符号和抖动显示
-    - 新增示例程序：`examples/2D/boxchart/`
-	![Box Chart](./docs/assets/screenshots/BoxChart.png)
+- **Box Chart (Box-and-Whisker Plot)**
+    - Added `QwtPlotBoxChart` class for box-and-whisker plots
+    - Added `QwtBoxStatisticsCalculator` for automatic statistics computation
+    - New data structures: `QwtBoxSample`, `QwtBoxOutlierSample`, `QwtBoxChartData`, `QwtBoxOutlierChartData`
+    - Supports both pre-computed and raw data input
+    - Box styles: Rect, Diamond, Notch
+    - Whisker methods: Tukey (1.5×IQR), percentile, min-max, standard deviation, standard error
+    - Vertical and horizontal orientations
+    - Automatic outlier detection with custom symbols and jitter display
+    - New example: `examples/2D/boxchart/`
+    ![Box Chart](./docs/assets/screenshots/BoxChart.png)
 
 ## tag:v7.0.8
 
-- `QwtFigure`增加`addAxisAlignment`等坐标轴对齐功能，可以指定子绘图的坐标轴进行对齐
-	坐标轴对齐的效果如下：
-	![axis-alignment](./docs/assets/picture/figure-scale-aligment.png)
-
-- `QwtPointMapper`添加对`NaN`和`Inf`值的异常处理，在数据存在异常值时不会导致坐标映射异常
-- `qwt_series_data.cpp`的数据范围判断增加对`NaN`和`Inf`值的异常处理
-- 解决合并文件漏了QwtSlider类的问题（Issue #4）
+- `QwtFigure` axis alignment — added `addAxisAlignment` to align sub-plot axes
+    ![axis-alignment](./docs/assets/picture/figure-scale-aligment.png)
+- `QwtPointMapper` NaN/Inf handling — prevents coordinate mapping corruption from abnormal data values
+- `qwt_series_data.cpp` — NaN/Inf checks added to data range computation
+- Fixed missing `QwtSlider` class in amalgamated file (Issue #4)
 
 ## tag:v7.0.7
 
-- v7.0.5~v7.0.6新增的`QwtScaleWidget::panScale`函数移动到`QwtPlot`中，并改名为`panAxis`，并修复了在对数坐标轴移动异常的问题，解决对数坐标轴坐标移动问题
-- 原来`QwtPanner`类改名为`QwtCachePanner`,代表带缓存的`Panner`。Qwt6.0的Panner为了避免频繁刷新使用了一个pixmap进行缓存，因此把这类Panner统称为`CachePanner`
-	- 同步`QwtPlotPanner`类改名为`QwtPlotCachePanner`
-	- 同步`QwtPolarPanner`类改名为`QwtPolarCachePanner` 
-	
-	`QwtPlotPanner`效果如下：
-	![series-data-picker-yvalue](./docs/assets/screenshots/qwt-realtime-panner.gif)
-	
-- 重写`QwtPlotPanner`类，继承`QwtPicker`，可实现拖动过程能实时刷新，如果想要原来的带缓存的panner，可使用`CachePanner`相关类
-- 新增`QwtCanvasPicker`针对canvas的picker操作都继承此类
-- `QwtPlotPanner`支持线性坐标轴、对数坐标轴、多坐标轴的实时平移
-- 针对`QwtPlotZoomer`只能绑定2个坐标轴问题，新增`QwtPlotCanvasZoomer`类
-	- `QwtPlotCanvasZoomer`无需绑定坐标轴，直接对整个cavas进行缩放
-	- `QwtPlotCanvasZoomer`支持多坐标轴的缩放
-- 原`QwtPlotZoomer`更名为`QwtPlotAxisZoomer`
-- `QwtPlotSeriesDataPicker`将直接继承`QwtPicker`，不再继承`QwtPlotPicker`
-- `QwtPlotMagnifier`支持多坐标轴的缩放
-- `QwtScaleMap`增加移动语义
-- 新增`make-classinclude.py`,可以导出`classincludes`目录，使用方法见`make-classinclude.py`
---
+- Moved `QwtScaleWidget::panScale` to `QwtPlot` as `panAxis`; fixed panning on logarithmic axes
+- Renamed panner classes to reflect caching behavior:
+    - `QwtPanner` → `QwtCachePanner`
+    - `QwtPlotPanner` → `QwtPlotCachePanner`
+    - `QwtPolarPanner` → `QwtPolarCachePanner`
 
-v7.0.7对Qwt的命名进行了调整
+    `QwtPlotPanner` (new, real-time):
+    ![series-data-picker-yvalue](./docs/assets/screenshots/qwt-realtime-panner.gif)
 
-|原名称|新名称|备注|
+- Rewrote `QwtPlotPanner` — now inherits `QwtPicker` for real-time dragging; original cached panner available as `QwtPlotCachePanner`
+- Added `QwtCanvasPicker` base class for canvas-specific picker operations
+- `QwtPlotPanner` supports linear, logarithmic, and multi-axis real-time panning
+- Added `QwtPlotCanvasZoomer` — zooms the entire canvas without axis binding, supports multi-axis zoom
+- Renamed `QwtPlotZoomer` → `QwtPlotAxisZoomer`
+- `QwtPlotSeriesDataPicker` now inherits `QwtPicker` directly (no longer `QwtPlotPicker`)
+- `QwtPlotMagnifier` supports multi-axis scaling
+- `QwtScaleMap` — added move semantics
+- Added `make-classinclude.py` for exporting the `classincludes` directory
+
+v7.0.7 naming changes:
+
+| Original Name | New Name | Note |
 |:--|:--|:--|
-|QwtPlotZoomer|QwtPlotAxisZoomer|由于原QwtPlotZoomer只能绑定2个坐标轴，故改名为QwtPlotAxisZoomer|
-|新增|QwtPlotCanvasZoomer|针对整个画布缩放的zoomer|
-|QwtPanner|QwtCachePanner|原Panner无法实时拖动，故名Cache Panner|
-|QwtPlotPanner|QwtPlotCachePanner|原Panner无法实时拖动，故名Cache Panner|
-|QwtPolarPanner|QwtPolarCachePanner|原Panner无法实时拖动，故名Cache Panner|
-|新增|QwtPlotPanner|原QwtPlotPanner改名为QwtPlotCachePanner后新增QwtPlotPanner|
+| QwtPlotZoomer | QwtPlotAxisZoomer | Renamed — original could only bind 2 axes |
+| (new) | QwtPlotCanvasZoomer | Whole-canvas zoomer |
+| QwtPanner | QwtCachePanner | Original cannot drag in real-time, hence "Cache" |
+| QwtPlotPanner | QwtPlotCachePanner | Same as above |
+| QwtPolarPanner | QwtPolarCachePanner | Same as above |
+| (new) | QwtPlotPanner | New real-time panner replacing the renamed one |
 
 ## tag:v7.0.6
 
-- 新增`QwtPlotSeriesDataPicker`类，提供了绘图数据的拾取
-    `QwtPlotSeriesDataPicker`效果如下：
+- Added `QwtPlotSeriesDataPicker` for plot data picking
     ![series-data-picker-yvalue](./docs/assets/picture/series-data-picker-yvalue.gif)
     ![series-data-picker-nearest-value](./docs/assets/picture/series-data-picker-nearest-value.gif)
-- 完善了寄生绘图的刷新机制，不会在构造时无法完全更新
-- 有些接口的索引类型由int改为size_t
-- `QwtPlotSeriesDataPicker`支持日期坐标轴的正常显示
-- 修正了`QwtFigureWidgetOverlay`的一些事件处理会和坐标轴动作冲突的问题
+- Improved parasite plot refresh mechanism — full update on construction
+- Changed some interface index types from `int` to `size_t`
+- `QwtPlotSeriesDataPicker` supports date axis display
+- Fixed `QwtFigureWidgetOverlay` event handling conflicting with axis actions
 
 ## tag:v7.0.5
 
-- `QwtScaleWidget`增加坐标轴内置动作功能，实现坐标轴的pan和zoom两种内置动作
-	- `QwtScaleWidget`增加`scaleRect`函数，可以获取坐标刻度所在矩形，也就是用来绘制刻度的区域
-	- `QwtScaleWidget`增加`QwtScaleWidget::BuiltinActions`枚举，目前包含了两个内置动作
-	- 增加`requestScaleRangeUpdate`信号，用于请求绘图刷新坐标轴范围
-	- 增加`setSelected`/`isSelected`函数，让坐标轴可选中，增加信号：`selectionChanged`
-	- 增加坐标轴动作相关的一些属性设置如：`zoomFactor`、`panScale`等函数
-- 增加`QwtPlotScaleEventDispatcher`类，实现绘图上处理坐标轴的相关事件
-- `QwtPlot`的寄生绘图相关接口进行了一定调整
-- `QwtPLot`增加`setEnableScaleBuildinActions`/`isEnableScaleBuildinActions`/`setupScaleEventDispatcher`等函数用于控制坐标轴的缩放和平移
-- `QwtPLot`增加`plotList`函数，能获取所有绘图对象，包括寄生绘图和宿主绘图
+- `QwtScaleWidget` built-in axis actions — pan and zoom
+    - Added `scaleRect()` to get the tick region rectangle
+    - Added `QwtScaleWidget::BuiltinActions` enum
+    - Added `requestScaleRangeUpdate` signal for axis range refresh
+    - Added `setSelected`/`isSelected` and `selectionChanged` signal
+    - Added action properties: `zoomFactor`, `panScale`, etc.
+- Added `QwtPlotScaleEventDispatcher` for axis event handling on plots
+- Adjusted `QwtPlot` parasite plot interfaces
+- Added `setEnableScaleBuildinActions`/`isEnableScaleBuildinActions`/`setupScaleEventDispatcher` to `QwtPlot`
+- Added `QwtPlot::plotList()` — returns all plot objects including parasite and host plots
 
 ## tag:v7.0.4
 
-- 实现寄生绘图功能
-- 增加寄生绘图的例子
-- `QwtPlot`添加`updateAxisEdgeMargin`函数，让寄生绘图可以自动调整坐标轴位置
+- Implemented parasite plot functionality
+- Added parasite plot example
+- Added `QwtPlot::updateAxisEdgeMargin` for automatic axis positioning with parasite plots
 
 ## tag:v7.0.2
 
-- 抽取出`QwtPlotLayoutEngine`类
-- 增加`QwtPlotParasiteLayout`类，用于实现寄生轴的布局
-- 增加`QwtPlotTransparentCanvas`类，用于实现一个完全透明的画布
-- `QwtFigure`类实现寄生轴功能
-- `QwtScaleWidget`添加了`setEdgeMargin`和`edgeMargin`方法，可以实现刻度和绘图边缘的距离设置
-- 调整了`QwtScaleWidget`的布局方案，能支持`edgeMargin`
-- 例子增加`parasitePlot`演示如何使用寄生轴
-- `QwtPlot`增加`rescaleAxes`,`syncAxis`等方法，用于实现快速调整坐标轴
-- 针对nan和inf值的异常处理
+- Extracted `QwtPlotLayoutEngine` class
+- Added `QwtPlotParasiteLayout` for parasite axis layout
+- Added `QwtPlotTransparentCanvas` — fully transparent canvas
+- `QwtFigure` — parasite axis support
+- `QwtScaleWidget` — added `setEdgeMargin`/`edgeMargin` for tick-to-edge distance
+- Adjusted `QwtScaleWidget` layout to support `edgeMargin`
+- Added `parasitePlot` example
+- `QwtPlot` — added `rescaleAxes`/`syncAxis` for quick axis adjustment
+- NaN and Inf exception handling
 
 ## tag:v7.0.1
 
-- 增加`QwtFigure`类，`QwtFigure`用于管理多个QwtPlot，实现类似Matplotlib的Figure功能，支持网格化布局
-
-`QwtFigure`类的效果如下：
+- Added `QwtFigure` — manages multiple `QwtPlot` instances in a grid layout (similar to Matplotlib Figure)
 
 ![figure](docs/screenshots/qwt_figure.png)
 
-- example增加figure例子，用于演示`QwtFigure`的使用
-- 新增`QwtFigureWidgetOverlay`，可以实现在`QwtFigure`上面进行一些动作，目前支持拖动绘图，缩放绘图的功能
+- Added `figure` example demonstrating `QwtFigure` usage
+- Added `QwtFigureWidgetOverlay` for interactive actions on `QwtFigure` — supports dragging and zooming sub-plots
 
 ## tag:v7.0.0
 
-- 把整个工程合并为QwtPlot.h和QwtPlot.cpp，直接可以引入，文件位于src-amalgamate
-- 例子增加staticExample
-- 增强`QwtPlotBarChart`的接口以支持pen和brush的设置.
-- 增加`QwtGridRasterData`类，相比`QwtMatrixRasterData`，它支持一个二维数据表，以及x,y轴进行网格插值
-- `QwtLinearColorMap`增加stopColors函数，修改`QwtLinearColorMap`的`colorStop`函数为`stopPos`
-- `Qwt`的初始化参数进行了调整，让默认绘图更符合当前绘图的审美
+- Amalgamated entire project into single `QwtPlot.h` / `QwtPlot.cpp` files in `src-amalgamate/`
+- Added `staticExample` example
+- Enhanced `QwtPlotBarChart` interface to support pen and brush configuration
+- Added `QwtGridRasterData` — supports 2D data tables with grid interpolation on X/Y axes (vs. `QwtMatrixRasterData`)
+- `QwtLinearColorMap` — added `stopColors()`, renamed `colorStop()` → `stopPos()`
+- Adjusted default initialization for a more modern look
 
-`QwtPlotCanvas`初始化如下：
+`QwtPlotCanvas` initialization:
 ```cpp
 QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
 {
@@ -140,8 +217,7 @@ QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanva
 }
 ```
 
-`QwtPlotLayout`初始化调整如下
-
+`QwtPlotLayout` initialization:
 ```cpp
 QwtPlotLayout::QwtPlotLayout()
 {
@@ -151,34 +227,21 @@ QwtPlotLayout::QwtPlotLayout()
 }
 ```
 
-- 去除QWT_MOC_INCLUDE
-- 调整了一些类的实现，以便能合并到一个文件中
+- Removed `QWT_MOC_INCLUDE`
+- Adjusted class implementations for single-file amalgamation
 
 ------
 
-**Qwt 7.0** is my modified version based on Qwt 6.2.0 source code. It complies with Qwt's open-source license, and I'm releasing these modifications as open-source.
+**Qwt 7.0** is a modified version based on Qwt 6.2.0 source code. It complies with Qwt's open-source license, and the modifications are released as open-source.
 
-Starting from this version, Qwt will support:
+Starting from this version, Qwt supports:
 - The latest **C++11 standard**
 - **CMake build system**
 
 **Modifications in this version:**
-1. Enhanced `QwtPlotBarChart` interface to support **pen and brush configuration**  
-2. Added `QwtGridRasterData` class – supports **2D data tables** with **grid interpolation** on X/Y axes (vs. `QwtMatrixRasterData`)  
-3. Added `stopColors()` function to `QwtLinearColorMap` and renamed `colorStop()` to `stopPos()`  
-
-
-> **Qwt7.0**是我基于Qwt6.2.0版本对源码进行修改后的版本，遵循Qwt的开源协议，我将修改进行开源
->
->从此版本的Qwt，将有如下改动:
->	
->- 支持最新的**C++11标准**
->- **支持CMake构建**
->
->下面是此版本的修改内容：
->- 增强`QwtPlotBarChart`的接口以支持pen和brush的设置.
->- 增加`QwtGridRasterData`类，相比`QwtMatrixRasterData`，它支持一个二维数据表，以及x,y轴进行网格插值
->- `QwtLinearColorMap`增加stopColors函数，修改`QwtLinearColorMap`的`colorStop`函数为`stopPos`
+1. Enhanced `QwtPlotBarChart` interface to support **pen and brush configuration**
+2. Added `QwtGridRasterData` class — supports **2D data tables** with **grid interpolation** on X/Y axes (vs. `QwtMatrixRasterData`)
+3. Added `stopColors()` function to `QwtLinearColorMap` and renamed `colorStop()` to `stopPos()`
 
 
 
@@ -195,12 +258,12 @@ it is possible to write "#include <QwtPlot>" now instead of "include qwt_plot.h"
 
 2) BSD License for examples
 
-Where possible the code of the examples is available under the 3-clause BSD License 
+Where possible the code of the examples is available under the 3-clause BSD License
 
 3) MathML text renderer removed
 
 The code can be found at https://github.com/uwerat/qwt-mml-dev now and is intended
-to become a standalone lib. Anyone who is interested to workon it, please let me know.
+to become a standalone lib. Anyone who is interested to work on it, please let me know.
 
 4) Spline interpolation
 
@@ -216,7 +279,7 @@ The most popular spline approximation/interpolation algos have been implemented:
 	- The one used in MS Excel
 	- Cubic
 
-An implementation of the de Casteljau’s algorithm has been added
+An implementation of the de Casteljau's algorithm has been added
 
 	- QwtBezier
 
