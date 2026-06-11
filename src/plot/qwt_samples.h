@@ -518,4 +518,10 @@ inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& va
 {
 }
 
+Q_DECLARE_METATYPE(QwtIntervalSample)
+Q_DECLARE_METATYPE(QwtOHLCSample)
+Q_DECLARE_METATYPE(QwtVectorFieldSample)
+Q_DECLARE_METATYPE(QwtBoxSample)
+Q_DECLARE_METATYPE(QwtSetSample)
+
 #endif

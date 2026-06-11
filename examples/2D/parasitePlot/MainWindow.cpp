@@ -4,6 +4,10 @@
 #include "qwt_plot_grid.h"
 #include "qwt_scale_widget.h"
 #include "qwt_figure.h"
+#include "qwt_plot_histogram.h"
+#include "qwt_plot_vectorfield.h"
+#include "qwt_samples.h"
+#include <QPen>
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -104,6 +108,35 @@ QwtPlot* MainWindow::createPlot(QWidget* par)
     hostCurve->setPen(QColor(31, 119, 180), 1.5);
     hostCurve->attach(hostPlot);
     hostCurve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+
+    //! 给宿主绘图添加直方图 (QwtPlotHistogram) — 演示多类型 picker
+    QwtPlotHistogram* histogram = new QwtPlotHistogram("Frequency Histogram");
+    QVector< QwtIntervalSample > histData;
+    for (int i = 0; i < 15; ++i) {
+        double low  = i * 0.6;
+        double high = (i + 1) * 0.6;
+        double freq = 0.5 + 0.8 * fabs(sin(i * 0.5));
+        histData.append(QwtIntervalSample(freq, QwtInterval(low, high)));
+    }
+    histogram->setSamples(histData);
+    histogram->setStyle(QwtPlotHistogram::Columns);
+    histogram->setPen(QColor(255, 165, 0), 1.0);
+    histogram->setBrush(QColor(255, 165, 0, 100));
+    histogram->attach(hostPlot);
+
+    //! 给宿主绘图添加向量场 (QwtPlotVectorField) — 演示多类型 picker
+    QwtPlotVectorField* vectorField = new QwtPlotVectorField("Wind Vectors");
+    QVector< QwtVectorFieldSample > vecData;
+    for (int i = 0; i < 10; ++i) {
+        double x  = i * 0.9 + 0.5;
+        double y  = 0.5 * sin(0.8 * x);
+        double vx = 0.3 * cos(i * 0.6);
+        double vy = 0.3 * sin(i * 0.6);
+        vecData.append(QwtVectorFieldSample(x, y, vx, vy));
+    }
+    vectorField->setSamples(vecData);
+    vectorField->setPen(QPen(QColor(128, 0, 128), 1.5));
+    vectorField->attach(hostPlot);
 
     ////////////////////////////////////////////////////////
     //! 添加寄生坐标系

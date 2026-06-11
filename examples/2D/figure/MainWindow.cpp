@@ -16,6 +16,11 @@
 #include "qwt_scale_engine.h"
 #include "qwt_plot_series_data_picker.h"
 #include "qwt_plot_scaleitem.h"
+#include "qwt_plot_tradingcurve.h"
+#include "qwt_plot_intervalcurve.h"
+#include "qwt_plot_boxchart.h"
+#include "qwt_plot_barchart.h"
+#include "qwt_samples.h"
 //
 #include "qwt_plot_series_data_picker_group.h"
 
@@ -62,65 +67,93 @@ void MainWindow::initFigure(QwtFigure* figure)
     plot1->replot();
     qDebug() << "plot1 norm rect =" << figure->axesNormRect(plot1);
 
-    // 示例2: 纵轴为对数轴
-    QwtPlot* plot2 = new QwtPlot();
-
-    // 设置Y轴为对数坐标
-    plot2->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
+    // 示例2: K线图 (QwtPlotTradingCurve) — 演示多类型 picker
+    QwtPlot* plot2                   = new QwtPlot();
     QwtPlotSeriesDataPicker* picker2 = new QwtPlotSeriesDataPicker(plot2->canvas());
 
-    QwtPlotCurve* curve2 = new QwtPlotCurve("Log Y Wave");
-    curve2->setSamples(generateExponentialData(100, 0.1));  // 使用指数增长数据，适合对数Y轴
-    curve2->setRenderHint(QwtPlotItem::RenderAntialiased, true);
-    curve2->attach(plot2);
+    QwtPlotTradingCurve* tradingCurve = new QwtPlotTradingCurve("Stock OHLC");
+    QVector< QwtOHLCSample > ohlcData;
+    double basePrice = 100.0;
+    for (int i = 0; i < 60; ++i) {
+        double open  = basePrice + (rand() % 10 - 5);
+        double close = open + (rand() % 6 - 3);
+        double high  = std::max(open, close) + (rand() % 3);
+        double low   = std::min(open, close) - (rand() % 3);
+        ohlcData.append(QwtOHLCSample(i, open, high, low, close));
+        basePrice = close;
+    }
+    tradingCurve->setSamples(ohlcData);
+    tradingCurve->setSymbolStyle(QwtPlotTradingCurve::CandleStick);
+    tradingCurve->setSymbolPen(QColor(231, 76, 60), 1.0);
+    tradingCurve->setSymbolBrush(QwtPlotTradingCurve::Increasing, QColor(46, 204, 113));
+    tradingCurve->setSymbolBrush(QwtPlotTradingCurve::Decreasing, QColor(231, 76, 60));
+    tradingCurve->attach(plot2);
 
-    setupPlotStyle(plot2, "Logarithmic Y-Axis (Top-Right)", Qt::red);
+    setupPlotStyle(plot2, "Trading Chart - QwtPlotTradingCurve (Top-Right)", QColor(231, 76, 60));
     figure->addAxes(plot2, 0.5, 0.0, 0.5, 0.33333333);  // 右上角
     plot2->setAxisAutoScale(QwtPlot::xBottom, true);
     plot2->setAxisAutoScale(QwtPlot::yLeft, true);
+    plot2->setAxisTitle(QwtPlot::xBottom, "Day");
+    plot2->setAxisTitle(QwtPlot::yLeft, "Price");
     plot2->replot();
     qDebug() << "plot2 norm rect =" << figure->axesNormRect(plot2);
 
-    // 示例3: 线性坐标（保持不变）
+    // 示例3: QwtPlotIntervalCurve (温度区间图) — 演示多类型 picker
     QwtPlot* plot3                   = new QwtPlot();
     QwtPlotSeriesDataPicker* picker3 = new QwtPlotSeriesDataPicker(plot3->canvas());
-    QwtPlotCurve* curve3             = new QwtPlotCurve("Sine Wave 3");
-    // 生成带nan和inf值的曲线
-    auto series = generateSampleDataWithNan();
-    //    if (qwtContainsNanOrInf(series.begin(), series.end())) {
-    //        qwtRemoveNanOrInf(series);
-    //    }
-    curve3->setSamples(series);
-    curve3->setRenderHint(QwtPlotItem::RenderAntialiased, true);
-    curve3->attach(plot3);
-    setupPlotStyle(plot3, "Linear Axes (3x2, Cell 1,0) sample with nan and inf", Qt::green);
-    figure->addGridAxes(plot3, 3, 2, 1, 0);  // 3x2网格，第1行第0列（0base）
-    plot3->rescaleAxes();
+
+    QwtPlotIntervalCurve* intervalCurve = new QwtPlotIntervalCurve("Daily Temperature Range");
+    QVector< QwtIntervalSample > intervalData;
+    for (int i = 0; i < 30; ++i) {
+        double base     = 15.0 + 10.0 * sin(i * 0.2);
+        double lowTemp  = base - (3.0 + rand() % 4);
+        double highTemp = base + (3.0 + rand() % 4);
+        intervalData.append(QwtIntervalSample(i, QwtInterval(lowTemp, highTemp)));
+    }
+    intervalCurve->setSamples(intervalData);
+    intervalCurve->setStyle(QwtPlotIntervalCurve::Tube);
+    intervalCurve->setPen(QColor(46, 204, 113));
+    intervalCurve->setBrush(QColor(46, 204, 113, 80));
+    intervalCurve->attach(plot3);
+
+    setupPlotStyle(plot3, "Interval Curve - QwtPlotIntervalCurve (3x2, Cell 1,0)", QColor(46, 204, 113));
+    figure->addGridAxes(plot3, 3, 2, 1, 0);
+    plot3->setAxisTitle(QwtPlot::xBottom, "Day");
+    plot3->setAxisTitle(QwtPlot::yLeft, "Temp (°C)");
+    plot3->setAxisAutoScale(QwtPlot::xBottom, true);
+    plot3->setAxisAutoScale(QwtPlot::yLeft, true);
+    plot3->replot();
     qDebug() << "plot3 norm rect =" << figure->axesNormRect(plot3);
 
-    // 示例4: 双对数坐标
+    // 示例4: 箱线图 (QwtPlotBoxChart) — 演示多类型 picker
     QwtPlot* plot4                   = new QwtPlot();
     QwtPlotSeriesDataPicker* picker4 = new QwtPlotSeriesDataPicker(plot4->canvas());
-    //  设置双对数坐标
-    plot4->setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine);
-    plot4->setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine);
 
-    QwtPlotCurve* curve4 = new QwtPlotCurve("Log-Log Wave");
-
-    // 生成适合双对数坐标的数据（幂律关系）
-    QVector< QPointF > logLogData;
-    for (int i = 1; i <= 100; ++i) {
-        double x = i * 0.1;
-        double y = 0.5 * pow(x, 2.0);  // 幂律关系 y = 0.5 * x^2
-        logLogData.append(QPointF(x, y));
+    QwtPlotBoxChart* boxChart = new QwtPlotBoxChart("Test Score Distribution");
+    QVector< QwtBoxSample > boxData;
+    const QStringList categories = { "Math", "Physics", "Chemistry", "Biology", "English" };
+    for (int i = 0; i < categories.size(); ++i) {
+        double median = 60.0 + rand() % 25;
+        double q1     = median - 5 - (rand() % 8);
+        double q3     = median + 5 + (rand() % 8);
+        double wl     = q1 - 5 - (rand() % 5);
+        double wh     = q3 + 5 + (rand() % 5);
+        boxData.append(QwtBoxSample(i, wl, q1, median, q3, wh));
     }
+    boxChart->setSamples(boxData);
+    boxChart->setPen(QColor(142, 68, 173), 1.5);
+    boxChart->setBrush(QColor(142, 68, 173, 100));
+    boxChart->attach(plot4);
 
-    curve4->setSamples(logLogData);
-    curve4->setRenderHint(QwtPlotItem::RenderAntialiased, true);
-    curve4->attach(plot4);
-    setupPlotStyle(plot4, "Log-Log Axes (3x2, Cell 1,1)", Qt::magenta);
-    figure->addGridAxes(plot4, 3, 2, 1, 1);  // 2x2网格，第1行第1列（0base）
-    plot4->setAxisAutoScale(QwtPlot::xBottom, true);
+    // Set X axis scale to match category positions
+    plot4->setAxisScale(QwtPlot::xBottom, -0.5, categories.size() - 0.5);
+    plot4->setAxisScaleDiv(QwtPlot::xBottom,
+                           QwtScaleDiv(-0.5, categories.size() - 0.5,
+                                       { 0.0, 1.0, 2.0, 3.0, 4.0 }, {}, {}));
+
+    setupPlotStyle(plot4, "Box Chart - QwtPlotBoxChart (3x2, Cell 1,1)", QColor(142, 68, 173));
+    figure->addGridAxes(plot4, 3, 2, 1, 1);
+    plot4->setAxisTitle(QwtPlot::yLeft, "Score");
     plot4->setAxisAutoScale(QwtPlot::yLeft, true);
     plot4->replot();
 
@@ -227,6 +260,19 @@ QwtPlot* MainWindow::createParasitePlot()
     QwtPlotCurve* parasiteCurve = new QwtPlotCurve("Sine Wave 6");
     parasiteCurve->setSamples(generateSampleData(100, 2000, 2.3));
     parasiteCurve->attach(parasitePlot);
+
+    //! 在寄生绘图中添加柱状图 (QwtPlotBarChart) — 演示多类型 picker
+    QwtPlotBarChart* barChart = new QwtPlotBarChart("Monthly Sales");
+    QVector< QPointF > barData;
+    const double sales[] = { 420, 380, 510, 470, 600, 550, 680, 720, 650, 580, 490, 530 };
+    for (int i = 0; i < 12; ++i) {
+        barData.append(QPointF(i, sales[ i ]));
+    }
+    barChart->setSamples(barData);
+    barChart->setPen(QPen(QColor(52, 152, 219), 1.0));
+    barChart->setBrush(QColor(52, 152, 219, 160));
+    barChart->attach(parasitePlot);
+
     return hostPlot;
 }
 
@@ -241,11 +287,35 @@ void MainWindow::onPickerGroupClicked(QwtPlotSeriesDataPicker* picker, const QPo
     QString info;
     for (const auto& fp : fps) {
         QString itemName = fp.item ? fp.item->title().text() : "Unknown";
-        info += QString("%1: (%2, %3) [idx=%4]  ")
-                .arg(itemName)
-                .arg(fp.feature.x(), 0, 'f', 2)
-                .arg(fp.feature.y(), 0, 'f', 2)
-                .arg(fp.index);
+        // Format type-specific detail from sampleData
+        QString detail;
+        if (fp.sampleData.isValid()) {
+            if (fp.sampleData.canConvert< QwtOHLCSample >()) {
+                auto s = fp.sampleData.value< QwtOHLCSample >();
+                detail = QString("O:%1 H:%2 L:%3 C:%4")
+                             .arg(QString::number(s.open, 'f', 2), QString::number(s.high, 'f', 2),
+                                  QString::number(s.low, 'f', 2), QString::number(s.close, 'f', 2));
+            } else if (fp.sampleData.canConvert< QwtIntervalSample >()) {
+                auto s = fp.sampleData.value< QwtIntervalSample >();
+                detail = QString("[%1, %2]").arg(QString::number(s.interval.minValue(), 'f', 1),
+                                                  QString::number(s.interval.maxValue(), 'f', 1));
+            } else if (fp.sampleData.canConvert< QwtBoxSample >()) {
+                auto s = fp.sampleData.value< QwtBoxSample >();
+                detail = QString("Med:%1 Q1:%2 Q3:%3 [%4-%5]")
+                             .arg(QString::number(s.median, 'f', 1), QString::number(s.q1, 'f', 1),
+                                  QString::number(s.q3, 'f', 1), QString::number(s.whiskerLower, 'f', 1),
+                                  QString::number(s.whiskerUpper, 'f', 1));
+            } else {
+                detail = QString("(%1, %2)")
+                             .arg(fp.feature.x(), 0, 'f', 2)
+                             .arg(fp.feature.y(), 0, 'f', 2);
+            }
+        } else {
+            detail = QString("(%1, %2)")
+                         .arg(fp.feature.x(), 0, 'f', 2)
+                         .arg(fp.feature.y(), 0, 'f', 2);
+        }
+        info += QString("%1: %2 [idx=%3]  ").arg(itemName, detail).arg(fp.index);
     }
     m_clickInfoLabel->setText(info);
 }

@@ -77,8 +77,6 @@
 #define QWT_EXPORT
 #endif
 
-#define QWT_CONSTEXPR constexpr
-
 #ifndef QWT_DEBUG_DRAW
 #define QWT_DEBUG_DRAW 0
 #endif
@@ -87,7 +85,6 @@
 #define QWT_DEBUG_PRINT 0
 #endif
 /**
- * \if ENGLISH
  * @def QWT_DECLARE_PRIVATE
  * @brief Imitates Q_DECLARE_PRIVATE but uses an inner class instead of forward declaration
  *
@@ -124,48 +121,6 @@
  * A::A():m_data(new PrivateData(this)){
  * }
  * @endcode
- *
- * \endif
- *
- * \if CHINESE
- * @def QWT_DECLARE_PRIVATE
- * @brief 模仿Q_DECLARE_PRIVATE，但不用前置声明而是作为一个内部类
- *
- * 例如:
- *
- * @code
- * //header
- * class A
- * {
- *  QWT_DECLARE_PRIVATE(A)
- * };
- * @endcode
- *
- * 其展开效果为：
- *
- * @code
- * class A{
- *  class PrivateData;
- *  friend class A::PrivateData;
- *  std::unique_ptr< PrivateData > m_data;
- * }
- * @endcode
- *
- * 这样前置声明了一个内部类PrivateData，在cpp文件中建立这个内部类的实现
- *
- * @code
- * //cpp
- * class A::PrivateData{
- *  QWT_DECLARE_PUBLIC(A)
- *  PrivateData(A* p):m_data(p){
- *  }
- * };
- *
- * A::A():m_data(new PrivateData(this)){
- * }
- * @endcode
- *
- * \endif
  */
 #ifndef QWT_DECLARE_PRIVATE
 #define QWT_DECLARE_PRIVATE(classname)                                                                                 \
@@ -183,19 +138,10 @@
 #endif
 
 /**
- * \if ENGLISH
  * @def QWT_DECLARE_PUBLIC
  * @brief Imitates Q_DECLARE_PUBLIC
  *
  * Used with QWT_DECLARE_PRIVATE
- * \endif
- *
- * \if CHINESE
- * @def QWT_DECLARE_PUBLIC
- * @brief 模仿Q_DECLARE_PUBLIC
- *
- * 配套QWT_DECLARE_PRIVATE使用
- * \endif
  */
 #ifndef QWT_DECLARE_PUBLIC
 #define QWT_DECLARE_PUBLIC(classname)                                                                                  \
@@ -212,34 +158,18 @@
 #endif
 
 /**
- * \if ENGLISH
  * @def  QWT_PIMPL_CONSTRUCT
  *
  * Used with QWT_DECLARE_PRIVATE to construct private data in constructor
- * \endif
- *
- * \if CHINESE
- * @def  QWT_PIMPL_CONSTRUCT
- *
- * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
- * \endif
  */
 #ifndef QWT_PIMPL_CONSTRUCT
 #define QWT_PIMPL_CONSTRUCT m_data(qwt_make_unique< PrivateData >(this))
 #endif
 
 /**
- * \if ENGLISH
  * @def  QWT_PIMPL_CONSTRUCT_INIT
  *
  * Used with QWT_DECLARE_PRIVATE to construct private data in constructor (alternative form)
- * \endif
- *
- * \if CHINESE
- * @def  QWT_PIMPL_CONSTRUCT_INIT
- *
- * 配套QWT_DECLARE_PRIVATE使用,在构造函数中构建privatedata
- * \endif
  */
 #ifndef QWT_PIMPL_CONSTRUCT_INIT
 #define QWT_PIMPL_CONSTRUCT_INIT()                                                                                     \
@@ -249,67 +179,39 @@
 #endif
 
 /**
- * \if ENGLISH
  * @def QWT_D
  * @brief Get private implementation pointer, similar to Q_D
- * \endif
- *
- * \if CHINESE
- * @def QWT_D
- * @brief impl获取指针，参考Q_D
- * \endif
  */
 #ifndef QWT_D
 #define QWT_D(pointerName) PrivateData* pointerName = d_func()
 #endif
 
 /**
- * \if ENGLISH
  * @def QWT_DC
  * @brief Get const private implementation pointer, similar to Q_D
- * \endif
- *
- * \if CHINESE
- * @def QWT_DC
- * @brief impl获取指针，参考Q_D
- * \endif
  */
 #ifndef QWT_DC
 #define QWT_DC(pointerName) const PrivateData* pointerName = d_func()
 #endif
 
 /**
- * \if ENGLISH
  * @def QWT_Q
  * @brief Get public class pointer from private implementation, similar to Q_Q
- * \endif
- *
- * \if CHINESE
- * @def QWT_Q
- * @brief impl获取指针，参考Q_Q
- * \endif
  */
 #ifndef QWT_Q
 #define QWT_Q(classname, pointerName) classname* pointerName = q_func()
 #endif
 
 /**
- * \if ENGLISH
  * @def QWT_QC
  * @brief Get const public class pointer from private implementation, similar to Q_Q
- * \endif
- *
- * \if CHINESE
- * @def QWT_QC
- * @brief impl获取指针，参考Q_Q
- * \endif
  */
 #ifndef QWT_QC
 #define QWT_QC(classname, pointerName) const classname* pointerName = q_func()
 #endif
 
 #if __cplusplus >= 201402L
-// C++14 或更高版本，使用标准库的 make_unique
+// C++14 or later, use standard library make_unique
 template< typename T, typename... Args >
 std::unique_ptr< T > qwt_make_unique(Args&&... args)
 {
@@ -323,16 +225,16 @@ std::unique_ptr< T > qwt_make_unique(std::size_t size)
 }
 
 #else
-// C++11 自定义实现
+// C++11 custom implementation
 
-// 基础版本 - 普通对象
+// Basic version - normal object
 template< typename T, typename... Args >
 std::unique_ptr< T > qwt_make_unique(Args&&... args)
 {
 	return std::unique_ptr< T >(new T(std::forward< Args >(args)...));
 }
 
-// 数组特化版本 - 动态数组
+// Array specialization version - dynamic array
 template< typename T >
 std::unique_ptr< T > qwt_make_unique(std::size_t size)
 {
@@ -346,7 +248,7 @@ std::unique_ptr< T > qwt_make_unique(std::size_t size)
 #define qwt_as_const std::as_const
 #endif
 #else
-// C++14 及以下版本使用 Qt 的 qwt_as_const
+// C++14 and below use Qt's qwt_as_const
 #ifndef qwt_as_const
 #define qwt_as_const qAsConst
 #endif
@@ -391,7 +293,7 @@ namespace QwtPolar
 
 	/*!
 	   Indices used to identify an axis.
-	   \sa Scale
+	   @sa Scale
 	 */
 	enum Axis
 	{
@@ -416,7 +318,7 @@ namespace QwtPolar
 
 	/*!
 	   Indices used to identify a scale.
-	   \sa Axis
+	   @sa Axis
 	 */
 	enum Scale
 	{
@@ -535,49 +437,49 @@ QT_WARNING_DISABLE_GCC("-Wdouble-promotion")
 	compiler issues with qMin/qMax.
  */
 
-//! \return Minimum of a and b.
+//! @return Minimum of a and b.
 constexpr inline float qwtMinF(float a, float b)
 {
 	return (a < b) ? a : b;
 }
 
-//! \return Minimum of a and b.
+//! @return Minimum of a and b.
 constexpr inline double qwtMinF(double a, double b)
 {
 	return (a < b) ? a : b;
 }
 
-//! \return Minimum of a and b.
+//! @return Minimum of a and b.
 constexpr inline qreal qwtMinF(float a, double b)
 {
 	return (a < b) ? a : b;
 }
 
-//! \return Minimum of a and b.
+//! @return Minimum of a and b.
 constexpr inline qreal qwtMinF(double a, float b)
 {
 	return (a < b) ? a : b;
 }
 
-//! \return Maximum of a and b.
+//! @return Maximum of a and b.
 constexpr inline float qwtMaxF(float a, float b)
 {
 	return (a < b) ? b : a;
 }
 
-//! \return Maximum of a and b.
+//! @return Maximum of a and b.
 constexpr inline double qwtMaxF(double a, double b)
 {
 	return (a < b) ? b : a;
 }
 
-//! \return Maximum of a and b.
+//! @return Maximum of a and b.
 constexpr inline qreal qwtMaxF(float a, double b)
 {
 	return (a < b) ? b : a;
 }
 
-//! \return Maximum of a and b.
+//! @return Maximum of a and b.
 constexpr inline qreal qwtMaxF(double a, float b)
 {
 	return (a < b) ? b : a;
@@ -592,23 +494,13 @@ QWT_EXPORT double qwtNormalizeDegrees(double degrees);
 QWT_EXPORT quint32 qwtRand();
 
 /*!
-   \if ENGLISH
-   \brief Compare 2 values, relative to an interval
-   \details Values are "equal", when:
+   @brief Compare 2 values, relative to an interval
+   @details Values are "equal", when:
 		  value2 - value1 <= abs(intervalSize * 10e^{-6})
-   \param value1 First value to compare
-   \param value2 Second value to compare
-   \param intervalSize interval size
-   \return 0: if equal, -1: if value2 > value1, 1: if value1 > value2
-   \endif
-   \if CHINESE
-   \brief 相对于区间比较两个值
-   \details 当 value2 - value1 <= abs(intervalSize * 10e^{-6}) 时认为相等
-   \param value1 第一个要比较的值
-   \param value2 第二个要比较的值
-   \param intervalSize 区间大小
-   \return 0: 相等; -1: value2 > value1; 1: value1 > value2
-   \endif
+   @param value1 First value to compare
+   @param value2 Second value to compare
+   @param intervalSize interval size
+   @return 0: if equal, -1: if value2 > value1, 1: if value1 > value2
  */
 inline int qwtFuzzyCompare(double value1, double value2, double intervalSize)
 {
@@ -623,7 +515,7 @@ inline int qwtFuzzyCompare(double value1, double value2, double intervalSize)
 	return 0;
 }
 
-//! \if ENGLISH Return the sign \endif \if CHINESE 返回符号值 \endif
+//! Return the sign
 inline int qwtSign(double x)
 {
 	if (x > 0.0)
@@ -634,13 +526,13 @@ inline int qwtSign(double x)
 		return 0;
 }
 
-//! \if ENGLISH Return the square of a number \endif \if CHINESE 返回数字的平方 \endif
-inline double qwtSqr(double x)
+//! Return the square of a number
+inline constexpr double qwtSqr(double x)
 {
 	return x * x;
 }
 
-//! \if ENGLISH Approximation of arc tangent (error below 0.005 radians) \endif \if CHINESE 反正切近似（误差小于 0.005 弧度） \endif
+//! Approximation of arc tangent (error below 0.005 radians)
 inline double qwtFastAtan(double x)
 {
 	if (x < -1.0)
@@ -652,7 +544,7 @@ inline double qwtFastAtan(double x)
 	return x / (1.0 + x * x * 0.28);
 }
 
-//! \if ENGLISH Approximation of arc tangent 2 (error below 0.005 radians) \endif \if CHINESE 反正切2近似（误差小于 0.005 弧度） \endif
+//! Approximation of arc tangent 2 (error below 0.005 radians)
 inline double qwtFastAtan2(double y, double x)
 {
 	if (x > 0)
@@ -673,7 +565,6 @@ inline double qwtFastAtan2(double y, double x)
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate a value of a cubic polynomial
  * @param[in] x Value
  * @param[in] a Cubic coefficient
@@ -681,43 +572,27 @@ inline double qwtFastAtan2(double y, double x)
  * @param[in] c Linear coefficient
  * @param[in] d Constant offset
  * @return Value of the polynomial for x
- * \endif
- * \if CHINESE
- * @brief 计算三次多项式的值
- * @param[in] x 值
- * @param[in] a 三次系数
- * @param[in] b 二次系数
- * @param[in] c 一次系数
- * @param[in] d 常数偏移
- * @return x 处多项式的值
- * \endif
  */
-inline double qwtCubicPolynomial(double x, double a, double b, double c, double d)
+inline constexpr double qwtCubicPolynomial(double x, double a, double b, double c, double d)
 {
 	return (((a * x) + b) * x + c) * x + d;
 }
 
-//! \if ENGLISH Translate degrees into radians \endif \if CHINESE 将度数转换为弧度 \endif
-inline double qwtRadians(double degrees)
+//! Translate degrees into radians
+inline constexpr double qwtRadians(double degrees)
 {
 	return degrees * M_PI / 180.0;
 }
 
-//! \if ENGLISH Translate radians into degrees \endif \if CHINESE 将弧度转换为度数 \endif
-inline double qwtDegrees(double degrees)
+//! Translate radians into degrees
+inline constexpr double qwtDegrees(double degrees)
 {
 	return degrees * 180.0 / M_PI;
 }
 
 /*!
-	\if ENGLISH
-	\brief The same as qCeil, but avoids including qmath.h
-	\return Ceiling of value.
-	\endif
-	\if CHINESE
-	\brief 与 qCeil 相同，但避免包含 qmath.h
-	\return 值的上限（向上取整）。
-	\endif
+	@brief The same as qCeil, but avoids including qmath.h
+	@return Ceiling of value.
  */
 inline int qwtCeil(qreal value)
 {
@@ -725,14 +600,8 @@ inline int qwtCeil(qreal value)
 	return int(ceil(value));
 }
 /*!
-	\if ENGLISH
-	\brief The same as qFloor, but avoids including qmath.h
-	\return Floor of value.
-	\endif
-	\if CHINESE
-	\brief 与 qFloor 相同，但避免包含 qmath.h
-	\return 值的下限（向下取整）。
-	\endif
+	@brief The same as qFloor, but avoids including qmath.h
+	@return Floor of value.
  */
 inline int qwtFloor(qreal value)
 {
@@ -741,7 +610,6 @@ inline int qwtFloor(qreal value)
 }
 
 /**
- * \if ENGLISH
  * @brief Verify and adjust array index range
  * @details Ensures the given index range is within valid bounds and returns the actual number of valid elements.
  *          This function automatically corrects invalid index values to ensure i1 <= i2.
@@ -750,17 +618,6 @@ inline int qwtFloor(qreal value)
  * @param i1 Start index (will be corrected to valid range)
  * @param i2 End index (will be corrected to valid range)
  * @return Number of valid elements in range, or 0 if array size is invalid
- * \endif
- * \if CHINESE
- * @brief 验证并调整数组索引范围
- * @details 确保给定的索引范围在有效范围内，并返回实际有效的元素个数。
- *          该函数会自动修正无效的索引值，确保 i1 <= i2。
- *          这个函数通常用于数组或容器的范围检查，确保访问不会越界。
- * @param size 数组的总大小
- * @param i1 起始索引（会被修正到有效范围内）
- * @param i2 结束索引（会被修正到有效范围内）
- * @return 返回有效范围内的元素个数，如果数组大小无效则返回0
- * \endif
  */
 inline int qwtVerifyRange(int size, int& i1, int& i2)
 {
@@ -777,18 +634,10 @@ inline int qwtVerifyRange(int size, int& i1, int& i2)
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate distance between two points
  * @param p1 First point
  * @param p2 Second point
  * @return Distance between p1 and p2
- * \endif
- * \if CHINESE
- * @brief 计算两点之间的距离
- * @param p1 第一个点
- * @param p2 第二个点
- * @return p1 和 p2 之间的距离
- * \endif
  */
 inline double qwtDistance(const QPointF& p1, const QPointF& p2)
 {
@@ -798,7 +647,6 @@ inline double qwtDistance(const QPointF& p1, const QPointF& p2)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if floating point value is NaN or infinity
  * @details This function checks whether a floating point value is either NaN (Not a Number)
  *          or infinite (positive or negative infinity). It uses std::isfinite() for the check.
@@ -808,18 +656,6 @@ inline double qwtDistance(const QPointF& p1, const QPointF& p2)
  * @return false if value is finite
  * @note This overload is enabled only for floating point types
  * @see std::isfinite()
- * \endif
- * \if CHINESE
- * @brief 检查浮点数值是否为 NaN 或无穷大
- * @details 此函数检查浮点数值是否为 NaN（非数字）或无穷大（正无穷大或负无穷大）。
- *          它使用 std::isfinite() 进行检查。
- * @tparam T 浮点数类型（float, double, long double）
- * @param value 要检查的值
- * @return true 如果值是 NaN 或无穷大
- * @return false 如果值是有限数
- * @note 此重载仅对浮点数类型启用
- * @see std::isfinite()
- * \endif
  */
 template< typename T >
 inline typename std::enable_if< std::is_floating_point< T >::value, bool >::type qwt_is_nan_or_inf(const T& value)
@@ -828,22 +664,12 @@ inline typename std::enable_if< std::is_floating_point< T >::value, bool >::type
 }
 
 /**
- * \if ENGLISH
  * @brief Check if QPointF contains NaN or infinite coordinates
  * @details This function checks whether either the x or y coordinate of a QPointF
  *          is NaN (Not a Number) or infinite. Both coordinates are checked.
  * @param point The QPointF to check
  * @return true if either x or y coordinate is NaN or infinite
  * @return false if both coordinates are finite
- * \endif
- * \if CHINESE
- * @brief 检查 QPointF 点是否包含 NaN 或无穷大坐标
- * @details 此函数检查 QPointF 的 x 或 y 坐标是否为 NaN（非数字）或无穷大。
- *          两个坐标都会被检查。
- * @param point 要检查的 QPointF
- * @return true 如果 x 或 y 坐标是 NaN 或无穷大
- * @return false 如果两个坐标都是有限数
- * \endif
  */
 inline bool qwt_is_nan_or_inf(const QPointF& point)
 {
@@ -852,14 +678,8 @@ inline bool qwt_is_nan_or_inf(const QPointF& point)
 
 // Default check function - for other types
 /**
- * \if ENGLISH
  * @brief Default check function for non-floating point types
  * @details Always returns false for non-floating point types as they cannot be NaN or infinite.
- * \endif
- * \if CHINESE
- * @brief 非浮点类型的默认检查函数
- * @details 对于非浮点类型始终返回 false，因为它们不可能是 NaN 或无穷大。
- * \endif
  */
 template< typename T >
 typename std::enable_if< !std::is_floating_point< T >::value && !std::is_same< T, QPointF >::value,
@@ -869,7 +689,6 @@ typename std::enable_if< !std::is_floating_point< T >::value && !std::is_same< T
 }
 
 /**
- * \if ENGLISH
  * @brief Check if iterator range contains NaN or Inf values
  * @details Checks whether elements in the iterator range [first, last) contain NaN or infinity values.
  *          Supports floating point types, QPointF, etc.
@@ -877,21 +696,11 @@ typename std::enable_if< !std::is_floating_point< T >::value && !std::is_same< T
  * @param first Start iterator of the range
  * @param last End iterator of the range
  * @return true if range contains at least one NaN or Inf value, false otherwise
- * \endif
- * \if CHINESE
- * @brief 检查指定迭代器范围内是否存在 NaN 或 Inf 值
- * @details 检查迭代器范围 [first, last) 内的元素是否包含 NaN 或无穷大值。
- *          支持浮点数类型、QPointF 等类型。
- * @tparam InputIt 输入迭代器类型
- * @param first 范围的起始迭代器
- * @param last 范围的结束迭代器
- * @return 如果范围内存在至少一个 NaN 或 Inf 值，返回 true；否则返回 false
- * \endif
  */
 template< typename InputIt >
 inline bool qwtContainsNanOrInf(InputIt first, InputIt last)
 {
-	// 使用迭代器遍历，对每个元素调用适当的 qwt_is_nan_or_inf 函数
+	// Iterate using iterator, calling the appropriate qwt_is_nan_or_inf function for each element
 	for (InputIt it = first; it != last; ++it) {
 		if (qwt_is_nan_or_inf(*it)) {
 			return true;
@@ -901,35 +710,25 @@ inline bool qwtContainsNanOrInf(InputIt first, InputIt last)
 }
 
 /**
- * \if ENGLISH
  * @brief In-place clean array, removing NaN and Inf values
  * @details Uses std::remove_if algorithm to move elements to keep to the front of the container,
  *          then erases the unwanted elements.
  * @tparam Container Container type
  * @param container Container to clean (modified in place)
  * @return Number of removed elements
- * \endif
- * \if CHINESE
- * @brief 就地清理数组，移除 NaN 和 Inf 值
- * @details 使用 std::remove_if 算法将需要保留的元素移动到容器前部，
- *          然后删除不需要的元素。
- * @tparam Container 容器类型
- * @param container 要清理的容器（原地修改）
- * @return 删除的元素数量
- * \endif
  */
 template< typename Container >
 inline std::size_t qwtRemoveNanOrInf(Container& container)
 {
-	// 使用 std::remove_if 算法将需要保留的元素移动到容器前部
+	// Use std::remove_if algorithm to move retained elements to the front of the container
 	auto new_end = std::remove_if(container.begin(), container.end(), [](const typename Container::value_type& value) {
 		return qwt_is_nan_or_inf(value);
 	});
 
-	// 计算被删除的元素数量
+	// Calculate the number of removed elements
 	std::size_t removed_count = std::distance(new_end, container.end());
 
-	// 实际删除不需要的元素
+	// Actually erase the unwanted elements
 	if (removed_count > 0) {
 		container.erase(new_end, container.end());
 	}
@@ -938,28 +737,19 @@ inline std::size_t qwtRemoveNanOrInf(Container& container)
 }
 
 /**
- * \if ENGLISH
  * @brief Remove all NaN or Inf values from container (returns new container)
  * @details Creates a new container with only finite values copied from the source.
  * @tparam Container Container type
  * @param container Container to process
  * @return New container without NaN or Inf values
- * \endif
- * \if CHINESE
- * @brief 从容器中删除所有 NaN 或 Inf 值（返回新容器）
- * @details 从源容器复制有限值创建一个新容器。
- * @tparam Container 容器类型
- * @param container 要处理的容器
- * @return 不包含 NaN 或 Inf 值的新容器
- * \endif
  */
 template< typename Container >
 inline Container qwtRemoveNanOrInfCopy(const Container& container)
 {
 	Container result;
-	result.reserve(container.size());  // 预分配空间以提高效率
+	result.reserve(container.size());  // pre-allocate for efficiency
 
-	// 只复制不是 NaN 或 Inf 的元素
+	// Copy only elements that are not NaN or Inf
 	std::copy_if(container.begin(),
 				 container.end(),
 				 std::back_inserter(result),
@@ -969,7 +759,6 @@ inline Container qwtRemoveNanOrInfCopy(const Container& container)
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two floating-point ranges for fuzzy equality using qFuzzyCompare
  * @details Works with any container as long as iterators meet ForwardIterator requirements.
  *          If the lengths differ it returns false immediately; otherwise it performs
@@ -984,32 +773,15 @@ inline Container qwtRemoveNanOrInfCopy(const Container& container)
  * @return false if lengths differ or any element pair fails qFuzzyCompare
  * @note Element type must be acceptable to qFuzzyCompare (usually float/double)
  * @sa qFuzzyCompare
- * \endif
- * \if CHINESE
- * @brief 比较两个浮点区间是否"模糊相等"（使用 qFuzzyCompare）
- * @details 只要迭代器类别满足前向迭代器要求，即可用于任何容器（QVector、QList、
- *          std::vector、std::array、原始数组等）。区间长度不同立即返回 false；
- *          否则逐元素调用 qFuzzyCompare，全部通过返回 true。
- * @tparam It1 第一组迭代器类型
- * @tparam It2 第二组迭代器类型
- * @param[in] first1 第一组区间起始迭代器
- * @param[in] last1 第一组区间结束迭代器
- * @param[in] first2 第二组区间起始迭代器
- * @param[in] last2 第二组区间结束迭代器
- * @return true 长度相同且所有对应元素 qFuzzyCompare 返回 true
- * @return false 长度不同或任一元素 qFuzzyCompare 返回 false
- * @note 元素类型必须能被 qFuzzyCompare 接受（一般为 float/double）
- * @sa qFuzzyCompare
- * \endif
  */
 template< typename It1, typename It2 >
 bool fuzzyRangeEqual(It1 first1, It1 last1, It2 first2, It2 last2)
 {
-	// 1. 长度不同 => 不相等
+	// 1. Different lengths => not equal
 	if (std::distance(first1, last1) != std::distance(first2, last2))
 		return false;
 
-	// 2. 逐元素 qFuzzyCompare
+	// 2. Element-wise qFuzzyCompare
 	for (; first1 != last1; ++first1, ++first2) {
 		if (!qFuzzyCompare(*first1, *first2))
 			return false;
@@ -1029,124 +801,58 @@ bool fuzzyRangeEqual(It1 first1, It1 last1, It2 first2, It2 last2)
 #include <iterator>   // std::prev
 
 /**
- * @brief 从迭代器范围中查找下一个元素的迭代器（支持循环切换）
+ * @brief Find the iterator to the next element in a range with circular wrapping
  *
- * 该函数在给定的迭代器范围 [begin, end) 中，根据当前元素和方向（向前/向后）查找下一个元素的迭代器。
- * 若当前元素不在范围内，默认从第一个元素开始计算；若范围为空，返回 end 迭代器。
- * 支持双向迭代器（如 QList、std::vector、std::list 等容器的迭代器），适用于循环切换场景（如轮询选择元素）。
+ * Searches the iterator range [begin, end) for the next element relative to
+ * the given current element and direction (forward/backward).
+ * If the current element is not in the range, counting starts from the first element.
+ * If the range is empty, returns the end iterator.
+ * Supports bidirectional iterators (e.g. QList, std::vector, std::list).
  *
- * @tparam Iter 迭代器类型，需满足双向迭代器要求（支持 ++、--、* 操作及相等比较）
- * @param begin 范围的起始迭代器（包含）
- * @param end   范围的结束迭代器（不包含）
- * @param current 当前元素，函数将从该元素开始计算下一个元素
- * @param forward 方向标志：true 表示向前（++），false 表示向后（--）
- * @return Iter 下一个元素的迭代器；若范围为空，返回 end
+ * @tparam Iter Bidirectional iterator type
+ * @param begin Start of the range (inclusive)
+ * @param end End of the range (exclusive)
+ * @param current Current element to compute the next element from
+ * @param forward Direction flag: true for forward (++), false for backward (--)
+ * @return Iterator to the next element; returns end if the range is empty
  *
- * @note 1. 若 current 不在 [begin, end) 范围内，默认从第一个元素（begin）开始计算
- *       2. 当向前切换到 end 时，自动循环到 begin；当向后切换到 begin 时，自动循环到 end 的前一个元素
- *       3. 要求元素类型支持 == 比较（用于 std::find 查找 current）
+ * @note 1. If current is not in [begin, end), counting starts from begin
+ *       2. Wraps around: forward past end goes to begin; backward past begin goes to prev(end)
+ *       3. Element type must support == comparison (used by std::find)
  *
- * 示例1：使用 std::vector 循环切换
  * @code
- * #include <vector>
- * #include <iostream>
+ * std::vector<int> nums = {10, 20, 30, 40};
+ * int current = 20;
  *
- * int main() {
- *     std::vector<int> nums = {10, 20, 30, 40};
- *     int current = 20;
+ * // Forward: 20 -> 30
+ * auto it = qwtSelectNextIterator(nums.begin(), nums.end(), current, true);
  *
- *     // 向前切换：20 → 30
- *     auto it = qwtSelectNextIterator(nums.begin(), nums.end(), current, true);
- *     std::cout << *it; // 输出：30
- *
- *     // 向后切换：20 → 10
- *     it = qwtSelectNextIterator(nums.begin(), nums.end(), current, false);
- *     std::cout << *it; // 输出：10
- *     return 0;
- * }
- * @endcode
- *
- * 示例2：循环到首尾边界
- * @code
- * #include <QList>
- * #include <QDebug>
- *
- * int main() {
- *     QList<QString> strs = {"A", "B", "C"};
- *     QString current = "C";
- *
- *     // 向前切换：C → A（到达 end 后循环到 begin）
- *     auto it = qwtSelectNextIterator(strs.begin(), strs.end(), current, true);
- *     qDebug() << *it; // 输出："A"
- *
- *     current = "A";
- *     // 向后切换：A → C（到达 begin 后循环到 end 前一个）
- *     it = qwtSelectNextIterator(strs.begin(), strs.end(), current, false);
- *     qDebug() << *it; // 输出："C"
- *     return 0;
- * }
- * @endcode
- *
- * 示例3：当前元素不在范围内
- * @code
- * #include <std::list>
- * #include <iostream>
- *
- * int main() {
- *     std::list<double> vals = {1.5, 2.5, 3.5};
- *     double current = 99.9; // 不在范围内
- *
- *     // 默认从第一个元素（1.5）开始向前切换 → 2.5
- *     auto it = qwtSelectNextIterator(vals.begin(), vals.end(), current, true);
- *     std::cout << *it; // 输出：2.5
- *     return 0;
- * }
- * @endcode
- *
- * 示例4：空范围处理
- * @code
- * #include <vector>
- * #include <iostream>
- *
- * int main() {
- *     std::vector<char> empty;
- *     char current = 'a';
- *
- *     // 空范围返回 end
- *     auto it = qwtSelectNextIterator(empty.begin(), empty.end(), current, true);
- *     if (it == empty.end()) {
- *         std::cout << "范围为空"; // 输出：范围为空
- *     }
- *     return 0;
- * }
+ * // Backward: 20 -> 10
+ * it = qwtSelectNextIterator(nums.begin(), nums.end(), current, false);
  * @endcode
  */
 template< typename Iter >
 Iter qwtSelectNextIterator(Iter begin, Iter end, typename std::iterator_traits< Iter >::value_type current, bool forward)
 {
-	// 空范围直接返回 end
 	if (begin == end) {
 		return end;
 	}
 
-	// 查找当前元素在范围内的位置
 	Iter ite = std::find(begin, end, current);
 
-	// 若当前元素不在范围内，默认从第一个元素开始
 	if (ite == end) {
 		ite = begin;
 	}
 
-	// 根据方向计算下一个迭代器
 	if (forward) {
 		++ite;
-		if (ite == end) {  // 到达末尾，循环到开头
+		if (ite == end) {
 			ite = begin;
 		}
 	} else {
-		if (ite != begin) {  // 未到开头，向前移动
+		if (ite != begin) {
 			--ite;
-		} else {  // 已在开头，循环到末尾
+		} else {
 			ite = std::prev(end);
 		}
 	}
@@ -1159,6 +865,44 @@ Iter qwtSelectNextIterator(Iter begin, Iter end, typename std::iterator_traits< 
 /*** End of inlined file: qwt_algorithm.hpp ***/
 
 
+/*** Start of inlined file: qwt_simd_argminmax.h ***/
+#ifndef QWT_SIMD_ARGMINMAX_H
+#define QWT_SIMD_ARGMINMAX_H
+
+#include <cfloat>
+
+/*!
+  @brief Result of SIMD-accelerated argmin + argmax search.
+  @details Contains local indices (0-based relative to input pointer)
+		   and values of the minimum and maximum elements found.
+		   For all-NaN input arrays, min_val = DBL_MAX, max_val = -DBL_MAX.
+ */
+struct QwtArgMinMaxResult
+{
+	int minIdx;
+	int maxIdx;
+	double minVal;
+	double maxVal;
+};
+
+/*!
+  @brief Find argmin and argmax in a double array using SIMD acceleration.
+  @details Uses runtime CPU feature detection to select the optimal
+		   implementation: AVX2 -> SSE4.2 -> Scalar fallback.
+		   NaN values are naturally ignored via IEEE 754 comparison semantics.
+  @param data Pointer to double array (must not be null)
+  @param count Number of elements (must be >= 1)
+  @return QwtArgMinMaxResult with min/max indices and values
+  @note For all-NaN arrays, returns {0, 0, DBL_MAX, -DBL_MAX}
+  @note Preconditions: data != nullptr && count >= 1
+ */
+QWT_EXPORT QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count);
+
+#endif
+
+/*** End of inlined file: qwt_simd_argminmax.h ***/
+
+
 /*** Start of inlined file: qwt_interval.h ***/
 #ifndef QWT_INTERVAL_H
 #define QWT_INTERVAL_H
@@ -1166,52 +910,40 @@ Iter qwtSelectNextIterator(Iter begin, Iter end, typename std::iterator_traits< 
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief A class representing an interval
  * @details The interval is represented by 2 doubles, the lower and the upper limit.
- * \endif
- * \if CHINESE
- * @brief 表示区间的类
- * @details 区间由两个双精度数表示，下限和上限。
- * \endif
  */
 
 class QWT_EXPORT QwtInterval
 {
 public:
 	/*!
-	   \if ENGLISH
-	   \brief Flag indicating if a border is included or excluded
-	   \sa setBorderFlags(), borderFlags()
-	   \endif
-	   \if CHINESE
-	   \brief 标志位，指示边界是否包含或排除
-	   \sa setBorderFlags(), borderFlags()
-	   \endif
+	   @brief Flag indicating if a border is included or excluded
+	   @sa setBorderFlags(), borderFlags()
 	 */
 	enum BorderFlag
 	{
-		//! \if ENGLISH Min/Max values are inside the interval \endif \if CHINESE 最小值/最大值在区间内 \endif
+		//! Min/Max values are inside the interval
 		IncludeBorders = 0x00,
 
-		//! \if ENGLISH Min value is not included in the interval \endif \if CHINESE 最小值不包含在区间内 \endif
+		//! Min value is not included in the interval
 		ExcludeMinimum = 0x01,
 
-		//! \if ENGLISH Max value is not included in the interval \endif \if CHINESE 最大值不包含在区间内 \endif
+		//! Max value is not included in the interval
 		ExcludeMaximum = 0x02,
 
-		//! \if ENGLISH Min/Max values are not included in the interval \endif \if CHINESE 最小值/最大值都不包含在区间内 \endif
+		//! Min/Max values are not included in the interval
 		ExcludeBorders = ExcludeMinimum | ExcludeMaximum
 	};
 
 	//! Border flags
 	Q_DECLARE_FLAGS(BorderFlags, BorderFlag)
 
-	QwtInterval();
-	QwtInterval(double minValue, double maxValue, BorderFlags = IncludeBorders);
+	constexpr QwtInterval() noexcept;
+	constexpr QwtInterval(double minValue, double maxValue, BorderFlags = IncludeBorders) noexcept;
 
 	// Assign the limits of the interval
-	void setInterval(double minValue, double maxValue, BorderFlags = IncludeBorders);
+	void setInterval(double minValue, double maxValue, BorderFlags = IncludeBorders) noexcept;
 
 	// Normalize the limits of the interval
 	QwtInterval normalized() const;
@@ -1225,18 +957,18 @@ public:
 	// Compare two intervals for inequality
 	bool operator!=(const QwtInterval&) const;
 
-	void setBorderFlags(BorderFlags);
-	BorderFlags borderFlags() const;
+	void setBorderFlags(BorderFlags) noexcept;
+	constexpr BorderFlags borderFlags() const noexcept;
 
-	double minValue() const;
-	double maxValue() const;
-	double centerValue() const;
+	constexpr double minValue() const noexcept;
+	constexpr double maxValue() const noexcept;
+	constexpr double centerValue() const noexcept;
 
-	double width() const;
-	long double widthL() const;
+	constexpr double width() const noexcept;
+	constexpr long double widthL() const noexcept;
 
-	void setMinValue(double);
-	void setMaxValue(double);
+	void setMinValue(double) noexcept;
+	void setMaxValue(double) noexcept;
 
 	// Test if a value is inside the interval
 	bool contains(double value) const;
@@ -1267,17 +999,17 @@ public:
 	// Extend an interval with a value
 	QwtInterval& operator|=(double);
 
-	bool isValid() const;
-	bool isNull() const;
-	void invalidate();
+	constexpr bool isValid() const noexcept;
+	constexpr bool isNull() const noexcept;
+	void invalidate() noexcept;
 
 	// Symmetrize the interval around a value
 	QwtInterval symmetrize(double value) const;
 
 private:
-	double m_minValue;
-	double m_maxValue;
-	BorderFlags m_borderFlags;
+	double m_minValue{0.0};
+	double m_maxValue{-1.0};
+	BorderFlags m_borderFlags{IncludeBorders};
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtInterval::BorderFlags)
@@ -1285,55 +1017,32 @@ Q_DECLARE_METATYPE(QwtInterval)
 Q_DECLARE_TYPEINFO(QwtInterval, Q_MOVABLE_TYPE);
 
 /**
- * \if ENGLISH
  * @brief Default Constructor
  * @details Creates an invalid interval [0.0, -1.0]
- * \sa setInterval(), isValid()
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 创建一个无效区间 [0.0, -1.0]
- * \sa setInterval(), isValid()
- * \endif
+ * @sa setInterval(), isValid()
  */
-inline QwtInterval::QwtInterval() : m_minValue(0.0), m_maxValue(-1.0), m_borderFlags(IncludeBorders)
+inline constexpr QwtInterval::QwtInterval() noexcept : m_minValue(0.0), m_maxValue(-1.0), m_borderFlags(IncludeBorders)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with min/max values
  * @param minValue Minimum value
  * @param maxValue Maximum value
  * @param borderFlags Include/Exclude borders
- * \endif
- * \if CHINESE
- * @brief 带最小/最大值的构造函数
- * @param minValue 最小值
- * @param maxValue 最大值
- * @param borderFlags 包含/排除边界
- * \endif
  */
-inline QwtInterval::QwtInterval(double minValue, double maxValue, BorderFlags borderFlags)
+inline constexpr QwtInterval::QwtInterval(double minValue, double maxValue, BorderFlags borderFlags) noexcept
 	: m_minValue(minValue), m_maxValue(maxValue), m_borderFlags(borderFlags)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Assign the limits of the interval
  * @param minValue Minimum value
  * @param maxValue Maximum value
  * @param borderFlags Include/Exclude borders
- * \endif
- * \if CHINESE
- * @brief 设置区间的界限
- * @param minValue 最小值
- * @param maxValue 最大值
- * @param borderFlags 包含/排除边界
- * \endif
  */
-inline void QwtInterval::setInterval(double minValue, double maxValue, BorderFlags borderFlags)
+inline void QwtInterval::setInterval(double minValue, double maxValue, BorderFlags borderFlags) noexcept
 {
 	m_minValue    = minValue;
 	m_maxValue    = maxValue;
@@ -1341,191 +1050,109 @@ inline void QwtInterval::setInterval(double minValue, double maxValue, BorderFla
 }
 
 /**
- * \if ENGLISH
  * @brief Change the border flags
  * @param borderFlags Or'd BorderMode flags
- * \sa borderFlags()
- * \endif
- * \if CHINESE
- * @brief 更改边界标志
- * @param borderFlags 边界模式标志的或运算结果
- * \sa borderFlags()
- * \endif
+ * @sa borderFlags()
  */
-inline void QwtInterval::setBorderFlags(BorderFlags borderFlags)
+inline void QwtInterval::setBorderFlags(BorderFlags borderFlags) noexcept
 {
 	m_borderFlags = borderFlags;
 }
 
 /**
- * \if ENGLISH
  * @return Border flags
- * \sa setBorderFlags()
- * \endif
- * \if CHINESE
- * @return 边界标志
- * \sa setBorderFlags()
- * \endif
+ * @sa setBorderFlags()
  */
-inline QwtInterval::BorderFlags QwtInterval::borderFlags() const
+inline constexpr QwtInterval::BorderFlags QwtInterval::borderFlags() const noexcept
 {
 	return m_borderFlags;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign the lower limit of the interval
  * @param minValue Minimum value
- * \endif
- * \if CHINESE
- * @brief 设置区间的下限
- * @param minValue 最小值
- * \endif
  */
-inline void QwtInterval::setMinValue(double minValue)
+inline void QwtInterval::setMinValue(double minValue) noexcept
 {
 	m_minValue = minValue;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign the upper limit of the interval
  * @param maxValue Maximum value
- * \endif
- * \if CHINESE
- * @brief 设置区间的上限
- * @param maxValue 最大值
- * \endif
  */
-inline void QwtInterval::setMaxValue(double maxValue)
+inline void QwtInterval::setMaxValue(double maxValue) noexcept
 {
 	m_maxValue = maxValue;
 }
 
 /**
- * \if ENGLISH
  * @return Minimum value of the interval
- * \sa setMinValue()
- * \endif
- * \if CHINESE
- * @return 区间的最小值
- * \sa setMinValue()
- * \endif
+ * @sa setMinValue()
  */
-inline double QwtInterval::minValue() const
+inline constexpr double QwtInterval::minValue() const noexcept
 {
 	return m_minValue;
 }
 
 /**
- * \if ENGLISH
  * @return Maximum value of the interval
- * \sa setMaxValue()
- * \endif
- * \if CHINESE
- * @return 区间的最大值
- * \sa setMaxValue()
- * \endif
+ * @sa setMaxValue()
  */
-inline double QwtInterval::maxValue() const
+inline constexpr double QwtInterval::maxValue() const noexcept
 {
 	return m_maxValue;
 }
 
 /**
- * \if ENGLISH
  * @return Center of the interval
- * \sa width()
- * \endif
- * \if CHINESE
- * @return 区间的中心
- * \sa width()
- * \endif
+ * @sa width()
  */
-inline double QwtInterval::centerValue() const
+inline constexpr double QwtInterval::centerValue() const noexcept
 {
 	return isValid() ? (m_minValue + (m_maxValue - m_minValue) * 0.5) : 0.0;
 }
 /**
- * \if ENGLISH
  * @brief Check if the interval is valid
  * @details A interval is valid when minValue() <= maxValue().
  * In case of QwtInterval::ExcludeBorders it is true
  * when minValue() < maxValue()
  * @return True, if the interval is valid
- * \sa isValid()
- * \endif
- * \if CHINESE
- * @brief 检查区间是否有效
- * @details 当 minValue() <= maxValue() 时区间有效。
- * 对于 QwtInterval::ExcludeBorders，当 minValue() < maxValue() 时为 true
- * @return 如果区间有效则为 true
- * \sa isValid()
- * \endif
+ * @sa isValid()
  */
-inline bool QwtInterval::isValid() const
+inline constexpr bool QwtInterval::isValid() const noexcept
 {
-	if ((m_borderFlags & ExcludeBorders) == 0)
-		return m_minValue <= m_maxValue;
-	else
-		return m_minValue < m_maxValue;
+	return ((m_borderFlags & ExcludeBorders) == 0) ? (m_minValue <= m_maxValue) : (m_minValue < m_maxValue);
 }
 
 /**
- * \if ENGLISH
  * @brief Return the width of an interval
  * @details The width of invalid intervals is 0.0, otherwise the result is maxValue() - minValue().
  * @return Interval width
- * \sa isValid()
- * \endif
- * \if CHINESE
- * @brief 返回区间的宽度
- * @details 无效区间的宽度为 0.0，否则结果为 maxValue() - minValue()。
- * @return 区间宽度
- * \sa isValid()
- * \endif
+ * @sa isValid()
  */
-inline double QwtInterval::width() const
+inline constexpr double QwtInterval::width() const noexcept
 {
 	return isValid() ? (m_maxValue - m_minValue) : 0.0;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the width of an interval as long double
  * @details The width of invalid intervals is 0.0, otherwise the result is
  *          maxValue() - minValue().
  * @return Interval width
  * @sa isValid()
- * \endif
- * \if CHINESE
- * @brief 以 long double 返回区间的宽度
- * @details 无效区间的宽度为 0.0，否则结果为 maxValue() - minValue()。
- * @return 区间宽度
- * @sa isValid()
- * \endif
  */
-inline long double QwtInterval::widthL() const
+inline constexpr long double QwtInterval::widthL() const noexcept
 {
-	if (!isValid())
-		return 0.0;
-
-	return static_cast< long double >(m_maxValue) - static_cast< long double >(m_minValue);
+	return isValid() ? static_cast< long double >(m_maxValue) - static_cast< long double >(m_minValue) : 0.0L;
 }
 
 /**
- * \if ENGLISH
  * @brief Intersection of two intervals
  * @param[in] other Interval to intersect with
  * @return Intersection of this and other
  * @sa intersect()
- * \endif
- * \if CHINESE
- * @brief 两个区间的交集
- * @param[in] other 要交集的区间
- * @return 本区间与 other 的交集
- * @sa intersect()
- * \endif
  */
 inline QwtInterval QwtInterval::operator&(const QwtInterval& other) const
 {
@@ -1533,18 +1160,10 @@ inline QwtInterval QwtInterval::operator&(const QwtInterval& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Union of two intervals
  * @param[in] other Interval to unite with
  * @return Union of this and other
  * @sa unite()
- * \endif
- * \if CHINESE
- * @brief 两个区间的并集
- * @param[in] other 要合并的区间
- * @return 本区间与 other 的并集
- * @sa unite()
- * \endif
  */
 inline QwtInterval QwtInterval::operator|(const QwtInterval& other) const
 {
@@ -1552,16 +1171,9 @@ inline QwtInterval QwtInterval::operator|(const QwtInterval& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two intervals
  * @param[in] other Interval to compare with
  * @return True when this and other are equal
- * \endif
- * \if CHINESE
- * @brief 比较两个区间
- * @param[in] other 要比较的区间
- * @return 如果本区间与 other 相等则返回 true
- * \endif
  */
 inline bool QwtInterval::operator==(const QwtInterval& other) const
 {
@@ -1569,16 +1181,9 @@ inline bool QwtInterval::operator==(const QwtInterval& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two intervals
  * @param[in] other Interval to compare with
  * @return True when this and other are not equal
- * \endif
- * \if CHINESE
- * @brief 比较两个区间
- * @param[in] other 要比较的区间
- * @return 如果本区间与 other 不相等则返回 true
- * \endif
  */
 inline bool QwtInterval::operator!=(const QwtInterval& other) const
 {
@@ -1586,18 +1191,10 @@ inline bool QwtInterval::operator!=(const QwtInterval& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Extend an interval
  * @param[in] value Value to extend with
  * @return Extended interval
  * @sa extend()
- * \endif
- * \if CHINESE
- * @brief 扩展区间
- * @param[in] value 用于扩展的值
- * @return 扩展后的区间
- * @sa extend()
- * \endif
  */
 inline QwtInterval QwtInterval::operator|(double value) const
 {
@@ -1605,33 +1202,20 @@ inline QwtInterval QwtInterval::operator|(double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if interval is null
  * @return True if isValid() && (minValue() >= maxValue())
- * \endif
- * \if CHINESE
- * @brief 检查区间是否为空
- * @return 如果 isValid() && (minValue() >= maxValue()) 则返回 true
- * \endif
  */
-inline bool QwtInterval::isNull() const
+inline constexpr bool QwtInterval::isNull() const noexcept
 {
 	return isValid() && m_minValue >= m_maxValue;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the interval
  * @details The limits are set to interval [0.0, -1.0]
  * @sa isValid()
- * \endif
- * \if CHINESE
- * @brief 使区间无效
- * @details 界限设置为区间 [0.0, -1.0]
- * @sa isValid()
- * \endif
  */
-inline void QwtInterval::invalidate()
+inline void QwtInterval::invalidate() noexcept
 {
 	m_minValue = 0.0;
 	m_maxValue = -1.0;
@@ -1660,7 +1244,6 @@ class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief QwtColorMap is used to map values into colors.
  * @details For displaying 3D data on a 2D plane the 3rd dimension is often
  *          displayed using colors, like f.e in a spectrogram.
@@ -1669,15 +1252,6 @@ class QVector;
  *          - QImage::Format_Indexed8
  *          - QImage::Format_ARGB32
  * @sa QwtPlotSpectrogram, QwtScaleWidget
- * \endif
- * \if CHINESE
- * @brief QwtColorMap 用于将数值映射为颜色。
- * @details 在二维平面上显示三维数据时，第三维通常使用颜色来表示，
- *          例如在光谱图中。每个颜色映射针对以下图像格式之一进行了优化：
- *          - QImage::Format_Indexed8
- *          - QImage::Format_ARGB32
- * @sa QwtPlotSpectrogram, QwtScaleWidget
- * \endif
  */
 
 class QWT_EXPORT QwtColorMap
@@ -1685,7 +1259,7 @@ class QWT_EXPORT QwtColorMap
 public:
 	/*!
 		Format for color mapping
-		\sa rgb(), colorIndex(), colorTable()
+		@sa rgb(), colorIndex(), colorTable()
 	 */
 
 	enum Format
@@ -1701,7 +1275,7 @@ public:
 		   images. The calculation of the color index is usually faster
 		   and the resulting image has a lower memory footprint.
 
-		   \sa colorIndex(), colorTable()
+		   @sa colorIndex(), colorTable()
 		 */
 		Indexed
 	};
@@ -1722,30 +1296,24 @@ public:
 	virtual QVector< QRgb > colorTable256() const;
 
 private:
-	Q_DISABLE_COPY(QwtColorMap)
+	QwtColorMap(const QwtColorMap&) = delete;
+	QwtColorMap& operator=(const QwtColorMap&) = delete;
 
 	Format m_format;
 };
 
 /**
- * \if ENGLISH
  * @brief QwtLinearColorMap builds a color map from color stops.
  * @details A color stop is a color at a specific position. The valid
  *          range for the positions is [0.0, 1.0]. When mapping a value
  *          into a color it is translated into this interval according to mode().
- * \endif
- * \if CHINESE
- * @brief QwtLinearColorMap 从颜色停止点构建颜色映射。
- * @details 颜色停止点是指特定位置的颜色。位置的有效范围为 [0.0, 1.0]。
- *          将数值映射为颜色时，根据 mode() 设置将其转换到此区间。
- * \endif
  */
 class QWT_EXPORT QwtLinearColorMap : public QwtColorMap
 {
 public:
 	/*!
 	   Mode of color map
-	   \sa setMode(), mode()
+	   @sa setMode(), mode()
 	 */
 	enum Mode
 	{
@@ -1760,7 +1328,7 @@ public:
 
 	QwtLinearColorMap(const QColor& from, const QColor& to, QwtColorMap::Format = QwtColorMap::RGB);
 
-	virtual ~QwtLinearColorMap();
+	~QwtLinearColorMap() override;
 
 	void setMode(Mode);
 	Mode mode() const;
@@ -1779,23 +1347,17 @@ public:
 	class ColorStops;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtLinearColorMap)
 };
 
 /**
- * \if ENGLISH
  * @brief QwtAlphaColorMap varies the alpha value of a color.
- * \endif
- * \if CHINESE
- * @brief QwtAlphaColorMap 改变颜色的透明度值。
- * \endif
  */
 class QWT_EXPORT QwtAlphaColorMap : public QwtColorMap
 {
 public:
 	explicit QwtAlphaColorMap(const QColor& = QColor(Qt::gray));
-	virtual ~QwtAlphaColorMap();
+	~QwtAlphaColorMap() override;
 
 	void setAlphaInterval(int alpha1, int alpha2);
 
@@ -1808,32 +1370,22 @@ public:
 	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtAlphaColorMap)
 };
 
 /**
- * \if ENGLISH
  * @brief QwtHueColorMap varies the hue value of the HSV color model.
  * @details QwtHueColorMap can be used to set up a color map easily, that runs cyclic over
  *          all colors. Each cycle has 360 different steps.
  *          The values for value and saturation are in the range of 0 to 255 and doesn't
  *          depend on the data value to be mapped.
  * @sa QwtSaturationValueColorMap
- * \endif
- * \if CHINESE
- * @brief QwtHueColorMap 改变 HSV 颜色模型中的色调值。
- * @details QwtHueColorMap 可以轻松设置循环遍历所有颜色的颜色映射。
- *          每个周期有 360 个不同的步进。
- *          value 和 saturation 的值范围为 0 到 255，不依赖于要映射的数据值。
- * @sa QwtSaturationValueColorMap
- * \endif
  */
 class QWT_EXPORT QwtHueColorMap : public QwtColorMap
 {
 public:
 	explicit QwtHueColorMap(QwtColorMap::Format = QwtColorMap::RGB);
-	virtual ~QwtHueColorMap();
+	~QwtHueColorMap() override;
 
 	void setHueInterval(int hue1, int hue2);  // direction ?
 	void setSaturation(int saturation);
@@ -1849,27 +1401,19 @@ public:
 	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtHueColorMap)
 };
 
 /**
- * \if ENGLISH
  * @brief QwtSaturationValueColorMap varies the saturation and/or value for a given hue in the HSV color model.
  * @details Value and saturation are in the range of 0 to 255 while hue is in the range of 0 to 359.
  * @sa QwtHueColorMap
- * \endif
- * \if CHINESE
- * @brief QwtSaturationValueColorMap 改变 HSV 颜色模型中给定色调的饱和度和/或明度值。
- * @details Value 和 saturation 的值范围为 0 到 255，而 hue 的范围为 0 到 359。
- * @sa QwtHueColorMap
- * \endif
  */
 class QWT_EXPORT QwtSaturationValueColorMap : public QwtColorMap
 {
 public:
 	QwtSaturationValueColorMap();
-	virtual ~QwtSaturationValueColorMap();
+	~QwtSaturationValueColorMap() override;
 
 	void setHue(int hue);
 	void setSaturationInterval(int sat1, int sat2);
@@ -1886,8 +1430,7 @@ public:
 	virtual QRgb rgb(const QwtInterval&, double value) const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSaturationValueColorMap)
 };
 
 // Map a value into a color.
@@ -1907,6 +1450,102 @@ private:
 /*** End of inlined file: qwt_color_map.h ***/
 
 
+/*** Start of inlined file: qwt_color_cycle.h ***/
+#ifndef QWT_COLOR_CYCLE_H
+#define QWT_COLOR_CYCLE_H
+
+#include <qcolor.h>
+
+#if QT_VERSION < 0x060000
+template< typename T >
+class QVector;
+#endif
+
+/**
+ * @brief Provides cyclic color selection from predefined palettes.
+ * @details QwtColorCycle manages an ordered list of colors and returns
+ *          them in a cyclic manner using the color() method. This is used
+ *          by QwtPlot to automatically assign distinct colors to plot items
+ *          (curves, bar charts, etc.) when they are attached without a
+ *          user-specified pen or brush.
+ *
+ *          Several built-in palettes are available, inspired by matplotlib,
+ *          Tableau, ColorBrewer, and the Okabe-Ito colorblind-safe palette.
+ *
+ * @par Example
+ * @code
+ *   QwtPlot plot;
+ *   plot.setColorCycle(QwtColorCycle(QwtColorCycle::OkabeIto));
+ *
+ *   auto* curve1 = new QwtPlotCurve("Series 1"); // gets color[0]
+ *   curve1->attach(&plot);
+ *   auto* curve2 = new QwtPlotCurve("Series 2"); // gets color[1]
+ *   curve2->attach(&plot);
+ * @endcode
+ *
+ * @sa QwtPlot::setColorCycle(), QwtPlot::colorCycle()
+ */
+class QWT_EXPORT QwtColorCycle
+{
+public:
+	/**
+	 * @brief Built-in color palettes
+	 */
+	enum Palette
+	{
+		//! matplotlib classic 10 colors
+		Default10,
+
+		//! Tableau Tab10 — high-contrast categorical colors
+		Tab10,
+
+		//! Tableau Tab20 — 20 colors with light/dark pairs
+		Tab20,
+
+		//! ColorBrewer Set1 — 9 colors for qualitative data
+		Set1,
+
+		//! ColorBrewer Set2 — 8 colors for qualitative data
+		Set2,
+
+		//! ColorBrewer Set3 — 12 colors for qualitative data
+		Set3,
+
+		//! Okabe-Ito — 8 colorblind-safe colors
+		OkabeIto
+	};
+
+	QwtColorCycle();
+	explicit QwtColorCycle(Palette palette);
+	explicit QwtColorCycle(const QVector< QColor >& colors);
+
+	//! Get a color by index (wraps around)
+	QColor color(int index) const;
+
+	//! Get the number of colors in the cycle
+	int count() const;
+
+	//! Set the palette from a built-in preset
+	void setPalette(Palette);
+
+	//! Set custom colors
+	void setColors(const QVector< QColor >&);
+
+	//! Get the current color list
+	QVector< QColor > colors() const;
+
+	//! Get the colors for a built-in palette
+	static QVector< QColor > paletteColors(Palette);
+
+private:
+	QVector< QColor > m_colors;
+};
+
+#endif
+
+/*** End of inlined file: qwt_color_cycle.h ***/
+
+
 /*** Start of inlined file: qwt_pixel_matrix.h ***/
 #ifndef QWT_PIXEL_MATRIX_H
 #define QWT_PIXEL_MATRIX_H
@@ -1915,18 +1554,10 @@ private:
 #include <qrect.h>
 
 /**
- * \if ENGLISH
  * @brief A bit field corresponding to the pixels of a rectangle
  *
  * QwtPixelMatrix is intended to filter out duplicates in an
  * unsorted array of points.
- * \endif
- *
- * \if CHINESE
- * @brief 与矩形像素对应的位域
- *
- * QwtPixelMatrix 用于过滤未排序点数组中的重复项。
- * \endif
  */
 class QWT_EXPORT QwtPixelMatrix : public QBitArray
 {
@@ -1954,19 +1585,10 @@ class QWT_EXPORT QwtPixelMatrix : public QBitArray
 };
 
 /**
- * \if ENGLISH
  * @brief Test if a pixel has been set
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @return true when position is outside of rect(), or when the pixel has already been set
- * \endif
- *
- * \if CHINESE
- * @brief 测试像素是否已设置
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @return 当位置在 rect() 之外，或像素已设置时返回 true
- * \endif
  */
 inline bool QwtPixelMatrix::testPixel( int x, int y ) const
 {
@@ -1975,21 +1597,11 @@ inline bool QwtPixelMatrix::testPixel( int x, int y ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a pixel and test if a pixel has been set before
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @param[in] on Set/Clear the pixel
  * @return true when position is outside of rect(), or when the pixel was set before
- * \endif
- *
- * \if CHINESE
- * @brief 设置像素并测试之前是否已设置
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @param[in] on 设置/清除像素
- * @return 当位置在 rect() 之外，或像素之前已设置时返回 true
- * \endif
  */
 inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
 {
@@ -2004,19 +1616,10 @@ inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the index in the bit field corresponding to a position
  * @param[in] x X-coordinate
  * @param[in] y Y-coordinate
  * @return Index when rect() contains position, otherwise -1
- * \endif
- *
- * \if CHINESE
- * @brief 计算位域中对应位置的索引
- * @param[in] x X坐标
- * @param[in] y Y坐标
- * @return 当 rect() 包含位置时返回索引，否则返回 -1
- * \endif
  */
 inline int QwtPixelMatrix::index( int x, int y ) const
 {
@@ -2041,7 +1644,6 @@ inline int QwtPixelMatrix::index( int x, int y ) const
 #define QWT_TRANSFORM_H
 
 /**
- * \if ENGLISH
  * @brief A transformation between coordinate systems
  * @details QwtTransform manipulates values when being mapped between
  *          the scale and the paint device coordinate system.
@@ -2054,19 +1656,6 @@ inline int QwtPixelMatrix::index( int x, int y ) const
  *          following calculations:
  *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
  *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
- * \endif
- * \if CHINESE
- * @brief 坐标系之间的变换
- * @details QwtTransform 在值和绘制设备坐标系之间映射时操作值。
- *          变换由 2 个方法组成:
- *          - transform
- *          - invTransform
- *          其中一个是另一个的反函数。
- *          当 p1, p2 是绘制设备坐标的边界，s1, s2 是刻度的边界时，
- *          QwtScaleMap 使用以下计算:
- *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
- *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
- * \endif
  */
 class QWT_EXPORT QwtTransform
 {
@@ -2086,18 +1675,13 @@ public:
 	virtual QwtTransform* copy() const = 0;
 
 private:
-	Q_DISABLE_COPY(QwtTransform)
+	QwtTransform(const QwtTransform&) = delete;
+	QwtTransform& operator=(const QwtTransform&) = delete;
 };
 
 /**
- * \if ENGLISH
  * @brief Null transformation
  * @details QwtNullTransform returns the values unmodified.
- * \endif
- * \if CHINESE
- * @brief 空变换
- * @details QwtNullTransform 返回未修改的值。
- * \endif
  */
 class QWT_EXPORT QwtNullTransform : public QwtTransform
 {
@@ -2105,7 +1689,7 @@ public:
 	//! Constructor
 	QwtNullTransform();
 	//! Destructor
-	virtual ~QwtNullTransform();
+	~QwtNullTransform() override;
 
 	//! Transformation function - returns value unmodified
 	virtual double transform(double value) const override;
@@ -2115,19 +1699,11 @@ public:
 	virtual QwtTransform* copy() const override;
 };
 /**
- * \if ENGLISH
  * @brief Logarithmic transformation
  * @details QwtLogTransform modifies the values using log() and exp().
- * \note In the calculations of QwtScaleMap the base of the log function
+ * @note In the calculations of QwtScaleMap the base of the log function
  *       has no effect on the mapping. So QwtLogTransform can be used
  *       for log2(), log10() or any other logarithmic scale.
- * \endif
- * \if CHINESE
- * @brief 对数变换
- * @details QwtLogTransform 使用 log() 和 exp() 修改值。
- * \note 在 QwtScaleMap 的计算中，对数函数的底数对映射没有影响。
- *       因此 QwtLogTransform 可以用于 log2()、log10() 或任何其他对数刻度。
- * \endif
  */
 class QWT_EXPORT QwtLogTransform : public QwtTransform
 {
@@ -2135,7 +1711,7 @@ public:
 	//! Constructor
 	QwtLogTransform();
 	//! Destructor
-	virtual ~QwtLogTransform();
+	~QwtLogTransform() override;
 
 	//! Transformation function - log(value)
 	virtual double transform(double value) const override;
@@ -2153,19 +1729,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief A transformation using pow()
  * @details QwtPowerTransform preserves the sign of a value.
  *          F.e. a transformation with a factor of 2
  *          transforms a value of -3 to -9 and v.v. Thus QwtPowerTransform
  *          can be used for scales including negative values.
- * \endif
- * \if CHINESE
- * @brief 使用 pow() 的变换
- * @details QwtPowerTransform 保持值的符号。
- *          例如，因子为 2 的变换将 -3 变换为 -9，反之亦然。
- *          因此 QwtPowerTransform 可以用于包含负值的刻度。
- * \endif
  */
 class QWT_EXPORT QwtPowerTransform : public QwtTransform
 {
@@ -2173,7 +1741,7 @@ public:
 	//! Constructor with exponent parameter
 	explicit QwtPowerTransform(double exponent);
 	//! Destructor
-	virtual ~QwtPowerTransform();
+	~QwtPowerTransform() override;
 
 	//! Transformation function - pow() preserving sign
 	virtual double transform(double value) const override;
@@ -2199,19 +1767,11 @@ class QPointF;
 class QRectF;
 
 /**
- * \if ENGLISH
  * @brief A scale map
  * @details QwtScaleMap offers transformations from the coordinate system
  *          of a scale into the linear coordinate system of a paint device
  *          and vice versa.
  * @sa QwtTransform, QwtScaleDiv
- * \endif
- * \if CHINESE
- * @brief 刻度映射
- * @details QwtScaleMap 提供从刻度坐标系到绘制设备线性坐标系之间的变换，
- *          以及反向变换。
- * @sa QwtTransform, QwtScaleDiv
- * \endif
  */
 class QWT_EXPORT QwtScaleMap
 {
@@ -2247,14 +1807,14 @@ public:
 	double invTransform(double p) const;
 
 	//! Return first border of paint interval
-	double p1() const;
+	constexpr double p1() const noexcept;
 	//! Return second border of paint interval
-	double p2() const;
+	constexpr double p2() const noexcept;
 
 	//! Return first border of scale interval
-	double s1() const;
+	constexpr double s1() const noexcept;
 	//! Return second border of scale interval
-	double s2() const;
+	constexpr double s2() const noexcept;
 
 	//! Return distance between paint interval boundaries
 	double pDist() const;
@@ -2276,82 +1836,66 @@ public:
 	//! Check if the scale is linear (no transformation)
 	static bool isLinerScale(const QwtScaleMap& sm);
 
+	//! Check if this scale has no nonlinear transformation
+	constexpr bool isLinear() const noexcept;
+
 	//! Check if the mapping direction is inverted
-	bool isInverting() const;
+	constexpr bool isInverting() const noexcept;
+
+	//! Conversion factor for linear fast-path: result = p1() + (value - ts1()) * cnv()
+	constexpr double cnv() const noexcept;
+
+	//! Transformed scale origin for linear fast-path
+	constexpr double ts1() const noexcept;
 
 protected:
-	void swap(QwtScaleMap& other) noexcept;  // 辅助
+	void swap(QwtScaleMap& other) noexcept;  // helper
 private:
 	void updateFactor();
 
-	double m_s1, m_s2;  // scale interval boundaries
-	double m_p1, m_p2;  // paint device interval boundaries
+	double m_s1{0.0}, m_s2{1.0};  // scale interval boundaries
+	double m_p1{0.0}, m_p2{1.0};  // paint device interval boundaries
 
-	double m_cnv;  // conversion factor
-	double m_ts1;
+	double m_cnv{1.0};  // conversion factor
+	double m_ts1{0.0};
 
-	QwtTransform* m_transform;
+	QwtTransform* m_transform{nullptr};
 };
 
 /**
- * \if ENGLISH
  * @brief Return first border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第一个边界
- * \endif
  */
-inline double QwtScaleMap::s1() const
+inline constexpr double QwtScaleMap::s1() const noexcept
 {
 	return m_s1;
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第二个边界
- * \endif
  */
-inline double QwtScaleMap::s2() const
+inline constexpr double QwtScaleMap::s2() const noexcept
 {
 	return m_s2;
 }
 
 /**
- * \if ENGLISH
  * @brief Return first border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第一个边界
- * \endif
  */
-inline double QwtScaleMap::p1() const
+inline constexpr double QwtScaleMap::p1() const noexcept
 {
 	return m_p1;
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第二个边界
- * \endif
  */
-inline double QwtScaleMap::p2() const
+inline constexpr double QwtScaleMap::p2() const noexcept
 {
 	return m_p2;
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(p2() - p1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(p2() - p1())
- * \endif
  */
 inline double QwtScaleMap::pDist() const
 {
@@ -2359,12 +1903,7 @@ inline double QwtScaleMap::pDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(s2() - s1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(s2() - s1())
- * \endif
  */
 inline double QwtScaleMap::sDist() const
 {
@@ -2372,18 +1911,10 @@ inline double QwtScaleMap::sDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a point related to the scale interval into a point related to the paint device interval
  * @param s Value relative to the coordinates of the scale
  * @return Transformed value
- * \sa invTransform()
- * \endif
- * \if CHINESE
- * @brief 将相对于刻度区间的点转换为相对于绘制设备区间的点
- * @param s 相对于刻度坐标的值
- * @return 转换后的值
- * \sa invTransform()
- * \endif
+ * @sa invTransform()
  */
 inline double QwtScaleMap::transform(double s) const
 {
@@ -2394,18 +1925,10 @@ inline double QwtScaleMap::transform(double s) const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a paint device value into a value in the interval of the scale
  * @param p Value relative to the coordinates of the paint device
  * @return Transformed value
- * \sa transform()
- * \endif
- * \if CHINESE
- * @brief 将绘制设备值转换为刻度区间中的值
- * @param p 相对于绘制设备坐标的值
- * @return 转换后的值
- * \sa transform()
- * \endif
+ * @sa transform()
  */
 inline double QwtScaleMap::invTransform(double p) const
 {
@@ -2416,10 +1939,28 @@ inline double QwtScaleMap::invTransform(double p) const
 	return s;
 }
 
-//! \if ENGLISH Return true when ( p1() < p2() ) != ( s1() < s2() ) \endif \if CHINESE 当 ( p1() < p2() ) != ( s1() < s2() ) 时返回 true \endif
-inline bool QwtScaleMap::isInverting() const
+//! Return true when ( p1() < p2() ) != ( s1() < s2() )
+inline constexpr bool QwtScaleMap::isInverting() const noexcept
 {
 	return ((m_p1 < m_p2) != (m_s1 < m_s2));
+}
+
+//! Return true when there is no nonlinear transformation
+inline constexpr bool QwtScaleMap::isLinear() const noexcept
+{
+	return m_transform == nullptr;
+}
+
+//! Return the conversion factor for linear fast-path transform
+inline constexpr double QwtScaleMap::cnv() const noexcept
+{
+	return m_cnv;
+}
+
+//! Return the transformed scale origin for linear fast-path transform
+inline constexpr double QwtScaleMap::ts1() const noexcept
+{
+	return m_ts1;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -2441,13 +1982,8 @@ class QSize;
 class QwtPlotItem;
 
 /**
- * \if ENGLISH
  * @brief Some constants and utility functions for use within Qwt.
- * \endif
  *
- * \if CHINESE
- * @brief Qwt中使用的一些常量和实用函数。
- * \endif
  */
 namespace Qwt
 {
@@ -2472,23 +2008,13 @@ QWT_EXPORT QSize qwtExpandedToGlobalStrut(const QSize&);
 template< typename T > class QList;
 
 /**
- * \if ENGLISH
  * @brief Dynamic grid layout that adjusts columns and rows to the current size
  *
  * @details QwtDynGridLayout takes the space it gets, divides it up into rows and
  * columns, and puts each of the widgets it manages into the correct cell(s).
  * It lays out as many number of columns as possible (limited by maxColumns()).
  *
- * \endif
  *
- * \if CHINESE
- * @brief 动态网格布局，根据当前大小调整列数和行数
- *
- * @details QwtDynGridLayout 获取可用空间，将其划分为行和列，
- * 并将管理的每个控件放入正确的单元格中。
- * 它尽可能多地排列列数（受 maxColumns() 限制）。
- *
- * \endif
  */
 class QWT_EXPORT QwtDynGridLayout : public QLayout
 {
@@ -2500,7 +2026,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
 	explicit QwtDynGridLayout( int spacing = -1 );
 
 	// Destructor
-	virtual ~QwtDynGridLayout();
+	~QwtDynGridLayout() override;
 
 	// Invalidate all internal caches
 	virtual void invalidate() override;
@@ -2566,8 +2092,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
 	void init();
 	int maxRowWidth( int numColumns ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtDynGridLayout)
 };
 
 #endif
@@ -2588,57 +2113,30 @@ class QPainterPath;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for curve fitting algorithms
- * \endif
- * \if CHINESE
- * @brief 曲线拟合算法的抽象基类
- * \endif
  */
 class QWT_EXPORT QwtCurveFitter
 {
   public:
 	/*!
-	   \if ENGLISH
-	   \brief Preferred mode of the fitting algorithm
-	   \details Even if a QPainterPath can always be created from a QPolygonF,
+	   @brief Preferred mode of the fitting algorithm
+	   @details Even if a QPainterPath can always be created from a QPolygonF,
 				the overhead of the conversion can be avoided by indicating
 				the preference of the implementation to the application code.
-	   \endif
-	   \if CHINESE
-	   \brief 拟合算法的首选模式
-	   \details 即使总是可以从 QPolygonF 创建 QPainterPath，
-				但通过向应用程序代码指示实现的首选项，
-				可以避免转换的开销。
-	   \endif
 	 */
 	enum Mode
 	{
 		/*!
-		   \if ENGLISH
 		   The fitting algorithm creates a polygon - the implementation
 		   of fitCurvePath() simply wraps the polygon into a path.
-		   \sa QwtWeedingCurveFitter
-		   \endif
-		   \if CHINESE
-		   拟合算法创建多边形 - fitCurvePath() 的实现
-		   只是将多边形包装到路径中。
-		   \sa QwtWeedingCurveFitter
-		   \endif
+		   @sa QwtWeedingCurveFitter
 		 */
 		Polygon,
 
 		/*!
-		   \if ENGLISH
 		   The fitting algorithm creates a painter path - the implementation
 		   of fitCurve() extracts a polygon from the path.
-		   \sa QwtSplineCurveFitter
-		   \endif
-		   \if CHINESE
-		   拟合算法创建绘制器路径 - fitCurve() 的实现
-		   从路径中提取多边形。
-		   \sa QwtSplineCurveFitter
-		   \endif
+		   @sa QwtSplineCurveFitter
 		 */
 		Path
 	};
@@ -2658,7 +2156,8 @@ class QWT_EXPORT QwtCurveFitter
 	explicit QwtCurveFitter( Mode mode );
 
   private:
-	Q_DISABLE_COPY(QwtCurveFitter)
+	QwtCurveFitter(const QwtCurveFitter&) = delete;
+	QwtCurveFitter& operator=(const QwtCurveFitter&) = delete;
 
 	const Mode m_mode;
 };
@@ -2668,8 +2167,7 @@ class QWT_EXPORT QwtCurveFitter
 /*** End of inlined file: qwt_curve_fitter.h ***/
 
 /*!
-   \if ENGLISH
-   \brief A curve fitter implementing Douglas and Peucker algorithm
+   @brief A curve fitter implementing Douglas and Peucker algorithm
 
    The purpose of the Douglas and Peucker algorithm is that given a 'curve'
    composed of line segments to find a curve not too dissimilar but that
@@ -2690,26 +2188,6 @@ class QWT_EXPORT QwtCurveFitter
    the number of points. By adjusting the tolerance parameter according to the
    axis scales QwtSplineCurveFitter can be used to implement different
    level of details to speed up painting of curves of many points.
-   \endif
-   *
-   \if CHINESE
-   \brief 实现 Douglas 和 Peucker 算法的曲线拟合器
-
-   Douglas 和 Peucker 算法的目的是给定由线段组成的"曲线"，
-   找到一条不太相似但点数更少的曲线。该算法基于原始曲线和
-   平滑曲线之间的最大距离（容差）来定义"太不相似"。
-
-   算法的运行时间非线性增长（最坏情况 O( n*n )），
-   对于巨大的多边形可能非常慢。为了避免性能问题，
-   可以拆分多边形（setChunkSize()）并为这些较小的部分运行算法。
-   在边界处没有插值的缺点对于大多数用例来说无关紧要。
-
-   平滑曲线由定义原始曲线的点的子集组成。
-
-   与 QwtSplineCurveFitter 相反，Douglas 和 Peucker 算法减少
-   点数。通过根据轴刻度调整容差参数，QwtSplineCurveFitter 可用于实现不同
-   的细节级别，以加速绘制多点曲线的速度。
-   \endif
  */
 class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 {
@@ -2717,7 +2195,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 	// Constructor with tolerance parameter
 	explicit QwtWeedingCurveFitter( double tolerance = 1.0 );
 	// Destructor
-	virtual ~QwtWeedingCurveFitter();
+	~QwtWeedingCurveFitter() override;
 
 	// Set the tolerance for curve fitting
 	void setTolerance( double );
@@ -2739,8 +2217,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 
 	class Line;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtWeedingCurveFitter)
 };
 
 #endif
@@ -2763,17 +2240,17 @@ namespace qwt
 {
 
 /**
- * @brief 处理Qt5与Qt6中的差异
+ * @brief Handle differences between Qt5 and Qt6
  *
  */
 namespace compat
 {
 
 /**
- * @brief 获取事件的位置（QPoint）
- * @tparam EventType 事件类型（需支持pos()或position()方法）
- * @param event 事件指针
- * @return 事件位置的QPoint表示
+ * @brief Get the event position (QPoint)
+ * @tparam EventType Event type (must support pos() or position() method)
+ * @param event Event pointer
+ * @return Event position as QPoint
  */
 template< typename EventType >
 inline QPoint eventPos(EventType* event)
@@ -2786,10 +2263,10 @@ inline QPoint eventPos(EventType* event)
 }
 
 /**
- * @brief 获取事件的x坐标
- * @tparam EventType 事件类型
- * @param event 事件指针
- * @return x坐标（整数）
+ * @brief Get the x coordinate of the event
+ * @tparam EventType Event type
+ * @param event Event pointer
+ * @return x coordinate (integer)
  */
 template< typename EventType >
 inline int eventPosX(EventType* event)
@@ -2802,10 +2279,10 @@ inline int eventPosX(EventType* event)
 }
 
 /**
- * @brief 获取事件的y坐标
- * @tparam EventType 事件类型
- * @param event 事件指针
- * @return y坐标（整数）
+ * @brief Get the y coordinate of the event
+ * @tparam EventType Event type
+ * @param event Event pointer
+ * @return y coordinate (integer)
  */
 template< typename EventType >
 inline int eventPosY(EventType* event)
@@ -2818,10 +2295,10 @@ inline int eventPosY(EventType* event)
 }
 
 /**
- * @brief 计算字符串的水平宽度（整数版本）
- * @param fm QFontMetrics对象
- * @param str 目标字符串
- * @return 宽度（整数）
+ * @brief Calculate the horizontal advance of a string (integer version)
+ * @param fm QFontMetrics object
+ * @param str Target string
+ * @return Width (integer)
  */
 inline int horizontalAdvance(const QFontMetrics& fm, const QString& str)
 {
@@ -2833,10 +2310,10 @@ inline int horizontalAdvance(const QFontMetrics& fm, const QString& str)
 }
 
 /**
- * @brief 计算字符串的水平宽度（浮点数版本）
- * @param fm QFontMetricsF对象
- * @param str 目标字符串
- * @return 宽度（浮点数）
+ * @brief Calculate the horizontal advance of a string (floating-point version)
+ * @param fm QFontMetricsF object
+ * @param str Target string
+ * @return Width (floating-point)
  */
 inline qreal horizontalAdvanceF(const QFontMetricsF& fm, const QString& str)
 {
@@ -2887,30 +2364,17 @@ inline int wheelEventDelta(QWheelEvent* e)
 #include <qrect.h>
 
 /**
- * \if ENGLISH
  * @brief Base class for statistical samples with position and range
  * @details Provides common fields for samples that have a position on one axis
  *          and a statistical range on the other axis (used by boxplots, OHLC charts).
- * \endif
  *
- * \if CHINESE
- * @brief 统计样本的基类，包含位置和范围
- * @details 为在一个轴上有位置、在另一个轴上有统计范围的样本提供公共字段
- *          （用于箱线图、OHLC 图表等）。
- * \endif
  */
 class QWT_EXPORT QwtStatisticalSample
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Default constructor
 	 * @details All values set to 0.0
-	 * \endif
-	 * \if CHINESE
-	 * @brief 默认构造函数
-	 * @details 所有值设置为 0.0
-	 * \endif
 	 */
 	QwtStatisticalSample(double position = 0.0);
 
@@ -2936,15 +2400,9 @@ inline QwtStatisticalSample::QwtStatisticalSample(double pos)
 }
 
 /**
- * \if ENGLISH
  * @brief A sample of the types (x1-x2, y) or (x, y1-y2)
  * @details Used for interval-based samples where one dimension has a range
  *          instead of a single value.
- * \endif
- * \if CHINESE
- * @brief 类型为 (x1-x2, y) 或 (x, y1-y2) 的样本
- * @details 用于基于区间的样本，其中一个维度是范围而不是单个值。
- * \endif
  */
 class QWT_EXPORT QwtIntervalSample
 {
@@ -2964,60 +2422,34 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details The value is set to 0.0, the interval is invalid
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 值设置为 0.0，区间无效
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample() : value(0.0)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and interval
  * @param v Value
  * @param intv Interval
- * \endif
- * \if CHINESE
- * @brief 带值和区间的构造函数
- * @param v 值
- * @param intv 区间
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample(double v, const QwtInterval& intv) : value(v), interval(intv)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and min/max
  * @param v Value
  * @param min Minimum value
  * @param max Maximum value
- * \endif
- * \if CHINESE
- * @brief 带值、最小值和最大值的构造函数
- * @param v 值
- * @param min 最小值
- * @param max 最大值
- * \endif
  */
 inline QwtIntervalSample::QwtIntervalSample(double v, double min, double max) : value(v), interval(min, max)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Equality comparison operator
- * \endif
- * \if CHINESE
- * @brief 相等比较运算符
- * \endif
  */
 inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
 {
@@ -3025,12 +2457,7 @@ inline bool QwtIntervalSample::operator==(const QwtIntervalSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inequality comparison operator
- * \endif
- * \if CHINESE
- * @brief 不相等比较运算符
- * \endif
  */
 inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
 {
@@ -3038,16 +2465,9 @@ inline bool QwtIntervalSample::operator!=(const QwtIntervalSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief A sample of the types (x1...xn, y) or (x, y1..yn)
  * @details Used for set-based samples where one dimension has multiple values.
  *          Commonly used for bar charts with multiple bars at each position.
- * \endif
- * \if CHINESE
- * @brief 类型为 (x1...xn, y) 或 (x, y1..yn) 的样本
- * @details 用于基于集合的样本，其中一个维度有多个值。
- *          通常用于在每个位置有多个柱的柱状图。
- * \endif
  */
 class QWT_EXPORT QwtSetSample
 {
@@ -3068,42 +2488,24 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Default constructor
  * @details The value is set to 0.0
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * @details 值设置为 0.0
- * \endif
  */
 inline QwtSetSample::QwtSetSample() : value(0.0)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with value and set
  * @param v Value
  * @param s Set of values
- * \endif
- * \if CHINESE
- * @brief 带值和集合的构造函数
- * @param v 值
- * @param s 值的集合
- * \endif
  */
 inline QwtSetSample::QwtSetSample(double v, const QVector< double >& s) : value(v), set(s)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Equality comparison operator
- * \endif
- * \if CHINESE
- * @brief 相等比较运算符
- * \endif
  */
 inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 {
@@ -3111,12 +2513,7 @@ inline bool QwtSetSample::operator==(const QwtSetSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inequality comparison operator
- * \endif
- * \if CHINESE
- * @brief 不相等比较运算符
- * \endif
  */
 inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 {
@@ -3124,14 +2521,8 @@ inline bool QwtSetSample::operator!=(const QwtSetSample& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Return all values of the set added together
  * @return Sum of all values in the set
- * \endif
- * \if CHINESE
- * @brief 返回集合中所有值的总和
- * @return 集合中所有值的总和
- * \endif
  */
 inline double QwtSetSample::added() const
 {
@@ -3143,19 +2534,11 @@ inline double QwtSetSample::added() const
 }
 
 /**
- * \if ENGLISH
  * @brief Open-High-Low-Close sample used in financial charts
  * @details In financial charts the movement of a price in a time interval is often
  *          represented by the opening/closing prices and the lowest/highest prices
  *          in this interval.
  * @sa QwtTradingChartData
- * \endif
- * \if CHINESE
- * @brief 用于金融图表的开盘-最高-最低-收盘样本
- * @details 在金融图表中，时间间隔内的价格变动通常由开盘/收盘价格
- *          和该间隔内的最低/最高价格表示。
- * @sa QwtTradingChartData
- * \endif
  */
 class QWT_EXPORT QwtOHLCSample
 {
@@ -3186,22 +2569,12 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor with all OHLC values
  * @param t Time value
  * @param o Open value
  * @param h High value
  * @param l Low value
  * @param c Close value
- * \endif
- * \if CHINESE
- * @brief 包含所有 OHLC 值的构造函数
- * @param t 时间值
- * @param o 开盘值
- * @param h 最高值
- * @param l 最低值
- * @param c 收盘值
- * \endif
  */
 inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, double c)
 	: time(t), open(o), high(h), low(l), close(c)
@@ -3209,22 +2582,12 @@ inline QwtOHLCSample::QwtOHLCSample(double t, double o, double h, double l, doub
 }
 
 /**
- * \if ENGLISH
  * @brief Check if a sample is valid
  * @details A sample is valid, when all of the following checks are true:
  *          - low <= high
  *          - low <= open <= high
  *          - low <= close <= high
  * @return True, when the sample is valid
- * \endif
- * \if CHINESE
- * @brief 检查样本是否有效
- * @details 当以下所有检查都为真时，样本有效：
- *          - low <= high
- *          - low <= open <= high
- *          - low <= close <= high
- * @return 当样本有效时返回 true
- * \endif
  */
 inline bool QwtOHLCSample::isValid() const
 {
@@ -3232,18 +2595,10 @@ inline bool QwtOHLCSample::isValid() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the bounding interval of the OHLC values
  * @details For valid samples the limits of this interval are always low/high.
  * @return Bounding interval
  * @sa isValid()
- * \endif
- * \if CHINESE
- * @brief 计算 OHLC 值的边界区间
- * @details 对于有效样本，此区间的边界始终是 low/high。
- * @return 边界区间
- * @sa isValid()
- * \endif
  */
 inline QwtInterval QwtOHLCSample::boundingInterval() const
 {
@@ -3261,18 +2616,10 @@ inline QwtInterval QwtOHLCSample::boundingInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Sample used in vector fields
  * @details A vector field sample is a position and a vector - usually
  *          representing some direction and magnitude - attached to this position.
  * @sa QwtVectorFieldData
- * \endif
- * \if CHINESE
- * @brief 用于向量场的样本
- * @details 向量场样本是一个位置和一个向量——通常表示某个方向和大小——
- *          附在该位置上。
- * @sa QwtVectorFieldData
- * \endif
  */
 class QWT_EXPORT QwtVectorFieldSample
 {
@@ -3299,20 +2646,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor with position and vector coordinates
  * @param posX x coordinate of the position
  * @param posY y coordinate of the position
  * @param vectorX x coordinate of the vector
  * @param vectorY y coordinate of the vector
- * \endif
- * \if CHINESE
- * @brief 带位置和向量坐标的构造函数
- * @param posX 位置的 x 坐标
- * @param posY 位置的 y 坐标
- * @param vectorX 向量的 x 坐标
- * @param vectorY 向量的 y 坐标
- * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, double vectorX, double vectorY)
 	: x(posX), y(posY), vx(vectorX), vy(vectorY)
@@ -3320,18 +2658,10 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(double posX, double posY, doub
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with QPointF position and vector coordinates
  * @param pos Position as QPointF
  * @param vectorX x coordinate of the vector
  * @param vectorY y coordinate of the vector
- * \endif
- * \if CHINESE
- * @brief 带 QPointF 位置和向量坐标的构造函数
- * @param pos 作为 QPointF 的位置
- * @param vectorX 向量的 x 坐标
- * @param vectorY 向量的 y 坐标
- * \endif
  */
 inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vectorX, double vectorY)
 	: x(pos.x()), y(pos.y()), vx(vectorX), vy(vectorY)
@@ -3339,14 +2669,8 @@ inline QwtVectorFieldSample::QwtVectorFieldSample(const QPointF& pos, double vec
 }
 
 /**
- * \if ENGLISH
  * @brief Return position as QPointF
  * @return x/y coordinates as QPointF
- * \endif
- * \if CHINESE
- * @brief 返回 QPointF 格式的位置
- * @return x/y 坐标作为 QPointF
- * \endif
  */
 inline QPointF QwtVectorFieldSample::pos() const
 {
@@ -3354,14 +2678,8 @@ inline QPointF QwtVectorFieldSample::pos() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the vector is null
  * @return true, if vx and vy are 0
- * \endif
- * \if CHINESE
- * @brief 检查向量是否为空
- * @return 如果 vx 和 vy 为 0 则返回 true
- * \endif
  */
 inline bool QwtVectorFieldSample::isNull() const
 {
@@ -3369,37 +2687,22 @@ inline bool QwtVectorFieldSample::isNull() const
 }
 
 /**
- * \if ENGLISH
  * @brief Sample for box-and-whisker plot (boxplot) visualization
  * @details Contains all statistical values needed to render a boxplot:
  *          whisker endpoints, quartiles, median, and outlier count.
  *          Actual outlier values are stored separately in QwtBoxOutlierSample.
- * \endif
  *
- * \if CHINESE
- * @brief 箱线图（boxplot）样本
- * @details 包含绘制箱线图所需的所有统计值：
- *          须须端点、四分位数、中位数和异常值计数。
- *          实际异常值单独存储在 QwtBoxOutlierSample 中。
- * \endif
  */
 class QWT_EXPORT QwtBoxSample : public QwtStatisticalSample
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Default constructor
 	 * @details All values set to 0.0
-	 * \endif
-	 * \if CHINESE
-	 * @brief 默认构造函数
-	 * @details 所有值设置为 0.0
-	 * \endif
 	 */
 	QwtBoxSample(double position = 0.0);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Full constructor with all statistical values
 	 * @param position Position on the axis
 	 * @param whiskerLower Lower whisker endpoint
@@ -3407,53 +2710,25 @@ public:
 	 * @param median Median value (50th percentile)
 	 * @param q3 Third quartile (75th percentile)
 	 * @param whiskerUpper Upper whisker endpoint
-	 * \endif
-	 * \if CHINESE
-	 * @brief 包含所有统计值的完整构造函数
-	 * @param position 轴上的位置
-	 * @param whiskerLower 下须须端点
-	 * @param q1 第一四分位数（第25百分位）
-	 * @param median 中位数（第50百分位）
-	 * @param q3 第三四分位数（第75百分位）
-	 * @param whiskerUpper 上须须端点
-	 * \endif
 	 */
 	QwtBoxSample(double position, double whiskerLower, double q1,
 				 double median, double q3, double whiskerUpper);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Check if sample has valid ordering
 	 * @details Returns true if whiskerLower <= q1 <= median <= q3 <= whiskerUpper
-	 * \endif
-	 * \if CHINESE
-	 * @brief 检查样本顺序是否有效
-	 * @details 当 whiskerLower <= q1 <= median <= q3 <= whiskerUpper 时返回 true
-	 * \endif
 	 */
 	bool isValid() const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Get bounding interval including whiskers
 	 * @return Interval from whiskerLower to whiskerUpper
-	 * \endif
-	 * \if CHINESE
-	 * @brief 获取包含须须的边界区间
-	 * @return 从 whiskerLower 到 whiskerUpper 的区间
-	 * \endif
 	 */
 	QwtInterval boundingInterval() const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Get box body interval (Q1 to Q3)
 	 * @return Interval from q1 to q3
-	 * \endif
-	 * \if CHINESE
-	 * @brief 获取箱体区间（Q1 到 Q3）
-	 * @return 从 q1 到 q3 的区间
-	 * \endif
 	 */
 	QwtInterval boxInterval() const;
 
@@ -3517,52 +2792,28 @@ inline QwtInterval QwtBoxSample::boxInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Outlier values for a single boxplot position
  * @details Contains all outlier values associated with one box position.
  *          One QwtBoxOutlierSample corresponds to one QwtBoxSample.
- * \endif
  *
- * \if CHINESE
- * @brief 单个箱线图位置的异常值
- * @details 包含与一个箱位置关联的所有异常值。
- *          一个 QwtBoxOutlierSample 对应一个 QwtBoxSample。
- * \endif
  */
 class QWT_EXPORT QwtBoxOutlierSample
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Default constructor
-	 * \endif
-	 * \if CHINESE
-	 * @brief 默认构造函数
-	 * \endif
 	 */
 	QwtBoxOutlierSample(double boxPosition = 0.0);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor with position and outlier values
 	 * @param boxPosition Position matching parent QwtBoxSample
 	 * @param values All outlier values for this box
-	 * \endif
-	 * \if CHINESE
-	 * @brief 包含位置和异常值的构造函数
-	 * @param boxPosition 匹配父 QwtBoxSample 的位置
-	 * @param values 此箱的所有异常值
-	 * \endif
 	 */
 	QwtBoxOutlierSample(double boxPosition, const QVector<double>& values);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor with move semantics
-	 * \endif
-	 * \if CHINESE
-	 * @brief 移动语义构造函数
-	 * \endif
 	 */
 	QwtBoxOutlierSample(double boxPosition, QVector<double>&& values);
 
@@ -3603,7 +2854,7 @@ inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& va
 
 
 /*** Start of inlined file: qwt_point_3d.h ***/
-/*! \file */
+/*! @file */
 #ifndef QWT_POINT_3D_H
 #define QWT_POINT_3D_H
 
@@ -3611,12 +2862,7 @@ inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& va
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief QwtPoint3D class defines a 3D point in double coordinates
- * \endif
- * \if CHINESE
- * @brief QwtPoint3D 类定义双精度坐标的 3D 点
- * \endif
  */
 
 class QWT_EXPORT QwtPoint3D
@@ -3626,29 +2872,29 @@ public:
 	QwtPoint3D(double x, double y, double z);
 	QwtPoint3D(const QPointF&);
 
-	bool isNull() const;
+	bool isNull() const noexcept;
 
-	double x() const;
-	double y() const;
-	double z() const;
+	double x() const noexcept;
+	double y() const noexcept;
+	double z() const noexcept;
 
-	double& rx();
-	double& ry();
-	double& rz();
+	double& rx() noexcept;
+	double& ry() noexcept;
+	double& rz() noexcept;
 
-	void setX(double x);
-	void setY(double y);
-	void setZ(double y);
+	void setX(double x) noexcept;
+	void setY(double y) noexcept;
+	void setZ(double y) noexcept;
 
-	QPointF toPoint() const;
+	QPointF toPoint() const noexcept;
 
-	bool operator==(const QwtPoint3D&) const;
-	bool operator!=(const QwtPoint3D&) const;
+	bool operator==(const QwtPoint3D&) const noexcept;
+	bool operator!=(const QwtPoint3D&) const noexcept;
 
 private:
-	double m_x;
-	double m_y;
-	double m_z;
+	double m_x{0.0};
+	double m_y{0.0};
+	double m_z{0.0};
 };
 
 Q_DECLARE_TYPEINFO(QwtPoint3D, Q_MOVABLE_TYPE);
@@ -3659,14 +2905,8 @@ QWT_EXPORT QDebug operator<<(QDebug, const QwtPoint3D&);
 #endif
 
 /**
- * \if ENGLISH
  * @brief Default constructor - constructs a null point
- * \sa isNull()
- * \endif
- * \if CHINESE
- * @brief 默认构造函数 - 构造一个空点
- * \sa isNull()
- * \endif
+ * @sa isNull()
  */
 inline QwtPoint3D::QwtPoint3D()
 	: m_x( 0.0 )
@@ -3676,18 +2916,10 @@ inline QwtPoint3D::QwtPoint3D()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a point with coordinates specified by x, y and z
  * @param x X coordinate
  * @param y Y coordinate
  * @param z Z coordinate (default 0.0)
- * \endif
- * \if CHINESE
- * @brief 构造一个具有指定 x, y, z 坐标的点
- * @param x X 坐标
- * @param y Y 坐标
- * @param z Z 坐标 (默认 0.0)
- * \endif
  */
 inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
 	: m_x( x )
@@ -3697,14 +2929,8 @@ inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a point with x and y coordinates from a 2D point, and z coordinate of 0
  * @param other 2D point
- * \endif
- * \if CHINESE
- * @brief 从 2D 点构造一个点，x 和 y 坐标来自 2D 点，z 坐标为 0
- * @param other 2D 点
- * \endif
  */
 inline QwtPoint3D::QwtPoint3D( const QPointF& other )
 	: m_x( other.x() )
@@ -3714,93 +2940,83 @@ inline QwtPoint3D::QwtPoint3D( const QPointF& other )
 }
 
 /**
- * \if ENGLISH
  * @return True if the point is null (x, y, z all equal to zero); otherwise false
- * \endif
- * \if CHINESE
- * @return 如果点是空的（x, y, z 都等于零）则为 true；否则为 false
- * \endif
  */
-inline bool QwtPoint3D::isNull() const
+inline bool QwtPoint3D::isNull() const noexcept
 {
 	return m_x == 0.0 && m_y == 0.0 && m_z == 0.0;
 }
 
-//! \if ENGLISH Return the x-coordinate of the point \endif \if CHINESE 返回点的 X 坐标 \endif
-inline double QwtPoint3D::x() const
+//! Return the x-coordinate of the point
+inline double QwtPoint3D::x() const noexcept
 {
 	return m_x;
 }
 
-//! \if ENGLISH Return the y-coordinate of the point \endif \if CHINESE 返回点的 Y 坐标 \endif
-inline double QwtPoint3D::y() const
+//! Return the y-coordinate of the point
+inline double QwtPoint3D::y() const noexcept
 {
 	return m_y;
 }
 
-//! \if ENGLISH Return the z-coordinate of the point \endif \if CHINESE 返回点的 Z 坐标 \endif
-inline double QwtPoint3D::z() const
+//! Return the z-coordinate of the point
+inline double QwtPoint3D::z() const noexcept
 {
 	return m_z;
 }
 
-//! \if ENGLISH Return a reference to the x-coordinate of the point \endif \if CHINESE 返回点 X 坐标的引用 \endif
-inline double& QwtPoint3D::rx()
+//! Return a reference to the x-coordinate of the point
+inline double& QwtPoint3D::rx() noexcept
 {
 	return m_x;
 }
 
-//! \if ENGLISH Return a reference to the y-coordinate of the point \endif \if CHINESE 返回点 Y 坐标的引用 \endif
-inline double& QwtPoint3D::ry()
+//! Return a reference to the y-coordinate of the point
+inline double& QwtPoint3D::ry() noexcept
 {
 	return m_y;
 }
 
-//! \if ENGLISH Return a reference to the z-coordinate of the point \endif \if CHINESE 返回点 Z 坐标的引用 \endif
-inline double& QwtPoint3D::rz()
+//! Return a reference to the z-coordinate of the point
+inline double& QwtPoint3D::rz() noexcept
 {
 	return m_z;
 }
 
-//! \if ENGLISH Set the x-coordinate of the point to x \endif \if CHINESE 将点的 X 坐标设置为 x \endif
-inline void QwtPoint3D::setX( double x )
+//! Set the x-coordinate of the point to x
+inline void QwtPoint3D::setX( double x ) noexcept
 {
 	m_x = x;
 }
 
-//! \if ENGLISH Set the y-coordinate of the point to y \endif \if CHINESE 将点的 Y 坐标设置为 y \endif
-inline void QwtPoint3D::setY( double y )
+//! Set the y-coordinate of the point to y
+inline void QwtPoint3D::setY( double y ) noexcept
 {
 	m_y = y;
 }
 
-//! \if ENGLISH Set the z-coordinate of the point to z \endif \if CHINESE 将点的 Z 坐标设置为 z \endif
-inline void QwtPoint3D::setZ( double z )
+//! Set the z-coordinate of the point to z
+inline void QwtPoint3D::setZ( double z ) noexcept
 {
 	m_z = z;
 }
 
 /**
- * \if ENGLISH
  * @return 2D point with the z coordinate dropped
- * \endif
- * \if CHINESE
- * @return 去掉 z 坐标的 2D 点
- * \endif
  */
-inline QPointF QwtPoint3D::toPoint() const
+inline QPointF QwtPoint3D::toPoint() const noexcept
 {
 	return QPointF( m_x, m_y );
 }
 
-//! \if ENGLISH Return true if this point and other are equal \endif \if CHINESE 如果此点与另一点相等则返回 true \endif
-inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const
+//! Return true if this point and other are equal
+inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const noexcept
 {
 	return ( m_x == other.m_x ) && ( m_y == other.m_y ) && ( m_z == other.m_z );
 }
 
-//! \if ENGLISH Return true if this point and other are different \endif \if CHINESE 如果此点与另一点不同则返回 true \endif
-inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const
+//! Return true if this point and other are different
+inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const noexcept
 {
 	return !operator==( other );
 }
@@ -3820,7 +3036,6 @@ inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const
 class QwtPointPolar;
 
 /**
- * \if ENGLISH
  * @brief Abstract interface for iterating over samples
  * @details Qwt offers several implementations of the QwtSeriesData API,
  *          but in situations, where data of an application specific format
@@ -3836,19 +3051,6 @@ class QwtPointPolar;
  *            the data. You can use qwtBoundingRect() for an implementation but often it is
  *            possible to implement a more efficient algorithm depending on the characteristics
  *            of the series. The member cachedBoundingRect is intended for caching the calculated rectangle.
- * \endif
- * \if CHINESE
- * @brief 遍历样本的抽象接口
- * @details Qwt 提供了 QwtSeriesData API 的几种实现，但在需要显示特定应用程序格式的数据
- *          而无需复制的情况下，建议实现单独的数据访问。
- *
- *          QwtSeriesData<QPointF> 的子类必须实现：
- *          - size(): 应返回数据点的数量。
- *          - sample(): 应返回特定位置的样本的 x 和 y 值作为 QPointF 对象。
- *          - boundingRect(): 应返回数据系列的边界矩形。它用于自动缩放，并可能有助于
- *            某些显示数据的算法。您可以使用 qwtBoundingRect() 来实现，但通常可以根据
- *            系列的特性实现更高效的算法。成员 cachedBoundingRect 用于缓存计算的矩形。
- * \endif
  */
 template< typename T >
 class QwtSeriesData
@@ -3862,7 +3064,7 @@ public:
 
 #ifndef QWT_PYTHON_WRAPPER
 
-	/// \return Number of samples
+	/// @return Number of samples
 	virtual size_t size() const = 0;
 
 	/// Return a sample
@@ -3914,14 +3116,8 @@ void QwtSeriesData< T >::setRectOfInterest(const QRectF&)
 }
 
 /**
- * \if ENGLISH
  * @brief Template class for data, that is organized as QVector
  * @details QVector uses implicit data sharing and can be passed around as argument efficiently.
- * \endif
- * \if CHINESE
- * @brief 数据模板类，组织为 QVector
- * @details QVector 使用隐式数据共享，可以高效地作为参数传递。
- * \endif
  */
 template< typename T >
 class QwtArraySeriesData : public QwtSeriesData< T >
@@ -3938,13 +3134,13 @@ public:
 	void setSamples(const QVector< T >& samples);
 	void setSamples(QVector< T >&& samples);
 
-	/// \return Array of samples
+	/// @return Array of samples
 	const QVector< T > samples() const;
 
-	/// \return Number of samples
+	/// @return Number of samples
 	virtual size_t size() const override;
 
-	/// \return Sample at a specific position
+	/// @return Sample at a specific position
 	virtual T sample(size_t index) const override;
 
 protected:
@@ -4001,14 +3197,8 @@ T QwtArraySeriesData< T >::sample(size_t i) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of points
  * @details QwtPointSeriesData provides access to QPointF samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 点数组迭代接口
- * @details QwtPointSeriesData 提供对存储在 QVector 中的 QPointF 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 {
@@ -4021,14 +3211,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of 3D points
  * @details QwtPoint3DSeriesData provides access to QwtPoint3D samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 3D点数组迭代接口
- * @details QwtPoint3DSeriesData 提供对存储在 QVector 中的 QwtPoint3D 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 {
@@ -4041,14 +3225,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of intervals
  * @details QwtIntervalSeriesData provides access to QwtIntervalSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 区间数组迭代接口
- * @details QwtIntervalSeriesData 提供对存储在 QVector 中的 QwtIntervalSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalSample >
 {
@@ -4061,14 +3239,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of set samples
  * @details QwtSetSeriesData provides access to QwtSetSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 集合样本数组迭代接口
- * @details QwtSetSeriesData 提供对存储在 QVector 中的 QwtSetSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 {
@@ -4081,14 +3253,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of vector field samples
  * @details QwtVectorFieldData provides access to QwtVectorFieldSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 向量场样本数组迭代接口
- * @details QwtVectorFieldData 提供对存储在 QVector 中的 QwtVectorFieldSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldSample >
 {
@@ -4101,16 +3267,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of OHLC samples
  * @details QwtTradingChartData provides access to QwtOHLCSample samples stored in a QVector.
  *          Used for candlestick or OHLC chart financial data.
- * \endif
- * \if CHINESE
- * @brief OHLC样本数组迭代接口
- * @details QwtTradingChartData 提供对存储在 QVector 中的 QwtOHLCSample 样本的访问。
- *          用于蜡烛图或OHLC图表的金融数据。
- * \endif
  */
 class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample >
 {
@@ -4123,16 +3282,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of boxplot samples
  * @details QwtBoxChartData provides access to QwtBoxSample samples stored in a QVector.
  *          Used for box-and-whisker plot statistical data.
- * \endif
- * \if CHINESE
- * @brief 箱线图样本数组迭代接口
- * @details QwtBoxChartData 提供对存储在 QVector 中的 QwtBoxSample 样本的访问。
- *          用于箱线图的统计数据。
- * \endif
  */
 class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
 {
@@ -4145,16 +3297,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of boxplot outlier samples
  * @details QwtBoxOutlierChartData provides access to QwtBoxOutlierSample samples stored in a QVector.
  *          Used for displaying outlier points in box-and-whisker plots.
- * \endif
- * \if CHINESE
- * @brief 箱线图异常值样本数组迭代接口
- * @details QwtBoxOutlierChartData 提供对存储在 QVector 中的 QwtBoxOutlierSample 样本的访问。
- *          用于显示箱线图中的异常值点。
- * \endif
  */
 class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
 {
@@ -4188,7 +3333,6 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t f
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
 
 /**
- * \if ENGLISH
  * @brief Binary search for a sorted series of samples
  * @details qwtUpperSampleIndex returns the index of sample that is the upper bound
  *          of value. Is the the value smaller than the smallest value the return
@@ -4240,85 +3384,34 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, s
  *
  * @note Starting from qwt7, this function is changed to size_t version. If not found,
  *       it will return series.size(), similar to an end iterator.
- * \endif
- * \if CHINESE
- * @brief 对排序的样本系列进行二分查找
- * @details qwtUpperSampleIndex 返回样本的索引，该样本是值的上界。如果值小于最小值，
- *          则返回值为 0。如果值大于或等于最大值，则返回值为 series.size()。
- *
- * @par 示例
- * 以下示例展示了如何根据 x 坐标找到曲线上的点
- * @code
- * #include <qwt_series_data.h>
- * #include <qwt_plot_curve.h>
- *
- *   struct compareX
- *   {
- *       inline bool operator()( const double x, const QPointF &pos ) const
- *       {
- *           return ( x < pos.x() );
- *       }
- *   };
- *
- *   QLineF curveLineAt( const QwtPlotCurve *curve, double x )
- *   {
- *       int index = qwtUpperSampleIndex<QPointF>(*curve->data(), x, compareX() );
- *
- *       if ( index == -1 &&
- *           x == curve->sample( curve->dataSize() - 1 ).x() )
- *       {
- *           // the last sample is excluded from qwtUpperSampleIndex
- *           index = curve->dataSize() - 1;
- *       }
- *
- *       QLineF line; // invalid
- *       if ( index > 0 )
- *       {
- *           line.setP1( curve->sample( index - 1 ) );
- *           line.setP2( curve->sample( index ) );
- *       }
- *
- *       return line;
- *   }
- *
- * @endcode
- * @endpar
- *
- * @param series 样本系列
- * @param value 值
- * @param lessThan 比较操作
- * @note 样本必须按照 lessThan 对象指定的顺序排序
- *
- * @note 从 qwt7 开始，此函数改为 size_t 版本。如果未找到，将返回 series.size()，类似于 end 迭代器。
- * \endif
  */
 template< typename T, typename LessThan >
 inline size_t qwtUpperSampleIndex(const QwtSeriesData< T >& series, double value, LessThan lessThan)
 {
 	const size_t count = series.size();
 	if (count == 0) {
-		return count;  // 返回 0 作为“未找到”的标记（因为有效索引从 0 开始，count 超出了有效范围）
+		return count; // Return 0 as "not found" marker (valid indices start from 0, count is beyond valid range)
 	}
 
 	const size_t indexMax = count - 1;
 
-	// 如果 value 大于等于最后一个元素，说明没有元素大于 value，返回 count
+	// If value is greater than or equal to the last element, no element is greater than value, return count
 	if (!lessThan(value, series.sample(indexMax))) {
 		return count;
 	}
 
 	size_t indexMin = 0;
-	size_t n        = indexMax;  // n 表示当前搜索区间的大小
+	size_t n        = indexMax; // n represents the current search interval size
 
 	while (n > 0) {
 		const size_t half     = n >> 1;
 		const size_t indexMid = indexMin + half;
 
 		if (lessThan(value, series.sample(indexMid))) {
-			// 目标在左侧区间 [indexMin, indexMid]
+			// Target is in the left interval [indexMin, indexMid]
 			n = half;
 		} else {
-			// 目标在右侧区间 [indexMid + 1, indexMin + n - 1]
+			// Target is in the right interval [indexMid + 1, indexMin + n - 1]
 			indexMin = indexMid + 1;
 			n -= half + 1;
 		}
@@ -4348,7 +3441,6 @@ template< class Key, class T >
 class QMap;
 
 /**
- * \if ENGLISH
  * @brief QwtRasterData defines an interface to any type of raster data.
  *
  * QwtRasterData is an abstract interface, that is used by
@@ -4366,22 +3458,7 @@ class QMap;
  * a given 2D matrix.
  *
  * @sa QwtMatrixRasterData
- * \endif
  *
- * \if CHINESE
- * @brief QwtRasterData 定义了任何类型栅格数据的接口
- *
- * QwtRasterData 是一个抽象接口，被 QwtPlotRasterItem 用于查找其栅格像素处的值。
- *
- * 数据边界矩形内的间隙可以通过 NaN 值表示（当 WithoutGaps 被禁用时）。
- *
- * 栅格项通常用于显示矩阵中的值。然后派生的栅格数据类需要实现某种重采样，
- * 将矩阵的栅格映射到栅格项的请求栅格中（取决于画布的分辨率和比例）。
- *
- * QwtMatrixRasterData 实现了栅格数据，从给定的 2D 矩阵返回值。
- *
- * @sa QwtMatrixRasterData
- * \endif
  */
 class QWT_EXPORT QwtRasterData
 {
@@ -4390,23 +3467,15 @@ public:
 	using ContourLines = QMap< double, QPolygonF >;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Raster data attributes
 	 *
 	 * Additional information that is used to improve processing
 	 * of the data.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 栅格数据属性
-	 *
-	 * 用于改进数据处理的附加信息。
-	 * \endif
 	 */
 	enum Attribute
 	{
 		/**
-		 * \if ENGLISH
 		 * The bounding rectangle of the data is spanned by
 		 * the interval(Qt::XAxis) and interval(Qt::YAxis).
 		 *
@@ -4420,20 +3489,7 @@ public:
 		 * The default setting is false.
 		 *
 		 * @note NaN values indicate an undefined value
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 数据的边界矩形由 interval(Qt::XAxis) 和 interval(Qt::YAxis) 跨越。
-		 *
-		 * WithoutGaps 表示数据在该区域没有间隙（未知值），
-		 * value() 的结果不需要检查 NaN 值。
-		 *
-		 * 启用此标志将对渲染 QwtPlotSpectrogram 的性能产生积极影响。
-		 *
-		 * 默认设置为 false。
-		 *
-		 * @note NaN 值表示未定义值
-		 * \endif
 		 */
 		WithoutGaps = 0x01
 	};
@@ -4441,13 +3497,8 @@ public:
 	Q_DECLARE_FLAGS(Attributes, Attribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Flags to modify the contour algorithm
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 修改等高线算法的标志
-	 * \endif
 	 */
 	enum ConrecFlag
 	{
@@ -4491,10 +3542,10 @@ public:
 	class ContourPlane;
 
 private:
-	Q_DISABLE_COPY(QwtRasterData)
+	QwtRasterData(const QwtRasterData&) = delete;
+	QwtRasterData& operator=(const QwtRasterData&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtRasterData)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::ConrecFlags)
@@ -4524,21 +3575,17 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::Attributes)
  * It supports three resampling methods: Nearest Neighbor, Bilinear Interpolation, and Bicubic Interpolation.
  * The container types for the axes and data are templated to allow flexibility.
  *
- * 此模板类封装了一个二维表格以及对应的 x 轴和 y 轴数据。
- * 它支持三种插值方法：最近邻插值、双线性插值和双三次插值。
- * 轴和数据的容器类型被模板化以提供灵活性。
- *
- * ↓Y轴方向 →X轴方向 n行 m列
+ * Y-axis direction (down), X-axis direction (right): n rows, m columns
  *
  * |column[0]|column[1]| ... |column[m]|
  * +---------+---------+-----+---------+
- * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+ * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
  * +---------+---------+-----+---------+
  * |   ...   |   ...   | ... |   ...   |
  * +---------+---------+-----+---------+
- * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+ * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
  * +---------+---------+-----+---------+
- * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+ * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
  * +---------+---------+-----+---------+
  *      ↑          ↑      ↑       ↑
  *  xAxis[0]   xAxis[1]  ...   xAxis[m]
@@ -4598,11 +3645,11 @@ template< typename T,
 class QwtGridData
 {
 public:
-	using value_type       = T;           ///< @brief Type of the stored values / 存储值的类型
-	using x_container_type = XContainer;  ///< @brief Type of the x-axis container / x 轴容器的类型
-	using y_container_type = YContainer;  ///< @brief Type of the y-axis container / y 轴容器的类型
-	using data_column_type = DataColumn;  ///< @brief Type of a single column in the data matrix / 数据矩阵中单列的类型
-	using data_container_type = DataContainer;  ///< @brief Type of the data matrix / 数据矩阵的类型
+	using value_type       = T;           ///< @brief Type of the stored values
+	using x_container_type = XContainer;  ///< @brief Type of the x-axis container
+	using y_container_type = YContainer;  ///< @brief Type of the y-axis container
+	using data_column_type = DataColumn;  ///< @brief Type of a single column in the data matrix
+	using data_container_type = DataContainer;  ///< @brief Type of the data matrix
 	using size_type           = typename DataColumn::size_type;
 	/**
 	 * @brief Enumeration for resampling methods.
@@ -4611,11 +3658,6 @@ public:
 	 * - NearestNeighbour: Nearest neighbor interpolation.
 	 * - BilinearInterpolation: Bilinear interpolation.
 	 * - BicubicInterpolation: Hermite bicubic interpolation.
-	 *
-	 * 定义可用的抽样方法：
-	 * - NearestNeighbour: 最近邻插值。
-	 * - BilinearInterpolation: 双线性插值。
-	 * - BicubicInterpolation: Hermite 双三次插值。
 	 */
 	enum ResampleMode
 	{
@@ -4627,7 +3669,7 @@ public:
 	/**
 	 * @brief Default constructor.
 	 *
-	 * 初始化一个空的 QwtGridData 对象。
+	 * Initializes an empty QwtGridData object.
 	 */
 	QwtGridData()
 		: m_mode(NearestNeighbour), m_xMin(0.0), m_xMax(0.0), m_yMin(0.0), m_yMax(0.0), m_dataMax(0.0), m_dataMin(0.0)
@@ -4639,12 +3681,10 @@ public:
 	 *
 	 * Initializes the object with x-axis, y-axis, and data matrix.
 	 *
-	 * 使用 x 轴、y 轴和数据矩阵初始化对象。
-	 *
-	 * @param xAxis The x-axis values. / x 轴值。
-	 * @param yAxis The y-axis values. / y 轴值。
-	 * @param data The 2D data matrix. / 二维数据矩阵。
-	 * @param mode The resampling mode to use. / 要使用的抽样方法。
+	 * @param xAxis The x-axis values.
+	 * @param yAxis The y-axis values.
+	 * @param data The 2D data matrix.
+	 * @param mode The resampling mode to use.
 	 */
 	QwtGridData(const x_container_type& xAxis,
 				const y_container_type& yAxis,
@@ -4667,25 +3707,22 @@ public:
 	 *
 	 * |column[0]|column[1]| ... |column[m]|
 	 * +---------+---------+-----+---------+
-	 * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+	 * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
 	 * +---------+---------+-----+---------+
 	 * |   ...   |   ...   | ... |   ...   |
 	 * +---------+---------+-----+---------+
-	 * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+	 * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
 	 * +---------+---------+-----+---------+
-	 * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+	 * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
 	 * +---------+---------+-----+---------+
 	 *      ↑          ↑      ↑       ↑
 	 *  xAxis[0]   xAxis[1]  ...   xAxis[m]
 	 *
-	 *  so (data matrix).size = xAxis.size,(data matrix).at(n).size = yAxis.szie
+	 *  so (data matrix).size = xAxis.size,(data matrix).at(n).size = yAxis.size
 	 *
-	 * 设置新的 x 轴、y 轴和数据矩阵。
-	 * 数据矩阵是一个vector<vector> ,数据矩阵.size = xAxis.size,数据矩阵.at(n).size = yAxis.size
-	 *
-	 * @param xAxis The x-axis values. / x 轴值。
-	 * @param yAxis The y-axis values. / y 轴值。
-	 * @param data The 2D data matrix. / 二维数据矩阵。
+	 * @param xAxis The x-axis values.
+	 * @param yAxis The y-axis values.
+	 * @param data The 2D data matrix.
 	 */
 	void setValue(const x_container_type& xAxis, const y_container_type& yAxis, const data_container_type& data)
 	{
@@ -4703,11 +3740,9 @@ public:
 	/**
 	 * @brief Operator to query value at (x, y).
 	 *
-	 * 根据给定的 x 和 y 坐标查询值。
-	 *
-	 * @param x The x-coordinate. / x 坐标。
-	 * @param y The y-coordinate. / y 坐标。
-	 * @return The interpolated or nearest value. / 插值或最近邻值。
+	 * @param x The x-coordinate.
+	 * @param y The y-coordinate.
+	 * @return The interpolated or nearest value.
 	 */
 	T operator()(T x, T y) const
 	{
@@ -4717,10 +3752,10 @@ public:
 	/**
 	 * @brief operator []
 	 *
-	 * 根据给定的 x 和 y 坐标查询值。
+	 * Queries value at the given (x, y) coordinates.
 	 *
 	 * @param xy,std::pair<x,y>
-	 * @return The interpolated or nearest value. / 插值或最近邻值。
+	 * @return The interpolated or nearest value.
 	 */
 	T operator[](const std::pair< T, T >& xy) const
 	{
@@ -4729,11 +3764,9 @@ public:
 	/**
 	 * @brief Query value at (x, y).
 	 *
-	 * 根据给定的 x 和 y 坐标查询值。
-	 *
-	 * @param x The x-coordinate. / x 坐标。
-	 * @param y The y-coordinate. / y 坐标。
-	 * @return The interpolated or nearest value. / 插值或最近邻值。
+	 * @param x The x-coordinate.
+	 * @param y The y-coordinate.
+	 * @return The interpolated or nearest value.
 	 */
 	T value(T x, T y) const
 	{
@@ -4752,9 +3785,7 @@ public:
 	/**
 	 * @brief Set the resampling mode.
 	 *
-	 * 设置查询值时使用的抽样方法。
-	 *
-	 * @param mode The resampling mode to use. / 要使用的抽样方法。
+	 * @param mode The resampling mode to use.
 	 */
 	void setResampleMode(ResampleMode mode)
 	{
@@ -4764,9 +3795,7 @@ public:
 	/**
 	 * @brief Get the current resampling mode.
 	 *
-	 * 返回当前激活的抽样方法。
-	 *
-	 * @return The current resampling mode. / 当前抽样方法。
+	 * @return The current resampling mode.
 	 */
 	ResampleMode resampleMode() const
 	{
@@ -4774,7 +3803,7 @@ public:
 	}
 
 	/**
-	 * @brief x的尺寸
+	 * @brief Size of x-axis
 	 * @return
 	 */
 	size_type xSize() const
@@ -4783,7 +3812,7 @@ public:
 	}
 
 	/**
-	 * @brief y的尺寸
+	 * @brief Size of y-axis
 	 * @return
 	 */
 	size_type ySize() const
@@ -4792,7 +3821,7 @@ public:
 	}
 
 	/**
-	 * @brief value矩阵的尺寸
+	 * @brief Size of the value matrix
 	 * @return <xsize,ysize>
 	 */
 	std::pair< size_type, size_type > valueSize() const
@@ -4801,7 +3830,7 @@ public:
 	}
 
 	/**
-	 * @brief x 值对应的内容
+	 * @brief Value at x-axis index
 	 * @param ix
 	 * @return
 	 */
@@ -4811,7 +3840,7 @@ public:
 	}
 
 	/**
-	 * @brief y值对应的内容
+	 * @brief Value at y-axis index
 	 * @param ix
 	 * @return
 	 */
@@ -4821,7 +3850,7 @@ public:
 	}
 
 	/**
-	 * @brief value值对应的内容
+	 * @brief Value at matrix index
 	 * @param ix
 	 * @return
 	 */
@@ -4833,9 +3862,7 @@ public:
 	/**
 	 * @brief Get the x-axis values.
 	 *
-	 * 获取 x 轴值。
-	 *
-	 * @return The x-axis values. / x 轴值。
+	 * @return The x-axis values.
 	 */
 	const x_container_type& xAxis() const
 	{
@@ -4845,9 +3872,7 @@ public:
 	/**
 	 * @brief Get the y-axis values.
 	 *
-	 * 获取 y 轴值。
-	 *
-	 * @return The y-axis values. / y 轴值。
+	 * @return The y-axis values.
 	 */
 	const y_container_type& yAxis() const
 	{
@@ -4857,9 +3882,7 @@ public:
 	/**
 	 * @brief Get the data matrix.
 	 *
-	 * 获取数据矩阵。
-	 *
-	 * @return The data matrix. / 数据矩阵。
+	 * @return The data matrix.
 	 */
 	const data_container_type& data() const
 	{
@@ -4869,9 +3892,7 @@ public:
 	/**
 	 * @brief Check if the object is valid.
 	 *
-	 * 判断对象是否有效。
-	 *
-	 * @return True if valid, false otherwise. / 如果有效则返回 true，否则返回 false。
+	 * @return True if valid, false otherwise.
 	 */
 	bool valid() const
 	{
@@ -4897,8 +3918,6 @@ public:
 
 	/**
 	 * @brief Validate the data.
-	 *
-	 * 验证数据的有效性。
 	 */
 	void validate()
 	{
@@ -4951,11 +3970,9 @@ public:
 	/**
 	 * @brief Find the closest index in a sorted array.
 	 *
-	 * 在排序数组中查找最接近的索引。
-	 *
-	 * @param arr The sorted array. / 排序数组。
-	 * @param val The target value. / 目标值。
-	 * @return The index of the closest value. / 最接近值的索引。
+	 * @param arr The sorted array.
+	 * @param val The target value.
+	 * @return The index of the closest value.
 	 */
 	template< typename Container >
 	static size_type findClosestIndex(const Container& arr, T val)
@@ -4972,11 +3989,9 @@ public:
 	/**
 	 * @brief Find the lower bound index in a sorted array.
 	 *
-	 * 在排序数组中查找下界索引。
-	 *
-	 * @param arr The sorted array. / 排序数组。
-	 * @param val The target value. / 目标值。
-	 * @return The lower bound index. / 下界索引。
+	 * @param arr The sorted array.
+	 * @param val The target value.
+	 * @return The lower bound index.
 	 */
 	template< typename Container >
 	static size_type findLowerIndex(const Container& arr, T val)
@@ -4997,10 +4012,8 @@ protected:
 	/**
 	 * @brief Get the minimum & maximum value in the data matrix.
 	 *
-	 * 查找并返回二维数据矩阵中的最小和最大值。
 	 *
-	 * @return std::pair<The minimum value, The maximum value> in the data matrix. / 数据矩阵中的最小和最大值。
-	 */
+	 * @return std::pair<The minimum value, The maximum value> in the data matrix.*/
 	void findValueRange()
 	{
 		m_dataMin = std::numeric_limits< T >::max();
@@ -5016,11 +4029,10 @@ protected:
 	/**
 	 * @brief Nearest neighbor interpolation.
 	 *
-	 * 最近邻插值。
 	 *
-	 * @param x The x-coordinate. / x 坐标。
-	 * @param y The y-coordinate. / y 坐标。
-	 * @return The nearest value. / 最近邻值。
+	 * @param x The x-coordinate.
+	 * @param y The y-coordinate.
+	 * @return The nearest value.
 	 */
 	T nearestNeighbour(T x, T y) const
 	{
@@ -5032,11 +4044,10 @@ protected:
 	/**
 	 * @brief Bilinear interpolation.
 	 *
-	 * 双线性插值。
 	 *
-	 * @param x The x-coordinate. / x 坐标。
-	 * @param y The y-coordinate. / y 坐标。
-	 * @return The interpolated value. / 插值结果。
+	 * @param x The x-coordinate.
+	 * @param y The y-coordinate.
+	 * @return The interpolated value.
 	 */
 	T bilinearInterpolation(T x, T y) const
 	{
@@ -5065,12 +4076,9 @@ protected:
 	 * @details Returns the bicubically interpolated value at the specified (x, y) position.
 	 * This implementation uses the Hermite bicubic interpolation method.
 	 *
-	 * 返回指定 (x, y) 位置的双三次插值结果。
-	 * 此实现使用 Hermite 双三次插值方法。
-	 *
-	 * @param x The x-coordinate / x 坐标
-	 * @param y The y-coordinate / y 坐标
-	 * @return The bicubically interpolated value / 双三次插值结果
+	 * @param x The x-coordinate.
+	 * @param y The y-coordinate.
+	 * @return The bicubically interpolated value.
 	 */
 	T bicubicInterpolation(T x, T y) const
 	{
@@ -5181,27 +4189,27 @@ protected:
 	}
 
 private:
-	x_container_type m_xAxis;  ///< @brief x-axis values / x 轴值
-	y_container_type m_yAxis;  ///< @brief y-axis values / y 轴值
+	x_container_type m_xAxis;  ///< x-axis values
+	y_container_type m_yAxis;  ///< y-axis values
 	/**
-	 * @brief The 2D data matrix / 二维数据矩阵
+	 * @brief The 2D data matrix
 	 *
 	 * |column[0]|column[1]| ... |column[m]|
 	 * +---------+---------+-----+---------+
-	 * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+	 * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
 	 * +---------+---------+-----+---------+
 	 * |   ...   |   ...   | ... |   ...   |
 	 * +---------+---------+-----+---------+
-	 * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+	 * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
 	 * +---------+---------+-----+---------+
-	 * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+	 * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
 	 * +---------+---------+-----+---------+
 	 *      ↑          ↑      ↑       ↑
 	 *  xAxis[0]   xAxis[1]  ...   xAxis[m]
 	 */
 	data_container_type m_data;
-	ResampleMode m_mode;                                     ///< @brief Current resampling mode / 当前抽样方法
-	T m_xMin, m_xMax, m_yMin, m_yMax, m_dataMin, m_dataMax;  ///< @brief Bounds of the grid / 网格的边界
+	ResampleMode m_mode;                                     ///< @brief Current resampling mode
+	T m_xMin, m_xMax, m_yMin, m_yMax, m_dataMin, m_dataMax;  ///< @brief Bounds of the grid
 };
 
 #endif  // QWT_GRID_DATA_HPP
@@ -5219,63 +4227,35 @@ class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief A class that encapsulates grid data and provides interpolation methods.
  * @details This class inherits from QwtRasterData and is used to represent 2D grid data.
  *          It supports various interpolation methods such as nearest neighbor and bilinear interpolation.
- * \endif
- * \if CHINESE
- * @brief 封装网格数据并提供插值方法的类。
- * @details 此类继承自 QwtRasterData，用于表示二维网格数据。
- *          它支持多种插值方法，例如最近邻插值和双线性插值。
- * \endif
  */
 class QWT_EXPORT QwtGridRasterData : public QwtRasterData
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Resampling algorithm
 	 * @details The default setting is NearestNeighbour.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 重采样算法
-	 * @details 默认设置为 NearestNeighbour。
-	 * \endif
 	 */
 	enum ResampleMode
 	{
 		/**
-		 * \if ENGLISH
 		 * Return the value from the matrix that is nearest to the requested position.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 返回矩阵中距离请求位置最近的值。
-		 * \endif
 		 */
 		NearestNeighbour,
 
 		/**
-		 * \if ENGLISH
 		 * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 从矩阵中 4 个相邻值的距离和值进行插值。
-		 * \endif
 		 */
 		BilinearInterpolation,
 
 		/**
-		 * \if ENGLISH
 		 * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 使用 Hermite 双三次插值从矩阵中 16 个相邻值进行插值。
-		 * \endif
 		 */
 		BicubicInterpolation
 	};
@@ -5284,7 +4264,7 @@ public:
 	// Constructor
 	QwtGridRasterData();
 	// Destructor
-	virtual ~QwtGridRasterData();
+	~QwtGridRasterData() override;
 
 	// Set the resampling algorithm
 	void setResampleMode(ResampleMode mode);
@@ -5318,8 +4298,7 @@ public:
 	double atY(int yIndex) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtGridRasterData)
 };
 
 #endif  // QWTGRIDRASTERDATA_H
@@ -5336,66 +4315,37 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief A class representing a matrix of values as raster data.
  * @details QwtMatrixRasterData implements an interface for a matrix of equidistant values,
  *          that can be used by a QwtPlotRasterItem.
  *          It implements a couple of resampling algorithms, to provide values for positions,
  *          that or not on the value matrix.
- * \endif
- * \if CHINESE
- * @brief 将数值矩阵表示为栅格数据的类。
- * @details QwtMatrixRasterData 为等距数值矩阵实现了接口，
- *          可用于 QwtPlotRasterItem。它实现了多种重采样算法，
- *          为不在数值矩阵上的位置提供数值。
- * \endif
  */
 class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Resampling algorithm
 	 * @details The default setting is NearestNeighbour.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 重采样算法
-	 * @details 默认设置为 NearestNeighbour。
-	 * \endif
 	 */
 	enum ResampleMode
 	{
 		/**
-		 * \if ENGLISH
 		 * Return the value from the matrix that is nearest to the requested position.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 返回矩阵中距离请求位置最近的值。
-		 * \endif
 		 */
 		NearestNeighbour,
 
 		/**
-		 * \if ENGLISH
 		 * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 从矩阵中 4 个相邻值的距离和值进行插值。
-		 * \endif
 		 */
 		BilinearInterpolation,
 
 		/**
-		 * \if ENGLISH
 		 * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 使用 Hermite 双三次插值从矩阵中 16 个相邻值进行插值。
-		 * \endif
 		 */
 		BicubicInterpolation
 	};
@@ -5403,7 +4353,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
 	// Constructor
 	QwtMatrixRasterData();
 	// Destructor
-	virtual ~QwtMatrixRasterData();
+	~QwtMatrixRasterData() override;
 
 	// Set the resampling algorithm
 	void setResampleMode(ResampleMode mode);
@@ -5437,8 +4387,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
   private:
 	void update();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtMatrixRasterData)
 };
 
 #endif
@@ -5453,7 +4402,6 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
 #include <qdatetime.h>
 
 /**
- * \if ENGLISH
  * @brief A collection of methods around date/time values
  *
  * Qt offers convenient classes for dealing with date/time values,
@@ -5478,109 +4426,67 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
  * calculate these axes.
  *
  * @sa QwtDateScaleEngine, QwtDateScaleDraw, QDate, QTime
- * \endif
  *
- * \if CHINESE
- * @brief 日期/时间值相关方法的集合
- *
- * Qt 提供了处理日期/时间值的便捷类，但 Qwt 使用基于双精度浮点数的坐标系统。
- * QwtDate 提供了在 QDateTime 和 double 之间相互转换的方法。
- *
- * 双精度浮点数被解释为自 1970-01-01T00:00:00 世界协调时间（也称为"纪元"）以来的毫秒数。
- *
- * Qt4 中儒略日的范围限制为 [0, MAX_INT]，而 Qt5 将其存储为 qint64，提供了巨大的有效日期范围。
- * 由于双精度浮点数的有效位数低于此值（假设小数部分为 52 位），对于远离纪元的日期，
- * 转换不是双射的，会出现舍入误差。对于 1 毫秒的分辨率，这些误差从公元 144683 年开始出现。
- *
- * 日期/时间间隔的坐标轴需要按秒、分钟等时间/日期单位对齐和划分。
- * QwtDate 提供了计算这些坐标轴所需的几种算法。
- *
- * @sa QwtDateScaleEngine, QwtDateScaleDraw, QDate, QTime
- * \endif
  */
 class QWT_EXPORT QwtDate
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief How to identify the first week of year differs between countries
-	 * \endif
-	 * \if CHINESE
-	 * @brief 如何确定一年的第一周（不同国家标准不同）
-	 * \endif
 	 */
 	enum Week0Type
 	{
 		/**
-		 * \if ENGLISH
 		 * According to ISO 8601 the first week of a year is defined
 		 * as "the week with the year's first Thursday in it".
 		 * FirstThursday corresponds to the numbering that is
 		 * implemented in QDate::weekNumber().
-		 * \endif
-		 * \if CHINESE
-		 * 根据 ISO 8601，一年的第一周定义为"包含该年第一个星期四的周"。
-		 * FirstThursday 对应于 QDate::weekNumber() 中实现的编号方式。
-		 * \endif
 		 */
 		FirstThursday,
 
 		/**
-		 * \if ENGLISH
 		 * "The week with January 1 in it."
 		 * In the U.S. this definition is more common than FirstThursday.
-		 * \endif
-		 * \if CHINESE
-		 * "包含1月1日的周"。
-		 * 在美国，这种定义比 FirstThursday 更常见。
-		 * \endif
 		 */
 		FirstDay
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Classification of a time interval
 	 *
 	 * Time intervals need to be classified to decide how to
 	 * align and divide it.
-	 * \endif
-	 * \if CHINESE
-	 * @brief 时间间隔的分类
-	 *
-	 * 需要对时间间隔进行分类以决定如何对齐和划分它。
-	 * \endif
 	 */
 	enum IntervalType
 	{
-		//! \if ENGLISH Millisecond \endif \if CHINESE 毫秒 \endif
+		//! Millisecond
 		Millisecond,
 
-		//! \if ENGLISH Second \endif \if CHINESE 秒 \endif
+		//! Second
 		Second,
 
-		//! \if ENGLISH Minute \endif \if CHINESE 分钟 \endif
+		//! Minute
 		Minute,
 
-		//! \if ENGLISH Hour \endif \if CHINESE 小时 \endif
+		//! Hour
 		Hour,
 
-		//! \if ENGLISH Day \endif \if CHINESE 天 \endif
+		//! Day
 		Day,
 
-		//! \if ENGLISH Week \endif \if CHINESE 周 \endif
+		//! Week
 		Week,
 
-		//! \if ENGLISH Month \endif \if CHINESE 月 \endif
+		//! Month
 		Month,
 
-		//! \if ENGLISH Year \endif \if CHINESE 年 \endif
+		//! Year
 		Year
 	};
 
 	enum
 	{
-		//! \if ENGLISH The Julian day of "The Epoch" \endif \if CHINESE "纪元"的儒略日 \endif
+		//! The Julian day of "The Epoch"
 		JulianDayForEpoch = 2440588
 	};
 
@@ -5622,24 +4528,14 @@ public:
 #define QWT_AXIS_H
 
 /**
- * \if ENGLISH
  * @brief Enums and methods for axes
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴的枚举和方法
- * \endif
  */
 namespace QwtAxis
 {
 /**
- * \if ENGLISH
  * @brief Axis position
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置
- * \endif
  */
 enum Position
 {
@@ -5657,38 +4553,33 @@ enum Position
 };
 
 /**
- * \if ENGLISH
  * @brief Number of axis positions
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置数量
- * \endif
  */
 enum
 {
 	AxisPositions = XTop + 1
 };
 
-bool isValid(int axisPos);
-bool isYAxis(int axisPos);
-bool isXAxis(int axisPos);
+constexpr bool isValid(int axisPos) noexcept;
+constexpr bool isYAxis(int axisPos) noexcept;
+constexpr bool isXAxis(int axisPos) noexcept;
 }
 
 // Return true, when axisPos is in the valid range [ YLeft, XTop ]
-inline bool QwtAxis::isValid(int axisPos)
+inline constexpr bool QwtAxis::isValid(int axisPos) noexcept
 {
 	return (axisPos >= 0 && axisPos < AxisPositions);
 }
 
 // Return true, when axisPos is XBottom or XTop
-inline bool QwtAxis::isXAxis(int axisPos)
+inline constexpr bool QwtAxis::isXAxis(int axisPos) noexcept
 {
 	return (axisPos == XBottom) || (axisPos == XTop);
 }
 
 // Return true, when axisPos is YLeft or YRight
-inline bool QwtAxis::isYAxis(int axisPos)
+inline constexpr bool QwtAxis::isYAxis(int axisPos) noexcept
 {
 	return (axisPos == YLeft) || (axisPos == YRight);
 }
@@ -5703,7 +4594,6 @@ inline bool QwtAxis::isYAxis(int axisPos)
 #define QWT_AXIS_ID_H
 
 /**
- * \if ENGLISH
  * @brief Axis identifier
  *
  * An axis id is one of values of QwtAxis::Position.
@@ -5712,18 +4602,7 @@ inline bool QwtAxis::isYAxis(int axisPos)
  * where it is possible to have more than one axis at each side of a plot.
  *
  * @sa QwtAxis
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴标识符
- *
- * 坐标轴ID是QwtAxis::Position的值之一。
- *
- * QwtAxisId是未来版本（-> multiaxes分支）的占位符，
- * 其中可以在绘图的每一侧有多个坐标轴。
- *
- * @sa QwtAxis
- * \endif
  */
 using QwtAxisId = int;
 
@@ -5740,18 +4619,10 @@ class QPointF;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief An implementation of the de Casteljau's Algorithm for interpolating Bézier curves
  * @details The flatness criterion for terminating the subdivision is based on
  *          "Piecewise Linear Approximation of Bézier Curves" by Roger Willcocks.
  *          See: https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
- * \endif
- * \if CHINESE
- * @brief de Casteljau 算法的 Bézier 曲线插值实现
- * @details 细分终止的平坦度判据基于 Roger Willcocks 的
- *          "Piecewise Linear Approximation of Bézier Curves"。
- *          参见：https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
- * \endif
  */
 class QWT_EXPORT QwtBezier
 {
@@ -5780,7 +4651,7 @@ private:
 	double m_flatness;
 };
 
-//! \return Tolerance value used for subdivision
+//! @return Tolerance value used for subdivision
 inline double QwtBezier::tolerance() const
 {
 	return m_tolerance;
@@ -5792,7 +4663,7 @@ inline double QwtBezier::tolerance() const
 
 
 /*** Start of inlined file: qwt_point_polar.h ***/
-/*! \file */
+/*! @file */
 #ifndef QWT_POINT_POLAR_H
 #define QWT_POINT_POLAR_H
 
@@ -5801,16 +4672,9 @@ inline double QwtBezier::tolerance() const
 #include <qmath.h>
 
 /**
- * \if ENGLISH
  * @brief A point in polar coordinates
  * @details In polar coordinates a point is determined by an angle and a distance.
  *          See http://en.wikipedia.org/wiki/Polar_coordinate_system
- * \endif
- * \if CHINESE
- * @brief 极坐标点
- * @details 在极坐标中，点由角度和距离确定。
- *          参见 http://en.wikipedia.org/wiki/Polar_coordinate_system
- * \endif
  */
 
 class QWT_EXPORT QwtPointPolar
@@ -5823,17 +4687,17 @@ class QWT_EXPORT QwtPointPolar
 	void setPoint( const QPointF& );
 	QPointF toPoint() const;
 
-	bool isValid() const;
-	bool isNull() const;
+	bool isValid() const noexcept;
+	bool isNull() const noexcept;
 
-	double radius() const;
-	double azimuth() const;
+	double radius() const noexcept;
+	double azimuth() const noexcept;
 
-	double& rRadius();
-	double& rAzimuth();
+	double& rRadius() noexcept;
+	double& rAzimuth() noexcept;
 
-	void setRadius( double );
-	void setAzimuth( double );
+	void setRadius( double ) noexcept;
+	void setAzimuth( double ) noexcept;
 
 	bool operator==( const QwtPointPolar& ) const;
 	bool operator!=( const QwtPointPolar& ) const;
@@ -5841,8 +4705,8 @@ class QWT_EXPORT QwtPointPolar
 	QwtPointPolar normalized() const;
 
   private:
-	double m_azimuth;
-	double m_radius;
+	double m_azimuth{0.0};
+	double m_radius{0.0};
 };
 
 Q_DECLARE_TYPEINFO( QwtPointPolar, Q_MOVABLE_TYPE );
@@ -5853,14 +4717,8 @@ QWT_EXPORT QDebug operator<<( QDebug, const QwtPointPolar& );
 #endif
 
 /**
- * \if ENGLISH
  * @brief Default constructor - constructs a null point with radius and azimuth set to 0.0
- * \sa QPointF::isNull()
- * \endif
- * \if CHINESE
- * @brief 默认构造函数 - 构造一个空点，半径和方位角都设置为 0.0
- * \sa QPointF::isNull()
- * \endif
+ * @sa QPointF::isNull()
  */
 inline QwtPointPolar::QwtPointPolar()
 	: m_azimuth( 0.0 )
@@ -5869,16 +4727,9 @@ inline QwtPointPolar::QwtPointPolar()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a point with coordinates specified by radius and azimuth
  * @param azimuth Azimuth (angle)
  * @param radius Radius (distance)
- * \endif
- * \if CHINESE
- * @brief 构造一个由半径和方位角指定坐标的点
- * @param azimuth 方位角（角度）
- * @param radius 半径（距离）
- * \endif
  */
 inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
 	: m_azimuth( azimuth )
@@ -5886,50 +4737,50 @@ inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
 {
 }
 
-//! \if ENGLISH Return true if radius() >= 0.0 \endif \if CHINESE 如果 radius() >= 0.0 则返回 true \endif
-inline bool QwtPointPolar::isValid() const
+//! Return true if radius() >= 0.0
+inline bool QwtPointPolar::isValid() const noexcept
 {
 	return m_radius >= 0.0;
 }
 
-//! \if ENGLISH Return true if radius() == 0.0 \endif \if CHINESE 如果 radius() == 0.0 则返回 true \endif
-inline bool QwtPointPolar::isNull() const
+//! Return true if radius() == 0.0
+inline bool QwtPointPolar::isNull() const noexcept
 {
 	return m_radius == 0.0;
 }
 
-//! \if ENGLISH Return the radius \endif \if CHINESE 返回半径 \endif
-inline double QwtPointPolar::radius() const
+//! Return the radius
+inline double QwtPointPolar::radius() const noexcept
 {
 	return m_radius;
 }
 
-//! \if ENGLISH Return the azimuth \endif \if CHINESE 返回方位角 \endif
-inline double QwtPointPolar::azimuth() const
+//! Return the azimuth
+inline double QwtPointPolar::azimuth() const noexcept
 {
 	return m_azimuth;
 }
 
-//! \if ENGLISH Return a reference to the radius \endif \if CHINESE 返回半径的引用 \endif
-inline double& QwtPointPolar::rRadius()
+//! Return a reference to the radius
+inline double& QwtPointPolar::rRadius() noexcept
 {
 	return m_radius;
 }
 
-//! \if ENGLISH Return a reference to the azimuth \endif \if CHINESE 返回方位角的引用 \endif
-inline double& QwtPointPolar::rAzimuth()
+//! Return a reference to the azimuth
+inline double& QwtPointPolar::rAzimuth() noexcept
 {
 	return m_azimuth;
 }
 
-//! \if ENGLISH Set the radius to radius \endif \if CHINESE 将半径设置为 radius \endif
-inline void QwtPointPolar::setRadius( double radius )
+//! Set the radius to radius
+inline void QwtPointPolar::setRadius( double radius ) noexcept
 {
 	m_radius = radius;
 }
 
-//! \if ENGLISH Set the azimuth to azimuth \endif \if CHINESE 将方位角设置为 azimuth \endif
-inline void QwtPointPolar::setAzimuth( double azimuth )
+//! Set the azimuth to azimuth
+inline void QwtPointPolar::setAzimuth( double azimuth ) noexcept
 {
 	m_azimuth = azimuth;
 }
@@ -6006,12 +4857,7 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Namespace for clipping algorithms
- * \endif
- * \if CHINESE
- * @brief 裁剪算法的命名空间
- * \endif
  */
 namespace QwtClipper
 {
@@ -6057,7 +4903,6 @@ namespace QwtClipper
 #include <qpaintengine.h>
 
 /**
- * \if ENGLISH
  * @brief A null paint device that does nothing
  * @details Sometimes important layout/rendering geometries are not
  *          available or changeable from the public Qt class interface
@@ -6066,27 +4911,13 @@ namespace QwtClipper
  *          this information by analyzing the stream of paint primitives.
  *          For example, QwtNullPaintDevice is used by QwtPlotCanvas to identify
  *          styled backgrounds with rounded corners.
- * \endif
- * \if CHINESE
- * @brief 一个不执行任何操作的空绘制设备
- * @details 有时重要的布局/渲染几何信息无法从公共 Qt 类接口获取或修改
- *          （例如隐藏在样式实现中）。
- *          QwtNullPaintDevice 可用于通过分析绘制原语流来操作或过滤这些信息。
- *          例如，QwtPlotCanvas 使用 QwtNullPaintDevice 来识别带有圆角的样式背景。
- * \endif
  */
 class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 {
   public:
 /**
-	 * \if ENGLISH
 	 * @brief Render mode for the paint device
 	 * @details Controls how vector graphic primitives are processed.
-	 * \endif
-	 * \if CHINESE
-	 * @brief 绘制设备的渲染模式
-	 * @details 控制矢量图形原语的处理方式。
-	 * \endif
 	 */
 	enum Mode
 	{
@@ -6103,7 +4934,7 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 	//! Constructor
 	QwtNullPaintDevice();
 	//! Destructor
-	virtual ~QwtNullPaintDevice();
+	~QwtNullPaintDevice() override;
 
 	//! Set the render mode
 	void setMode( Mode );
@@ -6166,15 +4997,14 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 	virtual void updateState( const QPaintEngineState& );
 
   protected:
-	//! \return Size needed to implement metric()
+	//! @return Size needed to implement metric()
 	virtual QSize sizeMetrics() const = 0;
 
   private:
 	class PaintEngine;
 	PaintEngine* m_engine;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtNullPaintDevice)
 };
 
 #endif
@@ -6195,18 +5025,11 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 #include <QPointF>
 
 /**
- * \if ENGLISH
  * @brief A paint device that records style sheet information for rendering.
  *
  * QwtStyleSheetRecorder is used to capture style information (borders, backgrounds, etc.)
  * for rendering styled widgets or elements.
- * \endif
  *
- * \if CHINESE
- * @brief 用于记录样式表信息的绘图设备
- *
- * QwtStyleSheetRecorder 用于捕获样式信息（边框、背景等），以便渲染带样式的部件或元素。
- * \endif
  */
 class QWT_EXPORT QwtStyleSheetRecorder final : public QwtNullPaintDevice
 {
@@ -6278,7 +5101,6 @@ private:
 class QPainterPath;
 
 /**
- * \if ENGLISH
  * @brief Represents the attributes of a paint operation between QPainter and QPaintDevice
  *
  * QwtPainterCommand encapsulates different types of paint operations including
@@ -6286,16 +5108,7 @@ class QPainterPath;
  * to record and replay paint operations.
  *
  * @sa QwtGraphic::commands()
- * \endif
  *
- * \if CHINESE
- * @brief 表示QPainter和QPaintDevice之间的绘制操作属性
- *
- * QwtPainterCommand封装了不同类型的绘制操作，包括绘制路径、pixmap、
- * 图像和状态变化。它被QwtGraphic用于记录和重放绘制操作。
- *
- * @sa QwtGraphic::commands()
- * \endif
  */
 class QWT_EXPORT QwtPainterCommand
 {
@@ -6361,6 +5174,7 @@ class QWT_EXPORT QwtPainterCommand
 
 	QwtPainterCommand();
 	QwtPainterCommand(const QwtPainterCommand&);
+	QwtPainterCommand(QwtPainterCommand&&) noexcept;
 
 	explicit QwtPainterCommand( const QPainterPath& );
 
@@ -6376,6 +5190,7 @@ class QWT_EXPORT QwtPainterCommand
 	~QwtPainterCommand();
 
 	QwtPainterCommand& operator=(const QwtPainterCommand& );
+	QwtPainterCommand& operator=(QwtPainterCommand&&) noexcept;
 
 	Type type() const;
 
@@ -6406,33 +5221,33 @@ class QWT_EXPORT QwtPainterCommand
 	};
 };
 
-//! \return Type of the command
+//! @return Type of the command
 inline QwtPainterCommand::Type QwtPainterCommand::type() const
 {
 	return m_type;
 }
 
-//! \return Painter path to be painted
+//! @return Painter path to be painted
 inline const QPainterPath* QwtPainterCommand::path() const
 {
 	return m_path;
 }
 
-//! \return Attributes how to paint a QPixmap
+//! @return Attributes how to paint a QPixmap
 inline const QwtPainterCommand::PixmapData*
 QwtPainterCommand::pixmapData() const
 {
 	return m_pixmapData;
 }
 
-//! \return Attributes how to paint a QImage
+//! @return Attributes how to paint a QImage
 inline const QwtPainterCommand::ImageData*
 QwtPainterCommand::imageData() const
 {
 	return m_imageData;
 }
 
-//! \return Attributes of a state change
+//! @return Attributes of a state change
 inline const QwtPainterCommand::StateData*
 QwtPainterCommand::stateData() const
 {
@@ -6451,7 +5266,6 @@ QwtPainterCommand::stateData() const
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief A paint device for scalable graphics
  *
  * @details QwtGraphic is the representation of a graphic that is tailored for
@@ -6497,66 +5311,18 @@ QwtPainterCommand::stateData() const
  * of the painter path ( the peak of a triangle is different than the flat side )
  * scaling with a fixed aspect ratio always needs to be calculated from the
  * control point rectangle.
- * \endif
  *
- * \if CHINESE
- * @brief 可缩放图形的绘制设备
- *
- * @details QwtGraphic 是专为可缩放性设计的图形表示。
- * 与 QPicture 类似，它通过 QPainter 操作初始化，
- * 并可以在稍后重放到任何目标绘制设备。
- *
- * 常见的图像表示 QImage 和 QPixmap 不可缩放，
- * Qt 提供了两个可能用于表示矢量图形的绘制设备：
- *
- * - QPicture：不幸的是，Qt4 引入基于浮点数的渲染引擎时，
- *   QPicture 被遗忘了。其 API 仍然基于整数，
- *   使其无法用于正确缩放。
- *
- * - QSvgRenderer/QSvgGenerator：不幸的是，QSvgRenderer 在内部 API 中
- *   隐藏了太多关于其节点的信息，这些信息对于正确的布局计算是必要的。
- *   此外它派生自 QObject，无法像 QImage/QPixmap 一样复制。
- *
- * QwtGraphic 将所有可缩放的绘制原语映射到 QPainterPath，
- * 并将其与绘制状态变更（画笔、画刷、变换...）
- * 一起存储在 QwtPaintCommands 列表中。
- * 为了成为完整的 QPaintDevice，它还存储 pixmap 或 image，
- * 这在某种程度上违背了类的初衷，因为这些对象在缩放时会损失质量。
- *
- * 缩放 QwtGraphic 对象的主要问题是用于绘制路径轮廓的画笔。
- * 非装饰性画笔（QPen::isCosmetic()）与路径以相同比例缩放，
- * 而装饰性画笔具有固定宽度。图形可能包含使用不同画笔的路径——
- * 装饰性和非装饰性。
- *
- * QwtGraphic 缓存两个不同的矩形：
- *
- * - 控制点矩形：控制点矩形是所有绘制路径控制点矩形的边界矩形，
- *   或 pixmap/image 的目标矩形。
- *
- * - 边界矩形：边界矩形扩展了控制点矩形，
- *   以包含使用未缩放画笔渲染轮廓所需的空间。
- *
- * 因为绘制轮廓的偏移取决于绘制路径的形状
- * （三角形的顶点与平边不同），
- * 以固定纵横比缩放时总是需要从控制点矩形计算。
- * \endif
  */
 class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Hint how to render a graphic
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 渲染图形的提示
-	 * \endif
 	 */
 	enum RenderHint
 	{
 		/**
-		 * \if ENGLISH
 		 * When rendering a QwtGraphic a specific scaling between
 		 * the controlPointRect() and the coordinates of the target rectangle
 		 * is set up internally in render().
@@ -6565,16 +5331,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 		 * for the control points only, but not for the pens.
 		 * All other painter transformations ( set up by application code )
 		 * are supposed to work like usual.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 渲染 QwtGraphic 时，在 render() 内部设置
-		 * controlPointRect() 与目标矩形坐标之间的特定缩放。
-		 *
-		 * 设置 RenderPensUnscaled 时，此特定缩放仅应用于控制点，
-		 * 不应用于画笔。所有其他绘制变换（由应用程序代码设置）
-		 * 按常规方式工作。
-		 * \endif
 		 */
 		RenderPensUnscaled = 0x1
 	};
@@ -6582,23 +5339,18 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 	Q_DECLARE_FLAGS( RenderHints, RenderHint )
 
 	/**
-	 * \if ENGLISH
 	 * @brief Indicator if the graphic contains a specific type of painter command
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 指示图形是否包含特定类型的绘制命令
-	 * \endif
 	 */
 	enum CommandType
 	{
-		//! \if ENGLISH The graphic contains scalable vector data \endif \if CHINESE 图形包含可缩放的矢量数据 \endif
+		//! The graphic contains scalable vector data
 		VectorData     = 1 << 0,
 
-		//! \if ENGLISH The graphic contains raster data ( QPixmap or QImage ) \endif \if CHINESE 图形包含光栅数据（QPixmap 或 QImage） \endif
+		//! The graphic contains raster data ( QPixmap or QImage )
 		RasterData     = 1 << 1,
 
-		//! \if ENGLISH The graphic contains transformations beyond simple translations \endif \if CHINESE 图形包含超出简单平移的变换 \endif
+		//! The graphic contains transformations beyond simple translations
 		Transformation = 1 << 2
 	};
 
@@ -6610,7 +5362,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 	QwtGraphic( const QwtGraphic& );
 
 	// Destructor
-	virtual ~QwtGraphic();
+	~QwtGraphic() override;
 
 	// Assignment operator
 	QwtGraphic& operator=( const QwtGraphic& );
@@ -6709,8 +5461,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 
 	class PathInfo;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtGraphic)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::RenderHints )
@@ -6733,25 +5484,17 @@ class QMouseEvent;
 class QKeyEvent;
 
 /**
- * \if ENGLISH
  * @brief A collection of event patterns
  * @details QwtEventPattern introduces a level of indirection for mouse and
  *          keyboard inputs. Those are represented by symbolic names, so
  *          the application code can be configured by individual mappings.
  * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
- * \endif
- * \if CHINESE
- * @brief 事件模式的集合
- * @details QwtEventPattern 为鼠标和键盘输入引入了一层间接抽象。
- *          这些输入通过符号名称表示，使应用程序代码可以通过个性化的映射进行配置。
- * @sa QwtPicker, QwtPickerMachine, QwtPlotZoomer
- * \endif
  */
 class QWT_EXPORT QwtEventPattern
 {
   public:
 	/*!
-	   \brief Symbolic mouse input codes
+	   @brief Symbolic mouse input codes
 
 	   QwtEventPattern implements 3 different settings for
 	   mice with 1, 2, or 3 buttons that can be activated
@@ -6760,7 +5503,7 @@ class QWT_EXPORT QwtEventPattern
 
 	   Individual settings can be configured using setMousePattern().
 
-	   \sa initMousePattern(), setMousePattern(), setKeyPattern()
+	   @sa initMousePattern(), setMousePattern(), setKeyPattern()
 	 */
 	enum MousePatternCode
 	{
@@ -6823,11 +5566,11 @@ class QWT_EXPORT QwtEventPattern
 	};
 
 	/*!
-	   \brief Symbolic keyboard input codes
+	   @brief Symbolic keyboard input codes
 
 	   Individual settings can be configured using setKeyPattern()
 
-	   \sa setKeyPattern(), setMousePattern()
+	   @sa setKeyPattern(), setMousePattern()
 	 */
 	enum KeyPatternCode
 	{
@@ -7000,22 +5743,13 @@ class QTextDocument;
 class QPainterPath;
 
 /**
- * \if ENGLISH
  * @brief A collection of QPainter workarounds
  *
  * QwtPainter provides a set of static methods that wrap QPainter operations
  * with workarounds for various Qt rendering issues. It handles device-specific
  * clipping, coordinate rounding, and performance optimizations for different
  * paint engines (raster, SVG, PDF, etc.).
- * \endif
  *
- * \if CHINESE
- * @brief QPainter绘制操作的封装和兼容性处理集合
- *
- * QwtPainter提供一组静态方法，封装QPainter操作并处理各种Qt渲染问题。
- * 它处理设备特定的裁剪、坐标对齐，以及针对不同绘制引擎（光栅、SVG、PDF等）
- * 的性能优化。
- * \endif
  */
 class QWT_EXPORT QwtPainter
 {
@@ -7094,7 +5828,7 @@ public:
 	static void fillBackground(QPainter* painter, QWidget* canvas);
 
 	static void drawBackgound(QPainter*, const QRectF&, const QWidget*);
-	// 绘制widget的背景
+	// Draw the widget background
 	static void drawCanvasBackgound(QPainter* painter, QWidget* canvas);
 
 	static void drawStyledBackground(QWidget* w, QPainter* painter);
@@ -7150,8 +5884,8 @@ inline void QwtPainter::drawLine(QPainter* painter, const QLineF& line)
 }
 
 /*!
-   \return True, when line splitting for the raster paint engine is enabled.
-   \sa setPolylineSplitting()
+   @return True, when line splitting for the raster paint engine is enabled.
+   @sa setPolylineSplitting()
  */
 inline bool QwtPainter::polylineSplitting()
 {
@@ -7163,8 +5897,8 @@ inline bool QwtPainter::polylineSplitting()
    to a paint engine that rounds to integer values. For other paint engines
    ( PDF, SVG ), this flag has no effect.
 
-   \return True, when rounding is enabled
-   \sa setRoundingAlignment(), isAligning()
+   @return True, when rounding is enabled
+   @sa setRoundingAlignment(), isAligning()
  */
 inline bool QwtPainter::roundingAlignment()
 {
@@ -7172,8 +5906,8 @@ inline bool QwtPainter::roundingAlignment()
 }
 
 /*!
-   \return roundingAlignment() && isAligning(painter);
-   \param painter Painter
+   @return roundingAlignment() && isAligning(painter);
+   @param painter Painter
  */
 inline bool QwtPainter::roundingAlignment(const QPainter* painter)
 {
@@ -7181,8 +5915,8 @@ inline bool QwtPainter::roundingAlignment(const QPainter* painter)
 }
 
 /*!
-   \return pen.widthF() expanded to at least 1.0
-   \param pen Pen
+   @return pen.widthF() expanded to at least 1.0
+   @param pen Pen
  */
 inline qreal QwtPainter::effectivePenWidth(const QPen& pen)
 {
@@ -7207,17 +5941,10 @@ class QString;
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for rendering text strings
  * @details A text engine is responsible for rendering texts for a
  *          specific text format. They are used by QwtText to render a text.
- * \sa QwtText::setTextEngine()
- * \endif
- * \if CHINESE
- * @brief 用于渲染文本字符串的抽象基类
- * @details 文本引擎负责渲染特定文本格式的文本。它们被 QwtText 用于渲染文本。
- * \sa QwtText::setTextEngine()
- * \endif
+ * @sa QwtText::setTextEngine()
  */
 
 class QWT_EXPORT QwtTextEngine
@@ -7226,105 +5953,22 @@ class QWT_EXPORT QwtTextEngine
 	// Virtual destructor
 	virtual ~QwtTextEngine();
 
-	/**
-	 * \if ENGLISH
-	 * @brief Find the height for a given width
-	 * @param font Font of the text
-	 * @param flags Bitwise OR of the flags used like in QPainter::drawText
-	 * @param text Text to be rendered
-	 * @param width Width
-	 * @return Calculated height
-	 * \endif
-	 * \if CHINESE
-	 * @brief 计算给定宽度的高度
-	 * @param font 文本字体
-	 * @param flags 标志的按位或，如 QPainter::drawText 中使用
-	 * @param text 要渲染的文本
-	 * @param width 宽度
-	 * @return 计算的高度
-	 * \endif
-	 */
+	// Find the height for a given width
 	virtual double heightForWidth( const QFont& font, int flags,
 		const QString& text, double width ) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Return the size needed to render text
-	 * @param font Font of the text
-	 * @param flags Bitwise OR of the flags like in QPainter::drawText
-	 * @param text Text to be rendered
-	 * @return Calculated size
-	 * \endif
-	 * \if CHINESE
-	 * @brief 返回渲染文本所需的尺寸
-	 * @param font 文本字体
-	 * @param flags 标志的按位或，如 QPainter::drawText 中使用
-	 * @param text 要渲染的文本
-	 * @return 计算的尺寸
-	 * \endif
-	 */
+	// Return the size needed to render text
 	virtual QSizeF textSize( const QFont& font, int flags,
 		const QString& text ) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Test if a string can be rendered by this text engine
-	 * @param text Text to be tested
-	 * @return true, if it can be rendered
-	 * \endif
-	 * \if CHINESE
-	 * @brief 测试字符串是否可以被此文本引擎渲染
-	 * @param text 要测试的文本
-	 * @return 如果可以渲染返回 true
-	 * \endif
-	 */
+	// Test if a string can be rendered by this text engine
 	virtual bool mightRender( const QString& text ) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Return margins around the texts
-	 * @details The textSize might include margins around the
-	 *          text, like QFontMetrics::descent(). In situations
-	 *          where texts need to be aligned in detail, knowing
-	 *          these margins might improve the layout calculations.
-	 * @param font Font of the text
-	 * @param text Text to be rendered
-	 * @param left Return value for the left margin
-	 * @param right Return value for the right margin
-	 * @param top Return value for the top margin
-	 * @param bottom Return value for the bottom margin
-	 * \endif
-	 * \if CHINESE
-	 * @brief 返回文本周围的边距
-	 * @details textSize 可能包括文本周围的边距，如 QFontMetrics::descent()。
-	 *          在需要详细对齐文本的情况下，了解这些边距可能会改进布局计算。
-	 * @param font 文本字体
-	 * @param text 要渲染的文本
-	 * @param left 左边距返回值
-	 * @param right 右边距返回值
-	 * @param top 上边距返回值
-	 * @param bottom 下边距返回值
-	 * \endif
-	 */
+	// Return margins around the texts
 	virtual void textMargins( const QFont& font, const QString& text,
 		double& left, double& right, double& top, double& bottom ) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw the text in a clipping rectangle
-	 * @param painter Painter
-	 * @param rect Clipping rectangle
-	 * @param flags Bitwise OR of the flags like in QPainter::drawText()
-	 * @param text Text to be rendered
-	 * \endif
-	 * \if CHINESE
-	 * @brief 在裁剪矩形中绘制文本
-	 * @param painter 绘制器
-	 * @param rect 裁剪矩形
-	 * @param flags 标志的按位或，如 QPainter::drawText() 中使用
-	 * @param text 要渲染的文本
-	 * \endif
-	 */
+	// Draw the text in a clipping rectangle
 	virtual void draw( QPainter* painter, const QRectF& rect,
 		int flags, const QString& text ) const = 0;
 
@@ -7333,21 +5977,15 @@ class QWT_EXPORT QwtTextEngine
 	QwtTextEngine();
 
   private:
-	Q_DISABLE_COPY(QwtTextEngine)
+	QwtTextEngine(const QwtTextEngine&) = delete;
+	QwtTextEngine& operator=(const QwtTextEngine&) = delete;
 };
 
 /**
- * \if ENGLISH
  * @brief A text engine for plain texts
  * @details QwtPlainTextEngine renders texts using the basic Qt classes
  *          QPainter and QFontMetrics.
- * \sa QwtRichTextEngine
- * \endif
- * \if CHINESE
- * @brief 纯文本的文本引擎
- * @details QwtPlainTextEngine 使用基本 Qt 类 QPainter 和 QFontMetrics 渲染文本。
- * \sa QwtRichTextEngine
- * \endif
+ * @sa QwtRichTextEngine
  */
 class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 {
@@ -7355,7 +5993,7 @@ class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 	// Constructor
 	QwtPlainTextEngine();
 	// Destructor
-	virtual ~QwtPlainTextEngine();
+	~QwtPlainTextEngine() override;
 
 	// Calculate height for a given width
 	virtual double heightForWidth( const QFont& font, int flags,
@@ -7379,24 +6017,16 @@ class QWT_EXPORT QwtPlainTextEngine : public QwtTextEngine
 		double& top, double& bottom ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlainTextEngine)
 };
 
 #ifndef QT_NO_RICHTEXT
 
 /**
- * \if ENGLISH
  * @brief A text engine for Qt rich texts
  * @details QwtRichTextEngine renders Qt rich texts using the classes
  *          of the Scribe framework of Qt.
- * \sa QwtPlainTextEngine
- * \endif
- * \if CHINESE
- * @brief Qt 富文本的文本引擎
- * @details QwtRichTextEngine 使用 Qt 的 Scribe 框架类渲染 Qt 富文本。
- * \sa QwtPlainTextEngine
- * \endif
+ * @sa QwtPlainTextEngine
  */
 class QWT_EXPORT QwtRichTextEngine : public QwtTextEngine
 {
@@ -7453,7 +6083,6 @@ class QPainter;
 class QwtTextEngine;
 
 /**
- * \if ENGLISH
  * @brief A class representing a text
  *
  * A QwtText is a text including a set of attributes how to render it.
@@ -7476,76 +6105,38 @@ class QwtTextEngine;
  *  QPainter::drawText().
  *
  * @sa QwtTextEngine, QwtTextLabel
- * \endif
  *
- * \if CHINESE
- * @brief 表示文本的类
- *
- * QwtText 是一个包含一组渲染属性的文本。
- *
- * - 格式\n
- *  文本可能包含描述如何渲染的控制序列（例如标签）。
- *  每种格式（例如 MathML、TeX、Qt 富文本）都有自己的控制序列集，
- *  可以由专门的 QwtTextEngine 处理。
- * - 背景\n
- *  文本可以有背景，由 QPen 和 QBrush 定义以提高可见性。
- *  背景的角可以是圆角的。
- * - 字体\n
- *  文本可以有单独的字体。
- * - 颜色\n
- *  文本可以有单独的颜色。
- * - 渲染标志\n
- *  来自 Qt::AlignmentFlag 和 Qt::TextFlag 的标志，用法类似于 QPainter::drawText()。
- *
- * @sa QwtTextEngine, QwtTextLabel
- * \endif
  */
 
 class QWT_EXPORT QwtText
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Text format
 	 *
 	 * The text format defines the QwtTextEngine, that is used to render
 	 * the text.
 	 *
 	 * @sa QwtTextEngine, setTextEngine()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 文本格式
-	 *
-	 * 文本格式定义了用于渲染文本的 QwtTextEngine。
-	 *
-	 * @sa QwtTextEngine, setTextEngine()
-	 * \endif
 	 */
 	enum TextFormat
 	{
 		/**
-		 * \if ENGLISH
 		 * The text format is determined using QwtTextEngine::mightRender() for
 		 * all available text engines in increasing order > PlainText.
 		 * If none of the text engines can render the text is rendered
 		 * like QwtText::PlainText.
-		 * \endif
-		 * \if CHINESE
-		 * 使用 QwtTextEngine::mightRender() 对所有可用的文本引擎按递增顺序 > PlainText 确定文本格式。
-		 * 如果没有文本引擎可以渲染文本，则像 QwtText::PlainText 一样渲染。
-		 * \endif
 		 */
 		AutoText = 0,
 
-		//! \if ENGLISH Draw the text as it is, using a QwtPlainTextEngine. \endif \if CHINESE 使用 QwtPlainTextEngine 按原样绘制文本。 \endif
+		//! Draw the text as it is, using a QwtPlainTextEngine.
 		PlainText,
 
-		//! \if ENGLISH Use the Scribe framework (Qt Rich Text) to render the text. \endif \if CHINESE 使用 Scribe 框架（Qt 富文本）渲染文本。 \endif
+		//! Use the Scribe framework (Qt Rich Text) to render the text.
 		RichText,
 
 		/**
-		 * \if ENGLISH
 		 * Use a MathML (http://en.wikipedia.org/wiki/MathML) render engine
 		 * to display the text. In earlier versions of Qwt such an engine
 		 * was included - since Qwt 6.2 it can be found here:
@@ -7554,101 +6145,58 @@ public:
 		 * To enable MathML support the following code needs to be added to the
 		 * application:
 		 *
-		 * \code
+		 * @code
 		 * QwtText::setTextEngine( QwtText::MathMLText, new QwtMathMLTextEngine() );
-		 * \endcode
-		 * \endif
-		 * \if CHINESE
-		 * 使用 MathML (http://en.wikipedia.org/wiki/MathML) 渲染引擎显示文本。
-		 * 在 Qwt 的早期版本中包含这样一个引擎 - 从 Qwt 6.2 开始可以在这里找到：
-		 * https://github.com/uwerat/qwt-mml-dev
-		 *
-		 * 要启用 MathML 支持，需要将以下代码添加到应用程序中：
-		 *
-		 * \code
-		 * QwtText::setTextEngine( QwtText::MathMLText, new QwtMathMLTextEngine() );
-		 * \endcode
-		 * \endif
+		 * @endcode
 		 */
 		MathMLText,
 
 		/**
-		 * \if ENGLISH
 		 * Use a TeX (http://en.wikipedia.org/wiki/TeX) render engine
 		 * to display the text ( not implemented yet ).
-		 * \endif
-		 * \if CHINESE
-		 * 使用 TeX (http://en.wikipedia.org/wiki/TeX) 渲染引擎显示文本（尚未实现）。
-		 * \endif
 		 */
 		TeXText,
 
 		/**
-		 * \if ENGLISH
 		 * The number of text formats can be extended using setTextEngine.
 		 * Formats >= QwtText::OtherFormat are not used by Qwt.
-		 * \endif
-		 * \if CHINESE
-		 * 可以使用 setTextEngine 扩展文本格式的数量。
-		 * 格式 >= QwtText::OtherFormat 不被 Qwt 使用。
-		 * \endif
 		 */
 		OtherFormat = 100
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Paint Attributes
 	 *
 	 * Font and color and background are optional attributes of a QwtText.
 	 * The paint attributes hold the information, if they are set.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 *
-	 * 字体、颜色和背景是 QwtText 的可选属性。
-	 * 绘制属性保存它们是否被设置的信息。
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
-		//! \if ENGLISH The text has an individual font. \endif \if CHINESE 文本有单独的字体。 \endif
+		//! The text has an individual font.
 		PaintUsingTextFont = 0x01,
 
-		//! \if ENGLISH The text has an individual color. \endif \if CHINESE 文本有单独的颜色。 \endif
+		//! The text has an individual color.
 		PaintUsingTextColor = 0x02,
 
-		//! \if ENGLISH The text has an individual background. \endif \if CHINESE 文本有单独的背景。 \endif
+		//! The text has an individual background.
 		PaintBackground = 0x04
 	};
 
 	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Layout Attributes
 	 * The layout attributes affects some aspects of the layout of the text.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 布局属性
-	 * 布局属性影响文本布局的某些方面。
-	 * \endif
 	 */
 	enum LayoutAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Layout the text without its margins. This mode is useful if a
 		 * text needs to be aligned accurately, like the tick labels of a scale.
 		 * If QwtTextEngine::textMargins is not implemented for the format
 		 * of the text, MinimumLayout has no effect.
-		 * \endif
-		 * \if CHINESE
-		 * 不带边距地布局文本。如果需要精确对齐文本（如刻度的刻度标签），此模式很有用。
-		 * 如果没有为文本格式实现 QwtTextEngine::textMargins，MinimumLayout 没有效果。
-		 * \endif
 		 */
 		MinimumLayout = 0x01
 	};
@@ -7661,12 +6209,16 @@ public:
 	QwtText(const QString&, TextFormat textFormat = AutoText);
 	// Copy constructor
 	QwtText(const QwtText&);
+	// Move constructor
+	QwtText(QwtText&&) noexcept;
 
 	// Destructor
 	~QwtText();
 
 	// Assignment operator
 	QwtText& operator=(const QwtText&);
+	// Move assignment
+	QwtText& operator=(QwtText&&) noexcept;
 
 	// Equality operator
 	bool operator==(const QwtText&) const;
@@ -7754,8 +6306,7 @@ public:
 	static void setTextEngine(QwtText::TextFormat, QwtTextEngine*);
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtText)
 
 	class LayoutCache;
 	LayoutCache* m_layoutCache;
@@ -7782,18 +6333,10 @@ class QPaintEvent;
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief A Widget which displays a QwtText
  * @details QwtTextLabel displays a text label supporting rich text formatting
  *          and rotated text. The text can be aligned horizontally and vertically.
- * \sa QwtText
- * \endif
- * \if CHINESE
- * @brief 显示 QwtText 的控件
- * @details QwtTextLabel 显示支持富文本格式和旋转文本的文本标签。
- *          文本可以水平和垂直对齐。
- * \sa QwtText
- * \endif
+ * @sa QwtText
  */
 
 class QWT_EXPORT QwtTextLabel : public QFrame
@@ -7810,7 +6353,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
 	// Constructor with text and parent
 	explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtTextLabel();
+	~QwtTextLabel() override;
 
 	// Set the text as plain text
 	void setPlainText( const QString& );
@@ -7866,8 +6409,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
 	/// Return the default indent
 	int defaultIndent() const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtTextLabel)
 };
 
 #endif
@@ -7885,7 +6427,6 @@ class QPainter;
 class QRegion;
 
 /**
- * \if ENGLISH
  * @brief An overlay for a widget
  *
  * The main use case of an widget overlay is to avoid
@@ -7904,35 +6445,14 @@ class QRegion;
  * Internally QwtPlotPicker uses overlays for displaying
  * the rubber band and the tracker text.
  *
- * \sa QwtPlotCanvas::BackingStore
- * \endif
+ * @sa QwtPlotCanvas::BackingStore
  *
- * \if CHINESE
- * @brief 控件的覆盖层
- *
- * 控件覆盖层的主要用途是避免下方控件的重绘操作。
- *
- * 例如，与绘图画布结合使用时，覆盖层可以避免重绘，
- * 因为画布的内容可以从其后备存储中恢复。
- *
- * QwtWidgetOverlay 是一个抽象基类。派生类应该
- * 重新实现以下方法：
- *
- * - drawOverlay()
- * - maskHint()
- *
- * 内部 QwtPlotPicker 使用覆盖层来显示
- * 橡皮筋和跟踪器文本。
- *
- * \sa QwtPlotCanvas::BackingStore
- * \endif
  */
 class QWT_EXPORT QwtWidgetOverlay : public QWidget
 {
 	Q_OBJECT
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Mask mode
 	 *
 	 * When using masks the widget below gets paint events for
@@ -7947,58 +6467,28 @@ public:
 	 *
 	 * The default setting is MaskHint.
 	 *
-	 * \sa setMaskMode(), maskMode()
-	 * \endif
+	 * @sa setMaskMode(), maskMode()
 	 *
-	 * \if CHINESE
-	 * @brief 掩码模式
-	 *
-	 * 使用掩码时，下方的控件只会为覆盖层的掩码区域
-	 * 接收绘制事件。否则 Qt 会触发完全重绘。在性能较弱的
-	 * 硬件上（例如嵌入式系统）——或者在远程桌面上使用光栅
-	 * 绘制引擎时——位块传输是一个需要注意的操作，应该避免。
-	 *
-	 * 是否使用掩码以及如何使用取决于掩码计算的开销
-	 * 以及有多少像素可以被排除。
-	 *
-	 * 默认设置为 MaskHint。
-	 *
-	 * \sa setMaskMode(), maskMode()
-	 * \endif
 	 */
 	enum MaskMode
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief Don't use a mask.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * @brief 不使用掩码。
-		 * \endif
 		 */
 		NoMask,
 
 		/*!
-		   \if ENGLISH
 		   @brief Use maskHint() as mask
 
 		   For many situations a fast approximation is good enough
 		   and it is not necessary to build a more detailed mask
 		   ( f.e the bounding rectangle of a text ).
-		   \endif
 		   *
-		   \if CHINESE
-		   @brief 使用 maskHint() 作为掩码
-
-		   在许多情况下，快速近似已经足够，
-		   不需要构建更详细的掩码（例如文本的边界矩形）。
-		   \endif
 		 */
 		MaskHint,
 
 		/*!
-		   \if ENGLISH
 		   @brief Calculate a mask by checking the alpha values
 
 		   Sometimes it is not possible to give a fast approximation
@@ -8007,23 +6497,12 @@ public:
 
 		   When a valid maskHint() is available
 		   only pixels inside this approximation are checked.
-		   \endif
 		   *
-		   \if CHINESE
-		   @brief 通过检查 alpha 值计算掩码
-
-		   有时无法提供快速近似，
-		   需要通过绘制覆盖层并测试结果来计算掩码。
-
-		   当有有效的 maskHint() 时，
-		   只检查此近似内的像素。
-		   \endif
 		 */
 		AlphaMask
 	};
 
 	/*!
-	   \if ENGLISH
 	   @brief Render mode
 
 	   For calculating the alpha mask the overlay has already
@@ -8036,54 +6515,26 @@ public:
 	   expensive operation building a pixmap and for simple overlays
 	   it might not be recommended.
 
-	   \note The render mode has no effect, when maskMode() != AlphaMask.
-	   \endif
+	   @note The render mode has no effect, when maskMode() != AlphaMask.
 	   *
-	   \if CHINESE
-	   @brief 渲染模式
-
-	   为了计算 alpha 掩码，覆盖层已经被绘制到临时的 QImage。
-	   与其将覆盖层渲染两次，不如复制此缓冲区用于绘制覆盖层。
-
-	   在使用光栅绘制引擎的图形系统上（QWS, Windows），
-	   这通常只意味着复制一些内存。在 X11 上，这会导致
-	   构建 pixmap 的昂贵操作，对于简单的覆盖层可能不推荐。
-
-	   \note 当 maskMode() != AlphaMask 时，渲染模式无效。
-	   \endif
 	 */
 	enum RenderMode
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief Copy the buffer, when using the raster paint engine.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * @brief 使用光栅绘制引擎时复制缓冲区。
-		 * \endif
 		 */
 		AutoRenderMode,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Always copy the buffer
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * @brief 始终复制缓冲区
-		 * \endif
 		 */
 		CopyAlphaMask,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Never copy the buffer
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * @brief 从不复制缓冲区
-		 * \endif
 		 */
 		DrawOverlay
 	};
@@ -8091,7 +6542,7 @@ public:
 	// Constructor with parent widget
 	explicit QwtWidgetOverlay(QWidget*);
 	// Destructor
-	virtual ~QwtWidgetOverlay();
+	~QwtWidgetOverlay() override;
 
 	// Set the mask mode for the overlay
 	void setMaskMode(MaskMode);
@@ -8108,13 +6559,8 @@ public:
 
 public Q_SLOTS:
 	/**
-	 * \if ENGLISH
 	 * @brief Recalculate the mask and repaint the overlay
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 重新计算掩码并重绘覆盖层
-	 * \endif
 	 */
 	void updateOverlay();
 
@@ -8125,15 +6571,9 @@ protected:
 	virtual QRegion maskHint() const;
 
 	/*!
-	   \if ENGLISH
 	   Draw the widget overlay
-	   \param painter Painter
-	   \endif
+	   @param painter Painter
 	   *
-	   \if CHINESE
-	   绘制控件覆盖层
-	   \param painter 绘制器
-	   \endif
 	 */
 	virtual void drawOverlay(QPainter* painter) const = 0;
 
@@ -8142,8 +6582,7 @@ private:
 	void draw(QPainter*) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtWidgetOverlay)
 };
 
 #endif
@@ -8162,125 +6601,77 @@ class QwtText;
 class QwtGraphic;
 
 /**
- * \if ENGLISH
  * @brief Attributes of an entry on a legend
  * @details QwtLegendData is an abstract container (like QAbstractModel)
  *          to exchange attributes that are only known between the plot item and the legend.
  *          By overloading QwtPlotItem::legendData() any other set of attributes
  *          could be used that can be handled by a modified (or completely different)
  *          implementation of a legend.
- * \sa QwtLegend, QwtPlotLegendItem
- * \note The stockchart example implements a legend as a tree with checkable items
- * \endif
- * \if CHINESE
- * @brief 图例条目的属性
- * @details QwtLegendData 是一个抽象容器（如 QAbstractModel），
- *          用于在绘图项和图例之间交换属性。
- *          通过重载 QwtPlotItem::legendData() 可以使用任何其他属性集，
- *          这些属性集可以由修改过的（或完全不同的）图例实现处理。
- * \sa QwtLegend, QwtPlotLegendItem
- * \note stockchart 示例将图例实现为带有可检查项的树
- * \endif
+ * @sa QwtLegend, QwtPlotLegendItem
+ * @note The stockchart example implements a legend as a tree with checkable items
  */
 class QWT_EXPORT QwtLegendData
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Mode defining how a legend entry interacts
-	 * \endif
-	 * \if CHINESE
-	 * @brief 定义图例条目如何交互的模式
-	 * \endif
 	 */
 	enum Mode
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief The legend item is not interactive, like a label
-		 * \endif
-		 * \if CHINESE
-		 * @brief 图例项不可交互，如标签
-		 * \endif
 		 */
 		ReadOnly,
 
 		/**
-		 * \if ENGLISH
 		 * @brief The legend item is clickable, like a push button
-		 * \endif
-		 * \if CHINESE
-		 * @brief 图例项可点击，如按钮
-		 * \endif
 		 */
 		Clickable,
 
 		/**
-		 * \if ENGLISH
 		 * @brief The legend item is checkable, like a checkable button
-		 * \endif
-		 * \if CHINESE
-		 * @brief 图例项可检查，如复选框
-		 * \endif
 		 */
 		Checkable
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Identifier how to interpret a QVariant
-	 * \endif
-	 * \if CHINESE
-	 * @brief 如何解释 QVariant 的标识符
-	 * \endif
 	 */
 	enum Role
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief The value is a Mode
-		 * \endif
-		 * \if CHINESE
-		 * @brief 值是 Mode
-		 * \endif
 		 */
 		ModeRole,
 
 		/**
-		 * \if ENGLISH
 		 * @brief The value is a title
-		 * \endif
-		 * \if CHINESE
-		 * @brief 值是标题
-		 * \endif
 		 */
 		TitleRole,
 
 		/**
-		 * \if ENGLISH
 		 * @brief The value is an icon
-		 * \endif
-		 * \if CHINESE
-		 * @brief 值是图标
-		 * \endif
 		 */
 		IconRole,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Values < UserRole are reserved for internal use
-		 * \endif
-		 * \if CHINESE
-		 * @brief 值 < UserRole 保留给内部使用
-		 * \endif
 		 */
 		UserRole  = 32
 	};
 
 	// Constructor
 	QwtLegendData();
+	// Copy constructor
+	QwtLegendData(const QwtLegendData&);
+	// Move constructor
+	QwtLegendData(QwtLegendData&&) noexcept = default;
 	// Destructor
 	~QwtLegendData();
+	// Copy assignment
+	QwtLegendData& operator=(const QwtLegendData&);
+	// Move assignment
+	QwtLegendData& operator=(QwtLegendData&&) noexcept = default;
 
 	// Set all values
 	void setValues( const QMap< int, QVariant >& );
@@ -8320,30 +6711,21 @@ class QWT_EXPORT QwtLegendData
 class QwtText;
 
 /**
- * \if ENGLISH
  * @brief A widget representing an item on a QwtLegend
  * @details QwtLegendLabel is used to display legend items in a QwtLegend.
  *          It can show an icon and a text label, and supports different
  *          interaction modes (ReadOnly, Clickable, Checkable).
- * \sa QwtLegend, QwtLegendData
- * \endif
- * \if CHINESE
- * @brief 表示 QwtLegend 上某个条目的控件
- * @details QwtLegendLabel 用于在 QwtLegend 中显示图例条目。
- *          它可以显示图标和文本标签，并支持不同的交互模式
- *          （只读、可点击、可选中）。
- * \sa QwtLegend, QwtLegendData
- * \endif
+ * @sa QwtLegend, QwtLegendData
  */
 class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 {
 	Q_OBJECT
   public:
 	// Constructor for QwtLegendLabel
-	explicit QwtLegendLabel( QWidget* parent = 0 );
+	explicit QwtLegendLabel( QWidget* parent = nullptr );
 
 	// Destructor for QwtLegendLabel
-	virtual ~QwtLegendLabel();
+	~QwtLegendLabel() override;
 
 	// Set the legend data
 	void setData( const QwtLegendData& );
@@ -8384,44 +6766,23 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 
   Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the legend item has been clicked
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当图例项被点击时发出的信号
-	 * \endif
 	 */
 	void clicked();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the legend item has been pressed
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当图例项被按下时发出的信号
-	 * \endif
 	 */
 	void pressed();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the legend item has been released
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当图例项被释放时发出的信号
-	 * \endif
 	 */
 	void released();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the legend item has been toggled
 	 * @param on True if checked, false otherwise
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当图例项状态切换时发出的信号
-	 * @param on 如果选中为 true，否则为 false
-	 * \endif
 	 */
 	void checked( bool );
 
@@ -8448,8 +6809,7 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 	virtual void keyReleaseEvent( QKeyEvent* ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtLegendLabel)
 };
 
 #endif
@@ -8470,25 +6830,15 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 #include <QList>
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for legend widgets
  * @details Legends that need to be under control of the QwtPlot layout system
  *          need to be derived from QwtAbstractLegend.
- * \note Other type of legends can be implemented by connecting to
+ * @note Other type of legends can be implemented by connecting to
  *       the QwtPlot::legendDataChanged() signal. But as these legends
  *       are unknown to the plot layout system the layout code
  *       (on screen and for QwtPlotRenderer) need to be organized
  *       in application code.
- * \sa QwtLegend
- * \endif
- * \if CHINESE
- * @brief 图例控件的抽象基类
- * @details 需要受 QwtPlot 布局系统控制的图例需要继承自 QwtAbstractLegend。
- * \note 其他类型的图例可以通过连接到 QwtPlot::legendDataChanged() 信号来实现。
- *       但由于这些图例对绘图布局系统未知，布局代码（屏幕上和 QwtPlotRenderer）
- *       需要在应用程序代码中组织。
- * \sa QwtLegend
- * \endif
+ * @sa QwtLegend
  */
 class QWT_EXPORT QwtAbstractLegend : public QFrame
 {
@@ -8499,24 +6849,9 @@ public:
 		explicit QwtAbstractLegend(QWidget* parent = nullptr);
 
 		// Destructor for QwtAbstractLegend
-		virtual ~QwtAbstractLegend();
+		~QwtAbstractLegend() override;
 
-		/**
-		 * \if ENGLISH
-		 * @brief Render the legend into a given rectangle
-		 * @param painter Painter
-		 * @param rect Bounding rectangle
-		 * @param fillBackground When true, fill rect with the widget background
-		 * \sa renderLegend() is used by QwtPlotRenderer
-		 * \endif
-		 * \if CHINESE
-		 * @brief 将图例渲染到给定的矩形中
-		 * @param painter 绘制器
-		 * @param rect 边界矩形
-		 * @param fillBackground 如果为 true，用控件背景填充矩形
-		 * \sa renderLegend() 由 QwtPlotRenderer 使用
-		 * \endif
-		 */
+		// Render the legend into a given rectangle
 		virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
 		// Return true when no plot item is inserted
@@ -8527,18 +6862,7 @@ public:
 
 public Q_SLOTS:
 
-		/**
-		 * \if ENGLISH
-		 * @brief Update the entries for a plot item
-		 * @param itemInfo Info about an item
-		 * @param data List of legend entry attributes for the item
-		 * \endif
-		 * \if CHINESE
-		 * @brief 更新绘图项的条目
-		 * @param itemInfo 关于项的信息
-		 * @param data 该项的图例条目属性列表
-		 * \endif
-		 */
+		// Update the entries for a plot item
 		virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
 };
 
@@ -8551,19 +6875,11 @@ public Q_SLOTS:
 class QScrollBar;
 
 /**
- * \if ENGLISH
  * @brief The legend widget
  * @details The QwtLegend widget is a tabular arrangement of legend items. Legend
  *          items might be any type of widget, but in general they will be
  *          a QwtLegendLabel.
- * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
- * \endif
- * \if CHINESE
- * @brief 图例控件
- * @details QwtLegend 控件是图例条目的表格排列。图例条目可以是任何类型的控件，
- *          但通常它们是 QwtLegendLabel。
- * \sa QwtLegendLabel, QwtPlotItem, QwtPlot
- * \endif
+ * @sa QwtLegendLabel, QwtPlotItem, QwtPlot
  */
 
 class QWT_EXPORT QwtLegend : public QwtAbstractLegend
@@ -8574,7 +6890,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 	// Constructor for QwtLegend
 	explicit QwtLegend( QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtLegend();
+	~QwtLegend() override;
 
 	// Set the maximum number of columns
 	void setMaxColumns( uint numColums );
@@ -8627,40 +6943,21 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 
   Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user clicks on a legend label in Clickable mode
 	 * @param itemInfo Info for the item of the selected legend item
 	 * @param index Index of the legend label in the list of widgets associated with the plot item
 	 * @note Clicks are disabled as default
-	 * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户点击 Clickable 模式的图例标签时发出的信号
-	 * @param itemInfo 选中图例项的项信息
-	 * @param index 图例标签在与绘图项关联的控件列表中的索引
-	 * @note 默认禁用点击
-	 * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
-	 * \endif
+	 * @sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
 	 */
 	void clicked( const QVariant& itemInfo, int index );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user clicks on a legend label in Checkable mode
 	 * @param itemInfo Info for the item of the selected legend label
 	 * @param on True when the legend label is checked
 	 * @param index Index of the legend label in the list of widgets associated with the plot item
 	 * @note Clicks are disabled as default
-	 * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户点击 Checkable 模式的图例标签时发出的信号
-	 * @param itemInfo 选中图例标签的项信息
-	 * @param on 图例标签被选中时为 true
-	 * @param index 图例标签在与绘图项关联的控件列表中的索引
-	 * @note 默认禁用点击
-	 * \sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
-	 * \endif
+	 * @sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
 	 */
 	void checked( const QVariant& itemInfo, bool on, int index );
 
@@ -8679,8 +6976,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
   private:
 	void updateTabOrder();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtLegend)
 };
 
 #endif
@@ -8695,18 +6991,10 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 #include <qpushbutton.h>
 
 /**
- * \if ENGLISH
- *   \brief Arrow Button
- *   \details A push button with one or more filled triangles on its front.
+ *   @brief Arrow Button
+ *   @details A push button with one or more filled triangles on its front.
  *            An Arrow button can have 1 to 3 arrows in a row, pointing
  *            up, down, left or right.
- * \endif
- * \if CHINESE
- *   \brief 箭头按钮
- *   \details 一个带有一个或多个填充三角形的前面板按钮。
- *            箭头按钮可以有1到3个箭头排列成一行，
- *            指向上、下、左或右方向。
- * \endif
  */
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {
@@ -8714,7 +7002,7 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
 	// Constructs an arrow button with specified number of arrows and arrow type
 	explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtArrowButton();
+	~QwtArrowButton() override;
 
 	// Returns the direction of the arrows
 	Qt::ArrowType arrowType() const;
@@ -8738,8 +7026,7 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
 		const QSize& boundingSize ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtArrowButton)
 };
 
 #endif
@@ -8756,15 +7043,9 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
 class QPainter;
 
 /**
- * \if ENGLISH
- *   \brief Abstract base class for a compass rose
- *   \details QwtCompassRose is the abstract base class that defines the interface
+ *   @brief Abstract base class for a compass rose
+ *   @details QwtCompassRose is the abstract base class that defines the interface
  *            for drawing compass roses in QwtCompass.
- * \endif
- * \if CHINESE
- *   \brief 罗盘花的抽象基类
- *   \details QwtCompassRose是定义在QwtCompass中绘制罗盘花接口的抽象基类。
- * \endif
  */
 class QWT_EXPORT QwtCompassRose
 {
@@ -8780,44 +7061,28 @@ class QWT_EXPORT QwtCompassRose
 	const QPalette& palette() const;
 
 	/**
-	 * \if ENGLISH
-	 *   \brief Draw the rose
-	 *   \param[in] painter Painter
-	 *   \param[in] center Center point
-	 *   \param[in] radius Radius of the rose
-	 *   \param[in] north Position pointing north
-	 *   \param[in] colorGroup Color group
-	 * \endif
-	 * \if CHINESE
-	 *   \brief 绘制罗盘花
-	 *   \param[in] painter 绘图设备
-	 *   \param[in] center 中心点
-	 *   \param[in] radius 罗盘花的半径
-	 *   \param[in] north 指向北方的位置
-	 *   \param[in] colorGroup 颜色组
-	 * \endif
+	 *   @brief Draw the rose
+	 *   @param[in] painter Painter
+	 *   @param[in] center Center point
+	 *   @param[in] radius Radius of the rose
+	 *   @param[in] north Position pointing north
+	 *   @param[in] colorGroup Color group
 	 */
 	virtual void draw( QPainter* painter,
 		const QPointF& center, double radius, double north,
 		QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
 
   private:
-	Q_DISABLE_COPY(QwtCompassRose)
+	QwtCompassRose(const QwtCompassRose&) = delete;
+	QwtCompassRose& operator=(const QwtCompassRose&) = delete;
 
 	QPalette m_palette;
 };
 
 /**
- * \if ENGLISH
- *   \brief A simple rose for QwtCompass
- *   \details QwtSimpleCompassRose provides a simple compass rose implementation
+ *   @brief A simple rose for QwtCompass
+ *   @details QwtSimpleCompassRose provides a simple compass rose implementation
  *            with configurable thorn count and levels.
- * \endif
- * \if CHINESE
- *   \brief QwtCompass的简单罗盘花
- *   \details QwtSimpleCompassRose提供了一个简单的罗盘花实现，
- *            具有可配置的刺数和层级。
- * \endif
  */
 class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 {
@@ -8825,7 +7090,7 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 	// Constructs a simple compass rose with specified number of thorns and levels
 	QwtSimpleCompassRose( int numThorns = 8, int numThornLevels = -1 );
 	// Destructor
-	virtual ~QwtSimpleCompassRose();
+	~QwtSimpleCompassRose() override;
 
 	// Sets the width of the rose heads (range: 0.03 to 0.4)
 	void setWidth( double );
@@ -8847,6 +7112,11 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 	// Returns the shrink factor for thorns
 	double shrinkFactor() const;
 
+	// Set flat style
+	void setFlatStyle( bool );
+	// Return flat style
+	bool flatStyle() const;
+
 	// Draw the rose (override from base class)
 	virtual void draw( QPainter*,
 		const QPointF& center, double radius, double north,
@@ -8855,11 +7125,11 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 	// Static helper to draw a rose with specified parameters
 	static void drawRose( QPainter*, const QPalette&,
 		const QPointF& center, double radius, double north, double width,
-		int numThorns, int numThornLevels, double shrinkFactor );
+		int numThorns, int numThornLevels, double shrinkFactor,
+		bool flatStyle = true );
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSimpleCompassRose)
 };
 
 #endif
@@ -8874,7 +7144,6 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 #include <qwidget.h>
 
 /**
- * \if ENGLISH
  * @brief The Counter Widget
  * @details A Counter consists of a label displaying a number and
  *          one or more (up to three) push buttons on each side
@@ -8897,27 +7166,6 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
  *          counter->setIncSteps(QwtCounter::Button2, 20);  // Button 2 increments 20 steps
  *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
  *          @endcode
- * \endif
- * \if CHINESE
- * @brief 计数器控件
- * @details 计数器由一个显示数字的标签和标签两侧的一个或多个（最多三个）按钮组成，
- *          这些按钮可用于增加或减少计数器的值。
- *          计数器有一个最小值到最大值的范围和一个步长。当设置了循环属性时，
- *          计数器是循环的。
- *          使用 setIncSteps() 可以指定按钮增加或减少值的步数。
- *          使用 setNumButtons() 可以更改按钮数量。
- *          示例：
- *          @code
- *          #include <qwt_counter.h>
- *          QwtCounter *counter = new QwtCounter(parent);
- *          counter->setRange(0.0, 100.0);                  // 从 0.0 到 100
- *          counter->setSingleStep( 1.0 );                  // 步长 1.0
- *          counter->setNumButtons(2);                      // 每侧两个按钮
- *          counter->setIncSteps(QwtCounter::Button1, 1);   // 按钮 1 增加 1 步
- *          counter->setIncSteps(QwtCounter::Button2, 20);  // 按钮 2 增加 20 步
- *          connect(counter, SIGNAL(valueChanged(double)), myClass, SLOT(newValue(double)));
- *          @endcode
- * \endif
  */
 
 class QWT_EXPORT QwtCounter : public QWidget
@@ -8939,12 +7187,7 @@ class QWT_EXPORT QwtCounter : public QWidget
 
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Button index
-	 * \endif
-	 * \if CHINESE
-	 * @brief 按钮索引
-	 * \endif
 	 */
 	enum Button
 	{
@@ -8964,7 +7207,7 @@ class QWT_EXPORT QwtCounter : public QWidget
 	/// Constructor
 	explicit QwtCounter( QWidget* parent = nullptr );
 	/// Destructor
-	virtual ~QwtCounter();
+	~QwtCounter() override;
 
 	/// Set the counter to be in valid/invalid state
 	void setValid( bool );
@@ -9035,26 +7278,14 @@ class QWT_EXPORT QwtCounter : public QWidget
 
   Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when a button has been released
 	 * @param value The new value
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当按钮释放时发出的信号
-	 * @param value 新值
-	 * \endif
 	 */
 	void buttonReleased ( double value );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the counter's value has changed
 	 * @param value The new value
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当计数器值改变时发出的信号
-	 * @param value 新值
-	 * \endif
 	 */
 	void valueChanged ( double value );
 
@@ -9074,8 +7305,7 @@ class QWT_EXPORT QwtCounter : public QWidget
 	void updateButtons();
 	void showNumber( double );
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtCounter)
 };
 
 #endif
@@ -9088,22 +7318,12 @@ class QWT_EXPORT QwtCounter : public QWidget
 #define QWT_POLAR_FITTER_H
 
 /**
- * \if ENGLISH
  * @brief A simple curve fitter for polar points
  * @details QwtPolarFitter adds equidistant points between 2 curve points,
  *          so that the connection gets rounded according to the nature of
  *          a polar plot.
  *
  * @sa QwtPolarCurve::setCurveFitter()
- * \endif
- *
- * \if CHINESE
- * @brief 极坐标点的简单曲线拟合器
- * @details QwtPolarFitter 在两个曲线点之间添加等距点，
- *          使连接根据极坐标图的特性变得圆滑。
- *
- * @sa QwtPolarCurve::setCurveFitter()
- * \endif
  */
 class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 {
@@ -9111,7 +7331,7 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 	/// Constructor
 	QwtPolarFitter( int stepCount = 5 );
 	/// Destructor
-	virtual ~QwtPolarFitter();
+	~QwtPolarFitter() override;
 
 	/// Set the step count
 	void setStepCount( int size );
@@ -9124,8 +7344,7 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 	virtual QPainterPath fitCurvePath( const QPolygonF& ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarFitter)
 };
 
 #endif
@@ -9140,7 +7359,6 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
 #include <qthread.h>
 
 /**
- * \if ENGLISH
  * @brief A thread collecting samples at regular intervals.
  *
  * Continuous signals are converted into a discrete signal by
@@ -9151,17 +7369,7 @@ class QWT_EXPORT QwtPolarFitter : public QwtCurveFitter
  * to collect and store ( or emit ) a single sample.
  *
  * @sa QwtPlotCurve, QwtPlotSeriesItem
- * \endif
  *
- * \if CHINESE
- * @brief 定期收集样本的线程
- *
- * 通过定期收集样本，将连续信号转换为离散信号。离散信号可以通过 QwtPlotSeriesItem 在 QwtPlot 部件上显示。
- *
- * QwtSamplingThread 启动一个线程，定期调用 sample() 方法来收集和存储（或发出）单个样本。
- *
- * @sa QwtPlotCurve, QwtPlotSeriesItem
- * \endif
  */
 class QWT_EXPORT QwtSamplingThread : public QThread
 {
@@ -9169,7 +7377,7 @@ class QWT_EXPORT QwtSamplingThread : public QThread
 
 public:
 	// Destructor
-	virtual ~QwtSamplingThread();
+	~QwtSamplingThread() override;
 
 	// Get the interval in seconds
 	double interval() const;
@@ -9190,27 +7398,18 @@ protected:
 	virtual void run() override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Collect a sample
 	 *
 	 * @param elapsed Time since the thread was started in seconds
 	 * @note Due to a bug in previous version elapsed was passed as
 	 *       seconds instead of miliseconds. To avoid breaking existing
 	 *       code we stay with seconds for now.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 收集样本
-	 *
-	 * @param elapsed 线程启动以来的时间（秒）
-	 * @note 由于之前版本的 bug，elapsed 被作为秒而不是毫秒传递。为了避免破坏现有代码，我们现在仍然使用秒。
-	 * \endif
 	 */
 	virtual void sample(double elapsed) = 0;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSamplingThread)
 };
 
 #endif
@@ -9227,19 +7426,13 @@ private:
 class QwtInterval;
 
 /**
- * @brief A class representing a scale division/表示刻度划分的类
+ * @brief A class representing a scale division
  *
  * A Qwt scale is defined by its boundaries and 3 list for the positions of the major, medium and minor ticks.
  *
  * The upperBound() might be smaller than the lowerBound() to indicate inverted scales.
  *
  * Scale divisions can be calculated from a QwtScaleEngine.
- *
- * Qwt 刻度由其边界以及分别表示主刻度、中刻度和次刻度位置的三个列表定义。
- *
- * upperBound() 可能小于 lowerBound()，以此表示刻度是反向的。
- *
- * 刻度划分可通过 QwtScaleEngine 计算得出。
  *
  * @sa QwtScaleEngine::divideScale(), QwtPlot::setAxisScaleDiv(), QwtAbstractSlider::setScaleDiv()
  */
@@ -9281,6 +7474,15 @@ public:
 						 const QList< double >& mediumTicks,
 						 const QList< double >& majorTicks);
 
+	// Copy constructor
+	QwtScaleDiv(const QwtScaleDiv&);
+	// Move constructor
+	QwtScaleDiv(QwtScaleDiv&&) noexcept = default;
+	// Copy assignment
+	QwtScaleDiv& operator=(const QwtScaleDiv&);
+	// Move assignment
+	QwtScaleDiv& operator=(QwtScaleDiv&&) noexcept = default;
+
 	// Equality operator
 	bool operator==(const QwtScaleDiv&) const;
 	// Inequality operator
@@ -9296,17 +7498,17 @@ public:
 	QwtInterval interval() const;
 
 	// Set the lower bound
-	void setLowerBound(double);
+	void setLowerBound(double) noexcept;
 	// Get the lower bound
-	double lowerBound() const;
+	double lowerBound() const noexcept;
 
 	// Set the upper bound
-	void setUpperBound(double);
+	void setUpperBound(double) noexcept;
 	// Get the upper bound
-	double upperBound() const;
+	double upperBound() const noexcept;
 
 	// Get the range (upper - lower)
-	double range() const;
+	double range() const noexcept;
 
 	// Check if value is within bounds
 	bool contains(double value) const;
@@ -9330,8 +7532,8 @@ public:
 	QwtScaleDiv bounded(double lowerBound, double upperBound) const;
 
 private:
-	double m_lowerBound;
-	double m_upperBound;
+	double m_lowerBound{0.0};
+	double m_upperBound{0.0};
 	QList< double > m_ticks[ NTickTypes ];
 };
 
@@ -9363,41 +7565,27 @@ class QwtTransform;
 class QwtScaleMap;
 
 /**
- * \if ENGLISH
  * @brief An abstract base class for drawing scales
  * @details QwtAbstractScaleDraw can be used to draw linear or logarithmic scales.
  *          After a scale division has been specified as a QwtScaleDiv object
  *          using setScaleDiv(), the scale can be drawn with the draw() member.
- * \endif
- * \if CHINESE
- * @brief 绘制刻度的抽象基类
- * @details QwtAbstractScaleDraw 可用于绘制线性或对数刻度。
- *          在使用 setScaleDiv() 指定刻度划分为 QwtScaleDiv 对象后，
- *          可以使用 draw() 成员绘制刻度。
- * \endif
  */
 class QWT_EXPORT QwtAbstractScaleDraw
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Components of a scale
-	 * \sa enableComponent(), hasComponent
-	 * \endif
-	 * \if CHINESE
-	 * @brief 刻度的组件
-	 * \sa enableComponent(), hasComponent
-	 * \endif
+	 * @sa enableComponent(), hasComponent
 	 */
 	enum ScaleComponent
 	{
-		//! \if ENGLISH Backbone = the line where the ticks are located \endif \if CHINESE 主干 = 刻度线所在的位置 \endif
+		//! Backbone = the line where the ticks are located
 		Backbone = 0x01,
 
-		//! \if ENGLISH Ticks \endif \if CHINESE 刻度线 \endif
+		//! Ticks
 		Ticks = 0x02,
 
-		//! \if ENGLISH Labels \endif \if CHINESE 标签 \endif
+		//! Labels
 		Labels = 0x04
 	};
 
@@ -9448,61 +7636,22 @@ public:
 	void invalidateCache();
 
 protected:
-	/**
-	 * \if ENGLISH
-	 * @brief Draw a tick
-	 * @param painter Painter
-	 * @param value Value of the tick
-	 * @param len Length of the tick
-	 * \sa drawBackbone(), drawLabel()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 绘制刻度线
-	 * @param painter 绘制器
-	 * @param value 刻度值
-	 * @param len 刻度线长度
-	 * \sa drawBackbone(), drawLabel()
-	 * \endif
-	 */
+	// Draw a tick
 	virtual void drawTick(QPainter* painter, double value, double len) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draws the baseline of the scale
-	 * @param painter Painter
-	 * \sa drawTick(), drawLabel()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 绘制刻度的基线
-	 * @param painter 绘制器
-	 * \sa drawTick(), drawLabel()
-	 * \endif
-	 */
+	// Draws the baseline of the scale
 	virtual void drawBackbone(QPainter* painter) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draws the label for a major scale tick
-	 * @param painter Painter
-	 * @param value Value
-	 * \sa drawTick(), drawBackbone()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 绘制主刻度标签
-	 * @param painter 绘制器
-	 * @param value 值
-	 * \sa drawTick(), drawBackbone()
-	 * \endif
-	 */
+	// Draws the label for a major scale tick
 	virtual void drawLabel(QPainter* painter, double value) const = 0;
 
 	const QwtText& tickLabel(const QFont&, double value) const;
 
 private:
-	Q_DISABLE_COPY(QwtAbstractScaleDraw)
+	QwtAbstractScaleDraw(const QwtAbstractScaleDraw&) = delete;
+	QwtAbstractScaleDraw& operator=(const QwtAbstractScaleDraw&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtAbstractScaleDraw)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtAbstractScaleDraw::ScaleComponents)
@@ -9519,7 +7668,6 @@ class QRectF;
 class QRect;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing scales
  * @details QwtScaleDraw can be used to draw linear or logarithmic scales.
  *          A scale has a position, an alignment and a length, which can be specified.
@@ -9529,28 +7677,13 @@ class QRect;
  *          After a scale division has been specified as a QwtScaleDiv object
  *          using QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s),
  *          the scale can be drawn with the QwtAbstractScaleDraw::draw() member.
- * \endif
- * \if CHINESE
- * @brief 用于绘制刻度的类
- * @details QwtScaleDraw 可用于绘制线性或对数刻度。刻度具有位置、对齐方式和长度，均可指定。
- *          可使用 setLabelRotation() 和 setLabelAlignment() 旋转标签并将其与刻度对齐。
- *
- *          使用 QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s) 将刻度划分指定为
- *          QwtScaleDiv 对象后，可使用 QwtAbstractScaleDraw::draw() 成员绘制刻度。
- * \endif
  */
 class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Alignment of the scale draw
-	 * \sa setAlignment(), alignment()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 刻度绘制的对齐方式
-	 * \sa setAlignment(), alignment()
-	 * \endif
+	 * @sa setAlignment(), alignment()
 	 */
 	enum Alignment
 	{
@@ -9568,7 +7701,7 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
 	};
 
 	QwtScaleDraw();
-	virtual ~QwtScaleDraw();
+	~QwtScaleDraw() override;
 
 	/// Get the border distance hint
 	void getBorderDistHint( const QFont&, int& start, int& end ) const;
@@ -9583,27 +7716,27 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
 	void move( const QPointF& );
 	void setLength( double length );
 
-	/// \return the alignment
+	/// @return the alignment
 	Alignment alignment() const;
 	/// Set the alignment
 	void setAlignment( Alignment );
 
-	/// \return the orientation
+	/// @return the orientation
 	Qt::Orientation orientation() const;
 
-	/// \return the position
+	/// @return the position
 	QPointF pos() const;
-	/// \return the length
+	/// @return the length
 	double length() const;
 
 	/// Set the label alignment
 	void setLabelAlignment( Qt::Alignment );
-	/// \return the label alignment
+	/// @return the label alignment
 	Qt::Alignment labelAlignment() const;
 
 	/// Set the label rotation
 	void setLabelRotation( double rotation );
-	/// \return the label rotation
+	/// @return the label rotation
 	double labelRotation() const;
 
 	/// Get the maximum label height
@@ -9633,23 +7766,14 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
   private:
 	void updateMap();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtScaleDraw)
 };
 
 /**
- * \if ENGLISH
  * @brief Move the position of the scale
  * @param x X coordinate
  * @param y Y coordinate
- * \sa move(const QPointF&)
- * \endif
- * \if CHINESE
- * @brief 移动刻度的位置
- * @param x X 坐标
- * @param y Y 坐标
- * \sa move(const QPointF&)
- * \endif
+ * @sa move(const QPointF&)
  */
 inline void QwtScaleDraw::move( double x, double y )
 {
@@ -9669,12 +7793,7 @@ class QwtInterval;
 class QwtTransform;
 
 /**
- * \if ENGLISH
  * @brief Arithmetic including a tolerance
- * \endif
- * \if CHINESE
- * @brief 包含公差的算术运算
- * \endif
  */
 class QWT_EXPORT QwtScaleArithmetic
 {
@@ -9692,33 +7811,18 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for scale engines
  * @details A scale engine tries to find "reasonable" ranges and step sizes
  *          for scales. The layout of the scale can be varied with setAttribute().
  *          Qwt offers implementations for logarithmic and linear scales.
  * @sa QwtLinearScaleEngine, QwtLogScaleEngine
- * \endif
- * \if CHINESE
- * @brief 刻度引擎的基类
- * @details 刻度引擎用于为坐标轴寻找"合理"的数值范围和步长。
- *          可通过 setAttribute() 方法调整刻度的布局样式。
- *          Qwt 库提供了对数刻度和线性刻度的具体实现。
- * @sa QwtLinearScaleEngine, QwtLogScaleEngine
- * \endif
  */
 class QWT_EXPORT QwtScaleEngine
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Layout attributes
-	 * \sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 布局属性
-	 * \sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
-	 * \endif
+	 * @sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
 	 */
 	enum Attribute
 	{
@@ -9732,16 +7836,10 @@ public:
 		Symmetric = 0x02,
 
 		/**
-		 * \if ENGLISH
 		 * The endpoints of the scale are supposed to be equal the
 		 * outmost included values plus the specified margins (see setMargins()).
 		 * If this attribute is *not* set, the endpoints of the scale will
 		 * be integer multiples of the step size.
-		 * \endif
-		 * \if CHINESE
-		 * 刻度的端点值 = 最外侧包含值 + 指定边距（详见 setMargins() 方法）。
-		 * 若未设置此属性，刻度的端点值将为步长的整数倍。
-		 * \endif
 		 */
 		Floating = 0x04,
 
@@ -9756,29 +7854,29 @@ public:
 
 	/// Set the base
 	void setBase(uint base);
-	/// \return the base
+	/// @return the base
 	uint base() const;
 
 	/// Set an attribute
 	void setAttribute(Attribute, bool on = true);
-	/// \return true if an attribute is set
+	/// @return true if an attribute is set
 	bool testAttribute(Attribute) const;
 
 	/// Set attributes
 	void setAttributes(Attributes);
-	/// \return the attributes
+	/// @return the attributes
 	Attributes attributes() const;
 
 	/// Set the reference value
 	void setReference(double);
-	/// \return the reference value
+	/// @return the reference value
 	double reference() const;
 
 	/// Set the margins
 	void setMargins(double lower, double upper);
-	/// \return the lower margin
+	/// @return the lower margin
 	double lowerMargin() const;
-	/// \return the upper margin
+	/// @return the upper margin
 	double upperMargin() const;
 
 	/// Align and divide an interval
@@ -9789,7 +7887,7 @@ public:
 
 	/// Set the transformation
 	void setTransformation(QwtTransform*);
-	/// \return the transformation
+	/// @return the transformation
 	QwtTransform* transformation() const;
 
 protected:
@@ -9805,28 +7903,22 @@ protected:
 	QwtInterval buildInterval(double value) const;
 
 private:
-	Q_DISABLE_COPY(QwtScaleEngine)
+	QwtScaleEngine(const QwtScaleEngine&) = delete;
+	QwtScaleEngine& operator=(const QwtScaleEngine&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtScaleEngine)
 };
 
 /**
- * \if ENGLISH
  * @brief A scale engine for linear scales
  * @details The step size will fit into the pattern \f$\left\{ 1,2,5\right\} \cdot 10^{n}\f$, where n is an integer.
- * \endif
- * \if CHINESE
- * @brief 线性刻度引擎
- * @details 步长将符合模式 \f$\left\{ 1,2,5\right\} \cdot 10^{n}\f$，其中 n 为整数。
- * \endif
  */
 
 class QWT_EXPORT QwtLinearScaleEngine : public QwtScaleEngine
 {
 public:
 	explicit QwtLinearScaleEngine(uint base = 10);
-	virtual ~QwtLinearScaleEngine();
+	~QwtLinearScaleEngine() override;
 
 	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
@@ -9843,28 +7935,19 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief A scale engine for logarithmic scales
  * @details The step size is measured in *decades* and the major step size will be adjusted
  *          to fit the pattern \f$\left\{ 1,2,3,5\right\} \cdot 10^{n}\f$, where n is a natural
  *          number including zero.
  *
  * @warning The step size as well as the margins are measured in *decades*.
- * \endif
- * \if CHINESE
- * @brief 对数刻度引擎
- * @details 步长以*十倍*为单位测量，主步长将调整为符合模式 \f$\left\{ 1,2,3,5\right\} \cdot 10^{n}\f$，
- *          其中 n 为包括零在内的自然数。
- *
- * @warning 步长和边距均以*十倍*为单位测量。
- * \endif
  */
 
 class QWT_EXPORT QwtLogScaleEngine : public QwtScaleEngine
 {
 public:
 	explicit QwtLogScaleEngine(uint base = 10);
-	virtual ~QwtLogScaleEngine();
+	~QwtLogScaleEngine() override;
 
 	virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
@@ -9907,7 +7990,6 @@ class QwtTransform;
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief A Widget which contains a scale
  * @details This Widget can be used to decorate composite widgets with a scale.
  *
@@ -9926,27 +8008,6 @@ class QwtColorMap;
  * │      │       │      │ 2  -│       │
  * │      │       │      │     │       │
  * │      │       │      │ 1  -│       │_________________________________
- * \endif
- * \if CHINESE
- * @brief 包含刻度的控件
- * @details 此控件可用于为复合控件添加刻度装饰。
- *
- * 布局示意图：
- * │<----------------------------- plot yleft edge
- * │      │       │      │tick ┌       ┌-----------------------------------
- * │      │       │      │label│       │
- * │edge  │YLeft  │space │ 6  -│margin │
- * │margin│Title  │      │     │       │
- * │      │       │      │ 5  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 4  -│       │ plot cavans
- * │      │       │      │     │       │
- * │      │       │      │ 3  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 2  -│       │
- * │      │       │      │     │       │
- * │      │       │      │ 1  -│       │_________________________________
- * \endif
  */
 
 class QWT_EXPORT QwtScaleWidget : public QWidget
@@ -9964,12 +8025,7 @@ public:
 	Q_DECLARE_FLAGS(LayoutFlags, LayoutFlag)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Built-in actions
-	 * \endif
-	 * \if CHINESE
-	 * @brief 内置的动作
-	 * \endif
 	 */
 	enum BuiltinActions
 	{
@@ -9989,48 +8045,28 @@ public:
 	/// Constructor with alignment
 	explicit QwtScaleWidget(QwtScaleDraw::Alignment, QWidget* parent = nullptr);
 	/// Destructor
-	virtual ~QwtScaleWidget();
+	~QwtScaleWidget() override;
 
 Q_SIGNALS:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted whenever the scale division changes
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当刻度分度发生变化时发出的信号
-	 * \endif
 	 */
 	void scaleDivChanged();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Request to change the axis scale division
 	 * @details Emitted when built-in actions (zoom/pan) need to alter the scale.
 	 *          Unlike normal QwtPlot updates, here the axis drives the change:
 	 *          QwtPlot receives this signal and adjusts item bounds accordingly.
 	 * @param min Minimum scale division requested
 	 * @param max Maximum scale division requested
-	 * \endif
-	 * \if CHINESE
-	 * @brief 坐标轴主动请求变更刻度范围
-	 * @details 内置动作（缩放/平移）需要改变刻度时发射此信号。
-	 *          与常规 QwtPlot 更新不同，此处由轴驱动变更：QwtPlot 接收信号后调整图元范围。
-	 * @param min 请求的最小刻度范围
-	 * @param max 请求的最大刻度范围
-	 * \endif
 	 */
 	void requestScaleRangeUpdate(double min, double max);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the axis selection state changes
 	 * @param selected True if the axis is selected, false otherwise
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当前轴被选中状态发生变化发射信号
-	 * @param selected true 表示选中，false 表示取消选中
-	 * \endif
 	 */
 	void selectionChanged(bool selected);
 
@@ -10039,19 +8075,19 @@ public:
 	void setTitle(const QString& title);
 	/// Set the title
 	void setTitle(const QwtText& title);
-	/// \return the title
+	/// @return the title
 	QwtText title() const;
 
 	/// Set a layout flag
 	void setLayoutFlag(LayoutFlag, bool on);
-	/// \return true if a layout flag is set
+	/// @return true if a layout flag is set
 	bool testLayoutFlag(LayoutFlag) const;
 
 	/// Set the border distances
 	void setBorderDist(int dist1, int dist2);
-	/// \return the start border distance
+	/// @return the start border distance
 	int startBorderDist() const;
-	/// \return the end border distance
+	/// @return the end border distance
 	int endBorderDist() const;
 
 	/// Get the border distance hint
@@ -10061,24 +8097,24 @@ public:
 	void getMinBorderDist(int& start, int& end) const;
 	/// Set the minimum border distances
 	void setMinBorderDist(int start, int end);
-	/// \return the start minimum border distance
+	/// @return the start minimum border distance
 	int startMinBorderDist() const;
-	/// \return the end minimum border distance
+	/// @return the end minimum border distance
 	int endMinBorderDist() const;
 
 	/// Set the margin
 	void setMargin(int);
-	/// \return the margin
+	/// @return the margin
 	int margin() const;
 
 	/// Set the spacing
 	void setSpacing(int);
-	/// \return the spacing
+	/// @return the spacing
 	int spacing() const;
 
 	/// Set the edge margin (offset between axis and plot canvas)
 	void setEdgeMargin(int offset);
-	/// \return the edge margin
+	/// @return the edge margin
 	int edgeMargin() const;
 
 	/// Set the scale division
@@ -10088,9 +8124,9 @@ public:
 
 	/// Set the scale draw
 	void setScaleDraw(QwtScaleDraw*);
-	/// \return the scale draw (const version)
+	/// @return the scale draw (const version)
 	const QwtScaleDraw* scaleDraw() const;
-	/// \return the scale draw
+	/// @return the scale draw
 	QwtScaleDraw* scaleDraw();
 
 	/// Set the label alignment
@@ -10100,28 +8136,28 @@ public:
 
 	/// Enable/disable the color bar
 	void setColorBarEnabled(bool);
-	/// \return true if color bar is enabled
+	/// @return true if color bar is enabled
 	bool isColorBarEnabled() const;
 
 	/// Set the color bar width
 	void setColorBarWidth(int);
-	/// \return the color bar width
+	/// @return the color bar width
 	int colorBarWidth() const;
 
 	/// Set the color map
 	void setColorMap(const QwtInterval&, QwtColorMap*);
 
-	/// \return the color bar interval
+	/// @return the color bar interval
 	QwtInterval colorBarInterval() const;
-	/// \return the color map
+	/// @return the color map
 	const QwtColorMap* colorMap() const;
 
 	virtual QSize sizeHint() const override;
 	virtual QSize minimumSizeHint() const override;
 
-	/// \return the height required for the title for a given width
+	/// @return the height required for the title for a given width
 	int titleHeightForWidth(int width) const;
-	/// \return the dimension required for a given length
+	/// @return the dimension required for a given length
 	int dimForLength(int length, const QFont& scaleFont) const;
 
 	/// Draw the color bar
@@ -10131,32 +8167,32 @@ public:
 
 	/// Set the alignment
 	void setAlignment(QwtScaleDraw::Alignment);
-	/// \return the alignment
+	/// @return the alignment
 	QwtScaleDraw::Alignment alignment() const;
 
-	/// \return the rectangle for the color bar
+	/// @return the rectangle for the color bar
 	QRectF colorBarRect(const QRectF&) const;
 
-	/// \return the scale rectangle (excluding color bar, margin, edge margin, border distances)
+	/// @return the scale rectangle (excluding color bar, margin, edge margin, border distances)
 	QRect scaleRect() const;
 	/// Set the text color (font color of the coordinate axis)
 	void setTextColor(const QColor& c);
-	/// \return the text color
+	/// @return the text color
 	QColor textColor() const;
 
 	/// Set the scale color (color of the coordinate axis)
 	void setScaleColor(const QColor& c);
-	/// \return the scale color
+	/// @return the scale color
 	QColor scaleColor() const;
 
 	/// Layout the scale
 	void layoutScale(bool update_geometry = true);
 
-	/// \return the axis ID for this scale widget
+	/// @return the axis ID for this scale widget
 	QwtAxisId axisID() const;
-	/// \return true if this is an X axis
+	/// @return true if this is an X axis
 	bool isXAxis() const;
-	/// \return true if this is a Y axis
+	/// @return true if this is a Y axis
 	bool isYAxis() const;
 	//===============================================
 	// Built-in action methods
@@ -10164,29 +8200,29 @@ public:
 
 	/// Enable/disable built-in actions
 	void setBuildinActions(BuiltinActionsFlags acts);
-	/// \return the built-in actions flags
+	/// @return the built-in actions flags
 	BuiltinActionsFlags buildinActions() const;
-	/// \return true if a built-in action is active
+	/// @return true if a built-in action is active
 	bool testBuildinActions(BuiltinActions ba) const;
 
 	/// Set the selected state
 	void setSelected(bool selected);
-	/// \return true if selected
+	/// @return true if selected
 	bool isSelected() const;
 
 	/// Set the selection color
 	void setSelectionColor(const QColor& color);
-	/// \return the selection color
+	/// @return the selection color
 	QColor selectionColor() const;
 
 	/// Set the zoom factor (default 1.2)
 	void setZoomFactor(double factor);
-	/// \return the zoom factor
+	/// @return the zoom factor
 	double zoomFactor() const;
 
 	/// Set the selected pen width offset
 	void setSelectedPenWidthOffset(qreal offset = 1);
-	/// \return the selected pen width offset
+	/// @return the selected pen width offset
 	qreal selectedPenWidthOffset() const;
 
 	/// Check if a point is on the scale area
@@ -10225,7 +8261,6 @@ class QwtScaleMap;
 class QwtInterval;
 
 /**
- * \if ENGLISH
  * @brief An abstract base class for widgets having a scale
  * @details The scale of an QwtAbstractScale is determined by a QwtScaleDiv
  *          definition that contains the boundaries and the ticks of the scale.
@@ -10234,16 +8269,6 @@ class QwtInterval;
  *          it is calculated from the boundaries using a QwtScaleEngine.
  *          The scale engine also decides the type of transformation of the scale
  *          (linear, logarithmic ...).
- * \endif
- * \if CHINESE
- * @brief 具有刻度的控件的抽象基类
- * @details QwtAbstractScale 的刻度由 QwtScaleDiv 定义确定，
- *          其中包含刻度的边界和刻度线。
- *          刻度使用 QwtScaleDraw 对象绘制。
- *          刻度划分可以显式分配 - 但通常
- *          它使用 QwtScaleEngine 从边界计算得出。
- *          刻度引擎还决定刻度的变换类型（线性、对数...）。
- * \endif
  */
 
 class QWT_EXPORT QwtAbstractScale : public QWidget
@@ -10263,7 +8288,7 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
 	explicit QwtAbstractScale( QWidget* parent = nullptr );
 
 	// Destructor for QwtAbstractScale
-	virtual ~QwtAbstractScale();
+	~QwtAbstractScale() override;
 
 	// Set scale by lower and upper bounds
 	void setScale( double lowerBound, double upperBound );
@@ -10358,8 +8383,7 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
 	virtual void scaleChange();
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtAbstractScale)
 };
 
 #endif
@@ -10372,7 +8396,6 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
 #define QWT_ABSTRACT_SLIDER_H
 
 /**
- * \if ENGLISH
  * @brief An abstract base class for slider widgets with a scale
  * @details A slider widget displays a value according to a scale.
  *          The class is designed as a common super class for widgets like
@@ -10383,15 +8406,6 @@ class QWT_EXPORT QwtAbstractScale : public QWidget
  *          which the value increments according to user inputs depend.
  *          Only for linear scales the number of steps correspond with
  *          a fixed step size.
- * \endif
- * \if CHINESE
- * @brief 带刻度的滑块控件的抽象基类
- * @details 滑块控件根据刻度显示值。
- *          该类设计为 QwtKnob、QwtDial 和 QwtSlider 等控件的公共基类。
- *          当滑块不是只读时，其值可以通过键盘、鼠标和滚轮输入来修改。
- *          滑块的范围被划分为多个步数，值根据用户输入按步数递增。
- *          只有在线性刻度下，步数才对应固定的步长。
- * \endif
  */
 
 class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
@@ -10416,7 +8430,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 	explicit QwtAbstractSlider( QWidget* parent = nullptr );
 
 	/// Destructor for QwtAbstractSlider (English only)
-	virtual ~QwtAbstractSlider();
+	~QwtAbstractSlider() override;
 
 	/// Set whether the slider is valid (English only)
 	void setValid( bool );
@@ -10482,53 +8496,28 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
   Q_SIGNALS:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Notify a change of value
 	 * @details When tracking is enabled (default setting),
 	 *          this signal will be emitted every time the value changes.
 	 * @param value New value
-	 * \sa setTracking(), sliderMoved()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 通知值变化
-	 * @details 当启用跟踪时（默认设置），每次值变化时都会发出此信号。
-	 * @param value 新值
-	 * \sa setTracking(), sliderMoved()
-	 * \endif
+	 * @sa setTracking(), sliderMoved()
 	 */
 	void valueChanged( double value );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user presses the movable part of the slider
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户按下滑块的可移动部分时发出的信号
-	 * \endif
 	 */
 	void sliderPressed();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user releases the movable part of the slider
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户释放滑块的可移动部分时发出的信号
-	 * \endif
 	 */
 	void sliderReleased();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user moves the slider with the mouse
 	 * @param value New value
-	 * \sa valueChanged()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户用鼠标移动滑块时发出的信号
-	 * @param value 新值
-	 * \sa valueChanged()
-	 * \endif
+	 * @sa valueChanged()
 	 */
 	void sliderMoved( double value );
 
@@ -10548,36 +8537,10 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 	/// Handle wheel events (English only)
 	virtual void wheelEvent( QWheelEvent* ) override;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Determine what to do when the user presses a mouse button
-	 * @param pos Mouse position
-	 * @return True when pos is a valid scroll position
-	 * \sa scrolledTo()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 确定当用户按下鼠标按钮时该做什么
-	 * @param pos 鼠标位置
-	 * @return 当 pos 是有效的滚动位置时返回 true
-	 * \sa scrolledTo()
-	 * \endif
-	 */
+	// Determine what to do when the user presses a mouse button
 	virtual bool isScrollPosition( const QPoint& pos ) const = 0;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Determine the value for a new position of the movable part of the slider
-	 * @param pos Mouse position
-	 * @return Value for the mouse position
-	 * \sa isScrollPosition()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 确定滑块可移动部分新位置的值
-	 * @param pos 鼠标位置
-	 * @return 鼠标位置对应的值
-	 * \sa isScrollPosition()
-	 * \endif
-	 */
+	// Determine the value for a new position of the movable part of the slider
 	virtual double scrolledTo( const QPoint& pos ) const = 0;
 
 	/// Increment the value by a number of steps (English only)
@@ -10598,8 +8561,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 	double alignedValue( double ) const;
 	double boundedValue( double ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtAbstractSlider)
 };
 
 #endif
@@ -10614,28 +8576,19 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 class QwtScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief The Slider Widget
  * @details QwtSlider is a slider widget which operates on an interval
  *          of type double. Its position is related to a scale showing
  *          the current value.
  *          The slider can be customized by having a through, a groove - or both.
- * \image html sliders.png
- * \endif
- * \if CHINESE
- * @brief 滑块控件
- * @details QwtSlider 是一个在 double 类型区间上操作的滑块控件。其位置与显示
- *          当前值的刻度相关联。
- *          滑块可以通过拥有槽、凹槽或两者来进行自定义。
- * \image html sliders.png
- * \endif
+ * @image html sliders.png
  */
 
 class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 {
 	Q_OBJECT
 
-	Q_ENUMS( ScalePosition BackgroundStyle )
+	Q_ENUMS( ScalePosition )
 
 	Q_PROPERTY( Qt::Orientation orientation
 		READ orientation WRITE setOrientation )
@@ -10648,18 +8601,13 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 	Q_PROPERTY( QSize handleSize READ handleSize WRITE setHandleSize )
 	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
 	Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
+	Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Position of the scale
-	 * \sa QwtSlider(), setScalePosition(), setOrientation()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 刻度位置
-	 * \sa QwtSlider(), setScalePosition(), setOrientation()
-	 * \endif
+	 * @sa QwtSlider(), setScalePosition(), setOrientation()
 	 */
 	enum ScalePosition
 	{
@@ -10679,7 +8627,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 	explicit QwtSlider( Qt::Orientation, QWidget* parent = nullptr );
 
 	/// Destructor
-	virtual ~QwtSlider();
+	~QwtSlider() override;
 
 	/// Set orientation
 	void setOrientation( Qt::Orientation );
@@ -10715,6 +8663,11 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 	void setSpacing( int );
 	/// Return spacing
 	int spacing() const;
+
+	/// Set flat style
+	void setFlatStyle( bool );
+	/// Return flat style
+	bool flatStyle() const;
 
 	/// Return size hint
 	virtual QSize sizeHint() const override;
@@ -10775,8 +8728,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 	/// Initialize slider
 	void initSlider( Qt::Orientation );
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSlider)
 };
 
 #endif
@@ -10792,7 +8744,6 @@ class QwtScaleDraw;
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief The Thermometer Widget
  * @details QwtThermo is a widget which displays a value in an interval. It supports:
  *          - a horizontal or vertical layout;
@@ -10807,24 +8758,7 @@ class QwtColorMap;
  *          - QPalette::Highlight: Fill brush for the values above the alarm level
  *          - QPalette::WindowText: For the axis of the scale
  *          - QPalette::Text: For the labels of the scale
- * \sa QwtAbstractScale
- * \endif
- * \if CHINESE
- * @brief 温度计控件
- * @details QwtThermo 是一个在区间内显示值的控件。它支持：
- *          - 水平或垂直布局；
- *          - 范围；
- *          - 刻度；
- *          - 报警级别。
- *          填充颜色可以从可选的颜色映射计算。
- *          如果没有分配颜色映射，QwtThermo 使用控件调色板的以下颜色/画刷：
- *          - QPalette::Base：管道背景
- *          - QPalette::ButtonText：报警级别以下的填充画刷
- *          - QPalette::Highlight：报警级别以上的值的填充画刷
- *          - QPalette::WindowText：用于刻度轴
- *          - QPalette::Text：用于刻度标签
- * \sa QwtAbstractScale
- * \endif
+ * @sa QwtAbstractScale
  */
 class QWT_EXPORT QwtThermo : public QwtAbstractScale
 {
@@ -10845,19 +8779,14 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 	Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
 	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
 	Q_PROPERTY( int pipeWidth READ pipeWidth WRITE setPipeWidth )
+	Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 	Q_PROPERTY( double value READ value WRITE setValue USER true )
 
   public:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Position of the scale
-	 * \sa setScalePosition(), setOrientation()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 刻度的位置
-	 * \sa setScalePosition(), setOrientation()
-	 * \endif
+	 * @sa setScalePosition(), setOrientation()
 	 */
 	enum ScalePosition
 	{
@@ -10872,14 +8801,8 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Origin mode. This property specifies where the beginning of the liquid is placed.
-	 * \sa setOriginMode(), setOrigin()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 原点模式。此属性指定液体的起始位置。
-	 * \sa setOriginMode(), setOrigin()
-	 * \endif
+	 * @sa setOriginMode(), setOrigin()
 	 */
 	enum OriginMode
 	{
@@ -10896,7 +8819,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 	// Constructor
 	explicit QwtThermo( QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtThermo();
+	~QwtThermo() override;
 
 	// Set the orientation
 	void setOrientation( Qt::Orientation );
@@ -10960,6 +8883,11 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 	// Return the pipe width
 	int pipeWidth() const;
 
+	// Set flat style
+	void setFlatStyle( bool );
+	// Return flat style
+	bool flatStyle() const;
+
 	// Set the range flags
 	void setRangeFlags( QwtInterval::BorderFlags );
 	// Return the range flags
@@ -11009,8 +8937,7 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 	/// Layout the thermo
 	void layoutThermo( bool );
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtThermo)
 };
 
 #endif
@@ -11025,21 +8952,12 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 #include <qelapsedtimer.h>
 
 /**
- * \if ENGLISH
  * @brief QwtSystemClock provides high resolution clock time functions.
  *
  * Precision and time intervals are multiples of milliseconds (ms).
  *
  * ( QwtSystemClock is deprecated as QElapsedTimer offers the same precision )
- * \endif
  *
- * \if CHINESE
- * @brief QwtSystemClock 提供高分辨率时钟时间函数。
- *
- * 精度和时间间隔以毫秒 (ms) 为单位。
- *
- * ( QwtSystemClock 已弃用，因为 QElapsedTimer 提供相同的精度 )
- * \endif
  */
 
 class QWT_EXPORT QwtSystemClock
@@ -11084,145 +9002,103 @@ class QByteArray;
 class QwtGraphic;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing symbols
- * \endif
- * \if CHINESE
- * @brief 用于绘制符号的类
- * \endif
  */
 class QWT_EXPORT QwtSymbol
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Symbol Style
 	 * @sa setStyle(), style()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 符号样式
-	 * @sa setStyle(), style()
-	 * \endif
 	 */
 	enum Style
 	{
-		//! \if ENGLISH No Style. The symbol cannot be drawn. \endif \if CHINESE 无样式，符号无法绘制。 \endif
+		//! No Style. The symbol cannot be drawn.
 		NoSymbol = -1,
 
-		//! \if ENGLISH Ellipse or circle \endif \if CHINESE 椭圆或圆形 \endif
+		//! Ellipse or circle
 		Ellipse,
 
-		//! \if ENGLISH Rectangle \endif \if CHINESE 矩形 \endif
+		//! Rectangle
 		Rect,
 
-		//! \if ENGLISH Diamond \endif \if CHINESE 菱形 \endif
+		//! Diamond
 		Diamond,
 
-		//! \if ENGLISH Triangle pointing upwards \endif \if CHINESE 向上指向的三角形 \endif
+		//! Triangle pointing upwards
 		Triangle,
 
-		//! \if ENGLISH Triangle pointing downwards \endif \if CHINESE 向下指向的三角形 \endif
+		//! Triangle pointing downwards
 		DTriangle,
 
-		//! \if ENGLISH Triangle pointing upwards \endif \if CHINESE 向上指向的三角形 \endif
+		//! Triangle pointing upwards
 		UTriangle,
 
-		//! \if ENGLISH Triangle pointing left \endif \if CHINESE 向左指向的三角形 \endif
+		//! Triangle pointing left
 		LTriangle,
 
-		//! \if ENGLISH Triangle pointing right \endif \if CHINESE 向右指向的三角形 \endif
+		//! Triangle pointing right
 		RTriangle,
 
-		//! \if ENGLISH Cross (+) \endif \if CHINESE 十字 (+) \endif
+		//! Cross (+)
 		Cross,
 
-		//! \if ENGLISH Diagonal cross (X) \endif \if CHINESE 对角十字 (X) \endif
+		//! Diagonal cross (X)
 		XCross,
 
-		//! \if ENGLISH Horizontal line \endif \if CHINESE 水平线 \endif
+		//! Horizontal line
 		HLine,
 
-		//! \if ENGLISH Vertical line \endif \if CHINESE 垂直线 \endif
+		//! Vertical line
 		VLine,
 
-		//! \if ENGLISH X combined with + \endif \if CHINESE X 与 + 组合 \endif
+		//! X combined with +
 		Star1,
 
-		//! \if ENGLISH Six-pointed star \endif \if CHINESE 六角星 \endif
+		//! Six-pointed star
 		Star2,
 
-		//! \if ENGLISH Hexagon \endif \if CHINESE 六边形 \endif
+		//! Hexagon
 		Hexagon,
 
 		/**
-		 * \if ENGLISH
 		 * The symbol is represented by a painter path, where the
 		 * origin ( 0, 0 ) of the path coordinate system is mapped to
 		 * the position of the symbol.
 		 * @sa setPath(), path()
-		 * \endif
-		 * \if CHINESE
-		 * 符号由绘图路径表示，其中路径坐标系的原点 (0, 0) 映射到符号的位置。
-		 * @sa setPath(), path()
-		 * \endif
 		 */
 		Path,
 
 		/**
-		 * \if ENGLISH
 		 * The symbol is represented by a pixmap. The pixmap is centered
 		 * or aligned to its pin point.
 		 * @sa setPinPoint()
-		 * \endif
-		 * \if CHINESE
-		 * 符号由像素图表示。像素图居中或对齐到其锚点。
-		 * @sa setPinPoint()
-		 * \endif
 		 */
 		Pixmap,
 
 		/**
-		 * \if ENGLISH
 		 * The symbol is represented by a graphic. The graphic is centered
 		 * or aligned to its pin point.
 		 * @sa setPinPoint()
-		 * \endif
-		 * \if CHINESE
-		 * 符号由图形表示。图形居中或对齐到其锚点。
-		 * @sa setPinPoint()
-		 * \endif
 		 */
 		Graphic,
 
 		/**
-		 * \if ENGLISH
 		 * The symbol is represented by a SVG graphic. The graphic is centered
 		 * or aligned to its pin point.
 		 * @sa setPinPoint()
-		 * \endif
-		 * \if CHINESE
-		 * 符号由 SVG 图形表示。图形居中或对齐到其锚点。
-		 * @sa setPinPoint()
-		 * \endif
 		 */
 		SvgDocument,
 
 		/**
-		 * \if ENGLISH
 		 * Styles >= QwtSymbol::UserSymbol are reserved for derived
 		 * classes of QwtSymbol that overload drawSymbols() with
 		 * additional application specific symbol types.
-		 * \endif
-		 * \if CHINESE
-		 * 样式 >= QwtSymbol::UserSymbol 保留给 QwtSymbol 的派生类，
-		 * 这些派生类使用额外的应用程序特定符号类型重载 drawSymbols()。
-		 * \endif
 		 */
 		UserStyle = 1000
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Cache policy for symbol rendering
 	 *
 	 * Depending on the render engine and the complexity of the
@@ -11243,40 +9119,18 @@ class QWT_EXPORT QwtSymbol
 	 * @note The policy has no effect, when the symbol is painted
 	 *       to a vector graphics format ( PDF, SVG ).
 	 * @warning Since Qt 4.8 raster is the default backend on X11
-	 * \endif
-	 * \if CHINESE
-	 * @brief 符号渲染的缓存策略
-	 *
-	 * 根据渲染引擎和符号形状的复杂性，将符号渲染到像素图然后绘制该像素图可能更快。
-	 *
-	 * 例如，光栅绘制引擎是纯软件渲染器，在缓存模式下，绘制操作通常以与后备存储区的光栅操作结束，
-	 * 这通常比渲染多边形的算法更快。但对于可以利用硬件加速的图形管道，情况可能相反。
-	 *
-	 * 默认设置是 AutoCache
-	 *
-	 * @sa setCachePolicy(), cachePolicy()
-	 *
-	 * @note 当符号绘制到矢量图形格式（PDF、SVG）时，此策略无效。
-	 * @warning 从 Qt 4.8 开始，光栅是 X11 上的默认后端
-	 * \endif
 	 */
 	enum CachePolicy
 	{
-		//! \if ENGLISH Don't use a pixmap cache \endif \if CHINESE 不使用像素图缓存 \endif
+		//! Don't use a pixmap cache
 		NoCache,
 
-		//! \if ENGLISH Always use a pixmap cache \endif \if CHINESE 始终使用像素图缓存 \endif
+		//! Always use a pixmap cache
 		Cache,
 
 		/**
-		 * \if ENGLISH
 		 * Use a cache when one of the following conditions is true:
 		 * - The symbol is rendered with the software renderer ( QPaintEngine::Raster )
-		 * \endif
-		 * \if CHINESE
-		 * 当以下条件之一为真时使用缓存：
-		 * - 符号使用软件渲染器渲染 ( QPaintEngine::Raster )
-		 * \endif
 		 */
 		AutoCache
 	};
@@ -11374,26 +9228,17 @@ public:
 		const QPointF*, int numPoints ) const;
 
   private:
-	Q_DISABLE_COPY(QwtSymbol)
-
-	class PrivateData;
-	PrivateData* m_data;
+	QwtSymbol(const QwtSymbol&) = delete;
+	QwtSymbol& operator=(const QwtSymbol&) = delete;
+	QWT_DECLARE_PRIVATE(QwtSymbol)
 };
 
 /**
- * \if ENGLISH
  * @brief Draw the symbol at a specified position
  * @param painter Painter
  * @param pos Position of the symbol in screen coordinates
  * @sa drawSymbols()
- * \endif
  *
- * \if CHINESE
- * @brief 在指定位置绘制符号
- * @param painter 绘制器
- * @param pos 符号在屏幕坐标中的位置
- * @sa drawSymbols()
- * \endif
  */
 inline void QwtSymbol::drawSymbol(
 	QPainter* painter, const QPointF& pos ) const
@@ -11402,19 +9247,11 @@ inline void QwtSymbol::drawSymbol(
 }
 
 /**
- * \if ENGLISH
  * @brief Draw symbols at the specified points
  * @param painter Painter
  * @param points Positions of the symbols in screen coordinates
  * @sa drawSymbol()
- * \endif
  *
- * \if CHINESE
- * @brief 在指定点处绘制符号
- * @param painter 绘制器
- * @param points 符号在屏幕坐标中的位置
- * @sa drawSymbol()
- * \endif
  */
 inline void QwtSymbol::drawSymbols(
 	QPainter* painter, const QPolygonF& points ) const
@@ -11440,57 +9277,33 @@ class QPointF;
 class QColor;
 
 /**
- * \if ENGLISH
  * @brief A drawing primitive for displaying an interval like an error bar
- * \sa QwtPlotIntervalCurve
- * \endif
- * \if CHINESE
- * @brief 用于显示区间（如误差条）的绘图基元
- * \sa QwtPlotIntervalCurve
- * \endif
+ * @sa QwtPlotIntervalCurve
  */
 class QWT_EXPORT QwtIntervalSymbol
 {
   public:
-	//! \if ENGLISH Symbol style \endif \if CHINESE 符号样式 \endif
+	//! Symbol style
 	enum Style
 	{
-		//! \if ENGLISH No Style. The symbol cannot be drawn. \endif \if CHINESE 无样式。符号无法绘制。 \endif
+		//! No Style. The symbol cannot be drawn.
 		NoSymbol = -1,
 
 		/*!
-		   \if ENGLISH
 		   The symbol displays a line with caps at the beginning/end.
 		   The size of the caps depends on the symbol width().
-		   \endif
-		   \if CHINESE
-		   符号显示一条线，两端有帽盖。
-		   帽盖的大小取决于符号的宽度。
-		   \endif
 		 */
 		Bar,
 
 		/*!
-		   \if ENGLISH
 		   The symbol displays a plain rectangle using pen() and brush().
 		   The size of the rectangle depends on the translated interval and the width().
-		   \endif
-		   \if CHINESE
-		   符号使用 pen() 和 brush() 显示一个简单的矩形。
-		   矩形的大小取决于转换后的区间和宽度。
-		   \endif
 		 */
 		Box,
 
 		/*!
-		   \if ENGLISH
 		   Styles >= UserSymbol are reserved for derived classes of QwtIntervalSymbol
 		   that overload draw() with additional application specific symbol types.
-		   \endif
-		   \if CHINESE
-		   样式 >= UserSymbol 保留给 QwtIntervalSymbol 的派生类，
-		   这些类重载 draw() 以添加特定于应用程序的符号类型。
-		   \endif
 		 */
 		UserSymbol = 1000
 	};
@@ -11538,8 +9351,7 @@ class QWT_EXPORT QwtIntervalSymbol
 		const QPointF& from, const QPointF& to ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtIntervalSymbol)
 };
 
 #endif
@@ -11558,54 +9370,42 @@ class QPalette;
 class QRectF;
 
 /**
- * \if ENGLISH
  * @brief Directed rectangle representing bounding rectangle and orientation of a column
  * @details QwtColumnRect is a data structure that stores the horizontal and vertical
  *          intervals defining a column's extent, along with a direction that indicates
  *          how the column should be drawn. It is used by QwtColumnSymbol to determine
  *          the column's orientation and boundaries.
- * \endif
- * \if CHINESE
- * @brief 表示柱的边界矩形和方向的方向矩形
- * @details QwtColumnRect 是一个数据结构，存储定义柱范围的水平区间和垂直区间，
- *          以及指示柱绘制方式的方向。QwtColumnSymbol 使用它来确定柱的方向和边界。
- * \endif
  */
 class QWT_EXPORT QwtColumnRect
 {
 public:
-	//! \if ENGLISH Direction of the column \endif \if CHINESE 柱的方向 \endif
+	//! Direction of the column
 	enum Direction
 	{
-		//! \if ENGLISH From left to right \endif \if CHINESE 从左到右 \endif
+		//! From left to right
 		LeftToRight,
 
-		//! \if ENGLISH From right to left \endif \if CHINESE 从右到左 \endif
+		//! From right to left
 		RightToLeft,
 
-		//! \if ENGLISH From bottom to top \endif \if CHINESE 从下到上 \endif
+		//! From bottom to top
 		BottomToTop,
 
-		//! \if ENGLISH From top to bottom \endif \if CHINESE 从上到下 \endif
+		//! From top to bottom
 		TopToBottom
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Build a rectangle with invalid intervals directed BottomToTop
-	 * \endif
-	 * \if CHINESE
-	 * @brief 构建一个具有无效区间、方向为 BottomToTop 的矩形
-	 * \endif
 	 */
 	QwtColumnRect() : direction(BottomToTop)
 	{
 	}
 
-	//! \if ENGLISH Return a normalized QRect built from the intervals \endif \if CHINESE 返回从区间构建的标准化 QRect \endif
+	//! Return a normalized QRect built from the intervals
 	QRectF toRect() const;
 
-	//! \if ENGLISH Return Orientation \endif \if CHINESE 返回方向 \endif
+	//! Return Orientation
 	Qt::Orientation orientation() const
 	{
 		if (direction == LeftToRight || direction == RightToLeft)
@@ -11614,91 +9414,60 @@ public:
 		return Qt::Vertical;
 	}
 
-	//! \if ENGLISH Interval for the horizontal coordinates \endif \if CHINESE 水平坐标的区间 \endif
+	//! Interval for the horizontal coordinates
 	QwtInterval hInterval;
 
-	//! \if ENGLISH Interval for the vertical coordinates \endif \if CHINESE 垂直坐标的区间 \endif
+	//! Interval for the vertical coordinates
 	QwtInterval vInterval;
 
-	//! \if ENGLISH Direction \endif \if CHINESE 方向 \endif
+	//! Direction
 	Direction direction;
 };
 
 /**
- * \if ENGLISH
  * @brief A drawing primitive for columns
  * @details QwtColumnSymbol defines how columns are rendered in column-based charts
  *          like bar charts. It provides different styles (Box, etc.) and frame styles
  *          (Plain, Raised, NoFrame) to customize the appearance of column graphics.
  *          The symbol can be extended by deriving new types with UserStyle.
- * \endif
- * \if CHINESE
- * @brief 柱的绘图基元
- * @details QwtColumnSymbol 定义了柱状图等图表中柱的渲染方式。它提供不同的样式
- *          （Box 等）和框架样式（Plain、Raised、NoFrame）来定制柱图形的外观。
- *          可以通过派生带有 UserStyle 的新类型来扩展符号。
- * \endif
  */
 class QWT_EXPORT QwtColumnSymbol
 {
 public:
 	/*!
-	   \if ENGLISH
-	   \brief Style
-	   \sa setStyle(), style()
-	   \endif
-	   \if CHINESE
-	   \brief 样式
-	   \sa setStyle(), style()
-	   \endif
+	   @brief Style
+	   @sa setStyle(), style()
 	 */
 	enum Style
 	{
-		//! \if ENGLISH No Style, the symbol draws nothing \endif \if CHINESE 无样式，符号不绘制任何内容 \endif
+		//! No Style, the symbol draws nothing
 		NoStyle = -1,
 
 		/*!
-		   \if ENGLISH
 		   The column is painted with a frame depending on the frameStyle() and lineWidth() using the palette().
-		   \endif
-		   \if CHINESE
-		   柱根据 frameStyle() 和 lineWidth() 使用 palette() 绘制一个框架。
-		   \endif
 		 */
 		Box,
 
 		/*!
-		   \if ENGLISH
 		   Styles >= QwtColumnSymbol::UserStyle are reserved for derived classes of QwtColumnSymbol
 		   that overload draw() with additional application specific symbol types.
-		   \endif
-		   \if CHINESE
-		   样式 >= QwtColumnSymbol::UserStyle 保留给 QwtColumnSymbol 的派生类，
-		   这些类重载 draw() 以添加特定于应用程序的符号类型。
-		   \endif
 		 */
 		UserStyle = 1000
 	};
 
 	/*!
-	   \if ENGLISH
-	   \brief Frame Style used in Box style()
-	   \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
-	   \endif
-	   \if CHINESE
-	   \brief Box 样式中使用的框架样式
-	   \sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
-	   \endif
+	   @brief Frame Style used in Box style()
+	   @sa Style, setFrameStyle(), frameStyle(), setStyle(), setPalette()
 	 */
 	enum FrameStyle
 	{
-		//! \if ENGLISH No frame \endif \if CHINESE 无框架 \endif
+		//! No frame
 		NoFrame,
 
-		//! \if ENGLISH A plain frame style \endif \if CHINESE 普通框架样式 \endif
+		//! A plain frame style
 		Plain,
 
-		//! \if ENGLISH A raised frame style \endif \if CHINESE 凸起框架样式 \endif
+		//! A raised frame style
 		Raised
 	};
 
@@ -11740,10 +9509,10 @@ protected:
 	void drawBox(QPainter*, const QwtColumnRect&) const;
 
 private:
-	Q_DISABLE_COPY(QwtColumnSymbol)
+	QwtColumnSymbol(const QwtColumnSymbol&) = delete;
+	QwtColumnSymbol& operator=(const QwtColumnSymbol&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtColumnSymbol)
 };
 
 #endif
@@ -11758,21 +9527,12 @@ private:
 #include <qwidget.h>
 
 /**
- * \if ENGLISH
  * @brief The Wheel Widget
  * @details The wheel widget can be used to change values over a very large range
  *          in very small steps. Using the setMass() member, it can be configured
  *          as a flying wheel.
  *          The default range of the wheel is [0.0, 100.0]
- * \sa The radio example.
- * \endif
- * \if CHINESE
- * @brief 轮式控件
- * @details 轮式控件可用于在非常大的范围内以非常小的步长改变值。
- *          使用 setMass() 成员，可以将其配置为飞轮。
- *          轮的默认范围是 [0.0, 100.0]
- * \sa 收音机示例。
- * \endif
+ * @sa The radio example.
  */
 class QWT_EXPORT QwtWheel : public QWidget
 {
@@ -11803,12 +9563,13 @@ class QWT_EXPORT QwtWheel : public QWidget
 	Q_PROPERTY( int wheelWidth READ wheelWidth WRITE setWheelWidth )
 	Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
 	Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
+	Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
 	/// Constructor
 	explicit QwtWheel( QWidget* parent = nullptr );
 	/// Destructor
-	virtual ~QwtWheel();
+	~QwtWheel() override;
 
 	/// Return the current value
 	double value() const;
@@ -11842,6 +9603,11 @@ class QWT_EXPORT QwtWheel : public QWidget
 	void setBorderWidth( int );
 	/// Return the outer border width
 	int borderWidth() const;
+
+	/// Set flat style
+	void setFlatStyle( bool );
+	/// Return flat style
+	bool flatStyle() const;
 
 	/// Set inverted appearance
 	void setInverted( bool );
@@ -11903,51 +9669,27 @@ class QWT_EXPORT QwtWheel : public QWidget
   Q_SIGNALS:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Notify a change of value
 	 * @details When tracking is enabled this signal will be emitted every
 	 *          time the value changes.
 	 * @param[in] value New value
-	 * \sa setTracking()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 通知值变化
-	 * @details 当启用跟踪时，每次值变化时都会发出此信号。
-	 * @param[in] value 新值
-	 * \sa setTracking()
-	 * \endif
+	 * @sa setTracking()
 	 */
 	void valueChanged( double value );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user presses the wheel with the mouse
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户用鼠标按下轮时发出此信号
-	 * \endif
 	 */
 	void wheelPressed();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user releases the mouse
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户释放鼠标时发出此信号
-	 * \endif
 	 */
 	void wheelReleased();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the user moves the wheel with the mouse
 	 * @param[in] value New value
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当用户用鼠标移动轮时发出此信号
-	 * @param[in] value 新值
-	 * \endif
 	 */
 	void wheelMoved( double value );
 
@@ -11976,8 +9718,7 @@ class QWT_EXPORT QwtWheel : public QWidget
 	double alignedValue( double ) const;
 	double boundedValue( double ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtWheel)
 };
 
 #endif
@@ -11993,7 +9734,6 @@ class QPainter;
 class QPainterPath;
 
 /*!
-	\if ENGLISH
 	Defines abstract interface for arrow drawing routines.
 
 	Arrow needs to be drawn horizontally with arrow tip at coordinate 0,0.
@@ -12006,21 +9746,7 @@ class QPainterPath;
 
 	A new arrow implementation can be set with QwtPlotVectorField::setArrowSymbol(), whereby
 	ownership is transferred to the plot field.
-	\endif
 	*
-	\if CHINESE
-	定义箭头绘制例程的抽象接口。
-
-	箭头需要水平绘制，箭头尖端在坐标 0,0。
-	arrowLength() 应返回箭头的整个长度（需要
-	平移箭头以进行尾部/中心对齐）。
-	setArrowLength() 以像素为单位定义箭头长度（屏幕坐标）。它可以
-	被实现为调整其他几何属性，例如
-	箭头头部的大小和宽度。它 _总是_ 在 paint() 之前被调用。
-
-	新的箭头实现可以通过 QwtPlotVectorField::setArrowSymbol() 设置，
-	所有权将转移到绘图字段。
-	\endif
  */
 class QWT_EXPORT QwtVectorFieldSymbol
 {
@@ -12038,19 +9764,14 @@ class QWT_EXPORT QwtVectorFieldSymbol
 	virtual void paint( QPainter* ) const = 0;
 
   private:
-	Q_DISABLE_COPY(QwtVectorFieldSymbol)
+	QwtVectorFieldSymbol(const QwtVectorFieldSymbol&) = delete;
+	QwtVectorFieldSymbol& operator=(const QwtVectorFieldSymbol&) = delete;
 };
 
 /*!
-	\if ENGLISH
 	Arrow implementation that draws a filled arrow with outline, using
 	a triangular head of constant width.
-	\endif
 	*
-	\if CHINESE
-	箭头实现，绘制带轮廓的填充箭头，使用
-	恒定宽度的三角形头部。
-	\endif
  */
 class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
@@ -12068,20 +9789,13 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 	virtual void paint( QPainter* ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtVectorFieldArrow)
 };
 
 /*!
-	\if ENGLISH
 	Arrow implementation that only used lines, with optionally a filled arrow or only
 	lines.
-	\endif
 	*
-	\if CHINESE
-	箭头实现，仅使用线条，可选择填充箭头或仅
-	线条。
-	\endif
  */
 class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
@@ -12099,8 +9813,7 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 	virtual void paint( QPainter* ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtVectorFieldThinArrow)
 };
 
 #endif
@@ -12116,7 +9829,6 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief A cubic polynomial without constant term
  *
  * QwtSplinePolynomial is a 3rd degree polynomial
@@ -12127,19 +9839,6 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
  * as the translation is known from the corresponding polygon points.
  *
  * @sa QwtSplineC1
- * \endif
- *
- * \if CHINESE
- * @brief 无常数项的三次多项式
- *
- * QwtSplinePolynomial 是一个三次多项式，
- * 形式为：y = c3 * x³ + c2 * x² + c1 * x;
- *
- * QwtSplinePolynomial 通常与多边形插值结合使用，
- * 由于平移可以从对应的多边形点得知，因此不需要存储常数项（c0）。
- *
- * @sa QwtSplineC1
- * \endif
  */
 class QWT_EXPORT QwtSplinePolynomial
 {
@@ -12182,21 +9881,11 @@ Q_DECLARE_TYPEINFO( QwtSplinePolynomial, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( QwtSplinePolynomial )
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @param[in] a3 Coefficient of the cubic summand
  * @param[in] a2 Coefficient of the quadratic summand
  * @param[in] a1 Coefficient of the linear summand
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * @param[in] a3 三次项系数
- * @param[in] a2 二次项系数
- * @param[in] a1 线性项系数
- * \endif
  */
 inline QwtSplinePolynomial::QwtSplinePolynomial( double a3, double a2, double a1 )
 	: c3( a3 )
@@ -12206,19 +9895,10 @@ inline QwtSplinePolynomial::QwtSplinePolynomial( double a3, double a2, double a1
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two polynomials for equality
  *
  * @param[in] other Other polynomial
  * @return true, when both polynomials have the same coefficients
- * \endif
- *
- * \if CHINESE
- * @brief 比较两个多项式是否相等
- *
- * @param[in] other 另一个多项式
- * @return 当两个多项式具有相同系数时返回 true
- * \endif
  */
 inline bool QwtSplinePolynomial::operator==( const QwtSplinePolynomial& other ) const
 {
@@ -12226,19 +9906,10 @@ inline bool QwtSplinePolynomial::operator==( const QwtSplinePolynomial& other ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two polynomials for inequality
  *
  * @param[in] other Other polynomial
  * @return true, when the polynomials have different coefficients
- * \endif
- *
- * \if CHINESE
- * @brief 比较两个多项式是否不相等
- *
- * @param[in] other 另一个多项式
- * @return 当多项式具有不同系数时返回 true
- * \endif
  */
 inline bool QwtSplinePolynomial::operator!=( const QwtSplinePolynomial& other ) const
 {
@@ -12246,19 +9917,10 @@ inline bool QwtSplinePolynomial::operator!=( const QwtSplinePolynomial& other ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Value at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处的多项式值
- *
- * @param[in] x 参数
- * @return x 处的值
- * \endif
  */
 inline double QwtSplinePolynomial::valueAt( double x ) const
 {
@@ -12266,19 +9928,10 @@ inline double QwtSplinePolynomial::valueAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of the first derivate of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Slope at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处多项式的一阶导数值
- *
- * @param[in] x 参数
- * @return x 处的斜率
- * \endif
  */
 inline double QwtSplinePolynomial::slopeAt( double x ) const
 {
@@ -12286,19 +9939,10 @@ inline double QwtSplinePolynomial::slopeAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of the second derivate of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Curvature at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处多项式的二阶导数值
- *
- * @param[in] x 参数
- * @return x 处的曲率
- * \endif
  */
 inline double QwtSplinePolynomial::curvatureAt( double x ) const
 {
@@ -12306,7 +9950,6 @@ inline double QwtSplinePolynomial::curvatureAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial including 2 points with
  *        specific values for the 1st derivates at these points.
  *
@@ -12317,19 +9960,6 @@ inline double QwtSplinePolynomial::curvatureAt( double x ) const
  *
  * @return Coefficients of the polynomials
  * @note The missing constant term of the polynomial is p1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 找出包含两个点及其一阶导数值的多项式系数
- *
- * @param[in] p1 第一个点
- * @param[in] m1 第一个点处的一阶导数值
- * @param[in] p2 第二个点
- * @param[in] m2 第二个点处的一阶导数值
- *
- * @return 多项式系数
- * @note 多项式缺失的常数项为 p1.y()
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 	const QPointF& p1, double m1, const QPointF& p2, double m2 )
@@ -12338,7 +9968,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial from the offset between 2 points
  *        and specific values for the 1st derivates at these points.
  *
@@ -12348,18 +9977,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
  * @param[in] m2 Value of the first derivate at p2
  *
  * @return Coefficients of the polynomials
- * \endif
- *
- * \if CHINESE
- * @brief 从两点之间的偏移量及其一阶导数值找出多项式系数
- *
- * @param[in] dx X 偏移量
- * @param[in] dy Y 偏移量
- * @param[in] m1 第一个点处的一阶导数值
- * @param[in] m2 第二个点处的一阶导数值
- *
- * @return 多项式系数
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 	double dx, double dy, double m1, double m2 )
@@ -12371,7 +9988,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial including 2 points with
  *        specific values for the 2nd derivates at these points.
  *
@@ -12382,19 +9998,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
  *
  * @return Coefficients of the polynomials
  * @note The missing constant term of the polynomial is p1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 找出包含两个点及其二阶导数值的多项式系数
- *
- * @param[in] p1 第一个点
- * @param[in] cv1 第一个点处的二阶导数值
- * @param[in] p2 第二个点
- * @param[in] cv2 第二个点处的二阶导数值
- *
- * @return 多项式系数
- * @note 多项式缺失的常数项为 p1.y()
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
 	const QPointF& p1, double cv1, const QPointF& p2, double cv2 )
@@ -12403,7 +10006,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial from the offset between 2 points
  *        and specific values for the 2nd derivates at these points.
  *
@@ -12413,18 +10015,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
  * @param[in] cv2 Value of the second derivate at p2
  *
  * @return Coefficients of the polynomials
- * \endif
- *
- * \if CHINESE
- * @brief 从两点之间的偏移量及其二阶导数值找出多项式系数
- *
- * @param[in] dx X 偏移量
- * @param[in] dy Y 偏移量
- * @param[in] cv1 第一个点处的二阶导数值
- * @param[in] cv2 第二个点处的二阶导数值
- *
- * @return 多项式系数
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
 	double dx, double dy, double cv1, double cv2 )
@@ -12455,7 +10045,6 @@ QWT_EXPORT QDebug operator<<( QDebug, const QwtSplinePolynomial& );
 #include <qpoint.h>
 
 /**
- * \if ENGLISH
  * @brief Curve parametrization used for a spline interpolation
  *
  * Parametrization is the process of finding a parameter value for
@@ -12480,30 +10069,6 @@ QWT_EXPORT QDebug operator<<( QDebug, const QwtSplinePolynomial& );
  *       approximation of the curve length.
  *
  * @sa QwtSpline::setParametrization()
- * \endif
- *
- * \if CHINESE
- * @brief 用于样条插值的曲线参数化
- *
- * 参数化是为每个曲线点找到参数值的过程——通常与某些物理量相关
- * （距离、时间等）。
- *
- * 通常累积曲线长度是参数化的预期方式，但由于插值曲线预先未知，
- * 需要使用近似方法。
- *
- * 值通过累积增量来计算，增量由 QwtSplineParametrization 提供。
- * 由于曲线参数需要单调递增，每个增量都需要为正值。
- *
- * - t[0] = 0;
- * - t[i] = t[i-1] + valueIncrement( point[i-1], p[i] );
- *
- * QwtSplineParametrization 提供了最常用的参数化类型，
- * 并提供了注入自定义实现的接口。
- *
- * @note 最相关的参数化类型是尝试提供曲线长度的近似。
- *
- * @sa QwtSpline::setParametrization()
- * \endif
  */
 class QWT_EXPORT QwtSplineParametrization
 {
@@ -12513,13 +10078,13 @@ class QWT_EXPORT QwtSplineParametrization
 	{
 		/*!
 		   No parametrization: t[i] = x[i]
-		   \sa valueIncrementX()
+		   @sa valueIncrementX()
 		 */
 		ParameterX,
 
 		/*!
 		   No parametrization: t[i] = y[i]
-		   \sa valueIncrementY()
+		   @sa valueIncrementY()
 		 */
 		ParameterY,
 
@@ -12531,7 +10096,7 @@ class QWT_EXPORT QwtSplineParametrization
 		   recording the position of a body, that is moving with constant
 		   speed every n seconds.
 
-		   \sa valueIncrementUniform()
+		   @sa valueIncrementUniform()
 		 */
 		ParameterUniform,
 
@@ -12541,7 +10106,7 @@ class QWT_EXPORT QwtSplineParametrization
 		   The chordal length is the most commonly used approximation for
 		   the curve length.
 
-		   \sa valueIncrementChordal()
+		   @sa valueIncrementChordal()
 		 */
 		ParameterChordal,
 
@@ -12553,7 +10118,7 @@ class QWT_EXPORT QwtSplineParametrization
 		   Its name stems from the physical observations regarding
 		   the centripetal force, of a body moving along the curve.
 
-		   \sa valueIncrementCentripetal()
+		   @sa valueIncrementCentripetal()
 		 */
 		ParameterCentripetal,
 
@@ -12563,7 +10128,7 @@ class QWT_EXPORT QwtSplineParametrization
 		   Approximating the curve length by the manhattan length is faster
 		   than the chordal length, but usually gives worse results.
 
-		   \sa valueIncrementManhattan()
+		   @sa valueIncrementManhattan()
 		 */
 		ParameterManhattan
 	};
@@ -12591,23 +10156,12 @@ class QWT_EXPORT QwtSplineParametrization
 };
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterX value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return point2.x() - point1.x()
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterX 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return point2.x() - point1.x()
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementX(
 	const QPointF& point1, const QPointF& point2 )
@@ -12616,23 +10170,12 @@ inline double QwtSplineParametrization::valueIncrementX(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterY value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return point2.y() - point1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterY 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return point2.y() - point1.y()
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementY(
 	const QPointF& point1, const QPointF& point2 )
@@ -12641,23 +10184,12 @@ inline double QwtSplineParametrization::valueIncrementY(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterUniform value increment
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return 1.0
- * \endif
- *
- * \if CHINESE
- * @brief 计算 ParameterUniform 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return 1.0
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementUniform(
 	const QPointF& point1, const QPointF& point2 )
@@ -12669,23 +10201,12 @@ inline double QwtSplineParametrization::valueIncrementUniform(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterChordal value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return qSqrt( dx * dx + dy * dy )
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterChordal 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return qSqrt( dx * dx + dy * dy )
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementChordal(
 	const QPointF& point1, const QPointF& point2 )
@@ -12697,23 +10218,12 @@ inline double QwtSplineParametrization::valueIncrementChordal(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterCentripetal value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return The square root of a chordal increment
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterCentripetal 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return 弦长增量的平方根
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementCentripetal(
 	const QPointF& point1, const QPointF& point2 )
@@ -12722,23 +10232,12 @@ inline double QwtSplineParametrization::valueIncrementCentripetal(
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the ParameterManhattan value increment for 2 points
  *
  * @param[in] point1 First point
  * @param[in] point2 Second point
  *
  * @return | point2.x() - point1.x() | + | point2.y() - point1.y() |
- * \endif
- *
- * \if CHINESE
- * @brief 计算两个点的 ParameterManhattan 值增量
- *
- * @param[in] point1 第一个点
- * @param[in] point2 第二个点
- *
- * @return | point2.x() - point1.x() | + | point2.y() - point1.y() |
- * \endif
  */
 inline double QwtSplineParametrization::valueIncrementManhattan(
 	const QPointF& point1, const QPointF& point2 )
@@ -12771,7 +10270,6 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Base class for all splines
  *
  * A spline is a curve represented by a sequence of polynomials. Spline approximation
@@ -12799,124 +10297,59 @@ template< typename T > class QVector;
  * but not vice-versa.
  *
  * QwtSpline is the base class for spline approximations of any continuity.
- * \endif
- *
- * \if CHINESE
- * @brief 所有样条曲线的基类
- *
- * 样条曲线是由一系列多项式表示的曲线。样条逼近是为给定点集寻找多项式的过程。
- * 当算法保留初始点时，称为插值。
- *
- * 样条可以根据在片段起点/终点处满足的多项式条件进行分类：
- *
- * - 几何连续性
- *   - G0: 多项式连接
- *   - G1: 在连接点处一阶导数成比例
- *         因此曲线切线具有相同的方向，但不一定具有相同的大小。
- *         即 C1'(1) = (a,b,c) 和 C2'(0) = (k*a, k*b, k*c)。
- *   - G2: 在连接点处一阶和二阶导数成比例
- *
- * - 参数连续性
- *   - C0: 曲线连接
- *   - C1: 一阶导数相等
- *   - C2: 一阶和二阶导数相等
- *
- * 几何连续性要求几何形状连续，而参数连续性要求底层参数化也连续。
- * n 阶参数连续性意味着 n 阶几何连续性，但反之不成立。
- *
- * QwtSpline 是任意连续性样条逼近的基类。
- * \endif
  */
 class QWT_EXPORT QwtSpline
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Boundary type specifying the spline at its endpoints
 	 *
-	 * \sa setBoundaryType(), boundaryType()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 指定样条端点处的边界类型
-	 *
-	 * \sa setBoundaryType(), boundaryType()
-	 * \endif
+	 * @sa setBoundaryType(), boundaryType()
 	 */
 	enum BoundaryType
 	{
 		/**
-		 * \if ENGLISH
 		 * The polynomials at the start/endpoint depend on specific conditions
 		 *
-		 * \sa QwtSpline::BoundaryCondition
-		 * \endif
-		 * \if CHINESE
-		 * 起点/终点处的多项式取决于特定条件
-		 *
-		 * \sa QwtSpline::BoundaryCondition
-		 * \endif
+		 * @sa QwtSpline::BoundaryCondition
 		 */
 		ConditionalBoundaries,
 
 		/**
-		 * \if ENGLISH
 		 * The polynomials at the start/endpoint are found by using
 		 * imaginary additional points. Additional points at the end
 		 * are found by translating points from the beginning or v.v.
-		 * \endif
-		 * \if CHINESE
-		 * 起点/终点处的多项式通过使用虚拟附加点来确定。
-		 * 终点的附加点通过平移起始点的点或反之来找到。
-		 * \endif
 		 */
 		PeriodicPolygon,
 
 		/**
-		 * \if ENGLISH
 		 * ClosedPolygon is similar to PeriodicPolygon beside, that
 		 * the interpolation includes the connection between the last
 		 * and the first control point.
 		 *
-		 * \note Only works for parametrizations, where the parameter increment
+		 * @note Only works for parametrizations, where the parameter increment
 		 *      for the the final closing line is positive.
 		 *      This excludes QwtSplineParametrization::ParameterX and
 		 *      QwtSplineParametrization::ParameterY
-		 * \endif
-		 * \if CHINESE
-		 * ClosedPolygon 与 PeriodicPolygon 类似，但插值包含
-		 * 最后一个和第一个控制点之间的连接。
-		 *
-		 * \note 仅适用于参数增量为正的参数化，
-		 *      即最终闭合线的参数增量为正。
-		 *      这不包括 QwtSplineParametrization::ParameterX 和
-		 *      QwtSplineParametrization::ParameterY
-		 * \endif
 		 */
 
 		ClosedPolygon
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief position of a boundary condition
-	 * \sa boundaryCondition(), boundaryValue()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 边界条件的位置
-	 * \sa boundaryCondition(), boundaryValue()
-	 * \endif
+	 * @sa boundaryCondition(), boundaryValue()
 	 */
 	enum BoundaryPosition
 	{
-		//! \if ENGLISH the condition is at the beginning of the polynomial \endif \if CHINESE 条件在多项式的起始处 \endif
+		//! the condition is at the beginning of the polynomial
 		AtBeginning,
 
-		//! \if ENGLISH the condition is at the end of the polynomial \endif \if CHINESE 条件在多项式的结束处 \endif
+		//! the condition is at the end of the polynomial
 		AtEnd
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Boundary condition
 	 *
 	 * A spline algorithm calculates polynomials by looking
@@ -12924,82 +10357,42 @@ class QWT_EXPORT QwtSpline
 	 * additional rules are necessary to compensate the missing
 	 * points.
 	 *
-	 * \sa boundaryCondition(), boundaryValue()
-	 * \sa QwtSplineC2::BoundaryConditionC2
-	 * \endif
-	 * \if CHINESE
-	 * @brief 边界条件
-	 *
-	 * 样条算法通过查看前后几个点（locality()）来计算多项式。
-	 * 在端点处需要额外的规则来补偿缺失的点。
-	 *
-	 * \sa boundaryCondition(), boundaryValue()
-	 * \sa QwtSplineC2::BoundaryConditionC2
-	 * \endif
+	 * @sa boundaryCondition(), boundaryValue()
+	 * @sa QwtSplineC2::BoundaryConditionC2
 	 */
 	enum BoundaryCondition
 	{
 		/**
-		 * \if ENGLISH
 		 * The first derivative at the end point is given
-		 * \sa boundaryValue()
-		 * \endif
-		 * \if CHINESE
-		 * 给定终点处的一阶导数
-		 * \sa boundaryValue()
-		 * \endif
+		 * @sa boundaryValue()
 		 */
 		Clamped1,
 
 		/**
-		 * \if ENGLISH
 		 * The second derivative at the end point is given
 		 *
-		 * \sa boundaryValue()
-		 * \note a condition having a second derivative of 0
+		 * @sa boundaryValue()
+		 * @note a condition having a second derivative of 0
 		 *      is also called "natural".
-		 * \endif
-		 * \if CHINESE
-		 * 给定终点处的二阶导数
-		 *
-		 * \sa boundaryValue()
-		 * \note 二阶导数为 0 的条件也称为"自然"条件。
-		 * \endif
 		 */
 		Clamped2,
 
 		/**
-		 * \if ENGLISH
 		 * The third derivative at the end point is given
 		 *
-		 * \sa boundaryValue()
-		 * \note a condition having a third derivative of 0
+		 * @sa boundaryValue()
+		 * @note a condition having a third derivative of 0
 		 *      is also called "parabolic runout".
-		 * \endif
-		 * \if CHINESE
-		 * 给定终点处的三阶导数
-		 *
-		 * \sa boundaryValue()
-		 * \note 三阶导数为 0 的条件也称为"抛物线延伸"。
-		 * \endif
 		 */
 		Clamped3,
 
 		/**
-		 * \if ENGLISH
 		 * The first derivate at the endpoint is related to the first derivative
 		 * at its neighbour by the boundary value. F,e when the boundary
 		 * value at the end is 1.0 then the slope at the last 2 points is
 		 * the same.
 		 *
-		 * \sa boundaryValue().
-		 * \endif
-		 * \if CHINESE
-		 * 终点处的一阶导数与其相邻点的一阶导数通过边界值相关联。
-		 * 例如，当终点的边界值为 1.0 时，最后两个点的斜率相同。
-		 *
-		 * \sa boundaryValue().
-		 * \endif
+		 * @sa boundaryValue().
 		 */
 		LinearRunout
 	};
@@ -13044,31 +10437,23 @@ class QWT_EXPORT QwtSpline
 	virtual uint locality() const;
 
   private:
-	Q_DISABLE_COPY(QwtSpline)
+	QwtSpline(const QwtSpline&) = delete;
+	QwtSpline& operator=(const QwtSpline&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSpline)
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for spline interpolation
  *
  * Spline interpolation is the process of interpolating a set of points
  * piecewise with polynomials. The initial set of points is preserved.
- * \endif
- *
- * \if CHINESE
- * @brief 样条插值基类
- *
- * 样条插值是用多项式分段插值一组点的过程。初始点集被保留。
- * \endif
  */
 class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 {
   public:
 	QwtSplineInterpolating();
-	virtual ~QwtSplineInterpolating();
+	~QwtSplineInterpolating() override;
 
 	virtual QPolygonF equidistantPolygon( const QPolygonF&,
 		double distance, bool withNodes ) const;
@@ -13080,31 +10465,23 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const = 0;
 
   private:
-	Q_DISABLE_COPY(QwtSplineInterpolating)
+	QwtSplineInterpolating(const QwtSplineInterpolating&) = delete;
+	QwtSplineInterpolating& operator=(const QwtSplineInterpolating&) = delete;
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for spline interpolations with G1 (first order geometric) continuity
  *
  * Provides first order geometric continuity (G1) between adjoining curves.
- * \endif
- *
- * \if CHINESE
- * @brief 提供 G1（一阶几何）连续性的样条插值基类
- *
- * 在相邻曲线之间提供一阶几何连续性 (G1)。
- * \endif
  */
 class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
 {
   public:
 	QwtSplineG1();
-	virtual ~QwtSplineG1();
+	~QwtSplineG1() override;
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for spline interpolations with C1 (first order parametric) continuity
  *
  * All interpolations with C1 continuity are based on rules for finding
@@ -13113,24 +10490,13 @@ class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
  * For non-parametric splines those points are the curve points, while
  * for parametric splines the calculation is done twice using a parameter value t.
  *
- * \sa QwtSplineParametrization
- * \endif
- *
- * \if CHINESE
- * @brief 提供 C1（一阶参数）连续性的样条插值基类
- *
- * 所有具有 C1 连续性的插值都基于在某些控制点处寻找一阶导数的规则。
- *
- * 对于非参数样条，这些点是曲线点；对于参数样条，使用参数值 t 进行两次计算。
- *
- * \sa QwtSplineParametrization
- * \endif
+ * @sa QwtSplineParametrization
  */
 class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
   public:
 	QwtSplineC1();
-	virtual ~QwtSplineC1();
+	~QwtSplineC1() override;
 
 	virtual QPainterPath painterPath( const QPolygonF& ) const override;
 	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
@@ -13147,7 +10513,6 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for spline interpolations with C2 (second order parametric) continuity
  *
  * All interpolations with C2 continuity are based on rules for finding
@@ -13156,18 +10521,7 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
  * For non-parametric splines those points are the curve points, while
  * for parametric splines the calculation is done twice using a parameter value t.
  *
- * \sa QwtSplineParametrization
- * \endif
- *
- * \if CHINESE
- * @brief 提供 C2（二阶参数）连续性的样条插值基类
- *
- * 所有具有 C2 连续性的插值都基于在某些控制点处寻找二阶导数的规则。
- *
- * 对于非参数样条，这些点是曲线点；对于参数样条，使用参数值 t 进行两次计算。
- *
- * \sa QwtSplineParametrization
- * \endif
+ * @sa QwtSplineParametrization
  */
 class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 {
@@ -13175,7 +10529,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 	/*!
 	   Boundary condition that requires C2 continuity
 
-	   \sa QwtSpline::boundaryCondition, QwtSpline::BoundaryCondition
+	   @sa QwtSpline::boundaryCondition, QwtSpline::BoundaryCondition
 	 */
 	enum BoundaryConditionC2
 	{
@@ -13183,7 +10537,7 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 		   The second derivate at the endpoint is related to the second derivatives
 		   at the 2 neighbours: cv[0] := 2.0 * cv[1] - cv[2].
 
-		   \note boundaryValue() is ignored
+		   @note boundaryValue() is ignored
 		 */
 		CubicRunout = LinearRunout + 1,
 
@@ -13192,13 +10546,13 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 		   Or in other words: the first/last curve segment extents the polynomial of its
 		   neighboured polynomial
 
-		   \note boundaryValue() is ignored
+		   @note boundaryValue() is ignored
 		 */
 		NotAKnot
 	};
 
 	QwtSplineC2();
-	virtual ~QwtSplineC2();
+	~QwtSplineC2() override;
 
 	virtual QPainterPath painterPath( const QPolygonF& ) const override;
 	virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
@@ -13217,23 +10571,12 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 /*** End of inlined file: qwt_spline.h ***/
 
 /**
- * \if ENGLISH
  * @brief A spline with G1 continuity
  *
  * QwtSplinePleasing is some sort of cardinal spline, with
  * non C1 continuous extra rules for narrow angles. It has a locality of 2.
  *
  * @note The algorithm is the one offered by a popular office package.
- * \endif
- *
- * \if CHINESE
- * @brief 具有 G1 连续性的样条
- *
- * QwtSplinePleasing 是某种基数样条，对于窄角具有非 C1 连续的额外规则。
- * 它的局部性为 2。
- *
- * @note 该算法是由一个流行的办公软件包提供的。
- * \endif
  */
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
@@ -13241,7 +10584,7 @@ public:
 	// Constructor
 	QwtSplinePleasing();
 	// Destructor
-	virtual ~QwtSplinePleasing();
+	~QwtSplinePleasing() override;
 
 	// Get locality (number of points used for calculation)
 	virtual uint locality() const override;
@@ -13262,23 +10605,12 @@ public:
 #define QWT_SPLINE_BASIS_H
 
 /**
- * \if ENGLISH
  * @brief An approximation using a basis spline
  *
  * QwtSplineBasis approximates a set of points by a polynomials with C2 continuity
  * ( = first and second derivatives are equal ) at the end points.
  *
  * The end points of the spline do not match the original points.
- * \endif
- *
- * \if CHINESE
- * @brief 使用基样条的逼近
- *
- * QwtSplineBasis 通过具有 C2 连续性的多项式（即端点处一阶和二阶导数相等）
- * 来逼近一组点。
- *
- * 样条的端点与原始点不匹配。
- * \endif
  */
 class QWT_EXPORT QwtSplineBasis : public QwtSpline
 {
@@ -13286,7 +10618,7 @@ class QWT_EXPORT QwtSplineBasis : public QwtSpline
 	//! Constructor
 	QwtSplineBasis();
 	//! Destructor
-	virtual ~QwtSplineBasis();
+	~QwtSplineBasis() override;
 
 	//! Get painter path from polygon
 	virtual QPainterPath painterPath( const QPolygonF& ) const override;
@@ -13304,7 +10636,6 @@ class QWT_EXPORT QwtSplineBasis : public QwtSpline
 #define QWT_SPLINE_CUBIC_H
 
 /**
- * \if ENGLISH
  * @brief A cubic spline
  *
  * A cubic spline is a spline with C2 continuity at all control points.
@@ -13320,23 +10651,6 @@ class QWT_EXPORT QwtSplineBasis : public QwtSpline
  * The default setting is a "natural spline" having M(x0) = M(xn) = 0.
  *
  * @sa QwtSpline::BoundaryType
- * \endif
- *
- * \if CHINESE
- * @brief 三次样条
- *
- * 三次样条是在所有控制点处具有 C2 连续性的样条。
- * 它是一种非局部样条，其中一个控制点的修改会影响整个样条。
- *
- * 该实现基于控制点 P(x) 的二阶导数 M(x) 的方程组。
- *
- * QwtSplineCubic 提供了几种查找 M(x) 的算法，
- * 这些算法通过 setBoundaryType() 选择。
- *
- * 默认设置是"自然样条"，具有 M(x0) = M(xn) = 0。
- *
- * @sa QwtSpline::BoundaryType
- * \endif
  */
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {
@@ -13344,7 +10658,7 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 	//! Constructor
 	QwtSplineCubic();
 	//! Destructor
-	virtual ~QwtSplineCubic();
+	~QwtSplineCubic() override;
 
 	//! Get locality (always 0 - non-local)
 	virtual uint locality() const override;
@@ -13362,8 +10676,7 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 	virtual QVector< double > curvatures( const QPolygonF& ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtSplineCubic)
 };
 
 #endif
@@ -13376,93 +10689,50 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 #define QWT_SPLINE_LOCAL_H
 
 /**
- * \if ENGLISH
  * @brief A spline with C1 continuity
  *
  * QwtSplineLocal offers several standard algorithms for interpolating
  * a curve with polynomials having C1 continuity at the control points.
  * All algorithms are local in a sense, that changing one control point
  * only few polynomials.
- * \endif
- *
- * \if CHINESE
- * @brief 具有 C1 连续性的样条
- *
- * QwtSplineLocal 提供了几种标准算法，用于在控制点处用具有 C1 连续性的
- * 多项式插值曲线。所有算法在某种意义上都是局部的，即改变一个控制点
- * 只会影响少数多项式。
- * \endif
  */
 class QWT_EXPORT QwtSplineLocal : public QwtSplineC1
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Spline interpolation type
 	 *
 	 * All type of spline interpolations are lightweight algorithms
 	 * calculating the slopes at a point by looking 1 or 2 points back
 	 * and ahead.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 样条插值类型
-	 *
-	 * 所有类型的样条插值都是轻量级算法，通过查看前后 1 或 2 个点
-	 * 来计算某点的斜率。
-	 * \endif
 	 */
 	enum Type
 	{
 		/**
-		 * \if ENGLISH
 		 * A cardinal spline
 		 *
 		 * The cardinal spline interpolation is a very cheap calculation with
 		 * a locality of 1.
-		 * \endif
-		 * \if CHINESE
-		 * 基数样条
-		 *
-		 * 基数样条插值是一种非常便宜的计算，局部性为 1。
-		 * \endif
 		 */
 		Cardinal,
 
 		/**
-		 * \if ENGLISH
 		 * Parabolic blending is a cheap calculation with a locality of 1. Sometimes
 		 * it is also called Cubic Bessel interpolation.
-		 * \endif
-		 * \if CHINESE
-		 * 抛物线混合是一种局部性为 1 的便宜计算。有时也称为三次贝塞尔插值。
-		 * \endif
 		 */
 		ParabolicBlending,
 
 		/**
-		 * \if ENGLISH
 		 * The algorithm of H.Akima is a calculation with a locality of 2.
-		 * \endif
-		 * \if CHINESE
-		 * H.Akima 算法是一种局部性为 2 的计算。
-		 * \endif
 		 */
 		Akima,
 
 		/**
-		 * \if ENGLISH
 		 * Piecewise Cubic Hermite Interpolating Polynomial (PCHIP) is an algorithm
 		 * that is popular because of being offered by MATLAB.
 		 *
 		 * It preserves the shape of the data and respects monotonicity. It has a
 		 * locality of 1.
-		 * \endif
-		 * \if CHINESE
-		 * 分段三次 Hermite 插值多项式 (PCHIP) 是一种因 MATLAB 提供而流行的算法。
-		 *
-		 * 它保持数据的形状并尊重单调性。它的局部性为 1。
-		 * \endif
 		 */
 		PChip
 	};
@@ -13470,7 +10740,7 @@ public:
 	//! Constructor with spline type
 	explicit QwtSplineLocal(Type type);
 	//! Destructor
-	virtual ~QwtSplineLocal();
+	~QwtSplineLocal() override;
 
 	//! Get spline type
 	Type type() const;
@@ -13504,22 +10774,12 @@ private:
 class QwtSpline;
 
 /**
- * \if ENGLISH
  * @brief A curve fitter using a spline interpolation
  *
  * The default setting for the spline is a cardinal spline with
  * uniform parametrization.
  *
  * @sa QwtSpline, QwtSplineLocal
- * \endif
- *
- * \if CHINESE
- * @brief 使用样条插值的曲线拟合器
- *
- * 样条的默认设置是具有均匀参数化的基数样条。
- *
- * @sa QwtSpline, QwtSplineLocal
- * \endif
  */
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
@@ -13527,7 +10787,7 @@ public:
 	// Constructor
 	QwtSplineCurveFitter();
 	// Destructor
-	virtual ~QwtSplineCurveFitter();
+	~QwtSplineCurveFitter() override;
 
 	// Set spline
 	void setSpline(QwtSpline*);
@@ -13556,7 +10816,6 @@ private:
 #define QWT_DATE_SCALE_DRAW_H
 
 /**
- * \if ENGLISH
  * @brief A class for drawing datetime scales
  * @details QwtDateScaleDraw displays values as datetime labels.
  *          The format of the labels depends on the alignment of
@@ -13578,30 +10837,7 @@ private:
  *          Usually QwtDateScaleDraw is used in combination with
  *          QwtDateScaleEngine, that calculates scales for datetime intervals.
  * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
- * \endif
  *
- * \if CHINESE
- * @brief 用于绘制日期时间刻度的类
- * @details QwtDateScaleDraw 将值显示为日期时间标签。
- *          标签的格式取决于主要刻度标签的对齐方式。
- *
- *          默认格式字符串为：
- *          - 毫秒: "hh:mm:ss:zzz\nddd dd MMM yyyy"
- *          - 秒: "hh:mm:ss\nddd dd MMM yyyy"
- *          - 分钟: "hh:mm\nddd dd MMM yyyy"
- *          - 小时: "hh:mm\nddd dd MMM yyyy"
- *          - 天: "ddd dd MMM yyyy"
- *          - 周: "Www yyyy"
- *          - 月: "MMM yyyy"
- *          - 年: "yyyy"
- *
- *          格式字符串可以通过 setDateFormat() 修改，
- *          或者通过重载 dateFormatOfDate() 为每个刻度标签单独设置。
- *
- *          通常 QwtDateScaleDraw 与 QwtDateScaleEngine 配合使用，
- *          QwtDateScaleEngine 为日期时间间隔计算刻度。
- * @sa QwtDateScaleEngine, QwtPlot::setAxisScaleDraw()
- * \endif
  */
 class QWT_EXPORT QwtDateScaleDraw : public QwtScaleDraw
 {
@@ -13610,7 +10846,7 @@ public:
 	explicit QwtDateScaleDraw(Qt::TimeSpec timeSpec = Qt::LocalTime);
 
 	/// Destructor
-	virtual ~QwtDateScaleDraw();
+	~QwtDateScaleDraw() override;
 
 	/// Set the default format string for a datetime interval type
 	void setDateFormat(QwtDate::IntervalType, const QString&);
@@ -13648,8 +10884,7 @@ protected:
 	virtual QString dateFormatOfDate(const QDateTime&, QwtDate::IntervalType) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtDateScaleDraw)
 };
 
 #endif
@@ -13662,7 +10897,6 @@ private:
 #define QWT_DATE_SCALE_ENGINE_H
 
 /**
- * \if ENGLISH
  * @brief A scale engine for date/time values
  * @details QwtDateScaleEngine builds scales from time intervals.
  *          Together with QwtDateScaleDraw it can be used for
@@ -13683,23 +10917,7 @@ private:
  *          as "The Epoch", that can be converted to QDateTime using
  *          QwtDate::toDateTime().
  * @sa QwtDate, QwtPlot::setAxisScaleEngine(), QwtAbstractScale::setScaleEngine()
- * \endif
  *
- * \if CHINESE
- * @brief 用于日期/时间值的刻度引擎
- * @details QwtDateScaleEngine 从时间间隔构建刻度。
- *          与 QwtDateScaleDraw 配合使用，可用于基于日期/时间值的坐标轴。
- *
- *          年、月、周、日、小时和分钟按不等间隔的步长组织。
- *          QwtDateScaleEngine 对间隔进行分类，并根据此分类对齐边界和刻度位置。
- *
- *          QwtDateScaleEngine 支持基于 Qt::TimeSpec 规范的表示。
- *          刻度的有效范围受 QDateTime 的范围限制，这在 Qt4 和 Qt5 之间有所不同。
- *
- *          日期时间值期望为自 1970-01-01T00:00:00 世界协调时间（也称为"纪元"）
- *          以来的毫秒数，可通过 QwtDate::toDateTime() 转换为 QDateTime。
- * @sa QwtDate, QwtPlot::setAxisScaleEngine(), QwtAbstractScale::setScaleEngine()
- * \endif
  */
 class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 {
@@ -13708,7 +10926,7 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 	explicit QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
 
 	/// Destructor
-	virtual ~QwtDateScaleEngine();
+	~QwtDateScaleEngine() override;
 
 	/// Set the time specification used by the engine
 	void setTimeSpec( Qt::TimeSpec );
@@ -13762,8 +10980,7 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 		QwtDate::IntervalType ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtDateScaleEngine)
 };
 
 #endif
@@ -13778,7 +10995,6 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 #include <qpoint.h>
 
 /**
- * \if ENGLISH
  * @brief A class for drawing round scales
  * @details QwtRoundScaleDraw can be used to draw round scales.
  *          The circle segment can be adjusted by setAngleRange().
@@ -13787,16 +11003,6 @@ class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
  *          After a scale division has been specified as a QwtScaleDiv object
  *          using QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s),
  *          the scale can be drawn with the QwtAbstractScaleDraw::draw() member.
- * \endif
- * \if CHINESE
- * @brief 用于绘制圆形刻度的类
- * @details QwtRoundScaleDraw 可用于绘制圆形刻度。
- *          圆形段可通过 setAngleRange() 调整。
- *          刻度的几何形状可通过 moveCenter() 和 setRadius() 指定。
- *
- *          使用 QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s) 将刻度划分指定为
- *          QwtScaleDiv 对象后，可使用 QwtAbstractScaleDraw::draw() 成员绘制刻度。
- * \endif
  */
 
 class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
@@ -13805,18 +11011,18 @@ class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
 	/// Constructor
 	QwtRoundScaleDraw();
 	/// Destructor
-	virtual ~QwtRoundScaleDraw();
+	~QwtRoundScaleDraw() override;
 
 	/// Set the radius
 	void setRadius( double radius );
-	/// \return the radius
+	/// @return the radius
 	double radius() const;
 
 	/// Move the center
 	void moveCenter( double x, double y );
 	/// Move the center
 	void moveCenter( const QPointF& );
-	/// \return the center
+	/// @return the center
 	QPointF center() const;
 
 	/// Set the angle range
@@ -13832,8 +11038,7 @@ class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
 	virtual void drawLabel( QPainter*, double value ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtRoundScaleDraw)
 };
 
 /// Move the center of the scale draw, leaving the radius unchanged
@@ -13852,19 +11057,11 @@ inline void QwtRoundScaleDraw::moveCenter( double x, double y )
 #define QWT_SERIES_STORE_H
 
 /**
- * \if ENGLISH
  * @brief Bridge between QwtSeriesStore and QwtPlotSeriesItem
  * @details QwtAbstractSeriesStore is an abstract interface only
  *          to make it possible to isolate the template based methods (QwtSeriesStore)
  *          from the regular methods (QwtPlotSeriesItem) to make it possible
  *          to derive from QwtPlotSeriesItem without any hassle with templates.
- * \endif
- * \if CHINESE
- * @brief QwtSeriesStore 和 QwtPlotSeriesItem 之间的桥梁
- * @details QwtAbstractSeriesStore 仅是一个抽象接口，用于将基于模板的方法 (QwtSeriesStore)
- *          与常规方法 (QwtPlotSeriesItem) 隔离，使得可以从 QwtPlotSeriesItem 派生
- *          而无需处理模板的麻烦。
- * \endif
  */
 class QwtAbstractSeriesStore
 {
@@ -13882,10 +11079,10 @@ protected:
 	/// Set a the "rectangle of interest" for the stored series
 	virtual void setRectOfInterest(const QRectF&) = 0;
 
-	/// \return Bounding rectangle of the stored series
+	/// @return Bounding rectangle of the stored series
 	virtual QRectF dataRect() const = 0;
 
-	/// \return Number of samples
+	/// @return Number of samples
 	virtual size_t dataSize() const = 0;
 #else
 	// Needed for generating the python bindings, but not for using them !
@@ -13907,7 +11104,6 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief Class storing a QwtSeriesData object
  * @details QwtSeriesStore and QwtPlotSeriesItem are intended as base classes for all
  *          plot items iterating over a series of samples. Both classes share
@@ -13915,15 +11111,6 @@ protected:
  *
  *          QwtSeriesStore offers the template based part for the plot item API, so
  *          that QwtPlotSeriesItem can be derived without any hassle with templates.
- * \endif
- * \if CHINESE
- * @brief 存储 QwtSeriesData 对象的类
- * @details QwtSeriesStore 和 QwtPlotSeriesItem 旨在作为所有遍历样本系列的绘图项的基类。
- *          这两个类共享一个虚拟基类 (QwtAbstractSeriesStore) 来在它们之间建立桥梁。
- *
- *          QwtSeriesStore 为绘图项 API 提供基于模板的部分，因此可以从 QwtPlotSeriesItem
- *          派生而无需处理模板的麻烦。
- * \endif
  */
 template< typename T >
 class QwtSeriesStore : public virtual QwtAbstractSeriesStore
@@ -14048,13 +11235,7 @@ QwtSeriesData< T >* QwtSeriesStore< T >::swapData(QwtSeriesData< T >* series)
 #include <cstring>
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over two QVector<T> objects.
- * \endif
- *
- * \if CHINESE
- * @brief 用于遍历两个 QVector<T> 对象的接口
- * \endif
  */
 template< typename T >
 class QwtPointArrayData : public QwtPointSeriesData
@@ -14083,13 +11264,7 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Data class containing two pointers to memory blocks of T.
- * \endif
- *
- * \if CHINESE
- * @brief 包含两个指向 T 类型内存块的指针的数据类
- * \endif
  */
 template< typename T >
 class QwtCPointerData : public QwtPointSeriesData
@@ -14115,18 +11290,10 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over a QVector<T>.
  *
  * The memory contains the y coordinates, while the index is
  * interpreted as x coordinate.
- * \endif
- *
- * \if CHINESE
- * @brief 用于遍历 QVector<T> 的接口
- *
- * 内存包含 y 坐标，而索引被解释为 x 坐标。
- * \endif
  */
 template< typename T >
 class QwtValuePointData : public QwtPointSeriesData
@@ -14150,18 +11317,10 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Data class containing a pointer to memory of y coordinates
  *
  * The memory contains the y coordinates, while the index is
  * interpreted as x coordinate.
- * \endif
- *
- * \if CHINESE
- * @brief 包含指向 y 坐标内存的指针的数据类
- *
- * 内存包含 y 坐标，而索引被解释为 x 坐标。
- * \endif
  */
 template< typename T >
 class QwtCPointerValueData : public QwtPointSeriesData
@@ -14184,7 +11343,6 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Synthetic point data
  *
  * QwtSyntheticPointData provides a fixed number of points for an interval.
@@ -14236,59 +11394,6 @@ private:
  *  return a.exec();
  * }
  * @endcode
- * \endif
- *
- * \if CHINESE
- * @brief 合成点数据
- *
- * QwtSyntheticPointData 为一个区间提供固定数量的点。
- * 这些点在 x 方向上等距计算。
- *
- * 如果区间无效，点将为"感兴趣的矩形"计算，通常是绘图画布上的显示区域。
- * 在这种模式下，当放大/缩小时，您会获得不同级别的细节。
- *
- * @par 示例
- *
- * 以下示例显示如何实现正弦曲线。
- *
- * @code
- * #include <cmath>
- * #include <qwt_series_data.h>
- * #include <qwt_plot_curve.h>
- * #include <qwt_plot.h>
- * #include <qapplication.h>
- *
- * class SinusData: public QwtSyntheticPointData
- * {
- * public:
- *  SinusData():
- *      QwtSyntheticPointData( 100 )
- *  {
- *  }
- *
- *  virtual double y( double x ) const
- *  {
- *      return qSin( x );
- *  }
- * };
- *
- * int main(int argc, char **argv)
- * {
- *  QApplication a( argc, argv );
- *
- *  QwtPlot plot;
- *  plot.setAxisScale( QwtAxis::XBottom, 0.0, 10.0 );
- *  plot.setAxisScale( QwtAxis::YLeft, -1.0, 1.0 );
- *
- *  QwtPlotCurve *curve = new QwtPlotCurve( "y = sin(x)" );
- *  curve->setData( new SinusData() );
- *  curve->attach( &plot );
- *
- *  plot.show();
- *  return a.exec();
- * }
- * @endcode
- * \endif
  */
 class QWT_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
 {
@@ -14311,21 +11416,7 @@ public:
 	// Get the sample at a specific index
 	virtual QPointF sample(size_t index) const override;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Calculate a y value for a x value
-	 *
-	 * @param x x value
-	 * @return Corresponding y value
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 计算 x 值对应的 y 值
-	 *
-	 * @param x x 值
-	 * @return 对应的 y 值
-	 * \endif
-	 */
+	// Calculate a y value for a x value
 	virtual double y(double x) const = 0;
 	// Calculate the x value for a given index
 	virtual double x(size_t index) const;
@@ -14511,47 +11602,31 @@ class QPen;
 class QImage;
 
 /**
- * \if ENGLISH
  * @brief A helper class for translating a series of points
  *
  * @details QwtPointMapper is a collection of methods and optimizations
  *          for translating a series of points into paint device coordinates.
  *          It is used by QwtPlotCurve but might also be useful for
  *          similar plot items displaying a QwtSeriesData<QPointF>.
- * \endif
  *
- * \if CHINESE
- * @brief 用于转换点序列的辅助类
- *
- * @details QwtPointMapper 是一组方法和优化的集合，
- *          用于将点序列转换为绘图设备坐标。
- *          它被 QwtPlotCurve 使用，但对于类似的显示 QwtSeriesData<QPointF> 的绘图项也可能有用。
- * \endif
  */
 class QWT_EXPORT QwtPointMapper
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Flags affecting the transformation process
 	 * @sa setFlag(), setFlags()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 影响转换过程的标志
-	 * @sa setFlag(), setFlags()
-	 * \endif
 	 */
 	enum TransformationFlag
 	{
-		//! \if ENGLISH Round points to integer values \endif \if CHINESE 将点舍入为整数值 \endif
+		//! Round points to integer values
 		RoundPoints = 0x01,
 
-		//! \if ENGLISH Try to remove points, that are translated to the same position \endif \if CHINESE 尝试删除被转换到相同位置的点 \endif
+		//! Try to remove points, that are translated to the same position
 		WeedOutPoints = 0x02,
 
 		/**
-		 * \if ENGLISH
 		 * @brief An even more aggressive weeding algorithm
 		 *
 		 * @details An even more aggressive weeding algorithm, that can be used in toPolygon().
@@ -14564,24 +11639,29 @@ public:
 		 *          In the worst case (first and last points are never one of the extremes)
 		 *          the number of points will be 4 times the width.
 		 *          As the algorithm is fast it can be used inside of a polyline render cycle.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * @brief 更激进的剔除算法
-		 *
-		 * @details 更激进的剔除算法，可用于 toPolygon()。
-		 *          映射到相同 x 坐标的连续点块被减少为 4 个点：
-		 *          - 第一个点
-		 *          - y 坐标最小的点
-		 *          - y 坐标最大的点
-		 *          - 最后一个点
-		 *
-		 *          在最坏情况下（第一个和最后一个点永远不是极值之一）
-		 *          点数将是宽度的 4 倍。
-		 *          由于算法速度快，可以在折线渲染周期内使用。
-		 * \endif
 		 */
-		WeedOutIntermediatePoints = 0x04
+		WeedOutIntermediatePoints = 0x04,
+
+		/**
+		 * @brief Pixel-column based downsampling
+		 *
+		 * @details Allocates a bin array indexed by pixel column and stores
+		 *          first/min/max/last Y per column. Output is at most 4 points per column.
+		 *          Requires a valid boundingRect() to determine the canvas width.
+		 *          Overrides WeedOutIntermediatePoints when both are set.
+		 */
+		PixelColumnReduce = 0x08,
+
+		/**
+		 * @brief MinMax bucket downsampling
+		 *
+		 * @details Divides the visible data into equal-count buckets and keeps
+		 *          the min-Y and max-Y point from each bucket. Target bucket count
+		 *          is derived from boundingRect() width.
+		 *          Overrides WeedOutIntermediatePoints when both are set.
+		 */
+		MinMaxReduce = 0x10
 	};
 
 	Q_DECLARE_FLAGS(TransformationFlags, TransformationFlag)
@@ -14633,10 +11713,10 @@ public:
 				   uint numThreads) const;
 
 private:
-	Q_DISABLE_COPY(QwtPointMapper)
+	QwtPointMapper(const QwtPointMapper&) = delete;
+	QwtPointMapper& operator=(const QwtPointMapper&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPointMapper)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPointMapper::TransformationFlags)
@@ -14655,17 +11735,10 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPointMapper::TransformationFlags)
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief Base class for needles that can be used in a QwtDial
  * @details QwtDialNeedle is a pointer that indicates a value by pointing
  *          to a specific direction.
- * \sa QwtDial, QwtCompass
- * \endif
- * \if CHINESE
- * @brief 可用于 QwtDial 的指针基类
- * @details QwtDialNeedle 是一个指针，通过指向特定方向来指示值。
- * \sa QwtDial, QwtCompass
- * \endif
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtDialNeedle
@@ -14681,6 +11754,11 @@ class QWT_EXPORT QwtDialNeedle
 	/// Return the palette of the needle
 	const QPalette& palette() const;
 
+	/// Set flat style
+	void setFlatStyle( bool );
+	/// Return flat style
+	bool flatStyle() const;
+
 	/// Draw the needle
 	virtual void draw( QPainter*, const QPointF& center,
 		double length, double direction,
@@ -14688,7 +11766,7 @@ class QWT_EXPORT QwtDialNeedle
 
   protected:
 	/*!
-	   \brief Draw the needle
+	   @brief Draw the needle
 
 	   The origin of the needle is at position (0.0, 0.0 )
 	   pointing in direction 0.0 ( = east ).
@@ -14696,11 +11774,11 @@ class QWT_EXPORT QwtDialNeedle
 	   The painter is already initialized with translation and
 	   rotation.
 
-	   \param painter Painter
-	   \param length Length of the needle
-	   \param colorGroup Color group, used for painting
+	   @param painter Painter
+	   @param length Length of the needle
+	   @param colorGroup Color group, used for painting
 
-	   \sa setPalette(), palette()
+	   @sa setPalette(), palette()
 	 */
 	virtual void drawNeedle( QPainter* painter,
 		double length, QPalette::ColorGroup colorGroup ) const = 0;
@@ -14708,60 +11786,35 @@ class QWT_EXPORT QwtDialNeedle
 	virtual void drawKnob( QPainter*, double width,
 		const QBrush&, bool sunken ) const;
 
-  private:
-	Q_DISABLE_COPY(QwtDialNeedle)
-
+  protected:
 	QPalette m_palette;
+	bool m_flatStyle;
+
+  private:
+	QwtDialNeedle(const QwtDialNeedle&) = delete;
+	QwtDialNeedle& operator=(const QwtDialNeedle&) = delete;
 };
 
 /**
- * \if ENGLISH
  * @brief A needle for dial widgets
  * @details The following colors are used:
  *          - QPalette::Mid: Pointer
  *          - QPalette::Base: Knob
- * \sa QwtDial, QwtCompass
- * \endif
- * \if CHINESE
- * @brief 表盘控件的指针
- * @details 使用以下颜色：
- *          - QPalette::Mid：指针
- *          - QPalette::Base：旋钮
- * \sa QwtDial, QwtCompass
- * \endif
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Style of the needle
-	 * \endif
-	 * \if CHINESE
-	 * @brief 指针样式
-	 * \endif
 	 */
 	enum Style
 	{
-		/**
-		 * \if ENGLISH
-		 * @brief Arrow style
-		 * \endif
-		 * \if CHINESE
-		 * @brief 箭头样式
-		 * \endif
-		 */
+		// Arrow style
 		Arrow,
 
-		/**
-		 * \if ENGLISH
-		 * @brief A straight line from the center
-		 * \endif
-		 * \if CHINESE
-		 * @brief 从中心出发的直线
-		 * \endif
-		 */
+		// A straight line from the center
 		Ray
 	};
 
@@ -14785,7 +11838,6 @@ class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
 };
 
 /**
- * \if ENGLISH
  * @brief A magnet needle for compass widgets
  * @details A magnet needle points to two opposite directions indicating
  *          north and south.
@@ -14793,50 +11845,21 @@ class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
  *          - QPalette::Light: Used for pointing south
  *          - QPalette::Dark: Used for pointing north
  *          - QPalette::Base: Knob (ThinStyle only)
- * \sa QwtDial, QwtCompass
- * \endif
- * \if CHINESE
- * @brief 罗盘控件的磁针
- * @details 磁针指向两个相反的方向，指示北和南。
- *          使用以下颜色：
- *          - QPalette::Light：用于指向南
- *          - QPalette::Dark：用于指向北
- *          - QPalette::Base：旋钮（仅 ThinStyle）
- * \sa QwtDial, QwtCompass
- * \endif
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Style of the needle
-	 * \endif
-	 * \if CHINESE
-	 * @brief 指针样式
-	 * \endif
 	 */
 	enum Style
 	{
-		/**
-		 * \if ENGLISH
-		 * @brief A needle with a triangular shape
-		 * \endif
-		 * \if CHINESE
-		 * @brief 三角形指针
-		 * \endif
-		 */
+		// A needle with a triangular shape
 		TriangleStyle,
 
-		/**
-		 * \if ENGLISH
-		 * @brief A thin needle
-		 * \endif
-		 * \if CHINESE
-		 * @brief 细指针
-		 * \endif
-		 */
+		// A thin needle
 		ThinStyle
 	};
 
@@ -14853,55 +11876,26 @@ class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
 };
 
 /**
- * \if ENGLISH
  * @brief An indicator for the wind direction
  * @details QwtCompassWindArrow shows the direction where the wind comes from.
  *          The following colors are used:
  *          - QPalette::Light: Used for Style1, or the light half of Style2
  *          - QPalette::Dark: Used for the dark half of Style2
- * \sa QwtDial, QwtCompass
- * \endif
- * \if CHINESE
- * @brief 风向指示器
- * @details QwtCompassWindArrow 显示风向的来源方向。
- *          使用以下颜色：
- *          - QPalette::Light：用于 Style1 或 Style2 的亮半部分
- *          - QPalette::Dark：用于 Style2 的暗半部分
- * \sa QwtDial, QwtCompass
- * \endif
+ * @sa QwtDial, QwtCompass
  */
 
 class QWT_EXPORT QwtCompassWindArrow : public QwtDialNeedle
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Style of the arrow
-	 * \endif
-	 * \if CHINESE
-	 * @brief 箭头样式
-	 * \endif
 	 */
 	enum Style
 	{
-		/**
-		 * \if ENGLISH
-		 * @brief A needle pointing to the center
-		 * \endif
-		 * \if CHINESE
-		 * @brief 指向中心的指针
-		 * \endif
-		 */
+		// A needle pointing to the center
 		Style1,
 
-		/**
-		 * \if ENGLISH
-		 * @brief A needle pointing to the center
-		 * \endif
-		 * \if CHINESE
-		 * @brief 指向中心的指针
-		 * \endif
-		 */
+		// A needle pointing to the center
 		Style2
 	};
 
@@ -14934,7 +11928,6 @@ class QwtRoundScaleDraw;
 class QwtAbstractScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief QwtDial class provides a rounded range control
  * @details QwtDial is intended as base class for dial widgets like
  *          speedometers, compass widgets, clocks...
@@ -14950,24 +11943,9 @@ class QwtAbstractScaleDraw;
  *          devices. For these high refresh rates QwtDial caches as much as possible.
  *          For derived classes it might be necessary to clear these caches manually
  *          according to attribute changes using invalidateCache().
- * \sa QwtCompass, QwtAnalogClock, QwtDialNeedle
- * \note The controls and dials examples shows different types of dials.
- * \note QDial is more similar to QwtKnob than to QwtDial
- * \endif
- * \if CHINESE
- * @brief QwtDial 类提供圆形范围控件
- * @details QwtDial 旨在作为表盘控件（如速度计、指南针控件、时钟等）的基类。
- *          表盘包含一个刻度和一个指示当前值的指针。根据 Mode，刻度或指针是固定的，
- *          另一个是旋转的。如果不是 isReadOnly()，可以通过拖动鼠标或使用键盘输入
- *          （参见 QwtAbstractSlider::keyPressEvent())）来旋转表盘。
- *          表盘可以循环，这意味着低于/高于一个限制的旋转会在另一个限制上继续（例如指南针）。
- *          刻度可以覆盖表盘的任意弧段，其值与表盘的 origin() 相关。
- *          表盘通常需要根据外部设备的值频繁更新。对于这些高刷新率，QwtDial 尽可能缓存。
- *          对于派生类，可能需要根据属性变化使用 invalidateCache() 手动清除这些缓存。
- * \sa QwtCompass, QwtAnalogClock, QwtDialNeedle
- * \note controls 和 dials 示例展示了不同类型的表盘。
- * \note QDial 更类似于 QwtKnob 而不是 QwtDial
- * \endif
+ * @sa QwtCompass, QwtAnalogClock, QwtDialNeedle
+ * @note The controls and dials examples shows different types of dials.
+ * @note QDial is more similar to QwtKnob than to QwtDial
  */
 
 class QWT_EXPORT QwtDial : public QwtAbstractSlider
@@ -14986,18 +11964,11 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
   public:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Frame shadow
 	 * @details Unfortunately it is not possible to use QFrame::Shadow
 	 *          as a property of a widget that is not derived from QFrame.
 	 *          The following enum is made for the designer only. It is safe
 	 *          to use QFrame::Shadow instead.
-	 * \endif
-	 * \if CHINESE
-	 * @brief 框架阴影
-	 * @details 不幸的是，不能将 QFrame::Shadow 作为非 QFrame派生控件的属性。
-	 *          以下枚举仅为设计器设计。使用 QFrame::Shadow 是安全的。
-	 * \endif
 	 */
 	enum Shadow
 	{
@@ -15012,12 +11983,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Mode controlling whether the needle or the scale is rotating
-	 * \endif
-	 * \if CHINESE
-	 * @brief 控制指针或刻度是否旋转的模式
-	 * \endif
 	 */
 	enum Mode
 	{
@@ -15031,7 +11997,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
 	/// Constructor
 	explicit QwtDial( QWidget* parent = nullptr );
 	/// Destructor
-	virtual ~QwtDial();
+	~QwtDial() override;
 
 	/// Set the frame shadow
 	void setFrameShadow( Shadow );
@@ -15124,8 +12090,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
 	void setAngleRange( double angle, double span );
 	void drawNeedle( QPainter* ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtDial)
 };
 
 #endif
@@ -15142,20 +12107,11 @@ class QString;
 template< class Key, class T > class QMap;
 
 /**
- * \if ENGLISH
- *   \brief A special scale draw made for QwtCompass
- *   \details QwtCompassScaleDraw maps values to strings using a special map,
+ *   @brief A special scale draw made for QwtCompass
+ *   @details QwtCompassScaleDraw maps values to strings using a special map,
  *            that can be modified by the application.
  *            The default map consists of the labels N, NE, E, SE, S, SW, W, NW.
- *   \sa QwtCompass
- * \endif
- * \if CHINESE
- *   \brief 专为QwtCompass设计的特殊刻度绘制类
- *   \details QwtCompassScaleDraw使用特殊映射将数值转换为字符串，
- *            该映射可由应用程序修改。
- *            默认映射包含标签N、NE、E、SE、S、SW、W、NW。
- *   \sa QwtCompass
- * \endif
+ *   @sa QwtCompass
  */
 class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 {
@@ -15166,7 +12122,7 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 	explicit QwtCompassScaleDraw( const QMap< double, QString >& map );
 
 	// Destructor
-	virtual ~QwtCompassScaleDraw();
+	~QwtCompassScaleDraw() override;
 
 	// Sets the map that maps values to labels
 	void setLabelMap( const QMap< double, QString >& map );
@@ -15177,25 +12133,15 @@ class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 	virtual QwtText label( double value ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtCompassScaleDraw)
 };
 
 /**
- * \if ENGLISH
- *   \brief A Compass Widget
- *   \details QwtCompass is a widget to display and enter directions.
+ *   @brief A Compass Widget
+ *   @details QwtCompass is a widget to display and enter directions.
  *            It consists of a scale, an optional needle and rose.
- *   \image html dials1.png
- *   \note The examples/dials example shows how to use QwtCompass.
- * \endif
- * \if CHINESE
- *   \brief 指南针控件
- *   \details QwtCompass是一个用于显示和输入方向的控件。
- *            它由刻度盘、可选的指针和罗盘花组成。
- *   \image html dials1.png
- *   \note examples/dials示例展示了如何使用QwtCompass。
- * \endif
+ *   @image html dials1.png
+ *   @note The examples/dials example shows how to use QwtCompass.
  */
 
 class QWT_EXPORT QwtCompass : public QwtDial
@@ -15206,7 +12152,7 @@ class QWT_EXPORT QwtCompass : public QwtDial
 	// Constructs a compass widget with a scale, no needle and no rose
 	explicit QwtCompass( QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtCompass();
+	~QwtCompass() override;
 
 	// Sets a compass rose that will be drawn inside the compass
 	void setRose( QwtCompassRose* rose );
@@ -15225,8 +12171,7 @@ class QWT_EXPORT QwtCompass : public QwtDial
 	virtual void keyPressEvent( QKeyEvent* ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtCompass)
 };
 
 #endif
@@ -15241,7 +12186,6 @@ class QWT_EXPORT QwtCompass : public QwtDial
 class QwtRoundScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief The Knob Widget
  * @details The QwtKnob widget imitates look and behavior of a volume knob on a radio.
  *          It looks similar to QDial - not to QwtDial.
@@ -15252,20 +12196,7 @@ class QwtRoundScaleDraw;
  *          - width <= 0: The knob is extended to the minimum of width/height of
  *            the contentsRect() and aligned in the other direction according to alignment().
  *          Setting a fixed knobWidth() is helpful to align several knobs with different scale labels.
- * \image html knob.png
- * \endif
- * \if CHINESE
- * @brief 旋钮控件
- * @details QwtKnob 控件模仿收音机音量旋钮的外观和行为。
- *          它看起来类似于 QDial - 而不是 QwtDial。
- *          旋钮的值范围可以被划分为多圈。
- *          旋钮的布局取决于 knobWidth()：
- *          - width > 0：旋钮的直径固定，旋钮根据 alignment() 标志在 contentsRect() 内对齐。
- *          - width <= 0：旋钮扩展到 contentsRect() 的最小宽度/高度，
- *            并在另一个方向根据 alignment() 对齐。
- *          设置固定的 knobWidth() 有助于对齐具有不同刻度标签的多个旋钮。
- * \image html knob.png
- * \endif
+ * @image html knob.png
  */
 
 class QWT_EXPORT QwtKnob : public QwtAbstractSlider
@@ -15285,17 +12216,10 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
 
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Style of the knob surface
 	 * @details Depending on the KnobStyle the surface of the knob is
 	 *          filled from the brushes of the widget palette().
-	 * \sa setKnobStyle(), knobStyle()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 旋钮表面样式
-	 * @details 根据 KnobStyle，旋钮表面使用控件 palette() 的画笔填充。
-	 * \sa setKnobStyle(), knobStyle()
-	 * \endif
+	 * @sa setKnobStyle(), knobStyle()
 	 */
 	enum KnobStyle
 	{
@@ -15313,17 +12237,10 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Marker type
 	 * @details The marker indicates the current value on the knob.
 	 *          The default setting is a Notch marker.
-	 * \sa setMarkerStyle(), setMarkerSize()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 标记类型
-	 * @details 标记指示旋钮上的当前值。默认设置为 Notch 标记。
-	 * \sa setMarkerStyle(), setMarkerSize()
-	 * \endif
+	 * @sa setMarkerStyle(), setMarkerSize()
 	 */
 	enum MarkerStyle
 	{
@@ -15349,7 +12266,7 @@ public:
 	/// Constructor
 	explicit QwtKnob( QWidget* parent = nullptr );
 	/// Destructor
-	virtual ~QwtKnob();
+	~QwtKnob() override;
 
 	/// Set alignment of the knob inside contentsRect()
 	void setAlignment( Qt::Alignment );
@@ -15422,8 +12339,7 @@ public:
 	virtual bool isScrollPosition( const QPoint& ) const override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtKnob)
 };
 
 #endif
@@ -15438,13 +12354,12 @@ public:
 class QwtDialNeedle;
 
 /**
- * \if ENGLISH
- *   \brief An analog clock widget
- *   \details QwtAnalogClock is a widget that displays an analog clock with hour, minute,
+ *   @brief An analog clock widget
+ *   @details QwtAnalogClock is a widget that displays an analog clock with hour, minute,
  *            and second hands.
- *   \image html analogclock.png
- *   \par Example
- *   \code
+ *   @image html analogclock.png
+ *   @par Example
+ *   @code
  *   #include <qwt_analog_clock.h>
  *   QwtAnalogClock *clock = new QwtAnalogClock(...);
  *   clock->scaleDraw()->setPenWidth(3);
@@ -15455,28 +12370,8 @@ class QwtDialNeedle;
  *   QTimer *timer = new QTimer(clock);
  *   timer->connect(timer, SIGNAL(timeout()), clock, SLOT(setCurrentTime()));
  *   timer->start(1000);
- *   \endcode
- *   \note The examples/dials example shows how to use QwtAnalogClock.
- * \endif
- * \if CHINESE
- *   \brief 模拟时钟控件
- *   \details QwtAnalogClock是一个显示带有时针、分针和秒针的模拟时钟的控件。
- *   \image html analogclock.png
- *   \par 示例
- *   \code
- *   #include <qwt_analog_clock.h>
- *   QwtAnalogClock *clock = new QwtAnalogClock(...);
- *   clock->scaleDraw()->setPenWidth(3);
- *   clock->setLineWidth(6);
- *   clock->setFrameShadow(QwtDial::Sunken);
- *   clock->setTime();
- *   // 每秒更新时钟
- *   QTimer *timer = new QTimer(clock);
- *   timer->connect(timer, SIGNAL(timeout()), clock, SLOT(setCurrentTime()));
- *   timer->start(1000);
- *   \endcode
- *   \note examples/dials示例展示了如何使用QwtAnalogClock。
- * \endif
+ *   @endcode
+ *   @note The examples/dials example shows how to use QwtAnalogClock.
  */
 
 class QWT_EXPORT QwtAnalogClock : public QwtDial
@@ -15485,36 +12380,29 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 
   public:
 	/**
-	 * \if ENGLISH
-	 *   \brief Hand type enumeration
-	 *   \details Defines the types of clock hands available.
-	 *   \sa setHand(), hand()
-	 * \endif
-	 * \if CHINESE
-	 *   \brief 时钟指针类型枚举
-	 *   \details 定义可用的时钟指针类型。
-	 *   \sa setHand(), hand()
-	 * \endif
+	 *   @brief Hand type enumeration
+	 *   @details Defines the types of clock hands available.
+	 *   @sa setHand(), hand()
 	 */
 	enum Hand
 	{
-		//! \if ENGLISH Needle displaying the seconds \endif \if CHINESE 显示秒的指针 \endif
+		//! Needle displaying the seconds
 		SecondHand,
 
-		//! \if ENGLISH Needle displaying the minutes \endif \if CHINESE 显示分的指针 \endif
+		//! Needle displaying the minutes
 		MinuteHand,
 
-		//! \if ENGLISH Needle displaying the hours \endif \if CHINESE 显示时的指针 \endif
+		//! Needle displaying the hours
 		HourHand,
 
-		//! \if ENGLISH Number of needles \endif \if CHINESE 指针数量 \endif
+		//! Number of needles
 		NHands
 	};
 
 	// Constructs an analog clock widget
 	explicit QwtAnalogClock( QWidget* parent = nullptr );
 	// Destructor
-	virtual ~QwtAnalogClock();
+	~QwtAnalogClock() override;
 
 	// Sets a specific clock hand needle
 	void setHand( Hand, QwtDialNeedle* );
@@ -15526,26 +12414,14 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 
   public Q_SLOTS:
 	/**
-	 * \if ENGLISH
-	 *   \brief Set the clock to display the current time
-	 *   \details Updates the clock display to show the current system time.
-	 * \endif
-	 * \if CHINESE
-	 *   \brief 设置时钟显示当前时间
-	 *   \details 更新时钟显示为当前系统时间。
-	 * \endif
+	 *   @brief Set the clock to display the current time
+	 *   @details Updates the clock display to show the current system time.
 	 */
 	void setCurrentTime();
 
 	/**
-	 * \if ENGLISH
-	 *   \brief Set the clock to display a specific time
-	 *   \param[in] time Time to display
-	 * \endif
-	 * \if CHINESE
-	 *   \brief 设置时钟显示特定时间
-	 *   \param[in] time 要显示的时间
-	 * \endif
+	 *   @brief Set the clock to display a specific time
+	 *   @param[in] time Time to display
 	 */
 	void setTime( const QTime& );
 
@@ -15580,16 +12456,9 @@ class QWheelEvent;
 class QKeyEvent;
 
 /**
- * \if ENGLISH
  * @brief QwtMagnifier provides zooming by magnifying in steps
  * @details Using QwtMagnifier a plot can be zoomed in/out in steps using
  *          keys, the mouse wheel or moving a mouse button in vertical direction.
- * \endif
- * \if CHINESE
- * @brief QwtMagnifier 提供逐步放大的缩放功能
- * @details 使用 QwtMagnifier 可以通过按键、鼠标滚轮或在垂直方向移动鼠标按钮
- *          来逐步放大/缩小绘图。
- * \endif
  */
 class QWT_EXPORT QwtMagnifier : public QObject
 {
@@ -15599,7 +12468,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
 	// Constructor
 	explicit QwtMagnifier( QWidget* );
 	// Destructor
-	virtual ~QwtMagnifier();
+	~QwtMagnifier() override;
 
 	// Return the parent widget (non-const version)
 	QWidget* parentWidget();
@@ -15656,16 +12525,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
 	virtual bool eventFilter( QObject*, QEvent* ) override;
 
   protected:
-	/**
-	 * \if ENGLISH
-	 * @brief Rescale the parent widget
-	 * @param[in] factor Scale factor (>1 for zoom in, <1 for zoom out)
-	 * \endif
-	 * \if CHINESE
-	 * @brief 重新缩放父控件
-	 * @param[in] factor 缩放因子（>1 放大，<1 缩小）
-	 * \endif
-	 */
+	// Rescale the parent widget
 	virtual void rescale( double factor ) = 0;
 
 	virtual void widgetMousePressEvent( QMouseEvent* );
@@ -15676,8 +12536,7 @@ class QWT_EXPORT QwtMagnifier : public QObject
 	virtual void widgetKeyReleaseEvent( QKeyEvent* );
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtMagnifier)
 };
 
 #endif
@@ -15694,17 +12553,10 @@ class QEvent;
 template< typename T > class QList;
 
 /**
- * \if ENGLISH
  * @brief A state machine for QwtPicker selections
  * @details QwtPickerMachine accepts key and mouse events and translates them
  *          into selection commands.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief QwtPicker 选择的状态机
- * @details QwtPickerMachine 接收键盘和鼠标事件，并将其转换为选择命令。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 
 class QWT_EXPORT QwtPickerMachine
@@ -15712,7 +12564,7 @@ class QWT_EXPORT QwtPickerMachine
   public:
 	/*!
 	   Type of a selection.
-	   \sa selectionType()
+	   @sa selectionType()
 	 */
 	enum SelectionType
 	{
@@ -15760,21 +12612,14 @@ class QWT_EXPORT QwtPickerMachine
 
   private:
 	const SelectionType m_selectionType;
-	int m_state;
+	int m_state{0};
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for indicating mouse movements
  * @details QwtPickerTrackerMachine supports displaying information
  *          corresponding to mouse movements, but is not intended for
  *          selecting anything. Begin/End are related to Enter/Leave events.
- * \endif
- * \if CHINESE
- * @brief 用于指示鼠标移动的状态机
- * @details QwtPickerTrackerMachine 支持显示与鼠标移动相关的信息，
- *          但不用于选择任何内容。Begin/End 与 Enter/Leave 事件相关。
- * \endif
  */
 class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
 {
@@ -15788,18 +12633,10 @@ class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for point selections
  * @details Pressing QwtEventPattern::MouseSelect1 or
  *          QwtEventPattern::KeySelect1 selects a point.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief 用于点选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 或 QwtEventPattern::KeySelect1
- *          选择一个点。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
 {
@@ -15813,18 +12650,10 @@ class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for point selections
  * @details Pressing QwtEventPattern::MouseSelect1 or QwtEventPattern::KeySelect1
  *          starts the selection, releasing QwtEventPattern::MouseSelect1 or
  *          a second press of QwtEventPattern::KeySelect1 terminates it.
- * \endif
- * \if CHINESE
- * @brief 用于点选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 或 QwtEventPattern::KeySelect1
- *          开始选择，释放 QwtEventPattern::MouseSelect1 或再次按下
- *          QwtEventPattern::KeySelect1 结束选择。
- * \endif
  */
 class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
 {
@@ -15838,7 +12667,6 @@ class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for rectangle selections
  * @details Pressing QwtEventPattern::MouseSelect1 starts the selection,
  *          releasing it selects the first point. Pressing it again selects
@@ -15847,14 +12675,6 @@ class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
  *          a second press selects the first point. A third one selects
  *          the second point and terminates the selection.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief 用于矩形选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 开始选择，释放它选择第一个点。
- *          再次按下选择第二个点并结束选择。按下 QwtEventPattern::KeySelect1
- *          也开始选择，第二次按下选择第一个点，第三次按下选择第二个点并结束选择。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 
 class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
@@ -15869,20 +12689,12 @@ class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for rectangle selections
  * @details Pressing QwtEventPattern::MouseSelect1 selects the first point,
  *          releasing it the second point.
  *          Pressing QwtEventPattern::KeySelect1 also selects the first point,
  *          a second press selects the second point and terminates the selection.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief 用于矩形选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 选择第一个点，释放它选择第二个点。
- *          按下 QwtEventPattern::KeySelect1 也选择第一个点，第二次按下选择第二个点并结束选择。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 
 class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
@@ -15897,7 +12709,6 @@ class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for line selections
  * @details Pressing QwtEventPattern::MouseSelect1 selects the first point,
  *          releasing it the second point.
@@ -15906,14 +12717,6 @@ class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
  *          A common use case of QwtPickerDragLineMachine are pickers for
  *          distance measurements.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief 用于线段选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 选择第一个点，释放它选择第二个点。
- *          按下 QwtEventPattern::KeySelect1 也选择第一个点，第二次按下选择第二个点并结束选择。
- *          QwtPickerDragLineMachine 的常见用途是距离测量拾取器。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 
 class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
@@ -15928,22 +12731,12 @@ class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
 };
 
 /**
- * \if ENGLISH
  * @brief A state machine for polygon selections
  * @details Pressing QwtEventPattern::MouseSelect1 or QwtEventPattern::KeySelect1
  *          starts the selection and selects the first point, or appends a point.
  *          Pressing QwtEventPattern::MouseSelect2 or QwtEventPattern::KeySelect2
  *          appends the last point and terminates the selection.
  * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
- * \if CHINESE
- * @brief 用于多边形选择的状态机
- * @details 按下 QwtEventPattern::MouseSelect1 或 QwtEventPattern::KeySelect1
- *          开始选择并选择第一个点，或追加一个点。
- *          按下 QwtEventPattern::MouseSelect2 或 QwtEventPattern::KeySelect2
- *          追加最后一个点并结束选择。
- * @sa QwtEventPattern::MousePatternCode, QwtEventPattern::KeyPatternCode
- * \endif
  */
 
 class QWT_EXPORT QwtPickerPolygonMachine : public QwtPickerMachine
@@ -15985,7 +12778,6 @@ class QKeyEvent;
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief QwtPicker provides selections on a widget
  * @details QwtPicker filters all enter, leave, mouse and keyboard events of a widget
  *          and translates them into an array of selected points.
@@ -16040,54 +12832,6 @@ class QPainter;
  * picker->setTrackerMode(QwtPicker::ActiveOnly);
  * picker->setRubberBand(QwtPicker::RectRubberBand);
  * @endcode
- * \endif
- * \if CHINESE
- * @brief QwtPicker 在一个部件上提供选择功能
- * @details QwtPicker 会过滤一个部件的所有进入、离开、鼠标和键盘事件，
- *          并将它们转换为一个选定坐标点的数组。
- *
- *          收集点的方式取决于连接到选择器的状态机类型。Qwt 提供了几个预定义的选择状态机：
- *
- *          - 无：QwtPickerTrackerMachine
- *          - 单个点：QwtPickerClickPointMachine, QwtPickerDragPointMachine
- *          - 矩形：QwtPickerClickRectMachine, QwtPickerDragRectMachine
- *          - 多边形：QwtPickerPolygonMachine
- *
- *          虽然这些状态机涵盖了最常见的点收集方式，但也可以实现自定义的状态机。
- *
- *          QwtPicker 使用 adjustedPoints() 方法将拾取的点转换为一个选择区域/集合。
- *          adjustedPoints() 方法旨在被重写，以便根据应用程序的特定要求修正选择结果。
- *          （例如：当应用程序只接受固定宽高比的矩形时。）
- *
- *          QwtPicker 可以选择性地通过一个橡皮筋和一个显示当前鼠标位置文本的追踪器来辅助点的收集过程。
- *
- *          状态机会触发以下命令：
- *          - begin()：激活/初始化选择。
- *          - append()：添加一个新点。
- *          - move()：改变最后一个点的位置。
- *          - remove()：移除最后一个点。
- *          - end()：终止选择，并调用 accept 来验证拾取的点。
- *
- *          在 begin() 和 end() 之间，选择器处于活动状态（isActive()）。
- *          在活动状态下，橡皮筋会显示。如果追踪器模式是 ActiveOnly 或 AlwaysOn，追踪器也会可见。
- *
- *          可以使用方向键移动光标。所有选择都可以使用取消键来中止。(QwtEventPattern::KeyPatternCode)
- *
- * @warning 如果观察的部件的焦点策略是 QWidget::NoFocus，
- *          那么在选择器处于活动状态时，或者如果 trackerMode() 是 AlwaysOn 时，
- *          该部件的焦点策略会被设置为 QWidget::WheelFocus，并且鼠标追踪会被操控。
- *
- * @par 示例
- * @code
- * #include <qwt_picker.h>
- * #include <qwt_picker_machine.h>
- *
- * QwtPicker *picker = new QwtPicker(widget);
- * picker->setStateMachine(new QwtPickerDragRectMachine);
- * picker->setTrackerMode(QwtPicker::ActiveOnly);
- * picker->setRubberBand(QwtPicker::RectRubberBand);
- * @endcode
- * \endif
  */
 class QWT_EXPORT QwtPicker : public QObject, public QwtEventPattern
 {
@@ -16106,17 +12850,10 @@ class QWT_EXPORT QwtPicker : public QObject, public QwtEventPattern
 	Q_PROPERTY(QPen rubberBandPen READ rubberBandPen WRITE setRubberBandPen)
 	QWT_DECLARE_PRIVATE(QwtPicker)
 public:
-/**
-	 * \if ENGLISH
+	/**
 	 * @brief Rubber band style
 	 * @details The default value is QwtPicker::NoRubberBand.
-	 * \sa setRubberBand(), rubberBand()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 橡皮筋样式
-	 * @details 默认值为 QwtPicker::NoRubberBand。
-	 * \sa setRubberBand(), rubberBand()
-	 * \endif
+	 * @sa setRubberBand(), rubberBand()
 	 */
 	enum RubberBand
 	{
@@ -16142,25 +12879,14 @@ public:
 		PolygonRubberBand,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Values >= UserRubberBand can be used to define additional rubber bands
-		 * \endif
-		 * \if CHINESE
-		 * @brief 值 >= UserRubberBand 可用于定义额外的橡皮筋
-		 * \endif
 		 */
 		UserRubberBand = 100
 	};
 
-/**
-	 * \if ENGLISH
+	/**
 	 * @brief Display mode
-	 * \sa setTrackerMode(), trackerMode(), isActive()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 显示模式
-	 * \sa setTrackerMode(), trackerMode(), isActive()
-	 * \endif
+	 * @sa setTrackerMode(), trackerMode(), isActive()
 	 */
 	enum DisplayMode
 	{
@@ -16174,17 +12900,10 @@ public:
 		ActiveOnly
 	};
 
-/**
-	 * \if ENGLISH
+	/**
 	 * @brief Controls what to do with the selected points when the observed widget is resized
 	 * @details The default value is QwtPicker::Stretch.
-	 * \sa setResizeMode()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 控制当观察部件调整大小时对选定点的处理方式
-	 * @details 默认值为 QwtPicker::Stretch。
-	 * \sa setResizeMode()
-	 * \endif
+	 * @sa setResizeMode()
 	 */
 	enum ResizeMode
 	{
@@ -16201,7 +12920,7 @@ public:
 	explicit QwtPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget*);
 
 	// Destructor
-	virtual ~QwtPicker();
+	~QwtPicker() override;
 
 	// Set the state machine
 	void setStateMachine(QwtPickerMachine*);
@@ -16286,87 +13005,45 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal indicating when the picker has been activated
 	 * @details Together with setEnabled() it can be used to implement
 	 *          selections with more than one picker.
 	 * @param on True, when the picker has been activated
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当选择器被激活时发出的信号
-	 * @details 与 setEnabled() 配合使用可以实现多个选择器的选择。
-	 * @param on 当选择器被激活时为 true
-	 * \endif
 	 */
 	void activated(bool on);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitting the selected points at the end of a selection
 	 * @param polygon Selected points
-	 * \endif
-	 * \if CHINESE
-	 * @brief 在选择结束时发出选定点的信号
-	 * @param polygon 选定的点
-	 * \endif
 	 */
 	void selected(const QPolygon& polygon);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when a point has been appended to the selection
 	 * @param pos Position of the appended point
-	 * \sa append(), moved()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当一个点被添加到选择时发出的信号
-	 * @param pos 添加点的位置
-	 * \sa append(), moved()
-	 * \endif
+	 * @sa append(), moved()
 	 */
 	void appended(const QPoint& pos);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted whenever the last appended point of the selection has been moved
 	 * @param pos Position of the moved last point of the selection
-	 * \sa move(), appended()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当选择的最后一个添加点被移动时发出的信号
-	 * @param pos 移动的最后一个点的位置
-	 * \sa move(), appended()
-	 * \endif
+	 * @sa move(), appended()
 	 */
 	void moved(const QPoint& pos);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted whenever the last appended point of the selection has been removed
 	 * @param pos Position of the point that has been removed
-	 * \sa remove(), appended()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当选择的最后一个添加点被移除时发出的信号
-	 * @param pos 被移除点的位置
-	 * \sa remove(), appended()
-	 * \endif
+	 * @sa remove(), appended()
 	 */
 	void removed(const QPoint& pos);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the active selection has been changed
 	 * @details This might happen when the observed widget is resized.
 	 * @param selection Changed selection
-	 * \sa stretchSelection()
-	 * \endif
-	 * \if CHINESE
-	 * @brief 当活动选择被更改时发出的信号
-	 * @details 这可能在观察部件调整大小时发生。
-	 * @param selection 更改的选择
-	 * \sa stretchSelection()
-	 * \endif
+	 * @sa stretchSelection()
 	 */
 	void changed(const QPolygon& selection);
 
@@ -16424,19 +13101,10 @@ class QWidget;
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief Base picker class specifically for canvas
  *
  * @details Provides convenient access methods for canvas and plot,
  * serving as a base class for other canvas-related tools.
- * \endif
- *
- * \if CHINESE
- * @brief 专门针对 canvas 的 picker 基类
- *
- * @details 提供 canvas 和 plot 的便捷访问方法，
- * 作为其他 canvas 相关工具的基类。
- * \endif
  */
 class QWT_EXPORT QwtCanvasPicker : public QwtPicker
 {
@@ -16445,7 +13113,7 @@ public:
 	// Constructor with canvas widget
 	explicit QwtCanvasPicker(QWidget* canvas);
 	// Destructor
-	~QwtCanvasPicker();
+	~QwtCanvasPicker() override;
 
 	// Get the associated plot (non-const version)
 	QwtPlot* plot();
@@ -16473,7 +13141,6 @@ class QCursor;
 class QPixmap;
 
 /**
- * \if ENGLISH
  * @brief QwtCachePanner provides panning of a widget
  * @details QwtCachePanner grabs the contents of a widget, that can be dragged
  *          in all directions. The offset between the start and the end position
@@ -16485,18 +13152,6 @@ class QPixmap;
  *          for mouse movements.
  *          For widgets, where repaints are very fast it might be better to
  *          implement panning manually by mapping mouse events into paint events.
- * \endif
- * \if CHINESE
- * @brief QwtCachePanner 提供控件的拖动平移功能
- * @details QwtCachePanner 捕获控件的内容，可以在所有方向上拖动。
- *          起始位置和结束位置之间的偏移通过 panned 信号发出。
- *          QwtCachePanner 将控件内容捕获到 pixmap 中并移动 pixmap，
- *          而不会为控件触发任何重绘事件。
- *          不属于内容的部分在平移时不会被绘制。
- *          这使得平移速度足够快，适用于重绘太慢而无法跟随鼠标移动的控件。
- *          对于重绘非常快的控件，最好手动实现平移，
- *          将鼠标事件映射为绘制事件。
- * \endif
  */
 class QWT_EXPORT QwtCachePanner : public QWidget
 {
@@ -16506,7 +13161,7 @@ public:
 	// Constructor with parent widget
 	explicit QwtCachePanner(QWidget* parent);
 	// Destructor
-	virtual ~QwtCachePanner();
+	~QwtCachePanner() override;
 
 	// Enable or disable the panner
 	void setEnabled(bool);
@@ -16541,30 +13196,16 @@ public:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when panning is done
 	 * @param[in] dx Offset in horizontal direction
 	 * @param[in] dy Offset in vertical direction
-	 * \endif
-	 * \if CHINESE
-	 * @brief 平移完成时发出的信号
-	 * @param[in] dx 水平方向的偏移量
-	 * @param[in] dy 垂直方向的偏移量
-	 * \endif
 	 */
 	void panned(int dx, int dy);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted while the widget moved, but panning is not finished
 	 * @param[in] dx Offset in horizontal direction
 	 * @param[in] dy Offset in vertical direction
-	 * \endif
-	 * \if CHINESE
-	 * @brief 控件移动但平移未完成时发出的信号
-	 * @param[in] dx 水平方向的偏移量
-	 * @param[in] dy 垂直方向的偏移量
-	 * \endif
 	 */
 	void moved(int dx, int dy);
 
@@ -16585,8 +13226,7 @@ private:
 	void showCursor(bool);
 #endif
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtCachePanner)
 };
 
 #endif
@@ -16618,14 +13258,8 @@ class QSvgGenerator;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Renderer for exporting a plot to a document, a printer
  *        or anything else, that is supported by QPainter/QPaintDevice
- * \endif
- *
- * \if CHINESE
- * @brief 用于将绘图导出到文档、打印机或其他受 QPainter/QPaintDevice 支持的对象的渲染器
- * \endif
  */
 class QWT_EXPORT QwtPlotRenderer : public QObject
 {
@@ -16633,15 +13267,8 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Discard flags
 	 * @details Flags to control which components of the plot are rendered
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 丢弃标志
-	 * @details 控制渲染绘图哪些组件的标志
-	 * \endif
 	 */
 	enum DiscardFlag
 	{
@@ -16663,21 +13290,8 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 		/// Don't render the footer of the plot
 		DiscardFooter           = 0x10,
 
-		/**
-		 * \if ENGLISH
-		 * Don't render the frame of the canvas
-		 *
-		 * @note This flag has no effect when using
-		 *       style sheets, where the frame is part
-		 *       of the background
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 不渲染画布的边框
-		 *
-		 * @note 当使用样式表时，此标志无效，因为边框是背景的一部分
-		 * \endif
-		 */
+		///< Don't render the frame of the canvas
+		///< @note This flag has no effect when using style sheets, where the frame is part of the background
 		DiscardCanvasFrame           = 0x20
 
 	};
@@ -16685,33 +13299,16 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 	Q_DECLARE_FLAGS( DiscardFlags, DiscardFlag )
 
 	/**
-	 * \if ENGLISH
 	 * @brief Layout flags
 	 * @details Flags to control the layout of the rendered plot
 	 * @sa setLayoutFlag(), testLayoutFlag()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 布局标志
-	 * @details 控制渲染绘图布局的标志
-	 * @sa setLayoutFlag(), testLayoutFlag()
-	 * \endif
 	 */
 	enum LayoutFlag
 	{
 		/// Use the default layout as on screen
 		DefaultLayout   = 0x00,
 
-		/**
-		 * \if ENGLISH
-		 * Instead of the scales a box is painted around the plot canvas,
-		 * where the scale ticks are aligned to.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 代替比例尺，在绘图画布周围绘制一个框，比例尺刻度对齐到该框。
-		 * \endif
-		 */
+		///< Instead of the scales a box is painted around the plot canvas, where the scale ticks are aligned to.
 		FrameWithScales = 0x01
 	};
 
@@ -16720,7 +13317,7 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 	// Constructor
 	explicit QwtPlotRenderer( QObject* = nullptr );
 	// Destructor
-	virtual ~QwtPlotRenderer();
+	~QwtPlotRenderer() override;
 
 	// Set a discard flag
 	void setDiscardFlag( DiscardFlag flag, bool on = true );
@@ -16797,25 +13394,16 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 		const QSizeF& sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
 
   private:
-	/**
-	 * \if ENGLISH
-	 * @brief Build canvas maps
-	 * \endif
-	 */
+	// Build canvas maps
 	void buildCanvasMaps( const QwtPlot*,
 		const QRectF&, QwtScaleMap maps[] ) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Update canvas margins
-	 * \endif
-	 */
+	// Update canvas margins
 	bool updateCanvasMargins( QwtPlot*,
 		const QRectF&, const QwtScaleMap maps[] ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotRenderer)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::DiscardFlags )
@@ -16849,14 +13437,8 @@ class QSvgGenerator;
 #endif
 
 /**
- * \if ENGLISH
  * @brief Renderer for exporting a polar plot to a document, a printer
  *        or anything else, that is supported by QPainter/QPaintDevice
- * \endif
- *
- * \if CHINESE
- * @brief 用于将极坐标图导出到文档、打印机或其他支持 QPainter/QPaintDevice 的设备的渲染器
- * \endif
  */
 class QWT_EXPORT QwtPolarRenderer : public QObject
 {
@@ -16866,7 +13448,7 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
 	/// Constructor
 	explicit QwtPolarRenderer( QObject* parent = nullptr );
 	/// Destructor
-	virtual ~QwtPolarRenderer();
+	~QwtPolarRenderer() override;
 
 	/// Render a polar plot to a document
 	void renderDocument( QwtPolarPlot*, const QString& format,
@@ -16908,8 +13490,7 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
 		const QwtPolarPlot*, QPainter*, const QRectF& ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarRenderer)
 };
 
 #endif
@@ -16927,68 +13508,34 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief Base class for all type of plot canvases
- * \endif
- *
- * \if CHINESE
- * @brief 所有类型绘图画布的基类
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractCanvas
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Focus indicator
 	 * @details The default setting is NoFocusIndicator
 	 * @sa setFocusIndicator(), focusIndicator(), drawFocusIndicator()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 焦点指示器
-	 * @details 默认设置是 NoFocusIndicator
-	 * @sa setFocusIndicator(), focusIndicator(), drawFocusIndicator()
-	 * \endif
 	 */
 
 	enum FocusIndicator
 	{
 		/**
-		 * \if ENGLISH
 		 * Don't paint a focus indicator
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 不绘制焦点指示器
-		 * \endif
 		 */
 		NoFocusIndicator,
 
 		/**
-		 * \if ENGLISH
 		 * The focus is related to the complete canvas.
 		 * Paint the focus indicator using drawFocusIndicator()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 焦点与整个画布相关。
-		 * 使用 drawFocusIndicator() 绘制焦点指示器
-		 * \endif
 		 */
 		CanvasFocusIndicator,
 
 		/**
-		 * \if ENGLISH
 		 * The focus is related to an item (curve, point, ...) on
 		 * the canvas. It is up to the application to display a
 		 * focus indication using e.g. highlighting.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 焦点与画布上的项目（曲线、点等）相关。
-		 * 由应用程序决定如何显示焦点指示，例如通过高亮。
-		 * \endif
 		 */
 		ItemFocusIndicator
 	};
@@ -16996,7 +13543,7 @@ class QWT_EXPORT QwtPlotAbstractCanvas
 	// Constructor
 	explicit QwtPlotAbstractCanvas( QWidget* canvasWidget );
 	// Destructor
-	virtual ~QwtPlotAbstractCanvas();
+	~QwtPlotAbstractCanvas();
 
 	// Get the parent plot widget
 	QwtPlot* plot();
@@ -17030,69 +13577,38 @@ class QWT_EXPORT QwtPlotAbstractCanvas
 	void updateStyleSheetInfo();
 
   private:
-	Q_DISABLE_COPY(QwtPlotAbstractCanvas)
+	QwtPlotAbstractCanvas(const QwtPlotAbstractCanvas&) = delete;
+	QwtPlotAbstractCanvas& operator=(const QwtPlotAbstractCanvas&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotAbstractCanvas)
 };
 
 /**
- * \if ENGLISH
  * @brief Base class of QwtPlotOpenGLCanvas and QwtPlotGLCanvas
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotOpenGLCanvas 和 QwtPlotGLCanvas 的基类
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details The default setting enables BackingStore and Opaque.
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 默认设置启用 BackingStore 和 Opaque。
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief Paint double buffered reusing the content of the pixmap buffer when possible
 		 * @details Using a backing store might improve the performance significantly,
 		 *          when working with widget overlays (like rubber bands).
 		 *          Disabling the cache might improve the performance for incremental paints
 		 *          (using QwtPlotDirectPainter).
 		 * @sa backingStore(), invalidateBackingStore()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 尽可能重用像素映射缓冲区内容进行双缓冲绘制
-		 * @details 使用后备存储可能会显著提高性能，
-		 *          当使用部件覆盖（如橡皮筋）时。
-		 *          禁用缓存可能会提高增量绘制的性能（使用 QwtPlotDirectPainter）。
-		 * @sa backingStore(), invalidateBackingStore()
-		 * \endif
 		 */
 		BackingStore = 1,
 
 		/**
-		 * \if ENGLISH
 		 * @brief When ImmediatePaint is set replot() calls repaint() instead of update()
 		 * @sa replot(), QWidget::repaint(), QWidget::update()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 当设置 ImmediatePaint 时，replot() 调用 repaint() 而不是 update()
-		 * @sa replot(), QWidget::repaint(), QWidget::update()
-		 * \endif
 		 */
 		ImmediatePaint = 8,
 	};
@@ -17103,7 +13619,7 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
 	// Constructor
 	explicit QwtPlotAbstractGLCanvas( QWidget* canvasWidget );
 	// Destructor
-	virtual ~QwtPlotAbstractGLCanvas();
+	~QwtPlotAbstractGLCanvas();
 
 	// Set a paint attribute
 	void setPaintAttribute( PaintAttribute, bool on = true );
@@ -17150,8 +13666,7 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
   private:
 	virtual void clearBackingStore() = 0;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotAbstractGLCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotAbstractGLCanvas::PaintAttributes )
@@ -17173,17 +13688,9 @@ class QPixmap;
 class QPainterPath;
 
 /**
- * \if ENGLISH
  * @brief Canvas of a QwtPlot
  * @details Canvas is the widget where all plot items are displayed
  * @sa QwtPlot::setCanvas(), QwtPlotGLCanvas, QwtPlotOpenGLCanvas
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot 的画布
- * @details 画布是显示所有绘图项的部件
- * @sa QwtPlot::setCanvas(), QwtPlotGLCanvas, QwtPlotOpenGLCanvas
- * \endif
  */
 class QWT_EXPORT QwtPlotCanvas : public QFrame, public QwtPlotAbstractCanvas
 {
@@ -17193,22 +13700,13 @@ class QWT_EXPORT QwtPlotCanvas : public QFrame, public QwtPlotAbstractCanvas
 
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details The default setting enables BackingStore and Opaque.
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 默认设置启用 BackingStore 与 Opaque。
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief BackingStore
 		 * @details Paint double buffered reusing the content of the pixmap buffer when possible.
 		 *          Using a backing store might improve the performance significantly,
@@ -17216,20 +13714,10 @@ public:
 		 *          Disabling the cache might improve the performance for incremental paints
 		 *          (using QwtPlotDirectPainter).
 		 * @sa backingStore(), invalidateBackingStore()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 后备存储
-		 * @details 双缓冲绘制，尽可能复用 pixmap 缓存的内容。
-		 *          使用后备存储可显著提升性能，尤其当存在部件叠加（如 rubber band）时。
-		 *          禁用缓存可能提升增量绘制（如使用 QwtPlotDirectPainter）的性能。
-		 * @sa backingStore(), invalidateBackingStore()
-		 * \endif
 		 */
 		BackingStore = 1,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Opaque
 		 * @details Try to fill the complete contents rectangle of the plot canvas.
 		 *          When using styled backgrounds Qt assumes that the canvas doesn't fill its area
@@ -17239,21 +13727,10 @@ public:
 		 *          When the Opaque attribute is enabled the canvas tries to identify the gaps
 		 *          with some heuristics and to fill those only.
 		 * @warning Will not work for semitransparent backgrounds.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 不透明
-		 * @details 尝试填充绘图画布的全部内容矩形。
-		 *          使用样式背景时，Qt 假定画布并未完全填充其区域（例如圆角边框），
-		 *          因而会在画布下方继续填充。若使用渐变填充，这可能成为严重性能瓶颈。
-		 *          启用 Opaque 后，画布会通过启发式算法识别空隙并仅填充这些区域。
-		 * @warning 对半透明背景无效。
-		 * \endif
 		 */
 		Opaque = 2,
 
 		/**
-		 * \if ENGLISH
 		 * @brief HackStyledBackground
 		 * @details Try to improve painting of styled backgrounds.
 		 *          QwtPlotCanvas supports the box model attributes for customizing the layout
@@ -17264,31 +13741,13 @@ public:
 		 *          the background before and the border after the plot items.
 		 *          In this order the border gets perfectly antialiased and you can avoid
 		 *          some pixel artifacts in the corners.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 样式背景黑客
-		 * @details 尝试优化样式背景的绘制。
-		 *          QwtPlotCanvas 支持盒模型属性，以便通过样式表自定义布局。
-		 *          遗憾的是，Qt 样式表的设计并未提供处理圆角背景的方案，除 padding 外。
-		 *          启用 HackStyledBackground 后，画布会通过逆向工程将背景与边框分离：
-		 *          先绘制背景，再绘制边框，使边框获得完美抗锯齿并避免角落像素伪影。
-		 * \endif
 		 */
 		HackStyledBackground = 4,
 
 		/**
-		 * \if ENGLISH
 		 * @brief ImmediatePaint
 		 * @details When ImmediatePaint is set replot() calls repaint() instead of update().
 		 * @sa replot(), QWidget::repaint(), QWidget::update()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 立即绘制
-		 * @details 当 ImmediatePaint 被设置时，replot() 将调用 repaint() 而非 update()。
-		 * @sa replot(), QWidget::repaint(), QWidget::update()
-		 * \endif
 		 */
 		ImmediatePaint = 8
 	};
@@ -17298,7 +13757,7 @@ public:
 	// Constructor
 	explicit QwtPlotCanvas(QwtPlot* = nullptr);
 	// Destructor
-	virtual ~QwtPlotCanvas();
+	~QwtPlotCanvas() override;
 
 	// Set paint attribute
 	void setPaintAttribute(PaintAttribute, bool on = true);
@@ -17330,8 +13789,7 @@ protected:
 	virtual void drawBorder(QPainter*) override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotCanvas::PaintAttributes)
@@ -17348,71 +13806,39 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotCanvas::PaintAttributes)
 #include <qframe.h>
 
 /**
- * \if ENGLISH
  * @brief A transparent canvas for QwtPlot
  * @details QwtPlotTransparentCanvas provides a transparent canvas for QwtPlot
  *          that allows the background to show through.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot 的透明画布
- * @details QwtPlotTransparentCanvas 为 QwtPlot 提供一个透明画布，
- *          允许背景透显出来。
- * \endif
  */
 class QWT_EXPORT QwtPlotTransparentCanvas : public QFrame, public QwtPlotAbstractCanvas
 {
 	Q_OBJECT
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 构造函数
-	 * \endif
 	 */
 	explicit QwtPlotTransparentCanvas(QwtPlot* plot = nullptr);
 	/**
-	 * \if ENGLISH
 	 * @brief Destructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 析构函数
-	 * \endif
 	 */
-	virtual ~QwtPlotTransparentCanvas();
+	~QwtPlotTransparentCanvas() override;
 public Q_SLOTS:
 	/**
-	 * \if ENGLISH
 	 * @brief Replot the canvas
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 重绘画布
-	 * \endif
 	 */
 	virtual void replot();
 
 protected:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint event handler
-	 * \endif
 	 */
 	virtual void paintEvent(QPaintEvent* event) override;
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the border
-	 * \endif
 	 */
 	virtual void drawBorder(QPainter* painter) override;
 	/**
-	 * \if ENGLISH
 	 * @brief Get the border path
-	 * \endif
 	 */
 	virtual QPainterPath borderPath(const QRect& rect) const;
 };
@@ -17436,7 +13862,6 @@ protected:
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief An alternative canvas for a QwtPlot derived from QOpenGLWidget
  * @details Even if QwtPlotOpenGLCanvas is not derived from QFrame it imitates
  *          its API. When using style sheets it supports the box model - beside
@@ -17448,18 +13873,6 @@ class QwtPlot;
  *       an OpenGL offscreen buffer ( QwtPlotCanvas::OpenGLBuffer ) with QwtPlotCanvas.
  *       Performance is worse, than rendering straight to a QOpenGLWidget, but is usually
  *       better integrated into a desktop application.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot 的替代画布，派生自 QOpenGLWidget
- * @details 即使 QwtPlotOpenGLCanvas 不是从 QFrame 派生的，它也模仿了其 API。
- *          使用样式表时，它支持盒模型 - 包括带有圆角边框的背景。
- *
- * @sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
- *
- * @note 获取硬件加速图形的另一种方法是使用 QwtPlotCanvas::OpenGLBuffer 与 QwtPlotCanvas。
- *       性能比直接渲染到 QOpenGLWidget 差，但通常更好地集成到桌面应用程序中。
- * \endif
  */
 class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstractGLCanvas
 {
@@ -17476,123 +13889,68 @@ class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstr
 
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 构造函数
-	 * \endif
 	 */
 	explicit QwtPlotOpenGLCanvas(QwtPlot* = nullptr);
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor with surface format
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 构造函数（带表面格式）
-	 * \endif
 	 */
 	explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = nullptr);
 	/**
-	 * \if ENGLISH
 	 * @brief Destructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 析构函数
-	 * \endif
 	 */
-	virtual ~QwtPlotOpenGLCanvas();
+	~QwtPlotOpenGLCanvas() override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Invalidate the backing store
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 使后备存储失效
-	 * \endif
 	 */
 	Q_INVOKABLE virtual void invalidateBackingStore() override;
 	/**
-	 * \if ENGLISH
 	 * @brief Get the border path
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 获取边界路径
-	 * \endif
 	 */
 	Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Handle events
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 处理事件
-	 * \endif
 	 */
 	virtual bool event(QEvent*) override;
 
 public Q_SLOTS:
 	/**
-	 * \if ENGLISH
 	 * @brief Replot the canvas
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 重绘画布
-	 * \endif
 	 */
 	void replot();
 
 protected:
 	/**
-	 * \if ENGLISH
 	 * @brief Handle paint events
-	 * \endif
 	 */
 	virtual void paintEvent(QPaintEvent*) override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize OpenGL
-	 * \endif
 	 */
 	virtual void initializeGL() override;
 	/**
-	 * \if ENGLISH
 	 * @brief Paint OpenGL
-	 * \endif
 	 */
 	virtual void paintGL() override;
 	/**
-	 * \if ENGLISH
 	 * @brief Resize OpenGL
-	 * \endif
 	 */
 	virtual void resizeGL(int width, int height) override;
 
 private:
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize the canvas
-	 * \endif
 	 */
 	void init(const QSurfaceFormat&);
 	/**
-	 * \if ENGLISH
 	 * @brief Clear the backing store
-	 * \endif
 	 */
 	virtual void clearBackingStore() override;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotOpenGLCanvas)
 };
 
 #endif
@@ -17619,7 +13977,6 @@ template< typename T >
 class QList;
 
 /**
- * \if ENGLISH
  * @brief Base class for items on the plot canvas
  *
  * A plot item is "something", that can be painted on the plot canvas,
@@ -17655,57 +14012,16 @@ class QList;
  * the YourPlotItem::draw() method.
  *
  * @sa The cpuplot example shows the implementation of additional plot items.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图画布上项目的基类
- *
- * 绘图项是可以在绘图画布上绘制的"东西"，或者只影响绘图部件的刻度。它们可以分为：
- *
- * - 表示器
- *  "表示器"是在绘图画布上表示某种数据的项目。不同的表示器类根据数据的特征组织：
- *  - QwtPlotMarker
- *    表示一个点或水平/垂直坐标
- *  - QwtPlotCurve
- *    表示一系列点
- *  - QwtPlotSpectrogram ( QwtPlotRasterItem )
- *    表示栅格数据
- *  - ...
- *
- * - 装饰器
- *  "装饰器"是显示与任何数据无关的附加信息的项目：
- *  - QwtPlotGrid
- *  - QwtPlotScaleItem
- *  - QwtPlotSvgItem
- *  - ...
- *
- * 根据 QwtPlotItem::ItemAttribute 标志，项目会被包含在自动缩放中或在图例上有一个条目。
- *
- * 在滥用现有项目类之前，最好实现一种新类型的绘图项
- * （不要将水印实现为谱图）。
- * 派生新类型的 QwtPlotItem 主要意味着实现
- * YourPlotItem::draw() 方法。
- *
- * @sa cpuplot 示例显示了附加绘图项的实现。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Runtime type information
 	 *
 	 * RttiValues is used to cast plot items, without
 	 * having to enable runtime type information of the compiler.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 运行时类型信息
-	 *
-	 * RttiValues 用于转换绘图项，无需启用编译器的运行时类型信息。
-	 * \endif
 	 */
 	enum RttiValues
 	{
@@ -17777,7 +14093,6 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Plot Item Attributes
 	 *
 	 * Various aspects of a plot widget depend on the attributes of
@@ -17785,15 +14100,6 @@ public:
 	 * participates in these updates depends on its attributes.
 	 *
 	 * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘图项属性
-	 *
-	 * 绘图部件的各个方面取决于附加绘图项的属性。单个绘图项是否以及如何参与这些更新取决于其属性。
-	 *
-	 * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-	 * \endif
 	 */
 	enum ItemAttribute
 	{
@@ -17810,7 +14116,7 @@ public:
 		/*!
 		   The item needs extra space to display something outside
 		   its bounding rectangle.
-		   \sa getCanvasMarginHint()
+		   @sa getCanvasMarginHint()
 		 */
 		Margins = 0x04
 	};
@@ -17818,54 +14124,27 @@ public:
 	Q_DECLARE_FLAGS(ItemAttributes, ItemAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Plot Item Interests
 	 *
 	 * Plot items might depend on the situation of the corresponding plot widget. By enabling an interest the plot item
 	 * will be notified, when the corresponding attribute of the plot widgets has changed.
 	 *
 	 * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘图项关注的事件类型
-	 *
-	 * 绘图项可能依赖于对应绘图部件的状态。通过启用某个关注事件，当绘图部件的对应属性发生变化时，绘图项将收到通知。
-	 *
-	 * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-	 * \endif
 	 */
 	enum ItemInterest
 	{
 		/**
-		 * \if ENGLISH
 		 * The item is interested in updates of the scales
 		 * @sa updateScaleDiv()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 该绘图项关注刻度的更新
-		 * @sa updateScaleDiv()
-		 * \endif
 		 */
 		ScaleInterest = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * The item is interested in updates of the legend ( of other items )
 		 * This flag is intended for items, that want to implement a legend for displaying entries of other plot item.
 		 *
 		 * @note If the plot item wants to be represented on a legend enable QwtPlotItem::Legend instead.
 		 * @sa updateLegend()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 该绘图项关注图例的更新（其他项的图例）
-		 * 此标志适用于那些希望实现图例以显示其他绘图项条目的绘图项。
-		 *
-		 * @note 若绘图项自身希望在图例中显示，请启用 QwtPlotItem::Legend 标志。
-		 * @sa updateLegend()
-		 * \endif
 		 */
 		LegendInterest = 0x02
 	};
@@ -17873,13 +14152,7 @@ public:
 	Q_DECLARE_FLAGS(ItemInterests, ItemInterest)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Render hints
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 渲染提示
-	 * \endif
 	 */
 	enum RenderHint
 	{
@@ -17900,7 +14173,7 @@ public:
 	virtual ~QwtPlotItem();
 
 	/// Attach the item to a plot
-	void attach(QwtPlot* plot);
+	virtual void attach(QwtPlot* plot);
 	/// Detach the item from the plot
 	void detach();
 
@@ -17975,23 +14248,12 @@ public:
 	virtual void legendChanged();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the item
 	 *
 	 * @param painter Painter
 	 * @param xMap Maps x-values into pixel coordinates.
 	 * @param yMap Maps y-values into pixel coordinates.
 	 * @param canvasRect Contents rect of the canvas in painter coordinates
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制项目
-	 *
-	 * @param painter 画笔
-	 * @param xMap 将 x 值映射到像素坐标
-	 * @param yMap 将 y 值映射到像素坐标
-	 * @param canvasRect 画布在画笔坐标中的内容矩形
-	 * \endif
 	 */
 	virtual void draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const = 0;
 
@@ -18029,10 +14291,9 @@ protected:
 	QwtGraphic defaultIcon(const QBrush&, const QSizeF&) const;
 
 private:
-	Q_DISABLE_COPY(QwtPlotItem)
-
-	class PrivateData;
-	PrivateData* m_data;
+	QwtPlotItem(const QwtPlotItem&) = delete;
+	QwtPlotItem& operator=(const QwtPlotItem&) = delete;
+	QWT_DECLARE_PRIVATE(QwtPlotItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotItem::ItemAttributes)
@@ -18056,7 +14317,6 @@ using QwtPlotItemList     = QList< QwtPlotItem* >;
 using QwtPlotItemIterator = QList< QwtPlotItem* >::ConstIterator;
 
 /**
- * \if ENGLISH
  * @brief A dictionary for plot items
  *
  * QwtPlotDict organizes plot items in increasing z-order.
@@ -18066,17 +14326,6 @@ using QwtPlotItemIterator = QList< QwtPlotItem* >::ConstIterator;
  * items of a specific type -  that are currently on the plot.
  *
  * @sa QwtPlotItem::attach(), QwtPlotItem::detach(), QwtPlotItem::z()
- * \endif
- *
- * \if CHINESE
- * @brief 绘图项的字典
- *
- * QwtPlotDict 按递增的 z 顺序组织绘图项。
- * 如果启用了 autoDelete()，所有附加的项目将在字典的析构函数中被删除。
- * QwtPlotDict 可用于访问所有 QwtPlotItem 项目 - 或所有特定类型的项目 - 当前在绘图上的项目。
- *
- * @sa QwtPlotItem::attach(), QwtPlotItem::detach(), QwtPlotItem::z()
- * \endif
  */
 class QWT_EXPORT QwtPlotDict
 {
@@ -18106,8 +14355,7 @@ protected:
 	void removeItem(QwtPlotItem*);
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotDict)
 };
 
 #endif
@@ -18122,7 +14370,6 @@ private:
 class QFont;
 
 /**
- * \if ENGLISH
  * @brief A class which draws a legend inside the plot canvas
  * @details QwtPlotLegendItem can be used to draw a legend inside the plot canvas.
  *          It can be used together with a QwtLegend or instead of it
@@ -18142,31 +14389,13 @@ class QFont;
  * @note An external QwtLegend with a transparent background
  *       on top the plot canvas might be another option
  *       with a similar effect.
- * \endif
  *
- * \if CHINESE
- * @brief 在绘图画布内绘制图例的类
- * @details QwtPlotLegendItem 可用于在绘图画布内绘制图例。
- *          它可以与 QwtLegend 一起使用，或替代它，
- *          为绘图画布留出更多空间。
- *
- *          与 QwtLegend 不同，图例项是非交互式的。
- *          要识别对图例项的鼠标点击，需要安装事件过滤器来捕获绘图画布上的鼠标事件。
- *          图例项的几何形状可通过 legendGeometries() 获取。
- *
- *          图例项根据其 alignment() 标志与绘图画布对齐。
- *          它可能为整个图例（通常是半透明的）或每个图例项设置背景。
- *
- * @note 在绘图画布顶部使用具有透明背景的外部 QwtLegend
- *       可能是另一个具有类似效果的选项。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotLegendItem : public QwtPlotItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Background mode
 	 * @details Depending on the mode the complete legend or each item
 	 *          might have an background.
@@ -18174,16 +14403,7 @@ public:
 	 *          The default setting is LegendBackground.
 	 *
 	 * @sa setBackgroundMode(), setBackgroundBrush(), drawBackground()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 背景模式
-	 * @details 根据模式，整个图例或每个项目可能有背景。
-	 *
-	 *          默认设置是 LegendBackground。
-	 *
-	 * @sa setBackgroundMode(), setBackgroundBrush(), drawBackground()
-	 * \endif
 	 */
 	enum BackgroundMode
 	{
@@ -18197,7 +14417,7 @@ public:
 	/// Constructor
 	explicit QwtPlotLegendItem();
 	/// Destructor
-	virtual ~QwtPlotLegendItem();
+	~QwtPlotLegendItem() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -18297,8 +14517,7 @@ protected:
 	virtual void drawBackground(QPainter*, const QRectF& rect) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotLegendItem)
 };
 
 #endif
@@ -18315,17 +14534,9 @@ private:
 class QwtScaleDiv;
 
 /**
- * \if ENGLISH
  * @brief Base class for plot items representing a series of samples
  * @details QwtPlotSeriesItem is the base class for plot items that represent a series of samples,
  *          such as curves, bars, and other data visualization elements.
- * \endif
- *
- * \if CHINESE
- * @brief 表示一系列样本的绘图项的基类
- * @details QwtPlotSeriesItem 是表示一系列样本的绘图项的基类，
- *          例如曲线、条形图和其他数据可视化元素。
- * \endif
  */
 class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 	public virtual QwtAbstractSeriesStore
@@ -18337,7 +14548,7 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 	explicit QwtPlotSeriesItem( const QwtText& title );
 
 	// Destructor
-	virtual ~QwtPlotSeriesItem();
+	~QwtPlotSeriesItem() override;
 
 	// Set the orientation
 	void setOrientation( Qt::Orientation );
@@ -18350,7 +14561,6 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 		const QRectF& canvasRect ) const override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw a subset of the samples
 	 * @param painter Painter
 	 * @param xMap Maps x-values into pixel coordinates.
@@ -18359,17 +14569,6 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 	 * @param from Index of the first point to be painted
 	 * @param to Index of the last point to be painted. If to < 0 the
 	 *           curve will be painted to its last point.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制样本的子集
-	 * @param painter 绘图器
-	 * @param xMap 将 x 值映射到像素坐标。
-	 * @param yMap 将 y 值映射到像素坐标。
-	 * @param canvasRect 画布的内容矩形
-	 * @param from 要绘制的第一个点的索引
-	 * @param to 要绘制的最后一个点的索引。如果 to < 0，则曲线将绘制到其最后一个点。
-	 * \endif
 	 */
 	virtual void drawSeries( QPainter* painter,
 		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -18386,8 +14585,7 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 	virtual void dataChanged() override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotSeriesItem)
 };
 
 #endif
@@ -18400,25 +14598,17 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
 #define QWT_PLOT_ABSTRACT_BAR_CHART_H
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for bar chart items
  * @details In opposite to almost all other plot items bar charts can't be
  *          displayed inside of their bounding rectangle and need a special
  *          API how to calculate the width of the bars and how they affect
  *          the layout of the attached plot.
- * \endif
- *
- * \if CHINESE
- * @brief 条形图项的抽象基类
- * @details 与几乎所有其他绘图项不同，条形图无法在其边界矩形内显示，
- *          需要特殊的 API 来计算条形的宽度以及它们如何影响附加绘图的布局。
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
   public:
 	/*!
-		\brief Mode how to calculate the bar width
+		@brief Mode how to calculate the bar width
 
 		setLayoutPolicy(), setLayoutHint(), barWidthHint()
 	 */
@@ -18429,7 +14619,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 		   by the number of samples. The layoutHint() is used as a minimum width
 		   in paint device coordinates.
 
-		   \sa boundingRectangle()
+		   @sa boundingRectangle()
 		 */
 		AutoAdjustSamples,
 
@@ -18442,7 +14632,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 		   The bar width is calculated by multiplying layoutHint()
 		   with the height or width of the canvas.
 
-		   \sa boundingRectangle()
+		   @sa boundingRectangle()
 		 */
 		ScaleSampleToCanvas,
 
@@ -18455,7 +14645,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 	// Constructor with title
 	explicit QwtPlotAbstractBarChart( const QwtText& title );
 	// Destructor
-	virtual ~QwtPlotAbstractBarChart();
+	~QwtPlotAbstractBarChart() override;
 
 	// Set the layout policy for bar width calculation
 	void setLayoutPolicy( LayoutPolicy );
@@ -18494,8 +14684,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 		double value ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotAbstractBarChart)
 };
 
 #endif
@@ -18512,7 +14701,6 @@ template< typename T >
 class QwtSeriesData;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotBarChart displays a series of values as bars
  * @details Each bar might be customized individually by implementing
  *          a specialSymbol(). Otherwise it is rendered using a default symbol.
@@ -18531,68 +14719,28 @@ class QwtSeriesData;
  *
  * @sa QwtPlotMultiBarChart, QwtPlotHistogram, QwtPlotCurve::Sticks,
  *     QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotBarChart 将一系列值显示为条形
- * @details 每个条形可以通过实现 specialSymbol() 进行单独自定义。
- *          否则，它将使用默认符号进行渲染。
- *
- *          根据其 orientation()，条形可以水平或垂直显示。
- *          条形覆盖从 baseline() 到值之间的区间。
- *
- *          通过激活 LegendBarTitles 模式，每个样本将在图例上有自己的条目。
- *
- *          条形图最常见的用例是显示 y 坐标列表，其中 x 坐标只是列表中的索引。
- *          但对于其他情况（例如，当值与日期相关时），也可以显式设置 x 坐标。
- *
- * @sa QwtPlotMultiBarChart, QwtPlotHistogram, QwtPlotCurve::Sticks,
- *     QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
  */
 class QWT_EXPORT QwtPlotBarChart : public QwtPlotAbstractBarChart, public QwtSeriesStore< QPointF >
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Legend modes
 	 * @details The default setting is QwtPlotBarChart::LegendChartTitle.
 	 * @sa setLegendMode(), legendMode()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 图例模式
-	 * @details 默认设置是 QwtPlotBarChart::LegendChartTitle。
-	 * @sa setLegendMode(), legendMode()
-	 * \endif
 	 */
 	enum LegendMode
 	{
 		/**
-		 * \if ENGLISH
 		 * One entry on the legend showing the default symbol
 		 * and the title() of the chart
 		 * @sa QwtPlotItem::title()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 图例上的一个条目，显示默认符号和图表的 title()
-		 * @sa QwtPlotItem::title()
-		 * \endif
 		 */
 		LegendChartTitle,
 
 		/**
-		 * \if ENGLISH
 		 * One entry for each value showing the individual symbol
 		 * of the corresponding bar and the bar title.
 		 * @sa specialSymbol(), barTitle()
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 每个值的一个条目，显示对应条形的单独符号和条形标题。
-		 * @sa specialSymbol(), barTitle()
-		 * \endif
 		 */
 		LegendBarTitles
 	};
@@ -18603,10 +14751,13 @@ public:
 	explicit QwtPlotBarChart(const QwtText& title);
 
 	// Destructor
-	virtual ~QwtPlotBarChart();
+	~QwtPlotBarChart() override;
 
 	// Get the runtime type information
 	virtual int rtti() const override;
+
+	// Attach the bar chart to a plot (applies color cycle if pen/brush not user-set)
+	void attach(QwtPlot* plot) override;
 
 	// Set samples from QVector<QPointF>
 	void setSamples(const QVector< QPointF >&);
@@ -18686,8 +14837,7 @@ private:
 	/// Initialize the bar chart
 	void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotBarChart)
 };
 
 #endif
@@ -18712,7 +14862,6 @@ class QPolygonF;
 class QPen;
 
 /**
- * \if ENGLISH
  * @brief A plot item, that represents a series of points
  * @details A curve is the representation of a series of points in the x-y plane.
  *          It supports different display styles, interpolation ( f.e. spline )
@@ -18739,157 +14888,70 @@ class QPen;
  * see examples/bode
  *
  * @sa QwtPointSeriesData, QwtSymbol, QwtScaleMap
- * \endif
- *
- * \if CHINESE
- * @brief 表示一系列点的绘图项
- * @details 曲线是 x-y 平面中一系列点的表示。
- *          它支持不同的显示样式、插值（例如样条曲线）和符号。
- *
- * @par 使用方法
- * <dl><dt>a) 分配曲线属性</dt>
- * <dd>创建曲线时，它被配置为绘制黑色实线，使用 QwtPlotCurve::Lines 样式，没有符号。
- * 您可以通过调用 setPen()、setStyle() 和 setSymbol() 来更改此设置。</dd>
- * <dt>b) 连接/分配数据</dt>
- * <dd>QwtPlotCurve 使用 QwtSeriesData 对象获取其点，该对象提供了到点的实际存储（如 QAbstractItemModel）的桥接。
- * 有几个从 QwtSeriesData 派生的便利类，它们也在内部存储点（如 QStandardItemModel）。
- * QwtPlotCurve 还提供了几种 setSamples() 变体，它们从内部数组构建 QwtSeriesData 对象。</dd>
- * <dt>c) 将曲线附加到绘图</dt>
- * <dd>请参阅 QwtPlotItem::attach()
- * </dd></dl>
- *
- * @par 示例：
- * 见 examples/bode
- *
- * @sa QwtPointSeriesData, QwtSymbol, QwtScaleMap
- * \endif
  */
 class QWT_EXPORT QwtPlotCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QPointF >
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Curve styles
 	 * @sa setStyle(), style()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 曲线样式
-	 * @sa setStyle(), style()
-	 * \endif
 	 */
 	enum CurveStyle
 	{
 		/**
-		 * \if ENGLISH
 		 * Don't draw a curve. Note: This doesn't affect the symbols.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 不绘制曲线。注意：这不会影响符号。
-		 * \endif
 		 */
 		NoCurve = -1,
 
 		/**
-		 * \if ENGLISH
 		 * Connect the points with straight lines. The lines might
 		 * be interpolated depending on the 'Fitted' attribute. Curve
 		 * fitting can be configured using setCurveFitter().
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 用直线连接点。线条可能会根据 'Fitted' 属性进行插值。
-		 * 可以使用 setCurveFitter() 配置曲线拟合。
-		 * \endif
 		 */
 		Lines,
 
 		/**
-		 * \if ENGLISH
 		 * Draw vertical or horizontal sticks ( depending on the
 		 * orientation() ) from a baseline which is defined by setBaseline().
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 从由 setBaseline() 定义的基线绘制垂直或水平线条（取决于 orientation()）。
-		 * \endif
 		 */
 		Sticks,
 
 		/**
-		 * \if ENGLISH
 		 * Connect the points with a step function. The step function
 		 * is drawn from the left to the right or vice versa,
 		 * depending on the QwtPlotCurve::Inverted attribute.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 用阶梯函数连接点。阶梯函数从左到右或从右到左绘制，
-		 * 取决于 QwtPlotCurve::Inverted 属性。
-		 * \endif
 		 */
 		Steps,
 
 		/**
-		 * \if ENGLISH
 		 * Draw dots at the locations of the data points. Note:
 		 * This is different from a dotted line (see setPen()), and faster
 		 * as a curve in QwtPlotCurve::NoStyle style and a symbol
 		 * painting a point.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 在数据点的位置绘制点。注意：
-		 * 这与虚线（见 setPen()）不同，并且比 QwtPlotCurve::NoStyle 样式的曲线和
-		 * 绘制点的符号更快。
-		 * \endif
 		 */
 		Dots,
 
 		/**
-		 * \if ENGLISH
 		 * Styles >= QwtPlotCurve::UserCurve are reserved for derived
 		 * classes of QwtPlotCurve that overload drawCurve() with
 		 * additional application specific curve types.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 样式 >= QwtPlotCurve::UserCurve 保留给 QwtPlotCurve 的派生类，
-		 * 这些类用额外的应用特定曲线类型重载 drawCurve()。
-		 * \endif
 		 */
 		UserCurve = 100
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Attribute for drawing the curve
 	 * @sa setCurveAttribute(), testCurveAttribute(), curveFitter()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制曲线的属性
-	 * @sa setCurveAttribute(), testCurveAttribute(), curveFitter()
-	 * \endif
 	 */
 	enum CurveAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * For QwtPlotCurve::Steps only.
 		 * Draws a step function from the right to the left.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 仅适用于 QwtPlotCurve::Steps。
-		 * 从右到左绘制阶梯函数。
-		 * \endif
 		 */
 		Inverted = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * Only in combination with QwtPlotCurve::Lines
 		 * A QwtCurveFitter tries to
 		 * interpolate/smooth the curve, before it is painted.
@@ -18898,16 +14960,6 @@ public:
 		 * for calculating coefficients and additional points.
 		 * If painting in QwtPlotCurve::Fitted mode is slow it might be better
 		 * to fit the points, before they are passed to QwtPlotCurve.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 仅与 QwtPlotCurve::Lines 结合使用
-		 * QwtCurveFitter 尝试在绘制曲线之前对其进行插值/平滑。
-		 *
-		 * @note 曲线拟合需要临时内存来计算系数和额外的点。
-		 * 如果在 QwtPlotCurve::Fitted 模式下绘制速度慢，
-		 * 最好在将点传递给 QwtPlotCurve 之前先拟合它们。
-		 * \endif
 		 */
 		Fitted = 0x02
 	};
@@ -18915,65 +14967,33 @@ public:
 	Q_DECLARE_FLAGS(CurveAttributes, CurveAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Attributes how to represent the curve on the legend
 	 * @sa setLegendAttribute(), testLegendAttribute(),
 	 *     QwtPlotItem::legendData(), legendIcon()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 如何在图例上表示曲线的属性
-	 * @sa setLegendAttribute(), testLegendAttribute(),
-	 *     QwtPlotItem::legendData(), legendIcon()
-	 * \endif
 	 */
 
 	enum LegendAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * QwtPlotCurve tries to find a color representing the curve
 		 * and paints a rectangle with it.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * QwtPlotCurve 尝试找到代表曲线的颜色并用它绘制一个矩形。
-		 * \endif
 		 */
 		LegendNoAttribute = 0x00,
 
 		/**
-		 * \if ENGLISH
 		 * If the style() is not QwtPlotCurve::NoCurve a line
 		 * is painted with the curve pen().
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 如果 style() 不是 QwtPlotCurve::NoCurve，则用曲线的 pen() 绘制一条线。
-		 * \endif
 		 */
 		LegendShowLine = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * If the curve has a valid symbol it is painted.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 如果曲线有有效的符号，则绘制它。
-		 * \endif
 		 */
 		LegendShowSymbol = 0x02,
 
 		/**
-		 * \if ENGLISH
 		 * If the curve has a brush a rectangle filled with the
 		 * curve brush() is painted.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 如果曲线有画笔，则绘制一个用曲线的 brush() 填充的矩形。
-		 * \endif
 		 */
 		LegendShowBrush = 0x04
 	};
@@ -18981,83 +15001,44 @@ public:
 	Q_DECLARE_FLAGS(LegendAttributes, LegendAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Attributes to modify the drawing algorithm
-	 * @details The default setting enables ClipPolygons | FilterPoints
+	 * @details The default setting enables ClipPolygons | FilterPoints | FilterPointsAggressive
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 修改绘制算法的属性
-	 * @details 默认设置启用 ClipPolygons | FilterPoints
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Clip polygons before painting them. In situations, where points
 		 * are far outside the visible area (f.e when zooming deep) this
 		 * might be a substantial improvement for the painting performance
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 在绘制多边形之前裁剪它们。在点远在可见区域之外的情况下（例如深度缩放时），
-		 * 这可能会显著提高绘制性能
-		 * \endif
 		 */
 		ClipPolygons = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * Tries to reduce the data that has to be painted, by sorting out
 		 * duplicates, or paintings outside the visible area. Might have a
 		 * notable impact on curves with many close points.
 		 * Only a couple of very basic filtering algorithms are implemented.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 尝试通过排除重复项或可见区域外的绘制来减少必须绘制的数据。
-		 * 对于有许多接近点的曲线可能有显著影响。
-		 * 只实现了几个非常基本的过滤算法。
-		 * \endif
 		 */
 		FilterPoints = 0x02,
 
 		/**
-		 * \if ENGLISH
 		 * Minimize memory usage that is temporarily needed for the
 		 * translated points, before they get painted.
 		 * This might slow down the performance of painting
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 最小化绘制前临时需要的转换点内存使用。
-		 * 这可能会减慢绘制性能
-		 * \endif
 		 */
 		MinimizeMemory = 0x04,
 
 		/**
-		 * \if ENGLISH
 		 * Render the points to a temporary image and paint the image.
 		 * This is a very special optimization for Dots style, when
 		 * having a huge amount of points.
 		 * With a reasonable number of points QPainter::drawPoints()
 		 * will be faster.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 将点渲染到临时图像并绘制该图像。
-		 * 这是对 Dots 样式的非常特殊的优化，当有大量点时。
-		 * 对于合理数量的点，QPainter::drawPoints() 会更快。
-		 * \endif
 		 */
 		ImageBuffer = 0x08,
 
 		/**
-		 * \if ENGLISH
 		 * More aggressive point filtering trying to filter out
 		 * intermediate points, accepting minor visual differences.
 		 *
@@ -19078,26 +15059,39 @@ public:
 		 *      a nasty bug of the raster paint engine ( Qt 4.8, Qt 5.1 - 5.3 )
 		 *      becomes more dominant. For these versions the bug can be
 		 *      worked around by enabling the QwtPainter::polylineSplitting() mode.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 更积极的点过滤，尝试过滤掉中间点，接受 minor 视觉差异。
-		 *
-		 * 只有在使用以下事实将曲线绘制到整数坐标的绘图设备（例如屏幕上的所有部件）时才有效：
-		 * 连续点通常映射到相同的 x 或 y 坐标。
-		 * 映射到相同坐标的每个样本块可以减少到 4 个点（第一个、最小值、最大值、最后一个）。
-		 *
-		 * 在最坏情况下，要渲染的多边形将是绘图画布宽度的 4 倍。
-		 *
-		 * 该算法对大型数据集非常快速有效，可用于重绘周期内。
-		 *
-		 * @note 仅为 QwtPlotCurve::Lines 实现
-		 * @note 由于此算法用一条长线替换许多短线，
-		 *      光栅绘制引擎的一个严重错误（Qt 4.8，Qt 5.1 - 5.3）
-		 *      变得更加明显。对于这些版本，可以通过启用 QwtPainter::polylineSplitting() 模式来解决此错误。
-		 * \endif
 		 */
 		FilterPointsAggressive = 0x10,
+
+		/**
+		 * Pixel-column based downsampling for extreme performance.
+		 *
+		 * Allocates a bin array indexed by pixel column and stores
+		 * first/min/max/last Y per column. Each column produces at most 4 points.
+		 * Combined with binary-search visible range for monotonic X data.
+		 *
+		 * Output size: ~4 * canvasWidth points regardless of input size.
+		 * This is the fastest algorithm for datasets exceeding 100k points.
+		 *
+		 * @note Implemented for QwtPlotCurve::Lines only
+		 * @note Overrides FilterPointsAggressive when both are set
+		 */
+		FilterPointsPixel = 0x20,
+
+		/**
+		 * MinMax bucket downsampling (simplified LTTB variant).
+		 *
+		 * Divides the visible data range into N equal-count buckets
+		 * and keeps the min-Y and max-Y point from each bucket.
+		 * N is auto-calculated as 2 * canvasWidth.
+		 *
+		 * Output size: ~2 * N points. O(n) time complexity.
+		 * Preserves visual shape better than FilterPointsPixel for
+		 * data with uneven X distribution.
+		 *
+		 * @note Implemented for QwtPlotCurve::Lines only
+		 * @note Overrides FilterPointsAggressive when both are set
+		 */
+		FilterPointsLTTB = 0x40,
 	};
 
 	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
@@ -19109,10 +15103,13 @@ explicit QwtPlotCurve(const QString& title = QString());
 explicit QwtPlotCurve(const QwtText& title);
 
 	// Destructor
-virtual ~QwtPlotCurve();
+~QwtPlotCurve() override;
 
 	// Get the runtime type information
 virtual int rtti() const override;
+
+	// Attach the curve to a plot (applies color cycle if pen not user-set)
+	void attach(QwtPlot* plot) override;
 
 	// Set paint attribute
 void setPaintAttribute(PaintAttribute, bool on = true);
@@ -19255,18 +15252,10 @@ virtual void drawSeries(QPainter*,
 virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:
-	/**
-	 * \if ENGLISH
-	 * @brief Initialize the curve
-	 * \endif
-	 */
+	//! Initialize the curve
 void init();
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw the curve
-	 * \endif
-	 */
+	//! Draw the curve
 virtual void drawCurve(QPainter*,
 						   int style,
 						   const QwtScaleMap& xMap,
@@ -19275,11 +15264,7 @@ virtual void drawCurve(QPainter*,
 						   int from,
 						   int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw symbols
-	 * \endif
-	 */
+	//! Draw symbols
 virtual void drawSymbols(QPainter*,
 							 const QwtSymbol&,
 							 const QwtScaleMap& xMap,
@@ -19288,55 +15273,30 @@ virtual void drawSymbols(QPainter*,
 							 int from,
 							 int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw lines
-	 * \endif
-	 */
+	//! Draw lines
 virtual void
 	drawLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw sticks
-	 * \endif
-	 */
+	//! Draw sticks
 virtual void
 	drawSticks(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw dots
-	 * \endif
-	 */
+	//! Draw dots
 virtual void
 	drawDots(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw steps
-	 * \endif
-	 */
+	//! Draw steps
 virtual void
 	drawSteps(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Fill the curve
-	 * \endif
-	 */
+	//! Fill the curve
 virtual void fillCurve(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF& canvasRect, QPolygonF&) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Close the polyline
-	 * \endif
-	 */
+	//! Close the polyline
 void closePolyline(QPainter*, const QwtScaleMap&, const QwtScaleMap&, QPolygonF&) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotCurve)
 };
 
 //! boundingRect().left()
@@ -19379,127 +15339,75 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotCurve::CurveAttributes)
 #include <qstring.h>
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a recorded sequence of QPainter commands
  * @details QwtPlotGraphicItem renders a sequence of recorded painter commands
  *          into a specific plot area. Recording of painter commands can be
  *          done manually by QPainter or e.g. QSvgRenderer.
  *
  * @sa QwtPlotShapeItem, QwtPlotSvgItem
- * \endif
  *
- * \if CHINESE
- * @brief 显示记录的 QPainter 命令序列的绘图项
- * @details QwtPlotGraphicItem 将记录的绘制命令序列渲染到特定的绘图区域。
- *          绘制命令的记录可以通过 QPainter 或 QSvgRenderer 等手动完成。
- *
- * @sa QwtPlotShapeItem, QwtPlotSvgItem
- * \endif
  */
 
 class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 构造函数
-	 * \endif
 	 */
 explicit QwtPlotGraphicItem( const QString& title = QString() );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Constructor with QwtText title
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 构造函数（带 QwtText 标题）
-	 * \endif
 	 */
 explicit QwtPlotGraphicItem( const QwtText& title );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Destructor
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 析构函数
-	 * \endif
 	 */
-virtual ~QwtPlotGraphicItem();
+~QwtPlotGraphicItem() override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Set graphic with its bounding rectangle
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 设置图形及其边界矩形
-	 * \endif
 	 */
 void setGraphic( const QRectF& rect, const QwtGraphic& );
 
 	/**
-	 * \if ENGLISH
 	 * @brief Get graphic
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 获取图形
-	 * \endif
 	 */
 QwtGraphic graphic() const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Get the bounding rectangle
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 获取边界矩形
-	 * \endif
 	 */
 virtual QRectF boundingRect() const override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the graphic
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制图形
-	 * \endif
 	 */
 virtual void draw( QPainter*,
 		const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 		const QRectF& canvasRect ) const override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Get the runtime type information
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 获取运行时类型信息
-	 * \endif
 	 */
 virtual int rtti() const override;
 
   private:
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize the item
-	 * \endif
 	 */
 void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotGraphicItem)
 };
 
 #endif
@@ -19517,7 +15425,6 @@ class QwtScaleMap;
 class QwtScaleDiv;
 
 /**
- * \if ENGLISH
  * @brief A class which draws a coordinate grid
  * @details The QwtPlotGrid class can be used to draw a coordinate grid.
  *          A coordinate grid consists of major and minor vertical
@@ -19526,16 +15433,7 @@ class QwtScaleDiv;
  *          be assigned with setXDiv() and setYDiv().
  *          The draw() member draws the grid within a bounding
  *          rectangle.
- * \endif
  *
- * \if CHINESE
- * @brief 绘制坐标网格的类
- * @details QwtPlotGrid 类可用于绘制坐标网格。
- *          坐标网格由主要和次要的垂直和水平网格线组成。
- *          网格线的位置由 X 和 Y 比例尺划分决定，
- *          可以通过 setXDiv() 和 setYDiv() 分配。
- *          draw() 成员在边界矩形内绘制网格。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
@@ -19545,7 +15443,7 @@ class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 explicit QwtPlotGrid();
 
 	// Destructor
-virtual ~QwtPlotGrid();
+~QwtPlotGrid() override;
 
 	// Get the runtime type information
 virtual int rtti() const override;
@@ -19623,16 +15521,13 @@ virtual void updateScaleDiv(
 
   private:
 	/**
-	 * \if ENGLISH
 	 * @brief Draw grid lines
-	 * \endif
 	 */
 void drawLines( QPainter*, const QRectF&,
 	Qt::Orientation, const QwtScaleMap&,
 	const QList< double >& ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotGrid)
 };
 
 #endif
@@ -19650,7 +15545,6 @@ class QRegion;
 class QwtPlotSeriesItem;
 
 /**
- * \if ENGLISH
  * @brief Painter object trying to paint incrementally
  * @details Often applications want to display samples while they are
  *          collected. When there are too many samples complete replots
@@ -19668,216 +15562,72 @@ class QwtPlotSeriesItem;
  * @warning Incremental painting will only help when no replot is triggered
  *          by another operation ( like changing scales ) and nothing needs
  *          to be erased.
- * \endif
- *
- * \if CHINESE
- * @brief 尝试增量绘制的绘制器对象
- * @details 通常应用程序希望在收集样本时显示它们。当样本太多时，
- *          在收集周期中处理完整的重绘会很昂贵。
- *
- *          QwtPlotDirectPainter 提供了一个 API 来绘制
- *          子集（例如所有添加的点），而无需擦除/重绘
- *          绘图画布。
- *
- *          在某些环境中，在绘制前计算适当的裁剪区域可能很重要。
- *          例如，对于 Qt Embedded，只有裁剪部分的后备存储会被复制到
- *          （可能未加速的）帧缓冲区。
- *
- * @warning 只有当没有其他操作（如更改比例尺）触发重绘且不需要
- *          擦除任何内容时，增量绘制才会有帮助。
- * \endif
  */
 class QWT_EXPORT QwtPlotDirectPainter : public QObject
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @sa setAttribute(), testAttribute(), drawSeries()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @sa setAttribute(), testAttribute(), drawSeries()
-	 * \endif
 	 */
 	enum Attribute
 	{
-		/**
-		 * \if ENGLISH
-		 * Initializing a QPainter is an expensive operation.
-		 * When AtomicPainter is set each call of drawSeries() opens/closes
-		 * a temporary QPainter. Otherwise QwtPlotDirectPainter tries to
-		 * use the same QPainter as long as possible.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 初始化 QPainter 是一项昂贵的操作。
-		 * 当设置了 AtomicPainter 时，每次调用 drawSeries() 都会打开/关闭
-		 * 一个临时的 QPainter。否则，QwtPlotDirectPainter 会尝试
-		 * 尽可能长时间地使用同一个 QPainter。
-		 * \endif
-		 */
+		///< Initializing a QPainter is an expensive operation.
+		///< When AtomicPainter is set each call of drawSeries() opens/closes
+		///< a temporary QPainter. Otherwise QwtPlotDirectPainter tries to
+		///< use the same QPainter as long as possible.
 		AtomicPainter = 0x01,
 
-		/**
-		 * \if ENGLISH
-		 * When FullRepaint is set the plot canvas is explicitly repainted
-		 * after the samples have been rendered.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 当设置了 FullRepaint 时，在样本渲染后会显式重绘绘图画布。
-		 * \endif
-		 */
+		///< When FullRepaint is set the plot canvas is explicitly repainted
+		///< after the samples have been rendered.
 		FullRepaint = 0x02,
 
-		/**
-		 * \if ENGLISH
-		 * When QwtPlotCanvas::BackingStore is enabled the painter
-		 * has to paint to the backing store and the widget. In certain
-		 * situations/environments it might be faster to paint to
-		 * the backing store only and then copy the backing store to the canvas.
-		 * This flag can also be useful for settings, where Qt fills the
-		 * the clip region with the widget background.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 当 QwtPlotCanvas::BackingStore 启用时，绘制器
-		 * 必须绘制到后备存储和部件。在某些情况下/环境中，
-		 * 只绘制到后备存储然后将后备存储复制到画布可能会更快。
-		 * 此标志对于 Qt 用部件背景填充裁剪区域的设置也很有用。
-		 * \endif
-		 */
+		///< When QwtPlotCanvas::BackingStore is enabled the painter
+		///< has to paint to the backing store and the widget. In certain
+		///< situations/environments it might be faster to paint to
+		///< the backing store only and then copy the backing store to the canvas.
+		///< This flag can also be useful for settings, where Qt fills the
+		///< the clip region with the widget background.
 		CopyBackingStore = 0x04
 	};
 
 Q_DECLARE_FLAGS( Attributes, Attribute )
 
-	/**
-	 * \if ENGLISH
-	 * @brief Constructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 构造函数
-	 * \endif
-	 */
+	// Constructor
 explicit QwtPlotDirectPainter( QObject* parent = nullptr );
 
-	/**
-	 * \if ENGLISH
-	 * @brief Destructor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 析构函数
-	 * \endif
-	 */
-virtual ~QwtPlotDirectPainter();
+	// Destructor
+~QwtPlotDirectPainter() override;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Set attribute
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 设置属性
-	 * \endif
-	 */
+	// Set attribute
 void setAttribute( Attribute, bool on );
 
-	/**
-	 * \if ENGLISH
-	 * @brief Test attribute
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 测试属性
-	 * \endif
-	 */
+	// Test attribute
 bool testAttribute( Attribute ) const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Set clipping
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 设置裁剪
-	 * \endif
-	 */
+	// Set clipping
 void setClipping( bool );
 
-	/**
-	 * \if ENGLISH
-	 * @brief Check if clipping is enabled
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 检查是否启用了裁剪
-	 * \endif
-	 */
+	// Check if clipping is enabled
 bool hasClipping() const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Set clip region
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 设置裁剪区域
-	 * \endif
-	 */
+	// Set clip region
 void setClipRegion( const QRegion& );
 
-	/**
-	 * \if ENGLISH
-	 * @brief Get clip region
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 获取裁剪区域
-	 * \endif
-	 */
+	// Get clip region
 QRegion clipRegion() const;
 
-	/**
-	 * \if ENGLISH
-	 * @brief Draw series
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制系列
-	 * \endif
-	 */
+	// Draw series
 void drawSeries( QwtPlotSeriesItem*, int from, int to );
 
-	/**
-	 * \if ENGLISH
-	 * @brief Reset the painter
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 重置绘制器
-	 * \endif
-	 */
+	// Reset the painter
 void reset();
 
-	/**
-	 * \if ENGLISH
-	 * @brief Event filter
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 事件过滤器
-	 * \endif
-	 */
+	// Event filter
 virtual bool eventFilter( QObject*, QEvent* ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotDirectPainter)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotDirectPainter::Attributes )
@@ -19901,7 +15651,6 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief QwtPlotHistogram represents a series of samples, where an interval
  *        is associated with a value ( \f$y = f([x1,x2])\f$ )
  * @details The representation depends on the style() and an optional symbol()
@@ -19914,18 +15663,7 @@ template< typename T > class QVector;
  *       is no applicable plot item for a "color histogram" yet.
  *
  * @sa QwtPlotBarChart, QwtPlotMultiBarChart
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotHistogram 表示一系列样本，其中每个区间都与一个值相关联 ( \f$y = f([x1,x2])\f$ )
- * @details 表示方式取决于 style() 和为每个区间显示的可选 symbol()。
- *
- * @note "直方图"一词在数字图像处理和统计学领域有不同的用法。维基百科引入了
- *       "图像直方图"和"颜色直方图"等术语以避免混淆。
- *       虽然"图像直方图"可以通过 QwtPlotCurve 显示，但目前还没有适用于"颜色直方图"的绘图项。
- *
- * @sa QwtPlotBarChart, QwtPlotMultiBarChart
- * \endif
  */
 
 class QWT_EXPORT QwtPlotHistogram
@@ -19934,71 +15672,41 @@ class QWT_EXPORT QwtPlotHistogram
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Histogram styles
 	 * @details The default style is QwtPlotHistogram::Columns.
 	 * @sa setStyle(), style(), setSymbol(), symbol(), setBaseline()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 直方图样式
-	 * @details 默认样式是 QwtPlotHistogram::Columns。
-	 * @sa setStyle(), style(), setSymbol(), symbol(), setBaseline()
-	 * \endif
 	 */
 	enum HistogramStyle
 	{
 		/**
-		 * \if ENGLISH
 		 * Draw an outline around the area, that is build by all intervals
 		 * using the pen() and fill it with the brush(). The outline style
 		 * requires, that the intervals are in increasing order and
 		 * not overlapping.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 使用 pen() 在所有区间构建的区域周围绘制轮廓，并用 brush() 填充它。
-		 * 轮廓样式要求区间按递增顺序排列且不重叠。
-		 * \endif
 		 */
 		Outline,
 
 		/**
-		 * \if ENGLISH
 		 * Draw a column for each interval. When a symbol() has been set
 		 * the symbol is used otherwise the column is displayed as
 		 * plain rectangle using pen() and brush().
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 为每个区间绘制一个列。当设置了 symbol() 时，使用该符号；
-		 * 否则，使用 pen() 和 brush() 将列显示为普通矩形。
-		 * \endif
 		 */
 		Columns,
 
 		/**
-		 * \if ENGLISH
 		 * Draw a simple line using the pen() for each interval.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 使用 pen() 为每个区间绘制一条简单的线。
-		 * \endif
 		 */
 		Lines,
 
 		/**
-		 * \if ENGLISH
 		 * Styles >= UserStyle are reserved for derived
 		 * classes that overload drawSeries() with
 		 * additional application specific ways to display a histogram.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 样式 >= UserStyle 保留给派生类使用，
-		 * 这些派生类用额外的应用特定方式重载 drawSeries() 来显示直方图。
-		 * \endif
 		 */
 		UserStyle = 100
 	};
@@ -20010,10 +15718,13 @@ explicit QwtPlotHistogram( const QString& title = QString() );
 explicit QwtPlotHistogram( const QwtText& title );
 
 	// Destructor
-virtual ~QwtPlotHistogram();
+~QwtPlotHistogram() override;
 
 	// Get the runtime type information
 virtual int rtti() const override;
+
+	// Attach the histogram to a plot (applies color cycle if pen/brush not user-set)
+	void attach(QwtPlot* plot) override;
 
 	// Set pen
 void setPen( const QColor&,
@@ -20069,43 +15780,33 @@ virtual QwtGraphic legendIcon(
 
   protected:
 	/**
-	 * \if ENGLISH
 	 * @brief Get the column rectangle
-	 * \endif
 	 */
 virtual QwtColumnRect columnRect( const QwtIntervalSample&,
 	const QwtScaleMap&, const QwtScaleMap& ) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw a column
-	 * \endif
 	 */
 virtual void drawColumn( QPainter*, const QwtColumnRect&,
 	const QwtIntervalSample& ) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw columns
-	 * \endif
 	 */
 void drawColumns( QPainter*,
 	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 	int from, int to ) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw outline
-	 * \endif
 	 */
 void drawOutline( QPainter*,
 	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 	int from, int to ) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw lines
-	 * \endif
 	 */
 void drawLines( QPainter*,
 	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -20113,21 +15814,16 @@ void drawLines( QPainter*,
 
   private:
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize the histogram
-	 * \endif
 	 */
 void init();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Flush polygon
-	 * \endif
 	 */
 void flushPolygon( QPainter*, double baseLine, QPolygonF& ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotHistogram)
 };
 
 #endif
@@ -20143,19 +15839,12 @@ class QwtIntervalSymbol;
 template< typename T > class QwtSeriesData;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotIntervalCurve represents a series of samples, where each value
  *        is associated with an interval ( \f$[y1,y2] = f(x)\f$ )
  * @details The representation depends on the style() and an optional symbol()
  *          that is displayed for each interval. QwtPlotIntervalCurve might be used
  *          to display error bars or the area between 2 curves.
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotIntervalCurve 表示一系列样本，其中每个值都与一个区间相关联 ( \f$[y1,y2] = f(x)\f$ )
- * @details 表示方式取决于 style() 和为每个区间显示的可选 symbol()。
- *          QwtPlotIntervalCurve 可用于显示误差条或两条曲线之间的区域。
- * \endif
  */
 class QWT_EXPORT QwtPlotIntervalCurve
 	: public QwtPlotSeriesItem
@@ -20163,84 +15852,48 @@ class QWT_EXPORT QwtPlotIntervalCurve
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Curve styles
 	 * @details The default setting is QwtPlotIntervalCurve::Tube.
 	 * @sa setStyle(), style()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 曲线样式
-	 * @details 默认设置是 QwtPlotIntervalCurve::Tube。
-	 * @sa setStyle(), style()
-	 * \endif
 	 */
 	enum CurveStyle
 	{
 		/**
-		 * \if ENGLISH
 		 * Don't draw a curve. Note: This doesn't affect the symbols.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 不绘制曲线。注意：这不会影响符号。
-		 * \endif
 		 */
 		NoCurve,
 
 		/**
-		 * \if ENGLISH
 		 * Build 2 curves from the upper and lower limits of the intervals
 		 * and draw them with the pen(). The area between the curves is
 		 * filled with the brush().
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 从区间的上限和下限构建 2 条曲线，并用 pen() 绘制它们。
-		 * 曲线之间的区域用 brush() 填充。
-		 * \endif
 		 */
 		Tube,
 
 		/**
-		 * \if ENGLISH
 		 * Styles >= QwtPlotIntervalCurve::UserCurve are reserved for derived
 		 * classes that overload drawSeries() with
 		 * additional application specific curve types.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 样式 >= QwtPlotIntervalCurve::UserCurve 保留给派生类使用，
-		 * 这些派生类用额外的应用特定曲线类型重载 drawSeries()。
-		 * \endif
 		 */
 		UserCurve = 100
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Attributes to modify the drawing algorithm
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 修改绘制算法的属性
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Clip polygons before painting them. In situations, where points
 		 * are far outside the visible area (f.e when zooming deep) this
 		 * might be a substantial improvement for the painting performance.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 在绘制多边形之前对其进行裁剪。在点远在可见区域之外的情况下
-		 * （例如深度缩放时），这可能会显著提高绘制性能。
-		 * \endif
 		 */
 		ClipPolygons = 0x01,
 
@@ -20257,10 +15910,13 @@ class QWT_EXPORT QwtPlotIntervalCurve
 	explicit QwtPlotIntervalCurve( const QwtText& title );
 
 	// Destructor
-	virtual ~QwtPlotIntervalCurve();
+	~QwtPlotIntervalCurve() override;
 
 	// Get the runtime type information
 	virtual int rtti() const override;
+
+	// Attach the interval curve to a plot (applies color cycle if pen not user-set)
+	void attach(QwtPlot* plot) override;
 
 	// Set paint attribute
 	void setPaintAttribute( PaintAttribute, bool on = true );
@@ -20317,33 +15973,26 @@ class QWT_EXPORT QwtPlotIntervalCurve
   protected:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize the curve
-	 * \endif
 	 */
 void init();
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the tube
-	 * \endif
 	 */
 virtual void drawTube( QPainter*,
 	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 	const QRectF& canvasRect, int from, int to ) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the symbols
-	 * \endif
 	 */
 virtual void drawSymbols( QPainter*, const QwtIntervalSymbol&,
 	const QwtScaleMap& xMap, const QwtScaleMap& yMap,
 	const QRectF& canvasRect, int from, int to ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotIntervalCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotIntervalCurve::PaintAttributes )
@@ -20360,7 +16009,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotIntervalCurve::PaintAttributes )
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotMagnifier provides zooming, by magnifying in steps
  * @details Using QwtPlotMagnifier a plot can be zoomed in/out in steps using
  *          keys, the mouse wheel or moving a mouse button in vertical direction.
@@ -20369,16 +16017,6 @@ class QwtPlot;
  *          individual and powerful navigation of the plot canvas.
  *
  * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotMagnifier 通过逐步放大提供缩放功能
- * @details 使用 QwtPlotMagnifier，可以使用按键、鼠标滚轮或在垂直方向移动鼠标按钮来逐步放大/缩小绘图。
- *
- *          与 QwtPlotZoomer 和 QwtPlotPanner 一起，可以实现绘图画布的个性化和强大导航。
- *
- * @sa QwtPlotZoomer, QwtPlotPanner, QwtPlot
- * \endif
  */
 class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 {
@@ -20389,7 +16027,7 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 	explicit QwtPlotMagnifier( QWidget* );
 
 	// Destructor
-	virtual ~QwtPlotMagnifier();
+	~QwtPlotMagnifier() override;
 
 	// Enable or disable an axis for magnification
 	void setAxisEnabled( QwtAxisId, bool on );
@@ -20414,8 +16052,7 @@ public Q_SLOTS:
 	virtual void rescale( double factor ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotMagnifier)
 };
 
 #endif
@@ -20433,7 +16070,6 @@ class QwtText;
 class QwtSymbol;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing markers
  * @details A marker can be a horizontal line, a vertical line,
  *          a symbol, a label or any combination of them, which can
@@ -20454,22 +16090,7 @@ class QwtSymbol;
  * @note QwtPlotTextLabel is intended to align a text label
  *       according to the geometry of canvas
  *       ( unrelated to plot coordinates )
- * \endif
  *
- * \if CHINESE
- * @brief 用于绘制标记的类
- * @details 标记可以是水平线、垂直线、符号、标签或它们的任意组合，可以在边界矩形内的中心点周围绘制。
- *
- *          setSymbol() 成员为标记分配一个符号。符号绘制在指定点。
- *
- *          通过 setLabel()，可以为标记分配标签。setLabelAlignment() 成员指定标签的绘制位置。
- *          Qt::AlignmentFlags 中的所有 Align* 常量（见 Qt 文档）都有效。
- *          对齐的解释取决于标记的线条样式。对齐是指标记的中心点，
- *          例如，如果对齐设置为 Qt::AlignLeft | Qt::AlignTop，标签将打印在中心点的左上方。
- *
- * @note QwtPlotTextLabel 用于根据画布的几何形状对齐文本标签
- *       （与绘图坐标无关）
- * \endif
  */
 
 class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
@@ -20477,15 +16098,9 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
   public:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Line styles
 	 * @sa setLineStyle(), lineStyle()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 线条样式
-	 * @sa setLineStyle(), lineStyle()
-	 * \endif
 	 */
 	enum LineStyle
 	{
@@ -20510,7 +16125,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 	explicit QwtPlotMarker( const QwtText& title );
 
 	/// Destructor
-	virtual ~QwtPlotMarker();
+	~QwtPlotMarker() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -20595,8 +16210,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 
   private:
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotMarker)
 };
 
 #endif
@@ -20613,7 +16227,6 @@ class QwtColumnSymbol;
 template< typename T > class QwtSeriesData;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotMultiBarChart displays a series of samples that consist each of a set of values
  * @details Each value is displayed as a bar, the bars of each set can be organized
  *          side by side or accumulated.
@@ -20631,22 +16244,7 @@ template< typename T > class QwtSeriesData;
  *
  * @sa QwtPlotBarChart, QwtPlotHistogram
  * @sa QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotMultiBarChart 显示一系列由每组值组成的样本
- * @details 每个值显示为一个条形，每组的条形可以并排或累加显示。
- *
- *          每组的每个条形由 QwtColumnSymbol 渲染，通过 setSymbol() 设置。
- *          不同组的条形使用相同的符号。可以通过重载 specialSymbol() 或 drawBar() 来实现例外。
- *
- *          根据其 orientation()，条形水平或垂直显示。条形覆盖基线()和值之间的间隔。
- *
- *          与大多数其他绘图项不同，QwtPlotMultiBarChart 为图例返回多个条目 - 每个符号一个。
- *
- * @sa QwtPlotBarChart, QwtPlotHistogram
- * @sa QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
  */
 class QWT_EXPORT QwtPlotMultiBarChart
 	: public QwtPlotAbstractBarChart
@@ -20654,17 +16252,10 @@ class QWT_EXPORT QwtPlotMultiBarChart
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Chart styles
 	 * @details The default setting is QwtPlotMultiBarChart::Grouped.
 	 * @sa setStyle(), style()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 图表样式
-	 * @details 默认设置为 QwtPlotMultiBarChart::Grouped。
-	 * @sa setStyle(), style()
-	 * \endif
 	 */
 	enum ChartStyle
 	{
@@ -20672,15 +16263,10 @@ class QWT_EXPORT QwtPlotMultiBarChart
 		Grouped,
 
 		/**
-		 * \if ENGLISH
 		 * The bars are displayed on top of each other accumulating
 		 * to a single bar. All values of a set need to have the same
 		 * sign.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 条形相互叠加显示，累积为单个条形。一组中的所有值必须具有相同的符号。
-		 * \endif
 		 */
 		Stacked
 	};
@@ -20691,10 +16277,13 @@ class QWT_EXPORT QwtPlotMultiBarChart
 	explicit QwtPlotMultiBarChart( const QwtText& title );
 
 	/// Destructor
-	virtual ~QwtPlotMultiBarChart();
+	~QwtPlotMultiBarChart() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
+
+	/// Attach to a plot (applies color cycle to symbols if none user-set)
+	void attach(QwtPlot* plot) override;
 
 	/// Set the bar titles
 	void setBarTitles( const QList< QwtText >& );
@@ -20770,8 +16359,7 @@ class QWT_EXPORT QwtPlotMultiBarChart
 	/// Initialize the multi-bar chart
 	void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotMultiBarChart)
 };
 
 #endif
@@ -20786,7 +16374,6 @@ class QWT_EXPORT QwtPlotMultiBarChart
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotCachePanner provides panning of a plot canvas
  * @details QwtPlotCachePanner is a panner for a plot canvas, that
  *          adjusts the scales of the axes after dropping
@@ -20797,19 +16384,6 @@ class QwtPlot;
  *
  * @note The axes are not updated, while dragging the canvas
  * @sa QwtPlotZoomer, QwtPlotMagnifier
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotCachePanner 提供绘图画布的平移功能
- * @details QwtPlotCachePanner 是绘图画布的平移器，它会在
- *          将画布拖放到新位置后调整坐标轴的比例尺。
- *
- *          与 QwtPlotZoomer 和 QwtPlotMagnifier 一起使用，可以轻松实现
- *          在 QwtPlot 部件上导航的强大方法。
- *
- * @note 拖动画布时，坐标轴不会更新
- * @sa QwtPlotZoomer, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotCachePanner : public QwtCachePanner
 {
@@ -20819,7 +16393,7 @@ public:
 	//! Constructor
 	explicit QwtPlotCachePanner(QWidget*);
 	//! Destructor
-	virtual ~QwtPlotCachePanner();
+	~QwtPlotCachePanner() override;
 
 	//! Get the canvas widget
 	QWidget* canvas();
@@ -20847,8 +16421,7 @@ protected:
 	virtual QPixmap grab() const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotCachePanner)
 };
 
 #endif
@@ -20870,18 +16443,10 @@ class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief QwtPlotPicker provides selections on a plot canvas
  * @details QwtPlotPicker is a QwtPicker tailored for selections on
  *          a plot canvas. It is set to a x-Axis and y-Axis and
  *          translates all pixel coordinates into this coordinate system.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotPicker 提供绘图画布上的选择功能
- * @details QwtPlotPicker 是一款专为绘图画布选择场景设计的 QwtPicker 类。
- *          它会绑定到一个 X 轴和一个 Y 轴，并将所有像素坐标转换为该坐标系下的坐标。
- * \endif
  */
 class QWT_EXPORT QwtPlotPicker : public QwtPicker
 {
@@ -20892,7 +16457,7 @@ public:
 	explicit QwtPlotPicker(QWidget* canvas);
 
 	//! Destructor
-	virtual ~QwtPlotPicker();
+	~QwtPlotPicker() override;
 
 	//! Constructor with axes
 	explicit QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget*);
@@ -20924,71 +16489,34 @@ public:
 Q_SIGNALS:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted in case of QwtPickerMachine::PointSelection
 	 * @param pos Selected point
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 在 QwtPickerMachine::PointSelection 情况下发出的信号
-	 * @param pos 选中的点
-	 * \endif
 	 */
 	void selected(const QPointF& pos);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted in case of QwtPickerMachine::RectSelection
 	 * @param rect Selected rectangle
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 在 QwtPickerMachine::RectSelection 情况下发出的信号
-	 * @param rect 选中的矩形
-	 * \endif
 	 */
 	void selected(const QRectF& rect);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitting the selected points at the end of a selection
 	 * @param pa Selected points
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 在选择结束时发出选中点的信号
-	 * @param pa 选中的点
-	 * \endif
 	 */
 	void selected(const QVector< QPointF >& pa);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when a point has been appended to the selection
 	 * @param pos Position of the appended point
 	 * @sa append(), moved()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 当一个点被添加到选择中时发出的信号
-	 * @param pos 添加点的位置
-	 * @sa append(), moved()
-	 * \endif
 	 */
 	void appended(const QPointF& pos);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted whenever the last appended point of the selection has been moved
 	 * @param pos Position of the moved last point of the selection
 	 * @sa move(), appended()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 当选择中最后添加的点被移动时发出的信号
-	 * @param pos 选择中最后一个点的移动位置
-	 * @sa move(), appended()
-	 * \endif
 	 */
 	void moved(const QPointF& pos);
 
@@ -21024,8 +16552,7 @@ protected:
 	virtual bool end(bool ok = true) override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotPicker)
 };
 
 #endif
@@ -21043,17 +16570,9 @@ class QwtPlot;
 class QwtPlotItem;
 
 /**
- * \if ENGLISH
  * @brief A plot data picker class for displaying current y-values or nearest points
  * @details QwtPlotSeriesDataPicker is a plot data picker class that displays current y-values
  *          or the nearest points to the mouse cursor position.
- * \endif
- *
- * \if CHINESE
- * @brief 这是一个绘图数据拾取显示类，用于显示当前的y值，或者显示最近点
- * @details QwtPlotSeriesDataPicker 是一个绘图数据拾取显示类，用于显示当前的y值，
- *          或者显示最接近鼠标光标位置的点。
- * \endif
  */
 class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
 {
@@ -21061,13 +16580,7 @@ class QWT_EXPORT QwtPlotSeriesDataPicker : public QwtCanvasPicker
 	QWT_DECLARE_PRIVATE(QwtPlotSeriesDataPicker)
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Pick modes
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 拾取模式
-	 * \endif
 	 */
 	enum PickSeriesMode
 	{
@@ -21076,13 +16589,7 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Text placement options
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 文本放置选项
-	 * \endif
 	 */
 	enum TextPlacement
 	{
@@ -21099,13 +16606,7 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Interpolation modes
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 插值模式
-	 * \endif
 	 */
 	enum InterpolationMode
 	{
@@ -21114,13 +16615,7 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Feature point structure
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 特征点结构
-	 * \endif
 	 */
 	struct FeaturePoint
 	{
@@ -21133,7 +16628,7 @@ public:
 	/// Constructor
 	explicit QwtPlotSeriesDataPicker(QWidget* canvas);
 	/// Destructor
-	~QwtPlotSeriesDataPicker();
+	~QwtPlotSeriesDataPicker() override;
 
 	/// Set pick mode
 	void setPickMode(PickSeriesMode mode);
@@ -21167,6 +16662,9 @@ public:
 	/// Get feature point size
 	int drawFeaturePointSize() const;
 
+	// Returns the list of feature points currently picked by the tracker
+	QList<FeaturePoint> featurePoints() const;
+
 	/// Set text background brush
 	void setTextBackgroundBrush(const QBrush& br);
 	/// Get text background brush
@@ -21177,50 +16675,72 @@ public:
 	/// Get text alignment
 	Qt::Alignment textAlignment() const;
 
-	// 是否显示x值
+	/// Whether to show X value
 	void setEnableShowXValue(bool on);
 	bool isEnableShowXValue() const;
 
-	// 设置trackerRect在TextFollowMouse模式下的偏移量
+	/// Set the tracker rectangle offset in TextFollowMouse mode
 	void setTextTrackerOffset(const QPoint& offset);
 	QPoint textTrackerOffset() const;
 
-	// 顶部矩形文字
+	/// Top rectangle text
 	QwtText trackerText(const QPoint& pos) const override;
 
-	// 让矩形在最顶部
+	/// Keep rectangle at top
 	QRect trackerRect(const QFont& f) const override;
 
-	// 绘制rubberband
+	/// Draw rubber band
 	virtual void drawRubberBand(QPainter* painter) const override;
 
-	// 手动设置位置
+	/// Manually set position
 	virtual void setTrackerPosition(const QPoint& pos) override;
 
 protected:
-	// 获取绘图区域屏幕坐标pos上，的所有可拾取的y值,返回获取的个数
+	/// Get all pickable Y values at the specified screen position; returns the number picked
 	virtual int pickYValue(const QwtPlot* p, const QPoint& pos, bool interpolate = false);
-	// 获取绘图区域屏幕坐标pos上，可拾取的最近的一个点，(基于窗口实现快速索引)
+	/// Get the nearest pickable point at the specified screen position (window-based fast indexing)
 	virtual int pickNearestPoint(const QwtPlot* plot, const QPoint& pos, int windowSize = -5);
+
+	virtual void widgetMousePressEvent(QMouseEvent* event) override;
+	virtual void widgetMouseDoubleClickEvent(QMouseEvent* event) override;
+Q_SIGNALS:
+	/**
+	 * @brief Emitted when the user left-clicks on the plot canvas
+	 * @param picker Pointer to the picker that was clicked
+	 * @param pos Screen position of the click event
+	 * @note A double-click will trigger clicked() before doubleClicked().
+	 *       Connect only one of these signals if you need to distinguish
+	 *       single-click from double-click.
+	 */
+	void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
+	/**
+	 * @brief Emitted when the user double-left-clicks on the plot canvas
+	 * @param picker Pointer to the picker that was double-clicked
+	 * @param pos Screen position of the double-click event
+	 * @note A double-click also triggers clicked() before this signal.
+	 */
+	void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
 private Q_SLOTS:
-	// item删除的槽，用于更新记录
+	// Slot for item detachment, used to update records
 	void onPlotItemDetached(QwtPlotItem* item, bool on);
 	void onParasitePlotAttached(QwtPlot* parasiteplot, bool on);
 
 protected:
-	// 生成一个item的文字内容
+	// Generate text content for an item
 	virtual QString valueString(const QList< FeaturePoint >& fps) const;
-	// 绘制特征点
+	// Draw a feature point
 	virtual void drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
-	// 鼠标移动
+	// Mouse move
 	virtual void move(const QPoint& pos) override;
-	// 格式化为坐标轴对应的内容，针对时间轴，value是一个大浮点数，用户需要看到的是2024-10-01这样的数字
+	// Format value according to axis type; for date axes the value is a large float but users need to see a format like 2024-10-01
 	QString formatAxisValue(double value, int axisId, QwtPlot* plot) const;
 
 private:
-	// 绘制特征点，所谓特征点就是捕获到的点
+	// Draw feature points (captured points)
 	void drawAllFeaturePoints(QPainter* painter) const;
-	// 更新特征点
+	// Update feature points
 	void updateFeaturePoint(const QPoint& pos);
 	//
 	QRect ensureRectInBounds(const QRect& rect, const QRect& bounds) const;
@@ -21240,7 +16760,6 @@ private:
 class QwtInterval;
 
 /**
- * \if ENGLISH
  * @brief A class, which displays raster data
  * @details Raster data is a grid of pixel values, that can be represented
  *          as a QImage. It is used for many types of information like
@@ -21254,88 +16773,46 @@ class QwtInterval;
  *          QImage::Format_Indexed8, QImage::Format_ARGB32.
  *
  * @sa QwtPlotSpectrogram
- * \endif
  *
- * \if CHINESE
- * @brief 显示栅格数据的类
- * @details 栅格数据是一组像素值的网格，可以表示为 QImage。它用于许多类型的信息，如
- *           spectrogram、图表、地理地图等。
- *
- *          通常，一个绘图会有几种类型的栅格数据组织在层中。
- *          （例如带有天气统计数据的地理地图）。
- *          使用 setAlpha() 可以轻松堆叠栅格项。
- *
- *          QwtPlotRasterItem 仅为以下格式的图像实现：
- *          QImage::Format_Indexed8、QImage::Format_ARGB32。
- *
- * @sa QwtPlotSpectrogram
- * \endif
  */
 
 class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Cache policy
 	 * @details The default policy is NoCache
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 缓存策略
-	 * @details 默认策略是 NoCache
-	 * \endif
 	 */
 	enum CachePolicy
 	{
 		/**
-		 * \if ENGLISH
 		 * renderImage() is called each time the item has to be repainted
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 每次项目需要重绘时调用 renderImage()
-		 * \endif
 		 */
 		NoCache,
 
 		/**
-		 * \if ENGLISH
 		 * renderImage() is called, whenever the image cache is not valid,
 		 * or the scales, or the size of the canvas has changed.
 		 *
 		 * This type of cache is useful for improving the performance
 		 * of hide/show operations or manipulations of the alpha value.
 		 * All other situations are handled by the canvas backing store.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 当图像缓存无效，或比例尺或画布大小发生变化时，调用 renderImage()。
-		 *
-		 * 这种类型的缓存对于提高隐藏/显示操作或 alpha 值操作的性能很有用。
-		 * 所有其他情况由画布后备存储处理。
-		 * \endif
 		 */
 		PaintCache
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details Attributes to modify the drawing algorithm.
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 用于修改绘制算法的属性。
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * When the image is rendered according to the data pixels
 		 * ( QwtRasterData::pixelHint() ) it can be expanded to paint
 		 * device resolution before it is passed to QPainter.
@@ -21345,15 +16822,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 		 * Disabling this flag might make sense, to reduce the size of a
 		 * document/file. If this is possible for a document format
 		 * depends on the implementation of the specific QPaintEngine.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 当图像根据数据像素（QwtRasterData::pixelHint()）渲染时，
-		 * 在传递给 QPainter 之前，可以将其扩展到绘制设备分辨率。
-		 * 扩展算法以与轴刻度相同的方式舍入像素边界，这通常比 Qt 中实现的缩放算法更好。
-		 * 禁用此标志可能有助于减少文档/文件的大小。
-		 * 这是否可能取决于特定 QPaintEngine 的实现。
-		 * \endif
 		 */
 		PaintInDeviceResolution = 1
 	};
@@ -21365,7 +16834,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 	// Constructor with title
 	explicit QwtPlotRasterItem( const QwtText& title );
 	// Destructor
-	virtual ~QwtPlotRasterItem();
+	~QwtPlotRasterItem() override;
 
 	// Set a paint attribute
 	void setPaintAttribute( PaintAttribute, bool on = true );
@@ -21399,37 +16868,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 	virtual QRectF boundingRect() const override;
 
   protected:
-	/**
-	 * \if ENGLISH
-	 * @brief Render an image
-	 * @details An implementation of render() might iterate over all
-	 *          pixels of imageRect. Each pixel has to be translated into
-	 *          the corresponding position in scale coordinates using the maps.
-	 *          This position can be used to look up a value in a implementation
-	 *          specific way and to map it into a color.
-	 *
-	 * @param xMap X-Scale Map
-	 * @param yMap Y-Scale Map
-	 * @param area Requested area for the image in scale coordinates
-	 * @param imageSize Requested size of the image
-	 *
-	 * @return Rendered image
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 渲染图像
-	 * @details render() 的实现可能会迭代 imageRect 的所有像素。
-	 *          每个像素必须使用映射转换为比例尺坐标中的相应位置。
-	 *          此位置可用于以实现特定的方式查找值并将其映射到颜色。
-	 *
-	 * @param xMap X 比例尺映射
-	 * @param yMap Y 比例尺映射
-	 * @param area 图像在比例尺坐标中的请求区域
-	 * @param imageSize 图像的请求大小
-	 *
-	 * @return 渲染的图像
-	 * \endif
-	 */
+	// Render an image
 	virtual QImage renderImage( const QwtScaleMap& xMap,
 		const QwtScaleMap& yMap, const QRectF& area,
 		const QSize& imageSize ) const = 0;
@@ -21451,8 +16890,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 		const QRectF& imageArea, const QRectF& paintRect,
 		const QSize& imageSize, bool doCache) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotRasterItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRasterItem::PaintAttributes )
@@ -21469,7 +16907,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRasterItem::PaintAttributes )
 class QPalette;
 
 /**
- * \if ENGLISH
  * @brief A class which draws a scale inside the plot canvas
  * @details QwtPlotScaleItem can be used to draw an axis inside the plot canvas.
  *          It might be synchronized to one of the axis of the plot, but can also display its own ticks and labels.
@@ -21488,28 +16925,7 @@ class QPalette;
  *
  *   plot->setAxisVisible( QwtAxis::YLeft, false );
  * @endcode
- * \endif
  *
- * \if CHINESE
- * @brief 在绘图画布内绘制刻度的类
- * @details QwtPlotScaleItem 可用于在绘图画布内绘制一条坐标轴。
- *          它可以与绘图的某一轴同步，也可以显示自己的刻度和标签。
- *
- *          允许将刻度项与禁用的轴同步。在同时存在垂直和水平刻度项的绘图中，
- *          可能需要通过重载 updateScaleDiv() 方法来移除交叉点处的刻度。
- *
- *          刻度可以位于特定位置（例如 0.0），也可以与画布边缘对齐。
- *
- * @par 示例
- * 以下示例展示了如何用 x 位置为 0.0 处的刻度项替换左轴。
- * @code
- *   QwtPlotScaleItem *scaleItem = new QwtPlotScaleItem( QwtScaleDraw::RightScale, 0.0 );
- *   scaleItem->setFont( plot->axisWidget( QwtAxis::YLeft )->font() );
- *   scaleItem->attach(plot);
- *
- *   plot->setAxisVisible( QwtAxis::YLeft, false );
- * @endcode
- * \endif
  */
 class QWT_EXPORT QwtPlotScaleItem : public QwtPlotItem
 {
@@ -21518,7 +16934,7 @@ public:
 	explicit QwtPlotScaleItem(QwtScaleDraw::Alignment = QwtScaleDraw::BottomScale, const double pos = 0.0);
 
 	// Destructor
-	virtual ~QwtPlotScaleItem();
+	~QwtPlotScaleItem() override;
 
 	// Get the runtime type information
 	virtual int rtti() const override;
@@ -21571,8 +16987,7 @@ public:
 	virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotScaleItem)
 };
 
 #endif
@@ -21590,7 +17005,6 @@ class QPainterPath;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays any graphical shape that can be defined by a QPainterPath
  * @details QwtPlotShapeItem displays a shape composed from intersecting and uniting
  *          regions, rectangles, ellipses or irregular areas defined by lines, and curves.
@@ -21604,43 +17018,21 @@ class QPolygonF;
  *          using QwtPlotGraphicItem.
  *
  * @sa QwtPlotZone, QwtPlotGraphicItem
- * \endif
  *
- * \if CHINESE
- * @brief 显示可由 QPainterPath 定义的任何图形形状的绘图项
- * @details QwtPlotShapeItem 显示由相交和联合的区域、矩形、椭圆或由线条和曲线定义的不规则区域组成的形状。
- *          形状使用钢笔和画笔显示。
- *
- *          QwtPlotShapeItem 提供了一些优化，如裁剪或除草。
- *          这些算法需要将绘制路径转换为多边形，这对于由曲线和椭圆构建的路径可能性能较低。
- *
- *          无法由 QPainterPath 表达的更复杂形状可以使用 QwtPlotGraphicItem 显示。
- *
- * @sa QwtPlotZone, QwtPlotGraphicItem
- * \endif
  */
 class QWT_EXPORT QwtPlotShapeItem : public QwtPlotItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details Attributes to modify the drawing algorithm.
 	 *          The default disables all attributes
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 用于修改绘制算法的属性。
-	 *          默认禁用所有属性
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Clip polygons before painting them. In situations, where points
 		 * are far outside the visible area (f.e when zooming deep) this
 		 * might be a substantial improvement for the painting performance
@@ -21648,14 +17040,7 @@ public:
 		 * But polygon clipping will convert the painter path into
 		 * polygons what might introduce a negative impact on the
 		 * performance of paths composed from curves or ellipses.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 在绘制多边形之前对其进行裁剪。在点远离可见区域的情况下（例如深度缩放时），
-		 * 这可能会显著提高绘制性能
-		 *
-		 * 但多边形裁剪会将绘制路径转换为多边形，这可能会对由曲线或椭圆组成的路径的性能产生负面影响。
-		 * \endif
 		 */
 		ClipPolygons = 0x01,
 	};
@@ -21663,15 +17048,9 @@ public:
 	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Legend modes
 	 * @details Mode how to display the item on the legend
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 图例模式
-	 * @details 在图例上显示项目的模式
-	 * \endif
 	 */
 	enum LegendMode
 	{
@@ -21688,7 +17067,7 @@ public:
 	explicit QwtPlotShapeItem(const QwtText& title);
 
 	// Destructor
-	virtual ~QwtPlotShapeItem();
+	~QwtPlotShapeItem() override;
 
 	// Set a paint attribute
 	void setPaintAttribute(PaintAttribute, bool on = true);
@@ -21741,14 +17120,11 @@ public:
 
 private:
 	/**
-	 * \if ENGLISH
 	 * @brief Initialize the shape item
-	 * \endif
 	 */
 	void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotShapeItem)
 };
 
 #endif
@@ -21763,16 +17139,10 @@ private:
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief Curve that displays 3D points as dots, where the z coordinate is mapped to a color
  * @details QwtPlotSpectroCurve displays 3D points as dots, with the z coordinate mapped to a color
  *          using a color map.
- * \endif
  *
- * \if CHINESE
- * @brief 将 3D 点显示为点的曲线，其中 z 坐标映射到颜色
- * @details QwtPlotSpectroCurve 将 3D 点显示为点，使用颜色映射将 z 坐标映射到颜色。
- * \endif
  */
 class QWT_EXPORT QwtPlotSpectroCurve
 	: public QwtPlotSeriesItem
@@ -21780,13 +17150,8 @@ class QWT_EXPORT QwtPlotSpectroCurve
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
@@ -21802,7 +17167,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
 	explicit QwtPlotSpectroCurve( const QwtText& title );
 
 	/// Destructor
-	virtual ~QwtPlotSpectroCurve();
+	~QwtPlotSpectroCurve() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -21825,7 +17190,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
 	/// Set the color range
 	void setColorRange( const QwtInterval& );
 	/// Get the color range
-	QwtInterval& colorRange() const;
+	const QwtInterval& colorRange() const;
 
 	/// Draw the series
 	virtual void drawSeries( QPainter*,
@@ -21847,8 +17212,7 @@ class QWT_EXPORT QwtPlotSpectroCurve
 	/// Initialize the spectro curve
 	void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotSpectroCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotSpectroCurve::PaintAttributes )
@@ -21867,7 +17231,6 @@ template< typename T >
 class QList;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a spectrogram
  * @details A spectrogram displays 3-dimensional data, where the 3rd dimension
  *          ( the intensity ) is displayed using colors. The colors are calculated
@@ -21880,36 +17243,17 @@ class QList;
  *          In ContourMode contour lines are painted for the contour levels.
  *
  * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
- * \endif
  *
- * \if CHINESE
- * @brief 显示频谱图的绘图项
- * @details 频谱图显示三维数据，其中第三维（强度）使用颜色显示。颜色是通过颜色映射从值计算得到的。
- *
- *          在多核系统上，通过将区域划分为多个瓦片（每个瓦片在不同的线程中渲染），
- *          通常可以提高图像合成的性能（参见 QwtPlotItem::setRenderThreadCount()）。
- *
- *          在 ContourMode 中，会为等高线级别绘制等高线。
- *
- * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
- * \endif
  */
 
 class QWT_EXPORT QwtPlotSpectrogram : public QwtPlotRasterItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Display modes
 	 * @details The display mode controls how the raster data will be represented.
 	 * @sa setDisplayMode(), testDisplayMode()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 显示模式
-	 * @details 显示模式控制栅格数据的表示方式。
-	 * @sa setDisplayMode(), testDisplayMode()
-	 * \endif
 	 */
 
 	enum DisplayMode
@@ -21926,7 +17270,7 @@ public:
 	// Constructor
 	explicit QwtPlotSpectrogram(const QString& title = QString());
 	// Destructor
-	virtual ~QwtPlotSpectrogram();
+	~QwtPlotSpectrogram() override;
 
 	// Set a display mode
 	void setDisplayMode(DisplayMode, bool on = true);
@@ -21983,9 +17327,7 @@ public:
 
 protected:
 	/**
-	 * \if ENGLISH
 	 * @brief Render the image
-	 * \endif
 	 */
 	virtual QImage renderImage(const QwtScaleMap& xMap,
 							   const QwtScaleMap& yMap,
@@ -21993,37 +17335,28 @@ protected:
 							   const QSize& imageSize) const override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Calculate the contour raster size
-	 * \endif
 	 */
 	virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Render the contour lines
-	 * \endif
 	 */
 	virtual QwtRasterData::ContourLines renderContourLines(const QRectF& rect, const QSize& raster) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the contour lines
-	 * \endif
 	 */
 	virtual void
 	drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Render a tile
-	 * \endif
 	 */
 	void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotSpectrogram)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectrogram::DisplayModes)
@@ -22040,19 +17373,11 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectrogram::DisplayModes)
 class QByteArray;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays data in Scalable Vector Graphics (SVG) format
  * @details SVG images are often used to display maps.
  *          QwtPlotSvgItem is only a small convenience wrapper class for QwtPlotGraphicItem,
  *          that creates a QwtGraphic from SVG data.
- * \endif
  *
- * \if CHINESE
- * @brief 显示可缩放矢量图形（SVG）格式数据的绘图项
- * @details SVG 图像常用于显示地图。
- *          QwtPlotSvgItem 只是为 QwtPlotGraphicItem 提供的一个小型便利包装类，
- *          它从 SVG 数据创建 QwtGraphic。
- * \endif
  */
 class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 {
@@ -22062,7 +17387,7 @@ class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 	// Constructor with QwtText title
 	explicit QwtPlotSvgItem( const QwtText& title );
 	// Destructor
-	virtual ~QwtPlotSvgItem();
+	~QwtPlotSvgItem() override;
 
 	// Load an SVG file
 	bool loadFile( const QRectF&, const QString& fileName );
@@ -22082,7 +17407,6 @@ class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 class QwtText;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a text label
  * @details QwtPlotTextLabel displays a text label aligned to the plot canvas.
  *
@@ -22094,7 +17418,7 @@ class QwtText;
  *
  * @par Example
  *  The following code shows how to add a title.
- *  \code
+ *  @code
  *    QwtText title( "Plot Title" );
  *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
  *
@@ -22105,36 +17429,10 @@ class QwtText;
  *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
  *    titleItem->setText( title );
  *    titleItem->attach( plot );
- *  \endcode
+ *  @endcode
  *
  * @sa QwtPlotMarker
- * \endif
  *
- * \if CHINESE
- * @brief 显示文本标签的绘图项
- * @details QwtPlotTextLabel 显示一个与绘图画布对齐的文本标签。
- *
- *          与 QwtPlotMarker 不同，标签的位置与绘图坐标无关。
- *
- *          由于绘制文本是一项昂贵的操作，标签会被缓存在 pixmap 中以加快重绘速度。
- *
- * @par 示例
- *  以下代码显示如何添加标题。
- *  \code
- *    QwtText title( "Plot Title" );
- *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
- *
- *    QFont font;
- *    font.setBold( true );
- *    title.setFont( font );
- *
- *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
- *    titleItem->setText( title );
- *    titleItem->attach( plot );
- *  \endcode
- *
- * @sa QwtPlotMarker
- * \endif
  */
 
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
@@ -22143,7 +17441,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 	// Constructor
 	QwtPlotTextLabel();
 	// Destructor
-	virtual ~QwtPlotTextLabel();
+	~QwtPlotTextLabel() override;
 
 	// Get the runtime type information
 	virtual int rtti() const override;
@@ -22163,24 +17461,19 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 
   protected:
 	/**
-	 * \if ENGLISH
 	 * @brief Draw the text label
-	 * \endif
 	 */
 	virtual void draw( QPainter*,
 		const QwtScaleMap&, const QwtScaleMap&,
 		const QRectF&) const override;
 
 	/**
-	 * \if ENGLISH
 	 * @brief Invalidate the cached pixmap
-	 * \endif
 	 */
 	void invalidateCache();
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotTextLabel)
 };
 
 #endif
@@ -22193,7 +17486,6 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 #define QWT_PLOT_TRADING_CURVE_H
 
 /**
- * \if ENGLISH
  * @brief QwtPlotTradingCurve illustrates movements in the price of a financial instrument over time
  * @details QwtPlotTradingCurve supports candlestick or bar ( OHLC ) charts
  *          that are used in the domain of technical analysis.
@@ -22211,40 +17503,16 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
  *          is in widget coordinates independent from the zoom level.
  *          When setting the minimum and maximum to the same value, the width of
  *          the symbol is fixed.
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotTradingCurve 展示金融工具价格随时间的变化
- * @details QwtPlotTradingCurve 支持烛台图或柱状图（OHLC），
- *          这些图表用于技术分析领域。
- *
- *          每个符号的长度（高度或宽度，取决于方向）取决于相应的 OHLC 样本，
- *          另一个维度的大小可以通过以下方式控制：
- *
- *          - setSymbolExtent()
- *          - setSymbolMinWidth()
- *          - setSymbolMaxWidth()
- *
- *          范围是缩放坐标中的大小，因此当绘图放大时，符号宽度会增加。
- *          最小/最大宽度是在小部件坐标中，与缩放级别无关。
- *          当将最小值和最大值设置为相同值时，符号的宽度是固定的。
- * \endif
  */
 class QWT_EXPORT QwtPlotTradingCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtOHLCSample >
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Symbol styles
 	 * @details The default setting is QwtPlotSeriesItem::CandleStick.
 	 * @sa setSymbolStyle(), symbolStyle()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 符号样式
-	 * @details 默认设置是 QwtPlotSeriesItem::CandleStick。
-	 * @sa setSymbolStyle(), symbolStyle()
-	 * \endif
 	 */
 	enum SymbolStyle
 	{
@@ -22252,62 +17520,37 @@ public:
 		NoSymbol = -1,
 
 		/**
-		 * \if ENGLISH
 		 * A line on the chart shows the price range (the highest and lowest
 		 * prices) over one unit of time, e.g. one day or one hour.
 		 * Tick marks project from each side of the line indicating the
 		 * opening and closing price.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 图表上的一条线显示一个时间单位（例如一天或一小时）内的价格范围（最高和最低价格）。
-		 * 从线的两侧伸出的刻度标记表示开盘价和收盘价。
-		 * \endif
 		 */
 		Bar,
 
 		/**
-		 * \if ENGLISH
 		 * The range between opening/closing price are displayed as
 		 * a filled box. The fill brush depends on the direction of the
 		 * price movement. The box is connected to the highest/lowest
 		 * values by lines.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 开盘/收盘价之间的范围显示为填充框。填充画刷取决于价格变动的方向。
-		 * 该框通过线条连接到最高/最低值。
-		 * \endif
 		 */
 		CandleStick,
 
 		/**
-		 * \if ENGLISH
 		 * SymbolTypes >= UserSymbol are displayed by drawUserSymbol(),
 		 * that needs to be overloaded and implemented in derived
 		 * curve classes.
 		 *
 		 * @sa drawUserSymbol()
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * SymbolTypes >= UserSymbol 通过 drawUserSymbol() 显示，
-		 * 需要在派生的曲线类中重载和实现。
-		 *
-		 * @sa drawUserSymbol()
-		 * \endif
 		 */
 		UserSymbol = 100
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Direction of a price movement
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 价格变动的方向
-	 * \endif
 	 */
 	enum Direction
 	{
@@ -22319,17 +17562,10 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details Attributes to modify the drawing algorithm.
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 用于修改绘制算法的属性。
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
@@ -22345,7 +17581,7 @@ public:
 	explicit QwtPlotTradingCurve(const QwtText& title);
 
 	// Destructor
-	virtual ~QwtPlotTradingCurve();
+	~QwtPlotTradingCurve() override;
 
 // Get the runtime type information
 	virtual int rtti() const override;
@@ -22422,8 +17658,7 @@ void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double wi
 virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotTradingCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotTradingCurve::PaintAttributes)
@@ -22443,38 +17678,22 @@ class QPen;
 class QBrush;
 
 /**
- * \if ENGLISH
  * @brief A plot item, that represents a vector field
  * @details A vector field is a representation of a points with a given magnitude and direction
  *          as arrows. While the direction affects the direction of the arrow, the magnitude
  *          might be represented as a color or by the length of the arrow.
  *
  * @sa QwtVectorFieldSymbol, QwtVectorFieldSample
- * \endif
  *
- * \if CHINESE
- * @brief 表示矢量场的绘图项
- * @details 矢量场是点的表示，这些点具有给定的大小和方向，以箭头形式显示。
- *          方向影响箭头的方向，大小可以通过颜色或箭头长度来表示。
- *
- * @sa QwtVectorFieldSymbol, QwtVectorFieldSample
- * \endif
  */
 class QWT_EXPORT QwtPlotVectorField : public QwtPlotSeriesItem, public QwtSeriesStore< QwtVectorFieldSample >
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Indicator origin
 	 * @details Depending on the origin the indicator symbol ( usually an arrow )
 	 *          will be to the position of the corresponding sample.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 指示器原点
-	 * @details 根据原点的不同，指示器符号（通常是箭头）
-	 *          将指向对应样本的位置。
-	 * \endif
 	 */
 	enum IndicatorOrigin
 	{
@@ -22489,35 +17708,20 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details Attributes to modify the rendering
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 用于修改渲染的属性
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * FilterVectors calculates an average sample from all samples
 		 * that lie in the same cell of a grid that is determined by
 		 * setting the rasterSize().
 		 *
 		 * @sa setRasterSize()
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * FilterVectors 计算同一网格单元中所有样本的平均样本，
-		 * 网格由设置 rasterSize() 确定。
-		 *
-		 * @sa setRasterSize()
-		 * \endif
 		 */
 		FilterVectors = 0x01
 	};
@@ -22525,46 +17729,26 @@ public:
 	Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Magnitude mode
 	 * @details Depending on the MagnitudeMode the magnitude component will have
 	 *          an impact on the attributes of the symbol/arrow.
 	 *
 	 * @sa setMagnitudeMode()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 大小模式
-	 * @details 根据 MagnitudeMode，大小分量将对符号/箭头的属性产生影响。
-	 *
-	 * @sa setMagnitudeMode()
-	 * \endif
 	 */
 	enum MagnitudeMode
 	{
 		/**
-		 * \if ENGLISH
 		 * The magnitude will be mapped to a color using a color map
 		 * @sa magnitudeRange(), colorMap()
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 大小将使用颜色映射映射到颜色
-		 * @sa magnitudeRange(), colorMap()
-		 * \endif
 		 */
 		MagnitudeAsColor = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * The magnitude will have an impact on the length of the arrow/symbol
 		 * @sa arrowLength(), magnitudeScaleFactor()
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 大小将对箭头/符号的长度产生影响
-		 * @sa arrowLength(), magnitudeScaleFactor()
-		 * \endif
 		 */
 		MagnitudeAsLength = 0x02
 	};
@@ -22577,7 +17761,7 @@ public:
 	explicit QwtPlotVectorField(const QwtText& title);
 
 	// Destructor
-	virtual ~QwtPlotVectorField();
+	~QwtPlotVectorField() override;
 
 	// Set a paint attribute
 	void setPaintAttribute(PaintAttribute, bool on = true);
@@ -22675,8 +17859,7 @@ protected:
 private:
 	void init();
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotVectorField)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotVectorField::PaintAttributes)
@@ -22697,7 +17880,6 @@ class QPen;
 class QBrush;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a zone
  * @details A horizontal zone highlights an interval of the y axis - a vertical
  *          zone an interval of the x axis - and is unbounded in the opposite direction.
@@ -22705,15 +17887,7 @@ class QBrush;
  *
  * @note For displaying an area that is bounded for x and y coordinates
  *       use QwtPlotShapeItem
- * \endif
  *
- * \if CHINESE
- * @brief 显示区域的绘图项
- * @details 水平区域高亮显示 y 轴的一个区间，垂直区域高亮显示 x 轴的一个区间，
- *          并在相反方向上无限延伸。它用画刷填充，其边界线可以选择用画笔显示。
- *
- * @note 要显示 x 和 y 坐标都有边界的区域，请使用 QwtPlotShapeItem
- * \endif
  */
 class QWT_EXPORT QwtPlotZoneItem : public QwtPlotItem
 {
@@ -22721,7 +17895,7 @@ public:
 	// Constructor
 	explicit QwtPlotZoneItem();
 	// Destructor
-	virtual ~QwtPlotZoneItem();
+	~QwtPlotZoneItem() override;
 
 	// Get the runtime type information
 	virtual int rtti() const override;
@@ -22757,8 +17931,7 @@ public:
 	virtual QRectF boundingRect() const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotZoneItem)
 };
 
 #endif
@@ -22777,16 +17950,9 @@ class QWidget;
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotPanner provides panning of a plot canvas
  * @details QwtPlotPanner is a QwtPicker that translates all pixel coordinates
  *          into plot coordinates and provides panning functionality for the plot canvas.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotPanner 提供绘图画布的平移功能
- * @details QwtPlotPanner 是一个 QwtPicker，它将所有像素坐标转换为绘图坐标，并为绘图画布提供平移功能。
- * \endif
  */
 class QWT_EXPORT QwtPlotPanner : public QwtPicker
 {
@@ -22796,7 +17962,7 @@ public:
 	// Constructor
 	explicit QwtPlotPanner(QWidget* canvas);
 	// Destructor
-	virtual ~QwtPlotPanner();
+	~QwtPlotPanner() override;
 
 	// Get the canvas widget
 	QWidget* canvas();
@@ -22826,17 +17992,9 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted after the canvas has been panned
 	 * @param dx Offset in x-direction
 	 * @param dy Offset in y-direction
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 画布平移后发出的信号
-	 * @param dx x 方向的偏移
-	 * @param dy y 方向的偏移
-	 * \endif
 	 */
 	void panned(int dx, int dy);
 
@@ -22866,7 +18024,6 @@ template< typename T >
 class QStack;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotAxisZoomer provides stacked zooming for a plot widget
  * @details QwtPlotAxisZoomer selects rectangles from user inputs ( mouse or keyboard )
  *          translates them into plot coordinates and adjusts the axes to them.
@@ -22922,57 +18079,7 @@ class QStack;
  * @note The realtime example includes an derived zoomer class that adds
  *       scrollbars to the plot canvas.
  * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotAxisZoomer 为绘图部件提供堆叠式缩放功能
- * @details QwtPlotAxisZoomer 根据用户输入（鼠标或键盘）选择矩形区域，
- *          将其转换为绘图坐标，并相应地调整坐标轴。
- *          选择操作由"橡皮筋"辅助，并可选择显示当前鼠标位置的坐标。
- *
- *          缩放操作可以无限次重复，仅受 maxStackDepth() 或 minZoomSize() 的限制。
- *          每个矩形都会被压入一个堆栈中。
- *
- *          默认的矩形选择方式是一个 QwtPickerDragRectMachine，
- *          其绑定方式如下：
- *
- *          - QwtEventPattern::MouseSelect1
- *           缩放矩形的第一个点通过鼠标按下选择，第二个点则根据鼠标释放时的位置确定。
- *
- *          - QwtEventPattern::KeySelect1
- *           第一次按键选择第一个点，第二次按键选择第二个点。
- *
- *          - QwtEventPattern::KeyAbort
- *           在已选择第一个点的状态下，放弃当前选择。
- *
- *          要遍历缩放堆栈，可使用以下绑定方式：
- *
- *          - QwtEventPattern::MouseSelect3, QwtEventPattern::KeyUndo
- *           在缩放堆栈中后退一步（缩小）
- *
- *          - QwtEventPattern::MouseSelect6, QwtEventPattern::KeyRedo
- *           在缩放堆栈中前进一步（放大）
- *
- *          - QwtEventPattern::MouseSelect2, QwtEventPattern::KeyHome
- *           缩放到基准视图（完全缩小）
- *
- *          可通过 setKeyPattern() 和 setMousePattern() 函数配置缩放器的行为。
- *          以下示例展示了如何将 'I' 和 'O' 键配置为在缩放堆栈中前进和后退一步，
- *          并使用 "Home" 键将绘图"取消缩放"到初始状态。
- *
- *          @code
- *          zoomer = new QwtPlotAxisZoomer( plot );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyRedo, Qt::Key_I, Qt::ShiftModifier );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyUndo, Qt::Key_O, Qt::ShiftModifier );
- *          zoomer->setKeyPattern( QwtEventPattern::KeyHome, Qt::Key_Home );
- *          @endcode
- *
- *          QwtPlotAxisZoomer 专为具有一个 x 轴和一个 y 轴的绘图设计，
- *          但也允许附加第二个 QwtPlotAxisZoomer（不带橡皮筋和追踪器）用于其他轴。
- *
- * @note realtime 示例包含一个派生的缩放器类，为绘图画布添加了滚动条。
- * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotAxisZoomer : public QwtPlotPicker
 {
@@ -22984,7 +18091,7 @@ public:
 	explicit QwtPlotAxisZoomer(QwtAxisId xAxis, QwtAxisId yAxis, QWidget*, bool doReplot = true);
 
 	// Destructor
-	virtual ~QwtPlotAxisZoomer();
+	~QwtPlotAxisZoomer() override;
 
 	// Set zoom base from current scales
 	virtual void setZoomBase(bool doReplot = true);
@@ -23025,16 +18132,10 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * A signal emitting the zoomRect(), when the plot has been
 	 * zoomed in or out.
 	 * @param rect Current zoom rectangle.
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * 当绘图被放大或缩小时发出的信号，包含当前的缩放矩形。
-	 * @param rect 当前缩放矩形。
-	 * \endif
 	 */
 	void zoomed(const QRectF& rect);
 
@@ -23061,8 +18162,7 @@ private:
 	/// Initialize the zoomer
 	void init(bool doReplot);
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotAxisZoomer)
 };
 
 #endif
@@ -23083,13 +18183,7 @@ class QStack;
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief Struct that stores zoom states for all four axes
- * \endif
- *
- * \if CHINESE
- * @brief 存储所有四个坐标轴缩放状态的结构体
- * \endif
  */
 struct QWT_EXPORT QwtPlotCanvasZoomState
 {
@@ -23126,7 +18220,6 @@ public:
 Q_DECLARE_METATYPE(QwtPlotCanvasZoomState)
 
 /**
- * \if ENGLISH
  * @brief QwtPlotCanvasZoomer provides zooming for all axes of a plot canvas
  * @details QwtPlotCanvasZoomer selects rectangles from user inputs (mouse or keyboard)
  *          and adjusts ALL axes of the plot simultaneously. Unlike QwtPlotZoomer which
@@ -23150,31 +18243,6 @@ Q_DECLARE_METATYPE(QwtPlotCanvasZoomState)
  *          - KeyHome: Reset to base
  *
  * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlotCanvasZoomer 为绘图画布的所有坐标轴提供缩放功能
- * @details QwtPlotCanvasZoomer 从用户输入（鼠标或键盘）中选择矩形
- *          并同时调整绘图的所有坐标轴。与只在两个坐标轴上工作的 QwtPlotZoomer 不同，
- *          此缩放器在整个画布上工作，并为所有四个坐标轴维护单独的范围。
- *
- *          选择由橡皮筋支持，并可选地显示当前鼠标位置的坐标。
- *
- *          缩放可以尽可能重复，仅受 maxStackDepth() 或 minZoomSize() 限制。
- *          每个缩放状态都被推送到堆栈上。
- *
- *          支持如下鼠标快捷键设置：
- *          - MouseSelect2，重置回基础
- *          - MouseSelect3，缩放栈回退
- *          - MouseSelect6，缩放栈前进
- *
- *          支持如下键盘快捷键设置：
- *          - KeyUndo，缩放栈回退
- *          - KeyRedo，缩放栈前进
- *          - KeyHome，重置回基础
- *
- * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotCanvasZoomer : public QwtCanvasPicker
 {
@@ -23185,7 +18253,7 @@ public:
 	explicit QwtPlotCanvasZoomer(QWidget* canvas, bool doReplot = true);
 
 	// Destructor
-	virtual ~QwtPlotCanvasZoomer();
+	~QwtPlotCanvasZoomer() override;
 
 	// Set zoom base to current axis ranges, min zoom size is calculated based on this
 	virtual void setZoomBase(bool doReplot = true);
@@ -23223,15 +18291,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the plot has been zoomed in or out
 	 * @param state Current zoom state containing all axis ranges
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 当绘图被放大或缩小时发出的信号
-	 * @param state 包含所有坐标轴范围的当前缩放状态
-	 * \endif
 	 */
 	void zoomed(const QList< QwtPlotCanvasZoomState >& state);
 
@@ -23268,21 +18329,11 @@ class QPainter;
 class QwtPolarPlot;
 
 /**
- * \if ENGLISH
  * @brief Canvas of a QwtPolarPlot
  * @details The canvas is the widget, where all polar items are painted to.
  *
  * @note In opposite to QwtPlot all axes are painted on the canvas.
  * @sa QwtPolarPlot
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarPlot 的画布
- * @details 画布是绘制所有极坐标项的控件。
- *
- * @note 与 QwtPlot 不同，所有轴都绘制在画布上。
- * @sa QwtPolarPlot
- * \endif
  */
 class QWT_EXPORT QwtPolarCanvas : public QFrame
 {
@@ -23290,31 +18341,16 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
 
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Paint attributes
 	 * @details The default setting enables BackingStore
 	 * @sa setPaintAttribute(), testPaintAttribute(), backingStore()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制属性
-	 * @details 默认设置启用 BackingStore
-	 * @sa setPaintAttribute(), testPaintAttribute(), backingStore()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Paint double buffered and reuse the content of the pixmap buffer
 		 * for some spontaneous repaints that happen when a plot gets unhidden,
 		 * deiconified or changes the focus.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 双缓冲绘制并重用像素图缓冲区的内容，
-		 * 用于绘图被取消隐藏、取消图标化或更改焦点时发生的一些自发重绘。
-		 * \endif
 		 */
 		BackingStore = 0x01
 	};
@@ -23324,7 +18360,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
 	/// Constructor
 	explicit QwtPolarCanvas( QwtPolarPlot* );
 	/// Destructor
-	virtual ~QwtPolarCanvas();
+	~QwtPolarCanvas() override;
 
 	/// Get the plot
 	QwtPolarPlot* plot();
@@ -23353,8 +18389,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
 	virtual void resizeEvent( QResizeEvent* ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarCanvas)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarCanvas::PaintAttributes )
@@ -23378,35 +18413,19 @@ class QwtScaleMap;
 class QwtScaleDiv;
 
 /**
- * \if ENGLISH
  * @brief Base class for items on a polar plot
  * @details A QwtPolarItem is "something that can be painted on the canvas".
  *          It is connected to the QwtPolar framework by a couple of virtual methods,
  *          that are individually implemented in derived item classes.
  *          QwtPolar offers an implementation of the most common types of items,
  *          but deriving from QwtPolarItem makes it easy to implement additional types of items.
- * \endif
- *
- * \if CHINESE
- * @brief 极坐标绘图项的基类
- * @details QwtPolarItem 是"可以在画布上绘制的东西"。
- *          它通过几个虚方法连接到 QwtPolar 框架，这些方法在派生项类中单独实现。
- *          QwtPolar 提供了最常见项类型的实现，但派生自 QwtPolarItem 可以轻松实现其他类型的项。
- * \endif
  */
 class QWT_EXPORT QwtPolarItem
 {
   public:
 	/*!
-	 * \if ENGLISH
 	 * @brief Runtime type information
 	 * @details RttiValues is used to cast plot items, without having to enable runtime type information of the compiler.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 运行时类型信息
-	 * @details RttiValues 用于转换绘图项，而无需启用编译器的运行时类型信息。
-	 * \endif
 	 */
 	enum RttiValues
 	{
@@ -23433,15 +18452,8 @@ class QWT_EXPORT QwtPolarItem
 	};
 
 	/*!
-	 * \if ENGLISH
 	 * @brief Plot Item Attributes
 	 * @sa setItemAttribute(), testItemAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘图项属性
-	 * @sa setItemAttribute(), testItemAttribute()
-	 * \endif
 	 */
 	enum ItemAttribute
 	{
@@ -23458,15 +18470,8 @@ class QWT_EXPORT QwtPolarItem
 	Q_DECLARE_FLAGS( ItemAttributes, ItemAttribute )
 
 	/*!
-	 * \if ENGLISH
 	 * @brief Render hints
 	 * @sa setRenderHint(), testRenderHint()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 渲染提示
-	 * @sa setRenderHint(), testRenderHint()
-	 * \endif
 	 */
 	enum RenderHint
 	{
@@ -23534,25 +18539,13 @@ class QWT_EXPORT QwtPolarItem
 	virtual void legendChanged();
 
 	/*!
-	 * \if ENGLISH
 	 * @brief Draw the item
-	 * @param[in] painter Painter
-	 * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-	 * @param[in] radialMap Maps radius values into painter coordinates
-	 * @param[in] pole Position of the pole in painter coordinates
-	 * @param[in] radius Radius of the complete plot area in painter coordinates
-	 * @param[in] canvasRect Contents rect of the canvas in painter coordinates
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制项
-	 * @param[in] painter 画师
-	 * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
-	 * @param[in] radialMap 将半径值映射到画师坐标
-	 * @param[in] pole 画师坐标中极点的位置
-	 * @param[in] radius 画师坐标中完整绘图区域的半径
-	 * @param[in] canvasRect 画师坐标中画布的内容矩形
-	 * \endif
+	 * @param painter Painter
+	 * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+	 * @param radialMap Maps radius values into painter coordinates
+	 * @param pole Position of the pole in painter coordinates
+	 * @param radius Radius of the complete plot area in painter coordinates
+	 * @param canvasRect Contents rect of the canvas in painter coordinates
 	 */
 	virtual void draw( QPainter* painter,
 		const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
@@ -23580,10 +18573,10 @@ class QWT_EXPORT QwtPolarItem
 	virtual QwtGraphic legendIcon( int index, const QSizeF& ) const;
 
   private:
-	Q_DISABLE_COPY( QwtPolarItem )
+	QwtPolarItem(const QwtPolarItem&) = delete;
+	QwtPolarItem& operator=(const QwtPolarItem&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::ItemAttributes )
@@ -23606,22 +18599,12 @@ using QwtPolarItemIterator = QList< QwtPolarItem* >::ConstIterator;
 using QwtPolarItemList     = QList< QwtPolarItem* >;
 
 /**
- * \if ENGLISH
  * @brief A dictionary for polar plot items
  * @details QwtPolarItemDict organizes polar plot items in increasing z-order.
  *          If autoDelete() is enabled, all attached items will be deleted
  *          in the destructor of the dictionary.
  *
  * @sa QwtPolarItem::attach(), QwtPolarItem::detach(), QwtPolarItem::z()
- * \endif
- *
- * \if CHINESE
- * @brief 极坐标绘图项的字典
- * @details QwtPolarItemDict 按递增的 z 顺序组织极坐标绘图项。
- *          如果启用了 autoDelete()，所有附加的项将在字典的析构函数中被删除。
- *
- * @sa QwtPolarItem::attach(), QwtPolarItem::detach(), QwtPolarItem::z()
- * \endif
  */
 class QWT_EXPORT QwtPolarItemDict
 {
@@ -23649,8 +18632,7 @@ protected:
 	void removeItem(QwtPolarItem*);
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarItemDict)
 };
 
 #endif
@@ -23667,34 +18649,18 @@ class QwtSymbol;
 class QwtCurveFitter;
 
 /**
- * \if ENGLISH
  * @brief An item, that represents a series of points
  * @details A curve is the representation of a series of points in polar coordinates.
  *          The points are connected to the curve using the abstract QwtData interface.
  *
  * @sa QwtPolarPlot, QwtSymbol, QwtScaleMap
- * \endif
- *
- * \if CHINESE
- * @brief 表示一系列点的绘图项
- * @details 曲线是极坐标中一系列点的表示。点使用抽象的 QwtData 接口连接到曲线。
- *
- * @sa QwtPolarPlot, QwtSymbol, QwtScaleMap
- * \endif
  */
 class QWT_EXPORT QwtPolarCurve : public QwtPolarItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Curve styles
 	 * @sa setStyle(), style()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 曲线样式
-	 * @sa setStyle(), style()
-	 * \endif
 	 */
 	enum CurveStyle
 	{
@@ -23702,16 +18668,9 @@ public:
 		NoCurve,
 
 		/**
-		 * \if ENGLISH
 		 * Connect the points with straight lines. The lines might
 		 * be interpolated depending on the 'Fitted' attribute. Curve
 		 * fitting can be configured using setCurveFitter().
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 用直线连接点。根据 'Fitted' 属性，线条可能会被插值。
-		 * 可以使用 setCurveFitter() 配置曲线拟合。
-		 * \endif
 		 */
 		Lines,
 
@@ -23720,42 +18679,21 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Attributes how to represent the curve on the legend
 	 * @details If none of the flags is activated QwtPlotCurve tries to find
 	 *          a color representing the curve and paints a rectangle with it.
 	 *          In the default setting all attributes are off.
 	 * @sa setLegendAttribute(), testLegendAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 在图例上表示曲线的属性
-	 * @details 如果没有激活任何标志，QwtPlotCurve 会尝试找到代表曲线的颜色并用它绘制矩形。
-	 *          在默认设置中，所有属性都是关闭的。
-	 * @sa setLegendAttribute(), testLegendAttribute()
-	 * \endif
 	 */
 	enum LegendAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * If the curveStyle() is not NoCurve a line is painted with the curvePen().
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 如果 curveStyle() 不是 NoCurve，则使用 curvePen() 绘制一条线。
-		 * \endif
 		 */
 		LegendShowLine = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * If the curve has a valid symbol it is painted.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 如果曲线有有效的符号，则绘制该符号。
-		 * \endif
 		 */
 		LegendShowSymbol = 0x02
 	};
@@ -23770,7 +18708,7 @@ public:
 	explicit QwtPolarCurve(const QString& title);
 
 	/// Destructor
-	virtual ~QwtPolarCurve();
+	~QwtPolarCurve() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -23857,19 +18795,18 @@ protected:
 private:
 	QwtSeriesData< QwtPointPolar >* m_series;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarCurve)
 };
 
-//! \return the the curve data
+//! @return the the curve data
 inline const QwtSeriesData< QwtPointPolar >* QwtPolarCurve::data() const
 {
 	return m_series;
 }
 
 /*!
-	\param i index
-	\return point at position i
+	@param i index
+	@return point at position i
  */
 inline QwtPointPolar QwtPolarCurve::sample(int i) const
 {
@@ -23891,7 +18828,6 @@ class QwtPolarPlot;
 class QwtPolarCanvas;
 
 /**
- * \if ENGLISH
  * @brief QwtPolarMagnifier provides zooming, by magnifying in steps
  * @details Using QwtPlotMagnifier a plot can be zoomed in/out in steps using
  *          keys, the mouse wheel or moving a mouse button in vertical direction.
@@ -23900,17 +18836,6 @@ class QwtPolarCanvas;
  *          an individual navigation of the plot canvas.
  *
  * @sa QwtPolarPanner, QwtPolarPlot, QwtPolarCanvas
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarMagnifier 通过逐步放大提供缩放功能
- * @details 使用 QwtPlotMagnifier，可以通过按键、鼠标滚轮或在垂直方向移动鼠标按钮
- *          以步进方式放大/缩小绘图。
- *
- *          与 QwtPolarPanner 一起，可以实现绘图画布的独立导航。
- *
- * @sa QwtPolarPanner, QwtPolarPlot, QwtPolarCanvas
- * \endif
  */
 class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
 {
@@ -23920,7 +18845,7 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
 	/// Constructor
 	explicit QwtPolarMagnifier( QwtPolarCanvas* );
 	/// Destructor
-	virtual ~QwtPolarMagnifier();
+	~QwtPolarMagnifier() override;
 
 	/// Set the unzoom key
 	void setUnzoomKey( int key, int modifiers );
@@ -23948,8 +18873,7 @@ class QWT_EXPORT QwtPolarMagnifier : public QwtMagnifier
 	virtual void widgetKeyPressEvent( QKeyEvent* ) override;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarMagnifier)
 };
 
 #endif
@@ -23966,7 +18890,6 @@ class QwtText;
 class QwtSymbol;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing markers
  * @details A marker can be a a symbol, a label or a combination of them, which can
  *          be drawn around a center point inside a bounding rectangle.
@@ -23980,19 +18903,6 @@ class QwtSymbol;
  *          are valid. The alignment refers to the center point of
  *          the marker, which means, for example, that the label would be painted
  *          left above the center point if the alignment was set to AlignLeft|AlignTop.
- * \endif
- *
- * \if CHINESE
- * @brief 用于绘制标记的类
- * @details 标记可以是符号、标签或它们的组合，可以在边界矩形内的中心点周围绘制。
- *
- *          setSymbol() 成员为标记分配一个符号。符号在指定的点绘制。
- *
- *          使用 setLabel() 可以为标记分配标签。setLabelAlignment() 成员指定标签的绘制位置。
- *          Qt::AlignmentFlags 中的所有 Align*-常量（参见 Qt 文档）都有效。
- *          对齐方式指的是标记的中心点，例如，如果对齐方式设置为 AlignLeft|AlignTop，
- *          则标签将在中心点的左上方绘制。
- * \endif
  */
 class QWT_EXPORT QwtPolarMarker : public QwtPolarItem
 {
@@ -24000,7 +18910,7 @@ public:
 	/// Constructor
 	explicit QwtPolarMarker();
 	/// Destructor
-	virtual ~QwtPolarMarker();
+	~QwtPolarMarker() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -24037,8 +18947,7 @@ public:
 	virtual QwtInterval boundingInterval(int scaleId) const override;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarMarker)
 };
 
 #endif
@@ -24053,7 +18962,6 @@ private:
 class QwtPolarPlot;
 class QwtPolarCanvas;
 /**
- * \if ENGLISH
  * @brief QwtPolarCachePanner provides panning of a polar plot canvas
  * @details QwtPolarPanner is a panner for a QwtPolarCanvas, that
  *          adjusts the visible area after dropping
@@ -24063,18 +18971,6 @@ class QwtPolarCanvas;
  *          of navigating on a QwtPolarPlot widget can be implemented easily.
  *
  * @sa QwtPolarMagnifier
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarCachePanner 提供极坐标绘图画布的平移功能
- * @details QwtPolarPanner 是 QwtPolarCanvas 的平移器，
- *          在将画布放在新位置后调整可见区域。
- *
- *          与 QwtPolarMagnifier 一起，可以轻松实现
- *          在 QwtPolarPlot 控件上导航的个性化方式。
- *
- * @sa QwtPolarMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPolarCachePanner : public QwtCachePanner
 {
@@ -24084,7 +18980,7 @@ public:
 	/// Constructor
 	explicit QwtPolarCachePanner(QwtPolarCanvas*);
 	/// Destructor
-	virtual ~QwtPolarCachePanner();
+	~QwtPolarCachePanner() override;
 
 	/// Get the plot
 	QwtPolarPlot* plot();
@@ -24122,16 +19018,9 @@ class QwtPolarCanvas;
 class QwtPointPolar;
 
 /**
- * \if ENGLISH
  * @brief QwtPolarPicker provides selections on a plot canvas
  * @details QwtPolarPicker is a QwtPicker tailored for selections on
  *          a polar plot canvas.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarPicker 提供在绘图画布上的选择功能
- * @details QwtPolarPicker 是为极坐标绘图画布上的选择而定制的 QwtPicker。
- * \endif
  */
 class QWT_EXPORT QwtPolarPicker : public QwtPicker
 {
@@ -24141,7 +19030,7 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
 	/// Constructor
 	explicit QwtPolarPicker( QwtPolarCanvas* );
 	/// Destructor
-	virtual ~QwtPolarPicker();
+	~QwtPolarPicker() override;
 
 	/// Constructor with rubber band and tracker mode
 	explicit QwtPolarPicker(
@@ -24165,30 +19054,26 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
 
 	/**
 	 * @brief A signal emitted in case of selectionFlags() & PointSelection
-	 *        当 selectionFlags() & PointSelection 时发出的信号
-	 * @param pos Selected point / 选中的点
+	 * @param pos Selected point
 	 */
 	void selected( const QwtPointPolar& pos );
 
 	/**
 	 * @brief A signal emitting the selected points, at the end of a selection
-	 *        在选择结束时发出选中点的信号
-	 * @param points Selected points / 选中的点
+	 * @param points Selected points
 	 */
 	void selected( const QVector< QwtPointPolar >& points );
 
 	/**
 	 * @brief A signal emitted when a point has been appended to the selection
-	 *        当点被追加到选择时发出的信号
-	 * @param pos Position of the appended point / 追加点的位置
+	 * @param pos Position of the appended point
 	 * @sa append(), moved()
 	 */
 	void appended( const QwtPointPolar& pos );
 
 	/**
 	 * @brief A signal emitted whenever the last appended point of the selection has been moved
-	 *        当选择的最后一个追加点被移动时发出的信号
-	 * @param pos Position of the moved last point of the selection / 移动的最后一个点的位置
+	 * @param pos Position of the moved last point of the selection
 	 * @sa move(), appended()
 	 */
 	void moved( const QwtPointPolar& pos );
@@ -24212,8 +19097,7 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
   private:
 	virtual QPainterPath pickArea() const override;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarPicker)
 };
 
 #endif
@@ -24231,50 +19115,26 @@ class QwtRasterData;
 class QwtColorMap;
 
 /**
- * \if ENGLISH
  * @brief An item, which displays a spectrogram
  * @details A spectrogram displays 3-dimensional data, where the 3rd dimension
  *          ( the intensity ) is displayed using colors. The colors are calculated
  *          from the values using a color map.
  *
  * @sa QwtRasterData, QwtColorMap
- * \endif
- *
- * \if CHINESE
- * @brief 显示光谱图的绘图项
- * @details 光谱图显示三维数据，其中第三维（强度）使用颜色显示。
- *          颜色是通过颜色映射从值计算得出的。
- *
- * @sa QwtRasterData, QwtColorMap
- * \endif
  */
 class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
 {
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Attributes to modify the drawing algorithm
 	 * @details The default setting disables ApproximatedAtan
 	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 修改绘制算法的属性
-	 * @details 默认设置禁用 ApproximatedAtan
-	 * @sa setPaintAttribute(), testPaintAttribute()
-	 * \endif
 	 */
 	enum PaintAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * Use qwtFastAtan2 instead of atan2 for translating
 		 * widget into polar coordinates.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 使用 qwtFastAtan2 代替 atan2 将控件坐标转换为极坐标。
-		 * \endif
 		 */
 		ApproximatedAtan = 0x01
 	};
@@ -24284,7 +19144,7 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
 	/// Constructor
 	explicit QwtPolarSpectrogram();
 	/// Destructor
-	virtual ~QwtPolarSpectrogram();
+	~QwtPolarSpectrogram() override;
 
 	/// Set the data
 	void setData( QwtRasterData* data );
@@ -24330,8 +19190,7 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
 	void renderTileInfo( const QwtScaleMap&, const QwtScaleMap&,
 		const QPointF& pole, TileInfo* ) const;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarSpectrogram)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarSpectrogram::PaintAttributes )
@@ -24359,6 +19218,7 @@ class QwtTextLabel;
 class QwtInterval;
 class QwtText;
 class QwtPlotScaleEventDispatcher;
+class QwtColorCycle;
 
 template< typename T >
 class QList;
@@ -24367,7 +19227,6 @@ class QList;
 #define QWT_AXIS_COMPAT 1
 
 /**
- * \if ENGLISH
  * @brief A 2-D plotting widget
  * @details QwtPlot is a widget for plotting two-dimensional graphs.
  *          An unlimited number of plot items can be displayed on
@@ -24408,45 +19267,6 @@ class QList;
  *      // finally, refresh the plot
  *      myPlot->replot();
  *  @endcode
- * \endif
- *
- * \if CHINESE
- * @brief 二维绘图部件
- * @details QwtPlot 是一个用于绘制二维图形的部件。
- *          可以在其画布上显示无限数量的绘图项。绘图项可以是曲线（QwtPlotCurve）、标记
- *          （QwtPlotMarker）、网格（QwtPlotGrid）或任何其他从 QwtPlotItem 派生的对象。
- *          一个绘图可以有最多四个坐标轴，每个绘图项都附加到一个 x 轴和一个 y 轴。
- *          坐标轴的比例尺可以显式设置（QwtScaleDiv），或者使用算法（QwtScaleEngine）从绘图项计算，
- *          这些算法可以为每个坐标轴单独配置。
- *
- *          simpleplot 示例是了解如何设置绘图部件的良好起点。
- *
- * @image html plot.png
- *
- * @par 示例
- *  以下示例（示意性）显示了使用 QwtPlot 的最简单方法。默认情况下，只有左侧和底部坐标轴可见，
- *  并且它们的比例尺会自动计算。
- *  @code
- * #include <qwt_plot.h>
- * #include <qwt_plot_curve.h>
- *
- *      QwtPlot *myPlot = new QwtPlot( "Two Curves", parent );
- *
- *      // add curves
- *      QwtPlotCurve *curve1 = new QwtPlotCurve( "Curve 1" );
- *      QwtPlotCurve *curve2 = new QwtPlotCurve( "Curve 2" );
- *
- *      // connect or copy the data to the curves
- *      curve1->setData( ... );
- *      curve2->setData( ... );
- *
- *      curve1->attach( myPlot );
- *      curve2->attach( myPlot );
- *
- *      // finally, refresh the plot
- *      myPlot->replot();
- *  @endcode
- * \endif
  */
 
 class QWT_EXPORT QwtPlot : public QFrame, public QwtPlotDict
@@ -24463,15 +19283,8 @@ class QWT_EXPORT QwtPlot : public QFrame, public QwtPlotDict
 
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Position of the legend, relative to the canvas
 	 * @sa insertLegend()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 图例相对于画布的位置
-	 * @sa insertLegend()
-	 * \endif
 	 */
 	enum LegendPosition
 	{
@@ -24489,28 +19302,17 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Tick direction enum
 	 * @details Controls whether ticks are drawn inside or outside the canvas.
 	 *          When ticks are inside, they are drawn from the canvas edge toward
 	 *          the interior, while the backbone and labels remain outside.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 刻度方向枚举
-	 * @details 控制刻度线是绘制在画布内部还是外部。
-	 *          当刻度朝内时，刻度线从画布边缘向内延伸，
-	 *          而主干和标签保持在画布外。
-	 * \endif
 	 */
 	enum TickDirection
 	{
 		///< Ticks are drawn outside the canvas (default behavior)
-		///< 刻度朝外（默认行为）
 		TickOutside = 0,
 
 		///< Ticks are drawn inside the canvas
-		///< 刻度朝内
 		TickInside = 1
 	};
 
@@ -24520,7 +19322,7 @@ public:
 	explicit QwtPlot(const QwtText& title, QWidget* = nullptr);
 
 	// Destructor
-	virtual ~QwtPlot();
+	~QwtPlot() override;
 
 	// Set auto replot
 	void setAutoReplot(bool = true);
@@ -24584,6 +19386,15 @@ public:
 	void setCanvasBackground(const QBrush&);
 	// Get canvas background
 	QBrush canvasBackground() const;
+
+	// Color cycle
+
+	// Set color cycle for automatic item coloring
+	void setColorCycle(const QwtColorCycle&);
+	// Get the current color cycle
+	QwtColorCycle colorCycle() const;
+	// Get the next auto-assigned color for a plot item type
+	QColor nextColorForItem(int rtti);
 
 	// Get canvas map for axis
 	virtual QwtScaleMap canvasMap(QwtAxisId) const;
@@ -24676,43 +19487,10 @@ public:
 
 	// Tick Direction - NEW
 
-	/**
-	 * \if ENGLISH
-	 * @brief Set the tick direction for an axis
-	 * @param axisId Axis identifier (QwtAxis::YLeft, YRight, XBottom, XTop)
-	 * @param direction Tick direction (TickOutside or TickInside)
-	 *
-	 * When set to TickInside, the tick marks are drawn from the canvas edge
-	 * toward the interior, while the backbone and labels remain outside the canvas.
-	 * The inside ticks share the same style (length, color, pen width) as the
-	 * outside ticks configured via QwtScaleDraw.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 设置坐标轴的刻度方向
-	 * @param axisId 坐标轴标识（QwtAxis::YLeft, YRight, XBottom, XTop）
-	 * @param direction 刻度方向（TickOutside 朝外或 TickInside 朝内）
-	 *
-	 * 当设置为 TickInside 时，刻度线从画布边缘向内绘制，
-	 * 而主干和标签保持在画布外。
-	 * 朝内刻度与朝外刻度共享相同的样式（长度、颜色、线宽）。
-	 * \endif
-	 */
+	// Set tick direction for an axis
 	void setAxisTickDirection(QwtAxisId axisId, TickDirection direction);
 
-	/**
-	 * \if ENGLISH
-	 * @brief Get the tick direction for an axis
-	 * @param axisId Axis identifier
-	 * @return Current tick direction (TickOutside or TickInside)
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 获取坐标轴的刻度方向
-	 * @param axisId 坐标轴标识
-	 * @return 当前刻度方向（TickOutside 朝外或 TickInside 朝内）
-	 * \endif
-	 */
+	// Get tick direction for an axis
 	TickDirection axisTickDirection(QwtAxisId axisId) const;
 
 	// Legend
@@ -24876,53 +19654,27 @@ public:
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
-	 * A signal indicating, that an item has been attached/detached
+	 * @brief A signal indicating that an item has been attached/detached
 	 * @param plotItem Plot item
 	 * @param on Attached/Detached
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * 指示项目已附加/分离的信号
-	 * @param plotItem 绘图项目
-	 * @param on 附加/分离
-	 * \endif
 	 */
 	void itemAttached(QwtPlotItem* plotItem, bool on);
 
 	/**
-	 * \if ENGLISH
-	 * A signal with the attributes how to update
+	 * @brief A signal with the attributes how to update
 	 * the legend entries for a plot item.
-	 * @param itemInfo Info about a plot item, build from itemToInfo()
-	 * @param data Attributes of the entries ( usually <= 1 ) for
+	 * @param itemInfo Info about a plot item, built from itemToInfo()
+	 * @param data Attributes of the entries (usually <= 1) for
 	 *            the plot item.
 	 * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * 带有如何更新绘图项图例条目的属性的信号
-	 * @param itemInfo 关于绘图项的信息，由 itemToInfo() 构建
-	 * @param data 绘图项的条目属性（通常 <= 1）
-	 * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
-	 * \endif
 	 */
 	void legendDataChanged(const QVariant& itemInfo, const QList< QwtLegendData >& data);
 
 	/**
-	 * \if ENGLISH
-	 * Identify the relationship between the parasitic plot and its host plot
+	 * @brief Identify the relationship between the parasitic plot and its host plot
 	 * @param parasitePlot Parasite plot
 	 * @param on When a parasitic plot is added, on = true. When the parasitic plot is removed, on = false.
 	 * @note This signal is emitted only by the host plot.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * 标识寄生绘图与其宿主绘图之间的关系
-	 * @param parasitePlot 寄生绘图
-	 * @param on 当添加寄生绘图时，on = true。当移除寄生绘图时，on = false。
-	 * @note 此信号仅由宿主绘图发出。
-	 * \endif
 	 */
 	void parasitePlotAttached(QwtPlot* parasitePlot, bool on);
 public Q_SLOTS:
@@ -25005,31 +19757,16 @@ class QwtAbstractLegend;
 class QwtTextLabel;
 class QwtScaleWidget;
 /**
- * \if ENGLISH
  * @brief Layout engine for QwtPlot components
  * @details Originally a private class in QwtPlotLayout, previously written as class LayoutEngine in qwt_plot_layout.cpp.
  *          It was extracted as a public class because other layouts need to use it.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot组件的布局引擎
- * @details 原来的QwtPlotLayout里的私有类，原来此类写在qwt_plot_layout.cpp中，class LayoutEngine，
- *          由于其它布局会用到，把它提取为公共类。
- * \endif
  */
 class QWT_EXPORT QwtPlotLayoutEngine
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Structure holding dimension values for layout calculation
 	 * @details Contains width/height values for title, footer, and all four axes.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 保存布局计算尺寸值的结构体
-	 * @details 包含标题、页脚以及四个坐标轴的宽度/高度值。
-	 * \endif
 	 */
 	struct Dimensions
 	{
@@ -25065,29 +19802,15 @@ public:
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Data structure for layout calculation
 	 * @details Contains cached data extracted from plot components for efficient layout calculation.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 布局计算数据结构
-	 * @details 包含从绘图组件提取的缓存数据，用于高效的布局计算。
-	 * \endif
 	 */
 	class LayoutData
 	{
 	public:
 		/**
-		 * \if ENGLISH
 		 * @brief Data for legend layout calculation
 		 * @details Contains frame width, scroll extents, and size hint for the legend.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 图例布局计算数据
-		 * @details 包含图例的边框宽度、滚动范围和尺寸提示。
-		 * \endif
 		 */
 		struct LegendData
 		{
@@ -25104,15 +19827,8 @@ public:
 		};
 
 		/**
-		 * \if ENGLISH
 		 * @brief Data for title/footer label layout calculation
 		 * @details Contains text and frame width for a label widget.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 标题/页脚标签布局计算数据
-		 * @details 包含标签部件的文本和边框宽度。
-		 * \endif
 		 */
 		struct LabelData
 		{
@@ -25124,15 +19840,8 @@ public:
 		};
 
 		/**
-		 * \if ENGLISH
 		 * @brief Data for axis scale widget layout calculation
 		 * @details Contains visibility, font, border distances, and tick offset for an axis.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 坐标轴刻度部件布局计算数据
-		 * @details 包含坐标轴的可见性、字体、边框距离和刻度偏移量。
-		 * \endif
 		 */
 		struct ScaleData
 		{
@@ -25154,15 +19863,8 @@ public:
 		};
 
 		/**
-		 * \if ENGLISH
 		 * @brief Data for canvas layout calculation
 		 * @details Contains content margins for the canvas widget.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 画布布局计算数据
-		 * @details 包含画布部件的内容边距。
-		 * \endif
 		 */
 		struct CanvasData
 		{
@@ -25173,22 +19875,15 @@ public:
 		};
 
 		/**
-		 * \if ENGLISH
 		 * @brief Label type enumeration
 		 * @details Identifies title or footer labels in the layout.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 标签类型枚举
-		 * @details 标识布局中的标题或页脚标签。
-		 * \endif
 		 */
 		enum Label
 		{
-			Title,   //!< \if ENGLISH Title label \endif \if CHINESE 标题标签 \endif
-			Footer,  //!< \if ENGLISH Footer label \endif \if CHINESE 页脚标签 \endif
+			Title,   //!< Title label
+			Footer,  //!< Footer label
 
-			NumLabels  //!< \if ENGLISH Number of label types \endif \if CHINESE 标签类型数量 \endif
+			NumLabels  //!< Number of label types
 		};
 
 		// Construct LayoutData from a QwtPlot
@@ -25274,9 +19969,7 @@ public:
 
 private:
 	/**
-	 * \if ENGLISH
 	 * @brief Get height for width
-	 * \endif
 	 */
 	int heightForWidth(LayoutData::Label labelType,
 					   const LayoutData& layoutData,
@@ -25305,103 +19998,49 @@ private:
 class QwtPlotLayoutEngine;
 
 /**
- * \if ENGLISH
  * @brief Layout engine for QwtPlot
  * @details It is used by the QwtPlot widget to organize its internal widgets
  *          or by QwtPlot::print() to render its content to a QPaintDevice like
  *          a QPrinter, QPixmap/QImage or QSvgRenderer.
  * @sa QwtPlot::setPlotLayout()
- * \endif
- *
- * \if CHINESE
- * @brief QwtPlot 的布局引擎
- * @details 它被 QwtPlot 部件用于组织其内部部件，
- *          或被 QwtPlot::print() 用于将其内容渲染到 QPaintDevice 上，
- *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
- * @sa QwtPlot::setPlotLayout()
- * \endif
  */
 class QWT_EXPORT QwtPlotLayout
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Options to configure the plot layout engine
 	 * @sa activate(), QwtPlotRenderer
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 用于配置绘图布局引擎的选项
-	 * @sa activate(), QwtPlotRenderer
-	 * \endif
 	 */
 	enum Option
 	{
 		/**
-		 * \if ENGLISH
 		 * @brief Unused
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 未使用
-		 * \endif
 		 */
 		AlignScales = 0x01,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Ignore the dimension of the scrollbars.
 		 * @details There are no scrollbars when the plot is not rendered to widgets.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 忽略滚动条的尺寸
-		 * @details 当绘图未渲染到部件时，不存在滚动条。
-		 * \endif
 		 */
 		IgnoreScrollbars = 0x02,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Ignore all frames
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 忽略所有边框
-		 * \endif
 		 */
 		IgnoreFrames = 0x04,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Ignore the legend
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 忽略图例
-		 * \endif
 		 */
 		IgnoreLegend = 0x08,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Ignore the title
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 忽略标题
-		 * \endif
 		 */
 		IgnoreTitle = 0x10,
 
 		/**
-		 * \if ENGLISH
 		 * @brief Ignore the footer
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * @brief 忽略页脚
-		 * \endif
 		 */
 		IgnoreFooter = 0x20
 	};
@@ -25450,10 +20089,10 @@ protected:
 		Options options = Options() );
 
 private:
-	Q_DISABLE_COPY( QwtPlotLayout )
+	QwtPlotLayout(const QwtPlotLayout&) = delete;
+	QwtPlotLayout& operator=(const QwtPlotLayout&) = delete;
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )
@@ -25468,7 +20107,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )
 #define QWTPARASITEPLOTLAYOUT_H
 
 /**
- * \if ENGLISH
  * @brief Layout manager for parasite plots
  *
  * QwtParasitePlotLayout manages the layout of parasite plots that share
@@ -25476,22 +20114,12 @@ Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )
  * from the host plot to ensure visual consistency.
  *
  * @sa QwtPlot::createParasitePlot()
- * \endif
- *
- * \if CHINESE
- * @brief 寄生绘图的布局管理器
- *
- * QwtParasitePlotLayout管理与宿主绘图共享相同画布区域的寄生绘图布局。
- * 它从宿主绘图复制布局属性以确保视觉一致性。
- *
- * @sa QwtPlot::createParasitePlot()
- * \endif
  */
 class QWT_EXPORT QwtParasitePlotLayout : public QwtPlotLayout
 {
 public:
 	QwtParasitePlotLayout();
-	~QwtParasitePlotLayout();
+	~QwtParasitePlotLayout() override;
 	virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options()) override;
 
 	virtual QSize minimumSizeHint(const QwtPlot* plot) const override;
@@ -25517,7 +20145,6 @@ class QWheelEvent;
 class QwtPlot;
 class QwtScaleWidget;
 /**
- * \if ENGLISH
  * @brief Event filter for parasitic plots, handling axis interactions
  * @details Since parasitic plots are child windows of host plots, events from multiple parasitic
  *          plots' widgets cannot be passed to other parasitic plots' widgets.
@@ -25527,17 +20154,7 @@ class QwtScaleWidget;
  *          fall to the current parasitic plot window, not the next level's axis widget.
  *          This class is designed to solve this problem. Axis actions are executed here as event
  *          handlers rather than event propagators.
- * \endif
  *
- * \if CHINESE
- * @brief 针对寄生绘图的事件过滤器，主要处理坐标轴动作
- * @details 由于寄生绘图属于宿主绘图的子窗口，多个寄生绘图的部件的事件无法传递到其它寄生绘图的部件上。
- *          例如有2个寄生绘图，寄生绘图的轴区域是重叠覆盖的，最顶层的寄生绘图的坐标轴窗口是和下面层级及宿主绘图的坐标轴窗口尺寸是一样的，
- *          也就是说，对于一个坐标轴窗口的事件，只有最顶层的寄生轴窗口能接收到，就算ignore忽略掉这个事件，只是落到了当前寄生绘图窗口，
- *          而不是下一层级的寄生绘图的坐标轴窗口，但一般希望的事情是，顶层的寄生绘图的坐标轴窗口事件如果忽略，应该落到下一层寄生绘图的坐标轴窗口，
- *          这样就能处理多坐标轴时坐标轴的动作。
- *          这个类就是为了解决上述问题设计的，轴的动作都放到这里来执行，不用做事件的传递者，而做事件的执行者。
- * \endif
  */
 class QWT_EXPORT QwtPlotScaleEventDispatcher : public QObject
 {
@@ -25547,7 +20164,7 @@ public:
 	/// Constructor
 	explicit QwtPlotScaleEventDispatcher(QwtPlot* plot, QObject* par = nullptr);
 	/// Destructor
-	~QwtPlotScaleEventDispatcher();
+	~QwtPlotScaleEventDispatcher() override;
 	/// Check if enabled
 	bool isEnable() const;
 	/// Find axis ID corresponding to QwtScaleWidget
@@ -25560,14 +20177,14 @@ public Q_SLOTS:
 
 protected:
 	virtual bool eventFilter(QObject* obj, QEvent* e) override;
-	// 更新数据
+	// Update data
 	void rebuildCache();
-	// 处理各种鼠标事件
+	// Handle various mouse events
 	virtual bool handleMousePress(QwtPlot* bindPlot, QMouseEvent* e);
 	virtual bool handleMouseMove(QwtPlot* bindPlot, QMouseEvent* e);
 	virtual bool handleMouseRelease(QwtPlot* bindPlot, QMouseEvent* e);
 	virtual bool handleWheelEvent(QwtPlot* bindPlot, QWheelEvent* e);
-	// 查找应该处理事件的 scale widget
+	// Find the scale widget that should handle the event
 	QwtScaleWidget* findTargetOnScale(const QPoint& pos);
 };
 
@@ -25587,16 +20204,10 @@ class QwtInterval;
 class QResizeEvent;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotRescaler takes care of fixed aspect ratios for plot scales
  * @details QwtPlotRescaler auto adjusts the axes of a QwtPlot according
  *          to fixed aspect ratios.
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotRescaler 负责处理绘图比例尺的固定宽高比
- * @details QwtPlotRescaler 根据固定的宽高比自动调整 QwtPlot 的坐标轴。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotRescaler : public QObject
@@ -25605,77 +20216,45 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
 
   public:
 	/**
-	 * \if ENGLISH
 	 * @brief Rescale policies
 	 * @details The rescale policy defines how to rescale the reference axis and
 	 *          their depending axes.
 	 * @sa ExpandingDirection, setIntervalHint()
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 重缩放策略
-	 * @details 重缩放策略定义了如何重缩放参考轴及其依赖轴。
-	 * @sa ExpandingDirection, setIntervalHint()
-	 * \endif
 	 */
 	enum RescalePolicy
 	{
 		/**
-		 * \if ENGLISH
 		 * The interval of the reference axis remains unchanged, when the
 		 * geometry of the canvas changes. All other axes
 		 * will be adjusted according to their aspect ratio.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 当画布的几何形状改变时，参考轴的区间保持不变。所有其他轴
-		 * 将根据其宽高比进行调整。
-		 * \endif
 		 */
 		Fixed,
 
 		/**
-		 * \if ENGLISH
 		 * The interval of the reference axis will be shrunk/expanded,
 		 * when the geometry of the canvas changes. All other axes
 		 * will be adjusted according to their aspect ratio.
 		 *
 		 * The interval, that is represented by one pixel is fixed.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 当画布的几何形状改变时，参考轴的区间将收缩/扩展。所有其他轴
-		 * 将根据其宽高比进行调整。
-		 *
-		 * 由一个像素表示的区间是固定的。
-		 * \endif
 		 */
 		Expanding,
 
 		/**
-		 * \if ENGLISH
 		 * The intervals of the axes are calculated, so that all axes include
 		 * their interval hint.
-		 * \endif
 		 *
-		 * \if CHINESE
-		 * 计算轴的区间，使所有轴都包含它们的区间提示。
-		 * \endif
 		 */
 		Fitting
 	};
 
 	/**
-	 * \if ENGLISH
 	 * @brief Expanding directions
 	 * @details When rescalePolicy() is set to Expanding its direction depends
 	 *          on ExpandingDirection
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 扩展方向
-	 * @details 当 rescalePolicy() 设置为 Expanding 时，其方向取决于 ExpandingDirection
-	 * \endif
 	 */
 	enum ExpandingDirection
 	{
@@ -25695,7 +20274,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
 		RescalePolicy = Expanding );
 
 	// Destructs the rescaler
-	virtual ~QwtPlotRescaler();
+	~QwtPlotRescaler() override;
 
 	// Enable or disable the rescaler
 	void setEnabled( bool );
@@ -25778,8 +20357,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
 	double pixelDist( QwtAxisId, const QSize& ) const;
 
 	class AxisData;
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPlotRescaler)
 };
 
 #endif
@@ -25802,7 +20380,6 @@ class QwtPolarLayout;
 class QwtAbstractLegend;
 
 /**
- * \if ENGLISH
  * @brief A plotting widget, displaying a polar coordinate system
  * @details An unlimited number of plot items can be displayed on
  *          its canvas. Plot items might be curves (QwtPolarCurve), markers
@@ -25818,20 +20395,6 @@ class QwtAbstractLegend;
  *          In opposite to QwtPlot the scales might be different from the
  *          view, that is displayed on the canvas. The view can be changed by
  *          zooming - f.e. by using QwtPolarPanner or QwtPolarMaginfier.
- * \endif
- *
- * \if CHINESE
- * @brief 显示极坐标系的绘图控件
- * @details 可以在其画布上显示无限数量的绘图项。绘图项可以是曲线、
- *          标记、网格 或任何其他从 QwtPolarItem 派生的对象。
- *
- *          坐标系由径向和方位角刻度定义。轴上的刻度可以显式设置，
- *          也可以使用算法从绘图项计算得出，这些算法可以为每个轴单独配置。
- *          径向刻度支持自动缩放。
- *
- *          与 QwtPlot 不同，刻度可能与画布上显示的视图不同。
- *          视图可以通过缩放来改变，例如使用 QwtPolarPanner 或 QwtPolarMaginfier。
- * \endif
  */
 class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
 {
@@ -25842,15 +20405,8 @@ class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
 
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Position of the legend, relative to the canvas
 	 * @sa insertLegend()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 图例相对于画布的位置
-	 * @sa insertLegend()
-	 * \endif
 	 */
 	enum LegendPosition
 	{
@@ -25867,21 +20423,12 @@ public:
 		TopLegend,
 
 		/**
-		 * \if ENGLISH
 		 * External means that only the content of the legend
 		 * will be handled by QwtPlot, but not its geometry.
 		 * This might be interesting if an application wants to
 		 * have a legend in an external window ( or on the canvas ).
 		 *
 		 * @note The legend is not painted by QwtPolarRenderer
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 外部意味着只有图例的内容由 QwtPlot 处理，而不是其几何形状。
-		 * 如果应用程序希望在外部窗口（或在画布上）放置图例，这可能很有用。
-		 *
-		 * @note 图例不由 QwtPolarRenderer 绘制
-		 * \endif
 		 */
 		ExternalLegend
 	};
@@ -25892,7 +20439,7 @@ public:
 	QwtPolarPlot(const QwtText& title, QWidget* parent = nullptr);
 
 	/// Destructor
-	virtual ~QwtPolarPlot();
+	~QwtPolarPlot() override;
 
 	/// Set the title
 	void setTitle(const QString&);
@@ -26019,24 +20566,21 @@ public:
 Q_SIGNALS:
 	/**
 	 * @brief A signal indicating, that an item has been attached/detached
-	 *        表示绘图项已附加/分离的信号
-	 * @param plotItem Plot item / 绘图项
-	 * @param on Attached/Detached / 附加/分离
+	 * @param plotItem Plot item
+	 * @param on Attached/Detached
 	 */
 	void itemAttached(QwtPolarItem* plotItem, bool on);
 
 	/**
 	 * @brief A signal with the attributes how to update the legend entries for a plot item
-	 *        包含如何更新绘图项图例条目属性的信号
-	 * @param itemInfo Info about a plot, build from itemToInfo() / 关于绘图的信息，由 itemToInfo() 构建
-	 * @param data Attributes of the entries ( usually <= 1 ) for the plot item / 绘图项的条目属性（通常 <= 1）
+	 * @param itemInfo Info about a plot, build from itemToInfo()
+	 * @param data Attributes of the entries ( usually <= 1 ) for the plot item
 	 * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
 	 */
 	void legendDataChanged(const QVariant& itemInfo, const QList< QwtLegendData >& data);
 
 	/**
 	 * @brief A signal that is emitted, whenever the layout of the plot has been recalculated
-	 *        当绘图的布局重新计算时发出的信号
 	 */
 	void layoutChanged();
 
@@ -26071,8 +20615,7 @@ private:
 
 	void initPlot(const QwtText&);
 
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarPlot)
 };
 
 #endif
@@ -26092,7 +20635,6 @@ class QwtRoundScaleDraw;
 class QwtScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief An item which draws scales and grid lines on a polar plot
  * @details The QwtPolarGrid class can be used to draw a coordinate grid.
  *          A coordinate grid consists of major and minor gridlines.
@@ -26106,100 +20648,47 @@ class QwtScaleDraw;
  *          is synchronized by updateScaleDiv().
  *
  * @sa QwtPolarPlot, QwtPolar::Axis
- * \endif
- *
- * \if CHINESE
- * @brief 在极坐标图上绘制刻度和网格线的绘图项
- * @details QwtPolarGrid 类可用于绘制坐标网格。坐标网格由主次网格线组成。
- *          网格线的位置由方位角和径向刻度分度决定。
- *
- *          QwtPolarGrid 还负责绘制代表刻度的轴。可以显示 4 个径向轴和 1 个方位角轴。
- *
- *          当绘图控件的刻度分度发生变化时，网格会通过 updateScaleDiv() 进行同步。
- *
- * @sa QwtPolarPlot, QwtPolar::Axis
- * \endif
  */
 class QWT_EXPORT QwtPolarGrid : public QwtPolarItem
 {
 public:
 	/**
-	 * \if ENGLISH
 	 * @brief Display flags to avoid conflicts when painting scales and grid lines
 	 * @details The default setting enables all flags.
 	 * @sa setDisplayFlag(), testDisplayFlag()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 绘制刻度和网格线时避免冲突的显示标志
-	 * @details 默认设置启用所有标志。
-	 * @sa setDisplayFlag(), testDisplayFlag()
-	 * \endif
 	 */
 	enum DisplayFlag
 	{
 		/**
-		 * \if ENGLISH
 		 * Try to avoid situations, where the label of the origin is
 		 * painted over another axis.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 尽量避免原点的标签绘制在另一个轴上的情况。
-		 * \endif
 		 */
 		SmartOriginLabel = 1,
 
 		/**
-		 * \if ENGLISH
 		 * Often the outermost tick of the radial scale is close to the
 		 * canvas border. With HideMaxRadiusLabel enabled it is not painted.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 径向刻度的最外刻度通常靠近画布边界。启用 HideMaxRadiusLabel 后，它将不被绘制。
-		 * \endif
 		 */
 		HideMaxRadiusLabel = 2,
 
 		/**
-		 * \if ENGLISH
 		 * The tick labels of the radial scales might be hard to read, when
 		 * they are painted on top of the radial grid lines ( or on top
 		 * of a curve/spectrogram ). When ClipAxisBackground the bounding rect
 		 * of each label is added to the clip region.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 当径向刻度的刻度标签绘制在径向网格线（或曲线/光谱图）上时，可能难以阅读。
-		 * 使用 ClipAxisBackground 时，每个标签的边界矩形将添加到裁剪区域。
-		 * \endif
 		 */
 		ClipAxisBackground = 4,
 
 		/**
-		 * \if ENGLISH
 		 * Don't paint the backbone of the radial axes, when they are very close
 		 * to a line of the azimuth grid.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 当径向轴的骨干非常靠近方位角网格线时，不绘制它。
-		 * \endif
 		 */
 		SmartScaleDraw = 8,
 
 		/**
-		 * \if ENGLISH
 		 * All grid lines are clipped against the plot area before being painted.
 		 * When the plot is zoomed in this will have an significant impact
 		 * on the performance of the painting code.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 所有网格线在绘制之前都针对绘图区域进行裁剪。
-		 * 当绘图放大时，这将对绘制代码的性能产生显著影响。
-		 * \endif
 		 */
 		ClipGridLines = 16
 	};
@@ -26207,27 +20696,14 @@ public:
 	Q_DECLARE_FLAGS(DisplayFlags, DisplayFlag)
 
 	/**
-	 * \if ENGLISH
 	 * @brief Grid attributes
 	 * @sa setGridAttributes(), testGridAttributes()
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 网格属性
-	 * @sa setGridAttributes(), testGridAttributes()
-	 * \endif
 	 */
 	enum GridAttribute
 	{
 		/**
-		 * \if ENGLISH
 		 * When AutoScaling is enabled, the radial axes will be adjusted
 		 * to the interval, that is currently visible on the canvas plot.
-		 * \endif
-		 *
-		 * \if CHINESE
-		 * 启用自动缩放时，径向轴将调整为当前在画布绘图上可见的区间。
-		 * \endif
 		 */
 		AutoScaling = 0x01
 	};
@@ -26237,7 +20713,7 @@ public:
 	/// Constructor
 	explicit QwtPolarGrid();
 	/// Destructor
-	virtual ~QwtPolarGrid();
+	~QwtPolarGrid() override;
 
 	/// Get the runtime type information
 	virtual int rtti() const override;
@@ -26345,8 +20821,7 @@ private:
 						  const double radius) const;
 
 private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarGrid)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::DisplayFlags)
@@ -26362,27 +20837,17 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarGrid::GridAttributes)
 #define QWT_POLAR_LAYOUT_H
 
 /**
- * \if ENGLISH
  * @brief Layout class for QwtPolarPlot
  * @details Organizes the geometry for the different QwtPolarPlot components.
  *          It is used by the QwtPolar widget to organize its internal widgets
  *          or by QwtPolarRenderer to render its content to a QPaintDevice like
  *          a QPrinter, QPixmap/QImage or QSvgRenderer.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarPlot 的布局类
- * @details 为不同的 QwtPolarPlot 组件组织几何形状。
- *          它被 QwtPolar 控件用于组织其内部控件，
- *          或被 QwtPolarRenderer 用于将内容渲染到 QPaintDevice，
- *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
- * \endif
  */
 class QWT_EXPORT QwtPolarLayout
 {
   public:
 
-	//! \brief Options to configure the plot layout engine
+	//! @brief Options to configure the plot layout engine
 	enum Option
 	{
 		//! Ignore the dimension of the scrollbars.
@@ -26437,8 +20902,7 @@ class QWT_EXPORT QwtPolarLayout
 	QRectF layoutLegend( Options options, QRectF& ) const;
 
   private:
-	class PrivateData;
-	PrivateData* m_data;
+	QWT_DECLARE_PRIVATE(QwtPolarLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )
@@ -26462,13 +20926,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )
 /**
  * @class QwtFigureLayout
  *
- * @if ENGLISH
  * @brief Custom layout manager for QwtFigureWidget that handles both normalized coordinates and grid layouts
- * @endif
- *
- * @if CHINESE
- * @brief 自定义布局管理器，用于QwtFigureWidget，支持归一化坐标和网格布局
- * @endif
  */
 class QWT_EXPORT QwtFigureLayout : public QLayout
 {
@@ -26477,7 +20935,7 @@ class QWT_EXPORT QwtFigureLayout : public QLayout
 public:
 	QwtFigureLayout();
 	explicit QwtFigureLayout(QWidget* parent);
-	virtual ~QwtFigureLayout();
+	~QwtFigureLayout() override;
 
 	virtual void addItem(QLayoutItem* item) override;
 	virtual QLayoutItem* itemAt(int index) const override;
@@ -26550,7 +21008,6 @@ class QwtPlot;
 /**
  * @class QwtFigure
  *
- * @if ENGLISH
  * @brief A figure container for organizing Qwt plots with flexible layout options
  *
  * @details
@@ -26577,35 +21034,6 @@ class QwtPlot;
  * // Save the figure
  * figure.saveFig("output.png", 300);
  * @endcode
- * @endif
- *
- * @if CHINESE
- * @brief 用于组织Qwt绘图的图形容器，提供灵活的布局选项
- *
- * @details
- * 此类提供类似于matplotlib的Figure类的图形容器，支持Qwt绘图的归一化坐标定位和网格布局。
- * 它使用Qt的标准左上角坐标系，使定位更加直观。
- *
- * @par 示例:
- * @code
- * // 使用示例：
- * QwtFigure figure;
- *
- * // 使用归一化坐标添加绘图（Qt左上角坐标系）
- * QwtPlot* plot1 = new QwtPlot;
- * figure.addAxes(plot1, QRectF(0.1, 0.1, 0.8, 0.4)); // 左: 10%, 上: 10%, 宽: 80%, 高: 40%
- *
- * // 使用网格布局添加绘图 - 创建2x2网格
- * QwtPlot* plot2 = new QwtPlot;
- * figure.addAxes(plot2, 2, 2, 0, 1); // 2x2网格, 第0行, 第1列
- *
- * QwtPlot* plot3 = new QwtPlot;
- * figure.addAxes(plot3, 2, 2, 1, 0, 1, 2); // 第1行, 第0-1列(跨2列)
- *
- * // 保存图形
- * figure.saveFig("output.png", 300);
- * @endcode
- * @endif
  */
 class QWT_EXPORT QwtFigure : public QFrame
 {
@@ -26613,7 +21041,7 @@ class QWT_EXPORT QwtFigure : public QFrame
 	QWT_DECLARE_PRIVATE(QwtFigure)
 public:
 	QwtFigure(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-	virtual ~QwtFigure();
+	~QwtFigure() override;
 
 	// Add a widget with normalized coordinates
 	void addWidget(QWidget* widget, qreal left, qreal top, qreal width, qreal height);
@@ -26755,58 +21183,28 @@ public:
 	static void alignAxes(QList< QwtPlot* > plots, int axisId, bool update = true);
 Q_SIGNALS:
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when axes are added to the figure
-	 * @param[in] newAxes Pointer to the newly added QwtPlot
+	 * @param newAxes Pointer to the newly added QwtPlot
 	 * @note Parasite axes addition also triggers this signal
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 当坐标轴添加到图形时发出的信号
-	 * @param[in] newAxes 指向新添加的QwtPlot的指针
-	 * @note 寄生轴的添加也会触发此信号
-	 * @endif
 	 */
 	void axesAdded(QwtPlot* newAxes);
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when axes are removed from the figure
-	 * @param[in] removedAxes Pointer to the removed QwtPlot
+	 * @param removedAxes Pointer to the removed QwtPlot
 	 * @note Parasite axes removal also triggers this signal
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 当坐标轴从图形中移除时发出的信号
-	 * @param[in] removedAxes 指向被移除的QwtPlot的指针
-	 * @note 寄生轴的移除也会触发此信号
-	 * @endif
 	 */
 	void axesRemoved(QwtPlot* removedAxes);
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when the figure is cleared
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 当图形被清除时发出的信号
-	 * @endif
 	 */
 	void figureCleared();
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when the current active axes changes
-	 * @param[in] current Pointer to the current QwtPlot, nullptr if no valid axes
+	 * @param current Pointer to the current QwtPlot, nullptr if no valid axes
 	 * @note Parasite axes cannot be set as current axes
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 当前激活的坐标系发生了改变的信号
-	 * @param[in] current 指向当前QwtPlot的指针，无有效激活坐标系时为nullptr
-	 * @note 寄生轴不能作为当前axes
-	 * @endif
 	 */
 	void currentAxesChanged(QwtPlot* current);
 
@@ -26834,7 +21232,6 @@ class QwtFigure;
 class QwtPlot;
 
 /**
- * @if ENGLISH
  * @brief An overlay widget for QwtFigure that provides interactive manipulation
  *
  * This class provides functionality for resizing child widgets within a figure window
@@ -26844,17 +21241,6 @@ class QwtPlot;
  * @note QwtFigureWidgetOverlay does not directly modify sizes. Size changes are
  *       performed in the managing window, allowing greater flexibility such as
  *       implementing undo/redo functionality.
- * @endif
- *
- * @if CHINESE
- * @brief 针对QwtFigure的操作蒙版
- *
- * 此类提供了figure窗口子对象调整大小的功能，以及改变当前绘图的功能。
- * 你可以通过继承此类实现更多的操作。
- *
- * @note QwtFigureWidgetOverlay并不会直接改变尺寸，尺寸的改变主要在管理窗口中执行，
- *       这是为了能让它有更大的自由度，例如需要做回退功能。
- * @endif
  */
 class QWT_EXPORT QwtFigureWidgetOverlay : public QwtWidgetOverlay
 {
@@ -26862,13 +21248,7 @@ class QWT_EXPORT QwtFigureWidgetOverlay : public QwtWidgetOverlay
 	QWT_DECLARE_PRIVATE(QwtFigureWidgetOverlay)
 public:
 	/**
-	 * @if ENGLISH
 	 * @brief Enum for marking rectangular control regions
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 用于标记矩形的区域
-	 * @endif
 	 */
 	enum ControlType
 	{
@@ -26886,13 +21266,7 @@ public:
 	Q_ENUM(ControlType)
 
 	/**
-	 * @if ENGLISH
 	 * @brief Built-in functionality flags
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 内置的功能标志
-	 * @endif
 	 */
 	enum BuiltInFunctionsFlag
 	{
@@ -26906,7 +21280,7 @@ public:
 public:
 	/// Constructor, passing nullptr is not allowed
 	explicit QwtFigureWidgetOverlay(QwtFigure* fig);
-	~QwtFigureWidgetOverlay();
+	~QwtFigureWidgetOverlay() override;
 	/// Returns the associated QwtFigure
 	QwtFigure* figure() const;
 	void setTransparentForMouseEvents(bool on);
@@ -26975,47 +21349,23 @@ protected:
 Q_SIGNALS:
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when widget normalized geometry changes
-	 * @param[in] w The widget
-	 * @param[in] oldNormGeo The old normalized geometry
-	 * @param[in] newNormGeo The new normalized geometry
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 绘图尺寸发生改变信号
-	 * @param[in] w 窗口
-	 * @param[in] oldNormGeo 旧的位置
-	 * @param[in] newNormGeo 新的位置
-	 * @endif
+	 * @param w The widget
+	 * @param oldNormGeo The old normalized geometry
+	 * @param newNormGeo The new normalized geometry
 	 */
 	void widgetNormGeometryChanged(QWidget* w, const QRectF& oldNormGeo, const QRectF& newNormGeo);
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when the active widget changes
-	 * @param[in] oldActive The previously active widget (may be nullptr if none)
-	 * @param[in] newActive The newly active widget (may be nullptr if none)
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 激活窗口发生变化的信号
-	 * @param[in] oldActive 如果之前没有激活窗口，此指针有可能是nullptr
-	 * @param[in] newActive 如果没有新的激活窗口，此指针有可能是nullptr
-	 * @endif
+	 * @param oldActive The previously active widget (may be nullptr if none)
+	 * @param newActive The newly active widget (may be nullptr if none)
 	 */
 	void activeWidgetChanged(QWidget* oldActive, QWidget* newActive);
 
 	/**
-	 * @if ENGLISH
 	 * @brief Signal emitted when the operation finishes
-	 * @param[in] isCancel Whether the operation was cancelled
-	 * @endif
-	 *
-	 * @if CHINESE
-	 * @brief 操作完成信号
-	 * @param[in] isCancel 是否为取消操作
-	 * @endif
+	 * @param isCancel Whether the operation was cancelled
 	 */
 	void finished(bool isCancel);
 private Q_SLOTS:
@@ -27089,8 +21439,8 @@ private Q_SLOTS:
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -27108,8 +21458,8 @@ private Q_SLOTS:
 
 
 /*** Start of inlined file: qwt3d_portability.h ***/
-#ifndef qwt3d_portability_h
-#define qwt3d_portability_h
+#ifndef QWT3D_PORTABILITY_H
+#define QWT3D_PORTABILITY_H
 
 #include <qnamespace.h>
 
@@ -27123,17 +21473,9 @@ namespace Qwt3D
 const Qt::TextFlag SingleLine = Qt::TextSingleLine;
 
 /**
- * \if ENGLISH
  * @brief Creates a (mouse-button, modifier) pair
  * @details This class encapsulates a combination of mouse buttons and keyboard modifiers,
  *          used for defining mouse interaction states in 3D plots.
- * \endif
- *
- * \if CHINESE
- * @brief 创建（鼠标按钮，修饰键）组合
- * @details 该类封装了鼠标按钮和键盘修饰键的组合，
- *          用于定义三维绘图中的鼠标交互状态。
- * \endif
  */
 class MouseState
 {
@@ -27162,17 +21504,9 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Creates a (key-button, modifier) pair
  * @details This class encapsulates a combination of keyboard keys and modifiers,
  *          used for defining keyboard interaction states in 3D plots.
- * \endif
- *
- * \if CHINESE
- * @brief 创建（按键，修饰键）组合
- * @details 该类封装了键盘按键和修饰键的组合，
- *          用于定义三维绘图中的键盘交互状态。
- * \endif
  */
 class KeyboardState
 {
@@ -27197,16 +21531,16 @@ private:
 };
 }  // ns
 
-#endif
+#endif // QWT3D_PORTABILITY_H
 /*** End of inlined file: qwt3d_portability.h ***/
 
 
 /*** Start of inlined file: qwt3d_helper.h ***/
-#ifndef __HELPER_H__
-#define __HELPER_H__
+#ifndef QWT3D_HELPER_H
+#define QWT3D_HELPER_H
 
-#include <math.h>
-#include <float.h>
+#include <cmath>
+#include <cfloat>
 #include <vector>
 #include <algorithm>
 
@@ -27229,12 +21563,6 @@ inline bool isPracticallyZero(double a, double b = 0)
 	return (fabs(a - b) <= Min_(fabs(a), fabs(b)) * DBL_EPSILON);
 }
 
-// Rounds a double value to the nearest integer
-inline int round(double d)
-{
-	return (d > 0) ? int(d + 0.5) : int(d - 0.5);
-}
-
 } // ns
 
 #endif
@@ -27242,8 +21570,8 @@ inline int round(double d)
 
 
 /*** Start of inlined file: qwt3d_openglhelper.h ***/
-#ifndef __openglhelper__
-#define __openglhelper__
+#ifndef QWT3D_OPENGLHELPER_H
+#define QWT3D_OPENGLHELPER_H
 
 #include "qglobal.h"
 
@@ -27261,16 +21589,9 @@ namespace Qwt3D {
 #ifndef QWT3D_NOT_FOR_DOXYGEN
 
 /**
- * \if ENGLISH
  * @brief Helper class for managing OpenGL state enable/disable
  * @details Saves and restores OpenGL enable/disable state. Useful for temporarily
  *          changing GL states within a drawing context.
- * \endif
- *
- * \if CHINESE
- * @brief 管理 OpenGL 状态启用/禁用的辅助类
- * @details 保存和恢复 OpenGL 启用/禁用状态。用于在绘图上下文中临时更改 GL 状态。
- * \endif
  */
 class GLStateBewarer
 {
@@ -27316,7 +21637,7 @@ private:
 inline const GLubyte *gl_error()
 {
 	GLenum errcode;
-	const GLubyte *err = 0;
+	const GLubyte *err = nullptr;
 
 	if ((errcode = glGetError()) != GL_NO_ERROR) {
 		err = gluErrorString(errcode);
@@ -27333,15 +21654,8 @@ inline void SaveGlDeleteLists(GLuint &lstidx, GLsizei range)
 }
 
 /**
- * \if ENGLISH
  * @brief Get OpenGL transformation matrices
  * @details Don't rely on (use) this in display lists!
- * \endif
- *
- * \if CHINESE
- * @brief 获取 OpenGL 变换矩阵
- * @details 不要在显示列表中使用此函数！
- * \endif
  */
 inline void getMatrices(GLdouble *modelMatrix, GLdouble *projMatrix, GLint *viewport)
 {
@@ -27351,15 +21665,8 @@ inline void getMatrices(GLdouble *modelMatrix, GLdouble *projMatrix, GLint *view
 }
 
 /**
- * \if ENGLISH
  * @brief Simplified glut routine (glUnProject): window coordinates -> object coordinates
  * @details Don't rely on (use) this in display lists!
- * \endif
- *
- * \if CHINESE
- * @brief 简化的 glut 函数 (glUnProject)：窗口坐标 -> 对象坐标
- * @details 不要在显示列表中使用此函数！
- * \endif
  */
 inline bool ViewPort2World(double &objx, double &objy, double &objz, double winx, double winy,
 						   double winz)
@@ -27376,15 +21683,8 @@ inline bool ViewPort2World(double &objx, double &objy, double &objz, double winx
 }
 
 /**
- * \if ENGLISH
  * @brief Simplified glut routine (glProject): object coordinates -> window coordinates
  * @details Don't rely on (use) this in display lists!
- * \endif
- *
- * \if CHINESE
- * @brief 简化的 glut 函数 (glProject)：对象坐标 -> 窗口坐标
- * @details 不要在显示列表中使用此函数！
- * \endif
  */
 inline bool World2ViewPort(double &winx, double &winy, double &winz, double objx, double objy,
 						   double objz)
@@ -27403,7 +21703,7 @@ inline bool World2ViewPort(double &winx, double &winy, double &winz, double objx
 
 } // ns
 
-#endif
+#endif // QWT3D_OPENGLHELPER_H
 /*** End of inlined file: qwt3d_openglhelper.h ***/
 
 #include <QColor>
@@ -27414,13 +21714,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -27434,13 +21728,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -27449,13 +21737,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -27465,13 +21747,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -27481,13 +21757,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -27497,13 +21767,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -27512,15 +21776,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -27539,13 +21796,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -27559,13 +21810,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -27581,15 +21826,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -27606,17 +21844,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -27746,19 +21976,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -27777,15 +21998,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -27803,46 +22017,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -27850,13 +22040,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -27870,13 +22054,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -27892,78 +22070,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -27972,36 +22119,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -28067,8 +22193,8 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 
 /*** Start of inlined file: qwt3d_color.h ***/
-#ifndef __COLORGENERATOR_H__
-#define __COLORGENERATOR_H__
+#ifndef QWT3D_COLOR_H
+#define QWT3D_COLOR_H
 
 #include <qstring.h>
 
@@ -28078,8 +22204,8 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -28103,13 +22229,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -28123,13 +22243,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -28138,13 +22252,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -28154,13 +22262,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -28170,13 +22272,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -28186,13 +22282,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -28201,15 +22291,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -28228,13 +22311,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -28248,13 +22325,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -28270,15 +22341,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -28295,17 +22359,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -28435,19 +22491,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -28466,15 +22513,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -28492,46 +22532,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -28539,13 +22555,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -28559,13 +22569,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -28581,78 +22585,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -28661,36 +22634,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -28757,20 +22709,11 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for color functors
  * @details Use your own color model by providing an implementation of
  *          operator()(double x, double y, double z). Colors destructor has been
  *          declared protected, in order to use only heap based objects. Plot3D
  *          will handle the objects destruction. See StandardColor for an example.
- * \endif
- *
- * \if CHINESE
- * @brief 颜色函数的抽象基类
- * @details 通过提供 operator()(double x, double y, double z) 的实现来使用自定义颜色模型。
- *          Color 的析构函数声明为 protected，以便仅使用堆分配的对象。
- *          Plot3D 将负责对象的销毁。参见 StandardColor 作为示例。
- * \endif
  */
 class QWT3D_EXPORT Color
 {
@@ -28794,40 +22737,28 @@ protected:
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Standard color model for Plot3D - implements the data driven operator()(double x, double y, double z)
  * @details The class has a ColorVector representing z values, which will be used by
  *          operator()(double x, double y, double z)
- * \endif
- *
- * \if CHINESE
- * @brief Plot3D 的标准颜色模型 - 实现数据驱动的 operator()(double x, double y, double z)
- * @details 该类有一个表示 z 值的 ColorVector，将由 operator()(double x, double y, double z) 使用。
- * \endif
  */
 class QWT3D_EXPORT StandardColor : public Color
 {
+	QWT_DECLARE_PRIVATE(StandardColor)
+
 public:
 	// Initializes with data and set up a ColorVector with a size of 100 z values (default)
 	explicit StandardColor(Qwt3D::Plot3D *data, unsigned size = 100);
+	~StandardColor() override;
 	// Receives z-dependent color from ColorVector
 	Qwt3D::RGBA operator()(double x, double y,
-						   double z) const;
+						   double z) const override;
 	void setColorVector(Qwt3D::ColorVector const &cv);
 	// Resets the standard colors
 	void reset(unsigned size = 100);
 	// Sets unitary alpha value for all colors
 	void setAlpha(double a);
 	// Creates color vector for ColorLegend - essentially a copy from the internal vector
-	Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec)
-	{
-		vec = colors_;
-		return vec;
-	}
-
-protected:
-	Qwt3D::ColorVector colors_;
-	Qwt3D::Plot3D *data_;
+	Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) override;
 };
 
 } // ns
@@ -28837,18 +22768,17 @@ protected:
 
 
 /*** Start of inlined file: qwt3d_axis.h ***/
-#ifndef __AXIS_H__
-#define __AXIS_H__
+#ifndef QWT3D_AXIS_H
+#define QWT3D_AXIS_H
 
 
 /*** Start of inlined file: qwt3d_autoptr.h ***/
-#ifndef qwt3d_autoptr_h
-#define qwt3d_autoptr_h
+#ifndef QWT3D_AUTOPTR_H
+#define QWT3D_AUTOPTR_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Simple auto pointer providing deep copies for raw pointer
  * @details Requirements:\n
  *          virtual T* T::clone() const;\n
@@ -28857,33 +22787,21 @@ namespace Qwt3D {
  *          clone() is necessary for the pointer to preserve polymorphic behaviour.
  *          The pointer requires also heap based objects with regard to the template
  *          argument in order to be able to get ownership and control over destruction.
- * \endif
- *
- * \if CHINESE
- * @brief 提供原始指针深拷贝的简单自动指针
- * @details 要求：\n
- *          virtual T* T::clone() const;\n
- *          T::destroy() const;\n
- *          virtual ~T() private/protected\n\n
- *          clone() 是指针保持多态行为所必需的。
- *          指针还要求模板参数对应的对象是基于堆分配的，
- *          以便能够获取所有权并控制销毁过程。
- * \endif
  */
 template<typename T>
-class qwt3d_ptr
+class ClonePtr
 {
 public:
 	// Standard ctor
-	explicit qwt3d_ptr(T *ptr = 0) : rawptr_(ptr) { }
+	explicit ClonePtr(T *ptr = nullptr) : rawptr_(ptr) { }
 	// Dtor (calls T::destroy)
-	~qwt3d_ptr() { destroyRawPtr(); }
+	~ClonePtr() { destroyRawPtr(); }
 
 	// Copy ctor (calls (virtual) clone())
-	qwt3d_ptr(qwt3d_ptr const &val) { rawptr_ = val.rawptr_->clone(); }
+	ClonePtr(ClonePtr const &val) { rawptr_ = val.rawptr_->clone(); }
 
 	// Assignment in the same spirit as copy ctor
-	qwt3d_ptr<T> &operator=(qwt3d_ptr const &val)
+	ClonePtr<T> &operator=(ClonePtr const &val)
 	{
 		if (this == &val)
 			return *this;
@@ -28906,19 +22824,19 @@ private:
 	{
 		if (rawptr_)
 			rawptr_->destroy();
-		rawptr_ = 0;
+		rawptr_ = nullptr;
 	}
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_AUTOPTR_H
 /*** End of inlined file: qwt3d_autoptr.h ***/
 
 
 /*** Start of inlined file: qwt3d_label.h ***/
-#ifndef __LABELPIXMAP_H__
-#define __LABELPIXMAP_H__
+#ifndef QWT3D_LABEL_H
+#define QWT3D_LABEL_H
 
 #include <qpixmap.h>
 #include <qimage.h>
@@ -28928,10 +22846,8 @@ private:
 
 
 /*** Start of inlined file: qwt3d_drawable.h ***/
-#ifndef __DRAWABLE_H__
-#define __DRAWABLE_H__
-
-#include <list>
+#ifndef QWT3D_DRAWABLE_H
+#define QWT3D_DRAWABLE_H
 
 
 /*** Start of inlined file: qwt3d_types.h ***/
@@ -28939,8 +22855,8 @@ private:
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -28964,13 +22880,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -28984,13 +22894,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -28999,13 +22903,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -29015,13 +22913,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -29031,13 +22923,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -29047,13 +22933,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -29062,15 +22942,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -29089,13 +22962,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -29109,13 +22976,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -29131,15 +22992,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -29156,17 +23010,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -29296,19 +23142,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -29327,15 +23164,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -29353,46 +23183,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -29400,13 +23206,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -29420,13 +23220,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -29442,78 +23236,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -29522,36 +23285,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -29617,10 +23359,10 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 
 /*** Start of inlined file: qwt3d_io_gl2ps.h ***/
-#ifndef qwt3d_io_gl2ps_h
-#define qwt3d_io_gl2ps_h
+#ifndef QWT3D_IO_GL2PS_H
+#define QWT3D_IO_GL2PS_H
 
-#include <time.h>
+#include <ctime>
 
 
 /*** Start of inlined file: qwt3d_types.h ***/
@@ -29628,8 +23370,8 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -29653,13 +23395,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -29673,13 +23409,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -29688,13 +23418,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -29704,13 +23428,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -29720,13 +23438,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -29736,13 +23448,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -29751,15 +23457,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -29778,13 +23477,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -29798,13 +23491,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -29820,15 +23507,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -29845,17 +23525,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -29985,19 +23657,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -30016,15 +23679,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -30042,46 +23698,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -30089,13 +23721,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -30109,13 +23735,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -30131,78 +23751,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -30211,36 +23800,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -30306,8 +23874,8 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 
 
 /*** Start of inlined file: qwt3d_io.h ***/
-#ifndef __qwt3d_io__
-#define __qwt3d_io__
+#ifndef QWT3D_IO_H
+#define QWT3D_IO_H
 
 #include <vector>
 #include <algorithm>
@@ -30321,20 +23889,11 @@ namespace Qwt3D
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Generic interface for standard and user written I/O handlers
  * @details IO provides a generic interface for standard and user written I/O handlers.
  *          It also provides functionality for the registering of such handlers in the
  *          framework. The interface mimics roughly Qt's QImageIO functions for defining
  *          image input/output functions.
- * \endif
- *
- * \if CHINESE
- * @brief 标准和用户自定义 I/O 处理器的通用接口
- * @details IO 提标准和用户自定义 I/O 处理器的通用接口，
- *          还提供在框架中注册此类处理器的功能。
- *          该接口大致模仿 Qt 的 QImageIO 函数来定义图像输入/输出函数。
- * \endif
  */
 class QWT3D_EXPORT IO
 {
@@ -30344,16 +23903,9 @@ public:
 	using Function = bool (*)(Plot3D*, QString const& fname);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Functor class for more flexible IO handler implementation
 	 * @details This class gives more flexibility in implementing userdefined IO handlers
 	 *          than the simple IO::Function type.
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 更灵活的 IO 处理器实现的 Functor 类
-	 * @details 该类比简单的 IO::Function 类型提供了更灵活的用户自定义 IO 处理器实现方式。
-	 * \endif
 	 */
 	class Functor
 	{
@@ -30398,7 +23950,7 @@ private:
 	{
 	public:
 		// Performs actual input
-		Functor* clone() const
+		Functor* clone() const override
 		{
 			return new Wrapper(*this);
 		}
@@ -30407,7 +23959,7 @@ private:
 		{
 		}
 		// Returns a pointer to the wrapped function
-		bool operator()(Plot3D* plot, QString const& fname)
+		bool operator()(Plot3D* plot, QString const& fname) override
 		{
 			return (hdl) ? (*hdl)(plot, fname) : false;
 		}
@@ -30458,33 +24010,23 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Provides Qt's Pixmap output facilities
- * \endif
- *
- * \if CHINESE
- * @brief 提供 Qt 的 Pixmap 输出功能
- * \endif
  */
 class QWT3D_EXPORT PixmapWriter : public IO::Functor
 {
 	friend class IO;
+	QWT_DECLARE_PRIVATE(PixmapWriter)
 
 public:
-	PixmapWriter() : quality_(-1)
-	{
-	}
+	PixmapWriter();
+	~PixmapWriter() override;
+
 	// Set output quality
 	void setQuality(int val);
 
 private:
-	IO::Functor* clone() const
-	{
-		return new PixmapWriter(*this);
-	}
-	bool operator()(Plot3D* plot, QString const& fname);
-	QString fmt_;
-	int quality_;
+	IO::Functor* clone() const override;
+	bool operator()(Plot3D* plot, QString const& fname) override;
 };
 
 }  // ns
@@ -30495,21 +24037,14 @@ private:
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Provides EPS, PS, PDF, SVG, PGF and TeX output
  * @details VectorWriter provides vector graphics output through the gl2ps library,
  *          supporting EPS, PS, PDF, SVG, PGF and TeX formats.
- * \endif
- *
- * \if CHINESE
- * @brief 提供 EPS, PS, PDF, SVG, PGF 和 TeX 输出
- * @details VectorWriter 通过 gl2ps 库提供矢量图形输出，
- *          支持 EPS, PS, PDF, SVG, PGF 和 TeX 格式。
- * \endif
  */
 class QWT3D_EXPORT VectorWriter : public IO::Functor
 {
 	friend class IO;
+	QWT_DECLARE_PRIVATE(VectorWriter)
 
 public:
 	// The possible output formats for the text parts of the scene
@@ -30534,38 +24069,31 @@ public:
 	};
 
 	VectorWriter();
+	~VectorWriter() override;
 
 	// Sets landscape mode
-	void setLandscape(LANDSCAPEMODE val) { landscape_ = val; }
+	void setLandscape(LANDSCAPEMODE val);
 	// Returns the current landscape mode
-	LANDSCAPEMODE landscape() const { return landscape_; }
+	LANDSCAPEMODE landscape() const;
 
 	void setTextMode(TEXTMODE val, QString fname = "");
 	// Return current text output mode
-	TEXTMODE textMode() const { return textmode_; }
+	TEXTMODE textMode() const;
 
 	// Sets one of the SORTMODE sorting modes
-	void setSortMode(SORTMODE val) { sortmode_ = val; }
+	void setSortMode(SORTMODE val);
 	// Returns gl2ps sorting type
-	SORTMODE sortMode() const { return sortmode_; }
+	SORTMODE sortMode() const;
 	// Turns compressed output on or off (no effect if zlib support is not available)
 	void setCompressed(bool val);
 	// Returns compression mode (always false if zlib support has not been set)
-	bool compressed() const { return compressed_; }
+	bool compressed() const;
 
 	bool setFormat(QString const &format);
 
 private:
-	IO::Functor *clone() const;
-	bool operator()(Plot3D *plot, QString const &fname);
-
-	GLint gl2ps_format_;
-	bool formaterror_;
-	bool compressed_;
-	SORTMODE sortmode_;
-	LANDSCAPEMODE landscape_;
-	TEXTMODE textmode_;
-	QString texfname_;
+	IO::Functor *clone() const override;
+	bool operator()(Plot3D *plot, QString const &fname) override;
 };
 
 GLint setDeviceLineWidth(GLfloat val);
@@ -30578,22 +24106,17 @@ void setDevicePolygonOffset(GLfloat factor, GLfloat units);
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_IO_GL2PS_H
 /*** End of inlined file: qwt3d_io_gl2ps.h ***/
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for Drawables
- * \endif
- *
- * \if CHINESE
- * @brief 可绘制对象的抽象基类
- * \endif
  */
 class QWT3D_EXPORT Drawable
 {
+	QWT_DECLARE_PRIVATE(Drawable)
 
 public:
 	virtual ~Drawable() = 0;
@@ -30614,28 +24137,16 @@ public:
 protected:
 	Qwt3D::RGBA color;
 	void Enable(GLenum what, GLboolean val);
-	Qwt3D::Triple ViewPort2World(Qwt3D::Triple win, bool *err = 0);
-	Qwt3D::Triple World2ViewPort(Qwt3D::Triple obj, bool *err = 0);
+	Qwt3D::Triple ViewPort2World(Qwt3D::Triple win, bool *err = nullptr);
+	Qwt3D::Triple World2ViewPort(Qwt3D::Triple obj, bool *err = nullptr);
+
+	Drawable();
+	Drawable(Drawable&& other) noexcept;
+	Drawable& operator=(Drawable&& other) noexcept;
 
 	GLdouble modelMatrix[16];
 	GLdouble projMatrix[16];
 	GLint viewport[4];
-
-private:
-	GLboolean ls;
-	GLboolean pols;
-	GLint polmode[2];
-	GLfloat lw;
-	GLint blsrc, bldst;
-	GLdouble col[4];
-	GLint pattern, factor;
-	GLboolean sallowed;
-	GLboolean tex2d;
-	GLint matrixmode;
-	GLfloat poloffs[2];
-	GLboolean poloffsfill;
-
-	std::list<Drawable *> dlist;
 };
 
 } // ns
@@ -30646,22 +24157,21 @@ private:
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A Qt string or an output device dependent string
  * @details Label provides text rendering on 3D plots, supporting both Qt string
  *          representation and device-dependent string output.
- * \endif
- *
- * \if CHINESE
- * @brief Qt 字符串或输出设备依赖的字符串
- * @details Label 提供三维绘图上的文本渲染，支持 Qt 字符串表示和设备依赖的字符串输出。
- * \endif
  */
 class QWT3D_EXPORT Label : public Drawable
 {
+	QWT_DECLARE_PRIVATE(Label)
 
 public:
 	Label();
+	~Label() override;
+	Label(const Label& other);
+	Label(Label&& other) noexcept;
+	Label& operator=(const Label& other);
+	Label& operator=(Label&& other) noexcept;
 	// Construct label and initialize with font
 	Label(const QString &family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
@@ -30672,40 +24182,29 @@ public:
 	// Fine tunes label
 	void adjust(int gap);
 	// Returns the gap caused by adjust()
-	double gap() const { return gap_; }
+	double gap() const;
 	// Sets the labels position
 	void setPosition(Qwt3D::Triple pos, ANCHOR a = BottomLeft);
 	// Sets the labels position relative to screen
 	void setRelPosition(Tuple rpos, ANCHOR a);
 	// Receives bottom left label position
-	Qwt3D::Triple first() const { return beg_; }
+	Qwt3D::Triple first() const;
 	// Receives top right label position
-	Qwt3D::Triple second() const { return end_; }
+	Qwt3D::Triple second() const;
 	// Defines an anchor point for the labels surrounding rectangle
-	ANCHOR anchor() const
-	{
-		return anchor_;
-	}
-	virtual void setColor(double r, double g, double b, double a = 1);
-	virtual void setColor(Qwt3D::RGBA rgba);
+	ANCHOR anchor() const;
+	virtual void setColor(double r, double g, double b, double a = 1) override;
+	virtual void setColor(Qwt3D::RGBA rgba) override;
 
 	// Sets the labels string
 	void setString(QString const &s);
 	// Actual drawing
-	void draw();
+	virtual void draw() override;
 
 	// Decides about use of PDF standard fonts for PDF output
 	static void useDeviceFonts(bool val);
 
 private:
-	Qwt3D::Triple beg_, end_, pos_;
-	QPixmap pm_;
-	QImage buf_, tex_;
-	QFont font_;
-	QString text_;
-
-	ANCHOR anchor_;
-
 	void init();
 	void init(const QString &family, int pointSize, int weight = QFont::Normal,
 			  bool italic = false);
@@ -30713,24 +24212,19 @@ private:
 	void convert2screen();
 	double width() const;
 	double height() const;
-
-	int gap_;
-
-	bool flagforupdate_;
-
-	static bool devicefonts_;
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_LABEL_H
 /*** End of inlined file: qwt3d_label.h ***/
 
 
 /*** Start of inlined file: qwt3d_scale.h ***/
-#ifndef qwt3d_scale_h
-#define qwt3d_scale_h
+#ifndef QWT3D_SCALE_H
+#define QWT3D_SCALE_H
 
+#include <vector>
 #include <qstring.h>
 
 /*** Start of inlined file: qwt3d_types.h ***/
@@ -30738,8 +24232,8 @@ private:
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -30763,13 +24257,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -30783,13 +24271,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -30798,13 +24280,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -30814,13 +24290,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -30830,13 +24300,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -30846,13 +24310,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -30861,15 +24319,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -30888,13 +24339,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -30908,13 +24353,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -30930,15 +24369,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -30955,17 +24387,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -31095,19 +24519,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -31126,15 +24541,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -31152,46 +24560,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -31199,13 +24583,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -31219,13 +24597,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -31241,78 +24613,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -31321,36 +24662,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -31415,27 +24735,120 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 /*** End of inlined file: qwt3d_types.h ***/
 
 
+namespace Qwt3D {
+
+/**
+ * @brief Non-visual scale class encapsulating tic generation
+ * @details The class encapsulates non-visual scales. It is utilized by Axis and also
+ *          collaborates closely with AutoScaler. A Scale allows control over all aspects
+ *          of tic generation including arbitrary transformations of tic values into corresponding
+ *          strings. The strings contain what eventually will be shown as tic labels.
+ *          Standard linear and logarithmic scales have been integrated into the Axis interface.
+ *          User-defined axes can be derived from Scale, LinearScale et al.
+ */
+class QWT3D_EXPORT Scale
+{
+	friend class Axis;
+	friend class ClonePtr<Scale>;
+
+protected:
+	QWT_DECLARE_PRIVATE(Scale)
+
+	Scale();
+	virtual ~Scale();
+	virtual QString ticLabel(unsigned int idx) const;
+
+	virtual void setLimits(double start, double stop);
+	// Sets number of major intervals
+	virtual void setMajors(int val);
+	// Sets number of minor intervals per major interval
+	virtual void setMinors(int val);
+	virtual void setMajorLimits(double start, double stop);
+
+	// Returns major intervals
+	int majors() const;
+	// Returns minor intervals
+	int minors() const;
+
+	// Derived classes should return a new heap based object here
+	virtual Scale *clone() const = 0;
+	// This function should setup the 2 vectors for major and minor positions
+	virtual void calculate() = 0;
+	virtual int autoscale(double &a, double &b, double start, double stop, int ivals);
+
+	// Returns const reference to major tic positions
+	const std::vector<double>& majorTicks() const;
+	// Returns const reference to minor tic positions
+	const std::vector<double>& minorTicks() const;
+
+	// Copies Scale base state from another Scale (used by derived clone())
+	void copyFrom(const Scale& other);
+
+private:
+	void destroy() const;
+};
+
+/**
+ * @brief The standard (1:1) mapping class for axis numbering
+ */
+class QWT3D_EXPORT LinearScale : public Scale
+{
+	friend class Axis;
+	friend class ClonePtr<Scale>;
+
+protected:
+	QWT_DECLARE_PRIVATE(LinearScale)
+
+	LinearScale();
+	~LinearScale() override;
+	int autoscale(double &a, double &b, double start, double stop, int ivals) override;
+	// Returns a new heap based object utilized from ClonePtr
+	Scale *clone() const override;
+	void calculate() override;
+};
+
+/**
+ * @brief Log10 scale
+ */
+class QWT3D_EXPORT LogScale : public Scale
+{
+	friend class Axis;
+	friend class ClonePtr<Scale>;
+
+protected:
+	QString ticLabel(unsigned int idx) const override;
+	void setMinors(int val) override;
+	// Standard ctor
+	LogScale();
+	~LogScale() override;
+	// Returns a new heap based object utilized from ClonePtr
+	Scale *clone() const override;
+	void calculate() override;
+
+private:
+	void setupCounter(double &k, int &step);
+};
+
+} // namespace Qwt3D
+
+#endif // QWT3D_SCALE_H
+/*** End of inlined file: qwt3d_scale.h ***/
+
 
 /*** Start of inlined file: qwt3d_autoscaler.h ***/
-#ifndef __qwt3d_autoscaler__
-#define __qwt3d_autoscaler__
+#ifndef QWT3D_AUTOSCALER_H
+#define QWT3D_AUTOSCALER_H
 
 #include <vector>
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for autoscaler
- * \endif
- *
- * \if CHINESE
- * @brief 自动缩放器的抽象基类
- * \endif
  */
 class QWT3D_EXPORT AutoScaler
 {
-	friend class qwt3d_ptr<AutoScaler>;
+	friend class ClonePtr<AutoScaler>;
 
 protected:
 	virtual AutoScaler *clone() const = 0;
@@ -31447,33 +24860,29 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Automatic beautifying of linear scales
- * \endif
- *
- * \if CHINESE
- * @brief 线性刻度的自动美化缩放器
- * \endif
  */
 class QWT3D_EXPORT LinearAutoScaler : public AutoScaler
 {
 	friend class LinearScale;
 
 protected:
+	QWT_DECLARE_PRIVATE(LinearAutoScaler)
+
 	LinearAutoScaler();
 	explicit LinearAutoScaler(std::vector<double> &mantisses);
-	AutoScaler *clone() const { return new LinearAutoScaler(*this); }
-	int execute(double &a, double &b, double start, double stop, int ivals);
+	~LinearAutoScaler() override;
+	AutoScaler *clone() const override;
+	int execute(double &a, double &b, double start, double stop, int ivals) override;
+
+	// Copies state from another LinearAutoScaler (used by LinearScale::clone)
+	void copyStateFrom(const LinearAutoScaler& other);
 
 private:
-	double start_, stop_;
-	int intervals_;
-
 	void init(double start, double stop, int ivals);
 	double anchorvalue(double start, double mantisse, int exponent);
 	int segments(int &l_intervals, int &r_intervals, double start, double stop, double anchor,
 				 double mantissa, int exponent);
-	std::vector<double> mantissi_;
 };
 
 } // ns
@@ -31481,138 +24890,17 @@ private:
 #endif
 /*** End of inlined file: qwt3d_autoscaler.h ***/
 
-namespace Qwt3D {
-
-/**
- * \if ENGLISH
- * @brief Non-visual scale class encapsulating tic generation
- * @details The class encapsulates non-visual scales. It is utilized by Axis and also
- *          collaborates closely with AutoScaler. A Scale allows control over all aspects
- *          of tic generation including arbitrary transformations of tic values into corresponding
- *          strings. The strings contain what eventually will be shown as tic labels.
- *          Standard linear and logarithmic scales have been integrated into the Axis interface.
- *          User-defined axes can be derived from Scale, LinearScale et al.
- * \endif
- *
- * \if CHINESE
- * @brief 非可视化刻度类，封装刻度线生成
- * @details 该类封装非可视化刻度。它由 Axis 使用，并与 AutoScaler 紧密协作。
- *          Scale 允许控制刻度线生成的所有方面，包括将刻度值任意转换为对应的字符串。
- *          字串最终将显示为刻度标签。标准线性和对数刻度已集成到 Axis 接口中。
- *          用户自定义坐标轴可以从 Scale、LinearScale 等派生。
- * \endif
- */
-class QWT3D_EXPORT Scale
-{
-	friend class Axis;
-	friend class qwt3d_ptr<Scale>;
-
-protected:
-	Scale();
-	virtual ~Scale() { }
-	virtual QString ticLabel(unsigned int idx) const;
-
-	virtual void setLimits(double start, double stop);
-	// Sets number of major intervals
-	virtual void setMajors(int val) { majorintervals_p = val; }
-	// Sets number of minor intervals per major interval
-	virtual void setMinors(int val)
-	{
-		minorintervals_p = val;
-	}
-	virtual void setMajorLimits(double start, double stop);
-
-	// Returns major intervals
-	int majors() const { return majorintervals_p; }
-	// Returns minor intervals
-	int minors() const { return minorintervals_p; }
-
-	// Derived classes should return a new heap based object here
-	virtual Scale *clone() const = 0;
-	// This function should setup the 2 vectors for major and minor positions
-	virtual void calculate() = 0;
-	virtual int autoscale(double &a, double &b, double start, double stop, int ivals);
-
-	std::vector<double> majors_p, minors_p;
-	double start_p, stop_p;
-	int majorintervals_p, minorintervals_p;
-	double mstart_p, mstop_p;
-
-private:
-	void destroy() const { delete this; }
-};
-
-/**
- * \if ENGLISH
- * @brief The standard (1:1) mapping class for axis numbering
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴编号的标准（1:1）映射类
- * \endif
- */
-class QWT3D_EXPORT LinearScale : public Scale
-{
-	friend class Axis;
-	friend class qwt3d_ptr<Scale>;
-
-protected:
-	int autoscale(double &a, double &b, double start, double stop, int ivals);
-	// Returns a new heap based object utilized from qwt3d_ptr
-	Scale *clone() const { return new LinearScale(*this); }
-	void calculate();
-	LinearAutoScaler autoscaler_p;
-};
-
-/**
- * \if ENGLISH
- * @brief Log10 scale
- * \endif
- *
- * \if CHINESE
- * @brief log10 对数刻度
- * \endif
- */
-class QWT3D_EXPORT LogScale : public Scale
-{
-	friend class Axis;
-	friend class qwt3d_ptr<Scale>;
-
-protected:
-	QString ticLabel(unsigned int idx) const;
-	void setMinors(int val);
-	// Standard ctor
-	LogScale();
-	// Returns a new heap based object utilized from qwt3d_ptr
-	Scale *clone() const { return new LogScale; }
-	void calculate();
-
-private:
-	void setupCounter(double &k, int &step);
-};
-
-} // namespace Qwt3D
-
-#endif /* include guarded */
-/*** End of inlined file: qwt3d_scale.h ***/
-
 namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Autoscalable axis with caption
  * @details Axes are highly customizable especially in terms
  *          of labeling and scaling.
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的自动缩放坐标轴
- * @details 坐标轴在标注和缩放方面高度可定制。
- * \endif
  */
 class QWT3D_EXPORT Axis : public Drawable
 {
+	QWT_DECLARE_PRIVATE(Axis)
 
 public:
 	// Constructs standard axis
@@ -31620,198 +24908,107 @@ public:
 	// Constructs a new axis with specified limits
 	Axis(Qwt3D::Triple beg, Qwt3D::Triple end);
 	// Destructor
-	virtual ~Axis();
+	~Axis() override;
 
 	// Draws axis
-	virtual void draw();
+	void draw() override;
 
 	// Positionate axis
 	void setPosition(const Qwt3D::Triple& beg, const Qwt3D::Triple& end);
 	// Returns axis' position
-	void position(Qwt3D::Triple& beg, Qwt3D::Triple& end) const
-	{
-		beg = beg_;
-		end = end_;
-	}
+	void position(Qwt3D::Triple& beg, Qwt3D::Triple& end) const;
 	// Returns axis' beginning position
-	Qwt3D::Triple begin() const
-	{
-		return beg_;
-	}
+	Qwt3D::Triple begin() const;
 	// Returns axis' ending position
-	Qwt3D::Triple end() const
-	{
-		return end_;
-	}
+	Qwt3D::Triple end() const;
 	// Returns axis' length
-	double length() const
-	{
-		return (end_ - beg_).length();
-	}
+	double length() const;
 
 	// Sets tics lengths in world coordinates
 	void setTicLength(double majorl, double minorl);
 	// Returns tics lengths
-	void ticLength(double& majorl, double& minorl) const
-	{
-		majorl = lmaj_;
-		minorl = lmin_;
-	}
+	void ticLength(double& majorl, double& minorl) const;
 	// Sets tic orientation
 	void setTicOrientation(double tx, double ty, double tz);
 	// Same function as above
 	void setTicOrientation(const Qwt3D::Triple& val);
 	// Returns tic orientation
-	Qwt3D::Triple ticOrientation() const
-	{
-		return orientation_;
-	}
+	Qwt3D::Triple ticOrientation() const;
 	// Sets two-sided tics (default is false)
-	void setSymmetricTics(bool b)
-	{
-		symtics_ = b;
-	}
+	void setSymmetricTics(bool b);
 
 	// Sets font for axis label
 	void setLabelFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 	// Sets font for axis label
 	void setLabelFont(QFont const& font);
 	// Returns current label font
-	QFont const& labelFont() const
-	{
-		return labelfont_;
-	}
+	QFont const& labelFont() const;
 
 	// Sets label content
 	void setLabelString(QString const& name);
 	void setLabelPosition(const Qwt3D::Triple& pos, Qwt3D::ANCHOR);
 	void setLabelColor(Qwt3D::RGBA col);
 	// Turns label drawing on or off
-	void setLabel(bool d)
-	{
-		drawLabel_ = d;
-	}
+	void setLabel(bool val);
 	// Shifts label in device coordinates dependent on anchor
-	void adjustLabel(int val)
-	{
-		labelgap_ = val;
-	}
+	void adjustLabel(int val);
 
 	// Turns scale drawing on or off
-	void setScaling(bool d)
-	{
-		drawTics_ = d;
-	}
+	void setScaling(bool val);
 	// Returns, if scale drawing is on or off
-	bool scaling() const
-	{
-		return drawTics_;
-	}
+	bool scaling() const;
 	void setScale(Qwt3D::SCALETYPE);
 	void setScale(Scale* item);
 	// Turns number drawing on or off
-	void setNumbers(bool d)
-	{
-		drawNumbers_ = d;
-	}
+	void setNumbers(bool val);
 	// Returns, if number drawing is on or off
-	bool numbers() const
-	{
-		return drawNumbers_;
-	}
+	bool numbers() const;
 	// Sets the color for axes numbers
 	void setNumberColor(Qwt3D::RGBA col);
 	// Returns the color for axes numbers
-	Qwt3D::RGBA numberColor() const
-	{
-		return numbercolor_;
-	}
+	Qwt3D::RGBA numberColor() const;
 	// Sets font for numbering
 	void setNumberFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 	// Overloaded member, works like the above function
 	void setNumberFont(QFont const&);
 	// Returns current numbering font
-	QFont const& numberFont() const
-	{
-		return numberfont_;
-	}
+	QFont const& numberFont() const;
 	// Sets anchor position for numbers
-	void setNumberAnchor(Qwt3D::ANCHOR a)
-	{
-		scaleNumberAnchor_ = a;
-	}
+	void setNumberAnchor(Qwt3D::ANCHOR a);
 	// Shifts axis numbers in device coordinates dependent on anchor
-	void adjustNumbers(int val)
-	{
-		numbergap_ = val;
-	}
+	void adjustNumbers(int val);
 
 	// Turns Autoscaling on or off
-	void setAutoScale(bool val = true)
-	{
-		autoscale_ = val;
-	}
+	void setAutoScale(bool val = true);
 	// actual Autoscaling mode
-	bool autoScale() const
-	{
-		return autoscale_;
-	}
+	bool autoScale() const;
 
 	// Requests major intervals (maybe changed, if autoscaling is present)
 	void setMajors(int val);
 	// Requests minor intervals
 	void setMinors(int val);
 	// Returns number of major intervals
-	int majors() const
-	{
-		return majorintervals_;
-	}
+	int majors() const;
 	// Returns number of minor intervals
-	int minors() const
-	{
-		return minorintervals_;
-	}
+	int minors() const;
 	// Returns positions for actual major tics (also if invisible)
-	Qwt3D::TripleField const& majorPositions() const
-	{
-		return majorpos_;
-	}
+	Qwt3D::TripleField const& majorPositions() const;
 	// Returns positions for actual minor tics (also if invisible)
-	Qwt3D::TripleField const& minorPositions() const
-	{
-		return minorpos_;
-	}
+	Qwt3D::TripleField const& minorPositions() const;
 
 	// Sets line width for axis components
 	void setLineWidth(double val, double majfac = 0.9, double minfac = 0.5);
 	// Returns line width for axis body
-	double lineWidth() const
-	{
-		return lineWidth_;
-	}
+	double lineWidth() const;
 	// Returns Line width for major tics
-	double majLineWidth() const
-	{
-		return majLineWidth_;
-	}
+	double majLineWidth() const;
 	// Returns Line width for minor tics
-	double minLineWidth() const
-	{
-		return minLineWidth_;
-	}
+	double minLineWidth() const;
 
 	// Sets interval
-	void setLimits(double start, double stop)
-	{
-		start_ = start;
-		stop_  = stop;
-	}
+	void setLimits(double start, double stop);
 	// Returns axis interval
-	void limits(double& start, double& stop) const
-	{
-		start = start_;
-		stop  = stop_;
-	}
+	void limits(double& start, double& stop) const;
 	// Enforces recalculation of ticmark positions
 	void recalculateTics();
 
@@ -31825,66 +25022,34 @@ private:
 	bool prepTicCalculation(Triple& startpoint);
 
 	Qwt3D::Triple biggestNumberString();
-
-	Qwt3D::ANCHOR scaleNumberAnchor_;
-	Qwt3D::Label label_;
-	std::vector< Qwt3D::Label > markerLabel_;
-
-	Qwt3D::Triple beg_, end_;
-	Qwt3D::TripleField majorpos_, minorpos_;
-
-	Qwt3D::Triple ncube_beg_, ncube_end_;
-
-	double start_, stop_, autostart_, autostop_;
-	double lmaj_, lmin_;
-	Qwt3D::Triple orientation_;
-
-	int majorintervals_, minorintervals_;
-
-	double lineWidth_, majLineWidth_, minLineWidth_;
-	bool symtics_;
-	bool drawNumbers_, drawTics_, drawLabel_;
-	bool autoscale_;
-	QFont numberfont_, labelfont_;
-	Qwt3D::RGBA numbercolor_;
-
-	int numbergap_, labelgap_;
-
-	Qwt3D::qwt3d_ptr< Qwt3D::Scale > scale_;
 };
 
 }  // ns
 
 #endif
+
 /*** End of inlined file: qwt3d_axis.h ***/
 
 
 /*** Start of inlined file: qwt3d_coordsys.h ***/
-#ifndef __COORDSYS_H__
-#define __COORDSYS_H__
+#ifndef QWT3D_COORDSYS_H
+#define QWT3D_COORDSYS_H
 
 
 /*** Start of inlined file: qwt3d_colorlegend.h ***/
-#ifndef __PLANE_H__
-#define __PLANE_H__
+#ifndef QWT3D_COLORLEGEND_H
+#define QWT3D_COLORLEGEND_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A flat color legend
  * @details The class visualizes a ColorVector together with a scale (axis)
  *          and a caption. ColorLegends are vertical or horizontal.
- * \endif
- *
- * \if CHINESE
- * @brief 平面颜色图例
- * @details 该类将 ColorVector 与刻度（坐标轴）和标题一起可视化。
- *          ColorLegends 可以是垂直的或水平的。
- * \endif
  */
 class QWT3D_EXPORT ColorLegend : public Drawable
 {
+	QWT_DECLARE_PRIVATE(ColorLegend)
 
 public:
 	// Possible anchor points for caption and axis
@@ -31903,9 +25068,10 @@ public:
 
 	// Standard constructor
 	ColorLegend();
+	~ColorLegend() override;
 
 	// Draws the object - called by updateGL()
-	void draw();
+	virtual void draw() override;
 
 	// Sets the relative position of the legend inside widget
 	void setRelPosition(Qwt3D::Tuple relMin,
@@ -31919,12 +25085,9 @@ public:
 	// Sets scale minor tics
 	void setMinors(int);
 	// Sets whether a scale will be drawn
-	void drawScale(bool val) { showaxis_ = val; }
+	void drawScale(bool val);
 	// Sets whether the scale will have scale numbers
-	void drawNumbers(bool val)
-	{
-		axis_.setNumbers(val);
-	}
+	void drawNumbers(bool val);
 	// Sets whether the axis is autoscaled or not
 	void setAutoScale(bool val);
 	// Sets another scale
@@ -31943,43 +25106,30 @@ public:
 	Qwt3D::ColorVector colors;
 
 private:
-	Qwt3D::Label caption_;
-	Qwt3D::ParallelEpiped geometry() const { return pe_; }
+	Qwt3D::ParallelEpiped geometry() const;
 	void setGeometryInternal();
-
-	Qwt3D::ParallelEpiped pe_;
-	Qwt3D::Tuple relMin_, relMax_;
-	Qwt3D::Axis axis_;
-	SCALEPOSITION axisposition_;
-	ORIENTATION orientation_;
-
-	bool showaxis_;
 };
 
 } // ns
 
 #endif
+
 /*** End of inlined file: qwt3d_colorlegend.h ***/
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A coordinate system with different styles (BOX, FRAME)
- * \endif
- *
- * \if CHINESE
- * @brief 具有不同样式（BOX, FRAME）的坐标系
- * \endif
  */
 class QWT3D_EXPORT CoordinateSystem : public Drawable
 {
+	QWT_DECLARE_PRIVATE(CoordinateSystem)
 
 public:
 	explicit CoordinateSystem(Qwt3D::Triple blb = Qwt3D::Triple(0, 0, 0),
 						  Qwt3D::Triple ftr = Qwt3D::Triple(0, 0, 0),
 						  Qwt3D::COORDSTYLE = Qwt3D::BOX);
-	~CoordinateSystem();
+	~CoordinateSystem() override;
 
 	void init(Qwt3D::Triple beg = Qwt3D::Triple(0, 0, 0),
 			  Qwt3D::Triple end = Qwt3D::Triple(0, 0, 0));
@@ -31987,7 +25137,7 @@ public:
 	void setStyle(Qwt3D::COORDSTYLE s, Qwt3D::AXIS frame_1 = Qwt3D::X1,
 				  Qwt3D::AXIS frame_2 = Qwt3D::Y1, Qwt3D::AXIS frame_3 = Qwt3D::Z1);
 	// Return style of the coordinate system
-	Qwt3D::COORDSTYLE style() const { return style_; }
+	Qwt3D::COORDSTYLE style() const;
 	// first == front_left_bottom, second == back_right_top
 	void setPosition(Qwt3D::Triple first,
 				Qwt3D::Triple second);
@@ -32010,7 +25160,7 @@ public:
 	void adjustLabels(int val);
 
 	// Sets color for the grid lines
-	void setGridLinesColor(Qwt3D::RGBA val) { gridlinecolor_ = val; }
+	void setGridLinesColor(Qwt3D::RGBA val);
 
 	// Set common font for all axis labels
 	void setLabelFont(QString const &family, int pointSize, int weight = QFont::Normal,
@@ -32028,37 +25178,29 @@ public:
 	// Switch autoscaling of axes
 	void setAutoScale(bool val = true);
 
-	Qwt3D::Triple first() const { return first_; }
-	Qwt3D::Triple second() const { return second_; }
+	Qwt3D::Triple first() const;
+	Qwt3D::Triple second() const;
 
-	void setAutoDecoration(bool val = true) { autodecoration_ = val; }
-	bool autoDecoration() const { return autodecoration_; }
+	void setAutoDecoration(bool val = true);
+	bool autoDecoration() const;
 
 	// Draw smooth axes
-	void setLineSmooth(bool val = true) { smooth_ = val; }
+	void setLineSmooth(bool val = true);
 	// Smooth axes enabled?
-	bool lineSmooth() const { return smooth_; }
+	bool lineSmooth() const;
 
-	void draw();
+	void draw() override;
 
 	// Defines whether a grid between the major and/or minor tics should be drawn
 	void setGridLines(bool majors, bool minors, int sides = Qwt3D::NOSIDEGRID);
 	// Returns grids switched on
-	int grids() const { return sides_; }
+	int grids() const;
 
 	// The vector of all 12 axes - use them to set axis properties individually
 	std::vector<Axis> axes;
 
 private:
 	void destroy();
-
-	Qwt3D::Triple first_, second_;
-	Qwt3D::COORDSTYLE style_;
-
-	Qwt3D::RGBA gridlinecolor_;
-
-	bool smooth_;
-
 	void chooseAxes();
 	void autoDecorateExposedAxis(Axis &ax, bool left);
 	void drawMajorGridLines();
@@ -32066,31 +25208,28 @@ private:
 	void drawMajorGridLines(Qwt3D::Axis &, Qwt3D::Axis &);
 	void drawMinorGridLines(Qwt3D::Axis &, Qwt3D::Axis &);
 	void recalculateAxesTics();
-
-	bool autodecoration_;
-	bool majorgridlines_, minorgridlines_;
-	int sides_;
 };
 
 } // ns
 
 #endif
+
 /*** End of inlined file: qwt3d_coordsys.h ***/
 
 
 /*** Start of inlined file: qwt3d_function.h ***/
-#ifndef qwt3d_function_h
-#define qwt3d_function_h
+#ifndef QWT3D_FUNCTION_H
+#define QWT3D_FUNCTION_H
 
 
 /*** Start of inlined file: qwt3d_gridmapping.h ***/
-#ifndef qwt3d_gridmapping_h
-#define qwt3d_gridmapping_h
+#ifndef QWT3D_GRIDMAPPING_H
+#define QWT3D_GRIDMAPPING_H
 
 
 /*** Start of inlined file: qwt3d_mapping.h ***/
-#ifndef qwt3d_mapping_h
-#define qwt3d_mapping_h
+#ifndef QWT3D_MAPPING_H
+#define QWT3D_MAPPING_H
 
 #include <qstring.h>
 
@@ -32100,8 +25239,8 @@ private:
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -32125,13 +25264,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -32145,13 +25278,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -32160,13 +25287,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -32176,13 +25297,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -32192,13 +25307,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -32208,13 +25317,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -32223,15 +25326,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -32250,13 +25346,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -32270,13 +25360,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -32292,15 +25376,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -32317,17 +25394,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -32457,19 +25526,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -32488,15 +25548,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -32514,46 +25567,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -32561,13 +25590,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -32581,13 +25604,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -32603,78 +25620,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -32683,36 +25669,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -32779,13 +25744,7 @@ void convexhull2d(std::vector< unsigned >& idx, const std::vector< Qwt3D::Tuple 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for general mappings
- * \endif
- *
- * \if CHINESE
- * @brief 通用映射的抽象基类
- * \endif
  */
 class QWT3D_EXPORT Mapping
 {
@@ -32799,7 +25758,7 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_MAPPING_H
 /*** End of inlined file: qwt3d_mapping.h ***/
 
 namespace Qwt3D {
@@ -32807,19 +25766,14 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for mappings acting on rectangular grids
- * \endif
- *
- * \if CHINESE
- * @brief 作用于矩形网格的映射抽象基类
- * \endif
  */
 class QWT3D_EXPORT GridMapping : public Mapping
 {
 public:
 	// Constructs GridMapping object w/o assigned SurfacePlot
 	GridMapping();
+	~GridMapping() override;
 
 	// Sets number of rows and columns
 	void setMesh(unsigned int columns, unsigned int rows);
@@ -32831,15 +25785,28 @@ public:
 			Qwt3D::ParallelEpiped const &);
 
 protected:
-	Qwt3D::ParallelEpiped range_p;
-	Qwt3D::SurfacePlot *plotwidget_p;
-	unsigned int umesh_p, vmesh_p;
-	double minu_p, maxu_p, minv_p, maxv_p;
+	QWT_DECLARE_PRIVATE(GridMapping)
+
+	// Accessors for subclasses
+	Qwt3D::SurfacePlot *plotWidget() const;
+	void setPlotWidget(Qwt3D::SurfacePlot *pw);
+
+	Qwt3D::ParallelEpiped &range();
+	const Qwt3D::ParallelEpiped &range() const;
+
+	unsigned int meshU() const;
+	unsigned int meshV() const;
+
+	double minU() const;
+	double maxU() const;
+	double minV() const;
+	double maxV() const;
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_GRIDMAPPING_H
+
 /*** End of inlined file: qwt3d_gridmapping.h ***/
 
 namespace Qwt3D {
@@ -32847,19 +25814,10 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for mathematical functions
  * @details A Function encapsulates a mathematical function with rectangular domain. The user has to
  *          adapt the pure virtual operator() to get a working object. Also, the client code should call
  *          setDomain, setMesh and create for reasonable operating conditions.
- * \endif
- *
- * \if CHINESE
- * @brief 数学函数的抽象基类
- * @details Function 封装了一个具有矩形域的数学函数。用户必须适配纯虚 operator()
- *          以获得可工作的对象。此外，客户端代码应调用 setDomain、setMesh 和 create
- *          以获得合理的操作条件。
- * \endif
  */
 class QWT3D_EXPORT Function : public GridMapping
 {
@@ -32891,13 +25849,13 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_FUNCTION_H
 /*** End of inlined file: qwt3d_function.h ***/
 
 
 /*** Start of inlined file: qwt3d_enrichment.h ***/
-#ifndef qwt3d_enrichment_h
-#define qwt3d_enrichment_h
+#ifndef QWT3D_ENRICHMENT_H
+#define QWT3D_ENRICHMENT_H
 
 
 /*** Start of inlined file: qwt3d_types.h ***/
@@ -32905,8 +25863,8 @@ public:
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -32930,13 +25888,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -32950,13 +25902,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -32965,13 +25911,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -32981,13 +25921,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -32997,13 +25931,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -33013,13 +25941,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -33028,15 +25950,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -33055,13 +25970,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -33075,13 +25984,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -33097,15 +26000,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -33122,17 +26018,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -33262,19 +26150,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -33293,15 +26172,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -33319,46 +26191,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -33366,13 +26214,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -33386,13 +26228,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -33408,78 +26244,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+	QWT_DECLARE_PRIVATE(Data)
+
 public:
 	Qwt3D::DATATYPE datatype;
-	Data()
-	{
-		datatype = Qwt3D::POLYGON;
-	}
-	virtual ~Data()
-	{
-	}
+	Data();
+	virtual ~Data();
 	// Destroy content
 	virtual void clear()       = 0;
 	// No data
 	virtual bool empty() const = 0;
-	void setHull(Qwt3D::ParallelEpiped const& h)
-	{
-		hull_p = h;
-	}
-	Qwt3D::ParallelEpiped const& hull() const
-	{
-		return hull_p;
-	}
-
-protected:
-	Qwt3D::ParallelEpiped hull_p;
+	void setHull(Qwt3D::ParallelEpiped const& h);
+	Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+	QWT_DECLARE_PRIVATE(GridData)
+
 public:
 	GridData();
 	// See setSize()
 	GridData(unsigned int columns, unsigned int rows);
-	~GridData()
-	{
-		clear();
-	}
+	~GridData() override;
 
 	int columns() const;
 	int rows() const;
 
 	// Destroy content
 	void clear();
-	bool empty() const
-	{
-		return vertices.empty();
-	}
+	bool empty() const;
 	// Destroys content and set new size, elements are uninitialized
 	void setSize(unsigned int columns,
 				 unsigned int rows);
@@ -33488,36 +26293,15 @@ public:
 	DataMatrix vertices;
 	// Mesh normals
 	DataMatrix normals;
-	void setPeriodic(bool u, bool v)
-	{
-		uperiodic_ = u;
-		vperiodic_ = v;
-	}
-	bool uperiodic() const
-	{
-		return uperiodic_;
-	}
-	bool vperiodic() const
-	{
-		return vperiodic_;
-	}
-
-private:
-	bool uperiodic_, vperiodic_;
+	void setPeriodic(bool u, bool v);
+	bool uperiodic() const;
+	bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {
@@ -33586,20 +26370,11 @@ namespace Qwt3D {
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for data dependent visible user objects
  * @details Enrichments provide a framework for user defined OpenGL objects. The base class has a pure virtual
  *          function clone(). 2 additional functions are per default empty and could also get a new
  *          implementation in derived classes. They can be used for initialization issues or actions not
  *          depending on the related primitive.
- * \endif
- *
- * \if CHINESE
- * @brief 数据依赖可见用户对象的抽象基类
- * @details Enrichment 提供用户自定义 OpenGL 对象的框架。基类有一个纯虚函数 clone()。
- *          另外两个函数默认为空，可以在派生类中获得新的实现。
- *          它们可用于初始化或不依赖于相关图元的操作。
- * \endif
  */
 class QWT3D_EXPORT Enrichment
 {
@@ -33612,7 +26387,7 @@ public:
 		VOXELENRICHMENT
 	};
 
-	Enrichment() : plot(0) { }
+	Enrichment() : plot(nullptr) { }
 	virtual ~Enrichment() { }
 	// The derived class should give back a new Derived(something) here
 	virtual Enrichment *clone() const = 0;
@@ -33630,19 +26405,10 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for vertex dependent visible user objects
  * @details VertexEnrichments introduce a specialized draw routine for vertex dependent data.
  *          draw() is called, when the Plot realizes its internal OpenGL data representation
  *          for every Vertex associated to his argument.
- * \endif
- *
- * \if CHINESE
- * @brief 顶点依赖可见用户对象的抽象基类
- * @details VertexEnrichment 为顶点依赖数据引入了专用的绘制流程。
- *          当 Plot 实现其内部 OpenGL 数据表示时，draw() 会为与其参数关联的
- *          每个顶点被调用。
- * \endif
  */
 class QWT3D_EXPORT VertexEnrichment : public Enrichment
 {
@@ -33653,7 +26419,7 @@ public:
 	// Overwrite this
 	virtual void draw(Qwt3D::Triple const &) = 0;
 	// This gives VERTEXENRICHMENT
-	virtual TYPE type() const
+	TYPE type() const override
 	{
 		return Qwt3D::Enrichment::VERTEXENRICHMENT;
 	}
@@ -33661,215 +26427,163 @@ public:
 
 } // ns
 
-#endif
+#endif // QWT3D_ENRICHMENT_H
 /*** End of inlined file: qwt3d_enrichment.h ***/
 
 
 /*** Start of inlined file: qwt3d_enrichment_std.h ***/
-#ifndef qwt3d_enrichment_std_h
-#define qwt3d_enrichment_std_h
+#ifndef QWT3D_ENRICHMENT_STD_H
+#define QWT3D_ENRICHMENT_STD_H
 
 namespace Qwt3D {
 
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief The Cross Hair Style
- * \endif
- *
- * \if CHINESE
- * @brief 十字线样式
- * \endif
  */
 class QWT3D_EXPORT CrossHair : public VertexEnrichment
 {
 public:
 	CrossHair();
 	CrossHair(double rad, double linewidth, bool smooth, bool boxed);
+	CrossHair(const CrossHair &other);
+	~CrossHair() override;
 
-	Qwt3D::Enrichment *clone() const { return new CrossHair(*this); }
+	Qwt3D::Enrichment *clone() const override;
 
 	void configure(double rad, double linewidth, bool smooth, bool boxed);
-	void drawBegin();
-	void drawEnd();
-	void draw(Qwt3D::Triple const &);
+	void drawBegin() override;
+	void drawEnd() override;
+	void draw(Qwt3D::Triple const &) override;
 
 private:
-	bool boxed_, smooth_;
-	double linewidth_, radius_;
-	GLboolean oldstate_;
+	QWT_DECLARE_PRIVATE(CrossHair)
 };
 
 /**
- * \if ENGLISH
  * @brief The Point Style
- * \endif
- *
- * \if CHINESE
- * @brief 点样式
- * \endif
  */
 class QWT3D_EXPORT Dot : public VertexEnrichment
 {
 public:
 	Dot();
 	Dot(double pointsize, bool smooth);
+	Dot(const Dot &other);
+	~Dot() override;
 
-	Qwt3D::Enrichment *clone() const { return new Dot(*this); }
+	Qwt3D::Enrichment *clone() const override;
 
 	void configure(double pointsize, bool smooth);
-	void drawBegin();
-	void drawEnd();
-	void draw(Qwt3D::Triple const &);
+	void drawBegin() override;
+	void drawEnd() override;
+	void draw(Qwt3D::Triple const &) override;
 
 private:
-	bool smooth_;
-	double pointsize_;
-	GLboolean oldstate_;
+	QWT_DECLARE_PRIVATE(Dot)
 };
 
 /**
- * \if ENGLISH
  * @brief The Cone Style
- * \endif
- *
- * \if CHINESE
- * @brief 圆锥样式
- * \endif
  */
 class QWT3D_EXPORT Cone : public VertexEnrichment
 {
 public:
 	Cone();
 	Cone(double rad, unsigned quality);
-	~Cone();
+	Cone(const Cone &other);
+	~Cone() override;
 
-	Qwt3D::Enrichment *clone() const { return new Cone(*this); }
+	Qwt3D::Enrichment *clone() const override;
 
 	void configure(double rad, unsigned quality);
-	void draw(Qwt3D::Triple const &);
+	void draw(Qwt3D::Triple const &) override;
 
 private:
-	GLUquadricObj *hat;
-	GLUquadricObj *disk;
-	unsigned quality_;
-	double radius_;
-	GLboolean oldstate_;
+	QWT_DECLARE_PRIVATE(Cone)
 };
 
 /**
- * \if ENGLISH
  * @brief 3D vector field
  * @details The class encapsulates a vector field including its OpenGL representation as arrow field.
  *          The arrows can be configured in different aspects (color, shape, painting quality).
- * \endif
- *
- * \if CHINESE
- * @brief 三维向量场
- * @details 该类封装了一个向量场，包括其作为箭头场的 OpenGL 表示。
- *          箭头可以在不同方面进行配置（颜色、形状、绘制质量）。
- * \endif
  */
 class QWT3D_EXPORT Arrow : public VertexEnrichment
 {
 public:
 	Arrow();
-	~Arrow();
+	Arrow(const Arrow &other);
+	~Arrow() override;
 
-	Qwt3D::Enrichment *clone() const { return new Arrow(*this); }
+	Qwt3D::Enrichment *clone() const override;
 
 	void configure(int segs, double relconelength, double relconerad, double relstemrad);
-	// Set the number of faces for the arrow
-	void setQuality(int val) { segments_ = val; }
-	void draw(Qwt3D::Triple const &);
+	void setQuality(int val);
+	void draw(Qwt3D::Triple const &) override;
 
-	void setTop(Qwt3D::Triple t) { top_ = t; }
-	void setColor(Qwt3D::RGBA rgba) { rgba_ = rgba; }
+	void setTop(Qwt3D::Triple t);
+	void setColor(Qwt3D::RGBA rgba);
 
 private:
-	GLUquadricObj *hat;
-	GLUquadricObj *disk;
-	GLUquadricObj *base;
-	GLUquadricObj *bottom;
-	GLboolean oldstate_;
+	QWT_DECLARE_PRIVATE(Arrow)
 
 	double calcRotation(Qwt3D::Triple &axis, Qwt3D::FreeVector const &vec);
-
-	int segments_;
-	double rel_cone_length;
-
-	double rel_cone_radius;
-	double rel_stem_radius;
-
-	Qwt3D::Triple top_;
-	Qwt3D::RGBA rgba_;
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_ENRICHMENT_STD_H
+
 /*** End of inlined file: qwt3d_enrichment_std.h ***/
 
 
 /*** Start of inlined file: qwt3d_io_reader.h ***/
-#ifndef qwt3d_reader_h
-#define qwt3d_reader_h
+#ifndef QWT3D_IO_READER_H
+#define QWT3D_IO_READER_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Functor for reading of native files containing grid data
  * @details As a standard input functor associated with "mes" and "MES" file extensions.
- * \endif
- *
- * \if CHINESE
- * @brief 读取包含网格数据的原生文件的 Functor
- * @details 作为与 "mes" 和 "MES" 文件扩展名关联的标准输入 Functor。
- * \endif
  */
 class QWT3D_EXPORT NativeReader : public IO::Functor
 {
 	friend class IO;
+	QWT_DECLARE_PRIVATE(NativeReader)
 
 public:
 	NativeReader();
+	~NativeReader() override;
 
 private:
-	IO::Functor *clone() const { return new NativeReader(*this); }
-	bool operator()(Plot3D *plot, QString const &fname);
+	IO::Functor *clone() const override;
+	bool operator()(Plot3D *plot, QString const &fname) override;
 	static const char *magicstring;
-	double minz_, maxz_;
 	bool collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
 					 double &minx, double &maxx, double &miny, double &maxy);
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_IO_READER_H
 /*** End of inlined file: qwt3d_io_reader.h ***/
 
 
 /*** Start of inlined file: qwt3d_parametricsurface.h ***/
-#ifndef qwt3d_parametricsurface_h
-#define qwt3d_parametricsurface_h
+#ifndef QWT3D_PARAMETRICSURFACE_H
+#define QWT3D_PARAMETRICSURFACE_H
 
 namespace Qwt3D {
 
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for parametric surfaces
- * \endif
- *
- * \if CHINESE
- * @brief 参数化表面的抽象基类
- * \endif
  */
 class QWT3D_EXPORT ParametricSurface : public GridMapping
 {
+	QWT_DECLARE_PRIVATE(ParametricSurface)
 
 public:
 	// Constructs ParametricSurface object w/o assigned SurfacePlot
@@ -33878,6 +26592,7 @@ public:
 	explicit ParametricSurface(Qwt3D::SurfacePlot &plotWidget);
 	// Constructs ParametricSurface object and assigns a SurfacePlot
 	explicit ParametricSurface(Qwt3D::SurfacePlot *plotWidget);
+	~ParametricSurface() override;
 	// Overwrite this
 	virtual Qwt3D::Triple operator()(double u, double v) = 0;
 	// Assigns a new SurfacePlot and creates a data representation for it
@@ -33890,20 +26605,17 @@ public:
 	void assign(Qwt3D::SurfacePlot *plotWidget);
 	// Provide information about periodicity of the 'u' resp. 'v' domains
 	void setPeriodic(bool u, bool v);
-
-private:
-	bool uperiodic_, vperiodic_;
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_PARAMETRICSURFACE_H
 /*** End of inlined file: qwt3d_parametricsurface.h ***/
 
 
 /*** Start of inlined file: qwt3d_plot.h ***/
-#ifndef __plot3d__
-#define __plot3d__
+#ifndef QWT3D_PLOT_H
+#define QWT3D_PLOT_H
 
 #include <QOpenGLWidget>
 
@@ -33911,22 +26623,12 @@ namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Base class for all plotting widgets
  * @details Plot3D handles all the common features for plotting widgets -
  *          coordinate system, transformations, mouse/keyboard handling,
  *          labeling etc. It contains some pure virtual functions and is,
  *          in so far, an abstract base class. The class provides interfaces
  *          for data handling and implements basic data controlled color allocation.
- * \endif
- *
- * \if CHINESE
- * @brief 所有绘图控件的基类
- * @details Plot3D 处理绘图控件的通用功能——坐标系、变换、
- *          鼠标/键盘处理、标注等。它包含一些纯虚函数，
- *          因此是一个抽象基类。该类提供数据处理的接口，
- *          并实现基本的数据控制颜色分配。
- * \endif
  */
 class QWT3D_EXPORT Plot3D : public QOpenGLWidget
 {
@@ -33934,9 +26636,9 @@ class QWT3D_EXPORT Plot3D : public QOpenGLWidget
 
 public:
 	// Constructor
-	Plot3D(QWidget* parent = 0);
+	Plot3D(QWidget* parent = nullptr);
 	// Destructor
-	virtual ~Plot3D();
+	~Plot3D() override;
 
 	// Render to pixmap
 	QPixmap renderPixmap(int w = 0, int h = 0, bool useContext = false);
@@ -33945,153 +26647,78 @@ public:
 	// Create coordinate system between two points
 	void createCoordinateSystem(Qwt3D::Triple beg, Qwt3D::Triple end);
 	// Returns pointer to CoordinateSystem object
-	Qwt3D::CoordinateSystem* coordinates()
-	{
-		return &coordinates_p;
-	}
+	Qwt3D::CoordinateSystem* coordinates();
 	// Returns pointer to ColorLegend object
-	Qwt3D::ColorLegend* legend()
-	{
-		return &legend_;
-	}
+	Qwt3D::ColorLegend* legend();
 
 	// Returns rotation around X axis [-360..360] (some angles are equivalent)
-	double xRotation() const
-	{
-		return xRot_;
-	}
+	double xRotation() const;
 	// Returns rotation around Y axis [-360..360] (some angles are equivalent)
-	double yRotation() const
-	{
-		return yRot_;
-	}
+	double yRotation() const;
 	// Returns rotation around Z axis [-360..360] (some angles are equivalent)
-	double zRotation() const
-	{
-		return zRot_;
-	}
+	double zRotation() const;
 
 	// Returns shift along X axis (object coordinates)
-	double xShift() const
-	{
-		return xShift_;
-	}
+	double xShift() const;
 	// Returns shift along Y axis (object coordinates)
-	double yShift() const
-	{
-		return yShift_;
-	}
+	double yShift() const;
 	// Returns shift along Z axis (object coordinates)
-	double zShift() const
-	{
-		return zShift_;
-	}
+	double zShift() const;
 
 	// Returns relative shift [-1..1] along X axis (view coordinates)
-	double xViewportShift() const
-	{
-		return xVPShift_;
-	}
+	double xViewportShift() const;
 	// Returns relative shift [-1..1] along Y axis (view coordinates)
-	double yViewportShift() const
-	{
-		return yVPShift_;
-	}
+	double yViewportShift() const;
 
 	// Returns scaling for X values [0..inf]
-	double xScale() const
-	{
-		return xScale_;
-	}
+	double xScale() const;
 	// Returns scaling for Y values [0..inf]
-	double yScale() const
-	{
-		return yScale_;
-	}
+	double yScale() const;
 	// Returns scaling for Z values [0..inf]
-	double zScale() const
-	{
-		return zScale_;
-	}
+	double zScale() const;
 
 	// Returns zoom (0..inf)
-	double zoom() const
-	{
-		return zoom_;
-	}
+	double zoom() const;
 
 	// Returns orthogonal (true) or perspective (false) projection
-	bool ortho() const
-	{
-		return ortho_;
-	}
+	bool ortho() const;
 	// Set plot style
 	void setPlotStyle(Qwt3D::PLOTSTYLE val);
 	// Set plot style with Enrichment
 	Qwt3D::Enrichment* setPlotStyle(Qwt3D::Enrichment const& val);
 	// Returns plotting style
-	Qwt3D::PLOTSTYLE plotStyle() const
-	{
-		return plotstyle_;
-	}
+	Qwt3D::PLOTSTYLE plotStyle() const;
 	// Returns current Enrichment object used for plotting styles (if set, zero else)
-	Qwt3D::Enrichment* userStyle() const
-	{
-		return userplotstyle_p;
-	}
+	Qwt3D::Enrichment* userStyle() const;
 	// Set shading style
 	void setShading(Qwt3D::SHADINGSTYLE val);
 	// Returns shading style
-	Qwt3D::SHADINGSTYLE shading() const
-	{
-		return shading_;
-	}
+	Qwt3D::SHADINGSTYLE shading() const;
 	// Set number of isolines
 	void setIsolines(int isolines);
 	// Returns number of isolines
-	int isolines() const
-	{
-		return isolines_;
-	}
+	int isolines() const;
 
 	// Enables/disables smooth data mesh lines. Default is false
-	void setSmoothMesh(bool val)
-	{
-		smoothdatamesh_p = val;
-	}
+	void setSmoothMesh(bool val);
 	// True if mesh antialiasing is on
-	bool smoothDataMesh() const
-	{
-		return smoothdatamesh_p;
-	}
+	bool smoothDataMesh() const;
 	// Sets widgets background color
 	void setBackgroundColor(Qwt3D::RGBA rgba);
 	// Returns the widgets background color
-	Qwt3D::RGBA backgroundRGBAColor() const
-	{
-		return bgcolor_;
-	}
+	Qwt3D::RGBA backgroundRGBAColor() const;
 	// Sets color for data mesh
 	void setMeshColor(Qwt3D::RGBA rgba);
 	// Returns color for data mesh
-	Qwt3D::RGBA meshColor() const
-	{
-		return meshcolor_;
-	}
+	Qwt3D::RGBA meshColor() const;
 	// Sets line width for data mesh
 	void setMeshLineWidth(double lw);
 	// Returns line width for data mesh
-	double meshLineWidth() const
-	{
-		return meshLineWidth_;
-	}
+	double meshLineWidth() const;
 	// Sets new data color object
 	void setDataColor(Color* col);
 	// Returns data color object
-	const Color* dataColor() const
-	{
-		return datacolor_p;
-	}
+	const Color* dataColor() const;
 
 	// Add an Enrichment
 	virtual Qwt3D::Enrichment* addEnrichment(Qwt3D::Enrichment const&);
@@ -34099,10 +26726,7 @@ public:
 	virtual bool degrade(Qwt3D::Enrichment*);
 
 	// Returns rectangular hull
-	Qwt3D::ParallelEpiped hull() const
-	{
-		return hull_;
-	}
+	Qwt3D::ParallelEpiped hull() const;
 
 	// Show/hide color legend
 	void showColorLegend(bool);
@@ -34112,25 +26736,16 @@ public:
 	// Set polygon offset
 	void setPolygonOffset(double d);
 	// Returns relative value for polygon offset [0..1]
-	double polygonOffset() const
-	{
-		return polygonOffset_;
-	}
+	double polygonOffset() const;
 
 	// Set title position
 	void setTitlePosition(double rely, double relx = 0.5, Qwt3D::ANCHOR = Qwt3D::TopCenter);
 	// Set title font
 	void setTitleFont(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 	// Set caption color
-	void setTitleColor(Qwt3D::RGBA col)
-	{
-		title_.setColor(col);
-	}
+	void setTitleColor(Qwt3D::RGBA col);
 	// Set caption text (one row only)
-	void setTitle(const QString& title)
-	{
-		title_.setString(title);
-	}
+	void setTitle(const QString& title);
 
 	// Assign mouse states for rotations, scales, zoom and shifts
 	void assignMouse(MouseState xrot,
@@ -34191,133 +26806,63 @@ public:
 	void setLightComponent(GLenum property, double intensity, unsigned light = 0);
 
 	// Returns Light 'idx' rotation around X axis [-360..360] (some angles are equivalent)
-	double xLightRotation(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].rot.x : 0;
-	}
+	double xLightRotation(unsigned idx = 0) const;
 	// Returns Light 'idx' rotation around Y axis [-360..360] (some angles are equivalent)
-	double yLightRotation(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].rot.y : 0;
-	}
+	double yLightRotation(unsigned idx = 0) const;
 	// Returns Light 'idx' rotation around Z axis [-360..360] (some angles are equivalent)
-	double zLightRotation(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].rot.z : 0;
-	}
+	double zLightRotation(unsigned idx = 0) const;
 
 	// Returns shift of Light 'idx' along X axis (object coordinates)
-	double xLightShift(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].shift.x : 0;
-	}
+	double xLightShift(unsigned idx = 0) const;
 	// Returns shift of Light 'idx' along Y axis (object coordinates)
-	double yLightShift(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].shift.y : 0;
-	}
+	double yLightShift(unsigned idx = 0) const;
 	// Returns shift of Light 'idx' along Z axis (object coordinates)
-	double zLightShift(unsigned idx = 0) const
-	{
-		return (idx < 8) ? lights_[ idx ].shift.z : 0;
-	}
+	double zLightShift(unsigned idx = 0) const;
 	// Returns true if valid data available, false else
-	bool hasData() const
-	{
-		return (actualData_p) ? !actualData_p->empty() : false;
-	}
+	bool hasData() const;
 
 Q_SIGNALS:
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the rotation is changed
 	 * @param xAngle X axis rotation angle
 	 * @param yAngle Y axis rotation angle
 	 * @param zAngle Z axis rotation angle
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 旋转角度变化时发出的信号
-	 * @param xAngle X轴旋转角度
-	 * @param yAngle Y轴旋转角度
-	 * @param zAngle Z轴旋转角度
-	 * \endif
 	 */
 	void rotationChanged(double xAngle, double yAngle, double zAngle);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the shift is changed
 	 * @param xShift X axis shift value
 	 * @param yShift Y axis shift value
 	 * @param zShift Z axis shift value
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 位移变化时发出的信号
-	 * @param xShift X轴位移值
-	 * @param yShift Y轴位移值
-	 * @param zShift Z轴位移值
-	 * \endif
 	 */
 	void shiftChanged(double xShift, double yShift, double zShift);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the viewport shift is changed
 	 * @param xShift X viewport shift value
 	 * @param yShift Y viewport shift value
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 视口位移变化时发出的信号
-	 * @param xShift X视口位移值
-	 * @param yShift Y视口位移值
-	 * \endif
 	 */
 	void vieportShiftChanged(double xShift, double yShift);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the scaling is changed
 	 * @param xScale X axis scale factor
 	 * @param yScale Y axis scale factor
 	 * @param zScale Z axis scale factor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 缩放比例变化时发出的信号
-	 * @param xScale X轴缩放因子
-	 * @param yScale Y轴缩放因子
-	 * @param zScale Z轴缩放因子
-	 * \endif
 	 */
 	void scaleChanged(double xScale, double yScale, double zScale);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the zoom is changed
 	 * @param zoom Zoom factor
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 缩放因子变化时发出的信号
-	 * @param zoom 缩放因子
-	 * \endif
 	 */
 	void zoomChanged(double);
 
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the projection mode is changed
 	 * @param ortho True for orthogonal, false for perspective
-	 * \endif
-	 *
-	 * \if CHINESE
-	 * @brief 投影模式变化时发出的信号
-	 * @param ortho 正交投影为true，透视投影为false
-	 * \endif
 	 */
 	void projectionChanged(bool);
 
@@ -34368,24 +26913,26 @@ public Q_SLOTS:
 	virtual bool save(QString const& fileName, QString const& format);
 
 protected:
+	QWT_DECLARE_PRIVATE(Plot3D)
+
 	using EnrichmentList = std::list< Qwt3D::Enrichment* >;
 	using ELIT           = EnrichmentList::iterator;
 
-	void initializeGL();
-	void paintGL();
-	void resizeGL(int w, int h);
+	void initializeGL() override;
+	void paintGL() override;
+	void resizeGL(int w, int h) override;
 
-	void mousePressEvent(QMouseEvent* e);
-	void mouseReleaseEvent(QMouseEvent* e);
-	void mouseMoveEvent(QMouseEvent* e);
-	void wheelEvent(QWheelEvent* e);
+	void mousePressEvent(QMouseEvent* e) override;
+	void mouseReleaseEvent(QMouseEvent* e) override;
+	void mouseMoveEvent(QMouseEvent* e) override;
+	void wheelEvent(QWheelEvent* e) override;
 
-	void keyPressEvent(QKeyEvent* e);
+	void keyPressEvent(QKeyEvent* e) override;
 
-	Qwt3D::CoordinateSystem coordinates_p;
-	Qwt3D::Color* datacolor_p;
-	Qwt3D::Enrichment* userplotstyle_p;
-	EnrichmentList elist_p;
+	// Protected accessors for derived classes
+	std::vector< GLuint >& displayLists();
+	Qwt3D::Data* actualData() const;
+	void setActualData(Qwt3D::Data* data);
 
 	virtual void calculateHull() = 0;
 	virtual void createData()    = 0;
@@ -34395,15 +26942,9 @@ protected:
 	virtual void createEnrichments();
 
 	void createCoordinateSystem();
-	void setHull(Qwt3D::ParallelEpiped p)
-	{
-		hull_ = p;
-	}
+	void setHull(Qwt3D::ParallelEpiped p);
 
-	bool initializedGL() const
-	{
-		return initializedGL_;
-	}
+	bool initializedGL() const;
 
 	enum OBJECTS
 	{
@@ -34412,115 +26953,50 @@ protected:
 		NormalObject,
 		DisplayListSize  // only to have a vector length ...
 	};
-	std::vector< GLuint > displaylists_p;
-	Qwt3D::Data* actualData_p;
 
 private:
-	struct Light
-	{
-		Light() : unlit(true)
-		{
-		}
-		bool unlit;
-		Qwt3D::Triple rot;
-		Qwt3D::Triple shift;
-	};
-	std::vector< Light > lights_;
-
-	GLdouble xRot_, yRot_, zRot_, xShift_, yShift_, zShift_, zoom_, xScale_, yScale_, zScale_, xVPShift_, yVPShift_;
-
-	Qwt3D::RGBA meshcolor_;
-	double meshLineWidth_;
-	Qwt3D::RGBA bgcolor_;
-	Qwt3D::PLOTSTYLE plotstyle_;
-	Qwt3D::SHADINGSTYLE shading_;
-	Qwt3D::FLOORSTYLE floorstyle_;
-	bool ortho_;
-	double polygonOffset_;
-	int isolines_;
-	bool displaylegend_;
-	bool smoothdatamesh_p;
-
-	Qwt3D::ParallelEpiped hull_;
-
-	Qwt3D::ColorLegend legend_;
-
-	Label title_;
-	Qwt3D::Tuple titlerel_;
-	Qwt3D::ANCHOR titleanchor_;
-
-	// mouse
-
-	QPoint lastMouseMovePosition_;
-	bool mpressed_;
-
-	MouseState xrot_mstate_, yrot_mstate_, zrot_mstate_, xscale_mstate_, yscale_mstate_, zscale_mstate_, zoom_mstate_,
-		xshift_mstate_, yshift_mstate_;
-
-	bool mouse_input_enabled_;
-
 	void setRotationMouse(MouseState bstate, double accel, QPoint diff);
 	void setScaleMouse(MouseState bstate, double accel, QPoint diff);
 	void setShiftMouse(MouseState bstate, double accel, QPoint diff);
-
-	// keyboard
-
-	bool kpressed_;
-
-	KeyboardState xrot_kstate_[ 2 ], yrot_kstate_[ 2 ], zrot_kstate_[ 2 ], xscale_kstate_[ 2 ], yscale_kstate_[ 2 ],
-		zscale_kstate_[ 2 ], zoom_kstate_[ 2 ], xshift_kstate_[ 2 ], yshift_kstate_[ 2 ];
-
-	bool kbd_input_enabled_;
-	double kbd_rot_speed_, kbd_scale_speed_, kbd_shift_speed_;
 
 	void setRotationKeyboard(KeyboardState kseq, double speed);
 	void setScaleKeyboard(KeyboardState kseq, double speed);
 	void setShiftKeyboard(KeyboardState kseq, double speed);
 
-	bool lighting_enabled_;
 	void applyLight(unsigned idx);
 	void applyLights();
-
-	bool initializedGL_;
-	bool renderpixmaprequest_;
 };
 
 }  // ns
 
-#endif
+#endif // QWT3D_PLOT_H
+
 /*** End of inlined file: qwt3d_plot.h ***/
 
 
 /*** Start of inlined file: qwt3d_surfaceplot.h ***/
-#ifndef qwt3d_SurfacePlot_h
-#define qwt3d_SurfacePlot_h
+#ifndef QWT3D_SURFACEPLOT_H
+#define QWT3D_SURFACEPLOT_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A class representing surfaces
  * @details SurfacePlot provides visualization of surface data in 3D space,
  *          supporting both grid-based and cell-based data representations.
- * \endif
  *
- * \if CHINESE
- * @brief 表示表面的类
- * @details SurfacePlot 提供三维空间中表面数据的可视化，
- *          支持基于网格和基于单元格的数据表示。
- * \endif
  */
 class QWT3D_EXPORT SurfacePlot : public Plot3D
 {
 	Q_OBJECT
 
 public:
-	SurfacePlot(QWidget *parent = 0);
-	~SurfacePlot();
+	SurfacePlot(QWidget *parent = nullptr);
+	~SurfacePlot() override;
 	// Recalculates surface normals
 	void updateNormals();
 	// Returns data resolution (1 means all data)
-	int resolution() const { return resolution_p; }
+	int resolution() const;
 	// Returns the number of mesh cells for the ORIGINAL data
 	std::pair<int, int> facets() const;
 	bool loadFromData(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
@@ -34548,37 +27024,28 @@ public:
 	}
 
 	// Return floor style
-	Qwt3D::FLOORSTYLE floorStyle() const { return floorstyle_; }
+	Qwt3D::FLOORSTYLE floorStyle() const;
 	// Sets floor style
-	void setFloorStyle(Qwt3D::FLOORSTYLE val) { floorstyle_ = val; }
+	void setFloorStyle(Qwt3D::FLOORSTYLE val);
 	// Draw normals to every vertex
 	void showNormals(bool);
 	// Returns true, if normal drawing is on
-	bool normals() const { return datanormals_p; }
+	bool normals() const;
 
 	// Sets length of normals in percent per hull diagonale
 	void setNormalLength(double val);
 	// Returns relative length of normals
-	double normalLength() const { return normalLength_p; }
+	double normalLength() const;
 	// Increases plotting quality of normal arrows
 	void setNormalQuality(int val);
 	// Returns plotting quality of normal arrows
-	int normalQuality() const
-	{
-		return normalQuality_p;
-	}
+	int normalQuality() const;
 
 Q_SIGNALS:
 	/**
-	 * \if ENGLISH
 	 * @brief Signal emitted when the resolution changes
 	 * @param resolution The new resolution value
-	 * \endif
 	 *
-	 * \if CHINESE
-	 * @brief 分辨率变化时发出的信号
-	 * @param resolution 新的分辨率值
-	 * \endif
 	 */
 	void resolutionChanged(int);
 
@@ -34586,18 +27053,14 @@ public Q_SLOTS:
 	void setResolution(int);
 
 protected:
-	bool datanormals_p;
-	double normalLength_p;
-	int normalQuality_p;
+	QWT_DECLARE_PRIVATE(SurfacePlot)
 
-	virtual void calculateHull();
-	virtual void createData();
-	virtual void createEnrichment(Qwt3D::Enrichment &p);
+	void calculateHull() override;
+	void createData() override;
+	void createEnrichment(Qwt3D::Enrichment &p) override;
 	virtual void createFloorData();
 	void createNormals();
 	void createPoints();
-
-	int resolution_p;
 
 	void readIn(Qwt3D::GridData &gdata, Triple **data, unsigned int columns, unsigned int rows);
 	void readIn(Qwt3D::GridData &gdata, double **data, unsigned int columns, unsigned int rows,
@@ -34609,9 +27072,6 @@ private:
 	void Data2Floor();
 	void Isolines2Floor();
 
-	Qwt3D::FLOORSTYLE floorstyle_;
-
-	Qwt3D::GridData *actualDataG_;
 	virtual void createDataG();
 	virtual void createFloorDataG();
 	void createNormalsG();
@@ -34619,7 +27079,6 @@ private:
 	void Isolines2FloorG();
 	void setColorFromVertexG(int ix, int iy, bool skip = false);
 
-	Qwt3D::CellData *actualDataC_;
 	virtual void createDataC();
 	virtual void createFloorDataC();
 	void createNormalsC();
@@ -34630,121 +27089,92 @@ private:
 
 } // ns
 
-#endif
+#endif // QWT3D_SURFACEPLOT_H
+
 /*** End of inlined file: qwt3d_surfaceplot.h ***/
 
 
 /*** Start of inlined file: qwt3d_volumeplot.h ***/
-#ifndef qwt3d_volumeplot_h__2004_03_06_01_52_begin_guarded_code
-#define qwt3d_volumeplot_h__2004_03_06_01_52_begin_guarded_code
+#ifndef QWT3D_VOLUMEPLOT_H
+#define QWT3D_VOLUMEPLOT_H
 
 namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Volume plot widget (TODO: not yet fully implemented)
  * @details VolumePlot is intended to provide 3D volume visualization capabilities.
  *          This class is a placeholder for future implementation.
- * \endif
- *
- * \if CHINESE
- * @brief 体绘制控件（TODO：尚未完全实现）
- * @details VolumePlot 旨在提供三维体可视化功能。
- *          该类是未来实现的占位符。
- * \endif
  */
 class QWT3D_EXPORT VolumePlot : public Plot3D
 {
-	//    Q_OBJECT
-
 public:
 	// Constructor
-	VolumePlot(QWidget* parent = 0, const char* name = 0)
+	explicit VolumePlot(QWidget* parent = nullptr)
 	{
 	}
 
 protected:
-	virtual void createData() = 0;
+	virtual void createData() override = 0;
 };
 
 }  // ns
 
-#endif
+#endif // QWT3D_VOLUMEPLOT_H
 /*** End of inlined file: qwt3d_volumeplot.h ***/
 
 
 /*** Start of inlined file: qwt3d_graphplot.h ***/
-#ifndef qwt3d_graphplot_h
-#define qwt3d_graphplot_h
+#ifndef QWT3D_GRAPHPLOT_H
+#define QWT3D_GRAPHPLOT_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Base class for graph plotting widgets
  * @details GraphPlot is an intermediate class between Plot3D and concrete graph plot types.
  *          It provides a common base for different graph plotting implementations.
- * \endif
- *
- * \if CHINESE
- * @brief 图形绘图控件的基类
- * @details GraphPlot 是 Plot3D 和具体图形绘图类型之间的中间类，
- *          为不同的图形绘图实现提供公共基类。
- * \endif
  */
 class QWT3D_EXPORT GraphPlot : public Plot3D
 {
-	//    Q_OBJECT
-
 public:
 	// Constructor
-	GraphPlot(QWidget *parent = 0, const char *name = 0);
+	explicit GraphPlot(QWidget* parent = nullptr);
 
 protected:
-	virtual void createData() = 0;
+	virtual void createData() override = 0;
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_GRAPHPLOT_H
 /*** End of inlined file: qwt3d_graphplot.h ***/
 
 
 /*** Start of inlined file: qwt3d_multiplot.h ***/
-#ifndef qwt3d_multiplot_h
-#define qwt3d_multiplot_h
+#ifndef QWT3D_MULTIPLOT_H
+#define QWT3D_MULTIPLOT_H
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Multi-plot widget for combining multiple plot areas
  * @details MultiPlot is an intermediate class between Plot3D and concrete multi-plot
  *          implementations, allowing multiple plot areas in a single widget.
- * \endif
- *
- * \if CHINESE
- * @brief 组合多个绘图区域的多绘图控件
- * @details MultiPlot 是 Plot3D 和具体多绘图实现之间的中间类，
- *          允许在单个控件中包含多个绘图区域。
- * \endif
  */
 class QWT3D_EXPORT MultiPlot : public Plot3D
 {
-	//    Q_OBJECT
-
 public:
 	// Constructor
-	MultiPlot(QWidget *parent = 0, const char *name = 0) { }
+	explicit MultiPlot(QWidget* parent = nullptr) { }
 
 protected:
-	virtual void createData() = 0;
+	virtual void createData() override = 0;
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_MULTIPLOT_H
 /*** End of inlined file: qwt3d_multiplot.h ***/
 
 /*** End of inlined file: QWTAmalgamTemplatePublicHeaders.h ***/

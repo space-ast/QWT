@@ -6,6 +6,7 @@
 #define QWT_PLOT_SERIES_DATA_PICKER_H
 #include <QList>
 #include <QPointF>
+#include <QVariant>
 #include "qwt_canvas_picker.h"
 #include "qwt_text.h"
 class QwtPlot;
@@ -62,7 +63,8 @@ public:
     struct FeaturePoint
     {
         QwtPlotItem* item { nullptr };  ///< Corresponding item
-        QPointF feature { 0, 0 };       ///< Feature point
+        QPointF feature { 0, 0 };       ///< Feature point position (for screen drawing)
+        QVariant sampleData;            ///< Full sample data (QwtOHLCSample, QwtIntervalSample, etc.)
         size_t index { 0 };             ///< Index in the item
     };
 
