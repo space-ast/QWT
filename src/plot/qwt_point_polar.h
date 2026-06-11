@@ -69,8 +69,8 @@ class QWT_EXPORT QwtPointPolar
     QwtPointPolar normalized() const;
 
   private:
-    double m_azimuth;
-    double m_radius;
+    double m_azimuth{0.0};
+    double m_radius{0.0};
 };
 
 Q_DECLARE_TYPEINFO( QwtPointPolar, Q_MOVABLE_TYPE );

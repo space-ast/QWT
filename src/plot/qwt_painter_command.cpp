@@ -159,6 +159,20 @@ QwtPainterCommand::QwtPainterCommand( const QwtPainterCommand& other )
 }
 
 /**
+ * @brief Move constructor
+ *
+ * @param[in] other Command to be moved from
+ *
+ */
+QwtPainterCommand::QwtPainterCommand( QwtPainterCommand&& other ) noexcept
+    : m_type( other.m_type )
+    , m_path( other.m_path )
+{
+    other.m_type = Invalid;
+    other.m_path = nullptr;
+}
+
+/**
  * @brief Destructor
  *
  */
@@ -179,6 +193,26 @@ QwtPainterCommand& QwtPainterCommand::operator=( const QwtPainterCommand& other 
     reset();
     copy( other );
 
+    return *this;
+}
+
+/**
+ * @brief Move assignment operator
+ *
+ * @param[in] other Command to be moved from
+ * @return Reference to this command
+ *
+ */
+QwtPainterCommand& QwtPainterCommand::operator=( QwtPainterCommand&& other ) noexcept
+{
+    if ( this != &other )
+    {
+        reset();
+        m_type = other.m_type;
+        m_path = other.m_path;
+        other.m_type = Invalid;
+        other.m_path = nullptr;
+    }
     return *this;
 }
 

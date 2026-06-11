@@ -167,12 +167,16 @@ public:
     QwtText(const QString&, TextFormat textFormat = AutoText);
     // Copy constructor
     QwtText(const QwtText&);
+    // Move constructor
+    QwtText(QwtText&&) noexcept;
 
     // Destructor
     ~QwtText();
 
     // Assignment operator
     QwtText& operator=(const QwtText&);
+    // Move assignment
+    QwtText& operator=(QwtText&&) noexcept;
 
     // Equality operator
     bool operator==(const QwtText&) const;

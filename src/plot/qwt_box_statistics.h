@@ -110,7 +110,7 @@ private:
     static QVector<double> sortData(const QVector<double>& data);
     
     WhiskerMethod m_method;
-    double m_coefficient;
+    double m_coefficient{1.5};
 };
 
 #endif // QWT_BOX_STATISTICS_H

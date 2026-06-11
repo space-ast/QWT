@@ -36,11 +36,21 @@ QwtLegendData::QwtLegendData()
 }
 
 /**
+ * @brief Copy constructor
+ */
+QwtLegendData::QwtLegendData(const QwtLegendData&) = default;
+
+/**
  * @brief Destructor
  */
 QwtLegendData::~QwtLegendData()
 {
 }
+
+/**
+ * @brief Copy assignment
+ */
+QwtLegendData& QwtLegendData::operator=(const QwtLegendData&) = default;
 
 /**
  * @brief Set the legend attributes

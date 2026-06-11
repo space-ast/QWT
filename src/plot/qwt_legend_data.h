@@ -97,8 +97,16 @@ class QWT_EXPORT QwtLegendData
 
     // Constructor
     QwtLegendData();
+    // Copy constructor
+    QwtLegendData(const QwtLegendData&);
+    // Move constructor
+    QwtLegendData(QwtLegendData&&) noexcept = default;
     // Destructor
     ~QwtLegendData();
+    // Copy assignment
+    QwtLegendData& operator=(const QwtLegendData&);
+    // Move assignment
+    QwtLegendData& operator=(QwtLegendData&&) noexcept = default;
 
     // Set all values
     void setValues( const QMap< int, QVariant >& );

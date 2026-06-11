@@ -111,6 +111,7 @@ class QWT_EXPORT QwtPainterCommand
 
     QwtPainterCommand();
     QwtPainterCommand(const QwtPainterCommand&);
+    QwtPainterCommand(QwtPainterCommand&&) noexcept;
 
     explicit QwtPainterCommand( const QPainterPath& );
 
@@ -126,6 +127,7 @@ class QWT_EXPORT QwtPainterCommand
     ~QwtPainterCommand();
 
     QwtPainterCommand& operator=(const QwtPainterCommand& );
+    QwtPainterCommand& operator=(QwtPainterCommand&&) noexcept;
 
     Type type() const;
 

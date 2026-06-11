@@ -97,6 +97,16 @@ QwtScaleDiv::QwtScaleDiv(double lowerBound,
 }
 
 /**
+ * @brief Copy constructor
+ */
+QwtScaleDiv::QwtScaleDiv(const QwtScaleDiv&) = default;
+
+/**
+ * @brief Copy assignment
+ */
+QwtScaleDiv& QwtScaleDiv::operator=(const QwtScaleDiv&) = default;
+
+/**
  * @brief Change the interval
  *
  * @param lowerBound First boundary

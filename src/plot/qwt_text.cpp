@@ -242,6 +242,18 @@ QwtText::QwtText(const QwtText& other)
 }
 
 /**
+ * @brief Move constructor
+ * @param other Other QwtText to move from
+ *
+ */
+QwtText::QwtText(QwtText&& other) noexcept
+    : m_data(std::move(other.m_data))
+    , m_layoutCache(other.m_layoutCache)
+{
+    other.m_layoutCache = nullptr;
+}
+
+/**
  * @brief Destructor
  *
  */
@@ -262,6 +274,24 @@ QwtText& QwtText::operator=(const QwtText& other)
     const PrivateData* od = other.d_func();
     *d             = *od;
     *m_layoutCache = *other.m_layoutCache;
+    return *this;
+}
+
+/**
+ * @brief Move assignment operator
+ * @param other Other QwtText to move from
+ * @return Reference to this QwtText
+ *
+ */
+QwtText& QwtText::operator=(QwtText&& other) noexcept
+{
+    if (this != &other)
+    {
+        m_data = std::move(other.m_data);
+        delete m_layoutCache;
+        m_layoutCache       = other.m_layoutCache;
+        other.m_layoutCache = nullptr;
+    }
     return *this;
 }
 

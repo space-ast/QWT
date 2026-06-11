@@ -81,6 +81,15 @@ public:
                          const QList< double >& mediumTicks,
                          const QList< double >& majorTicks);
 
+    // Copy constructor
+    QwtScaleDiv(const QwtScaleDiv&);
+    // Move constructor
+    QwtScaleDiv(QwtScaleDiv&&) noexcept = default;
+    // Copy assignment
+    QwtScaleDiv& operator=(const QwtScaleDiv&);
+    // Move assignment
+    QwtScaleDiv& operator=(QwtScaleDiv&&) noexcept = default;
+
     // Equality operator
     bool operator==(const QwtScaleDiv&) const;
     // Inequality operator
@@ -130,8 +139,8 @@ public:
     QwtScaleDiv bounded(double lowerBound, double upperBound) const;
 
 private:
-    double m_lowerBound;
-    double m_upperBound;
+    double m_lowerBound{0.0};
+    double m_upperBound{0.0};
     QList< double > m_ticks[ NTickTypes ];
 };
 

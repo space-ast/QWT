@@ -93,7 +93,7 @@ class QWT_EXPORT QwtPickerMachine
 
   private:
     const SelectionType m_selectionType;
-    int m_state;
+    int m_state{0};
 };
 
 /**

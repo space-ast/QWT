@@ -128,9 +128,9 @@ public:
     QwtInterval symmetrize(double value) const;
 
 private:
-    double m_minValue;
-    double m_maxValue;
-    BorderFlags m_borderFlags;
+    double m_minValue{0.0};
+    double m_maxValue{-1.0};
+    BorderFlags m_borderFlags{IncludeBorders};
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtInterval::BorderFlags)
