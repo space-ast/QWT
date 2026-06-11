@@ -4,6 +4,7 @@
 #include "../../src/plot/qwt_polar.h"
 #include "../../src/plot/qwt_math.h"
 #include "../../src/plot/qwt_algorithm.hpp"
+#include "../../src/plot/qwt_simd_argminmax.h"
 #include "../../src/plot/qwt_interval.h"
 #include "../../src/plot/qwt_color_map.h"
 #include "../../src/plot/qwt_color_cycle.h"

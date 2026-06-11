@@ -12,6 +12,7 @@
 #pragma warning (disable: 4996) // deprecated POSIX names
 #endif
 #include "../../src/plot/qwt_math.cpp"
+#include "../../src/plot/qwt_simd_argminmax.cpp"
 #include "../../src/plot/qwt_interval.cpp"
 #include "../../src/plot/qwt_color_map.cpp"
 #include "../../src/plot/qwt_color_cycle.cpp"
