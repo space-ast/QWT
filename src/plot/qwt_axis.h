@@ -63,25 +63,25 @@ enum
     AxisPositions = XTop + 1
 };
 
-constexpr bool isValid(int axisPos);
-constexpr bool isYAxis(int axisPos);
-constexpr bool isXAxis(int axisPos);
+constexpr bool isValid(int axisPos) noexcept;
+constexpr bool isYAxis(int axisPos) noexcept;
+constexpr bool isXAxis(int axisPos) noexcept;
 }
 
 // Return true, when axisPos is in the valid range [ YLeft, XTop ]
-inline constexpr bool QwtAxis::isValid(int axisPos)
+inline constexpr bool QwtAxis::isValid(int axisPos) noexcept
 {
     return (axisPos >= 0 && axisPos < AxisPositions);
 }
 
 // Return true, when axisPos is XBottom or XTop
-inline constexpr bool QwtAxis::isXAxis(int axisPos)
+inline constexpr bool QwtAxis::isXAxis(int axisPos) noexcept
 {
     return (axisPos == XBottom) || (axisPos == XTop);
 }
 
 // Return true, when axisPos is YLeft or YRight
-inline constexpr bool QwtAxis::isYAxis(int axisPos)
+inline constexpr bool QwtAxis::isYAxis(int axisPos) noexcept
 {
     return (axisPos == YLeft) || (axisPos == YRight);
 }

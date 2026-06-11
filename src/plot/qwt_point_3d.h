@@ -43,24 +43,24 @@ public:
     QwtPoint3D(double x, double y, double z);
     QwtPoint3D(const QPointF&);
 
-    bool isNull() const;
+    bool isNull() const noexcept;
 
-    double x() const;
-    double y() const;
-    double z() const;
+    double x() const noexcept;
+    double y() const noexcept;
+    double z() const noexcept;
 
-    double& rx();
-    double& ry();
-    double& rz();
+    double& rx() noexcept;
+    double& ry() noexcept;
+    double& rz() noexcept;
 
-    void setX(double x);
-    void setY(double y);
-    void setZ(double y);
+    void setX(double x) noexcept;
+    void setY(double y) noexcept;
+    void setZ(double y) noexcept;
 
-    QPointF toPoint() const;
+    QPointF toPoint() const noexcept;
 
-    bool operator==(const QwtPoint3D&) const;
-    bool operator!=(const QwtPoint3D&) const;
+    bool operator==(const QwtPoint3D&) const noexcept;
+    bool operator!=(const QwtPoint3D&) const noexcept;
 
 private:
     double m_x;
@@ -113,61 +113,61 @@ inline QwtPoint3D::QwtPoint3D( const QPointF& other )
 /**
  * @return True if the point is null (x, y, z all equal to zero); otherwise false
  */
-inline bool QwtPoint3D::isNull() const
+inline bool QwtPoint3D::isNull() const noexcept
 {
     return m_x == 0.0 && m_y == 0.0 && m_z == 0.0;
 }
 
 //! Return the x-coordinate of the point
-inline double QwtPoint3D::x() const
+inline double QwtPoint3D::x() const noexcept
 {
     return m_x;
 }
 
 //! Return the y-coordinate of the point
-inline double QwtPoint3D::y() const
+inline double QwtPoint3D::y() const noexcept
 {
     return m_y;
 }
 
 //! Return the z-coordinate of the point
-inline double QwtPoint3D::z() const
+inline double QwtPoint3D::z() const noexcept
 {
     return m_z;
 }
 
 //! Return a reference to the x-coordinate of the point
-inline double& QwtPoint3D::rx()
+inline double& QwtPoint3D::rx() noexcept
 {
     return m_x;
 }
 
 //! Return a reference to the y-coordinate of the point
-inline double& QwtPoint3D::ry()
+inline double& QwtPoint3D::ry() noexcept
 {
     return m_y;
 }
 
 //! Return a reference to the z-coordinate of the point
-inline double& QwtPoint3D::rz()
+inline double& QwtPoint3D::rz() noexcept
 {
     return m_z;
 }
 
 //! Set the x-coordinate of the point to x
-inline void QwtPoint3D::setX( double x )
+inline void QwtPoint3D::setX( double x ) noexcept
 {
     m_x = x;
 }
 
 //! Set the y-coordinate of the point to y
-inline void QwtPoint3D::setY( double y )
+inline void QwtPoint3D::setY( double y ) noexcept
 {
     m_y = y;
 }
 
 //! Set the z-coordinate of the point to z
-inline void QwtPoint3D::setZ( double z )
+inline void QwtPoint3D::setZ( double z ) noexcept
 {
     m_z = z;
 }
@@ -175,19 +175,19 @@ inline void QwtPoint3D::setZ( double z )
 /**
  * @return 2D point with the z coordinate dropped
  */
-inline QPointF QwtPoint3D::toPoint() const
+inline QPointF QwtPoint3D::toPoint() const noexcept
 {
     return QPointF( m_x, m_y );
 }
 
 //! Return true if this point and other are equal
-inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const
+inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const noexcept
 {
     return ( m_x == other.m_x ) && ( m_y == other.m_y ) && ( m_z == other.m_z );
 }
 
 //! Return true if this point and other are different
-inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const
+inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const noexcept
 {
     return !operator==( other );
 }

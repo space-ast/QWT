@@ -51,17 +51,17 @@ class QWT_EXPORT QwtPointPolar
     void setPoint( const QPointF& );
     QPointF toPoint() const;
 
-    bool isValid() const;
-    bool isNull() const;
+    bool isValid() const noexcept;
+    bool isNull() const noexcept;
 
-    double radius() const;
-    double azimuth() const;
+    double radius() const noexcept;
+    double azimuth() const noexcept;
 
-    double& rRadius();
-    double& rAzimuth();
+    double& rRadius() noexcept;
+    double& rAzimuth() noexcept;
 
-    void setRadius( double );
-    void setAzimuth( double );
+    void setRadius( double ) noexcept;
+    void setAzimuth( double ) noexcept;
 
     bool operator==( const QwtPointPolar& ) const;
     bool operator!=( const QwtPointPolar& ) const;
@@ -102,49 +102,49 @@ inline QwtPointPolar::QwtPointPolar( double azimuth, double radius )
 }
 
 //! Return true if radius() >= 0.0
-inline bool QwtPointPolar::isValid() const
+inline bool QwtPointPolar::isValid() const noexcept
 {
     return m_radius >= 0.0;
 }
 
 //! Return true if radius() == 0.0
-inline bool QwtPointPolar::isNull() const
+inline bool QwtPointPolar::isNull() const noexcept
 {
     return m_radius == 0.0;
 }
 
 //! Return the radius
-inline double QwtPointPolar::radius() const
+inline double QwtPointPolar::radius() const noexcept
 {
     return m_radius;
 }
 
 //! Return the azimuth
-inline double QwtPointPolar::azimuth() const
+inline double QwtPointPolar::azimuth() const noexcept
 {
     return m_azimuth;
 }
 
 //! Return a reference to the radius
-inline double& QwtPointPolar::rRadius()
+inline double& QwtPointPolar::rRadius() noexcept
 {
     return m_radius;
 }
 
 //! Return a reference to the azimuth
-inline double& QwtPointPolar::rAzimuth()
+inline double& QwtPointPolar::rAzimuth() noexcept
 {
     return m_azimuth;
 }
 
 //! Set the radius to radius
-inline void QwtPointPolar::setRadius( double radius )
+inline void QwtPointPolar::setRadius( double radius ) noexcept
 {
     m_radius = radius;
 }
 
 //! Set the azimuth to azimuth
-inline void QwtPointPolar::setAzimuth( double azimuth )
+inline void QwtPointPolar::setAzimuth( double azimuth ) noexcept
 {
     m_azimuth = azimuth;
 }

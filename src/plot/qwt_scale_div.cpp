@@ -140,7 +140,7 @@ QwtInterval QwtScaleDiv::interval() const
  * @sa lowerBound(), setUpperBound()
  *
  */
-void QwtScaleDiv::setLowerBound(double lowerBound)
+void QwtScaleDiv::setLowerBound(double lowerBound) noexcept
 {
     m_lowerBound = lowerBound;
 }
@@ -151,7 +151,7 @@ void QwtScaleDiv::setLowerBound(double lowerBound)
  * @sa upperBound()
  *
  */
-double QwtScaleDiv::lowerBound() const
+double QwtScaleDiv::lowerBound() const noexcept
 {
     return m_lowerBound;
 }
@@ -163,7 +163,7 @@ double QwtScaleDiv::lowerBound() const
  * @sa upperBound(), setLowerBound()
  *
  */
-void QwtScaleDiv::setUpperBound(double upperBound)
+void QwtScaleDiv::setUpperBound(double upperBound) noexcept
 {
     m_upperBound = upperBound;
 }
@@ -174,7 +174,7 @@ void QwtScaleDiv::setUpperBound(double upperBound)
  * @sa lowerBound()
  *
  */
-double QwtScaleDiv::upperBound() const
+double QwtScaleDiv::upperBound() const noexcept
 {
     return m_upperBound;
 }
@@ -184,7 +184,7 @@ double QwtScaleDiv::upperBound() const
  * @return upperBound() - lowerBound()
  *
  */
-double QwtScaleDiv::range() const
+double QwtScaleDiv::range() const noexcept
 {
     return m_upperBound - m_lowerBound;
 }

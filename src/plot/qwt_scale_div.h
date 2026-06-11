@@ -96,17 +96,17 @@ public:
     QwtInterval interval() const;
 
     // Set the lower bound
-    void setLowerBound(double);
+    void setLowerBound(double) noexcept;
     // Get the lower bound
-    double lowerBound() const;
+    double lowerBound() const noexcept;
 
     // Set the upper bound
-    void setUpperBound(double);
+    void setUpperBound(double) noexcept;
     // Get the upper bound
-    double upperBound() const;
+    double upperBound() const noexcept;
 
     // Get the range (upper - lower)
-    double range() const;
+    double range() const noexcept;
 
     // Check if value is within bounds
     bool contains(double value) const;
