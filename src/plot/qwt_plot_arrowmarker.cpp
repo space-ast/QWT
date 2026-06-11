@@ -303,6 +303,7 @@ QwtPlotArrowMarker::QwtPlotArrowMarker() : QWT_PIMPL_CONSTRUCT
 {
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
+    setLegendIconSize(QSize(24, 12));
 }
 
 /**
@@ -314,6 +315,7 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtTe
 {
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
+    setLegendIconSize(QSize(24, 12));
 }
 
 /**
@@ -325,6 +327,7 @@ QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title
 {
     setZ(30.0);
     setItemAttribute(QwtPlotItem::AutoScale, false);
+    setLegendIconSize(QSize(24, 12));
 }
 
 /**
@@ -901,7 +904,7 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
         // Update cached path if needed
         d->updateTailPath();
         drawCachedEndpoint(painter,
-                           canvasEnd,
+                           canvasStart,
                            d->tailParams.getCachedPath(),
                            d->tailParams.getSize(),
                            d->tailParams.getPen(),
@@ -914,12 +917,12 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
         // Update cached path if needed
         d->updateHeadPath();
         drawCachedEndpoint(painter,
-                           canvasStart,
+                           canvasEnd,
                            d->headParams.getCachedPath(),
                            d->headParams.getSize(),
                            d->headParams.getPen(),
                            d->headParams.getBrush(),
-                           lineAngle + 180.0);
+                           lineAngle);
     }
 }
 
@@ -959,8 +962,12 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
     QWT_DC(d);
     Q_UNUSED(index);
 
+    if (size.isEmpty())
+        return QwtGraphic();
+
     QwtGraphic icon;
     icon.setDefaultSize(size);
+    icon.setRenderHint(QwtGraphic::RenderPensUnscaled, true);
 
     QPainter painter(&icon);
     painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
@@ -972,16 +979,32 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
     QPointF start(rect.left(), rect.center().y());
     QPointF end(rect.right(), rect.center().y());
 
+    const double endpointScale = rect.height() * 0.6;
+
+    // Draw tail at left end
+    if (d->tailParams.getStyle() != NoEndpoint) {
+        QSizeF tailSize = d->tailParams.getSize();
+        tailSize = tailSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
+
+        d->updateTailPath();
+        drawCachedEndpoint(&painter,
+                           start,
+                           d->tailParams.getCachedPath(),
+                           tailSize,
+                           d->tailParams.getPen(),
+                           d->tailParams.getBrush(),
+                           0.0);
+    }
+
     // Draw line
     painter.setPen(d->linePen);
     painter.drawLine(start, end);
 
-    // Draw head
+    // Draw head at right end
     if (d->headParams.getStyle() != NoEndpoint) {
         QSizeF headSize = d->headParams.getSize();
-        headSize        = headSize.scaled(rect.height() * 0.6, rect.height() * 0.6, Qt::KeepAspectRatio);
+        headSize = headSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
 
-        // Update cached path if needed
         d->updateHeadPath();
         drawCachedEndpoint(&painter,
                            end,
@@ -1064,9 +1087,9 @@ void QwtPlotArrowMarker::drawCachedEndpoint(QPainter* painter,
     painter->setPen(pen);
     painter->setBrush(brush);
 
-    // Apply rotation if needed
+    // Translate to position and apply rotation if needed
+    painter->translate(position);
     if (!qFuzzyIsNull(rotation)) {
-        painter->translate(position);
         painter->rotate(rotation);
     }
 

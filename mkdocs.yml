@@ -88,6 +88,7 @@ plugins:
                     - Scatter: en/use-guide/scatter.md
                     - Grid: en/use-guide/grid.md
                     - Marker: en/use-guide/marker.md
+                    - Arrow Marker: en/use-guide/arrow-marker.md
                     - Bar Chart: en/use-guide/barchart.md
                     - Box Chart: en/use-guide/boxchart.md
                     - Histogram: en/use-guide/histogram.md
@@ -158,6 +159,7 @@ plugins:
                     - 散点图: zh/use-guide/scatter.md
                     - 网格线: zh/use-guide/grid.md
                     - 标记点: zh/use-guide/marker.md
+                    - 箭头标记: zh/use-guide/arrow-marker.md
                     - 柱状图: zh/use-guide/barchart.md
                     - 箱形图: zh/use-guide/boxchart.md
                     - 直方图: zh/use-guide/histogram.md
