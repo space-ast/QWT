@@ -60507,6 +60507,9 @@ void QwtPlot::initPlot(const QwtText& title)
 	m_data->canvas->installEventFilter(this);
 	setCanvasBackground(QBrush(Qt::white));
 
+	setBackgroundRole(QPalette::Base);
+	setAutoFillBackground(true);
+
 	//create uuid
 	m_data->plotId = QUuid::createUuid().toString();
 
@@ -62031,7 +62034,7 @@ bool QwtPlot::isHostPlot() const
 void QwtPlot::setBackgroundColor(const QColor& c)
 {
 	QPalette p = palette();
-	p.setColor(QPalette::Window, c);
+	p.setColor(backgroundRole(), c);
 	setPalette(p);
 
 	setAutoFillBackground(true);
@@ -62043,7 +62046,7 @@ void QwtPlot::setBackgroundColor(const QColor& c)
  */
 QColor QwtPlot::backgroundColor() const
 {
-	return palette().color(QPalette::Window);
+	return palette().color(backgroundRole());
 }
 
 /**
