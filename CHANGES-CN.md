@@ -1,4 +1,4 @@
-## tag:v7.3.0 (Unreleased)
+## tag:v7.3.0 (2026-06-12)
 
 ### 新功能
 
@@ -69,6 +69,9 @@
     - 控制面板可调整数据量、降采样模式、线宽等参数
     - 支持生成Markdown格式的性能报告
     - 位于`examples/bench/renderbench/`
+- **staticExample** - 重写为Qwt综合特性展示示例
+    - 演示曲线、频谱图、柱状图、箱线图、向量场等多种绘图类型
+    - 统一更新所有2D示例的颜色调色板和画布背景风格
 
 ### 文档
 
@@ -81,6 +84,8 @@
 ### Bug修复
 
 - 修复Qt6下legend图标因`QwtNullPaintDevice::metric()`返回0（设备像素比）导致的空白问题
+- 修复`QwtPlotMarker`箭头首尾端点反转问题，改进图例图标渲染
+- 修复绘图背景渲染问题，改用`QPalette::Base`动态`backgroundRole`，确保主题切换时背景色正确
 
 ## tag:v7.2.1
 

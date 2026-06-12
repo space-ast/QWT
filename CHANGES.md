@@ -1,4 +1,4 @@
-## tag:v7.3.0 (Unreleased)
+## tag:v7.3.0 (2026-06-12)
 
 ### New Features
 
@@ -69,6 +69,9 @@
     - Control panel for adjusting data size, downsampling mode, line width, etc.
     - Generates Markdown-formatted performance reports
     - Located at `examples/bench/renderbench/`
+- **staticExample** — rewritten as comprehensive Qwt feature showcase
+    - Demonstrates curves, spectrograms, bar charts, box charts, vector fields, and more
+    - Modernized color palette and canvas backgrounds across all 2D examples
 
 ### Documentation
 
@@ -81,6 +84,8 @@
 ### Bug Fixes
 
 - Fixed Qt6 legend icon appearing blank due to `QwtNullPaintDevice::metric()` returning 0 for device pixel ratio
+- Fixed `QwtPlotMarker` arrow endpoints — head and tail were swapped; improved legend icon rendering
+- Fixed plot background rendering — now uses dynamic `backgroundRole` from `QPalette::Base` for correct theme-aware coloring
 
 ## tag:v7.2.1
 
