@@ -144,8 +144,12 @@ static inline QFont qwtResolvedFont(const QWidget* widget)
 
 class QwtPlotRenderer::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotRenderer)
 public:
-    PrivateData() : discardFlags(QwtPlotRenderer::DiscardNone), layoutFlags(QwtPlotRenderer::DefaultLayout)
+    PrivateData(QwtPlotRenderer* p)
+        : q_ptr(p)
+        , discardFlags(QwtPlotRenderer::DiscardNone)
+        , layoutFlags(QwtPlotRenderer::DefaultLayout)
     {
     }
 
@@ -154,211 +158,126 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] parent Parent object
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] parent 父对象
- * \endif
  */
-QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent)
+QwtPlotRenderer::QwtPlotRenderer(QObject* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotRenderer::~QwtPlotRenderer()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Change a flag, indicating what to discard from rendering
  * @param[in] flag Flag to change
  * @param[in] on On/Off
  * @sa DiscardFlag, testDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 更改指示渲染时丢弃内容的标志
- * @param[in] flag 要更改的标志
- * @param[in] on 开启或关闭
- * @sa DiscardFlag, testDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
  */
 void QwtPlotRenderer::setDiscardFlag(DiscardFlag flag, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->discardFlags |= flag;
+        d->discardFlags |= flag;
     else
-        m_data->discardFlags &= ~flag;
+        d->discardFlags &= ~flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a discard flag is enabled
  * @param[in] flag Flag to be tested
  * @return True if flag is enabled
  * @sa DiscardFlag, setDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 测试丢弃标志是否启用
- * @param[in] flag 要测试的标志
- * @return 如果标志启用则返回 true
- * @sa DiscardFlag, setDiscardFlag(), setDiscardFlags(), discardFlags()
- * \endif
  */
 bool QwtPlotRenderer::testDiscardFlag(DiscardFlag flag) const
 {
-    return m_data->discardFlags & flag;
+    QWT_DC(d);
+    return d->discardFlags & flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the flags, indicating what to discard from rendering
  * @param[in] flags Flags to set
  * @sa DiscardFlag, setDiscardFlag(), testDiscardFlag(), discardFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 设置指示渲染时丢弃内容的标志
- * @param[in] flags 要设置的标志
- * @sa DiscardFlag, setDiscardFlag(), testDiscardFlag(), discardFlags()
- * \endif
  */
 void QwtPlotRenderer::setDiscardFlags(DiscardFlags flags)
 {
-    m_data->discardFlags = flags;
+    QWT_D(d);
+    d->discardFlags = flags;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the flags indicating what to discard from rendering
  * @return Flags indicating what to discard from rendering
  * @sa DiscardFlag, setDiscardFlags(), setDiscardFlag(), testDiscardFlag()
- * \endif
- *
- * \if CHINESE
- * @brief 获取指示渲染时丢弃内容的标志
- * @return 指示渲染时丢弃内容的标志
- * @sa DiscardFlag, setDiscardFlags(), setDiscardFlag(), testDiscardFlag()
- * \endif
  */
 QwtPlotRenderer::DiscardFlags QwtPlotRenderer::discardFlags() const
 {
-    return m_data->discardFlags;
+    QWT_DC(d);
+    return d->discardFlags;
 }
 
 /**
- * \if ENGLISH
  * @brief Change a layout flag
  * @param[in] flag Flag to change
  * @param[in] on On/Off
  * @sa LayoutFlag, testLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 更改布局标志
- * @param[in] flag 要更改的标志
- * @param[in] on 开启或关闭
- * @sa LayoutFlag, testLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
  */
 void QwtPlotRenderer::setLayoutFlag(LayoutFlag flag, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->layoutFlags |= flag;
+        d->layoutFlags |= flag;
     else
-        m_data->layoutFlags &= ~flag;
+        d->layoutFlags &= ~flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a layout flag is enabled
  * @param[in] flag Flag to be tested
  * @return True if flag is enabled
  * @sa LayoutFlag, setLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 测试布局标志是否启用
- * @param[in] flag 要测试的标志
- * @return 如果标志启用则返回 true
- * @sa LayoutFlag, setLayoutFlag(), setLayoutFlags(), layoutFlags()
- * \endif
  */
 bool QwtPlotRenderer::testLayoutFlag(LayoutFlag flag) const
 {
-    return m_data->layoutFlags & flag;
+    QWT_DC(d);
+    return d->layoutFlags & flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the layout flags
  * @param[in] flags Flags to set
  * @sa LayoutFlag, setLayoutFlag(), testLayoutFlag(), layoutFlags()
- * \endif
- *
- * \if CHINESE
- * @brief 设置布局标志
- * @param[in] flags 要设置的标志
- * @sa LayoutFlag, setLayoutFlag(), testLayoutFlag(), layoutFlags()
- * \endif
  */
 void QwtPlotRenderer::setLayoutFlags(LayoutFlags flags)
 {
-    m_data->layoutFlags = flags;
+    QWT_D(d);
+    d->layoutFlags = flags;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout flags
  * @return Layout flags
  * @sa LayoutFlag, setLayoutFlags(), setLayoutFlag(), testLayoutFlag()
- * \endif
- *
- * \if CHINESE
- * @brief 获取布局标志
- * @return 布局标志
- * @sa LayoutFlag, setLayoutFlags(), setLayoutFlag(), testLayoutFlag()
- * \endif
  */
 QwtPlotRenderer::LayoutFlags QwtPlotRenderer::layoutFlags() const
 {
-    return m_data->layoutFlags;
+    QWT_DC(d);
+    return d->layoutFlags;
 }
 
 /**
- * \if ENGLISH
  * @brief Render a plot to a file
  * @details The format of the document will be auto-detected from the suffix of the file name.
  * @param[in] plot Plot widget
  * @param[in] fileName Path of the file where the document will be stored
  * @param[in] sizeMM Size for the document in millimeters
  * @param[in] resolution Resolution in dots per Inch (dpi)
- * \endif
  *
- * \if CHINESE
- * @brief 将绘图渲染到文件
- * @details 文档格式将从文件名后缀自动检测。
- * @param[in] plot 绘图控件
- * @param[in] fileName 存储文档的文件路径
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * \endif
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QSizeF& sizeMM, int resolution)
 {
@@ -366,7 +285,6 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
 }
 
 /**
- * \if ENGLISH
  * @brief Render a plot to a file with specified format
  * @details Supported formats are:
  *          - pdf: Portable Document Format PDF
@@ -380,23 +298,7 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
  * @param[in] sizeMM Size for the document in millimeters
  * @param[in] resolution Resolution in dots per Inch (dpi)
  * @sa renderTo(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  *
- * \if CHINESE
- * @brief 将绘图渲染到指定格式的文件
- * @details 支持的格式有：
- *          - pdf：便携式文档格式 PDF
- *          - ps：PostScript
- *          - svg：可缩放矢量图形 SVG
- *          - Qt 支持的所有图像格式（参见 QImageWriter::supportedImageFormats()）
- *          像 PDF 或 SVG 这样的可缩放矢量图形格式优于栅格图形格式。
- * @param[in] plot 绘图控件
- * @param[in] fileName 存储文档的文件路径
- * @param[in] format 文档格式
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * @sa renderTo(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution)
 {
@@ -484,23 +386,12 @@ void QwtPlotRenderer::renderDocument(QwtPlot* plot, const QString& fileName, con
 }
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QPaintDevice
  * @details This function renders the contents of a QwtPlot instance to QPaintDevice object.
  *          The target rectangle is derived from its device metrics.
  * @param[in] plot Plot to be rendered
  * @param[in] paintDevice Device to paint on, f.e. a QImage
  * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QPaintDevice
- * @details 此函数将 QwtPlot 实例的内容渲染到 QPaintDevice 对象。
- *          目标矩形从其设备指标派生。
- * @param[in] plot 要渲染的绘图
- * @param[in] paintDevice 绘制设备，例如 QImage
- * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 
 void QwtPlotRenderer::renderTo(QwtPlot* plot, QPaintDevice& paintDevice) const
@@ -513,23 +404,12 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPaintDevice& paintDevice) const
 }
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QPrinter
  * @details This function renders the contents of a QwtPlot instance to QPaintDevice object.
  *          The size is derived from the printer metrics.
  * @param[in] plot Plot to be rendered
  * @param[in] printer Printer to paint on
  * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QPrinter
- * @details 此函数将 QwtPlot 实例的内容渲染到 QPaintDevice 对象。
- *          尺寸从打印机指标派生。
- * @param[in] plot 要渲染的绘图
- * @param[in] printer 绘制打印机
- * @sa renderDocument(), render(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 
 #ifndef QT_NO_PRINTER
@@ -553,7 +433,6 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPrinter& printer) const
 #if QWT_FORMAT_SVG
 
 /**
- * \if ENGLISH
  * @brief Render the plot to a QSvgGenerator
  * @details If the generator has a view box, the plot will be rendered into it.
  *          If it has no viewBox but a valid size, the target coordinates will be
@@ -561,17 +440,6 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QPrinter& printer) const
  *          rectangle will be QRectF(0, 0, 800, 600).
  * @param[in] plot Plot to be rendered
  * @param[in] generator SVG generator
- * \endif
- *
- * \if CHINESE
- * @brief 将绘图渲染到 QSvgGenerator
- * @details 如果生成器有视图框，绘图将渲染到其中。
- *          如果没有 viewBox 但有有效尺寸，目标坐标将是
- *          (0, 0, generator.width(), generator.height())。
- *          否则目标矩形将是 QRectF(0, 0, 800, 600)。
- * @param[in] plot 要渲染的绘图
- * @param[in] generator SVG 生成器
- * \endif
  */
 void QwtPlotRenderer::renderTo(QwtPlot* plot, QSvgGenerator& generator) const
 {
@@ -589,29 +457,20 @@ void QwtPlotRenderer::renderTo(QwtPlot* plot, QSvgGenerator& generator) const
 #endif
 
 /**
- * \if ENGLISH
  * @brief Paint the contents of a QwtPlot instance into a given rectangle
  * @param[in] plot Plot to be rendered
  * @param[in] painter Painter
  * @param[in] plotRect Bounding rectangle
  * @sa renderDocument(), renderTo(), QwtPainter::setRoundingAlignment()
- * \endif
- *
- * \if CHINESE
- * @brief 将 QwtPlot 实例的内容绘制到给定矩形中
- * @param[in] plot 要渲染的绘图
- * @param[in] painter 绘制器
- * @param[in] plotRect 边界矩形
- * @sa renderDocument(), renderTo(), QwtPainter::setRoundingAlignment()
- * \endif
  */
 void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plotRect) const
 {
+    QWT_DC(d);
     if (painter == 0 || !painter->isActive() || !plotRect.isValid() || plot->size().isNull()) {
         return;
     }
 
-    if (!(m_data->discardFlags & DiscardBackground))
+    if (!(d->discardFlags & DiscardBackground))
         QwtPainter::drawBackgound(painter, plotRect, plot);
 
     /*
@@ -625,7 +484,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     QRectF layoutRect = transform.inverted().mapRect(plotRect);
 
-    if (!(m_data->discardFlags & DiscardBackground)) {
+    if (!(d->discardFlags & DiscardBackground)) {
         // subtract the contents margins
 
         const QMargins m = plot->contentsMargins();
@@ -640,7 +499,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
     for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++) {
         canvasMargins[ axisPos ] = layout->canvasMargin(axisPos);
 
-        if (m_data->layoutFlags & FrameWithScales) {
+        if (d->layoutFlags & FrameWithScales) {
             const QwtAxisId axisId(axisPos);
 
             QwtScaleWidget* scaleWidget = plot->axisWidget(axisId);
@@ -683,17 +542,17 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     QwtPlotLayout::Options layoutOptions = QwtPlotLayout::IgnoreScrollbars;
 
-    if ((m_data->layoutFlags & FrameWithScales) || (m_data->discardFlags & DiscardCanvasFrame)) {
+    if ((d->layoutFlags & FrameWithScales) || (d->discardFlags & DiscardCanvasFrame)) {
         layoutOptions |= QwtPlotLayout::IgnoreFrames;
     }
 
-    if (m_data->discardFlags & DiscardLegend)
+    if (d->discardFlags & DiscardLegend)
         layoutOptions |= QwtPlotLayout::IgnoreLegend;
 
-    if (m_data->discardFlags & DiscardTitle)
+    if (d->discardFlags & DiscardTitle)
         layoutOptions |= QwtPlotLayout::IgnoreTitle;
 
-    if (m_data->discardFlags & DiscardFooter)
+    if (d->discardFlags & DiscardFooter)
         layoutOptions |= QwtPlotLayout::IgnoreFooter;
 
     layout->activate(plot, layoutRect, layoutOptions);
@@ -717,15 +576,15 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     renderCanvas(plot, painter, layout->canvasRect(), maps);
 
-    if (!(m_data->discardFlags & DiscardTitle) && (!plot->titleLabel()->text().isEmpty())) {
+    if (!(d->discardFlags & DiscardTitle) && (!plot->titleLabel()->text().isEmpty())) {
         renderTitle(plot, painter, layout->titleRect());
     }
 
-    if (!(m_data->discardFlags & DiscardFooter) && (!plot->footerLabel()->text().isEmpty())) {
+    if (!(d->discardFlags & DiscardFooter) && (!plot->footerLabel()->text().isEmpty())) {
         renderFooter(plot, painter, layout->footerRect());
     }
 
-    if (!(m_data->discardFlags & DiscardLegend) && plot->legend() && !plot->legend()->isEmpty()) {
+    if (!(d->discardFlags & DiscardLegend) && plot->legend() && !plot->legend()->isEmpty()) {
         renderLegend(plot, painter, layout->legendRect());
     }
 
@@ -749,7 +608,7 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 
     // restore all setting to their original attributes.
     for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++) {
-        if (m_data->layoutFlags & FrameWithScales) {
+        if (d->layoutFlags & FrameWithScales) {
             const QwtAxisId axisId(axisPos);
 
             QwtScaleWidget* scaleWidget = plot->axisWidget(axisId);
@@ -764,19 +623,11 @@ void QwtPlotRenderer::render(QwtPlot* plot, QPainter* painter, const QRectF& plo
 }
 
 /**
- * \if ENGLISH
  * @brief Render the title into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] titleRect Bounding rectangle for the title
- * \endif
  *
- * \if CHINESE
- * @brief 将标题渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] titleRect 标题的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderTitle(const QwtPlot* plot, QPainter* painter, const QRectF& titleRect) const
 {
@@ -789,19 +640,11 @@ void QwtPlotRenderer::renderTitle(const QwtPlot* plot, QPainter* painter, const 
 }
 
 /**
- * \if ENGLISH
  * @brief Render the footer into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] footerRect Bounding rectangle for the footer
- * \endif
  *
- * \if CHINESE
- * @brief 将页脚渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] footerRect 页脚的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderFooter(const QwtPlot* plot, QPainter* painter, const QRectF& footerRect) const
 {
@@ -814,30 +657,22 @@ void QwtPlotRenderer::renderFooter(const QwtPlot* plot, QPainter* painter, const
 }
 
 /**
- * \if ENGLISH
  * @brief Render the legend into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] legendRect Bounding rectangle for the legend
- * \endif
  *
- * \if CHINESE
- * @brief 将图例渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] legendRect 图例的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const QRectF& legendRect) const
 {
+    QWT_DC(d);
     if (plot->legend()) {
-        bool fillBackground = !(m_data->discardFlags & DiscardBackground);
+        bool fillBackground = !(d->discardFlags & DiscardBackground);
         plot->legend()->renderLegend(painter, legendRect, fillBackground);
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Paint a scale into a given rectangle
  * @details Render the scale into a given rectangle.
  * @param[in] plot Plot widget
@@ -847,19 +682,7 @@ void QwtPlotRenderer::renderLegend(const QwtPlot* plot, QPainter* painter, const
  * @param[in] endDist End border distance
  * @param[in] baseDist Base distance
  * @param[in] scaleRect Bounding rectangle for the scale
- * \endif
  *
- * \if CHINESE
- * @brief 将比例尺绘制到给定矩形中
- * @details 将比例尺渲染到给定矩形。
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] axisId 坐标轴标识
- * @param[in] startDist 起始边距离
- * @param[in] endDist 结束边距离
- * @param[in] baseDist 基础距离
- * @param[in] scaleRect 比例尺的边界矩形
- * \endif
  */
 void QwtPlotRenderer::renderScale(const QwtPlot* plot,
                                   QPainter* painter,
@@ -869,6 +692,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
                                   int baseDist,
                                   const QRectF& scaleRect) const
 {
+    QWT_DC(d);
     if (!plot->isAxisVisible(axisId))
         return;
 
@@ -884,7 +708,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
     double x, y, w;
 
     qreal off = 0.0;
-    if (m_data->layoutFlags & FrameWithScales)
+    if (d->layoutFlags & FrameWithScales)
         off = qwtScalePenWidth(plot);
 
     switch (axisId) {
@@ -930,7 +754,7 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
 
     const bool hasBackbone = sd->hasComponent(QwtAbstractScaleDraw::Backbone);
 
-    if (m_data->layoutFlags & FrameWithScales)
+    if (d->layoutFlags & FrameWithScales)
         sd->enableComponent(QwtAbstractScaleDraw::Backbone, false);
 
     sd->move(x, y);
@@ -949,29 +773,21 @@ void QwtPlotRenderer::renderScale(const QwtPlot* plot,
 }
 
 /**
- * \if ENGLISH
  * @brief Render the canvas into a given rectangle
  * @param[in] plot Plot widget
  * @param[in] painter Painter
  * @param[in] canvasRect Canvas rectangle
  * @param[in] maps Maps mapping between plot and paint device coordinates
- * \endif
  *
- * \if CHINESE
- * @brief 将画布渲染到给定矩形中
- * @param[in] plot 绘图控件
- * @param[in] painter 绘制器
- * @param[in] canvasRect 画布矩形
- * @param[in] maps 绘图与绘制设备坐标之间的映射
- * \endif
  */
 void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const QRectF& canvasRect, const QwtScaleMap* maps) const
 {
+    QWT_DC(d);
     const QWidget* canvas = plot->canvas();
 
     QRectF r = canvasRect.adjusted(0.0, 0.0, -1.0, -1.0);
 
-    if (m_data->layoutFlags & FrameWithScales) {
+    if (d->layoutFlags & FrameWithScales) {
         painter->save();
 
         QPen pen;
@@ -984,7 +800,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
         const qreal pw2 = 0.5 * pen.widthF();
         r.adjust(-pw2, -pw2, pw2, pw2);
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             const QBrush bgBrush = canvas->palette().brush(plot->backgroundRole());
             painter->setBrush(bgBrush);
         }
@@ -1003,7 +819,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 
         painter->save();
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             QwtPainter::drawBackgound(painter, r, canvas);
             clipPath = qwtCanvasClip(canvas, canvasRect);
         }
@@ -1024,7 +840,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 
         double frameWidth = 0.0;
 
-        if (!(m_data->discardFlags & DiscardCanvasFrame)) {
+        if (!(d->discardFlags & DiscardCanvasFrame)) {
             const QVariant fw = canvas->property("frameWidth");
             if (fw.canConvert< double >())
                 frameWidth = fw.value< double >();
@@ -1042,7 +858,7 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
             painter->setClipPath(clipPath);
         }
 
-        if (!(m_data->discardFlags & DiscardCanvasBackground)) {
+        if (!(d->discardFlags & DiscardCanvasBackground)) {
             QwtPainter::drawBackgound(painter, innerRect, canvas);
         }
 
@@ -1079,9 +895,9 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
 /*!
    Calculated the scale maps for rendering the canvas
 
-   \param plot Plot widget
-   \param canvasRect Target rectangle
-   \param maps Scale maps to be calculated
+   @param plot Plot widget
+   @param canvasRect Target rectangle
+   @param maps Scale maps to be calculated
  */
 void QwtPlotRenderer::buildCanvasMaps(const QwtPlot* plot, const QRectF& canvasRect, QwtScaleMap maps[]) const
 {
@@ -1147,7 +963,6 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
 }
 
 /**
- * \if ENGLISH
  * @brief Execute a file dialog and render the plot to the selected file
  * @param[in] plot Plot widget
  * @param[in] documentName Default document name
@@ -1155,17 +970,7 @@ bool QwtPlotRenderer::updateCanvasMargins(QwtPlot* plot, const QRectF& canvasRec
  * @param[in] resolution Resolution in dots per Inch (dpi)
  * @return True when exporting was successful
  * @sa renderDocument()
- * \endif
  *
- * \if CHINESE
- * @brief 执行文件对话框并将绘图渲染到选定文件
- * @param[in] plot 绘图控件
- * @param[in] documentName 默认文档名称
- * @param[in] sizeMM 文档尺寸（毫米）
- * @param[in] resolution 分辨率（点/英寸）
- * @return 导出成功返回 true
- * @sa renderDocument()
- * \endif
  */
 bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const QSizeF& sizeMM, int resolution)
 {

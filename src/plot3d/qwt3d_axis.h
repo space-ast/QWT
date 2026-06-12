@@ -1,5 +1,7 @@
-#ifndef __AXIS_H__
-#define __AXIS_H__
+#ifndef QWT3D_AXIS_H
+#define QWT3D_AXIS_H
+
+#include <qwt_global.h>
 
 #include "qwt3d_autoptr.h"
 #include "qwt3d_label.h"
@@ -11,19 +13,13 @@ namespace Qwt3D
 {
 
 /**
- * \if ENGLISH
  * @brief Autoscalable axis with caption
  * @details Axes are highly customizable especially in terms
  *          of labeling and scaling.
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的自动缩放坐标轴
- * @details 坐标轴在标注和缩放方面高度可定制。
- * \endif
  */
 class QWT3D_EXPORT Axis : public Drawable
 {
+    QWT_DECLARE_PRIVATE(Axis)
 
 public:
     // Constructs standard axis
@@ -31,198 +27,107 @@ public:
     // Constructs a new axis with specified limits
     Axis(Qwt3D::Triple beg, Qwt3D::Triple end);
     // Destructor
-    virtual ~Axis();
+    ~Axis() override;
 
     // Draws axis
-    virtual void draw();
+    void draw() override;
 
     // Positionate axis
     void setPosition(const Qwt3D::Triple& beg, const Qwt3D::Triple& end);
     // Returns axis' position
-    void position(Qwt3D::Triple& beg, Qwt3D::Triple& end) const
-    {
-        beg = beg_;
-        end = end_;
-    }
+    void position(Qwt3D::Triple& beg, Qwt3D::Triple& end) const;
     // Returns axis' beginning position
-    Qwt3D::Triple begin() const
-    {
-        return beg_;
-    }
+    Qwt3D::Triple begin() const;
     // Returns axis' ending position
-    Qwt3D::Triple end() const
-    {
-        return end_;
-    }
+    Qwt3D::Triple end() const;
     // Returns axis' length
-    double length() const
-    {
-        return (end_ - beg_).length();
-    }
+    double length() const;
 
     // Sets tics lengths in world coordinates
     void setTicLength(double majorl, double minorl);
     // Returns tics lengths
-    void ticLength(double& majorl, double& minorl) const
-    {
-        majorl = lmaj_;
-        minorl = lmin_;
-    }
+    void ticLength(double& majorl, double& minorl) const;
     // Sets tic orientation
     void setTicOrientation(double tx, double ty, double tz);
     // Same function as above
     void setTicOrientation(const Qwt3D::Triple& val);
     // Returns tic orientation
-    Qwt3D::Triple ticOrientation() const
-    {
-        return orientation_;
-    }
+    Qwt3D::Triple ticOrientation() const;
     // Sets two-sided tics (default is false)
-    void setSymmetricTics(bool b)
-    {
-        symtics_ = b;
-    }
+    void setSymmetricTics(bool b);
 
     // Sets font for axis label
     void setLabelFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
     // Sets font for axis label
     void setLabelFont(QFont const& font);
     // Returns current label font
-    QFont const& labelFont() const
-    {
-        return labelfont_;
-    }
+    QFont const& labelFont() const;
 
     // Sets label content
     void setLabelString(QString const& name);
     void setLabelPosition(const Qwt3D::Triple& pos, Qwt3D::ANCHOR);
     void setLabelColor(Qwt3D::RGBA col);
     // Turns label drawing on or off
-    void setLabel(bool d)
-    {
-        drawLabel_ = d;
-    }
+    void setLabel(bool val);
     // Shifts label in device coordinates dependent on anchor
-    void adjustLabel(int val)
-    {
-        labelgap_ = val;
-    }
+    void adjustLabel(int val);
 
     // Turns scale drawing on or off
-    void setScaling(bool d)
-    {
-        drawTics_ = d;
-    }
+    void setScaling(bool val);
     // Returns, if scale drawing is on or off
-    bool scaling() const
-    {
-        return drawTics_;
-    }
+    bool scaling() const;
     void setScale(Qwt3D::SCALETYPE);
     void setScale(Scale* item);
     // Turns number drawing on or off
-    void setNumbers(bool d)
-    {
-        drawNumbers_ = d;
-    }
+    void setNumbers(bool val);
     // Returns, if number drawing is on or off
-    bool numbers() const
-    {
-        return drawNumbers_;
-    }
+    bool numbers() const;
     // Sets the color for axes numbers
     void setNumberColor(Qwt3D::RGBA col);
     // Returns the color for axes numbers
-    Qwt3D::RGBA numberColor() const
-    {
-        return numbercolor_;
-    }
+    Qwt3D::RGBA numberColor() const;
     // Sets font for numbering
     void setNumberFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
     // Overloaded member, works like the above function
     void setNumberFont(QFont const&);
     // Returns current numbering font
-    QFont const& numberFont() const
-    {
-        return numberfont_;
-    }
+    QFont const& numberFont() const;
     // Sets anchor position for numbers
-    void setNumberAnchor(Qwt3D::ANCHOR a)
-    {
-        scaleNumberAnchor_ = a;
-    }
+    void setNumberAnchor(Qwt3D::ANCHOR a);
     // Shifts axis numbers in device coordinates dependent on anchor
-    void adjustNumbers(int val)
-    {
-        numbergap_ = val;
-    }
+    void adjustNumbers(int val);
 
     // Turns Autoscaling on or off
-    void setAutoScale(bool val = true)
-    {
-        autoscale_ = val;
-    }
+    void setAutoScale(bool val = true);
     // actual Autoscaling mode
-    bool autoScale() const
-    {
-        return autoscale_;
-    }
+    bool autoScale() const;
 
     // Requests major intervals (maybe changed, if autoscaling is present)
     void setMajors(int val);
     // Requests minor intervals
     void setMinors(int val);
     // Returns number of major intervals
-    int majors() const
-    {
-        return majorintervals_;
-    }
+    int majors() const;
     // Returns number of minor intervals
-    int minors() const
-    {
-        return minorintervals_;
-    }
+    int minors() const;
     // Returns positions for actual major tics (also if invisible)
-    Qwt3D::TripleField const& majorPositions() const
-    {
-        return majorpos_;
-    }
+    Qwt3D::TripleField const& majorPositions() const;
     // Returns positions for actual minor tics (also if invisible)
-    Qwt3D::TripleField const& minorPositions() const
-    {
-        return minorpos_;
-    }
+    Qwt3D::TripleField const& minorPositions() const;
 
     // Sets line width for axis components
     void setLineWidth(double val, double majfac = 0.9, double minfac = 0.5);
     // Returns line width for axis body
-    double lineWidth() const
-    {
-        return lineWidth_;
-    }
+    double lineWidth() const;
     // Returns Line width for major tics
-    double majLineWidth() const
-    {
-        return majLineWidth_;
-    }
+    double majLineWidth() const;
     // Returns Line width for minor tics
-    double minLineWidth() const
-    {
-        return minLineWidth_;
-    }
+    double minLineWidth() const;
 
     // Sets interval
-    void setLimits(double start, double stop)
-    {
-        start_ = start;
-        stop_  = stop;
-    }
+    void setLimits(double start, double stop);
     // Returns axis interval
-    void limits(double& start, double& stop) const
-    {
-        start = start_;
-        stop  = stop_;
-    }
+    void limits(double& start, double& stop) const;
     // Enforces recalculation of ticmark positions
     void recalculateTics();
 
@@ -236,32 +141,6 @@ private:
     bool prepTicCalculation(Triple& startpoint);
 
     Qwt3D::Triple biggestNumberString();
-
-    Qwt3D::ANCHOR scaleNumberAnchor_;
-    Qwt3D::Label label_;
-    std::vector< Qwt3D::Label > markerLabel_;
-
-    Qwt3D::Triple beg_, end_;
-    Qwt3D::TripleField majorpos_, minorpos_;
-
-    Qwt3D::Triple ncube_beg_, ncube_end_;
-
-    double start_, stop_, autostart_, autostop_;
-    double lmaj_, lmin_;
-    Qwt3D::Triple orientation_;
-
-    int majorintervals_, minorintervals_;
-
-    double lineWidth_, majLineWidth_, minLineWidth_;
-    bool symtics_;
-    bool drawNumbers_, drawTics_, drawLabel_;
-    bool autoscale_;
-    QFont numberfont_, labelfont_;
-    Qwt3D::RGBA numbercolor_;
-
-    int numbergap_, labelgap_;
-
-    Qwt3D::qwt3d_ptr< Qwt3D::Scale > scale_;
 };
 
 }  // ns

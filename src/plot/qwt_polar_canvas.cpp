@@ -21,8 +21,9 @@
 
 class QwtPolarCanvas::PrivateData
 {
-public:
-    PrivateData() : backingStore(nullptr)
+    QWT_DECLARE_PUBLIC(QwtPolarCanvas)
+  public:
+    PrivateData(QwtPolarCanvas* p) : q_ptr(p), backingStore(nullptr)
     {
     }
 
@@ -36,20 +37,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * @param[in] plot Parent polar plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 父极坐标绘图控件
- * \endif
+ * @param plot Parent polar plot widget
  */
-QwtPolarCanvas::QwtPolarCanvas(QwtPolarPlot* plot) : QFrame(plot)
+QwtPolarCanvas::QwtPolarCanvas(QwtPolarPlot* plot) : QFrame(plot), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
 #ifndef QT_NO_CURSOR
     setCursor(Qt::CrossCursor);
 #endif
@@ -59,29 +51,15 @@ QwtPolarCanvas::QwtPolarCanvas(QwtPolarPlot* plot) : QFrame(plot)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarCanvas::~QwtPolarCanvas()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the parent plot widget
  * @return Parent polar plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取父绘图控件
- * @return 父极坐标绘图控件
- * \endif
  */
 QwtPolarPlot* QwtPolarCanvas::plot()
 {
@@ -89,15 +67,8 @@ QwtPolarPlot* QwtPolarCanvas::plot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the parent plot widget (const version)
  * @return Parent polar plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取父绘图控件（常量版本）
- * @return 父极坐标绘图控件
- * \endif
  */
 const QwtPolarPlot* QwtPolarCanvas::plot() const
 {
@@ -105,49 +76,41 @@ const QwtPolarPlot* QwtPolarCanvas::plot() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the paint attributes
- * @param[in] attribute Paint attribute to modify
- * @param[in] on True to enable, false to disable
+ * @param attribute Paint attribute to modify
+ * @param on True to enable, false to disable
  * @details The default setting enables BackingStore.
  * @sa testPaintAttribute(), backingStore()
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘制属性
- * @param[in] attribute 要修改的绘制属性
- * @param[in] on true 启用，false 禁用
- * @details 默认设置启用 BackingStore。
- * @sa testPaintAttribute(), backingStore()
- * \endif
  */
 void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
-    if (bool(m_data->paintAttributes & attribute) == on)
+    QWT_D(d);
+
+    if (bool(d->paintAttributes & attribute) == on)
         return;
 
     if (on)
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 
     switch (attribute) {
     case BackingStore: {
         if (on) {
-            if (m_data->backingStore == nullptr)
-                m_data->backingStore = new QPixmap();
+            if (d->backingStore == nullptr)
+                d->backingStore = new QPixmap();
 
             if (isVisible()) {
                 const QRect cr = contentsRect();
 #if QT_VERSION >= 0x050000
-                *m_data->backingStore = grab(cr);
+                *d->backingStore = grab(cr);
 #else
-                *m_data->backingStore = QPixmap::grabWidget(this, cr);
+                *d->backingStore = QPixmap::grabWidget(this, cr);
 #endif
             }
         } else {
-            delete m_data->backingStore;
-            m_data->backingStore = nullptr;
+            delete d->backingStore;
+            d->backingStore = nullptr;
         }
         break;
     }
@@ -155,73 +118,53 @@ void QwtPolarCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test whether a paint attribute is enabled
- * @param[in] attribute Paint attribute to test
+ * @param attribute Paint attribute to test
  * @return True if the attribute is enabled
  * @sa setPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试绘制属性是否启用
- * @param[in] attribute 要测试的绘制属性
- * @return 如果属性已启用则返回 true
- * @sa setPaintAttribute()
- * \endif
  */
 bool QwtPolarCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
-    return (m_data->paintAttributes & attribute) != 0;
+    QWT_DC(d);
+    return (d->paintAttributes & attribute) != 0;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the backing store pixmap
  * @return Backing store pixmap, might be null if not enabled
  * @sa setPaintAttribute(), invalidateBackingStore()
- * \endif
- *
- * \if CHINESE
- * @brief 获取后台存储像素图
- * @return 后台存储像素图，如果未启用可能为 null
- * @sa setPaintAttribute(), invalidateBackingStore()
- * \endif
  */
 const QPixmap* QwtPolarCanvas::backingStore() const
 {
-    return m_data->backingStore;
+    QWT_DC(d);
+    return d->backingStore;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal backing store
  * @details Clears the backing store pixmap, forcing a full repaint on the next paint event.
  * @sa backingStore()
- * \endif
- *
- * \if CHINESE
- * @brief 使内部后台存储失效
- * @details 清除后台存储像素图，强制在下一个绘制事件时进行完全重绘。
- * @sa backingStore()
- * \endif
  */
 void QwtPolarCanvas::invalidateBackingStore()
 {
-    if (m_data->backingStore)
-        *m_data->backingStore = QPixmap();
+    QWT_D(d);
+    if (d->backingStore)
+        *d->backingStore = QPixmap();
 }
 
 /*!
    Paint event
-   \param event Paint event
+   @param event Paint event
  */
 void QwtPolarCanvas::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
+
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
-    if ((m_data->paintAttributes & BackingStore) && m_data->backingStore != nullptr) {
-        QPixmap& bs = *m_data->backingStore;
+    if ((d->paintAttributes & BackingStore) && d->backingStore != nullptr) {
+        QPixmap& bs = *d->backingStore;
         if (bs.size() != size()) {
             bs = QPixmap(size());
 #ifdef Q_WS_X11
@@ -253,7 +196,7 @@ void QwtPolarCanvas::paintEvent(QPaintEvent* event)
                 drawFrame(&p);
         }
 
-        painter.drawPixmap(0, 0, *m_data->backingStore);
+        painter.drawPixmap(0, 0, *d->backingStore);
     } else {
         QwtPainter::drawStyledBackground(this, &painter);
 
@@ -266,7 +209,7 @@ void QwtPolarCanvas::paintEvent(QPaintEvent* event)
 
 /*!
    Resize event
-   \param event Resize event
+   @param event Resize event
  */
 void QwtPolarCanvas::resizeEvent(QResizeEvent* event)
 {
@@ -277,19 +220,10 @@ void QwtPolarCanvas::resizeEvent(QResizeEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a point from widget coordinates to polar coordinates
- * @param[in] pos Point in widget coordinates of the plot canvas
+ * @param pos Point in widget coordinates of the plot canvas
  * @return Point in polar coordinates
  * @sa transform()
- * \endif
- *
- * \if CHINESE
- * @brief 将点从控件坐标转换为极坐标
- * @param[in] pos 画布控件坐标中的点
- * @return 极坐标中的点
- * @sa transform()
- * \endif
  */
 QwtPointPolar QwtPolarCanvas::invTransform(const QPoint& pos) const
 {
@@ -325,19 +259,10 @@ QwtPointPolar QwtPolarCanvas::invTransform(const QPoint& pos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a point from polar coordinates to widget coordinates
- * @param[in] polarPos Point in polar coordinates
+ * @param polarPos Point in polar coordinates
  * @return Point in widget coordinates
  * @sa invTransform()
- * \endif
- *
- * \if CHINESE
- * @brief 将点从极坐标转换为控件坐标
- * @param[in] polarPos 极坐标中的点
- * @return 控件坐标中的点
- * @sa invTransform()
- * \endif
  */
 QPoint QwtPolarCanvas::transform(const QwtPointPolar& polarPos) const
 {

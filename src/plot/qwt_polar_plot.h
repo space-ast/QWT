@@ -26,7 +26,6 @@ class QwtPolarLayout;
 class QwtAbstractLegend;
 
 /**
- * \if ENGLISH
  * @brief A plotting widget, displaying a polar coordinate system
  * @details An unlimited number of plot items can be displayed on
  *          its canvas. Plot items might be curves (QwtPolarCurve), markers
@@ -42,20 +41,6 @@ class QwtAbstractLegend;
  *          In opposite to QwtPlot the scales might be different from the
  *          view, that is displayed on the canvas. The view can be changed by
  *          zooming - f.e. by using QwtPolarPanner or QwtPolarMaginfier.
- * \endif
- *
- * \if CHINESE
- * @brief 显示极坐标系的绘图控件
- * @details 可以在其画布上显示无限数量的绘图项。绘图项可以是曲线、
- *          标记、网格 或任何其他从 QwtPolarItem 派生的对象。
- *
- *          坐标系由径向和方位角刻度定义。轴上的刻度可以显式设置，
- *          也可以使用算法从绘图项计算得出，这些算法可以为每个轴单独配置。
- *          径向刻度支持自动缩放。
- *
- *          与 QwtPlot 不同，刻度可能与画布上显示的视图不同。
- *          视图可以通过缩放来改变，例如使用 QwtPolarPanner 或 QwtPolarMaginfier。
- * \endif
  */
 class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
 {
@@ -66,15 +51,8 @@ class QWT_EXPORT QwtPolarPlot : public QFrame, public QwtPolarItemDict
 
 public:
     /**
-     * \if ENGLISH
      * @brief Position of the legend, relative to the canvas
      * @sa insertLegend()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 图例相对于画布的位置
-     * @sa insertLegend()
-     * \endif
      */
     enum LegendPosition
     {
@@ -91,21 +69,12 @@ public:
         TopLegend,
 
         /**
-         * \if ENGLISH
          * External means that only the content of the legend
          * will be handled by QwtPlot, but not its geometry.
          * This might be interesting if an application wants to
          * have a legend in an external window ( or on the canvas ).
          *
          * @note The legend is not painted by QwtPolarRenderer
-         * \endif
-         *
-         * \if CHINESE
-         * 外部意味着只有图例的内容由 QwtPlot 处理，而不是其几何形状。
-         * 如果应用程序希望在外部窗口（或在画布上）放置图例，这可能很有用。
-         *
-         * @note 图例不由 QwtPolarRenderer 绘制
-         * \endif
          */
         ExternalLegend
     };
@@ -116,7 +85,7 @@ public:
     QwtPolarPlot(const QwtText& title, QWidget* parent = nullptr);
 
     /// Destructor
-    virtual ~QwtPolarPlot();
+    ~QwtPolarPlot() override;
 
     /// Set the title
     void setTitle(const QString&);
@@ -243,24 +212,21 @@ public:
 Q_SIGNALS:
     /**
      * @brief A signal indicating, that an item has been attached/detached
-     *        表示绘图项已附加/分离的信号
-     * @param plotItem Plot item / 绘图项
-     * @param on Attached/Detached / 附加/分离
+     * @param plotItem Plot item
+     * @param on Attached/Detached
      */
     void itemAttached(QwtPolarItem* plotItem, bool on);
 
     /**
      * @brief A signal with the attributes how to update the legend entries for a plot item
-     *        包含如何更新绘图项图例条目属性的信号
-     * @param itemInfo Info about a plot, build from itemToInfo() / 关于绘图的信息，由 itemToInfo() 构建
-     * @param data Attributes of the entries ( usually <= 1 ) for the plot item / 绘图项的条目属性（通常 <= 1）
+     * @param itemInfo Info about a plot, build from itemToInfo()
+     * @param data Attributes of the entries ( usually <= 1 ) for the plot item
      * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
      */
     void legendDataChanged(const QVariant& itemInfo, const QList< QwtLegendData >& data);
 
     /**
      * @brief A signal that is emitted, whenever the layout of the plot has been recalculated
-     *        当绘图的布局重新计算时发出的信号
      */
     void layoutChanged();
 
@@ -295,8 +261,7 @@ private:
 
     void initPlot(const QwtText&);
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarPlot)
 };
 
 #endif

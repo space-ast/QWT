@@ -41,7 +41,7 @@ namespace QwtPolar
 
     /*!
        Indices used to identify an axis.
-       \sa Scale
+       @sa Scale
      */
     enum Axis
     {
@@ -66,7 +66,7 @@ namespace QwtPolar
 
     /*!
        Indices used to identify a scale.
-       \sa Axis
+       @sa Axis
      */
     enum Scale
     {

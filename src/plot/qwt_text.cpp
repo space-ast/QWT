@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -164,9 +164,10 @@ const QwtTextEngine* TextEngineDict::textEngine(QwtText::TextFormat format) cons
 
 class QwtText::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtText)
 public:
-    PrivateData()
-        : renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
+    PrivateData(QwtText* p)
+        : q_ptr(p), renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
     {
     }
 
@@ -198,40 +199,27 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
  *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 QwtText::QwtText()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data             = new PrivateData;
     m_data->textEngine = textEngine(m_data->text, PlainText);
 
     m_layoutCache = new LayoutCache;
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @param text Text content
  * @param textFormat Text format
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- *
- * @param text 文本内容
- * @param textFormat 文本格式
- * \endif
  */
 QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data             = new PrivateData;
     m_data->text       = text;
     m_data->format     = textFormat;
     m_data->textEngine = textEngine(text, textFormat);
@@ -240,19 +228,13 @@ QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
 }
 
 /**
- * \if ENGLISH
  * @brief Copy constructor
  * @param other Other QwtText to copy from
- * \endif
  *
- * \if CHINESE
- * @brief 拷贝构造函数
- * @param other 要复制的其他 QwtText
- * \endif
  */
 QwtText::QwtText(const QwtText& other)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data  = new PrivateData;
     *m_data = *other.m_data;
 
     m_layoutCache  = new LayoutCache;
@@ -260,74 +242,81 @@ QwtText::QwtText(const QwtText& other)
 }
 
 /**
- * \if ENGLISH
- * @brief Destructor
- * \endif
+ * @brief Move constructor
+ * @param other Other QwtText to move from
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
+ */
+QwtText::QwtText(QwtText&& other) noexcept
+    : m_data(std::move(other.m_data))
+    , m_layoutCache(other.m_layoutCache)
+{
+    other.m_layoutCache = nullptr;
+}
+
+/**
+ * @brief Destructor
+ *
  */
 QwtText::~QwtText()
 {
-    delete m_data;
     delete m_layoutCache;
 }
 
 /**
- * \if ENGLISH
  * @brief Assignment operator
  * @param other Other QwtText to assign from
  * @return Reference to this QwtText
- * \endif
  *
- * \if CHINESE
- * @brief 赋值运算符
- * @param other 要赋值的其他 QwtText
- * @return 对此 QwtText 的引用
- * \endif
  */
 QwtText& QwtText::operator=(const QwtText& other)
 {
-    *m_data        = *other.m_data;
+    QWT_D(d);
+    const PrivateData* od = other.d_func();
+    *d             = *od;
     *m_layoutCache = *other.m_layoutCache;
     return *this;
 }
 
 /**
- * \if ENGLISH
- * @brief Equality operator
- * @param other Other QwtText to compare with
- * @return true if equal
- * \endif
+ * @brief Move assignment operator
+ * @param other Other QwtText to move from
+ * @return Reference to this QwtText
  *
- * \if CHINESE
- * @brief 相等运算符
- * @param other 要比较的其他 QwtText
- * @return 如果相等则返回 true
- * \endif
  */
-bool QwtText::operator==(const QwtText& other) const
+QwtText& QwtText::operator=(QwtText&& other) noexcept
 {
-    return m_data->renderFlags == other.m_data->renderFlags && m_data->text == other.m_data->text
-           && m_data->font == other.m_data->font && m_data->color == other.m_data->color
-           && m_data->borderRadius == other.m_data->borderRadius && m_data->borderPen == other.m_data->borderPen
-           && m_data->backgroundBrush == other.m_data->backgroundBrush
-           && m_data->paintAttributes == other.m_data->paintAttributes && m_data->textEngine == other.m_data->textEngine;
+    if (this != &other)
+    {
+        m_data = std::move(other.m_data);
+        delete m_layoutCache;
+        m_layoutCache       = other.m_layoutCache;
+        other.m_layoutCache = nullptr;
+    }
+    return *this;
 }
 
 /**
- * \if ENGLISH
+ * @brief Equality operator
+ * @param other Other QwtText to compare with
+ * @return true if equal
+ *
+ */
+bool QwtText::operator==(const QwtText& other) const
+{
+    QWT_DC(d);
+    const PrivateData* od = other.d_func();
+    return d->renderFlags == od->renderFlags && d->text == od->text
+           && d->font == od->font && d->color == od->color
+           && d->borderRadius == od->borderRadius && d->borderPen == od->borderPen
+           && d->backgroundBrush == od->backgroundBrush
+           && d->paintAttributes == od->paintAttributes && d->textEngine == od->textEngine;
+}
+
+/**
  * @brief Inequality operator
  * @param other Other QwtText to compare with
  * @return true if not equal
- * \endif
  *
- * \if CHINESE
- * @brief 不等运算符
- * @param other 要比较的其他 QwtText
- * @return 如果不相等则返回 true
- * \endif
  */
 bool QwtText::operator!=(const QwtText& other) const
 {
@@ -335,52 +324,36 @@ bool QwtText::operator!=(const QwtText& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a new text content
  *
  * @param text Text content
  * @param textFormat Text format
  *
  * @sa text()
- * \endif
  *
- * \if CHINESE
- * @brief 分配新的文本内容
- *
- * @param text 文本内容
- * @param textFormat 文本格式
- *
- * @sa text()
- * \endif
  */
 void QwtText::setText(const QString& text, QwtText::TextFormat textFormat)
 {
-    m_data->text       = text;
-    m_data->format     = textFormat;
-    m_data->textEngine = textEngine(text, textFormat);
+    QWT_D(d);
+    d->text       = text;
+    d->format     = textFormat;
+    d->textEngine = textEngine(text, textFormat);
     m_layoutCache->invalidate();
 }
 
 /**
- * \if ENGLISH
  * @brief Get text as QString
  * @return Text as QString
  * @sa setText()
- * \endif
  *
- * \if CHINESE
- * @brief 获取文本作为 QString
- * @return 文本作为 QString
- * @sa setText()
- * \endif
  */
 QString QwtText::text() const
 {
-    return m_data->text;
+    QWT_DC(d);
+    return d->text;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the render flags
  *
  * The default setting is Qt::AlignCenter
@@ -389,399 +362,264 @@ QString QwtText::text() const
  *
  * @sa renderFlags(), QwtTextEngine::draw()
  * @note Some renderFlags might have no effect, depending on the text format.
- * \endif
  *
- * \if CHINESE
- * @brief 更改渲染标志
- *
- * 默认设置是 Qt::AlignCenter
- *
- * @param renderFlags 标志的按位或，用法类似于 QPainter::drawText()
- *
- * @sa renderFlags(), QwtTextEngine::draw()
- * @note 某些 renderFlags 可能没有效果，取决于文本格式。
- * \endif
  */
 void QwtText::setRenderFlags(int renderFlags)
 {
-    if (renderFlags != m_data->renderFlags) {
-        m_data->renderFlags = renderFlags;
+    QWT_D(d);
+    if (renderFlags != d->renderFlags) {
+        d->renderFlags = renderFlags;
         m_layoutCache->invalidate();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get render flags
  * @return Render flags
  * @sa setRenderFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 获取渲染标志
- * @return 渲染标志
- * @sa setRenderFlags()
- * \endif
  */
 int QwtText::renderFlags() const
 {
-    return m_data->renderFlags;
+    QWT_DC(d);
+    return d->renderFlags;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the font
  * @param font Font to set
  * @note Setting the font might have no effect, when the text contains control sequences for setting fonts.
  * @sa font(), usedFont()
- * \endif
  *
- * \if CHINESE
- * @brief 设置字体
- * @param font 要设置的字体
- * @note 如果文本包含设置字体的控制序列，设置字体可能无效。
- * @sa font(), usedFont()
- * \endif
  */
 void QwtText::setFont(const QFont& font)
 {
-    m_data->font = font;
+    QWT_D(d);
+    d->font = font;
     setPaintAttribute(PaintUsingTextFont);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the font
  * @return Current font
  * @sa setFont(), usedFont()
- * \endif
  *
- * \if CHINESE
- * @brief 获取字体
- * @return 当前字体
- * @sa setFont(), usedFont()
- * \endif
  */
 QFont QwtText::font() const
 {
-    return m_data->font;
+    QWT_DC(d);
+    return d->font;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the font of the text, if it has one, otherwise return defaultFont
  * @param defaultFont Default font to use if text has no font
  * @return Font used for drawing the text
  * @sa setFont(), font(), PaintAttributes
- * \endif
  *
- * \if CHINESE
- * @brief 返回文本的字体，如果有则返回，否则返回 defaultFont
- * @param defaultFont 如果文本没有字体则使用的默认字体
- * @return 用于绘制文本的字体
- * @sa setFont(), font(), PaintAttributes
- * \endif
  */
 QFont QwtText::usedFont(const QFont& defaultFont) const
 {
-    if (m_data->paintAttributes & PaintUsingTextFont)
-        return m_data->font;
+    QWT_DC(d);
+    if (d->paintAttributes & PaintUsingTextFont)
+        return d->font;
 
     return defaultFont;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the format of the text
  * @return The format of the text
  * @note This function was introduced in QWT7.0
- * \endif
  *
- * \if CHINESE
- * @brief 返回文本的格式
- * @return 文本的格式
- * @note 此函数在 QWT7.0 中引入
- * \endif
  */
 QwtText::TextFormat QwtText::format() const
 {
-    return m_data->format;
+    QWT_DC(d);
+    return d->format;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the pen color used for drawing the text
  * @param color Color to set
  * @note Setting the color might have no effect, when the text contains control sequences for setting colors.
  * @sa color(), usedColor()
- * \endif
  *
- * \if CHINESE
- * @brief 设置用于绘制文本的画笔颜色
- * @param color 要设置的颜色
- * @note 如果文本包含设置颜色的控制序列，设置颜色可能无效。
- * @sa color(), usedColor()
- * \endif
  */
 void QwtText::setColor(const QColor& color)
 {
-    m_data->color = color;
+    QWT_D(d);
+    d->color = color;
     setPaintAttribute(PaintUsingTextColor);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen color used for painting the text
  * @return Current color
  * @sa setColor(), usedColor()
- * \endif
  *
- * \if CHINESE
- * @brief 获取用于绘制文本的画笔颜色
- * @return 当前颜色
- * @sa setColor(), usedColor()
- * \endif
  */
 QColor QwtText::color() const
 {
-    return m_data->color;
+    QWT_DC(d);
+    return d->color;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the color of the text, if it has one, otherwise return defaultColor
  * @param defaultColor Default color to use if text has no color
  * @return Color used for drawing the text
  * @sa setColor(), color(), PaintAttributes
- * \endif
  *
- * \if CHINESE
- * @brief 返回文本的颜色，如果有则返回，否则返回 defaultColor
- * @param defaultColor 如果文本没有颜色则使用的默认颜色
- * @return 用于绘制文本的颜色
- * @sa setColor(), color(), PaintAttributes
- * \endif
  */
 QColor QwtText::usedColor(const QColor& defaultColor) const
 {
-    if (m_data->paintAttributes & PaintUsingTextColor)
-        return m_data->color;
+    QWT_DC(d);
+    if (d->paintAttributes & PaintUsingTextColor)
+        return d->color;
 
     return defaultColor;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the radius for the corners of the border frame
  * @param radius Radius of a rounded corner
  * @sa borderRadius(), setBorderPen(), setBackgroundBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 设置边框框架角的半径
- * @param radius 圆角的半径
- * @sa borderRadius(), setBorderPen(), setBackgroundBrush()
- * \endif
  */
 void QwtText::setBorderRadius(double radius)
 {
-    m_data->borderRadius = qwtMaxF(0.0, radius);
+    QWT_D(d);
+    d->borderRadius = qwtMaxF(0.0, radius);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the radius for the corners of the border frame
  * @return Radius for the corners of the border frame
  * @sa setBorderRadius(), borderPen(), backgroundBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边框框架角的半径
- * @return 边框框架角的半径
- * @sa setBorderRadius(), borderPen(), backgroundBrush()
- * \endif
  */
 double QwtText::borderRadius() const
 {
-    return m_data->borderRadius;
+    QWT_DC(d);
+    return d->borderRadius;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the background pen (border pen)
  * @param pen Background pen
  * @sa borderPen(), setBackgroundBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 设置背景画笔（边框画笔）
- * @param pen 背景画笔
- * @sa borderPen(), setBackgroundBrush()
- * \endif
  */
 void QwtText::setBorderPen(const QPen& pen)
 {
-    m_data->borderPen = pen;
+    QWT_D(d);
+    d->borderPen = pen;
     setPaintAttribute(PaintBackground);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the background pen (border pen)
  * @return Background pen
  * @sa setBorderPen(), backgroundBrush()
- * \endif
  *
- * \if CHINESE
- * @brief 获取背景画笔（边框画笔）
- * @return 背景画笔
- * @sa setBorderPen(), backgroundBrush()
- * \endif
  */
 QPen QwtText::borderPen() const
 {
-    return m_data->borderPen;
+    QWT_DC(d);
+    return d->borderPen;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the background brush
  * @param brush Background brush
  * @sa backgroundBrush(), setBorderPen()
- * \endif
  *
- * \if CHINESE
- * @brief 设置背景画刷
- * @param brush 背景画刷
- * @sa backgroundBrush(), setBorderPen()
- * \endif
  */
 void QwtText::setBackgroundBrush(const QBrush& brush)
 {
-    m_data->backgroundBrush = brush;
+    QWT_D(d);
+    d->backgroundBrush = brush;
     setPaintAttribute(PaintBackground);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the background brush
  * @return Background brush
  * @sa setBackgroundBrush(), borderPen()
- * \endif
  *
- * \if CHINESE
- * @brief 获取背景画刷
- * @return 背景画刷
- * @sa setBackgroundBrush(), borderPen()
- * \endif
  */
 QBrush QwtText::backgroundBrush() const
 {
-    return m_data->backgroundBrush;
+    QWT_DC(d);
+    return d->backgroundBrush;
 }
 
 /**
- * \if ENGLISH
  * @brief Change a paint attribute
  * @param attribute Paint attribute to change
  * @param on On/Off
  * @note Used by setFont(), setColor(), setBorderPen() and setBackgroundBrush()
  * @sa testPaintAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 更改绘制属性
- * @param attribute 要更改的绘制属性
- * @param on 开启/关闭
- * @note 由 setFont(), setColor(), setBorderPen() 和 setBackgroundBrush() 使用
- * @sa testPaintAttribute()
- * \endif
  */
 void QwtText::setPaintAttribute(PaintAttribute attribute, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test a paint attribute
  * @param attribute Paint attribute to test
  * @return true, if attribute is enabled
  * @sa setPaintAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 测试绘制属性
- * @param attribute 要测试的绘制属性
- * @return 如果属性启用则返回 true
- * @sa setPaintAttribute()
- * \endif
  */
 bool QwtText::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Change a layout attribute
  * @param attribute Layout attribute to change
  * @param on On/Off
  * @sa testLayoutAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 更改布局属性
- * @param attribute 要更改的布局属性
- * @param on 开启/关闭
- * @sa testLayoutAttribute()
- * \endif
  */
 void QwtText::setLayoutAttribute(LayoutAttribute attribute, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->layoutAttributes |= attribute;
+        d->layoutAttributes |= attribute;
     else
-        m_data->layoutAttributes &= ~attribute;
+        d->layoutAttributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test a layout attribute
  * @param attribute Layout attribute to test
  * @return true, if attribute is enabled
  * @sa setLayoutAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 测试布局属性
- * @param attribute 要测试的布局属性
- * @return 如果属性启用则返回 true
- * @sa setLayoutAttribute()
- * \endif
  */
 bool QwtText::testLayoutAttribute(LayoutAttribute attribute) const
 {
-    return m_data->layoutAttributes | attribute;
+    QWT_DC(d);
+    return d->layoutAttributes | attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Find the height for a given width
  * @param width Width
  * @return Calculated height
  * @sa heightForWidth(double, const QFont&)
- * \endif
  *
- * \if CHINESE
- * @brief 计算给定宽度的高度
- * @param width 宽度
- * @return 计算的高度
- * @sa heightForWidth(double, const QFont&)
- * \endif
  */
 double QwtText::heightForWidth(double width) const
 {
@@ -789,24 +627,16 @@ double QwtText::heightForWidth(double width) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the height for a given width
  * @param width Width
  * @param defaultFont Font used for the calculation if the text has no font
  * @return Calculated height
  * @sa heightForWidth(double)
- * \endif
  *
- * \if CHINESE
- * @brief 计算给定宽度的高度
- * @param width 宽度
- * @param defaultFont 如果文本没有字体，用于计算的字体
- * @return 计算的高度
- * @sa heightForWidth(double)
- * \endif
  */
 double QwtText::heightForWidth(double width, const QFont& defaultFont) const
 {
+    QWT_DC(d);
     // We want to calculate in screen metrics. So
     // we need a font that uses screen metrics
 
@@ -814,32 +644,25 @@ double QwtText::heightForWidth(double width, const QFont& defaultFont) const
 
     double h = 0;
 
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
 
-        h = m_data->textEngine->heightForWidth(font, m_data->renderFlags, m_data->text, width + left + right);
+        h = d->textEngine->heightForWidth(font, d->renderFlags, d->text, width + left + right);
 
         h -= top + bottom;
     } else {
-        h = m_data->textEngine->heightForWidth(font, m_data->renderFlags, m_data->text, width);
+        h = d->textEngine->heightForWidth(font, d->renderFlags, d->text, width);
     }
 
     return h;
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the size that is needed to render text
  * @return Calculated size
  * @sa textSize(const QFont&)
- * \endif
  *
- * \if CHINESE
- * @brief 返回渲染文本所需的尺寸
- * @return 计算的尺寸
- * @sa textSize(const QFont&)
- * \endif
  */
 QSizeF QwtText::textSize() const
 {
@@ -847,37 +670,30 @@ QSizeF QwtText::textSize() const
 }
 
 /**
- * \if ENGLISH
  * @brief Returns the size that is needed to render text
  * @param defaultFont Font of the text
  * @return Calculated size
  * @sa textSize()
- * \endif
  *
- * \if CHINESE
- * @brief 返回渲染文本所需的尺寸
- * @param defaultFont 文本字体
- * @return 计算的尺寸
- * @sa textSize()
- * \endif
  */
 QSizeF QwtText::textSize(const QFont& defaultFont) const
 {
+    QWT_DC(d);
     // We want to calculate in screen metrics. So
     // we need a font that uses screen metrics
 
     const QFont font = QwtPainter::scaledFont(usedFont(defaultFont));
 
     if (!m_layoutCache->textSize.isValid() || m_layoutCache->font != font) {
-        m_layoutCache->textSize = m_data->textEngine->textSize(font, m_data->renderFlags, m_data->text);
+        m_layoutCache->textSize = d->textEngine->textSize(font, d->renderFlags, d->text);
         m_layoutCache->font     = font;
     }
 
     QSizeF sz = m_layoutCache->textSize;
 
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
         sz -= QSizeF(left + right, top + bottom);
     }
 
@@ -885,34 +701,27 @@ QSizeF QwtText::textSize(const QFont& defaultFont) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a text into a rectangle
  * @param painter Painter
  * @param rect Rectangle to draw text into
  * @sa textSize()
- * \endif
  *
- * \if CHINESE
- * @brief 在矩形区域内绘制文本
- * @param painter 绘制器
- * @param rect 绘制文本的矩形区域
- * @sa textSize()
- * \endif
  */
 void QwtText::draw(QPainter* painter, const QRectF& rect) const
 {
-    if (m_data->paintAttributes & PaintBackground) {
-        if (m_data->borderPen != Qt::NoPen || m_data->backgroundBrush != Qt::NoBrush) {
+    QWT_DC(d);
+    if (d->paintAttributes & PaintBackground) {
+        if (d->borderPen != Qt::NoPen || d->backgroundBrush != Qt::NoBrush) {
             painter->save();
 
-            painter->setPen(m_data->borderPen);
-            painter->setBrush(m_data->backgroundBrush);
+            painter->setPen(d->borderPen);
+            painter->setBrush(d->backgroundBrush);
 
-            if (m_data->borderRadius == 0) {
+            if (d->borderRadius == 0) {
                 QwtPainter::drawRect(painter, rect);
             } else {
                 painter->setRenderHint(QPainter::Antialiasing, true);
-                painter->drawRoundedRect(rect, m_data->borderRadius, m_data->borderRadius);
+                painter->drawRoundedRect(rect, d->borderRadius, d->borderRadius);
             }
 
             painter->restore();
@@ -921,24 +730,24 @@ void QwtText::draw(QPainter* painter, const QRectF& rect) const
 
     painter->save();
 
-    if (m_data->paintAttributes & PaintUsingTextFont) {
-        painter->setFont(m_data->font);
+    if (d->paintAttributes & PaintUsingTextFont) {
+        painter->setFont(d->font);
     }
 
-    if (m_data->paintAttributes & PaintUsingTextColor) {
-        if (m_data->color.isValid())
-            painter->setPen(m_data->color);
+    if (d->paintAttributes & PaintUsingTextColor) {
+        if (d->color.isValid())
+            painter->setPen(d->color);
     }
 
     QRectF expandedRect = rect;
-    if (m_data->layoutAttributes & MinimumLayout) {
+    if (d->layoutAttributes & MinimumLayout) {
         // We want to calculate in screen metrics. So
         // we need a font that uses screen metrics
 
         const QFont font = QwtPainter::scaledFont(painter->font());
 
         double left, right, top, bottom;
-        m_data->textEngine->textMargins(font, m_data->text, left, right, top, bottom);
+        d->textEngine->textMargins(font, d->text, left, right, top, bottom);
 
         expandedRect.setTop(rect.top() - top);
         expandedRect.setBottom(rect.bottom() + bottom);
@@ -946,13 +755,12 @@ void QwtText::draw(QPainter* painter, const QRectF& rect) const
         expandedRect.setRight(rect.right() + right);
     }
 
-    m_data->textEngine->draw(painter, expandedRect, m_data->renderFlags, m_data->text);
+    d->textEngine->draw(painter, expandedRect, d->renderFlags, d->text);
 
     painter->restore();
 }
 
 /**
- * \if ENGLISH
  * @brief Find the text engine for a text format
  * @details In case of QwtText::AutoText the first text engine (beside QwtPlainTextEngine) is returned,
  *          where QwtTextEngine::mightRender returns true. If there is none QwtPlainTextEngine is returned.
@@ -961,17 +769,7 @@ void QwtText::draw(QPainter* painter, const QRectF& rect) const
  * @param format Text format
  * @return Corresponding text engine
  * @sa textEngine(QwtText::TextFormat)
- * \endif
  *
- * \if CHINESE
- * @brief 查找文本格式对应的文本引擎
- * @details 对于 QwtText::AutoText，返回第一个（除 QwtPlainTextEngine 外）QwtTextEngine::mightRender 返回 true 的文本引擎。
- *          如果没有，返回 QwtPlainTextEngine。如果没有为该格式注册文本引擎，返回 QwtPlainTextEngine。
- * @param text 文本，AutoText 时需要
- * @param format 文本格式
- * @return 对应的文本引擎
- * @sa textEngine(QwtText::TextFormat)
- * \endif
  */
 const QwtTextEngine* QwtText::textEngine(const QString& text, QwtText::TextFormat format)
 {
@@ -979,7 +777,6 @@ const QwtTextEngine* QwtText::textEngine(const QString& text, QwtText::TextForma
 }
 
 /**
- * \if ENGLISH
  * @brief Assign/Replace a text engine for a text format
  * @details With setTextEngine it is possible to extend Qwt with other types of text formats.
  *          For QwtText::PlainText it is not allowed to assign a engine == nullptr.
@@ -987,17 +784,7 @@ const QwtTextEngine* QwtText::textEngine(const QString& text, QwtText::TextForma
  * @param engine Text engine
  * @warning Using QwtText::AutoText does nothing.
  * @sa textEngine(QwtText::TextFormat)
- * \endif
  *
- * \if CHINESE
- * @brief 为文本格式分配/替换文本引擎
- * @details 使用 setTextEngine 可以扩展 Qwt 以支持其他类型的文本格式。
- *          对于 QwtText::PlainText，不允许分配 engine == nullptr。
- * @param format 文本格式
- * @param engine 文本引擎
- * @warning 使用 QwtText::AutoText 不会执行任何操作。
- * @sa textEngine(QwtText::TextFormat)
- * \endif
  */
 void QwtText::setTextEngine(QwtText::TextFormat format, QwtTextEngine* engine)
 {
@@ -1005,21 +792,12 @@ void QwtText::setTextEngine(QwtText::TextFormat format, QwtTextEngine* engine)
 }
 
 /**
- * \if ENGLISH
  * @brief Find the text engine for a text format
  * @details textEngine can be used to find out if a text format is supported.
  * @param format Text format
  * @return The text engine, or nullptr if no engine is available.
  * @sa textEngine(const QString&, QwtText::TextFormat)
- * \endif
  *
- * \if CHINESE
- * @brief 查找文本格式对应的文本引擎
- * @details textEngine 可用于查找是否支持某个文本格式。
- * @param format 文本格式
- * @return 文本引擎，如果没有可用的引擎则返回 nullptr。
- * @sa textEngine(const QString&, QwtText::TextFormat)
- * \endif
  */
 const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
 {
@@ -1027,33 +805,23 @@ const QwtTextEngine* QwtText::textEngine(QwtText::TextFormat format)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if text is null
  * @return text().isNull()
- * \endif
  *
- * \if CHINESE
- * @brief 检查文本是否为空
- * @return text().isNull()
- * \endif
  */
 bool QwtText::isNull() const
 {
-    return m_data->text.isNull();
+    QWT_DC(d);
+    return d->text.isNull();
 }
 
 /**
- * \if ENGLISH
  * @brief Check if text is empty
  * @return text().isEmpty()
- * \endif
  *
- * \if CHINESE
- * @brief 检查文本是否为空字符串
- * @return text().isEmpty()
- * \endif
  */
 bool QwtText::isEmpty() const
 {
-    return m_data->text.isEmpty();
+    QWT_DC(d);
+    return d->text.isEmpty();
 }

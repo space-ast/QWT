@@ -33,57 +33,30 @@ class QPainterPath;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for curve fitting algorithms
- * \endif
- * \if CHINESE
- * @brief 曲线拟合算法的抽象基类
- * \endif
  */
 class QWT_EXPORT QwtCurveFitter
 {
   public:
     /*!
-       \if ENGLISH
-       \brief Preferred mode of the fitting algorithm
-       \details Even if a QPainterPath can always be created from a QPolygonF,
+       @brief Preferred mode of the fitting algorithm
+       @details Even if a QPainterPath can always be created from a QPolygonF,
                 the overhead of the conversion can be avoided by indicating
                 the preference of the implementation to the application code.
-       \endif
-       \if CHINESE
-       \brief 拟合算法的首选模式
-       \details 即使总是可以从 QPolygonF 创建 QPainterPath，
-                但通过向应用程序代码指示实现的首选项，
-                可以避免转换的开销。
-       \endif
      */
     enum Mode
     {
         /*!
-           \if ENGLISH
            The fitting algorithm creates a polygon - the implementation
            of fitCurvePath() simply wraps the polygon into a path.
-           \sa QwtWeedingCurveFitter
-           \endif
-           \if CHINESE
-           拟合算法创建多边形 - fitCurvePath() 的实现
-           只是将多边形包装到路径中。
-           \sa QwtWeedingCurveFitter
-           \endif
+           @sa QwtWeedingCurveFitter
          */
         Polygon,
 
         /*!
-           \if ENGLISH
            The fitting algorithm creates a painter path - the implementation
            of fitCurve() extracts a polygon from the path.
-           \sa QwtSplineCurveFitter
-           \endif
-           \if CHINESE
-           拟合算法创建绘制器路径 - fitCurve() 的实现
-           从路径中提取多边形。
-           \sa QwtSplineCurveFitter
-           \endif
+           @sa QwtSplineCurveFitter
          */
         Path
     };
@@ -103,7 +76,8 @@ class QWT_EXPORT QwtCurveFitter
     explicit QwtCurveFitter( Mode mode );
 
   private:
-    Q_DISABLE_COPY(QwtCurveFitter)
+    QwtCurveFitter(const QwtCurveFitter&) = delete;
+    QwtCurveFitter& operator=(const QwtCurveFitter&) = delete;
 
     const Mode m_mode;
 };

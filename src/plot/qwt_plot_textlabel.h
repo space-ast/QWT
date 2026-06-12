@@ -33,7 +33,6 @@
 class QwtText;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a text label
  * @details QwtPlotTextLabel displays a text label aligned to the plot canvas.
  * 
@@ -45,7 +44,7 @@ class QwtText;
  * 
  * @par Example
  *  The following code shows how to add a title.
- *  \code
+ *  @code
  *    QwtText title( "Plot Title" );
  *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
  * 
@@ -56,36 +55,10 @@ class QwtText;
  *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
  *    titleItem->setText( title );
  *    titleItem->attach( plot );
- *  \endcode
+ *  @endcode
  * 
  * @sa QwtPlotMarker
- * \endif
  * 
- * \if CHINESE
- * @brief 显示文本标签的绘图项
- * @details QwtPlotTextLabel 显示一个与绘图画布对齐的文本标签。
- * 
- *          与 QwtPlotMarker 不同，标签的位置与绘图坐标无关。
- * 
- *          由于绘制文本是一项昂贵的操作，标签会被缓存在 pixmap 中以加快重绘速度。
- * 
- * @par 示例
- *  以下代码显示如何添加标题。
- *  \code
- *    QwtText title( "Plot Title" );
- *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
- * 
- *    QFont font;
- *    font.setBold( true );
- *    title.setFont( font );
- * 
- *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
- *    titleItem->setText( title );
- *    titleItem->attach( plot );
- *  \endcode
- * 
- * @sa QwtPlotMarker
- * \endif
  */
 
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
@@ -94,7 +67,7 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
     // Constructor
     QwtPlotTextLabel();
     // Destructor
-    virtual ~QwtPlotTextLabel();
+    ~QwtPlotTextLabel() override;
 
     // Get the runtime type information
     virtual int rtti() const override;
@@ -114,24 +87,19 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 
   protected:
     /**
-     * \if ENGLISH
      * @brief Draw the text label
-     * \endif
      */
     virtual void draw( QPainter*,
         const QwtScaleMap&, const QwtScaleMap&,
         const QRectF&) const override;
 
     /**
-     * \if ENGLISH
      * @brief Invalidate the cached pixmap
-     * \endif
      */
     void invalidateCache();
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotTextLabel)
 };
 
 #endif

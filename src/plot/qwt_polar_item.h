@@ -24,35 +24,19 @@ class QwtScaleMap;
 class QwtScaleDiv;
 
 /**
- * \if ENGLISH
  * @brief Base class for items on a polar plot
  * @details A QwtPolarItem is "something that can be painted on the canvas".
  *          It is connected to the QwtPolar framework by a couple of virtual methods,
  *          that are individually implemented in derived item classes.
  *          QwtPolar offers an implementation of the most common types of items,
  *          but deriving from QwtPolarItem makes it easy to implement additional types of items.
- * \endif
- *
- * \if CHINESE
- * @brief 极坐标绘图项的基类
- * @details QwtPolarItem 是"可以在画布上绘制的东西"。
- *          它通过几个虚方法连接到 QwtPolar 框架，这些方法在派生项类中单独实现。
- *          QwtPolar 提供了最常见项类型的实现，但派生自 QwtPolarItem 可以轻松实现其他类型的项。
- * \endif
  */
 class QWT_EXPORT QwtPolarItem
 {
   public:
     /*!
-     * \if ENGLISH
      * @brief Runtime type information
      * @details RttiValues is used to cast plot items, without having to enable runtime type information of the compiler.
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 运行时类型信息
-     * @details RttiValues 用于转换绘图项，而无需启用编译器的运行时类型信息。
-     * \endif
      */
     enum RttiValues
     {
@@ -79,15 +63,8 @@ class QWT_EXPORT QwtPolarItem
     };
 
     /*!
-     * \if ENGLISH
      * @brief Plot Item Attributes
      * @sa setItemAttribute(), testItemAttribute()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 绘图项属性
-     * @sa setItemAttribute(), testItemAttribute()
-     * \endif
      */
     enum ItemAttribute
     {
@@ -104,15 +81,8 @@ class QWT_EXPORT QwtPolarItem
     Q_DECLARE_FLAGS( ItemAttributes, ItemAttribute )
 
     /*!
-     * \if ENGLISH
      * @brief Render hints
      * @sa setRenderHint(), testRenderHint()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 渲染提示
-     * @sa setRenderHint(), testRenderHint()
-     * \endif
      */
     enum RenderHint
     {
@@ -180,25 +150,13 @@ class QWT_EXPORT QwtPolarItem
     virtual void legendChanged();
 
     /*!
-     * \if ENGLISH
      * @brief Draw the item
-     * @param[in] painter Painter
-     * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-     * @param[in] radialMap Maps radius values into painter coordinates
-     * @param[in] pole Position of the pole in painter coordinates
-     * @param[in] radius Radius of the complete plot area in painter coordinates
-     * @param[in] canvasRect Contents rect of the canvas in painter coordinates
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 绘制项
-     * @param[in] painter 画师
-     * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
-     * @param[in] radialMap 将半径值映射到画师坐标
-     * @param[in] pole 画师坐标中极点的位置
-     * @param[in] radius 画师坐标中完整绘图区域的半径
-     * @param[in] canvasRect 画师坐标中画布的内容矩形
-     * \endif
+     * @param painter Painter
+     * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+     * @param radialMap Maps radius values into painter coordinates
+     * @param pole Position of the pole in painter coordinates
+     * @param radius Radius of the complete plot area in painter coordinates
+     * @param canvasRect Contents rect of the canvas in painter coordinates
      */
     virtual void draw( QPainter* painter,
         const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
@@ -226,10 +184,10 @@ class QWT_EXPORT QwtPolarItem
     virtual QwtGraphic legendIcon( int index, const QSizeF& ) const;
 
   private:
-    Q_DISABLE_COPY( QwtPolarItem )
+    QwtPolarItem(const QwtPolarItem&) = delete;
+    QwtPolarItem& operator=(const QwtPolarItem&) = delete;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::ItemAttributes )

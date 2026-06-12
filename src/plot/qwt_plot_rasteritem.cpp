@@ -41,9 +41,11 @@
 
 class QwtPlotRasterItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotRasterItem)
   public:
-    PrivateData()
-        : alpha( -1 )
+    PrivateData(QwtPlotRasterItem* p)
+        : q_ptr(p)
+        , alpha( -1 )
         , paintAttributes( QwtPlotRasterItem::PaintInDeviceResolution )
     {
         cache.policy = QwtPlotRasterItem::NoCache;
@@ -53,7 +55,7 @@ class QwtPlotRasterItem::PrivateData
 
     QwtPlotRasterItem::PaintAttributes paintAttributes;
 
-    struct ImageCache
+    mutable struct ImageCache
     {
         QwtPlotRasterItem::CachePolicy policy;
         QRectF area;
@@ -448,57 +450,37 @@ static void qwtToRgba( const QImage* from, QImage* to,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the raster item
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 栅格项的标题
- * \endif
  */
 QwtPlotRasterItem::QwtPlotRasterItem( const QString& title )
-    : QwtPlotItem( QwtText( title ) )
+    : QwtPlotItem( QwtText( title ) ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with title
  * @param[in] title Title of the raster item
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数（带标题）
- * @param[in] title 栅格项的标题
- * \endif
  */
 QwtPlotRasterItem::QwtPlotRasterItem( const QwtText& title )
-    : QwtPlotItem( title )
+    : QwtPlotItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotRasterItem::~QwtPlotRasterItem()
 {
-    delete m_data;
 }
 
 void QwtPlotRasterItem::init()
 {
-    m_data = new PrivateData();
-
     setItemAttribute( QwtPlotItem::AutoScale, true );
     setItemAttribute( QwtPlotItem::Legend, false );
 
@@ -506,50 +488,35 @@ void QwtPlotRasterItem::init()
 }
 
 /**
- * \if ENGLISH
  * @brief Set a paint attribute
  * @param[in] attribute Paint attribute
  * @param[in] on On/Off
  * @sa PaintAttribute, testPaintAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 设置绘制属性
- * @param[in] attribute 绘制属性
- * @param[in] on 开/关
- * @sa PaintAttribute, testPaintAttribute()
- * \endif
  */
 void QwtPlotRasterItem::setPaintAttribute( PaintAttribute attribute, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test a paint attribute
  * @param[in] attribute Paint attribute
  * @return True, when attribute is enabled
  * @sa PaintAttribute, setPaintAttribute()
- * \endif
  *
- * \if CHINESE
- * @brief 测试绘制属性
- * @param[in] attribute 绘制属性
- * @return 如果属性启用则返回 true
- * @sa PaintAttribute, setPaintAttribute()
- * \endif
  */
 bool QwtPlotRasterItem::testPaintAttribute( PaintAttribute attribute ) const
 {
-    return ( m_data->paintAttributes & attribute );
+    QWT_DC(d);
+    return ( d->paintAttributes & attribute );
 }
 
 /**
- * \if ENGLISH
  * @brief Set an alpha value for the raster data
  * @details Often a plot has several types of raster data organized in layers.
  *          (e.g. a geographical map, with weather statistics).
@@ -562,78 +529,51 @@ bool QwtPlotRasterItem::testPaintAttribute( PaintAttribute attribute ) const
  *          The default alpha value is -1.
  * @param[in] alpha Alpha value
  * @sa alpha()
- * \endif
  *
- * \if CHINESE
- * @brief 设置栅格数据的 alpha 值
- * @details 通常，一个绘图会有几种类型的栅格数据组织在层中。
- *          （例如带有天气统计数据的地理地图）。
- *          使用 setAlpha() 可以轻松堆叠栅格项。
- *          alpha 值是 [0, 255] 的值，用于控制图像的透明度。
- *          0 表示完全透明的颜色，255 表示完全不透明的颜色。
- *          - alpha >= 0: renderImage() 返回的像素的所有 alpha 值都将设置为 alpha，
- *            除了 alpha 值为 0 的像素（无效像素）。
- *          - alpha < 0: renderImage() 返回的 alpha 值不会改变。
- *          默认 alpha 值为 -1。
- * @param[in] alpha Alpha 值
- * @sa alpha()
- * \endif
  */
 void QwtPlotRasterItem::setAlpha( int alpha )
 {
+    QWT_D(d);
     if ( alpha < 0 )
         alpha = -1;
 
     if ( alpha > 255 )
         alpha = 255;
 
-    if ( alpha != m_data->alpha )
+    if ( alpha != d->alpha )
     {
-        m_data->alpha = alpha;
+        d->alpha = alpha;
 
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the alpha value of the raster item
  * @return Alpha value of the raster item
  * @sa setAlpha()
- * \endif
  *
- * \if CHINESE
- * @brief 获取栅格项的 alpha 值
- * @return 栅格项的 alpha 值
- * @sa setAlpha()
- * \endif
  */
 int QwtPlotRasterItem::alpha() const
 {
-    return m_data->alpha;
+    QWT_DC(d);
+    return d->alpha;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the cache policy
  * @details The default policy is NoCache
  * @param[in] policy Cache policy
  * @sa CachePolicy, cachePolicy()
- * \endif
  *
- * \if CHINESE
- * @brief 更改缓存策略
- * @details 默认策略是 NoCache
- * @param[in] policy 缓存策略
- * @sa CachePolicy, cachePolicy()
- * \endif
  */
 void QwtPlotRasterItem::setCachePolicy(
     QwtPlotRasterItem::CachePolicy policy )
 {
-    if ( m_data->cache.policy != policy )
+    QWT_D(d);
+    if ( d->cache.policy != policy )
     {
-        m_data->cache.policy = policy;
+        d->cache.policy = policy;
 
         invalidateCache();
         itemChanged();
@@ -641,43 +581,31 @@ void QwtPlotRasterItem::setCachePolicy(
 }
 
 /**
- * \if ENGLISH
  * @brief Get the cache policy
  * @return Cache policy
  * @sa CachePolicy, setCachePolicy()
- * \endif
  *
- * \if CHINESE
- * @brief 获取缓存策略
- * @return 缓存策略
- * @sa CachePolicy, setCachePolicy()
- * \endif
  */
 QwtPlotRasterItem::CachePolicy QwtPlotRasterItem::cachePolicy() const
 {
-    return m_data->cache.policy;
+    QWT_DC(d);
+    return d->cache.policy;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache
  * @sa setCachePolicy()
- * \endif
  *
- * \if CHINESE
- * @brief 使绘制缓存失效
- * @sa setCachePolicy()
- * \endif
  */
 void QwtPlotRasterItem::invalidateCache()
 {
-    m_data->cache.image = QImage();
-    m_data->cache.area = QRect();
-    m_data->cache.size = QSize();
+    QWT_D(d);
+    d->cache.image = QImage();
+    d->cache.area = QRect();
+    d->cache.size = QSize();
 }
 
 /**
- * \if ENGLISH
  * @brief Pixel hint
  * @details The geometry of a pixel is used to calculate the resolution and
  *          alignment of the rendered image.
@@ -691,19 +619,7 @@ void QwtPlotRasterItem::invalidateCache()
  * @param[in] area In most implementations the resolution of the data doesn't depend on the requested area
  * @return Bounding rectangle of a pixel
  * @sa render(), renderImage()
- * \endif
  *
- * \if CHINESE
- * @brief 像素提示
- * @details 像素的几何形状用于计算渲染图像的分辨率和对齐方式。
- *          提示的宽度和高度需要是两个相邻点之间的水平和垂直距离。
- *          提示的中心必须是任何点的位置（不重要哪个点）。
- *          限制图像的分辨率可能会显著提高性能，并大大减少从栅格数据渲染 QImage 时的内存使用量。
- *          默认实现返回空矩形（QRectF()），意味着图像将以目标设备（如屏幕）分辨率渲染。
- * @param[in] area 在大多数实现中，数据的分辨率不依赖于请求的区域
- * @return 像素的边界矩形
- * @sa render(), renderImage()
- * \endif
  */
 QRectF QwtPlotRasterItem::pixelHint( const QRectF& area ) const
 {
@@ -712,30 +628,22 @@ QRectF QwtPlotRasterItem::pixelHint( const QRectF& area ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the raster data
  * @param[in] painter Painter
  * @param[in] xMap X-Scale Map
  * @param[in] yMap Y-Scale Map
  * @param[in] canvasRect Contents rectangle of the plot canvas
- * \endif
  *
- * \if CHINESE
- * @brief 绘制栅格数据
- * @param[in] painter 画笔
- * @param[in] xMap X 比例尺映射
- * @param[in] yMap Y 比例尺映射
- * @param[in] canvasRect 绘图画布的内容矩形
- * \endif
  */
 void QwtPlotRasterItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
-    if ( canvasRect.isEmpty() || m_data->alpha == 0 )
+    QWT_DC(d);
+    if ( canvasRect.isEmpty() || d->alpha == 0 )
         return;
 
-    const bool doCache = qwtUseCache( m_data->cache.policy, painter );
+    const bool doCache = qwtUseCache( d->cache.policy, painter );
 
     const QwtInterval xInterval = interval( Qt::XAxis );
     const QwtInterval yInterval = interval( Qt::YAxis );
@@ -885,21 +793,12 @@ void QwtPlotRasterItem::draw( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding interval for an axis
  * @details This method is intended to be reimplemented by derived classes.
  *          The default implementation returns an invalid interval.
  * @param[in] axis X, Y, or Z axis
  * @return Bounding interval for an axis
- * \endif
  *
- * \if CHINESE
- * @brief 获取轴的边界区间
- * @details 此方法旨在由派生类重新实现。
- *          默认实现返回无效区间。
- * @param[in] axis X、Y 或 Z 轴
- * @return 轴的边界区间
- * \endif
  */
 QwtInterval QwtPlotRasterItem::interval(Qt::Axis axis) const
 {
@@ -908,17 +807,10 @@ QwtInterval QwtPlotRasterItem::interval(Qt::Axis axis) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of the data
  * @return Bounding rectangle of the data
  * @sa QwtPlotRasterItem::interval()
- * \endif
  *
- * \if CHINESE
- * @brief 获取数据的边界矩形
- * @return 数据的边界矩形
- * @sa QwtPlotRasterItem::interval()
- * \endif
  */
 QRectF QwtPlotRasterItem::boundingRect() const
 {
@@ -964,17 +856,18 @@ QImage QwtPlotRasterItem::compose(
     const QRectF& imageArea, const QRectF& paintRect,
     const QSize& imageSize, bool doCache) const
 {
+    QWT_DC(d);
     QImage image;
     if ( imageArea.isEmpty() || paintRect.isEmpty() || imageSize.isEmpty() )
         return image;
 
     if ( doCache )
     {
-        if ( !m_data->cache.image.isNull()
-            && m_data->cache.area == imageArea
-            && m_data->cache.size == paintRect.size() )
+        if ( !d->cache.image.isNull()
+            && d->cache.area == imageArea
+            && d->cache.size == paintRect.size() )
         {
-            image = m_data->cache.image;
+            image = d->cache.image;
         }
     }
 
@@ -998,13 +891,13 @@ QImage QwtPlotRasterItem::compose(
 
         if ( doCache )
         {
-            m_data->cache.area = imageArea;
-            m_data->cache.size = paintRect.size();
-            m_data->cache.image = image;
+            d->cache.area = imageArea;
+            d->cache.size = paintRect.size();
+            d->cache.image = image;
         }
     }
 
-    if ( m_data->alpha >= 0 && m_data->alpha < 255 )
+    if ( d->alpha >= 0 && d->alpha < 255 )
     {
         QImage alphaImage( image.size(), QImage::Format_ARGB32 );
 
@@ -1028,19 +921,19 @@ QImage QwtPlotRasterItem::compose(
             if ( i == numThreads - 1 )
             {
                 tile.setHeight( image.height() - i * numRows );
-                qwtToRgba( &image, &alphaImage, tile, m_data->alpha );
+                qwtToRgba( &image, &alphaImage, tile, d->alpha );
             }
             else
             {
                 futures += QtConcurrent::run(
-                    &qwtToRgba, &image, &alphaImage, tile, m_data->alpha );
+                    &qwtToRgba, &image, &alphaImage, tile, d->alpha );
             }
         }
         for ( int i = 0; i < futures.size(); i++ )
             futures[i].waitForFinished();
 #else
         const QRect tile( 0, 0, image.width(), image.height() );
-        qwtToRgba( &image, &alphaImage, tile, m_data->alpha );
+        qwtToRgba( &image, &alphaImage, tile, d->alpha );
 #endif
         image = alphaImage;
     }
@@ -1049,15 +942,15 @@ QImage QwtPlotRasterItem::compose(
 }
 
 /*!
-   \brief Calculate a scale map for painting to an image
+   @brief Calculate a scale map for painting to an image
 
-   \param orientation Orientation, Qt::Horizontal means a X axis
-   \param map Scale map for rendering the plot item
-   \param area Area to be painted on the image
-   \param imageSize Image size
-   \param pixelSize Width/Height of a data pixel
+   @param orientation Orientation, Qt::Horizontal means a X axis
+   @param map Scale map for rendering the plot item
+   @param area Area to be painted on the image
+   @param imageSize Image size
+   @param pixelSize Width/Height of a data pixel
 
-   \return Calculated scale map
+   @return Calculated scale map
  */
 QwtScaleMap QwtPlotRasterItem::imageMap(
     Qt::Orientation orientation,

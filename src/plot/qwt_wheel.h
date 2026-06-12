@@ -31,21 +31,12 @@
 #include <qwidget.h>
 
 /**
- * \if ENGLISH
  * @brief The Wheel Widget
  * @details The wheel widget can be used to change values over a very large range
  *          in very small steps. Using the setMass() member, it can be configured
  *          as a flying wheel.
  *          The default range of the wheel is [0.0, 100.0]
- * \sa The radio example.
- * \endif
- * \if CHINESE
- * @brief 轮式控件
- * @details 轮式控件可用于在非常大的范围内以非常小的步长改变值。
- *          使用 setMass() 成员，可以将其配置为飞轮。
- *          轮的默认范围是 [0.0, 100.0]
- * \sa 收音机示例。
- * \endif
+ * @sa The radio example.
  */
 class QWT_EXPORT QwtWheel : public QWidget
 {
@@ -76,12 +67,13 @@ class QWT_EXPORT QwtWheel : public QWidget
     Q_PROPERTY( int wheelWidth READ wheelWidth WRITE setWheelWidth )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
+    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
     /// Constructor
     explicit QwtWheel( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtWheel();
+    ~QwtWheel() override;
 
     /// Return the current value
     double value() const;
@@ -115,6 +107,11 @@ class QWT_EXPORT QwtWheel : public QWidget
     void setBorderWidth( int );
     /// Return the outer border width
     int borderWidth() const;
+
+    /// Set flat style
+    void setFlatStyle( bool );
+    /// Return flat style
+    bool flatStyle() const;
 
     /// Set inverted appearance
     void setInverted( bool );
@@ -176,51 +173,27 @@ class QWT_EXPORT QwtWheel : public QWidget
   Q_SIGNALS:
 
     /**
-     * \if ENGLISH
      * @brief Notify a change of value
      * @details When tracking is enabled this signal will be emitted every
      *          time the value changes.
      * @param[in] value New value
-     * \sa setTracking()
-     * \endif
-     * \if CHINESE
-     * @brief 通知值变化
-     * @details 当启用跟踪时，每次值变化时都会发出此信号。
-     * @param[in] value 新值
-     * \sa setTracking()
-     * \endif
+     * @sa setTracking()
      */
     void valueChanged( double value );
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user presses the wheel with the mouse
-     * \endif
-     * \if CHINESE
-     * @brief 当用户用鼠标按下轮时发出此信号
-     * \endif
      */
     void wheelPressed();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user releases the mouse
-     * \endif
-     * \if CHINESE
-     * @brief 当用户释放鼠标时发出此信号
-     * \endif
      */
     void wheelReleased();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user moves the wheel with the mouse
      * @param[in] value New value
-     * \endif
-     * \if CHINESE
-     * @brief 当用户用鼠标移动轮时发出此信号
-     * @param[in] value 新值
-     * \endif
      */
     void wheelMoved( double value );
 
@@ -249,8 +222,7 @@ class QWT_EXPORT QwtWheel : public QWidget
     double alignedValue( double ) const;
     double boundedValue( double ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtWheel)
 };
 
 #endif

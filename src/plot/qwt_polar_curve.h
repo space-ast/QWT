@@ -19,34 +19,18 @@ class QwtSymbol;
 class QwtCurveFitter;
 
 /**
- * \if ENGLISH
  * @brief An item, that represents a series of points
  * @details A curve is the representation of a series of points in polar coordinates.
  *          The points are connected to the curve using the abstract QwtData interface.
  *
  * @sa QwtPolarPlot, QwtSymbol, QwtScaleMap
- * \endif
- *
- * \if CHINESE
- * @brief 表示一系列点的绘图项
- * @details 曲线是极坐标中一系列点的表示。点使用抽象的 QwtData 接口连接到曲线。
- *
- * @sa QwtPolarPlot, QwtSymbol, QwtScaleMap
- * \endif
  */
 class QWT_EXPORT QwtPolarCurve : public QwtPolarItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Curve styles
      * @sa setStyle(), style()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 曲线样式
-     * @sa setStyle(), style()
-     * \endif
      */
     enum CurveStyle
     {
@@ -54,16 +38,9 @@ public:
         NoCurve,
 
         /**
-         * \if ENGLISH
          * Connect the points with straight lines. The lines might
          * be interpolated depending on the 'Fitted' attribute. Curve
          * fitting can be configured using setCurveFitter().
-         * \endif
-         *
-         * \if CHINESE
-         * 用直线连接点。根据 'Fitted' 属性，线条可能会被插值。
-         * 可以使用 setCurveFitter() 配置曲线拟合。
-         * \endif
          */
         Lines,
 
@@ -72,42 +49,21 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Attributes how to represent the curve on the legend
      * @details If none of the flags is activated QwtPlotCurve tries to find
      *          a color representing the curve and paints a rectangle with it.
      *          In the default setting all attributes are off.
      * @sa setLegendAttribute(), testLegendAttribute()
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 在图例上表示曲线的属性
-     * @details 如果没有激活任何标志，QwtPlotCurve 会尝试找到代表曲线的颜色并用它绘制矩形。
-     *          在默认设置中，所有属性都是关闭的。
-     * @sa setLegendAttribute(), testLegendAttribute()
-     * \endif
      */
     enum LegendAttribute
     {
         /**
-         * \if ENGLISH
          * If the curveStyle() is not NoCurve a line is painted with the curvePen().
-         * \endif
-         *
-         * \if CHINESE
-         * 如果 curveStyle() 不是 NoCurve，则使用 curvePen() 绘制一条线。
-         * \endif
          */
         LegendShowLine = 0x01,
 
         /**
-         * \if ENGLISH
          * If the curve has a valid symbol it is painted.
-         * \endif
-         *
-         * \if CHINESE
-         * 如果曲线有有效的符号，则绘制该符号。
-         * \endif
          */
         LegendShowSymbol = 0x02
     };
@@ -122,7 +78,7 @@ public:
     explicit QwtPolarCurve(const QString& title);
 
     /// Destructor
-    virtual ~QwtPolarCurve();
+    ~QwtPolarCurve() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;
@@ -209,19 +165,18 @@ protected:
 private:
     QwtSeriesData< QwtPointPolar >* m_series;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarCurve)
 };
 
-//! \return the the curve data
+//! @return the the curve data
 inline const QwtSeriesData< QwtPointPolar >* QwtPolarCurve::data() const
 {
     return m_series;
 }
 
 /*!
-    \param i index
-    \return point at position i
+    @param i index
+    @return point at position i
  */
 inline QwtPointPolar QwtPolarCurve::sample(int i) const
 {

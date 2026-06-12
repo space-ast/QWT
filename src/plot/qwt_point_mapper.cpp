@@ -28,7 +28,9 @@
 #include "qwt_scale_map.h"
 #include "qwt_pixel_matrix.h"
 #include "qwt_series_data.h"
+#include "qwt_point_data.h"
 #include "qwt_math.h"
+#include "qwt_simd_argminmax.h"
 
 #include <qpolygon.h>
 #include <qimage.h>
@@ -73,7 +75,7 @@ static Qt::Orientation qwtProbeOrientation(const QwtSeriesData< QPointF >* serie
     if (x0 == xn)
         return Qt::Vertical;
 
-    const int step          = (to - from) / 10;
+    const int step          = qMax(1, (to - from) / 50);
     const bool isIncreasing = xn > x0;
 
     double x1 = x0;
@@ -198,31 +200,57 @@ private:
 
 template< class Polygon, class Point, class PolygonQuadrupel >
 static Polygon
-qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to,
+                 int reserveSize = 0)
 {
+    Polygon polyline;
+
+    // find first non-NaN sample
     int realFrom    = from;
     QPointF sample0 = series->sample(from);
-    // check nan/检查 NaN
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
+        sample0 = series->sample(realFrom);
     }
+    if (realFrom >= to && qwt_is_nan_or_inf(sample0))
+        return polyline;
+
+    if (reserveSize > 0)
+        polyline.reserve(reserveSize);
 
     PolygonQuadrupel q;
     q.start(qwtRoundValue(xMap.transform(sample0.x())), qwtRoundValue(yMap.transform(sample0.y())));
 
-    Polygon polyline;
-    for (int i = realFrom; i <= to; i++) {
-        const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
-        if (qwt_is_nan_or_inf(sample)) {
-            continue;
-        }
-        const int x = qwtRoundValue(xMap.transform(sample.x()));
-        const int y = qwtRoundValue(yMap.transform(sample.y()));
+    // linear scale fast path: avoid virtual transform() call per point
+    const bool linearPath = xMap.isLinear() && yMap.isLinear();
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
 
-        if (!q.append(x, y)) {
-            q.flush(polyline);
-            q.start(x, y);
+        for (int i = realFrom; i <= to; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qRound(sample.x() * xCnv + xOff);
+            const int y = qRound(sample.y() * yCnv + yOff);
+
+            if (!q.append(x, y)) {
+                q.flush(polyline);
+                q.start(x, y);
+            }
+        }
+    } else {
+        for (int i = realFrom; i <= to; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qwtRoundValue(xMap.transform(sample.x()));
+            const int y = qwtRoundValue(yMap.transform(sample.y()));
+
+            if (!q.append(x, y)) {
+                q.flush(polyline);
+                q.start(x, y);
+            }
         }
     }
     q.flush(polyline);
@@ -231,7 +259,7 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
 }
 
 template< class Polygon, class Point, class PolygonQuadrupel >
-static Polygon qwtMapPointsQuad(const Polygon& polyline)
+static Polygon qwtMapPointsQuad(const Polygon& polyline, int reserveSize = 0)
 {
     const int numPoints = polyline.size();
 
@@ -241,6 +269,8 @@ static Polygon qwtMapPointsQuad(const Polygon& polyline)
     const Point* points = polyline.constData();
 
     Polygon polylineXY;
+    if (reserveSize > 0)
+        polylineXY.reserve(reserveSize);
 
     PolygonQuadrupel q;
     q.start(points[ 0 ].x(), points[ 0 ].y());
@@ -267,6 +297,12 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     if (from > to)
         return polyline;
 
+    // estimate reserve sizes: 4 points per pixel dimension
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int yPixels = qAbs(qRound(yMap.p2() - yMap.p1())) + 1;
+    const int reserve1 = 4 * qMax(xPixels, yPixels) + 16;
+    const int reserve2 = 4 * qMin(xPixels, yPixels) + 16;
+
     /*
         probing some values, to decide if it is better
         to start with x or y coordinates
@@ -274,15 +310,461 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     const Qt::Orientation orientation = qwtProbeOrientation(series, from, to);
 
     if (orientation == Qt::Horizontal) {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(xMap, yMap, series, from, to);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
 
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(polyline);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(polyline, reserve2);
     } else {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(xMap, yMap, series, from, to);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
 
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(polyline);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(polyline, reserve2);
     }
 
+    return polyline;
+}
+
+// Binary search for visible range in monotonic X data with linear scale.
+// Returns true if the range was successfully narrowed.
+static bool qwtFindVisibleRange(const QwtScaleMap& xMap, const QwtSeriesData< QPointF >* series, int from, int to, int& visFrom,
+                                int& visTo)
+{
+    if (!xMap.isLinear() || to - from < 20)
+        return false;
+
+    const double x0 = series->sample(from).x();
+    const double xn = series->sample(to).x();
+    if (x0 == xn)
+        return false;
+
+    const bool increasing = xn > x0;
+
+    // quick monotonicity check by sampling (up to 50 probe points)
+    const int step = qMax(1, (to - from) / 50);
+    double prev    = x0;
+    for (int i = from + step; i < to; i += step) {
+        const double xi = series->sample(i).x();
+        if ((xi > prev) != increasing && xi != prev)
+            return false;
+        prev = xi;
+    }
+
+    const double visMin = qMin(xMap.s1(), xMap.s2());
+    const double visMax = qMax(xMap.s1(), xMap.s2());
+
+    // binary search for first visible index
+    int lo = from, hi = to;
+    if (increasing) {
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (series->sample(mid).x() < visMin)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        visFrom = qMax(from, lo - 1);
+
+        hi = to;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo + 1) / 2;
+            if (series->sample(mid).x() > visMax)
+                hi = mid - 1;
+            else
+                lo = mid;
+        }
+        visTo = qMin(to, hi + 1);
+    } else {
+        while (lo < hi) {
+            const int mid = lo + (hi - lo) / 2;
+            if (series->sample(mid).x() > visMax)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        visFrom = qMax(from, lo - 1);
+
+        hi = to;
+        while (lo < hi) {
+            const int mid = lo + (hi - lo + 1) / 2;
+            if (series->sample(mid).x() < visMin)
+                hi = mid - 1;
+            else
+                lo = mid;
+        }
+        visTo = qMin(to, hi + 1);
+    }
+
+    return visFrom <= visTo;
+}
+
+// Pixel-column downsampling: bin points by screen X column, keep first/min/max/last Y.
+// Output: at most 4 points per pixel column.
+template< class Polygon, class Point >
+static Polygon
+qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+{
+    Polygon polyline;
+    if (from > to)
+        return polyline;
+
+    int visFrom = from, visTo = to;
+    qwtFindVisibleRange(xMap, series, from, to, visFrom, visTo);
+
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    if (xPixels <= 0)
+        return polyline;
+
+    struct Bin
+    {
+        int firstY, minY, maxY, lastY;
+        int count;
+    };
+
+    QVector< Bin > bins(xPixels, Bin{0, 0, 0, 0, 0});
+
+    const int xMin        = qRound(xMap.p1());
+    const bool linearPath = xMap.isLinear() && yMap.isLinear();
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
+
+        for (int i = visFrom; i <= visTo; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x = qRound(sample.x() * xCnv + xOff);
+            const int y = qRound(sample.y() * yCnv + yOff);
+            const int col = x - xMin;
+            if (col < 0 || col >= xPixels)
+                continue;
+            Bin& bin = bins[ col ];
+            if (bin.count == 0) {
+                bin.firstY = bin.minY = bin.maxY = bin.lastY = y;
+            } else {
+                if (y < bin.minY)
+                    bin.minY = y;
+                else if (y > bin.maxY)
+                    bin.maxY = y;
+                bin.lastY = y;
+            }
+            bin.count++;
+        }
+    } else {
+        for (int i = visFrom; i <= visTo; i++) {
+            const QPointF sample = series->sample(i);
+            if (qwt_is_nan_or_inf(sample))
+                continue;
+            const int x   = qwtRoundValue(xMap.transform(sample.x()));
+            const int y   = qwtRoundValue(yMap.transform(sample.y()));
+            const int col = x - xMin;
+            if (col < 0 || col >= xPixels)
+                continue;
+            Bin& bin = bins[ col ];
+            if (bin.count == 0) {
+                bin.firstY = bin.minY = bin.maxY = bin.lastY = y;
+            } else {
+                if (y < bin.minY)
+                    bin.minY = y;
+                else if (y > bin.maxY)
+                    bin.maxY = y;
+                bin.lastY = y;
+            }
+            bin.count++;
+        }
+    }
+
+    polyline.resize(4 * xPixels);
+    Point* outPts = polyline.data();
+    int n         = 0;
+    for (int col = 0; col < xPixels; col++) {
+        const Bin& bin = bins[ col ];
+        if (bin.count == 0)
+            continue;
+        const int x = xMin + col;
+        outPts[ n++ ] = Point(x, bin.firstY);
+        if (bin.count < 4) {
+            // for very few points in a column, just emit them in order
+            if (bin.count == 2)
+                outPts[ n++ ] = Point(x, bin.lastY);
+            else if (bin.count >= 3) {
+                outPts[ n++ ] = Point(x, bin.minY);
+                outPts[ n++ ] = Point(x, bin.maxY);
+                outPts[ n++ ] = Point(x, bin.lastY);
+            }
+        } else {
+            int yMin = bin.minY, yMax = bin.maxY;
+            if (bin.lastY > bin.firstY)
+                qSwap(yMin, yMax);
+            if (yMax != bin.firstY)
+                outPts[ n++ ] = Point(x, yMax);
+            if (yMin != yMax)
+                outPts[ n++ ] = Point(x, yMin);
+            if (bin.lastY != bin.minY)
+                outPts[ n++ ] = Point(x, bin.lastY);
+        }
+    }
+    polyline.resize(n);
+
+    return polyline;
+}
+
+// Try to extract raw contiguous X/Y double pointers from the series data.
+// Returns {nullptr, nullptr} if the series type does not support direct access.
+struct QwtRawPointData
+{
+    const double* x;
+    const double* y;
+};
+
+static QwtRawPointData qwtTryGetRawPointData(const QwtSeriesData< QPointF >* series)
+{
+    if (auto* arr = dynamic_cast< const QwtPointArrayData< double >* >(series))
+        return {arr->xData().constData(), arr->yData().constData()};
+    if (auto* ptr = dynamic_cast< const QwtCPointerData< double >* >(series))
+        return {ptr->xData(), ptr->yData()};
+    if (auto* val = dynamic_cast< const QwtValuePointData< double >* >(series))
+        return {nullptr, val->yData().constData()};
+    if (auto* cval = dynamic_cast< const QwtCPointerValueData< double >* >(series))
+        return {nullptr, cval->yData()};
+    return {nullptr, nullptr};
+}
+
+// MinMax bucket downsampling: divide data into N equal-count buckets,
+// keep min-Y and max-Y from each bucket. O(n) time, O(N) output.
+template< class Polygon, class Point >
+static Polygon
+qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to)
+{
+    Polygon polyline;
+    if (from > to)
+        return polyline;
+
+    int visFrom = from, visTo = to;
+    qwtFindVisibleRange(xMap, series, from, to, visFrom, visTo);
+
+    const int numPoints = visTo - visFrom + 1;
+    if (numPoints <= 0)
+        return polyline;
+
+    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int numBuckets = qMax(2, 2 * xPixels); // 2 points per bucket (min + max)
+
+    if (numPoints <= numBuckets * 2) {
+        // not enough points to benefit from bucketing, fall back to quad
+        return qwtMapPointsQuad< Polygon, Point >(xMap, yMap, series, visFrom, visTo);
+    }
+
+    const double bucketSize = static_cast< double >(numPoints) / numBuckets;
+    const bool linearPath   = xMap.isLinear() && yMap.isLinear();
+
+    polyline.resize(2 * numBuckets);
+    Point* outPts = polyline.data();
+    int n         = 0;
+
+    if (linearPath) {
+        const double xCnv = xMap.cnv(), xOff = xMap.p1() - xMap.ts1() * xCnv;
+        const double yCnv = yMap.cnv(), yOff = yMap.p1() - yMap.ts1() * yCnv;
+
+        // Try raw-pointer fast path for SIMD-accelerated argmin/argmax
+        const QwtRawPointData raw = qwtTryGetRawPointData(series);
+        if (raw.y != nullptr) {
+            // NaN pre-scan: check if any NaN exists in the visible Y range
+            bool hasNaN = false;
+            for (int i = visFrom; i <= visTo; ++i) {
+                if (std::isnan(raw.y[i]))
+                {
+                    hasNaN = true;
+                    break;
+                }
+            }
+
+            if (!hasNaN) {
+                // ===== SIMD fast path: no NaN, raw pointer access =====
+                for (int b = 0; b < numBuckets; b++) {
+                    const int start = visFrom + static_cast< int >(b * bucketSize);
+                    const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+                    const int bEnd  = qMin(end, visTo);
+                    const int count = bEnd - start + 1;
+                    if (count <= 0)
+                        continue;
+
+                    const QwtArgMinMaxResult r = qwtSimdArgMinMax(raw.y + start, count);
+                    const int minI = start + r.minIdx;
+                    const int maxI = start + r.maxIdx;
+
+                    int minX, maxX;
+                    if (raw.x != nullptr) {
+                        minX = qRound(raw.x[minI] * xCnv + xOff);
+                        maxX = qRound(raw.x[maxI] * xCnv + xOff);
+                    } else {
+                        minX = qRound(minI * xCnv + xOff);
+                        maxX = qRound(maxI * xCnv + xOff);
+                    }
+
+                    const int syMin = qRound(r.minVal * yCnv + yOff);
+                    const int syMax = qRound(r.maxVal * yCnv + yOff);
+                    if (minI <= maxI) {
+                        outPts[ n++ ] = Point(minX, syMin);
+                        if (syMax != syMin || maxX != minX)
+                            outPts[ n++ ] = Point(maxX, syMax);
+                    } else {
+                        outPts[ n++ ] = Point(maxX, syMax);
+                        if (syMax != syMin || maxX != minX)
+                            outPts[ n++ ] = Point(minX, syMin);
+                    }
+                }
+            } else {
+                // ===== Scalar path with raw pointers (has NaN) =====
+                for (int b = 0; b < numBuckets; b++) {
+                    const int start = visFrom + static_cast< int >(b * bucketSize);
+                    const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+
+                    int minX = 0, maxX = 0;
+                    double minY = DBL_MAX, maxY = -DBL_MAX;
+                    int minIdx = 0, maxIdx = 0;
+                    bool first = true;
+
+                    for (int i = start; i <= qMin(end, visTo); i++) {
+                        const double y = raw.y[i];
+                        if (std::isnan(y))
+                            continue;
+
+                        if (first) {
+                            minIdx = maxIdx = i;
+                            minY = maxY = y;
+                            first = false;
+                        } else {
+                            if (y < minY) { minY = y; minIdx = i; }
+                            if (y > maxY) { maxY = y; maxIdx = i; }
+                        }
+                    }
+
+                    if (!first) {
+                        int sxMin, sxMax;
+                        if (raw.x != nullptr) {
+                            sxMin = qRound(raw.x[minIdx] * xCnv + xOff);
+                            sxMax = qRound(raw.x[maxIdx] * xCnv + xOff);
+                        } else {
+                            sxMin = qRound(minIdx * xCnv + xOff);
+                            sxMax = qRound(maxIdx * xCnv + xOff);
+                        }
+                        const int syMin = qRound(minY * yCnv + yOff);
+                        const int syMax = qRound(maxY * yCnv + yOff);
+                        if (minIdx <= maxIdx) {
+                            outPts[ n++ ] = Point(sxMin, syMin);
+                            if (syMax != syMin || sxMax != sxMin)
+                                outPts[ n++ ] = Point(sxMax, syMax);
+                        } else {
+                            outPts[ n++ ] = Point(sxMax, syMax);
+                            if (syMax != syMin || sxMax != sxMin)
+                                outPts[ n++ ] = Point(sxMin, syMin);
+                        }
+                    }
+                }
+            }
+        } else {
+            // ===== Generic path: virtual sample() access =====
+            for (int b = 0; b < numBuckets; b++) {
+                const int start = visFrom + static_cast< int >(b * bucketSize);
+                const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+
+                int minX = 0, maxX = 0;
+                double minY = 1e300, maxY = -1e300;
+                int minIdx = 0, maxIdx = 0;
+                bool first = true;
+
+                for (int i = start; i <= qMin(end, visTo); i++) {
+                    const QPointF sample = series->sample(i);
+                    if (qwt_is_nan_or_inf(sample))
+                        continue;
+                    const double y = sample.y();
+                    const int sx   = qRound(sample.x() * xCnv + xOff);
+
+                    if (first) {
+                        minX = maxX = sx;
+                        minY = maxY = y;
+                        minIdx = maxIdx = i;
+                        first           = false;
+                    } else {
+                        if (y < minY) {
+                            minY   = y;
+                            minX   = sx;
+                            minIdx = i;
+                        }
+                        if (y > maxY) {
+                            maxY   = y;
+                            maxX   = sx;
+                            maxIdx = i;
+                        }
+                    }
+                }
+
+                if (!first) {
+                    const int syMin = qRound(minY * yCnv + yOff);
+                    const int syMax = qRound(maxY * yCnv + yOff);
+                    if (minIdx <= maxIdx) {
+                        outPts[ n++ ] = Point(minX, syMin);
+                        if (syMax != syMin || maxX != minX)
+                            outPts[ n++ ] = Point(maxX, syMax);
+                    } else {
+                        outPts[ n++ ] = Point(maxX, syMax);
+                        if (syMax != syMin || maxX != minX)
+                            outPts[ n++ ] = Point(minX, syMin);
+                    }
+                }
+            }
+        }
+    } else {
+        for (int b = 0; b < numBuckets; b++) {
+            const int start = visFrom + static_cast< int >(b * bucketSize);
+            const int end   = visFrom + static_cast< int >((b + 1) * bucketSize) - 1;
+
+            int minX = 0, maxX = 0;
+            double minY = 1e300, maxY = -1e300;
+            int minIdx = 0, maxIdx = 0;
+            bool first = true;
+
+            for (int i = start; i <= qMin(end, visTo); i++) {
+                const QPointF sample = series->sample(i);
+                if (qwt_is_nan_or_inf(sample))
+                    continue;
+                const double y = sample.y();
+                const int sx   = qwtRoundValue(xMap.transform(sample.x()));
+
+                if (first) {
+                    minX = maxX = sx;
+                    minY = maxY = y;
+                    minIdx = maxIdx = i;
+                    first           = false;
+                } else {
+                    if (y < minY) {
+                        minY   = y;
+                        minX   = sx;
+                        minIdx = i;
+                    }
+                    if (y > maxY) {
+                        maxY   = y;
+                        maxX   = sx;
+                        maxIdx = i;
+                    }
+                }
+            }
+
+            if (!first) {
+                const int syMin = qwtRoundValue(yMap.transform(minY));
+                const int syMax = qwtRoundValue(yMap.transform(maxY));
+                if (minIdx <= maxIdx) {
+                    outPts[ n++ ] = Point(minX, syMin);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(maxX, syMax);
+                } else {
+                    outPts[ n++ ] = Point(maxX, syMax);
+                    if (syMax != syMin || maxX != minX)
+                        outPts[ n++ ] = Point(minX, syMin);
+                }
+            }
+        }
+    }
+
+    polyline.resize(n);
     return polyline;
 }
 
@@ -311,7 +793,7 @@ qwtRenderDots(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtDotsCom
 
     for (int i = command.from; i <= command.to; i++) {
         const QPointF sample = command.series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -372,7 +854,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
         for (int i = from; i <= to; i++) {
             const QPointF sample = series->sample(i);
-            // check nan/检查 NaN
+            // check nan
             if (qwt_is_nan_or_inf(sample)) {
                 continue;
             }
@@ -394,7 +876,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
         for (int i = from; i <= to; i++) {
             const QPointF sample = series->sample(i);
-            // check nan/检查 NaN
+            // check nan
             if (qwt_is_nan_or_inf(sample)) {
                 continue;
             }
@@ -406,7 +888,7 @@ static inline Polygon qwtToPoints(const QRectF& boundingRect,
 
             numPoints++;
         }
-        // Since NaN value checking has been added, resizing is also required here./由于增加了nan值的检测，这里也需要进行resize
+        // Since NaN value checking has been added, resizing is also required here.
         polyline.resize(numPoints);
     }
 
@@ -456,9 +938,10 @@ static inline Polygon qwtToPolylineFiltered(const QwtScaleMap& xMap,
 
     int realFrom    = from;
     QPointF sample0 = series->sample(from);
-    // check nan/检查 NaN
+    // check nan
     while (realFrom < to && qwt_is_nan_or_inf(sample0)) {
         realFrom++;
+        sample0 = series->sample(realFrom);
     }
 
     points[ 0 ].rx() = round(xMap.transform(sample0.x()));
@@ -467,7 +950,7 @@ static inline Polygon qwtToPolylineFiltered(const QwtScaleMap& xMap,
     int pos = 0;
     for (int i = realFrom + 1; i <= to; i++) {
         const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -520,7 +1003,7 @@ static inline Polygon qwtToPointsFiltered(const QRectF& boundingRect,
     int numPoints = 0;
     for (int i = from; i <= to; i++) {
         const QPointF sample = series->sample(i);
-        // check nan/检查 NaN
+        // check nan
         if (qwt_is_nan_or_inf(sample)) {
             continue;
         }
@@ -562,7 +1045,9 @@ static inline QPolygonF qwtToPointsFilteredF(const QRectF& boundingRect,
 class QwtPointMapper::PrivateData
 {
 public:
-    PrivateData() : boundingRect(qwtInvalidRect)
+    QWT_DECLARE_PUBLIC(QwtPointMapper)
+
+    PrivateData(QwtPointMapper* p) : q_ptr(p), boundingRect(qwtInvalidRect)
     {
     }
 
@@ -571,114 +1056,72 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @details Creates a QwtPointMapper with default settings.
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- *
- * @details 创建一个具有默认设置的 QwtPointMapper。
- * \endif
  */
-QwtPointMapper::QwtPointMapper()
+QwtPointMapper::QwtPointMapper() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  *
  * @details Destroys the QwtPointMapper and frees all allocated resources.
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- *
- * @details 销毁 QwtPointMapper 并释放所有已分配的资源。
- * \endif
  */
 QwtPointMapper::~QwtPointMapper()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the flags affecting the transformation process
  *
  * @param[in] flags Flags
  *
  * @sa flags(), setFlag()
- * \endif
  *
- * \if CHINESE
- * @brief 设置影响转换过程的标志
- *
- * @param[in] flags 标志
- *
- * @sa flags(), setFlag()
- * \endif
  */
 void QwtPointMapper::setFlags(TransformationFlags flags)
 {
-    m_data->flags = flags;
+    QWT_D(d);
+    d->flags = flags;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the flags affecting the transformation process
  *
  * @return Flags affecting the transformation process
  *
  * @sa setFlags(), setFlag()
- * \endif
  *
- * \if CHINESE
- * @brief 获取影响转换过程的标志
- *
- * @return 影响转换过程的标志
- *
- * @sa setFlags(), setFlag()
- * \endif
  */
 QwtPointMapper::TransformationFlags QwtPointMapper::flags() const
 {
-    return m_data->flags;
+    QWT_DC(d);
+    return d->flags;
 }
 
 /**
- * \if ENGLISH
  * @brief Modify a flag affecting the transformation process
  *
  * @param[in] flag Flag type
  * @param[in] on Value
  *
  * @sa testFlag(), setFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 修改影响转换过程的标志
- *
- * @param[in] flag 标志类型
- * @param[in] on 值
- *
- * @sa testFlag(), setFlags()
- * \endif
  */
 void QwtPointMapper::setFlag(TransformationFlag flag, bool on)
 {
+    QWT_D(d);
     if (on)
-        m_data->flags |= flag;
+        d->flags |= flag;
     else
-        m_data->flags &= ~flag;
+        d->flags &= ~flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a flag is set
  *
  * @param[in] flag Flag type
@@ -686,25 +1129,15 @@ void QwtPointMapper::setFlag(TransformationFlag flag, bool on)
  * @return True when the flag is set
  *
  * @sa setFlag(), setFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 测试标志是否已设置
- *
- * @param[in] flag 标志类型
- *
- * @return 如果标志已设置则返回 true
- *
- * @sa setFlag(), setFlags()
- * \endif
  */
 bool QwtPointMapper::testFlag(TransformationFlag flag) const
 {
-    return m_data->flags & flag;
+    QWT_DC(d);
+    return d->flags & flag;
 }
 
 /**
- * \if ENGLISH
  * @brief Set a bounding rectangle for the point mapping algorithm
  *
  * @details A valid bounding rectangle can be used for optimizations.
@@ -712,47 +1145,29 @@ bool QwtPointMapper::testFlag(TransformationFlag flag) const
  * @param[in] rect Bounding rectangle
  *
  * @sa boundingRect()
- * \endif
  *
- * \if CHINESE
- * @brief 为点映射算法设置边界矩形
- *
- * @details 有效的边界矩形可用于优化。
- *
- * @param[in] rect 边界矩形
- *
- * @sa boundingRect()
- * \endif
  */
 void QwtPointMapper::setBoundingRect(const QRectF& rect)
 {
-    m_data->boundingRect = rect;
+    QWT_D(d);
+    d->boundingRect = rect;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  *
  * @return Bounding rectangle
  *
  * @sa setBoundingRect()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边界矩形
- *
- * @return 边界矩形
- *
- * @sa setBoundingRect()
- * \endif
  */
 QRectF QwtPointMapper::boundingRect() const
 {
-    return m_data->boundingRect;
+    QWT_DC(d);
+    return d->boundingRect;
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygonF
  *
  * @details When the WeedOutPoints flag is enabled, consecutive points
@@ -770,24 +1185,7 @@ QRectF QwtPointMapper::boundingRect() const
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygonF
- *
- * @details 当启用 WeedOutPoints 标志时，映射到相同位置的连续点将合并为一个点。
- *          当设置 RoundPoints 时，所有点被舍入为整数，但返回为 PolygonF ——
- *          这仅在对值的进一步处理需要 QPolygonF 时有意义。
- *          当启用 RoundPoints & WeedOutIntermediatePoints 时，启用更激进的剔除算法。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
                                      const QwtScaleMap& yMap,
@@ -795,18 +1193,24 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
                                      int from,
                                      int to) const
 {
+    QWT_DC(d);
     QPolygonF polyline;
 
-    if (m_data->flags & RoundPoints) {
-        if (m_data->flags & WeedOutIntermediatePoints) {
+    // priority: PixelColumnReduce > MinMaxReduce > WeedOutIntermediatePoints > WeedOutPoints
+    if (d->flags & PixelColumnReduce) {
+        polyline = qwtPixelColumnReduce< QPolygonF, QPointF >(xMap, yMap, series, from, to);
+    } else if (d->flags & MinMaxReduce) {
+        polyline = qwtMinMaxBucketReduce< QPolygonF, QPointF >(xMap, yMap, series, from, to);
+    } else if (d->flags & RoundPoints) {
+        if (d->flags & WeedOutIntermediatePoints) {
             polyline = qwtMapPointsQuad< QPolygonF, QPointF >(xMap, yMap, series, from, to);
-        } else if (m_data->flags & WeedOutPoints) {
+        } else if (d->flags & WeedOutPoints) {
             polyline = qwtToPolylineFilteredF(xMap, yMap, series, from, to, QwtRoundF());
         } else {
             polyline = qwtToPointsF(qwtInvalidRect, xMap, yMap, series, from, to, QwtRoundF());
         }
     } else {
-        if (m_data->flags & WeedOutPoints) {
+        if (d->flags & WeedOutPoints) {
             polyline = qwtToPolylineFilteredF(xMap, yMap, series, from, to, QwtNoRoundF());
         } else {
             polyline = qwtToPointsF(qwtInvalidRect, xMap, yMap, series, from, to, QwtNoRoundF());
@@ -817,7 +1221,6 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygon
  *
  * @details When the WeedOutPoints flag is enabled, consecutive points
@@ -830,21 +1233,7 @@ QPolygonF QwtPointMapper::toPolygonF(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygon
- *
- * @details 当启用 WeedOutPoints 标志时，映射到相同位置的连续点将合并为一个点。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
                                    const QwtScaleMap& yMap,
@@ -852,12 +1241,16 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
                                    int from,
                                    int to) const
 {
+    QWT_DC(d);
     QPolygon polyline;
 
-    if (m_data->flags & WeedOutIntermediatePoints) {
-        // TODO WeedOutIntermediatePointsY ...
+    if (d->flags & PixelColumnReduce) {
+        polyline = qwtPixelColumnReduce< QPolygon, QPoint >(xMap, yMap, series, from, to);
+    } else if (d->flags & MinMaxReduce) {
+        polyline = qwtMinMaxBucketReduce< QPolygon, QPoint >(xMap, yMap, series, from, to);
+    } else if (d->flags & WeedOutIntermediatePoints) {
         polyline = qwtMapPointsQuad< QPolygon, QPoint >(xMap, yMap, series, from, to);
-    } else if (m_data->flags & WeedOutPoints) {
+    } else if (d->flags & WeedOutPoints) {
         polyline = qwtToPolylineFilteredI(xMap, yMap, series, from, to);
     } else {
         polyline = qwtToPointsI(qwtInvalidRect, xMap, yMap, series, from, to);
@@ -867,7 +1260,6 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series into a QPolygonF (scattered points)
  *
  * @details
@@ -892,32 +1284,7 @@ QPolygon QwtPointMapper::toPolygon(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将序列转换为 QPolygonF（散点）
- *
- * @details
- * - WeedOutPoints & RoundPoints & boundingRect().isValid()：
- *   所有映射到相同位置的点将合并为一个点，边界矩形外的点被忽略。
- * - WeedOutPoints & RoundPoints & !boundingRect().isValid()：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - WeedOutPoints & !RoundPoints：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - !WeedOutPoints & boundingRect().isValid()：
- *   边界矩形外的点被忽略。
- *
- *   当设置 RoundPoints 时，所有点被舍入为整数，但返回为 PolygonF ——
- *   这仅在对值的进一步处理需要 QPolygonF 时有意义。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
                                     const QwtScaleMap& yMap,
@@ -925,12 +1292,13 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
                                     int from,
                                     int to) const
 {
+    QWT_DC(d);
     QPolygonF points;
 
-    if (m_data->flags & WeedOutPoints) {
-        if (m_data->flags & RoundPoints) {
-            if (m_data->boundingRect.isValid()) {
-                points = qwtToPointsFilteredF(m_data->boundingRect, xMap, yMap, series, from, to);
+    if (d->flags & WeedOutPoints) {
+        if (d->flags & RoundPoints) {
+            if (d->boundingRect.isValid()) {
+                points = qwtToPointsFilteredF(d->boundingRect, xMap, yMap, series, from, to);
             } else {
                 // without a bounding rectangle all we can
                 // do is to filter out duplicates of
@@ -945,10 +1313,10 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
             points = qwtToPolylineFilteredF(xMap, yMap, series, from, to, QwtNoRoundF());
         }
     } else {
-        if (m_data->flags & RoundPoints) {
-            points = qwtToPointsF(m_data->boundingRect, xMap, yMap, series, from, to, QwtRoundF());
+        if (d->flags & RoundPoints) {
+            points = qwtToPointsF(d->boundingRect, xMap, yMap, series, from, to, QwtRoundF());
         } else {
-            points = qwtToPointsF(m_data->boundingRect, xMap, yMap, series, from, to, QwtNoRoundF());
+            points = qwtToPointsF(d->boundingRect, xMap, yMap, series, from, to, QwtNoRoundF());
         }
     }
 
@@ -956,7 +1324,6 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series of points into a QPolygon (scattered points)
  *
  * @details
@@ -975,27 +1342,7 @@ QPolygonF QwtPointMapper::toPointsF(const QwtScaleMap& xMap,
  * @param[in] to Index of the last point to be painted
  *
  * @return Translated polygon
- * \endif
  *
- * \if CHINESE
- * @brief 将点序列转换为 QPolygon（散点）
- *
- * @details
- * - WeedOutPoints & boundingRect().isValid()：
- *   所有映射到相同位置的点将合并为一个点，边界矩形外的点被忽略。
- * - WeedOutPoints & !boundingRect().isValid()：
- *   所有映射到相同位置的连续点将合并为一个点。
- * - !WeedOutPoints & boundingRect().isValid()：
- *   边界矩形外的点被忽略。
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- *
- * @return 转换后的多边形
- * \endif
  */
 QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
                                   const QwtScaleMap& yMap,
@@ -1003,11 +1350,12 @@ QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
                                   int from,
                                   int to) const
 {
+    QWT_DC(d);
     QPolygon points;
 
-    if (m_data->flags & WeedOutPoints) {
-        if (m_data->boundingRect.isValid()) {
-            points = qwtToPointsFilteredI(m_data->boundingRect, xMap, yMap, series, from, to);
+    if (d->flags & WeedOutPoints) {
+        if (d->boundingRect.isValid()) {
+            points = qwtToPointsFilteredI(d->boundingRect, xMap, yMap, series, from, to);
         } else {
             // when we don't have the bounding rectangle all
             // we can do is to filter out consecutive duplicates
@@ -1015,14 +1363,13 @@ QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
             points = qwtToPolylineFilteredI(xMap, yMap, series, from, to);
         }
     } else {
-        points = qwtToPointsI(m_data->boundingRect, xMap, yMap, series, from, to);
+        points = qwtToPointsI(d->boundingRect, xMap, yMap, series, from, to);
     }
 
     return points;
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a series into a QImage
  *
  * @param[in] xMap x map
@@ -1036,23 +1383,7 @@ QPolygon QwtPointMapper::toPoints(const QwtScaleMap& xMap,
  *                       If numThreads is set to 0, the system specific ideal thread count is used.
  *
  * @return Image displaying the series
- * \endif
  *
- * \if CHINESE
- * @brief 将序列转换为 QImage
- *
- * @param[in] xMap x 映射
- * @param[in] yMap y 映射
- * @param[in] series 要映射的点序列
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引
- * @param[in] pen 用于绘制图像点的画笔，即点映射到的位置
- * @param[in] antialiased 当点应以抗锯齿方式显示时为 true
- * @param[in] numThreads 用于渲染的线程数。
- *                       如果 numThreads 设置为 0，则使用系统特定的理想线程数。
- *
- * @return 显示序列的图像
- * \endif
  */
 QImage QwtPointMapper::toImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,
@@ -1063,6 +1394,7 @@ QImage QwtPointMapper::toImage(const QwtScaleMap& xMap,
                                bool antialiased,
                                uint numThreads) const
 {
+    QWT_DC(d);
     Q_UNUSED(antialiased)
 
 #if QWT_USE_THREADS
@@ -1078,7 +1410,7 @@ QImage QwtPointMapper::toImage(const QwtScaleMap& xMap,
     // a very special optimization for scatter plots
     // where every sample is mapped to one pixel only.
 
-    const QRect rect = m_data->boundingRect.toAlignedRect();
+    const QRect rect = d->boundingRect.toAlignedRect();
 
     QImage image(rect.size(), QImage::Format_ARGB32);
     image.fill(Qt::transparent);

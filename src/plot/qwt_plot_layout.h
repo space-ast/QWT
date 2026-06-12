@@ -33,103 +33,49 @@
 class QwtPlotLayoutEngine;
 
 /**
- * \if ENGLISH
  * @brief Layout engine for QwtPlot
  * @details It is used by the QwtPlot widget to organize its internal widgets
  *          or by QwtPlot::print() to render its content to a QPaintDevice like
  *          a QPrinter, QPixmap/QImage or QSvgRenderer.
  * @sa QwtPlot::setPlotLayout()
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlot 的布局引擎
- * @details 它被 QwtPlot 部件用于组织其内部部件，
- *          或被 QwtPlot::print() 用于将其内容渲染到 QPaintDevice 上，
- *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
- * @sa QwtPlot::setPlotLayout()
- * \endif
  */
 class QWT_EXPORT QwtPlotLayout
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Options to configure the plot layout engine
      * @sa activate(), QwtPlotRenderer
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 用于配置绘图布局引擎的选项
-     * @sa activate(), QwtPlotRenderer
-     * \endif
      */
     enum Option
     {
         /**
-         * \if ENGLISH
          * @brief Unused
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 未使用
-         * \endif
          */
         AlignScales = 0x01,
 
         /**
-         * \if ENGLISH
          * @brief Ignore the dimension of the scrollbars.
          * @details There are no scrollbars when the plot is not rendered to widgets.
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 忽略滚动条的尺寸
-         * @details 当绘图未渲染到部件时，不存在滚动条。
-         * \endif
          */
         IgnoreScrollbars = 0x02,
 
         /**
-         * \if ENGLISH
          * @brief Ignore all frames
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 忽略所有边框
-         * \endif
          */
         IgnoreFrames = 0x04,
 
         /**
-         * \if ENGLISH
          * @brief Ignore the legend
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 忽略图例
-         * \endif
          */
         IgnoreLegend = 0x08,
 
         /**
-         * \if ENGLISH
          * @brief Ignore the title
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 忽略标题
-         * \endif
          */
         IgnoreTitle = 0x10,
 
         /**
-         * \if ENGLISH
          * @brief Ignore the footer
-         * \endif
-         * 
-         * \if CHINESE
-         * @brief 忽略页脚
-         * \endif
          */
         IgnoreFooter = 0x20
     };
@@ -178,10 +124,10 @@ protected:
         Options options = Options() );
 
 private:
-    Q_DISABLE_COPY( QwtPlotLayout )
+    QwtPlotLayout(const QwtPlotLayout&) = delete;
+    QwtPlotLayout& operator=(const QwtPlotLayout&) = delete;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )

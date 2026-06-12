@@ -13,27 +13,17 @@
 #include "qwt_polar_plot.h"
 
 /**
- * \if ENGLISH
  * @brief Layout class for QwtPolarPlot
  * @details Organizes the geometry for the different QwtPolarPlot components.
  *          It is used by the QwtPolar widget to organize its internal widgets
  *          or by QwtPolarRenderer to render its content to a QPaintDevice like
  *          a QPrinter, QPixmap/QImage or QSvgRenderer.
- * \endif
- *
- * \if CHINESE
- * @brief QwtPolarPlot 的布局类
- * @details 为不同的 QwtPolarPlot 组件组织几何形状。
- *          它被 QwtPolar 控件用于组织其内部控件，
- *          或被 QwtPolarRenderer 用于将内容渲染到 QPaintDevice，
- *          如 QPrinter、QPixmap/QImage 或 QSvgRenderer。
- * \endif
  */
 class QWT_EXPORT QwtPolarLayout
 {
   public:
 
-    //! \brief Options to configure the plot layout engine
+    //! @brief Options to configure the plot layout engine
     enum Option
     {
         //! Ignore the dimension of the scrollbars.
@@ -88,8 +78,7 @@ class QWT_EXPORT QwtPolarLayout
     QRectF layoutLegend( Options options, QRectF& ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarLayout)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )

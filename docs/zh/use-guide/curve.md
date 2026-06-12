@@ -296,24 +296,161 @@ curve->setBrush(QBrush(Qt::lightGray));
 
 ```cpp
 // 设置渲染属性
-curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);      // 裁剪多边形
-curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);       // 过滤重复点
+curve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);           // 裁剪多边形
+curve->setPaintAttribute(QwtPlotCurve::FilterPoints, true);            // 过滤重复点
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true);  // 激进过滤
-curve->setPaintAttribute(QwtPlotCurve::ImageBuffer, true);        // 图像缓冲（用于Dots样式）
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);       // 像素列降采样
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);        // LTTB MinMax降采样
+curve->setPaintAttribute(QwtPlotCurve::ImageBuffer, true);             // 图像缓冲（用于Dots样式）
 ```
+
+#### 渲染属性一览
 
 | 渲染属性 | 说明 |
 |----------|------|
 | `ClipPolygons` | 裁剪画布外的多边形，避免绘制无效区域 |
 | `FilterPoints` | 过滤重复点和画布外的点 |
-| `FilterPointsAggressive` | 更激进的过滤，接受轻微视觉差异 |
+| `FilterPointsAggressive` | 更激进的过滤，去除同像素列的中间点，接受轻微视觉差异 |
+| `FilterPointsPixel` | 像素列降采样，每像素列保留首/最小/最大/末共4个点，极速渲染 |
+| `FilterPointsLTTB` | MinMax桶降采样（简化LTTB），将数据分桶保留每桶极值，更好保留波形 |
 | `MinimizeMemory` | 减少临时内存使用（可能降低性能） |
 | `ImageBuffer` | 用图像缓冲绘制散点（适用于百万级数据） |
 
-!!! tip "大数据量建议"
-    - 超过10万点：启用 `FilterPointsAggressive`
-    - 超过百万点：使用 `Dots` 样式 + `ImageBuffer`
-    - 实时更新：关闭 `setAutoReplot()`，批量更新后手动刷新
+!!! note "默认设置"
+    从 Qwt 7.x 开始，默认启用 `ClipPolygons | FilterPointsAggressive`，无需手动开启基础优化。
+
+#### 降采样算法详解
+
+##### FilterPointsAggressive — 激进过滤（默认启用）
+
+基于 QwtPointMapper 的四边形化简算法（Quad Reduce）。对映射到同一像素坐标的连续点进行合并，去除冗余中间点。
+
+- **原理**：沿 X 和 Y 方向分别扫描，将映射到同一像素行/列的连续点化简为关键点
+- **输出点数**：与画布像素尺寸成正比，约为 `4 × max(画布宽, 画布高)`
+- **适用场景**：通用大数据场景，波形保真度好
+- **时间复杂度**：O(n)
+
+##### FilterPointsPixel — 像素列降采样
+
+将数据按屏幕像素列分桶，每列仅保留 first/min/max/last 四个 Y 值。对单调递增 X 数据自动使用二分查找定位可见范围。
+
+- **原理**：分配一个与画布等宽的 Bin 数组，遍历所有数据点归入对应列桶
+- **输出点数**：最多 `4 × 画布宽度`，与数据量完全无关
+- **适用场景**：大数据集的趋势观察
+- **时间复杂度**：O(n)
+- **限制**：仅适用于 `Lines` 样式
+
+```cpp
+// 像素列降采样
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
+```
+
+!!! warning "FilterPointsPixel 注意"
+    该算法会覆盖 `FilterPointsAggressive` 的效果（两者同时设置时 Pixel 优先）。由于每列只保留4个点，高频细节可能被丢失，适合趋势观察而非精确分析。
+
+##### FilterPointsLTTB — MinMax桶降采样（推荐）
+
+将可见数据范围分为 N 个等量桶（N = 2 × 画布宽度），每个桶保留 Y 最小和 Y 最大的两个点。类似简化版 LTTB（Largest Triangle Three Buckets）算法。实测表明这是百万级数据下最快的渲染方法。
+
+- **原理**：按数据索引等分为桶，每桶遍历找极值点，保留原始 X 坐标
+- **输出点数**：约 `2 × N = 4 × 画布宽度`
+- **适用场景**：X 分布不均匀的数据、需要保留视觉波形特征的场景，以及追求最佳性能的大数据场景
+- **时间复杂度**：O(n)
+- **限制**：仅适用于 `Lines` 样式
+
+```cpp
+// 波形保留模式：适合需要观察信号特征的场景
+curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+```
+
+!!! note "FilterPointsLTTB vs FilterPointsPixel"
+    - LTTB 保留原始 X 坐标（非像素对齐），波形轮廓更精确
+    - Pixel 将所有点强制对齐到像素列，实现简单但性能不一定更优
+    - 当数据量不足以从降采样中获益时，LTTB 会自动回退到 Quad 算法
+    - 实测表明 LTTB 在百万级数据下性能优于 Pixel（见下方基准测试结果）
+
+#### 如何选择渲染方法
+
+根据数据规模和使用场景选择合适的渲染策略：
+
+```mermaid
+graph TD
+    A[数据规模?] -->|"< 1万点"| B[默认设置即可<br/>FilterPointsAggressive]
+    A -->|"1万 ~ 10万"| C{需要精确波形?}
+    C -->|是| D[FilterPointsLTTB]
+    C -->|否| E[FilterPointsAggressive<br/>（默认已启用）]
+    A -->|"10万 ~ 100万"| F{首要目标?}
+    F -->|最佳性能| D
+    F -->|趋势观察| G[FilterPointsPixel]
+    A -->|"> 100万"| H{显示模式?}
+    H -->|最佳性能| D
+    H -->|散点分布| I["Dots样式 + ImageBuffer"]
+    H -->|趋势观察| G
+```
+
+**选择建议速查表：**
+
+| 数据量 | 场景 | 推荐配置 | 说明 |
+|--------|------|----------|------|
+| < 1万 | 一般绘图 | 默认（`FilterPointsAggressive`） | 无需额外优化 |
+| 1万~10万 | 实时曲线 | `FilterPointsAggressive`（默认） | 默认算法已足够高效 |
+| 1万~10万 | 信号分析 | `FilterPointsLTTB` | 保留波形细节 |
+| 10万~100万 | 实时滚动 | `FilterPointsLTTB` | 实测最快，适合趋势监控 |
+| 10万~100万 | 离线回放 | `FilterPointsLTTB` | 兼顾速度与波形保真 |
+| > 100万 | 趋势总览 | `FilterPointsLTTB` | 实测最快，百万级数据最优 |
+| > 100万 | 散点分布 | `Dots` + `ImageBuffer` | 专为海量散点优化 |
+| > 100万 | 趋势观察 | `FilterPointsPixel` | 替代方案，性能略低于 LTTB |
+
+**使用示例：**
+
+```cpp
+// === 场景1：百万级传感器数据实时监控（推荐 LTTB）===
+QwtPlotCurve* sensorCurve = new QwtPlotCurve("传感器数据");
+sensorCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+sensorCurve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);  // 默认已开启
+
+// === 场景2：示波器波形分析（需要保留波形特征）===
+QwtPlotCurve* scopeCurve = new QwtPlotCurve("波形");
+scopeCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+
+// === 场景3：海量散点数据 ===
+QwtPlotCurve* scatterCurve = new QwtPlotCurve("散点");
+scatterCurve->setStyle(QwtPlotCurve::Dots);
+scatterCurve->setPaintAttribute(QwtPlotCurve::ImageBuffer, true);
+
+// === 场景4：禁用所有优化（仅在小数据量调试时使用）===
+QwtPlotCurve* debugCurve = new QwtPlotCurve("调试");
+debugCurve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, false);
+debugCurve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, false);
+debugCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, false);
+```
+
+!!! tip "大数据量综合建议"
+    - 实时更新场景：关闭 `setAutoReplot()`，批量更新后手动调用 `replot()`
+    - X 轴单调递增数据：`FilterPointsPixel` 和 `FilterPointsLTTB` 会自动二分查找可见范围，无需手动裁剪数据
+    - 缩放/平移频繁的场景：推荐使用 `FilterPointsLTTB`，实测性能最优
+    - 需要截图或导出的高质量绘图：临时关闭降采样，使用 `FilterPointsAggressive` 获得最精确的输出
+
+#### 基准测试结果
+
+以下是百万级数据（1,000,000 点）的实测性能对比（画布尺寸 680×490 px，100 帧渲染）：
+
+| 渲染方法 | 总耗时 (ms) | 平均帧时间 (ms) | FPS |
+|----------|-------------|----------------|-----|
+| None（无优化） | 26,212 | 262.12 | 3.8 |
+| FilterPoints | 44,472 | 444.72 | 2.2 |
+| FilterPointsAggressive（默认） | 17,539 | 175.39 | 5.7 |
+| FilterPointsPixel | 23,216 | 232.16 | 4.3 |
+| **FilterPointsLTTB** | **13,349** | **133.49** | **7.5** |
+
+**结论：**
+- `FilterPointsLTTB` 在百万级数据下性能最优，FPS 达到 7.5，比默认方法快 32%
+- `FilterPointsAggressive` 是次优选择，作为默认设置已足够高效
+- `FilterPoints` 基础过滤反而最慢，因为过滤开销大于收益
+- 无优化（None）比 `FilterPoints` 快，说明基础过滤在大数据量下不划算
+
+!!! note "自行测试"
+    你可以运行 `examples/bench/renderbench` 示例来测试不同渲染方法的性能。该工具支持配置数据量、帧数、波形类型，并提供单方法测试和批量对比模式，运行结束后会生成详细的 Markdown 格式报告。
 
 ### 7. 图例样式配置
 

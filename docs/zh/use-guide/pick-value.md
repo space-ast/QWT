@@ -183,4 +183,168 @@ protected:
 
 `valueString`方法的`order`参数代表了显示的第n个特征点，如果你有多条曲线，这个参数会递增，你可以根据这个参数是否为0来换行
 
+## 点击信号 (Click Signals)
+
+`QwtPlotSeriesDataPicker` 提供了点击信号，用于响应用户的鼠标点击操作。
+
+### 信号说明
+
+```cpp
+// 单击信号
+void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
+// 双击信号
+void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+```
+
+**信号参数 (Signal Parameters):**
+
+| 参数 (Parameter) | 类型 (Type) | 说明 (Description) |
+|------------------|-------------|-------------------|
+| picker | QwtPlotSeriesDataPicker* | 被点击的 picker 指针 (Pointer to the clicked picker) |
+| pos | QPoint | 点击事件的屏幕位置 (Screen position of the click event) |
+
+### 左键限制 (Left Button Only)
+
+!!! info "注意"
+    点击信号**仅响应鼠标左键** (Qt::LeftButton)。右键和中键点击不会触发这些信号。
+
+### 双击触发行为 (Double-Fire Behavior)
+
+!!! warning "注意"
+    当用户双击时，会先触发 `clicked()` 信号，然后触发 `doubleClicked()` 信号。
+    这是 Qt 的标准行为，不是 Bug。
+    
+    如果你需要区分单击和双击，建议只连接其中一个信号，不要同时连接两个信号。
+
+## 数据获取 (Getting Picked Data)
+
+通过 `featurePoints()` 方法可以获取当前拾取到的数据点信息。
+
+### FeaturePoint 结构
+
+```cpp
+struct FeaturePoint
+{
+    QwtPlotItem* item { nullptr };  ///< 对应的曲线项 (Corresponding curve item)
+    QPointF feature { 0, 0 };       ///< 特征点坐标 (Feature point coordinates)
+    size_t index { 0 };             ///< 在曲线数据中的索引 (Index in the curve data)
+};
+```
+
+**字段说明 (Field Description):**
+
+| 字段 (Field) | 类型 (Type) | 说明 (Description) |
+|--------------|-------------|-------------------|
+| item | QwtPlotItem* | 曲线指针，可通过 `item->title().text()` 获取曲线名称 |
+| feature | QPointF | 数据点的坐标值 (x, y) |
+| index | size_t | 数据点在曲线样本中的索引位置 |
+
+### featurePoints() 方法
+
+```cpp
+// 获取当前拾取到的特征点列表
+QList<FeaturePoint> featurePoints() const;
+```
+
+`featurePoints()` 返回当前 tracker 位置拾取到的所有特征点列表。通常在 `clicked` 或 `doubleClicked` 信号处理器中调用此方法获取点击位置的数据。
+
+!!! tip "提示"
+    返回的列表可能包含多个 `FeaturePoint`，因为鼠标位置可能同时对应多条曲线的数据点（特别是在 Y 值拾取模式下）。
+
+## 组内信号转发 (Group Signal Forwarding)
+
+`QwtPlotSeriesDataPickerGroup` 提供了组内点击信号的转发功能。
+
+### 组信号说明
+
+```cpp
+// 组内 picker 被点击时发出
+void clicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+
+// 组内 picker 被双击时发出
+void doubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
+```
+
+### 同步机制 (Sync-Before-Signal)
+
+!!! info "重要特性"
+    Group 在发出点击信号之前，会先同步组内所有其他 picker 的位置。
+    这意味着当 `clicked` 信号触发时，组内所有 picker 的 `featurePoints()` 都已经更新到同步后的位置。
+
+这个特性对于多子图联动场景非常有用：当用户点击某个子图时，其他子图的 picker 已经同步到对应的 X 轴比例位置，可以直接获取所有子图在相同比例位置的数据。
+
+## 代码示例 (Code Example)
+
+以下示例展示如何连接 Group 的点击信号并获取拾取数据：
+
+```cpp
+#include "qwt_plot_series_data_picker.h"
+#include "qwt_plot_series_data_picker_group.h"
+
+// 创建 Group 并添加多个 picker
+QwtPlotSeriesDataPickerGroup* pickerGroup = new QwtPlotSeriesDataPickerGroup(this);
+pickerGroup->addPicker(picker1);
+pickerGroup->addPicker(picker2);
+pickerGroup->addPicker(picker3);
+
+// 连接 Group 的点击信号
+connect(pickerGroup, &QwtPlotSeriesDataPickerGroup::clicked,
+        this, &MyClass::onPickerGroupClicked);
+
+// 点击事件处理器
+void MyClass::onPickerGroupClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+    Q_UNUSED(pos);
+    
+    // 获取当前拾取到的特征点列表
+    QList<QwtPlotSeriesDataPicker::FeaturePoint> fps = picker->featurePoints();
+    
+    // 遍历所有拾取到的数据点
+    for (const auto& fp : fps) {
+        if (fp.item) {
+            qDebug() << "曲线 (Curve):" << fp.item->title().text()
+                     << "X:" << fp.feature.x()
+                     << "Y:" << fp.feature.y()
+                     << "索引 (Index):" << fp.index;
+        }
+    }
+}
+```
+
+### 多子图联动示例
+
+在多子图布局中，可以通过 Group 的同步机制实现跨图数据检视：
+
+```cpp
+// 假设有多个子图，每个子图都有自己的 picker
+QwtPlotSeriesDataPickerGroup* group = new QwtPlotSeriesDataPickerGroup(this);
+group->addPicker(plot1Picker);
+group->addPicker(plot2Picker);
+group->addPicker(plot3Picker);
+
+connect(group, &QwtPlotSeriesDataPickerGroup::clicked,
+        this, [this](QwtPlotSeriesDataPicker* picker, const QPoint& pos) {
+    Q_UNUSED(pos);
+    
+    // 获取被点击 picker 的数据
+    auto fps = picker->featurePoints();
+    if (!fps.isEmpty()) {
+        const auto& fp = fps.first();
+        double xValue = fp.feature.x();
+        
+        // 由于 Group 的同步机制，此时所有 picker 都已经同步
+        // 可以获取其他 picker 在相同 X 比例位置的数据
+        for (auto* p : { plot1Picker, plot2Picker, plot3Picker }) {
+            auto otherFps = p->featurePoints();
+            if (!otherFps.isEmpty()) {
+                qDebug() << p->canvas()->parent()->objectName()
+                         << "Y value at x=" << xValue 
+                         << ":" << otherFps.first().feature.y();
+            }
+        }
+    }
+});
+```
+
 

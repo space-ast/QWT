@@ -27,13 +27,8 @@
 #include "qwt_painter_command.h"
 
 /**
- * \if ENGLISH
  * @brief Construct an invalid command
- * \endif
  *
- * \if CHINESE
- * @brief 构造无效命令
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand()
     : m_type( Invalid )
@@ -41,17 +36,10 @@ QwtPainterCommand::QwtPainterCommand()
 }
 
 /**
- * \if ENGLISH
  * @brief Construct a path command
  *
  * @param[in] path QPainterPath to be painted
- * \endif
  *
- * \if CHINESE
- * @brief 构造路径命令
- *
- * @param[in] path 要绘制的QPainterPath
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QPainterPath& path )
     : m_type( Path )
@@ -60,23 +48,13 @@ QwtPainterCommand::QwtPainterCommand( const QPainterPath& path )
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor for Pixmap paint operation
  *
  * @param[in] rect Target rectangle
  * @param[in] pixmap Pixmap to draw
  * @param[in] subRect Rectangle inside the pixmap
  * @sa QPainter::drawPixmap()
- * \endif
  *
- * \if CHINESE
- * @brief Pixmap绘制操作的构造函数
- *
- * @param[in] rect 目标矩形
- * @param[in] pixmap 要绘制的pixmap
- * @param[in] subRect pixmap内部的矩形区域
- * @sa QPainter::drawPixmap()
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
         const QPixmap& pixmap, const QRectF& subRect )
@@ -89,7 +67,6 @@ QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor for Image paint operation
  *
  * @param[in] rect Target rectangle
@@ -97,17 +74,7 @@ QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
  * @param[in] subRect Rectangle inside the image
  * @param[in] flags Conversion flags
  * @sa QPainter::drawImage()
- * \endif
  *
- * \if CHINESE
- * @brief Image绘制操作的构造函数
- *
- * @param[in] rect 目标矩形
- * @param[in] image 要绘制的图像
- * @param[in] subRect 图像内部的矩形区域
- * @param[in] flags 转换标志
- * @sa QPainter::drawImage()
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
         const QImage& image, const QRectF& subRect,
@@ -122,17 +89,10 @@ QwtPainterCommand::QwtPainterCommand( const QRectF& rect,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor for State paint operation
  *
  * @param[in] state Paint engine state
- * \endif
  *
- * \if CHINESE
- * @brief State绘制操作的构造函数
- *
- * @param[in] state 绘制引擎状态
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QPaintEngineState& state )
     : m_type( State )
@@ -188,17 +148,10 @@ QwtPainterCommand::QwtPainterCommand( const QPaintEngineState& state )
 }
 
 /**
- * \if ENGLISH
  * @brief Copy constructor
  *
  * @param[in] other Command to be copied
- * \endif
  *
- * \if CHINESE
- * @brief 拷贝构造函数
- *
- * @param[in] other 要拷贝的命令
- * \endif
  */
 QwtPainterCommand::QwtPainterCommand( const QwtPainterCommand& other )
 {
@@ -206,13 +159,22 @@ QwtPainterCommand::QwtPainterCommand( const QwtPainterCommand& other )
 }
 
 /**
- * \if ENGLISH
- * @brief Destructor
- * \endif
+ * @brief Move constructor
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
+ * @param[in] other Command to be moved from
+ *
+ */
+QwtPainterCommand::QwtPainterCommand( QwtPainterCommand&& other ) noexcept
+    : m_type( other.m_type )
+    , m_path( other.m_path )
+{
+    other.m_type = Invalid;
+    other.m_path = nullptr;
+}
+
+/**
+ * @brief Destructor
+ *
  */
 QwtPainterCommand::~QwtPainterCommand()
 {
@@ -220,25 +182,37 @@ QwtPainterCommand::~QwtPainterCommand()
 }
 
 /**
- * \if ENGLISH
  * @brief Assignment operator
  *
  * @param[in] other Command to be copied
  * @return Modified command
- * \endif
  *
- * \if CHINESE
- * @brief 赋值操作符
- *
- * @param[in] other 要拷贝的命令
- * @return 修改后的命令
- * \endif
  */
 QwtPainterCommand& QwtPainterCommand::operator=( const QwtPainterCommand& other )
 {
     reset();
     copy( other );
 
+    return *this;
+}
+
+/**
+ * @brief Move assignment operator
+ *
+ * @param[in] other Command to be moved from
+ * @return Reference to this command
+ *
+ */
+QwtPainterCommand& QwtPainterCommand::operator=( QwtPainterCommand&& other ) noexcept
+{
+    if ( this != &other )
+    {
+        reset();
+        m_type = other.m_type;
+        m_path = other.m_path;
+        other.m_type = Invalid;
+        other.m_path = nullptr;
+    }
     return *this;
 }
 
@@ -304,25 +278,25 @@ void QwtPainterCommand::reset()
     m_type = Invalid;
 }
 
-//! \return Painter path to be painted
+//! @return Painter path to be painted
 QPainterPath* QwtPainterCommand::path()
 {
     return m_path;
 }
 
-//! \return Attributes how to paint a QPixmap
+//! @return Attributes how to paint a QPixmap
 QwtPainterCommand::PixmapData* QwtPainterCommand::pixmapData()
 {
     return m_pixmapData;
 }
 
-//! \return Attributes how to paint a QImage
+//! @return Attributes how to paint a QImage
 QwtPainterCommand::ImageData* QwtPainterCommand::imageData()
 {
     return m_imageData;
 }
 
-//! \return Attributes of a state change
+//! @return Attributes of a state change
 QwtPainterCommand::StateData* QwtPainterCommand::stateData()
 {
     return m_stateData;

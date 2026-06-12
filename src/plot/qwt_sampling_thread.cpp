@@ -29,151 +29,115 @@
 
 class QwtSamplingThread::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtSamplingThread)
 public:
+    PrivateData( QwtSamplingThread* p )
+        : q_ptr( p )
+        , msecsInterval( 1e3 )
+    {
+    }
+
     QElapsedTimer timer;
     double msecsInterval;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param parent Parent object
- * \endif
  * 
- * \if CHINESE
- * @brief 构造函数
- * @param parent 父对象
- * \endif
  */
-QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent)
+QwtSamplingThread::QwtSamplingThread(QObject* parent)
+    : QThread(parent)
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data                = new PrivateData;
-    m_data->msecsInterval = 1e3;  // 1 second
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  * 
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSamplingThread::~QwtSamplingThread()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the interval (in ms), when sample() is called.
  * 
  * The default interval is 1000.0 ( = 1s )
  * 
  * @param msecs Interval
  * @sa interval()
- * \endif
  * 
- * \if CHINESE
- * @brief 更改调用 sample() 的间隔（毫秒）
- * 
- * 默认间隔为 1000.0（= 1秒）
- * 
- * @param msecs 间隔
- * @sa interval()
- * \endif
  */
 void QwtSamplingThread::setInterval(double msecs)
 {
+    QWT_D(d);
     if (msecs < 0.0)
         msecs = 0.0;
 
-    m_data->msecsInterval = msecs;
+    d->msecsInterval = msecs;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the interval (in ms), between 2 calls of sample()
  * @return Interval in milliseconds
  * @sa setInterval()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取两次调用 sample() 之间的间隔（毫秒）
- * @return 间隔（毫秒）
- * @sa setInterval()
- * \endif
  */
 double QwtSamplingThread::interval() const
 {
-    return m_data->msecsInterval;
+    QWT_DC(d);
+    return d->msecsInterval;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the time (in ms) since the thread was started
  * @return Elapsed time in milliseconds
  * @sa QThread::start(), run()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取线程启动以来的时间（毫秒）
- * @return 经过的时间（毫秒）
- * @sa QThread::start(), run()
- * \endif
  */
 double QwtSamplingThread::elapsed() const
 {
-    if (m_data->timer.isValid())
-        return m_data->timer.nsecsElapsed() / 1e6;
+    QWT_DC(d);
+    if (d->timer.isValid())
+        return d->timer.nsecsElapsed() / 1e6;
 
     return 0.0;
 }
 
 /**
- * \if ENGLISH
  * @brief Terminate the collecting thread
  * @sa QThread::start(), run()
- * \endif
  * 
- * \if CHINESE
- * @brief 终止收集线程
- * @sa QThread::start(), run()
- * \endif
  */
 void QwtSamplingThread::stop()
 {
-    m_data->timer.invalidate();
+    QWT_D(d);
+    d->timer.invalidate();
 }
 
 /**
- * \if ENGLISH
  * @brief Loop collecting samples started from QThread::start()
  * @sa stop()
- * \endif
  * 
- * \if CHINESE
- * @brief 从 QThread::start() 开始的样本收集循环
- * @sa stop()
- * \endif
  */
 void QwtSamplingThread::run()
 {
-    m_data->timer.start();
+    QWT_D(d);
+    d->timer.start();
 
     /*
         We should have all values in nsecs/qint64, but
         this would break existing code. TODO ...
         Anyway - for QThread::usleep we even need microseconds( usecs )
      */
-    while (m_data->timer.isValid()) {
-        const qint64 timestamp = m_data->timer.nsecsElapsed();
+    while (d->timer.isValid()) {
+        const qint64 timestamp = d->timer.nsecsElapsed();
         sample(timestamp / 1e9);  // seconds
 
-        if (m_data->msecsInterval > 0.0) {
-            const double interval = m_data->msecsInterval * 1e3;
-            const double elapsed  = (m_data->timer.nsecsElapsed() - timestamp) / 1e3;
+        if (d->msecsInterval > 0.0) {
+            const double interval = d->msecsInterval * 1e3;
+            const double elapsed  = (d->timer.nsecsElapsed() - timestamp) / 1e3;
 
             const double usecs = interval - elapsed;
 

@@ -25,8 +25,9 @@ static inline bool qwtInsidePole(const QwtScaleMap& map, double radius)
 
 class QwtPolarCurve::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarCurve)
 public:
-    PrivateData() : style(QwtPolarCurve::Lines), curveFitter(nullptr)
+    PrivateData(QwtPolarCurve* p) : q_ptr(p), style(QwtPolarCurve::Lines), curveFitter(nullptr)
     {
         symbol = new QwtSymbol();
         pen    = QPen(Qt::black);
@@ -47,13 +48,7 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtPolarCurve::QwtPolarCurve() : QwtPolarItem(QwtText())
 {
@@ -61,15 +56,8 @@ QwtPolarCurve::QwtPolarCurve() : QwtPolarItem(QwtText())
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with title
- * @param[in] title Title of the curve
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的构造函数
- * @param[in] title 曲线标题
- * \endif
+ * @param title Title of the curve
  */
 QwtPolarCurve::QwtPolarCurve(const QwtText& title) : QwtPolarItem(title)
 {
@@ -77,15 +65,8 @@ QwtPolarCurve::QwtPolarCurve(const QwtText& title) : QwtPolarItem(title)
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with title string
- * @param[in] title Title of the curve as string
- * \endif
- *
- * \if CHINESE
- * @brief 带标题字符串的构造函数
- * @param[in] title 曲线标题字符串
- * \endif
+ * @param title Title of the curve as string
  */
 QwtPolarCurve::QwtPolarCurve(const QString& title) : QwtPolarItem(QwtText(title))
 {
@@ -93,24 +74,17 @@ QwtPolarCurve::QwtPolarCurve(const QString& title) : QwtPolarItem(QwtText(title)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarCurve::~QwtPolarCurve()
 {
     delete m_series;
-    delete m_data;
 }
 
 //! Initialize data members
 void QwtPolarCurve::init()
 {
-    m_data   = new PrivateData;
+    QWT_PIMPL_CONSTRUCT_INIT();
     m_series = nullptr;
 
     setItemAttribute(QwtPolarItem::AutoScale);
@@ -121,15 +95,8 @@ void QwtPolarCurve::init()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPolarCurve::Rtti_PolarCurve
- * \endif
- *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPolarCurve::Rtti_PolarCurve
- * \endif
  */
 int QwtPolarCurve::rtti() const
 {
@@ -137,180 +104,117 @@ int QwtPolarCurve::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify an attribute for how to draw the legend identifier
- * @param[in] attribute Legend attribute to set
- * @param[in] on True to enable, false to disable
+ * @param attribute Legend attribute to set
+ * @param on True to enable, false to disable
  * @sa LegendAttribute, testLegendAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 指定图例标识符的绘制方式属性
- * @param[in] attribute 要设置的图例属性
- * @param[in] on true 启用，false 禁用
- * @sa LegendAttribute, testLegendAttribute()
- * \endif
  */
 void QwtPolarCurve::setLegendAttribute(LegendAttribute attribute, bool on)
 {
+    QWT_D(d);
+
     if (on)
-        m_data->legendAttributes |= attribute;
+        d->legendAttributes |= attribute;
     else
-        m_data->legendAttributes &= ~attribute;
+        d->legendAttributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a legend attribute is enabled
- * @param[in] attribute Legend attribute to test
+ * @param attribute Legend attribute to test
  * @return True if attribute is enabled
  * @sa LegendAttribute, setLegendAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试图例属性是否启用
- * @param[in] attribute 要测试的图例属性
- * @return 如果属性已启用则返回 true
- * @sa LegendAttribute, setLegendAttribute()
- * \endif
  */
 bool QwtPolarCurve::testLegendAttribute(LegendAttribute attribute) const
 {
-    return (m_data->legendAttributes & attribute);
+    QWT_DC(d);
+    return (d->legendAttributes & attribute);
 }
 
 /**
- * \if ENGLISH
  * @brief Set the curve's drawing style
- * @param[in] style Curve style
+ * @param style Curve style
  * @sa CurveStyle, style()
- * \endif
- *
- * \if CHINESE
- * @brief 设置曲线的绘制样式
- * @param[in] style 曲线样式
- * @sa CurveStyle, style()
- * \endif
  */
 void QwtPolarCurve::setStyle(CurveStyle style)
 {
-    if (style != m_data->style) {
-        m_data->style = style;
+    QWT_D(d);
+
+    if (style != d->style) {
+        d->style = style;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current style
  * @return Current style
  * @sa CurveStyle, setStyle()
- * \endif
- *
- * \if CHINESE
- * @brief 获取当前样式
- * @return 当前样式
- * @sa CurveStyle, setStyle()
- * \endif
  */
 QwtPolarCurve::CurveStyle QwtPolarCurve::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a symbol
- * @param[in] symbol New symbol (ownership is transferred)
+ * @param symbol New symbol (ownership is transferred)
  * @sa symbol()
- * \endif
- *
- * \if CHINESE
- * @brief 分配符号
- * @param[in] symbol 新符号（所有权转移）
- * @sa symbol()
- * \endif
  */
 void QwtPolarCurve::setSymbol(QwtSymbol* symbol)
 {
-    if (symbol != m_data->symbol) {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+    QWT_D(d);
+
+    if (symbol != d->symbol) {
+        delete d->symbol;
+        d->symbol = symbol;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current symbol
  * @return The current symbol
  * @sa setSymbol()
- * \endif
- *
- * \if CHINESE
- * @brief 获取当前符号
- * @return 当前符号
- * @sa setSymbol()
- * \endif
  */
 const QwtSymbol* QwtPolarCurve::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen
- * @param[in] pen New pen
+ * @param pen New pen
  * @sa pen()
- * \endif
- *
- * \if CHINESE
- * @brief 分配画笔
- * @param[in] pen 新画笔
- * @sa pen()
- * \endif
  */
 void QwtPolarCurve::setPen(const QPen& pen)
 {
-    if (pen != m_data->pen) {
-        m_data->pen = pen;
+    QWT_D(d);
+
+    if (pen != d->pen) {
+        d->pen = pen;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen used to draw the lines
  * @return Pen used to draw the lines
  * @sa setPen()
- * \endif
- *
- * \if CHINESE
- * @brief 获取用于绘制线条的画笔
- * @return 用于绘制线条的画笔
- * @sa setPen()
- * \endif
  */
 const QPen& QwtPolarCurve::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize data with a pointer to QwtSeriesData<QwtPointPolar>
- * @param[in] data Series data. The x-values represent azimuth, y-values represent radius.
+ * @param data Series data. The x-values represent azimuth, y-values represent radius.
  * @details Ownership of the data is transferred to the curve.
  * @sa data()
- * \endif
- *
- * \if CHINESE
- * @brief 使用 QwtSeriesData<QwtPointPolar> 指针初始化数据
- * @param[in] data 系列数据。x 值表示方位角，y 值表示半径。
- * @details 数据所有权转移给曲线。
- * @sa data()
- * \endif
  */
 void QwtPolarCurve::setData(QwtSeriesData< QwtPointPolar >* data)
 {
@@ -322,71 +226,44 @@ void QwtPolarCurve::setData(QwtSeriesData< QwtPointPolar >* data)
 }
 
 /**
- * \if ENGLISH
  * @brief Insert a curve fitter
- * @param[in] curveFitter Curve fitter (ownership is transferred)
+ * @param curveFitter Curve fitter (ownership is transferred)
  * @details A curve fitter interpolates the curve points. For example, QwtPolarFitter
  *          adds equidistant points so that the connection gets rounded instead
  *          of having straight lines. If curveFitter is nullptr, fitting is disabled.
  * @sa curveFitter()
- * \endif
- *
- * \if CHINESE
- * @brief 插入曲线拟合器
- * @param[in] curveFitter 曲线拟合器（所有权转移）
- * @details 曲线拟合器插值曲线点。例如，QwtPolarFitter 添加等距点，
- *          使连接变得平滑而不是直线。如果 curveFitter 为 nullptr，则禁用拟合。
- * @sa curveFitter()
- * \endif
  */
 void QwtPolarCurve::setCurveFitter(QwtCurveFitter* curveFitter)
 {
-    if (curveFitter != m_data->curveFitter) {
-        delete m_data->curveFitter;
-        m_data->curveFitter = curveFitter;
+    QWT_D(d);
+
+    if (curveFitter != d->curveFitter) {
+        delete d->curveFitter;
+        d->curveFitter = curveFitter;
 
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the curve fitter
  * @return The curve fitter
  * @sa setCurveFitter()
- * \endif
- *
- * \if CHINESE
- * @brief 获取曲线拟合器
- * @return 曲线拟合器
- * @sa setCurveFitter()
- * \endif
  */
 QwtCurveFitter* QwtPolarCurve::curveFitter() const
 {
-    return m_data->curveFitter;
+    QWT_DC(d);
+    return d->curveFitter;
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the curve
- * @param[in] painter Painter
- * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
- * @param[in] radialMap Maps radius values into painter coordinates
- * @param[in] pole Position of the pole in painter coordinates
- * @param[in] radius Radius of the complete plot area in painter coordinates
- * @param[in] canvasRect Contents rect of the canvas in painter coordinates
- * \endif
- *
- * \if CHINESE
- * @brief 绘制曲线
- * @param[in] painter 绘图器
- * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
- * @param[in] radialMap 将半径值映射到绘图器坐标
- * @param[in] pole 绘图器坐标中极点的位置
- * @param[in] radius 绘图器坐标中完整绘图区域的半径
- * @param[in] canvasRect 绘图器坐标中画布的内容矩形
- * \endif
+ * @param painter Painter
+ * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+ * @param radialMap Maps radius values into painter coordinates
+ * @param pole Position of the pole in painter coordinates
+ * @param radius Radius of the complete plot area in painter coordinates
+ * @param canvasRect Contents rect of the canvas in painter coordinates
  */
 void QwtPolarCurve::draw(QPainter* painter,
                          const QwtScaleMap& azimuthMap,
@@ -402,27 +279,14 @@ void QwtPolarCurve::draw(QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Draw an interval of the curve
- * @param[in] painter Painter
- * @param[in] azimuthMap Maps azimuth values to values related to 0.0, M_2PI
- * @param[in] radialMap Maps radius values into painter coordinates
- * @param[in] pole Position of the pole in painter coordinates
- * @param[in] from Index of the first point to be painted
- * @param[in] to Index of the last point to be painted. If to < 0, the curve will be painted to its last point.
+ * @param painter Painter
+ * @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+ * @param radialMap Maps radius values into painter coordinates
+ * @param pole Position of the pole in painter coordinates
+ * @param from Index of the first point to be painted
+ * @param to Index of the last point to be painted. If to < 0, the curve will be painted to its last point.
  * @sa drawCurve(), drawSymbols()
- * \endif
- *
- * \if CHINESE
- * @brief 绘制曲线的一个区间
- * @param[in] painter 绘图器
- * @param[in] azimuthMap 将方位角值映射到与 0.0, M_2PI 相关的值
- * @param[in] radialMap 将半径值映射到绘图器坐标
- * @param[in] pole 绘图器坐标中极点的位置
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引。如果 to < 0，曲线将绘制到最后一个点。
- * @sa drawCurve(), drawSymbols()
- * \endif
  */
 void QwtPolarCurve::draw(QPainter* painter,
                          const QwtScaleMap& azimuthMap,
@@ -431,6 +295,8 @@ void QwtPolarCurve::draw(QPainter* painter,
                          int from,
                          int to) const
 {
+    QWT_DC(d);
+
     if (!painter || dataSize() <= 0)
         return;
 
@@ -439,15 +305,15 @@ void QwtPolarCurve::draw(QPainter* painter,
 
     if (qwtVerifyRange(dataSize(), from, to) > 0) {
         painter->save();
-        painter->setPen(m_data->pen);
+        painter->setPen(d->pen);
 
-        drawCurve(painter, m_data->style, azimuthMap, radialMap, pole, from, to);
+        drawCurve(painter, d->style, azimuthMap, radialMap, pole, from, to);
 
         painter->restore();
 
-        if (m_data->symbol->style() != QwtSymbol::NoSymbol) {
+        if (d->symbol->style() != QwtSymbol::NoSymbol) {
             painter->save();
-            drawSymbols(painter, *m_data->symbol, azimuthMap, radialMap, pole, from, to);
+            drawSymbols(painter, *d->symbol, azimuthMap, radialMap, pole, from, to);
             painter->restore();
         }
     }
@@ -456,14 +322,14 @@ void QwtPolarCurve::draw(QPainter* painter,
 /*!
    Draw the line part (without symbols) of a curve interval.
 
-   \param painter Painter
-   \param style Curve style, see QwtPolarCurve::CurveStyle
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
-   \sa draw(), drawLines()
+   @param painter Painter
+   @param style Curve style, see QwtPolarCurve::CurveStyle
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
+   @sa draw(), drawLines()
  */
 void QwtPolarCurve::drawCurve(QPainter* painter,
                               int style,
@@ -486,13 +352,13 @@ void QwtPolarCurve::drawCurve(QPainter* painter,
 /*!
    Draw lines
 
-   \param painter Painter
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
-   \sa draw(), drawLines(), setCurveFitter()
+   @param painter Painter
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
+   @sa draw(), drawLines(), setCurveFitter()
  */
 void QwtPolarCurve::drawLines(QPainter* painter,
                               const QwtScaleMap& azimuthMap,
@@ -507,14 +373,16 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 
     QPolygonF polyline;
 
-    if (m_data->curveFitter) {
+    QWT_DC(d);
+
+    if (d->curveFitter) {
         QPolygonF points(size);
         for (int j = from; j <= to; j++) {
             const QwtPointPolar point = sample(j);
             points[ j - from ]        = QPointF(point.azimuth(), point.radius());
         }
 
-        points = m_data->curveFitter->fitCurve(points);
+        points = d->curveFitter->fitCurve(points);
 
         polyline.resize(points.size());
 
@@ -566,15 +434,15 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 /*!
    Draw symbols
 
-   \param painter Painter
-   \param symbol Curve symbol
-   \param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
-   \param radialMap Maps radius values into painter coordinates.
-   \param pole Position of the pole in painter coordinates
-   \param from index of the first point to be painted
-   \param to index of the last point to be painted.
+   @param painter Painter
+   @param symbol Curve symbol
+   @param azimuthMap Maps azimuth values to values related to 0.0, M_2PI
+   @param radialMap Maps radius values into painter coordinates.
+   @param pole Position of the pole in painter coordinates
+   @param from index of the first point to be painted
+   @param to index of the last point to be painted.
 
-   \sa setSymbol(), draw(), drawCurve()
+   @sa setSymbol(), draw(), drawCurve()
  */
 void QwtPolarCurve::drawSymbols(QPainter* painter,
                                 const QwtSymbol& symbol,
@@ -612,17 +480,9 @@ void QwtPolarCurve::drawSymbols(QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the number of data points
  * @return Number of points
  * @sa setData()
- * \endif
- *
- * \if CHINESE
- * @brief 获取数据点数量
- * @return 点的数量
- * @sa setData()
- * \endif
  */
 size_t QwtPolarCurve::dataSize() const
 {
@@ -630,21 +490,11 @@ size_t QwtPolarCurve::dataSize() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the icon representing the curve on the legend
- * @param[in] index Index of the legend entry (ignored as there is only one)
- * @param[in] size Icon size
+ * @param index Index of the legend entry (ignored as there is only one)
+ * @param size Icon size
  * @return Icon representing the curve on the legend
  * @sa QwtPolarItem::setLegendIconSize(), QwtPolarItem::legendData()
- * \endif
- *
- * \if CHINESE
- * @brief 获取图例上代表曲线的图标
- * @param[in] index 图例条目的索引（忽略，因为只有一个）
- * @param[in] size 图标大小
- * @return 图例上代表曲线的图标
- * @sa QwtPolarItem::setLegendIconSize(), QwtPolarItem::legendData()
- * \endif
  */
 QwtGraphic QwtPolarCurve::legendIcon(int index, const QSizeF& size) const
 {
@@ -660,13 +510,15 @@ QwtGraphic QwtPolarCurve::legendIcon(int index, const QSizeF& size) const
     QPainter painter(&graphic);
     painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPolarItem::RenderAntialiased));
 
-    if (m_data->legendAttributes == 0) {
+    QWT_DC(d);
+
+    if (d->legendAttributes == 0) {
         QBrush brush;
 
         if (style() != QwtPolarCurve::NoCurve) {
             brush = QBrush(pen().color());
-        } else if (m_data->symbol && (m_data->symbol->style() != QwtSymbol::NoSymbol)) {
-            brush = QBrush(m_data->symbol->pen().color());
+        } else if (d->symbol && (d->symbol->style() != QwtSymbol::NoSymbol)) {
+            brush = QBrush(d->symbol->pen().color());
         }
 
         if (brush.style() != Qt::NoBrush) {
@@ -675,7 +527,7 @@ QwtGraphic QwtPolarCurve::legendIcon(int index, const QSizeF& size) const
         }
     }
 
-    if (m_data->legendAttributes & QwtPolarCurve::LegendShowLine) {
+    if (d->legendAttributes & QwtPolarCurve::LegendShowLine) {
         if (pen() != Qt::NoPen) {
             QPen pn = pen();
             pn.setCapStyle(Qt::FlatCap);
@@ -687,10 +539,10 @@ QwtGraphic QwtPolarCurve::legendIcon(int index, const QSizeF& size) const
         }
     }
 
-    if (m_data->legendAttributes & QwtPolarCurve::LegendShowSymbol) {
-        if (m_data->symbol) {
+    if (d->legendAttributes & QwtPolarCurve::LegendShowSymbol) {
+        if (d->symbol) {
             QRectF r(0, 0, size.width(), size.height());
-            m_data->symbol->drawSymbol(&painter, r);
+            d->symbol->drawSymbol(&painter, r);
         }
     }
 
@@ -698,21 +550,11 @@ QwtGraphic QwtPolarCurve::legendIcon(int index, const QSizeF& size) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding interval necessary to display the item
- * @param[in] scaleId Scale index
+ * @param scaleId Scale index
  * @return Bounding interval
  * @details This interval can be useful for operations like clipping or autoscaling.
  * @sa QwtData::boundingRect()
- * \endif
- *
- * \if CHINESE
- * @brief 获取显示项所需的边界区间
- * @param[in] scaleId 刻度索引
- * @return 边界区间
- * @details 此区间可用于裁剪或自动缩放等操作。
- * @sa QwtData::boundingRect()
- * \endif
  */
 QwtInterval QwtPolarCurve::boundingInterval(int scaleId) const
 {

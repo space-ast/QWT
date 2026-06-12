@@ -15,70 +15,45 @@
 
 class QwtPolarPicker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPolarPicker)
+public:
+    PrivateData(QwtPolarPicker* p) : q_ptr(p)
+    {
+    }
 };
 
 /**
- * \if ENGLISH
  * @brief Create a polar plot picker
- * @param[in] canvas Plot canvas to observe, also the parent object
- * \endif
- *
- * \if CHINESE
- * @brief 创建极坐标绘图拾取器
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * \endif
+ * @param canvas Plot canvas to observe, also the parent object
  */
-QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), m_data(nullptr)
+QwtPolarPicker::QwtPolarPicker(QwtPolarCanvas* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Create a plot picker with rubber band and tracker mode
- * @param[in] rubberBand Rubberband style
- * @param[in] trackerMode Tracker mode
- * @param[in] canvas Plot canvas to observe, also the parent object
+ * @param rubberBand Rubberband style
+ * @param trackerMode Tracker mode
+ * @param canvas Plot canvas to observe, also the parent object
  * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(),
  *     QwtPicker::setTrackerMode, QwtPolarPlot::autoReplot(), QwtPolarPlot::replot()
- * \endif
- *
- * \if CHINESE
- * @brief 创建带有橡皮筋和追踪模式的绘图拾取器
- * @param[in] rubberBand 橡皮筋样式
- * @param[in] trackerMode 追踪模式
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(),
- *     QwtPicker::setTrackerMode, QwtPolarPlot::autoReplot(), QwtPolarPlot::replot()
- * \endif
  */
 QwtPolarPicker::QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPolarCanvas* canvas)
-    : QwtPicker(rubberBand, trackerMode, canvas), m_data(nullptr)
+    : QwtPicker(rubberBand, trackerMode, canvas), QWT_PIMPL_CONSTRUCT
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPolarPicker::~QwtPolarPicker()
 {
 }
 
+
 /**
- * \if ENGLISH
  * @brief Get the observed plot canvas
  * @return Observed plot canvas
- * \endif
- *
- * \if CHINESE
- * @brief 获取观察的绘图画布
- * @return 观察的绘图画布
- * \endif
  */
 QwtPolarCanvas* QwtPolarPicker::canvas()
 {
@@ -86,15 +61,8 @@ QwtPolarCanvas* QwtPolarPicker::canvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the observed plot canvas (const version)
  * @return Observed plot canvas
- * \endif
- *
- * \if CHINESE
- * @brief 获取观察的绘图画布（常量版本）
- * @return 观察的绘图画布
- * \endif
  */
 const QwtPolarCanvas* QwtPolarPicker::canvas() const
 {
@@ -102,15 +70,8 @@ const QwtPolarCanvas* QwtPolarPicker::canvas() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget containing the observed plot canvas
  * @return Plot widget, containing the observed plot canvas
- * \endif
- *
- * \if CHINESE
- * @brief 获取包含观察画布的绘图控件
- * @return 包含观察画布的绘图控件
- * \endif
  */
 QwtPolarPlot* QwtPolarPicker::plot()
 {
@@ -122,15 +83,8 @@ QwtPolarPlot* QwtPolarPicker::plot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget containing the observed plot canvas (const version)
  * @return Plot widget, containing the observed plot canvas
- * \endif
- *
- * \if CHINESE
- * @brief 获取包含观察画布的绘图控件（常量版本）
- * @return 包含观察画布的绘图控件
- * \endif
  */
 const QwtPolarPlot* QwtPolarPicker::plot() const
 {
@@ -144,8 +98,8 @@ const QwtPolarPlot* QwtPolarPicker::plot() const
 /*!
    Translate a pixel position into a position string
 
-   \param pos Position in pixel coordinates
-   \return Position string
+   @param pos Position in pixel coordinates
+   @return Position string
  */
 QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 {
@@ -154,7 +108,7 @@ QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 }
 
 /*!
-   \brief Translate a position into a position string
+   @brief Translate a position into a position string
 
    In case of HLineRubberBand the label is the value of the
    y position, in case of VLineRubberBand the value of the x position.
@@ -162,8 +116,8 @@ QwtText QwtPolarPicker::trackerText(const QPoint& pos) const
 
    The format for the double to string conversion is "%.4f".
 
-   \param pos Position
-   \return Position string
+   @param pos Position
+   @return Position string
  */
 QwtText QwtPolarPicker::trackerTextPolar(const QwtPointPolar& pos) const
 {
@@ -175,10 +129,10 @@ QwtText QwtPolarPicker::trackerTextPolar(const QwtPointPolar& pos) const
 /*!
    Append a point to the selection and update rubberband and tracker.
 
-   \param pos Additional point
-   \sa isActive, begin(), end(), move(), appended()
+   @param pos Additional point
+   @sa isActive, begin(), end(), move(), appended()
 
-   \note The appended(const QPoint &), appended(const QDoublePoint &)
+   @note The appended(const QPoint &), appended(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPolarPicker::append(const QPoint& pos)
@@ -190,10 +144,10 @@ void QwtPolarPicker::append(const QPoint& pos)
 /*!
    Move the last point of the selection
 
-   \param pos New position
-   \sa isActive, begin(), end(), append()
+   @param pos New position
+   @sa isActive, begin(), end(), append()
 
-   \note The moved(const QPoint &), moved(const QDoublePoint &)
+   @note The moved(const QPoint &), moved(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPolarPicker::move(const QPoint& pos)
@@ -205,9 +159,9 @@ void QwtPolarPicker::move(const QPoint& pos)
 /*!
    Close a selection setting the state to inactive.
 
-   \param ok If true, complete the selection and emit selected signals
+   @param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
-   \return true if the selection is accepted, false otherwise
+   @return true if the selection is accepted, false otherwise
  */
 
 bool QwtPolarPicker::end(bool ok)
@@ -253,9 +207,9 @@ bool QwtPolarPicker::end(bool ok)
 /*!
     Translate a point from widget into plot coordinates
 
-    \param pos Point in widget coordinates of the plot canvas
-    \return Point in plot coordinates
-    \sa transform(), canvas()
+    @param pos Point in widget coordinates of the plot canvas
+    @return Point in plot coordinates
+    @sa transform(), canvas()
  */
 QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
 {
@@ -267,15 +221,8 @@ QwtPointPolar QwtPolarPicker::invTransform(const QPoint& pos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of the region where picking is supported
  * @return Bounding rectangle of the region, where picking is supported
- * \endif
- *
- * \if CHINESE
- * @brief 获取支持拾取的区域边界矩形
- * @return 支持拾取的区域边界矩形
- * \endif
  */
 QRect QwtPolarPicker::pickRect() const
 {

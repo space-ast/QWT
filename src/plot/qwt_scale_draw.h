@@ -38,7 +38,6 @@ class QRectF;
 class QRect;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing scales
  * @details QwtScaleDraw can be used to draw linear or logarithmic scales.
  *          A scale has a position, an alignment and a length, which can be specified.
@@ -48,28 +47,13 @@ class QRect;
  *          After a scale division has been specified as a QwtScaleDiv object
  *          using QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s),
  *          the scale can be drawn with the QwtAbstractScaleDraw::draw() member.
- * \endif
- * \if CHINESE
- * @brief 用于绘制刻度的类
- * @details QwtScaleDraw 可用于绘制线性或对数刻度。刻度具有位置、对齐方式和长度，均可指定。
- *          可使用 setLabelRotation() 和 setLabelAlignment() 旋转标签并将其与刻度对齐。
- *
- *          使用 QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv &s) 将刻度划分指定为
- *          QwtScaleDiv 对象后，可使用 QwtAbstractScaleDraw::draw() 成员绘制刻度。
- * \endif
  */
 class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Alignment of the scale draw
-     * \sa setAlignment(), alignment()
-     * \endif
-     * \if CHINESE
-     * @brief 刻度绘制的对齐方式
-     * \sa setAlignment(), alignment()
-     * \endif
+     * @sa setAlignment(), alignment()
      */
     enum Alignment
     {
@@ -87,7 +71,7 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     };
 
     QwtScaleDraw();
-    virtual ~QwtScaleDraw();
+    ~QwtScaleDraw() override;
 
     /// Get the border distance hint
     void getBorderDistHint( const QFont&, int& start, int& end ) const;
@@ -102,27 +86,27 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
     void move( const QPointF& );
     void setLength( double length );
 
-    /// \return the alignment
+    /// @return the alignment
     Alignment alignment() const;
     /// Set the alignment
     void setAlignment( Alignment );
 
-    /// \return the orientation
+    /// @return the orientation
     Qt::Orientation orientation() const;
 
-    /// \return the position
+    /// @return the position
     QPointF pos() const;
-    /// \return the length
+    /// @return the length
     double length() const;
 
     /// Set the label alignment
     void setLabelAlignment( Qt::Alignment );
-    /// \return the label alignment
+    /// @return the label alignment
     Qt::Alignment labelAlignment() const;
 
     /// Set the label rotation
     void setLabelRotation( double rotation );
-    /// \return the label rotation
+    /// @return the label rotation
     double labelRotation() const;
 
     /// Get the maximum label height
@@ -152,23 +136,14 @@ class QWT_EXPORT QwtScaleDraw : public QwtAbstractScaleDraw
   private:
     void updateMap();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtScaleDraw)
 };
 
 /**
- * \if ENGLISH
  * @brief Move the position of the scale
  * @param x X coordinate
  * @param y Y coordinate
- * \sa move(const QPointF&)
- * \endif
- * \if CHINESE
- * @brief 移动刻度的位置
- * @param x X 坐标
- * @param y Y 坐标
- * \sa move(const QPointF&)
- * \endif
+ * @sa move(const QPointF&)
  */
 inline void QwtScaleDraw::move( double x, double y )
 {

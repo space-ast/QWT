@@ -31,21 +31,12 @@
 #include <qelapsedtimer.h>
 
 /**
- * \if ENGLISH
  * @brief QwtSystemClock provides high resolution clock time functions.
  *
  * Precision and time intervals are multiples of milliseconds (ms).
  *
  * ( QwtSystemClock is deprecated as QElapsedTimer offers the same precision )
- * \endif
  *
- * \if CHINESE
- * @brief QwtSystemClock 提供高分辨率时钟时间函数。
- *
- * 精度和时间间隔以毫秒 (ms) 为单位。
- *
- * ( QwtSystemClock 已弃用，因为 QElapsedTimer 提供相同的精度 )
- * \endif
  */
 
 class QWT_EXPORT QwtSystemClock

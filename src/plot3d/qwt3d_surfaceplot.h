@@ -1,34 +1,27 @@
-#ifndef qwt3d_SurfacePlot_h
-#define qwt3d_SurfacePlot_h
+#ifndef QWT3D_SURFACEPLOT_H
+#define QWT3D_SURFACEPLOT_H
 
 #include "qwt3d_plot.h"
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A class representing surfaces
  * @details SurfacePlot provides visualization of surface data in 3D space,
  *          supporting both grid-based and cell-based data representations.
- * \endif
  *
- * \if CHINESE
- * @brief 表示表面的类
- * @details SurfacePlot 提供三维空间中表面数据的可视化，
- *          支持基于网格和基于单元格的数据表示。
- * \endif
  */
 class QWT3D_EXPORT SurfacePlot : public Plot3D
 {
     Q_OBJECT
 
 public:
-    SurfacePlot(QWidget *parent = 0);
-    ~SurfacePlot();
+    SurfacePlot(QWidget *parent = nullptr);
+    ~SurfacePlot() override;
     // Recalculates surface normals
     void updateNormals();
     // Returns data resolution (1 means all data)
-    int resolution() const { return resolution_p; }
+    int resolution() const;
     // Returns the number of mesh cells for the ORIGINAL data
     std::pair<int, int> facets() const;
     bool loadFromData(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
@@ -56,37 +49,28 @@ public:
     }
 
     // Return floor style
-    Qwt3D::FLOORSTYLE floorStyle() const { return floorstyle_; }
+    Qwt3D::FLOORSTYLE floorStyle() const;
     // Sets floor style
-    void setFloorStyle(Qwt3D::FLOORSTYLE val) { floorstyle_ = val; }
+    void setFloorStyle(Qwt3D::FLOORSTYLE val);
     // Draw normals to every vertex
     void showNormals(bool);
     // Returns true, if normal drawing is on
-    bool normals() const { return datanormals_p; }
+    bool normals() const;
 
     // Sets length of normals in percent per hull diagonale
     void setNormalLength(double val);
     // Returns relative length of normals
-    double normalLength() const { return normalLength_p; }
+    double normalLength() const;
     // Increases plotting quality of normal arrows
     void setNormalQuality(int val);
     // Returns plotting quality of normal arrows
-    int normalQuality() const
-    {
-        return normalQuality_p;
-    }
+    int normalQuality() const;
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the resolution changes
      * @param resolution The new resolution value
-     * \endif
      *
-     * \if CHINESE
-     * @brief 分辨率变化时发出的信号
-     * @param resolution 新的分辨率值
-     * \endif
      */
     void resolutionChanged(int);
 
@@ -94,18 +78,14 @@ public Q_SLOTS:
     void setResolution(int);
 
 protected:
-    bool datanormals_p;
-    double normalLength_p;
-    int normalQuality_p;
+    QWT_DECLARE_PRIVATE(SurfacePlot)
 
-    virtual void calculateHull();
-    virtual void createData();
-    virtual void createEnrichment(Qwt3D::Enrichment &p);
+    void calculateHull() override;
+    void createData() override;
+    void createEnrichment(Qwt3D::Enrichment &p) override;
     virtual void createFloorData();
     void createNormals();
     void createPoints();
-
-    int resolution_p;
 
     void readIn(Qwt3D::GridData &gdata, Triple **data, unsigned int columns, unsigned int rows);
     void readIn(Qwt3D::GridData &gdata, double **data, unsigned int columns, unsigned int rows,
@@ -117,9 +97,6 @@ private:
     void Data2Floor();
     void Isolines2Floor();
 
-    Qwt3D::FLOORSTYLE floorstyle_;
-
-    Qwt3D::GridData *actualDataG_;
     virtual void createDataG();
     virtual void createFloorDataG();
     void createNormalsG();
@@ -127,7 +104,6 @@ private:
     void Isolines2FloorG();
     void setColorFromVertexG(int ix, int iy, bool skip = false);
 
-    Qwt3D::CellData *actualDataC_;
     virtual void createDataC();
     virtual void createFloorDataC();
     void createNormalsC();
@@ -138,4 +114,4 @@ private:
 
 } // ns
 
-#endif
+#endif // QWT3D_SURFACEPLOT_H

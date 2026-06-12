@@ -36,7 +36,6 @@ template< typename T >
 class QList;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays a spectrogram
  * @details A spectrogram displays 3-dimensional data, where the 3rd dimension
  *          ( the intensity ) is displayed using colors. The colors are calculated
@@ -49,36 +48,17 @@ class QList;
  *          In ContourMode contour lines are painted for the contour levels.
  * 
  * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
- * \endif
  * 
- * \if CHINESE
- * @brief 显示频谱图的绘图项
- * @details 频谱图显示三维数据，其中第三维（强度）使用颜色显示。颜色是通过颜色映射从值计算得到的。
- * 
- *          在多核系统上，通过将区域划分为多个瓦片（每个瓦片在不同的线程中渲染），
- *          通常可以提高图像合成的性能（参见 QwtPlotItem::setRenderThreadCount()）。
- * 
- *          在 ContourMode 中，会为等高线级别绘制等高线。
- * 
- * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
- * \endif
  */
 
 class QWT_EXPORT QwtPlotSpectrogram : public QwtPlotRasterItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Display modes
      * @details The display mode controls how the raster data will be represented.
      * @sa setDisplayMode(), testDisplayMode()
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 显示模式
-     * @details 显示模式控制栅格数据的表示方式。
-     * @sa setDisplayMode(), testDisplayMode()
-     * \endif
      */
 
     enum DisplayMode
@@ -95,7 +75,7 @@ public:
     // Constructor
     explicit QwtPlotSpectrogram(const QString& title = QString());
     // Destructor
-    virtual ~QwtPlotSpectrogram();
+    ~QwtPlotSpectrogram() override;
 
     // Set a display mode
     void setDisplayMode(DisplayMode, bool on = true);
@@ -152,9 +132,7 @@ public:
 
 protected:
     /**
-     * \if ENGLISH
      * @brief Render the image
-     * \endif
      */
     virtual QImage renderImage(const QwtScaleMap& xMap,
                                const QwtScaleMap& yMap,
@@ -162,37 +140,28 @@ protected:
                                const QSize& imageSize) const override;
 
     /**
-     * \if ENGLISH
      * @brief Calculate the contour raster size
-     * \endif
      */
     virtual QSize contourRasterSize(const QRectF&, const QRect&) const;
 
     /**
-     * \if ENGLISH
      * @brief Render the contour lines
-     * \endif
      */
     virtual QwtRasterData::ContourLines renderContourLines(const QRectF& rect, const QSize& raster) const;
 
     /**
-     * \if ENGLISH
      * @brief Draw the contour lines
-     * \endif
      */
     virtual void
     drawContourLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtRasterData::ContourLines&) const;
 
     /**
-     * \if ENGLISH
      * @brief Render a tile
-     * \endif
      */
     void renderTile(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRect& tile, QImage*) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotSpectrogram)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectrogram::DisplayModes)

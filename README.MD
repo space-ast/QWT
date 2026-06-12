@@ -27,7 +27,7 @@ Because the `Qwt` author has ceased maintenance, I personally prefer `Qwt`: its 
 `QCustomPlot` delivers out-of-the-box interactive features such as mouse zooming and axis scaling, whereas `Qwt` requires more code to achieve the same, yet it offers finer-grained control.  
 When my own projects need plotting I therefore choose `Qwt`, enhancing and optimizing it with the features I need—hence this project.
 
-**docment**：[https://czyt1988.github.io/QWT/zh/](https://czyt1988.github.io/QWT/zh/)
+**Documentation**：[https://czyt1988.github.io/QWT/](https://czyt1988.github.io/QWT/)
 
 ## Qwt7.0
 
@@ -42,7 +42,7 @@ Goals and current progress:
 
 - [x] CMake support  
 - [x] Qt 6 support  
-- [ ] C++11 modernization  
+- [x] C++11 modernization  
 - [x] Merged into single header/source for easier inclusion  
 - [x] Provide integrated interaction helpers for simpler usage  
 - [x] Modernized visual style  
@@ -59,7 +59,11 @@ Qwt7.0 now supports **CMake**; `qmake` may be dropped in the future.
 After installing Qwt you can simply link it in your project:
 
 ```cmake
-target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::qwt)
+find_package(qwt)
+# 2D plotting
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot)
+# 3D plotting
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot3d)
 ```
 
 ### Single Header & Source File
@@ -240,8 +244,8 @@ See [CHANGES.MD](./CHANGES.md) for detailed logs.
   
 |  |  |  |
 |:---:|:---:|:---:|
-|![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![parasite plot](./docs/assets/screenshots/parasite-plot.png)|
-|`examples/rasterview`|`playground/svgmap`|`examples/parasitePlot`|
+|![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![Item Editor](./docs/assets/screenshots/itemeditor.png)|
+|`examples/rasterview`|`playground/svgmap`|`examples/itemeditor`|
 
 ### Animated Demos
 
@@ -276,3 +280,17 @@ See [CHANGES.MD](./CHANGES.md) for detailed logs.
 |:---:|:---:|:---:|
 |![Compass Dial](./docs/assets/screenshots/dials-compass.png)|![Cockpit Dials](./docs/assets/screenshots/dials-cockpit.png)||
 |`examples/dials`|`examples/dials`||
+
+## Copyright
+
+    Qwt Widget Library
+    Copyright (C) 1997   Josef Wilgen
+    Copyright (C) 2002   Uwe Rathmann
+
+    Qwt is published under the Qwt License, Version 1.0.
+    You should have received a copy of this licence in the file
+    COPYING.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

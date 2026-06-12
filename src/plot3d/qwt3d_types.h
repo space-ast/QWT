@@ -2,8 +2,8 @@
 #pragma warning(disable : 4786)
 #endif
 
-#ifndef __DATATYPES_H__
-#define __DATATYPES_H__
+#ifndef QWT3D_TYPES_H
+#define QWT3D_TYPES_H
 
 #ifdef _DEBUG
 #include <fstream>
@@ -32,13 +32,7 @@ namespace Qwt3D
 const double PI = 3.14159265358979323846264338328;
 
 /**
- * \if ENGLISH
  * @brief Plotting style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 绘图样式枚举
- * \endif
  */
 enum PLOTSTYLE
 {
@@ -52,13 +46,7 @@ enum PLOTSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Shading style enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 着色样式枚举
- * \endif
  */
 enum SHADINGSTYLE
 {
@@ -67,13 +55,7 @@ enum SHADINGSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Style of coordinate system enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 坐标系样式枚举
- * \endif
  */
 enum COORDSTYLE
 {
@@ -83,13 +65,7 @@ enum COORDSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Different types of axis scales
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴刻度类型枚举
- * \endif
  */
 enum SCALETYPE
 {
@@ -99,13 +75,7 @@ enum SCALETYPE
 };
 
 /**
- * \if ENGLISH
  * @brief Plotting style for floor data (projections)
- * \endif
- *
- * \if CHINESE
- * @brief 底面数据绘图样式（投影）
- * \endif
  */
 enum FLOORSTYLE
 {
@@ -115,13 +85,7 @@ enum FLOORSTYLE
 };
 
 /**
- * \if ENGLISH
  * @brief Mesh type enumeration
- * \endif
- *
- * \if CHINESE
- * @brief 网格类型枚举
- * \endif
  */
 enum DATATYPE
 {
@@ -130,15 +94,8 @@ enum DATATYPE
 };
 
 /**
- * \if ENGLISH
  * @brief The 12 axes
- * \image html axes.png
- * \endif
- *
- * \if CHINESE
- * @brief 12 个坐标轴
- * \image html axes.png
- * \endif
+ * @image html axes.png
  */
 enum AXIS
 {
@@ -157,13 +114,7 @@ enum AXIS
 };
 
 /**
- * \if ENGLISH
  * @brief The 6 sides of a plot box
- * \endif
- *
- * \if CHINESE
- * @brief 绘图框的 6 个面
- * \endif
  */
 enum SIDE
 {
@@ -177,13 +128,7 @@ enum SIDE
 };
 
 /**
- * \if ENGLISH
  * @brief Possible anchor points for drawing operations
- * \endif
- *
- * \if CHINESE
- * @brief 绘图操作的可能锚点
- * \endif
  */
 enum ANCHOR
 {
@@ -199,15 +144,8 @@ enum ANCHOR
 };
 
 /**
- * \if ENGLISH
  * @brief Tuple [x,y]
  * @details A 2D point/vector represented by x and y coordinates.
- * \endif
- *
- * \if CHINESE
- * @brief 二元组 [x,y]
- * @details 由 x 和 y 坐标表示的二维点/向量。
- * \endif
  */
 struct QWT3D_EXPORT Tuple
 {
@@ -224,17 +162,9 @@ struct QWT3D_EXPORT Tuple
 };
 
 /**
- * \if ENGLISH
  * @brief Triple [x,y,z]
  * @details Consider Triples also as vectors in R^3. Provides basic vector operations
  *          including addition, subtraction, scaling, normalization, and length calculation.
- * \endif
- *
- * \if CHINESE
- * @brief 三元组 [x,y,z]
- * @details 三元组也可以视为 R^3 中的向量。提供基本向量运算，
- *          包括加减、缩放、归一化和长度计算。
- * \endif
  */
 struct QWT3D_EXPORT Triple
 {
@@ -364,19 +294,10 @@ inline const Triple operator*(const Triple& t, const Triple& t2)
 }
 
 /**
- * \if ENGLISH
  * @brief Parallelepiped spanned by 2 Triples
  * @details Please use normalized Parallelepipeds:
  *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
  *          minVertex.z <= maxVertex.z
- * \endif
- *
- * \if CHINESE
- * @brief 由两个三元组张成的平行六面体
- * @details 请使用归一化的平行六面体：
- *          minVertex.x <= maxVertex.x, minVertex.y <= maxVertex.y,
- *          minVertex.z <= maxVertex.z
- * \endif
  */
 struct QWT3D_EXPORT ParallelEpiped
 {
@@ -395,15 +316,8 @@ struct QWT3D_EXPORT ParallelEpiped
 };
 
 /**
- * \if ENGLISH
  * @brief Free vector
  * @details FreeVectors represent objects like normal vectors and other vector fields inside R^3.
- * \endif
- *
- * \if CHINESE
- * @brief 自由向量
- * @details 自由向量表示法向量等对象以及 R^3 内的其他向量场。
- * \endif
  */
 struct QWT3D_EXPORT FreeVector
 {
@@ -421,46 +335,22 @@ struct QWT3D_EXPORT FreeVector
 };
 
 /**
- * \if ENGLISH
  * @brief A free vector field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的自由向量场
- * \endif
  */
 using FreeVectorField = std::vector< FreeVector >;
 
 /**
- * \if ENGLISH
  * @brief A point field in R^3
- * \endif
- *
- * \if CHINESE
- * @brief R^3 中的点场
- * \endif
  */
 using TripleField = std::vector< Triple >;
 
 /**
- * \if ENGLISH
  * @brief Holds indices in a TripleField interpreted as counterclockwise node numbering for a convex polygon
- * \endif
- *
- * \if CHINESE
- * @brief 在三元组场中保存索引，解释为凸多边形的逆时针节点编号
- * \endif
  */
 using Cell = std::vector< unsigned >;
 
 /**
- * \if ENGLISH
  * @brief Vector of convex polygons. You need a TripleField as base for the node data
- * \endif
- *
- * \if CHINESE
- * @brief 凸多边形向量。需要 TripleField 作为节点数据的基
- * \endif
  */
 using CellField = std::vector< Cell >;
 
@@ -468,13 +358,7 @@ using CellField = std::vector< Cell >;
 unsigned tesselationSize(Qwt3D::CellField const& t);
 
 /**
- * \if ENGLISH
  * @brief Red-Green-Blue-Alpha value
- * \endif
- *
- * \if CHINESE
- * @brief 红-绿-蓝-透明度值
- * \endif
  */
 struct QWT3D_EXPORT RGBA
 {
@@ -488,13 +372,7 @@ struct QWT3D_EXPORT RGBA
 };
 
 /**
- * \if ENGLISH
  * @brief A Color field
- * \endif
- *
- * \if CHINESE
- * @brief 颜色场
- * \endif
  */
 using ColorVector = std::vector< RGBA >;
 
@@ -510,78 +388,47 @@ using DataRow    = std::vector< Vertex >;
 using DataMatrix = std::vector< DataRow >;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for plot data
  * @details Data provides the interface for different data representations
  *          used by 3D plot widgets.
- * \endif
- *
- * \if CHINESE
- * @brief 绘图数据的抽象基类
- * @details Data 提供三维绘图控件使用的不同数据表示的接口。
- * \endif
  */
 class Data
 {
+    QWT_DECLARE_PRIVATE(Data)
+
 public:
     Qwt3D::DATATYPE datatype;
-    Data()
-    {
-        datatype = Qwt3D::POLYGON;
-    }
-    virtual ~Data()
-    {
-    }
+    Data();
+    virtual ~Data();
     // Destroy content
     virtual void clear()       = 0;
     // No data
     virtual bool empty() const = 0;
-    void setHull(Qwt3D::ParallelEpiped const& h)
-    {
-        hull_p = h;
-    }
-    Qwt3D::ParallelEpiped const& hull() const
-    {
-        return hull_p;
-    }
-
-protected:
-    Qwt3D::ParallelEpiped hull_p;
+    void setHull(Qwt3D::ParallelEpiped const& h);
+    Qwt3D::ParallelEpiped const& hull() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a matrix of z-Values with limit access functions
  * @details GridData represents data on a rectangular grid topology,
  *          providing z-values organized in a matrix with associated normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的 z 值矩阵
- * @details GridData 表示矩形网格拓扑上的数据，
- *          提供以矩阵形式组织的 z 值及相关的法向量。
- * \endif
  */
 class GridData : public Data
 {
+    QWT_DECLARE_PRIVATE(GridData)
+
 public:
     GridData();
     // See setSize()
     GridData(unsigned int columns, unsigned int rows);
-    ~GridData()
-    {
-        clear();
-    }
+    ~GridData() override;
 
     int columns() const;
     int rows() const;
 
     // Destroy content
     void clear();
-    bool empty() const
-    {
-        return vertices.empty();
-    }
+    bool empty() const;
     // Destroys content and set new size, elements are uninitialized
     void setSize(unsigned int columns,
                  unsigned int rows);
@@ -590,36 +437,15 @@ public:
     DataMatrix vertices;
     // Mesh normals
     DataMatrix normals;
-    void setPeriodic(bool u, bool v)
-    {
-        uperiodic_ = u;
-        vperiodic_ = v;
-    }
-    bool uperiodic() const
-    {
-        return uperiodic_;
-    }
-    bool vperiodic() const
-    {
-        return vperiodic_;
-    }
-
-private:
-    bool uperiodic_, vperiodic_;
+    void setPeriodic(bool u, bool v);
+    bool uperiodic() const;
+    bool vperiodic() const;
 };
 
 /**
- * \if ENGLISH
  * @brief Implements a graph-like cell structure with limit access functions
  * @details CellData represents data as a collection of convex polygon cells
  *          with associated node coordinates and normals.
- * \endif
- *
- * \if CHINESE
- * @brief 实现带限制访问函数的图状单元格结构
- * @details CellData 将数据表示为凸多边形单元格的集合，
- *          附带相关的节点坐标和法向量。
- * \endif
  */
 class CellData : public Data
 {

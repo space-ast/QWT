@@ -38,7 +38,6 @@ class QwtRoundScaleDraw;
 class QwtAbstractScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief QwtDial class provides a rounded range control
  * @details QwtDial is intended as base class for dial widgets like
  *          speedometers, compass widgets, clocks...
@@ -54,24 +53,9 @@ class QwtAbstractScaleDraw;
  *          devices. For these high refresh rates QwtDial caches as much as possible.
  *          For derived classes it might be necessary to clear these caches manually
  *          according to attribute changes using invalidateCache().
- * \sa QwtCompass, QwtAnalogClock, QwtDialNeedle
- * \note The controls and dials examples shows different types of dials.
- * \note QDial is more similar to QwtKnob than to QwtDial
- * \endif
- * \if CHINESE
- * @brief QwtDial 类提供圆形范围控件
- * @details QwtDial 旨在作为表盘控件（如速度计、指南针控件、时钟等）的基类。
- *          表盘包含一个刻度和一个指示当前值的指针。根据 Mode，刻度或指针是固定的，
- *          另一个是旋转的。如果不是 isReadOnly()，可以通过拖动鼠标或使用键盘输入
- *          （参见 QwtAbstractSlider::keyPressEvent())）来旋转表盘。
- *          表盘可以循环，这意味着低于/高于一个限制的旋转会在另一个限制上继续（例如指南针）。
- *          刻度可以覆盖表盘的任意弧段，其值与表盘的 origin() 相关。
- *          表盘通常需要根据外部设备的值频繁更新。对于这些高刷新率，QwtDial 尽可能缓存。
- *          对于派生类，可能需要根据属性变化使用 invalidateCache() 手动清除这些缓存。
- * \sa QwtCompass, QwtAnalogClock, QwtDialNeedle
- * \note controls 和 dials 示例展示了不同类型的表盘。
- * \note QDial 更类似于 QwtKnob 而不是 QwtDial
- * \endif
+ * @sa QwtCompass, QwtAnalogClock, QwtDialNeedle
+ * @note The controls and dials examples shows different types of dials.
+ * @note QDial is more similar to QwtKnob than to QwtDial
  */
 
 class QWT_EXPORT QwtDial : public QwtAbstractSlider
@@ -90,18 +74,11 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
   public:
 
     /**
-     * \if ENGLISH
      * @brief Frame shadow
      * @details Unfortunately it is not possible to use QFrame::Shadow
      *          as a property of a widget that is not derived from QFrame.
      *          The following enum is made for the designer only. It is safe
      *          to use QFrame::Shadow instead.
-     * \endif
-     * \if CHINESE
-     * @brief 框架阴影
-     * @details 不幸的是，不能将 QFrame::Shadow 作为非 QFrame派生控件的属性。
-     *          以下枚举仅为设计器设计。使用 QFrame::Shadow 是安全的。
-     * \endif
      */
     enum Shadow
     {
@@ -116,12 +93,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     };
 
     /**
-     * \if ENGLISH
      * @brief Mode controlling whether the needle or the scale is rotating
-     * \endif
-     * \if CHINESE
-     * @brief 控制指针或刻度是否旋转的模式
-     * \endif
      */
     enum Mode
     {
@@ -135,7 +107,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     /// Constructor
     explicit QwtDial( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtDial();
+    ~QwtDial() override;
 
     /// Set the frame shadow
     void setFrameShadow( Shadow );
@@ -228,8 +200,7 @@ class QWT_EXPORT QwtDial : public QwtAbstractSlider
     void setAngleRange( double angle, double span );
     void drawNeedle( QPainter* ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtDial)
 };
 
 #endif

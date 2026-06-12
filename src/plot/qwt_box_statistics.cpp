@@ -15,14 +15,8 @@
 #include <algorithm>
 
 /**
- * \if ENGLISH
  * @brief Constructor with default Tukey method
  * @details Initializes the calculator with Tukey whisker method and coefficient 1.5.
- * \endif
- * \if CHINESE
- * @brief 默认使用 Tukey 方法的构造函数
- * @details 初始化计算器，使用 Tukey 须须方法和系数 1.5。
- * \endif
  */
 QwtBoxStatisticsCalculator::QwtBoxStatisticsCalculator()
     : m_method(Tukey)
@@ -31,14 +25,8 @@ QwtBoxStatisticsCalculator::QwtBoxStatisticsCalculator()
 }
 
 /**
- * \if ENGLISH
  * @brief Set the whisker calculation method
  * @param[in] method The whisker method to use (Tukey, Percentile, MinMax, StandardDeviation, StandardError)
- * \endif
- * \if CHINESE
- * @brief 设置须须计算方法
- * @param[in] method 要使用的须须方法（Tukey、Percentile、MinMax、StandardDeviation、StandardError）
- * \endif
  */
 void QwtBoxStatisticsCalculator::setWhiskerMethod(WhiskerMethod method)
 {
@@ -46,14 +34,8 @@ void QwtBoxStatisticsCalculator::setWhiskerMethod(WhiskerMethod method)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the whisker calculation method
  * @return Current whisker method
- * \endif
- * \if CHINESE
- * @brief 获取须须计算方法
- * @return 当前须须方法
- * \endif
  */
 QwtBoxStatisticsCalculator::WhiskerMethod QwtBoxStatisticsCalculator::whiskerMethod() const
 {
@@ -61,14 +43,8 @@ QwtBoxStatisticsCalculator::WhiskerMethod QwtBoxStatisticsCalculator::whiskerMet
 }
 
 /**
- * \if ENGLISH
  * @brief Set the whisker coefficient
  * @param[in] coeff Coefficient value (1.5 for Tukey method, percentile value for Percentile method)
- * \endif
- * \if CHINESE
- * @brief 设置须须系数
- * @param[in] coeff 系数值（Tukey 方法为 1.5，Percentile 方法为百分位值）
- * \endif
  */
 void QwtBoxStatisticsCalculator::setWhiskerCoefficient(double coeff)
 {
@@ -76,14 +52,8 @@ void QwtBoxStatisticsCalculator::setWhiskerCoefficient(double coeff)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the whisker coefficient
  * @return Current whisker coefficient
- * \endif
- * \if CHINESE
- * @brief 获取须须系数
- * @return 当前须须系数
- * \endif
  */
 double QwtBoxStatisticsCalculator::whiskerCoefficient() const
 {
@@ -154,7 +124,6 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector<double>& data
 }
 
 /**
- * \if ENGLISH
  * @brief Compute boxplot statistics from sorted data
  * @details Calculates whisker bounds, quartiles, median, and outlier count
  *          using the specified whisker method.
@@ -163,16 +132,6 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector<double>& data
  * @param[in] method Whisker calculation method (default: Tukey)
  * @param[in] coefficient Whisker coefficient (default: 1.5)
  * @return QwtBoxSample containing computed statistics
- * \endif
- * \if CHINESE
- * @brief 从已排序数据计算箱线图统计量
- * @details 使用指定的须须方法计算须须边界、四分位数、中位数和异常值计数。
- * @param[in] position 结果样本的位置值
- * @param[in] sortedData 已排序的数据向量
- * @param[in] method 须须计算方法（默认：Tukey）
- * @param[in] coefficient 须须系数（默认：1.5）
- * @return 包含计算统计量的 QwtBoxSample
- * \endif
  */
 QwtBoxSample QwtBoxStatisticsCalculator::calculate(
     double position,
@@ -252,7 +211,6 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(
 }
 
 /**
- * \if ENGLISH
  * @brief Compute boxplot statistics from unsorted raw data
  * @details Sorts the data internally and then calculates statistics.
  * @param[in] position The position value for the resulting sample
@@ -260,16 +218,6 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(
  * @param[in] method Whisker calculation method (default: Tukey)
  * @param[in] coefficient Whisker coefficient (default: 1.5)
  * @return QwtBoxSample containing computed statistics
- * \endif
- * \if CHINESE
- * @brief 从未排序的原始数据计算箱线图统计量
- * @details 内部对数据进行排序后计算统计量。
- * @param[in] position 结果样本的位置值
- * @param[in] rawData 未排序的原始数据向量
- * @param[in] method 须须计算方法（默认：Tukey）
- * @param[in] coefficient 须须系数（默认：1.5）
- * @return 包含计算统计量的 QwtBoxSample
- * \endif
  */
 QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(
     double position,
@@ -282,20 +230,11 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(
 }
 
 /**
- * \if ENGLISH
  * @brief Extract outlier values from sorted data based on box sample
  * @details Identifies all values outside the whisker bounds as outliers.
  * @param[in] sample The box sample containing whisker bounds
  * @param[in] sortedData Pre-sorted data vector
  * @return Vector of outlier values
- * \endif
- * \if CHINESE
- * @brief 根据箱线图样本从已排序数据中提取异常值
- * @details 将所有位于须须边界之外的值识别为异常值。
- * @param[in] sample 包含须须边界的箱线图样本
- * @param[in] sortedData 已排序的数据向量
- * @return 异常值向量
- * \endif
  */
 QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
     const QwtBoxSample& sample,
@@ -314,7 +253,6 @@ QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
 }
 
 /**
- * \if ENGLISH
  * @brief Compute full boxplot statistics including outliers
  * @details Calculates both the box sample and extracts outlier values in one call.
  * @param[in] position The position value for the resulting samples
@@ -323,17 +261,6 @@ QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
  * @param[out] outliers Output parameter for extracted outlier values
  * @param[in] method Whisker calculation method (default: Tukey)
  * @param[in] coefficient Whisker coefficient (default: 1.5)
- * \endif
- * \if CHINESE
- * @brief 计算完整的箱线图统计量，包括异常值
- * @details 在一次调用中同时计算箱线图样本并提取异常值。
- * @param[in] position 结果样本的位置值
- * @param[in] rawData 未排序的原始数据向量
- * @param[out] sample 输出参数，用于存储计算的箱线图统计量
- * @param[out] outliers 输出参数，用于存储提取的异常值
- * @param[in] method 须须计算方法（默认：Tukey）
- * @param[in] coefficient 须须系数（默认：1.5）
- * \endif
  */
 void QwtBoxStatisticsCalculator::calculateFull(
     double position,

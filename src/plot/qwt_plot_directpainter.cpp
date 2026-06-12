@@ -58,9 +58,11 @@ static inline bool qwtHasBackingStore( const QwtPlotCanvas* canvas )
 
 class QwtPlotDirectPainter::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotDirectPainter)
   public:
-    PrivateData()
-        : hasClipping( false )
+    PrivateData(QwtPlotDirectPainter* p)
+        : q_ptr(p)
+        , hasClipping( false )
         , seriesItem( nullptr )
         , from( 0 )
         , to( 0 )
@@ -80,59 +82,36 @@ class QwtPlotDirectPainter::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] parent Parent object
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] parent 父对象
- * \endif
  */
 QwtPlotDirectPainter::QwtPlotDirectPainter( QObject* parent )
-    : QObject( parent )
+    : QObject( parent ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotDirectPainter::~QwtPlotDirectPainter()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Change an attribute
  * @param[in] attribute Attribute to change
  * @param[in] on On/Off
  * @sa Attribute, testAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 更改属性
- * @param[in] attribute 要更改的属性
- * @param[in] on 开/关
- * @sa Attribute, testAttribute()
- * \endif
  */
 void QwtPlotDirectPainter::setAttribute( Attribute attribute, bool on )
 {
-    if ( bool( m_data->attributes & attribute ) != on )
+    QWT_D(d);
+    if ( bool( d->attributes & attribute ) != on )
     {
         if ( on )
-            m_data->attributes |= attribute;
+            d->attributes |= attribute;
         else
-            m_data->attributes &= ~attribute;
+            d->attributes &= ~attribute;
 
         if ( ( attribute == AtomicPainter ) && on )
             reset();
@@ -140,106 +119,66 @@ void QwtPlotDirectPainter::setAttribute( Attribute attribute, bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Test an attribute
  * @param[in] attribute Attribute to be tested
  * @return True, when attribute is enabled
  * @sa Attribute, setAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试属性
- * @param[in] attribute 要测试的属性
- * @return 如果属性启用则返回 true
- * @sa Attribute, setAttribute()
- * \endif
  */
 bool QwtPlotDirectPainter::testAttribute( Attribute attribute ) const
 {
-    return m_data->attributes & attribute;
+    QWT_DC(d);
+    return d->attributes & attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable clipping
  * @param[in] enable Enables clipping if true, disables it otherwise
  * @sa hasClipping(), clipRegion(), setClipRegion()
- * \endif
- *
- * \if CHINESE
- * @brief 启用或禁用裁剪
- * @param[in] enable 如果为 true 则启用裁剪，否则禁用
- * @sa hasClipping(), clipRegion(), setClipRegion()
- * \endif
  */
 void QwtPlotDirectPainter::setClipping( bool enable )
 {
-    m_data->hasClipping = enable;
+    QWT_D(d);
+    d->hasClipping = enable;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if clipping is enabled
  * @return true, when clipping is enabled
  * @sa setClipping(), clipRegion(), setClipRegion()
- * \endif
- *
- * \if CHINESE
- * @brief 检查是否启用了裁剪
- * @return 如果裁剪启用则返回 true
- * @sa setClipping(), clipRegion(), setClipRegion()
- * \endif
  */
 bool QwtPlotDirectPainter::hasClipping() const
 {
-    return m_data->hasClipping;
+    QWT_DC(d);
+    return d->hasClipping;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a clip region and enable clipping
  * @details Depending on the environment setting a proper clip region might improve
  *          the performance heavily. E.g. on Qt embedded only the clipped part of
  *          the backing store will be copied to a (maybe unaccelerated) frame buffer device.
  * @param[in] region Clip region
  * @sa clipRegion(), hasClipping(), setClipping()
- * \endif
- *
- * \if CHINESE
- * @brief 分配裁剪区域并启用裁剪
- * @details 根据环境，设置适当的裁剪区域可能会大大提高性能。
- *          例如，在 Qt Embedded 上，只有裁剪部分的后备存储会被复制到
- *          （可能未加速的）帧缓冲设备。
- * @param[in] region 裁剪区域
- * @sa clipRegion(), hasClipping(), setClipping()
- * \endif
  */
 void QwtPlotDirectPainter::setClipRegion( const QRegion& region )
 {
-    m_data->clipRegion = region;
-    m_data->hasClipping = true;
+    QWT_D(d);
+    d->clipRegion = region;
+    d->hasClipping = true;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the currently set clip region
  * @return Currently set clip region
  * @sa setClipRegion(), setClipping(), hasClipping()
- * \endif
- *
- * \if CHINESE
- * @brief 获取当前设置的裁剪区域
- * @return 当前设置的裁剪区域
- * @sa setClipRegion(), setClipping(), hasClipping()
- * \endif
  */
 QRegion QwtPlotDirectPainter::clipRegion() const
 {
-    return m_data->clipRegion;
+    QWT_DC(d);
+    return d->clipRegion;
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a set of points of a seriesItem
  * @details When observing a measurement while it is running, new points have to be
  *          added to an existing seriesItem. drawSeries() can be used to display them
@@ -250,22 +189,11 @@ QRegion QwtPlotDirectPainter::clipRegion() const
  * @param[in] seriesItem Item to be painted
  * @param[in] from Index of the first point to be painted
  * @param[in] to Index of the last point to be painted. If to < 0 the series will be painted to its last point.
- * \endif
- *
- * \if CHINESE
- * @brief 绘制系列项的一组点
- * @details 在观察正在运行的测量时，必须将新点添加到现有的系列项。
- *          drawSeries() 可以用于显示它们，避免完全重绘画布。
- *          设置 plot()->canvas()->setAttribute(Qt::WA_PaintOutsidePaintEvent, true);
- *          如果画布部件的绘制引擎支持此功能，将导致更快的绘制。
- * @param[in] seriesItem 要绘制的项
- * @param[in] from 要绘制的第一个点的索引
- * @param[in] to 要绘制的最后一个点的索引。如果 to < 0，系列将绘制到最后一个点。
- * \endif
  */
 void QwtPlotDirectPainter::drawSeries(
     QwtPlotSeriesItem* seriesItem, int from, int to )
 {
+    QWT_D(d);
     if ( seriesItem == nullptr || seriesItem->plot() == nullptr )
         return;
 
@@ -278,8 +206,8 @@ void QwtPlotDirectPainter::drawSeries(
     {
         QPainter painter( const_cast< QPixmap* >( plotCanvas->backingStore() ) );
 
-        if ( m_data->hasClipping )
-            painter.setClipRegion( m_data->clipRegion );
+        if ( d->hasClipping )
+            painter.setClipRegion( d->clipRegion );
 
         qwtRenderItem( &painter, canvasRect, seriesItem, from, to );
 
@@ -303,104 +231,91 @@ void QwtPlotDirectPainter::drawSeries(
 
     if ( immediatePaint )
     {
-        if ( !m_data->painter.isActive() )
+        if ( !d->painter.isActive() )
         {
             reset();
 
-            m_data->painter.begin( canvas );
+            d->painter.begin( canvas );
             canvas->installEventFilter( this );
         }
 
-        if ( m_data->hasClipping )
+        if ( d->hasClipping )
         {
-            m_data->painter.setClipRegion(
-                QRegion( canvasRect ) & m_data->clipRegion );
+            d->painter.setClipRegion(
+                QRegion( canvasRect ) & d->clipRegion );
         }
         else
         {
-            if ( !m_data->painter.hasClipping() )
-                m_data->painter.setClipRect( canvasRect );
+            if ( !d->painter.hasClipping() )
+                d->painter.setClipRect( canvasRect );
         }
 
-        qwtRenderItem( &m_data->painter, canvasRect, seriesItem, from, to );
+        qwtRenderItem( &d->painter, canvasRect, seriesItem, from, to );
 
-        if ( m_data->attributes & QwtPlotDirectPainter::AtomicPainter )
+        if ( d->attributes & QwtPlotDirectPainter::AtomicPainter )
         {
             reset();
         }
         else
         {
-            if ( m_data->hasClipping )
-                m_data->painter.setClipping( false );
+            if ( d->hasClipping )
+                d->painter.setClipping( false );
         }
     }
     else
     {
         reset();
 
-        m_data->seriesItem = seriesItem;
-        m_data->from = from;
-        m_data->to = to;
+        d->seriesItem = seriesItem;
+        d->from = from;
+        d->to = to;
 
         QRegion clipRegion = canvasRect;
-        if ( m_data->hasClipping )
-            clipRegion &= m_data->clipRegion;
+        if ( d->hasClipping )
+            clipRegion &= d->clipRegion;
 
         canvas->installEventFilter( this );
         canvas->repaint(clipRegion);
         canvas->removeEventFilter( this );
 
-        m_data->seriesItem = nullptr;
+        d->seriesItem = nullptr;
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Close the internal QPainter
- * \endif
- *
- * \if CHINESE
- * @brief 关闭内部 QPainter
- * \endif
  */
 void QwtPlotDirectPainter::reset()
 {
-    if ( m_data->painter.isActive() )
+    QWT_D(d);
+    if ( d->painter.isActive() )
     {
-        QWidget* w = static_cast< QWidget* >( m_data->painter.device() );
+        QWidget* w = static_cast< QWidget* >( d->painter.device() );
         if ( w )
             w->removeEventFilter( this );
 
-        m_data->painter.end();
+        d->painter.end();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Event filter
  * @param[in] object Object
  * @param[in] event Event
  * @return True if the event was handled
- * \endif
- *
- * \if CHINESE
- * @brief 事件过滤器
- * @param[in] object 对象
- * @param[in] event 事件
- * @return 如果事件被处理则返回 true
- * \endif
  */
 bool QwtPlotDirectPainter::eventFilter( QObject*, QEvent* event )
 {
+    QWT_D(d);
     if ( event->type() == QEvent::Paint )
     {
         reset();
 
-        if ( m_data->seriesItem )
+        if ( d->seriesItem )
         {
             const QPaintEvent* pe = static_cast< QPaintEvent* >( event );
 
-            QWidget* canvas = m_data->seriesItem->plot()->canvas();
+            QWidget* canvas = d->seriesItem->plot()->canvas();
 
             QPainter painter( canvas );
             painter.setClipRegion( pe->region() );
@@ -425,7 +340,7 @@ bool QwtPlotDirectPainter::eventFilter( QObject*, QEvent* event )
             if ( !doCopyCache )
             {
                 qwtRenderItem( &painter, canvas->contentsRect(),
-                    m_data->seriesItem, m_data->from, m_data->to );
+                    d->seriesItem, d->from, d->to );
             }
 
             return true; // don't call QwtPlotCanvas::paintEvent()

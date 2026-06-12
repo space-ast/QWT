@@ -18,28 +18,16 @@
 #include <qvector.h>
 
 /**
- * \if ENGLISH
  * @brief Helper class for computing boxplot statistics from raw data
  * @details Provides static methods to calculate whisker bounds, quartiles,
  *          median, and extract outliers using various methods (Tukey, percentile, SD, SE).
- * \endif
  * 
- * \if CHINESE
- * @brief 从原始数据计算箱线图统计量的辅助类
- * @details 提供静态方法，使用各种方法（Tukey、百分位、SD、SE）
- *          计算须须边界、四分位数、中位数并提取异常值。
- * \endif
  */
 class QWT_EXPORT QwtBoxStatisticsCalculator
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Whisker calculation method
-     * \endif
-     * \if CHINESE
-     * @brief 须须计算方法
-     * \endif
      */
     enum WhiskerMethod
     {
@@ -122,7 +110,7 @@ private:
     static QVector<double> sortData(const QVector<double>& data);
     
     WhiskerMethod m_method;
-    double m_coefficient;
+    double m_coefficient{1.5};
 };
 
 #endif // QWT_BOX_STATISTICS_H

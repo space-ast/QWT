@@ -36,8 +36,9 @@
 
 class QwtPlotOpenGLCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotOpenGLCanvas)
 public:
-    PrivateData() : isPolished(false), fboDirty(true), fbo(nullptr)
+    PrivateData(QwtPlotOpenGLCanvas* p) : q_ptr(p), numSamples(0), isPolished(false), fboDirty(true), fbo(nullptr)
     {
     }
 
@@ -54,19 +55,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 父绘图部件
- * @sa QwtPlot::setCanvas()
- * \endif
  */
-QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
+QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     QSurfaceFormat fmt = format();
     fmt.setSamples(4);
@@ -75,30 +68,21 @@ QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), Q
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] format OpenGL surface format
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] format OpenGL 表面格式
- * @param[in] plot 父绘图部件
- * @sa QwtPlot::setCanvas()
- * \endif
  */
 QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(const QSurfaceFormat& format, QwtPlot* plot)
-    : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this)
+    : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     init(format);
 }
 
 void QwtPlotOpenGLCanvas::init(const QSurfaceFormat& format)
 {
-    m_data             = new PrivateData;
-    m_data->numSamples = format.samples();
+    QWT_D(d);
+    d->numSamples = format.samples();
 
     setFormat(format);
 
@@ -106,52 +90,39 @@ void QwtPlotOpenGLCanvas::init(const QSurfaceFormat& format)
     setAttribute(Qt::WA_OpaquePaintEvent, true);
 #endif
 
-    setLineWidth(2);
-    setFrameShadow(QFrame::Sunken);
-    setFrameShape(QFrame::Panel);
+    setLineWidth(1);
+    setFrameShadow(QFrame::Plain);
+    setFrameShape(QFrame::Box);
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotOpenGLCanvas::~QwtPlotOpenGLCanvas()
 {
-    delete m_data;
 }
 
 /*!
    Paint event
 
-   \param event Paint event
-   \sa QwtPlot::drawCanvas()
+   @param event Paint event
+   @sa QwtPlot::drawCanvas()
  */
 void QwtPlotOpenGLCanvas::paintEvent(QPaintEvent* event)
 {
-    if (m_data->isPolished)
+    QWT_D(d);
+    if (d->isPolished)
         QOpenGLWidget::paintEvent(event);
 }
 
 /**
- * \if ENGLISH
  * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
  * @param[in] event Qt Event
  * @return See QOpenGLWidget::event()
- * \endif
- *
- * \if CHINESE
- * @brief Qt 事件处理器，处理 QEvent::PolishRequest 和 QEvent::StyleChange
- * @param[in] event Qt 事件
- * @return 请参阅 QOpenGLWidget::event()
- * \endif
  */
 bool QwtPlotOpenGLCanvas::event(QEvent* event)
 {
+    QWT_D(d);
     const bool ok = QOpenGLWidget::event(event);
 
     if (event->type() == QEvent::PolishRequest) {
@@ -159,7 +130,7 @@ bool QwtPlotOpenGLCanvas::event(QEvent* event)
         // early repaints. As we always have a QEvent::PolishRequest
         // followed by QEvent::Paint, we can ignore all these repaints.
 
-        m_data->isPolished = true;
+        d->isPolished = true;
     }
 
     if (event->type() == QEvent::PolishRequest || event->type() == QEvent::StyleChange) {
@@ -173,15 +144,8 @@ bool QwtPlotOpenGLCanvas::event(QEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache and repaint the canvas
  * @sa invalidatePaintCache()
- * \endif
- *
- * \if CHINESE
- * @brief 使绘制缓存失效并重绘画布
- * @sa invalidatePaintCache()
- * \endif
  */
 void QwtPlotOpenGLCanvas::replot()
 {
@@ -189,41 +153,27 @@ void QwtPlotOpenGLCanvas::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal backing store
- * \endif
- *
- * \if CHINESE
- * @brief 使内部后备存储失效
- * \endif
  */
 void QwtPlotOpenGLCanvas::invalidateBackingStore()
 {
-    m_data->fboDirty = true;
+    QWT_D(d);
+    d->fboDirty = true;
 }
 
 void QwtPlotOpenGLCanvas::clearBackingStore()
 {
-    delete m_data->fbo;
-    m_data->fbo = nullptr;
+    QWT_D(d);
+    delete d->fbo;
+    d->fbo = nullptr;
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the painter path for a styled or rounded border
  * @details When the canvas has no styled background or rounded borders
  *          the painter path is empty.
  * @param[in] rect Bounding rectangle of the canvas
  * @return Painter path, that can be used for clipping
- * \endif
- *
- * \if CHINESE
- * @brief 计算样式化或圆角边界的绘制路径
- * @details 当画布没有样式化背景或圆角边界时，
- *          绘制路径为空。
- * @param[in] rect 画布的边界矩形
- * @return 可用于裁剪的绘制路径
- * \endif
  */
 QPainterPath QwtPlotOpenGLCanvas::borderPath(const QRect& rect) const
 {
@@ -238,6 +188,7 @@ void QwtPlotOpenGLCanvas::initializeGL()
 //! Paint the plot
 void QwtPlotOpenGLCanvas::paintGL()
 {
+    QWT_D(d);
     const bool hasFocusIndicator = hasFocus() && focusIndicator() == CanvasFocusIndicator;
 
     QPainter painter;
@@ -259,24 +210,24 @@ void QwtPlotOpenGLCanvas::paintGL()
                - ???
          */
 
-        if (m_data->fbo) {
-            if (m_data->fbo->size() != fboSize) {
-                delete m_data->fbo;
-                m_data->fbo = nullptr;
+        if (d->fbo) {
+            if (d->fbo->size() != fboSize) {
+                delete d->fbo;
+                d->fbo = nullptr;
             }
         }
 
-        if (m_data->fbo == nullptr) {
+        if (d->fbo == nullptr) {
             QOpenGLFramebufferObjectFormat fboFormat;
-            fboFormat.setSamples(m_data->numSamples);
+            fboFormat.setSamples(d->numSamples);
             fboFormat.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
 
-            m_data->fbo      = new QOpenGLFramebufferObject(fboSize, fboFormat);
-            m_data->fboDirty = true;
+            d->fbo      = new QOpenGLFramebufferObject(fboSize, fboFormat);
+            d->fboDirty = true;
         }
 
-        if (m_data->fboDirty) {
-            m_data->fbo->bind();
+        if (d->fboDirty) {
+            d->fbo->bind();
 
             QOpenGLPaintDevice pd(fboSize);
 
@@ -285,10 +236,10 @@ void QwtPlotOpenGLCanvas::paintGL()
             draw(&fboPainter);
             fboPainter.end();
 
-            m_data->fboDirty = false;
+            d->fboDirty = false;
         }
 
-        QOpenGLFramebufferObject::blitFramebuffer(nullptr, m_data->fbo);
+        QOpenGLFramebufferObject::blitFramebuffer(nullptr, d->fbo);
     } else {
         painter.begin(this);
         draw(&painter);

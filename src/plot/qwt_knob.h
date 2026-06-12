@@ -33,7 +33,6 @@
 class QwtRoundScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief The Knob Widget
  * @details The QwtKnob widget imitates look and behavior of a volume knob on a radio.
  *          It looks similar to QDial - not to QwtDial.
@@ -44,20 +43,7 @@ class QwtRoundScaleDraw;
  *          - width <= 0: The knob is extended to the minimum of width/height of
  *            the contentsRect() and aligned in the other direction according to alignment().
  *          Setting a fixed knobWidth() is helpful to align several knobs with different scale labels.
- * \image html knob.png
- * \endif
- * \if CHINESE
- * @brief 旋钮控件
- * @details QwtKnob 控件模仿收音机音量旋钮的外观和行为。
- *          它看起来类似于 QDial - 而不是 QwtDial。
- *          旋钮的值范围可以被划分为多圈。
- *          旋钮的布局取决于 knobWidth()：
- *          - width > 0：旋钮的直径固定，旋钮根据 alignment() 标志在 contentsRect() 内对齐。
- *          - width <= 0：旋钮扩展到 contentsRect() 的最小宽度/高度，
- *            并在另一个方向根据 alignment() 对齐。
- *          设置固定的 knobWidth() 有助于对齐具有不同刻度标签的多个旋钮。
- * \image html knob.png
- * \endif
+ * @image html knob.png
  */
 
 class QWT_EXPORT QwtKnob : public QwtAbstractSlider
@@ -77,17 +63,10 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
 
 public:
     /**
-     * \if ENGLISH
      * @brief Style of the knob surface
      * @details Depending on the KnobStyle the surface of the knob is
      *          filled from the brushes of the widget palette().
-     * \sa setKnobStyle(), knobStyle()
-     * \endif
-     * \if CHINESE
-     * @brief 旋钮表面样式
-     * @details 根据 KnobStyle，旋钮表面使用控件 palette() 的画笔填充。
-     * \sa setKnobStyle(), knobStyle()
-     * \endif
+     * @sa setKnobStyle(), knobStyle()
      */
     enum KnobStyle
     {
@@ -105,17 +84,10 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Marker type
      * @details The marker indicates the current value on the knob.
      *          The default setting is a Notch marker.
-     * \sa setMarkerStyle(), setMarkerSize()
-     * \endif
-     * \if CHINESE
-     * @brief 标记类型
-     * @details 标记指示旋钮上的当前值。默认设置为 Notch 标记。
-     * \sa setMarkerStyle(), setMarkerSize()
-     * \endif
+     * @sa setMarkerStyle(), setMarkerSize()
      */
     enum MarkerStyle
     {
@@ -141,7 +113,7 @@ public:
     /// Constructor
     explicit QwtKnob( QWidget* parent = nullptr );
     /// Destructor
-    virtual ~QwtKnob();
+    ~QwtKnob() override;
 
     /// Set alignment of the knob inside contentsRect()
     void setAlignment( Qt::Alignment );
@@ -214,8 +186,7 @@ public:
     virtual bool isScrollPosition( const QPoint& ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtKnob)
 };
 
 #endif

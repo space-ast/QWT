@@ -38,7 +38,6 @@ class QPen;
 class QBrush;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing arrow markers on plots
  * @details QwtPlotArrowMarker is a specialized plot item for drawing arrows
  *          with customizable start and end points, arrow styles, lengths,
@@ -53,158 +52,83 @@ class QBrush;
  *          - Canvas pixel-based drawing (size preserved during zoom)
  *          - Flexible styling system with predefined and custom shapes
  *
- * \endif
  *
- * \if CHINESE
- * @brief 用于在绘图上绘制箭头标记的类
- * @details QwtPlotArrowMarker 是一个专门的绘图项，用于绘制具有可自定义起点和终点、
- *          箭头样式、长度和颜色的箭头。箭头在画布像素坐标中绘制，在缩放操作期间保持其大小，
- *          同时跟随画布平移。
- *
- *          主要特性：
- *          - 支持显式起点和终点指定
- *          - 通过起点、长度和旋转角度定位箭头
- *          - 可自定义箭头头部和尾部样式
- *          - 基于画布像素的绘制（缩放时大小保持不变）
- *          - 具有预定义和自定义形状的灵活样式系统
- * \endif
  */
 
 class QWT_EXPORT QwtPlotArrowMarker : public QwtPlotItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Arrow endpoint style types
      * @sa setHeadStyle(), setTailStyle(), headStyle(), tailStyle()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 箭头端点样式类型
-     * @sa setHeadStyle(), setTailStyle(), headStyle(), tailStyle()
-     * \endif
      */
     enum EndpointStyle
     {
         /**
-         * \if ENGLISH
          * @brief  No endpoint (invisible)
-         * \endif
          *
-         * \if CHINESE
-         * @brief 无端点（不可见）
-         * \endif
          */
         NoEndpoint = 0,
 
         /**
-         * \if ENGLISH
          * @brief Arrow head style
-         * \endif
          *
-         * \if CHINESE
-         * @brief 箭头头部样式
-         * \endif
          */
         ArrowHead,
 
         /**
-         * \if ENGLISH
          * @brief Circle endpoint
-         * \endif
          *
-         * \if CHINESE
-         * @brief 圆形端点
-         * \endif
          */
         Circle,
 
         /**
-         * \if ENGLISH
          * @brief Square endpoint
-         * \endif
          *
-         * \if CHINESE
-         * @brief 方形端点
-         * \endif
          */
         Square,
 
         /**
-         * \if ENGLISH
          * @brief Diamond endpoint
-         * \endif
          *
-         * \if CHINESE
-         * @brief 菱形端点
-         * \endif
          */
         Diamond,
 
         /**
-         * \if ENGLISH
          * @brief Triangle endpoint
-         * \endif
          *
-         * \if CHINESE
-         * @brief 三角形端点
-         * \endif
          */
         Triangle,
 
         /**
-         * \if ENGLISH
          * @brief Custom QPainterPath endpoint
-         * \endif
          *
-         * \if CHINESE
-         * @brief 自定义 QPainterPath 端点
-         * \endif
          */
         CustomPath
     };
 
     /**
-     * \if ENGLISH
      * @brief Arrow positioning mode
      * @sa setPositionMode(), positionMode()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 箭头定位模式
-     * @sa setPositionMode(), positionMode()
-     * \endif
      */
     enum PositionMode
     {
         /**
-         * \if ENGLISH
          * @brief  Use explicit start and end points
          *
          * In this mode, the arrow's start and end points are specified in plot coordinates.
          * The arrow's size will change proportionally to the plot's zoom level.
-         * \endif
          *
-         * \if CHINESE
-         * @brief 使用显式起点和终点
-         *
-         * 使用此模式，箭头的起点和终点基于绘图坐标，会跟随画布的缩放而改变大小
-         * \endif
          */
         ExplicitPoints,
 
         /**
-         * \if ENGLISH
          * @brief  start point, length, and angle
          *
          * in this mode, the arrow length will be fixed regardless of the zoom level
-         * \endif
          *
-         * \if CHINESE
-         * @brief 使用起点、长度和角度
-         *
-         * 使用此模式，箭头在画布的长度不会随着画布的缩放而改变，箭头的长度将是固定的
-         * \endif
          */
         StartLengthAngle
     };
@@ -219,7 +143,7 @@ public:
     explicit QwtPlotArrowMarker(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotArrowMarker();
+    ~QwtPlotArrowMarker() override;
 
     // Get the runtime type information
     virtual int rtti() const override;
@@ -371,8 +295,7 @@ private:
     QwtPlotArrowMarker(const QwtPlotArrowMarker&);
     QwtPlotArrowMarker& operator=(const QwtPlotArrowMarker&);
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotArrowMarker)
 };
 
 #endif  // QWT_PLOT_ARROWMARKER_H

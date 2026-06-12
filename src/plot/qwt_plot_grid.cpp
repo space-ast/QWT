@@ -32,6 +32,7 @@
 
 #include <qpainter.h>
 #include <qpen.h>
+#include <qcolor.h>
 
 static inline bool qwtFuzzyGreaterOrEqual( double d1, double d2 )
 {
@@ -40,12 +41,17 @@ static inline bool qwtFuzzyGreaterOrEqual( double d1, double d2 )
 
 class QwtPlotGrid::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotGrid)
+
   public:
-    PrivateData()
-        : xEnabled( true )
+    PrivateData( QwtPlotGrid* p )
+        : q_ptr( p )
+        , xEnabled( true )
         , yEnabled( true )
         , xMinEnabled( false )
         , yMinEnabled( false )
+        , majorPen( QColor("#c0c0c0"), 0.5, Qt::SolidLine )
+        , minorPen( QColor("#e0e0e0"), 0.5, Qt::DotLine )
     {
     }
 
@@ -62,49 +68,30 @@ class QwtPlotGrid::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Enables major grid, disables minor grid
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 启用主要网格，禁用次要网格
- * \endif
  */
 QwtPlotGrid::QwtPlotGrid()
     : QwtPlotItem( QwtText( "Grid" ) )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemInterest( QwtPlotItem::ScaleInterest, true );
     setZ( 10.0 );
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotGrid::~QwtPlotGrid()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotGrid
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotGrid
- * \endif
  */
 int QwtPlotGrid::rtti() const
 {
@@ -112,23 +99,17 @@ int QwtPlotGrid::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable vertical grid lines
  * @param[in] on Enable (true) or disable
  * @sa Minor grid lines can be enabled or disabled with enableXMin()
- * \endif
  *
- * \if CHINESE
- * @brief 启用或禁用垂直网格线
- * @param[in] on 启用（true）或禁用
- * @sa 次要网格线可以通过 enableXMin() 启用或禁用
- * \endif
  */
 void QwtPlotGrid::enableX( bool on )
 {
-    if ( m_data->xEnabled != on )
+    QWT_D(d);
+    if ( d->xEnabled != on )
     {
-        m_data->xEnabled = on;
+        d->xEnabled = on;
 
         legendChanged();
         itemChanged();
@@ -136,23 +117,17 @@ void QwtPlotGrid::enableX( bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable horizontal grid lines
  * @param[in] on Enable (true) or disable
  * @sa Minor grid lines can be enabled or disabled with enableYMin()
- * \endif
  *
- * \if CHINESE
- * @brief 启用或禁用水平网格线
- * @param[in] on 启用（true）或禁用
- * @sa 次要网格线可以通过 enableYMin() 启用或禁用
- * \endif
  */
 void QwtPlotGrid::enableY( bool on )
 {
-    if ( m_data->yEnabled != on )
+    QWT_D(d);
+    if ( d->yEnabled != on )
     {
-        m_data->yEnabled = on;
+        d->yEnabled = on;
 
         legendChanged();
         itemChanged();
@@ -160,23 +135,17 @@ void QwtPlotGrid::enableY( bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable minor vertical grid lines
  * @param[in] on Enable (true) or disable
  * @sa enableX()
- * \endif
  *
- * \if CHINESE
- * @brief 启用或禁用次要垂直网格线
- * @param[in] on 启用（true）或禁用
- * @sa enableX()
- * \endif
  */
 void QwtPlotGrid::enableXMin( bool on )
 {
-    if ( m_data->xMinEnabled != on )
+    QWT_D(d);
+    if ( d->xMinEnabled != on )
     {
-        m_data->xMinEnabled = on;
+        d->xMinEnabled = on;
 
         legendChanged();
         itemChanged();
@@ -184,23 +153,17 @@ void QwtPlotGrid::enableXMin( bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable minor horizontal grid lines
  * @param[in] on Enable (true) or disable
  * @sa enableY()
- * \endif
  *
- * \if CHINESE
- * @brief 启用或禁用次要水平网格线
- * @param[in] on 启用（true）或禁用
- * @sa enableY()
- * \endif
  */
 void QwtPlotGrid::enableYMin( bool on )
 {
-    if ( m_data->yMinEnabled != on )
+    QWT_D(d);
+    if ( d->yMinEnabled != on )
     {
-        m_data->yMinEnabled = on;
+        d->yMinEnabled = on;
 
         legendChanged();
         itemChanged();
@@ -208,47 +171,36 @@ void QwtPlotGrid::enableYMin( bool on )
 }
 
 /**
- * \if ENGLISH
  * @brief Assign an x axis scale division
  * @param[in] scaleDiv Scale division
- * \endif
  *
- * \if CHINESE
- * @brief 分配x轴比例划分
- * @param[in] scaleDiv 比例划分
- * \endif
  */
 void QwtPlotGrid::setXDiv( const QwtScaleDiv& scaleDiv )
 {
-    if ( m_data->xScaleDiv != scaleDiv )
+    QWT_D(d);
+    if ( d->xScaleDiv != scaleDiv )
     {
-        m_data->xScaleDiv = scaleDiv;
+        d->xScaleDiv = scaleDiv;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a y axis scale division
  * @param[in] scaleDiv Scale division
- * \endif
  *
- * \if CHINESE
- * @brief 分配y轴比例划分
- * @param[in] scaleDiv 比例划分
- * \endif
  */
 void QwtPlotGrid::setYDiv( const QwtScaleDiv& scaleDiv )
 {
-    if ( m_data->yScaleDiv != scaleDiv )
+    QWT_D(d);
+    if ( d->yScaleDiv != scaleDiv )
     {
-        m_data->yScaleDiv = scaleDiv;
+        d->yScaleDiv = scaleDiv;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen for both major and minor grid lines
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) which makes it
  *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
@@ -257,17 +209,7 @@ void QwtPlotGrid::setYDiv( const QwtScaleDiv& scaleDiv )
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配主要和次要网格线的画笔
- * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性
- *          （见 QPen::isCosmetic()）。此方法用于隐藏此不兼容性。
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotGrid::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -275,24 +217,18 @@ void QwtPlotGrid::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for both major and minor grid lines
  * @param[in] pen Pen
  * @sa setMajorPen(), setMinorPen()
- * \endif
  *
- * \if CHINESE
- * @brief 分配主要和次要网格线的画笔
- * @param[in] pen 画笔
- * @sa setMajorPen(), setMinorPen()
- * \endif
  */
 void QwtPlotGrid::setPen( const QPen& pen )
 {
-    if ( m_data->majorPen != pen || m_data->minorPen != pen )
+    QWT_D(d);
+    if ( d->majorPen != pen || d->minorPen != pen )
     {
-        m_data->majorPen = pen;
-        m_data->minorPen = pen;
+        d->majorPen = pen;
+        d->minorPen = pen;
 
         legendChanged();
         itemChanged();
@@ -300,7 +236,6 @@ void QwtPlotGrid::setPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen for major grid lines
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) which makes it
  *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
@@ -309,17 +244,7 @@ void QwtPlotGrid::setPen( const QPen& pen )
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配主要网格线的画笔
- * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性
- *          （见 QPen::isCosmetic()）。此方法用于隐藏此不兼容性。
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotGrid::setMajorPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -327,23 +252,17 @@ void QwtPlotGrid::setMajorPen( const QColor& color, qreal width, Qt::PenStyle st
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the major grid lines
  * @param[in] pen Pen
  * @sa majorPen(), setMinorPen(), setPen()
- * \endif
  *
- * \if CHINESE
- * @brief 分配主要网格线的画笔
- * @param[in] pen 画笔
- * @sa majorPen(), setMinorPen(), setPen()
- * \endif
  */
 void QwtPlotGrid::setMajorPen( const QPen& pen )
 {
-    if ( m_data->majorPen != pen )
+    QWT_D(d);
+    if ( d->majorPen != pen )
     {
-        m_data->majorPen = pen;
+        d->majorPen = pen;
 
         legendChanged();
         itemChanged();
@@ -351,7 +270,6 @@ void QwtPlotGrid::setMajorPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen for the minor grid lines
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) which makes it
  *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
@@ -360,17 +278,7 @@ void QwtPlotGrid::setMajorPen( const QPen& pen )
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa pen(), brush()
- * \endif
  *
- * \if CHINESE
- * @brief 构建并分配次要网格线的画笔
- * @details 在 Qt5 中，默认画笔宽度为 1.0（Qt4 中为 0.0），使其非装饰性
- *          （见 QPen::isCosmetic()）。此方法用于隐藏此不兼容性。
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotGrid::setMinorPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -378,23 +286,17 @@ void QwtPlotGrid::setMinorPen( const QColor& color, qreal width, Qt::PenStyle st
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen for the minor grid lines
  * @param[in] pen Pen
  * @sa minorPen(), setMajorPen(), setPen()
- * \endif
  *
- * \if CHINESE
- * @brief 分配次要网格线的画笔
- * @param[in] pen 画笔
- * @sa minorPen(), setMajorPen(), setPen()
- * \endif
  */
 void QwtPlotGrid::setMinorPen( const QPen& pen )
 {
-    if ( m_data->minorPen != pen )
+    QWT_D(d);
+    if ( d->minorPen != pen )
     {
-        m_data->minorPen = pen;
+        d->minorPen = pen;
 
         legendChanged();
         itemChanged();
@@ -402,7 +304,6 @@ void QwtPlotGrid::setMinorPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the grid
  * @details The grid is drawn into the bounding rectangle such that
  *          grid lines begin and end at the rectangle's borders. The X and Y
@@ -411,60 +312,52 @@ void QwtPlotGrid::setMinorPen( const QPen& pen )
  * @param[in] xMap X axis map
  * @param[in] yMap Y axis
  * @param[in] canvasRect Contents rectangle of the plot canvas
- * \endif
  *
- * \if CHINESE
- * @brief 绘制网格
- * @details 网格绘制在边界矩形内，使网格线在矩形边界开始和结束。
- *          X 和 Y 映射用于将比例划分映射到绘图区域屏幕。
- * @param[in] painter 绘图器
- * @param[in] xMap X轴映射
- * @param[in] yMap Y轴映射
- * @param[in] canvasRect 绘图画布的内容矩形
- * \endif
  */
 void QwtPlotGrid::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
+    QWT_DC(d);
+
     //  draw minor grid lines
-    QPen minorPen = m_data->minorPen;
+    QPen minorPen = d->minorPen;
     minorPen.setCapStyle( Qt::FlatCap );
 
     painter->setPen( minorPen );
 
-    if ( m_data->xEnabled && m_data->xMinEnabled )
+    if ( d->xEnabled && d->xMinEnabled )
     {
         drawLines( painter, canvasRect, Qt::Vertical, xMap,
-            m_data->xScaleDiv.ticks( QwtScaleDiv::MinorTick ) );
+            d->xScaleDiv.ticks( QwtScaleDiv::MinorTick ) );
         drawLines( painter, canvasRect, Qt::Vertical, xMap,
-            m_data->xScaleDiv.ticks( QwtScaleDiv::MediumTick ) );
+            d->xScaleDiv.ticks( QwtScaleDiv::MediumTick ) );
     }
 
-    if ( m_data->yEnabled && m_data->yMinEnabled )
+    if ( d->yEnabled && d->yMinEnabled )
     {
         drawLines( painter, canvasRect, Qt::Horizontal, yMap,
-            m_data->yScaleDiv.ticks( QwtScaleDiv::MinorTick ) );
+            d->yScaleDiv.ticks( QwtScaleDiv::MinorTick ) );
         drawLines( painter, canvasRect, Qt::Horizontal, yMap,
-            m_data->yScaleDiv.ticks( QwtScaleDiv::MediumTick ) );
+            d->yScaleDiv.ticks( QwtScaleDiv::MediumTick ) );
     }
 
     //  draw major grid lines
-    QPen majorPen = m_data->majorPen;
+    QPen majorPen = d->majorPen;
     majorPen.setCapStyle( Qt::FlatCap );
 
     painter->setPen( majorPen );
 
-    if ( m_data->xEnabled )
+    if ( d->xEnabled )
     {
         drawLines( painter, canvasRect, Qt::Vertical, xMap,
-            m_data->xScaleDiv.ticks( QwtScaleDiv::MajorTick ) );
+            d->xScaleDiv.ticks( QwtScaleDiv::MajorTick ) );
     }
 
-    if ( m_data->yEnabled )
+    if ( d->yEnabled )
     {
         drawLines( painter, canvasRect, Qt::Horizontal, yMap,
-            m_data->yScaleDiv.ticks( QwtScaleDiv::MajorTick ) );
+            d->yScaleDiv.ticks( QwtScaleDiv::MajorTick ) );
     }
 }
 
@@ -505,160 +398,106 @@ void QwtPlotGrid::drawLines( QPainter* painter, const QRectF& canvasRect,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen for the major grid lines
  * @return Pen for major grid lines
  * @sa setMajorPen(), setMinorPen(), setPen()
- * \endif
  *
- * \if CHINESE
- * @brief 获取主要网格线的画笔
- * @return 主要网格线的画笔
- * @sa setMajorPen(), setMinorPen(), setPen()
- * \endif
  */
 const QPen& QwtPlotGrid::majorPen() const
 {
-    return m_data->majorPen;
+    QWT_DC(d);
+    return d->majorPen;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen for the minor grid lines
  * @return Pen for minor grid lines
  * @sa setMinorPen(), setMajorPen(), setPen()
- * \endif
  *
- * \if CHINESE
- * @brief 获取次要网格线的画笔
- * @return 次要网格线的画笔
- * @sa setMinorPen(), setMajorPen(), setPen()
- * \endif
  */
 const QPen& QwtPlotGrid::minorPen() const
 {
-    return m_data->minorPen;
+    QWT_DC(d);
+    return d->minorPen;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if vertical grid lines are enabled
  * @return true if vertical grid lines are enabled
  * @sa enableX()
- * \endif
  *
- * \if CHINESE
- * @brief 检查垂直网格线是否启用
- * @return 如果垂直网格线启用返回true
- * @sa enableX()
- * \endif
  */
 bool QwtPlotGrid::xEnabled() const
 {
-    return m_data->xEnabled;
+    QWT_DC(d);
+    return d->xEnabled;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if minor vertical grid lines are enabled
  * @return true if minor vertical grid lines are enabled
  * @sa enableXMin()
- * \endif
  *
- * \if CHINESE
- * @brief 检查次要垂直网格线是否启用
- * @return 如果次要垂直网格线启用返回true
- * @sa enableXMin()
- * \endif
  */
 bool QwtPlotGrid::xMinEnabled() const
 {
-    return m_data->xMinEnabled;
+    QWT_DC(d);
+    return d->xMinEnabled;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if horizontal grid lines are enabled
  * @return true if horizontal grid lines are enabled
  * @sa enableY()
- * \endif
  *
- * \if CHINESE
- * @brief 检查水平网格线是否启用
- * @return 如果水平网格线启用返回true
- * @sa enableY()
- * \endif
  */
 bool QwtPlotGrid::yEnabled() const
 {
-    return m_data->yEnabled;
+    QWT_DC(d);
+    return d->yEnabled;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if minor horizontal grid lines are enabled
  * @return true if minor horizontal grid lines are enabled
  * @sa enableYMin()
- * \endif
  *
- * \if CHINESE
- * @brief 检查次要水平网格线是否启用
- * @return 如果次要水平网格线启用返回true
- * @sa enableYMin()
- * \endif
  */
 bool QwtPlotGrid::yMinEnabled() const
 {
-    return m_data->yMinEnabled;
+    QWT_DC(d);
+    return d->yMinEnabled;
 }
 
 
 /**
- * \if ENGLISH
  * @brief Get the scale division of the x axis
  * @return Scale division of the x axis
- * \endif
  *
- * \if CHINESE
- * @brief 获取x轴的比例划分
- * @return x轴的比例划分
- * \endif
  */
 const QwtScaleDiv& QwtPlotGrid::xScaleDiv() const
 {
-    return m_data->xScaleDiv;
+    QWT_DC(d);
+    return d->xScaleDiv;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale division of the y axis
  * @return Scale division of the y axis
- * \endif
  *
- * \if CHINESE
- * @brief 获取y轴的比例划分
- * @return y轴的比例划分
- * \endif
  */
 const QwtScaleDiv& QwtPlotGrid::yScaleDiv() const
 {
-    return m_data->yScaleDiv;
+    QWT_DC(d);
+    return d->yScaleDiv;
 }
 
 /**
- * \if ENGLISH
  * @brief Update the grid to changes of the axes scale division
  * @param[in] xScaleDiv Scale division of the x-axis
  * @param[in] yScaleDiv Scale division of the y-axis
  * @sa QwtPlot::updateAxes()
- * \endif
  *
- * \if CHINESE
- * @brief 更新网格以响应坐标轴比例划分的变化
- * @param[in] xScaleDiv x轴的比例划分
- * @param[in] yScaleDiv y轴的比例划分
- * @sa QwtPlot::updateAxes()
- * \endif
  */
 void QwtPlotGrid::updateScaleDiv( const QwtScaleDiv& xScaleDiv,
     const QwtScaleDiv& yScaleDiv )

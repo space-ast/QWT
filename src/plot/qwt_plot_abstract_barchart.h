@@ -31,25 +31,17 @@
 #include "qwt_plot_seriesitem.h"
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for bar chart items
  * @details In opposite to almost all other plot items bar charts can't be
  *          displayed inside of their bounding rectangle and need a special
  *          API how to calculate the width of the bars and how they affect
  *          the layout of the attached plot.
- * \endif
- * 
- * \if CHINESE
- * @brief 条形图项的抽象基类
- * @details 与几乎所有其他绘图项不同，条形图无法在其边界矩形内显示，
- *          需要特殊的 API 来计算条形的宽度以及它们如何影响附加绘图的布局。
- * \endif
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
   public:
     /*!
-        \brief Mode how to calculate the bar width
+        @brief Mode how to calculate the bar width
 
         setLayoutPolicy(), setLayoutHint(), barWidthHint()
      */
@@ -60,7 +52,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
            by the number of samples. The layoutHint() is used as a minimum width
            in paint device coordinates.
 
-           \sa boundingRectangle()
+           @sa boundingRectangle()
          */
         AutoAdjustSamples,
 
@@ -73,7 +65,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
            The bar width is calculated by multiplying layoutHint()
            with the height or width of the canvas.
 
-           \sa boundingRectangle()
+           @sa boundingRectangle()
          */
         ScaleSampleToCanvas,
 
@@ -86,7 +78,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
     // Constructor with title
     explicit QwtPlotAbstractBarChart( const QwtText& title );
     // Destructor
-    virtual ~QwtPlotAbstractBarChart();
+    ~QwtPlotAbstractBarChart() override;
 
     // Set the layout policy for bar width calculation
     void setLayoutPolicy( LayoutPolicy );
@@ -126,8 +118,7 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
         double value ) const;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotAbstractBarChart)
 };
 
 #endif

@@ -97,9 +97,11 @@ static QRegion qwtAlphaMask(const QImage& image, const QRegion& region)
 
 class QwtWidgetOverlay::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtWidgetOverlay)
 public:
-    PrivateData()
-        : maskMode(QwtWidgetOverlay::MaskHint), renderMode(QwtWidgetOverlay::AutoRenderMode), rgbaBuffer(nullptr)
+    PrivateData( QwtWidgetOverlay* p )
+        : q_ptr( p )
+        , maskMode(QwtWidgetOverlay::MaskHint), renderMode(QwtWidgetOverlay::AutoRenderMode), rgbaBuffer(nullptr)
     {
     }
 
@@ -122,20 +124,14 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param widget Parent widget, where the overlay is aligned to
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param widget 父控件，覆盖层与其对齐
- * \endif
  */
-QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
+QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget)
+    : QWidget(widget)
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setAttribute(Qt::WA_NoSystemBackground);
     setFocusPolicy(Qt::NoFocus);
@@ -147,98 +143,65 @@ QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtWidgetOverlay::~QwtWidgetOverlay()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify how to find the mask for the overlay
  * @param mode New mode
- * \sa maskMode()
- * \endif
+ * @sa maskMode()
  *
- * \if CHINESE
- * @brief 指定如何为覆盖层查找掩码
- * @param mode 新模式
- * \sa maskMode()
- * \endif
  */
 void QwtWidgetOverlay::setMaskMode(MaskMode mode)
 {
-    if (mode != m_data->maskMode) {
-        m_data->maskMode = mode;
-        m_data->resetRgbaBuffer();
+    QWT_D(d);
+    if (mode != d->maskMode) {
+        d->maskMode = mode;
+        d->resetRgbaBuffer();
     }
 }
 
 /**
- * \if ENGLISH
  * @return Mode how to find the mask for the overlay
- * \sa setMaskMode()
- * \endif
+ * @sa setMaskMode()
  *
- * \if CHINESE
- * @return 如何为覆盖层查找掩码的模式
- * \sa setMaskMode()
- * \endif
  */
 QwtWidgetOverlay::MaskMode QwtWidgetOverlay::maskMode() const
 {
-    return m_data->maskMode;
+    QWT_DC(d);
+    return d->maskMode;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the render mode
  * @param[in] mode Render mode
- * \sa RenderMode, renderMode()
- * \endif
+ * @sa RenderMode, renderMode()
  *
- * \if CHINESE
- * @brief 设置渲染模式
- * @param[in] mode 渲染模式
- * \sa RenderMode, renderMode()
- * \endif
  */
 void QwtWidgetOverlay::setRenderMode(RenderMode mode)
 {
-    m_data->renderMode = mode;
+    QWT_D(d);
+    d->renderMode = mode;
 }
 
 /**
- * \if ENGLISH
  * @return Render mode
- * \sa RenderMode, setRenderMode()
- * \endif
+ * @sa RenderMode, setRenderMode()
  *
- * \if CHINESE
- * @return 渲染模式
- * \sa RenderMode, setRenderMode()
- * \endif
  */
 QwtWidgetOverlay::RenderMode QwtWidgetOverlay::renderMode() const
 {
-    return m_data->renderMode;
+    QWT_DC(d);
+    return d->renderMode;
 }
 
 /**
- * \if ENGLISH
  * @brief Recalculate the mask and repaint the overlay
- * \endif
  *
- * \if CHINESE
- * @brief 重新计算掩码并重绘覆盖层
- * \endif
  */
 void QwtWidgetOverlay::updateOverlay()
 {
@@ -248,13 +211,14 @@ void QwtWidgetOverlay::updateOverlay()
 
 void QwtWidgetOverlay::updateMask()
 {
-    m_data->resetRgbaBuffer();
+    QWT_D(d);
+    d->resetRgbaBuffer();
 
     QRegion mask;
 
-    if (m_data->maskMode == QwtWidgetOverlay::MaskHint) {
+    if (d->maskMode == QwtWidgetOverlay::MaskHint) {
         mask = maskHint();
-    } else if (m_data->maskMode == QwtWidgetOverlay::AlphaMask) {
+    } else if (d->maskMode == QwtWidgetOverlay::AlphaMask) {
         // TODO: the image doesn't need to be larger than
         //       the bounding rectangle of the hint !!
 
@@ -266,9 +230,9 @@ void QwtWidgetOverlay::updateMask()
         // than reinitializing an existing one with
         // QImage::fill( 0 ) or memset()
 
-        m_data->rgbaBuffer = (uchar*)::calloc(width() * height(), 4);
+        d->rgbaBuffer = (uchar*)::calloc(width() * height(), 4);
 
-        QImage image(m_data->rgbaBuffer, width(), height(), qwtMaskImageFormat());
+        QImage image(d->rgbaBuffer, width(), height(), qwtMaskImageFormat());
 
         QPainter painter(&image);
         draw(&painter);
@@ -276,9 +240,9 @@ void QwtWidgetOverlay::updateMask()
 
         mask = qwtAlphaMask(image, hint);
 
-        if (m_data->renderMode == QwtWidgetOverlay::DrawOverlay) {
+        if (d->renderMode == QwtWidgetOverlay::DrawOverlay) {
             // we don't need the buffer later
-            m_data->resetRgbaBuffer();
+            d->resetRgbaBuffer();
         }
     }
 
@@ -296,34 +260,28 @@ void QwtWidgetOverlay::updateMask()
 }
 
 /*!
-   \if ENGLISH
    Paint event
    @param event Paint event
-   \sa drawOverlay()
-   \endif
+   @sa drawOverlay()
    *
-   \if CHINESE
-   绘制事件
-   @param event 绘制事件
-   \sa drawOverlay()
-   \endif
  */
 void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
     const QRegion& clipRegion = event->region();
 
     QPainter painter(this);
 
     bool useRgbaBuffer = false;
-    if (m_data->renderMode == QwtWidgetOverlay::CopyAlphaMask) {
+    if (d->renderMode == QwtWidgetOverlay::CopyAlphaMask) {
         useRgbaBuffer = true;
-    } else if (m_data->renderMode == QwtWidgetOverlay::AutoRenderMode) {
+    } else if (d->renderMode == QwtWidgetOverlay::AutoRenderMode) {
         if (painter.paintEngine()->type() == QPaintEngine::Raster)
             useRgbaBuffer = true;
     }
 
-    if (m_data->rgbaBuffer && useRgbaBuffer) {
-        const QImage image(m_data->rgbaBuffer, width(), height(), qwtMaskImageFormat());
+    if (d->rgbaBuffer && useRgbaBuffer) {
+        const QImage image(d->rgbaBuffer, width(), height(), qwtMaskImageFormat());
 
         const int rectCount = clipRegion.rectCount();
 
@@ -353,21 +311,16 @@ void QwtWidgetOverlay::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \if ENGLISH
    Resize event
    @param event Resize event
-   \endif
    *
-   \if CHINESE
-   调整大小事件
-   @param event 调整大小事件
-   \endif
  */
 void QwtWidgetOverlay::resizeEvent(QResizeEvent* event)
 {
     Q_UNUSED(event);
 
-    m_data->resetRgbaBuffer();
+    QWT_D(d);
+    d->resetRgbaBuffer();
 }
 
 void QwtWidgetOverlay::draw(QPainter* painter) const
@@ -393,7 +346,7 @@ void QwtWidgetOverlay::draw(QPainter* painter) const
 }
 
 /*!
-   \brief Calculate an approximation for the mask
+   @brief Calculate an approximation for the mask
 
    - MaskHint
      The hint is used as mask.
@@ -408,7 +361,7 @@ void QwtWidgetOverlay::draw(QPainter* painter) const
    The default implementation returns an invalid region
    indicating no hint.
 
-   \return Hint for the mask
+   @return Hint for the mask
  */
 QRegion QwtWidgetOverlay::maskHint() const
 {
@@ -416,7 +369,6 @@ QRegion QwtWidgetOverlay::maskHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Event filter
  *
  * @details Resize the overlay according to the size of the parent widget.
@@ -424,17 +376,7 @@ QRegion QwtWidgetOverlay::maskHint() const
  * @param[in] object Object to be filtered
  * @param[in] event Event
  * @return See QObject::eventFilter()
- * \endif
  *
- * \if CHINESE
- * @brief 事件过滤器
- *
- * @details 根据父控件的大小调整覆盖层的大小。
- *
- * @param[in] object 要过滤的对象
- * @param[in] event 事件
- * @return 参见 QObject::eventFilter()
- * \endif
  */
 
 bool QwtWidgetOverlay::eventFilter(QObject* object, QEvent* event)

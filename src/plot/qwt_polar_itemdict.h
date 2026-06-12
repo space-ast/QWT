@@ -17,22 +17,12 @@ using QwtPolarItemIterator = QList< QwtPolarItem* >::ConstIterator;
 using QwtPolarItemList     = QList< QwtPolarItem* >;
 
 /**
- * \if ENGLISH
  * @brief A dictionary for polar plot items
  * @details QwtPolarItemDict organizes polar plot items in increasing z-order.
  *          If autoDelete() is enabled, all attached items will be deleted
  *          in the destructor of the dictionary.
- * 
+ *
  * @sa QwtPolarItem::attach(), QwtPolarItem::detach(), QwtPolarItem::z()
- * \endif
- * 
- * \if CHINESE
- * @brief 极坐标绘图项的字典
- * @details QwtPolarItemDict 按递增的 z 顺序组织极坐标绘图项。
- *          如果启用了 autoDelete()，所有附加的项将在字典的析构函数中被删除。
- * 
- * @sa QwtPolarItem::attach(), QwtPolarItem::detach(), QwtPolarItem::z()
- * \endif
  */
 class QWT_EXPORT QwtPolarItemDict
 {
@@ -60,8 +50,7 @@ protected:
     void removeItem(QwtPolarItem*);
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPolarItemDict)
 };
 
 #endif

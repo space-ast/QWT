@@ -35,9 +35,11 @@
 
 class QwtRoundScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtRoundScaleDraw)
   public:
-    PrivateData()
-        : center( 50.0, 50.0 )
+    PrivateData( QwtRoundScaleDraw* p )
+        : q_ptr( p )
+        , center( 50.0, 50.0 )
         , radius( 50.0 )
         , startAngle( -135.0 )
         , endAngle( 135.0 )
@@ -52,105 +54,70 @@ class QwtRoundScaleDraw::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details The range of the scale is initialized to [0, 100], the center is set to (50, 50)
  *          with a radius of 50. The angle range is set to [-135, 135].
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 刻度范围初始化为 [0, 100]，中心设置在 (50, 50)，半径为 50。
- *          角度范围设置为 [-135, 135]。
- * \endif
  */
 QwtRoundScaleDraw::QwtRoundScaleDraw()
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtRoundScaleDraw::PrivateData;
-
+    QWT_D(d);
     setRadius( 50 );
-    scaleMap().setPaintInterval( m_data->startAngle, m_data->endAngle );
+    scaleMap().setPaintInterval( d->startAngle, d->endAngle );
 }
 
 //! Destructor
 QwtRoundScaleDraw::~QwtRoundScaleDraw()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the radius of the scale
  * @param radius New radius
  * @details Radius is the radius of the backbone without ticks and labels.
- * \sa moveCenter()
- * \endif
- * \if CHINESE
- * @brief 更改刻度的半径
- * @param radius 新的半径
- * @details 半径是不含刻度和标签的主干半径。
- * \sa moveCenter()
- * \endif
+ * @sa moveCenter()
  */
 void QwtRoundScaleDraw::setRadius( double radius )
 {
-    m_data->radius = radius;
+    QWT_D(d);
+    d->radius = radius;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the radius
  * @return Radius of the scale
  * @details Radius is the radius of the backbone without ticks and labels.
- * \sa setRadius(), extent()
- * \endif
- * \if CHINESE
- * @brief 获取半径
- * @return 刻度的半径
- * @details 半径是不含刻度和标签的主干半径。
- * \sa setRadius(), extent()
- * \endif
+ * @sa setRadius(), extent()
  */
 double QwtRoundScaleDraw::radius() const
 {
-    return m_data->radius;
+    QWT_DC(d);
+    return d->radius;
 }
 
 /**
- * \if ENGLISH
  * @brief Move the center of the scale draw, leaving the radius unchanged
  * @param center New center
- * \sa setRadius()
- * \endif
- * \if CHINESE
- * @brief 移动刻度绘制的中心，保持半径不变
- * @param center 新的中心
- * \sa setRadius()
- * \endif
+ * @sa setRadius()
  */
 void QwtRoundScaleDraw::moveCenter( const QPointF& center )
 {
-    m_data->center = center;
+    QWT_D(d);
+    d->center = center;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the center of the scale
  * @return Center point of the scale
- * \sa moveCenter()
- * \endif
- * \if CHINESE
- * @brief 获取刻度的中心
- * @return 刻度的中心点
- * \sa moveCenter()
- * \endif
+ * @sa moveCenter()
  */
 QPointF QwtRoundScaleDraw::center() const
 {
-    return m_data->center;
+    QWT_DC(d);
+    return d->center;
 }
 
 /**
- * \if ENGLISH
  * @brief Adjust the baseline circle segment for round scales
  * @param angle1 First boundary of the angle interval in degrees
  * @param angle2 Second boundary of the angle interval in degrees
@@ -162,58 +129,39 @@ QPointF QwtRoundScaleDraw::center() const
  * - The angle range is limited to [-360, 360] degrees. Angles exceeding this range will be clipped.
  * - For angles more or equal than 360 degrees above or below min(angle1, angle2), scale marks will not be drawn.
  * - If you need a counterclockwise scale, use QwtScaleDiv::setInterval()
- * \endif
- * \if CHINESE
- * @brief 调整圆形刻度的基线圆弧段
- * @param angle1 角度区间的第一个边界（度）
- * @param angle2 角度区间的第二个边界（度）
- * @details 基线将从 min(angle1,angle2) 绘制到 max(angle1, angle2)。
- *          默认设置为 [ -135, 135 ]。0 度角对应于 12 点钟位置，正角度按顺时针方向计算。
- *
- * @warning
- * - 角度范围限制在 [-360, 360] 度。超出此范围的角度将被裁剪。
- * - 对于大于或等于 min(angle1, angle2) 上下 360 度的角度，将不绘制刻度标记。
- * - 如果需要逆时针刻度，请使用 QwtScaleDiv::setInterval()
- * \endif
  */
 void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
 {
+    QWT_D(d);
 #if 0
     angle1 = qBound( -360.0, angle1, 360.0 );
     angle2 = qBound( -360.0, angle2, 360.0 );
 #endif
 
-    m_data->startAngle = angle1;
-    m_data->endAngle = angle2;
+    d->startAngle = angle1;
+    d->endAngle = angle2;
 
-    if ( m_data->startAngle == m_data->endAngle )
+    if ( d->startAngle == d->endAngle )
     {
-        m_data->startAngle -= 1;
-        m_data->endAngle += 1;
+        d->startAngle -= 1;
+        d->endAngle += 1;
     }
 
-    scaleMap().setPaintInterval( m_data->startAngle, m_data->endAngle );
+    scaleMap().setPaintInterval( d->startAngle, d->endAngle );
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the label for a major scale tick
  * @param painter Painter
  * @param value Value
- * \sa drawTick(), drawBackbone()
- * \endif
- * \if CHINESE
- * @brief 绘制主刻度标签
- * @param painter 绘制器
- * @param value 值
- * \sa drawTick(), drawBackbone()
- * \endif
+ * @sa drawTick(), drawBackbone()
  */
 void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
 {
+    QWT_DC(d);
     const double tval = scaleMap().transform( value );
-    if ( ( tval >= m_data->startAngle + 360.0 )
-        || ( tval <= m_data->startAngle - 360.0 ) )
+    if ( ( tval >= d->startAngle + 360.0 )
+        || ( tval <= d->startAngle - 360.0 ) )
     {
         return;
     }
@@ -222,7 +170,7 @@ void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
     if ( label.isEmpty() )
         return;
 
-    double radius = m_data->radius;
+    double radius = d->radius;
     if ( hasComponent( QwtAbstractScaleDraw::Ticks ) ||
         hasComponent( QwtAbstractScaleDraw::Backbone ) )
     {
@@ -235,9 +183,9 @@ void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
     const QSizeF sz = label.textSize( painter->font() );
     const double arc = qwtRadians( tval );
 
-    const double x = m_data->center.x() +
+    const double x = d->center.x() +
         ( radius + sz.width() / 2.0 ) * std::sin( arc );
-    const double y = m_data->center.y() -
+    const double y = d->center.y() -
         ( radius + sz.height() / 2.0 ) * std::cos( arc );
 
     const QRectF r( x - sz.width() / 2, y - sz.height() / 2,
@@ -246,34 +194,26 @@ void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a tick
  * @param painter Painter
  * @param value Value of the tick
  * @param len Length of the tick
- * \sa drawBackbone(), drawLabel()
- * \endif
- * \if CHINESE
- * @brief 绘制刻度线
- * @param painter 绘制器
- * @param value 刻度值
- * @param len 刻度线长度
- * \sa drawBackbone(), drawLabel()
- * \endif
+ * @sa drawBackbone(), drawLabel()
  */
 void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) const
 {
+    QWT_DC(d);
     if ( len <= 0 )
         return;
 
     const double tval = scaleMap().transform( value );
 
-    const double cx = m_data->center.x();
-    const double cy = m_data->center.y();
-    const double radius = m_data->radius;
+    const double cx = d->center.x();
+    const double cy = d->center.y();
+    const double radius = d->radius;
 
-    if ( ( tval < m_data->startAngle + 360.0 )
-        && ( tval > m_data->startAngle - 360.0 ) )
+    if ( ( tval < d->startAngle + 360.0 )
+        && ( tval > d->startAngle - 360.0 ) )
     {
         const double arc = qwtRadians( tval );
 
@@ -290,35 +230,28 @@ void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the baseline of the scale
  * @param painter Painter
- * \sa drawTick(), drawLabel()
- * \endif
- * \if CHINESE
- * @brief 绘制刻度的基线
- * @param painter 绘制器
- * \sa drawTick(), drawLabel()
- * \endif
+ * @sa drawTick(), drawLabel()
  */
 void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
 {
+    QWT_DC(d);
     const double deg1 = scaleMap().p1();
     const double deg2 = scaleMap().p2();
 
     const int a1 = qRound( qwtMinF( deg1, deg2 ) - 90 );
     const int a2 = qRound( qwtMaxF( deg1, deg2 ) - 90 );
 
-    const double radius = m_data->radius;
-    const double x = m_data->center.x() - radius;
-    const double y = m_data->center.y() - radius;
+    const double radius = d->radius;
+    const double x = d->center.x() - radius;
+    const double y = d->center.y() - radius;
 
     painter->drawArc( QRectF( x, y, 2 * radius, 2 * radius ),
         -a2 * 16, ( a2 - a1 + 1 ) * 16 );          // counterclockwise
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the extent of the scale
  * @param font Font used for painting the labels
  * @return Calculated extent
@@ -327,22 +260,12 @@ void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
  *
  * @warning The implemented algorithm is not too smart and calculates only an upper limit,
  *          that might be a few pixels too large.
- * \sa setMinimumExtent(), minimumExtent()
- * \endif
- * \if CHINESE
- * @brief 计算刻度的范围
- * @param font 用于绘制标签的字体
- * @return 计算出的范围
- * @details 范围是基线到刻度绘制最外层像素的距离。
- *          radius() + extent() 是边界圆半径的上限。
- *
- * @warning 实现的算法不够智能，只计算上限，可能会大几个像素。
- * \sa setMinimumExtent(), minimumExtent()
- * \endif
+ * @sa setMinimumExtent(), minimumExtent()
  */
 double QwtRoundScaleDraw::extent( const QFont& font ) const
 {
-    double d = 0.0;
+    QWT_DC(d);
+    double extent = 0.0;
 
     if ( hasComponent( QwtAbstractScaleDraw::Labels ) )
     {
@@ -355,8 +278,8 @@ double QwtRoundScaleDraw::extent( const QFont& font ) const
                 continue;
 
             const double tval = scaleMap().transform( value );
-            if ( ( tval < m_data->startAngle + 360 )
-                && ( tval > m_data->startAngle - 360 ) )
+            if ( ( tval < d->startAngle + 360 )
+                && ( tval > d->startAngle - 360 ) )
             {
                 const QwtText label = tickLabel( font, value );
                 if ( label.isEmpty() )
@@ -371,30 +294,30 @@ double QwtRoundScaleDraw::extent( const QFont& font ) const
                 double y = off * std::cos( arc );
 
                 const double dist = std::sqrt( x * x + y * y );
-                if ( dist > d )
-                    d = dist;
+                if ( dist > extent )
+                    extent = dist;
             }
         }
     }
 
     if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
     {
-        d += maxTickLength();
+        extent += maxTickLength();
     }
 
     if ( hasComponent( QwtAbstractScaleDraw::Backbone ) )
     {
-        d += qwtMaxF( penWidthF(), 1.0 );
+        extent += qwtMaxF( penWidthF(), 1.0 );
     }
 
     if ( hasComponent( QwtAbstractScaleDraw::Labels ) &&
         ( hasComponent( QwtAbstractScaleDraw::Ticks ) ||
         hasComponent( QwtAbstractScaleDraw::Backbone ) ) )
     {
-        d += spacing();
+        extent += spacing();
     }
 
-    d = qwtMaxF( d, minimumExtent() );
+    extent = qwtMaxF( extent, minimumExtent() );
 
-    return d;
+    return extent;
 }

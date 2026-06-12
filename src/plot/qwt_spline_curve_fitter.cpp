@@ -32,17 +32,9 @@
 #include <qpainterpath.h>
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * Creates a spline curve fitter with a cardinal spline using uniform parametrization.
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * 创建一个使用均匀参数化的基数样条的样条曲线拟合器。
- * \endif
  */
 QwtSplineCurveFitter::QwtSplineCurveFitter() : QwtCurveFitter(QwtCurveFitter::Path)
 {
@@ -51,17 +43,9 @@ QwtSplineCurveFitter::QwtSplineCurveFitter() : QwtCurveFitter(QwtCurveFitter::Pa
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  *
  * Deletes the internal spline object.
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- *
- * 删除内部样条对象。
- * \endif
  */
 QwtSplineCurveFitter::~QwtSplineCurveFitter()
 {
@@ -69,7 +53,6 @@ QwtSplineCurveFitter::~QwtSplineCurveFitter()
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a spline
  *
  * The spline needs to be allocated by new and will be deleted
@@ -77,16 +60,6 @@ QwtSplineCurveFitter::~QwtSplineCurveFitter()
  *
  * @param spline Spline
  * @sa spline()
- * \endif
- *
- * \if CHINESE
- * @brief 分配样条
- *
- * 样条需要使用 new 分配，并将在拟合器的析构函数中被删除。
- *
- * @param spline 样条
- * @sa spline()
- * \endif
  */
 void QwtSplineCurveFitter::setSpline(QwtSpline* spline)
 {
@@ -98,19 +71,10 @@ void QwtSplineCurveFitter::setSpline(QwtSpline* spline)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the spline (const version)
  *
  * @return Spline
  * @sa setSpline()
- * \endif
- *
- * \if CHINESE
- * @brief 获取样条（const 版本）
- *
- * @return 样条
- * @sa setSpline()
- * \endif
  */
 const QwtSpline* QwtSplineCurveFitter::spline() const
 {
@@ -118,19 +82,10 @@ const QwtSpline* QwtSplineCurveFitter::spline() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the spline (non-const version)
  *
  * @return Spline
  * @sa setSpline()
- * \endif
- *
- * \if CHINESE
- * @brief 获取样条（非 const 版本）
- *
- * @return 样条
- * @sa setSpline()
- * \endif
  */
 QwtSpline* QwtSplineCurveFitter::spline()
 {
@@ -138,23 +93,12 @@ QwtSpline* QwtSplineCurveFitter::spline()
 }
 
 /**
- * \if ENGLISH
  * @brief Find a curve which has the best fit to a series of data points
  *
  * @param points Series of data points
  * @return Fitted Curve
  *
  * @sa fitCurvePath()
- * \endif
- *
- * \if CHINESE
- * @brief 找到最适合一系列数据点的曲线
- *
- * @param points 数据点系列
- * @return 拟合曲线
- *
- * @sa fitCurvePath()
- * \endif
  */
 QPolygonF QwtSplineCurveFitter::fitCurve(const QPolygonF& points) const
 {
@@ -168,23 +112,12 @@ QPolygonF QwtSplineCurveFitter::fitCurve(const QPolygonF& points) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find a curve path which has the best fit to a series of data points
  *
  * @param points Series of data points
  * @return Fitted Curve
  *
  * @sa fitCurve()
- * \endif
- *
- * \if CHINESE
- * @brief 找到最适合一系列数据点的曲线路径
- *
- * @param points 数据点系列
- * @return 拟合曲线
- *
- * @sa fitCurve()
- * \endif
  */
 QPainterPath QwtSplineCurveFitter::fitCurvePath(const QPolygonF& points) const
 {

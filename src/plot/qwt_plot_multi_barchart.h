@@ -35,7 +35,6 @@ class QwtColumnSymbol;
 template< typename T > class QwtSeriesData;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotMultiBarChart displays a series of samples that consist each of a set of values
  * @details Each value is displayed as a bar, the bars of each set can be organized
  *          side by side or accumulated.
@@ -53,22 +52,7 @@ template< typename T > class QwtSeriesData;
  * 
  * @sa QwtPlotBarChart, QwtPlotHistogram
  * @sa QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
  * 
- * \if CHINESE
- * @brief QwtPlotMultiBarChart 显示一系列由每组值组成的样本
- * @details 每个值显示为一个条形，每组的条形可以并排或累加显示。
- * 
- *          每组的每个条形由 QwtColumnSymbol 渲染，通过 setSymbol() 设置。
- *          不同组的条形使用相同的符号。可以通过重载 specialSymbol() 或 drawBar() 来实现例外。
- * 
- *          根据其 orientation()，条形水平或垂直显示。条形覆盖基线()和值之间的间隔。
- * 
- *          与大多数其他绘图项不同，QwtPlotMultiBarChart 为图例返回多个条目 - 每个符号一个。
- * 
- * @sa QwtPlotBarChart, QwtPlotHistogram
- * @sa QwtPlotSeriesItem::orientation(), QwtPlotAbstractBarChart::baseline()
- * \endif
  */
 class QWT_EXPORT QwtPlotMultiBarChart
     : public QwtPlotAbstractBarChart
@@ -76,17 +60,10 @@ class QWT_EXPORT QwtPlotMultiBarChart
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Chart styles
      * @details The default setting is QwtPlotMultiBarChart::Grouped.
      * @sa setStyle(), style()
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 图表样式
-     * @details 默认设置为 QwtPlotMultiBarChart::Grouped。
-     * @sa setStyle(), style()
-     * \endif
      */
     enum ChartStyle
     {
@@ -94,15 +71,10 @@ class QWT_EXPORT QwtPlotMultiBarChart
         Grouped,
 
         /**
-         * \if ENGLISH
          * The bars are displayed on top of each other accumulating
          * to a single bar. All values of a set need to have the same
          * sign.
-         * \endif
          * 
-         * \if CHINESE
-         * 条形相互叠加显示，累积为单个条形。一组中的所有值必须具有相同的符号。
-         * \endif
          */
         Stacked
     };
@@ -113,10 +85,13 @@ class QWT_EXPORT QwtPlotMultiBarChart
     explicit QwtPlotMultiBarChart( const QwtText& title );
 
     /// Destructor
-    virtual ~QwtPlotMultiBarChart();
+    ~QwtPlotMultiBarChart() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;
+
+    /// Attach to a plot (applies color cycle to symbols if none user-set)
+    void attach(QwtPlot* plot) override;
 
     /// Set the bar titles
     void setBarTitles( const QList< QwtText >& );
@@ -192,8 +167,7 @@ class QWT_EXPORT QwtPlotMultiBarChart
     /// Initialize the multi-bar chart
     void init();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotMultiBarChart)
 };
 
 #endif

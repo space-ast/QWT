@@ -34,19 +34,11 @@ class QPointF;
 class QRectF;
 
 /**
- * \if ENGLISH
  * @brief A scale map
  * @details QwtScaleMap offers transformations from the coordinate system
  *          of a scale into the linear coordinate system of a paint device
  *          and vice versa.
  * @sa QwtTransform, QwtScaleDiv
- * \endif
- * \if CHINESE
- * @brief 刻度映射
- * @details QwtScaleMap 提供从刻度坐标系到绘制设备线性坐标系之间的变换，
- *          以及反向变换。
- * @sa QwtTransform, QwtScaleDiv
- * \endif
  */
 class QWT_EXPORT QwtScaleMap
 {
@@ -82,14 +74,14 @@ public:
     double invTransform(double p) const;
 
     //! Return first border of paint interval
-    double p1() const;
+    constexpr double p1() const noexcept;
     //! Return second border of paint interval
-    double p2() const;
+    constexpr double p2() const noexcept;
 
     //! Return first border of scale interval
-    double s1() const;
+    constexpr double s1() const noexcept;
     //! Return second border of scale interval
-    double s2() const;
+    constexpr double s2() const noexcept;
 
     //! Return distance between paint interval boundaries
     double pDist() const;
@@ -111,82 +103,66 @@ public:
     //! Check if the scale is linear (no transformation)
     static bool isLinerScale(const QwtScaleMap& sm);
 
+    //! Check if this scale has no nonlinear transformation
+    constexpr bool isLinear() const noexcept;
+
     //! Check if the mapping direction is inverted
-    bool isInverting() const;
+    constexpr bool isInverting() const noexcept;
+
+    //! Conversion factor for linear fast-path: result = p1() + (value - ts1()) * cnv()
+    constexpr double cnv() const noexcept;
+
+    //! Transformed scale origin for linear fast-path
+    constexpr double ts1() const noexcept;
 
 protected:
-    void swap(QwtScaleMap& other) noexcept;  // 辅助
+    void swap(QwtScaleMap& other) noexcept;  // helper
 private:
     void updateFactor();
 
-    double m_s1, m_s2;  // scale interval boundaries
-    double m_p1, m_p2;  // paint device interval boundaries
+    double m_s1{0.0}, m_s2{1.0};  // scale interval boundaries
+    double m_p1{0.0}, m_p2{1.0};  // paint device interval boundaries
 
-    double m_cnv;  // conversion factor
-    double m_ts1;
+    double m_cnv{1.0};  // conversion factor
+    double m_ts1{0.0};
 
-    QwtTransform* m_transform;
+    QwtTransform* m_transform{nullptr};
 };
 
 /**
- * \if ENGLISH
  * @brief Return first border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第一个边界
- * \endif
  */
-inline double QwtScaleMap::s1() const
+inline constexpr double QwtScaleMap::s1() const noexcept
 {
     return m_s1;
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the scale interval
- * \endif
- * \if CHINESE
- * @brief 返回刻度区间的第二个边界
- * \endif
  */
-inline double QwtScaleMap::s2() const
+inline constexpr double QwtScaleMap::s2() const noexcept
 {
     return m_s2;
 }
 
 /**
- * \if ENGLISH
  * @brief Return first border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第一个边界
- * \endif
  */
-inline double QwtScaleMap::p1() const
+inline constexpr double QwtScaleMap::p1() const noexcept
 {
     return m_p1;
 }
 
 /**
- * \if ENGLISH
  * @brief Return second border of the paint interval
- * \endif
- * \if CHINESE
- * @brief 返回绘制区间的第二个边界
- * \endif
  */
-inline double QwtScaleMap::p2() const
+inline constexpr double QwtScaleMap::p2() const noexcept
 {
     return m_p2;
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(p2() - p1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(p2() - p1())
- * \endif
  */
 inline double QwtScaleMap::pDist() const
 {
@@ -194,12 +170,7 @@ inline double QwtScaleMap::pDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return qwtAbs(s2() - s1())
- * \endif
- * \if CHINESE
- * @brief 返回 qwtAbs(s2() - s1())
- * \endif
  */
 inline double QwtScaleMap::sDist() const
 {
@@ -207,18 +178,10 @@ inline double QwtScaleMap::sDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a point related to the scale interval into a point related to the paint device interval
  * @param s Value relative to the coordinates of the scale
  * @return Transformed value
- * \sa invTransform()
- * \endif
- * \if CHINESE
- * @brief 将相对于刻度区间的点转换为相对于绘制设备区间的点
- * @param s 相对于刻度坐标的值
- * @return 转换后的值
- * \sa invTransform()
- * \endif
+ * @sa invTransform()
  */
 inline double QwtScaleMap::transform(double s) const
 {
@@ -229,18 +192,10 @@ inline double QwtScaleMap::transform(double s) const
 }
 
 /**
- * \if ENGLISH
  * @brief Transform a paint device value into a value in the interval of the scale
  * @param p Value relative to the coordinates of the paint device
  * @return Transformed value
- * \sa transform()
- * \endif
- * \if CHINESE
- * @brief 将绘制设备值转换为刻度区间中的值
- * @param p 相对于绘制设备坐标的值
- * @return 转换后的值
- * \sa transform()
- * \endif
+ * @sa transform()
  */
 inline double QwtScaleMap::invTransform(double p) const
 {
@@ -251,10 +206,28 @@ inline double QwtScaleMap::invTransform(double p) const
     return s;
 }
 
-//! \if ENGLISH Return true when ( p1() < p2() ) != ( s1() < s2() ) \endif \if CHINESE 当 ( p1() < p2() ) != ( s1() < s2() ) 时返回 true \endif
-inline bool QwtScaleMap::isInverting() const
+//! Return true when ( p1() < p2() ) != ( s1() < s2() )
+inline constexpr bool QwtScaleMap::isInverting() const noexcept
 {
     return ((m_p1 < m_p2) != (m_s1 < m_s2));
+}
+
+//! Return true when there is no nonlinear transformation
+inline constexpr bool QwtScaleMap::isLinear() const noexcept
+{
+    return m_transform == nullptr;
+}
+
+//! Return the conversion factor for linear fast-path transform
+inline constexpr double QwtScaleMap::cnv() const noexcept
+{
+    return m_cnv;
+}
+
+//! Return the transformed scale origin for linear fast-path transform
+inline constexpr double QwtScaleMap::ts1() const noexcept
+{
+    return m_ts1;
 }
 
 #ifndef QT_NO_DEBUG_STREAM

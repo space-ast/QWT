@@ -1,15 +1,14 @@
-#ifndef qwt3d_scale_h
-#define qwt3d_scale_h
+#ifndef QWT3D_SCALE_H
+#define QWT3D_SCALE_H
 
+#include <vector>
 #include <qstring.h>
 #include "qwt3d_types.h"
-#include "qwt3d_autoscaler.h"
 #include "qwt3d_autoptr.h"
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Non-visual scale class encapsulating tic generation
  * @details The class encapsulates non-visual scales. It is utilized by Axis and also
  *          collaborates closely with AutoScaler. A Scale allows control over all aspects
@@ -17,40 +16,30 @@ namespace Qwt3D {
  *          strings. The strings contain what eventually will be shown as tic labels.
  *          Standard linear and logarithmic scales have been integrated into the Axis interface.
  *          User-defined axes can be derived from Scale, LinearScale et al.
- * \endif
- *
- * \if CHINESE
- * @brief 非可视化刻度类，封装刻度线生成
- * @details 该类封装非可视化刻度。它由 Axis 使用，并与 AutoScaler 紧密协作。
- *          Scale 允许控制刻度线生成的所有方面，包括将刻度值任意转换为对应的字符串。
- *          字串最终将显示为刻度标签。标准线性和对数刻度已集成到 Axis 接口中。
- *          用户自定义坐标轴可以从 Scale、LinearScale 等派生。
- * \endif
  */
 class QWT3D_EXPORT Scale
 {
     friend class Axis;
-    friend class qwt3d_ptr<Scale>;
+    friend class ClonePtr<Scale>;
 
 protected:
+    QWT_DECLARE_PRIVATE(Scale)
+
     Scale();
-    virtual ~Scale() { }
+    virtual ~Scale();
     virtual QString ticLabel(unsigned int idx) const;
 
     virtual void setLimits(double start, double stop);
     // Sets number of major intervals
-    virtual void setMajors(int val) { majorintervals_p = val; }
+    virtual void setMajors(int val);
     // Sets number of minor intervals per major interval
-    virtual void setMinors(int val)
-    {
-        minorintervals_p = val;
-    }
+    virtual void setMinors(int val);
     virtual void setMajorLimits(double start, double stop);
 
     // Returns major intervals
-    int majors() const { return majorintervals_p; }
+    int majors() const;
     // Returns minor intervals
-    int minors() const { return minorintervals_p; }
+    int minors() const;
 
     // Derived classes should return a new heap based object here
     virtual Scale *clone() const = 0;
@@ -58,59 +47,54 @@ protected:
     virtual void calculate() = 0;
     virtual int autoscale(double &a, double &b, double start, double stop, int ivals);
 
-    std::vector<double> majors_p, minors_p;
-    double start_p, stop_p;
-    int majorintervals_p, minorintervals_p;
-    double mstart_p, mstop_p;
+    // Returns const reference to major tic positions
+    const std::vector<double>& majorTicks() const;
+    // Returns const reference to minor tic positions
+    const std::vector<double>& minorTicks() const;
+
+    // Copies Scale base state from another Scale (used by derived clone())
+    void copyFrom(const Scale& other);
 
 private:
-    void destroy() const { delete this; }
+    void destroy() const;
 };
 
 /**
- * \if ENGLISH
  * @brief The standard (1:1) mapping class for axis numbering
- * \endif
- *
- * \if CHINESE
- * @brief 坐标轴编号的标准（1:1）映射类
- * \endif
  */
 class QWT3D_EXPORT LinearScale : public Scale
 {
     friend class Axis;
-    friend class qwt3d_ptr<Scale>;
+    friend class ClonePtr<Scale>;
 
 protected:
-    int autoscale(double &a, double &b, double start, double stop, int ivals);
-    // Returns a new heap based object utilized from qwt3d_ptr
-    Scale *clone() const { return new LinearScale(*this); }
-    void calculate();
-    LinearAutoScaler autoscaler_p;
+    QWT_DECLARE_PRIVATE(LinearScale)
+
+    LinearScale();
+    ~LinearScale() override;
+    int autoscale(double &a, double &b, double start, double stop, int ivals) override;
+    // Returns a new heap based object utilized from ClonePtr
+    Scale *clone() const override;
+    void calculate() override;
 };
 
 /**
- * \if ENGLISH
  * @brief Log10 scale
- * \endif
- *
- * \if CHINESE
- * @brief log10 对数刻度
- * \endif
  */
 class QWT3D_EXPORT LogScale : public Scale
 {
     friend class Axis;
-    friend class qwt3d_ptr<Scale>;
+    friend class ClonePtr<Scale>;
 
 protected:
-    QString ticLabel(unsigned int idx) const;
-    void setMinors(int val);
+    QString ticLabel(unsigned int idx) const override;
+    void setMinors(int val) override;
     // Standard ctor
     LogScale();
-    // Returns a new heap based object utilized from qwt3d_ptr
-    Scale *clone() const { return new LogScale; }
-    void calculate();
+    ~LogScale() override;
+    // Returns a new heap based object utilized from ClonePtr
+    Scale *clone() const override;
+    void calculate() override;
 
 private:
     void setupCounter(double &k, int &step);
@@ -118,4 +102,4 @@ private:
 
 } // namespace Qwt3D
 
-#endif /* include guarded */
+#endif // QWT3D_SCALE_H

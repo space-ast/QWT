@@ -44,6 +44,7 @@ class QwtTextLabel;
 class QwtInterval;
 class QwtText;
 class QwtPlotScaleEventDispatcher;
+class QwtColorCycle;
 
 template< typename T >
 class QList;
@@ -52,7 +53,6 @@ class QList;
 #define QWT_AXIS_COMPAT 1
 
 /**
- * \if ENGLISH
  * @brief A 2-D plotting widget
  * @details QwtPlot is a widget for plotting two-dimensional graphs.
  *          An unlimited number of plot items can be displayed on
@@ -63,12 +63,12 @@ class QList;
  *          a y axis. The scales at the axes can be explicitly set (QwtScaleDiv), or
  *          are calculated from the plot items, using algorithms (QwtScaleEngine) which
  *          can be configured separately for each axis.
- * 
+ *
  *          The simpleplot example is a good starting point to see how to set up a
  *          plot widget.
- * 
+ *
  * @image html plot.png
- * 
+ *
  * @par Example
  *  The following example shows (schematically) the most simple
  *  way to use QwtPlot. By default, only the left and bottom axes are
@@ -76,62 +76,23 @@ class QList;
  *  @code
  * #include <qwt_plot.h>
  * #include <qwt_plot_curve.h>
- * 
+ *
  *      QwtPlot *myPlot = new QwtPlot( "Two Curves", parent );
- * 
+ *
  *      // add curves
  *      QwtPlotCurve *curve1 = new QwtPlotCurve( "Curve 1" );
  *      QwtPlotCurve *curve2 = new QwtPlotCurve( "Curve 2" );
- * 
+ *
  *      // connect or copy the data to the curves
  *      curve1->setData( ... );
  *      curve2->setData( ... );
- * 
+ *
  *      curve1->attach( myPlot );
  *      curve2->attach( myPlot );
- * 
+ *
  *      // finally, refresh the plot
  *      myPlot->replot();
  *  @endcode
- * \endif
- * 
- * \if CHINESE
- * @brief 二维绘图部件
- * @details QwtPlot 是一个用于绘制二维图形的部件。
- *          可以在其画布上显示无限数量的绘图项。绘图项可以是曲线（QwtPlotCurve）、标记
- *          （QwtPlotMarker）、网格（QwtPlotGrid）或任何其他从 QwtPlotItem 派生的对象。
- *          一个绘图可以有最多四个坐标轴，每个绘图项都附加到一个 x 轴和一个 y 轴。
- *          坐标轴的比例尺可以显式设置（QwtScaleDiv），或者使用算法（QwtScaleEngine）从绘图项计算，
- *          这些算法可以为每个坐标轴单独配置。
- * 
- *          simpleplot 示例是了解如何设置绘图部件的良好起点。
- * 
- * @image html plot.png
- * 
- * @par 示例
- *  以下示例（示意性）显示了使用 QwtPlot 的最简单方法。默认情况下，只有左侧和底部坐标轴可见，
- *  并且它们的比例尺会自动计算。
- *  @code
- * #include <qwt_plot.h>
- * #include <qwt_plot_curve.h>
- * 
- *      QwtPlot *myPlot = new QwtPlot( "Two Curves", parent );
- * 
- *      // add curves
- *      QwtPlotCurve *curve1 = new QwtPlotCurve( "Curve 1" );
- *      QwtPlotCurve *curve2 = new QwtPlotCurve( "Curve 2" );
- * 
- *      // connect or copy the data to the curves
- *      curve1->setData( ... );
- *      curve2->setData( ... );
- * 
- *      curve1->attach( myPlot );
- *      curve2->attach( myPlot );
- * 
- *      // finally, refresh the plot
- *      myPlot->replot();
- *  @endcode
- * \endif
  */
 
 class QWT_EXPORT QwtPlot : public QFrame, public QwtPlotDict
@@ -148,15 +109,8 @@ class QWT_EXPORT QwtPlot : public QFrame, public QwtPlotDict
 
 public:
     /**
-     * \if ENGLISH
      * @brief Position of the legend, relative to the canvas
      * @sa insertLegend()
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 图例相对于画布的位置
-     * @sa insertLegend()
-     * \endif
      */
     enum LegendPosition
     {
@@ -174,28 +128,17 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Tick direction enum
      * @details Controls whether ticks are drawn inside or outside the canvas.
      *          When ticks are inside, they are drawn from the canvas edge toward
      *          the interior, while the backbone and labels remain outside.
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 刻度方向枚举
-     * @details 控制刻度线是绘制在画布内部还是外部。
-     *          当刻度朝内时，刻度线从画布边缘向内延伸，
-     *          而主干和标签保持在画布外。
-     * \endif
      */
     enum TickDirection
     {
         ///< Ticks are drawn outside the canvas (default behavior)
-        ///< 刻度朝外（默认行为）
         TickOutside = 0,
 
         ///< Ticks are drawn inside the canvas
-        ///< 刻度朝内
         TickInside = 1
     };
 
@@ -205,7 +148,7 @@ public:
     explicit QwtPlot(const QwtText& title, QWidget* = nullptr);
 
     // Destructor
-    virtual ~QwtPlot();
+    ~QwtPlot() override;
 
     // Set auto replot
     void setAutoReplot(bool = true);
@@ -269,6 +212,15 @@ public:
     void setCanvasBackground(const QBrush&);
     // Get canvas background
     QBrush canvasBackground() const;
+
+    // Color cycle
+
+    // Set color cycle for automatic item coloring
+    void setColorCycle(const QwtColorCycle&);
+    // Get the current color cycle
+    QwtColorCycle colorCycle() const;
+    // Get the next auto-assigned color for a plot item type
+    QColor nextColorForItem(int rtti);
 
     // Get canvas map for axis
     virtual QwtScaleMap canvasMap(QwtAxisId) const;
@@ -361,43 +313,10 @@ public:
 
     // Tick Direction - NEW
 
-    /**
-     * \if ENGLISH
-     * @brief Set the tick direction for an axis
-     * @param axisId Axis identifier (QwtAxis::YLeft, YRight, XBottom, XTop)
-     * @param direction Tick direction (TickOutside or TickInside)
-     * 
-     * When set to TickInside, the tick marks are drawn from the canvas edge
-     * toward the interior, while the backbone and labels remain outside the canvas.
-     * The inside ticks share the same style (length, color, pen width) as the
-     * outside ticks configured via QwtScaleDraw.
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 设置坐标轴的刻度方向
-     * @param axisId 坐标轴标识（QwtAxis::YLeft, YRight, XBottom, XTop）
-     * @param direction 刻度方向（TickOutside 朝外或 TickInside 朝内）
-     * 
-     * 当设置为 TickInside 时，刻度线从画布边缘向内绘制，
-     * 而主干和标签保持在画布外。
-     * 朝内刻度与朝外刻度共享相同的样式（长度、颜色、线宽）。
-     * \endif
-     */
+    // Set tick direction for an axis
     void setAxisTickDirection(QwtAxisId axisId, TickDirection direction);
 
-    /**
-     * \if ENGLISH
-     * @brief Get the tick direction for an axis
-     * @param axisId Axis identifier
-     * @return Current tick direction (TickOutside or TickInside)
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 获取坐标轴的刻度方向
-     * @param axisId 坐标轴标识
-     * @return 当前刻度方向（TickOutside 朝外或 TickInside 朝内）
-     * \endif
-     */
+    // Get tick direction for an axis
     TickDirection axisTickDirection(QwtAxisId axisId) const;
 
     // Legend
@@ -561,53 +480,27 @@ public:
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
-     * A signal indicating, that an item has been attached/detached
+     * @brief A signal indicating that an item has been attached/detached
      * @param plotItem Plot item
      * @param on Attached/Detached
-     * \endif
-     * 
-     * \if CHINESE
-     * 指示项目已附加/分离的信号
-     * @param plotItem 绘图项目
-     * @param on 附加/分离
-     * \endif
      */
     void itemAttached(QwtPlotItem* plotItem, bool on);
 
     /**
-     * \if ENGLISH
-     * A signal with the attributes how to update
+     * @brief A signal with the attributes how to update
      * the legend entries for a plot item.
-     * @param itemInfo Info about a plot item, build from itemToInfo()
-     * @param data Attributes of the entries ( usually <= 1 ) for
+     * @param itemInfo Info about a plot item, built from itemToInfo()
+     * @param data Attributes of the entries (usually <= 1) for
      *            the plot item.
      * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
-     * \endif
-     * 
-     * \if CHINESE
-     * 带有如何更新绘图项图例条目的属性的信号
-     * @param itemInfo 关于绘图项的信息，由 itemToInfo() 构建
-     * @param data 绘图项的条目属性（通常 <= 1）
-     * @sa itemToInfo(), infoToItem(), QwtAbstractLegend::updateLegend()
-     * \endif
      */
     void legendDataChanged(const QVariant& itemInfo, const QList< QwtLegendData >& data);
 
     /**
-     * \if ENGLISH
-     * Identify the relationship between the parasitic plot and its host plot
+     * @brief Identify the relationship between the parasitic plot and its host plot
      * @param parasitePlot Parasite plot
      * @param on When a parasitic plot is added, on = true. When the parasitic plot is removed, on = false.
      * @note This signal is emitted only by the host plot.
-     * \endif
-     * 
-     * \if CHINESE
-     * 标识寄生绘图与其宿主绘图之间的关系
-     * @param parasitePlot 寄生绘图
-     * @param on 当添加寄生绘图时，on = true。当移除寄生绘图时，on = false。
-     * @note 此信号仅由宿主绘图发出。
-     * \endif
      */
     void parasitePlotAttached(QwtPlot* parasitePlot, bool on);
 public Q_SLOTS:

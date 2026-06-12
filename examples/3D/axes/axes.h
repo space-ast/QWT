@@ -15,10 +15,10 @@ class Letter : public LinearScale
 {
 public:
     explicit Letter(bool uppercase = true) : uc_(uppercase) { }
-    Scale *clone() const { return new Letter(*this); }
-    QString ticLabel(unsigned int idx) const
+    Scale *clone() const override { return new Letter(uc_); }
+    QString ticLabel(unsigned int idx) const override
     {
-        if (idx < majors_p.size() && idx < 26)
+        if (idx < majorTicks().size() && idx < 26)
             return (uc_) ? QString(QChar('A' + idx)) : QString(QChar('a' + idx));
         return QString("-");
     }
@@ -30,11 +30,12 @@ private:
 class Imaginary : public LinearScale
 {
 public:
-    Scale *clone() const { return new Imaginary; }
-    QString ticLabel(unsigned int idx) const
+    Scale *clone() const override { return new Imaginary; }
+    QString ticLabel(unsigned int idx) const override
     {
-        if (idx < majors_p.size()) {
-            double val = majors_p[idx];
+        const auto& majors = majorTicks();
+        if (idx < majors.size()) {
+            double val = majors[idx];
             if (val)
                 return QString::number(val) + "*i";
             return QString::number(val);
@@ -46,10 +47,10 @@ public:
 class TimeItems : public LinearScale
 {
 public:
-    Scale *clone() const { return new TimeItems; }
-    QString ticLabel(unsigned int idx) const
+    Scale *clone() const override { return new TimeItems; }
+    QString ticLabel(unsigned int idx) const override
     {
-        if (idx < majors_p.size()) {
+        if (idx < majorTicks().size()) {
             QTime t = QTime::currentTime();
             int h = t.hour();
             int m = t.minute();

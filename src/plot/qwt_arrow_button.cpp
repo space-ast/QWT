@@ -38,7 +38,13 @@ static const int cs_arrowButton_spacing = 1;
 
 class QwtArrowButton::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtArrowButton)
 public:
+    PrivateData( QwtArrowButton* p )
+        : q_ptr( p )
+    {
+    }
+
     int num;
     Qt::ArrowType arrowType;
 };
@@ -65,29 +71,23 @@ static QStyleOptionButton styleOpt(const QwtArrowButton* btn)
 }
 
 /**
- * \if ENGLISH
- *   \brief Constructor
- *   \param[in] num Number of arrows (1-3)
- *   \param[in] arrowType Direction of arrows (see Qt::ArrowType)
- *   \param[in] parent Parent widget
- * \endif
- * \if CHINESE
- *   \brief 构造函数
- *   \param[in] num 箭头数量（1-3）
- *   \param[in] arrowType 箭头方向（参见Qt::ArrowType）
- *   \param[in] parent 父控件
- * \endif
+ *   @brief Constructor
+ *   @param[in] num Number of arrows (1-3)
+ *   @param[in] arrowType Direction of arrows (see Qt::ArrowType)
+ *   @param[in] parent Parent widget
  */
-QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent) : QPushButton(parent)
+QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent)
+    : QPushButton(parent)
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data            = new PrivateData;
-    m_data->num       = qBound(1, num, cs_arrowButton_maxNum);
-    m_data->arrowType = arrowType;
+    QWT_D(d);
+    d->num       = qBound(1, num, cs_arrowButton_maxNum);
+    d->arrowType = arrowType;
 
     setAutoRepeat(true);
     setAutoDefault(false);
 
-    switch (m_data->arrowType) {
+    switch (d->arrowType) {
     case Qt::LeftArrow:
     case Qt::RightArrow:
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -98,51 +98,34 @@ QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent
 }
 
 /**
- * \if ENGLISH
- *   \brief Destructor
- * \endif
- * \if CHINESE
- *   \brief 析构函数
- * \endif
+ *   @brief Destructor
  */
 QwtArrowButton::~QwtArrowButton()
 {
-    delete m_data;
-    m_data = nullptr;
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the direction of the arrows
- *   \return Arrow direction
- * \endif
- * \if CHINESE
- *   \brief 获取箭头的方向
- *   \return 箭头方向
- * \endif
+ *   @brief Get the direction of the arrows
+ *   @return Arrow direction
  */
 Qt::ArrowType QwtArrowButton::arrowType() const
 {
-    return m_data->arrowType;
+    QWT_DC(d);
+    return d->arrowType;
 }
 
 /**
- * \if ENGLISH
- *   \brief Get the number of arrows
- *   \return Number of arrows
- * \endif
- * \if CHINESE
- *   \brief 获取箭头的数量
- *   \return 箭头数量
- * \endif
+ *   @brief Get the number of arrows
+ *   @return Number of arrows
  */
 int QwtArrowButton::num() const
 {
-    return m_data->num;
+    QWT_DC(d);
+    return d->num;
 }
 
 /*!
-   \return the bounding rectangle for the label
+   @return the bounding rectangle for the label
  */
 QRect QwtArrowButton::labelRect() const
 {
@@ -164,7 +147,7 @@ QRect QwtArrowButton::labelRect() const
 
 /*!
    Paint event handler
-   \param event Paint event
+   @param event Paint event
  */
 void QwtArrowButton::paintEvent(QPaintEvent* event)
 {
@@ -174,14 +157,15 @@ void QwtArrowButton::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \brief Draw the button label
+   @brief Draw the button label
 
-   \param painter Painter
-   \sa The Qt Manual for QPushButton
+   @param painter Painter
+   @sa The Qt Manual for QPushButton
  */
 void QwtArrowButton::drawButtonLabel(QPainter* painter)
 {
-    const bool isVertical = m_data->arrowType == Qt::UpArrow || m_data->arrowType == Qt::DownArrow;
+    QWT_D(d);
+    const bool isVertical = d->arrowType == Qt::UpArrow || d->arrowType == Qt::DownArrow;
 
     const QRect r      = labelRect();
     QSize boundingSize = labelRect().size();
@@ -196,12 +180,12 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
         arrow.transpose();
 
     QRect contentsSize;  // aligned rect where to paint all arrows
-    if (m_data->arrowType == Qt::LeftArrow || m_data->arrowType == Qt::RightArrow) {
-        contentsSize.setWidth(m_data->num * arrow.width() + (m_data->num - 1) * cs_arrowButton_spacing);
+    if (d->arrowType == Qt::LeftArrow || d->arrowType == Qt::RightArrow) {
+        contentsSize.setWidth(d->num * arrow.width() + (d->num - 1) * cs_arrowButton_spacing);
         contentsSize.setHeight(arrow.height());
     } else {
         contentsSize.setWidth(arrow.width());
-        contentsSize.setHeight(m_data->num * arrow.height() + (m_data->num - 1) * cs_arrowButton_spacing);
+        contentsSize.setHeight(d->num * arrow.height() + (d->num - 1) * cs_arrowButton_spacing);
     }
 
     QRect arrowRect(contentsSize);
@@ -209,8 +193,8 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
     arrowRect.setSize(arrow);
 
     painter->save();
-    for (int i = 0; i < m_data->num; i++) {
-        drawArrow(painter, arrowRect, m_data->arrowType);
+    for (int i = 0; i < d->num; i++) {
+        drawArrow(painter, arrowRect, d->arrowType);
 
         int dx = 0;
         int dy = 0;
@@ -236,9 +220,9 @@ void QwtArrowButton::drawButtonLabel(QPainter* painter)
 /*!
     Draw an arrow int a bounding rectangle
 
-    \param painter Painter
-    \param r Rectangle where to paint the arrow
-    \param arrowType Arrow type
+    @param painter Painter
+    @param r Rectangle where to paint the arrow
+    @param arrowType Arrow type
  */
 void QwtArrowButton::drawArrow(QPainter* painter, const QRect& r, Qt::ArrowType arrowType) const
 {
@@ -280,14 +264,8 @@ void QwtArrowButton::drawArrow(QPainter* painter, const QRect& r, Qt::ArrowType 
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a size hint for the button
- *   \return Size hint
- * \endif
- * \if CHINESE
- *   \brief 获取按钮的大小提示
- *   \return 大小提示
- * \endif
+ *   @brief Get a size hint for the button
+ *   @return Size hint
  */
 QSize QwtArrowButton::sizeHint() const
 {
@@ -296,24 +274,19 @@ QSize QwtArrowButton::sizeHint() const
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a minimum size hint for the button
- *   \return Minimum size hint
- * \endif
- * \if CHINESE
- *   \brief 获取按钮的最小大小提示
- *   \return 最小大小提示
- * \endif
+ *   @brief Get a minimum size hint for the button
+ *   @return Minimum size hint
  */
 QSize QwtArrowButton::minimumSizeHint() const
 {
+    QWT_DC(d);
     const QSize asz = arrowSize(Qt::RightArrow, QSize());
 
     QSize sz(2 * cs_arrowButton_margin + (cs_arrowButton_maxNum - 1) * cs_arrowButton_spacing
                  + cs_arrowButton_maxNum * asz.width(),
              2 * cs_arrowButton_margin + asz.height());
 
-    if (m_data->arrowType == Qt::UpArrow || m_data->arrowType == Qt::DownArrow)
+    if (d->arrowType == Qt::UpArrow || d->arrowType == Qt::DownArrow)
         sz.transpose();
 
     QStyleOption styleOption;
@@ -327,9 +300,9 @@ QSize QwtArrowButton::minimumSizeHint() const
 /*!
    Calculate the size for a arrow that fits into a rectangle of a given size
 
-   \param arrowType Arrow type
-   \param boundingSize Bounding size
-   \return Size of the arrow
+   @param arrowType Arrow type
+   @param boundingSize Bounding size
+   @return Size of the arrow
  */
 QSize QwtArrowButton::arrowSize(Qt::ArrowType arrowType, const QSize& boundingSize) const
 {
@@ -356,7 +329,7 @@ QSize QwtArrowButton::arrowSize(Qt::ArrowType arrowType, const QSize& boundingSi
 }
 
 /*!
-   \brief autoRepeat for the space keys
+   @brief autoRepeat for the space keys
  */
 void QwtArrowButton::keyPressEvent(QKeyEvent* event)
 {

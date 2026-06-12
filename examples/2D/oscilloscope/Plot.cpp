@@ -71,13 +71,13 @@ private:
 
         QLinearGradient gradient;
         gradient.setCoordinateMode(QGradient::StretchToDeviceMode);
-        gradient.setColorAt(0.0, QColor(0, 49, 110));
-        gradient.setColorAt(1.0, QColor(0, 87, 174));
+        gradient.setColorAt(0.0, QColor(15, 32, 53));
+        gradient.setColorAt(1.0, QColor(25, 55, 95));
 
         pal.setBrush(QPalette::Window, QBrush(gradient));
 
         // QPalette::WindowText is used for the curve color
-        pal.setColor(QPalette::WindowText, Qt::green);
+        pal.setColor(QPalette::WindowText, QColor("#4caf50"));
 
         setPalette(pal);
     }
@@ -127,7 +127,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent), m_paintedPoints(0), m_interval(0.
     setAxisScale(QwtAxis::YLeft, -200.0, 200.0);
 
     QwtPlotGrid* grid = new QwtPlotGrid();
-    grid->setPen(Qt::gray, 0.0, Qt::DotLine);
+    grid->setPen(QColor(100, 120, 140), 0.0, Qt::DotLine);
     grid->enableX(true);
     grid->enableXMin(true);
     grid->enableY(true);
@@ -137,7 +137,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent), m_paintedPoints(0), m_interval(0.
     m_origin = new QwtPlotMarker();
     m_origin->setLineStyle(QwtPlotMarker::Cross);
     m_origin->setValue(m_interval.minValue() + m_interval.width() / 2.0, 0.0);
-    m_origin->setLinePen(Qt::gray, 0.0, Qt::DashLine);
+    m_origin->setLinePen(QColor(100, 120, 140), 0.0, Qt::DashLine);
     m_origin->attach(this);
 
     m_curve = new QwtPlotCurve();

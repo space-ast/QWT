@@ -33,13 +33,12 @@
 class QwtDialNeedle;
 
 /**
- * \if ENGLISH
- *   \brief An analog clock widget
- *   \details QwtAnalogClock is a widget that displays an analog clock with hour, minute,
+ *   @brief An analog clock widget
+ *   @details QwtAnalogClock is a widget that displays an analog clock with hour, minute,
  *            and second hands.
- *   \image html analogclock.png
- *   \par Example
- *   \code
+ *   @image html analogclock.png
+ *   @par Example
+ *   @code
  *   #include <qwt_analog_clock.h>
  *   QwtAnalogClock *clock = new QwtAnalogClock(...);
  *   clock->scaleDraw()->setPenWidth(3);
@@ -50,28 +49,8 @@ class QwtDialNeedle;
  *   QTimer *timer = new QTimer(clock);
  *   timer->connect(timer, SIGNAL(timeout()), clock, SLOT(setCurrentTime()));
  *   timer->start(1000);
- *   \endcode
- *   \note The examples/dials example shows how to use QwtAnalogClock.
- * \endif
- * \if CHINESE
- *   \brief 模拟时钟控件
- *   \details QwtAnalogClock是一个显示带有时针、分针和秒针的模拟时钟的控件。
- *   \image html analogclock.png
- *   \par 示例
- *   \code
- *   #include <qwt_analog_clock.h>
- *   QwtAnalogClock *clock = new QwtAnalogClock(...);
- *   clock->scaleDraw()->setPenWidth(3);
- *   clock->setLineWidth(6);
- *   clock->setFrameShadow(QwtDial::Sunken);
- *   clock->setTime();
- *   // 每秒更新时钟
- *   QTimer *timer = new QTimer(clock);
- *   timer->connect(timer, SIGNAL(timeout()), clock, SLOT(setCurrentTime()));
- *   timer->start(1000);
- *   \endcode
- *   \note examples/dials示例展示了如何使用QwtAnalogClock。
- * \endif
+ *   @endcode
+ *   @note The examples/dials example shows how to use QwtAnalogClock.
  */
 
 class QWT_EXPORT QwtAnalogClock : public QwtDial
@@ -80,36 +59,29 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 
   public:
     /**
-     * \if ENGLISH
-     *   \brief Hand type enumeration
-     *   \details Defines the types of clock hands available.
-     *   \sa setHand(), hand()
-     * \endif
-     * \if CHINESE
-     *   \brief 时钟指针类型枚举
-     *   \details 定义可用的时钟指针类型。
-     *   \sa setHand(), hand()
-     * \endif
+     *   @brief Hand type enumeration
+     *   @details Defines the types of clock hands available.
+     *   @sa setHand(), hand()
      */
     enum Hand
     {
-        //! \if ENGLISH Needle displaying the seconds \endif \if CHINESE 显示秒的指针 \endif
+        //! Needle displaying the seconds
         SecondHand,
 
-        //! \if ENGLISH Needle displaying the minutes \endif \if CHINESE 显示分的指针 \endif
+        //! Needle displaying the minutes
         MinuteHand,
 
-        //! \if ENGLISH Needle displaying the hours \endif \if CHINESE 显示时的指针 \endif
+        //! Needle displaying the hours
         HourHand,
 
-        //! \if ENGLISH Number of needles \endif \if CHINESE 指针数量 \endif
+        //! Number of needles
         NHands
     };
 
     // Constructs an analog clock widget
     explicit QwtAnalogClock( QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtAnalogClock();
+    ~QwtAnalogClock() override;
 
     // Sets a specific clock hand needle
     void setHand( Hand, QwtDialNeedle* );
@@ -121,26 +93,14 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 
   public Q_SLOTS:
     /**
-     * \if ENGLISH
-     *   \brief Set the clock to display the current time
-     *   \details Updates the clock display to show the current system time.
-     * \endif
-     * \if CHINESE
-     *   \brief 设置时钟显示当前时间
-     *   \details 更新时钟显示为当前系统时间。
-     * \endif
+     *   @brief Set the clock to display the current time
+     *   @details Updates the clock display to show the current system time.
      */
     void setCurrentTime();
 
     /**
-     * \if ENGLISH
-     *   \brief Set the clock to display a specific time
-     *   \param[in] time Time to display
-     * \endif
-     * \if CHINESE
-     *   \brief 设置时钟显示特定时间
-     *   \param[in] time 要显示的时间
-     * \endif
+     *   @brief Set the clock to display a specific time
+     *   @param[in] time Time to display
      */
     void setTime( const QTime& );
 

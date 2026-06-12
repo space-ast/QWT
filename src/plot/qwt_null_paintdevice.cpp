@@ -30,8 +30,10 @@
 
 class QwtNullPaintDevice::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtNullPaintDevice)
   public:
-    PrivateData():
+    PrivateData( QwtNullPaintDevice* p ):
+        q_ptr( p ),
         mode( QwtNullPaintDevice::NormalMode )
     {
     }
@@ -381,72 +383,45 @@ inline QwtNullPaintDevice* QwtNullPaintDevice::PaintEngine::nullDevice()
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtNullPaintDevice::QwtNullPaintDevice():
     m_engine( nullptr )
 {
-    m_data = new PrivateData;
+    QWT_PIMPL_CONSTRUCT_INIT();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtNullPaintDevice::~QwtNullPaintDevice()
 {
     delete m_engine;
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the render mode
  * @param[in] mode New mode for the paint device
- * \endif
- * \if CHINESE
- * @brief 设置渲染模式
- * @param[in] mode 绘制设备的新模式
- * \endif
  */
 void QwtNullPaintDevice::setMode( Mode mode )
 {
-    m_data->mode = mode;
+    QWT_D(d);
+    d->mode = mode;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the render mode
  * @return Current render mode
- * \endif
- * \if CHINESE
- * @brief 获取渲染模式
- * @return 当前渲染模式
- * \endif
  */
 QwtNullPaintDevice::Mode QwtNullPaintDevice::mode() const
 {
-    return m_data->mode;
+    QWT_DC(d);
+    return d->mode;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the paint engine for this device
  * @return Pointer to the paint engine, created on first call
- * \endif
- * \if CHINESE
- * @brief 返回此设备的绘制引擎
- * @return 绘制引擎指针，在首次调用时创建
- * \endif
  */
 QPaintEngine* QwtNullPaintDevice::paintEngine() const
 {
@@ -462,20 +437,11 @@ QPaintEngine* QwtNullPaintDevice::paintEngine() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return metric information for the paint device
  * @details Returns information about the device metrics like width, height,
  *          DPI, etc. The actual size is determined by sizeMetrics().
  * @param[in] deviceMetric Type of metric to query
  * @return Metric value for the given paint device metric
- * \endif
- * \if CHINESE
- * @brief 返回绘制设备的度量信息
- * @details 返回关于设备度量的信息，如宽度、高度、DPI 等。
- *          实际大小由 sizeMetrics() 确定。
- * @param[in] deviceMetric 要查询的度量类型
- * @return 给定绘制设备度量的度量值
- * \endif
  */
 int QwtNullPaintDevice::metric( PaintDeviceMetric deviceMetric ) const
 {

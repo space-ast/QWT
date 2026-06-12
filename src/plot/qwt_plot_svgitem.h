@@ -33,19 +33,11 @@
 class QByteArray;
 
 /**
- * \if ENGLISH
  * @brief A plot item, which displays data in Scalable Vector Graphics (SVG) format
  * @details SVG images are often used to display maps.
  *          QwtPlotSvgItem is only a small convenience wrapper class for QwtPlotGraphicItem,
  *          that creates a QwtGraphic from SVG data.
- * \endif
  *
- * \if CHINESE
- * @brief 显示可缩放矢量图形（SVG）格式数据的绘图项
- * @details SVG 图像常用于显示地图。
- *          QwtPlotSvgItem 只是为 QwtPlotGraphicItem 提供的一个小型便利包装类，
- *          它从 SVG 数据创建 QwtGraphic。
- * \endif
  */
 class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 {
@@ -55,7 +47,7 @@ class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
     // Constructor with QwtText title
     explicit QwtPlotSvgItem( const QwtText& title );
     // Destructor
-    virtual ~QwtPlotSvgItem();
+    ~QwtPlotSvgItem() override;
 
     // Load an SVG file
     bool loadFile( const QRectF&, const QString& fileName );

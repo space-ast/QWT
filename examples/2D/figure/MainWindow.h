@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+class QLabel;
 class QwtFigure;
 class QwtPlot;
 class QwtFigureWidgetOverlay;
+class QwtPlotSeriesDataPicker;
 class QwtPlotSeriesDataPickerGroup;
 
 namespace Ui
@@ -41,12 +43,14 @@ private:
     QwtPlot* createParasitePlot();
 private Q_SLOTS:
     void onActionResizeTriggered(bool on);
+    void onPickerGroupClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos);
 
 private:
     Ui::MainWindow* ui;
     QwtFigure* m_figure { nullptr };
     QwtFigureWidgetOverlay* m_figureOverlay { nullptr };
     QwtPlotSeriesDataPickerGroup* m_pickerLinker { nullptr };
+    QLabel* m_clickInfoLabel { nullptr };
 };
 
 #endif  // MAINWINDOW_H

@@ -49,9 +49,7 @@ CurveBox::CurveBox()
     xMap.setScaleInterval(-0.5, 10.5);
     yMap.setScaleInterval(-1.1, 1.1);
 
-    setFrameStyle(QFrame::Box | QFrame::Raised);
-    setLineWidth(2);
-    setMidLineWidth(3);
+    setFrameStyle(QFrame::NoFrame);
 
     for (int i = 0; i < Size; i++) {
         xval[ i ] = double(i) * 10.0 / double(Size - 1);

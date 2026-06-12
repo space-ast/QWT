@@ -30,19 +30,10 @@
 #include <qpainterpath.h>
 
 /**
- * \if ENGLISH
  * @brief Calculate chordal length between two points
  * @param point1 First point
  * @param point2 Second point
  * @return Distance between points
- * \endif
- *
- * \if CHINESE
- * @brief 计算两点之间的弦长
- * @param point1 第一个点
- * @param point2 第二个点
- * @return 点之间的距离
- * \endif
  */
 static inline double qwtChordalLength(const QPointF& point1, const QPointF& point2)
 {
@@ -262,23 +253,12 @@ static SplineStore qwtSplinePathPleasing(const QPolygonF& points, bool isClosed,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * The default setting is a non closing spline with uniform parametrization.
  * ( QwtSplineParametrization::ParameterUniform ).
  *
  * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * 默认设置是非闭合样条，具有均匀参数化
- * ( QwtSplineParametrization::ParameterUniform )。
- *
- * @sa QwtSpline::setParametrization(), QwtSpline::setBoundaryType()
- * \endif
  */
 QwtSplinePleasing::QwtSplinePleasing()
 {
@@ -286,28 +266,15 @@ QwtSplinePleasing::QwtSplinePleasing()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSplinePleasing::~QwtSplinePleasing()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Get locality
  * @return 2 (looks 2 points ahead/behind)
- * \endif
- *
- * \if CHINESE
- * @brief 获取局部性
- * @return 2（向前/向后查看 2 个点）
- * \endif
  */
 uint QwtSplinePleasing::locality() const
 {
@@ -315,7 +282,6 @@ uint QwtSplinePleasing::locality() const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -323,16 +289,6 @@ uint QwtSplinePleasing::locality() const
  *
  * @param points Control points
  * @return QPainterPath Painter path, that can be rendered by QPainter
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
- *
- * @param points 控制点
- * @return QPainterPath 绘制路径，可由 QPainter 渲染
- * \endif
  */
 QPainterPath QwtSplinePleasing::painterPath(const QPolygonF& points) const
 {
@@ -358,7 +314,6 @@ QPainterPath QwtSplinePleasing::painterPath(const QPolygonF& points) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -366,16 +321,6 @@ QPainterPath QwtSplinePleasing::painterPath(const QPolygonF& points) const
  *
  * @param points Control points
  * @return Control points of the interpolating Bezier curves
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
- *
- * @param points 控制点
- * @return 插值贝塞尔曲线的控制点
- * \endif
  */
 QVector< QLineF > QwtSplinePleasing::bezierControlLines(const QPolygonF& points) const
 {

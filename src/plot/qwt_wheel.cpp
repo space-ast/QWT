@@ -39,9 +39,11 @@
 
 class QwtWheel::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtWheel)
 public:
-    PrivateData()
-        : orientation(Qt::Horizontal)
+    PrivateData(QwtWheel* p)
+        : q_ptr(p)
+        , orientation(Qt::Horizontal)
         , viewAngle(175.0)
         , totalAngle(360.0)
         , tickCount(10)
@@ -66,6 +68,7 @@ public:
         , pendingValueChanged(false)
         , inverted(false)
         , wrapping(false)
+        , flatStyle(true)
     {
     }
 
@@ -103,13 +106,12 @@ public:
     bool pendingValueChanged;  // when not tracking
     bool inverted;
     bool wrapping;
+    bool flatStyle;
 };
 
 //! Constructor
-QwtWheel::QwtWheel(QWidget* parent) : QWidget(parent)
+QwtWheel::QwtWheel(QWidget* parent) : QWidget(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setFocusPolicy(Qt::StrongFocus);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     setAttribute(Qt::WA_WState_OwnSizePolicy, false);
@@ -118,12 +120,10 @@ QwtWheel::QwtWheel(QWidget* parent) : QWidget(parent)
 //! Destructor
 QwtWheel::~QwtWheel()
 {
-    delete m_data;
 }
 
 /*!
-   \if ENGLISH
-   \brief En/Disable tracking
+   @brief En/Disable tracking
 
    If tracking is enabled (the default), the wheel emits the valueChanged()
    signal while the wheel is moving. If tracking is disabled, the wheel
@@ -131,293 +131,221 @@ QwtWheel::~QwtWheel()
 
    The wheelMoved() signal is emitted regardless id tracking is enabled or not.
 
-   \param enable On/Off
-   \sa isTracking()
-   \endif
+   @param enable On/Off
+   @sa isTracking()
    *
-   \if CHINESE
-   \brief 启用/禁用跟踪
-
-   如果启用了跟踪（默认），轮在移动时会发出 valueChanged() 信号。
-   如果禁用了跟踪，轮只在移动终止时才发出 valueChanged() 信号。
-
-   wheelMoved() 信号无论是否启用跟踪都会发出。
-
-   \param enable 开/关
-   \sa isTracking()
-   \endif
  */
 void QwtWheel::setTracking(bool enable)
 {
-    m_data->tracking = enable;
+    QWT_D(d);
+    d->tracking = enable;
 }
 
 /*!
-   \if ENGLISH
-   \return True, when tracking is enabled
-   \sa setTracking(), valueChanged(), wheelMoved()
-   \endif
+   @return True, when tracking is enabled
+   @sa setTracking(), valueChanged(), wheelMoved()
    *
-   \if CHINESE
-   \return 当启用跟踪时返回 true
-   \sa setTracking(), valueChanged(), wheelMoved()
-   \endif
  */
 bool QwtWheel::isTracking() const
 {
-    return m_data->tracking;
+    QWT_DC(d);
+    return d->tracking;
 }
 
 /*!
-   \if ENGLISH
-   \brief Specify the update interval when the wheel is flying
+   @brief Specify the update interval when the wheel is flying
 
    Default and minimum value is 50 ms.
 
-   \param interval Interval in milliseconds
-   \sa updateInterval(), setMass(), setTracking()
-   \endif
+   @param interval Interval in milliseconds
+   @sa updateInterval(), setMass(), setTracking()
    *
-   \if CHINESE
-   \brief 指定轮飞行时的更新间隔
-
-   默认值和最小值是 50 毫秒。
-
-   \param interval 间隔（毫秒）
-   \sa updateInterval(), setMass(), setTracking()
-   \endif
  */
 void QwtWheel::setUpdateInterval(int interval)
 {
-    m_data->updateInterval = qMax(interval, 50);
+    QWT_D(d);
+    d->updateInterval = qMax(interval, 50);
 }
 
 /*!
-   \if ENGLISH
-   \return Update interval when the wheel is flying
-   \sa setUpdateInterval(), mass(), isTracking()
-   \endif
+   @return Update interval when the wheel is flying
+   @sa setUpdateInterval(), mass(), isTracking()
    *
-   \if CHINESE
-   \return 轮飞行时的更新间隔
-   \sa setUpdateInterval(), mass(), isTracking()
-   \endif
  */
 int QwtWheel::updateInterval() const
 {
-    return m_data->updateInterval;
+    QWT_DC(d);
+    return d->updateInterval;
 }
 
 /*!
-   \if ENGLISH
-   \brief Mouse press event handler
+   @brief Mouse press event handler
 
    Start movement of the wheel.
 
-   \param event Mouse event
-   \endif
+   @param event Mouse event
    *
-   \if CHINESE
-   \brief 鼠标按下事件处理程序
-
-   开始轮的移动。
-
-   \param event 鼠标事件
-   \endif
  */
 void QwtWheel::mousePressEvent(QMouseEvent* event)
 {
+    QWT_D(d);
     stopFlying();
 
-    m_data->isScrolling = wheelRect().contains(event->pos());
+    d->isScrolling = wheelRect().contains(event->pos());
 
-    if (m_data->isScrolling) {
-        m_data->timer.start();
-        m_data->speed               = 0.0;
-        m_data->mouseValue          = valueAt(event->pos());
-        m_data->mouseOffset         = m_data->mouseValue - m_data->value;
-        m_data->pendingValueChanged = false;
+    if (d->isScrolling) {
+        d->timer.start();
+        d->speed               = 0.0;
+        d->mouseValue          = valueAt(event->pos());
+        d->mouseOffset         = d->mouseValue - d->value;
+        d->pendingValueChanged = false;
 
         Q_EMIT wheelPressed();
     }
 }
 
 /*!
-   \if ENGLISH
-   \brief Mouse Move Event handler
+   @brief Mouse Move Event handler
 
    Turn the wheel according to the mouse position
 
-   \param event Mouse event
-   \endif
+   @param event Mouse event
    *
-   \if CHINESE
-   \brief 鼠标移动事件处理程序
-
-   根据鼠标位置转动轮
-
-   \param event 鼠标事件
-   \endif
  */
 void QwtWheel::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_data->isScrolling)
+    QWT_D(d);
+    if (!d->isScrolling)
         return;
 
     double mouseValue = valueAt(event->pos());
 
-    if (m_data->mass > 0.0) {
-        double ms = m_data->timer.restart();
+    if (d->mass > 0.0) {
+        double ms = d->timer.restart();
 
         // the interval when mouse move events are posted are somehow
         // random. To avoid unrealistic speed values we limit ms
 
         ms = qMax(ms, 5.0);
 
-        m_data->speed = (mouseValue - m_data->mouseValue) / ms;
+        d->speed = (mouseValue - d->mouseValue) / ms;
     }
 
-    m_data->mouseValue = mouseValue;
+    d->mouseValue = mouseValue;
 
-    double value = boundedValue(mouseValue - m_data->mouseOffset);
-    if (m_data->stepAlignment)
+    double value = boundedValue(mouseValue - d->mouseOffset);
+    if (d->stepAlignment)
         value = alignedValue(value);
 
-    if (value != m_data->value) {
-        m_data->value = value;
+    if (value != d->value) {
+        d->value = value;
 
         update();
 
-        Q_EMIT wheelMoved(m_data->value);
+        Q_EMIT wheelMoved(d->value);
 
-        if (m_data->tracking)
-            Q_EMIT valueChanged(m_data->value);
+        if (d->tracking)
+            Q_EMIT valueChanged(d->value);
         else
-            m_data->pendingValueChanged = true;
+            d->pendingValueChanged = true;
     }
 }
 
 /*!
-   \if ENGLISH
-   \brief Mouse Release Event handler
+   @brief Mouse Release Event handler
 
    When the wheel has no mass the movement of the wheel stops, otherwise
    it starts flying.
 
-   \param event Mouse event
-   \endif
+   @param event Mouse event
    *
-   \if CHINESE
-   \brief 鼠标释放事件处理程序
-
-   当轮没有质量时，轮的移动停止，否则开始飞行。
-
-   \param event 鼠标事件
-   \endif
  */
 
 void QwtWheel::mouseReleaseEvent(QMouseEvent* event)
 {
+    QWT_D(d);
     Q_UNUSED(event);
 
-    if (!m_data->isScrolling)
+    if (!d->isScrolling)
         return;
 
-    m_data->isScrolling = false;
+    d->isScrolling = false;
 
     bool startFlying = false;
 
-    if (m_data->mass > 0.0) {
-        const qint64 ms = m_data->timer.elapsed();
-        if ((std::fabs(m_data->speed) > 0.0) && (ms < 50))
+    if (d->mass > 0.0) {
+        const qint64 ms = d->timer.elapsed();
+        if ((std::fabs(d->speed) > 0.0) && (ms < 50))
             startFlying = true;
     }
 
     if (startFlying) {
-        m_data->flyingValue = boundedValue(m_data->mouseValue - m_data->mouseOffset);
+        d->flyingValue = boundedValue(d->mouseValue - d->mouseOffset);
 
-        m_data->timerId = startTimer(m_data->updateInterval);
+        d->timerId = startTimer(d->updateInterval);
     } else {
-        if (m_data->pendingValueChanged)
-            Q_EMIT valueChanged(m_data->value);
+        if (d->pendingValueChanged)
+            Q_EMIT valueChanged(d->value);
     }
 
-    m_data->pendingValueChanged = false;
-    m_data->mouseOffset         = 0.0;
+    d->pendingValueChanged = false;
+    d->mouseOffset         = 0.0;
 
     Q_EMIT wheelReleased();
 }
 
 /*!
-   \if ENGLISH
-   \brief Qt timer event
+   @brief Qt timer event
 
    The flying wheel effect is implemented using a timer
 
-   \param event Timer event
+   @param event Timer event
 
-   \sa updateInterval()
-   \endif
+   @sa updateInterval()
    *
-   \if CHINESE
-   \brief Qt 定时器事件
-
-   飞轮效果使用定时器实现
-
-   \param event 定时器事件
-
-   \sa updateInterval()
-   \endif
  */
 void QwtWheel::timerEvent(QTimerEvent* event)
 {
-    if (event->timerId() != m_data->timerId) {
+    QWT_D(d);
+    if (event->timerId() != d->timerId) {
         QWidget::timerEvent(event);
         return;
     }
 
-    m_data->speed *= std::exp(-m_data->updateInterval * 0.001 / m_data->mass);
+    d->speed *= std::exp(-d->updateInterval * 0.001 / d->mass);
 
-    m_data->flyingValue += m_data->speed * m_data->updateInterval;
-    m_data->flyingValue = boundedValue(m_data->flyingValue);
+    d->flyingValue += d->speed * d->updateInterval;
+    d->flyingValue = boundedValue(d->flyingValue);
 
-    double value = m_data->flyingValue;
-    if (m_data->stepAlignment)
+    double value = d->flyingValue;
+    if (d->stepAlignment)
         value = alignedValue(value);
 
-    if (std::fabs(m_data->speed) < 0.001 * m_data->singleStep) {
-        // stop if m_data->speed < one step per second
+    if (std::fabs(d->speed) < 0.001 * d->singleStep) {
+        // stop if d->speed < one step per second
         stopFlying();
     }
 
-    if (value != m_data->value) {
-        m_data->value = value;
+    if (value != d->value) {
+        d->value = value;
         update();
 
-        if (m_data->tracking || m_data->timerId == 0)
-            Q_EMIT valueChanged(m_data->value);
+        if (d->tracking || d->timerId == 0)
+            Q_EMIT valueChanged(d->value);
     }
 }
 
 /*!
-   \if ENGLISH
-   \brief Handle wheel events
+   @brief Handle wheel events
 
    In/Decrement the value
 
-   \param event Wheel event
-   \endif
+   @param event Wheel event
    *
-   \if CHINESE
-   \brief 处理轮事件
-
-   增加/减少值
-
-   \param event 轮事件
-   \endif
  */
 void QwtWheel::wheelEvent(QWheelEvent* event)
 {
+    QWT_D(d);
 #if QT_VERSION < 0x050e00
     const QPoint wheelPos = event->pos();
     const int wheelDelta  = event->delta();
@@ -433,7 +361,7 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
         return;
     }
 
-    if (m_data->isScrolling)
+    if (d->isScrolling)
         return;
 
     stopFlying();
@@ -442,33 +370,32 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
 
     if ((event->modifiers() & Qt::ControlModifier) || (event->modifiers() & Qt::ShiftModifier)) {
         // one page regardless of delta
-        increment = m_data->singleStep * m_data->pageStepCount;
+        increment = d->singleStep * d->pageStepCount;
         if (wheelDelta < 0)
             increment = -increment;
     } else {
         const int numSteps = wheelDelta / 120;
-        increment          = m_data->singleStep * numSteps;
+        increment          = d->singleStep * numSteps;
     }
 
-    if (m_data->orientation == Qt::Vertical && m_data->inverted)
+    if (d->orientation == Qt::Vertical && d->inverted)
         increment = -increment;
 
-    double value = boundedValue(m_data->value + increment);
+    double value = boundedValue(d->value + increment);
 
-    if (m_data->stepAlignment)
+    if (d->stepAlignment)
         value = alignedValue(value);
 
-    if (value != m_data->value) {
-        m_data->value = value;
+    if (value != d->value) {
+        d->value = value;
         update();
 
-        Q_EMIT valueChanged(m_data->value);
-        Q_EMIT wheelMoved(m_data->value);
+        Q_EMIT valueChanged(d->value);
+        Q_EMIT wheelMoved(d->value);
     }
 }
 
 /*!
-   \if ENGLISH
    Handle key events
 
    - Qt::Key_Home\n
@@ -493,94 +420,69 @@ void QwtWheel::wheelEvent(QWheelEvent* event)
    - Qt::Key_PageDown\n
     The value will be decremented by pageStepSize() * singleStepSize().
 
-   \param event Key event
-   \endif
+   @param event Key event
    *
-   \if CHINESE
-   处理键盘事件
-
-   - Qt::Key_Home\n
-    步进到 minimum()
-
-   - Qt::Key_End\n
-    步进到 maximum()
-
-   - Qt::Key_Up\n
-    对于水平或非反向的垂直轮，值将增加步长。
-    对于反向的垂直轮，值将减少步长。
-
-   - Qt::Key_Down\n
-    对于水平或非反向的垂直轮，值将减少步长。
-    对于反向的垂直轮，值将增加步长。
-
-   - Qt::Key_PageUp\n
-    值将增加 pageStepSize() * singleStepSize()。
-
-   - Qt::Key_PageDown\n
-    值将减少 pageStepSize() * singleStepSize()。
-
-   \param event 键盘事件
-   \endif
  */
 void QwtWheel::keyPressEvent(QKeyEvent* event)
 {
-    if (m_data->isScrolling) {
+    QWT_D(d);
+    if (d->isScrolling) {
         // don't interfere mouse scrolling
         return;
     }
 
-    double value     = m_data->value;
+    double value     = d->value;
     double increment = 0.0;
 
     switch (event->key()) {
     case Qt::Key_Down: {
-        if (m_data->orientation == Qt::Vertical && m_data->inverted)
-            increment = m_data->singleStep;
+        if (d->orientation == Qt::Vertical && d->inverted)
+            increment = d->singleStep;
         else
-            increment = -m_data->singleStep;
+            increment = -d->singleStep;
 
         break;
     }
     case Qt::Key_Up: {
-        if (m_data->orientation == Qt::Vertical && m_data->inverted)
-            increment = -m_data->singleStep;
+        if (d->orientation == Qt::Vertical && d->inverted)
+            increment = -d->singleStep;
         else
-            increment = m_data->singleStep;
+            increment = d->singleStep;
 
         break;
     }
     case Qt::Key_Left: {
-        if (m_data->orientation == Qt::Horizontal) {
-            if (m_data->inverted)
-                increment = m_data->singleStep;
+        if (d->orientation == Qt::Horizontal) {
+            if (d->inverted)
+                increment = d->singleStep;
             else
-                increment = -m_data->singleStep;
+                increment = -d->singleStep;
         }
         break;
     }
     case Qt::Key_Right: {
-        if (m_data->orientation == Qt::Horizontal) {
-            if (m_data->inverted)
-                increment = -m_data->singleStep;
+        if (d->orientation == Qt::Horizontal) {
+            if (d->inverted)
+                increment = -d->singleStep;
             else
-                increment = m_data->singleStep;
+                increment = d->singleStep;
         }
         break;
     }
     case Qt::Key_PageUp: {
-        increment = m_data->pageStepCount * m_data->singleStep;
+        increment = d->pageStepCount * d->singleStep;
         break;
     }
     case Qt::Key_PageDown: {
-        increment = -m_data->pageStepCount * m_data->singleStep;
+        increment = -d->pageStepCount * d->singleStep;
         break;
     }
     case Qt::Key_Home: {
-        value = m_data->minimum;
+        value = d->minimum;
         break;
     }
     case Qt::Key_End: {
-        value = m_data->maximum;
+        value = d->maximum;
         break;
     }
     default:;
@@ -593,73 +495,56 @@ void QwtWheel::keyPressEvent(QKeyEvent* event)
         stopFlying();
 
     if (increment != 0.0) {
-        value = boundedValue(m_data->value + increment);
+        value = boundedValue(d->value + increment);
 
-        if (m_data->stepAlignment)
+        if (d->stepAlignment)
             value = alignedValue(value);
     }
 
-    if (value != m_data->value) {
-        m_data->value = value;
+    if (value != d->value) {
+        d->value = value;
         update();
 
-        Q_EMIT valueChanged(m_data->value);
-        Q_EMIT wheelMoved(m_data->value);
+        Q_EMIT valueChanged(d->value);
+        Q_EMIT wheelMoved(d->value);
     }
 }
 
 /*!
-   \if ENGLISH
-   \brief Adjust the number of grooves in the wheel's surface.
+   @brief Adjust the number of grooves in the wheel's surface.
 
    The number of grooves is limited to 6 <= count <= 50.
    Values outside this range will be clipped.
    The default value is 10.
 
-   \param count Number of grooves per 360 degrees
-   \sa tickCount()
-   \endif
+   @param count Number of grooves per 360 degrees
+   @sa tickCount()
    *
-   \if CHINESE
-   \brief 调整轮表面凹槽的数量。
-
-   凹槽数量限制为 6 <= count <= 50。
-   超出此范围的值将被裁剪。
-   默认值为 10。
-
-   \param count 每 360 度的凹槽数
-   \sa tickCount()
-   \endif
  */
 void QwtWheel::setTickCount(int count)
 {
+    QWT_D(d);
     count = qBound(6, count, 50);
 
-    if (count != m_data->tickCount) {
-        m_data->tickCount = qBound(6, count, 50);
+    if (count != d->tickCount) {
+        d->tickCount = qBound(6, count, 50);
         update();
     }
 }
 
 /*!
-   \if ENGLISH
-   \return Number of grooves in the wheel's surface.
-   \sa setTickCnt()
-   \endif
+   @return Number of grooves in the wheel's surface.
+   @sa setTickCnt()
    *
-   \if CHINESE
-   \return 轮表面凹槽的数量。
-   \sa setTickCnt()
-   \endif
  */
 int QwtWheel::tickCount() const
 {
-    return m_data->tickCount;
+    QWT_DC(d);
+    return d->tickCount;
 }
 
 /*!
-   \if ENGLISH
-   \brief Set the wheel border width of the wheel.
+   @brief Set the wheel border width of the wheel.
 
    The wheel border must not be smaller than 1
    and is limited in dependence on the wheel's size.
@@ -667,100 +552,95 @@ int QwtWheel::tickCount() const
 
    The wheel border defaults to 2.
 
-   \param borderWidth Border width
-   \sa internalBorder()
-   \endif
+   @param borderWidth Border width
+   @sa internalBorder()
    *
-   \if CHINESE
-   \brief 设置轮的边框宽度。
-
-   轮边框不能小于 1，
-   并且根据轮的大小有限制。
-   超出允许范围的值将被裁剪。
-
-   轮边框默认为 2。
-
-   \param borderWidth 边框宽度
-   \sa internalBorder()
-   \endif
  */
 void QwtWheel::setWheelBorderWidth(int borderWidth)
 {
-    const int d              = qMin(width(), height()) / 3;
-    borderWidth              = qMin(borderWidth, d);
-    m_data->wheelBorderWidth = qMax(borderWidth, 1);
+    QWT_D(d);
+    const int wd             = qMin(width(), height()) / 3;
+    borderWidth              = qMin(borderWidth, wd);
+    d->wheelBorderWidth = qMax(borderWidth, 1);
     update();
 }
 
 /*!
-   \if ENGLISH
-   \return Wheel border width
-   \sa setWheelBorderWidth()
-   \endif
+   @return Wheel border width
+   @sa setWheelBorderWidth()
    *
-   \if CHINESE
-   \return 轮边框宽度
-   \sa setWheelBorderWidth()
-   \endif
  */
 int QwtWheel::wheelBorderWidth() const
 {
-    return m_data->wheelBorderWidth;
+    QWT_DC(d);
+    return d->wheelBorderWidth;
 }
 
 /*!
-   \if ENGLISH
-   \brief Set the border width
+   @brief Set the border width
 
    The border defaults to 2.
 
-   \param width Border width
-   \sa borderWidth()
-   \endif
+   @param width Border width
+   @sa borderWidth()
    *
-   \if CHINESE
-   \brief 设置边框宽度
-
-   边框默认为 2。
-
-   \param width 边框宽度
-   \sa borderWidth()
-   \endif
  */
 void QwtWheel::setBorderWidth(int width)
 {
-    m_data->borderWidth = qMax(width, 0);
+    QWT_D(d);
+    d->borderWidth = qMax(width, 0);
     update();
 }
 
 /*!
-   \if ENGLISH
-   \return Border width
-   \sa setBorderWidth()
-   \endif
+   @return Border width
+   @sa setBorderWidth()
    *
-   \if CHINESE
-   \return 边框宽度
-   \sa setBorderWidth()
-   \endif
  */
 int QwtWheel::borderWidth() const
 {
-    return m_data->borderWidth;
+    QWT_DC(d);
+    return d->borderWidth;
+}
+
+/**
+ * @brief Set flat style
+ * @details When enabled (default), the wheel is drawn with flat colors
+ *          instead of 3D embossed effects.
+ * @param on true for flat style, false for classic 3D style
+ * @sa flatStyle()
+ */
+void QwtWheel::setFlatStyle(bool on)
+{
+    QWT_D(d);
+    if (d->flatStyle != on) {
+        d->flatStyle = on;
+        update();
+    }
+}
+
+/**
+ * @brief Return whether flat style is enabled
+ * @sa setFlatStyle()
+ */
+bool QwtWheel::flatStyle() const
+{
+    QWT_DC(d);
+    return d->flatStyle;
 }
 
 /*!
-   \return Rectangle of the wheel without the outer border
+   @return Rectangle of the wheel without the outer border
  */
 QRect QwtWheel::wheelRect() const
 {
-    const int bw = m_data->borderWidth;
+    QWT_DC(d);
+    const int bw = d->borderWidth;
     return contentsRect().adjusted(bw, bw, -bw, -bw);
 }
 
 /*!
-   \if ENGLISH
-   \brief Set the total angle which the wheel can be turned.
+   @brief Set the total angle which the wheel can be turned.
 
    One full turn of the wheel corresponds to an angle of
    360 degrees. A total angle of n*360 degrees means
@@ -769,65 +649,41 @@ QRect QwtWheel::wheelRect() const
 
    The default setting of the total angle is 360 degrees.
 
-   \param angle total angle in degrees
-   \sa totalAngle()
-   \endif
+   @param angle total angle in degrees
+   @sa totalAngle()
    *
-   \if CHINESE
-   \brief 设置轮可以转动的总角度。
-
-   轮的一整圈对应 360 度。
-   n*360 度的总角度意味着轮必须绕其轴转动 n 圈
-   才能从最小值到最大值。
-
-   总角度的默认设置是 360 度。
-
-   \param angle 总角度（度）
-   \sa totalAngle()
-   \endif
  */
 void QwtWheel::setTotalAngle(double angle)
 {
+    QWT_D(d);
     if (angle < 0.0)
         angle = 0.0;
 
-    m_data->totalAngle = angle;
+    d->totalAngle = angle;
     update();
 }
 
 /*!
-   \if ENGLISH
-   \return Total angle which the wheel can be turned.
-   \sa setTotalAngle()
-   \endif
+   @return Total angle which the wheel can be turned.
+   @sa setTotalAngle()
    *
-   \if CHINESE
-   \return 轮可以转动的总角度。
-   \sa setTotalAngle()
-   \endif
  */
 double QwtWheel::totalAngle() const
 {
-    return m_data->totalAngle;
+    QWT_DC(d);
+    return d->totalAngle;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the wheel's orientation
  * @details The default orientation is Qt::Horizontal.
  * @param[in] orientation Qt::Horizontal or Qt::Vertical
- * \sa orientation()
- * \endif
- * \if CHINESE
- * @brief 设置轮的方向
- * @details 默认方向是 Qt::Horizontal。
- * @param[in] orientation Qt::Horizontal 或 Qt::Vertical
- * \sa orientation()
- * \endif
+ * @sa orientation()
  */
 void QwtWheel::setOrientation(Qt::Orientation orientation)
 {
-    if (m_data->orientation == orientation)
+    QWT_D(d);
+    if (d->orientation == orientation)
         return;
 
     if (!testAttribute(Qt::WA_WState_OwnSizePolicy)) {
@@ -838,78 +694,59 @@ void QwtWheel::setOrientation(Qt::Orientation orientation)
         setAttribute(Qt::WA_WState_OwnSizePolicy, false);
     }
 
-    m_data->orientation = orientation;
+    d->orientation = orientation;
     update();
 }
 
 /**
- * \if ENGLISH
  * @brief Return the orientation
  * @return Orientation
- * \sa setOrientation()
- * \endif
- * \if CHINESE
- * @brief 返回方向
- * @return 方向
- * \sa setOrientation()
- * \endif
+ * @sa setOrientation()
  */
 Qt::Orientation QwtWheel::orientation() const
 {
-    return m_data->orientation;
+    QWT_DC(d);
+    return d->orientation;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the visible portion of the wheel
  * @details You may use this function for fine-tuning the appearance of the wheel.
  *          The default value is 175 degrees. The value is limited from 10 to 175 degrees.
  * @param[in] angle Visible angle in degrees
- * \sa viewAngle(), setTotalAngle()
- * \endif
- * \if CHINESE
- * @brief 指定轮的可见部分
- * @details 您可以使用此函数微调轮的外观。
- *          默认值为 175 度。值限制在 10 到 175 度之间。
- * @param[in] angle 可见角度（度）
- * \sa viewAngle(), setTotalAngle()
- * \endif
+ * @sa viewAngle(), setTotalAngle()
  */
 void QwtWheel::setViewAngle(double angle)
 {
-    m_data->viewAngle = qBound(10.0, angle, 175.0);
+    QWT_D(d);
+    d->viewAngle = qBound(10.0, angle, 175.0);
     update();
 }
 
 /**
- * \if ENGLISH
  * @brief Return the visible portion of the wheel
  * @return Visible angle in degrees
- * \sa setViewAngle(), totalAngle()
- * \endif
- * \if CHINESE
- * @brief 返回轮的可见部分
- * @return 可见角度（度）
- * \sa setViewAngle(), totalAngle()
- * \endif
+ * @sa setViewAngle(), totalAngle()
  */
 double QwtWheel::viewAngle() const
 {
-    return m_data->viewAngle;
+    QWT_DC(d);
+    return d->viewAngle;
 }
 
 /*!
    Determine the value corresponding to a specified point
 
-   \param pos Position
-   \return Value corresponding to pos
+   @param pos Position
+   @return Value corresponding to pos
  */
 double QwtWheel::valueAt(const QPoint& pos) const
 {
+    QWT_DC(d);
     const QRectF rect = wheelRect();
 
     double w, dx;
-    if (m_data->orientation == Qt::Vertical) {
+    if (d->orientation == Qt::Vertical) {
         w  = rect.height();
         dx = rect.top() - pos.y();
     } else {
@@ -920,34 +757,29 @@ double QwtWheel::valueAt(const QPoint& pos) const
     if (w == 0.0)
         return 0.0;
 
-    if (m_data->inverted) {
+    if (d->inverted) {
         dx = w - dx;
     }
 
     // w pixels is an arc of viewAngle degrees,
     // so we convert change in pixels to change in angle
-    const double ang = dx * m_data->viewAngle / w;
+    const double ang = dx * d->viewAngle / w;
 
     // value range maps to totalAngle degrees,
     // so convert the change in angle to a change in value
-    const double val = ang * (maximum() - minimum()) / m_data->totalAngle;
+    const double val = ang * (maximum() - minimum()) / d->totalAngle;
 
     return val;
 }
 
 /*!
-   \if ENGLISH
-   \brief Qt Paint Event
-   \param event Paint event
-   \endif
+   @brief Qt Paint Event
+   @param event Paint event
    *
-   \if CHINESE
-   \brief Qt 绘制事件
-   \param event 绘制事件
-   \endif
  */
 void QwtWheel::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
@@ -955,7 +787,17 @@ void QwtWheel::paintEvent(QPaintEvent* event)
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 
-    qDrawShadePanel(&painter, contentsRect(), palette(), true, m_data->borderWidth);
+    if (d->flatStyle) {
+        const QRect r = contentsRect();
+        const int bw = d->borderWidth;
+        painter.save();
+        painter.setPen(QPen(palette().color(QPalette::Mid), bw));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(r.adjusted(bw / 2, bw / 2, -bw / 2 - 1, -bw / 2 - 1));
+        painter.restore();
+    } else {
+        qDrawShadePanel(&painter, contentsRect(), palette(), true, d->borderWidth);
+    }
 
     drawWheelBackground(&painter, wheelRect());
     drawTicks(&painter, wheelRect());
@@ -967,44 +809,62 @@ void QwtWheel::paintEvent(QPaintEvent* event)
 /*!
    Draw the Wheel's background gradient
 
-   \param painter Painter
-   \param rect Geometry for the wheel
+   @param painter Painter
+   @param rect Geometry for the wheel
  */
 void QwtWheel::drawWheelBackground(QPainter* painter, const QRectF& rect)
 {
+    QWT_D(d);
     painter->save();
 
     QPalette pal = palette();
 
-    //  draw shaded background
-    QLinearGradient gradient(rect.topLeft(), (m_data->orientation == Qt::Horizontal) ? rect.topRight() : rect.bottomLeft());
-    gradient.setColorAt(0.0, pal.color(QPalette::Button));
-    gradient.setColorAt(0.2, pal.color(QPalette::Midlight));
-    gradient.setColorAt(0.7, pal.color(QPalette::Mid));
-    gradient.setColorAt(1.0, pal.color(QPalette::Dark));
+    if (d->flatStyle) {
+        painter->fillRect(rect, pal.brush(QPalette::Button));
 
-    painter->fillRect(rect, gradient);
+        const QPen borderPen(pal.color(QPalette::Mid), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        const double bw2 = 0.5 * d->wheelBorderWidth;
 
-    // draw internal border
+        if (d->orientation == Qt::Horizontal) {
+            painter->setPen(borderPen);
+            painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+            painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
+        } else {
+            painter->setPen(borderPen);
+            painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+            painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        }
+    } else {
+        //  draw shaded background
+        QLinearGradient gradient(rect.topLeft(), (d->orientation == Qt::Horizontal) ? rect.topRight() : rect.bottomLeft());
+        gradient.setColorAt(0.0, pal.color(QPalette::Button));
+        gradient.setColorAt(0.2, pal.color(QPalette::Midlight));
+        gradient.setColorAt(0.7, pal.color(QPalette::Mid));
+        gradient.setColorAt(1.0, pal.color(QPalette::Dark));
 
-    const QPen lightPen(palette().color(QPalette::Light), m_data->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
-    const QPen darkPen(pal.color(QPalette::Dark), m_data->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        painter->fillRect(rect, gradient);
 
-    const double bw2 = 0.5 * m_data->wheelBorderWidth;
+        // draw internal border
 
-    if (m_data->orientation == Qt::Horizontal) {
-        painter->setPen(lightPen);
-        painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+        const QPen lightPen(palette().color(QPalette::Light), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
+        const QPen darkPen(pal.color(QPalette::Dark), d->wheelBorderWidth, Qt::SolidLine, Qt::FlatCap);
 
-        painter->setPen(darkPen);
-        painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
-    } else  // Qt::Vertical
-    {
-        painter->setPen(lightPen);
-        painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+        const double bw2 = 0.5 * d->wheelBorderWidth;
 
-        painter->setPen(darkPen);
-        painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        if (d->orientation == Qt::Horizontal) {
+            painter->setPen(lightPen);
+            painter->drawLine(QPointF(rect.left(), rect.top() + bw2), QPointF(rect.right(), rect.top() + bw2));
+
+            painter->setPen(darkPen);
+            painter->drawLine(QPointF(rect.left(), rect.bottom() - bw2), QPointF(rect.right(), rect.bottom() - bw2));
+        } else  // Qt::Vertical
+        {
+            painter->setPen(lightPen);
+            painter->drawLine(QPointF(rect.left() + bw2, rect.top()), QPointF(rect.left() + bw2, rect.bottom()));
+
+            painter->setPen(darkPen);
+            painter->drawLine(QPointF(rect.right() - bw2, rect.top()), QPointF(rect.right() - bw2, rect.bottom()));
+        }
     }
 
     painter->restore();
@@ -1013,35 +873,37 @@ void QwtWheel::drawWheelBackground(QPainter* painter, const QRectF& rect)
 /*!
    Draw the Wheel's ticks
 
-   \param painter Painter
-   \param rect Geometry for the wheel
+   @param painter Painter
+   @param rect Geometry for the wheel
  */
 void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
 {
-    const double range = m_data->maximum - m_data->minimum;
+    QWT_D(d);
+    const double range = d->maximum - d->minimum;
 
-    if (range == 0.0 || m_data->totalAngle == 0.0) {
+    if (range == 0.0 || d->totalAngle == 0.0) {
         return;
     }
 
     const QPen lightPen(palette().color(QPalette::Light), 0, Qt::SolidLine, Qt::FlatCap);
     const QPen darkPen(palette().color(QPalette::Dark), 0, Qt::SolidLine, Qt::FlatCap);
+    const QPen flatPen(palette().color(QPalette::Mid), 0, Qt::SolidLine, Qt::FlatCap);
 
-    const double cnvFactor = qAbs(m_data->totalAngle / range);
-    const double halfIntv  = 0.5 * m_data->viewAngle / cnvFactor;
+    const double cnvFactor = qAbs(d->totalAngle / range);
+    const double halfIntv  = 0.5 * d->viewAngle / cnvFactor;
     const double loValue   = value() - halfIntv;
     const double hiValue   = value() + halfIntv;
-    const double tickWidth = 360.0 / double(m_data->tickCount) / cnvFactor;
-    const double sinArc    = qFastSin(m_data->viewAngle * M_PI / 360.0);
+    const double tickWidth = 360.0 / double(d->tickCount) / cnvFactor;
+    const double sinArc    = qFastSin(d->viewAngle * M_PI / 360.0);
 
-    if (m_data->orientation == Qt::Horizontal) {
+    if (d->orientation == Qt::Horizontal) {
         const double radius = rect.width() * 0.5;
 
-        double l1 = rect.top() + m_data->wheelBorderWidth;
-        double l2 = rect.bottom() - m_data->wheelBorderWidth - 1;
+        double l1 = rect.top() + d->wheelBorderWidth;
+        double l2 = rect.bottom() - d->wheelBorderWidth - 1;
 
         // draw one point over the border if border > 1
-        if (m_data->wheelBorderWidth > 1) {
+        if (d->wheelBorderWidth > 1) {
             l1--;
             l2++;
         }
@@ -1057,26 +919,31 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
             const double off = radius * (sinArc + s) / sinArc;
 
             double tickPos;
-            if (m_data->inverted)
+            if (d->inverted)
                 tickPos = rect.left() + off;
             else
                 tickPos = rect.right() - off;
 
             if ((tickPos <= maxpos) && (tickPos > minpos)) {
-                painter->setPen(darkPen);
-                painter->drawLine(QPointF(tickPos - 1, l1), QPointF(tickPos - 1, l2));
-                painter->setPen(lightPen);
-                painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                if (d->flatStyle) {
+                    painter->setPen(flatPen);
+                    painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                } else {
+                    painter->setPen(darkPen);
+                    painter->drawLine(QPointF(tickPos - 1, l1), QPointF(tickPos - 1, l2));
+                    painter->setPen(lightPen);
+                    painter->drawLine(QPointF(tickPos, l1), QPointF(tickPos, l2));
+                }
             }
         }
     } else  // Qt::Vertical
     {
         const double radius = rect.height() * 0.5;
 
-        double l1 = rect.left() + m_data->wheelBorderWidth;
-        double l2 = rect.right() - m_data->wheelBorderWidth - 1;
+        double l1 = rect.left() + d->wheelBorderWidth;
+        double l2 = rect.right() - d->wheelBorderWidth - 1;
 
-        if (m_data->wheelBorderWidth > 1) {
+        if (d->wheelBorderWidth > 1) {
             l1--;
             l2++;
         }
@@ -1092,68 +959,54 @@ void QwtWheel::drawTicks(QPainter* painter, const QRectF& rect)
 
             double tickPos;
 
-            if (m_data->inverted)
+            if (d->inverted)
                 tickPos = rect.bottom() - off;
             else
                 tickPos = rect.top() + off;
 
             if ((tickPos <= maxpos) && (tickPos > minpos)) {
-                painter->setPen(darkPen);
-                painter->drawLine(QPointF(l1, tickPos - 1), QPointF(l2, tickPos - 1));
-                painter->setPen(lightPen);
-                painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                if (d->flatStyle) {
+                    painter->setPen(flatPen);
+                    painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                } else {
+                    painter->setPen(darkPen);
+                    painter->drawLine(QPointF(l1, tickPos - 1), QPointF(l2, tickPos - 1));
+                    painter->setPen(lightPen);
+                    painter->drawLine(QPointF(l1, tickPos), QPointF(l2, tickPos));
+                }
             }
         }
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Set the width of the wheel
  * @details Corresponds to the wheel height for horizontal orientation,
  *          and the wheel width for vertical orientation.
  * @param[in] width The wheel's width
- * \sa wheelWidth()
- * \endif
- * \if CHINESE
- * @brief 设置轮的宽度
- * @details 对应水平方向的轮高度和垂直方向的轮宽度。
- * @param[in] width 轮的宽度
- * \sa wheelWidth()
- * \endif
+ * @sa wheelWidth()
  */
 void QwtWheel::setWheelWidth(int width)
 {
-    m_data->wheelWidth = width;
+    QWT_D(d);
+    d->wheelWidth = width;
     update();
 }
 
 /**
- * \if ENGLISH
  * @brief Return the width of the wheel
  * @return Wheel width
- * \sa setWheelWidth()
- * \endif
- * \if CHINESE
- * @brief 返回轮的宽度
- * @return 轮宽度
- * \sa setWheelWidth()
- * \endif
+ * @sa setWheelWidth()
  */
 int QwtWheel::wheelWidth() const
 {
-    return m_data->wheelWidth;
+    QWT_DC(d);
+    return d->wheelWidth;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the size hint
  * @return Size hint
- * \endif
- * \if CHINESE
- * @brief 返回大小提示
- * @return 大小提示
- * \endif
  */
 QSize QwtWheel::sizeHint() const
 {
@@ -1162,188 +1015,125 @@ QSize QwtWheel::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the minimum size hint
  * @return Minimum size hint
- * \warning The return value is based on the wheel width.
- * \endif
- * \if CHINESE
- * @brief 返回最小大小提示
- * @return 最小大小提示
- * \warning 返回值基于轮宽度。
- * \endif
+ * @warning The return value is based on the wheel width.
  */
 QSize QwtWheel::minimumSizeHint() const
 {
-    QSize sz(3 * m_data->wheelWidth + 2 * m_data->borderWidth, m_data->wheelWidth + 2 * m_data->borderWidth);
-    if (m_data->orientation != Qt::Horizontal)
+    QWT_DC(d);
+    QSize sz(3 * d->wheelWidth + 2 * d->borderWidth, d->wheelWidth + 2 * d->borderWidth);
+    if (d->orientation != Qt::Horizontal)
         sz.transpose();
 
     return sz;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the step size of the counter
  * @details A value <= 0.0 disables stepping.
  * @param[in] stepSize Single step size
- * \sa singleStep(), setPageStepCount()
- * \endif
- * \if CHINESE
- * @brief 设置计数器的步长
- * @details 值 <= 0.0 禁用步进。
- * @param[in] stepSize 单步大小
- * \sa singleStep(), setPageStepCount()
- * \endif
+ * @sa singleStep(), setPageStepCount()
  */
 void QwtWheel::setSingleStep(double stepSize)
 {
-    m_data->singleStep = qwtMaxF(stepSize, 0.0);
+    QWT_D(d);
+    d->singleStep = qwtMaxF(stepSize, 0.0);
 }
 
 /**
- * \if ENGLISH
  * @brief Return the single step size
  * @return Single step size
- * \sa setSingleStep()
- * \endif
- * \if CHINESE
- * @brief 返回单步大小
- * @return 单步大小
- * \sa setSingleStep()
- * \endif
+ * @sa setSingleStep()
  */
 double QwtWheel::singleStep() const
 {
-    return m_data->singleStep;
+    QWT_DC(d);
+    return d->singleStep;
 }
 
 /**
- * \if ENGLISH
  * @brief En/Disable step alignment
  * @details When step alignment is enabled, value changes initiated by
  *          user input (mouse, keyboard, wheel) are aligned to multiples of the single step.
  * @param[in] on On/Off
- * \sa stepAlignment(), setSingleStep()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用步对齐
- * @details 当启用步对齐时，用户输入（鼠标、键盘、滚轮）引起的值变化将对齐到单步的倍数。
- * @param[in] on 开/关
- * \sa stepAlignment(), setSingleStep()
- * \endif
+ * @sa stepAlignment(), setSingleStep()
  */
 void QwtWheel::setStepAlignment(bool on)
 {
-    if (on != m_data->stepAlignment) {
-        m_data->stepAlignment = on;
+    QWT_D(d);
+    if (on != d->stepAlignment) {
+        d->stepAlignment = on;
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return whether step alignment is enabled
  * @return True when step alignment is enabled
- * \sa setStepAlignment(), singleStep()
- * \endif
- * \if CHINESE
- * @brief 返回是否启用了步对齐
- * @return 如果启用了步对齐返回 true
- * \sa setStepAlignment(), singleStep()
- * \endif
+ * @sa setStepAlignment(), singleStep()
  */
 bool QwtWheel::stepAlignment() const
 {
-    return m_data->stepAlignment;
+    QWT_DC(d);
+    return d->stepAlignment;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the page step count
  * @details pageStepCount is a multiplicator for the single step size
  *          that typically corresponds to the user pressing PageUp or PageDown.
  *          A value of 0 disables page stepping. The default value is 1.
  * @param[in] count Multiplicator for the single step size
- * \sa pageStepCount(), setSingleStep()
- * \endif
- * \if CHINESE
- * @brief 设置页步数
- * @details pageStepCount 是单步大小的乘数，通常对应用户按下 PageUp 或 PageDown。
- *          值为 0 禁用页步进。默认值为 1。
- * @param[in] count 单步大小的乘数
- * \sa pageStepCount(), setSingleStep()
- * \endif
+ * @sa pageStepCount(), setSingleStep()
  */
 void QwtWheel::setPageStepCount(int count)
 {
-    m_data->pageStepCount = qMax(0, count);
+    QWT_D(d);
+    d->pageStepCount = qMax(0, count);
 }
 
 /**
- * \if ENGLISH
  * @brief Return the page step count
  * @return Page step count
- * \sa setPageStepCount(), singleStep()
- * \endif
- * \if CHINESE
- * @brief 返回页步数
- * @return 页步数
- * \sa setPageStepCount(), singleStep()
- * \endif
+ * @sa setPageStepCount(), singleStep()
  */
 int QwtWheel::pageStepCount() const
 {
-    return m_data->pageStepCount;
+    QWT_DC(d);
+    return d->pageStepCount;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the minimum and maximum values
  * @details The maximum is adjusted if necessary to ensure that the range remains valid.
  *          The value might be modified to be inside of the range.
  * @param[in] min Minimum value
  * @param[in] max Maximum value
- * \sa minimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 设置最小值和最大值
- * @details 如有必要会调整最大值以确保范围有效。
- *          值可能会被修改以保持在范围内。
- * @param[in] min 最小值
- * @param[in] max 最大值
- * \sa minimum(), maximum()
- * \endif
+ * @sa minimum(), maximum()
  */
 void QwtWheel::setRange(double min, double max)
 {
+    QWT_D(d);
     max = qwtMaxF(min, max);
 
-    if (m_data->minimum == min && m_data->maximum == max)
+    if (d->minimum == min && d->maximum == max)
         return;
 
-    m_data->minimum = min;
-    m_data->maximum = max;
+    d->minimum = min;
+    d->maximum = max;
 
-    if (m_data->value < min || m_data->value > max) {
-        m_data->value = qBound(min, m_data->value, max);
+    if (d->value < min || d->value > max) {
+        d->value = qBound(min, d->value, max);
 
         update();
-        Q_EMIT valueChanged(m_data->value);
+        Q_EMIT valueChanged(d->value);
     }
 }
 /**
- * \if ENGLISH
  * @brief Set the minimum value of the range
  * @param[in] value Minimum value
- * \sa setRange(), setMaximum(), minimum()
- * \note The maximum is adjusted if necessary to ensure that the range remains valid.
- * \endif
- * \if CHINESE
- * @brief 设置范围的最小值
- * @param[in] value 最小值
- * \sa setRange(), setMaximum(), minimum()
- * \note 如有必要会调整最大值以确保范围有效。
- * \endif
+ * @sa setRange(), setMaximum(), minimum()
+ * @note The maximum is adjusted if necessary to ensure that the range remains valid.
  */
 void QwtWheel::setMinimum(double value)
 {
@@ -1351,33 +1141,20 @@ void QwtWheel::setMinimum(double value)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the minimum of the range
  * @return Minimum value
- * \sa setRange(), setMinimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 返回范围的最小值
- * @return 最小值
- * \sa setRange(), setMinimum(), maximum()
- * \endif
+ * @sa setRange(), setMinimum(), maximum()
  */
 double QwtWheel::minimum() const
 {
-    return m_data->minimum;
+    QWT_DC(d);
+    return d->minimum;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the maximum value of the range
  * @param[in] value Maximum value
- * \sa setRange(), setMinimum(), maximum()
- * \endif
- * \if CHINESE
- * @brief 设置范围的最大值
- * @param[in] value 最大值
- * \sa setRange(), setMinimum(), maximum()
- * \endif
+ * @sa setRange(), setMinimum(), maximum()
  */
 void QwtWheel::setMaximum(double value)
 {
@@ -1385,149 +1162,102 @@ void QwtWheel::setMaximum(double value)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the maximum of the range
  * @return Maximum value
- * \sa setRange(), setMaximum(), minimum()
- * \endif
- * \if CHINESE
- * @brief 返回范围的最大值
- * @return 最大值
- * \sa setRange(), setMaximum(), minimum()
- * \endif
+ * @sa setRange(), setMaximum(), minimum()
  */
 double QwtWheel::maximum() const
 {
-    return m_data->maximum;
+    QWT_DC(d);
+    return d->maximum;
 }
 
 /**
- * \if ENGLISH
  * @brief Set a new value without adjusting to the step raster
  * @param[in] value New value
- * \sa value(), valueChanged()
- * \warning The value is clipped when it lies outside the range.
- * \endif
- * \if CHINESE
- * @brief 设置新值而不调整到步栅格
- * @param[in] value 新值
- * \sa value(), valueChanged()
- * \warning 当值超出范围时会被裁剪。
- * \endif
+ * @sa value(), valueChanged()
+ * @warning The value is clipped when it lies outside the range.
  */
 void QwtWheel::setValue(double value)
 {
+    QWT_D(d);
     stopFlying();
-    m_data->isScrolling = false;
+    d->isScrolling = false;
 
-    value = qBound(m_data->minimum, value, m_data->maximum);
+    value = qBound(d->minimum, value, d->maximum);
 
-    if (m_data->value != value) {
-        m_data->value = value;
+    if (d->value != value) {
+        d->value = value;
 
         update();
-        Q_EMIT valueChanged(m_data->value);
+        Q_EMIT valueChanged(d->value);
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return the current value of the wheel
  * @return Current value
- * \sa setValue(), valueChanged()
- * \endif
- * \if CHINESE
- * @brief 返回轮的当前值
- * @return 当前值
- * \sa setValue(), valueChanged()
- * \endif
+ * @sa setValue(), valueChanged()
  */
 double QwtWheel::value() const
 {
-    return m_data->value;
+    QWT_DC(d);
+    return d->value;
 }
 
 /**
- * \if ENGLISH
  * @brief En/Disable inverted appearance
  * @details An inverted wheel increases its values in the opposite direction.
  *          The direction of an inverted horizontal wheel will be from right to left,
  *          an inverted vertical wheel will increase from bottom to top.
  * @param[in] on En/Disable inverted appearance
- * \sa isInverted()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用反转外观
- * @details 反转的轮以相反方向增加其值。
- *          反转的水平轮方向将从右到左，反转的垂直轮将从底到顶增加。
- * @param[in] on 启用/禁用反转外观
- * \sa isInverted()
- * \endif
+ * @sa isInverted()
  */
 void QwtWheel::setInverted(bool on)
 {
-    if (m_data->inverted != on) {
-        m_data->inverted = on;
+    QWT_D(d);
+    if (d->inverted != on) {
+        d->inverted = on;
         update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return whether the wheel is inverted
  * @return True when the wheel is inverted
- * \sa setInverted()
- * \endif
- * \if CHINESE
- * @brief 返回轮是否反转
- * @return 如果轮反转返回 true
- * \sa setInverted()
- * \endif
+ * @sa setInverted()
  */
 bool QwtWheel::isInverted() const
 {
-    return m_data->inverted;
+    QWT_DC(d);
+    return d->inverted;
 }
 
 /**
- * \if ENGLISH
  * @brief En/Disable wrapping
  * @details If wrapping is true, stepping up from maximum() value will take
  *          you to the minimum() value and vice versa.
  * @param[in] on En/Disable wrapping
- * \sa wrapping()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用环绕
- * @details 如果启用环绕，从 maximum() 值向上步进会到达 minimum() 值，反之亦然。
- * @param[in] on 启用/禁用环绕
- * \sa wrapping()
- * \endif
+ * @sa wrapping()
  */
 void QwtWheel::setWrapping(bool on)
 {
-    m_data->wrapping = on;
+    QWT_D(d);
+    d->wrapping = on;
 }
 
 /**
- * \if ENGLISH
  * @brief Return whether wrapping is enabled
  * @return True when wrapping is set
- * \sa setWrapping()
- * \endif
- * \if CHINESE
- * @brief 返回是否启用了环绕
- * @return 如果启用了环绕返回 true
- * \sa setWrapping()
- * \endif
+ * @sa setWrapping()
  */
 bool QwtWheel::wrapping() const
 {
-    return m_data->wrapping;
+    QWT_DC(d);
+    return d->wrapping;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the slider's mass for flywheel effect
  * @details If the slider's mass is greater than 0, it will continue to move
  *          after the mouse button has been released. Its speed decreases
@@ -1535,81 +1265,61 @@ bool QwtWheel::wrapping() const
  *          A large mass means that it will continue to move for a long time.
  *          Derived widgets may overload this function to make it public.
  * @param[in] mass New mass in kg
- * \warning If the mass is smaller than 1g, it is set to zero.
+ * @warning If the mass is smaller than 1g, it is set to zero.
  *          The maximal mass is limited to 100kg.
- * \sa mass()
- * \endif
- * \if CHINESE
- * @brief 设置滑块的质量以实现飞轮效果
- * @details 如果滑块的质量大于 0，它将在鼠标按钮释放后继续移动。
- *          其速度随时间递减，速率取决于滑块的质量。
- *          大质量意味着它将继续移动很长时间。
- *          派生控件可以重载此函数使其公开。
- * @param[in] mass 新质量（千克）
- * \warning 如果质量小于 1g，则设置为 0。
- *          最大质量限制为 100kg。
- * \sa mass()
- * \endif
+ * @sa mass()
  */
 void QwtWheel::setMass(double mass)
 {
+    QWT_D(d);
     if (mass < 0.001) {
-        m_data->mass = 0.0;
+        d->mass = 0.0;
     } else {
-        m_data->mass = qwtMinF(100.0, mass);
+        d->mass = qwtMinF(100.0, mass);
     }
 
-    if (m_data->mass <= 0.0)
+    if (d->mass <= 0.0)
         stopFlying();
 }
 
 /**
- * \if ENGLISH
  * @brief Return the mass for flywheel effect
  * @return Mass in kg
- * \sa setMass()
- * \endif
- * \if CHINESE
- * @brief 返回飞轮效果的质量
- * @return 质量（千克）
- * \sa setMass()
- * \endif
+ * @sa setMass()
  */
 double QwtWheel::mass() const
 {
-    return m_data->mass;
+    QWT_DC(d);
+    return d->mass;
 }
 
 /*!
-   \if ENGLISH
-   \brief Stop the flying movement of the wheel
-   \endif
+   @brief Stop the flying movement of the wheel
    *
-   \if CHINESE
-   \brief 停止轮的飞行移动
-   \endif
  */
 void QwtWheel::stopFlying()
 {
-    if (m_data->timerId != 0) {
-        killTimer(m_data->timerId);
-        m_data->timerId = 0;
-        m_data->speed   = 0.0;
+    QWT_D(d);
+    if (d->timerId != 0) {
+        killTimer(d->timerId);
+        d->timerId = 0;
+        d->speed   = 0.0;
     }
 }
 
 double QwtWheel::boundedValue(double value) const
 {
-    const double range = m_data->maximum - m_data->minimum;
+    QWT_DC(d);
+    const double range = d->maximum - d->minimum;
 
-    if (m_data->wrapping && range >= 0.0) {
-        if (value < m_data->minimum) {
-            value += std::ceil((m_data->minimum - value) / range) * range;
-        } else if (value > m_data->maximum) {
-            value -= std::ceil((value - m_data->maximum) / range) * range;
+    if (d->wrapping && range >= 0.0) {
+        if (value < d->minimum) {
+            value += std::ceil((d->minimum - value) / range) * range;
+        } else if (value > d->maximum) {
+            value -= std::ceil((value - d->maximum) / range) * range;
         }
     } else {
-        value = qBound(m_data->minimum, value, m_data->maximum);
+        value = qBound(d->minimum, value, d->maximum);
     }
 
     return value;
@@ -1617,18 +1327,19 @@ double QwtWheel::boundedValue(double value) const
 
 double QwtWheel::alignedValue(double value) const
 {
-    const double stepSize = m_data->singleStep;
+    QWT_DC(d);
+    const double stepSize = d->singleStep;
 
     if (stepSize > 0.0) {
-        value = m_data->minimum + qRound((value - m_data->minimum) / stepSize) * stepSize;
+        value = d->minimum + qRound((value - d->minimum) / stepSize) * stepSize;
 
         if (stepSize > 1e-12) {
             if (qFuzzyCompare(value + 1.0, 1.0)) {
                 // correct rounding error if value = 0
                 value = 0.0;
-            } else if (qFuzzyCompare(value, m_data->maximum)) {
+            } else if (qFuzzyCompare(value, d->maximum)) {
                 // correct rounding error at the border
-                value = m_data->maximum;
+                value = d->maximum;
             }
         }
     }

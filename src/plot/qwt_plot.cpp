@@ -47,6 +47,7 @@
 #include "qwt_plot_scale_event_dispatcher.h"
 #include "qwt_painter.h"
 #include "qwt_scale_draw.h"
+#include "qwt_color_cycle.h"
 // qt
 #include <qpainter.h>
 #include <qpointer.h>
@@ -61,7 +62,8 @@
 
 static inline void qwtEnableLegendItems(QwtPlot* plot, bool on)
 {
-    // gcc seems to have problems with const char sig[] in combination with certain options
+    // Old-style SIGNAL/SLOT required: updateLegendItems is a private slot,
+    // and this is a free function that cannot access private members.
     const char* sig  = SIGNAL(legendDataChanged(QVariant, QList< QwtLegendData >));
     const char* slot = SLOT(updateLegendItems(QVariant, QList< QwtLegendData >));
 
@@ -128,16 +130,20 @@ public:
     QwtPlotScaleEventDispatcher* scaleEventDispatcher { nullptr };
 
     bool autoReplot { true };
-    bool autoReplotTemp { true };  ///< 用于暂存autoReplot状态
+    bool autoReplotTemp { true };  ///< Used to temporarily store the autoReplot state
 
-    bool isParasitePlot { false };                                ///< 标记这个绘图是寄生绘图
-    QMetaObject::Connection shareConn[ QwtAxis::AxisPositions ];  // 记录寄生轴和宿主轴坐标同步的信号槽，仅仅针对寄生轴有用
+    bool isParasitePlot { false };                                ///< Marks this plot as a parasite plot
+    QMetaObject::Connection shareConn[ QwtAxis::AxisPositions ];  // Records signal-slot connections for syncing parasite axes with host axes, only relevant for parasite axes
     QString plotId;
 
     // NEW: tick direction for each axis
     TickDirection tickDirection[QwtAxis::AxisPositions] = {
         TickOutside, TickOutside, TickOutside, TickOutside
     };
+
+    // Color cycle for automatic item coloring
+    QwtColorCycle colorCycle;
+    int colorCycleCounters[20] = {};  // per-rtti counter for built-in types
 };
 
 QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
@@ -149,17 +155,9 @@ QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
 //----------------------------------------------------
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] parent Parent widget
  * @details Creates a QwtPlot widget with an empty title.
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] parent 父部件
- * @details 创建一个带有空标题的 QwtPlot 部件。
- * \endif
  */
 QwtPlot::QwtPlot(QWidget* parent) : QFrame(parent), QWT_PIMPL_CONSTRUCT
 {
@@ -167,19 +165,10 @@ QwtPlot::QwtPlot(QWidget* parent) : QFrame(parent), QWT_PIMPL_CONSTRUCT
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with title
  * @param[in] title Title text
  * @param[in] parent Parent widget
  * @details Creates a QwtPlot widget with the specified title.
- * \endif
- *
- * \if CHINESE
- * @brief 带标题的构造函数
- * @param[in] title 标题文本
- * @param[in] parent 父部件
- * @details 创建一个带有指定标题的 QwtPlot 部件。
- * \endif
  */
 QwtPlot::QwtPlot(const QwtText& title, QWidget* parent) : QFrame(parent), QWT_PIMPL_CONSTRUCT
 {
@@ -187,15 +176,8 @@ QwtPlot::QwtPlot(const QwtText& title, QWidget* parent) : QFrame(parent), QWT_PI
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  * @details Detaches all plot items and deletes the layout and axis data.
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * @details 分离所有绘图项并删除布局和坐标轴数据。
- * \endif
  */
 QwtPlot::~QwtPlot()
 {
@@ -206,8 +188,8 @@ QwtPlot::~QwtPlot()
 }
 
 /*!
-   \brief Initializes a QwtPlot instance
-   \param title Title text
+   @brief Initializes a QwtPlot instance
+   @param title Title text
  */
 void QwtPlot::initPlot(const QwtText& title)
 {
@@ -242,6 +224,10 @@ void QwtPlot::initPlot(const QwtText& title)
     m_data->canvas = new QwtPlotCanvas(this);
     m_data->canvas->setObjectName("QwtPlotCanvas");
     m_data->canvas->installEventFilter(this);
+    setCanvasBackground(QBrush(Qt::white));
+
+    setBackgroundRole(QPalette::Base);
+    setAutoFillBackground(true);
 
     //create uuid
     m_data->plotId = QUuid::createUuid().toString();
@@ -260,23 +246,25 @@ void QwtPlot::initPlot(const QwtText& title)
         qwtSetTabOrder(focusChain[ i ], focusChain[ i + 1 ], false);
 
     qwtEnableLegendItems(this, true);
-    // 默认安装一个事件转发器
+    // Install a default event dispatcher
     setupScaleEventDispatcher(new QwtPlotScaleEventDispatcher(this, this));
 }
 
 /**
- * @brief 最顶部的寄生绘图对宿主绘图调用updateAllAxisEdgeMargin
+ * @brief The topmost parasite plot triggers the host plot to call updateAllAxisEdgeMargin
  *
- * 这个函数的目的是，绘图存在寄生绘图时，由于寄生绘图属于宿主的子绘图，宿主绘图调用updateAllAxisEdgeMargin函数时，
- * 寄生绘图的位置可能还没确定，这时，就需要最顶部的寄生绘图在某些情况调用宿主绘图的updateAllAxisEdgeMargin，
- * 典型的应用场景是绘图第一次显示的时候就需要用到此函数
+ * The purpose of this function is that when a plot has parasite plots, since parasite plots are
+ * children of the host plot, when the host calls updateAllAxisEdgeMargin, the positions of the
+ * parasite plots may not yet be determined. In this case, the topmost parasite plot needs to
+ * trigger the host's updateAllAxisEdgeMargin in certain situations. A typical use case is
+ * when the plot is first displayed.
  *
- * @note 如果没有寄生绘图，此函数没有任何动作
+ * @note If there are no parasite plots, this function does nothing.
  */
 void QwtPlot::topParasiteTriggerHostUpdateAxisMargins()
 {
     if (isParasitePlot()) {
-        // 宿主显示调用host的更新
+        // Host explicitly calls the host's update
         if (isTopParasitePlot()) {
             QwtPlot* host = hostPlot();
             if (host) {
@@ -287,7 +275,7 @@ void QwtPlot::topParasiteTriggerHostUpdateAxisMargins()
 }
 
 /*!
-   \brief Set the drawing canvas of the plot widget
+   @brief Set the drawing canvas of the plot widget
 
    QwtPlot invokes methods of the canvas as meta methods ( see QMetaObject ).
    In opposite to using conventional C++ techniques like virtual methods
@@ -307,8 +295,8 @@ void QwtPlot::topParasiteTriggerHostUpdateAxisMargins()
 
    The default canvas is a QwtPlotCanvas
 
-   \param canvas Canvas Widget
-   \sa canvas()
+   @param canvas Canvas Widget
+   @sa canvas()
  */
 void QwtPlot::setCanvas(QWidget* canvas)
 {
@@ -328,10 +316,10 @@ void QwtPlot::setCanvas(QWidget* canvas)
 }
 
 /*!
-   \brief Adds handling of layout requests
-   \param event Event
+   @brief Adds handling of layout requests
+   @param event Event
 
-   \return See QFrame::event()
+   @return See QFrame::event()
  */
 bool QwtPlot::event(QEvent* event)
 {
@@ -350,7 +338,7 @@ bool QwtPlot::event(QEvent* event)
 }
 
 /*!
-   \brief Event filter
+   @brief Event filter
 
    The plot handles the following events for the canvas:
 
@@ -360,14 +348,14 @@ bool QwtPlot::event(QEvent* event)
    - QEvent::ContentsRectChange
     The layout needs to be recalculated
 
-   - 对于寄生轴，寄生轴会过滤宿主轴的尺寸，并调整自己的尺寸
+   - For parasite axes, the parasite axis filters the host axis dimensions and adjusts its own dimensions
 
-   \param object Object to be filtered
-   \param event Event
+   @param object Object to be filtered
+   @param event Event
 
-   \return See QFrame::eventFilter()
+   @return See QFrame::eventFilter()
 
-   \sa updateCanvasMargins(), updateLayout()
+   @sa updateCanvasMargins(), updateLayout()
  */
 bool QwtPlot::eventFilter(QObject* object, QEvent* e)
 {
@@ -382,16 +370,9 @@ bool QwtPlot::eventFilter(QObject* object, QEvent* e)
 }
 
 /**
- * \if ENGLISH
  * @brief Replots the plot if autoReplot() is enabled
  * @details This method is called internally when plot properties change
  *          and autoReplot is enabled.
- * \endif
- *
- * \if CHINESE
- * @brief 如果 autoReplot() 启用则重绘绘图
- * @details 当绘图属性更改且 autoReplot 启用时，此方法会在内部被调用。
- * \endif
  */
 void QwtPlot::autoRefresh()
 {
@@ -401,7 +382,7 @@ void QwtPlot::autoRefresh()
 }
 
 /*!
-   \brief Set or reset the autoReplot option
+   @brief Set or reset the autoReplot option
 
    If the autoReplot option is set, the plot will be
    updated implicitly by manipulating member functions.
@@ -412,8 +393,8 @@ void QwtPlot::autoRefresh()
    The autoReplot option is set to false by default, which
    means that the user has to call replot() in order to make
    changes visible.
-   \param tf \c true or \c false. Defaults to \c true.
-   \sa replot()
+   @param tf \c true or \c false. Defaults to \c true.
+   @sa replot()
  */
 void QwtPlot::setAutoReplot(bool tf)
 {
@@ -421,15 +402,8 @@ void QwtPlot::setAutoReplot(bool tf)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if autoReplot option is enabled
  * @return true if the autoReplot option is set
- * \endif
- *
- * \if CHINESE
- * @brief 检查自动重绘选项是否启用
- * @return 如果设置了 autoReplot 选项则返回 true
- * \endif
  * @sa setAutoReplot()
  */
 bool QwtPlot::autoReplot() const
@@ -438,26 +412,15 @@ bool QwtPlot::autoReplot() const
 }
 
 /**
-* \if ENGLISH
-* Plot ID
-* 
-* The plot ID is provided to enable a Figure to identify individual plots during persistence.
-* 
-* For example, after saving a Figure in XML format, it is necessary to know which plots have established axis synchronization signals with which other plots,
-* 
-* and which plot boundaries have been aligned. These tasks require locating specific plots, which can be achieved using the plot ID.
-* 
-* \return A unique UUID
-* \endif 
-* 
-* \if CHINESE
- * 绘图id
- * 
- * 之所以提供绘图id，是为了让Figure能在持久化中识别绘图，例如把Figure以xml的形式保存后，需要知道哪个plot和哪个plot的坐标轴是建立了坐标轴同步的信号
- * 哪个绘图的边界进行了对齐，这些都需要定位出具体的绘图，这时可以通过plot id进行定位
- * 
- * \return 唯一的uuid
- * \endif
+ * @brief Plot ID
+ *
+ * The plot ID is provided to enable a Figure to identify individual plots during persistence.
+ *
+ * For example, after saving a Figure in XML format, it is necessary to know which plots have established
+ * axis synchronization signals with which other plots, and which plot boundaries have been aligned.
+ * These tasks require locating specific plots, which can be achieved using the plot ID.
+ *
+ * @return A unique UUID
  */
 QString QwtPlot::plotId() const
 {
@@ -465,15 +428,8 @@ QString QwtPlot::plotId() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the plot's title
  * @param[in] title New title as a string
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘图的标题
- * @param[in] title 新标题字符串
- * \endif
  */
 void QwtPlot::setTitle(const QString& title)
 {
@@ -484,15 +440,8 @@ void QwtPlot::setTitle(const QString& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the plot's title
- * @param[in] title New title as a string
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘图的标题
- * @param[in] title 新标题字符串
- * \endif
+ * @param[in] title New title as a QwtText
  */
 void QwtPlot::setTitle(const QwtText& title)
 {
@@ -503,15 +452,8 @@ void QwtPlot::setTitle(const QwtText& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's title
  * @return Title of the plot
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的标题
- * @return 绘图的标题
- * \endif
  */
 QwtText QwtPlot::title() const
 {
@@ -519,15 +461,8 @@ QwtText QwtPlot::title() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the title label widget
  * @return Title label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取标题标签部件
- * @return 标题标签部件
- * \endif
  */
 QwtTextLabel* QwtPlot::titleLabel()
 {
@@ -535,15 +470,8 @@ QwtTextLabel* QwtPlot::titleLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the title label widget
- * @return Title label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取标题标签部件
- * @return 标题标签部件
- * \endif
+ * @return Title label widget (const)
  */
 const QwtTextLabel* QwtPlot::titleLabel() const
 {
@@ -551,15 +479,8 @@ const QwtTextLabel* QwtPlot::titleLabel() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the footer text
  * @param[in] text New text of the footer as a string
- * \endif
- *
- * \if CHINESE
- * @brief 更改页脚文本
- * @param[in] text 新的页脚文本字符串
- * \endif
  */
 void QwtPlot::setFooter(const QString& text)
 {
@@ -570,15 +491,8 @@ void QwtPlot::setFooter(const QString& text)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the footer text
- * @param[in] text New text of the footer as a string
- * \endif
- *
- * \if CHINESE
- * @brief 更改页脚文本
- * @param[in] text 新的页脚文本字符串
- * \endif
+ * @param[in] text New text of the footer as a QwtText
  */
 void QwtPlot::setFooter(const QwtText& text)
 {
@@ -589,15 +503,8 @@ void QwtPlot::setFooter(const QwtText& text)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the footer text
  * @return Text of the footer
- * \endif
- *
- * \if CHINESE
- * @brief 获取页脚文本
- * @return 页脚的文本
- * \endif
  */
 QwtText QwtPlot::footer() const
 {
@@ -605,15 +512,8 @@ QwtText QwtPlot::footer() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the footer label widget
  * @return Footer label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取页脚标签部件
- * @return 页脚标签部件
- * \endif
  */
 QwtTextLabel* QwtPlot::footerLabel()
 {
@@ -621,15 +521,8 @@ QwtTextLabel* QwtPlot::footerLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the footer label widget
- * @return Footer label widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取页脚标签部件
- * @return 页脚标签部件
- * \endif
+ * @return Footer label widget (const)
  */
 const QwtTextLabel* QwtPlot::footerLabel() const
 {
@@ -637,10 +530,10 @@ const QwtTextLabel* QwtPlot::footerLabel() const
 }
 
 /*!
-   \brief Assign a new plot layout
+   @brief Assign a new plot layout
 
-   \param layout Layout()
-   \sa plotLayout()
+   @param layout Layout()
+   @sa plotLayout()
  */
 void QwtPlot::setPlotLayout(QwtPlotLayout* layout)
 {
@@ -653,15 +546,8 @@ void QwtPlot::setPlotLayout(QwtPlotLayout* layout)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's layout
  * @return The plot's layout
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的布局
- * @return 绘图的布局
- * \endif
  */
 QwtPlotLayout* QwtPlot::plotLayout()
 {
@@ -669,15 +555,8 @@ QwtPlotLayout* QwtPlot::plotLayout()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's layout
- * @return The plot's layout
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的布局
- * @return 绘图的布局
- * \endif
+ * @return The plot's layout (const)
  */
 const QwtPlotLayout* QwtPlot::plotLayout() const
 {
@@ -685,15 +564,8 @@ const QwtPlotLayout* QwtPlot::plotLayout() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's legend
  * @return The plot's legend
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的图例
- * @return 绘图的图例
- * \endif
  * @sa insertLegend()
  */
 QwtAbstractLegend* QwtPlot::legend()
@@ -702,15 +574,8 @@ QwtAbstractLegend* QwtPlot::legend()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's legend
- * @return The plot's legend
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的图例
- * @return 绘图的图例
- * \endif
+ * @return The plot's legend (const)
  * @sa insertLegend()
  */
 const QwtAbstractLegend* QwtPlot::legend() const
@@ -719,15 +584,8 @@ const QwtAbstractLegend* QwtPlot::legend() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's canvas
  * @return The plot's canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的画布
- * @return 绘图的画布部件
- * \endif
  */
 QWidget* QwtPlot::canvas()
 {
@@ -735,15 +593,8 @@ QWidget* QwtPlot::canvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot's canvas
- * @return The plot's canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图的画布
- * @return 绘图的画布部件
- * \endif
+ * @return The plot's canvas widget (const)
  */
 const QWidget* QwtPlot::canvas() const
 {
@@ -751,8 +602,8 @@ const QWidget* QwtPlot::canvas() const
 }
 
 /*!
-   \return Size hint for the plot widget
-   \sa minimumSizeHint()
+   @return Size hint for the plot widget
+   @sa minimumSizeHint()
  */
 QSize QwtPlot::sizeHint() const
 {
@@ -785,7 +636,7 @@ QSize QwtPlot::sizeHint() const
 }
 
 /*!
-   \brief Return a minimum size hint
+   @brief Return a minimum size hint
  */
 QSize QwtPlot::minimumSizeHint() const
 {
@@ -797,26 +648,26 @@ QSize QwtPlot::minimumSizeHint() const
 
 /*!
    Resize and update internal layout
-   \param e Resize event
+   @param e Resize event
  */
 void QwtPlot::resizeEvent(QResizeEvent* e)
 {
     QFrame::resizeEvent(e);
     updateLayout();
-    // updateAllAxisEdgeMargin 必须在updateLayout之后执行
+    // updateAllAxisEdgeMargin must be executed after updateLayout
     if (isHostPlot()) {
         updateAllAxisEdgeMargin();
     }
 }
 
 /*!
-   \brief Redraw the plot
+   @brief Redraw the plot
 
    If the autoReplot option is not set (which is the default)
    or if any curves are attached to raw data, the plot has to
    be refreshed explicitly in order to make changes visible.
 
-   \sa updateAxes(), setAutoReplot()
+   @sa updateAxes(), setAutoReplot()
  */
 void QwtPlot::replot()
 {
@@ -843,7 +694,7 @@ void QwtPlot::replot()
 }
 
 /**
- * @brief 重绘所有绘图
+ * @brief Replot all plots
  */
 void QwtPlot::replotAll()
 {
@@ -861,8 +712,8 @@ void QwtPlot::autoRefreshAll()
 }
 
 /*!
-   \brief Adjust plot content to its current size.
-   \sa resizeEvent()
+   @brief Adjust plot content to its current size.
+   @sa resizeEvent()
  */
 void QwtPlot::updateLayout()
 {
@@ -872,10 +723,12 @@ void QwtPlot::updateLayout()
 /**
  * @brief Adjust plot content to its current size.
  *
- * updateLayout的具体实现，7.0之前的版本没有寄生轴，由于寄生轴的尺寸信息完全参照宿主轴，
- * 因此，在updateLayout过程中，寄生轴不应该执行任何动作，而是等宿主轴的updateLayout最后在对所有寄生轴执行doLayout
+ * The concrete implementation of updateLayout. Before version 7.0, there were no parasite axes.
+ * Since the size information of parasite axes fully references the host axes, during the updateLayout
+ * process, parasite axes should not perform any actions. Instead, after the host axis's updateLayout
+ * finishes, doLayout is executed for all parasite axes.
  *
- * 所以把updateLayout的所有实现抽到doLayout中
+ * Therefore, all implementation of updateLayout is extracted into doLayout.
  */
 void QwtPlot::doLayout()
 {
@@ -951,10 +804,10 @@ void QwtPlot::doLayout()
 
     m_data->canvas->setGeometry(canvasRect);
 
-    // 宿主轴的layout执行完成后，对所有寄生轴执行doLayout
+    // After the host axis layout completes, execute doLayout for all parasite axes
     if (isHostPlot()) {
         const QList< QwtPlot* > allparasites = parasitePlots();
-        // 先设置好尺寸再调整其他
+        // Set dimensions first, then adjust the rest
         for (QwtPlot* p : allparasites) {
             p->setGeometry(QRect(0, 0, width(), height()));
         }
@@ -964,7 +817,7 @@ void QwtPlot::doLayout()
 /**
  * set the plot id.
  * 
- * \param id 
+ * @param id 
  */
 void QwtPlot::setPlotId(const QString& id)
 {
@@ -972,14 +825,14 @@ void QwtPlot::setPlotId(const QString& id)
 }
 
 /*!
-   \brief Calculate the canvas margins
+   @brief Calculate the canvas margins
 
-   \param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
-   \param canvasRect Bounding rectangle where to paint
-   \param left Return parameter for the left margin
-   \param top Return parameter for the top margin
-   \param right Return parameter for the right margin
-   \param bottom Return parameter for the bottom margin
+   @param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
+   @param canvasRect Bounding rectangle where to paint
+   @param left Return parameter for the left margin
+   @param top Return parameter for the top margin
+   @param right Return parameter for the right margin
+   @param bottom Return parameter for the bottom margin
 
    Plot items might indicate, that they need some extra space
    at the borders of the canvas by the QwtPlotItem::Margins flag.
@@ -993,8 +846,7 @@ void QwtPlot::getCanvasMarginsHint(
     left = top = right = bottom = -1.0;
 
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        const QwtPlotItem* item = *it;
+    for (const QwtPlotItem* item : itmList) {
         if (item->testItemAttribute(QwtPlotItem::Margins)) {
             using namespace QwtAxis;
 
@@ -1012,7 +864,7 @@ void QwtPlot::getCanvasMarginsHint(
 }
 
 /*!
-   \brief Update the canvas margins
+   @brief Update the canvas margins
 
    Plot items might indicate, that they need some extra space
    at the borders of the canvas by the QwtPlotItem::Margins flag.
@@ -1044,13 +896,13 @@ void QwtPlot::updateCanvasMargins()
 }
 
 /*!
-   \brief Draw a single inside tick
+   @brief Draw a single inside tick
 
-   \param painter Painter
-   \param tickPixelPos Tick position in pixels
-   \param tickLength Tick length
-   \param backbonePos Backbone position (canvas edge)
-   \param axisPos Axis position (YLeft, YRight, XTop, XBottom)
+   @param painter Painter
+   @param tickPixelPos Tick position in pixels
+   @param tickLength Tick length
+   @param backbonePos Backbone position (canvas edge)
+   @param axisPos Axis position (YLeft, YRight, XTop, XBottom)
  */
 void QwtPlot::drawSingleInsideTick(QPainter* painter,
                                    double tickPixelPos,
@@ -1094,14 +946,14 @@ void QwtPlot::drawSingleInsideTick(QPainter* painter,
 }
 
 /*!
-   \brief Draw inside ticks for axes with TickInside direction
+   @brief Draw inside ticks for axes with TickInside direction
 
    This method is called after drawItems() to draw tick marks that
    extend from the canvas edge toward the interior.
 
-   \param painter Painter
-   \param canvasRect Canvas rectangle
-   \param maps Scale maps for all axes
+   @param painter Painter
+   @param canvasRect Canvas rectangle
+   @param maps Scale maps for all axes
  */
 void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
                               const QwtScaleMap maps[QwtAxis::AxisPositions]) const
@@ -1187,12 +1039,12 @@ void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
 
 /*!
    Redraw the canvas.
-   \param painter Painter used for drawing
+   @param painter Painter used for drawing
 
-   \warning drawCanvas calls drawItems what is also used
+   @warning drawCanvas calls drawItems what is also used
            for printing. Applications that like to add individual
            plot items better overload drawItems()
-   \sa drawItems()
+   @sa drawItems()
  */
 void QwtPlot::drawCanvas(QPainter* painter)
 {
@@ -1209,11 +1061,11 @@ void QwtPlot::drawCanvas(QPainter* painter)
 /*!
    Redraw the canvas items.
 
-   \param painter Painter used for drawing
-   \param canvasRect Bounding rectangle where to paint
-   \param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
+   @param painter Painter used for drawing
+   @param canvasRect Bounding rectangle where to paint
+   @param maps QwtAxis::AxisCount maps, mapping between plot and paint device coordinates
 
-   \note Usually canvasRect is contentsRect() of the plot canvas.
+   @note Usually canvasRect is contentsRect() of the plot canvas.
         Due to a bug in Qt this rectangle might be wrong for certain
         frame styles ( f.e QFrame::Box ) and it might be necessary to
         fix the margins manually using QWidget::setContentsMargins()
@@ -1222,8 +1074,7 @@ void QwtPlot::drawCanvas(QPainter* painter)
 void QwtPlot::drawItems(QPainter* painter, const QRectF& canvasRect, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const
 {
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        QwtPlotItem* item = *it;
+    for (QwtPlotItem* item : itmList) {
         if (item && item->isVisible()) {
             const QwtAxisId xAxis = item->xAxis();
             const QwtAxisId yAxis = item->yAxis();
@@ -1244,10 +1095,10 @@ void QwtPlot::drawItems(QPainter* painter, const QRectF& canvasRect, const QwtSc
 }
 
 /*!
-   \param axisId Axis
-   \return Map for the axis on the canvas. With this map pixel coordinates can
+   @param axisId Axis
+   @return Map for the axis on the canvas. With this map pixel coordinates can
           translated to plot coordinates and vice versa.
-   \sa QwtScaleMap, transform(), invTransform()
+   @sa QwtScaleMap, transform(), invTransform()
  */
 QwtScaleMap QwtPlot::canvasMap(QwtAxisId axisId) const
 {
@@ -1302,14 +1153,14 @@ QwtScaleMap QwtPlot::canvasMap(QwtAxisId axisId) const
 }
 
 /*!
-   \brief Change the background of the plotting area
+   @brief Change the background of the plotting area
 
    Sets brush to QPalette::Window of all color groups of
    the palette of the canvas. Using canvas()->setPalette()
    is a more powerful way to set these colors.
 
-   \param brush New background brush
-   \sa canvasBackground()
+   @param brush New background brush
+   @sa canvasBackground()
  */
 void QwtPlot::setCanvasBackground(const QBrush& brush)
 {
@@ -1323,16 +1174,60 @@ void QwtPlot::setCanvasBackground(const QBrush& brush)
    Nothing else than: canvas()->palette().brush(
         QPalette::Normal, QPalette::Window);
 
-   \return Background brush of the plotting area.
-   \sa setCanvasBackground()
+   @return Background brush of the plotting area.
+   @sa setCanvasBackground()
  */
 QBrush QwtPlot::canvasBackground() const
 {
     return canvas()->palette().brush(QPalette::Normal, QPalette::Window);
 }
 
+/**
+ * @brief Set the color cycle used for automatic item coloring
+ * @details When plot items (curves, bar charts, etc.) are attached without
+ *          a user-specified pen or brush, they automatically receive a color
+ *          from this color cycle.
+ * @param colorCycle Color cycle object
+ * @sa colorCycle(), nextColorForItem()
+ */
+void QwtPlot::setColorCycle(const QwtColorCycle& colorCycle)
+{
+    QWT_D(d);
+    d->colorCycle = colorCycle;
+}
+
+/**
+ * @brief Get the current color cycle
+ * @return Current color cycle
+ * @sa setColorCycle()
+ */
+QwtColorCycle QwtPlot::colorCycle() const
+{
+    QWT_DC(d);
+    return d->colorCycle;
+}
+
+/**
+ * @brief Get the next auto-assigned color for a plot item type
+ * @details Returns the next color from the color cycle for the given rtti type.
+ *          Each rtti type maintains an independent counter, so curves and bar
+ *          charts each start from the first palette color.
+ * @param rtti The rtti value of the plot item (e.g. QwtPlotItem::Rtti_PlotCurve)
+ * @return Next color from the cycle
+ * @sa colorCycle(), QwtPlotItem::rtti()
+ */
+QColor QwtPlot::nextColorForItem(int rtti)
+{
+    QWT_D(d);
+    int idx = 0;
+    if (rtti >= 0 && rtti < 20)
+        idx = d->colorCycleCounters[rtti]++;
+
+    return d->colorCycle.color(idx);
+}
+
 /*!
-   \brief Insert a legend
+   @brief Insert a legend
 
    If the position legend is \c QwtPlot::LeftLegend or \c QwtPlot::RightLegend
    the legend will be organized in one column from top to down.
@@ -1349,19 +1244,19 @@ QBrush QwtPlot::canvasBackground() const
    wants to implement its own layout this also needs to be done for
    rendering plots to a document ( see QwtPlotRenderer ).
 
-   \param legend Legend
-   \param pos The legend's position. For top/left position the number
+   @param legend Legend
+   @param pos The legend's position. For top/left position the number
              of columns will be limited to 1, otherwise it will be set to
              unlimited.
 
-   \param ratio Ratio between legend and the bounding rectangle
+   @param ratio Ratio between legend and the bounding rectangle
                of title, canvas and axes. The legend will be shrunk
                if it would need more space than the given ratio.
                The ratio is limited to ]0.0 .. 1.0]. In case of <= 0.0
                it will be reset to the default ratio.
                The default vertical/horizontal ratio is 0.33/0.5.
 
-   \sa legend(), QwtPlotLayout::legendPosition(),
+   @sa legend(), QwtPlotLayout::legendPosition(),
       QwtPlotLayout::setLegendPosition()
  */
 void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition pos, double ratio)
@@ -1383,7 +1278,7 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
             updateLegend();
             qwtEnableLegendItems(this, true);
 
-            QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
+            auto* lgd = qobject_cast< QwtLegend* >(legend);
             if (lgd) {
                 switch (m_data->layout->legendPosition()) {
                 case LeftLegend:
@@ -1435,21 +1330,21 @@ void QwtPlot::insertLegend(QwtAbstractLegend* legend, QwtPlot::LegendPosition po
 /*!
    Emit legendDataChanged() for all plot item
 
-   \sa QwtPlotItem::legendData(), legendDataChanged()
+   @sa QwtPlotItem::legendData(), legendDataChanged()
  */
 void QwtPlot::updateLegend()
 {
     const QwtPlotItemList& itmList = itemList();
-    for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-        updateLegend(*it);
+    for (const QwtPlotItem* item : itmList) {
+        updateLegend(item);
     }
 }
 
 /*!
    Emit legendDataChanged() for a plot item
 
-   \param plotItem Plot item
-   \sa QwtPlotItem::legendData(), legendDataChanged()
+   @param plotItem Plot item
+   @sa QwtPlotItem::legendData(), legendDataChanged()
  */
 void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 {
@@ -1466,15 +1361,15 @@ void QwtPlot::updateLegend(const QwtPlotItem* plotItem)
 }
 
 /*!
-   \brief Update all plot items interested in legend attributes
+   @brief Update all plot items interested in legend attributes
 
    Call QwtPlotItem::updateLegend(), when the QwtPlotItem::LegendInterest
    flag is set.
 
-   \param itemInfo Info about the plot item
-   \param legendData Entries to be displayed for the plot item ( usually 1 )
+   @param itemInfo Info about the plot item
+   @param legendData Entries to be displayed for the plot item ( usually 1 )
 
-   \sa QwtPlotItem::LegendInterest,
+   @sa QwtPlotItem::LegendInterest,
       QwtPlotLegendItem, QwtPlotItem::updateLegend()
  */
 void QwtPlot::updateLegendItems(const QVariant& itemInfo, const QList< QwtLegendData >& legendData)
@@ -1482,8 +1377,7 @@ void QwtPlot::updateLegendItems(const QVariant& itemInfo, const QList< QwtLegend
     QwtPlotItem* plotItem = infoToItem(itemInfo);
     if (plotItem) {
         const QwtPlotItemList& itmList = itemList();
-        for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-            QwtPlotItem* item = *it;
+        for (QwtPlotItem* item : itmList) {
             if (item->testItemInterest(QwtPlotItem::LegendInterest))
                 item->updateLegend(plotItem, legendData);
         }
@@ -1491,21 +1385,19 @@ void QwtPlot::updateLegendItems(const QVariant& itemInfo, const QList< QwtLegend
 }
 
 /**
- * @brief Create parasite axes for this plot/创建一个基于此轴为宿主的寄生轴
+ * @brief Create parasite axes for this plot
  *
  * This method creates a parasite axes that shares the same plotting area as the host plot
  * but with independent axis scaling and labeling. The parasite axes will be positioned
  * exactly on top of the host plot and will automatically synchronize its geometry.
  *
- * 此方法创建一个寄生轴，它与宿主绘图共享相同的绘图区域，但具有独立的轴缩放和标签。
- * 寄生轴将精确定位在宿主绘图之上，并自动同步其几何形状。
+ * @param enableAxis The axis position to enable on the parasite axes
+ * @return Pointer to the created parasite QwtPlot
+ * @retval nullptr if hostPlot is invalid or not in the figure
  *
- * @param enableAxis The axis position to enable on the parasite axes/在寄生轴上启用的轴位置
- * @return Pointer to the created parasite QwtPlot/指向创建的寄生QwtPlot的指针
- * @retval nullptr if hostPlot is invalid or not in the figure/如果hostPlot无效或不在图形中则返回nullptr
- *
- * @note 一个绘图不会既是寄生绘图也是宿主绘图的情况，也就是说，
- * 如果绘图是寄生绘图，那么他自身不允许再创建寄生绘图，寄生绘图调用次函数将返回nullptr
+ * @note A plot cannot be both a parasite and a host at the same time. That is, if a plot
+ * is a parasite plot, it is not allowed to create further parasite plots. Calling this
+ * function on a parasite plot will return nullptr.
  */
 QwtPlot* QwtPlot::createParasitePlot(QwtAxis::Position enableAxis)
 {
@@ -1516,7 +1408,7 @@ QwtPlot* QwtPlot::createParasitePlot(QwtAxis::Position enableAxis)
     QwtPlot* parasitePlot = new QwtPlot(this);
     initParasiteAxes(parasitePlot);
 
-    // 根据位置设置轴可见性
+    // Set axis visibility based on position
     switch (enableAxis) {
     case QwtAxis::XTop:
         parasitePlot->enableAxis(QwtAxis::XTop, true);
@@ -1551,32 +1443,32 @@ QwtPlot* QwtPlot::createParasitePlot(QwtAxis::Position enableAxis)
 }
 
 /**
- * @brief 设置寄生轴是否共享宿主的指定轴，此函数仅针对寄生轴有效
- * @param axisId 指定要共享的轴 ID（如 QwtAxis::YLeft 等）
- * @param isShare 是否启用共享
+ * @brief Set whether the parasite axis shares the host's specified axis, only valid for parasite axes
+ * @param axisId The axis ID to share (e.g., QwtAxis::YLeft)
+ * @param isShare Whether to enable sharing
  * @sa isParasiteShareAxis
  */
 void QwtPlot::setParasiteShareAxis(QwtAxisId axisId, bool isShare)
 {
     QWT_D(d);
     if (axisId < 0 || axisId >= QwtAxis::AxisPositions) {
-        return;  // 非法轴，直接忽略
+        return;  // Invalid axis, ignore
     }
 
     QwtPlot* host = hostPlot();
-    if (!host) {  // 没有宿主，无法共享
+    if (!host) {  // No host, cannot share
         return;
     }
 
-    // 1. 无论是否要共享，先断开旧连接，避免重复
+    // 1. Regardless of whether sharing is needed, disconnect the old connection first to avoid duplicates
     if (d->shareConn[ axisId ]) {
         disconnect(d->shareConn[ axisId ]);
     }
 
-    // 2. 按需建立新连接
+    // 2. Establish new connection as needed
     if (isShare) {
         QwtScaleWidget* hostAxisWidget = host->axisWidget(axisId);
-        if (!hostAxisWidget) {  // 宿主本身没这条轴
+        if (!hostAxisWidget) {  // The host does not have this axis
             return;
         }
         d->shareConn[ axisId ] = connect(hostAxisWidget, &QwtScaleWidget::scaleDivChanged, this, [ this, axisId ]() {
@@ -1586,51 +1478,43 @@ void QwtPlot::setParasiteShareAxis(QwtAxisId axisId, bool isShare)
 }
 
 /**
- * @brief 查询寄生轴是否共享宿主的指定轴
- * @param axisId 要查询的轴 ID
- * @return true 表示当前寄生轴共享了宿主对应轴；false 否则
+ * @brief Query whether the parasite axis shares the host's specified axis
+ * @param axisId The axis ID to query
+ * @return true if the current parasite axis shares the corresponding host axis; false otherwise
  * @sa setParasiteShareAxis
  */
 bool QwtPlot::isParasiteShareAxis(QwtAxisId axisId) const
 {
     QWT_DC(d);
     if (axisId < 0 || axisId >= QwtAxis::AxisPositions) {
-        return false;  // 非法轴视为“未共享”
+        return false;  // Invalid axis treated as “not shared”
     }
     return bool(d->shareConn[ axisId ]);
 }
 
 /**
- * @brief Add a parasite plot to this host plot/向此宿主绘图添加寄生绘图
+ * @brief Add a parasite plot to this host plot
  *
  * This method establishes a parasite relationship where the specified plot will
  * be treated as a parasite of this host plot. The parasite plot will automatically
  * synchronize its geometry with the host plot.
  *
- * 此方法建立一个寄生关系，指定的绘图将被视为此宿主绘图的寄生绘图。
- * 寄生绘图将自动同步其几何形状与宿主绘图。
- *
- * @param parasite Pointer to the parasite QwtPlot/指向寄生QwtPlot的指针
+ * @param parasite Pointer to the parasite QwtPlot
  *
  * @note This method is typically called internally by QwtFigure::createParasiteAxes().
- *       此方法通常由QwtFigure::createParasiteAxes()内部调用。
  * @note The parasite plot should have a transparent background to avoid obscuring the host plot.
- *       寄生绘图应具有透明背景以避免遮挡宿主绘图。
  *
  * @code
  * // Manually create a parasite relationship
- * // 手动创建寄生关系
  * QwtPlot* hostPlot = new QwtPlot;
  * QwtPlot* parasitePlot = new QwtPlot;
  *
  * // Configure parasite plot
- * // 配置寄生绘图
  * parasitePlot->setAutoFillBackground(false);
  * parasitePlot->canvas()->setAutoFillBackground(false);
  * parasitePlot->enableAxis(QwtAxis::YRight, true);
  *
  * // Add parasite to host
- * // 将寄生绘图添加到宿主
  * hostPlot->addParasitePlot(parasitePlot);
  * @endcode
  *
@@ -1644,66 +1528,61 @@ void QwtPlot::addParasitePlot(QwtPlot* parasite)
     if (parasite->parentWidget() != this) {
         parasite->setParent(this);
     }
-    // 设定为寄生绘图
+    // Set as parasite plot
     parasite->m_data->isParasitePlot = true;
 
-    // 设置后对寄生轴要进行一次布局
+    // After setting, perform a layout for the parasite axis
     updateLayout();
 
     Q_EMIT parasitePlotAttached(parasite, true);
 }
 
 /**
- * @brief 初始化寄生轴的基本属性
- * @param parasitePlot
+ * @brief Initialize basic properties of the parasite axes
+ * @param parasitePlot The parasite plot to initialize
  */
 void QwtPlot::initParasiteAxes(QwtPlot* parasitePlot) const
 {
-    // 确保禁用不透明绘制属性
+    // Disable opaque paint event attribute
     parasitePlot->setAttribute(Qt::WA_OpaquePaintEvent, false);
 
-    // 禁用样式背景
+    // Disable styled background
     parasitePlot->setAttribute(Qt::WA_StyledBackground, false);
 
-    // 禁用自动填充背景
+    // Disable auto-fill background
     parasitePlot->setAutoFillBackground(false);
 
-    // 寄生轴绘图和canvas都对宿主透明，让鼠标事件最终都传递到宿主处理
+    // Make parasite plot and canvas transparent to host, so mouse events pass through to the host
     parasitePlot->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     if (QWidget* c = parasitePlot->canvas()) {
         c->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     }
 
-    // 设置透明背景
+    // Set transparent background
     QPalette palette = parasitePlot->palette();
     palette.setColor(QPalette::Window, Qt::transparent);
     parasitePlot->setPalette(palette);
     QwtPlotTransparentCanvas* canvas = new QwtPlotTransparentCanvas(parasitePlot);
     parasitePlot->setCanvas(canvas);
 
-    // 调整布局边距
+    // Adjust layout margins
     parasitePlot->setPlotLayout(new QwtParasitePlotLayout());
 }
 
 /**
- * @brief Remove a parasite plot from this host plot/从此宿主绘图移除寄生绘图
+ * @brief Remove a parasite plot from this host plot
  *
  * This method removes the parasite relationship between this host plot and the specified plot.
  *
- * 此方法移除此宿主绘图与指定绘图之间的寄生关系。
- *
- * @param parasite Pointer to the parasite QwtPlot to remove/要移除的寄生QwtPlot指针
+ * @param parasite Pointer to the parasite QwtPlot to remove
  *
  * @note This method does not delete the parasite plot, it only removes the relationship.
- *       此方法不会删除寄生绘图，仅移除关系。
  *
  * @code
  * // Remove a parasite plot
- * // 移除寄生绘图
  * hostPlot->removeParasitePlot(parasitePlot);
  *
  * // Now the plot is independent and can be used elsewhere
- * // 现在该绘图是独立的，可以在其他地方使用
  * @endcode
  *
  * @see addParasitePlot(), parasitePlots()
@@ -1713,7 +1592,7 @@ void QwtPlot::removeParasitePlot(QwtPlot* parasite)
     if (!parasite) {
         return;
     }
-    // 移除时，把绘图的寄生标记设置为false；
+    // When removing, set the parasite flag of the plot to false
     parasite->m_data->isParasitePlot = false;
     updateLayout();
     updateAllAxisEdgeMargin();
@@ -1721,21 +1600,17 @@ void QwtPlot::removeParasitePlot(QwtPlot* parasite)
 }
 
 /**
- * @brief Get all parasite plots associated with this host plot/获取与此宿主绘图关联的所有寄生绘图
+ * @brief Get all parasite plots associated with this host plot
  *
  * This method returns a list of all parasite plots that are associated with this host plot.
  *
- * 此方法返回与此宿主绘图关联的所有寄生绘图的列表。
- *
- * @return List of parasite QwtPlot pointers/寄生QwtPlot指针列表
+ * @return List of parasite QwtPlot pointers
  *
  * @code
  * // Get all parasite plots
- * // 获取所有寄生绘图
  * const QList<QwtPlot*> parasites = hostPlot->parasitePlots();
  *
  * // Perform an operation on all parasite plots
- * // 对所有寄生绘图执行操作
  * for (QwtPlot* parasite : parasites) {
  *     parasite->replot();
  * }
@@ -1749,18 +1624,19 @@ QList< QwtPlot* > QwtPlot::parasitePlots() const
 }
 
 /**
- * @brief 返回所有绘图,包含宿主绘图
+ * @brief Return all plots, including the host plot
  *
- * descending=false,增序返回，宿主绘图在第一个，层级越低越靠前，如果descending=true，那么降序返回，宿主在最末端
- * @param descending
- * @return
+ * descending=false: ascending order, host plot first, lower levels first.
+ * descending=true: descending order, host at the end.
+ * @param descending Sort order
+ * @return Ordered list of all plots
  */
 QList< QwtPlot* > QwtPlot::plotList(bool descending) const
 {
     QList< QwtPlot* > plotsByOrder;
     QwtPlot* host = hostPlot();
     if (!host) {
-        // 说明当前是宿主
+        // This is the host
         host = const_cast< QwtPlot* >(this);
     }
     plotsByOrder.append(host);
@@ -1772,9 +1648,9 @@ QList< QwtPlot* > QwtPlot::plotList(bool descending) const
 }
 
 /**
- * @brief 获取第n个宿主轴
- * @param index 索引
- * @return 如果超出范围返回nullptr，如果自身是寄生轴，此函数返回空
+ * @brief Get the nth parasite plot
+ * @param index Index
+ * @return nullptr if out of range or if this plot is a parasite plot
  */
 QwtPlot* QwtPlot::parasitePlotAt(int index) const
 {
@@ -1783,13 +1659,14 @@ QwtPlot* QwtPlot::parasitePlotAt(int index) const
 }
 
 /**
- * @brief 寄生轴的索引（层级）
+ * @brief Parasite plot index (level)
  *
- * 所谓寄生轴层级，默认是寄生轴的添加顺序，第一个添加的寄生轴为0层，第二个添加的寄生轴为1层，寄生轴层级越高，轴越靠绘图的边界
- * @param parasite 寄生轴
- * @return 如果为-1，说明是无效索引
- * @note 如果传入的寄生轴不是此绘图的寄生轴，返回-1
- * @note 此函数仅对宿主轴有效，如果是寄生轴调用，也将返回-1
+ * The parasite level is determined by the order of addition. The first parasite added is at level 0,
+ * the second at level 1, and so on. The higher the level, the closer the axis is to the plot boundary.
+ * @param parasite Parasite plot
+ * @return -1 if invalid index
+ * @note If the passed parasite is not a parasite of this plot, returns -1
+ * @note This function is only valid for host plots; calling it on a parasite plot also returns -1
  */
 int QwtPlot::parasitePlotIndex(QwtPlot* parasite) const
 {
@@ -1798,16 +1675,14 @@ int QwtPlot::parasitePlotIndex(QwtPlot* parasite) const
 }
 
 /**
- * @brief Get the host plot for this parasite plot/获取此寄生绘图的宿主绘图
+ * @brief Get the host plot for this parasite plot
  *
  * This method returns the host plot of this parasite plot, or nullptr if this plot is not a parasite.
  *
- * 此方法返回此寄生绘图的宿主绘图，如果此绘图不是寄生绘图则返回nullptr。
+ * @return Pointer to the host QwtPlot
+ * @retval nullptr if this plot is not a parasite plot
  *
- * @return Pointer to the host QwtPlot/指向宿主QwtPlot的指针
- * @retval nullptr if this plot is not a parasite plot/如果此绘图不是寄生绘图则返回nullptr
- *
- * @see setHostPlot(), isParasitePlot()
+ * @see isParasitePlot()
  */
 QwtPlot* QwtPlot::hostPlot() const
 {
@@ -1818,14 +1693,12 @@ QwtPlot* QwtPlot::hostPlot() const
 }
 
 /**
- * @brief Check if this plot is a parasite plot/检查此绘图是否为寄生绘图
+ * @brief Check if this plot is a parasite plot
  *
  * This method returns true if this plot is a parasite of another plot.
  *
- * 如果此绘图是另一个绘图的寄生绘图，则此方法返回true。
- *
- * @return true if this plot is a parasite plot/如果此绘图是寄生绘图则返回true
- * @return false if this plot is not a parasite plot/如果此绘图不是寄生绘图则返回false
+ * @return true if this plot is a parasite plot
+ * @return false if this plot is not a parasite plot
  *
  * @see isHostPlot(), hostPlot()
  */
@@ -1835,8 +1708,8 @@ bool QwtPlot::isParasitePlot() const
 }
 
 /**
- * @brief 是否是最顶部的宿主绘图，最顶部的宿主绘图坐标轴处于最外围，且一般是最后进行更新
- * @return
+ * @brief Whether this is the topmost parasite plot; the topmost parasite's axes are at the outermost layer and are typically updated last
+ * @return true if this is the topmost parasite plot
  */
 bool QwtPlot::isTopParasitePlot() const
 {
@@ -1855,18 +1728,16 @@ bool QwtPlot::isTopParasitePlot() const
 }
 
 /**
- * @brief Check if this plot is a host plot/检查此绘图是否为宿主绘图
+ * @brief Check if this plot is a host plot
  *
  * This method returns true if this plot has one or more parasite plots.
  *
- * 如果此绘图有一个或多个寄生绘图，则此方法返回true。
+ * A plot is only considered a host if it holds parasite plots.
  *
- * 只有此绘图持有寄生绘图才会认为是宿主绘图
+ * @note A plot cannot be both a parasite and a host at the same time, meaning a host itself is not allowed to be parasitic on another plot.
  *
- * @note 一个绘图不会出现既是寄生绘图也是宿主绘图的情况，也就是宿主自身不允许寄生在其它绘图上
- *
- * @return true if this plot has parasite plots/如果此绘图有寄生绘图则返回true
- * @return false if this plot has no parasite plots/如果此绘图没有寄生绘图则返回false
+ * @return true if this plot has parasite plots
+ * @return false if this plot has no parasite plots
  *
  * @see isParasitePlot(), parasitePlots()
  */
@@ -1876,31 +1747,31 @@ bool QwtPlot::isHostPlot() const
 }
 
 /**
- * @brief set Background Color/设置背景颜色
- * @param c
+ * @brief Set background color
+ * @param c Color
  */
 void QwtPlot::setBackgroundColor(const QColor& c)
 {
     QPalette p = palette();
-    p.setColor(QPalette::Window, c);
+    p.setColor(backgroundRole(), c);
     setPalette(p);
 
     setAutoFillBackground(true);
 }
 
 /**
- * @brief Background Color/背景颜色
- * @return
+ * @brief Get background color
+ * @return Background color
  */
 QColor QwtPlot::backgroundColor() const
 {
-    return palette().color(QPalette::Window);
+    return palette().color(backgroundRole());
 }
 
 /**
- * @brief Synchronize the axis ranges of the corresponding plot/同步plot绘图对应的坐标轴范围到此绘图
- * @param axis
- * @param plot
+ * @brief Synchronize the axis ranges from the given plot to this plot
+ * @param axis Axis ID
+ * @param plot Source plot to sync from
  */
 void QwtPlot::syncAxis(QwtAxisId axis, const QwtPlot* plot)
 {
@@ -1912,32 +1783,27 @@ void QwtPlot::syncAxis(QwtAxisId axis, const QwtPlot* plot)
 }
 
 /**
- * @brief Rescale/重新缩放坐标轴以适应所有数据项的范围
+ * @brief Rescale axes to fit all data items
  *
  * This function automatically adjusts the axis ranges to fit all visible data items
  * in the plot. It calculates the bounding rectangle of all plot items and sets
  * appropriate axis scales with optional margins.
  *
- * 此函数自动调整坐标轴范围以适应绘图中所有可见数据项。它计算所有绘图项的边界矩形，
- * 并设置适当的坐标轴刻度，可选择添加边距。
- *
- * @param onlyVisibleItems If true, only visible items are considered/如果为true，只考虑可见的绘图项目
- * @param marginPercent Percentage of margin to add around the data range/在数据范围周围添加的边距百分比
- * @param xAxis The x-axis to rescale (default: QwtPlot::xBottom)/需要重新缩放的x轴（默认：QwtPlot::xBottom）
- * @param yAxis The y-axis to rescale (default: QwtPlot::yLeft)/需要重新缩放的y轴（默认：QwtPlot::yLeft）
+ * @param onlyVisibleItems If true, only visible items are considered
+ * @param marginPercent Percentage of margin to add around the data range
+ * @param xAxis The x-axis to rescale (default: QwtPlot::xBottom)
+ * @param yAxis The y-axis to rescale (default: QwtPlot::yLeft)
  *
  *
- * Basic usage/基本用法
+ * Basic usage:
  * @code
  * // Rescale to fit all visible items with default 5% margin
- * // 重新缩放以适应所有可见项，默认5%边距
  * rescaleAxes();
  * @endcode
  *
- * Custom margin/自定义边距
+ * Custom margin:
  * @code
  * // Rescale with 10% margin around data
- * // 使用10%边距重新缩放
  * rescaleAxes(true, 0.1);
  * @endcode
  *
@@ -1952,21 +1818,18 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
     double maxY  = std::numeric_limits< double >::lowest();
     bool hasData = false;
 
-    // 遍历所有绘图项/Iterate through all plot items
+    // Iterate through all plot items
     const QwtPlotItemList& items = itemList();
-    for (QwtPlotItemIterator it = items.begin(); it != items.end(); ++it) {
-        QwtPlotItem* item = *it;
-
-        // 如果只处理可见项/If only processing visible items
+    for (QwtPlotItem* item : items) {
+        // If only processing visible items
         if (onlyVisibleItems && !item->isVisible()) {
             continue;
         }
 
-        // 获取该项的边界矩形/Get bounding rectangle of the item
+        // Get bounding rectangle of the item
         QRectF boundingRect = item->boundingRect();
 
-        // 检查是否有效/Check if valid
-        // 检查边界矩形的有效性，包括 NaN 和无穷大
+        // Check if valid, including NaN and infinity checks
         if (boundingRect.isValid() && !boundingRect.isEmpty() && std::isfinite(boundingRect.left())
             && std::isfinite(boundingRect.right()) && std::isfinite(boundingRect.top())
             && std::isfinite(boundingRect.bottom())) {
@@ -1978,13 +1841,13 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
             hasData = true;
         }
     }
-    // 如果有数据，则设置坐标范围/If there is data, set axis ranges
+    // If there is data, set axis ranges
     if (hasData) {
         double xMargin = 0;
         double yMargin = 0;
         if (marginPercent > 1) {
         } else {
-            // 添加边距/Add margins
+            // Add margins
             xMargin = (maxX - minX) * marginPercent;
             yMargin = (maxY - minY) * marginPercent;
 
@@ -1995,21 +1858,17 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
 }
 
 /**
- * @brief Set the specified axis to logarithmic scale / 将指定坐标轴设置为对数刻度
+ * @brief Set the specified axis to logarithmic scale
  *
  * This method replaces the current scale engine of the axis with QwtLogScaleEngine,
  * enabling logarithmic scaling. All data values must be greater than zero.
  *
- * 此方法将坐标轴当前的刻度引擎替换为 QwtLogScaleEngine，启用对数刻度。所有数据值必须大于零。
- *
- * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft / 坐标轴标识符，如 QwtPlot::xBottom、QwtPlot::yLeft
+ * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft
  *
  * @note This method deletes the previous scale engine automatically. Data <= 0 will cause undefined behavior.
- *       此方法会自动删除先前的刻度引擎。数据 ≤ 0 将导致未定义行为。
  *
  * @code
  * // Set Y axis to logarithmic scale
- * // 将 Y 轴设置为对数刻度
  * plot->setAxisToLogScale(QwtPlot::yLeft);
  *
  * QVector<double> x = {1, 10, 100, 1000};
@@ -2027,30 +1886,27 @@ void QwtPlot::setAxisToLogScale(QwtAxisId axisId)
     if (!isAxisValid(axisId)) {
         return;
     }
-    // setAxisScaleEngine会自动删除旧的 ScaleEngine
+    // setAxisScaleEngine will automatically delete the old ScaleEngine
     setAxisScaleEngine(axisId, new QwtLogScaleEngine());
 }
 
 /**
- * @brief Set the specified axis to date-time scale / 将指定坐标轴设置为日期-时间刻度
+ * @brief Set the specified axis to date-time scale
  *
  * This method configures the axis to display date-time formatted labels using QwtDateScaleEngine
  * and QwtDateScaleDraw. Data should be provided as milliseconds since epoch (QDateTime::toMSecsSinceEpoch).
  *
- * 此方法使用 QwtDateScaleEngine 和 QwtDateScaleDraw 配置坐标轴以显示日期-时间格式的标签。数据应以自纪元以来的毫秒数提供（QDateTime::toMSecsSinceEpoch）。
- *
- * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft / 坐标轴标识符，如 QwtPlot::xBottom、QwtPlot::yLeft
- * @param timeSpec Time zone specification, defaults to Qt::LocalTime / 时区规范，默认为 Qt::LocalTime
+ * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft
+ * @param timeSpec Time zone specification, defaults to Qt::LocalTime
  *
  * @code
  * // Set X axis to UTC date-time scale
- * // 将 X 轴设置为 UTC 日期-时间刻度
  * plot->setAxisToDateTime(QwtPlot::xBottom, Qt::UTC);
  *
  * QDateTime start = QDateTime::currentDateTime().addSecs(-3600);
  * QVector<double> timestamps, values;
  * for (int i = 0; i < 60; ++i) {
- *     timestamps << start.addSecs(i * 60).toMSecsSinceEpoch(); // per minute / 每分钟
+ *     timestamps << start.addSecs(i * 60).toMSecsSinceEpoch(); // per minute
  *     values << 1.0 + qAbs(qSin(i * 0.2)) * 100;
  * }
  *
@@ -2077,21 +1933,17 @@ void QwtPlot::setAxisToDateTime(QwtAxisId axisId, Qt::TimeSpec timeSpec)
 }
 
 /**
- * @brief Restore the specified axis to linear scale / 将指定坐标轴恢复为线性刻度
+ * @brief Restore the specified axis to linear scale
  *
  * This method replaces the current scale engine and draw with default linear versions.
  * Useful to revert from logarithmic or date-time scales.
  *
- * 此方法将当前刻度引擎和绘制器替换为默认的线性版本。适用于从对数或日期-时间刻度恢复。
- *
- * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft / 坐标轴标识符，如 QwtPlot::xBottom、QwtPlot::yLeft
+ * @param axisId Axis identifier, e.g., QwtPlot::xBottom, QwtPlot::yLeft
  *
  * @note Previous scale engine and draw are deleted automatically.
- *       先前的刻度引擎和绘制器将被自动删除。
  *
  * @code
  * // Switch back to linear scale after using log scale
- * // 在使用对数刻度后切换回线性刻度
  * plot->setAxisToLinearScale(QwtPlot::yLeft);
  * plot->updateAxes();
  * plot->replot();
@@ -2105,20 +1957,20 @@ void QwtPlot::setAxisToLinearScale(QwtAxisId axisId)
         return;
     }
     setAxisScaleEngine(axisId, new QwtLinearScaleEngine());
-    setAxisScaleDraw(axisId, new QwtScaleDraw());  // 恢复默认绘制器
+    setAxisScaleDraw(axisId, new QwtScaleDraw());  // Restore default draw
 }
 
 /*!
-   \brief Set the tick direction for an axis
+   @brief Set the tick direction for an axis
 
    When set to TickInside, the tick marks are drawn from the canvas edge
    toward the interior. The outside tick component is disabled on the
    QwtScaleWidget, and inside ticks are drawn in drawCanvas.
 
-   \param axisId Axis identifier
-   \param direction Tick direction (TickOutside or TickInside)
+   @param axisId Axis identifier
+   @param direction Tick direction (TickOutside or TickInside)
 
-   \sa axisTickDirection()
+   @sa axisTickDirection()
  */
 void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
 {
@@ -2160,12 +2012,12 @@ void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
 }
 
 /*!
-   \brief Get the tick direction for an axis
+   @brief Get the tick direction for an axis
 
-   \param axisId Axis identifier
-   \return Current tick direction
+   @param axisId Axis identifier
+   @return Current tick direction
 
-   \sa setAxisTickDirection()
+   @sa setAxisTickDirection()
  */
 QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
 {
@@ -2177,7 +2029,7 @@ QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
 }
 
 /**
- * @brief 让寄生轴和宿主轴对齐
+ * @brief Align the parasite plot to the host plot
  */
 void QwtPlot::alignToHost()
 {
@@ -2189,8 +2041,8 @@ void QwtPlot::alignToHost()
         return;
     }
 
-    // 计算host的应该设置的minbordhint
-    // 保证和host的borderhint一致
+    // Calculate the minBorderDist that should be set for the host
+    // Ensure consistency with the host's border hint
     for (int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++) {
         const QwtAxisId axisId(axisPos);
         QwtScaleWidget* scaleWidget = axisWidget(axisId);
@@ -2207,8 +2059,8 @@ void QwtPlot::alignToHost()
 }
 
 /**
- * @brief 获取宿主轴的个数
- * @return 如果自身就是寄生轴，返回0，否则返回宿主轴的个数
+ * @brief Get the number of parasite plots
+ * @return 0 if this plot is a parasite plot, otherwise the count of parasite plots
  */
 int QwtPlot::parasitePlotCount() const
 {
@@ -2217,57 +2069,60 @@ int QwtPlot::parasitePlotCount() const
 }
 
 /**
- * @brief 根据层级顺序重新计算并下发所有层（宿主+寄生）轴的 edgeMargin 与 margin
+ * @brief Recalculate and assign edgeMargin and margin for all layers (host + parasite) axes based on level order
  *
- * 在 Qwt 多轴体系里，宿主 plot 可以挂载任意数量的寄生 plot，每个寄生 plot
- * 与宿主的画布位置时一样的，但拥有自己独立的坐标轴。为了避免轴层之间重叠，
- * 需要为每条轴动态计算两个偏移量：
+ * In the Qwt multi-axis system, a host plot can mount any number of parasite plots. Each parasite plot
+ * shares the same canvas position as the host but has its own independent axes. To avoid overlap between
+ * axis layers, two offsets need to be dynamically calculated for each axis:
  *
- * 1. edgeMargin —— 当前轴到画布边框的距离，由“层级比它高的所有轴”的理论尺寸累加而成。
- * 2. margin —— 当前轴到绘图区的距离，由“层级比它低的所有轴”的理论尺寸累加而成。
+ * 1. edgeMargin -- The distance from the current axis to the canvas border, accumulated from the
+ *    theoretical sizes of all axes at higher levels.
+ * 2. margin -- The distance from the current axis to the plot area, accumulated from the
+ *    theoretical sizes of all axes at lower levels.
  *
- * 这里定义的层级规则：
- * - 宿主始终处于第 0 层（最底层）；
- * - 寄生 plot 按挂载顺序依次构成第 1、2、3... 层，数字越大越靠近画布外侧。
+ * Level rules defined here:
+ * - The host is always at level 0 (innermost layer);
+ * - Parasite plots form levels 1, 2, 3... in the order they are mounted, with larger numbers
+ *   being closer to the outside of the canvas.
  *
- * 计算流程：
- * 1. 收集宿主及所有可见寄生轴的“净”矩形（已剔除旧的 edgeMargin 与 margin）；
- * 2. 对每i层：
- *    - margin     = 0 ~ i-1 层净矩形尺寸之和；
- *    - edgeMargin = i+1 ~ 末层净矩形尺寸之和；
- * 3. 将新值下发给对应轴的 QwtScaleWidget；
- * 4. 宿主的 margin 予以保留（不覆盖用户可能手工设置的值）。
+ * Calculation flow:
+ * 1. Collect the “net” rectangles of the host and all visible parasite axes (with old edgeMargin and margin stripped);
+ * 2. For each level i:
+ *    - margin     = sum of net rectangle sizes from level 0 to i-1;
+ *    - edgeMargin = sum of net rectangle sizes from level i+1 to the last level;
+ * 3. Assign the new values to the corresponding axis's QwtScaleWidget;
+ * 4. The host's margin is preserved (not overwriting values that users may have manually set).
  *
- * 注意：
- * - 若当前轴不可见或寄生 plot 未使用 QwtParasitePlotLayout，则自动跳过；
- * - 函数内部所有矩形尺寸均按轴方向取宽或高：
- *   Y 轴（YLeft/YRight）取 width，X 轴（XBottom/XTop）取 height。
+ * Notes:
+ * - If the current axis is not visible or the parasite plot does not use QwtParasitePlotLayout, it is skipped automatically;
+ * - All rectangle dimensions within the function are taken as width or height based on axis direction:
+ *   Y axes (YLeft/YRight) use width, X axes (XBottom/XTop) use height.
  *
- * @param axisId 要处理的轴 ID
+ * @param axisId The axis ID to process
  *
- * @note 本函数仅修改几何偏移，不会触发布局或重绘；调用方可在必要时
- *       随后调用 hostPlot->updateLayout()。
+ * @note This function only modifies geometric offsets and does not trigger layout or repaint; the caller can
+ *       subsequently call hostPlot->updateLayout() if needed.
  *
- * @see QwtPlot::updateAxisEdgeMargin(), QwtScaleWidget::setEdgeMargin(), QwtScaleWidget::setMargin(),
+ * @see QwtScaleWidget::setEdgeMargin(), QwtScaleWidget::setMargin(),
  *      QwtParasitePlotLayout::parasiteScaleRect()
  *
  * @since 7.0.4
  */
 void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 {
-    // --------------- 1. 收集本次需要处理的所有 plot（含宿主） ---------------
+    // --------------- 1. Collect all plots to process (including host) ---------------
     QwtPlot* host = isHostPlot() ? this : hostPlot();
     if (!host) {
         return;
     }
     if (host->parasitePlotCount() == 0) {
-        // 没有寄生绘图不需要处理
+        // No parasite plots, no processing needed
         return;
     }
     struct AxisLayer
     {
         QwtPlot* plot = nullptr;
-        QRectF scaleRect;  // 已去掉旧 edgeMargin/margin 的“净”矩形
+        QRectF scaleRect;  // “Net” rectangle with old edgeMargin/margin removed
     };
     const auto shrinkRect = [](QRectF r, int delta, QwtAxisId id) -> QRectF {
         if (delta == 0)
@@ -2294,15 +2149,12 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
     const QList< QwtPlot* > parasites = host->parasitePlots();
     QVector< AxisLayer > layers;
     layers.reserve(1 + host->parasitePlots().size());
-    // 宿主总是第 0 层
+    // Host is always at level 0
     QRectF hostScaleRect = host->plotLayout()->scaleRect(axisId);
-    // 宿主的矩形修正，宿主只修正edgeMargin作为原始矩形
+    // Host rectangle correction: only correct edgeMargin as the original rectangle
     hostScaleRect = shrinkRect(hostScaleRect, host->axisWidget(axisId)->edgeMargin(), axisId);
-    AxisLayer hostLayer;
-    hostLayer.plot = host;
-    hostLayer.scaleRect = hostScaleRect;
-    layers.append(hostLayer);
-    // 寄生轴按加入顺序构成 1,2,… 层
+    layers.append({ host, hostScaleRect });
+    // Parasite axes form levels 1, 2, ... in order of addition
     for (QwtPlot* p : parasites) {
         if (!p || !p->isAxisVisible(axisId)) {
             continue;
@@ -2327,11 +2179,11 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 
     for (int i = 0; i < layers.size(); ++i) {
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << "   layers[" << i << "] scaleRect=" << layers[ i ].scaleRect;
+        qDebug() << “   layers[“ << i << “] scaleRect=” << layers[ i ].scaleRect;
 #endif
     }
 
-    // --------------- 2. 计算每层的新 edgeMargin / margin ---------------
+    // --------------- 2. Calculate new edgeMargin / margin for each layer ---------------
     const auto accumulateSize = [ & ](int low, int high) -> int {
         int sum = 0;
         for (int i = low; i < high; ++i) {
@@ -2342,33 +2194,33 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
     };
 
     for (int i = 0; i < layers.size(); ++i) {
-        const int margin     = accumulateSize(0, i);                  // 比我低的层
-        const int edgeMargin = accumulateSize(i + 1, layers.size());  // 比我高的层
+        const int margin     = accumulateSize(0, i);                  // Layers lower than this one
+        const int edgeMargin = accumulateSize(i + 1, layers.size());  // Layers higher than this one
 
         QwtScaleWidget* axisWidget = layers[ i ].plot->axisWidget(axisId);
         axisWidget->setEdgeMargin(edgeMargin);
-        if (i != 0) {  // 宿主不强制设 margin，保留用户值
+        if (i != 0) {  // Host does not force-set margin, preserve user value
             axisWidget->setMargin(margin);
         }
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << "    [" << i << "]setEdgeMargin(" << edgeMargin << ")";
-        qDebug() << "    [" << i << "]setMargin(" << margin << ")";
+        qDebug() << “    [“ << i << “]setEdgeMargin(“ << edgeMargin << “)”;
+        qDebug() << “    [“ << i << “]setMargin(“ << margin << “)”;
 #endif
     }
 }
 
 /**
- * @brief 批量更新所有轴位置的边缘偏移
+ * @brief Batch update edge offsets for all axis positions
  *
- * 对当前绘图实例的所有轴位置（YLeft、YRight、XBottom、XTop）依次调用
- * updateAllAxisEdgeMargin(QwtAxisId)，自动完成宿主与所有寄生轴的 edgeMargin
- * 与 margin 同步，保证多轴场景下各层轴之间不重叠且绘图区对齐。
+ * Sequentially calls updateAxisEdgeMargin(QwtAxisId) for all axis positions (YLeft, YRight, XBottom, XTop)
+ * of the current plot instance, automatically synchronizing edgeMargin and margin between the host and all
+ * parasite axes, ensuring no overlap between layers and proper alignment of plot areas in multi-axis scenarios.
  *
- * 典型调用时机：
- * - 寄生 plot 挂载或移除后；
- * - 轴可见性、标签字体、刻度长度等影响尺寸的属性变更后；
- * - 宿主或寄生轴数据范围变化导致轴标签宽度/高度显著改变时。
- * @see updateAllAxisEdgeMargin(QwtAxisId)
+ * Typical invocation timing:
+ * - After a parasite plot is mounted or removed;
+ * - After property changes that affect dimensions, such as axis visibility, label fonts, or tick lengths;
+ * - When axis label width/height changes significantly due to host or parasite axis data range changes.
+ * @see updateAxisEdgeMargin(QwtAxisId)
  */
 void QwtPlot::updateAllAxisEdgeMargin()
 {
@@ -2381,16 +2233,16 @@ void QwtPlot::updateAllAxisEdgeMargin()
         updateAxisEdgeMargin(axisPos);
     }
     if (m_data->scaleEventDispatcher) {
-        // updateAllAxisEdgeMargin之后更新updateCache
+        // Update cache after updateAllAxisEdgeMargin
         m_data->scaleEventDispatcher->updateCache();
     }
 }
 
 /*!
-   \brief Attach/Detach a plot item
+   @brief Attach/Detach a plot item
 
-   \param plotItem Plot item
-   \param on When true attach the item, otherwise detach it
+   @param plotItem Plot item
+   @param on When true attach the item, otherwise detach it
  */
 void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
 {
@@ -2398,9 +2250,7 @@ void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
         // plotItem is some sort of legend
 
         const QwtPlotItemList& itmList = itemList();
-        for (QwtPlotItemIterator it = itmList.begin(); it != itmList.end(); ++it) {
-            QwtPlotItem* item = *it;
-
+        for (QwtPlotItem* item : itmList) {
             QList< QwtLegendData > legendData;
             if (on && item->testItemAttribute(QwtPlotItem::Legend)) {
                 legendData = item->legendData();
@@ -2431,16 +2281,16 @@ void QwtPlot::attachItem(QwtPlotItem* plotItem, bool on)
 }
 
 /*!
-   \brief Build an information, that can be used to identify
+   @brief Build an information, that can be used to identify
          a plot item on the legend.
 
    The default implementation simply wraps the plot item
    into a QVariant object. When overloading itemToInfo()
    usually infoToItem() needs to reimplemeted too.
 
-   \param plotItem Plot item
-   \return Plot item embedded in a QVariant
-   \sa infoToItem()
+   @param plotItem Plot item
+   @return Plot item embedded in a QVariant
+   @sa infoToItem()
  */
 QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
 {
@@ -2448,19 +2298,19 @@ QVariant QwtPlot::itemToInfo(QwtPlotItem* plotItem) const
 }
 
 /*!
-   \brief Identify the plot item according to an item info object,
+   @brief Identify the plot item according to an item info object,
          that has bee generated from itemToInfo().
 
    The default implementation simply tries to unwrap a QwtPlotItem
    pointer:
 
-   \code
+   @code
     if ( itemInfo.canConvert<QwtPlotItem *>() )
         return qvariant_cast<QwtPlotItem *>( itemInfo );
-   \endcode
-   \param itemInfo Plot item
-   \return A plot item, when successful, otherwise a nullptr pointer.
-   \sa itemToInfo()
+   @endcode
+   @param itemInfo Plot item
+   @return A plot item, when successful, otherwise a nullptr pointer.
+   @sa itemToInfo()
  */
 QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
 {
@@ -2471,11 +2321,11 @@ QwtPlotItem* QwtPlot::infoToItem(const QVariant& itemInfo) const
 }
 
 /**
- * @brief 设置坐标轴事件是否可用
+ * @brief Enable or disable built-in axis event actions
  *
- * 坐标轴事件是坐标轴内置的几个事件动作，主要是点击移动坐标轴，鼠标滚轮缩放等功能
+ * Axis events are built-in event actions for axes, primarily including click-to-move-axis, mouse wheel zoom, etc.
  *
- * @param on
+ * @param on Enable state
  */
 void QwtPlot::setEnableScaleBuildinActions(bool on)
 {
@@ -2483,8 +2333,8 @@ void QwtPlot::setEnableScaleBuildinActions(bool on)
 }
 
 /**
- * @brief 判断坐标轴缩放事件
- * @return
+ * @brief Check if built-in axis event actions are enabled
+ * @return true if enabled
  */
 bool QwtPlot::isEnableScaleBuildinActions() const
 {
@@ -2492,8 +2342,8 @@ bool QwtPlot::isEnableScaleBuildinActions() const
 }
 
 /**
- * @brief 安装坐标轴事件转发器
- * @param dispatcher
+ * @brief Install the axis event dispatcher
+ * @param dispatcher The event dispatcher to install
  */
 void QwtPlot::setupScaleEventDispatcher(QwtPlotScaleEventDispatcher* dispatcher)
 {
@@ -2507,7 +2357,7 @@ void QwtPlot::setupScaleEventDispatcher(QwtPlotScaleEventDispatcher* dispatcher)
 }
 
 /**
- * @brief 保存当前自动绘图设置的状态
+ * @brief Save the current autoReplot state
  */
 void QwtPlot::saveAutoReplotState()
 {
@@ -2515,7 +2365,7 @@ void QwtPlot::saveAutoReplotState()
 }
 
 /**
- * @brief 恢复当前自动绘图设置的状态
+ * @brief Restore the previously saved autoReplot state
  */
 void QwtPlot::restoreAutoReplotState()
 {
@@ -2523,14 +2373,14 @@ void QwtPlot::restoreAutoReplotState()
 }
 
 /**
- * @brief 按像素平移指定坐标轴
- * @param axis 坐标轴ID (QwtPlot::xBottom, QwtPlot::yLeft 等)
- * @param deltaPixels 移动的像素数
+ * @brief Pan the specified axis by a given number of pixels
+ * @param axisId Axis ID (QwtPlot::xBottom, QwtPlot::yLeft, etc.)
+ * @param deltaPixels Number of pixels to move
  *
- * 正数表示向右/下移动，负数表示向左/上移动
- * 对于对数坐标轴会自动处理坐标变换
+ * Positive values move right/down, negative values move left/up.
+ * For logarithmic axes, coordinate transformations are handled automatically.
  *
- * @note 注意，此函数不会进行重绘，需要调用者手动调用@ref replot
+ * @note This function does not trigger a repaint; the caller must manually call @ref replot
  */
 void QwtPlot::panAxis(QwtAxisId axisId, int deltaPixels)
 {
@@ -2539,62 +2389,62 @@ void QwtPlot::panAxis(QwtAxisId axisId, int deltaPixels)
         return;
     }
 
-    // 获取坐标轴的映射和当前范围
+    // Get the axis mapping and current range
     const QwtScaleDraw* sd      = axisScaleDraw(axisId);
     const QwtScaleMap& scaleMap = sd->scaleMap();
-    // p1和p2是绘图尺寸的边界
+    // p1 and p2 are the boundaries of the plot dimension
     double minValue = scaleMap.p1();
     double maxValue = scaleMap.p2();
-    // 把绘图距离偏移deltaPixels,这里手动移动
+    // Offset the plot distance by deltaPixels manually
     minValue -= deltaPixels;
     maxValue -= deltaPixels;
-    // 转换回scale坐标系
+    // Convert back to scale coordinate system
     minValue = scaleMap.invTransform(minValue);
     maxValue = scaleMap.invTransform(maxValue);
     setAxisScale(axisId, minValue, maxValue);
 }
 
 /**
- * @brief 按像素偏移平移整个画布
- * @param offset 像素偏移量
+ * @brief Pan the entire canvas by a pixel offset
+ * @param offset Pixel offset
  *
- * 该方法会将所有的坐标轴（不管是否已启用）按照指定的像素偏移量进行平移，
- * 实现整个画布的同步移动效果。
- * 水平方向：正数向右移动，负数向左移动
- * 垂直方向：正数向下移动，负数向上移动
+ * This method translates all axes (whether enabled or not) by the specified pixel offset,
+ * achieving a synchronized panning effect for the entire canvas.
+ * Horizontal direction: positive moves right, negative moves left
+ * Vertical direction: positive moves down, negative moves up
  *
- * @note 注意，此函数不会进行重绘，需要调用者手动调用@ref replot
+ * @note This function does not trigger a repaint; the caller must manually call @ref replot
  */
 void QwtPlot::panCanvas(const QPoint& offset)
 {
     if (offset.isNull()) {
-        return;  // 偏移量为零，无需处理
+        return;  // Zero offset, nothing to process
     }
 
-    // 平移所有启用的坐标轴
+    // Pan all enabled axes
     for (int axis = 0; axis < QwtPlot::axisCnt; axis++) {
-        // 根据坐标轴类型选择相应的偏移分量
+        // Select the appropriate offset component based on axis type
         if (QwtAxis::isXAxis(axis)) {
-            // 水平轴使用x偏移量，由于手动移动坐标轴
+            // Horizontal axis uses x offset component
             panAxis(axis, offset.x());
         } else {
-            // 垂直轴使用y偏移量（注意方向处理）
+            // Vertical axis uses y offset component
             panAxis(axis, offset.y());
         }
     }
 }
 
 /**
- * @brief 以指定像素位置为中心缩放坐标轴
- * @param axisId 坐标轴ID
- * @param factor 缩放因子 (大于1表示放大，小于1表示缩小)
- * @param centerPosPixels 缩放中心的像素位置（相对于画布）
+ * @brief Zoom the axis centered at the specified pixel position
+ * @param axisId Axis ID
+ * @param factor Zoom factor (>1 for zoom in, <1 for zoom out)
+ * @param centerPosPixels Pixel position of the zoom center (relative to canvas)
  *
- * 缩放原理：
- * - 线性坐标：以鼠标位置为中心进行线性缩放
- * - 对数坐标：以鼠标位置为中心进行对数域的缩放
+ * Zoom principle:
+ * - Linear axes: zoom centered at the mouse position linearly
+ * - Logarithmic axes: zoom centered at the mouse position in the logarithmic domain
  *
- * @note 注意，此函数不会进行重绘，需要调用者手动调用@ref replot
+ * @note This function does not trigger a repaint; the caller must manually call @ref replot
  */
 void QwtPlot::zoomAxis(QwtAxisId axisId, double factor, const QPoint& centerPosPixels)
 {
@@ -2602,38 +2452,38 @@ void QwtPlot::zoomAxis(QwtAxisId axisId, double factor, const QPoint& centerPosP
         return;
     }
     const QwtScaleMap& scaleMap = canvasMap(axisId);
-    double currentMin           = scaleMap.s1();  // s1,s2是当前实际点的值
+    double currentMin           = scaleMap.s1();  // s1, s2 are the values of the current actual points
     double currentMax           = scaleMap.s2();
     double center               = QwtAxis::isXAxis(axisId) ? centerPosPixels.x() : centerPosPixels.y();
-    // 判断是否为线性坐标
+    // Check if transformation is linear
     const QwtTransform* tm = scaleMap.transformation();
     if (tm) {
-        // 非线性坐标，把数据转换到屏幕坐标系上(transform)，这样就能绝对线性
+        // Non-linear coordinate: transform data to screen coordinates for absolute linearity
         currentMin = scaleMap.transform(currentMin);
         currentMax = scaleMap.transform(currentMax);
     } else {
-        // 对于线性轴，把屏幕的中心点转换为数据的中心点(invTransform)
+        // For linear axes, convert the screen center point to the data center point (invTransform)
         center = scaleMap.invTransform(center);
     }
-    // 把center限制在currentMin~currentMax之间，为了兼容c++11,这里不使用clamp，
-    // 如果后续明确要求c++17及以上，可改为center = std::clamp(center, currentMin, currentMax);
+    // Clamp center between currentMin and currentMax; for C++11 compatibility we avoid std::clamp here.
+    // If C++17 or later is explicitly required, this can be changed to center = std::clamp(center, currentMin, currentMax);
     center = std::max(currentMin, std::min(center, currentMax));
 
     currentMin = center - (center - currentMin) / factor;
     currentMax = center + (currentMax - center) / factor;
-    // 边界检查
+    // Bounds check
     if (currentMin >= currentMax) {
-        return;  // 无效范围
+        return;  // Invalid range
     }
 
     if (tm) {
         currentMin = scaleMap.invTransform(currentMin);
         currentMax = scaleMap.invTransform(currentMax);
-        // 避免数值过小，对应log坐标，这个会返回一个合理范围
+        // Avoid excessively small values; for log coordinates, this returns a reasonable range
         currentMin = tm->bounded(currentMin);
         currentMax = tm->bounded(currentMax);
         if (qFuzzyCompare(currentMin, currentMax)) {
-            // 说明缩放到两个点及其接近
+            // The two points have become extremely close after zooming
             currentMax = currentMin + 1e-8;
         }
     }

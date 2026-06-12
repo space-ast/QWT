@@ -81,9 +81,11 @@ static inline double qwtBoundedAngle(double min, double angle, double max)
 
 class QwtDial::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtDial)
 public:
-    PrivateData()
-        : frameShadow(Sunken)
+    PrivateData(QwtDial* p)
+        : q_ptr(p)
+        , frameShadow(Sunken)
         , lineWidth(0)
         , mode(RotateNeedle)
         , origin(90.0)
@@ -110,14 +112,13 @@ public:
 
     QwtDialNeedle* needle;
 
-    double arcOffset;
-    double mouseOffset;
+    mutable double arcOffset;
+    mutable double mouseOffset;
 
     QPixmap pixmapCache;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Create a dial widget with no needle. The scale is initialized
  *          to [ 0.0, 360.0 ] and 360 steps ( QwtAbstractSlider::setTotalSteps() ).
@@ -125,20 +126,9 @@ public:
  *          The value is set to 0.0.
  *          The default mode is QwtDial::RotateNeedle.
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个无指针的表盘控件。刻度初始化为 [ 0.0, 360.0 ] 和 360 步
- *          ( QwtAbstractSlider::setTotalSteps() )。
- *          刻度的原点在 90°，值设置为 0.0。
- *          默认模式是 QwtDial::RotateNeedle。
- * @param parent 父控件
- * \endif
  */
-QwtDial::QwtDial(QWidget* parent) : QwtAbstractSlider(parent)
+QwtDial::QwtDial(QWidget* parent) : QwtAbstractSlider(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setFocusPolicy(Qt::TabFocus);
 
     QPalette p = palette();
@@ -166,105 +156,71 @@ QwtDial::QwtDial(QWidget* parent) : QwtAbstractSlider(parent)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtDial::~QwtDial()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the frame shadow value from the frame style
  * @param shadow Frame shadow
- * \sa setLineWidth(), QFrame::setFrameShadow()
- * \endif
- * \if CHINESE
- * @brief 从框架样式设置框架阴影值
- * @param shadow 框架阴影
- * \sa setLineWidth(), QFrame::setFrameShadow()
- * \endif
+ * @sa setLineWidth(), QFrame::setFrameShadow()
  */
 void QwtDial::setFrameShadow(Shadow shadow)
 {
-    if (shadow != m_data->frameShadow) {
+    QWT_D(d);
+    if (shadow != d->frameShadow) {
         invalidateCache();
 
-        m_data->frameShadow = shadow;
+        d->frameShadow = shadow;
         if (lineWidth() > 0)
             update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return frame shadow
- * \sa setFrameShadow(), lineWidth(), QFrame::frameShadow()
- * \endif
- * \if CHINESE
- * @brief 返回框架阴影
- * \sa setFrameShadow(), lineWidth(), QFrame::frameShadow()
- * \endif
+ * @sa setFrameShadow(), lineWidth(), QFrame::frameShadow()
  */
 QwtDial::Shadow QwtDial::frameShadow() const
 {
-    return m_data->frameShadow;
+    QWT_DC(d);
+    return d->frameShadow;
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the line width of the frame
  * @param lineWidth Line width
- * \sa setFrameShadow()
- * \endif
- * \if CHINESE
- * @brief 设置框架的线宽
- * @param lineWidth 线宽
- * \sa setFrameShadow()
- * \endif
+ * @sa setFrameShadow()
  */
 void QwtDial::setLineWidth(int lineWidth)
 {
+    QWT_D(d);
     if (lineWidth < 0)
         lineWidth = 0;
 
-    if (m_data->lineWidth != lineWidth) {
+    if (d->lineWidth != lineWidth) {
         invalidateCache();
 
-        m_data->lineWidth = lineWidth;
+        d->lineWidth = lineWidth;
         update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return line width of the frame
- * \sa setLineWidth(), frameShadow(), lineWidth()
- * \endif
- * \if CHINESE
- * @brief 返回框架的线宽
- * \sa setLineWidth(), frameShadow(), lineWidth()
- * \endif
+ * @sa setLineWidth(), frameShadow(), lineWidth()
  */
 int QwtDial::lineWidth() const
 {
-    return m_data->lineWidth;
+    QWT_DC(d);
+    return d->lineWidth;
 }
 
 /**
- * \if ENGLISH
  * @brief Return bounding rectangle of the circle inside the frame
- * \sa setLineWidth(), scaleInnerRect(), boundingRect()
- * \endif
- * \if CHINESE
- * @brief 返回框架内圆的边界矩形
- * \sa setLineWidth(), scaleInnerRect(), boundingRect()
- * \endif
+ * @sa setLineWidth(), scaleInnerRect(), boundingRect()
  */
 QRect QwtDial::innerRect() const
 {
@@ -273,14 +229,8 @@ QRect QwtDial::innerRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return bounding rectangle of the dial including the frame
- * \sa setLineWidth(), scaleInnerRect(), innerRect()
- * \endif
- * \if CHINESE
- * @brief 返回表盘的边界矩形（含框架）
- * \sa setLineWidth(), scaleInnerRect(), innerRect()
- * \endif
+ * @sa setLineWidth(), scaleInnerRect(), innerRect()
  */
 QRect QwtDial::boundingRect() const
 {
@@ -295,14 +245,8 @@ QRect QwtDial::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return rectangle inside the scale
- * \sa setLineWidth(), boundingRect(), innerRect()
- * \endif
- * \if CHINESE
- * @brief 返回刻度内的矩形
- * \sa setLineWidth(), boundingRect(), innerRect()
- * \endif
+ * @sa setLineWidth(), boundingRect(), innerRect()
  */
 QRect QwtDial::scaleInnerRect() const
 {
@@ -320,68 +264,51 @@ QRect QwtDial::scaleInnerRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Change the mode of the dial
  * @details In case of QwtDial::RotateNeedle the needle is rotating, in case of
  *          QwtDial::RotateScale, the needle points to origin()
  *          and the scale is rotating.
  *          The default mode is QwtDial::RotateNeedle.
  * @param mode New mode
- * \sa mode(), setValue(), setOrigin()
- * \endif
- * \if CHINESE
- * @brief 更改表盘的模式
- * @details 如果是 QwtDial::RotateNeedle，指针是旋转的；如果是 QwtDial::RotateScale，
- *          指针指向 origin()，刻度是旋转的。
- *          默认模式是 QwtDial::RotateNeedle。
- * @param mode 新模式
- * \sa mode(), setValue(), setOrigin()
- * \endif
+ * @sa mode(), setValue(), setOrigin()
  */
 void QwtDial::setMode(Mode mode)
 {
-    if (mode != m_data->mode) {
+    QWT_D(d);
+    if (mode != d->mode) {
         invalidateCache();
 
-        m_data->mode = mode;
+        d->mode = mode;
         sliderChange();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return mode of the dial
- * \sa setMode(), origin(), setScaleArc(), value()
- * \endif
- * \if CHINESE
- * @brief 返回表盘的模式
- * \sa setMode(), origin(), setScaleArc(), value()
- * \endif
+ * @sa setMode(), origin(), setScaleArc(), value()
  */
 QwtDial::Mode QwtDial::mode() const
 {
-    return m_data->mode;
+    QWT_DC(d);
+    return d->mode;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal caches used to speed up repainting
- * \endif
- * \if CHINESE
- * @brief 使用于加速重绘的内部缓存失效
- * \endif
  */
 void QwtDial::invalidateCache()
 {
-    m_data->pixmapCache = QPixmap();
+    QWT_D(d);
+    d->pixmapCache = QPixmap();
 }
 
 /*!
    Paint the dial
-   \param event Paint event
+   @param event Paint event
  */
 void QwtDial::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
@@ -389,7 +316,7 @@ void QwtDial::paintEvent(QPaintEvent* event)
     opt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
 
-    if (m_data->mode == QwtDial::RotateScale) {
+    if (d->mode == QwtDial::RotateScale) {
         painter.save();
         painter.setRenderHint(QPainter::Antialiasing, true);
 
@@ -399,27 +326,27 @@ void QwtDial::paintEvent(QPaintEvent* event)
     }
 
     const QRect r = contentsRect();
-    if (r.size() != m_data->pixmapCache.size()) {
-        m_data->pixmapCache = QwtPainter::backingStore(this, r.size());
-        m_data->pixmapCache.fill(Qt::transparent);
+    if (r.size() != d->pixmapCache.size()) {
+        d->pixmapCache = QwtPainter::backingStore(this, r.size());
+        d->pixmapCache.fill(Qt::transparent);
 
-        QPainter p(&m_data->pixmapCache);
+        QPainter p(&d->pixmapCache);
         p.setRenderHint(QPainter::Antialiasing, true);
         p.translate(-r.topLeft());
 
-        if (m_data->mode != QwtDial::RotateScale)
+        if (d->mode != QwtDial::RotateScale)
             drawContents(&p);
 
         if (lineWidth() > 0)
             drawFrame(&p);
 
-        if (m_data->mode != QwtDial::RotateNeedle)
+        if (d->mode != QwtDial::RotateNeedle)
             drawNeedle(&p);
     }
 
-    painter.drawPixmap(r.topLeft(), m_data->pixmapCache);
+    painter.drawPixmap(r.topLeft(), d->pixmapCache);
 
-    if (m_data->mode == QwtDial::RotateNeedle)
+    if (d->mode == QwtDial::RotateNeedle)
         drawNeedle(&painter);
 
     if (hasFocus())
@@ -428,7 +355,7 @@ void QwtDial::paintEvent(QPaintEvent* event)
 
 /*!
    Draw the focus indicator
-   \param painter Painter
+   @param painter Painter
  */
 void QwtDial::drawFocusIndicator(QPainter* painter) const
 {
@@ -438,24 +365,25 @@ void QwtDial::drawFocusIndicator(QPainter* painter) const
 /*!
    Draw the frame around the dial
 
-   \param painter Painter
-   \sa lineWidth(), frameShadow()
+   @param painter Painter
+   @sa lineWidth(), frameShadow()
  */
 void QwtDial::drawFrame(QPainter* painter)
 {
-    QwtPainter::drawRoundFrame(painter, boundingRect(), palette(), lineWidth(), m_data->frameShadow);
+    QWT_D(d);
+    QwtPainter::drawRoundFrame(painter, boundingRect(), palette(), lineWidth(), d->frameShadow);
 }
 
 /*!
-   \brief Draw the contents inside the frame
+   @brief Draw the contents inside the frame
 
    QPalette::Window is the background color outside of the frame.
    QPalette::Base is the background color inside the frame.
    QPalette::WindowText is the background color inside the scale.
 
-   \param painter Painter
+   @param painter Painter
 
-   \sa boundingRect(), innerRect(),
+   @sa boundingRect(), innerRect(),
     scaleInnerRect(), QWidget::setPalette()
  */
 void QwtDial::drawContents(QPainter* painter) const
@@ -494,17 +422,18 @@ void QwtDial::drawContents(QPainter* painter) const
 /*!
    Draw the needle
 
-   \param painter Painter
-   \param center Center of the dial
-   \param radius Length for the needle
-   \param direction Direction of the needle in degrees, counter clockwise
-   \param colorGroup ColorGroup
+   @param painter Painter
+   @param center Center of the dial
+   @param radius Length for the needle
+   @param direction Direction of the needle in degrees, counter clockwise
+   @param colorGroup ColorGroup
  */
 void QwtDial::drawNeedle(QPainter* painter, const QPointF& center, double radius, double direction, QPalette::ColorGroup colorGroup) const
 {
-    if (m_data->needle) {
+    QWT_DC(d);
+    if (d->needle) {
         direction = 360.0 - direction;  // counter clockwise
-        m_data->needle->draw(painter, center, radius, direction, colorGroup);
+        d->needle->draw(painter, center, radius, direction, colorGroup);
     }
 }
 
@@ -530,9 +459,9 @@ void QwtDial::drawNeedle(QPainter* painter) const
 /*!
    Draw the scale
 
-   \param painter Painter
-   \param center Center of the dial
-   \param radius Radius of the scale
+   @param painter Painter
+   @param center Center of the dial
+   @param radius Radius of the scale
  */
 void QwtDial::drawScale(QPainter* painter, const QPointF& center, double radius) const
 {
@@ -560,9 +489,9 @@ void QwtDial::drawScale(QPainter* painter, const QPointF& center, double radius)
 
    Paints nothing.
 
-   \param painter Painter
-   \param center Center of the contents circle
-   \param radius Radius of the contents circle
+   @param painter Painter
+   @param center Center of the contents circle
+   @param radius Radius of the contents circle
  */
 void QwtDial::drawScaleContents(QPainter* painter, const QPointF& center, double radius) const
 {
@@ -572,65 +501,44 @@ void QwtDial::drawScaleContents(QPainter* painter, const QPointF& center, double
 }
 
 /**
- * \if ENGLISH
  * @brief Set a needle for the dial
  * @param needle Needle
  * @warning The needle will be deleted, when a different needle is set or in ~QwtDial()
- * \endif
- * \if CHINESE
- * @brief 为表盘设置指针
- * @param needle 指针
- * @warning 当设置不同的指针或在 ~QwtDial() 时，指针将被删除
- * \endif
  */
 void QwtDial::setNeedle(QwtDialNeedle* needle)
 {
-    if (needle != m_data->needle) {
-        if (m_data->needle)
-            delete m_data->needle;
+    QWT_D(d);
+    if (needle != d->needle) {
+        if (d->needle)
+            delete d->needle;
 
-        m_data->needle = needle;
+        d->needle = needle;
         update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return needle
- * \sa setNeedle()
- * \endif
- * \if CHINESE
- * @brief 返回指针
- * \sa setNeedle()
- * \endif
+ * @sa setNeedle()
  */
 const QwtDialNeedle* QwtDial::needle() const
 {
-    return m_data->needle;
+    QWT_DC(d);
+    return d->needle;
 }
 
 /**
- * \if ENGLISH
  * @brief Return needle
- * \sa setNeedle()
- * \endif
- * \if CHINESE
- * @brief 返回指针
- * \sa setNeedle()
- * \endif
+ * @sa setNeedle()
  */
 QwtDialNeedle* QwtDial::needle()
 {
-    return m_data->needle;
+    QWT_D(d);
+    return d->needle;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale draw
- * \endif
- * \if CHINESE
- * @brief 返回刻度绘制器
- * \endif
  */
 QwtRoundScaleDraw* QwtDial::scaleDraw()
 {
@@ -638,12 +546,7 @@ QwtRoundScaleDraw* QwtDial::scaleDraw()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale draw
- * \endif
- * \if CHINESE
- * @brief 返回刻度绘制器
- * \endif
  */
 const QwtRoundScaleDraw* QwtDial::scaleDraw() const
 {
@@ -651,20 +554,11 @@ const QwtRoundScaleDraw* QwtDial::scaleDraw() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set an individual scale draw
  * @details The motivation for setting a scale draw is often to overload QwtRoundScaleDraw::label()
  *          to return individual tick labels.
  * @param scaleDraw Scale draw
  * @warning The previous scale draw is deleted
- * \endif
- * \if CHINESE
- * @brief 设置单独的刻度绘制器
- * @details 设置刻度绘制器的原因通常是为了重载 QwtRoundScaleDraw::label()
- *          以返回单独的刻度标签。
- * @param scaleDraw 刻度绘制器
- * @warning 之前的刻度绘制器将被删除
- * \endif
  */
 void QwtDial::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 {
@@ -673,21 +567,14 @@ void QwtDial::setScaleDraw(QwtRoundScaleDraw* scaleDraw)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the arc of the scale
- * @param[in] minArc Lower limit
- * @param[in] maxArc Upper limit
- * \sa minScaleArc(), maxScaleArc()
- * \endif
- * \if CHINESE
- * @brief 更改刻度的弧度范围
- * @param[in] minArc 下限
- * @param[in] maxArc 上限
- * \sa minScaleArc(), maxScaleArc()
- * \endif
+ * @param minArc Lower limit
+ * @param maxArc Upper limit
+ * @sa minScaleArc(), maxScaleArc()
  */
 void QwtDial::setScaleArc(double minArc, double maxArc)
 {
+    QWT_D(d);
     if (minArc != 360.0 && minArc != -360.0)
         minArc = std::fmod(minArc, 360.0);
     if (maxArc != 360.0 && maxArc != -360.0)
@@ -699,9 +586,9 @@ void QwtDial::setScaleArc(double minArc, double maxArc)
     if (maxScaleArc - minScaleArc > 360.0)
         maxScaleArc = minScaleArc + 360.0;
 
-    if ((minScaleArc != m_data->minScaleArc) || (maxScaleArc != m_data->maxScaleArc)) {
-        m_data->minScaleArc = minScaleArc;
-        m_data->maxScaleArc = maxScaleArc;
+    if ((minScaleArc != d->minScaleArc) || (maxScaleArc != d->maxScaleArc)) {
+        d->minScaleArc = minScaleArc;
+        d->maxScaleArc = maxScaleArc;
 
         invalidateCache();
         sliderChange();
@@ -709,117 +596,76 @@ void QwtDial::setScaleArc(double minArc, double maxArc)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the lower limit for the scale arc
  * @param min Lower limit of the scale arc
- * \sa setScaleArc(), setMaxScaleArc()
- * \endif
- * \if CHINESE
- * @brief 设置刻度弧的下限
- * @param min 刻度弧下限
- * \sa setScaleArc(), setMaxScaleArc()
- * \endif
+ * @sa setScaleArc(), setMaxScaleArc()
  */
 void QwtDial::setMinScaleArc(double min)
 {
-    setScaleArc(min, m_data->maxScaleArc);
+    QWT_D(d);
+    setScaleArc(min, d->maxScaleArc);
 }
 
 /**
- * \if ENGLISH
  * @brief Return lower limit of the scale arc
- * \sa setScaleArc()
- * \endif
- * \if CHINESE
- * @brief 返回刻度弧的下限
- * \sa setScaleArc()
- * \endif
+ * @sa setScaleArc()
  */
 double QwtDial::minScaleArc() const
 {
-    return m_data->minScaleArc;
+    QWT_DC(d);
+    return d->minScaleArc;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the upper limit for the scale arc
  * @param max Upper limit of the scale arc
- * \sa setScaleArc(), setMinScaleArc()
- * \endif
- * \if CHINESE
- * @brief 设置刻度弧的上限
- * @param max 刻度弧上限
- * \sa setScaleArc(), setMinScaleArc()
- * \endif
+ * @sa setScaleArc(), setMinScaleArc()
  */
 void QwtDial::setMaxScaleArc(double max)
 {
-    setScaleArc(m_data->minScaleArc, max);
+    QWT_D(d);
+    setScaleArc(d->minScaleArc, max);
 }
 
 /**
- * \if ENGLISH
  * @brief Return upper limit of the scale arc
- * \sa setScaleArc()
- * \endif
- * \if CHINESE
- * @brief 返回刻度弧的上限
- * \sa setScaleArc()
- * \endif
+ * @sa setScaleArc()
  */
 double QwtDial::maxScaleArc() const
 {
-    return m_data->maxScaleArc;
+    QWT_DC(d);
+    return d->maxScaleArc;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the origin
  * @details The origin is the angle where scale and needle is relative to.
  * @param origin New origin
- * \sa origin()
- * \endif
- * \if CHINESE
- * @brief 更改原点
- * @details 原点是刻度和指针相对的角度。
- * @param origin 新原点
- * \sa origin()
- * \endif
+ * @sa origin()
  */
 void QwtDial::setOrigin(double origin)
 {
+    QWT_D(d);
     invalidateCache();
 
-    m_data->origin = origin;
+    d->origin = origin;
     sliderChange();
 }
 
 /**
- * \if ENGLISH
  * @brief The origin is the angle where scale and needle is relative to
  * @return Origin of the dial
- * \sa setOrigin()
- * \endif
- * \if CHINESE
- * @brief 原点是刻度和指针相对的角度
- * @return 表盘原点
- * \sa setOrigin()
- * \endif
+ * @sa setOrigin()
  */
 double QwtDial::origin() const
 {
-    return m_data->origin;
+    QWT_DC(d);
+    return d->origin;
 }
 
 /**
- * \if ENGLISH
  * @brief Return size hint
- * \sa minimumSizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回尺寸提示
- * \sa minimumSizeHint()
- * \endif
+ * @sa minimumSizeHint()
  */
 QSize QwtDial::sizeHint() const
 {
@@ -837,14 +683,8 @@ QSize QwtDial::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return minimum size hint
- * \sa sizeHint()
- * \endif
- * \if CHINESE
- * @brief 返回最小尺寸提示
- * \sa sizeHint()
- * \endif
+ * @sa sizeHint()
  */
 QSize QwtDial::minimumSizeHint() const
 {
@@ -858,25 +698,26 @@ QSize QwtDial::minimumSizeHint() const
 }
 
 /*!
-   \brief Determine what to do when the user presses a mouse button.
+   @brief Determine what to do when the user presses a mouse button.
 
-   \param pos Mouse position
+   @param pos Mouse position
 
-   \retval True, when the inner circle contains pos
-   \sa scrolledTo()
+   @retval True, when the inner circle contains pos
+   @sa scrolledTo()
  */
 bool QwtDial::isScrollPosition(const QPoint& pos) const
 {
+    QWT_DC(d);
     const QRegion region(innerRect(), QRegion::Ellipse);
     if (region.contains(pos) && (pos != innerRect().center())) {
         double angle = QLineF(rect().center(), pos).angle();
-        if (m_data->mode == QwtDial::RotateScale)
+        if (d->mode == QwtDial::RotateScale)
             angle = 360.0 - angle;
 
         double valueAngle = qwtNormalizeDegrees(90.0 - scaleMap().transform(value()));
 
-        m_data->mouseOffset = qwtNormalizeDegrees(angle - valueAngle);
-        m_data->arcOffset   = scaleMap().p1();
+        d->mouseOffset = qwtNormalizeDegrees(angle - valueAngle);
+        d->arcOffset   = scaleMap().p1();
 
         return true;
     }
@@ -885,23 +726,24 @@ bool QwtDial::isScrollPosition(const QPoint& pos) const
 }
 
 /*!
-   \brief Determine the value for a new position of the
+   @brief Determine the value for a new position of the
          slider handle.
 
-   \param pos Mouse position
+   @param pos Mouse position
 
-   \return Value for the mouse position
-   \sa isScrollPosition()
+   @return Value for the mouse position
+   @sa isScrollPosition()
  */
 double QwtDial::scrolledTo(const QPoint& pos) const
 {
+    QWT_DC(d);
     double angle = QLineF(rect().center(), pos).angle();
-    if (m_data->mode == QwtDial::RotateScale) {
-        angle += scaleMap().p1() - m_data->arcOffset;
+    if (d->mode == QwtDial::RotateScale) {
+        angle += scaleMap().p1() - d->arcOffset;
         angle = 360.0 - angle;
     }
 
-    angle = qwtNormalizeDegrees(angle - m_data->mouseOffset);
+    angle = qwtNormalizeDegrees(angle - d->mouseOffset);
     angle = qwtNormalizeDegrees(90.0 - angle);
 
     if (scaleMap().pDist() >= 360.0) {
@@ -916,7 +758,7 @@ double QwtDial::scrolledTo(const QPoint& pos) const
                 boundedAngle = (arc > 0) ? scaleMap().p1() : scaleMap().p2();
             }
 
-            m_data->mouseOffset += (boundedAngle - angle);
+            d->mouseOffset += (boundedAngle - angle);
 
             angle = boundedAngle;
         }
@@ -924,7 +766,7 @@ double QwtDial::scrolledTo(const QPoint& pos) const
         const double boundedAngle = qwtBoundedAngle(scaleMap().p1(), angle, scaleMap().p2());
 
         if (!wrapping())
-            m_data->mouseOffset += (boundedAngle - angle);
+            d->mouseOffset += (boundedAngle - angle);
 
         angle = boundedAngle;
     }
@@ -934,7 +776,7 @@ double QwtDial::scrolledTo(const QPoint& pos) const
 
 /*!
    Change Event handler
-   \param event Change event
+   @param event Change event
 
    Invalidates internal paint caches if necessary
  */
@@ -959,7 +801,7 @@ void QwtDial::changeEvent(QEvent* event)
 
 /*!
    Wheel Event handler
-   \param event Wheel event
+   @param event Wheel event
  */
 void QwtDial::wheelEvent(QWheelEvent* event)
 {
@@ -994,11 +836,12 @@ void QwtDial::scaleChange()
 
 void QwtDial::sliderChange()
 {
-    setAngleRange(m_data->origin + m_data->minScaleArc, m_data->maxScaleArc - m_data->minScaleArc);
+    QWT_D(d);
+    setAngleRange(d->origin + d->minScaleArc, d->maxScaleArc - d->minScaleArc);
 
     if (mode() == RotateScale) {
         const double arc = scaleMap().transform(value()) - scaleMap().p1();
-        setAngleRange(m_data->origin - arc, m_data->maxScaleArc - m_data->minScaleArc);
+        setAngleRange(d->origin - arc, d->maxScaleArc - d->minScaleArc);
     }
 
     QwtAbstractSlider::sliderChange();

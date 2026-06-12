@@ -23,6 +23,7 @@ set(QWTPLOT_HEADER_BASE
         qwt_bezier.h
         qwt_clipper.h
         qwt_color_map.h
+        qwt_color_cycle.h
         qwt_column_symbol.h
         qwt_date.h
         qwt_date_scale_draw.h
@@ -71,6 +72,7 @@ set(QWTPLOT_SOURCE_BASE
         qwt_bezier.cpp
         qwt_clipper.cpp
         qwt_color_map.cpp
+        qwt_color_cycle.cpp
         qwt_column_symbol.cpp
         qwt_date.cpp
         qwt_date_scale_draw.cpp
@@ -175,6 +177,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.h
         qwt_plot_rescaler.h
         qwt_point_mapper.h
+        qwt_simd_argminmax.h
         qwt_grid_data.hpp
         qwt_raster_data.h
         qwt_matrix_raster_data.h
@@ -245,6 +248,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.cpp
         qwt_plot_rescaler.cpp
         qwt_point_mapper.cpp
+        qwt_simd_argminmax.cpp
         qwt_raster_data.cpp
         qwt_matrix_raster_data.cpp
         qwt_grid_raster_data.cpp

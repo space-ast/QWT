@@ -34,7 +34,6 @@
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief A paint device for scalable graphics
  *
  * @details QwtGraphic is the representation of a graphic that is tailored for
@@ -80,66 +79,18 @@
  * of the painter path ( the peak of a triangle is different than the flat side )
  * scaling with a fixed aspect ratio always needs to be calculated from the
  * control point rectangle.
- * \endif
  *
- * \if CHINESE
- * @brief 可缩放图形的绘制设备
- *
- * @details QwtGraphic 是专为可缩放性设计的图形表示。
- * 与 QPicture 类似，它通过 QPainter 操作初始化，
- * 并可以在稍后重放到任何目标绘制设备。
- *
- * 常见的图像表示 QImage 和 QPixmap 不可缩放，
- * Qt 提供了两个可能用于表示矢量图形的绘制设备：
- *
- * - QPicture：不幸的是，Qt4 引入基于浮点数的渲染引擎时，
- *   QPicture 被遗忘了。其 API 仍然基于整数，
- *   使其无法用于正确缩放。
- *
- * - QSvgRenderer/QSvgGenerator：不幸的是，QSvgRenderer 在内部 API 中
- *   隐藏了太多关于其节点的信息，这些信息对于正确的布局计算是必要的。
- *   此外它派生自 QObject，无法像 QImage/QPixmap 一样复制。
- *
- * QwtGraphic 将所有可缩放的绘制原语映射到 QPainterPath，
- * 并将其与绘制状态变更（画笔、画刷、变换...）
- * 一起存储在 QwtPaintCommands 列表中。
- * 为了成为完整的 QPaintDevice，它还存储 pixmap 或 image，
- * 这在某种程度上违背了类的初衷，因为这些对象在缩放时会损失质量。
- *
- * 缩放 QwtGraphic 对象的主要问题是用于绘制路径轮廓的画笔。
- * 非装饰性画笔（QPen::isCosmetic()）与路径以相同比例缩放，
- * 而装饰性画笔具有固定宽度。图形可能包含使用不同画笔的路径——
- * 装饰性和非装饰性。
- *
- * QwtGraphic 缓存两个不同的矩形：
- *
- * - 控制点矩形：控制点矩形是所有绘制路径控制点矩形的边界矩形，
- *   或 pixmap/image 的目标矩形。
- *
- * - 边界矩形：边界矩形扩展了控制点矩形，
- *   以包含使用未缩放画笔渲染轮廓所需的空间。
- *
- * 因为绘制轮廓的偏移取决于绘制路径的形状
- * （三角形的顶点与平边不同），
- * 以固定纵横比缩放时总是需要从控制点矩形计算。
- * \endif
  */
 class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Hint how to render a graphic
-     * \endif
      *
-     * \if CHINESE
-     * @brief 渲染图形的提示
-     * \endif
      */
     enum RenderHint
     {
         /**
-         * \if ENGLISH
          * When rendering a QwtGraphic a specific scaling between
          * the controlPointRect() and the coordinates of the target rectangle
          * is set up internally in render().
@@ -148,16 +99,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
          * for the control points only, but not for the pens.
          * All other painter transformations ( set up by application code )
          * are supposed to work like usual.
-         * \endif
          *
-         * \if CHINESE
-         * 渲染 QwtGraphic 时，在 render() 内部设置
-         * controlPointRect() 与目标矩形坐标之间的特定缩放。
-         *
-         * 设置 RenderPensUnscaled 时，此特定缩放仅应用于控制点，
-         * 不应用于画笔。所有其他绘制变换（由应用程序代码设置）
-         * 按常规方式工作。
-         * \endif
          */
         RenderPensUnscaled = 0x1
     };
@@ -165,23 +107,18 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     Q_DECLARE_FLAGS( RenderHints, RenderHint )
 
     /**
-     * \if ENGLISH
      * @brief Indicator if the graphic contains a specific type of painter command
-     * \endif
      *
-     * \if CHINESE
-     * @brief 指示图形是否包含特定类型的绘制命令
-     * \endif
      */
     enum CommandType
     {
-        //! \if ENGLISH The graphic contains scalable vector data \endif \if CHINESE 图形包含可缩放的矢量数据 \endif
+        //! The graphic contains scalable vector data
         VectorData     = 1 << 0,
 
-        //! \if ENGLISH The graphic contains raster data ( QPixmap or QImage ) \endif \if CHINESE 图形包含光栅数据（QPixmap 或 QImage） \endif
+        //! The graphic contains raster data ( QPixmap or QImage )
         RasterData     = 1 << 1,
 
-        //! \if ENGLISH The graphic contains transformations beyond simple translations \endif \if CHINESE 图形包含超出简单平移的变换 \endif
+        //! The graphic contains transformations beyond simple translations
         Transformation = 1 << 2
     };
 
@@ -193,7 +130,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     QwtGraphic( const QwtGraphic& );
 
     // Destructor
-    virtual ~QwtGraphic();
+    ~QwtGraphic() override;
 
     // Assignment operator
     QwtGraphic& operator=( const QwtGraphic& );
@@ -292,8 +229,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 
     class PathInfo;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtGraphic)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::RenderHints )

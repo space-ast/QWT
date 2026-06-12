@@ -34,9 +34,11 @@
 
 class QwtWeedingCurveFitter::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtWeedingCurveFitter)
   public:
-    PrivateData()
-        : tolerance( 1.0 )
+    PrivateData( QwtWeedingCurveFitter* p )
+        : q_ptr( p )
+        , tolerance( 1.0 )
         , chunkSize( 0 )
     {
     }
@@ -59,40 +61,25 @@ class QwtWeedingCurveFitter::Line
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param tolerance Tolerance
- * \sa setTolerance(), tolerance()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param tolerance 容差
- * \sa setTolerance(), tolerance()
- * \endif
+ * @sa setTolerance(), tolerance()
  */
 QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
     : QwtCurveFitter( QwtCurveFitter::Polygon )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setTolerance( tolerance );
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 {
-    delete m_data;
 }
 
 /*!
-   \if ENGLISH
    Assign the tolerance
 
    The tolerance is the maximum distance, that is acceptable
@@ -101,121 +88,78 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
    Increasing the tolerance will reduce the number of the
    resulting points.
 
-   \param tolerance Tolerance
+   @param tolerance Tolerance
 
-   \sa tolerance()
-   \endif
-   *
-   \if CHINESE
-   设置容差
-
-   容差是原始曲线和平滑曲线之间可接受的最大距离。
-
-   增加容差将减少结果点的数量。
-
-   \param tolerance 容差
-
-   \sa tolerance()
-   \endif
+   @sa tolerance()
  */
 void QwtWeedingCurveFitter::setTolerance( double tolerance )
 {
-    m_data->tolerance = qwtMaxF( tolerance, 0.0 );
+    QWT_D(d);
+    d->tolerance = qwtMaxF( tolerance, 0.0 );
 }
 
 /*!
-   \if ENGLISH
-   \return Tolerance
-   \sa setTolerance()
-   \endif
-   *
-   \if CHINESE
-   \return 容差
-   \sa setTolerance()
-   \endif
+   @return Tolerance
+   @sa setTolerance()
  */
 double QwtWeedingCurveFitter::tolerance() const
 {
-    return m_data->tolerance;
+    QWT_DC(d);
+    return d->tolerance;
 }
 
 /*!
-   \if ENGLISH
    Limit the number of points passed to a run of the algorithm
 
    The runtime of the Douglas Peucker algorithm increases non linear
    with the number of points. For a chunk size > 0 the polygon
    is split into pieces passed to the algorithm one by one.
 
-   \param numPoints Maximum for the number of points passed to the algorithm
+   @param numPoints Maximum for the number of points passed to the algorithm
 
-   \sa chunkSize()
-   \endif
-   *
-   \if CHINESE
-   限制传递给算法运行的点数
-
-   Douglas Peucker 算法的运行时间随点数非线性增长。
-   对于块大小 > 0，多边形被拆分成块，逐个传递给算法。
-
-   \param numPoints 传递给算法的点数最大值
-
-   \sa chunkSize()
-   \endif
+   @sa chunkSize()
  */
 void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
 {
+    QWT_D(d);
     if ( numPoints > 0 )
         numPoints = qMax( numPoints, 3U );
 
-    m_data->chunkSize = numPoints;
+    d->chunkSize = numPoints;
 }
 
 /*!
-   \if ENGLISH
-   \return Maximum for the number of points passed to a run
+   @return Maximum for the number of points passed to a run
           of the algorithm - or 0, when unlimited
-   \sa setChunkSize()
-   \endif
-   *
-   \if CHINESE
-   \return 传递给算法运行的点数最大值 - 如果无限制则为 0
-   \sa setChunkSize()
-   \endif
+   @sa setChunkSize()
  */
 uint QwtWeedingCurveFitter::chunkSize() const
 {
-    return m_data->chunkSize;
+    QWT_DC(d);
+    return d->chunkSize;
 }
 
 /*!
-   \if ENGLISH
    @param points Series of data points
    @return Curve points
-   \sa fitCurvePath()
-   \endif
-   *
-   \if CHINESE
-   @param points 数据点序列
-   @return 曲线点
-   \sa fitCurvePath()
-   \endif
+   @sa fitCurvePath()
  */
 QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 {
+    QWT_DC(d);
     if ( points.isEmpty() )
         return points;
 
     QPolygonF fittedPoints;
-    if ( m_data->chunkSize == 0 )
+    if ( d->chunkSize == 0 )
     {
         fittedPoints = simplify( points );
     }
     else
     {
-        for ( int i = 0; i < points.size(); i += m_data->chunkSize )
+        for ( int i = 0; i < points.size(); i += d->chunkSize )
         {
-            const QPolygonF p = points.mid( i, m_data->chunkSize );
+            const QPolygonF p = points.mid( i, d->chunkSize );
             fittedPoints += simplify( p );
         }
     }
@@ -224,17 +168,9 @@ QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
 }
 
 /*!
-   \if ENGLISH
    @param points Series of data points
    @return Curve path
-   \sa fitCurve()
-   \endif
-   *
-   \if CHINESE
-   @param points 数据点序列
-   @return 曲线路径
-   \sa fitCurve()
-   \endif
+   @sa fitCurve()
  */
 QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
 {
@@ -245,7 +181,8 @@ QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) cons
 
 QPolygonF QwtWeedingCurveFitter::simplify( const QPolygonF& points ) const
 {
-    const double toleranceSqr = m_data->tolerance * m_data->tolerance;
+    QWT_DC(d);
+    const double toleranceSqr = d->tolerance * d->tolerance;
 
     QStack< Line > stack;
     stack.reserve( 500 );

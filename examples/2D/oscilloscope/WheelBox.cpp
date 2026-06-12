@@ -67,7 +67,7 @@ WheelBox::WheelBox(const QString& title, double min, double max, double stepSize
     m_number->setFocusPolicy(Qt::WheelFocus);
 
     QPalette pal(Qt::black);
-    pal.setColor(QPalette::WindowText, Qt::green);
+    pal.setColor(QPalette::WindowText, QColor("#4caf50"));
     m_number->setPalette(pal);
 
     m_wheel = new Wheel(this);

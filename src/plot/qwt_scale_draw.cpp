@@ -254,8 +254,9 @@ inline void drawTick(QPainter* painter, const QwtScaleDraw* scaleDraw, qreal tic
 
 class QwtScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtScaleDraw)
 public:
-    PrivateData() : len(0), alignment(QwtScaleDraw::BottomScale), labelRotation(0.0)
+    PrivateData(QwtScaleDraw* p) : q_ptr(p), len(0), alignment(QwtScaleDraw::BottomScale), labelRotation(0.0)
     {
     }
 
@@ -269,84 +270,54 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details The range of the scale is initialized to [0, 100], the position is at (0, 0)
  *          with a length of 100. The orientation is QwtAbstractScaleDraw::Bottom.
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 刻度范围初始化为 [0, 100]，位置在 (0, 0)，长度为 100。
- *          方向为 QwtAbstractScaleDraw::Bottom。
- * \endif
  */
-QwtScaleDraw::QwtScaleDraw()
+QwtScaleDraw::QwtScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtScaleDraw::PrivateData;
     setLength(100);
 }
 
 //! Destructor
 QwtScaleDraw::~QwtScaleDraw()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Return alignment of the scale
  * @return Alignment of the scale
- * \sa setAlignment()
- * \endif
- * \if CHINESE
- * @brief 返回刻度的对齐方式
- * @return 刻度的对齐方式
- * \sa setAlignment()
- * \endif
+ * @sa setAlignment()
  */
 QwtScaleDraw::Alignment QwtScaleDraw::alignment() const
 {
-    return m_data->alignment;
+    QWT_DC(d);
+    return d->alignment;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the alignment of the scale
  * @param align Alignment of the scale
  * @details The default alignment is QwtScaleDraw::BottomScale
- * \sa alignment()
- * \endif
- * \if CHINESE
- * @brief 设置刻度的对齐方式
- * @param align 刻度的对齐方式
- * @details 默认对齐方式是 QwtScaleDraw::BottomScale
- * \sa alignment()
- * \endif
+ * @sa alignment()
  */
 void QwtScaleDraw::setAlignment(Alignment align)
 {
-    m_data->alignment = align;
+    QWT_D(d);
+    d->alignment = align;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the orientation
  * @details TopScale, BottomScale are horizontal (Qt::Horizontal) scales,
  *          LeftScale, RightScale are vertical (Qt::Vertical) scales.
  * @return Orientation of the scale
- * \sa alignment()
- * \endif
- * \if CHINESE
- * @brief 返回方向
- * @details TopScale, BottomScale 是水平 (Qt::Horizontal) 刻度，
- *          LeftScale, RightScale 是垂直 (Qt::Vertical) 刻度。
- * @return 刻度的方向
- * \sa alignment()
- * \endif
+ * @sa alignment()
  */
 Qt::Orientation QwtScaleDraw::orientation() const
 {
-    switch (m_data->alignment) {
+    QWT_DC(d);
+    switch (d->alignment) {
     case TopScale:
     case BottomScale:
         return Qt::Horizontal;
@@ -358,7 +329,6 @@ Qt::Orientation QwtScaleDraw::orientation() const
 }
 
 /**
- * \if ENGLISH
  * @brief Determine the minimum border distance
  *
  * This member function returns the minimum space
@@ -367,17 +337,7 @@ Qt::Orientation QwtScaleDraw::orientation() const
  * @param font Font
  * @param start Start border distance
  * @param end End border distance
- * \endif
  *
- * \if CHINESE
- * @brief 确定最小边距
- *
- * 该成员函数返回在刻度端点绘制标记标签所需的最小空间。
- *
- * @param font 字体
- * @param start 起始边距
- * @param end 结束边距
- * \endif
  */
 void QwtScaleDraw::getBorderDistHint(const QFont& font, int& start, int& end) const
 {
@@ -438,7 +398,6 @@ void QwtScaleDraw::getBorderDistHint(const QFont& font, int& start, int& end) co
 }
 
 /**
- * \if ENGLISH
  * @brief Determine the minimum distance between two labels
  *
  * Determine the minimum distance between two labels, that is necessary
@@ -448,18 +407,7 @@ void QwtScaleDraw::getBorderDistHint(const QFont& font, int& start, int& end) co
  * @return The maximum width of a label
  *
  * @sa getBorderDistHint()
- * \endif
  *
- * \if CHINESE
- * @brief 确定两个标签之间的最小距离
- *
- * 确定两个标签之间的最小距离，以防止文本重叠。
- *
- * @param font 字体
- * @return 标签的最大宽度
- *
- * @sa getBorderDistHint()
- * \endif
  */
 
 int QwtScaleDraw::minLabelDist(const QFont& font) const
@@ -533,7 +481,6 @@ int QwtScaleDraw::minLabelDist(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the width/height that is needed for a vertical/horizontal scale
  *
  * The extent is calculated from the pen width of the backbone,
@@ -544,18 +491,7 @@ int QwtScaleDraw::minLabelDist(const QFont& font) const
  * @return Extent
  *
  * @sa minLength()
- * \endif
  *
- * \if CHINESE
- * @brief 计算垂直/水平刻度所需的宽度/高度
- *
- * 范围是根据主干的画笔宽度、主刻度长度、间距和标签的最大宽度/高度计算的。
- *
- * @param font 用于绘制标签的字体
- * @return 范围
- *
- * @sa minLength()
- * \endif
  */
 double QwtScaleDraw::extent(const QFont& font) const
 {
@@ -584,23 +520,13 @@ double QwtScaleDraw::extent(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the minimum length that is needed to draw the scale
  *
  * @param font Font used for painting the labels
  * @return Minimum length that is needed to draw the scale
  *
  * @sa extent()
- * \endif
  *
- * \if CHINESE
- * @brief 计算绘制刻度所需的最小长度
- *
- * @param font 用于绘制标签的字体
- * @return 绘制刻度所需的最小长度
- *
- * @sa extent()
- * \endif
  */
 int QwtScaleDraw::minLength(const QFont& font) const
 {
@@ -626,7 +552,6 @@ int QwtScaleDraw::minLength(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the position, where to paint a label
  *
  * The position has a distance that depends on the length of the ticks
@@ -634,19 +559,11 @@ int QwtScaleDraw::minLength(const QFont& font) const
  *
  * @param value Value
  * @return Position, where to paint a label
- * \endif
  *
- * \if CHINESE
- * @brief 查找绘制标签的位置
- *
- * 该位置与刻度长度有关，距离取决于 alignment() 的方向。
- *
- * @param value 值
- * @return 绘制标签的位置
- * \endif
  */
 QPointF QwtScaleDraw::labelPosition(double value) const
 {
+    QWT_DC(d);
     const double tval = scaleMap().transform(value);
     double dist       = spacing();
     if (hasComponent(QwtAbstractScaleDraw::Backbone))
@@ -660,23 +577,23 @@ QPointF QwtScaleDraw::labelPosition(double value) const
 
     switch (alignment()) {
     case RightScale: {
-        px = m_data->pos.x() + dist;
+        px = d->pos.x() + dist;
         py = tval;
         break;
     }
     case LeftScale: {
-        px = m_data->pos.x() - dist;
+        px = d->pos.x() - dist;
         py = tval;
         break;
     }
     case BottomScale: {
         px = tval;
-        py = m_data->pos.y() + dist;
+        py = d->pos.y() + dist;
         break;
     }
     case TopScale: {
         px = tval;
-        py = m_data->pos.y() - dist;
+        py = d->pos.y() - dist;
         break;
     }
     }
@@ -685,7 +602,6 @@ QPointF QwtScaleDraw::labelPosition(double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a tick
  *
  * @param painter Painter
@@ -693,17 +609,7 @@ QPointF QwtScaleDraw::labelPosition(double value) const
  * @param len Length of the tick
  *
  * @sa drawBackbone(), drawLabel()
- * \endif
  *
- * \if CHINESE
- * @brief 绘制刻度线
- *
- * @param painter 绘制器
- * @param value 刻度值
- * @param len 刻度长度
- *
- * @sa drawBackbone(), drawLabel()
- * \endif
  */
 void QwtScaleDraw::drawTick(QPainter* painter, double value, double len) const
 {
@@ -719,21 +625,12 @@ void QwtScaleDraw::drawTick(QPainter* painter, double value, double len) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the baseline of the scale
  *
  * @param painter Painter
  *
  * @sa drawTick(), drawLabel()
- * \endif
  *
- * \if CHINESE
- * @brief 绘制刻度的基线
- *
- * @param painter 绘制器
- *
- * @sa drawTick(), drawLabel()
- * \endif
  */
 void QwtScaleDraw::drawBackbone(QPainter* painter) const
 {
@@ -744,7 +641,6 @@ void QwtScaleDraw::drawBackbone(QPainter* painter) const
 }
 
 /**
- * \if ENGLISH
  * @brief Move the position of the scale
  *
  * The meaning of the parameter pos depends on the alignment:
@@ -764,52 +660,28 @@ void QwtScaleDraw::drawBackbone(QPainter* painter) const
  * @param pos Origin of the scale
  *
  * @sa pos(), setLength()
- * \endif
  *
- * \if CHINESE
- * @brief 移动刻度的位置
- *
- * 参数 pos 的含义取决于对齐方式：
- * - QwtScaleDraw::LeftScale: 原点是主干的最顶端点。主干是垂直线。
- *   刻度标记和标签绘制在主干的左侧。
- * - QwtScaleDraw::RightScale: 原点是主干的最顶端点。主干是垂直线。
- *   刻度标记和标签绘制在主干的右侧。
- * - QwtScaleDraw::TopScale: 原点是主干的最左端点。主干是水平线。
- *   刻度标记和标签绘制在主干的上方。
- * - QwtScaleDraw::BottomScale: 原点是主干的最左端点。主干是水平线。
- *   刻度标记和标签绘制在主干的下方。
- *
- * @param pos 刻度的原点
- *
- * @sa pos(), setLength()
- * \endif
  */
 void QwtScaleDraw::move(const QPointF& pos)
 {
-    m_data->pos = pos;
+    QWT_D(d);
+    d->pos = pos;
     updateMap();
 }
 
 /**
- * \if ENGLISH
  * @brief Get origin of the scale
  * @return Origin of the scale
  * @sa move(), length()
- * \endif
  *
- * \if CHINESE
- * @brief 获取刻度的原点
- * @return 刻度的原点
- * @sa move(), length()
- * \endif
  */
 QPointF QwtScaleDraw::pos() const
 {
-    return m_data->pos;
+    QWT_DC(d);
+    return d->pos;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the length of the backbone
  *
  * The length doesn't include the space needed for
@@ -818,20 +690,11 @@ QPointF QwtScaleDraw::pos() const
  * @param length Length of the backbone
  *
  * @sa move(), minLabelDist()
- * \endif
  *
- * \if CHINESE
- * @brief 设置主干的长度
- *
- * 长度不包括重叠标签所需的空间。
- *
- * @param length 主干的长度
- *
- * @sa move(), minLabelDist()
- * \endif
  */
 void QwtScaleDraw::setLength(double length)
 {
+    QWT_D(d);
 #if 0
     if ( length >= 0 && length < 10 )
         length = 10;
@@ -843,46 +706,30 @@ void QwtScaleDraw::setLength(double length)
     length = qwtMaxF(length, 10.0);
 #endif
 
-    m_data->len = length;
+    d->len = length;
     updateMap();
 }
 
 /**
- * \if ENGLISH
  * @brief Get the length of the backbone
  * @return the length of the backbone
  * @sa setLength(), pos()
- * \endif
  *
- * \if CHINESE
- * @brief 获取主干的长度
- * @return 主干的长度
- * @sa setLength(), pos()
- * \endif
  */
 double QwtScaleDraw::length() const
 {
-    return m_data->len;
+    QWT_DC(d);
+    return d->len;
 }
 
 /**
- * \if ENGLISH
  * @brief Draws the label for a major scale tick
  *
  * @param painter Painter
  * @param value Value
  *
  * @sa drawTick(), drawBackbone(), boundingLabelRect()
- * \endif
  *
- * \if CHINESE
- * @brief 绘制主刻度标签
- *
- * @param painter 绘制器
- * @param value 值
- *
- * @sa drawTick(), drawBackbone(), boundingLabelRect()
- * \endif
  */
 void QwtScaleDraw::drawLabel(QPainter* painter, double value) const
 {
@@ -905,7 +752,6 @@ void QwtScaleDraw::drawLabel(QPainter* painter, double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the bounding rectangle for the label
  *
  * The coordinates of the rectangle are absolute ( calculated from pos() )
@@ -916,19 +762,7 @@ void QwtScaleDraw::drawLabel(QPainter* painter, double value) const
  *
  * @return Bounding rectangle
  * @sa labelRect()
- * \endif
  *
- * \if CHINESE
- * @brief 查找标签的边界矩形
- *
- * 矩形的坐标是绝对的（从 pos() 计算得出），沿刻度方向。
- *
- * @param font 用于绘制的字体
- * @param value 值
- *
- * @return 边界矩形
- * @sa labelRect()
- * \endif
  */
 QRect QwtScaleDraw::boundingLabelRect(const QFont& font, double value) const
 {
@@ -944,7 +778,6 @@ QRect QwtScaleDraw::boundingLabelRect(const QFont& font, double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the transformation that is needed to paint a label
  *
  * Calculate the transformation that is needed to paint a label
@@ -955,19 +788,7 @@ QRect QwtScaleDraw::boundingLabelRect(const QFont& font, double value) const
  *
  * @return Transformation matrix
  * @sa setLabelAlignment(), setLabelRotation()
- * \endif
  *
- * \if CHINESE
- * @brief 计算绘制标签所需的变换
- *
- * 根据对齐方式和旋转角度计算绘制标签所需的变换。
- *
- * @param pos 绘制标签的位置
- * @param size 标签的大小
- *
- * @return 变换矩阵
- * @sa setLabelAlignment(), setLabelRotation()
- * \endif
  */
 QTransform QwtScaleDraw::labelTransformation(const QPointF& pos, const QSizeF& size) const
 {
@@ -1023,7 +844,6 @@ QTransform QwtScaleDraw::labelTransformation(const QPointF& pos, const QSizeF& s
 }
 
 /**
- * \if ENGLISH
  * @brief Find the bounding rectangle for the label
  *
  * The coordinates of the rectangle are relative to spacing + tick length
@@ -1033,18 +853,7 @@ QTransform QwtScaleDraw::labelTransformation(const QPointF& pos, const QSizeF& s
  * @param value Value
  *
  * @return Bounding rectangle that is needed to draw a label
- * \endif
  *
- * \if CHINESE
- * @brief 查找标签的边界矩形
- *
- * 矩形的坐标相对于主干沿刻度方向的间距 + 刻度长度。
- *
- * @param font 用于绘制的字体
- * @param value 值
- *
- * @return 绘制标签所需的边界矩形
- * \endif
  */
 QRectF QwtScaleDraw::labelRect(const QFont& font, double value) const
 {
@@ -1064,23 +873,13 @@ QRectF QwtScaleDraw::labelRect(const QFont& font, double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the size that is needed to draw a label
  *
  * @param font Label font
  * @param value Value
  *
  * @return Size that is needed to draw a label
- * \endif
  *
- * \if CHINESE
- * @brief 计算绘制标签所需的大小
- *
- * @param font 标签字体
- * @param value 值
- *
- * @return 绘制标签所需的大小
- * \endif
  */
 QSizeF QwtScaleDraw::labelSize(const QFont& font, double value) const
 {
@@ -1088,7 +887,6 @@ QSizeF QwtScaleDraw::labelSize(const QFont& font, double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Rotate all labels
  *
  * When changing the rotation, it might be necessary to
@@ -1099,43 +897,27 @@ QSizeF QwtScaleDraw::labelSize(const QFont& font, double value) const
  *                 the label flags often needs to be adjusted too.
  *
  * @sa setLabelAlignment(), labelRotation(), labelAlignment()
- * \endif
  *
- * \if CHINESE
- * @brief 旋转所有标签
- *
- * 更改旋转角度时，可能还需要调整标签标志。找到有用的组合通常是反复试验的结果。
- *
- * @param rotation 角度（度）。更改标签旋转时，通常还需要调整标签标志。
- *
- * @sa setLabelAlignment(), labelRotation(), labelAlignment()
- * \endif
  */
 void QwtScaleDraw::setLabelRotation(double rotation)
 {
-    m_data->labelRotation = rotation;
+    QWT_D(d);
+    d->labelRotation = rotation;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the label rotation
  * @return the label rotation
  * @sa setLabelRotation(), labelAlignment()
- * \endif
  *
- * \if CHINESE
- * @brief 获取标签旋转角度
- * @return 标签旋转角度
- * @sa setLabelRotation(), labelAlignment()
- * \endif
  */
 double QwtScaleDraw::labelRotation() const
 {
-    return m_data->labelRotation;
+    QWT_DC(d);
+    return d->labelRotation;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the label flags
  *
  * Labels are aligned to the point tick length + spacing away from the backbone.
@@ -1158,67 +940,32 @@ double QwtScaleDraw::labelRotation() const
  *          The alignment of the label is not the alignment
  *          of the scale and is not the alignment of the flags
  *          ( QwtText::flags() ) returned from QwtAbstractScaleDraw::label().
- * \endif
  *
- * \if CHINESE
- * @brief 更改标签标志
- *
- * 标签对齐到距离主干刻度长度 + 间距的位置。
- *
- * 对齐是相对于标签文本的方向。如果标志为 0，
- * 标签将根据刻度的方向对齐：
- *
- * - QwtScaleDraw::TopScale: Qt::AlignHCenter | Qt::AlignTop
- * - QwtScaleDraw::BottomScale: Qt::AlignHCenter | Qt::AlignBottom
- * - QwtScaleDraw::LeftScale: Qt::AlignLeft | Qt::AlignVCenter
- * - QwtScaleDraw::RightScale: Qt::AlignRight | Qt::AlignVCenter
- *
- * 对于旋转的标签，通常需要更改对齐方式。
- *
- * @param alignment 组合的 Qt::AlignmentFlags，参见 <qnamespace.h>
- *
- * @sa setLabelRotation(), labelRotation(), labelAlignment()
- * @warning 各种对齐方式可能会令人困惑。
- *          标签的对齐不是刻度的对齐，也不是
- *          QwtAbstractScaleDraw::label() 返回的标志 ( QwtText::flags() ) 的对齐。
- * \endif
  */
 
 void QwtScaleDraw::setLabelAlignment(Qt::Alignment alignment)
 {
-    m_data->labelAlignment = alignment;
+    QWT_D(d);
+    d->labelAlignment = alignment;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the label flags
  * @return the label flags
  * @sa setLabelAlignment(), labelRotation()
- * \endif
  *
- * \if CHINESE
- * @brief 获取标签标志
- * @return 标签标志
- * @sa setLabelAlignment(), labelRotation()
- * \endif
  */
 Qt::Alignment QwtScaleDraw::labelAlignment() const
 {
-    return m_data->labelAlignment;
+    QWT_DC(d);
+    return d->labelAlignment;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the maximum width of a label
  * @param font Font
  * @return the maximum width of a label
- * \endif
  *
- * \if CHINESE
- * @brief 获取标签的最大宽度
- * @param font 字体
- * @return 标签的最大宽度
- * \endif
  */
 int QwtScaleDraw::maxLabelWidth(const QFont& font) const
 {
@@ -1238,17 +985,10 @@ int QwtScaleDraw::maxLabelWidth(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the maximum height of a label
  * @param font Font
  * @return the maximum height of a label
- * \endif
  *
- * \if CHINESE
- * @brief 获取标签的最大高度
- * @param font 字体
- * @return 标签的最大高度
- * \endif
  */
 int QwtScaleDraw::maxLabelHeight(const QFont& font) const
 {
@@ -1268,18 +1008,14 @@ int QwtScaleDraw::maxLabelHeight(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Update the scale map
- * \endif
  *
- * \if CHINESE
- * @brief 更新刻度映射
- * \endif
  */
 void QwtScaleDraw::updateMap()
 {
-    const QPointF pos = m_data->pos;
-    double len        = m_data->len;
+    QWT_D(d);
+    const QPointF pos = d->pos;
+    double len        = d->len;
 
     QwtScaleMap& sm = scaleMap();
     if (orientation() == Qt::Vertical)

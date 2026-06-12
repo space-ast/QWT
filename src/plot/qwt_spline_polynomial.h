@@ -33,7 +33,6 @@
 #include <qmetatype.h>
 
 /**
- * \if ENGLISH
  * @brief A cubic polynomial without constant term
  *
  * QwtSplinePolynomial is a 3rd degree polynomial
@@ -44,19 +43,6 @@
  * as the translation is known from the corresponding polygon points.
  *
  * @sa QwtSplineC1
- * \endif
- *
- * \if CHINESE
- * @brief 无常数项的三次多项式
- *
- * QwtSplinePolynomial 是一个三次多项式，
- * 形式为：y = c3 * x³ + c2 * x² + c1 * x;
- *
- * QwtSplinePolynomial 通常与多边形插值结合使用，
- * 由于平移可以从对应的多边形点得知，因此不需要存储常数项（c0）。
- *
- * @sa QwtSplineC1
- * \endif
  */
 class QWT_EXPORT QwtSplinePolynomial
 {
@@ -99,21 +85,11 @@ Q_DECLARE_TYPEINFO( QwtSplinePolynomial, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( QwtSplinePolynomial )
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @param[in] a3 Coefficient of the cubic summand
  * @param[in] a2 Coefficient of the quadratic summand
  * @param[in] a1 Coefficient of the linear summand
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * @param[in] a3 三次项系数
- * @param[in] a2 二次项系数
- * @param[in] a1 线性项系数
- * \endif
  */
 inline QwtSplinePolynomial::QwtSplinePolynomial( double a3, double a2, double a1 )
     : c3( a3 )
@@ -123,19 +99,10 @@ inline QwtSplinePolynomial::QwtSplinePolynomial( double a3, double a2, double a1
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two polynomials for equality
  *
  * @param[in] other Other polynomial
  * @return true, when both polynomials have the same coefficients
- * \endif
- *
- * \if CHINESE
- * @brief 比较两个多项式是否相等
- *
- * @param[in] other 另一个多项式
- * @return 当两个多项式具有相同系数时返回 true
- * \endif
  */
 inline bool QwtSplinePolynomial::operator==( const QwtSplinePolynomial& other ) const
 {
@@ -143,19 +110,10 @@ inline bool QwtSplinePolynomial::operator==( const QwtSplinePolynomial& other ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Compare two polynomials for inequality
  *
  * @param[in] other Other polynomial
  * @return true, when the polynomials have different coefficients
- * \endif
- *
- * \if CHINESE
- * @brief 比较两个多项式是否不相等
- *
- * @param[in] other 另一个多项式
- * @return 当多项式具有不同系数时返回 true
- * \endif
  */
 inline bool QwtSplinePolynomial::operator!=( const QwtSplinePolynomial& other ) const
 {
@@ -163,19 +121,10 @@ inline bool QwtSplinePolynomial::operator!=( const QwtSplinePolynomial& other ) 
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Value at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处的多项式值
- *
- * @param[in] x 参数
- * @return x 处的值
- * \endif
  */
 inline double QwtSplinePolynomial::valueAt( double x ) const
 {
@@ -183,19 +132,10 @@ inline double QwtSplinePolynomial::valueAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of the first derivate of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Slope at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处多项式的一阶导数值
- *
- * @param[in] x 参数
- * @return x 处的斜率
- * \endif
  */
 inline double QwtSplinePolynomial::slopeAt( double x ) const
 {
@@ -203,19 +143,10 @@ inline double QwtSplinePolynomial::slopeAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the value of the second derivate of a polynomial for a given x
  *
  * @param[in] x Parameter
  * @return Curvature at x
- * \endif
- *
- * \if CHINESE
- * @brief 计算给定 x 处多项式的二阶导数值
- *
- * @param[in] x 参数
- * @return x 处的曲率
- * \endif
  */
 inline double QwtSplinePolynomial::curvatureAt( double x ) const
 {
@@ -223,7 +154,6 @@ inline double QwtSplinePolynomial::curvatureAt( double x ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial including 2 points with
  *        specific values for the 1st derivates at these points.
  *
@@ -234,19 +164,6 @@ inline double QwtSplinePolynomial::curvatureAt( double x ) const
  *
  * @return Coefficients of the polynomials
  * @note The missing constant term of the polynomial is p1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 找出包含两个点及其一阶导数值的多项式系数
- *
- * @param[in] p1 第一个点
- * @param[in] m1 第一个点处的一阶导数值
- * @param[in] p2 第二个点
- * @param[in] m2 第二个点处的一阶导数值
- *
- * @return 多项式系数
- * @note 多项式缺失的常数项为 p1.y()
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
     const QPointF& p1, double m1, const QPointF& p2, double m2 )
@@ -255,7 +172,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial from the offset between 2 points
  *        and specific values for the 1st derivates at these points.
  *
@@ -265,18 +181,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
  * @param[in] m2 Value of the first derivate at p2
  *
  * @return Coefficients of the polynomials
- * \endif
- *
- * \if CHINESE
- * @brief 从两点之间的偏移量及其一阶导数值找出多项式系数
- *
- * @param[in] dx X 偏移量
- * @param[in] dy Y 偏移量
- * @param[in] m1 第一个点处的一阶导数值
- * @param[in] m2 第二个点处的一阶导数值
- *
- * @return 多项式系数
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
     double dx, double dy, double m1, double m2 )
@@ -288,7 +192,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial including 2 points with
  *        specific values for the 2nd derivates at these points.
  *
@@ -299,19 +202,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromSlopes(
  *
  * @return Coefficients of the polynomials
  * @note The missing constant term of the polynomial is p1.y()
- * \endif
- *
- * \if CHINESE
- * @brief 找出包含两个点及其二阶导数值的多项式系数
- *
- * @param[in] p1 第一个点
- * @param[in] cv1 第一个点处的二阶导数值
- * @param[in] p2 第二个点
- * @param[in] cv2 第二个点处的二阶导数值
- *
- * @return 多项式系数
- * @note 多项式缺失的常数项为 p1.y()
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
     const QPointF& p1, double cv1, const QPointF& p2, double cv2 )
@@ -320,7 +210,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
 }
 
 /**
- * \if ENGLISH
  * @brief Find the coefficients for the polynomial from the offset between 2 points
  *        and specific values for the 2nd derivates at these points.
  *
@@ -330,18 +219,6 @@ inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
  * @param[in] cv2 Value of the second derivate at p2
  *
  * @return Coefficients of the polynomials
- * \endif
- *
- * \if CHINESE
- * @brief 从两点之间的偏移量及其二阶导数值找出多项式系数
- *
- * @param[in] dx X 偏移量
- * @param[in] dy Y 偏移量
- * @param[in] cv1 第一个点处的二阶导数值
- * @param[in] cv2 第二个点处的二阶导数值
- *
- * @return 多项式系数
- * \endif
  */
 inline QwtSplinePolynomial QwtSplinePolynomial::fromCurvatures(
     double dx, double dy, double cv1, double cv2 )

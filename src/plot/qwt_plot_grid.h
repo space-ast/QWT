@@ -36,7 +36,6 @@ class QwtScaleMap;
 class QwtScaleDiv;
 
 /**
- * \if ENGLISH
  * @brief A class which draws a coordinate grid
  * @details The QwtPlotGrid class can be used to draw a coordinate grid.
  *          A coordinate grid consists of major and minor vertical
@@ -45,16 +44,7 @@ class QwtScaleDiv;
  *          be assigned with setXDiv() and setYDiv().
  *          The draw() member draws the grid within a bounding
  *          rectangle.
- * \endif
  * 
- * \if CHINESE
- * @brief 绘制坐标网格的类
- * @details QwtPlotGrid 类可用于绘制坐标网格。
- *          坐标网格由主要和次要的垂直和水平网格线组成。
- *          网格线的位置由 X 和 Y 比例尺划分决定，
- *          可以通过 setXDiv() 和 setYDiv() 分配。
- *          draw() 成员在边界矩形内绘制网格。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
@@ -64,7 +54,7 @@ class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 explicit QwtPlotGrid();
 
     // Destructor
-virtual ~QwtPlotGrid();
+~QwtPlotGrid() override;
 
     // Get the runtime type information
 virtual int rtti() const override;
@@ -142,16 +132,13 @@ virtual void updateScaleDiv(
 
   private:
     /**
-     * \if ENGLISH
      * @brief Draw grid lines
-     * \endif
      */
 void drawLines( QPainter*, const QRectF&,
     Qt::Orientation, const QwtScaleMap&,
     const QList< double >& ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotGrid)
 };
 
 #endif

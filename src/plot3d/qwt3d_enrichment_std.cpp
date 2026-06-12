@@ -1,7 +1,9 @@
-#include <math.h>
+#include "qwt3d_enrichment_std.h"
+
+#include <cmath>
+
 #include "qwt3d_color.h"
 #include "qwt3d_plot.h"
-#include "qwt3d_enrichment_std.h"
 
 using namespace Qwt3D;
 
@@ -11,56 +13,86 @@ using namespace Qwt3D;
 //
 /////////////////////////////////////////////////////////////////
 
+class CrossHair::PrivateData
+{
+    QWT_DECLARE_PUBLIC(CrossHair)
+
+public:
+    PrivateData(CrossHair *q)
+        : q_ptr(q)
+        , m_boxed(false)
+        , m_smooth(false)
+        , m_linewidth(1.0)
+        , m_radius(0.0)
+        , m_oldstate(GL_FALSE)
+    {
+    }
+
+    bool m_boxed;
+    bool m_smooth;
+    double m_linewidth;
+    double m_radius;
+    GLboolean m_oldstate;
+};
+
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 CrossHair::CrossHair()
+    : QWT_PIMPL_CONSTRUCT
 {
     configure(0, 1, false, false);
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a CrossHair with specified parameters
- * @param[in] rad Relative radius
- * @param[in] linewidth Line width
- * @param[in] smooth Smooth lines
- * @param[in] boxed Draw a box around the crosshair
- * \endif
- *
- * \if CHINESE
- * @brief 构造具有指定参数的十字线
- * @param[in] rad 相对半径
- * @param[in] linewidth 线宽
- * @param[in] smooth 平滑线条
- * @param[in] boxed 在十字线周围绘制方框
- * \endif
+ * @param rad Relative radius
+ * @param linewidth Line width
+ * @param smooth Smooth lines
+ * @param boxed Draw a box around the crosshair
  */
 CrossHair::CrossHair(double rad, double linewidth, bool smooth, bool boxed)
+    : QWT_PIMPL_CONSTRUCT
 {
     configure(rad, linewidth, smooth, boxed);
 }
 
+CrossHair::CrossHair(const CrossHair &other)
+    : VertexEnrichment(other)
+    , QWT_PIMPL_CONSTRUCT
+{
+    QWT_D(d);
+    const PrivateData *od = other.d_func();
+    d->m_boxed = od->m_boxed;
+    d->m_smooth = od->m_smooth;
+    d->m_linewidth = od->m_linewidth;
+    d->m_radius = od->m_radius;
+    d->m_oldstate = od->m_oldstate;
+}
+
+CrossHair::~CrossHair() = default;
+
+Enrichment *CrossHair::clone() const
+{
+    return new CrossHair(*this);
+}
+
 void CrossHair::configure(double rad, double linewidth, bool smooth, bool boxed)
 {
-    plot = 0;
-    radius_ = rad;
-    linewidth_ = linewidth;
-    smooth_ = smooth;
-    boxed_ = boxed;
+    plot = nullptr;
+    QWT_D(d);
+    d->m_radius = rad;
+    d->m_linewidth = linewidth;
+    d->m_smooth = smooth;
+    d->m_boxed = boxed;
 }
 
 void CrossHair::drawBegin()
 {
-    setDeviceLineWidth(linewidth_);
-    oldstate_ = glIsEnabled(GL_LINE_SMOOTH);
-    if (smooth_)
+    QWT_D(d);
+    setDeviceLineWidth(d->m_linewidth);
+    d->m_oldstate = glIsEnabled(GL_LINE_SMOOTH);
+    if (d->m_smooth)
         glEnable(GL_LINE_SMOOTH);
     else
         glDisable(GL_LINE_SMOOTH);
@@ -69,9 +101,10 @@ void CrossHair::drawBegin()
 
 void CrossHair::drawEnd()
 {
+    QWT_D(d);
     glEnd();
 
-    if (oldstate_)
+    if (d->m_oldstate)
         glEnable(GL_LINE_SMOOTH);
     else
         glDisable(GL_LINE_SMOOTH);
@@ -79,10 +112,11 @@ void CrossHair::drawEnd()
 
 void CrossHair::draw(Qwt3D::Triple const &pos)
 {
+    QWT_D(d);
     RGBA rgba = (*plot->dataColor())(pos);
     glColor4d(rgba.r, rgba.g, rgba.b, rgba.a);
 
-    double diag = (plot->hull().maxVertex - plot->hull().minVertex).length() * radius_;
+    double diag = (plot->hull().maxVertex - plot->hull().minVertex).length() * d->m_radius;
 
     glVertex3d(pos.x - diag, pos.y, pos.z);
     glVertex3d(pos.x + diag, pos.y, pos.z);
@@ -95,7 +129,7 @@ void CrossHair::draw(Qwt3D::Triple const &pos)
 
     // hull
 
-    if (!boxed_)
+    if (!d->m_boxed)
         return;
 
     glVertex3d(pos.x - diag, pos.y - diag, pos.z + diag);
@@ -135,63 +169,89 @@ void CrossHair::draw(Qwt3D::Triple const &pos)
 //
 /////////////////////////////////////////////////////////////////
 
+class Dot::PrivateData
+{
+    QWT_DECLARE_PUBLIC(Dot)
+
+public:
+    PrivateData(Dot *q)
+        : q_ptr(q)
+        , m_smooth(false)
+        , m_pointsize(1.0)
+        , m_oldstate(GL_FALSE)
+    {
+    }
+
+    bool m_smooth;
+    double m_pointsize;
+    GLboolean m_oldstate;
+};
+
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 Dot::Dot()
+    : QWT_PIMPL_CONSTRUCT
 {
     configure(1, false);
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a Dot with specified parameters
- * @param[in] pointsize Point size
- * @param[in] smooth Smooth point rendering
- * \endif
- *
- * \if CHINESE
- * @brief 构造具有指定参数的点
- * @param[in] pointsize 点大小
- * @param[in] smooth 平滑点渲染
- * \endif
+ * @param pointsize Point size
+ * @param smooth Smooth point rendering
  */
 Dot::Dot(double pointsize, bool smooth)
+    : QWT_PIMPL_CONSTRUCT
 {
     configure(pointsize, smooth);
 }
 
+Dot::Dot(const Dot &other)
+    : VertexEnrichment(other)
+    , QWT_PIMPL_CONSTRUCT
+{
+    QWT_D(d);
+    const PrivateData *od = other.d_func();
+    d->m_smooth = od->m_smooth;
+    d->m_pointsize = od->m_pointsize;
+    d->m_oldstate = od->m_oldstate;
+}
+
+Dot::~Dot() = default;
+
+Enrichment *Dot::clone() const
+{
+    return new Dot(*this);
+}
+
 void Dot::configure(double pointsize, bool smooth)
 {
-    plot = 0;
-    pointsize_ = pointsize;
-    smooth_ = smooth;
+    plot = nullptr;
+    QWT_D(d);
+    d->m_pointsize = pointsize;
+    d->m_smooth = smooth;
 }
 
 void Dot::drawBegin()
 {
-    setDevicePointSize(pointsize_);
-    oldstate_ = glIsEnabled(GL_POINT_SMOOTH);
-    if (smooth_)
+    QWT_D(d);
+    setDevicePointSize(d->m_pointsize);
+    d->m_oldstate = glIsEnabled(GL_POINT_SMOOTH);
+    if (d->m_smooth)
         glEnable(GL_POINT_SMOOTH);
     else
         glDisable(GL_POINT_SMOOTH);
 
-    // glPointSize(10);
     glBegin(GL_POINTS);
 }
 
 void Dot::drawEnd()
 {
+    QWT_D(d);
     glEnd();
 
-    if (oldstate_)
+    if (d->m_oldstate)
         glEnable(GL_POINT_SMOOTH);
     else
         glDisable(GL_POINT_SMOOTH);
@@ -210,76 +270,107 @@ void Dot::draw(Qwt3D::Triple const &pos)
 //
 /////////////////////////////////////////////////////////////////
 
+class Cone::PrivateData
+{
+    QWT_DECLARE_PUBLIC(Cone)
+
+public:
+    PrivateData(Cone *q)
+        : q_ptr(q)
+        , m_hat(nullptr)
+        , m_disk(nullptr)
+        , m_quality(3)
+        , m_radius(0.0)
+        , m_oldstate(GL_FALSE)
+    {
+    }
+
+    ~PrivateData()
+    {
+        if (m_hat)
+            gluDeleteQuadric(m_hat);
+        if (m_disk)
+            gluDeleteQuadric(m_disk);
+    }
+
+    void initQuadrics()
+    {
+        m_hat = gluNewQuadric();
+        m_disk = gluNewQuadric();
+
+        gluQuadricDrawStyle(m_hat, GLU_FILL);
+        gluQuadricNormals(m_hat, GLU_SMOOTH);
+        gluQuadricOrientation(m_hat, GLU_OUTSIDE);
+        gluQuadricDrawStyle(m_disk, GLU_FILL);
+        gluQuadricNormals(m_disk, GLU_SMOOTH);
+        gluQuadricOrientation(m_disk, GLU_OUTSIDE);
+    }
+
+    GLUquadricObj *m_hat;
+    GLUquadricObj *m_disk;
+    unsigned m_quality;
+    double m_radius;
+    GLboolean m_oldstate;
+};
+
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 Cone::Cone()
+    : QWT_PIMPL_CONSTRUCT
 {
-    hat = gluNewQuadric();
-    disk = gluNewQuadric();
-
+    QWT_D(d);
+    d->initQuadrics();
     configure(0, 3);
 }
 
 /**
- * \if ENGLISH
  * @brief Constructs a Cone with specified radius and quality
- * @param[in] rad Cone radius
- * @param[in] quality Number of faces for the cone
- * \endif
- *
- * \if CHINESE
- * @brief 构造具有指定半径和质量的圆锥
- * @param[in] rad 圆锥半径
- * @param[in] quality 圆锥的面数
- * \endif
+ * @param rad Cone radius
+ * @param quality Number of faces for the cone
  */
 Cone::Cone(double rad, unsigned quality)
+    : QWT_PIMPL_CONSTRUCT
 {
-    hat = gluNewQuadric();
-    disk = gluNewQuadric();
-
+    QWT_D(d);
+    d->initQuadrics();
     configure(rad, quality);
 }
 
-/**
- * \if ENGLISH
- * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
- */
-Cone::~Cone()
+Cone::Cone(const Cone &other)
+    : VertexEnrichment(other)
+    , QWT_PIMPL_CONSTRUCT
 {
-    gluDeleteQuadric(hat);
-    gluDeleteQuadric(disk);
+    QWT_D(d);
+    const PrivateData *od = other.d_func();
+    d->m_quality = od->m_quality;
+    d->m_radius = od->m_radius;
+    d->m_oldstate = od->m_oldstate;
+    d->initQuadrics();
+}
+
+/**
+ * @brief Destructor
+ */
+Cone::~Cone() = default;
+
+Enrichment *Cone::clone() const
+{
+    return new Cone(*this);
 }
 
 void Cone::configure(double rad, unsigned quality)
 {
-    plot = 0;
-    radius_ = rad;
-    quality_ = quality;
-    oldstate_ = GL_FALSE;
-
-    gluQuadricDrawStyle(hat, GLU_FILL);
-    gluQuadricNormals(hat, GLU_SMOOTH);
-    gluQuadricOrientation(hat, GLU_OUTSIDE);
-    gluQuadricDrawStyle(disk, GLU_FILL);
-    gluQuadricNormals(disk, GLU_SMOOTH);
-    gluQuadricOrientation(disk, GLU_OUTSIDE);
+    plot = nullptr;
+    QWT_D(d);
+    d->m_radius = rad;
+    d->m_quality = quality;
+    d->m_oldstate = GL_FALSE;
 }
 
 void Cone::draw(Qwt3D::Triple const &pos)
 {
+    QWT_D(d);
     RGBA rgba = (*plot->dataColor())(pos);
     glColor4d(rgba.r, rgba.g, rgba.b, rgba.a);
 
@@ -290,9 +381,9 @@ void Cone::draw(Qwt3D::Triple const &pos)
 
     glTranslatef(pos.x, pos.y, pos.z);
 
-    gluCylinder(hat, 0.0, radius_, radius_ * 2, quality_, 1);
-    glTranslatef(0, 0, radius_ * 2);
-    gluDisk(disk, 0.0, radius_, quality_, 1);
+    gluCylinder(d->m_hat, 0.0, d->m_radius, d->m_radius * 2, d->m_quality, 1);
+    glTranslatef(0, 0, d->m_radius * 2);
+    gluDisk(d->m_disk, 0.0, d->m_radius, d->m_quality, 1);
 
     glPopMatrix();
     glMatrixMode(mode);
@@ -304,86 +395,156 @@ void Cone::draw(Qwt3D::Triple const &pos)
 //
 /////////////////////////////////////////////////////////////////
 
-Arrow::Arrow()
+class Arrow::PrivateData
 {
-    hat = gluNewQuadric();
-    disk = gluNewQuadric();
-    base = gluNewQuadric();
-    bottom = gluNewQuadric();
+    QWT_DECLARE_PUBLIC(Arrow)
 
-    gluQuadricDrawStyle(hat, GLU_FILL);
-    gluQuadricNormals(hat, GLU_SMOOTH);
-    gluQuadricOrientation(hat, GLU_OUTSIDE);
-    gluQuadricDrawStyle(disk, GLU_FILL);
-    gluQuadricNormals(disk, GLU_SMOOTH);
-    gluQuadricOrientation(disk, GLU_OUTSIDE);
-    gluQuadricDrawStyle(base, GLU_FILL);
-    gluQuadricNormals(base, GLU_SMOOTH);
-    gluQuadricOrientation(base, GLU_OUTSIDE);
-    gluQuadricDrawStyle(bottom, GLU_FILL);
-    gluQuadricNormals(bottom, GLU_SMOOTH);
-    gluQuadricOrientation(bottom, GLU_OUTSIDE);
+public:
+    PrivateData(Arrow *q)
+        : q_ptr(q)
+        , m_hat(nullptr)
+        , m_disk(nullptr)
+        , m_base(nullptr)
+        , m_bottom(nullptr)
+        , m_oldstate(GL_FALSE)
+        , m_segments(3)
+        , m_relConeLength(0.4)
+        , m_relConeRadius(0.06)
+        , m_relStemRadius(0.02)
+    {
+    }
 
+    ~PrivateData()
+    {
+        if (m_hat)
+            gluDeleteQuadric(m_hat);
+        if (m_disk)
+            gluDeleteQuadric(m_disk);
+        if (m_base)
+            gluDeleteQuadric(m_base);
+        if (m_bottom)
+            gluDeleteQuadric(m_bottom);
+    }
+
+    void initQuadrics()
+    {
+        m_hat = gluNewQuadric();
+        m_disk = gluNewQuadric();
+        m_base = gluNewQuadric();
+        m_bottom = gluNewQuadric();
+
+        gluQuadricDrawStyle(m_hat, GLU_FILL);
+        gluQuadricNormals(m_hat, GLU_SMOOTH);
+        gluQuadricOrientation(m_hat, GLU_OUTSIDE);
+        gluQuadricDrawStyle(m_disk, GLU_FILL);
+        gluQuadricNormals(m_disk, GLU_SMOOTH);
+        gluQuadricOrientation(m_disk, GLU_OUTSIDE);
+        gluQuadricDrawStyle(m_base, GLU_FILL);
+        gluQuadricNormals(m_base, GLU_SMOOTH);
+        gluQuadricOrientation(m_base, GLU_OUTSIDE);
+        gluQuadricDrawStyle(m_bottom, GLU_FILL);
+        gluQuadricNormals(m_bottom, GLU_SMOOTH);
+        gluQuadricOrientation(m_bottom, GLU_OUTSIDE);
+    }
+
+    GLUquadricObj *m_hat;
+    GLUquadricObj *m_disk;
+    GLUquadricObj *m_base;
+    GLUquadricObj *m_bottom;
+    GLboolean m_oldstate;
+
+    int m_segments;
+    double m_relConeLength;
+    double m_relConeRadius;
+    double m_relStemRadius;
+
+    Qwt3D::Triple m_top;
+    Qwt3D::RGBA m_rgba;
+};
+
+Arrow::Arrow()
+    : QWT_PIMPL_CONSTRUCT
+{
+    QWT_D(d);
+    d->initQuadrics();
     configure(3, 0.4, 0.06, 0.02);
 }
 
-/**
- * \if ENGLISH
- * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
- */
-Arrow::~Arrow()
+Arrow::Arrow(const Arrow &other)
+    : VertexEnrichment(other)
+    , QWT_PIMPL_CONSTRUCT
 {
-    gluDeleteQuadric(hat);
-    gluDeleteQuadric(disk);
-    gluDeleteQuadric(base);
-    gluDeleteQuadric(bottom);
+    QWT_D(d);
+    const PrivateData *od = other.d_func();
+    d->m_oldstate = od->m_oldstate;
+    d->m_segments = od->m_segments;
+    d->m_relConeLength = od->m_relConeLength;
+    d->m_relConeRadius = od->m_relConeRadius;
+    d->m_relStemRadius = od->m_relStemRadius;
+    d->m_top = od->m_top;
+    d->m_rgba = od->m_rgba;
+    d->initQuadrics();
 }
 
 /**
- * \if ENGLISH
+ * @brief Destructor
+ */
+Arrow::~Arrow() = default;
+
+Enrichment *Arrow::clone() const
+{
+    return new Arrow(*this);
+}
+
+/**
  * @brief Configures the arrow appearance
- * @param[in] segs Number of faces for the arrows (see the gallery for examples)
- * @param[in] relconelength Relative cone length (see arrowanatomy.png)
- * @param[in] relconerad Relative cone radius (see arrowanatomy.png)
- * @param[in] relstemrad Relative stem radius (see arrowanatomy.png)
- * \image html arrowanatomy.png
- * \endif
- *
- * \if CHINESE
- * @brief 配置箭头外观
- * @param[in] segs 箭头的面数（参见图库示例）
- * @param[in] relconelength 相对锥体长度（参见 arrowanatomy.png）
- * @param[in] relconerad 相对锥体半径（参见 arrowanatomy.png）
- * @param[in] relstemrad 相对杆体半径（参见 arrowanatomy.png）
- * \image html arrowanatomy.png
- * \endif
+ * @param segs Number of faces for the arrows (see the gallery for examples)
+ * @param relconelength Relative cone length (see arrowanatomy.png)
+ * @param relconerad Relative cone radius (see arrowanatomy.png)
+ * @param relstemrad Relative stem radius (see arrowanatomy.png)
+ * @image html arrowanatomy.png
  */
 void Arrow::configure(int segs, double relconelength, double relconerad, double relstemrad)
 {
-    plot = 0;
-    segments_ = segs;
-    oldstate_ = GL_FALSE;
-    rel_cone_length = relconelength;
-    rel_cone_radius = relconerad;
-    rel_stem_radius = relstemrad;
+    plot = nullptr;
+    QWT_D(d);
+    d->m_segments = segs;
+    d->m_oldstate = GL_FALSE;
+    d->m_relConeLength = relconelength;
+    d->m_relConeRadius = relconerad;
+    d->m_relStemRadius = relstemrad;
+}
+
+void Arrow::setQuality(int val)
+{
+    QWT_D(d);
+    d->m_segments = val;
+}
+
+void Arrow::setTop(Qwt3D::Triple t)
+{
+    QWT_D(d);
+    d->m_top = t;
+}
+
+void Arrow::setColor(Qwt3D::RGBA rgba)
+{
+    QWT_D(d);
+    d->m_rgba = rgba;
 }
 
 void Arrow::draw(Qwt3D::Triple const &pos)
 {
-    Triple end = top_;
+    QWT_D(d);
+    Triple end = d->m_top;
     Triple beg = pos;
     Triple vdiff = end - beg;
     double length = vdiff.length();
-    glColor4d(rgba_.r, rgba_.g, rgba_.b, rgba_.a);
+    glColor4d(d->m_rgba.r, d->m_rgba.g, d->m_rgba.b, d->m_rgba.a);
 
     double radius[2];
-    radius[0] = rel_cone_radius * length;
-    radius[1] = rel_stem_radius * length;
+    radius[0] = d->m_relConeRadius * length;
+    radius[1] = d->m_relStemRadius * length;
 
     GLint mode;
     glGetIntegerv(GL_MATRIX_MODE, &mode);
@@ -397,39 +558,29 @@ void Arrow::draw(Qwt3D::Triple const &pos)
     glTranslatef(beg.x, beg.y, beg.z);
     glRotatef(phi, axis.x, axis.y, axis.z);
 
-    double baseheight = (1 - rel_cone_length) * length;
+    double baseheight = (1 - d->m_relConeLength) * length;
 
     glTranslatef(0, 0, baseheight);
 
-    gluCylinder(hat, radius[0], 0.0, rel_cone_length * length, segments_, 1);
-    gluDisk(disk, radius[1], radius[0], segments_, 1);
+    gluCylinder(d->m_hat, radius[0], 0.0, d->m_relConeLength * length, d->m_segments, 1);
+    gluDisk(d->m_disk, radius[1], radius[0], d->m_segments, 1);
 
     glTranslatef(0, 0, -baseheight);
 
-    gluCylinder(base, radius[1], radius[1], baseheight, segments_, 1);
-    gluDisk(disk, 0, radius[1], segments_, 1);
+    gluCylinder(d->m_base, radius[1], radius[1], baseheight, d->m_segments, 1);
+    gluDisk(d->m_disk, 0, radius[1], d->m_segments, 1);
 
     glPopMatrix();
     glMatrixMode(mode);
 }
 
 /**
- * \if ENGLISH
  * @brief Calculates rotation angle to transform a z-axis vector to coincide with a given vector
  * @param[out] axis The axis to rotate around
- * @param[in] vec The target free vector
+ * @param vec The target free vector
  * @return Angle in degrees to rotate
  * @details Transforms a vector on the z axis with length |beg-end| to get them
  *          in coincidence with the vector(beg,end).
- * \endif
- *
- * \if CHINESE
- * @brief 计算旋转角度以将 z 轴向量变换为与给定向量重合
- * @param[out] axis 旋转轴
- * @param[in] vec 目标自由向量
- * @return 旋转角度（度）
- * @details 将 z 轴上长度为 |beg-end| 的向量变换为与向量(beg,end)重合。
- * \endif
  */
 double Arrow::calcRotation(Triple &axis, FreeVector const &vec)
 {

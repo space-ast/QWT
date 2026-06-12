@@ -1,0 +1,27 @@
+/*****************************************************************************
+ * Qwt Examples - Copyright (C) 2002 Uwe Rathmann
+ * This file may be used under the terms of the 3-clause BSD License
+ *****************************************************************************/
+
+#pragma once
+
+#include <QwtPlot>
+
+class QwtPlotCurve;
+class WindowedSeriesData;
+
+class Plot : public QwtPlot
+{
+    Q_OBJECT
+
+public:
+    Plot(QWidget* parent = nullptr);
+
+    void setRenderingMethod(int methodIndex);
+    void setCurveData(WindowedSeriesData* data);
+
+    QwtPlotCurve* curve() const { return m_curve; }
+
+private:
+    QwtPlotCurve* m_curve;
+};

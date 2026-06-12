@@ -8,63 +8,35 @@ class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief A class that encapsulates grid data and provides interpolation methods.
  * @details This class inherits from QwtRasterData and is used to represent 2D grid data.
  *          It supports various interpolation methods such as nearest neighbor and bilinear interpolation.
- * \endif
- * \if CHINESE
- * @brief 封装网格数据并提供插值方法的类。
- * @details 此类继承自 QwtRasterData，用于表示二维网格数据。
- *          它支持多种插值方法，例如最近邻插值和双线性插值。
- * \endif
  */
 class QWT_EXPORT QwtGridRasterData : public QwtRasterData
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Resampling algorithm
      * @details The default setting is NearestNeighbour.
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 重采样算法
-     * @details 默认设置为 NearestNeighbour。
-     * \endif
      */
     enum ResampleMode
     {
         /**
-         * \if ENGLISH
          * Return the value from the matrix that is nearest to the requested position.
-         * \endif
          * 
-         * \if CHINESE
-         * 返回矩阵中距离请求位置最近的值。
-         * \endif
          */
         NearestNeighbour,
 
         /**
-         * \if ENGLISH
          * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-         * \endif
          * 
-         * \if CHINESE
-         * 从矩阵中 4 个相邻值的距离和值进行插值。
-         * \endif
          */
         BilinearInterpolation,
 
         /**
-         * \if ENGLISH
          * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-         * \endif
          * 
-         * \if CHINESE
-         * 使用 Hermite 双三次插值从矩阵中 16 个相邻值进行插值。
-         * \endif
          */
         BicubicInterpolation
     };
@@ -73,7 +45,7 @@ public:
     // Constructor
     QwtGridRasterData();
     // Destructor
-    virtual ~QwtGridRasterData();
+    ~QwtGridRasterData() override;
 
     // Set the resampling algorithm
     void setResampleMode(ResampleMode mode);
@@ -107,8 +79,7 @@ public:
     double atY(int yIndex) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtGridRasterData)
 };
 
 #endif  // QWTGRIDRASTERDATA_H

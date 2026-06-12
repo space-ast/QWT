@@ -1,4 +1,4 @@
-﻿
+
 # QWT CMake By Czyt1988
 
 cmake_minimum_required(VERSION 3.5)
@@ -60,6 +60,7 @@ option(QWT_CONFIG_QWTPLOT_3D "Enable QwtPlot3D module" ON)
 option(QWT_CONFIG_BUILD_EXAMPLE "Build example applications" ON)
 option(QWT_CONFIG_BUILD_PLAYGROUND "Build playground applications" ON)
 option(QWT_CONFIG_BUILD_STATIC_EXAMPLE "Build static examples (takes relatively long compilation time)" ON)
+option(QWT_CONFIG_BUILD_TESTS "Build test applications" OFF)
 
 ########################################################
 # MSVC Settings
@@ -96,6 +97,9 @@ if(QWT_CONFIG_BUILD_EXAMPLE)
 endif()
 if(QWT_CONFIG_BUILD_PLAYGROUND)
     add_subdirectory(playground)
+endif()
+if(QWT_CONFIG_BUILD_TESTS)
+    add_subdirectory(tests)
 endif()
 
 ########################################################

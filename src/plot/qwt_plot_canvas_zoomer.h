@@ -17,13 +17,7 @@ class QStack;
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief Struct that stores zoom states for all four axes
- * \endif
- * 
- * \if CHINESE
- * @brief 存储所有四个坐标轴缩放状态的结构体
- * \endif
  */
 struct QWT_EXPORT QwtPlotCanvasZoomState
 {
@@ -60,55 +54,29 @@ public:
 Q_DECLARE_METATYPE(QwtPlotCanvasZoomState)
 
 /**
- * \if ENGLISH
  * @brief QwtPlotCanvasZoomer provides zooming for all axes of a plot canvas
  * @details QwtPlotCanvasZoomer selects rectangles from user inputs (mouse or keyboard)
  *          and adjusts ALL axes of the plot simultaneously. Unlike QwtPlotZoomer which
  *          only works on two axes, this zoomer works on the entire canvas and maintains
  *          separate ranges for all four axes.
- * 
+ *
  *          The selection is supported by a rubber band and optionally by displaying
  *          the coordinates of the current mouse position.
- * 
+ *
  *          Zooming can be repeated as often as possible, limited only by
  *          maxStackDepth() or minZoomSize(). Each zoom state is pushed on a stack.
- * 
+ *
  *          Mouse shortcuts:
  *          - MouseSelect2: Reset to base
  *          - MouseSelect3: Zoom out (back)
  *          - MouseSelect6: Zoom in (forward)
- * 
+ *
  *          Keyboard shortcuts:
  *          - KeyUndo: Zoom out (back)
  *          - KeyRedo: Zoom in (forward)
  *          - KeyHome: Reset to base
- * 
+ *
  * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlotCanvasZoomer 为绘图画布的所有坐标轴提供缩放功能
- * @details QwtPlotCanvasZoomer 从用户输入（鼠标或键盘）中选择矩形
- *          并同时调整绘图的所有坐标轴。与只在两个坐标轴上工作的 QwtPlotZoomer 不同，
- *          此缩放器在整个画布上工作，并为所有四个坐标轴维护单独的范围。
- * 
- *          选择由橡皮筋支持，并可选地显示当前鼠标位置的坐标。
- * 
- *          缩放可以尽可能重复，仅受 maxStackDepth() 或 minZoomSize() 限制。
- *          每个缩放状态都被推送到堆栈上。
- * 
- *          支持如下鼠标快捷键设置：
- *          - MouseSelect2，重置回基础
- *          - MouseSelect3，缩放栈回退
- *          - MouseSelect6，缩放栈前进
- * 
- *          支持如下键盘快捷键设置：
- *          - KeyUndo，缩放栈回退
- *          - KeyRedo，缩放栈前进
- *          - KeyHome，重置回基础
- * 
- * @sa QwtPlotPanner, QwtPlotMagnifier
- * \endif
  */
 class QWT_EXPORT QwtPlotCanvasZoomer : public QwtCanvasPicker
 {
@@ -119,7 +87,7 @@ public:
     explicit QwtPlotCanvasZoomer(QWidget* canvas, bool doReplot = true);
     
     // Destructor
-    virtual ~QwtPlotCanvasZoomer();
+    ~QwtPlotCanvasZoomer() override;
 
     // Set zoom base to current axis ranges, min zoom size is calculated based on this
     virtual void setZoomBase(bool doReplot = true);
@@ -157,15 +125,8 @@ public Q_SLOTS:
     
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the plot has been zoomed in or out
      * @param state Current zoom state containing all axis ranges
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 当绘图被放大或缩小时发出的信号
-     * @param state 包含所有坐标轴范围的当前缩放状态
-     * \endif
      */
     void zoomed(const QList< QwtPlotCanvasZoomState >& state);
 

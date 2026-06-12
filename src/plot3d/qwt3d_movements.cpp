@@ -3,25 +3,26 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <float.h>
-#include "qwt3d_plot.h"
+#include <cfloat>
+#include "qwt3d_plot_p.h"
 
 using namespace Qwt3D;
 
 /**
   Set the rotation angle of the object. If you look along the respective axis towards ascending
-  values, the rotation is performed in mathematical \e negative sense \param xVal angle in \e degree
-  to rotate around the X axis \param yVal angle in \e degree to rotate around the Y axis \param zVal
+  values, the rotation is performed in mathematical \e negative sense @param xVal angle in \e degree
+  to rotate around the X axis @param yVal angle in \e degree to rotate around the Y axis @param zVal
   angle in \e degree to rotate around the Z axis
 */
 void Plot3D::setRotation(double xVal, double yVal, double zVal)
 {
-    if (xRot_ == xVal && yRot_ == yVal && zRot_ == zVal)
+    QWT_D(d);
+    if (d->m_xRot == xVal && d->m_yRot == yVal && d->m_zRot == zVal)
         return;
 
-    xRot_ = xVal;
-    yRot_ = yVal;
-    zRot_ = zVal;
+    d->m_xRot = xVal;
+    d->m_yRot = yVal;
+    d->m_zRot = zVal;
 
     update();
     emit rotationChanged(xVal, yVal, zVal);
@@ -29,19 +30,20 @@ void Plot3D::setRotation(double xVal, double yVal, double zVal)
 
 /**
   Set the shift in object (world) coordinates.
-        \param xVal shift along (world) X axis
-        \param yVal shift along (world) Y axis
-        \param zVal shift along (world) Z axis
-        \see setViewportShift()
+        @param xVal shift along (world) X axis
+        @param yVal shift along (world) Y axis
+        @param zVal shift along (world) Z axis
+        @see setViewportShift()
 */
 void Plot3D::setShift(double xVal, double yVal, double zVal)
 {
-    if (xShift_ == xVal && yShift_ == yVal && zShift_ == zVal)
+    QWT_D(d);
+    if (d->m_xShift == xVal && d->m_yShift == yVal && d->m_zShift == zVal)
         return;
 
-    xShift_ = xVal;
-    yShift_ = yVal;
-    zShift_ = zVal;
+    d->m_xShift = xVal;
+    d->m_yShift = yVal;
+    d->m_zShift = zVal;
     update();
     emit shiftChanged(xVal, yVal, zVal);
 }
@@ -52,38 +54,40 @@ void Plot3D::setShift(double xVal, double yVal, double zVal)
   which encloses the unscaled and unzoomed data
         by multiples of the spheres diameter
 
-        \param xVal shift along (view) X axis
-        \param yVal shift along (view) Y axis
-        \see setShift()
+        @param xVal shift along (view) X axis
+        @param yVal shift along (view) Y axis
+        @see setShift()
 */
 void Plot3D::setViewportShift(double xVal, double yVal)
 {
-    if (xVPShift_ == xVal && yVPShift_ == yVal)
+    QWT_D(d);
+    if (d->m_xVPShift == xVal && d->m_yVPShift == yVal)
         return;
 
-    xVPShift_ = xVal;
-    yVPShift_ = yVal;
+    d->m_xVPShift = xVal;
+    d->m_yVPShift = yVal;
 
     update();
-    emit vieportShiftChanged(xVPShift_, yVPShift_);
+    emit vieportShiftChanged(d->m_xVPShift, d->m_yVPShift);
 }
 
 /**
   Set the scale in object (world) coordinates.
-        \param xVal scaling for X values
-        \param yVal scaling for Y values
-        \param zVal scaling for Z values
+        @param xVal scaling for X values
+        @param yVal scaling for Y values
+        @param zVal scaling for Z values
 
         A respective value of 1 represents no scaling;
 */
 void Plot3D::setScale(double xVal, double yVal, double zVal)
 {
-    if (xScale_ == xVal && yScale_ == yVal && zScale_ == zVal)
+    QWT_D(d);
+    if (d->m_xScale == xVal && d->m_yScale == yVal && d->m_zScale == zVal)
         return;
 
-    xScale_ = (xVal < DBL_EPSILON) ? DBL_EPSILON : xVal;
-    yScale_ = (yVal < DBL_EPSILON) ? DBL_EPSILON : yVal;
-    zScale_ = (zVal < DBL_EPSILON) ? DBL_EPSILON : zVal;
+    d->m_xScale = (xVal < DBL_EPSILON) ? DBL_EPSILON : xVal;
+    d->m_yScale = (yVal < DBL_EPSILON) ? DBL_EPSILON : yVal;
+    d->m_zScale = (zVal < DBL_EPSILON) ? DBL_EPSILON : zVal;
 
     update();
     emit scaleChanged(xVal, yVal, zVal);
@@ -91,14 +95,15 @@ void Plot3D::setScale(double xVal, double yVal, double zVal)
 
 /**
   Set the (zoom in addition to scale).
-        \param val zoom value (value == 1 indicates no zooming)
+        @param val zoom value (value == 1 indicates no zooming)
 */
 void Plot3D::setZoom(double val)
 {
-    if (zoom_ == val)
+    QWT_D(d);
+    if (d->m_zoom == val)
         return;
 
-    zoom_ = (val < DBL_EPSILON) ? DBL_EPSILON : val;
+    d->m_zoom = (val < DBL_EPSILON) ? DBL_EPSILON : val;
     update();
     emit zoomChanged(val);
 }

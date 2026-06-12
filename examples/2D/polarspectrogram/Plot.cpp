@@ -103,13 +103,13 @@ class Grid : public QwtPolarGrid
 public:
     Grid()
     {
-        setPen(QPen(Qt::white));
+        setPen(QPen(QColor("#c0c0c0"), 0.5));
 
         for (int scaleId = 0; scaleId < QwtPolar::ScaleCount; scaleId++) {
             showGrid(scaleId);
             showMinorGrid(scaleId);
 
-            QPen minorPen(Qt::gray);
+            QPen minorPen(QColor("#e0e0e0"), 0.5);
             setMinorGridPen(scaleId, minorPen);
         }
 
@@ -129,7 +129,7 @@ public:
 Plot::Plot(QWidget* parent) : QwtPolarPlot(parent)
 {
     setAutoReplot(false);
-    setPlotBackground(Qt::darkBlue);
+    setPlotBackground(QColor(245, 245, 250));
 
     // scales
     setScale(QwtPolar::Azimuth, 0.0, 2 * M_PI, M_PI_4);

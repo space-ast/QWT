@@ -33,28 +33,19 @@
 class QwtScaleDraw;
 
 /**
- * \if ENGLISH
  * @brief The Slider Widget
  * @details QwtSlider is a slider widget which operates on an interval
  *          of type double. Its position is related to a scale showing
  *          the current value.
  *          The slider can be customized by having a through, a groove - or both.
- * \image html sliders.png
- * \endif
- * \if CHINESE
- * @brief 滑块控件
- * @details QwtSlider 是一个在 double 类型区间上操作的滑块控件。其位置与显示
- *          当前值的刻度相关联。
- *          滑块可以通过拥有槽、凹槽或两者来进行自定义。
- * \image html sliders.png
- * \endif
+ * @image html sliders.png
  */
 
 class QWT_EXPORT QwtSlider : public QwtAbstractSlider
 {
     Q_OBJECT
 
-    Q_ENUMS( ScalePosition BackgroundStyle )
+    Q_ENUMS( ScalePosition )
 
     Q_PROPERTY( Qt::Orientation orientation
         READ orientation WRITE setOrientation )
@@ -67,18 +58,13 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     Q_PROPERTY( QSize handleSize READ handleSize WRITE setHandleSize )
     Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
     Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
+    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
 
   public:
 
     /**
-     * \if ENGLISH
      * @brief Position of the scale
-     * \sa QwtSlider(), setScalePosition(), setOrientation()
-     * \endif
-     * \if CHINESE
-     * @brief 刻度位置
-     * \sa QwtSlider(), setScalePosition(), setOrientation()
-     * \endif
+     * @sa QwtSlider(), setScalePosition(), setOrientation()
      */
     enum ScalePosition
     {
@@ -98,7 +84,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     explicit QwtSlider( Qt::Orientation, QWidget* parent = nullptr );
 
     /// Destructor
-    virtual ~QwtSlider();
+    ~QwtSlider() override;
 
     /// Set orientation
     void setOrientation( Qt::Orientation );
@@ -134,6 +120,11 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     void setSpacing( int );
     /// Return spacing
     int spacing() const;
+
+    /// Set flat style
+    void setFlatStyle( bool );
+    /// Return flat style
+    bool flatStyle() const;
 
     /// Return size hint
     virtual QSize sizeHint() const override;
@@ -194,8 +185,7 @@ class QWT_EXPORT QwtSlider : public QwtAbstractSlider
     /// Initialize slider
     void initSlider( Qt::Orientation );
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSlider)
 };
 
 #endif

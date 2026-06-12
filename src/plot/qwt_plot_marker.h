@@ -36,7 +36,6 @@ class QwtText;
 class QwtSymbol;
 
 /**
- * \if ENGLISH
  * @brief A class for drawing markers
  * @details A marker can be a horizontal line, a vertical line,
  *          a symbol, a label or any combination of them, which can
@@ -57,22 +56,7 @@ class QwtSymbol;
  * @note QwtPlotTextLabel is intended to align a text label
  *       according to the geometry of canvas
  *       ( unrelated to plot coordinates )
- * \endif
  * 
- * \if CHINESE
- * @brief 用于绘制标记的类
- * @details 标记可以是水平线、垂直线、符号、标签或它们的任意组合，可以在边界矩形内的中心点周围绘制。
- * 
- *          setSymbol() 成员为标记分配一个符号。符号绘制在指定点。
- * 
- *          通过 setLabel()，可以为标记分配标签。setLabelAlignment() 成员指定标签的绘制位置。
- *          Qt::AlignmentFlags 中的所有 Align* 常量（见 Qt 文档）都有效。
- *          对齐的解释取决于标记的线条样式。对齐是指标记的中心点，
- *          例如，如果对齐设置为 Qt::AlignLeft | Qt::AlignTop，标签将打印在中心点的左上方。
- * 
- * @note QwtPlotTextLabel 用于根据画布的几何形状对齐文本标签
- *       （与绘图坐标无关）
- * \endif
  */
 
 class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
@@ -80,15 +64,9 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
   public:
 
     /**
-     * \if ENGLISH
      * @brief Line styles
      * @sa setLineStyle(), lineStyle()
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 线条样式
-     * @sa setLineStyle(), lineStyle()
-     * \endif
      */
     enum LineStyle
     {
@@ -113,7 +91,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
     explicit QwtPlotMarker( const QwtText& title );
 
     /// Destructor
-    virtual ~QwtPlotMarker();
+    ~QwtPlotMarker() override;
 
     /// Get the runtime type information
     virtual int rtti() const override;
@@ -198,8 +176,7 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 
   private:
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotMarker)
 };
 
 #endif

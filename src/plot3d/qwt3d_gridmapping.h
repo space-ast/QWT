@@ -1,5 +1,5 @@
-#ifndef qwt3d_gridmapping_h
-#define qwt3d_gridmapping_h
+#ifndef QWT3D_GRIDMAPPING_H
+#define QWT3D_GRIDMAPPING_H
 
 #include "qwt3d_mapping.h"
 
@@ -8,19 +8,14 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for mappings acting on rectangular grids
- * \endif
- *
- * \if CHINESE
- * @brief 作用于矩形网格的映射抽象基类
- * \endif
  */
 class QWT3D_EXPORT GridMapping : public Mapping
 {
 public:
     // Constructs GridMapping object w/o assigned SurfacePlot
     GridMapping();
+    ~GridMapping() override;
 
     // Sets number of rows and columns
     void setMesh(unsigned int columns, unsigned int rows);
@@ -32,12 +27,24 @@ public:
             Qwt3D::ParallelEpiped const &);
 
 protected:
-    Qwt3D::ParallelEpiped range_p;
-    Qwt3D::SurfacePlot *plotwidget_p;
-    unsigned int umesh_p, vmesh_p;
-    double minu_p, maxu_p, minv_p, maxv_p;
+    QWT_DECLARE_PRIVATE(GridMapping)
+
+    // Accessors for subclasses
+    Qwt3D::SurfacePlot *plotWidget() const;
+    void setPlotWidget(Qwt3D::SurfacePlot *pw);
+
+    Qwt3D::ParallelEpiped &range();
+    const Qwt3D::ParallelEpiped &range() const;
+
+    unsigned int meshU() const;
+    unsigned int meshV() const;
+
+    double minU() const;
+    double maxU() const;
+    double minV() const;
+    double maxV() const;
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_GRIDMAPPING_H

@@ -39,30 +39,17 @@
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief An alternative canvas for a QwtPlot derived from QOpenGLWidget
  * @details Even if QwtPlotOpenGLCanvas is not derived from QFrame it imitates
  *          its API. When using style sheets it supports the box model - beside
  *          backgrounds with rounded borders.
- * 
+ *
  * @sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
- * 
+ *
  * @note Another way for getting hardware accelerated graphics is using
  *       an OpenGL offscreen buffer ( QwtPlotCanvas::OpenGLBuffer ) with QwtPlotCanvas.
  *       Performance is worse, than rendering straight to a QOpenGLWidget, but is usually
  *       better integrated into a desktop application.
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlot 的替代画布，派生自 QOpenGLWidget
- * @details 即使 QwtPlotOpenGLCanvas 不是从 QFrame 派生的，它也模仿了其 API。
- *          使用样式表时，它支持盒模型 - 包括带有圆角边框的背景。
- * 
- * @sa QwtPlot::setCanvas(), QwtPlotCanvas, QwtPlotCanvas::OpenGLBuffer
- * 
- * @note 获取硬件加速图形的另一种方法是使用 QwtPlotCanvas::OpenGLBuffer 与 QwtPlotCanvas。
- *       性能比直接渲染到 QOpenGLWidget 差，但通常更好地集成到桌面应用程序中。
- * \endif
  */
 class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstractGLCanvas
 {
@@ -79,123 +66,68 @@ class QWT_EXPORT QwtPlotOpenGLCanvas : public QOpenGLWidget, public QwtPlotAbstr
 
 public:
     /**
-     * \if ENGLISH
      * @brief Constructor
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 构造函数
-     * \endif
      */
     explicit QwtPlotOpenGLCanvas(QwtPlot* = nullptr);
     /**
-     * \if ENGLISH
      * @brief Constructor with surface format
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 构造函数（带表面格式）
-     * \endif
      */
     explicit QwtPlotOpenGLCanvas(const QSurfaceFormat&, QwtPlot* = nullptr);
     /**
-     * \if ENGLISH
      * @brief Destructor
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 析构函数
-     * \endif
      */
-    virtual ~QwtPlotOpenGLCanvas();
+    ~QwtPlotOpenGLCanvas() override;
 
     /**
-     * \if ENGLISH
      * @brief Invalidate the backing store
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 使后备存储失效
-     * \endif
      */
     Q_INVOKABLE virtual void invalidateBackingStore() override;
     /**
-     * \if ENGLISH
      * @brief Get the border path
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 获取边界路径
-     * \endif
      */
     Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
     /**
-     * \if ENGLISH
      * @brief Handle events
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 处理事件
-     * \endif
      */
     virtual bool event(QEvent*) override;
 
 public Q_SLOTS:
     /**
-     * \if ENGLISH
      * @brief Replot the canvas
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 重绘画布
-     * \endif
      */
     void replot();
 
 protected:
     /**
-     * \if ENGLISH
      * @brief Handle paint events
-     * \endif
      */
     virtual void paintEvent(QPaintEvent*) override;
 
     /**
-     * \if ENGLISH
      * @brief Initialize OpenGL
-     * \endif
      */
     virtual void initializeGL() override;
     /**
-     * \if ENGLISH
      * @brief Paint OpenGL
-     * \endif
      */
     virtual void paintGL() override;
     /**
-     * \if ENGLISH
      * @brief Resize OpenGL
-     * \endif
      */
     virtual void resizeGL(int width, int height) override;
 
 private:
     /**
-     * \if ENGLISH
      * @brief Initialize the canvas
-     * \endif
      */
     void init(const QSurfaceFormat&);
     /**
-     * \if ENGLISH
      * @brief Clear the backing store
-     * \endif
      */
     virtual void clearBackingStore() override;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotOpenGLCanvas)
 };
 
 #endif

@@ -31,7 +31,6 @@
 #include "qwt_abstract_scale.h"
 
 /**
- * \if ENGLISH
  * @brief An abstract base class for slider widgets with a scale
  * @details A slider widget displays a value according to a scale.
  *          The class is designed as a common super class for widgets like
@@ -42,15 +41,6 @@
  *          which the value increments according to user inputs depend.
  *          Only for linear scales the number of steps correspond with
  *          a fixed step size.
- * \endif
- * \if CHINESE
- * @brief 带刻度的滑块控件的抽象基类
- * @details 滑块控件根据刻度显示值。
- *          该类设计为 QwtKnob、QwtDial 和 QwtSlider 等控件的公共基类。
- *          当滑块不是只读时，其值可以通过键盘、鼠标和滚轮输入来修改。
- *          滑块的范围被划分为多个步数，值根据用户输入按步数递增。
- *          只有在线性刻度下，步数才对应固定的步长。
- * \endif
  */
 
 class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
@@ -75,7 +65,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     explicit QwtAbstractSlider( QWidget* parent = nullptr );
     
     /// Destructor for QwtAbstractSlider (English only)
-    virtual ~QwtAbstractSlider();
+    ~QwtAbstractSlider() override;
 
     /// Set whether the slider is valid (English only)
     void setValid( bool );
@@ -141,53 +131,28 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
   Q_SIGNALS:
 
     /**
-     * \if ENGLISH
      * @brief Notify a change of value
      * @details When tracking is enabled (default setting),
      *          this signal will be emitted every time the value changes.
      * @param value New value
-     * \sa setTracking(), sliderMoved()
-     * \endif
-     * \if CHINESE
-     * @brief 通知值变化
-     * @details 当启用跟踪时（默认设置），每次值变化时都会发出此信号。
-     * @param value 新值
-     * \sa setTracking(), sliderMoved()
-     * \endif
+     * @sa setTracking(), sliderMoved()
      */
     void valueChanged( double value );
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user presses the movable part of the slider
-     * \endif
-     * \if CHINESE
-     * @brief 当用户按下滑块的可移动部分时发出的信号
-     * \endif
      */
     void sliderPressed();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user releases the movable part of the slider
-     * \endif
-     * \if CHINESE
-     * @brief 当用户释放滑块的可移动部分时发出的信号
-     * \endif
      */
     void sliderReleased();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the user moves the slider with the mouse
      * @param value New value
-     * \sa valueChanged()
-     * \endif
-     * \if CHINESE
-     * @brief 当用户用鼠标移动滑块时发出的信号
-     * @param value 新值
-     * \sa valueChanged()
-     * \endif
+     * @sa valueChanged()
      */
     void sliderMoved( double value );
 
@@ -207,36 +172,10 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     /// Handle wheel events (English only)
     virtual void wheelEvent( QWheelEvent* ) override;
 
-    /**
-     * \if ENGLISH
-     * @brief Determine what to do when the user presses a mouse button
-     * @param pos Mouse position
-     * @return True when pos is a valid scroll position
-     * \sa scrolledTo()
-     * \endif
-     * \if CHINESE
-     * @brief 确定当用户按下鼠标按钮时该做什么
-     * @param pos 鼠标位置
-     * @return 当 pos 是有效的滚动位置时返回 true
-     * \sa scrolledTo()
-     * \endif
-     */
+    // Determine what to do when the user presses a mouse button
     virtual bool isScrollPosition( const QPoint& pos ) const = 0;
 
-    /**
-     * \if ENGLISH
-     * @brief Determine the value for a new position of the movable part of the slider
-     * @param pos Mouse position
-     * @return Value for the mouse position
-     * \sa isScrollPosition()
-     * \endif
-     * \if CHINESE
-     * @brief 确定滑块可移动部分新位置的值
-     * @param pos 鼠标位置
-     * @return 鼠标位置对应的值
-     * \sa isScrollPosition()
-     * \endif
-     */
+    // Determine the value for a new position of the movable part of the slider
     virtual double scrolledTo( const QPoint& pos ) const = 0;
 
     /// Increment the value by a number of steps (English only)
@@ -257,8 +196,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     double alignedValue( double ) const;
     double boundedValue( double ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtAbstractSlider)
 };
 
 #endif

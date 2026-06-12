@@ -33,23 +33,13 @@
 template< typename T > class QList;
 
 /**
- * \if ENGLISH
  * @brief Dynamic grid layout that adjusts columns and rows to the current size
  *
  * @details QwtDynGridLayout takes the space it gets, divides it up into rows and
  * columns, and puts each of the widgets it manages into the correct cell(s).
  * It lays out as many number of columns as possible (limited by maxColumns()).
  *
- * \endif
  *
- * \if CHINESE
- * @brief 动态网格布局，根据当前大小调整列数和行数
- *
- * @details QwtDynGridLayout 获取可用空间，将其划分为行和列，
- * 并将管理的每个控件放入正确的单元格中。
- * 它尽可能多地排列列数（受 maxColumns() 限制）。
- *
- * \endif
  */
 class QWT_EXPORT QwtDynGridLayout : public QLayout
 {
@@ -61,7 +51,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
     explicit QwtDynGridLayout( int spacing = -1 );
 
     // Destructor
-    virtual ~QwtDynGridLayout();
+    ~QwtDynGridLayout() override;
 
     // Invalidate all internal caches
     virtual void invalidate() override;
@@ -127,8 +117,7 @@ class QWT_EXPORT QwtDynGridLayout : public QLayout
     void init();
     int maxRowWidth( int numColumns ) const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtDynGridLayout)
 };
 
 #endif

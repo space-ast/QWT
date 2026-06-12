@@ -12,8 +12,10 @@
 #pragma warning (disable: 4996) // deprecated POSIX names
 #endif
 #include "../../src/plot/qwt_math.cpp"
+#include "../../src/plot/qwt_simd_argminmax.cpp"
 #include "../../src/plot/qwt_interval.cpp"
 #include "../../src/plot/qwt_color_map.cpp"
+#include "../../src/plot/qwt_color_cycle.cpp"
 #include "../../src/plot/qwt_pixel_matrix.cpp"
 #include "../../src/plot/qwt_transform.cpp"
 #include "../../src/plot/qwt_scale_map.cpp"
@@ -114,6 +116,7 @@
 #include "../../src/plot/qwt_plot_textlabel.cpp"
 #include "../../src/plot/qwt_plot_tradingcurve.cpp"
 #include "../../src/plot/qwt_plot_vectorfield.cpp"
+#include "../../src/plot/qwt_plot_boxchart.cpp"
 #include "../../src/plot/qwt_plot_panner.cpp"
 #include "../../src/plot/qwt_plot_zoneitem.cpp"
 #include "../../src/plot/qwt_plot_axis_zoomer.cpp"

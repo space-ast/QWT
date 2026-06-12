@@ -48,20 +48,20 @@ static void qwtDrawBox(QPainter* p, const QRectF& rect, const QPen& pen, const Q
         // A valid rectangle has a width() > 0 and height() > 0
         p->fillRect(rect, brush);
         if (rect.width() > 2 * pen.widthF()) {
-            // 保证线宽不要超过矩形的宽度或者高度的一半
+            // Ensure line width does not exceed half the rectangle's width or height
             p->setPen(pen);
             p->drawRect(rect);
         }
     } else {
-        // 矩形不合法，那么有可能图被缩放的过小，导致宽或者高为0
-        // 仅矩形的宽度大于2倍线宽，才有绘制边线的意义
+        // Invalid rectangle: the chart may have been scaled too small, resulting in zero width or height
+        // Only draw border lines when the rectangle width is greater than twice the pen width
         if (qFuzzyIsNull(rect.width())) {
-            // 没有宽度
+            // No width
             p->setPen(brush.color());
             p->drawLine(rect.topLeft(), rect.bottomLeft());
             return;
         }
-        // 没有高度
+        // No height
         if (qFuzzyIsNull(rect.height())) {
             p->setPen(brush.color());
             p->drawLine(rect.topLeft(), rect.topRight());
@@ -122,8 +122,12 @@ static void qwtDrawPanel(QPainter* painter, const QRectF& rect, const QPen& pen,
 
 class QwtColumnSymbol::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtColumnSymbol)
 public:
-    PrivateData() : style(QwtColumnSymbol::Box), frameStyle(QwtColumnSymbol::Plain)
+    PrivateData( QwtColumnSymbol* p )
+        : q_ptr( p )
+        , style(QwtColumnSymbol::Box)
+        , frameStyle(QwtColumnSymbol::Plain)
     {
     }
 
@@ -135,222 +139,147 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] style Style of the symbol
  * @sa setStyle(), style(), Style
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @param[in] style 符号的样式
- * @sa setStyle(), style(), Style
- * \endif
  */
 QwtColumnSymbol::QwtColumnSymbol(Style style)
+    : QWT_PIMPL_CONSTRUCT
 {
-    m_data        = new PrivateData();
-    m_data->style = style;
-    m_data->pen   = QPen(Qt::black, 1);
-    m_data->brush = QBrush(Qt::gray);
+    QWT_D(d);
+    d->style = style;
+    d->pen   = QPen(QColor("#888888"), 1);
+    d->brush = QBrush(QColor("#c0c0c0"));
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtColumnSymbol::~QwtColumnSymbol()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the symbol style
  * @param[in] style Style to set
  * @sa style(), setPalette()
- * \endif
- * \if CHINESE
- * @brief 指定符号样式
- * @param[in] style 要设置的样式
- * @sa style(), setPalette()
- * \endif
  */
 void QwtColumnSymbol::setStyle(Style style)
 {
-    m_data->style = style;
+    QWT_D(d);
+    d->style = style;
 }
 
 /**
- * \if ENGLISH
  * @brief Return current symbol style
  * @return Current style
  * @sa setStyle()
- * \endif
- * \if CHINESE
- * @brief 返回当前符号样式
- * @return 当前样式
- * @sa setStyle()
- * \endif
  */
 QwtColumnSymbol::Style QwtColumnSymbol::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the outline pen
  * @param[in] pen Pen to use for drawing the outline
- * \endif
- * \if CHINESE
- * @brief 指定轮廓画笔
- * @param[in] pen 用于绘制轮廓的画笔
- * \endif
  */
 void QwtColumnSymbol::setPen(const QPen& pen)
 {
-    m_data->pen = pen;
+    QWT_D(d);
+    d->pen = pen;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the outline pen
  * @return Current pen used for drawing the outline
- * \endif
- * \if CHINESE
- * @brief 返回轮廓画笔
- * @return 当前用于绘制轮廓的画笔
- * \endif
  */
 QPen QwtColumnSymbol::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the fill brush
  * @param[in] b Brush to use for filling the column
- * \endif
- * \if CHINESE
- * @brief 指定填充画刷
- * @param[in] b 用于填充柱的画刷
- * \endif
  */
 void QwtColumnSymbol::setBrush(const QBrush& b)
 {
-    m_data->brush = b;
+    QWT_D(d);
+    d->brush = b;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the fill brush
  * @return Current brush used for filling the column
- * \endif
- * \if CHINESE
- * @brief 返回填充画刷
- * @return 当前用于填充柱的画刷
- * \endif
  */
 QBrush QwtColumnSymbol::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame style that is used for the Box style
  * @param[in] frameStyle Frame style to set
  * @sa frameStyle(), setLineWidth(), setStyle()
- * \endif
- * \if CHINESE
- * @brief 设置 Box 样式使用的框架样式
- * @param[in] frameStyle 要设置的框架样式
- * @sa frameStyle(), setLineWidth(), setStyle()
- * \endif
  */
 void QwtColumnSymbol::setFrameStyle(FrameStyle frameStyle)
 {
-    m_data->frameStyle = frameStyle;
+    QWT_D(d);
+    d->frameStyle = frameStyle;
 }
 
 /**
- * \if ENGLISH
  * @brief Return current frame style that is used for the Box style
  * @return Current frame style
  * @sa setFrameStyle(), lineWidth(), setStyle()
- * \endif
- * \if CHINESE
- * @brief 返回 Box 样式使用的当前框架样式
- * @return 当前框架样式
- * @sa setFrameStyle(), lineWidth(), setStyle()
- * \endif
  */
 QwtColumnSymbol::FrameStyle QwtColumnSymbol::frameStyle() const
 {
-    return m_data->frameStyle;
+    QWT_DC(d);
+    return d->frameStyle;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the line width of the frame that is used for the Box style
  * @param[in] width Width of the frame line
  * @sa lineWidth(), setFrameStyle()
- * \endif
- * \if CHINESE
- * @brief 设置 Box 样式使用的框架线宽
- * @param[in] width 框架线的宽度
- * @sa lineWidth(), setFrameStyle()
- * \endif
  */
 void QwtColumnSymbol::setLineWidth(int width)
 {
+    QWT_D(d);
     if (width < 0)
         width = 0;
 
-    m_data->pen.setWidth(width);
+    d->pen.setWidth(width);
 }
 
 /**
- * \if ENGLISH
  * @brief Return line width of the frame that is used for the Box style
  * @return Current line width
  * @sa setLineWidth(), frameStyle(), setStyle()
- * \endif
- * \if CHINESE
- * @brief 返回 Box 样式使用的框架线宽
- * @return 当前线宽
- * @sa setLineWidth(), frameStyle(), setStyle()
- * \endif
  */
 int QwtColumnSymbol::lineWidth() const
 {
-    return m_data->pen.width();
+    QWT_DC(d);
+    return d->pen.width();
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the symbol depending on its style
  * @param[in] painter Painter to use for drawing
  * @param[in] rect Directed rectangle defining the column bounds
  * @sa drawBox()
- * \endif
- * \if CHINESE
- * @brief 根据样式绘制符号
- * @param[in] painter 用于绘制的画笔
- * @param[in] rect 定义柱边界的方向矩形
- * @sa drawBox()
- * \endif
  */
 void QwtColumnSymbol::draw(QPainter* painter, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     painter->save();
 
-    switch (m_data->style) {
+    switch (d->style) {
     case QwtColumnSymbol::Box: {
         drawBox(painter, rect);
         break;
@@ -363,6 +292,7 @@ void QwtColumnSymbol::draw(QPainter* painter, const QwtColumnRect& rect) const
 
 void QwtColumnSymbol::drawBox(QPainter* painter, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     QRectF r = rect.toRect();
     if (QwtPainter::roundingAlignment(painter)) {
         r.setLeft(qRound(r.left()));
@@ -371,35 +301,27 @@ void QwtColumnSymbol::drawBox(QPainter* painter, const QwtColumnRect& rect) cons
         r.setBottom(qRound(r.bottom()));
     }
 
-    switch (m_data->frameStyle) {
+    switch (d->frameStyle) {
     case QwtColumnSymbol::Raised: {
-        qwtDrawPanel(painter, r, m_data->pen, m_data->brush);
+        qwtDrawPanel(painter, r, d->pen, d->brush);
         break;
     }
     case QwtColumnSymbol::Plain: {
-        // qwtDrawBox(painter, r, m_data->palette, m_data->lineWidth);
-        qwtDrawBox(painter, r, m_data->pen, m_data->brush);
+        // qwtDrawBox(painter, r, d->palette, d->lineWidth);
+        qwtDrawBox(painter, r, d->pen, d->brush);
         break;
     }
     default: {
-        painter->fillRect(r.adjusted(0, 0, 1, 1), m_data->brush);
+        painter->fillRect(r.adjusted(0, 0, 1, 1), d->brush);
     }
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return a normalized QRect built from the intervals
  * @details Converts the horizontal and vertical intervals into a QRectF,
  *          handling exclude minimum/maximum flags appropriately.
  * @return Normalized rectangle
- * \endif
- * \if CHINESE
- * @brief 返回从区间构建的标准化 QRect
- * @details 将水平区间和垂直区间转换为 QRectF，
- *          并适当处理排除最小值/最大值标志。
- * @return 标准化的矩形
- * \endif
  */
 QRectF QwtColumnRect::toRect() const
 {

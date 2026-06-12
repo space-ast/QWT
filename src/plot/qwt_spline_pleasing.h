@@ -30,23 +30,12 @@
 #include "qwt_spline.h"
 
 /**
- * \if ENGLISH
  * @brief A spline with G1 continuity
  *
  * QwtSplinePleasing is some sort of cardinal spline, with
  * non C1 continuous extra rules for narrow angles. It has a locality of 2.
  *
  * @note The algorithm is the one offered by a popular office package.
- * \endif
- *
- * \if CHINESE
- * @brief 具有 G1 连续性的样条
- *
- * QwtSplinePleasing 是某种基数样条，对于窄角具有非 C1 连续的额外规则。
- * 它的局部性为 2。
- *
- * @note 该算法是由一个流行的办公软件包提供的。
- * \endif
  */
 class QWT_EXPORT QwtSplinePleasing : public QwtSplineG1
 {
@@ -54,7 +43,7 @@ public:
     // Constructor
     QwtSplinePleasing();
     // Destructor
-    virtual ~QwtSplinePleasing();
+    ~QwtSplinePleasing() override;
 
     // Get locality (number of points used for calculation)
     virtual uint locality() const override;

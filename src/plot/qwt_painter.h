@@ -48,22 +48,13 @@ class QTextDocument;
 class QPainterPath;
 
 /**
- * \if ENGLISH
  * @brief A collection of QPainter workarounds
  *
  * QwtPainter provides a set of static methods that wrap QPainter operations
  * with workarounds for various Qt rendering issues. It handles device-specific
  * clipping, coordinate rounding, and performance optimizations for different
  * paint engines (raster, SVG, PDF, etc.).
- * \endif
  *
- * \if CHINESE
- * @brief QPainter绘制操作的封装和兼容性处理集合
- *
- * QwtPainter提供一组静态方法，封装QPainter操作并处理各种Qt渲染问题。
- * 它处理设备特定的裁剪、坐标对齐，以及针对不同绘制引擎（光栅、SVG、PDF等）
- * 的性能优化。
- * \endif
  */
 class QWT_EXPORT QwtPainter
 {
@@ -142,7 +133,7 @@ public:
     static void fillBackground(QPainter* painter, QWidget* canvas);
 
     static void drawBackgound(QPainter*, const QRectF&, const QWidget*);
-    // 绘制widget的背景
+    // Draw the widget background
     static void drawCanvasBackgound(QPainter* painter, QWidget* canvas);
 
     static void drawStyledBackground(QWidget* w, QPainter* painter);
@@ -198,8 +189,8 @@ inline void QwtPainter::drawLine(QPainter* painter, const QLineF& line)
 }
 
 /*!
-   \return True, when line splitting for the raster paint engine is enabled.
-   \sa setPolylineSplitting()
+   @return True, when line splitting for the raster paint engine is enabled.
+   @sa setPolylineSplitting()
  */
 inline bool QwtPainter::polylineSplitting()
 {
@@ -211,8 +202,8 @@ inline bool QwtPainter::polylineSplitting()
    to a paint engine that rounds to integer values. For other paint engines
    ( PDF, SVG ), this flag has no effect.
 
-   \return True, when rounding is enabled
-   \sa setRoundingAlignment(), isAligning()
+   @return True, when rounding is enabled
+   @sa setRoundingAlignment(), isAligning()
  */
 inline bool QwtPainter::roundingAlignment()
 {
@@ -220,8 +211,8 @@ inline bool QwtPainter::roundingAlignment()
 }
 
 /*!
-   \return roundingAlignment() && isAligning(painter);
-   \param painter Painter
+   @return roundingAlignment() && isAligning(painter);
+   @param painter Painter
  */
 inline bool QwtPainter::roundingAlignment(const QPainter* painter)
 {
@@ -229,8 +220,8 @@ inline bool QwtPainter::roundingAlignment(const QPainter* painter)
 }
 
 /*!
-   \return pen.widthF() expanded to at least 1.0
-   \param pen Pen
+   @return pen.widthF() expanded to at least 1.0
+   @param pen Pen
  */
 inline qreal QwtPainter::effectivePenWidth(const QPen& pen)
 {

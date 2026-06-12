@@ -13,7 +13,6 @@
 #include <QwtPlotCurve>
 #include <QwtPlotLayout>
 #include <QwtScaleWidget>
-#include <QwtScaleDraw>
 #include <QwtMath>
 
 #ifndef QWT_NO_OPENGL
@@ -56,8 +55,7 @@ Plot::Plot(QWidget* parent)
     setTitle("Testing Refresh Rates");
 
     QwtPlotCanvas* canvas = new QwtPlotCanvas();
-    canvas->setFrameStyle(QFrame::Box | QFrame::Plain);
-    canvas->setLineWidth(1);
+    canvas->setFrameStyle(QFrame::NoFrame);
     canvas->setPalette(Qt::white);
 
     setCanvas(canvas);
@@ -70,7 +68,6 @@ Plot::Plot(QWidget* parent)
 
     // Insert curve
     m_curve = new QwtPlotCurve("Data Moving Right");
-    m_curve->setPen(Qt::black);
     m_curve->setData(new CircularBuffer(m_interval, 10));
     m_curve->attach(this);
 
@@ -99,10 +96,6 @@ void Plot::alignScales()
         QwtScaleWidget* scaleWidget = axisWidget(axisPos);
         if (scaleWidget)
             scaleWidget->setMargin(0);
-
-        QwtScaleDraw* scaleDraw = axisScaleDraw(axisPos);
-        if (scaleDraw)
-            scaleDraw->enableComponent(QwtAbstractScaleDraw::Backbone, false);
     }
 
     plotLayout()->setAlignCanvasToScales(true);
@@ -150,10 +143,8 @@ void Plot::setSettings(const Settings& s)
         QwtPlotOpenGLCanvas* plotCanvas = qobject_cast< QwtPlotOpenGLCanvas* >(canvas());
         if (plotCanvas == NULL) {
             plotCanvas = new QwtPlotOpenGLCanvas();
-            plotCanvas->setPalette(QColor("NavajoWhite"));
             plotCanvas->setPalette(QColor("khaki"));
-            plotCanvas->setFrameStyle(QFrame::Box | QFrame::Plain);
-            plotCanvas->setLineWidth(1);
+            plotCanvas->setFrameStyle(QFrame::NoFrame);
 
             setCanvas(plotCanvas);
         }
@@ -162,8 +153,7 @@ void Plot::setSettings(const Settings& s)
         if (plotCanvas == NULL) {
             plotCanvas = new QwtPlotGLCanvas();
             plotCanvas->setPalette(QColor("khaki"));
-            plotCanvas->setFrameStyle(QFrame::Box | QFrame::Plain);
-            plotCanvas->setLineWidth(1);
+            plotCanvas->setFrameStyle(QFrame::NoFrame);
 
             setCanvas(plotCanvas);
         }
@@ -174,8 +164,7 @@ void Plot::setSettings(const Settings& s)
         QwtPlotCanvas* plotCanvas = qobject_cast< QwtPlotCanvas* >(canvas());
         if (plotCanvas == NULL) {
             plotCanvas = new QwtPlotCanvas();
-            plotCanvas->setFrameStyle(QFrame::Box | QFrame::Plain);
-            plotCanvas->setLineWidth(1);
+            plotCanvas->setFrameStyle(QFrame::NoFrame);
             plotCanvas->setPalette(Qt::white);
 
             setCanvas(plotCanvas);

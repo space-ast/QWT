@@ -34,13 +34,8 @@ class QSize;
 class QwtPlotItem;
 
 /**
- * \if ENGLISH
  * @brief Some constants and utility functions for use within Qwt.
- * \endif
  *
- * \if CHINESE
- * @brief Qwt中使用的一些常量和实用函数。
- * \endif
  */
 namespace Qwt
 {

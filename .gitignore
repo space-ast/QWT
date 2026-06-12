@@ -1,8 +1,12 @@
 ﻿bin_*
 build*
+!build.md
+!build.ps1
 # 针对文档添加否定规则
 !docs/zh/build-guide
 !docs/zh/build-guide/**
+!docs/en/build-guide
+!docs/en/build-guide/**
 *.user
 *.autosave
 *.dll
@@ -33,6 +37,9 @@ opencode.md
 .qoder
 .kilo
 .sisyphus
+.omo
+.omc
+.qwen
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 

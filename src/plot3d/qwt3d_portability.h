@@ -1,5 +1,5 @@
-#ifndef qwt3d_portability_h
-#define qwt3d_portability_h
+#ifndef QWT3D_PORTABILITY_H
+#define QWT3D_PORTABILITY_H
 
 #include <qnamespace.h>
 #include "qwt3d_global.h"
@@ -14,17 +14,9 @@ namespace Qwt3D
 const Qt::TextFlag SingleLine = Qt::TextSingleLine;
 
 /**
- * \if ENGLISH
  * @brief Creates a (mouse-button, modifier) pair
  * @details This class encapsulates a combination of mouse buttons and keyboard modifiers,
  *          used for defining mouse interaction states in 3D plots.
- * \endif
- *
- * \if CHINESE
- * @brief 创建（鼠标按钮，修饰键）组合
- * @details 该类封装了鼠标按钮和键盘修饰键的组合，
- *          用于定义三维绘图中的鼠标交互状态。
- * \endif
  */
 class MouseState
 {
@@ -53,17 +45,9 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Creates a (key-button, modifier) pair
  * @details This class encapsulates a combination of keyboard keys and modifiers,
  *          used for defining keyboard interaction states in 3D plots.
- * \endif
- *
- * \if CHINESE
- * @brief 创建（按键，修饰键）组合
- * @details 该类封装了键盘按键和修饰键的组合，
- *          用于定义三维绘图中的键盘交互状态。
- * \endif
  */
 class KeyboardState
 {
@@ -88,4 +72,4 @@ private:
 };
 }  // ns
 
-#endif
+#endif // QWT3D_PORTABILITY_H

@@ -3,7 +3,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include "qwt3d_surfaceplot.h"
+#include "qwt3d_surfaceplot_p.h"
 #include "qwt3d_enrichment_std.h"
 
 using namespace std;
@@ -16,6 +16,7 @@ using namespace Qwt3D;
 
 void SurfacePlot::createDataC()
 {
+    QWT_D(d);
     createFloorDataC();
 
     if (plotStyle() == NOPLOT)
@@ -25,8 +26,8 @@ void SurfacePlot::createDataC()
         createPoints();
         return;
     } else if (plotStyle() == Qwt3D::USER) {
-        if (userplotstyle_p)
-            createEnrichment(*userplotstyle_p);
+        if (userStyle())
+            createEnrichment(*userStyle());
         return;
     }
 
@@ -44,15 +45,15 @@ void SurfacePlot::createDataC()
             glColor4d(col.r, col.g, col.b, col.a);
         }
 
-        for (unsigned i = 0; i != actualDataC_->cells.size(); ++i) {
+        for (unsigned i = 0; i != d->m_actualDataC->cells.size(); ++i) {
             glBegin(GL_POLYGON);
-            for (unsigned j = 0; j != actualDataC_->cells[i].size(); ++j) {
-                idx = actualDataC_->cells[i][j];
+            for (unsigned j = 0; j != d->m_actualDataC->cells[i].size(); ++j) {
+                idx = d->m_actualDataC->cells[i][j];
                 setColorFromVertexC(idx, hl);
-                glVertex3d(actualDataC_->nodes[idx].x, actualDataC_->nodes[idx].y,
-                           actualDataC_->nodes[idx].z);
-                glNormal3d(actualDataC_->normals[idx].x, actualDataC_->normals[idx].y,
-                           actualDataC_->normals[idx].z);
+                glVertex3d(d->m_actualDataC->nodes[idx].x, d->m_actualDataC->nodes[idx].y,
+                           d->m_actualDataC->nodes[idx].z);
+                glNormal3d(d->m_actualDataC->normals[idx].x, d->m_actualDataC->normals[idx].y,
+                           d->m_actualDataC->normals[idx].z);
             }
             glEnd();
         }
@@ -61,12 +62,12 @@ void SurfacePlot::createDataC()
     if (plotStyle() == FILLEDMESH || plotStyle() == WIREFRAME || plotStyle() == HIDDENLINE) {
         glColor4d(meshColor().r, meshColor().g, meshColor().b, meshColor().a);
         {
-            for (unsigned i = 0; i != actualDataC_->cells.size(); ++i) {
+            for (unsigned i = 0; i != d->m_actualDataC->cells.size(); ++i) {
                 glBegin(GL_LINE_LOOP);
-                for (unsigned j = 0; j != actualDataC_->cells[i].size(); ++j) {
-                    idx = actualDataC_->cells[i][j];
-                    glVertex3d(actualDataC_->nodes[idx].x, actualDataC_->nodes[idx].y,
-                               actualDataC_->nodes[idx].z);
+                for (unsigned j = 0; j != d->m_actualDataC->cells[i].size(); ++j) {
+                    idx = d->m_actualDataC->cells[i][j];
+                    glVertex3d(d->m_actualDataC->nodes[idx].x, d->m_actualDataC->nodes[idx].y,
+                               d->m_actualDataC->nodes[idx].z);
                 }
                 glEnd();
             }
@@ -78,11 +79,12 @@ void SurfacePlot::createDataC()
 // cv = vertex index in cell ci
 void SurfacePlot::setColorFromVertexC(int node, bool skip)
 {
+    QWT_D(d);
     if (skip)
         return;
 
-    RGBA col = (*datacolor_p)(actualDataC_->nodes[node].x, actualDataC_->nodes[node].y,
-                              actualDataC_->nodes[node].z);
+    RGBA col = (*dataColor())(d->m_actualDataC->nodes[node].x, d->m_actualDataC->nodes[node].y,
+                              d->m_actualDataC->nodes[node].z);
 
     glColor4d(col.r, col.g, col.b, col.a);
 }
@@ -103,18 +105,19 @@ void SurfacePlot::createFloorDataC()
 
 void SurfacePlot::Data2FloorC()
 {
+    QWT_D(d);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    double zshift = actualDataC_->hull().minVertex.z;
+    double zshift = d->m_actualDataC->hull().minVertex.z;
     int idx;
 
-    for (unsigned i = 0; i != actualDataC_->cells.size(); ++i) {
+    for (unsigned i = 0; i != d->m_actualDataC->cells.size(); ++i) {
         glBegin(GL_POLYGON);
-        for (unsigned j = 0; j != actualDataC_->cells[i].size(); ++j) {
-            idx = actualDataC_->cells[i][j];
+        for (unsigned j = 0; j != d->m_actualDataC->cells[i].size(); ++j) {
+            idx = d->m_actualDataC->cells[i][j];
             setColorFromVertexC(idx);
-            glVertex3d(actualDataC_->nodes[idx].x, actualDataC_->nodes[idx].y, zshift);
+            glVertex3d(d->m_actualDataC->nodes[idx].x, d->m_actualDataC->nodes[idx].y, zshift);
         }
         glEnd();
     }
@@ -122,15 +125,17 @@ void SurfacePlot::Data2FloorC()
 
 void SurfacePlot::Isolines2FloorC()
 {
-    if (isolines() <= 0 || actualData_p->empty())
+    QWT_D(d);
+    Qwt3D::Data* data = actualData();
+    if (isolines() <= 0 || !data || data->empty())
         return;
 
     double step =
-            (actualData_p->hull().maxVertex.z - actualData_p->hull().minVertex.z) / isolines();
+            (data->hull().maxVertex.z - data->hull().minVertex.z) / isolines();
 
     RGBA col;
 
-    double zshift = actualData_p->hull().minVertex.z;
+    double zshift = data->hull().minVertex.z;
 
     TripleField nodes;
     TripleField intersection;
@@ -142,11 +147,11 @@ void SurfacePlot::Isolines2FloorC()
     for (int k = 0; k != isolines(); ++k) {
         double val = zshift + k * step;
 
-        for (unsigned i = 0; i != actualDataC_->cells.size(); ++i) {
+        for (unsigned i = 0; i != d->m_actualDataC->cells.size(); ++i) {
             nodes.clear();
-            size_t cellnodes = actualDataC_->cells[i].size();
+            size_t cellnodes = d->m_actualDataC->cells[i].size();
             for (size_t j = 0; j < cellnodes; ++j) {
-                nodes.push_back(actualDataC_->nodes[actualDataC_->cells[i][j]]);
+                nodes.push_back(d->m_actualDataC->nodes[d->m_actualDataC->cells[i][j]]);
             }
 
             double diff = 0;
@@ -171,7 +176,7 @@ void SurfacePlot::Isolines2FloorC()
             }
 
             if (!intersection.empty()) {
-                col = (*datacolor_p)(nodes[0].x, nodes[0].y, nodes[0].z);
+                col = (*dataColor())(nodes[0].x, nodes[0].y, nodes[0].z);
                 glColor4d(col.r, col.g, col.b, col.a);
                 if (intersection.size() > 2) {
                     glBegin(GL_LINE_STRIP);
@@ -201,32 +206,34 @@ void SurfacePlot::Isolines2FloorC()
 
 void SurfacePlot::createNormalsC()
 {
-    if (!normals() || actualData_p->empty())
+    QWT_D(d);
+    Qwt3D::Data* data = actualData();
+    if (!normals() || !data || data->empty())
         return;
 
-    if (actualDataC_->nodes.size() != actualDataC_->normals.size())
+    if (d->m_actualDataC->nodes.size() != d->m_actualDataC->normals.size())
         return;
     Arrow arrow;
     arrow.setQuality(normalQuality());
 
     Triple basev, topv, norm;
 
-    double diag = (actualData_p->hull().maxVertex - actualData_p->hull().minVertex).length()
+    double diag = (data->hull().maxVertex - data->hull().minVertex).length()
             * normalLength();
 
     RGBA col;
     arrow.assign(*this);
     arrow.drawBegin();
-    for (unsigned i = 0; i != actualDataC_->normals.size(); ++i) {
-        basev = actualDataC_->nodes[i];
-        topv = basev + actualDataC_->normals[i];
+    for (unsigned i = 0; i != d->m_actualDataC->normals.size(); ++i) {
+        basev = d->m_actualDataC->nodes[i];
+        topv = basev + d->m_actualDataC->normals[i];
 
         norm = topv - basev;
         norm.normalize();
         norm *= diag;
 
         arrow.setTop(basev + norm);
-        arrow.setColor((*datacolor_p)(basev.x, basev.y, basev.z));
+        arrow.setColor((*dataColor())(basev.x, basev.y, basev.z));
         arrow.draw(basev);
     }
     arrow.drawEnd();
@@ -238,12 +245,13 @@ void SurfacePlot::createNormalsC()
 */
 bool SurfacePlot::loadFromData(TripleField const &data, CellField const &poly)
 {
-    actualDataG_->clear();
-    actualData_p = actualDataC_;
+    QWT_D(d);
+    d->m_actualDataG->clear();
+    setActualData(d->m_actualDataC);
 
-    actualDataC_->nodes = data;
-    actualDataC_->cells = poly;
-    actualDataC_->normals = TripleField(actualDataC_->nodes.size());
+    d->m_actualDataC->nodes = data;
+    d->m_actualDataC->cells = poly;
+    d->m_actualDataC->normals = TripleField(d->m_actualDataC->nodes.size());
 
     unsigned i;
 
@@ -256,15 +264,15 @@ bool SurfacePlot::loadFromData(TripleField const &data, CellField const &poly)
             for (size_t j = 0; j < poly[i].size(); ++j) {
                 size_t jj = (j + 1) % poly[i].size();
                 size_t pjj = (j) ? j - 1 : poly[i].size() - 1;
-                u = actualDataC_->nodes[poly[i][jj]] - actualDataC_->nodes[poly[i][j]];
-                v = actualDataC_->nodes[poly[i][pjj]] - actualDataC_->nodes[poly[i][j]];
+                u = d->m_actualDataC->nodes[poly[i][jj]] - d->m_actualDataC->nodes[poly[i][j]];
+                v = d->m_actualDataC->nodes[poly[i][pjj]] - d->m_actualDataC->nodes[poly[i][j]];
                 n = normalizedcross(u, v);
-                actualDataC_->normals[poly[i][j]] += n;
+                d->m_actualDataC->normals[poly[i][j]] += n;
             }
         }
     }
-    for (i = 0; i != actualDataC_->normals.size(); ++i) {
-        actualDataC_->normals[i].normalize();
+    for (i = 0; i != d->m_actualDataC->normals.size(); ++i) {
+        d->m_actualDataC->normals[i].normalize();
     }
 
     ParallelEpiped hull(Triple(DBL_MAX, DBL_MAX, DBL_MAX), Triple(-DBL_MAX, -DBL_MAX, -DBL_MAX));
@@ -285,7 +293,7 @@ bool SurfacePlot::loadFromData(TripleField const &data, CellField const &poly)
             hull.maxVertex.z = data[i].z;
     }
 
-    actualDataC_->setHull(hull);
+    d->m_actualDataC->setHull(hull);
 
     updateData();
     updateNormals();

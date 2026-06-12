@@ -38,8 +38,9 @@
 
 class QwtAbstractScaleDraw::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtAbstractScaleDraw)
 public:
-    PrivateData() : spacing(4.0), penWidthF(0.0), minExtent(0.0)
+    PrivateData(QwtAbstractScaleDraw* p) : q_ptr(p), spacing(4.0), penWidthF(0.0), minExtent(0.0)
     {
         components = QwtAbstractScaleDraw::Backbone | QwtAbstractScaleDraw::Ticks | QwtAbstractScaleDraw::Labels;
 
@@ -62,292 +63,194 @@ public:
 
     double minExtent;
 
-    QMap< double, QwtText > labelCache;
+    mutable QMap< double, QwtText > labelCache;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor for QwtAbstractScaleDraw
  * @details The range of the scale is initialized to [0, 100],
  *          the spacing (distance between ticks and labels) is set to 4,
  *          the tick lengths are set to 4, 6 and 8 pixels.
- * \endif
- * \if CHINESE
- * @brief QwtAbstractScaleDraw 构造函数
- * @details 刻度范围初始化为 [0, 100]，
- *          间距（刻度线和标签之间的距离）设置为 4，
- *          刻度线长度设置为 4、6 和 8 像素。
- * \endif
  */
-QwtAbstractScaleDraw::QwtAbstractScaleDraw()
+QwtAbstractScaleDraw::QwtAbstractScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new QwtAbstractScaleDraw::PrivateData;
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor for QwtAbstractScaleDraw
- * \endif
- * \if CHINESE
- * @brief QwtAbstractScaleDraw 析构函数
- * \endif
  */
 QwtAbstractScaleDraw::~QwtAbstractScaleDraw()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable a scale component
  * @param component Scale component (Backbone, Ticks, or Labels)
  * @param enable True to enable, false to disable
- * \sa hasComponent()
- * \endif
- * \if CHINESE
- * @brief 启用或禁用刻度组件
- * @param component 刻度组件（主干、刻度线或标签）
- * @param enable true 启用，false 禁用
- * \sa hasComponent()
- * \endif
+ * @sa hasComponent()
  */
 void QwtAbstractScaleDraw::enableComponent(ScaleComponent component, bool enable)
 {
+    QWT_D(d);
     if (enable)
-        m_data->components |= component;
+        d->components |= component;
     else
-        m_data->components &= ~component;
+        d->components &= ~component;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if a component is enabled
  * @param component Component type
  * @return True if component is enabled
- * \sa enableComponent()
- * \endif
- * \if CHINESE
- * @brief 检查组件是否已启用
- * @param component 组件类型
- * @return 如果组件已启用则返回 true
- * \sa enableComponent()
- * \endif
+ * @sa enableComponent()
  */
 bool QwtAbstractScaleDraw::hasComponent(ScaleComponent component) const
 {
-    return (m_data->components & component);
+    QWT_DC(d);
+    return (d->components & component);
 }
 
 /**
- * \if ENGLISH
  * @brief Set the scale division
  * @param scaleDiv New scale division object
  * @details This also updates the scale map and clears the label cache.
- * \endif
- * \if CHINESE
- * @brief 设置刻度划分
- * @param scaleDiv 新的刻度划分对象
- * @details 这还会更新刻度映射并清空标签缓存。
- * \endif
  */
 void QwtAbstractScaleDraw::setScaleDiv(const QwtScaleDiv& scaleDiv)
 {
-    m_data->scaleDiv = scaleDiv;
-    m_data->map.setScaleInterval(scaleDiv.lowerBound(), scaleDiv.upperBound());
-    m_data->labelCache.clear();
+    QWT_D(d);
+    d->scaleDiv = scaleDiv;
+    d->map.setScaleInterval(scaleDiv.lowerBound(), scaleDiv.upperBound());
+    d->labelCache.clear();
 }
 
 /**
- * \if ENGLISH
  * @brief Set the scale transformation
  * @param transformation New scale transformation object
- * \endif
- * \if CHINESE
- * @brief 设置刻度变换
- * @param transformation 新的刻度变换对象
- * \endif
  */
 void QwtAbstractScaleDraw::setTransformation(QwtTransform* transformation)
 {
-    m_data->map.setTransformation(transformation);
+    QWT_D(d);
+    d->map.setTransformation(transformation);
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale map (const version)
  * @return Map for translating between scale and pixel values
- * \endif
- * \if CHINESE
- * @brief 返回刻度映射（常量版本）
- * @return 用于在刻度和像素值之间转换的映射
- * \endif
  */
 const QwtScaleMap& QwtAbstractScaleDraw::scaleMap() const
 {
-    return m_data->map;
+    QWT_DC(d);
+    return d->map;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale map (non-const version)
  * @return Map for translating between scale and pixel values
- * \endif
- * \if CHINESE
- * @brief 返回刻度映射（非常量版本）
- * @return 用于在刻度和像素值之间转换的映射
- * \endif
  */
 QwtScaleMap& QwtAbstractScaleDraw::scaleMap()
 {
-    return m_data->map;
+    QWT_D(d);
+    return d->map;
 }
 
 /**
- * \if ENGLISH
  * @brief Return the scale division
  * @return Current scale division object
- * \endif
- * \if CHINESE
- * @brief 返回刻度划分
- * @return 当前刻度划分对象
- * \endif
  */
 const QwtScaleDiv& QwtAbstractScaleDraw::scaleDiv() const
 {
-    return m_data->scaleDiv;
+    QWT_DC(d);
+    return d->scaleDiv;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the width of the scale pen
  * @param width Pen width
- * \sa penWidth()
- * \endif
- * \if CHINESE
- * @brief 设置刻度画笔宽度
- * @param width 画笔宽度
- * \sa penWidth()
- * \endif
+ * @sa penWidth()
  */
 void QwtAbstractScaleDraw::setPenWidthF(qreal width)
 {
+    QWT_D(d);
     if (width < 0.0)
         width = 0.0;
 
-    m_data->penWidthF = width;
+    d->penWidthF = width;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale pen width
  * @return Scale pen width
- * \sa setPenWidth()
- * \endif
- * \if CHINESE
- * @brief 获取刻度画笔宽度
- * @return 刻度画笔宽度
- * \sa setPenWidth()
- * \endif
+ * @sa setPenWidth()
  */
 qreal QwtAbstractScaleDraw::penWidthF() const
 {
-    return m_data->penWidthF;
+    QWT_DC(d);
+    return d->penWidthF;
 }
 
 /**
- * \if ENGLISH
  * @brief Set whether the scale draw is selected
  * @param on True to select, false to deselect
- * \endif
- * \if CHINESE
- * @brief 设置刻度绘制是否被选中
- * @param on true 为选中，false 为取消选中
- * \endif
  */
 void QwtAbstractScaleDraw::setSelected(bool on)
 {
-    m_data->isSelected = on;
+    QWT_D(d);
+    d->isSelected = on;
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the scale draw is selected
  * @return True if selected, false otherwise
- * \endif
- * \if CHINESE
- * @brief 检查刻度绘制是否被选中
- * @return 如果被选中返回 true，否则返回 false
- * \endif
  */
 bool QwtAbstractScaleDraw::isSelected() const
 {
-    return m_data->isSelected;
+    QWT_DC(d);
+    return d->isSelected;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the pen width offset for the axis when it is in selected state
  * @details When an axis (e.g., X-axis or Y-axis) is selected by the user, the pen width used
  *          for drawing will be increased by this offset value, achieving a visual highlighting effect.
  * @param offset The additional width value to be added when selected (unit: pixels).
  *               This value should be non-negative. If it is 0, the line width in selected state
  *               will be the same as in normal state.
- * \sa selectedPenWidthOffset()
- * \endif
- * \if CHINESE
- * @brief 设置坐标轴在选中状态下的画笔宽度附加值
- * @details 当坐标轴（如 X 轴或 Y 轴）被用户选中时，绘制的画笔宽度会在原始宽度的基础上
- *          增加这个附加值，实现视觉上的突出显示效果。
- * @param offset 选中时增加的宽度值（单位：像素）。该值应为非负数。
- *               如果为 0，则选中状态下的线宽与普通状态相同。
- * \sa selectedPenWidthOffset()
- * \endif
+ * @sa selectedPenWidthOffset()
  */
 void QwtAbstractScaleDraw::setSelectedPenWidthOffset(qreal offset)
 {
-    m_data->penWidthOffset = offset;
+    QWT_D(d);
+    d->penWidthOffset = offset;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current pen width offset for the axis when it is in selected state
  * @return The current width offset value
- * \sa setSelectedPenWidthOffset()
- * \endif
- * \if CHINESE
- * @brief 获取当前坐标轴在选中状态下的画笔宽度附加值
- * @return 当前的宽度附加值
- * \sa setSelectedPenWidthOffset()
- * \endif
+ * @sa setSelectedPenWidthOffset()
  */
 qreal QwtAbstractScaleDraw::selectedPenWidthOffset() const
 {
-    return m_data->penWidthOffset;
+    QWT_DC(d);
+    return d->penWidthOffset;
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the scale
  * @param painter The painter
  * @param palette Palette, text color is used for the labels, foreground color for ticks and backbone
- * \endif
- * \if CHINESE
- * @brief 绘制刻度
- * @param painter 绘制器
- * @param palette 调色板，文本颜色用于标签，前景色用于刻度线和主干
- * \endif
  */
 void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) const
 {
+    QWT_DC(d);
     painter->save();
 
     QPen pen = painter->pen();
-    pen.setWidthF(m_data->penWidthF);
+    pen.setWidthF(d->penWidthF);
     if (isSelected()) {
-        if (qFuzzyIsNull(m_data->penWidthF)) {
-            pen.setWidthF(1.0 + m_data->penWidthOffset);
+        if (qFuzzyIsNull(d->penWidthF)) {
+            pen.setWidthF(1.0 + d->penWidthOffset);
         } else {
-            pen.setWidthF(m_data->penWidthF + m_data->penWidthOffset);
+            pen.setWidthF(d->penWidthF + d->penWidthOffset);
         }
     }
     painter->setPen(pen);
@@ -356,11 +259,11 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
         painter->save();
         painter->setPen(palette.color(QPalette::Text));  // ignore pen style
 
-        const QList< double >& majorTicks = m_data->scaleDiv.ticks(QwtScaleDiv::MajorTick);
+        const QList< double >& majorTicks = d->scaleDiv.ticks(QwtScaleDiv::MajorTick);
 
         for (int i = 0; i < majorTicks.count(); i++) {
             const double v = majorTicks[ i ];
-            if (m_data->scaleDiv.contains(v))
+            if (d->scaleDiv.contains(v))
                 drawLabel(painter, v);
         }
 
@@ -377,14 +280,14 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
         painter->setPen(pen);
 
         for (int tickType = QwtScaleDiv::MinorTick; tickType < QwtScaleDiv::NTickTypes; tickType++) {
-            const double tickLen = m_data->tickLength[ tickType ];
+            const double tickLen = d->tickLength[ tickType ];
             if (tickLen <= 0.0)
                 continue;
 
-            const QList< double >& ticks = m_data->scaleDiv.ticks(tickType);
+            const QList< double >& ticks = d->scaleDiv.ticks(tickType);
             for (int i = 0; i < ticks.count(); i++) {
                 const double v = ticks[ i ];
-                if (m_data->scaleDiv.contains(v))
+                if (d->scaleDiv.contains(v))
                     drawTick(painter, v, tickLen);
             }
         }
@@ -410,104 +313,69 @@ void QwtAbstractScaleDraw::draw(QPainter* painter, const QPalette& palette) cons
 }
 
 /**
- * \if ENGLISH
  * @brief Set the spacing between tick and labels
  * @details The spacing is the distance between ticks and labels. The default spacing is 4 pixels.
  * @param spacing Spacing
- * \sa spacing()
- * \endif
- * \if CHINESE
- * @brief 设置刻度线和标签之间的间距
- * @details 间距是刻度线和标签之间的距离。默认间距为 4 像素。
- * @param spacing 间距
- * \sa spacing()
- * \endif
+ * @sa spacing()
  */
 void QwtAbstractScaleDraw::setSpacing(double spacing)
 {
+    QWT_D(d);
     if (spacing < 0)
         spacing = 0;
 
-    m_data->spacing = spacing;
+    d->spacing = spacing;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the spacing
  * @details The spacing is the distance between ticks and labels. The default spacing is 4 pixels.
  * @return Spacing
- * \sa setSpacing()
- * \endif
- * \if CHINESE
- * @brief 获取间距
- * @details 间距是刻度线和标签之间的距离。默认间距为 4 像素。
- * @return 间距
- * \sa setSpacing()
- * \endif
+ * @sa setSpacing()
  */
 double QwtAbstractScaleDraw::spacing() const
 {
-    return m_data->spacing;
+    QWT_DC(d);
+    return d->spacing;
 }
 
 /**
- * \if ENGLISH
  * @brief Set a minimum for the extent
  * @details The extent is calculated from the components of the scale draw.
  *          In situations where the labels are changing and the layout depends on the extent
  *          (e.g., scrolling a scale), setting an upper limit as minimum extent will avoid jumps of the layout.
  * @param minExtent Minimum extent
- * \sa extent(), minimumExtent()
- * \endif
- * \if CHINESE
- * @brief 设置范围的最小值
- * @details 范围是从刻度绘制的组件计算的。在标签变化且布局依赖于范围的情况下
- *          （如滚动刻度），设置最小范围的上限将避免布局跳动。
- * @param minExtent 最小范围
- * \sa extent(), minimumExtent()
- * \endif
+ * @sa extent(), minimumExtent()
  */
 void QwtAbstractScaleDraw::setMinimumExtent(double minExtent)
 {
+    QWT_D(d);
     if (minExtent < 0.0)
         minExtent = 0.0;
 
-    m_data->minExtent = minExtent;
+    d->minExtent = minExtent;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the minimum extent
  * @return Minimum extent
- * \sa extent(), setMinimumExtent()
- * \endif
- * \if CHINESE
- * @brief 获取最小范围
- * @return 最小范围
- * \sa extent(), setMinimumExtent()
- * \endif
+ * @sa extent(), setMinimumExtent()
  */
 double QwtAbstractScaleDraw::minimumExtent() const
 {
-    return m_data->minExtent;
+    QWT_DC(d);
+    return d->minExtent;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the length of the ticks
  * @param tickType Tick type
  * @param length New length
  * @warning The length is limited to [0..1000]
- * \endif
- * \if CHINESE
- * @brief 设置刻度线长度
- * @param tickType 刻度类型
- * @param length 新的长度
- * @warning 长度限制在 [0..1000]
- * \endif
  */
 void QwtAbstractScaleDraw::setTickLength(QwtScaleDiv::TickType tickType, double length)
 {
+    QWT_D(d);
     if (tickType < QwtScaleDiv::MinorTick || tickType > QwtScaleDiv::MajorTick) {
         return;
     }
@@ -519,68 +387,46 @@ void QwtAbstractScaleDraw::setTickLength(QwtScaleDiv::TickType tickType, double 
     if (length > maxTickLen)
         length = maxTickLen;
 
-    m_data->tickLength[ tickType ] = length;
+    d->tickLength[ tickType ] = length;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the length of the ticks
  * @return Length of the ticks
- * \sa setTickLength(), maxTickLength()
- * \endif
- * \if CHINESE
- * @brief 获取刻度线长度
- * @return 刻度线长度
- * \sa setTickLength(), maxTickLength()
- * \endif
+ * @sa setTickLength(), maxTickLength()
  */
 double QwtAbstractScaleDraw::tickLength(QwtScaleDiv::TickType tickType) const
 {
+    QWT_DC(d);
     if (tickType < QwtScaleDiv::MinorTick || tickType > QwtScaleDiv::MajorTick) {
         return 0;
     }
 
-    return m_data->tickLength[ tickType ];
+    return d->tickLength[ tickType ];
 }
 
 /**
- * \if ENGLISH
  * @brief Get the length of the longest tick
  * @return Length of the longest tick
  * @details Useful for layout calculations
- * \sa tickLength(), setTickLength()
- * \endif
- * \if CHINESE
- * @brief 获取最长刻度线的长度
- * @return 最长刻度线的长度
- * @details 对布局计算有用
- * \sa tickLength(), setTickLength()
- * \endif
+ * @sa tickLength(), setTickLength()
  */
 double QwtAbstractScaleDraw::maxTickLength() const
 {
+    QWT_DC(d);
     double length = 0.0;
     for (int i = 0; i < QwtScaleDiv::NTickTypes; i++)
-        length = qwtMaxF(length, m_data->tickLength[ i ]);
+        length = qwtMaxF(length, d->tickLength[ i ]);
 
     return length;
 }
 
 /**
- * \if ENGLISH
  * @brief Convert a value into its representing label
  * @details The value is converted to a plain text using QLocale().toString(value).
  *          This method is often overloaded by applications to have individual labels.
  * @param value Value
  * @return Label string
- * \endif
- * \if CHINESE
- * @brief 将值转换为表示标签
- * @details 值通过 QLocale().toString(value) 转换为纯文本。
- *          此方法常被应用程序重载以获得自定义标签。
- * @param value 值
- * @return 标签字符串
- * \endif
  */
 QwtText QwtAbstractScaleDraw::label(double value) const
 {
@@ -588,7 +434,6 @@ QwtText QwtAbstractScaleDraw::label(double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Convert a value into its representing label and cache it
  * @details The conversion between value and label is called very often in the layout and painting code.
  *          Unfortunately the calculation of the label sizes might be slow (really slow for rich text in Qt4),
@@ -596,20 +441,12 @@ QwtText QwtAbstractScaleDraw::label(double value) const
  * @param font Font
  * @param value Value
  * @return Tick label
- * \endif
- * \if CHINESE
- * @brief 将值转换为表示标签并缓存
- * @details 值和标签之间的转换在布局和绘制代码中经常被调用。
- *          不幸的是，标签大小的计算可能很慢（Qt4 中的富文本确实很慢），因此需要缓存标签。
- * @param font 字体
- * @param value 值
- * @return 刻度标签
- * \endif
  */
 const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) const
 {
-    QMap< double, QwtText >::const_iterator it1 = m_data->labelCache.constFind(value);
-    if (it1 != m_data->labelCache.constEnd())
+    QWT_DC(d);
+    auto it1 = d->labelCache.constFind(value);
+    if (it1 != d->labelCache.constEnd())
         return *it1;
 
     QwtText lbl = label(value);
@@ -618,24 +455,18 @@ const QwtText& QwtAbstractScaleDraw::tickLabel(const QFont& font, double value) 
 
     (void)lbl.textSize(font);  // initialize the internal cache
 
-    QMap< double, QwtText >::iterator it2 = m_data->labelCache.insert(value, lbl);
+    auto it2 = d->labelCache.insert(value, lbl);
     return *it2;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the cache used by tickLabel()
  * @details The cache is invalidated when a new QwtScaleDiv is set.
  *          If the labels need to be changed while the same QwtScaleDiv is set,
  *          invalidateCache() needs to be called manually.
- * \endif
- * \if CHINESE
- * @brief 清除 tickLabel() 使用的缓存
- * @details 当设置新的 QwtScaleDiv 时缓存会被清除。
- *          如果在相同的 QwtScaleDiv 下需要更改标签，需要手动调用 invalidateCache()。
- * \endif
  */
 void QwtAbstractScaleDraw::invalidateCache()
 {
-    m_data->labelCache.clear();
+    QWT_D(d);
+    d->labelCache.clear();
 }

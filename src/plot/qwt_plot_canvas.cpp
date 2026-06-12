@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -34,8 +34,9 @@
 
 class QwtPlotCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotCanvas)
 public:
-    PrivateData() : backingStore(nullptr)
+    PrivateData(QwtPlotCanvas* p) : q_ptr(p), backingStore(nullptr)
     {
     }
 
@@ -49,22 +50,12 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] plot 父绘图控件
- * @sa QwtPlot::setCanvas()
- * \endif
  */
-QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this)
+QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanvas(this), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setPaintAttribute(QwtPlotCanvas::BackingStore, true);
     setPaintAttribute(QwtPlotCanvas::Opaque, true);
     setPaintAttribute(QwtPlotCanvas::HackStyledBackground, true);
@@ -75,60 +66,46 @@ QwtPlotCanvas::QwtPlotCanvas(QwtPlot* plot) : QFrame(plot), QwtPlotAbstractCanva
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotCanvas::~QwtPlotCanvas()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the paint attributes
  * @param[in] attribute Paint attribute
  * @param[in] on On/Off
  * @sa testPaintAttribute(), backingStore()
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘制属性
- * @param[in] attribute 绘制属性
- * @param[in] on 开启/关闭
- * @sa testPaintAttribute(), backingStore()
- * \endif
  */
 void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
-    if (bool(m_data->paintAttributes & attribute) == on)
+    QWT_D(d);
+
+    if (bool(d->paintAttributes & attribute) == on)
         return;
 
     if (on)
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 
     switch (attribute) {
     case BackingStore: {
         if (on) {
-            if (m_data->backingStore == nullptr)
-                m_data->backingStore = new QPixmap();
+            if (d->backingStore == nullptr)
+                d->backingStore = new QPixmap();
 
             if (isVisible()) {
 #if QT_VERSION >= 0x050000
-                *m_data->backingStore = grab(rect());
+                *d->backingStore = grab(rect());
 #else
-                *m_data->backingStore = QPixmap::grabWidget(this, rect());
+                *d->backingStore = QPixmap::grabWidget(this, rect());
 #endif
             }
         } else {
-            delete m_data->backingStore;
-            m_data->backingStore = nullptr;
+            delete d->backingStore;
+            d->backingStore = nullptr;
         }
         break;
     }
@@ -145,68 +122,42 @@ void QwtPlotCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test whether a paint attribute is enabled
  * @param[in] attribute Paint attribute
  * @return true when attribute is enabled
  * @sa setPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试绘制属性是否启用
- * @param[in] attribute 绘制属性
- * @return 属性启用时返回 true
- * @sa setPaintAttribute()
- * \endif
  */
 bool QwtPlotCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the backing store
  * @return Backing store pixmap, might be null
- * \endif
- *
- * \if CHINESE
- * @brief 获取后备存储
- * @return 后备存储 pixmap，可能为空
- * \endif
  */
 const QPixmap* QwtPlotCanvas::backingStore() const
 {
-    return m_data->backingStore;
+    QWT_DC(d);
+    return d->backingStore;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the internal backing store
- * \endif
- *
- * \if CHINESE
- * @brief 使内部后备存储失效
- * \endif
  */
 void QwtPlotCanvas::invalidateBackingStore()
 {
-    if (m_data->backingStore)
-        *m_data->backingStore = QPixmap();
+    QWT_D(d);
+
+    if (d->backingStore)
+        *d->backingStore = QPixmap();
 }
 
 /**
- * \if ENGLISH
  * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
  * @param[in] event Qt Event
  * @return See QFrame::event()
- * \endif
- *
- * \if CHINESE
- * @brief Qt 事件处理器，处理 QEvent::PolishRequest 和 QEvent::StyleChange
- * @param[in] event Qt 事件
- * @return 参见 QFrame::event()
- * \endif
  */
 bool QwtPlotCanvas::event(QEvent* event)
 {
@@ -229,18 +180,20 @@ bool QwtPlotCanvas::event(QEvent* event)
 
 /*!
    Paint event
-   \param event Paint event
+   @param event Paint event
  */
 void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 {
+    QWT_D(d);
+
     QPainter painter(this);
     painter.setClipRegion(event->region());
 
-    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && m_data->backingStore != nullptr) {
-        QPixmap& bs = *m_data->backingStore;
+    if (testPaintAttribute(QwtPlotCanvas::BackingStore) && d->backingStore != nullptr) {
+        QPixmap& bs = *d->backingStore;
         if (bs.size() != size() * QwtPainter::devicePixelRatio(&bs)) {
             bs = QwtPainter::backingStore(this, size());
-            // 先初始化为完全透明
+            // Initialize with full transparency first
             bs.fill(Qt::transparent);
 
             if (testAttribute(Qt::WA_StyledBackground)) {
@@ -261,7 +214,7 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
                     drawBorder(&p);
             }
         }
-        painter.drawPixmap(0, 0, *m_data->backingStore);
+        painter.drawPixmap(0, 0, *d->backingStore);
     } else {
         if (testAttribute(Qt::WA_StyledBackground)) {
             if (testAttribute(Qt::WA_OpaquePaintEvent)) {
@@ -305,8 +258,8 @@ void QwtPlotCanvas::paintEvent(QPaintEvent* event)
 /*!
    Draw the border of the plot canvas
 
-   \param painter Painter
-   \sa setBorderRadius()
+   @param painter Painter
+   @sa setBorderRadius()
  */
 void QwtPlotCanvas::drawBorder(QPainter* painter)
 {
@@ -320,7 +273,7 @@ void QwtPlotCanvas::drawBorder(QPainter* painter)
 
 /*!
    Resize event
-   \param event Resize event
+   @param event Resize event
  */
 void QwtPlotCanvas::resizeEvent(QResizeEvent* event)
 {
@@ -329,15 +282,8 @@ void QwtPlotCanvas::resizeEvent(QResizeEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache and repaint the canvas
  * @sa invalidatePaintCache()
- * \endif
- *
- * \if CHINESE
- * @brief 使绘制缓存失效并重绘画布
- * @sa invalidatePaintCache()
- * \endif
  */
 void QwtPlotCanvas::replot()
 {
@@ -350,20 +296,11 @@ void QwtPlotCanvas::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the painter path for a styled or rounded border
  * @param[in] rect Bounding rectangle of the canvas
  * @return Painter path that can be used for clipping
  * @details When the canvas has no styled background or rounded borders,
  *          the painter path is empty.
- * \endif
- *
- * \if CHINESE
- * @brief 计算样式边框或圆角边框的绘制路径
- * @param[in] rect 画布的边界矩形
- * @return 可用于裁剪的绘制路径
- * @details 当画布没有样式背景或圆角边框时，绘制路径为空。
- * \endif
  */
 QPainterPath QwtPlotCanvas::borderPath(const QRect& rect) const
 {

@@ -239,7 +239,6 @@ static inline QDate qwtToDate(int year, int month = 1, int day = 1)
 }
 
 /**
- * \if ENGLISH
  * @brief Translate from double to QDateTime
  *
  * @param value Number of milliseconds since the epoch,
@@ -249,18 +248,7 @@ static inline QDate qwtToDate(int year, int month = 1, int day = 1)
  *
  * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
  * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
- * \endif
  *
- * \if CHINESE
- * @brief 将 double 转换为 QDateTime
- *
- * @param value 自纪元 1970-01-01T00:00:00 UTC 以来的毫秒数
- * @param timeSpec 时间规范
- * @return 日期时间值
- *
- * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
- * @note Qt::OffsetFromUTC 的返回日期时间将是 Qt::UTC
- * \endif
  */
 QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 {
@@ -289,7 +277,6 @@ QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 }
 
 /**
- * \if ENGLISH
  * @brief Translate from QDateTime to double
  *
  * @param dateTime Datetime value
@@ -298,18 +285,7 @@ QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
  * @sa toDateTime(), QDateTime::toMSecsSinceEpoch()
  * @warning For values very far below or above 1970-01-01 UTC rounding errors
  *          will happen due to the limited significance of a double.
- * \endif
  *
- * \if CHINESE
- * @brief 将 QDateTime 转换为 double
- *
- * @param dateTime 日期时间值
- * @return 自 1970-01-01T00:00:00 UTC 以来经过的毫秒数。
- *
- * @sa toDateTime(), QDateTime::toMSecsSinceEpoch()
- * @warning 对于远低于或远高于 1970-01-01 UTC 的值，由于双精度浮点数的有限精度，
- *          会出现舍入误差。
- * \endif
  */
 double QwtDate::toDouble(const QDateTime& dateTime)
 {
@@ -326,7 +302,6 @@ double QwtDate::toDouble(const QDateTime& dateTime)
 }
 
 /**
- * \if ENGLISH
  * @brief Ceil a datetime according the interval type
  *
  * @param dateTime Datetime value
@@ -335,18 +310,7 @@ double QwtDate::toDouble(const QDateTime& dateTime)
  *                     will be ceiled to the next beginning of a month
  * @return Ceiled datetime
  * @sa floor()
- * \endif
  *
- * \if CHINESE
- * @brief 根据间隔类型向上取整日期时间
- *
- * @param dateTime 日期时间值
- * @param intervalType 间隔类型，如何向上取整。
- *                     例如，当 intervalType = QwtDate::Months 时，
- *                     结果将向上取整到下个月的开始
- * @return 向上取整后的日期时间
- * @sa floor()
- * \endif
  */
 QDateTime QwtDate::ceil(const QDateTime& dateTime, IntervalType intervalType)
 {
@@ -430,7 +394,6 @@ QDateTime QwtDate::ceil(const QDateTime& dateTime, IntervalType intervalType)
 }
 
 /**
- * \if ENGLISH
  * @brief Floor a datetime according the interval type
  *
  * @param dateTime Datetime value
@@ -439,18 +402,7 @@ QDateTime QwtDate::ceil(const QDateTime& dateTime, IntervalType intervalType)
  *                     the result will be floored to the beginning of a month
  * @return Floored datetime
  * @sa ceil()
- * \endif
  *
- * \if CHINESE
- * @brief 根据间隔类型向下取整日期时间
- *
- * @param dateTime 日期时间值
- * @param intervalType 间隔类型，如何向下取整。
- *                     例如，当 intervalType = QwtDate::Months 时，
- *                     结果将向下取整到当月的开始
- * @return 向下取整后的日期时间
- * @sa ceil()
- * \endif
  */
 QDateTime QwtDate::floor(const QDateTime& dateTime, IntervalType intervalType)
 {
@@ -506,7 +458,6 @@ QDateTime QwtDate::floor(const QDateTime& dateTime, IntervalType intervalType)
 }
 
 /**
- * \if ENGLISH
  * @brief Minimum for the supported date range
  *
  * The range of valid dates depends on how QDate stores the
@@ -517,19 +468,7 @@ QDateTime QwtDate::floor(const QDateTime& dateTime, IntervalType intervalType)
  *
  * @return minimum of the date range
  * @sa maxDate()
- * \endif
  *
- * \if CHINESE
- * @brief 支持的日期范围的最小值
- *
- * 有效日期的范围取决于 QDate 内部存储儒略日的方式。
- *
- * - 对于 Qt4 是 "Tue Jan 2 -4713"
- * - 对于 Qt5 是 "Thu Jan 1 -2147483648"
- *
- * @return 日期范围的最小值
- * @sa maxDate()
- * \endif
  */
 QDate QwtDate::minDate()
 {
@@ -541,7 +480,6 @@ QDate QwtDate::minDate()
 }
 
 /**
- * \if ENGLISH
  * @brief Maximum for the supported date range
  *
  * The range of valid dates depends on how QDate stores the
@@ -553,20 +491,7 @@ QDate QwtDate::minDate()
  * @return maximum of the date range
  * @sa minDate()
  * @note The maximum differs between Qt4 and Qt5
- * \endif
  *
- * \if CHINESE
- * @brief 支持的日期范围的最大值
- *
- * 有效日期的范围取决于 QDate 内部存储儒略日的方式。
- *
- * - 对于 Qt4 是 "Tue Jun 3 5874898"
- * - 对于 Qt5 是 "Tue Dec 31 2147483647"
- *
- * @return 日期范围的最大值
- * @sa minDate()
- * @note 最大值在 Qt4 和 Qt5 之间有所不同
- * \endif
  */
 QDate QwtDate::maxDate()
 {
@@ -578,7 +503,6 @@ QDate QwtDate::maxDate()
 }
 
 /**
- * \if ENGLISH
  * @brief Date of the first day of the first week for a year
  *
  * The first day of a week depends on the current locale
@@ -589,19 +513,7 @@ QDate QwtDate::maxDate()
  * @return First day of week 0
  *
  * @sa QLocale::firstDayOfWeek(), weekNumber()
- * \endif
  *
- * \if CHINESE
- * @brief 一年中第一周第一天的日期
- *
- * 一周的第一天取决于当前区域设置 ( QLocale::firstDayOfWeek() )。
- *
- * @param year 年份
- * @param type 如何确定第一周的选项
- * @return 第0周的第一天
- *
- * @sa QLocale::firstDayOfWeek(), weekNumber()
- * \endif
  */
 QDate QwtDate::dateOfWeek0(int year, Week0Type type)
 {
@@ -632,7 +544,6 @@ QDate QwtDate::dateOfWeek0(int year, Week0Type type)
 }
 
 /**
- * \if ENGLISH
  * @brief Find the week number of a date
  *
  * - QwtDate::FirstThursday: Corresponding to ISO 8601 ( see QDate::weekNumber() ).
@@ -642,19 +553,7 @@ QDate QwtDate::dateOfWeek0(int year, Week0Type type)
  * @param type Option how to identify the first week
  *
  * @return Week number, starting with 1
- * \endif
  *
- * \if CHINESE
- * @brief 查找日期的周数
- *
- * - QwtDate::FirstThursday: 对应于 ISO 8601 (参见 QDate::weekNumber() )。
- * - QwtDate::FirstDay: 自 dateOfWeek0() 以来开始的周数。
- *
- * @param date 日期
- * @param type 如何确定第一周的选项
- *
- * @return 周数，从1开始
- * \endif
  */
 int QwtDate::weekNumber(const QDate& date, Week0Type type)
 {
@@ -683,7 +582,6 @@ int QwtDate::weekNumber(const QDate& date, Week0Type type)
 }
 
 /**
- * \if ENGLISH
  * @brief Offset in seconds from Coordinated Universal Time
  *
  * The offset depends on the time specification of dateTime:
@@ -697,22 +595,7 @@ int QwtDate::weekNumber(const QDate& date, Week0Type type)
  *
  * @param dateTime Datetime value
  * @return Offset in seconds
- * \endif
  *
- * \if CHINESE
- * @brief 与世界协调时间的偏移量（秒）
- *
- * 偏移量取决于 dateTime 的时间规范：
- *
- * - Qt::UTC: 0，dateTime 没有偏移
- * - Qt::OffsetFromUTC: 返回 dateTime.offsetFromUtc()
- * - Qt::LocalTime: 与 UTC 的秒数差
- *
- * 对于 Qt::LocalTime，偏移量取决于时区和夏令时。
- *
- * @param dateTime 日期时间值
- * @return 偏移量（秒）
- * \endif
  */
 int QwtDate::utcOffset(const QDateTime& dateTime)
 {
@@ -740,7 +623,6 @@ int QwtDate::utcOffset(const QDateTime& dateTime)
 }
 
 /**
- * \if ENGLISH
  * @brief Translate a datetime into a string
  *
  * Beside the format expressions documented in QDateTime::toString()
@@ -759,26 +641,7 @@ int QwtDate::utcOffset(const QDateTime& dateTime)
  *
  * @return Datetime string
  * @sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
- * \endif
  *
- * \if CHINESE
- * @brief 将日期时间转换为字符串
- *
- * 除了 QDateTime::toString() 中记录的格式表达式外，还支持以下表达式：
- *
- * - w: 周数 ( 1 - 53 )
- * - ww: 带前导零的周数 ( 01 - 53 )
- *
- * 由于第1周通常从前一年开始，因此对于期望年份与周数匹配的格式，
- * 会应用特殊规则 - 即使日期属于前一年。
- *
- * @param dateTime 日期时间值
- * @param format 格式字符串
- * @param week0Type 第0周的规范
- *
- * @return 日期时间字符串
- * @sa QDateTime::toString(), weekNumber(), QwtDateScaleDraw
- * \endif
  */
 QString QwtDate::toString(const QDateTime& dateTime, const QString& format, Week0Type week0Type)
 {

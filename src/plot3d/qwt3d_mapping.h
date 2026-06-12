@@ -1,5 +1,5 @@
-#ifndef qwt3d_mapping_h
-#define qwt3d_mapping_h
+#ifndef QWT3D_MAPPING_H
+#define QWT3D_MAPPING_H
 
 #include <qstring.h>
 #include "qwt3d_global.h"
@@ -8,13 +8,7 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for general mappings
- * \endif
- *
- * \if CHINESE
- * @brief 通用映射的抽象基类
- * \endif
  */
 class QWT3D_EXPORT Mapping
 {
@@ -28,4 +22,4 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_MAPPING_H

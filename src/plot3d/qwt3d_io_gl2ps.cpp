@@ -2,7 +2,7 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <time.h>
+#include <ctime>
 #include "qwt3d_openglhelper.h"
 #include "gl2ps.h"
 #include "qwt3d_io_gl2ps.h"
@@ -11,169 +11,204 @@
 
 using namespace Qwt3D;
 
+class VectorWriter::PrivateData
+{
+    QWT_DECLARE_PUBLIC(VectorWriter)
+
+public:
+    PrivateData(VectorWriter* q)
+        : q_ptr(q)
+        , m_gl2psFormat(GL2PS_EPS)
+        , m_formatError(false)
+#ifdef GL2PS_HAVE_ZLIB
+        , m_compressed(true)
+#else
+        , m_compressed(false)
+#endif
+        , m_sortMode(VectorWriter::SIMPLESORT)
+        , m_landscape(VectorWriter::AUTO)
+        , m_textMode(VectorWriter::PIXEL)
+    {
+    }
+
+    GLint m_gl2psFormat;
+    bool m_formatError;
+    bool m_compressed;
+    VectorWriter::SORTMODE m_sortMode;
+    VectorWriter::LANDSCAPEMODE m_landscape;
+    VectorWriter::TEXTMODE m_textMode;
+    QString m_texFname;
+};
+
+VectorWriter::VectorWriter() : QWT_PIMPL_CONSTRUCT
+{
+}
+
+VectorWriter::~VectorWriter() = default;
+
 /**
- * \if ENGLISH
  * @brief Provides a new VectorWriter object
  * @return A cloned copy of this VectorWriter as Functor pointer
- * \endif
- *
- * \if CHINESE
- * @brief 提供一个新的 VectorWriter 对象
- * @return 此 VectorWriter 的克隆副本作为 Functor 指针
- * \endif
  */
 IO::Functor* VectorWriter::clone() const
 {
-    return new VectorWriter(*this);
-}
-
-VectorWriter::VectorWriter()
-    : gl2ps_format_(GL2PS_EPS)
-    , formaterror_(false)
-    ,
-#ifdef GL2PS_HAVE_ZLIB
-    compressed_(true)
-    ,
-#else
-    compressed_(false)
-    ,
-#endif
-    sortmode_(SIMPLESORT)
-    , landscape_(VectorWriter::AUTO)
-    , textmode_(VectorWriter::PIXEL)
-    , texfname_("")
-{
+    auto* copy = new VectorWriter();
+    QWT_DC(d);
+    auto* copyD = copy->d_func();
+    copyD->m_gl2psFormat = d->m_gl2psFormat;
+    copyD->m_formatError = d->m_formatError;
+    copyD->m_compressed = d->m_compressed;
+    copyD->m_sortMode = d->m_sortMode;
+    copyD->m_landscape = d->m_landscape;
+    copyD->m_textMode = d->m_textMode;
+    copyD->m_texFname = d->m_texFname;
+    return copy;
 }
 
 /**
- * \if ENGLISH
+ * @brief Sets landscape mode
+ * @param val Landscape mode (ON, OFF, or AUTO)
+ */
+void VectorWriter::setLandscape(LANDSCAPEMODE val)
+{
+    QWT_D(d);
+    d->m_landscape = val;
+}
+
+/**
+ * @brief Returns the current landscape mode
+ */
+VectorWriter::LANDSCAPEMODE VectorWriter::landscape() const
+{
+    QWT_DC(d);
+    return d->m_landscape;
+}
+
+/**
+ * @brief Sets the sorting mode
+ * @param val Sort mode (NOSORT, SIMPLESORT, or BSPSORT)
+ */
+void VectorWriter::setSortMode(SORTMODE val)
+{
+    QWT_D(d);
+    d->m_sortMode = val;
+}
+
+/**
+ * @brief Returns the current sorting mode
+ */
+VectorWriter::SORTMODE VectorWriter::sortMode() const
+{
+    QWT_DC(d);
+    return d->m_sortMode;
+}
+
+/**
  * @brief Sets the mode for text output
- * @param[in] val The underlying format for the generated output:
- *                PIXEL - poor quality but exact positioning;
- *                NATIVE - high quality but inexact positioning;
- *                TEX - high quality and exact positioning, arbitrary TeX strings
- *                as content for the saved labels are possible. The disadvantage is
- *                the need for an additionally TeX run to get the final output.
- * @param[in] fname Optional, used only in conjunction with TeX output; file name
- *                  for the generated TeX file. If not set, a file called
- *                  "OUTPUT.FOR.tex" will be generated, where "OUTPUT.FOR" describes
- *                  the file name argument for IO::save().
+ * @param val The underlying format for the generated output:
+ *            PIXEL - poor quality but exact positioning;
+ *            NATIVE - high quality but inexact positioning;
+ *            TEX - high quality and exact positioning, arbitrary TeX strings
+ *            as content for the saved labels are possible. The disadvantage is
+ *            the need for an additionally TeX run to get the final output.
+ * @param fname Optional, used only in conjunction with TeX output; file name
+ *              for the generated TeX file. If not set, a file called
+ *              "OUTPUT.FOR.tex" will be generated, where "OUTPUT.FOR" describes
+ *              the file name argument for IO::save().
  * @note On Linux platforms, pdflatex seems a file named 'dump_0.pdf.tex' mistakenly
  *       to identify as PDF file.
- * \endif
- *
- * \if CHINESE
- * @brief 设置文本输出模式
- * @param[in] val 生成输出的底层格式：
- *                PIXEL - 质量较差但定位精确；
- *                NATIVE - 质量较高但定位不精确；
- *                TEX - 质量高且定位精确，可以使用任意 TeX 字串作为保存标签的内容。
- *                缺点是需要额外的 TeX 运行才能获得最终输出。
- * @param[in] fname 可选参数，仅在 TeX 输出模式下使用；生成的 TeX 文件的文件名。
- *                  如果未设置，将生成名为 "OUTPUT.FOR.tex" 的文件，
- *                  其中 "OUTPUT.FOR" 描述了 IO::save() 的文件名参数。
- * @note 在 Linux 平台上，pdflatex 可能会错误地将名为 'dump_0.pdf.tex' 的文件识别为 PDF 文件。
- * \endif
  */
 void VectorWriter::setTextMode(TEXTMODE val, QString fname)
 {
-    textmode_ = val;
-    texfname_ = (fname.isEmpty()) ? QString("") : fname;
+    QWT_D(d);
+    d->m_textMode = val;
+    d->m_texFname = (fname.isEmpty()) ? QString("") : fname;
+}
+
+/**
+ * @brief Returns the current text output mode
+ */
+VectorWriter::TEXTMODE VectorWriter::textMode() const
+{
+    QWT_DC(d);
+    return d->m_textMode;
 }
 
 #ifdef GL2PS_HAVE_ZLIB
 /**
- * \if ENGLISH
  * @brief Turns compressed output on or off
- * @param[in] val True to enable compression, false to disable
+ * @param val True to enable compression, false to disable
  * @details No effect if zlib support has not been set.
- * \endif
- *
- * \if CHINESE
- * @brief 开启或关闭压缩输出
- * @param[in] val true 启用压缩，false 禁用
- * @details 如果未设置 zlib 支持则无效。
- * \endif
  */
 void VectorWriter::setCompressed(bool val)
 {
-    compressed_ = val;
+    QWT_D(d);
+    d->m_compressed = val;
 }
 #else
 /**
- * \if ENGLISH
  * @brief Turns compressed output on or off (no effect - zlib support not available)
- * \endif
- *
- * \if CHINESE
- * @brief 开启或关闭压缩输出（无效 - zlib 支持不可用）
- * \endif
  */
 void VectorWriter::setCompressed(bool)
 {
-    compressed_ = false;
+    QWT_D(d);
+    d->m_compressed = false;
 }
 #endif
 
 /**
- * \if ENGLISH
+ * @brief Returns compression mode
+ */
+bool VectorWriter::compressed() const
+{
+    QWT_DC(d);
+    return d->m_compressed;
+}
+
+/**
  * @brief Sets output format
- * @param[in] format Must be one of "EPS_GZ", "PS_GZ", "EPS", "PS", "PDF", "SVG" or "PGF" (case sensitive)
+ * @param format Must be one of "EPS_GZ", "PS_GZ", "EPS", "PS", "PDF", "SVG" or "PGF" (case sensitive)
  * @return True on success, false for unknown format
- * \endif
- *
- * \if CHINESE
- * @brief 设置输出格式
- * @param[in] format 必须是 "EPS_GZ"、"PS_GZ"、"EPS"、"PS"、"PDF"、"SVG" 或 "PGF" 之一（区分大小写）
- * @return 成功返回 true，未知格式返回 false
- * \endif
  */
 bool VectorWriter::setFormat(QString const& format)
 {
+    QWT_D(d);
     if (format == QString("EPS")) {
-        gl2ps_format_ = GL2PS_EPS;
+        d->m_gl2psFormat = GL2PS_EPS;
     } else if (format == QString("PS")) {
-        gl2ps_format_ = GL2PS_PS;
+        d->m_gl2psFormat = GL2PS_PS;
     } else if (format == QString("PDF")) {
-        gl2ps_format_ = GL2PS_PDF;
+        d->m_gl2psFormat = GL2PS_PDF;
     } else if (format == QString("SVG")) {
-        gl2ps_format_ = GL2PS_SVG;
+        d->m_gl2psFormat = GL2PS_SVG;
     } else if (format == QString("PGF")) {
-        gl2ps_format_ = GL2PS_PGF;
+        d->m_gl2psFormat = GL2PS_PGF;
     }
 #ifdef GL2PS_HAVE_ZLIB
     else if (format == QString("EPS_GZ")) {
-        gl2ps_format_ = GL2PS_EPS;
+        d->m_gl2psFormat = GL2PS_EPS;
     } else if (format == QString("PS_GZ")) {
-        gl2ps_format_ = GL2PS_PS;
+        d->m_gl2psFormat = GL2PS_PS;
     }
 #endif
     else {
-        formaterror_ = true;
+        d->m_formatError = true;
         return false;
     }
-    formaterror_ = false;
+    d->m_formatError = false;
     return true;
 }
 
 /**
- * \if ENGLISH
  * @brief Performs actual output
- * @param[in] plot Plot3D widget to export
- * @param[in] fname Output file name
+ * @param plot Plot3D widget to export
+ * @param fname Output file name
  * @return True on success, false on format error or file open failure
- * \endif
- *
- * \if CHINESE
- * @brief 执行实际输出
- * @param[in] plot 要导出的 Plot3D 控件
- * @param[in] fname 输出文件名
- * @return 成功返回 true，格式错误或文件打开失败返回 false
- * \endif
  */
 bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 {
-    if (formaterror_)
+    QWT_D(d);
+    if (d->m_formatError)
         return false;
 
     plot->makeCurrent();
@@ -185,10 +220,10 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
 
     GLint options = GL2PS_SIMPLE_LINE_OFFSET | GL2PS_SILENT | GL2PS_DRAW_BACKGROUND | GL2PS_OCCLUSION_CULL | GL2PS_BEST_ROOT;
 
-    if (compressed_)
+    if (d->m_compressed)
         options |= GL2PS_COMPRESS;
 
-    switch (landscape_) {
+    switch (d->m_landscape) {
     case VectorWriter::AUTO:
         if (viewport[ 2 ] - viewport[ 0 ] > viewport[ 3 ] - viewport[ 0 ])
             options |= GL2PS_LANDSCAPE;
@@ -201,7 +236,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
     }
 
     int sortmode = GL2PS_SIMPLE_SORT;
-    switch (sortmode_) {
+    switch (d->m_sortMode) {
     case VectorWriter::NOSORT:
         sortmode = GL2PS_NO_SORT;
         break;
@@ -215,7 +250,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
         break;
     }
 
-    switch (textmode_) {
+    switch (d->m_textMode) {
     case NATIVE:
         Label::useDeviceFonts(true);
         break;
@@ -244,7 +279,7 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
         gl2psBeginPage("---",
                        QWT3DLOCAL8BIT(producer),
                        viewport,
-                       gl2ps_format_,
+                       d->m_gl2psFormat,
                        sortmode,
                        options,
                        GL_RGBA,
@@ -263,8 +298,8 @@ bool VectorWriter::operator()(Plot3D* plot, QString const& fname)
     fclose(fp);
 
     // extra TeX file
-    if (textmode_ == TEX) {
-        QString fn = (texfname_.isEmpty()) ? fname + ".tex" : texfname_;
+    if (d->m_textMode == TEX) {
+        QString fn = (d->m_texFname.isEmpty()) ? fname + ".tex" : d->m_texFname;
 
         fp = fopen(QWT3DLOCAL8BIT(fn), "wb");
         if (!fp) {
@@ -378,9 +413,6 @@ GLint Qwt3D::drawDeviceText(const char* str, const char* fontname, int fontsize,
     glGetDoublev(GL_CURRENT_COLOR, fcol);
     GLdouble bcol[ 4 ];
     glGetDoublev(GL_COLOR_CLEAR_VALUE, bcol);
-
-    //	glColor4d(color.r, color.g, color.b, color.a);
-    //		glClearColor(color.r, color.g, color.b, color.a);
 
     GLint ret = GL2PS_SUCCESS;
 

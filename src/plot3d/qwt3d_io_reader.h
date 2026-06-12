@@ -1,37 +1,31 @@
-#ifndef qwt3d_reader_h
-#define qwt3d_reader_h
+#ifndef QWT3D_IO_READER_H
+#define QWT3D_IO_READER_H
 
 #include "qwt3d_io.h"
 
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief Functor for reading of native files containing grid data
  * @details As a standard input functor associated with "mes" and "MES" file extensions.
- * \endif
- *
- * \if CHINESE
- * @brief 读取包含网格数据的原生文件的 Functor
- * @details 作为与 "mes" 和 "MES" 文件扩展名关联的标准输入 Functor。
- * \endif
  */
 class QWT3D_EXPORT NativeReader : public IO::Functor
 {
     friend class IO;
+    QWT_DECLARE_PRIVATE(NativeReader)
 
 public:
     NativeReader();
+    ~NativeReader() override;
 
 private:
-    IO::Functor *clone() const { return new NativeReader(*this); }
-    bool operator()(Plot3D *plot, QString const &fname);
+    IO::Functor *clone() const override;
+    bool operator()(Plot3D *plot, QString const &fname) override;
     static const char *magicstring;
-    double minz_, maxz_;
     bool collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
                      double &minx, double &maxx, double &miny, double &maxy);
 };
 
 } // ns
 
-#endif
+#endif // QWT3D_IO_READER_H

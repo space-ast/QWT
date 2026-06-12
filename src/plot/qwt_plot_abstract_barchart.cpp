@@ -41,9 +41,12 @@ static inline double qwtTransformWidth(
 
 class QwtPlotAbstractBarChart::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAbstractBarChart)
+
   public:
-    PrivateData()
-        : layoutPolicy( QwtPlotAbstractBarChart::AutoAdjustSamples )
+    PrivateData(QwtPlotAbstractBarChart* p)
+        : q_ptr(p)
+        , layoutPolicy( QwtPlotAbstractBarChart::AutoAdjustSamples )
         , layoutHint( 0.5 )
         , spacing( 10 )
         , margin( 5 )
@@ -59,21 +62,13 @@ class QwtPlotAbstractBarChart::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the chart
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 图表的标题
- * \endif
  */
 QwtPlotAbstractBarChart::QwtPlotAbstractBarChart( const QwtText& title )
     : QwtPlotSeriesItem( title )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemAttribute( QwtPlotItem::Legend, true );
     setItemAttribute( QwtPlotItem::AutoScale, true );
     setItemAttribute( QwtPlotItem::Margins, true );
@@ -81,203 +76,131 @@ QwtPlotAbstractBarChart::QwtPlotAbstractBarChart( const QwtText& title )
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * 
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotAbstractBarChart::~QwtPlotAbstractBarChart()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the layout policy
  * @details The combination of layoutPolicy() and layoutHint() define how the width
  *          of the bars is calculated.
  * @param[in] policy Layout policy
  * @sa layoutPolicy(), layoutHint()
- * \endif
- * 
- * \if CHINESE
- * @brief 设置布局策略
- * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
- * @param[in] policy 布局策略
- * @sa layoutPolicy(), layoutHint()
- * \endif
  */
 void QwtPlotAbstractBarChart::setLayoutPolicy( LayoutPolicy policy )
 {
-    if ( policy != m_data->layoutPolicy )
+    QWT_D(d);
+    if ( policy != d->layoutPolicy )
     {
-        m_data->layoutPolicy = policy;
+        d->layoutPolicy = policy;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout policy
  * @details The combination of layoutPolicy() and layoutHint() define how the width
  *          of the bars is calculated.
  * @return Layout policy of the chart item
  * @sa setLayoutPolicy(), layoutHint()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取布局策略
- * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
- * @return 图表项的布局策略
- * @sa setLayoutPolicy(), layoutHint()
- * \endif
  */
 QwtPlotAbstractBarChart::LayoutPolicy QwtPlotAbstractBarChart::layoutPolicy() const
 {
-    return m_data->layoutPolicy;
+    QWT_DC(d);
+    return d->layoutPolicy;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the layout hint
  * @details The combination of layoutPolicy() and layoutHint() define how the width
  *          of the bars is calculated.
  * @param[in] hint Layout hint
  * @sa LayoutPolicy, layoutPolicy(), layoutHint()
- * \endif
- * 
- * \if CHINESE
- * @brief 设置布局提示
- * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
- * @param[in] hint 布局提示
- * @sa LayoutPolicy, layoutPolicy(), layoutHint()
- * \endif
  */
 void QwtPlotAbstractBarChart::setLayoutHint( double hint )
 {
+    QWT_D(d);
     hint = qwtMaxF( 0.0, hint );
-    if ( hint != m_data->layoutHint )
+    if ( hint != d->layoutHint )
     {
-        m_data->layoutHint = hint;
+        d->layoutHint = hint;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the layout hint
  * @details The combination of layoutPolicy() and layoutHint() define how the width
  *          of the bars is calculated.
  * @return Layout hint of the chart item
  * @sa LayoutPolicy, setLayoutHint(), layoutPolicy()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取布局提示
- * @details layoutPolicy() 和 layoutHint() 的组合定义了条形宽度的计算方式。
- * @return 图表项的布局提示
- * @sa LayoutPolicy, setLayoutHint(), layoutPolicy()
- * \endif
  */
 double QwtPlotAbstractBarChart::layoutHint() const
 {
-    return m_data->layoutHint;
+    QWT_DC(d);
+    return d->layoutHint;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the spacing between bars
  * @details The spacing is the distance between 2 samples ( bars for QwtPlotBarChart or
  *          a group of bars for QwtPlotMultiBarChart ) in paint device coordinates.
  * @param[in] spacing Spacing in pixels
  * @sa spacing()
- * \endif
- * 
- * \if CHINESE
- * @brief 设置条形之间的间距
- * @details 间距是两个样本之间的距离（QwtPlotBarChart 的条形或 QwtPlotMultiBarChart 的条形组）
- *          ，以绘图设备坐标表示。
- * @param[in] spacing 间距（像素）
- * @sa spacing()
- * \endif
  */
 void QwtPlotAbstractBarChart::setSpacing( int spacing )
 {
+    QWT_D(d);
     spacing = qMax( spacing, 0 );
-    if ( spacing != m_data->spacing )
+    if ( spacing != d->spacing )
     {
-        m_data->spacing = spacing;
+        d->spacing = spacing;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the spacing between bars
  * @return Spacing between 2 samples ( bars or groups of bars )
  * @sa setSpacing(), margin()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取条形之间的间距
- * @return 两个样本之间的间距（条形或条形组）
- * @sa setSpacing(), margin()
- * \endif
  */
 int QwtPlotAbstractBarChart::spacing() const
 {
-    return m_data->spacing;
+    QWT_DC(d);
+    return d->spacing;
 }
 /**
- * \if ENGLISH
  * @brief Set the margin around the bars
  * @details The margin is the distance between the outmost bars and the contentsRect()
  *          of the canvas. The default setting is 5 pixels.
  * @param[in] margin Margin in pixels
  * @sa spacing(), margin()
- * \endif
- * 
- * \if CHINESE
- * @brief 设置条形周围的边距
- * @details 边距是最外侧条形与画布 contentsRect() 之间的距离。
- *          默认设置为 5 像素。
- * @param[in] margin 边距（像素）
- * @sa spacing(), margin()
- * \endif
  */
 void QwtPlotAbstractBarChart::setMargin( int margin )
 {
+    QWT_D(d);
     margin = qMax( margin, 0 );
-    if ( margin != m_data->margin )
+    if ( margin != d->margin )
     {
-        m_data->margin = margin;
+        d->margin = margin;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the margin around the bars
  * @return Margin between the outmost bars and the contentsRect() of the canvas.
  * @sa setMargin(), spacing()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取条形周围的边距
- * @return 最外侧条形与画布 contentsRect() 之间的边距。
- * @sa setMargin(), spacing()
- * \endif
  */
 int QwtPlotAbstractBarChart::margin() const
 {
-    return m_data->margin;
+    QWT_DC(d);
+    return d->margin;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the baseline value
  * @details The baseline is the origin for the chart. Each bar is
  *          painted from the baseline in the direction of the sample
@@ -286,76 +209,61 @@ int QwtPlotAbstractBarChart::margin() const
  *          The default value for the baseline is 0.
  * @param[in] value Value for the baseline
  * @sa baseline(), QwtPlotSeriesItem::orientation()
- * \endif
- * 
- * \if CHINESE
- * @brief 设置基线值
- * @details 基线是图表的原点。每个条形从基线向样本值的方向绘制。
- *          如果是水平方向，基线被解释为 x 值，否则为 y 值。
- *          基线的默认值为 0。
- * @param[in] value 基线值
- * @sa baseline(), QwtPlotSeriesItem::orientation()
- * \endif
  */
 void QwtPlotAbstractBarChart::setBaseline( double value )
 {
-    if ( value != m_data->baseline )
+    QWT_D(d);
+    if ( value != d->baseline )
     {
-        m_data->baseline = value;
+        d->baseline = value;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the baseline value
  * @return Value for the origin of the bar chart
  * @sa setBaseline(), QwtPlotSeriesItem::orientation()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取基线值
- * @return 条形图的原点值
- * @sa setBaseline(), QwtPlotSeriesItem::orientation()
- * \endif
  */
 double QwtPlotAbstractBarChart::baseline() const
 {
-    return m_data->baseline;
+    QWT_DC(d);
+    return d->baseline;
 }
 
 /*!
    Calculate the width for a sample in paint device coordinates
 
-   \param map Scale map for the corresponding scale
-   \param canvasSize Size of the canvas in paint device coordinates
-   \param boundingSize Bounding size of the chart in plot coordinates
+   @param map Scale map for the corresponding scale
+   @param canvasSize Size of the canvas in paint device coordinates
+   @param boundingSize Bounding size of the chart in plot coordinates
                        ( used in AutoAdjustSamples mode )
-   \param value Value of the sample
+   @param value Value of the sample
 
-   \return Sample width
-   \sa layoutPolicy(), layoutHint()
+   @return Sample width
+   @sa layoutPolicy(), layoutHint()
  */
 double QwtPlotAbstractBarChart::sampleWidth( const QwtScaleMap& map,
     double canvasSize, double boundingSize, double value ) const
 {
+    QWT_DC(d);
     double width;
 
-    switch( m_data->layoutPolicy )
+    switch( d->layoutPolicy )
     {
         case ScaleSamplesToAxes:
         {
-            width = qwtTransformWidth( map, value, m_data->layoutHint );
+            width = qwtTransformWidth( map, value, d->layoutHint );
             break;
         }
         case ScaleSampleToCanvas:
         {
-            width = canvasSize * m_data->layoutHint;
+            width = canvasSize * d->layoutHint;
             break;
         }
         case FixedSampleSize:
         {
-            width = m_data->layoutHint;
+            width = d->layoutHint;
             break;
         }
         case AutoAdjustSamples:
@@ -370,8 +278,8 @@ double QwtPlotAbstractBarChart::sampleWidth( const QwtScaleMap& map,
             }
 
             width = qwtTransformWidth( map, value, w );
-            width -= m_data->spacing;
-            width = qwtMaxF( width, m_data->layoutHint );
+            width -= d->spacing;
+            width = qwtMaxF( width, d->layoutHint );
         }
     }
 
@@ -379,7 +287,6 @@ double QwtPlotAbstractBarChart::sampleWidth( const QwtScaleMap& map,
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate a hint for the canvas margin
  * @details Bar charts need to reserve some space for displaying the bars
  *          for the first and the last sample. The hint is calculated
@@ -394,28 +301,12 @@ double QwtPlotAbstractBarChart::sampleWidth( const QwtScaleMap& map,
  * @param[out] bottom Returns the bottom margin
  * @sa layoutPolicy(), layoutHint(), QwtPlotItem::Margins,
  *     QwtPlot::getCanvasMarginsHint(), QwtPlot::updateCanvasMargins()
- * \endif
- * 
- * \if CHINESE
- * @brief 计算画布边距的提示
- * @details 条形图需要预留一些空间来显示第一个和最后一个样本的条形。
- *          提示是根据 layoutPolicy() 从 layoutHint() 计算的。
- *          边距以目标设备坐标（屏幕上的像素）表示。
- * @param[in] xMap 将 x 值映射到像素坐标。
- * @param[in] yMap 将 y 值映射到像素坐标。
- * @param[in] canvasRect 画布的内容矩形（绘图坐标）
- * @param[out] left 返回左边距
- * @param[out] top 返回上边距
- * @param[out] right 返回右边距
- * @param[out] bottom 返回下边距
- * @sa layoutPolicy(), layoutHint(), QwtPlotItem::Margins,
- *     QwtPlot::getCanvasMarginsHint(), QwtPlot::updateCanvasMargins()
- * \endif
  */
 void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap& xMap,
     const QwtScaleMap& yMap, const QRectF& canvasRect,
     double& left, double& top, double& right, double& bottom ) const
 {
+    QWT_DC(d);
     double hint = -1.0;
 
     switch( layoutPolicy() )
@@ -423,15 +314,15 @@ void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap& xMap,
         case ScaleSampleToCanvas:
         {
             if ( orientation() == Qt::Vertical )
-                hint = 0.5 * canvasRect.width() * m_data->layoutHint;
+                hint = 0.5 * canvasRect.width() * d->layoutHint;
             else
-                hint = 0.5 * canvasRect.height() * m_data->layoutHint;
+                hint = 0.5 * canvasRect.height() * d->layoutHint;
 
             break;
         }
         case FixedSampleSize:
         {
-            hint = 0.5 * m_data->layoutHint;
+            hint = 0.5 * d->layoutHint;
             break;
         }
         case AutoAdjustSamples:
@@ -450,11 +341,11 @@ void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap& xMap,
 
             if ( layoutPolicy() == ScaleSamplesToAxes )
             {
-                sampleWidthS = qwtMaxF( m_data->layoutHint, 0.0 );
+                sampleWidthS = qwtMaxF( d->layoutHint, 0.0 );
             }
             else
             {
-                spacing = m_data->spacing;
+                spacing = d->spacing;
 
                 if ( numSamples > 1 )
                 {
@@ -478,7 +369,7 @@ void QwtPlotAbstractBarChart::getCanvasMarginHint( const QwtScaleMap& xMap,
                 * sampleWidthS / ( ds + sampleWidthS );
 
             hint = 0.5 * sampleWidthP;
-            hint += qMax( m_data->margin, 0 );
+            hint += qMax( d->margin, 0 );
         }
     }
 

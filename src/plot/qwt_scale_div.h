@@ -33,19 +33,13 @@
 class QwtInterval;
 
 /**
- * @brief A class representing a scale division/表示刻度划分的类
+ * @brief A class representing a scale division
  *
  * A Qwt scale is defined by its boundaries and 3 list for the positions of the major, medium and minor ticks.
  *
  * The upperBound() might be smaller than the lowerBound() to indicate inverted scales.
  *
  * Scale divisions can be calculated from a QwtScaleEngine.
- *
- * Qwt 刻度由其边界以及分别表示主刻度、中刻度和次刻度位置的三个列表定义。
- *
- * upperBound() 可能小于 lowerBound()，以此表示刻度是反向的。
- *
- * 刻度划分可通过 QwtScaleEngine 计算得出。
  *
  * @sa QwtScaleEngine::divideScale(), QwtPlot::setAxisScaleDiv(), QwtAbstractSlider::setScaleDiv()
  */
@@ -87,6 +81,15 @@ public:
                          const QList< double >& mediumTicks,
                          const QList< double >& majorTicks);
 
+    // Copy constructor
+    QwtScaleDiv(const QwtScaleDiv&);
+    // Move constructor
+    QwtScaleDiv(QwtScaleDiv&&) noexcept = default;
+    // Copy assignment
+    QwtScaleDiv& operator=(const QwtScaleDiv&);
+    // Move assignment
+    QwtScaleDiv& operator=(QwtScaleDiv&&) noexcept = default;
+
     // Equality operator
     bool operator==(const QwtScaleDiv&) const;
     // Inequality operator
@@ -102,17 +105,17 @@ public:
     QwtInterval interval() const;
 
     // Set the lower bound
-    void setLowerBound(double);
+    void setLowerBound(double) noexcept;
     // Get the lower bound
-    double lowerBound() const;
+    double lowerBound() const noexcept;
 
     // Set the upper bound
-    void setUpperBound(double);
+    void setUpperBound(double) noexcept;
     // Get the upper bound
-    double upperBound() const;
+    double upperBound() const noexcept;
 
     // Get the range (upper - lower)
-    double range() const;
+    double range() const noexcept;
 
     // Check if value is within bounds
     bool contains(double value) const;
@@ -136,8 +139,8 @@ public:
     QwtScaleDiv bounded(double lowerBound, double upperBound) const;
 
 private:
-    double m_lowerBound;
-    double m_upperBound;
+    double m_lowerBound{0.0};
+    double m_upperBound{0.0};
     QList< double > m_ticks[ NTickTypes ];
 };
 

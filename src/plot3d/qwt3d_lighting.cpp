@@ -3,8 +3,8 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <float.h>
-#include "qwt3d_plot.h"
+#include <cfloat>
+#include "qwt3d_plot_p.h"
 
 using namespace Qwt3D;
 
@@ -38,10 +38,11 @@ inline GLenum lightEnum(unsigned idx)
 
 void Plot3D::enableLighting(bool val)
 {
-    if (lighting_enabled_ == val)
+    QWT_D(d);
+    if (d->m_lightingEnabled == val)
         return;
 
-    lighting_enabled_ = val;
+    d->m_lightingEnabled = val;
     makeCurrent();
     if (val)
         glEnable(GL_LIGHTING);
@@ -60,28 +61,31 @@ void Plot3D::disableLighting(bool val)
 
 bool Plot3D::lightingEnabled() const
 {
-    return lighting_enabled_;
+    QWT_DC(d);
+    return d->m_lightingEnabled;
 }
 
 /**
-  \param light light number [0..7]
-  \see setLight
+  @param light light number [0..7]
+  @see setLight
 */
 void Plot3D::illuminate(unsigned light)
 {
+    QWT_D(d);
     if (light > 7)
         return;
-    lights_[ light ].unlit = false;
+    d->m_lights[ light ].unlit = false;
 }
 /**
-  \param light light number [0..7]
-  \see setLight
+  @param light light number [0..7]
+  @see setLight
 */
 void Plot3D::blowout(unsigned light)
 {
+    QWT_D(d);
     if (light > 7)
         return;
-    lights_[ light ].unlit = false;
+    d->m_lights[ light ].unlit = false;
 }
 
 /**
@@ -137,49 +141,52 @@ void Plot3D::setLightComponent(GLenum property, double intensity, unsigned light
 
 /**
   Set the rotation angle of the light source. If you look along the respective axis towards
-  ascending values, the rotation is performed in mathematical \e negative sense \param xVal angle in
-  \e degree to rotate around the X axis \param yVal angle in \e degree to rotate around the Y axis
-        \param zVal angle in \e degree to rotate around the Z axis
-  \param light light number
+  ascending values, the rotation is performed in mathematical \e negative sense @param xVal angle in
+  \e degree to rotate around the X axis @param yVal angle in \e degree to rotate around the Y axis
+        @param zVal angle in \e degree to rotate around the Z axis
+  @param light light number
 */
 void Plot3D::setLightRotation(double xVal, double yVal, double zVal, unsigned light)
 {
+    QWT_D(d);
     if (light > 7)
         return;
-    lights_[ light ].rot.x = xVal;
-    lights_[ light ].rot.y = yVal;
-    lights_[ light ].rot.z = zVal;
+    d->m_lights[ light ].rot.x = xVal;
+    d->m_lights[ light ].rot.y = yVal;
+    d->m_lights[ light ].rot.z = zVal;
 }
 
 /**
   Set the shift in light source (world) coordinates.
-        \param xVal shift along (world) X axis
-        \param yVal shift along (world) Y axis
-        \param zVal shift along (world) Z axis
-  \param light light number
-        \see setViewportShift()
+        @param xVal shift along (world) X axis
+        @param yVal shift along (world) Y axis
+        @param zVal shift along (world) Z axis
+  @param light light number
+        @see setViewportShift()
 */
 void Plot3D::setLightShift(double xVal, double yVal, double zVal, unsigned light)
 {
+    QWT_D(d);
     if (light > 7)
         return;
-    lights_[ light ].shift.x = xVal;
-    lights_[ light ].shift.y = yVal;
-    lights_[ light ].shift.z = zVal;
+    d->m_lights[ light ].shift.x = xVal;
+    d->m_lights[ light ].shift.y = yVal;
+    d->m_lights[ light ].shift.z = zVal;
 }
 
 void Plot3D::applyLight(unsigned light)
 {
-    if (lights_[ light ].unlit)
+    QWT_D(d);
+    if (d->m_lights[ light ].unlit)
         return;
 
     glEnable(lightEnum(light));
     glLoadIdentity();
 
-    glRotatef(lights_[ light ].rot.x - 90, 1.0, 0.0, 0.0);
-    glRotatef(lights_[ light ].rot.y, 0.0, 1.0, 0.0);
-    glRotatef(lights_[ light ].rot.z, 0.0, 0.0, 1.0);
-    double light4d[ 4 ] = { lights_[ light ].shift.x, lights_[ light ].shift.y, lights_[ light ].shift.z, 1.0 };
+    glRotatef(d->m_lights[ light ].rot.x - 90, 1.0, 0.0, 0.0);
+    glRotatef(d->m_lights[ light ].rot.y, 0.0, 1.0, 0.0);
+    glRotatef(d->m_lights[ light ].rot.z, 0.0, 0.0, 1.0);
+    double light4d[ 4 ] = { d->m_lights[ light ].shift.x, d->m_lights[ light ].shift.y, d->m_lights[ light ].shift.z, 1.0 };
     GLfloat lightPos[ 4 ] {};
     for (size_t i = 0; i < 4; i++) {
         lightPos[ i ] = static_cast< GLfloat >(light4d[ i ]);

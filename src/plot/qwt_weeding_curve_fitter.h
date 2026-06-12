@@ -30,8 +30,7 @@
 #include "qwt_curve_fitter.h"
 
 /*!
-   \if ENGLISH
-   \brief A curve fitter implementing Douglas and Peucker algorithm
+   @brief A curve fitter implementing Douglas and Peucker algorithm
 
    The purpose of the Douglas and Peucker algorithm is that given a 'curve'
    composed of line segments to find a curve not too dissimilar but that
@@ -52,26 +51,6 @@
    the number of points. By adjusting the tolerance parameter according to the
    axis scales QwtSplineCurveFitter can be used to implement different
    level of details to speed up painting of curves of many points.
-   \endif
-   *
-   \if CHINESE
-   \brief 实现 Douglas 和 Peucker 算法的曲线拟合器
-
-   Douglas 和 Peucker 算法的目的是给定由线段组成的"曲线"，
-   找到一条不太相似但点数更少的曲线。该算法基于原始曲线和
-   平滑曲线之间的最大距离（容差）来定义"太不相似"。
-
-   算法的运行时间非线性增长（最坏情况 O( n*n )），
-   对于巨大的多边形可能非常慢。为了避免性能问题，
-   可以拆分多边形（setChunkSize()）并为这些较小的部分运行算法。
-   在边界处没有插值的缺点对于大多数用例来说无关紧要。
-
-   平滑曲线由定义原始曲线的点的子集组成。
-
-   与 QwtSplineCurveFitter 相反，Douglas 和 Peucker 算法减少
-   点数。通过根据轴刻度调整容差参数，QwtSplineCurveFitter 可用于实现不同
-   的细节级别，以加速绘制多点曲线的速度。
-   \endif
  */
 class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 {
@@ -79,7 +58,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
     // Constructor with tolerance parameter
     explicit QwtWeedingCurveFitter( double tolerance = 1.0 );
     // Destructor
-    virtual ~QwtWeedingCurveFitter();
+    ~QwtWeedingCurveFitter() override;
 
     // Set the tolerance for curve fitting
     void setTolerance( double );
@@ -101,8 +80,7 @@ class QWT_EXPORT QwtWeedingCurveFitter : public QwtCurveFitter
 
     class Line;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtWeedingCurveFitter)
 };
 
 #endif

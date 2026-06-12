@@ -1,209 +1,214 @@
-site_name: QWT - Qt绘图库
+site_name: QWT - Qt Plotting Library
 site_author: 'Chen ZongYan'
-site_url: https://czyt1988.github.io/QWT  
-repo_url: https://github.com/czyt1988/QWT  
+site_url: https://czyt1988.github.io/QWT
+repo_url: https://github.com/czyt1988/QWT
 
-# 多语言站点信息
+# Multilingual site info
 extra:
   site_name:
-    zh: QWT - Qt绘图库
     en: QWT - Qt Plotting Library
-  site_description: 
-    zh: QWT是一个功能强大的Qt绘图库，提供丰富的科学和工程图表绘制功能
+    zh: QWT - Qt绘图库
+  site_description:
     en: QWT is a powerful Qt plotting library that provides rich scientific and engineering chart drawing capabilities
+    zh: QWT是一个功能强大的Qt绘图库，提供丰富的科学和工程图表绘制功能
   alternate:
-    - name: 中文
-      link: /
-      lang: zh
     - name: English
-      link: /en/
+      link: /QWT/
       lang: en
-    
-# 主题
+    - name: 中文
+      link: /QWT/zh/
+      lang: zh
+
+# Theme
 theme:
   name: material
-  language: zh
+  language: en
   palette:
     - scheme: default
       toggle:
         icon: material/brightness-4
-        name: 切换浅色
+        name: Switch to dark mode
     - scheme: slate
       toggle:
         icon: material/brightness-7
-        name: 切换深色
+        name: Switch to light mode
   features:
-    - navigation.sections # 侧边栏章节可折叠
-    - navigation.top # 右下角"回到顶部"按钮
-    - navigation.path # 顶部面包屑导航条
-    - navigation.expand        # 默认展开全部章节，一眼看到整本书
-    - navigation.indexes       # 允许章节首页可点击
-    - navigation.footer  # 底部导航条
-    - content.code.copy # 代码块右上角出现"复制"按钮
-    - content.code.annotate # 代码块行内注释气泡
-    - search.suggest # 搜索框实时联想补全
-    - search.highlight # 点击结果后正文高亮匹配关键词
-    - search.share # 支持复制带关键词的搜索链接
-    - toc.follow # 滚动时自动跟随当前章节
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.path
+    - navigation.expand
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
 
-# 插件配置
+# Plugins
 plugins:
   - search
   - i18n:
       languages:
-        - locale: zh
-          name: 中文
-          default: true
-          build: true
-          # 中文导航配置
-          nav:
-            - 概述: 
-                - Qwt简介: index.md
-                - Qwt 7.0新特性: zh/use-guide/qwt7-new-features.md
-            - 构建指南:
-                - 构建说明: zh/build-guide/build-instructions.md
-            - 开发指引:
-                - 开发指引首页: zh/dev-guide/index.md
-                - 编码规范: zh/dev-guide/coding-standards.md
-                - 注释规范: zh/dev-guide/comment-standards.md
-                - PIMPL模式: zh/dev-guide/pimpl-pattern.md
-            - 基本使用指南: 
-                - 引入qwt: zh/use-guide/import-qwt.md
-                - 第一个绘图: zh/use-guide/first-plot.md
-                - 状态机介绍: zh/use-guide/picker-state-machine.md
-            - 绘图容器与布局:
-                - Figure绘图容器: zh/use-guide/figure-widget.md
-                - 多坐标轴的创建: zh/use-guide/parasite-axes.md
-                - 布局管理: zh/use-guide/plot-layout.md
-            - 核心绘图项:
-                - 曲线图: zh/use-guide/curve.md
-                - 散点图: zh/use-guide/scatter.md
-                - 网格线: zh/use-guide/grid.md
-                - 标记点: zh/use-guide/marker.md
-                - 柱状图: zh/use-guide/barchart.md
-                - 箱形图: zh/use-guide/boxchart.md
-                - 直方图: zh/use-guide/histogram.md
-                - 光谱图/热力图: zh/use-guide/spectrogram.md
-                - K线图: zh/use-guide/tradingcurve.md
-                - 向量场图: zh/use-guide/vectorfield.md
-                - 区间曲线: zh/use-guide/intervalcurve.md
-                - 形状项: zh/use-guide/shapeitem.md
-                - 文本标签: zh/use-guide/textlabel.md
-            - 绘图交互:
-                - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
-                - 数据拾取工具: zh/use-guide/pick-value.md
-                - 平移工具: zh/use-guide/panner.md
-                - 缩放工具: zh/use-guide/zoomer.md
-                - 绘图导出: zh/use-guide/renderer.md
-            - 坐标轴系统:
-                - 坐标轴控件: zh/use-guide/scale-widget.md
-                - 刻度朝内显示: zh/use-guide/ticks-inside.md
-                - 刻度计算引擎: zh/use-guide/scale-engine.md
-            - 图例系统:
-                - 图例控件: zh/use-guide/legend.md
-            - 数据处理:
-                - 数据系列: zh/use-guide/series-data.md
-            - 样式与符号:
-                - 符号样式: zh/use-guide/symbol.md
-            - 极坐标绘图:
-                - 极坐标绘图: zh/use-guide/polar-plot.md
-            - 控件组件:
-                - 仪表盘与滑块: zh/use-guide/widgets-controls.md
-            - 3D绘图:
-                - 3D绘图简介: zh/use-guide/3d-plot.md
-                - OpenGL画布: zh/use-guide/opengl.md
-            - API文档: 
-                - API文档首页: doxygen_cn/index.html
-                - 类列表: doxygen_cn/annotated.html
-                - 类索引: doxygen_cn/classes.html
         - locale: en
           name: English
+          default: true
           build: true
-          # English navigation configuration
           nav:
-            - Overview:
-                - Qwt Introduction: index.md
-                - Qwt 7.0 New Features: zh/use-guide/qwt7-new-features.md
-            - Build Guide:
-                - Build Instructions: zh/build-guide/build-instructions.md
-            - Development Guide:
-                - Dev Guide Home: zh/dev-guide/index.md
-                - Coding Standards: zh/dev-guide/coding-standards.md
-                - Comment Standards: zh/dev-guide/comment-standards.md
-                - PIMPL Pattern: zh/dev-guide/pimpl-pattern.md
-            - Basic Usage:
-                - Import Qwt: zh/use-guide/import-qwt.md
-                - First Plot: zh/use-guide/first-plot.md
-                - Picker State Machine: zh/use-guide/picker-state-machine.md
-            - Plot Container & Layout:
-                - Figure Widget: zh/use-guide/figure-widget.md
-                - Parasite Axes: zh/use-guide/parasite-axes.md
-                - Plot Layout: zh/use-guide/plot-layout.md
-            - Core Plot Items:
-                - Curve: zh/use-guide/curve.md
-                - Scatter: zh/use-guide/scatter.md
-                - Grid: zh/use-guide/grid.md
-                - Marker: zh/use-guide/marker.md
-                - Bar Chart: zh/use-guide/barchart.md
-                - Box Chart: zh/use-guide/boxchart.md
-                - Histogram: zh/use-guide/histogram.md
-                - Spectrogram: zh/use-guide/spectrogram.md
-                - Trading Curve: zh/use-guide/tradingcurve.md
-                - Vector Field: zh/use-guide/vectorfield.md
-                - Interval Curve: zh/use-guide/intervalcurve.md
-                - Shape Item: zh/use-guide/shapeitem.md
-                - Text Label: zh/use-guide/textlabel.md
-            - Plot Interaction:
-                - Scale Built-in Action: zh/use-guide/scale-builtin-action.md
-                - Pick Value: zh/use-guide/pick-value.md
-                - Panner: zh/use-guide/panner.md
-                - Zoomer: zh/use-guide/zoomer.md
-                - Renderer: zh/use-guide/renderer.md
-            - Axis System:
-                - Scale Widget: zh/use-guide/scale-widget.md
-                - Ticks Inside: zh/use-guide/ticks-inside.md
-                - Scale Engine: zh/use-guide/scale-engine.md
-            - Legend:
-                - Legend Widget: zh/use-guide/legend.md
-            - Data Processing:
-                - Series Data: zh/use-guide/series-data.md
-            - Styles & Symbols:
-                - Symbol: zh/use-guide/symbol.md
-            - Polar Plot:
-                - Polar Plot: zh/use-guide/polar-plot.md
-            - Control Widgets:
-                - Widgets & Controls: zh/use-guide/widgets-controls.md
-            - 3D Plot:
-                - 3D Plot Introduction: zh/use-guide/3d-plot.md
-                - OpenGL Canvas: zh/use-guide/opengl.md
-            - API Docs:
-                - API Home: doxygen_en/index.html
-                - Class List: doxygen_en/annotated.html
-                - Class Index: doxygen_en/classes.html
-  # 需要导出pdf再打开下面
-  # - with-pdf:
-  #      # 启用整站 PDF 导出
-  #      output_path: pdf/DAWorkBench.pdf
-  #      cover: true
-  #      cover_title: DAWorkBench 用户手册
-  #      cover_subtitle: 基于工作流数据的分析工具
-  #      cover_logo: assets/icon.png 
-  #      verbose: true
+            - Home: index.md
+            - Getting Started:
+                - Overview:
+                    - Qwt Introduction: en/use-guide/qwt7-new-features.md
+                - Build Guide:
+                    - Build Instructions: en/build-guide/build-instructions.md
+                - Development Guide:
+                    - Dev Guide Home: en/dev-guide/index.md
+                    - Coding Standards: en/dev-guide/coding-standards.md
+                    - Comment Standards: en/dev-guide/comment-standards.md
+                    - PIMPL Pattern: en/dev-guide/pimpl-pattern.md
+            - User Guide:
+                - Basic Usage:
+                    - Import Qwt: en/use-guide/import-qwt.md
+                    - First Plot: en/use-guide/first-plot.md
+                    - Picker State Machine: en/use-guide/picker-state-machine.md
+                - Plot Container & Layout:
+                    - Figure Widget: en/use-guide/figure-widget.md
+                    - Parasite Axes: en/use-guide/parasite-axes.md
+                    - Plot Layout: en/use-guide/plot-layout.md
+                - Data Processing:
+                    - Series Data: en/use-guide/series-data.md
+                - Styles & Symbols:
+                    - Symbol: en/use-guide/symbol.md
+            - Charts:
+                - Core Plot Items:
+                    - Curve: en/use-guide/curve.md
+                    - Curve Downsampling: en/use-guide/curve-downsampling.md
+                    - Scatter: en/use-guide/scatter.md
+                    - Grid: en/use-guide/grid.md
+                    - Marker: en/use-guide/marker.md
+                    - Arrow Marker: en/use-guide/arrow-marker.md
+                    - Bar Chart: en/use-guide/barchart.md
+                    - Box Chart: en/use-guide/boxchart.md
+                    - Histogram: en/use-guide/histogram.md
+                    - Spectrogram: en/use-guide/spectrogram.md
+                    - Trading Curve: en/use-guide/tradingcurve.md
+                    - Vector Field: en/use-guide/vectorfield.md
+                    - Interval Curve: en/use-guide/intervalcurve.md
+                    - Shape Item: en/use-guide/shapeitem.md
+                    - Text Label: en/use-guide/textlabel.md
+                - Polar Plot:
+                    - Polar Plot: en/use-guide/polar-plot.md
+                - 3D Plot:
+                    - 3D Plot Introduction: en/use-guide/3d-plot.md
+                    - OpenGL Canvas: en/use-guide/opengl.md
+                - Control Widgets:
+                    - Widgets & Controls: en/use-guide/widgets-controls.md
+            - Interaction:
+                - Plot Interaction:
+                    - Scale Built-in Action: en/use-guide/scale-builtin-action.md
+                    - Pick Value: en/use-guide/pick-value.md
+                    - Panner: en/use-guide/panner.md
+                    - Zoomer: en/use-guide/zoomer.md
+                    - Renderer: en/use-guide/renderer.md
+                - Axis System:
+                    - Scale Widget: en/use-guide/scale-widget.md
+                    - Ticks Inside: en/use-guide/ticks-inside.md
+                    - Scale Engine: en/use-guide/scale-engine.md
+                - Legend:
+                    - Legend Widget: en/use-guide/legend.md
+            - API:
+                - API Docs:
+                    - API Home: doxygen_en/index.html
+                    - Class List: doxygen_en/annotated.html
+                    - Class Index: doxygen_en/classes.html
+        - locale: zh
+          name: 中文
+          build: true
+          nav:
+            - 首页: index.md
+            - 入门指南:
+                - 概述:
+                    - Qwt简介: zh/index.md
+                    - Qwt 7.0新特性: zh/use-guide/qwt7-new-features.md
+                - 构建指南:
+                    - 构建说明: zh/build-guide/build-instructions.md
+                - 开发指引:
+                    - 开发指引首页: zh/dev-guide/index.md
+                    - 编码规范: zh/dev-guide/coding-standards.md
+                    - 注释规范: zh/dev-guide/comment-standards.md
+                    - PIMPL模式: zh/dev-guide/pimpl-pattern.md
+            - 使用指南:
+                - 基本使用:
+                    - 引入qwt: zh/use-guide/import-qwt.md
+                    - 第一个绘图: zh/use-guide/first-plot.md
+                    - 状态机介绍: zh/use-guide/picker-state-machine.md
+                - 绘图容器与布局:
+                    - Figure绘图容器: zh/use-guide/figure-widget.md
+                    - 多坐标轴的创建: zh/use-guide/parasite-axes.md
+                    - 布局管理: zh/use-guide/plot-layout.md
+                - 数据处理:
+                    - 数据系列: zh/use-guide/series-data.md
+                - 样式与符号:
+                    - 符号样式: zh/use-guide/symbol.md
+            - 图表类型:
+                - 核心绘图项:
+                    - 曲线图: zh/use-guide/curve.md
+                    - 曲线降采样算法: zh/use-guide/curve-downsampling.md
+                    - 散点图: zh/use-guide/scatter.md
+                    - 网格线: zh/use-guide/grid.md
+                    - 标记点: zh/use-guide/marker.md
+                    - 箭头标记: zh/use-guide/arrow-marker.md
+                    - 柱状图: zh/use-guide/barchart.md
+                    - 箱形图: zh/use-guide/boxchart.md
+                    - 直方图: zh/use-guide/histogram.md
+                    - 光谱图/热力图: zh/use-guide/spectrogram.md
+                    - K线图: zh/use-guide/tradingcurve.md
+                    - 向量场图: zh/use-guide/vectorfield.md
+                    - 区间曲线: zh/use-guide/intervalcurve.md
+                    - 形状项: zh/use-guide/shapeitem.md
+                    - 文本标签: zh/use-guide/textlabel.md
+                - 极坐标绘图:
+                    - 极坐标绘图: zh/use-guide/polar-plot.md
+                - 3D绘图:
+                    - 3D绘图简介: zh/use-guide/3d-plot.md
+                    - OpenGL画布: zh/use-guide/opengl.md
+                - 控件组件:
+                    - 仪表盘与滑块: zh/use-guide/widgets-controls.md
+            - 交互操作:
+                - 绘图交互:
+                    - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
+                    - 数据拾取工具: zh/use-guide/pick-value.md
+                    - 平移工具: zh/use-guide/panner.md
+                    - 缩放工具: zh/use-guide/zoomer.md
+                    - 绘图导出: zh/use-guide/renderer.md
+                - 坐标轴系统:
+                    - 坐标轴控件: zh/use-guide/scale-widget.md
+                    - 刻度朝内显示: zh/use-guide/ticks-inside.md
+                    - 刻度计算引擎: zh/use-guide/scale-engine.md
+                - 图例系统:
+                    - 图例控件: zh/use-guide/legend.md
+            - API:
+                - API文档:
+                    - API文档首页: doxygen_cn/index.html
+                    - 类列表: doxygen_cn/annotated.html
+                    - 类索引: doxygen_cn/classes.html
 
+# Markdown extensions
 markdown_extensions:
-  # ===== 基础官方扩展 =====
-  - meta                 # 允许在页头写 YAML 元数据（title / description / tags …）
-  - abbr                 # 缩写注解：正文里写 *[HTML]: 超文本标记语言，鼠标悬停显示全称
-  - attr_list            # 给图片、链接、段落等任意元素加 class/id，例如 ![](img.png){.shadow #pic}
-  - def_list             # 定义列表，写术语/释义更方便（HTML 的 <dl><dt><dd>）
-  - footnotes            # 脚注 [^1] 与文末 [^1]: 内容，自动编号、回链
-  - tables               # GitHub 风格管道符表格 | 表头 | 表头 |
-  - md_in_html           # 在原生 HTML 标签（如 <div>）里继续解析 Markdown
-  - toc:                 # 右侧/侧边目录；permalink: true 给每级标题加 ¶ 锚链
+  - meta
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - tables
+  - md_in_html
+  - toc:
       permalink: true
-  - fenced_code          # 支持 ``` 围栏代码块（高亮、行号等玩法的前提）
-  - nl2br                # 换行直接转 <br>，不用末尾再空两格
-  - admonition          # 开启 !!! 语法
+  - fenced_code
+  - nl2br
+  - admonition
   - pymdownx.caret
   - pymdownx.keys
   - pymdownx.mark
@@ -218,7 +223,12 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-          
-# 添加额外的 CSS 文件
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Custom CSS
 extra_css:
   - stylesheets/extra.css

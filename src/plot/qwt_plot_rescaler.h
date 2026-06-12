@@ -37,16 +37,10 @@ class QwtInterval;
 class QResizeEvent;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotRescaler takes care of fixed aspect ratios for plot scales
  * @details QwtPlotRescaler auto adjusts the axes of a QwtPlot according
  *          to fixed aspect ratios.
- * \endif
  * 
- * \if CHINESE
- * @brief QwtPlotRescaler 负责处理绘图比例尺的固定宽高比
- * @details QwtPlotRescaler 根据固定的宽高比自动调整 QwtPlot 的坐标轴。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotRescaler : public QObject
@@ -55,77 +49,45 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
 
   public:
     /**
-     * \if ENGLISH
      * @brief Rescale policies
      * @details The rescale policy defines how to rescale the reference axis and
      *          their depending axes.
      * @sa ExpandingDirection, setIntervalHint()
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 重缩放策略
-     * @details 重缩放策略定义了如何重缩放参考轴及其依赖轴。
-     * @sa ExpandingDirection, setIntervalHint()
-     * \endif
      */
     enum RescalePolicy
     {
         /**
-         * \if ENGLISH
          * The interval of the reference axis remains unchanged, when the
          * geometry of the canvas changes. All other axes
          * will be adjusted according to their aspect ratio.
-         * \endif
          * 
-         * \if CHINESE
-         * 当画布的几何形状改变时，参考轴的区间保持不变。所有其他轴
-         * 将根据其宽高比进行调整。
-         * \endif
          */
         Fixed,
 
         /**
-         * \if ENGLISH
          * The interval of the reference axis will be shrunk/expanded,
          * when the geometry of the canvas changes. All other axes
          * will be adjusted according to their aspect ratio.
          * 
          * The interval, that is represented by one pixel is fixed.
-         * \endif
          * 
-         * \if CHINESE
-         * 当画布的几何形状改变时，参考轴的区间将收缩/扩展。所有其他轴
-         * 将根据其宽高比进行调整。
-         * 
-         * 由一个像素表示的区间是固定的。
-         * \endif
          */
         Expanding,
 
         /**
-         * \if ENGLISH
          * The intervals of the axes are calculated, so that all axes include
          * their interval hint.
-         * \endif
          * 
-         * \if CHINESE
-         * 计算轴的区间，使所有轴都包含它们的区间提示。
-         * \endif
          */
         Fitting
     };
 
     /**
-     * \if ENGLISH
      * @brief Expanding directions
      * @details When rescalePolicy() is set to Expanding its direction depends
      *          on ExpandingDirection
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 扩展方向
-     * @details 当 rescalePolicy() 设置为 Expanding 时，其方向取决于 ExpandingDirection
-     * \endif
      */
     enum ExpandingDirection
     {
@@ -145,7 +107,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
         RescalePolicy = Expanding );
 
     // Destructs the rescaler
-    virtual ~QwtPlotRescaler();
+    ~QwtPlotRescaler() override;
 
     // Enable or disable the rescaler
     void setEnabled( bool );
@@ -228,8 +190,7 @@ class QWT_EXPORT QwtPlotRescaler : public QObject
     double pixelDist( QwtAxisId, const QSize& ) const;
 
     class AxisData;
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotRescaler)
 };
 
 #endif

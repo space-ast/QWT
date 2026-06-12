@@ -21,7 +21,6 @@ class QwtSymbol;
 template<typename T> class QwtSeriesData;
 
 /**
- * \if ENGLISH
  * @brief Plot item for box-and-whisker (boxplot) visualization
  * @details QwtPlotBoxChart displays statistical distributions using the boxplot format:
  *          - Box body showing Q1-Q3 interquartile range
@@ -31,19 +30,7 @@ template<typename T> class QwtSeriesData;
  *          
  *          Supports multiple box styles (Rectangle, Diamond, Notch),
  *          horizontal/vertical orientation, and extensive customization.
- * \endif
  * 
- * \if CHINESE
- * @brief 箱线图（boxplot）绘图项
- * @details QwtPlotBoxChart 使用箱线图格式显示统计分布：
- *          - 箱体显示 Q1-Q3 四分位距
- *          - 箱内的中位数线
- *          - 延伸到数据范围或计算边界的须须
- *          - 须须外部点的异常值符号
- *          
- *          支持多种箱样式（矩形、菱形、缺口），
- *          水平/垂直方向，以及丰富的自定义选项。
- * \endif
  */
 class QWT_EXPORT QwtPlotBoxChart
     : public QwtPlotSeriesItem
@@ -51,12 +38,7 @@ class QWT_EXPORT QwtPlotBoxChart
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Box body display style
-     * \endif
-     * \if CHINESE
-     * @brief 箱体显示样式
-     * \endif
      */
     enum BoxStyle
     {
@@ -74,12 +56,7 @@ public:
     };
     
     /**
-     * \if ENGLISH
      * @brief Whisker display style
-     * \endif
-     * \if CHINESE
-     * @brief 须须显示样式
-     * \endif
      */
     enum WhiskerStyle
     {
@@ -94,12 +71,7 @@ public:
     };
     
     /**
-     * \if ENGLISH
      * @brief Paint attributes for performance optimization
-     * \endif
-     * \if CHINESE
-     * @brief 性能优化的绘制属性
-     * \endif
      */
     enum PaintAttribute
     {
@@ -116,47 +88,26 @@ public:
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
     
     /**
-     * \if ENGLISH
      * @brief Constructor
-     * \endif
-     * \if CHINESE
-     * @brief 构造函数
-     * \endif
      */
     explicit QwtPlotBoxChart(const QString& title = QString());
     
     /**
-     * \if ENGLISH
      * @brief Constructor with QwtText title
-     * \endif
-     * \if CHINESE
-     * @brief 带 QwtText 标题的构造函数
-     * \endif
      */
     explicit QwtPlotBoxChart(const QwtText& title);
     
     /**
-     * \if ENGLISH
      * @brief Destructor
-     * \endif
-     * \if CHINESE
-     * @brief 析构函数
-     * \endif
      */
-    virtual ~QwtPlotBoxChart();
+    ~QwtPlotBoxChart() override;
     
-    /**
-     * \if ENGLISH
-     * @brief Get runtime type information
-     * @return Rtti_PlotBoxChart
-     * \endif
-     * \if CHINESE
-     * @brief 获取运行时类型信息
-     * @return Rtti_PlotBoxChart
-     * \endif
-     */
+    // Get runtime type information
     virtual int rtti() const override;
-    
+
+    // Attach the box chart to a plot (applies color cycle if pen not user-set)
+    void attach(QwtPlot* plot) override;
+
     // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
     
@@ -277,9 +228,8 @@ protected:
         const QwtSymbol& symbol) const;
     
 private:
-    class PrivateData;
-    PrivateData* m_data;
-    
+    QWT_DECLARE_PRIVATE(QwtPlotBoxChart)
+
     QwtSeriesData<QwtBoxOutlierSample>* m_outlierData;
 };
 

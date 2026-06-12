@@ -29,42 +29,24 @@
 #include "qwt_math.h"
 
 /**
- * \if ENGLISH
  * @brief Construct a division without ticks
  *
  * @param lowerBound First boundary
  * @param upperBound Second boundary
  *
  * @note lowerBound might be greater than upperBound for inverted scales
- * \endif
  *
- * \if CHINESE
- * @brief 构造一个没有刻度的刻度划分
- *
- * @param lowerBound 第一个边界
- * @param upperBound 第二个边界
- *
- * @note 对于反向刻度，lowerBound 可能大于 upperBound
- * \endif
  */
 QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound) : m_lowerBound(lowerBound), m_upperBound(upperBound)
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Construct a scale division
  *
  * @param interval Interval
  * @param ticks List of major, medium and minor ticks
- * \endif
  *
- * \if CHINESE
- * @brief 构造一个刻度划分
- *
- * @param interval 间隔
- * @param ticks 主刻度、中刻度和次刻度列表
- * \endif
  */
 QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTickTypes ])
     : m_lowerBound(interval.minValue()), m_upperBound(interval.maxValue())
@@ -74,7 +56,6 @@ QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTi
 }
 
 /**
- * \if ENGLISH
  * @brief Construct a scale division
  *
  * @param lowerBound First boundary
@@ -82,17 +63,7 @@ QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTi
  * @param ticks List of major, medium and minor ticks
  *
  * @note lowerBound might be greater than upperBound for inverted scales
- * \endif
  *
- * \if CHINESE
- * @brief 构造一个刻度划分
- *
- * @param lowerBound 第一个边界
- * @param upperBound 第二个边界
- * @param ticks 主刻度、中刻度和次刻度列表
- *
- * @note 对于反向刻度，lowerBound 可能大于 upperBound
- * \endif
  */
 QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > ticks[ NTickTypes ])
     : m_lowerBound(lowerBound), m_upperBound(upperBound)
@@ -102,7 +73,6 @@ QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > t
 }
 
 /**
- * \if ENGLISH
  * @brief Construct a scale division
  *
  * @param lowerBound First boundary
@@ -112,19 +82,7 @@ QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > t
  * @param majorTicks List of major ticks
  *
  * @note lowerBound might be greater than upperBound for inverted scales
- * \endif
  *
- * \if CHINESE
- * @brief 构造一个刻度划分
- *
- * @param lowerBound 第一个边界
- * @param upperBound 第二个边界
- * @param minorTicks 次刻度列表
- * @param mediumTicks 中刻度列表
- * @param majorTicks 主刻度列表
- *
- * @note 对于反向刻度，lowerBound 可能大于 upperBound
- * \endif
  */
 QwtScaleDiv::QwtScaleDiv(double lowerBound,
                          double upperBound,
@@ -139,23 +97,23 @@ QwtScaleDiv::QwtScaleDiv(double lowerBound,
 }
 
 /**
- * \if ENGLISH
+ * @brief Copy constructor
+ */
+QwtScaleDiv::QwtScaleDiv(const QwtScaleDiv&) = default;
+
+/**
+ * @brief Copy assignment
+ */
+QwtScaleDiv& QwtScaleDiv::operator=(const QwtScaleDiv&) = default;
+
+/**
  * @brief Change the interval
  *
  * @param lowerBound First boundary
  * @param upperBound Second boundary
  *
  * @note lowerBound might be greater than upperBound for inverted scales
- * \endif
  *
- * \if CHINESE
- * @brief 更改间隔
- *
- * @param lowerBound 第一个边界
- * @param upperBound 第二个边界
- *
- * @note 对于反向刻度，lowerBound 可能大于 upperBound
- * \endif
  */
 void QwtScaleDiv::setInterval(double lowerBound, double upperBound)
 {
@@ -164,17 +122,10 @@ void QwtScaleDiv::setInterval(double lowerBound, double upperBound)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the interval
  *
  * @param interval Interval
- * \endif
  *
- * \if CHINESE
- * @brief 更改间隔
- *
- * @param interval 间隔
- * \endif
  */
 void QwtScaleDiv::setInterval(const QwtInterval& interval)
 {
@@ -183,15 +134,9 @@ void QwtScaleDiv::setInterval(const QwtInterval& interval)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the interval from lowerBound to upperBound
  * @return Interval from lowerBound to upperBound
- * \endif
  *
- * \if CHINESE
- * @brief 获取从 lowerBound 到 upperBound 的间隔
- * @return 从 lowerBound 到 upperBound 的间隔
- * \endif
  */
 QwtInterval QwtScaleDiv::interval() const
 {
@@ -199,107 +144,65 @@ QwtInterval QwtScaleDiv::interval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the first boundary
  *
  * @param lowerBound First boundary
  * @sa lowerBound(), setUpperBound()
- * \endif
  *
- * \if CHINESE
- * @brief 设置第一个边界
- *
- * @param lowerBound 第一个边界
- * @sa lowerBound(), setUpperBound()
- * \endif
  */
-void QwtScaleDiv::setLowerBound(double lowerBound)
+void QwtScaleDiv::setLowerBound(double lowerBound) noexcept
 {
     m_lowerBound = lowerBound;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the first boundary
  * @return First boundary
  * @sa upperBound()
- * \endif
  *
- * \if CHINESE
- * @brief 获取第一个边界
- * @return 第一个边界
- * @sa upperBound()
- * \endif
  */
-double QwtScaleDiv::lowerBound() const
+double QwtScaleDiv::lowerBound() const noexcept
 {
     return m_lowerBound;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the second boundary
  *
  * @param upperBound Second boundary
  * @sa upperBound(), setLowerBound()
- * \endif
  *
- * \if CHINESE
- * @brief 设置第二个边界
- *
- * @param upperBound 第二个边界
- * @sa upperBound(), setLowerBound()
- * \endif
  */
-void QwtScaleDiv::setUpperBound(double upperBound)
+void QwtScaleDiv::setUpperBound(double upperBound) noexcept
 {
     m_upperBound = upperBound;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the upper bound
  * @return Upper bound
  * @sa lowerBound()
- * \endif
  *
- * \if CHINESE
- * @brief 获取上边界
- * @return 上边界
- * @sa lowerBound()
- * \endif
  */
-double QwtScaleDiv::upperBound() const
+double QwtScaleDiv::upperBound() const noexcept
 {
     return m_upperBound;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the range (upperBound - lowerBound)
  * @return upperBound() - lowerBound()
- * \endif
  *
- * \if CHINESE
- * @brief 获取范围（上边界 - 下边界）
- * @return upperBound() - lowerBound()
- * \endif
  */
-double QwtScaleDiv::range() const
+double QwtScaleDiv::range() const noexcept
 {
     return m_upperBound - m_lowerBound;
 }
 
 /**
- * \if ENGLISH
  * @brief Equality operator
  * @return true if this instance is equal to other
- * \endif
  *
- * \if CHINESE
- * @brief 相等运算符
- * @return 如果此实例等于 other 则返回 true
- * \endif
  */
 bool QwtScaleDiv::operator==(const QwtScaleDiv& other) const
 {
@@ -316,15 +219,9 @@ bool QwtScaleDiv::operator==(const QwtScaleDiv& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inequality operator
  * @return true if this instance is not equal to other
- * \endif
  *
- * \if CHINESE
- * @brief 不等运算符
- * @return 如果此实例不等于 other 则返回 true
- * \endif
  */
 bool QwtScaleDiv::operator!=(const QwtScaleDiv& other) const
 {
@@ -332,17 +229,10 @@ bool QwtScaleDiv::operator!=(const QwtScaleDiv& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Fuzzy comparison
  * @param other Other scale division
  * @return true if this instance is approximately equal to other
- * \endif
  *
- * \if CHINESE
- * @brief 模糊比较
- * @param other 其他刻度划分
- * @return 如果此实例近似等于 other 则返回 true
- * \endif
  */
 bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
 {
@@ -359,15 +249,9 @@ bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the scale division is empty
  * @return true if lowerBound() == upperBound()
- * \endif
  *
- * \if CHINESE
- * @brief 检查刻度划分是否为空
- * @return 如果 lowerBound() == upperBound() 则返回 true
- * \endif
  */
 bool QwtScaleDiv::isEmpty() const
 {
@@ -375,15 +259,9 @@ bool QwtScaleDiv::isEmpty() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the scale division is increasing
  * @return true if lowerBound() <= upperBound()
- * \endif
  *
- * \if CHINESE
- * @brief 检查刻度划分是否是递增的
- * @return 如果 lowerBound() <= upperBound() 则返回 true
- * \endif
  */
 bool QwtScaleDiv::isIncreasing() const
 {
@@ -391,19 +269,11 @@ bool QwtScaleDiv::isIncreasing() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if a value is between lowerBound() and upperBound()
  *
  * @param value Value
  * @return true if value is within bounds
- * \endif
  *
- * \if CHINESE
- * @brief 检查值是否在 lowerBound() 和 upperBound() 之间
- *
- * @param value 值
- * @return 如果值在范围内则返回 true
- * \endif
  */
 bool QwtScaleDiv::contains(double value) const
 {
@@ -414,15 +284,9 @@ bool QwtScaleDiv::contains(double value) const
 }
 
 /**
- * \if ENGLISH
  * @brief Invert the scale division
  * @sa inverted()
- * \endif
  *
- * \if CHINESE
- * @brief 反转刻度划分
- * @sa inverted()
- * \endif
  */
 void QwtScaleDiv::invert()
 {
@@ -440,17 +304,10 @@ void QwtScaleDiv::invert()
 }
 
 /**
- * \if ENGLISH
  * @brief Get a scale division with inverted boundaries and ticks
  * @return A scale division with inverted boundaries and ticks
  * @sa invert()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边界和刻度反转的刻度划分
- * @return 边界和刻度反转的刻度划分
- * @sa invert()
- * \endif
  */
 QwtScaleDiv QwtScaleDiv::inverted() const
 {
@@ -461,7 +318,6 @@ QwtScaleDiv QwtScaleDiv::inverted() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return a scale division with an interval [lowerBound, upperBound]
  *        where all ticks outside this interval are removed
  *
@@ -471,19 +327,7 @@ QwtScaleDiv QwtScaleDiv::inverted() const
  * @return Scale division with all ticks inside of the given interval
  *
  * @note lowerBound might be greater than upperBound for inverted scales
- * \endif
  *
- * \if CHINESE
- * @brief 返回一个间隔为 [lowerBound, upperBound] 的刻度划分，
- *        其中所有在此间隔外的刻度都被移除
- *
- * @param lowerBound 下边界
- * @param upperBound 上边界
- *
- * @return 所有刻度都在给定间隔内的刻度划分
- *
- * @note 对于反向刻度，lowerBound 可能大于 upperBound
- * \endif
  */
 QwtScaleDiv QwtScaleDiv::bounded(double lowerBound, double upperBound) const
 {
@@ -510,19 +354,11 @@ QwtScaleDiv QwtScaleDiv::bounded(double lowerBound, double upperBound) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign ticks
  *
  * @param tickType MinorTick, MediumTick or MajorTick
  * @param ticks Values of the tick positions
- * \endif
  *
- * \if CHINESE
- * @brief 分配刻度
- *
- * @param tickType MinorTick、MediumTick 或 MajorTick
- * @param ticks 刻度位置的值
- * \endif
  */
 void QwtScaleDiv::setTicks(int tickType, const QList< double >& ticks)
 {
@@ -531,19 +367,11 @@ void QwtScaleDiv::setTicks(int tickType, const QList< double >& ticks)
 }
 
 /**
- * \if ENGLISH
  * @brief Return a list of ticks
  *
  * @param tickType MinorTick, MediumTick or MajorTick
  * @return Tick list
- * \endif
  *
- * \if CHINESE
- * @brief 返回刻度列表
- *
- * @param tickType MinorTick、MediumTick 或 MajorTick
- * @return 刻度列表
- * \endif
  */
 QList< double > QwtScaleDiv::ticks(int tickType) const
 {

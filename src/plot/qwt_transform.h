@@ -30,7 +30,6 @@
 #include "qwt_global.h"
 
 /**
- * \if ENGLISH
  * @brief A transformation between coordinate systems
  * @details QwtTransform manipulates values when being mapped between
  *          the scale and the paint device coordinate system.
@@ -43,19 +42,6 @@
  *          following calculations:
  *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
  *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
- * \endif
- * \if CHINESE
- * @brief 坐标系之间的变换
- * @details QwtTransform 在值和绘制设备坐标系之间映射时操作值。
- *          变换由 2 个方法组成:
- *          - transform
- *          - invTransform
- *          其中一个是另一个的反函数。
- *          当 p1, p2 是绘制设备坐标的边界，s1, s2 是刻度的边界时，
- *          QwtScaleMap 使用以下计算:
- *          - p = p1 + ( p2 - p1 ) * ( T( s ) - T( s1 ) / ( T( s2 ) - T( s1 ) );
- *          - s = invT ( T( s1 ) + ( T( s2 ) - T( s1 ) ) * ( p - p1 ) / ( p2 - p1 ) );
- * \endif
  */
 class QWT_EXPORT QwtTransform
 {
@@ -75,18 +61,13 @@ public:
     virtual QwtTransform* copy() const = 0;
 
 private:
-    Q_DISABLE_COPY(QwtTransform)
+    QwtTransform(const QwtTransform&) = delete;
+    QwtTransform& operator=(const QwtTransform&) = delete;
 };
 
 /**
- * \if ENGLISH
  * @brief Null transformation
  * @details QwtNullTransform returns the values unmodified.
- * \endif
- * \if CHINESE
- * @brief 空变换
- * @details QwtNullTransform 返回未修改的值。
- * \endif
  */
 class QWT_EXPORT QwtNullTransform : public QwtTransform
 {
@@ -94,7 +75,7 @@ public:
     //! Constructor
     QwtNullTransform();
     //! Destructor
-    virtual ~QwtNullTransform();
+    ~QwtNullTransform() override;
 
     //! Transformation function - returns value unmodified
     virtual double transform(double value) const override;
@@ -104,19 +85,11 @@ public:
     virtual QwtTransform* copy() const override;
 };
 /**
- * \if ENGLISH
  * @brief Logarithmic transformation
  * @details QwtLogTransform modifies the values using log() and exp().
- * \note In the calculations of QwtScaleMap the base of the log function
+ * @note In the calculations of QwtScaleMap the base of the log function
  *       has no effect on the mapping. So QwtLogTransform can be used
  *       for log2(), log10() or any other logarithmic scale.
- * \endif
- * \if CHINESE
- * @brief 对数变换
- * @details QwtLogTransform 使用 log() 和 exp() 修改值。
- * \note 在 QwtScaleMap 的计算中，对数函数的底数对映射没有影响。
- *       因此 QwtLogTransform 可以用于 log2()、log10() 或任何其他对数刻度。
- * \endif
  */
 class QWT_EXPORT QwtLogTransform : public QwtTransform
 {
@@ -124,7 +97,7 @@ public:
     //! Constructor
     QwtLogTransform();
     //! Destructor
-    virtual ~QwtLogTransform();
+    ~QwtLogTransform() override;
 
     //! Transformation function - log(value)
     virtual double transform(double value) const override;
@@ -142,19 +115,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief A transformation using pow()
  * @details QwtPowerTransform preserves the sign of a value.
  *          F.e. a transformation with a factor of 2
  *          transforms a value of -3 to -9 and v.v. Thus QwtPowerTransform
  *          can be used for scales including negative values.
- * \endif
- * \if CHINESE
- * @brief 使用 pow() 的变换
- * @details QwtPowerTransform 保持值的符号。
- *          例如，因子为 2 的变换将 -3 变换为 -9，反之亦然。
- *          因此 QwtPowerTransform 可以用于包含负值的刻度。
- * \endif
  */
 class QWT_EXPORT QwtPowerTransform : public QwtTransform
 {
@@ -162,7 +127,7 @@ public:
     //! Constructor with exponent parameter
     explicit QwtPowerTransform(double exponent);
     //! Destructor
-    virtual ~QwtPowerTransform();
+    ~QwtPowerTransform() override;
 
     //! Transformation function - pow() preserving sign
     virtual double transform(double value) const override;

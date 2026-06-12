@@ -18,29 +18,29 @@ PIMPL（Pointer to Implementation，指向实现的指针）是一种 C++ 设计
 ### 传统方式的缺陷
 
 ```cpp
-// 传统方式 - 头文件暴露所有私有成员
+// Traditional approach - all private members exposed in header
 class MyClass : public QObject
 {
     Q_OBJECT
 private:
-    QString m_title;          // 暴露在头文件中
-    int m_value;              // 任何修改都需要重新编译所有依赖文件
-    QVector<double> m_data;   // 头文件依赖 QVector
+    QString m_title;          // Exposed in header
+    int m_value;              // Any change requires recompiling all dependencies
+    QVector<double> m_data;   // Header depends on QVector
 };
 ```
 
 ### PIMPL 模式的优势
 
 ```cpp
-// PIMPL 方式 - 头文件只暴露指针
+// PIMPL approach - only pointer exposed in header
 class MyClass : public QObject
 {
     Q_OBJECT
-    QWT_DECLARE_PRIVATE(MyClass)  // 自动生成私有指针
+    QWT_DECLARE_PRIVATE(MyClass)  // Auto-generates private data pointer
 public:
     MyClass();
 private:
-    // 私有成员全部隐藏在 MyClass::PrivateData 中
+    // All private members hidden in MyClass::PrivateData
 };
 ```
 
@@ -74,7 +74,7 @@ private:
 class QWT_EXPORT MyClass : public QObject
 {
     Q_OBJECT
-    QWT_DECLARE_PRIVATE(MyClass)  // 添加此宏
+    QWT_DECLARE_PRIVATE(MyClass)  // Add this macro
 
 public:
     // Constructor (English only)
@@ -90,7 +90,7 @@ public:
     QString title() const;
 
 private:
-    // 私有成员不再在此声明
+    // Private members no longer declared here
 };
 ```
 
@@ -102,21 +102,21 @@ private:
 // MyClass.cpp
 #include "MyClass.h"
 
-// 定义私有数据类
+// Define private data class
 class MyClass::PrivateData
 {
-    QWT_DECLARE_PUBLIC(MyClass)  // 自动生成 q_ptr 指针
+    QWT_DECLARE_PUBLIC(MyClass)  // Auto-generates q_ptr pointer
 
 public:
     PrivateData(MyClass* p);
-    
-    QString title;        // 私有成员变量
+
+    QString title;        // Private member variable
     int value;
     QVector<double> data;
 };
 
 MyClass::PrivateData::PrivateData(MyClass* p)
-    : q_ptr(p)            // 初始化宿主指针
+    : q_ptr(p)            // Initialize host pointer
     , title(QString())
     , value(0)
 {
@@ -129,25 +129,18 @@ MyClass::PrivateData::PrivateData(MyClass* p)
 
 ```cpp
 /**
- * \if ENGLISH
  * @brief Constructor for MyClass
- * @param[in] parent Parent object pointer
- * \endif
- * 
- * \if CHINESE
- * @brief MyClass 构造函数
- * @param[in] parent 父对象指针
- * \endif
+ * @param parent Parent object pointer
  */
 MyClass::MyClass(QObject* parent)
     : QObject(parent)
-    , QWT_PIMPL_CONSTRUCT  // 初始化 m_data 指针
+    , QWT_PIMPL_CONSTRUCT  // Initializes m_data pointer
 {
 }
 ```
 
 !!! info "宏展开说明"
-    `QWT_PIMPL_CONSTRUCT` 会展开为：`m_data(new PrivateData(this))`
+    `QWT_PIMPL_CONSTRUCT` 会展开为：`m_data(qwt_make_unique<PrivateData>(this))`
 
 ### 步骤 4：析构函数处理
 
@@ -156,7 +149,7 @@ MyClass::MyClass(QObject* parent)
 ```cpp
 MyClass::~MyClass()
 {
-    // m_data 会自动析构，无需手动 delete
+    // m_data is automatically destroyed, no manual delete required
 }
 ```
 
@@ -166,39 +159,25 @@ MyClass::~MyClass()
 
 ```cpp
 /**
- * \if ENGLISH
  * @brief Set the title text
- * @param[in] title The new title text
- * \endif
- * 
- * \if CHINESE
- * @brief 设置标题文本
- * @param[in] title 新的标题文本
- * \endif
+ * @param title The new title text
  */
 void MyClass::setTitle(const QString& title)
 {
-    QWT_D(d);           // 获取私有数据指针，参数名可自定义
-    d->title = title;   // 访问私有成员
-    
-    // 也可以直接使用 m_data
+    QWT_D(d);           // Get private data pointer, parameter name can be customized
+    d->title = title;   // Access private member
+
+    // Alternatively, use m_data directly:
     // m_data->title = title;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current title
  * @return The current title text
- * \endif
- * 
- * \if CHINESE
- * @brief 获取当前标题
- * @return 当前标题文本
- * \endif
  */
 QString MyClass::title() const
 {
-    QWT_DC(d);          // const 函数使用 QWT_DC
+    QWT_DC(d);          // Use QWT_DC for const member functions
     return d->title;
 }
 ```
@@ -211,7 +190,7 @@ classDiagram
         +QWT_DECLARE_PRIVATE(MyClass)
         +setTitle(title : QString)
         +title() : QString
-        -m_data : PrivateData*
+        -m_data : unique_ptr~PrivateData~
     }
     
     class PrivateData {
@@ -251,7 +230,7 @@ public:
     int value() const;
 
 private:
-    // 私有实现隐藏
+    // Private implementation hidden
 };
 
 #endif // MYCLASS_H
@@ -262,7 +241,7 @@ private:
 ```cpp
 #include "MyClass.h"
 
-// 私有数据类定义
+// Private data class definition
 class MyClass::PrivateData
 {
     QWT_DECLARE_PUBLIC(MyClass)
@@ -280,14 +259,14 @@ public:
     QVector<double> data;
 };
 
-// 构造函数
+// Constructor
 MyClass::MyClass(QObject* parent)
     : QObject(parent)
     , QWT_PIMPL_CONSTRUCT
 {
 }
 
-// 析构函数
+// Destructor
 MyClass::~MyClass()
 {
 }
@@ -350,9 +329,9 @@ int MyClass::value() const
 
 | 宏 | 展开结果 |
 |-----|----------|
-| `QWT_DECLARE_PRIVATE(Class)` | `Class::PrivateData* m_data;` + `d_func()` 方法 |
+| `QWT_DECLARE_PRIVATE(Class)` | `std::unique_ptr<PrivateData> m_data;` + `d_func()` 方法 |
 | `QWT_DECLARE_PUBLIC(Class)` | `Class* q_ptr;` + `q_func()` 方法 |
-| `QWT_PIMPL_CONSTRUCT` | `m_data(new PrivateData(this))` |
+| `QWT_PIMPL_CONSTRUCT` | `m_data(qwt_make_unique<PrivateData>(this))` |
 | `QWT_D(name)` | `Class::PrivateData* name = d_func();` |
 | `QWT_DC(name)` | `const Class::PrivateData* name = d_func();` |
 

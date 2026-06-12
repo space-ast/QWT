@@ -62,18 +62,10 @@ public:
 }
 
 /**
- * \if ENGLISH
- *   \brief Constructor
- *   \param[in] parent Parent widget
- *   \details Creates an analog clock widget with default appearance.
+ *   @brief Constructor
+ *   @param[in] parent Parent widget
+ *   @details Creates an analog clock widget with default appearance.
  *            The clock is read-only and displays the current time.
- * \endif
- * \if CHINESE
- *   \brief 构造函数
- *   \param[in] parent 父控件
- *   \details 创建一个具有默认外观的模拟时钟控件。
- *            时钟为只读模式，显示当前时间。
- * \endif
  */
 QwtAnalogClock::QwtAnalogClock(QWidget* parent) : QwtDial(parent)
 {
@@ -127,12 +119,7 @@ QwtAnalogClock::QwtAnalogClock(QWidget* parent) : QwtDial(parent)
 }
 
 /**
- * \if ENGLISH
- *   \brief Destructor
- * \endif
- * \if CHINESE
- *   \brief 析构函数
- * \endif
+ *   @brief Destructor
  */
 QwtAnalogClock::~QwtAnalogClock()
 {
@@ -141,14 +128,8 @@ QwtAnalogClock::~QwtAnalogClock()
 }
 
 /**
- * \if ENGLISH
- *   \brief No-op method, use setHand() instead
- *   \sa setHand()
- * \endif
- * \if CHINESE
- *   \brief 空操作方法，请使用setHand()
- *   \sa setHand()
- * \endif
+ *   @brief No-op method, use setHand() instead
+ *   @sa setHand()
  */
 void QwtAnalogClock::setNeedle(QwtDialNeedle*)
 {
@@ -157,18 +138,10 @@ void QwtAnalogClock::setNeedle(QwtDialNeedle*)
 }
 
 /**
- * \if ENGLISH
- *   \brief Set a clock hand
- *   \param[in] hand Specifies the type of hand (SecondHand, MinuteHand, HourHand)
- *   \param[in] needle Needle object representing the hand
- *   \sa hand()
- * \endif
- * \if CHINESE
- *   \brief 设置时钟指针
- *   \param[in] hand 指针类型（SecondHand、MinuteHand、HourHand）
- *   \param[in] needle 表示指针的针对象
- *   \sa hand()
- * \endif
+ *   @brief Set a clock hand
+ *   @param[in] hand Specifies the type of hand (SecondHand, MinuteHand, HourHand)
+ *   @param[in] needle Needle object representing the hand
+ *   @sa hand()
  */
 void QwtAnalogClock::setHand(Hand hand, QwtDialNeedle* needle)
 {
@@ -179,18 +152,10 @@ void QwtAnalogClock::setHand(Hand hand, QwtDialNeedle* needle)
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a clock hand
- *   \param[in] hd Specifies the type of hand
- *   \return Clock hand needle, or nullptr if invalid hand type
- *   \sa setHand()
- * \endif
- * \if CHINESE
- *   \brief 获取时钟指针
- *   \param[in] hd 指针类型
- *   \return 时钟指针针对象，若类型无效则返回nullptr
- *   \sa setHand()
- * \endif
+ *   @brief Get a clock hand
+ *   @param[in] hd Specifies the type of hand
+ *   @return Clock hand needle, or nullptr if invalid hand type
+ *   @sa setHand()
  */
 QwtDialNeedle* QwtAnalogClock::hand(Hand hd)
 {
@@ -201,18 +166,10 @@ QwtDialNeedle* QwtAnalogClock::hand(Hand hd)
 }
 
 /**
- * \if ENGLISH
- *   \brief Get a clock hand (const version)
- *   \param[in] hd Specifies the type of hand
- *   \return Clock hand needle (const), or nullptr if invalid hand type
- *   \sa setHand()
- * \endif
- * \if CHINESE
- *   \brief 获取时钟指针（const版本）
- *   \param[in] hd 指针类型
- *   \return 时钟指针针对象（const），若类型无效则返回nullptr
- *   \sa setHand()
- * \endif
+ *   @brief Get a clock hand (const version)
+ *   @param[in] hd Specifies the type of hand
+ *   @return Clock hand needle (const), or nullptr if invalid hand type
+ *   @sa setHand()
  */
 const QwtDialNeedle* QwtAnalogClock::hand(Hand hd) const
 {
@@ -220,14 +177,8 @@ const QwtDialNeedle* QwtAnalogClock::hand(Hand hd) const
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the clock to display the current time
- *   \details Updates the clock to show the current system time.
- * \endif
- * \if CHINESE
- *   \brief 设置时钟显示当前时间
- *   \details 更新时钟显示为当前系统时间。
- * \endif
+ *   @brief Set the clock to display the current time
+ *   @details Updates the clock to show the current system time.
  */
 void QwtAnalogClock::setCurrentTime()
 {
@@ -235,17 +186,10 @@ void QwtAnalogClock::setCurrentTime()
 }
 
 /**
- * \if ENGLISH
- *   \brief Set the clock to display a specific time
- *   \param[in] time Time to display
- *   \details Sets the clock to display the given time. If the time is invalid,
+ *   @brief Set the clock to display a specific time
+ *   @param[in] time Time to display
+ *   @details Sets the clock to display the given time. If the time is invalid,
  *            the clock display is invalidated.
- * \endif
- * \if CHINESE
- *   \brief 设置时钟显示特定时间
- *   \param[in] time 要显示的时间
- *   \details 设置时钟显示给定的时间。如果时间无效，时钟显示将被置为无效状态。
- * \endif
  */
 void QwtAnalogClock::setTime(const QTime& time)
 {
@@ -256,19 +200,19 @@ void QwtAnalogClock::setTime(const QTime& time)
 }
 
 /*!
-   \brief Draw the needle
+   @brief Draw the needle
 
    A clock has no single needle but three hands instead. drawNeedle()
    translates value() into directions for the hands and calls
    drawHand().
 
-   \param painter Painter
-   \param center Center of the clock
-   \param radius Maximum length for the hands
-   \param direction Dummy, not used.
-   \param colorGroup ColorGroup
+   @param painter Painter
+   @param center Center of the clock
+   @param radius Maximum length for the hands
+   @param direction Dummy, not used.
+   @param colorGroup ColorGroup
 
-   \sa drawHand()
+   @sa drawHand()
  */
 void QwtAnalogClock::drawNeedle(QPainter* painter,
                                 const QPointF& center,
@@ -298,12 +242,12 @@ void QwtAnalogClock::drawNeedle(QPainter* painter,
 /*!
    Draw a clock hand
 
-   \param painter Painter
-   \param hd Specify the type of hand
-   \param center Center of the clock
-   \param radius Maximum length for the hands
-   \param direction Direction of the hand in degrees, counter clockwise
-   \param cg ColorGroup
+   @param painter Painter
+   @param hd Specify the type of hand
+   @param center Center of the clock
+   @param radius Maximum length for the hands
+   @param direction Direction of the hand in degrees, counter clockwise
+   @param cg ColorGroup
  */
 void QwtAnalogClock::drawHand(QPainter* painter,
                               Hand hd,

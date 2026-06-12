@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -50,8 +50,10 @@ static QSize buttonShift(const QwtLegendLabel* w)
 
 class QwtLegendLabel::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtLegendLabel)
+
 public:
-    PrivateData() : itemMode(QwtLegendData::ReadOnly), isDown(false), spacing(cs_legendlabel_margin)
+    PrivateData(QwtLegendLabel* p) : q_ptr(p), itemMode(QwtLegendData::ReadOnly), isDown(false), spacing(cs_legendlabel_margin)
     {
     }
 
@@ -65,20 +67,14 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Set the attributes of the legend label
  * @param legendData Attributes of the label
- * \sa data()
- * \endif
- * \if CHINESE
- * @brief 设置图例标签的属性
- * @param legendData 标签的属性
- * \sa data()
- * \endif
+ * @sa data()
  */
 void QwtLegendLabel::setData(const QwtLegendData& legendData)
 {
-    m_data->legendData = legendData;
+    QWT_D(d);
+    d->legendData = legendData;
 
     const bool doUpdate = updatesEnabled();
     if (doUpdate)
@@ -95,64 +91,37 @@ void QwtLegendLabel::setData(const QwtLegendData& legendData)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the attributes of the label
  * @return Attributes of the label
- * \sa setData(), QwtPlotItem::legendData()
- * \endif
- * \if CHINESE
- * @brief 返回图例标签的属性
- * @return 标签的属性
- * \sa setData(), QwtPlotItem::legendData()
- * \endif
+ * @sa setData(), QwtPlotItem::legendData()
  */
 const QwtLegendData& QwtLegendLabel::data() const
 {
-    return m_data->legendData;
+    QWT_DC(d);
+    return d->legendData;
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor for QwtLegendLabel
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief QwtLegendLabel 构造函数
- * @param parent 父控件
- * \endif
  */
-QwtLegendLabel::QwtLegendLabel(QWidget* parent) : QwtTextLabel(parent)
+QwtLegendLabel::QwtLegendLabel(QWidget* parent) : QwtTextLabel(parent), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
     setMargin(cs_legendlabel_margin);
     setIndent(cs_legendlabel_margin);
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtLegendLabel::~QwtLegendLabel()
 {
-    delete m_data;
-    m_data = nullptr;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the text to the legend item
  * @param text Text label
- * \sa QwtTextLabel::text()
- * \endif
- * \if CHINESE
- * @brief 设置图例项的文本
- * @param text 文本标签
- * \sa QwtTextLabel::text()
- * \endif
+ * @sa QwtTextLabel::text()
  */
 void QwtLegendLabel::setText(const QwtText& text)
 {
@@ -165,24 +134,17 @@ void QwtLegendLabel::setText(const QwtText& text)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the item mode
  * @details The default is QwtLegendData::ReadOnly
  * @param mode Item mode
- * \sa itemMode()
- * \endif
- * \if CHINESE
- * @brief 设置条目模式
- * @details 默认值为 QwtLegendData::ReadOnly
- * @param mode 条目模式
- * \sa itemMode()
- * \endif
+ * @sa itemMode()
  */
 void QwtLegendLabel::setItemMode(QwtLegendData::Mode mode)
 {
-    if (mode != m_data->itemMode) {
-        m_data->itemMode = mode;
-        m_data->isDown   = false;
+    QWT_D(d);
+    if (mode != d->itemMode) {
+        d->itemMode = mode;
+        d->isDown   = false;
 
         setFocusPolicy((mode != QwtLegendData::ReadOnly) ? Qt::TabFocus : Qt::NoFocus);
         setMargin(cs_legendlabel_buttonFrame + cs_legendlabel_margin);
@@ -192,120 +154,84 @@ void QwtLegendLabel::setItemMode(QwtLegendData::Mode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the item mode
  * @return Item mode
- * \sa setItemMode()
- * \endif
- * \if CHINESE
- * @brief 返回条目模式
- * @return 条目模式
- * \sa setItemMode()
- * \endif
+ * @sa setItemMode()
  */
 QwtLegendData::Mode QwtLegendLabel::itemMode() const
 {
-    return m_data->itemMode;
+    QWT_DC(d);
+    return d->itemMode;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign the icon
  * @param icon Pixmap representing a plot item
- * \sa icon(), QwtPlotItem::legendIcon()
- * \endif
- * \if CHINESE
- * @brief 设置图标
- * @param icon 表示绘图项的像素图
- * \sa icon(), QwtPlotItem::legendIcon()
- * \endif
+ * @sa icon(), QwtPlotItem::legendIcon()
  */
 void QwtLegendLabel::setIcon(const QPixmap& icon)
 {
-    m_data->icon = icon;
+    QWT_D(d);
+    d->icon = icon;
 
-    int indent = margin() + m_data->spacing;
+    int indent = margin() + d->spacing;
     if (icon.width() > 0)
-        indent += icon.width() + m_data->spacing;
+        indent += icon.width() + d->spacing;
 
     setIndent(indent);
 }
 
 /**
- * \if ENGLISH
  * @brief Return the pixmap representing a plot item
  * @return Pixmap representing a plot item
- * \sa setIcon()
- * \endif
- * \if CHINESE
- * @brief 返回表示绘图项的像素图
- * @return 表示绘图项的像素图
- * \sa setIcon()
- * \endif
+ * @sa setIcon()
  */
 QPixmap QwtLegendLabel::icon() const
 {
-    return m_data->icon;
+    QWT_DC(d);
+    return d->icon;
 }
 
 /**
- * \if ENGLISH
  * @brief Change the spacing between icon and text
  * @param spacing Spacing
- * \sa spacing(), QwtTextLabel::margin()
- * \endif
- * \if CHINESE
- * @brief 更改图标和文本之间的间距
- * @param spacing 间距
- * \sa spacing(), QwtTextLabel::margin()
- * \endif
+ * @sa spacing(), QwtTextLabel::margin()
  */
 void QwtLegendLabel::setSpacing(int spacing)
 {
+    QWT_D(d);
     spacing = qMax(spacing, 0);
-    if (spacing != m_data->spacing) {
-        m_data->spacing = spacing;
+    if (spacing != d->spacing) {
+        d->spacing = spacing;
 
-        int indent = margin() + m_data->spacing;
-        if (m_data->icon.width() > 0)
-            indent += m_data->icon.width() + m_data->spacing;
+        int indent = margin() + d->spacing;
+        if (d->icon.width() > 0)
+            indent += d->icon.width() + d->spacing;
 
         setIndent(indent);
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Return the spacing between icon and text
  * @return Spacing between icon and text
- * \sa setSpacing(), QwtTextLabel::margin()
- * \endif
- * \if CHINESE
- * @brief 返回图标和文本之间的间距
- * @return 图标和文本之间的间距
- * \sa setSpacing(), QwtTextLabel::margin()
- * \endif
+ * @sa setSpacing(), QwtTextLabel::margin()
  */
 int QwtLegendLabel::spacing() const
 {
-    return m_data->spacing;
+    QWT_DC(d);
+    return d->spacing;
 }
 
 /**
- * \if ENGLISH
  * @brief Check/Uncheck the item
  * @param on check/uncheck
- * \sa setItemMode()
- * \endif
- * \if CHINESE
- * @brief 选中/取消选中条目
- * @param on 选中/取消选中
- * \sa setItemMode()
- * \endif
+ * @sa setItemMode()
  */
 void QwtLegendLabel::setChecked(bool on)
 {
-    if (m_data->itemMode == QwtLegendData::Checkable) {
+    QWT_D(d);
+    if (d->itemMode == QwtLegendData::Checkable) {
         const bool isBlocked = signalsBlocked();
         blockSignals(true);
 
@@ -316,31 +242,27 @@ void QwtLegendLabel::setChecked(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true if the item is checked
  * @return True if the item is checked
- * \endif
- * \if CHINESE
- * @brief 返回条目是否被选中
- * @return 如果条目被选中则返回 true
- * \endif
  */
 bool QwtLegendLabel::isChecked() const
 {
-    return m_data->itemMode == QwtLegendData::Checkable && isDown();
+    QWT_DC(d);
+    return d->itemMode == QwtLegendData::Checkable && isDown();
 }
 
 //! Set the item being down
 void QwtLegendLabel::setDown(bool down)
 {
-    if (down == m_data->isDown)
+    QWT_D(d);
+    if (down == d->isDown)
         return;
 
-    m_data->isDown = down;
+    d->isDown = down;
     update();
 
-    if (m_data->itemMode == QwtLegendData::Clickable) {
-        if (m_data->isDown)
+    if (d->itemMode == QwtLegendData::Clickable) {
+        if (d->isDown)
             Q_EMIT pressed();
         else {
             Q_EMIT released();
@@ -348,32 +270,28 @@ void QwtLegendLabel::setDown(bool down)
         }
     }
 
-    if (m_data->itemMode == QwtLegendData::Checkable)
-        Q_EMIT checked(m_data->isDown);
+    if (d->itemMode == QwtLegendData::Checkable)
+        Q_EMIT checked(d->isDown);
 }
 
 //! Return true, if the item is down
 bool QwtLegendLabel::isDown() const
 {
-    return m_data->isDown;
+    QWT_DC(d);
+    return d->isDown;
 }
 
 /**
- * \if ENGLISH
  * @brief Return a size hint
  * @return Size hint
- * \endif
- * \if CHINESE
- * @brief 返回大小提示
- * @return 大小提示
- * \endif
  */
 QSize QwtLegendLabel::sizeHint() const
 {
+    QWT_DC(d);
     QSize sz = QwtTextLabel::sizeHint();
-    sz.setHeight(qMax(sz.height(), m_data->icon.height() + 4));
+    sz.setHeight(qMax(sz.height(), d->icon.height() + 4));
 
-    if (m_data->itemMode != QwtLegendData::ReadOnly) {
+    if (d->itemMode != QwtLegendData::ReadOnly) {
         sz += buttonShift(this);
         sz = qwtExpandedToGlobalStrut(sz);
     }
@@ -384,18 +302,19 @@ QSize QwtLegendLabel::sizeHint() const
 //! Paint event
 void QwtLegendLabel::paintEvent(QPaintEvent* e)
 {
+    QWT_D(d);
     const QRect cr = contentsRect();
 
     QPainter painter(this);
     painter.setClipRegion(e->region());
 
-    if (m_data->isDown) {
+    if (d->isDown) {
         qDrawWinButton(&painter, 0, 0, width(), height(), palette(), true);
     }
 
     painter.save();
 
-    if (m_data->isDown) {
+    if (d->isDown) {
         const QSize shiftSize = buttonShift(this);
         painter.translate(shiftSize.width(), shiftSize.height());
     }
@@ -404,16 +323,16 @@ void QwtLegendLabel::paintEvent(QPaintEvent* e)
 
     drawContents(&painter);
 
-    if (!m_data->icon.isNull()) {
+    if (!d->icon.isNull()) {
         QRect iconRect = cr;
         iconRect.setX(iconRect.x() + margin());
-        if (m_data->itemMode != QwtLegendData::ReadOnly)
+        if (d->itemMode != QwtLegendData::ReadOnly)
             iconRect.setX(iconRect.x() + cs_legendlabel_buttonFrame);
 
-        iconRect.setSize(m_data->icon.size());
+        iconRect.setSize(d->icon.size());
         iconRect.moveCenter(QPoint(iconRect.center().x(), cr.center().y()));
 
-        painter.drawPixmap(iconRect, m_data->icon);
+        painter.drawPixmap(iconRect, d->icon);
     }
 
     painter.restore();
@@ -422,8 +341,9 @@ void QwtLegendLabel::paintEvent(QPaintEvent* e)
 //! Handle mouse press events
 void QwtLegendLabel::mousePressEvent(QMouseEvent* e)
 {
+    QWT_D(d);
     if (e->button() == Qt::LeftButton) {
-        switch (m_data->itemMode) {
+        switch (d->itemMode) {
         case QwtLegendData::Clickable: {
             setDown(true);
             return;
@@ -441,8 +361,9 @@ void QwtLegendLabel::mousePressEvent(QMouseEvent* e)
 //! Handle mouse release events
 void QwtLegendLabel::mouseReleaseEvent(QMouseEvent* e)
 {
+    QWT_D(d);
     if (e->button() == Qt::LeftButton) {
-        switch (m_data->itemMode) {
+        switch (d->itemMode) {
         case QwtLegendData::Clickable: {
             setDown(false);
             return;
@@ -459,8 +380,9 @@ void QwtLegendLabel::mouseReleaseEvent(QMouseEvent* e)
 //! Handle key press events
 void QwtLegendLabel::keyPressEvent(QKeyEvent* e)
 {
+    QWT_D(d);
     if (e->key() == Qt::Key_Space) {
-        switch (m_data->itemMode) {
+        switch (d->itemMode) {
         case QwtLegendData::Clickable: {
             if (!e->isAutoRepeat())
                 setDown(true);
@@ -481,8 +403,9 @@ void QwtLegendLabel::keyPressEvent(QKeyEvent* e)
 //! Handle key release events
 void QwtLegendLabel::keyReleaseEvent(QKeyEvent* e)
 {
+    QWT_D(d);
     if (e->key() == Qt::Key_Space) {
-        switch (m_data->itemMode) {
+        switch (d->itemMode) {
         case QwtLegendData::Clickable: {
             if (!e->isAutoRepeat())
                 setDown(false);

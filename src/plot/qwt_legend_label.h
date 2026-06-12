@@ -34,30 +34,21 @@
 class QwtText;
 
 /**
- * \if ENGLISH
  * @brief A widget representing an item on a QwtLegend
  * @details QwtLegendLabel is used to display legend items in a QwtLegend.
  *          It can show an icon and a text label, and supports different
  *          interaction modes (ReadOnly, Clickable, Checkable).
- * \sa QwtLegend, QwtLegendData
- * \endif
- * \if CHINESE
- * @brief 表示 QwtLegend 上某个条目的控件
- * @details QwtLegendLabel 用于在 QwtLegend 中显示图例条目。
- *          它可以显示图标和文本标签，并支持不同的交互模式
- *          （只读、可点击、可选中）。
- * \sa QwtLegend, QwtLegendData
- * \endif
+ * @sa QwtLegend, QwtLegendData
  */
 class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 {
     Q_OBJECT
   public:
     // Constructor for QwtLegendLabel
-    explicit QwtLegendLabel( QWidget* parent = 0 );
+    explicit QwtLegendLabel( QWidget* parent = nullptr );
     
     // Destructor for QwtLegendLabel
-    virtual ~QwtLegendLabel();
+    ~QwtLegendLabel() override;
 
     // Set the legend data
     void setData( const QwtLegendData& );
@@ -98,44 +89,23 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 
   Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the legend item has been clicked
-     * \endif
-     * \if CHINESE
-     * @brief 当图例项被点击时发出的信号
-     * \endif
      */
     void clicked();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the legend item has been pressed
-     * \endif
-     * \if CHINESE
-     * @brief 当图例项被按下时发出的信号
-     * \endif
      */
     void pressed();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the legend item has been released
-     * \endif
-     * \if CHINESE
-     * @brief 当图例项被释放时发出的信号
-     * \endif
      */
     void released();
 
     /**
-     * \if ENGLISH
      * @brief Signal emitted when the legend item has been toggled
      * @param on True if checked, false otherwise
-     * \endif
-     * \if CHINESE
-     * @brief 当图例项状态切换时发出的信号
-     * @param on 如果选中为 true，否则为 false
-     * \endif
      */
     void checked( bool );
 
@@ -162,8 +132,7 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
     virtual void keyReleaseEvent( QKeyEvent* ) override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtLegendLabel)
 };
 
 #endif

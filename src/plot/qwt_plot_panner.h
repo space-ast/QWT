@@ -10,16 +10,9 @@ class QWidget;
 class QwtPlot;
 
 /**
- * \if ENGLISH
  * @brief QwtPlotPanner provides panning of a plot canvas
  * @details QwtPlotPanner is a QwtPicker that translates all pixel coordinates
  *          into plot coordinates and provides panning functionality for the plot canvas.
- * \endif
- * 
- * \if CHINESE
- * @brief QwtPlotPanner 提供绘图画布的平移功能
- * @details QwtPlotPanner 是一个 QwtPicker，它将所有像素坐标转换为绘图坐标，并为绘图画布提供平移功能。
- * \endif
  */
 class QWT_EXPORT QwtPlotPanner : public QwtPicker
 {
@@ -29,7 +22,7 @@ public:
     // Constructor
     explicit QwtPlotPanner(QWidget* canvas);
     // Destructor
-    virtual ~QwtPlotPanner();
+    ~QwtPlotPanner() override;
 
     // Get the canvas widget
     QWidget* canvas();
@@ -59,17 +52,9 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**
-     * \if ENGLISH
      * @brief Signal emitted after the canvas has been panned
      * @param dx Offset in x-direction
      * @param dy Offset in y-direction
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 画布平移后发出的信号
-     * @param dx x 方向的偏移
-     * @param dy y 方向的偏移
-     * \endif
      */
     void panned(int dx, int dy);
 

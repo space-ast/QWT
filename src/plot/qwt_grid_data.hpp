@@ -20,21 +20,17 @@
  * It supports three resampling methods: Nearest Neighbor, Bilinear Interpolation, and Bicubic Interpolation.
  * The container types for the axes and data are templated to allow flexibility.
  *
- * 此模板类封装了一个二维表格以及对应的 x 轴和 y 轴数据。
- * 它支持三种插值方法：最近邻插值、双线性插值和双三次插值。
- * 轴和数据的容器类型被模板化以提供灵活性。
- *
- * ↓Y轴方向 →X轴方向 n行 m列
+ * Y-axis direction (down), X-axis direction (right): n rows, m columns
  *
  * |column[0]|column[1]| ... |column[m]|
  * +---------+---------+-----+---------+
- * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+ * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
  * +---------+---------+-----+---------+
  * |   ...   |   ...   | ... |   ...   |
  * +---------+---------+-----+---------+
- * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+ * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
  * +---------+---------+-----+---------+
- * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+ * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
  * +---------+---------+-----+---------+
  *      ↑          ↑      ↑       ↑
  *  xAxis[0]   xAxis[1]  ...   xAxis[m]
@@ -94,11 +90,11 @@ template< typename T,
 class QwtGridData
 {
 public:
-    using value_type       = T;           ///< @brief Type of the stored values / 存储值的类型
-    using x_container_type = XContainer;  ///< @brief Type of the x-axis container / x 轴容器的类型
-    using y_container_type = YContainer;  ///< @brief Type of the y-axis container / y 轴容器的类型
-    using data_column_type = DataColumn;  ///< @brief Type of a single column in the data matrix / 数据矩阵中单列的类型
-    using data_container_type = DataContainer;  ///< @brief Type of the data matrix / 数据矩阵的类型
+    using value_type       = T;           ///< @brief Type of the stored values
+    using x_container_type = XContainer;  ///< @brief Type of the x-axis container
+    using y_container_type = YContainer;  ///< @brief Type of the y-axis container
+    using data_column_type = DataColumn;  ///< @brief Type of a single column in the data matrix
+    using data_container_type = DataContainer;  ///< @brief Type of the data matrix
     using size_type           = typename DataColumn::size_type;
     /**
      * @brief Enumeration for resampling methods.
@@ -107,11 +103,6 @@ public:
      * - NearestNeighbour: Nearest neighbor interpolation.
      * - BilinearInterpolation: Bilinear interpolation.
      * - BicubicInterpolation: Hermite bicubic interpolation.
-     *
-     * 定义可用的抽样方法：
-     * - NearestNeighbour: 最近邻插值。
-     * - BilinearInterpolation: 双线性插值。
-     * - BicubicInterpolation: Hermite 双三次插值。
      */
     enum ResampleMode
     {
@@ -123,7 +114,7 @@ public:
     /**
      * @brief Default constructor.
      *
-     * 初始化一个空的 QwtGridData 对象。
+     * Initializes an empty QwtGridData object.
      */
     QwtGridData()
         : m_mode(NearestNeighbour), m_xMin(0.0), m_xMax(0.0), m_yMin(0.0), m_yMax(0.0), m_dataMax(0.0), m_dataMin(0.0)
@@ -135,12 +126,10 @@ public:
      *
      * Initializes the object with x-axis, y-axis, and data matrix.
      *
-     * 使用 x 轴、y 轴和数据矩阵初始化对象。
-     *
-     * @param xAxis The x-axis values. / x 轴值。
-     * @param yAxis The y-axis values. / y 轴值。
-     * @param data The 2D data matrix. / 二维数据矩阵。
-     * @param mode The resampling mode to use. / 要使用的抽样方法。
+     * @param xAxis The x-axis values.
+     * @param yAxis The y-axis values.
+     * @param data The 2D data matrix.
+     * @param mode The resampling mode to use.
      */
     QwtGridData(const x_container_type& xAxis,
                 const y_container_type& yAxis,
@@ -163,25 +152,22 @@ public:
      *
      * |column[0]|column[1]| ... |column[m]|
      * +---------+---------+-----+---------+
-     * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+     * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
      * +---------+---------+-----+---------+
      * |   ...   |   ...   | ... |   ...   |
      * +---------+---------+-----+---------+
-     * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+     * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
      * +---------+---------+-----+---------+
-     * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+     * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
      * +---------+---------+-----+---------+
      *      ↑          ↑      ↑       ↑
      *  xAxis[0]   xAxis[1]  ...   xAxis[m]
      *
-     *  so (data matrix).size = xAxis.size,(data matrix).at(n).size = yAxis.szie
+     *  so (data matrix).size = xAxis.size,(data matrix).at(n).size = yAxis.size
      *
-     * 设置新的 x 轴、y 轴和数据矩阵。
-     * 数据矩阵是一个vector<vector> ,数据矩阵.size = xAxis.size,数据矩阵.at(n).size = yAxis.size
-     *
-     * @param xAxis The x-axis values. / x 轴值。
-     * @param yAxis The y-axis values. / y 轴值。
-     * @param data The 2D data matrix. / 二维数据矩阵。
+     * @param xAxis The x-axis values.
+     * @param yAxis The y-axis values.
+     * @param data The 2D data matrix.
      */
     void setValue(const x_container_type& xAxis, const y_container_type& yAxis, const data_container_type& data)
     {
@@ -199,11 +185,9 @@ public:
     /**
      * @brief Operator to query value at (x, y).
      *
-     * 根据给定的 x 和 y 坐标查询值。
-     *
-     * @param x The x-coordinate. / x 坐标。
-     * @param y The y-coordinate. / y 坐标。
-     * @return The interpolated or nearest value. / 插值或最近邻值。
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The interpolated or nearest value.
      */
     T operator()(T x, T y) const
     {
@@ -213,10 +197,10 @@ public:
     /**
      * @brief operator []
      *
-     * 根据给定的 x 和 y 坐标查询值。
+     * Queries value at the given (x, y) coordinates.
      *
      * @param xy,std::pair<x,y>
-     * @return The interpolated or nearest value. / 插值或最近邻值。
+     * @return The interpolated or nearest value.
      */
     T operator[](const std::pair< T, T >& xy) const
     {
@@ -225,11 +209,9 @@ public:
     /**
      * @brief Query value at (x, y).
      *
-     * 根据给定的 x 和 y 坐标查询值。
-     *
-     * @param x The x-coordinate. / x 坐标。
-     * @param y The y-coordinate. / y 坐标。
-     * @return The interpolated or nearest value. / 插值或最近邻值。
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The interpolated or nearest value.
      */
     T value(T x, T y) const
     {
@@ -248,9 +230,7 @@ public:
     /**
      * @brief Set the resampling mode.
      *
-     * 设置查询值时使用的抽样方法。
-     *
-     * @param mode The resampling mode to use. / 要使用的抽样方法。
+     * @param mode The resampling mode to use.
      */
     void setResampleMode(ResampleMode mode)
     {
@@ -260,9 +240,7 @@ public:
     /**
      * @brief Get the current resampling mode.
      *
-     * 返回当前激活的抽样方法。
-     *
-     * @return The current resampling mode. / 当前抽样方法。
+     * @return The current resampling mode.
      */
     ResampleMode resampleMode() const
     {
@@ -270,7 +248,7 @@ public:
     }
 
     /**
-     * @brief x的尺寸
+     * @brief Size of x-axis
      * @return
      */
     size_type xSize() const
@@ -279,7 +257,7 @@ public:
     }
 
     /**
-     * @brief y的尺寸
+     * @brief Size of y-axis
      * @return
      */
     size_type ySize() const
@@ -288,7 +266,7 @@ public:
     }
 
     /**
-     * @brief value矩阵的尺寸
+     * @brief Size of the value matrix
      * @return <xsize,ysize>
      */
     std::pair< size_type, size_type > valueSize() const
@@ -297,7 +275,7 @@ public:
     }
 
     /**
-     * @brief x 值对应的内容
+     * @brief Value at x-axis index
      * @param ix
      * @return
      */
@@ -307,7 +285,7 @@ public:
     }
 
     /**
-     * @brief y值对应的内容
+     * @brief Value at y-axis index
      * @param ix
      * @return
      */
@@ -317,7 +295,7 @@ public:
     }
 
     /**
-     * @brief value值对应的内容
+     * @brief Value at matrix index
      * @param ix
      * @return
      */
@@ -329,9 +307,7 @@ public:
     /**
      * @brief Get the x-axis values.
      *
-     * 获取 x 轴值。
-     *
-     * @return The x-axis values. / x 轴值。
+     * @return The x-axis values.
      */
     const x_container_type& xAxis() const
     {
@@ -341,9 +317,7 @@ public:
     /**
      * @brief Get the y-axis values.
      *
-     * 获取 y 轴值。
-     *
-     * @return The y-axis values. / y 轴值。
+     * @return The y-axis values.
      */
     const y_container_type& yAxis() const
     {
@@ -353,9 +327,7 @@ public:
     /**
      * @brief Get the data matrix.
      *
-     * 获取数据矩阵。
-     *
-     * @return The data matrix. / 数据矩阵。
+     * @return The data matrix.
      */
     const data_container_type& data() const
     {
@@ -365,9 +337,7 @@ public:
     /**
      * @brief Check if the object is valid.
      *
-     * 判断对象是否有效。
-     *
-     * @return True if valid, false otherwise. / 如果有效则返回 true，否则返回 false。
+     * @return True if valid, false otherwise.
      */
     bool valid() const
     {
@@ -393,8 +363,6 @@ public:
 
     /**
      * @brief Validate the data.
-     *
-     * 验证数据的有效性。
      */
     void validate()
     {
@@ -447,11 +415,9 @@ public:
     /**
      * @brief Find the closest index in a sorted array.
      *
-     * 在排序数组中查找最接近的索引。
-     *
-     * @param arr The sorted array. / 排序数组。
-     * @param val The target value. / 目标值。
-     * @return The index of the closest value. / 最接近值的索引。
+     * @param arr The sorted array.
+     * @param val The target value.
+     * @return The index of the closest value.
      */
     template< typename Container >
     static size_type findClosestIndex(const Container& arr, T val)
@@ -468,11 +434,9 @@ public:
     /**
      * @brief Find the lower bound index in a sorted array.
      *
-     * 在排序数组中查找下界索引。
-     *
-     * @param arr The sorted array. / 排序数组。
-     * @param val The target value. / 目标值。
-     * @return The lower bound index. / 下界索引。
+     * @param arr The sorted array.
+     * @param val The target value.
+     * @return The lower bound index.
      */
     template< typename Container >
     static size_type findLowerIndex(const Container& arr, T val)
@@ -493,10 +457,8 @@ protected:
     /**
      * @brief Get the minimum & maximum value in the data matrix.
      *
-     * 查找并返回二维数据矩阵中的最小和最大值。
      *
-     * @return std::pair<The minimum value, The maximum value> in the data matrix. / 数据矩阵中的最小和最大值。
-     */
+     * @return std::pair<The minimum value, The maximum value> in the data matrix.*/
     void findValueRange()
     {
         m_dataMin = std::numeric_limits< T >::max();
@@ -512,11 +474,10 @@ protected:
     /**
      * @brief Nearest neighbor interpolation.
      *
-     * 最近邻插值。
      *
-     * @param x The x-coordinate. / x 坐标。
-     * @param y The y-coordinate. / y 坐标。
-     * @return The nearest value. / 最近邻值。
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The nearest value.
      */
     T nearestNeighbour(T x, T y) const
     {
@@ -528,11 +489,10 @@ protected:
     /**
      * @brief Bilinear interpolation.
      *
-     * 双线性插值。
      *
-     * @param x The x-coordinate. / x 坐标。
-     * @param y The y-coordinate. / y 坐标。
-     * @return The interpolated value. / 插值结果。
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The interpolated value.
      */
     T bilinearInterpolation(T x, T y) const
     {
@@ -561,12 +521,9 @@ protected:
      * @details Returns the bicubically interpolated value at the specified (x, y) position.
      * This implementation uses the Hermite bicubic interpolation method.
      *
-     * 返回指定 (x, y) 位置的双三次插值结果。
-     * 此实现使用 Hermite 双三次插值方法。
-     *
-     * @param x The x-coordinate / x 坐标
-     * @param y The y-coordinate / y 坐标
-     * @return The bicubically interpolated value / 双三次插值结果
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The bicubically interpolated value.
      */
     T bicubicInterpolation(T x, T y) const
     {
@@ -677,27 +634,27 @@ protected:
     }
 
 private:
-    x_container_type m_xAxis;  ///< @brief x-axis values / x 轴值
-    y_container_type m_yAxis;  ///< @brief y-axis values / y 轴值
+    x_container_type m_xAxis;  ///< x-axis values
+    y_container_type m_yAxis;  ///< y-axis values
     /**
-     * @brief The 2D data matrix / 二维数据矩阵
+     * @brief The 2D data matrix
      *
      * |column[0]|column[1]| ... |column[m]|
      * +---------+---------+-----+---------+
-     * | [x0,yn] | [x1,yn] | ... | [xm,yn] | → yAxis[n] 对应行
+     * | [x0,yn] | [x1,yn] | ... | [xm,yn] | -> yAxis[n] corresponding row
      * +---------+---------+-----+---------+
      * |   ...   |   ...   | ... |   ...   |
      * +---------+---------+-----+---------+
-     * | [x0,y1] | [x1,y1] | ... | [xm,y1] | → yAxis[1] 对应行
+     * | [x0,y1] | [x1,y1] | ... | [xm,y1] | -> yAxis[1] corresponding row
      * +---------+---------+-----+---------+
-     * | [x0,y0] | [x1,y0] | ... | [xm,y0] | → yAxis[0] 对应行
+     * | [x0,y0] | [x1,y0] | ... | [xm,y0] | -> yAxis[0] corresponding row
      * +---------+---------+-----+---------+
      *      ↑          ↑      ↑       ↑
      *  xAxis[0]   xAxis[1]  ...   xAxis[m]
      */
     data_container_type m_data;
-    ResampleMode m_mode;                                     ///< @brief Current resampling mode / 当前抽样方法
-    T m_xMin, m_xMax, m_yMin, m_yMax, m_dataMin, m_dataMax;  ///< @brief Bounds of the grid / 网格的边界
+    ResampleMode m_mode;                                     ///< @brief Current resampling mode
+    T m_xMin, m_xMax, m_yMin, m_yMax, m_dataMin, m_dataMax;  ///< @brief Bounds of the grid
 };
 
 #endif  // QWT_GRID_DATA_HPP

@@ -104,9 +104,9 @@ void IncrementalPlot::showSymbols(bool on)
 {
     if (on) {
         m_curve->setStyle(QwtPlotCurve::NoCurve);
-        m_curve->setSymbol(new QwtSymbol(QwtSymbol::XCross, Qt::NoBrush, QPen(Qt::white), QSize(4, 4)));
+        m_curve->setSymbol(new QwtSymbol(QwtSymbol::XCross, Qt::NoBrush, QPen(QColor("#1f77b4")), QSize(4, 4)));
     } else {
-        m_curve->setPen(Qt::white);
+        m_curve->setPen(QColor("#1f77b4"));
         m_curve->setStyle(QwtPlotCurve::Dots);
         m_curve->setSymbol(NULL);
     }

@@ -44,12 +44,11 @@ template< typename T >
 class QList;
 
 /**
- * \if ENGLISH
  * @brief Base class for items on the plot canvas
- * 
+ *
  * A plot item is "something", that can be painted on the plot canvas,
  * or only affects the scales of the plot widget. They can be categorized as:
- * 
+ *
  * - Representator
  *  A "Representator" is an item that represents some sort of data
  *  on the plot canvas. The different representator classes are organized
@@ -61,7 +60,7 @@ class QList;
  *  - QwtPlotSpectrogram ( QwtPlotRasterItem )
  *    Represents raster data
  *  - ...
- * 
+ *
  * - Decorators
  *  A "Decorator" is an item, that displays additional information, that
  *  is not related to any data:
@@ -69,68 +68,27 @@ class QList;
  *  - QwtPlotScaleItem
  *  - QwtPlotSvgItem
  *  - ...
- * 
+ *
  * Depending on the QwtPlotItem::ItemAttribute flags, an item is included
  * into autoscaling or has an entry on the legend.
- * 
+ *
  * Before misusing the existing item classes it might be better to
  * implement a new type of plot item
  * ( don't implement a watermark as spectrogram ).
  * Deriving a new type of QwtPlotItem primarily means to implement
  * the YourPlotItem::draw() method.
- * 
+ *
  * @sa The cpuplot example shows the implementation of additional plot items.
- * \endif
- * 
- * \if CHINESE
- * @brief 绘图画布上项目的基类
- * 
- * 绘图项是可以在绘图画布上绘制的"东西"，或者只影响绘图部件的刻度。它们可以分为：
- * 
- * - 表示器
- *  "表示器"是在绘图画布上表示某种数据的项目。不同的表示器类根据数据的特征组织：
- *  - QwtPlotMarker
- *    表示一个点或水平/垂直坐标
- *  - QwtPlotCurve
- *    表示一系列点
- *  - QwtPlotSpectrogram ( QwtPlotRasterItem )
- *    表示栅格数据
- *  - ...
- * 
- * - 装饰器
- *  "装饰器"是显示与任何数据无关的附加信息的项目：
- *  - QwtPlotGrid
- *  - QwtPlotScaleItem
- *  - QwtPlotSvgItem
- *  - ...
- * 
- * 根据 QwtPlotItem::ItemAttribute 标志，项目会被包含在自动缩放中或在图例上有一个条目。
- * 
- * 在滥用现有项目类之前，最好实现一种新类型的绘图项
- * （不要将水印实现为谱图）。
- * 派生新类型的 QwtPlotItem 主要意味着实现
- * YourPlotItem::draw() 方法。
- * 
- * @sa cpuplot 示例显示了附加绘图项的实现。
- * \endif
  */
 
 class QWT_EXPORT QwtPlotItem
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Runtime type information
-     * 
+     *
      * RttiValues is used to cast plot items, without
      * having to enable runtime type information of the compiler.
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 运行时类型信息
-     * 
-     * RttiValues 用于转换绘图项，无需启用编译器的运行时类型信息。
-     * \endif
      */
     enum RttiValues
     {
@@ -202,23 +160,13 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Plot Item Attributes
-     * 
+     *
      * Various aspects of a plot widget depend on the attributes of
      * the attached plot items. If and how a single plot item
      * participates in these updates depends on its attributes.
-     * 
+     *
      * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 绘图项属性
-     * 
-     * 绘图部件的各个方面取决于附加绘图项的属性。单个绘图项是否以及如何参与这些更新取决于其属性。
-     * 
-     * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-     * \endif
      */
     enum ItemAttribute
     {
@@ -235,7 +183,7 @@ public:
         /*!
            The item needs extra space to display something outside
            its bounding rectangle.
-           \sa getCanvasMarginHint()
+           @sa getCanvasMarginHint()
          */
         Margins = 0x04
     };
@@ -243,54 +191,27 @@ public:
     Q_DECLARE_FLAGS(ItemAttributes, ItemAttribute)
 
     /**
-     * \if ENGLISH
      * @brief Plot Item Interests
-     * 
+     *
      * Plot items might depend on the situation of the corresponding plot widget. By enabling an interest the plot item
      * will be notified, when the corresponding attribute of the plot widgets has changed.
-     * 
+     *
      * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 绘图项关注的事件类型
-     * 
-     * 绘图项可能依赖于对应绘图部件的状态。通过启用某个关注事件，当绘图部件的对应属性发生变化时，绘图项将收到通知。
-     * 
-     * @sa setItemAttribute(), testItemAttribute(), ItemInterest
-     * \endif
      */
     enum ItemInterest
     {
         /**
-         * \if ENGLISH
          * The item is interested in updates of the scales
          * @sa updateScaleDiv()
-         * \endif
-         * 
-         * \if CHINESE
-         * 该绘图项关注刻度的更新
-         * @sa updateScaleDiv()
-         * \endif
          */
         ScaleInterest = 0x01,
 
         /**
-         * \if ENGLISH
          * The item is interested in updates of the legend ( of other items )
          * This flag is intended for items, that want to implement a legend for displaying entries of other plot item.
-         * 
+         *
          * @note If the plot item wants to be represented on a legend enable QwtPlotItem::Legend instead.
          * @sa updateLegend()
-         * \endif
-         * 
-         * \if CHINESE
-         * 该绘图项关注图例的更新（其他项的图例）
-         * 此标志适用于那些希望实现图例以显示其他绘图项条目的绘图项。
-         * 
-         * @note 若绘图项自身希望在图例中显示，请启用 QwtPlotItem::Legend 标志。
-         * @sa updateLegend()
-         * \endif
          */
         LegendInterest = 0x02
     };
@@ -298,13 +219,7 @@ public:
     Q_DECLARE_FLAGS(ItemInterests, ItemInterest)
 
     /**
-     * \if ENGLISH
      * @brief Render hints
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 渲染提示
-     * \endif
      */
     enum RenderHint
     {
@@ -325,7 +240,7 @@ public:
     virtual ~QwtPlotItem();
 
     /// Attach the item to a plot
-    void attach(QwtPlot* plot);
+    virtual void attach(QwtPlot* plot);
     /// Detach the item from the plot
     void detach();
 
@@ -400,23 +315,12 @@ public:
     virtual void legendChanged();
 
     /**
-     * \if ENGLISH
      * @brief Draw the item
-     * 
+     *
      * @param painter Painter
      * @param xMap Maps x-values into pixel coordinates.
      * @param yMap Maps y-values into pixel coordinates.
      * @param canvasRect Contents rect of the canvas in painter coordinates
-     * \endif
-     * 
-     * \if CHINESE
-     * @brief 绘制项目
-     * 
-     * @param painter 画笔
-     * @param xMap 将 x 值映射到像素坐标
-     * @param yMap 将 y 值映射到像素坐标
-     * @param canvasRect 画布在画笔坐标中的内容矩形
-     * \endif
      */
     virtual void draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const = 0;
 
@@ -454,10 +358,9 @@ protected:
     QwtGraphic defaultIcon(const QBrush&, const QSizeF&) const;
 
 private:
-    Q_DISABLE_COPY(QwtPlotItem)
-
-    class PrivateData;
-    PrivateData* m_data;
+    QwtPlotItem(const QwtPlotItem&) = delete;
+    QwtPlotItem& operator=(const QwtPlotItem&) = delete;
+    QWT_DECLARE_PRIVATE(QwtPlotItem)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotItem::ItemAttributes)

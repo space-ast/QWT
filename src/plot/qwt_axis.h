@@ -30,24 +30,14 @@
 #include "qwt_global.h"
 
 /**
- * \if ENGLISH
  * @brief Enums and methods for axes
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴的枚举和方法
- * \endif
  */
 namespace QwtAxis
 {
 /**
- * \if ENGLISH
  * @brief Axis position
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置
- * \endif
  */
 enum Position
 {
@@ -65,38 +55,33 @@ enum Position
 };
 
 /**
- * \if ENGLISH
  * @brief Number of axis positions
- * \endif
  *
- * \if CHINESE
- * @brief 坐标轴位置数量
- * \endif
  */
 enum
 {
     AxisPositions = XTop + 1
 };
 
-bool isValid(int axisPos);
-bool isYAxis(int axisPos);
-bool isXAxis(int axisPos);
+constexpr bool isValid(int axisPos) noexcept;
+constexpr bool isYAxis(int axisPos) noexcept;
+constexpr bool isXAxis(int axisPos) noexcept;
 }
 
 // Return true, when axisPos is in the valid range [ YLeft, XTop ]
-inline bool QwtAxis::isValid(int axisPos)
+inline constexpr bool QwtAxis::isValid(int axisPos) noexcept
 {
     return (axisPos >= 0 && axisPos < AxisPositions);
 }
 
 // Return true, when axisPos is XBottom or XTop
-inline bool QwtAxis::isXAxis(int axisPos)
+inline constexpr bool QwtAxis::isXAxis(int axisPos) noexcept
 {
     return (axisPos == XBottom) || (axisPos == XTop);
 }
 
 // Return true, when axisPos is YLeft or YRight
-inline bool QwtAxis::isYAxis(int axisPos)
+inline constexpr bool QwtAxis::isYAxis(int axisPos) noexcept
 {
     return (axisPos == YLeft) || (axisPos == YRight);
 }

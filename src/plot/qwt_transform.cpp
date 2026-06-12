@@ -27,47 +27,30 @@
 #include "qwt_transform.h"
 #include "qwt_math.h"
 
-//! \if ENGLISH Smallest allowed value for logarithmic scales: 1.0e-150 \endif \if CHINESE 对数刻度允许的最小值：1.0e-150 \endif
+//! Smallest allowed value for logarithmic scales: 1.0e-150
 const double QwtLogTransform::LogMin = 1.0e-150;
 
-//! \if ENGLISH Largest allowed value for logarithmic scales: 1.0e150 \endif \if CHINESE 对数刻度允许的最大值：1.0e150 \endif
+//! Largest allowed value for logarithmic scales: 1.0e150
 const double QwtLogTransform::LogMax = 1.0e150;
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 QwtTransform::QwtTransform()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtTransform::~QwtTransform()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Bounded function - returns value unmodified
  * @param value Value to be bounded
  * @return Value unmodified
- * \endif
- * \if CHINESE
- * @brief 边界函数 - 返回未修改的值
- * @param value 要限制的值
- * @return 未修改的值
- * \endif
  */
 double QwtTransform::bounded( double value ) const
 {
@@ -75,12 +58,7 @@ double QwtTransform::bounded( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 QwtNullTransform::QwtNullTransform():
     QwtTransform()
@@ -88,28 +66,16 @@ QwtNullTransform::QwtNullTransform():
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtNullTransform::~QwtNullTransform()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Transform function - returns value unmodified
  * @param value Value to be transformed
  * @return Value unmodified
- * \endif
- * \if CHINESE
- * @brief 变换函数 - 返回未修改的值
- * @param value 要变换的值
- * @return 未修改的值
- * \endif
  */
 double QwtNullTransform::transform( double value ) const
 {
@@ -117,16 +83,9 @@ double QwtNullTransform::transform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inverse transform function - returns value unmodified
  * @param value Value to be transformed
  * @return Value unmodified
- * \endif
- * \if CHINESE
- * @brief 反变换函数 - 返回未修改的值
- * @param value 要变换的值
- * @return 未修改的值
- * \endif
  */
 double QwtNullTransform::invTransform( double value ) const
 {
@@ -134,14 +93,8 @@ double QwtNullTransform::invTransform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Clone of the transformation
  * @return New QwtNullTransform instance
- * \endif
- * \if CHINESE
- * @brief 变换的克隆
- * @return 新的 QwtNullTransform 实例
- * \endif
  */
 QwtTransform* QwtNullTransform::copy() const
 {
@@ -149,12 +102,7 @@ QwtTransform* QwtNullTransform::copy() const
 }
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
 QwtLogTransform::QwtLogTransform():
     QwtTransform()
@@ -162,29 +110,17 @@ QwtLogTransform::QwtLogTransform():
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtLogTransform::~QwtLogTransform()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Transform function
  * @param value Value to be transformed
  * @return log( value )
- * \endif
  *
- * \if CHINESE
- * @brief 变换函数
- * @param value 要变换的值
- * @return log( value )
- * \endif
  */
 double QwtLogTransform::transform( double value ) const
 {
@@ -192,17 +128,10 @@ double QwtLogTransform::transform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inverse transform function
  * @param value Value to be transformed
  * @return exp( value )
- * \endif
  *
- * \if CHINESE
- * @brief 反变换函数
- * @param value 要变换的值
- * @return exp( value )
- * \endif
  */
 double QwtLogTransform::invTransform( double value ) const
 {
@@ -210,17 +139,10 @@ double QwtLogTransform::invTransform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Bounded function
  * @param value Value to be bounded
  * @return qBound( LogMin, value, LogMax )
- * \endif
  *
- * \if CHINESE
- * @brief 边界函数
- * @param value 要限制的值
- * @return qBound( LogMin, value, LogMax )
- * \endif
  */
 double QwtLogTransform::bounded( double value ) const
 {
@@ -228,15 +150,9 @@ double QwtLogTransform::bounded( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Clone of the transformation
  * @return New QwtLogTransform instance
- * \endif
  *
- * \if CHINESE
- * @brief 变换的克隆
- * @return 新的 QwtLogTransform 实例
- * \endif
  */
 QwtTransform* QwtLogTransform::copy() const
 {
@@ -244,15 +160,9 @@ QwtTransform* QwtLogTransform::copy() const
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param exponent Exponent
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @param exponent 指数
- * \endif
  */
 QwtPowerTransform::QwtPowerTransform( double exponent ):
     QwtTransform(),
@@ -261,30 +171,18 @@ QwtPowerTransform::QwtPowerTransform( double exponent ):
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPowerTransform::~QwtPowerTransform()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Transform function
  * @param value Value to be transformed
  * @return Exponentiation preserving the sign
- * \endif
  *
- * \if CHINESE
- * @brief 变换函数
- * @param value 要变换的值
- * @return 保持符号的幂运算
- * \endif
  */
 double QwtPowerTransform::transform( double value ) const
 {
@@ -296,17 +194,10 @@ double QwtPowerTransform::transform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Inverse transform function
  * @param value Value to be transformed
  * @return Inverse exponentiation preserving the sign
- * \endif
  *
- * \if CHINESE
- * @brief 反变换函数
- * @param value 要变换的值
- * @return 保持符号的反幂运算
- * \endif
  */
 double QwtPowerTransform::invTransform( double value ) const
 {
@@ -317,15 +208,9 @@ double QwtPowerTransform::invTransform( double value ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Clone of the transformation
  * @return New QwtPowerTransform instance
- * \endif
  *
- * \if CHINESE
- * @brief 变换的克隆
- * @return 新的 QwtPowerTransform 实例
- * \endif
  */
 QwtTransform* QwtPowerTransform::copy() const
 {

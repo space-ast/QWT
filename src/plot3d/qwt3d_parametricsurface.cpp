@@ -3,95 +3,107 @@
 
 using namespace Qwt3D;
 
-ParametricSurface::ParametricSurface() : GridMapping()
+class ParametricSurface::PrivateData
+{
+    QWT_DECLARE_PUBLIC(ParametricSurface)
+
+public:
+    PrivateData(ParametricSurface* q) : q_ptr(q), m_uperiodic(false), m_vperiodic(false) {}
+
+    bool m_uperiodic;
+    bool m_vperiodic;
+};
+
+ParametricSurface::ParametricSurface()
+    : GridMapping()
+    , QWT_PIMPL_CONSTRUCT
 {
 }
 
-ParametricSurface::ParametricSurface(SurfacePlot& pw) : GridMapping()
+ParametricSurface::ParametricSurface(SurfacePlot& pw)
+    : GridMapping()
+    , QWT_PIMPL_CONSTRUCT
 {
-    plotwidget_p = &pw;
-    uperiodic_   = false;
-    vperiodic_   = false;
+    setPlotWidget(&pw);
 }
 
-ParametricSurface::ParametricSurface(SurfacePlot* pw) : GridMapping()
+ParametricSurface::ParametricSurface(SurfacePlot* pw)
+    : GridMapping()
+    , QWT_PIMPL_CONSTRUCT
 {
-    plotwidget_p = pw;
-    uperiodic_   = false;
-    vperiodic_   = false;
+    setPlotWidget(pw);
 }
+
+ParametricSurface::~ParametricSurface() = default;
 
 void ParametricSurface::setPeriodic(bool u, bool v)
 {
-    uperiodic_ = u;
-    vperiodic_ = v;
+    QWT_D(d);
+    d->m_uperiodic = u;
+    d->m_vperiodic = v;
 }
 
 void ParametricSurface::assign(SurfacePlot& plotWidget)
 {
-    if (&plotWidget != plotwidget_p)
-        plotwidget_p = &plotWidget;
+    if (&plotWidget != this->plotWidget())
+        setPlotWidget(&plotWidget);
 }
 
 void ParametricSurface::assign(SurfacePlot* plotWidget)
 {
-    if (plotWidget != plotwidget_p)
-        plotwidget_p = plotWidget;
+    if (plotWidget != this->plotWidget())
+        setPlotWidget(plotWidget);
 }
 
 /**
- * \if ENGLISH
  * @brief Creates the parametric surface data and loads it into the plot widget
- * @return True on success, false if umesh_p <= 2, vmesh_p <= 2, or plotwidget_p is null
- * @details For plotWidget != 0 the function permanently assigns her argument (In fact, assign(plotWidget) is called)
- * \endif
- *
- * \if CHINESE
- * @brief 创建参数曲面数据并加载到绘图控件中
- * @return 成功返回 true，umesh_p <= 2、vmesh_p <= 2 或 plotwidget_p 为 null 时返回 false
- * @details 当 plotWidget != 0 时，函数永久分配其参数（实际上调用了 assign(plotWidget)）
- * \endif
+ * @return True on success, false if meshU() <= 2, meshV() <= 2, or plotWidget() is null
+ * @details For plotWidget() != nullptr the function permanently assigns her argument (In fact, assign(plotWidget) is called)
  */
 bool ParametricSurface::create()
 {
-    if ((umesh_p <= 2) || (vmesh_p <= 2) || !plotwidget_p)
+    const unsigned int um = meshU();
+    const unsigned int vm = meshV();
+
+    if ((um <= 2) || (vm <= 2) || !plotWidget())
         return false;
 
-    /* allocate some space for the mesh */
-    Triple** data = new Triple*[ umesh_p ];
+    /* allocate some cache for the mesh */
+    Triple** data = new Triple*[ um ];
 
     unsigned i, j;
-    for (i = 0; i < umesh_p; i++) {
-        data[ i ] = new Triple[ vmesh_p ];
+    for (i = 0; i < um; i++) {
+        data[ i ] = new Triple[ vm ];
     }
 
     /* get the data */
 
-    double du = (maxu_p - minu_p) / (umesh_p - 1);
-    double dv = (maxv_p - minv_p) / (vmesh_p - 1);
+    double du = (maxU() - minU()) / (um - 1);
+    double dv = (maxV() - minV()) / (vm - 1);
 
-    for (i = 0; i < umesh_p; ++i) {
-        for (j = 0; j < vmesh_p; ++j) {
-            data[ i ][ j ] = operator()(minu_p + i * du, minv_p + j * dv);
+    for (i = 0; i < um; ++i) {
+        for (j = 0; j < vm; ++j) {
+            data[ i ][ j ] = operator()(minU() + i * du, minV() + j * dv);
 
-            if (data[ i ][ j ].x > range_p.maxVertex.x)
-                data[ i ][ j ].x = range_p.maxVertex.x;
-            else if (data[ i ][ j ].y > range_p.maxVertex.y)
-                data[ i ][ j ].y = range_p.maxVertex.y;
-            else if (data[ i ][ j ].z > range_p.maxVertex.z)
-                data[ i ][ j ].z = range_p.maxVertex.z;
-            else if (data[ i ][ j ].x < range_p.minVertex.x)
-                data[ i ][ j ].x = range_p.minVertex.x;
-            else if (data[ i ][ j ].y < range_p.minVertex.y)
-                data[ i ][ j ].y = range_p.minVertex.y;
-            else if (data[ i ][ j ].z < range_p.minVertex.z)
-                data[ i ][ j ].z = range_p.minVertex.z;
+            if (data[ i ][ j ].x > range().maxVertex.x)
+                data[ i ][ j ].x = range().maxVertex.x;
+            else if (data[ i ][ j ].y > range().maxVertex.y)
+                data[ i ][ j ].y = range().maxVertex.y;
+            else if (data[ i ][ j ].z > range().maxVertex.z)
+                data[ i ][ j ].z = range().maxVertex.z;
+            else if (data[ i ][ j ].x < range().minVertex.x)
+                data[ i ][ j ].x = range().minVertex.x;
+            else if (data[ i ][ j ].y < range().minVertex.y)
+                data[ i ][ j ].y = range().minVertex.y;
+            else if (data[ i ][ j ].z < range().minVertex.z)
+                data[ i ][ j ].z = range().minVertex.z;
         }
     }
 
-    static_cast< SurfacePlot* >(plotwidget_p)->loadFromData(data, umesh_p, vmesh_p, uperiodic_, vperiodic_);
+    QWT_D(d);
+    static_cast< SurfacePlot* >(plotWidget())->loadFromData(data, um, vm, d->m_uperiodic, d->m_vperiodic);
 
-    for (i = 0; i < umesh_p; i++) {
+    for (i = 0; i < um; i++) {
         delete[] data[ i ];
     }
 

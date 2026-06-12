@@ -241,48 +241,26 @@ static QPainterPath qwtSplineBasisPath( const QPolygonF& points,
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * \endif
  */
 QwtSplineBasis::QwtSplineBasis()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSplineBasis::~QwtSplineBasis()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Get locality
  *
  * The locality is always 2, meaning changing one control point
  * affects 2 polynomials before and 2 polynomials after.
  *
  * @return Always 2
- * \endif
- *
- * \if CHINESE
- * @brief 获取局部性
- *
- * 局部性始终为 2，意味着改变一个控制点会影响前后各 2 个多项式。
- *
- * @return 值为 2
- * \endif
  */
 uint QwtSplineBasis::locality() const
 {
@@ -290,7 +268,6 @@ uint QwtSplineBasis::locality() const
 }
 
 /**
- * \if ENGLISH
  * @brief Approximate a polygon with cubic Bezier curves
  *
  * Approximates a polygon piecewise with cubic Bezier curves
@@ -298,16 +275,6 @@ uint QwtSplineBasis::locality() const
  *
  * @param[in] points Control points
  * @return Painter path that can be rendered by QPainter
- * \endif
- *
- * \if CHINESE
- * @brief 使用三次贝塞尔曲线逼近多边形
- *
- * 使用三次贝塞尔曲线分段逼近多边形，并将其作为 QPainterPath 返回。
- *
- * @param[in] points 控制点
- * @return 可由 QPainter 渲染的绘制路径
- * \endif
  */
 QPainterPath QwtSplineBasis::painterPath( const QPolygonF& points ) const
 {

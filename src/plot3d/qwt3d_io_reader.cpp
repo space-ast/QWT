@@ -2,17 +2,30 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include <float.h>
-#include <stdio.h>
+#include "qwt3d_io_reader.h"
+
 #include <qtextstream.h>
 
+#include <cfloat>
+#include <cstdio>
+
 #include "qwt3d_surfaceplot.h"
-#include "qwt3d_io_reader.h"
 
 using namespace std;
 using namespace Qwt3D;
 
 const char* NativeReader::magicstring = "jk:11051895-17021986";
+
+class NativeReader::PrivateData
+{
+    QWT_DECLARE_PUBLIC(NativeReader)
+
+public:
+    PrivateData(NativeReader* q) : q_ptr(q), m_minZ(-DBL_MAX), m_maxZ(DBL_MAX) {}
+
+    double m_minZ;
+    double m_maxZ;
+};
 
 namespace
 {
@@ -66,11 +79,11 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
     char* p;
 
     // find out the size
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmesh = static_cast< unsigned int >(atoi(p));
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymesh = static_cast< unsigned int >(atoi(p));
 
@@ -78,19 +91,19 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
         return false;
 
     // ... and the limits
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmin = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     xmax = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymin = atof(p);
 
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
     ymax = atof(p);
 
@@ -104,7 +117,7 @@ bool extract_info(FILE* fp, unsigned int& xmesh, unsigned int& ymesh, double& xm
 bool check_magic(FILE* fp, const char* val)
 {
     char* p;
-    if ((p = read_field(fp, false)) == 0)
+    if ((p = read_field(fp, false)) == nullptr)
         return false;
 
     if (strcmp(p, val) != 0)
@@ -116,7 +129,7 @@ bool check_magic(FILE* fp, const char* val)
 bool check_type(FILE* fp, const char* val)
 {
     char* p;
-    if ((p = read_field(fp)) == 0)
+    if ((p = read_field(fp)) == nullptr)
         return false;
 
     if (strcmp(p, val) != 0)
@@ -144,23 +157,28 @@ void deleteData(double** data, int columns)
 }
 
 /**
- * \if ENGLISH
  * @brief Default constructor
- * \endif
- *
- * \if CHINESE
- * @brief 默认构造函数
- * \endif
  */
-NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
+NativeReader::NativeReader() : QWT_PIMPL_CONSTRUCT
 {
 }
 
+NativeReader::~NativeReader() = default;
+
+IO::Functor* NativeReader::clone() const
+{
+    auto* copy = new NativeReader();
+    QWT_DC(d);
+    auto* copyD = copy->d_func();
+    copyD->m_minZ = d->m_minZ;
+    copyD->m_maxZ = d->m_maxZ;
+    return copy;
+}
+
 /**
- * \if ENGLISH
  * @brief Collects information about the data file
  * @param[out] file File pointer (opened on success)
- * @param[in] fname File name to read
+ * @param fname File name to read
  * @param[out] xmesh Number of columns in mesh
  * @param[out] ymesh Number of rows in mesh
  * @param[out] minx Minimum x value
@@ -168,20 +186,6 @@ NativeReader::NativeReader() : minz_(-DBL_MAX), maxz_(DBL_MAX)
  * @param[out] miny Minimum y value
  * @param[out] maxy Maximum y value
  * @return True on success, false if file cannot be opened or has invalid format
- * \endif
- *
- * \if CHINESE
- * @brief 收集数据文件的信息
- * @param[out] file 文件指针（成功时已打开）
- * @param[in] fname 要读取的文件名
- * @param[out] xmesh 网格列数
- * @param[out] ymesh 网格行数
- * @param[out] minx 最小 x 值
- * @param[out] maxx 最大 x 值
- * @param[out] miny 最小 y 值
- * @param[out] maxy 最大 y 值
- * @return 成功返回 true，文件无法打开或格式无效返回 false
- * \endif
  */
 bool NativeReader::collectInfo(FILE*& file,
                                QString const& fname,
@@ -210,22 +214,14 @@ bool NativeReader::collectInfo(FILE*& file,
 }
 
 /**
- * \if ENGLISH
  * @brief Reads native format data into a Plot3D widget
- * @param[in] plot Target Plot3D widget
- * @param[in] fname File name to read
+ * @param plot Target Plot3D widget
+ * @param fname File name to read
  * @return True on success, false on file error or data format error
- * \endif
- *
- * \if CHINESE
- * @brief 将原生格式数据读入 Plot3D 控件
- * @param[in] plot 目标 Plot3D 控件
- * @param[in] fname 要读取的文件名
- * @return 成功返回 true，文件错误或数据格式错误返回 false
- * \endif
  */
 bool NativeReader::operator()(Plot3D* plot, QString const& fname)
 {
+    QWT_D(d);
 
     FILE* file;
     unsigned int xmesh, ymesh;
@@ -244,10 +240,10 @@ bool NativeReader::operator()(Plot3D* plot, QString const& fname)
                 return false;
             }
 
-            if (data[ i ][ j ] > maxz_)
-                data[ i ][ j ] = maxz_;
-            else if (data[ i ][ j ] < minz_)
-                data[ i ][ j ] = minz_;
+            if (data[ i ][ j ] > d->m_maxZ)
+                data[ i ][ j ] = d->m_maxZ;
+            else if (data[ i ][ j ] < d->m_minZ)
+                data[ i ][ j ] = d->m_minZ;
         }
     }
 

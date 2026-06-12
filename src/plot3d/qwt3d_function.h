@@ -1,5 +1,5 @@
-#ifndef qwt3d_function_h
-#define qwt3d_function_h
+#ifndef QWT3D_FUNCTION_H
+#define QWT3D_FUNCTION_H
 
 #include "qwt3d_gridmapping.h"
 
@@ -8,19 +8,10 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for mathematical functions
  * @details A Function encapsulates a mathematical function with rectangular domain. The user has to
  *          adapt the pure virtual operator() to get a working object. Also, the client code should call
  *          setDomain, setMesh and create for reasonable operating conditions.
- * \endif
- *
- * \if CHINESE
- * @brief 数学函数的抽象基类
- * @details Function 封装了一个具有矩形域的数学函数。用户必须适配纯虚 operator()
- *          以获得可工作的对象。此外，客户端代码应调用 setDomain、setMesh 和 create
- *          以获得合理的操作条件。
- * \endif
  */
 class QWT3D_EXPORT Function : public GridMapping
 {
@@ -52,4 +43,4 @@ public:
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_FUNCTION_H

@@ -31,19 +31,11 @@
 #include "qwt_series_data.h"
 
 /**
- * \if ENGLISH
  * @brief Bridge between QwtSeriesStore and QwtPlotSeriesItem
  * @details QwtAbstractSeriesStore is an abstract interface only
  *          to make it possible to isolate the template based methods (QwtSeriesStore)
  *          from the regular methods (QwtPlotSeriesItem) to make it possible
  *          to derive from QwtPlotSeriesItem without any hassle with templates.
- * \endif
- * \if CHINESE
- * @brief QwtSeriesStore 和 QwtPlotSeriesItem 之间的桥梁
- * @details QwtAbstractSeriesStore 仅是一个抽象接口，用于将基于模板的方法 (QwtSeriesStore)
- *          与常规方法 (QwtPlotSeriesItem) 隔离，使得可以从 QwtPlotSeriesItem 派生
- *          而无需处理模板的麻烦。
- * \endif
  */
 class QwtAbstractSeriesStore
 {
@@ -61,10 +53,10 @@ protected:
     /// Set a the "rectangle of interest" for the stored series
     virtual void setRectOfInterest(const QRectF&) = 0;
 
-    /// \return Bounding rectangle of the stored series
+    /// @return Bounding rectangle of the stored series
     virtual QRectF dataRect() const = 0;
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t dataSize() const = 0;
 #else
     // Needed for generating the python bindings, but not for using them !
@@ -86,7 +78,6 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief Class storing a QwtSeriesData object
  * @details QwtSeriesStore and QwtPlotSeriesItem are intended as base classes for all
  *          plot items iterating over a series of samples. Both classes share
@@ -94,15 +85,6 @@ protected:
  *
  *          QwtSeriesStore offers the template based part for the plot item API, so
  *          that QwtPlotSeriesItem can be derived without any hassle with templates.
- * \endif
- * \if CHINESE
- * @brief 存储 QwtSeriesData 对象的类
- * @details QwtSeriesStore 和 QwtPlotSeriesItem 旨在作为所有遍历样本系列的绘图项的基类。
- *          这两个类共享一个虚拟基类 (QwtAbstractSeriesStore) 来在它们之间建立桥梁。
- *
- *          QwtSeriesStore 为绘图项 API 提供基于模板的部分，因此可以从 QwtPlotSeriesItem
- *          派生而无需处理模板的麻烦。
- * \endif
  */
 template< typename T >
 class QwtSeriesStore : public virtual QwtAbstractSeriesStore

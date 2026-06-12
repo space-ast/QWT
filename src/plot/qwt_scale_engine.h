@@ -34,12 +34,7 @@ class QwtInterval;
 class QwtTransform;
 
 /**
- * \if ENGLISH
  * @brief Arithmetic including a tolerance
- * \endif
- * \if CHINESE
- * @brief 包含公差的算术运算
- * \endif
  */
 class QWT_EXPORT QwtScaleArithmetic
 {
@@ -57,33 +52,18 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Base class for scale engines
  * @details A scale engine tries to find "reasonable" ranges and step sizes
  *          for scales. The layout of the scale can be varied with setAttribute().
  *          Qwt offers implementations for logarithmic and linear scales.
  * @sa QwtLinearScaleEngine, QwtLogScaleEngine
- * \endif
- * \if CHINESE
- * @brief 刻度引擎的基类
- * @details 刻度引擎用于为坐标轴寻找"合理"的数值范围和步长。
- *          可通过 setAttribute() 方法调整刻度的布局样式。
- *          Qwt 库提供了对数刻度和线性刻度的具体实现。
- * @sa QwtLinearScaleEngine, QwtLogScaleEngine
- * \endif
  */
 class QWT_EXPORT QwtScaleEngine
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Layout attributes
-     * \sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
-     * \endif
-     * \if CHINESE
-     * @brief 布局属性
-     * \sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
-     * \endif
+     * @sa setAttribute(), testAttribute(), reference(), lowerMargin(), upperMargin()
      */
     enum Attribute
     {
@@ -97,16 +77,10 @@ public:
         Symmetric = 0x02,
 
         /**
-         * \if ENGLISH
          * The endpoints of the scale are supposed to be equal the
          * outmost included values plus the specified margins (see setMargins()).
          * If this attribute is *not* set, the endpoints of the scale will
          * be integer multiples of the step size.
-         * \endif
-         * \if CHINESE
-         * 刻度的端点值 = 最外侧包含值 + 指定边距（详见 setMargins() 方法）。
-         * 若未设置此属性，刻度的端点值将为步长的整数倍。
-         * \endif
          */
         Floating = 0x04,
 
@@ -121,29 +95,29 @@ public:
 
     /// Set the base
     void setBase(uint base);
-    /// \return the base
+    /// @return the base
     uint base() const;
 
     /// Set an attribute
     void setAttribute(Attribute, bool on = true);
-    /// \return true if an attribute is set
+    /// @return true if an attribute is set
     bool testAttribute(Attribute) const;
 
     /// Set attributes
     void setAttributes(Attributes);
-    /// \return the attributes
+    /// @return the attributes
     Attributes attributes() const;
 
     /// Set the reference value
     void setReference(double);
-    /// \return the reference value
+    /// @return the reference value
     double reference() const;
 
     /// Set the margins
     void setMargins(double lower, double upper);
-    /// \return the lower margin
+    /// @return the lower margin
     double lowerMargin() const;
-    /// \return the upper margin
+    /// @return the upper margin
     double upperMargin() const;
 
     /// Align and divide an interval
@@ -154,7 +128,7 @@ public:
 
     /// Set the transformation
     void setTransformation(QwtTransform*);
-    /// \return the transformation
+    /// @return the transformation
     QwtTransform* transformation() const;
 
 protected:
@@ -170,28 +144,22 @@ protected:
     QwtInterval buildInterval(double value) const;
 
 private:
-    Q_DISABLE_COPY(QwtScaleEngine)
+    QwtScaleEngine(const QwtScaleEngine&) = delete;
+    QwtScaleEngine& operator=(const QwtScaleEngine&) = delete;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtScaleEngine)
 };
 
 /**
- * \if ENGLISH
  * @brief A scale engine for linear scales
  * @details The step size will fit into the pattern \f$\left\{ 1,2,5\right\} \cdot 10^{n}\f$, where n is an integer.
- * \endif
- * \if CHINESE
- * @brief 线性刻度引擎
- * @details 步长将符合模式 \f$\left\{ 1,2,5\right\} \cdot 10^{n}\f$，其中 n 为整数。
- * \endif
  */
 
 class QWT_EXPORT QwtLinearScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLinearScaleEngine(uint base = 10);
-    virtual ~QwtLinearScaleEngine();
+    ~QwtLinearScaleEngine() override;
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
@@ -208,28 +176,19 @@ protected:
 };
 
 /**
- * \if ENGLISH
  * @brief A scale engine for logarithmic scales
  * @details The step size is measured in *decades* and the major step size will be adjusted
  *          to fit the pattern \f$\left\{ 1,2,3,5\right\} \cdot 10^{n}\f$, where n is a natural
  *          number including zero.
  *
  * @warning The step size as well as the margins are measured in *decades*.
- * \endif
- * \if CHINESE
- * @brief 对数刻度引擎
- * @details 步长以*十倍*为单位测量，主步长将调整为符合模式 \f$\left\{ 1,2,3,5\right\} \cdot 10^{n}\f$，
- *          其中 n 为包括零在内的自然数。
- *
- * @warning 步长和边距均以*十倍*为单位测量。
- * \endif
  */
 
 class QWT_EXPORT QwtLogScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLogScaleEngine(uint base = 10);
-    virtual ~QwtLogScaleEngine();
+    ~QwtLogScaleEngine() override;
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 

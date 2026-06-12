@@ -57,9 +57,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
 
     m_zoomer[ 0 ] = new Zoomer(QwtAxis::XBottom, QwtAxis::YLeft, m_plot->canvas());
     m_zoomer[ 0 ]->setRubberBand(QwtPicker::RectRubberBand);
-    m_zoomer[ 0 ]->setRubberBandPen(QColor(Qt::green));
+    m_zoomer[ 0 ]->setRubberBandPen(QColor("#1f77b4"));
     m_zoomer[ 0 ]->setTrackerMode(QwtPicker::ActiveOnly);
-    m_zoomer[ 0 ]->setTrackerPen(QColor(Qt::white));
+    m_zoomer[ 0 ]->setTrackerPen(QColor("#333333"));
 
     m_zoomer[ 1 ] = new Zoomer(QwtAxis::XTop, QwtAxis::YRight, m_plot->canvas());
 
@@ -70,9 +70,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
     m_picker = new QwtPlotPicker(
         QwtAxis::XBottom, QwtAxis::YLeft, QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_plot->canvas());
     // m_picker->setStateMachine( new QwtPickerDragPointMachine() );
-    m_picker->setRubberBandPen(QColor(Qt::green));
+    m_picker->setRubberBandPen(QColor("#1f77b4"));
     m_picker->setRubberBand(QwtPicker::CrossRubberBand);
-    m_picker->setTrackerPen(QColor(Qt::white));
+    m_picker->setTrackerPen(QColor("#333333"));
 
     setCentralWidget(m_plot);
 

@@ -38,7 +38,6 @@
 class QPainterPath;
 
 /**
- * \if ENGLISH
  * @brief Represents the attributes of a paint operation between QPainter and QPaintDevice
  *
  * QwtPainterCommand encapsulates different types of paint operations including
@@ -46,16 +45,7 @@ class QPainterPath;
  * to record and replay paint operations.
  *
  * @sa QwtGraphic::commands()
- * \endif
  *
- * \if CHINESE
- * @brief 表示QPainter和QPaintDevice之间的绘制操作属性
- *
- * QwtPainterCommand封装了不同类型的绘制操作，包括绘制路径、pixmap、
- * 图像和状态变化。它被QwtGraphic用于记录和重放绘制操作。
- *
- * @sa QwtGraphic::commands()
- * \endif
  */
 class QWT_EXPORT QwtPainterCommand
 {
@@ -121,6 +111,7 @@ class QWT_EXPORT QwtPainterCommand
 
     QwtPainterCommand();
     QwtPainterCommand(const QwtPainterCommand&);
+    QwtPainterCommand(QwtPainterCommand&&) noexcept;
 
     explicit QwtPainterCommand( const QPainterPath& );
 
@@ -136,6 +127,7 @@ class QWT_EXPORT QwtPainterCommand
     ~QwtPainterCommand();
 
     QwtPainterCommand& operator=(const QwtPainterCommand& );
+    QwtPainterCommand& operator=(QwtPainterCommand&&) noexcept;
 
     Type type() const;
 
@@ -166,33 +158,33 @@ class QWT_EXPORT QwtPainterCommand
     };
 };
 
-//! \return Type of the command
+//! @return Type of the command
 inline QwtPainterCommand::Type QwtPainterCommand::type() const
 {
     return m_type;
 }
 
-//! \return Painter path to be painted
+//! @return Painter path to be painted
 inline const QPainterPath* QwtPainterCommand::path() const
 {
     return m_path;
 }
 
-//! \return Attributes how to paint a QPixmap
+//! @return Attributes how to paint a QPixmap
 inline const QwtPainterCommand::PixmapData*
 QwtPainterCommand::pixmapData() const
 {
     return m_pixmapData;
 }
 
-//! \return Attributes how to paint a QImage
+//! @return Attributes how to paint a QImage
 inline const QwtPainterCommand::ImageData*
 QwtPainterCommand::imageData() const
 {
     return m_imageData;
 }
 
-//! \return Attributes of a state change
+//! @return Attributes of a state change
 inline const QwtPainterCommand::StateData*
 QwtPainterCommand::stateData() const
 {

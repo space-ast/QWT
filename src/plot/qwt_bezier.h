@@ -33,18 +33,10 @@ class QPointF;
 class QPolygonF;
 
 /**
- * \if ENGLISH
  * @brief An implementation of the de Casteljau's Algorithm for interpolating Bézier curves
  * @details The flatness criterion for terminating the subdivision is based on
  *          "Piecewise Linear Approximation of Bézier Curves" by Roger Willcocks.
  *          See: https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
- * \endif
- * \if CHINESE
- * @brief de Casteljau 算法的 Bézier 曲线插值实现
- * @details 细分终止的平坦度判据基于 Roger Willcocks 的
- *          "Piecewise Linear Approximation of Bézier Curves"。
- *          参见：https://jeremykun.com/2013/05/11/bezier-curves-and-picasso
- * \endif
  */
 class QWT_EXPORT QwtBezier
 {
@@ -73,7 +65,7 @@ private:
     double m_flatness;
 };
 
-//! \return Tolerance value used for subdivision
+//! @return Tolerance value used for subdivision
 inline double QwtBezier::tolerance() const
 {
     return m_tolerance;

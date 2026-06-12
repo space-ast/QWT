@@ -269,8 +269,8 @@ QVector< QwtInterval > QwtCircleClipper::clipCircle(const QPointF& pos, double r
         QVector< double > angles;
         angles.reserve(points.size());
 
-        for (int i = 0; i < points.size(); i++)
-            angles += toAngle(pos, points[ i ]);
+        for (const auto& pt : points)
+            angles += toAngle(pos, pt);
 
         std::sort(angles.begin(), angles.end());
 
@@ -345,18 +345,10 @@ QVector< QPointF > QwtCircleClipper::cuttingPoints(Edge edge, const QPointF& pos
 }
 
 /**
- * \if ENGLISH
  * @brief Sutherland-Hodgman polygon clipping algorithm
  * @param clipRect Clip rectangle
  * @param polygon Polygon to be clipped (modified in place)
  * @param closePolygon True if the polygon is closed
- * \endif
- * \if CHINESE
- * @brief Sutherland-Hodgman 多边形裁剪算法
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形（原地修改）
- * @param closePolygon 如果多边形是闭合的则为 true
- * \endif
  */
 void QwtClipper::clipPolygon(const QRectF& clipRect, QPolygon& polygon, bool closePolygon)
 {
@@ -372,18 +364,10 @@ void QwtClipper::clipPolygon(const QRectF& clipRect, QPolygon& polygon, bool clo
 }
 
 /**
- * \if ENGLISH
  * @brief Sutherland-Hodgman polygon clipping algorithm (integer coordinates)
  * @param clipRect Clip rectangle
  * @param polygon Polygon to be clipped (modified in place)
  * @param closePolygon True if the polygon is closed
- * \endif
- * \if CHINESE
- * @brief Sutherland-Hodgman 多边形裁剪算法（整数坐标）
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形（原地修改）
- * @param closePolygon 如果多边形是闭合的则为 true
- * \endif
  */
 void QwtClipper::clipPolygon(const QRect& clipRect, QPolygon& polygon, bool closePolygon)
 {
@@ -392,18 +376,10 @@ void QwtClipper::clipPolygon(const QRect& clipRect, QPolygon& polygon, bool clos
 }
 
 /**
- * \if ENGLISH
  * @brief Sutherland-Hodgman polygon clipping algorithm (float coordinates)
  * @param clipRect Clip rectangle
  * @param polygon Polygon to be clipped (modified in place)
  * @param closePolygon True if the polygon is closed
- * \endif
- * \if CHINESE
- * @brief Sutherland-Hodgman 多边形裁剪算法（浮点坐标）
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形（原地修改）
- * @param closePolygon 如果多边形是闭合的则为 true
- * \endif
  */
 void QwtClipper::clipPolygonF(const QRectF& clipRect, QPolygonF& polygon, bool closePolygon)
 {
@@ -412,20 +388,11 @@ void QwtClipper::clipPolygonF(const QRectF& clipRect, QPolygonF& polygon, bool c
 }
 
 /**
- * \if ENGLISH
  * @brief Return clipped polygon (float rectangle)
  * @param clipRect Clip rectangle
  * @param polygon Polygon to clip
  * @param closePolygon True if the polygon is closed
  * @return Clipped polygon
- * \endif
- * \if CHINESE
- * @brief 返回裁剪后的多边形（浮点矩形）
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形
- * @param closePolygon 如果多边形是闭合的则为 true
- * @return 裁剪后的多边形
- * \endif
  */
 QPolygon QwtClipper::clippedPolygon(const QRectF& clipRect, const QPolygon& polygon, bool closePolygon)
 {
@@ -435,20 +402,11 @@ QPolygon QwtClipper::clippedPolygon(const QRectF& clipRect, const QPolygon& poly
     return points;
 }
 /**
- * \if ENGLISH
  * @brief Return clipped polygon (integer rectangle)
  * @param clipRect Clip rectangle
  * @param polygon Polygon to clip
  * @param closePolygon True if the polygon is closed
  * @return Clipped polygon
- * \endif
- * \if CHINESE
- * @brief 返回裁剪后的多边形（整数矩形）
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形
- * @param closePolygon 如果多边形是闭合的则为 true
- * @return 裁剪后的多边形
- * \endif
  */
 QPolygon QwtClipper::clippedPolygon(const QRect& clipRect, const QPolygon& polygon, bool closePolygon)
 {
@@ -459,20 +417,11 @@ QPolygon QwtClipper::clippedPolygon(const QRect& clipRect, const QPolygon& polyg
 }
 
 /**
- * \if ENGLISH
  * @brief Return clipped float polygon
  * @param clipRect Clip rectangle
  * @param polygon Polygon to clip
  * @param closePolygon True if the polygon is closed
  * @return Clipped polygon
- * \endif
- * \if CHINESE
- * @brief 返回裁剪后的浮点多边形
- * @param clipRect 裁剪矩形
- * @param polygon 要裁剪的多边形
- * @param closePolygon 如果多边形是闭合的则为 true
- * @return 裁剪后的多边形
- * \endif
  */
 QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& polygon, bool closePolygon)
 {
@@ -483,7 +432,6 @@ QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& p
 }
 
 /**
- * \if ENGLISH
  * @brief Clip circle and return arcs as intervals
  * @details clipCircle() divides a circle into intervals of angles representing arcs
  *          of the circle. When the circle is completely inside the clip rectangle,
@@ -492,16 +440,6 @@ QPolygonF QwtClipper::clippedPolygonF(const QRectF& clipRect, const QPolygonF& p
  * @param center Center of the circle
  * @param radius Radius of the circle
  * @return Arcs of the circle as angle intervals
- * \endif
- * \if CHINESE
- * @brief 裁剪圆形并返回弧段区间
- * @details clipCircle() 将圆形分割成表示圆弧的角度区间。
- *          当圆形完全在裁剪矩形内时，返回区间 [0.0, 2π]。
- * @param clipRect 裁剪矩形
- * @param center 圆心
- * @param radius 圆半径
- * @return 圆弧的角度区间
- * \endif
  */
 QVector< QwtInterval > QwtClipper::clipCircle(const QRectF& clipRect, const QPointF& center, double radius)
 {

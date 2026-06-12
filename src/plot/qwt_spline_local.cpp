@@ -423,19 +423,10 @@ static inline SplineStore qwtSplineLocal(const QwtSplineLocal* spline, const QVe
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  *
  * @param[in] type Spline type, specifying the type of interpolation
  * @sa type()
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- *
- * @param[in] type 样条类型，指定插值类型
- * @sa type()
- * \endif
  */
 QwtSplineLocal::QwtSplineLocal(Type type) : m_type(type)
 {
@@ -447,30 +438,16 @@ QwtSplineLocal::QwtSplineLocal(Type type) : m_type(type)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtSplineLocal::~QwtSplineLocal()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Get spline type
  *
  * @return Spline type, specifying the type of interpolation
- * \endif
- *
- * \if CHINESE
- * @brief 获取样条类型
- *
- * @return 样条类型，指定插值类型
- * \endif
  */
 QwtSplineLocal::Type QwtSplineLocal::type() const
 {
@@ -478,7 +455,6 @@ QwtSplineLocal::Type QwtSplineLocal::type() const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -486,16 +462,6 @@ QwtSplineLocal::Type QwtSplineLocal::type() const
  *
  * @param points Control points
  * @return Painter path, that can be rendered by QPainter
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将其作为 QPainterPath 返回。
- *
- * @param points 控制点
- * @return 绘制路径，可由 QPainter 渲染
- * \endif
  */
 QPainterPath QwtSplineLocal::painterPath(const QPolygonF& points) const
 {
@@ -508,7 +474,6 @@ QPainterPath QwtSplineLocal::painterPath(const QPolygonF& points) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interpolate a curve with Bezier curves
  *
  * Interpolates a polygon piecewise with cubic Bezier curves
@@ -516,16 +481,6 @@ QPainterPath QwtSplineLocal::painterPath(const QPolygonF& points) const
  *
  * @param points Control points
  * @return Control points of the interpolating Bezier curves
- * \endif
- *
- * \if CHINESE
- * @brief 使用贝塞尔曲线插值曲线
- *
- * 使用三次贝塞尔曲线分段插值多边形，并将每条曲线的 2 个控制点作为 QLineF 返回。
- *
- * @param points 控制点
- * @return 插值贝塞尔曲线的控制点
- * \endif
  */
 QVector< QLineF > QwtSplineLocal::bezierControlLines(const QPolygonF& points) const
 {
@@ -538,23 +493,12 @@ QVector< QLineF > QwtSplineLocal::bezierControlLines(const QPolygonF& points) co
 }
 
 /**
- * \if ENGLISH
  * @brief Find the first derivative at the control points
  *
  * @param points Control nodes of the spline
  * @return Vector with the values of the 2nd derivate at the control points
  *
  * @note The x coordinates need to be increasing or decreasing
- * \endif
- *
- * \if CHINESE
- * @brief 在控制点处找到一阶导数
- *
- * @param points 样条的控制节点
- * @return 控制点处二阶导数值的向量
- *
- * @note x 坐标需要递增或递减
- * \endif
  */
 QVector< double > QwtSplineLocal::slopes(const QPolygonF& points) const
 {
@@ -563,7 +507,6 @@ QVector< double > QwtSplineLocal::slopes(const QPolygonF& points) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the interpolating polynomials for a non parametric spline
  *
  * @param points Control points
@@ -572,17 +515,6 @@ QVector< double > QwtSplineLocal::slopes(const QPolygonF& points) const
  * @note The x coordinates need to be increasing or decreasing
  * @note The implementation simply calls QwtSplineC1::polynomials(), but is
  *       intended to be replaced by a one pass calculation some day.
- * \endif
- *
- * \if CHINESE
- * @brief 计算非参数样条的插值多项式
- *
- * @param points 控制点
- * @return 插值多项式
- *
- * @note x 坐标需要递增或递减
- * @note 实现只是调用 QwtSplineC1::polynomials()，但打算将来替换为一次计算。
- * \endif
  */
 QVector< QwtSplinePolynomial > QwtSplineLocal::polynomials(const QPolygonF& points) const
 {
@@ -591,7 +523,6 @@ QVector< QwtSplinePolynomial > QwtSplineLocal::polynomials(const QPolygonF& poin
 }
 
 /**
- * \if ENGLISH
  * @brief Get the locality of the spline interpolation
  *
  * The locality of an spline interpolation identifies how many adjacent
@@ -601,18 +532,6 @@ QVector< QwtSplinePolynomial > QwtSplineLocal::polynomials(const QPolygonF& poin
  * while the Akima interpolation has a locality of 2.
  *
  * @return 1 or 2.
- * \endif
- *
- * \if CHINESE
- * @brief 获取样条插值的局部性
- *
- * 样条插值的局部性标识当改变一个点的位置时，有多少相邻的多项式会受到影响。
- *
- * Cardinal、ParabolicBlending 和 PChip 算法的局部性为 1，
- * 而 Akima 插值的局部性为 2。
- *
- * @return 1 或 2
- * \endif
  */
 uint QwtSplineLocal::locality() const
 {

@@ -3,122 +3,114 @@
 
 using namespace Qwt3D;
 
+class StandardColor::PrivateData
+{
+    QWT_DECLARE_PUBLIC(StandardColor)
+
+public:
+    PrivateData(StandardColor* q) : q_ptr(q), m_data(nullptr) {}
+
+    Qwt3D::ColorVector m_colors;
+    Qwt3D::Plot3D* m_data;
+};
+
 /**
- * \if ENGLISH
  * @brief Constructs a StandardColor object
- * @param[in] data Plot3D data source for color mapping
- * @param[in] size Number of color entries in the color vector
+ * @param data Plot3D data source for color mapping
+ * @param size Number of color entries in the color vector
  * @details Creates a standard color mapping with the specified size and resets
  *          the color vector to default gradient values.
- * \endif
- *
- * \if CHINESE
- * @brief 构造 StandardColor 对象
- * @param[in] data 用于颜色映射的 Plot3D 数据源
- * @param[in] size 颜色向量中的颜色条目数
- * @details 创建指定大小的标准颜色映射，并将颜色向量重置为默认渐变值。
- * \endif
  */
-StandardColor::StandardColor(Plot3D* data, unsigned size) : data_(data)
+StandardColor::StandardColor(Plot3D* data, unsigned size)
+    : QWT_PIMPL_CONSTRUCT
 {
-    Q_ASSERT(data_);
+    QWT_D(d);
+    Q_ASSERT(data);
+    d->m_data = data;
 
     reset(size);
 }
 
+StandardColor::~StandardColor() = default;
+
 /**
- * \if ENGLISH
  * @brief Resets the color vector to a default gradient
- * @param[in] size Number of color entries to generate
+ * @param size Number of color entries to generate
  * @details Creates a color vector of the given size with a blue-to-red gradient.
- * \endif
- *
- * \if CHINESE
- * @brief 将颜色向量重置为默认渐变
- * @param[in] size 要生成的颜色条目数
- * @details 创建给定大小的颜色向量，使用蓝到红的渐变。
- * \endif
  */
 void StandardColor::reset(unsigned size)
 {
-    colors_ = ColorVector(size);
+    QWT_D(d);
+    d->m_colors = ColorVector(size);
     RGBA elem;
 
     double dsize = size;
 
     for (unsigned int i = 0; i != size; ++i) {
-        elem.r       = i / dsize;
-        elem.g       = i / dsize / 4;
-        elem.b       = 1 - i / dsize;
-        elem.a       = 1.0;
-        colors_[ i ] = elem;
+        elem.r           = i / dsize;
+        elem.g           = i / dsize / 4;
+        elem.b           = 1 - i / dsize;
+        elem.a           = 1.0;
+        d->m_colors[ i ] = elem;
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Assigns a new ColorVector
- * @param[in] cv The new color vector (also overwrites the constructor's size argument)
- * \endif
- *
- * \if CHINESE
- * @brief 分配新的颜色向量
- * @param[in] cv 新的颜色向量（也会覆盖构造函数的大小参数）
- * \endif
+ * @param cv The new color vector (also overwrites the constructor's size argument)
  */
 void StandardColor::setColorVector(ColorVector const& cv)
 {
-    colors_ = cv;
+    QWT_D(d);
+    d->m_colors = cv;
 }
 
 /**
- * \if ENGLISH
  * @brief Sets the alpha value for all colors
- * @param[in] a Alpha value (0.0 to 1.0)
- * \endif
- *
- * \if CHINESE
- * @brief 设置所有颜色的透明度值
- * @param[in] a 透明度值（0.0 到 1.0）
- * \endif
+ * @param a Alpha value (0.0 to 1.0)
  */
 void StandardColor::setAlpha(double a)
 {
+    QWT_D(d);
     if (a < 0 || a > 1)
         return;
 
     RGBA elem;
 
-    for (unsigned int i = 0; i != colors_.size(); ++i) {
-        elem         = colors_[ i ];
-        elem.a       = a;
-        colors_[ i ] = elem;
+    for (unsigned int i = 0; i != d->m_colors.size(); ++i) {
+        elem               = d->m_colors[ i ];
+        elem.a             = a;
+        d->m_colors[ i ]   = elem;
     }
 }
 
 /**
- * \if ENGLISH
+ * @brief Creates color vector for ColorLegend - essentially a copy from the internal vector
+ * @param vec The vector to fill
+ * @return Reference to the filled color vector
+ */
+Qwt3D::ColorVector& StandardColor::createVector(Qwt3D::ColorVector& vec)
+{
+    QWT_D(d);
+    vec = d->m_colors;
+    return vec;
+}
+
+/**
  * @brief Returns the color for a given z value
- * @param[in] z The z coordinate value for color lookup
+ * @param z The z coordinate value for color lookup
  * @return RGBA color corresponding to the z value
  * @details Maps the z value to a color index based on the data hull's z range.
- * \endif
- *
- * \if CHINESE
- * @brief 返回给定 z 值对应的颜色
- * @param[in] z 用于颜色查找的 z 坐标值
- * @return 与 z 值对应的 RGBA 颜色
- * @details 根据数据外壳的 z 范围将 z 值映射到颜色索引。
- * \endif
  */
 RGBA StandardColor::operator()(double, double, double z) const
 {
-    Q_ASSERT(data_);
-    int index = static_cast< int >((colors_.size() - 1) * (z - data_->hull().minVertex.z)
-                                   / (data_->hull().maxVertex.z - data_->hull().minVertex.z));
+    QWT_DC(d);
+    Q_ASSERT(d->m_data);
+    int index = static_cast< int >((d->m_colors.size() - 1) * (z - d->m_data->hull().minVertex.z)
+                                   / (d->m_data->hull().maxVertex.z - d->m_data->hull().minVertex.z));
     if (index < 0)
         index = 0;
-    if (static_cast< unsigned int >(index) > colors_.size() - 1)
-        index = static_cast< int >(colors_.size() - 1);
-    return colors_[ index ];
+    if (static_cast< unsigned int >(index) > d->m_colors.size() - 1)
+        index = static_cast< int >(d->m_colors.size() - 1);
+    return d->m_colors[ index ];
 }

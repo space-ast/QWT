@@ -33,7 +33,6 @@ class QPainter;
 class QPainterPath;
 
 /*!
-    \if ENGLISH
     Defines abstract interface for arrow drawing routines.
 
     Arrow needs to be drawn horizontally with arrow tip at coordinate 0,0.
@@ -46,21 +45,7 @@ class QPainterPath;
 
     A new arrow implementation can be set with QwtPlotVectorField::setArrowSymbol(), whereby
     ownership is transferred to the plot field.
-    \endif
     *
-    \if CHINESE
-    定义箭头绘制例程的抽象接口。
-
-    箭头需要水平绘制，箭头尖端在坐标 0,0。
-    arrowLength() 应返回箭头的整个长度（需要
-    平移箭头以进行尾部/中心对齐）。
-    setArrowLength() 以像素为单位定义箭头长度（屏幕坐标）。它可以
-    被实现为调整其他几何属性，例如
-    箭头头部的大小和宽度。它 _总是_ 在 paint() 之前被调用。
-
-    新的箭头实现可以通过 QwtPlotVectorField::setArrowSymbol() 设置，
-    所有权将转移到绘图字段。
-    \endif
  */
 class QWT_EXPORT QwtVectorFieldSymbol
 {
@@ -78,19 +63,14 @@ class QWT_EXPORT QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const = 0;
 
   private:
-    Q_DISABLE_COPY(QwtVectorFieldSymbol)
+    QwtVectorFieldSymbol(const QwtVectorFieldSymbol&) = delete;
+    QwtVectorFieldSymbol& operator=(const QwtVectorFieldSymbol&) = delete;
 };
 
 /*!
-    \if ENGLISH
     Arrow implementation that draws a filled arrow with outline, using
     a triangular head of constant width.
-    \endif
     *
-    \if CHINESE
-    箭头实现，绘制带轮廓的填充箭头，使用
-    恒定宽度的三角形头部。
-    \endif
  */
 class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
@@ -108,20 +88,13 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtVectorFieldArrow)
 };
 
 /*!
-    \if ENGLISH
     Arrow implementation that only used lines, with optionally a filled arrow or only
     lines.
-    \endif
     *
-    \if CHINESE
-    箭头实现，仅使用线条，可选择填充箭头或仅
-    线条。
-    \endif
  */
 class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
@@ -139,8 +112,7 @@ class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
     virtual void paint( QPainter* ) const override;
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtVectorFieldThinArrow)
 };
 
 #endif

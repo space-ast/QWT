@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_barchart.h"
+#include "qwt_plot.h"
 #include "qwt_scale_map.h"
 #include "qwt_column_symbol.h"
 #include "qwt_text.h"
@@ -35,8 +36,13 @@
 
 class QwtPlotBarChart::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotBarChart)
+
 public:
-    PrivateData() : symbol(new QwtColumnSymbol(QwtColumnSymbol::Box)), legendMode(QwtPlotBarChart::LegendChartTitle)
+    PrivateData(QwtPlotBarChart* p)
+        : q_ptr(p)
+        , symbol(new QwtColumnSymbol(QwtColumnSymbol::Box))
+        , legendMode(QwtPlotBarChart::LegendChartTitle)
     {
     }
 
@@ -47,70 +53,47 @@ public:
 
     QwtColumnSymbol* symbol;
     QwtPlotBarChart::LegendMode legendMode;
+    bool m_userSetPen = false;
+    bool m_userSetBrush = false;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the chart
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 图表的标题
- * \endif
  */
-QwtPlotBarChart::QwtPlotBarChart(const QwtText& title) : QwtPlotAbstractBarChart(title)
+QwtPlotBarChart::QwtPlotBarChart(const QwtText& title)
+    : QwtPlotAbstractBarChart(title)
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the chart
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 图表的标题
- * \endif
  */
-QwtPlotBarChart::QwtPlotBarChart(const QString& title) : QwtPlotAbstractBarChart(QwtText(title))
+QwtPlotBarChart::QwtPlotBarChart(const QString& title)
+    : QwtPlotAbstractBarChart(QwtText(title))
+    , QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * 
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotBarChart::~QwtPlotBarChart()
 {
-    delete m_data;
 }
 
 void QwtPlotBarChart::init()
 {
-    m_data = new PrivateData;
     setData(new QwtPointSeriesData());
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotBarChart
- * \endif
- * 
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotBarChart
- * \endif
  */
 int QwtPlotBarChart::rtti() const
 {
@@ -118,19 +101,33 @@ int QwtPlotBarChart::rtti() const
 }
 
 /**
- * \if ENGLISH
+ * @brief Attach the bar chart to a plot
+ * @details If the brush has not been explicitly set by the user, the bar chart
+ *          automatically receives a color from the plot's color cycle.
+ *          The pen is set to a darker shade of the fill color unless user-set.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotBarChart::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && (!d->m_userSetBrush || !d->m_userSetPen)) {
+        if (!d->symbol)
+            d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+
+        const QColor c = plot->nextColorForItem(rtti());
+        if (!d->m_userSetBrush)
+            d->symbol->setBrush(c);
+        if (!d->m_userSetPen)
+            d->symbol->setPen(QPen(c.darker(150), 1));
+    }
+    QwtPlotItem::attach(plot);
+}
+
+/**
  * @brief Initialize data with an array of points
  * @param[in] samples Vector of points
  * @note QVector is implicitly shared.
  * @note QPolygonF is derived from QVector<QPointF>.
- * \endif
- * 
- * \if CHINESE
- * @brief 用点数组初始化数据
- * @param[in] samples 点向量
- * @note QVector 是隐式共享的。
- * @note QPolygonF 派生自 QVector<QPointF>。
- * \endif
  */
 void QwtPlotBarChart::setSamples(const QVector< QPointF >& samples)
 {
@@ -138,20 +135,11 @@ void QwtPlotBarChart::setSamples(const QVector< QPointF >& samples)
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize data with an array of doubles
  * @details The indices in the array are taken as x coordinate,
  *          while the doubles are interpreted as y values.
  * @param[in] samples Vector of y coordinates
  * @note QVector is implicitly shared.
- * \endif
- * 
- * \if CHINESE
- * @brief 用双精度数组初始化数据
- * @details 数组中的索引作为 x 坐标，双精度值作为 y 值。
- * @param[in] samples y 坐标向量
- * @note QVector 是隐式共享的。
- * \endif
  */
 void QwtPlotBarChart::setSamples(const QVector< double >& samples)
 {
@@ -165,22 +153,12 @@ void QwtPlotBarChart::setSamples(const QVector< double >& samples)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a series of samples
  * @details setSamples() is just a wrapper for setData() without any additional
  *          value - beside that it is easier to find for the developer.
  * @param[in] data Data
  * @warning The item takes ownership of the data object, deleting
  *          it when its not used anymore.
- * \endif
- * 
- * \if CHINESE
- * @brief 分配样本系列
- * @details setSamples() 只是 setData() 的包装，没有额外价值，
- *          除了对开发者更容易找到。
- * @param[in] data 数据
- * @warning 该项获得数据对象的所有权，当不再使用时会删除它。
- * \endif
  */
 void QwtPlotBarChart::setSamples(QwtSeriesData< QPointF >* data)
 {
@@ -188,28 +166,19 @@ void QwtPlotBarChart::setSamples(QwtSeriesData< QPointF >* data)
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a symbol
  * @details The bar chart will take the ownership of the symbol, hence the previously
  *          set symbol will be deleted by setting a new one. If \p symbol is
  *          \c nullptr no symbol will be drawn.
  * @param[in] symbol Symbol
  * @sa symbol()
- * \endif
- * 
- * \if CHINESE
- * @brief 分配符号
- * @details 条形图将获得符号的所有权，因此设置新符号时将删除先前设置的符号。
- *          如果 \p symbol 为 \c nullptr，则不会绘制符号。
- * @param[in] symbol 符号
- * @sa symbol()
- * \endif
  */
 void QwtPlotBarChart::setSymbol(QwtColumnSymbol* symbol)
 {
-    if (symbol != m_data->symbol) {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+    QWT_D(d);
+    if (symbol != d->symbol) {
+        delete d->symbol;
+        d->symbol = symbol;
 
         legendChanged();
         itemChanged();
@@ -217,202 +186,138 @@ void QwtPlotBarChart::setSymbol(QwtColumnSymbol* symbol)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current symbol
  * @return Current symbol or nullptr, when no symbol has been assigned.
  * @sa setSymbol()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取当前符号
- * @return 当前符号，如果没有分配符号则返回 nullptr。
- * @sa setSymbol()
- * \endif
  */
 const QwtColumnSymbol* QwtPlotBarChart::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the bar symbol pen
  * @param[in] p Pen for drawing the bar outline
- * \endif
- * 
- * \if CHINESE
- * @brief 设置条形符号的画笔
- * @param[in] p 用于绘制条形轮廓的画笔
- * \endif
  */
 void QwtPlotBarChart::setPen(const QPen& p)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    d->m_userSetPen = true;
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setPen(p);
+    d->symbol->setPen(p);
 
     legendChanged();
     itemChanged();
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bar symbol pen
  * @return Pen for drawing the bar outline
- * \endif
- * 
- * \if CHINESE
- * @brief 获取条形符号的画笔
- * @return 用于绘制条形轮廓的画笔
- * \endif
  */
 QPen QwtPlotBarChart::pen() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->pen();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->pen();
     }
     return QPen();
 }
 
 /**
- * \if ENGLISH
  * @brief Set the bar symbol brush
  * @param[in] b Brush for filling the bar
- * \endif
- * 
- * \if CHINESE
- * @brief 设置条形符号的画刷
- * @param[in] b 用于填充条形的画刷
- * \endif
  */
 void QwtPlotBarChart::setBrush(const QBrush& b)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    d->m_userSetBrush = true;
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setBrush(b);
+    d->symbol->setBrush(b);
 
     legendChanged();
     itemChanged();
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bar symbol brush
  * @return Brush for filling the bar
- * \endif
- * 
- * \if CHINESE
- * @brief 获取条形符号的画刷
- * @return 用于填充条形的画刷
- * \endif
  */
 QBrush QwtPlotBarChart::brush() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->brush();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->brush();
     }
     return QBrush();
 }
 
 /**
- * \if ENGLISH
  * @brief Set the bar symbol frame style
  * @param[in] f Frame style for the bar
- * \endif
- * 
- * \if CHINESE
- * @brief 设置条形符号的边框样式
- * @param[in] f 条形的边框样式
- * \endif
  */
 void QwtPlotBarChart::setFrameStyle(QwtColumnSymbol::FrameStyle f)
 {
-    if (!m_data->symbol) {
-        m_data->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
+    QWT_D(d);
+    if (!d->symbol) {
+        d->symbol = new QwtColumnSymbol(QwtColumnSymbol::Box);
     }
 
-    m_data->symbol->setFrameStyle(f);
+    d->symbol->setFrameStyle(f);
 
     legendChanged();
     itemChanged();
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bar symbol frame style
  * @return Frame style for the bar
- * \endif
- * 
- * \if CHINESE
- * @brief 获取条形符号的边框样式
- * @return 条形的边框样式
- * \endif
  */
 QwtColumnSymbol::FrameStyle QwtPlotBarChart::frameStyle() const
 {
-    if (m_data->symbol) {
-        return m_data->symbol->frameStyle();
+    QWT_DC(d);
+    if (d->symbol) {
+        return d->symbol->frameStyle();
     }
     return QwtColumnSymbol::NoFrame;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the mode that decides what to display on the legend
  * @details In case of LegendBarTitles barTitle() needs to be overloaded
  *          to return individual titles for each bar.
  * @param[in] mode New mode
  * @sa legendMode(), legendData(), barTitle(), QwtPlotItem::ItemAttribute
- * \endif
- * 
- * \if CHINESE
- * @brief 设置决定图例显示内容的模式
- * @details 如果是 LegendBarTitles 模式，需要重载 barTitle()
- *          为每个条形返回单独的标题。
- * @param[in] mode 新模式
- * @sa legendMode(), legendData(), barTitle(), QwtPlotItem::ItemAttribute
- * \endif
  */
 void QwtPlotBarChart::setLegendMode(LegendMode mode)
 {
-    if (mode != m_data->legendMode) {
-        m_data->legendMode = mode;
+    QWT_D(d);
+    if (mode != d->legendMode) {
+        d->legendMode = mode;
         legendChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the legend mode
  * @return Legend mode
  * @sa setLegendMode()
- * \endif
- * 
- * \if CHINESE
- * @brief 获取图例模式
- * @return 图例模式
- * @sa setLegendMode()
- * \endif
  */
 QwtPlotBarChart::LegendMode QwtPlotBarChart::legendMode() const
 {
-    return m_data->legendMode;
+    QWT_DC(d);
+    return d->legendMode;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of all samples
  * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
- * \endif
- * 
- * \if CHINESE
- * @brief 获取所有样本的边界矩形
- * @return 所有样本的边界矩形。对于空系列，矩形无效。
- * \endif
  */
 QRectF QwtPlotBarChart::boundingRect() const
 {
@@ -438,7 +343,6 @@ QRectF QwtPlotBarChart::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw an interval of the bar chart
  * @param[in] painter Painter
  * @param[in] xMap Maps x-values into pixel coordinates.
@@ -448,19 +352,6 @@ QRectF QwtPlotBarChart::boundingRect() const
  * @param[in] to Index of the last point to be painted. If to < 0 the
  *              curve will be painted to its last point.
  * @sa drawSymbols()
- * \endif
- * 
- * \if CHINESE
- * @brief 绘制条形图的一个区间
- * @param[in] painter 绘图器
- * @param[in] xMap 将 x 值映射到像素坐标。
- * @param[in] yMap 将 y 值映射到像素坐标。
- * @param[in] canvasRect 画布的内容矩形
- * @param[in] from 第一个绘制点的索引
- * @param[in] to 最后一个绘制点的索引。如果 to < 0，
- *              曲线将绘制到最后一个点。
- * @sa drawSymbols()
- * \endif
  */
 void QwtPlotBarChart::drawSeries(QPainter* painter,
                                  const QwtScaleMap& xMap,
@@ -493,13 +384,13 @@ void QwtPlotBarChart::drawSeries(QPainter* painter,
 /*!
    Calculate the geometry of a bar in widget coordinates
 
-   \param xMap x map
-   \param yMap y map
-   \param canvasRect Contents rect of the canvas
-   \param boundingInterval Bounding interval of sample values
-   \param sample Value of the sample
+   @param xMap x map
+   @param yMap y map
+   @param canvasRect Contents rect of the canvas
+   @param boundingInterval Bounding interval of sample values
+   @param sample Value of the sample
 
-   \return Geometry of the column
+   @return Geometry of the column
  */
 QwtColumnRect QwtPlotBarChart::columnRect(const QwtScaleMap& xMap,
                                           const QwtScaleMap& yMap,
@@ -545,15 +436,15 @@ QwtColumnRect QwtPlotBarChart::columnRect(const QwtScaleMap& xMap,
 /*!
    Draw a sample
 
-   \param painter Painter
-   \param xMap x map
-   \param yMap y map
-   \param canvasRect Contents rect of the canvas
-   \param boundingInterval Bounding interval of sample values
-   \param index Index of the sample
-   \param sample Value of the sample
+   @param painter Painter
+   @param xMap x map
+   @param yMap y map
+   @param canvasRect Contents rect of the canvas
+   @param boundingInterval Bounding interval of sample values
+   @param index Index of the sample
+   @param sample Value of the sample
 
-   \sa drawSeries()
+   @sa drawSeries()
  */
 void QwtPlotBarChart::drawSample(QPainter* painter,
                                  const QwtScaleMap& xMap,
@@ -571,18 +462,19 @@ void QwtPlotBarChart::drawSample(QPainter* painter,
 /*!
    Draw a bar
 
-   \param painter Painter
-   \param sampleIndex Index of the sample represented by the bar
-   \param sample Value of the sample
-   \param rect Bounding rectangle of the bar
+   @param painter Painter
+   @param sampleIndex Index of the sample represented by the bar
+   @param sample Value of the sample
+   @param rect Bounding rectangle of the bar
  */
 void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF& sample, const QwtColumnRect& rect) const
 {
+    QWT_DC(d);
     const QwtColumnSymbol* specialSym = specialSymbol(sampleIndex, sample);
 
     const QwtColumnSymbol* sym = specialSym;
     if (sym == nullptr)
-        sym = m_data->symbol;
+        sym = d->symbol;
 
     if (sym) {
         sym->draw(painter, rect);
@@ -598,21 +490,11 @@ void QwtPlotBarChart::drawBar(QPainter* painter, int sampleIndex, const QPointF&
 }
 
 /**
- * \if ENGLISH
  * @brief Get a special symbol for a specific sample
  * @details Needs to be overloaded to return a non default symbol for a specific sample.
  * @param[in] sampleIndex Index of the sample represented by the bar
  * @param[in] sample Value of the sample
  * @return nullptr, indicating to use the default symbol
- * \endif
- * 
- * \if CHINESE
- * @brief 获取特定样本的特殊符号
- * @details 需要重载以返回特定样本的非默认符号。
- * @param[in] sampleIndex 由条形表示的样本索引
- * @param[in] sample 样本的值
- * @return nullptr，表示使用默认符号
- * \endif
  */
 QwtColumnSymbol* QwtPlotBarChart::specialSymbol(int sampleIndex, const QPointF& sample) const
 {
@@ -623,7 +505,6 @@ QwtColumnSymbol* QwtPlotBarChart::specialSymbol(int sampleIndex, const QPointF& 
 }
 
 /**
- * \if ENGLISH
  * @brief Return the title of a bar
  * @details In LegendBarTitles mode the title is displayed on
  *          the legend entry corresponding to a bar.
@@ -632,16 +513,6 @@ QwtColumnSymbol* QwtPlotBarChart::specialSymbol(int sampleIndex, const QPointF& 
  * @param[in] sampleIndex Index of the bar
  * @return An empty text
  * @sa LegendBarTitles
- * \endif
- * 
- * \if CHINESE
- * @brief 返回条形的标题
- * @details 在 LegendBarTitles 模式下，标题显示在与条形对应的图例条目上。
- *          默认实现是一个空文本，旨在被重载。
- * @param[in] sampleIndex 条形的索引
- * @return 空文本
- * @sa LegendBarTitles
- * \endif
  */
 QwtText QwtPlotBarChart::barTitle(int sampleIndex) const
 {
@@ -650,21 +521,22 @@ QwtText QwtPlotBarChart::barTitle(int sampleIndex) const
 }
 
 /*!
-   \brief Return all information, that is needed to represent
+   @brief Return all information, that is needed to represent
           the item on the legend
 
    In case of LegendBarTitles an entry for each bar is returned,
    otherwise the chart is represented like any other plot item
    from its title() and the legendIcon().
 
-   \return Information, that is needed to represent the item on the legend
-   \sa title(), setLegendMode(), barTitle(), QwtLegend, QwtPlotLegendItem
+   @return Information, that is needed to represent the item on the legend
+   @sa title(), setLegendMode(), barTitle(), QwtLegend, QwtPlotLegendItem
  */
 QList< QwtLegendData > QwtPlotBarChart::legendData() const
 {
+    QWT_DC(d);
     QList< QwtLegendData > list;
 
-    if (m_data->legendMode == LegendBarTitles) {
+    if (d->legendMode == LegendBarTitles) {
         const size_t numSamples = dataSize();
         list.reserve(numSamples);
 
@@ -687,20 +559,21 @@ QList< QwtLegendData > QwtPlotBarChart::legendData() const
 }
 
 /*!
-   \return Icon representing a bar or the chart on the legend
+   @return Icon representing a bar or the chart on the legend
 
    When the legendMode() is LegendBarTitles the icon shows
    the bar corresponding to index - otherwise the bar
    displays the default symbol.
 
-   \param index Index of the legend entry
-   \param size Icon size
+   @param index Index of the legend entry
+   @param size Icon size
 
-   \sa setLegendMode(), drawBar(),
+   @sa setLegendMode(), drawBar(),
        QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
  */
 QwtGraphic QwtPlotBarChart::legendIcon(int index, const QSizeF& size) const
 {
+    QWT_DC(d);
     QwtColumnRect column;
     column.hInterval = QwtInterval(0.0, size.width() - 1.0);
     column.vInterval = QwtInterval(0.0, size.height() - 1.0);
@@ -713,7 +586,7 @@ QwtGraphic QwtPlotBarChart::legendIcon(int index, const QSizeF& size) const
     painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
 
     int barIndex = -1;
-    if (m_data->legendMode == QwtPlotBarChart::LegendBarTitles)
+    if (d->legendMode == QwtPlotBarChart::LegendBarTitles)
         barIndex = index;
 
     drawBar(&painter, barIndex, QPointF(), column);

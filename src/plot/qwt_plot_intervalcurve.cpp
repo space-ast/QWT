@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "qwt_plot_intervalcurve.h"
+#include "qwt_plot.h"
 #include "qwt_interval_symbol.h"
 #include "qwt_scale_map.h"
 #include "qwt_clipper.h"
@@ -63,12 +64,14 @@ static inline bool qwtIsVSampleInside( const QwtIntervalSample& sample,
 
 class QwtPlotIntervalCurve::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotIntervalCurve)
   public:
-    PrivateData():
+    PrivateData(QwtPlotIntervalCurve* p):
+        q_ptr(p),
         style( QwtPlotIntervalCurve::Tube ),
         symbol( nullptr ),
-        pen( Qt::black ),
-        brush( Qt::white )
+        pen( QColor("#555555") ),
+        brush( Qt::NoBrush )
     {
         paintAttributes = QwtPlotIntervalCurve::ClipPolygons;
         paintAttributes |= QwtPlotIntervalCurve::ClipSymbol;
@@ -86,56 +89,39 @@ class QwtPlotIntervalCurve::PrivateData
 
     QPen pen;
     QBrush brush;
+    bool m_userSetPen = false;
 
     QwtPlotIntervalCurve::PaintAttributes paintAttributes;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the curve
- * \endif
  * 
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 曲线标题
- * \endif
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QwtText& title )
-    : QwtPlotSeriesItem( title )
+    : QwtPlotSeriesItem( title ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the curve
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 曲线标题
- * \endif
+ *
  */
 QwtPlotIntervalCurve::QwtPlotIntervalCurve( const QString& title )
-    : QwtPlotSeriesItem( QwtText( title ) )
+    : QwtPlotSeriesItem( QwtText( title ) ), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * 
- * \if CHINESE
- * @brief 析构函数
- * \endif
+ *
  */
 QwtPlotIntervalCurve::~QwtPlotIntervalCurve()
 {
-    delete m_data;
 }
 
 //! Initialize internal members
@@ -143,23 +129,15 @@ void QwtPlotIntervalCurve::init()
 {
     setItemAttribute( QwtPlotItem::Legend, true );
     setItemAttribute( QwtPlotItem::AutoScale, true );
-
-    m_data = new PrivateData;
     setData( new QwtIntervalSeriesData() );
 
     setZ( 19.0 );
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotIntervalCurve
- * \endif
  * 
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotIntervalCurve
- * \endif
  */
 int QwtPlotIntervalCurve::rtti() const
 {
@@ -167,58 +145,58 @@ int QwtPlotIntervalCurve::rtti() const
 }
 
 /**
- * \if ENGLISH
+ * @brief Attach the interval curve to a plot
+ * @details If the pen has not been explicitly set by the user, the interval curve
+ *          automatically receives a color from the plot's color cycle.
+ *          The brush is set to a semi-transparent version of the same color.
+ * @param plot Plot to attach to (nullptr to detach)
+ */
+void QwtPlotIntervalCurve::attach(QwtPlot* plot)
+{
+    QWT_D(d);
+    if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
+        const QColor c = plot->nextColorForItem(rtti());
+        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+        d->pen.setCapStyle(Qt::FlatCap);
+        d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+    }
+    QwtPlotItem::attach(plot);
+}
+
+/**
  * @brief Specify an attribute how to draw the curve
  * @param[in] attribute Paint attribute
  * @param[in] on On/Off
  * @sa testPaintAttribute()
- * \endif
  * 
- * \if CHINESE
- * @brief 指定绘制曲线的属性
- * @param[in] attribute 绘制属性
- * @param[in] on 开启/关闭
- * @sa testPaintAttribute()
- * \endif
  */
 void QwtPlotIntervalCurve::setPaintAttribute(
     PaintAttribute attribute, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     else
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a paint attribute is enabled
  * @return True when attribute is enabled
  * @sa PaintAttribute, setPaintAttribute()
- * \endif
  * 
- * \if CHINESE
- * @brief 测试绘制属性是否启用
- * @return 属性启用时返回 true
- * @sa PaintAttribute, setPaintAttribute()
- * \endif
  */
 bool QwtPlotIntervalCurve::testPaintAttribute(
     PaintAttribute attribute ) const
 {
-    return ( m_data->paintAttributes & attribute );
+    QWT_DC(d);
+    return ( d->paintAttributes & attribute );
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize data with an array of samples
  * @param[in] samples Vector of samples
- * \endif
  * 
- * \if CHINESE
- * @brief 使用样本数组初始化数据
- * @param[in] samples 样本向量
- * \endif
  */
 void QwtPlotIntervalCurve::setSamples(
     const QVector< QwtIntervalSample >& samples )
@@ -227,22 +205,13 @@ void QwtPlotIntervalCurve::setSamples(
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a series of samples
  * @details setSamples() is just a wrapper for setData() without any additional
  *          value - beside that it is easier to find for the developer.
  * @param[in] data Data
  * @warning The item takes ownership of the data object, deleting
  *          it when its not used anymore.
- * \endif
  * 
- * \if CHINESE
- * @brief 分配样本序列
- * @details setSamples() 只是对 setData() 的封装，没有额外的价值，
- *          除了对开发者来说更容易找到。
- * @param[in] data 数据
- * @warning 该项取得数据对象的所有权，当不再使用时会删除它。
- * \endif
  */
 void QwtPlotIntervalCurve::setSamples(
     QwtSeriesData< QwtIntervalSample >* data )
@@ -251,23 +220,17 @@ void QwtPlotIntervalCurve::setSamples(
 }
 
 /**
- * \if ENGLISH
  * @brief Set the curve's drawing style
  * @param[in] style Curve style
  * @sa CurveStyle, style()
- * \endif
  * 
- * \if CHINESE
- * @brief 设置曲线的绘制样式
- * @param[in] style 曲线样式
- * @sa CurveStyle, style()
- * \endif
  */
 void QwtPlotIntervalCurve::setStyle( CurveStyle style )
 {
-    if ( style != m_data->style )
+    QWT_D(d);
+    if ( style != d->style )
     {
-        m_data->style = style;
+        d->style = style;
 
         legendChanged();
         itemChanged();
@@ -275,42 +238,30 @@ void QwtPlotIntervalCurve::setStyle( CurveStyle style )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the curve's drawing style
  * @return Style of the curve
  * @sa setStyle()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取曲线的绘制样式
- * @return 曲线样式
- * @sa setStyle()
- * \endif
  */
 QwtPlotIntervalCurve::CurveStyle QwtPlotIntervalCurve::style() const
 {
-    return m_data->style;
+    QWT_DC(d);
+    return d->style;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a symbol
  * @param[in] symbol Symbol
  * @sa symbol()
- * \endif
  * 
- * \if CHINESE
- * @brief 分配符号
- * @param[in] symbol 符号
- * @sa symbol()
- * \endif
  */
 void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 {
-    if ( symbol != m_data->symbol )
+    QWT_D(d);
+    if ( symbol != d->symbol )
     {
-        delete m_data->symbol;
-        m_data->symbol = symbol;
+        delete d->symbol;
+        d->symbol = symbol;
 
         legendChanged();
         itemChanged();
@@ -318,25 +269,18 @@ void QwtPlotIntervalCurve::setSymbol( const QwtIntervalSymbol* symbol )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current symbol
  * @return Current symbol or nullptr when no symbol has been assigned
  * @sa setSymbol()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取当前符号
- * @return 当前符号，如果没有分配符号则返回 nullptr
- * @sa setSymbol()
- * \endif
  */
 const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const
 {
-    return m_data->symbol;
+    QWT_DC(d);
+    return d->symbol;
 }
 
 /**
- * \if ENGLISH
  * @brief Build and assign a pen
  * @details In Qt5 the default pen width is 1.0 (0.0 in Qt4) what makes it
  *          non cosmetic (see QPen::isCosmetic()). This method has been introduced
@@ -345,18 +289,7 @@ const QwtIntervalSymbol* QwtPlotIntervalCurve::symbol() const
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa pen(), brush()
- * \endif
  * 
- * \if CHINESE
- * @brief 构建并分配画笔
- * @details 在 Qt5 中，默认画笔宽度是 1.0（Qt4 中是 0.0），这使其
- *          成为非装饰性画笔（参见 QPen::isCosmetic()）。此方法被引入
- *          以隐藏这种不兼容性。
- * @param[in] color 画笔颜色
- * @param[in] width 画笔宽度
- * @param[in] style 画笔样式
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotIntervalCurve::setPen( const QColor& color, qreal width, Qt::PenStyle style )
 {
@@ -364,23 +297,18 @@ void QwtPlotIntervalCurve::setPen( const QColor& color, qreal width, Qt::PenStyl
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a pen
  * @param[in] pen New pen
  * @sa pen(), brush()
- * \endif
  * 
- * \if CHINESE
- * @brief 分配画笔
- * @param[in] pen 新画笔
- * @sa pen(), brush()
- * \endif
  */
 void QwtPlotIntervalCurve::setPen( const QPen& pen )
 {
-    if ( pen != m_data->pen )
+    QWT_D(d);
+    d->m_userSetPen = true;
+    if ( pen != d->pen )
     {
-        m_data->pen = pen;
+        d->pen = pen;
 
         legendChanged();
         itemChanged();
@@ -388,43 +316,30 @@ void QwtPlotIntervalCurve::setPen( const QPen& pen )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the pen used to draw the lines
  * @return Pen used to draw the lines
  * @sa setPen(), brush()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取用于绘制线条的画笔
- * @return 用于绘制线条的画笔
- * @sa setPen(), brush()
- * \endif
  */
 const QPen& QwtPlotIntervalCurve::pen() const
 {
-    return m_data->pen;
+    QWT_DC(d);
+    return d->pen;
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a brush
  * @details The brush is used to fill the area in Tube style().
  * @param[in] brush Brush
  * @sa brush(), pen(), setStyle(), CurveStyle
- * \endif
  * 
- * \if CHINESE
- * @brief 分配画刷
- * @details 画刷用于在 Tube 样式()中填充区域。
- * @param[in] brush 画刷
- * @sa brush(), pen(), setStyle(), CurveStyle
- * \endif
  */
 void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
 {
-    if ( brush != m_data->brush )
+    QWT_D(d);
+    if ( brush != d->brush )
     {
-        m_data->brush = brush;
+        d->brush = brush;
 
         legendChanged();
         itemChanged();
@@ -432,33 +347,21 @@ void QwtPlotIntervalCurve::setBrush( const QBrush& brush )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the brush used to fill the area in Tube style()
  * @return Brush used to fill the area in Tube style()
  * @sa setBrush(), setStyle(), CurveStyle
- * \endif
  * 
- * \if CHINESE
- * @brief 获取用于在 Tube 样式()中填充区域的画刷
- * @return 用于在 Tube 样式()中填充区域的画刷
- * @sa setBrush(), setStyle(), CurveStyle
- * \endif
  */
 const QBrush& QwtPlotIntervalCurve::brush() const
 {
-    return m_data->brush;
+    QWT_DC(d);
+    return d->brush;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle of all samples
  * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
- * \endif
  * 
- * \if CHINESE
- * @brief 获取所有样本的边界矩形
- * @return 所有样本的边界矩形。对于空序列，矩形无效。
- * \endif
  */
 QRectF QwtPlotIntervalCurve::boundingRect() const
 {
@@ -470,7 +373,6 @@ QRectF QwtPlotIntervalCurve::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a subset of the samples
  * @param[in] painter Painter
  * @param[in] xMap Maps x-values into pixel coordinates
@@ -479,18 +381,7 @@ QRectF QwtPlotIntervalCurve::boundingRect() const
  * @param[in] from Index of the first sample to be painted
  * @param[in] to Index of the last sample to be painted. If to < 0, the series will be painted to its last sample.
  * @sa drawTube(), drawSymbols()
- * \endif
  * 
- * \if CHINESE
- * @brief 绘制样本的子集
- * @param[in] painter 绘制器
- * @param[in] xMap 将 x 值映射到像素坐标
- * @param[in] yMap 将 y 值映射到像素坐标
- * @param[in] canvasRect 画布的内容矩形
- * @param[in] from 要绘制的第一个样本的索引
- * @param[in] to 要绘制的最后一个样本的索引。如果 to < 0，将绘制到序列的最后一个样本。
- * @sa drawTube(), drawSymbols()
- * \endif
  */
 void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -505,7 +396,8 @@ void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
     if ( from > to )
         return;
 
-    switch ( m_data->style )
+    QWT_DC(d);
+    switch ( d->style )
     {
         case Tube:
             drawTube( painter, xMap, yMap, canvasRect, from, to );
@@ -516,10 +408,10 @@ void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
             break;
     }
 
-    if ( m_data->symbol &&
-        ( m_data->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
+    if ( d->symbol &&
+        ( d->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
     {
-        drawSymbols( painter, *m_data->symbol,
+        drawSymbols( painter, *d->symbol,
             xMap, yMap, canvasRect, from, to );
     }
 }
@@ -531,20 +423,21 @@ void QwtPlotIntervalCurve::drawSeries( QPainter* painter,
    and draws them with the pen(). The area between the curves is
    filled with the brush().
 
-   \param painter Painter
-   \param xMap Maps x-values into pixel coordinates.
-   \param yMap Maps y-values into pixel coordinates.
-   \param canvasRect Contents rectangle of the canvas
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted. If to < 0 the
+   @param painter Painter
+   @param xMap Maps x-values into pixel coordinates.
+   @param yMap Maps y-values into pixel coordinates.
+   @param canvasRect Contents rectangle of the canvas
+   @param from Index of the first sample to be painted
+   @param to Index of the last sample to be painted. If to < 0 the
          series will be painted to its last sample.
 
-   \sa drawSeries(), drawSymbols()
+   @sa drawSeries(), drawSymbols()
  */
 void QwtPlotIntervalCurve::drawTube( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to ) const
 {
+    QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment( painter );
 
     painter->save();
@@ -595,12 +488,12 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
         }
     }
 
-    if ( m_data->brush.style() != Qt::NoBrush )
+    if ( d->brush.style() != Qt::NoBrush )
     {
         painter->setPen( QPen( Qt::NoPen ) );
-        painter->setBrush( m_data->brush );
+        painter->setBrush( d->brush );
 
-        if ( m_data->paintAttributes & ClipPolygons )
+        if ( d->paintAttributes & ClipPolygons )
         {
             const qreal m = 1.0;
             const QPolygonF p = QwtClipper::clippedPolygonF(
@@ -614,12 +507,12 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
         }
     }
 
-    if ( m_data->pen.style() != Qt::NoPen )
+    if ( d->pen.style() != Qt::NoPen )
     {
-        painter->setPen( m_data->pen );
+        painter->setPen( d->pen );
         painter->setBrush( Qt::NoBrush );
 
-        if ( m_data->paintAttributes & ClipPolygons )
+        if ( d->paintAttributes & ClipPolygons )
         {
             qreal pw = QwtPainter::effectivePenWidth( painter->pen() );
             const QRectF clipRect = canvasRect.adjusted( -pw, -pw, pw, pw );
@@ -647,21 +540,22 @@ void QwtPlotIntervalCurve::drawTube( QPainter* painter,
 /*!
    Draw symbols for a subset of the samples
 
-   \param painter Painter
-   \param symbol Interval symbol
-   \param xMap x map
-   \param yMap y map
-   \param canvasRect Contents rectangle of the canvas
-   \param from Index of the first sample to be painted
-   \param to Index of the last sample to be painted
+   @param painter Painter
+   @param symbol Interval symbol
+   @param xMap x map
+   @param yMap y map
+   @param canvasRect Contents rectangle of the canvas
+   @param from Index of the first sample to be painted
+   @param to Index of the last sample to be painted
 
-   \sa setSymbol(), drawSeries(), drawTube()
+   @sa setSymbol(), drawSeries(), drawTube()
  */
 void QwtPlotIntervalCurve::drawSymbols(
     QPainter* painter, const QwtIntervalSymbol& symbol,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect, int from, int to ) const
 {
+    QWT_DC(d);
     painter->save();
 
     QPen pen = symbol.pen();
@@ -677,7 +571,7 @@ void QwtPlotIntervalCurve::drawSymbols(
     const double yMin = tr.top();
     const double yMax = tr.bottom();
 
-    const bool doClip = m_data->paintAttributes & ClipSymbol;
+    const bool doClip = d->paintAttributes & ClipSymbol;
 
     for ( int i = from; i <= to; i++ )
     {
@@ -713,7 +607,6 @@ void QwtPlotIntervalCurve::drawSymbols(
 }
 
 /**
- * \if ENGLISH
  * @brief Get the icon for the legend
  * @details In case of Tube style() the icon is a plain rectangle filled with the brush().
  *          If a symbol is assigned it is scaled to size.
@@ -721,21 +614,12 @@ void QwtPlotIntervalCurve::drawSymbols(
  * @param[in] size Icon size
  * @return Icon for the legend
  * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
- * \endif
  * 
- * \if CHINESE
- * @brief 获取图例图标
- * @details 在 Tube 样式()的情况下，图标是用 brush() 填充的纯矩形。
- *          如果分配了符号，它会缩放到指定大小。
- * @param[in] index 图例条目的索引（忽略，因为只有一个）
- * @param[in] size 图标大小
- * @return 图例图标
- * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
- * \endif
  */
 QwtGraphic QwtPlotIntervalCurve::legendIcon(
     int index, const QSizeF& size ) const
 {
+    QWT_DC(d);
     Q_UNUSED( index );
 
     if ( size.isEmpty() )
@@ -749,34 +633,34 @@ QwtGraphic QwtPlotIntervalCurve::legendIcon(
     painter.setRenderHint( QPainter::Antialiasing,
         testRenderHint( QwtPlotItem::RenderAntialiased ) );
 
-    if ( m_data->style == Tube )
+    if ( d->style == Tube )
     {
         QRectF r( 0, 0, size.width(), size.height() );
-        painter.fillRect( r, m_data->brush );
+        painter.fillRect( r, d->brush );
     }
 
-    if ( m_data->symbol &&
-        ( m_data->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
+    if ( d->symbol &&
+        ( d->symbol->style() != QwtIntervalSymbol::NoSymbol ) )
     {
-        QPen pen = m_data->symbol->pen();
+        QPen pen = d->symbol->pen();
         pen.setWidthF( pen.widthF() );
         pen.setCapStyle( Qt::FlatCap );
 
         painter.setPen( pen );
-        painter.setBrush( m_data->symbol->brush() );
+        painter.setBrush( d->symbol->brush() );
 
         if ( orientation() == Qt::Vertical )
         {
             const double x = 0.5 * size.width();
 
-            m_data->symbol->draw( &painter, orientation(),
+            d->symbol->draw( &painter, orientation(),
                 QPointF( x, 0 ), QPointF( x, size.height() - 1.0 ) );
         }
         else
         {
             const double y = 0.5 * size.height();
 
-            m_data->symbol->draw( &painter, orientation(),
+            d->symbol->draw( &painter, orientation(),
                 QPointF( 0.0, y ), QPointF( size.width() - 1.0, y ) );
         }
     }

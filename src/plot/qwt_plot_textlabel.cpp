@@ -69,20 +69,21 @@ static QRect qwtItemRect( int renderFlags,
 
 class QwtPlotTextLabel::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotTextLabel)
   public:
-    PrivateData()
-        : margin( 5 )
+    PrivateData(QwtPlotTextLabel* p)
+        : q_ptr(p)
+        , margin( 5 )
     {
     }
 
     QwtText text;
     int margin;
 
-    QPixmap pixmap;
+    mutable QPixmap pixmap;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Initializes an text label with an empty text.
  *          Sets the following item attributes:
@@ -90,23 +91,11 @@ class QwtPlotTextLabel::PrivateData
  *          - QwtPlotItem::Legend: false
  *          The z value is initialized by 150.
  * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  *
- * \if CHINESE
- * @brief 构造函数
- * @details 初始化一个带有空文本的文本标签。
- *          设置以下项目属性：
- *          - QwtPlotItem::AutoScale: false
- *          - QwtPlotItem::Legend: false
- *          z 值初始化为 150。
- * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * \endif
  */
 QwtPlotTextLabel::QwtPlotTextLabel()
-    : QwtPlotItem( QwtText( "Label" ) )
+    : QwtPlotItem( QwtText( "Label" ) ), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     setItemAttribute( QwtPlotItem::AutoScale, false );
     setItemAttribute( QwtPlotItem::Legend, false );
 
@@ -114,29 +103,17 @@ QwtPlotTextLabel::QwtPlotTextLabel()
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
  *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotTextLabel::~QwtPlotTextLabel()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotTextLabel
- * \endif
  *
- * \if CHINESE
- * @brief 获取运行时类型信息
- * @return QwtPlotItem::Rtti_PlotTextLabel
- * \endif
  */
 int QwtPlotTextLabel::rtti() const
 {
@@ -144,25 +121,18 @@ int QwtPlotTextLabel::rtti() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the text
  * @param[in] text Text to be displayed
  * @details The label will be aligned to the plot canvas according to the alignment flags of text.
  * @sa text(), QwtText::renderFlags()
- * \endif
  *
- * \if CHINESE
- * @brief 设置文本
- * @param[in] text 要显示的文本
- * @details 标签将根据文本的对齐标志与绘图画布对齐。
- * @sa text(), QwtText::renderFlags()
- * \endif
  */
 void QwtPlotTextLabel::setText( const QwtText& text )
 {
-    if ( m_data->text != text )
+    QWT_D(d);
+    if ( d->text != text )
     {
-        m_data->text = text;
+        d->text = text;
 
         invalidateCache();
         itemChanged();
@@ -170,89 +140,71 @@ void QwtPlotTextLabel::setText( const QwtText& text )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the text
  * @return Text to be displayed
  * @sa setText()
- * \endif
  *
- * \if CHINESE
- * @brief 获取文本
- * @return 要显示的文本
- * @sa setText()
- * \endif
  */
 QwtText QwtPlotTextLabel::text() const
 {
-    return m_data->text;
+    QWT_DC(d);
+    return d->text;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the margin
  * @param[in] margin Margin
  * @details The margin is the distance between the contentsRect() of the plot canvas
  *          and the rectangle where the label can be displayed.
  * @sa margin(), textRect()
- * \endif
  *
- * \if CHINESE
- * @brief 设置边距
- * @param[in] margin 边距
- * @details 边距是绘图画布的 contentsRect() 与标签可显示的矩形之间的距离。
- * @sa margin(), textRect()
- * \endif
  */
 void QwtPlotTextLabel::setMargin( int margin )
 {
+    QWT_D(d);
     margin = qMax( margin, 0 );
-    if ( m_data->margin != margin )
+    if ( d->margin != margin )
     {
-        m_data->margin = margin;
+        d->margin = margin;
         itemChanged();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the margin
  * @return Margin added to the contentsMargins() of the canvas
  * @sa setMargin()
- * \endif
  *
- * \if CHINESE
- * @brief 获取边距
- * @return 添加到画布 contentsMargins() 的边距
- * @sa setMargin()
- * \endif
  */
 int QwtPlotTextLabel::margin() const
 {
-    return m_data->margin;
+    QWT_DC(d);
+    return d->margin;
 }
 
 /*!
    Draw the text label
 
-   \param painter Painter
-   \param xMap x Scale Map
-   \param yMap y Scale Map
-   \param canvasRect Contents rectangle of the canvas in painter coordinates
+   @param painter Painter
+   @param xMap x Scale Map
+   @param yMap y Scale Map
+   @param canvasRect Contents rectangle of the canvas in painter coordinates
 
-   \sa textRect()
+   @sa textRect()
  */
 
 void QwtPlotTextLabel::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
     const QRectF& canvasRect ) const
 {
+    QWT_DC(d);
     Q_UNUSED( xMap );
     Q_UNUSED( yMap );
 
-    const int m = m_data->margin;
+    const int m = d->margin;
 
     const QRectF rect = textRect( canvasRect.adjusted( m, m, -m, -m ),
-        m_data->text.textSize( painter->font() ) );
+        d->text.textSize( painter->font() ) );
 
     bool doCache = QwtPainter::roundingAlignment( painter );
     if ( doCache )
@@ -278,8 +230,8 @@ void QwtPlotTextLabel::draw( QPainter* painter,
         // we use a cache.
 
         int pw = 0;
-        if ( m_data->text.borderPen().style() != Qt::NoPen )
-            pw = qMax( m_data->text.borderPen().width(), 1 );
+        if ( d->text.borderPen().style() != Qt::NoPen )
+            pw = qMax( d->text.borderPen().width(), 1 );
 
         QRect pixmapRect;
         pixmapRect.setLeft( qwtFloor( rect.left() ) - pw );
@@ -294,63 +246,51 @@ void QwtPlotTextLabel::draw( QPainter* painter,
         const QSize scaledSize = pixmapRect.size();
 #endif
 
-        if ( m_data->pixmap.isNull() ||
-            ( scaledSize != m_data->pixmap.size() ) )
+        if ( d->pixmap.isNull() ||
+            ( scaledSize != d->pixmap.size() ) )
         {
-            m_data->pixmap = QPixmap( scaledSize );
+            d->pixmap = QPixmap( scaledSize );
 #if QT_VERSION >= 0x050000
-            m_data->pixmap.setDevicePixelRatio( pixelRatio );
+            d->pixmap.setDevicePixelRatio( pixelRatio );
 #endif
-            m_data->pixmap.fill( Qt::transparent );
+            d->pixmap.fill( Qt::transparent );
 
             const QRect r( pw, pw,
                 pixmapRect.width() - 2 * pw, pixmapRect.height() - 2 * pw );
 
-            QPainter pmPainter( &m_data->pixmap );
-            m_data->text.draw( &pmPainter, r );
+            QPainter pmPainter( &d->pixmap );
+            d->text.draw( &pmPainter, r );
         }
 
-        painter->drawPixmap( pixmapRect, m_data->pixmap );
+        painter->drawPixmap( pixmapRect, d->pixmap );
     }
     else
     {
-        m_data->text.draw( painter, rect );
+        d->text.draw( painter, rect );
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Align the text label
  * @param[in] rect Canvas rectangle with margins subtracted
  * @param[in] textSize Size required to draw the text
  * @return A rectangle aligned according the the alignment flags of the text.
  * @sa setMargin(), QwtText::renderFlags(), QwtText::textSize()
- * \endif
  *
- * \if CHINESE
- * @brief 对齐文本标签
- * @param[in] rect 画布矩形（已减去边距）
- * @param[in] textSize 绘制文本所需的尺寸
- * @return 根据文本对齐标志对齐的矩形
- * @sa setMargin(), QwtText::renderFlags(), QwtText::textSize()
- * \endif
  */
 QRectF QwtPlotTextLabel::textRect(
     const QRectF& rect, const QSizeF& textSize ) const
 {
-    return qwtItemRect( m_data->text.renderFlags(), rect, textSize );
+    QWT_DC(d);
+    return qwtItemRect( d->text.renderFlags(), rect, textSize );
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the cached pixmap
- * \endif
  *
- * \if CHINESE
- * @brief 使缓存的 pixmap 无效
- * \endif
  */
 void QwtPlotTextLabel::invalidateCache()
 {
-    m_data->pixmap = QPixmap();
+    QWT_D(d);
+    d->pixmap = QPixmap();
 }

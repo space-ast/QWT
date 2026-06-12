@@ -37,7 +37,6 @@
 class QwtPointPolar;
 
 /**
- * \if ENGLISH
  * @brief Abstract interface for iterating over samples
  * @details Qwt offers several implementations of the QwtSeriesData API,
  *          but in situations, where data of an application specific format
@@ -53,19 +52,6 @@ class QwtPointPolar;
  *            the data. You can use qwtBoundingRect() for an implementation but often it is
  *            possible to implement a more efficient algorithm depending on the characteristics
  *            of the series. The member cachedBoundingRect is intended for caching the calculated rectangle.
- * \endif
- * \if CHINESE
- * @brief 遍历样本的抽象接口
- * @details Qwt 提供了 QwtSeriesData API 的几种实现，但在需要显示特定应用程序格式的数据
- *          而无需复制的情况下，建议实现单独的数据访问。
- *
- *          QwtSeriesData<QPointF> 的子类必须实现：
- *          - size(): 应返回数据点的数量。
- *          - sample(): 应返回特定位置的样本的 x 和 y 值作为 QPointF 对象。
- *          - boundingRect(): 应返回数据系列的边界矩形。它用于自动缩放，并可能有助于
- *            某些显示数据的算法。您可以使用 qwtBoundingRect() 来实现，但通常可以根据
- *            系列的特性实现更高效的算法。成员 cachedBoundingRect 用于缓存计算的矩形。
- * \endif
  */
 template< typename T >
 class QwtSeriesData
@@ -79,7 +65,7 @@ public:
 
 #ifndef QWT_PYTHON_WRAPPER
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t size() const = 0;
 
     /// Return a sample
@@ -131,14 +117,8 @@ void QwtSeriesData< T >::setRectOfInterest(const QRectF&)
 }
 
 /**
- * \if ENGLISH
  * @brief Template class for data, that is organized as QVector
  * @details QVector uses implicit data sharing and can be passed around as argument efficiently.
- * \endif
- * \if CHINESE
- * @brief 数据模板类，组织为 QVector
- * @details QVector 使用隐式数据共享，可以高效地作为参数传递。
- * \endif
  */
 template< typename T >
 class QwtArraySeriesData : public QwtSeriesData< T >
@@ -155,13 +135,13 @@ public:
     void setSamples(const QVector< T >& samples);
     void setSamples(QVector< T >&& samples);
 
-    /// \return Array of samples
+    /// @return Array of samples
     const QVector< T > samples() const;
 
-    /// \return Number of samples
+    /// @return Number of samples
     virtual size_t size() const override;
 
-    /// \return Sample at a specific position
+    /// @return Sample at a specific position
     virtual T sample(size_t index) const override;
 
 protected:
@@ -218,14 +198,8 @@ T QwtArraySeriesData< T >::sample(size_t i) const
 }
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of points
  * @details QwtPointSeriesData provides access to QPointF samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 点数组迭代接口
- * @details QwtPointSeriesData 提供对存储在 QVector 中的 QPointF 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 {
@@ -238,14 +212,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of 3D points
  * @details QwtPoint3DSeriesData provides access to QwtPoint3D samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 3D点数组迭代接口
- * @details QwtPoint3DSeriesData 提供对存储在 QVector 中的 QwtPoint3D 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 {
@@ -258,14 +226,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of intervals
  * @details QwtIntervalSeriesData provides access to QwtIntervalSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 区间数组迭代接口
- * @details QwtIntervalSeriesData 提供对存储在 QVector 中的 QwtIntervalSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalSample >
 {
@@ -278,14 +240,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of set samples
  * @details QwtSetSeriesData provides access to QwtSetSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 集合样本数组迭代接口
- * @details QwtSetSeriesData 提供对存储在 QVector 中的 QwtSetSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 {
@@ -298,14 +254,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of vector field samples
  * @details QwtVectorFieldData provides access to QwtVectorFieldSample samples stored in a QVector.
- * \endif
- * \if CHINESE
- * @brief 向量场样本数组迭代接口
- * @details QwtVectorFieldData 提供对存储在 QVector 中的 QwtVectorFieldSample 样本的访问。
- * \endif
  */
 class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldSample >
 {
@@ -318,16 +268,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of OHLC samples
  * @details QwtTradingChartData provides access to QwtOHLCSample samples stored in a QVector.
  *          Used for candlestick or OHLC chart financial data.
- * \endif
- * \if CHINESE
- * @brief OHLC样本数组迭代接口
- * @details QwtTradingChartData 提供对存储在 QVector 中的 QwtOHLCSample 样本的访问。
- *          用于蜡烛图或OHLC图表的金融数据。
- * \endif
  */
 class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample >
 {
@@ -340,16 +283,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of boxplot samples
  * @details QwtBoxChartData provides access to QwtBoxSample samples stored in a QVector.
  *          Used for box-and-whisker plot statistical data.
- * \endif
- * \if CHINESE
- * @brief 箱线图样本数组迭代接口
- * @details QwtBoxChartData 提供对存储在 QVector 中的 QwtBoxSample 样本的访问。
- *          用于箱线图的统计数据。
- * \endif
  */
 class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
 {
@@ -362,16 +298,9 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Interface for iterating over an array of boxplot outlier samples
  * @details QwtBoxOutlierChartData provides access to QwtBoxOutlierSample samples stored in a QVector.
  *          Used for displaying outlier points in box-and-whisker plots.
- * \endif
- * \if CHINESE
- * @brief 箱线图异常值样本数组迭代接口
- * @details QwtBoxOutlierChartData 提供对存储在 QVector 中的 QwtBoxOutlierSample 样本的访问。
- *          用于显示箱线图中的异常值点。
- * \endif
  */
 class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
 {
@@ -405,7 +334,6 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t f
 QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
 
 /**
- * \if ENGLISH
  * @brief Binary search for a sorted series of samples
  * @details qwtUpperSampleIndex returns the index of sample that is the upper bound
  *          of value. Is the the value smaller than the smallest value the return
@@ -457,85 +385,34 @@ QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, s
  *
  * @note Starting from qwt7, this function is changed to size_t version. If not found,
  *       it will return series.size(), similar to an end iterator.
- * \endif
- * \if CHINESE
- * @brief 对排序的样本系列进行二分查找
- * @details qwtUpperSampleIndex 返回样本的索引，该样本是值的上界。如果值小于最小值，
- *          则返回值为 0。如果值大于或等于最大值，则返回值为 series.size()。
- *
- * @par 示例
- * 以下示例展示了如何根据 x 坐标找到曲线上的点
- * @code
- * #include <qwt_series_data.h>
- * #include <qwt_plot_curve.h>
- *
- *   struct compareX
- *   {
- *       inline bool operator()( const double x, const QPointF &pos ) const
- *       {
- *           return ( x < pos.x() );
- *       }
- *   };
- *
- *   QLineF curveLineAt( const QwtPlotCurve *curve, double x )
- *   {
- *       int index = qwtUpperSampleIndex<QPointF>(*curve->data(), x, compareX() );
- *
- *       if ( index == -1 &&
- *           x == curve->sample( curve->dataSize() - 1 ).x() )
- *       {
- *           // the last sample is excluded from qwtUpperSampleIndex
- *           index = curve->dataSize() - 1;
- *       }
- *
- *       QLineF line; // invalid
- *       if ( index > 0 )
- *       {
- *           line.setP1( curve->sample( index - 1 ) );
- *           line.setP2( curve->sample( index ) );
- *       }
- *
- *       return line;
- *   }
- *
- * @endcode
- * @endpar
- *
- * @param series 样本系列
- * @param value 值
- * @param lessThan 比较操作
- * @note 样本必须按照 lessThan 对象指定的顺序排序
- *
- * @note 从 qwt7 开始，此函数改为 size_t 版本。如果未找到，将返回 series.size()，类似于 end 迭代器。
- * \endif
  */
 template< typename T, typename LessThan >
 inline size_t qwtUpperSampleIndex(const QwtSeriesData< T >& series, double value, LessThan lessThan)
 {
     const size_t count = series.size();
     if (count == 0) {
-        return count;  // 返回 0 作为“未找到”的标记（因为有效索引从 0 开始，count 超出了有效范围）
+        return count; // Return 0 as "not found" marker (valid indices start from 0, count is beyond valid range)
     }
 
     const size_t indexMax = count - 1;
 
-    // 如果 value 大于等于最后一个元素，说明没有元素大于 value，返回 count
+    // If value is greater than or equal to the last element, no element is greater than value, return count
     if (!lessThan(value, series.sample(indexMax))) {
         return count;
     }
 
     size_t indexMin = 0;
-    size_t n        = indexMax;  // n 表示当前搜索区间的大小
+    size_t n        = indexMax; // n represents the current search interval size
 
     while (n > 0) {
         const size_t half     = n >> 1;
         const size_t indexMid = indexMin + half;
 
         if (lessThan(value, series.sample(indexMid))) {
-            // 目标在左侧区间 [indexMin, indexMid]
+            // Target is in the left interval [indexMin, indexMid]
             n = half;
         } else {
-            // 目标在右侧区间 [indexMid + 1, indexMin + n - 1]
+            // Target is in the right interval [indexMid + 1, indexMin + n - 1]
             indexMin = indexMid + 1;
             n -= half + 1;
         }

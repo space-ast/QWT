@@ -1,5 +1,5 @@
-#ifndef __PLANE_H__
-#define __PLANE_H__
+#ifndef QWT3D_COLORLEGEND_H
+#define QWT3D_COLORLEGEND_H
 
 #include "qwt3d_global.h"
 #include "qwt3d_drawable.h"
@@ -9,20 +9,13 @@
 namespace Qwt3D {
 
 /**
- * \if ENGLISH
  * @brief A flat color legend
  * @details The class visualizes a ColorVector together with a scale (axis)
  *          and a caption. ColorLegends are vertical or horizontal.
- * \endif
- *
- * \if CHINESE
- * @brief 平面颜色图例
- * @details 该类将 ColorVector 与刻度（坐标轴）和标题一起可视化。
- *          ColorLegends 可以是垂直的或水平的。
- * \endif
  */
 class QWT3D_EXPORT ColorLegend : public Drawable
 {
+    QWT_DECLARE_PRIVATE(ColorLegend)
 
 public:
     // Possible anchor points for caption and axis
@@ -41,9 +34,10 @@ public:
 
     // Standard constructor
     ColorLegend();
+    ~ColorLegend() override;
 
     // Draws the object - called by updateGL()
-    void draw();
+    virtual void draw() override;
 
     // Sets the relative position of the legend inside widget
     void setRelPosition(Qwt3D::Tuple relMin,
@@ -57,12 +51,9 @@ public:
     // Sets scale minor tics
     void setMinors(int);
     // Sets whether a scale will be drawn
-    void drawScale(bool val) { showaxis_ = val; }
+    void drawScale(bool val);
     // Sets whether the scale will have scale numbers
-    void drawNumbers(bool val)
-    {
-        axis_.setNumbers(val);
-    }
+    void drawNumbers(bool val);
     // Sets whether the axis is autoscaled or not
     void setAutoScale(bool val);
     // Sets another scale
@@ -81,17 +72,8 @@ public:
     Qwt3D::ColorVector colors;
 
 private:
-    Qwt3D::Label caption_;
-    Qwt3D::ParallelEpiped geometry() const { return pe_; }
+    Qwt3D::ParallelEpiped geometry() const;
     void setGeometryInternal();
-
-    Qwt3D::ParallelEpiped pe_;
-    Qwt3D::Tuple relMin_, relMax_;
-    Qwt3D::Axis axis_;
-    SCALEPOSITION axisposition_;
-    ORIENTATION orientation_;
-
-    bool showaxis_;
 };
 
 } // ns

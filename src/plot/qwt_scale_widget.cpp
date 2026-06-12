@@ -70,14 +70,14 @@ public:
 
     QwtScaleWidget::LayoutFlags layoutFlags;
 
-    // 内置动作新增的 交互相关成员
+    // Interaction-related members added for built-in actions
     bool isSelected { false };
 
-    double zoomFactor { 1.2 };  ///< 缩放系数
+    double zoomFactor { 1.2 };  ///< Zoom factor
     QwtScaleWidget::BuiltinActionsFlags builtinActions { QwtScaleWidget::ActionAll };
-    QColor selectionColor { Qt::blue };     ///< 选中的颜色
-    QColor originTextColor { Qt::black };   ///< 记录原始文字颜色
-    QColor originScaleColor { Qt::black };  ///< 记录坐标轴颜色
+    QColor selectionColor { Qt::blue };     ///< Selection color
+    QColor originTextColor { Qt::black };   ///< Original text color
+    QColor originScaleColor { Qt::black };  ///< Original axis color
 
     struct t_colorBar
     {
@@ -89,14 +89,8 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Create a scale with the position QwtScaleWidget::Left
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief 创建位置为 QwtScaleWidget::Left 的刻度
- * @param parent 父控件
- * \endif
  */
 QwtScaleWidget::QwtScaleWidget(QWidget* parent) : QWidget(parent), QWT_PIMPL_CONSTRUCT
 {
@@ -104,16 +98,9 @@ QwtScaleWidget::QwtScaleWidget(QWidget* parent) : QWidget(parent), QWT_PIMPL_CON
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param align Alignment
  * @param parent Parent widget
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @param align 对齐方式
- * @param parent 父控件
- * \endif
  */
 QwtScaleWidget::QwtScaleWidget(QwtScaleDraw::Alignment align, QWidget* parent) : QWidget(parent), QWT_PIMPL_CONSTRUCT
 {
@@ -159,16 +146,9 @@ void QwtScaleWidget::initScale(QwtScaleDraw::Alignment align)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if a mouse position falls on the "pure scale area"
  * @param pos Mouse position (relative to this QWidget's coordinates)
  * @return true if on the scale area, false if on margin, edgeMargin, title, colorBar, etc.
- * \endif
- * \if CHINESE
- * @brief 判断鼠标位置是否落在"纯刻度区域"
- * @param pos 鼠标位置（相对于本 QWidget 的坐标）
- * @return true 落在刻度上，false 落在 margin、edgeMargin、标题、colorBar 等空白处
- * \endif
  */
 bool QwtScaleWidget::isOnScale(const QPoint& pos) const
 {
@@ -177,18 +157,10 @@ bool QwtScaleWidget::isOnScale(const QPoint& pos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Toggle a layout flag
  * @param flag Layout flag
  * @param on true/false
- * \sa testLayoutFlag(), LayoutFlag
- * \endif
- * \if CHINESE
- * @brief 切换布局标志
- * @param flag 布局标志
- * @param on true/false
- * \sa testLayoutFlag(), LayoutFlag
- * \endif
+ * @sa testLayoutFlag(), LayoutFlag
  */
 void QwtScaleWidget::setLayoutFlag(LayoutFlag flag, bool on)
 {
@@ -203,18 +175,10 @@ void QwtScaleWidget::setLayoutFlag(LayoutFlag flag, bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Test a layout flag
  * @param flag Layout flag
  * @return true/false
- * \sa setLayoutFlag(), LayoutFlag
- * \endif
- * \if CHINESE
- * @brief 测试布局标志
- * @param flag 布局标志
- * @return true/false
- * \sa setLayoutFlag(), LayoutFlag
- * \endif
+ * @sa setLayoutFlag(), LayoutFlag
  */
 bool QwtScaleWidget::testLayoutFlag(LayoutFlag flag) const
 {
@@ -222,16 +186,9 @@ bool QwtScaleWidget::testLayoutFlag(LayoutFlag flag) const
 }
 
 /**
- * \if ENGLISH
  * @brief Give title new text contents
  * @param title New title
- * \sa title(), setTitle(const QwtText&)
- * \endif
- * \if CHINESE
- * @brief 设置标题的文本内容
- * @param title 新标题
- * \sa title(), setTitle(const QwtText&)
- * \endif
+ * @sa title(), setTitle(const QwtText&)
  */
 void QwtScaleWidget::setTitle(const QString& title)
 {
@@ -242,20 +199,11 @@ void QwtScaleWidget::setTitle(const QString& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Give title new text contents
  * @param title New title
- * \sa title()
+ * @sa title()
  * @warning The title flags are interpreted in direction of the label,
  *          AlignTop, AlignBottom can't be set as the title will always be aligned to the scale.
- * \endif
- * \if CHINESE
- * @brief 设置标题的文本内容
- * @param title 新标题
- * \sa title()
- * @warning 标题标志是按标签方向解释的，AlignTop, AlignBottom 无法设置，
- *          因为标题始终与刻度对齐。
- * \endif
  */
 void QwtScaleWidget::setTitle(const QwtText& title)
 {
@@ -270,16 +218,9 @@ void QwtScaleWidget::setTitle(const QwtText& title)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the alignment
  * @param alignment New alignment
- * \sa alignment()
- * \endif
- * \if CHINESE
- * @brief 更改对齐方式
- * @param alignment 新的对齐方式
- * \sa alignment()
- * \endif
+ * @sa alignment()
  */
 void QwtScaleWidget::setAlignment(QwtScaleDraw::Alignment alignment)
 {
@@ -300,16 +241,9 @@ void QwtScaleWidget::setAlignment(QwtScaleDraw::Alignment alignment)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the alignment
  * @return Alignment of the scale
- * \sa setAlignment()
- * \endif
- * \if CHINESE
- * @brief 获取对齐方式
- * @return 刻度的对齐方式
- * \sa setAlignment()
- * \endif
+ * @sa setAlignment()
  */
 QwtScaleDraw::Alignment QwtScaleWidget::alignment() const
 {
@@ -320,16 +254,9 @@ QwtScaleDraw::Alignment QwtScaleWidget::alignment() const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the margin to the colorBar/base line
  * @param margin Margin
- * \sa margin()
- * \endif
- * \if CHINESE
- * @brief 设置到颜色条/基线的边距
- * @param margin 边距
- * \sa margin()
- * \endif
+ * @sa margin()
  */
 void QwtScaleWidget::setMargin(int margin)
 {
@@ -341,16 +268,9 @@ void QwtScaleWidget::setMargin(int margin)
 }
 
 /**
- * \if ENGLISH
  * @brief Specify the distance between color bar, scale and title
  * @param spacing Spacing
- * \sa spacing()
- * \endif
- * \if CHINESE
- * @brief 设置颜色条、刻度和标题之间的距离
- * @param spacing 间距
- * \sa spacing()
- * \endif
+ * @sa spacing()
  */
 void QwtScaleWidget::setSpacing(int spacing)
 {
@@ -362,16 +282,9 @@ void QwtScaleWidget::setSpacing(int spacing)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the alignment for the labels
  * @param alignment Alignment
- * \sa QwtScaleDraw::setLabelAlignment(), setLabelRotation()
- * \endif
- * \if CHINESE
- * @brief 更改标签的对齐方式
- * @param alignment 对齐方式
- * \sa QwtScaleDraw::setLabelAlignment(), setLabelRotation()
- * \endif
+ * @sa QwtScaleDraw::setLabelAlignment(), setLabelRotation()
  */
 void QwtScaleWidget::setLabelAlignment(Qt::Alignment alignment)
 {
@@ -380,16 +293,9 @@ void QwtScaleWidget::setLabelAlignment(Qt::Alignment alignment)
 }
 
 /**
- * \if ENGLISH
  * @brief Change the rotation for the labels
  * @param rotation Rotation angle in degrees
- * \sa QwtScaleDraw::setLabelRotation(), setLabelAlignment()
- * \endif
- * \if CHINESE
- * @brief 更改标签的旋转角度
- * @param rotation 旋转角度（度）
- * \sa QwtScaleDraw::setLabelRotation(), setLabelAlignment()
- * \endif
+ * @sa QwtScaleDraw::setLabelRotation(), setLabelAlignment()
  */
 void QwtScaleWidget::setLabelRotation(double rotation)
 {
@@ -398,21 +304,12 @@ void QwtScaleWidget::setLabelRotation(double rotation)
 }
 
 /**
- * \if ENGLISH
  * @brief Set a scale draw
  * @details scaleDraw has to be created with new and will be deleted in ~QwtScaleWidget()
  *          or the next call of setScaleDraw(). scaleDraw will be initialized with
  *          the attributes of the previous scaleDraw object.
  * @param scaleDraw ScaleDraw object
- * \sa scaleDraw()
- * \endif
- * \if CHINESE
- * @brief 设置刻度绘制对象
- * @details scaleDraw 必须用 new 创建，将在 ~QwtScaleWidget() 或下次调用 setScaleDraw() 时删除。
- *          scaleDraw 将使用前一个 scaleDraw 对象的属性初始化。
- * @param scaleDraw ScaleDraw 对象
- * \sa scaleDraw()
- * \endif
+ * @sa scaleDraw()
  */
 void QwtScaleWidget::setScaleDraw(QwtScaleDraw* scaleDraw)
 {
@@ -437,16 +334,9 @@ void QwtScaleWidget::setScaleDraw(QwtScaleDraw* scaleDraw)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw (const version)
  * @return scaleDraw of this scale
- * \sa setScaleDraw(), QwtScaleDraw::setScaleDraw()
- * \endif
- * \if CHINESE
- * @brief 获取刻度绘制对象（常量版本）
- * @return 此刻度的 scaleDraw
- * \sa setScaleDraw(), QwtScaleDraw::setScaleDraw()
- * \endif
+ * @sa setScaleDraw(), QwtScaleDraw::setScaleDraw()
  */
 const QwtScaleDraw* QwtScaleWidget::scaleDraw() const
 {
@@ -454,16 +344,9 @@ const QwtScaleDraw* QwtScaleWidget::scaleDraw() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the scale draw
  * @return scaleDraw of this scale
- * \sa QwtScaleDraw::setScaleDraw()
- * \endif
- * \if CHINESE
- * @brief 获取刻度绘制对象
- * @return 此刻度的 scaleDraw
- * \sa QwtScaleDraw::setScaleDraw()
- * \endif
+ * @sa QwtScaleDraw::setScaleDraw()
  */
 QwtScaleDraw* QwtScaleWidget::scaleDraw()
 {
@@ -471,16 +354,9 @@ QwtScaleDraw* QwtScaleWidget::scaleDraw()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the title
  * @return Title text
- * \sa setTitle()
- * \endif
- * \if CHINESE
- * @brief 获取标题
- * @return 标题文本
- * \sa setTitle()
- * \endif
+ * @sa setTitle()
  */
 QwtText QwtScaleWidget::title() const
 {
@@ -488,16 +364,9 @@ QwtText QwtScaleWidget::title() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the margin
  * @return Margin value
- * \sa setMargin()
- * \endif
- * \if CHINESE
- * @brief 获取边距
- * @return 边距值
- * \sa setMargin()
- * \endif
+ * @sa setMargin()
  */
 int QwtScaleWidget::margin() const
 {
@@ -505,16 +374,9 @@ int QwtScaleWidget::margin() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the distance between scale and title
  * @return Distance between scale and title
- * \sa setSpacing()
- * \endif
- * \if CHINESE
- * @brief 获取刻度和标题之间的距离
- * @return 刻度和标题之间的距离
- * \sa setSpacing()
- * \endif
+ * @sa setSpacing()
  */
 int QwtScaleWidget::spacing() const
 {
@@ -522,17 +384,10 @@ int QwtScaleWidget::spacing() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the edge margin (offset between axis and plot canvas edge)
  * @details edgeMargin and margin are opposite: margin is the offset from the plot,
  *          edgeMargin is the offset from the plot canvas edge.
  * @param offset Edge margin offset
- * \endif
- * \if CHINESE
- * @brief 设置坐标轴和绘图边缘的空白偏移距离
- * @details edgeMargin和margin刚好相反，margin是和绘图的偏移，edgeMargin是和绘图边缘的偏移
- * @param offset 边缘偏移距离
- * \endif
  */
 void QwtScaleWidget::setEdgeMargin(int offset)
 {
@@ -544,16 +399,9 @@ void QwtScaleWidget::setEdgeMargin(int offset)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the edge margin
  * @details The edge margin is the offset between the axis and the plot canvas edge.
  * @return Edge margin value
- * \endif
- * \if CHINESE
- * @brief 获取边缘距离
- * @details 边缘距离是坐标轴和绘图边缘之间的偏移距离。
- * @return 边缘距离值
- * \endif
  */
 int QwtScaleWidget::edgeMargin() const
 {
@@ -561,18 +409,12 @@ int QwtScaleWidget::edgeMargin() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the font color of the coordinate axis
  * @param c Text color
- * \endif
- * \if CHINESE
- * @brief 设置坐标轴的字体颜色
- * @param c 字体颜色
- * \endif
  */
 void QwtScaleWidget::setTextColor(const QColor& c)
 {
-    // 绘制标题时是通过QPalette::Text获取颜色
+    // When drawing the title, the color is obtained via QPalette::Text
     // painter->setPen(palette().color(QPalette::Text));
     QPalette p = palette();
     p.setColor(QPalette::Text, c);
@@ -580,14 +422,8 @@ void QwtScaleWidget::setTextColor(const QColor& c)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the font color of the coordinate axis
  * @return Text color
- * \endif
- * \if CHINESE
- * @brief 获取坐标轴的字体颜色
- * @return 字体颜色
- * \endif
  */
 QColor QwtScaleWidget::textColor() const
 {
@@ -595,14 +431,8 @@ QColor QwtScaleWidget::textColor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the color of the coordinate axis
  * @param c Scale color
- * \endif
- * \if CHINESE
- * @brief 设置坐标轴的颜色
- * @param c 坐标轴颜色
- * \endif
  */
 void QwtScaleWidget::setScaleColor(const QColor& c)
 {
@@ -613,21 +443,15 @@ void QwtScaleWidget::setScaleColor(const QColor& c)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the color of the coordinate axis
  * @return Scale color
- * \endif
- * \if CHINESE
- * @brief 获取坐标轴的颜色
- * @return 坐标轴颜色
- * \endif
  */
 QColor QwtScaleWidget::scaleColor() const
 {
     return palette().color(QPalette::WindowText);
 }
 /*!
-   \brief paintEvent
+   @brief paintEvent
  */
 void QwtScaleWidget::paintEvent(QPaintEvent* event)
 {
@@ -646,7 +470,7 @@ void QwtScaleWidget::paintEvent(QPaintEvent* event)
 }
 
 /*!
-   \brief draw the scale
+   @brief draw the scale
  */
 void QwtScaleWidget::draw(QPainter* painter) const
 {
@@ -671,16 +495,9 @@ void QwtScaleWidget::draw(QPainter* painter) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the rectangle for the color bar
  * @param rect Bounding rectangle for all components of the scale
  * @return Rectangle for the color bar
- * \endif
- * \if CHINESE
- * @brief 计算颜色条的矩形区域
- * @param rect 刻度所有组件的边界矩形
- * @return 颜色条的矩形区域
- * \endif
  */
 QRectF QwtScaleWidget::colorBarRect(const QRectF& rect) const
 {
@@ -724,67 +541,61 @@ QRectF QwtScaleWidget::colorBarRect(const QRectF& rect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the rectangle for drawing the scale (excluding colorBar, margin, edgeMargin, borderDist)
  * @return Rectangle used for drawing the scale
- * \endif
- * \if CHINESE
- * @brief 获取用于绘制刻度的矩形区域（不包含 colorBar、margin、edgeMargin、borderDistHint）
- * @return 用于绘制刻度的矩形区域
- * \endif
  */
 QRect QwtScaleWidget::scaleRect() const
 {
-    if (!m_data->scaleDraw)  // 无刻度对象
+    if (!m_data->scaleDraw)  // No scale draw object
         return QRect();
 
-    /* 1. 内容区，去掉外围的 contentsMargins() */
+    /* 1. Content area, remove the outer contentsMargins() */
     QRect cr = contentsRect();
 
-    /* 2. 再去掉用户设定的 borderDist（刻度两端留空） */
+    /* 2. Remove user-specified borderDist (empty space at scale endpoints) */
     int bd0, bd1;
-    getBorderDistHint(bd0, bd1);  // 最小必需距离
+    getBorderDistHint(bd0, bd1);  // Minimum required distance
     bd0 = qMax(bd0, m_data->borderDist[ 0 ]);
     bd1 = qMax(bd1, m_data->borderDist[ 1 ]);
 
     if (m_data->scaleDraw->orientation() == Qt::Vertical) {
-        cr.adjust(0, bd0, 0, -bd1);  // 上下两端
+        cr.adjust(0, bd0, 0, -bd1);  // Top and bottom ends
     } else {
-        cr.adjust(bd0, 0, -bd1, 0);  // 左右两端
+        cr.adjust(bd0, 0, -bd1, 0);  // Left and right ends
     }
 
-    /* 3. 再去掉 colorBar 占用的区域（如果启用） */
+    /* 3. Remove the area occupied by colorBar (if enabled) */
     if (m_data->colorBar.isEnabled && m_data->colorBar.width > 0 && m_data->colorBar.interval.isValid()) {
         const int cw = m_data->colorBar.width + m_data->spacing;
         switch (m_data->scaleDraw->alignment()) {
         case QwtScaleDraw::LeftScale:
-            cr.adjust(0, 0, -cw, 0);  // 右边减掉
+            cr.adjust(0, 0, -cw, 0);  // Subtract from right
             break;
         case QwtScaleDraw::RightScale:
-            cr.adjust(cw, 0, 0, 0);  // 左边减掉
+            cr.adjust(cw, 0, 0, 0);  // Subtract from left
             break;
         case QwtScaleDraw::TopScale:
-            cr.adjust(0, cw, 0, 0);  // 下边减掉
+            cr.adjust(0, cw, 0, 0);  // Subtract from bottom
             break;
         case QwtScaleDraw::BottomScale:
-            cr.adjust(0, 0, 0, -cw);  // 上边减掉
+            cr.adjust(0, 0, 0, -cw);  // Subtract from top
             break;
         }
     }
 
-    /* 4. 去掉margin和edgeMargin */
+    /* 4. Remove margin and edgeMargin */
     switch (m_data->scaleDraw->alignment()) {
     case QwtScaleDraw::LeftScale:
-        cr.adjust(m_data->edgeMargin, 0, -(m_data->margin), 0);  // 右边减掉margin,左边减掉edgeMargin
+        cr.adjust(m_data->edgeMargin, 0, -(m_data->margin), 0);  // Subtract margin from right, edgeMargin from left
         break;
     case QwtScaleDraw::RightScale:
-        cr.adjust(m_data->margin, 0, -(m_data->edgeMargin), 0);  // 左边减掉margin,右边减掉edgeMargin
+        cr.adjust(m_data->margin, 0, -(m_data->edgeMargin), 0);  // Subtract margin from left, edgeMargin from right
         break;
     case QwtScaleDraw::TopScale:
-        cr.adjust(0, m_data->edgeMargin, 0, -(m_data->margin));  // 下边减掉margin,上边减掉edgeMargin
+        cr.adjust(0, m_data->edgeMargin, 0, -(m_data->margin));  // Subtract margin from bottom, edgeMargin from top
         break;
     case QwtScaleDraw::BottomScale:
-        cr.adjust(0, m_data->margin, 0, -(m_data->edgeMargin));  // 上边减掉margin,下边减掉edgeMargin
+        cr.adjust(0, m_data->margin, 0, -(m_data->edgeMargin));  // Subtract margin from top, edgeMargin from bottom
         break;
     }
 
@@ -793,7 +604,7 @@ QRect QwtScaleWidget::scaleRect() const
 
 /*!
    Change Event handler
-   \param event Change event
+   @param event Change event
 
    Invalidates internal caches if necessary
  */
@@ -808,7 +619,7 @@ void QwtScaleWidget::changeEvent(QEvent* event)
 
 /*!
    Event handler for resize events
-   \param event Resize event
+   @param event Resize event
  */
 void QwtScaleWidget::resizeEvent(QResizeEvent* event)
 {
@@ -817,14 +628,8 @@ void QwtScaleWidget::resizeEvent(QResizeEvent* event)
 }
 
 /**
- * \if ENGLISH
  * @brief Recalculate the scale's geometry and layout based on the current geometry and fonts
  * @param update_geometry Notify the layout system and call update to redraw the scale
- * \endif
- * \if CHINESE
- * @brief 根据当前几何形状和字体重新计算刻度的几何形状和布局
- * @param update_geometry 通知布局系统并调用 update 以重绘刻度
- * \endif
  */
 void QwtScaleWidget::layoutScale(bool update_geometry)
 {
@@ -841,12 +646,12 @@ void QwtScaleWidget::layoutScale(bool update_geometry)
 
     const QRectF r = contentsRect();
     double x, y, length;
-    // 刻度偏移和edgeMargin无关
+    // Scale offset is independent of edgeMargin
     if (m_data->scaleDraw->orientation() == Qt::Vertical) {
         y      = r.top() + bd0;
         length = r.height() - (bd0 + bd1);
 
-        if (m_data->scaleDraw->alignment() == QwtScaleDraw::LeftScale) {  // 左对齐的刻度，坐标轴一般是右坐标轴
+        if (m_data->scaleDraw->alignment() == QwtScaleDraw::LeftScale) {  // Left-aligned scale, typically the right axis
             x = r.right() - 1.0 - m_data->margin - colorBarWidth;
         } else {
             x = r.left() + m_data->margin + colorBarWidth;
@@ -866,7 +671,7 @@ void QwtScaleWidget::layoutScale(bool update_geometry)
     m_data->scaleDraw->setLength(length);
 
     const int extent = qwtCeil(m_data->scaleDraw->extent(font()));
-    // titleoffset和edgeMargin无关
+    // titleOffset is independent of edgeMargin
     m_data->titleOffset = m_data->margin + m_data->spacing + colorBarWidth + extent;
 
     if (update_geometry) {
@@ -891,16 +696,9 @@ void QwtScaleWidget::layoutScale(bool update_geometry)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the axis ID for this scale widget
  * @note This function converts based on QwtScaleDraw alignment. If alignment is not set, returns QwtAxis::AxisPositions.
  * @return Axis ID
- * \endif
- * \if CHINESE
- * @brief 获取此轴窗口对应的 axisID
- * @note 此函数基于 QwtScaleDraw 的对齐方式来转换，如果 QwtScaleDraw 的对齐方式没设置，那么会返回 QwtAxis::AxisPositions
- * @return 轴 ID
- * \endif
  */
 QwtAxisId QwtScaleWidget::axisID() const
 {
@@ -921,14 +719,8 @@ QwtAxisId QwtScaleWidget::axisID() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if this is an X axis
  * @return true if this is an X axis
- * \endif
- * \if CHINESE
- * @brief 是否是 X 坐标轴
- * @return 如果是 X 轴返回 true
- * \endif
  */
 bool QwtScaleWidget::isXAxis() const
 {
@@ -936,14 +728,8 @@ bool QwtScaleWidget::isXAxis() const
 }
 
 /**
- * \if ENGLISH
  * @brief Check if this is a Y axis
  * @return true if this is a Y axis
- * \endif
- * \if CHINESE
- * @brief 是否是 Y 坐标轴
- * @return 如果是 Y 轴返回 true
- * \endif
  */
 bool QwtScaleWidget::isYAxis() const
 {
@@ -951,16 +737,9 @@ bool QwtScaleWidget::isYAxis() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the built-in actions
  * @param actions Built-in action flags
- * \sa BuiltinActions
- * \endif
- * \if CHINESE
- * @brief 设置内置的动作
- * @param actions 内置动作标志
- * \sa BuiltinActions
- * \endif
+ * @sa BuiltinActions
  */
 void QwtScaleWidget::setBuildinActions(BuiltinActionsFlags acts)
 {
@@ -970,14 +749,8 @@ void QwtScaleWidget::setBuildinActions(BuiltinActionsFlags acts)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the built-in actions flags
  * @return Built-in action flags
- * \endif
- * \if CHINESE
- * @brief 获取内置的动作标志
- * @return 内置动作标志
- * \endif
  */
 QwtScaleWidget::BuiltinActionsFlags QwtScaleWidget::buildinActions() const
 {
@@ -985,16 +758,9 @@ QwtScaleWidget::BuiltinActionsFlags QwtScaleWidget::buildinActions() const
 }
 
 /**
- * \if ENGLISH
  * @brief Test if a built-in action is active
  * @param ba Built-in action to test
  * @return true if the action is active
- * \endif
- * \if CHINESE
- * @brief 检测内置动作是否激活
- * @param ba 要检测的内置动作
- * @return 如果激活返回 true
- * \endif
  */
 bool QwtScaleWidget::testBuildinActions(QwtScaleWidget::BuiltinActions ba) const
 {
@@ -1002,17 +768,10 @@ bool QwtScaleWidget::testBuildinActions(QwtScaleWidget::BuiltinActions ba) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the selected state
  * @details This function triggers the selectionChanged signal.
  *          Setting the same state repeatedly will not trigger the signal again.
  * @param selected true to select, false to deselect
- * \endif
- * \if CHINESE
- * @brief 设置当前轴被选中
- * @details 此函数会触发信号 selectionChanged。如果重复设置同一个状态不会重复触发信号。
- * @param selected true 为选中，false 为取消选中
- * \endif
  */
 void QwtScaleWidget::setSelected(bool selected)
 {
@@ -1035,14 +794,8 @@ void QwtScaleWidget::setSelected(bool selected)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if the current axis is selected
  * @return true if selected, false otherwise
- * \endif
- * \if CHINESE
- * @brief 当前轴是否被选中
- * @return 如果被选中返回 true，否则返回 false
- * \endif
  */
 bool QwtScaleWidget::isSelected() const
 {
@@ -1050,14 +803,8 @@ bool QwtScaleWidget::isSelected() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the selection color
  * @param color Selection color
- * \endif
- * \if CHINESE
- * @brief 设置选中的颜色
- * @param color 选中的颜色
- * \endif
  */
 void QwtScaleWidget::setSelectionColor(const QColor& color)
 {
@@ -1070,14 +817,8 @@ void QwtScaleWidget::setSelectionColor(const QColor& color)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the selection color
  * @return Selection color
- * \endif
- * \if CHINESE
- * @brief 获取选中的颜色
- * @return 选中的颜色
- * \endif
  */
 QColor QwtScaleWidget::selectionColor() const
 {
@@ -1085,14 +826,8 @@ QColor QwtScaleWidget::selectionColor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the zoom factor (default 1.2)
  * @param factor Zoom factor (range 0.1 to 10.0)
- * \endif
- * \if CHINESE
- * @brief 设置缩放因子（默认 1.2）
- * @param factor 缩放因子（范围 0.1 到 10.0）
- * \endif
  */
 void QwtScaleWidget::setZoomFactor(double factor)
 {
@@ -1100,14 +835,8 @@ void QwtScaleWidget::setZoomFactor(double factor)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the zoom factor
  * @return Zoom factor
- * \endif
- * \if CHINESE
- * @brief 获取缩放因子
- * @return 缩放因子
- * \endif
  */
 double QwtScaleWidget::zoomFactor() const
 {
@@ -1115,23 +844,13 @@ double QwtScaleWidget::zoomFactor() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the pen width offset for the axis when it is in selected state
  * @details When an axis (e.g., X-axis or Y-axis) is selected by the user, the pen width used
  *          for drawing will be increased by this offset value, achieving a visual highlighting effect.
  * @param offset The additional width value to be added when selected (unit: pixels).
  *               This value should be non-negative. If it is 0, the line width in selected state
  *               will be the same as in normal state.
- * \sa QwtScaleWidget::selectedPenWidthOffset, QwtAbstractScaleDraw::setSelectedPenWidthOffset
- * \endif
- * \if CHINESE
- * @brief 设置坐标轴在选中状态下的画笔宽度附加值
- * @details 当坐标轴（如 X 轴或 Y 轴）被用户选中时，绘制的画笔宽度会在原始宽度的基础上
- *          增加这个附加值，实现视觉上的突出显示效果。
- * @param offset 选中时增加的宽度值（单位：像素）。该值应为非负数。
- *               如果为 0，则选中状态下的线宽与普通状态相同。
- * \sa QwtScaleWidget::selectedPenWidthOffset, QwtAbstractScaleDraw::setSelectedPenWidthOffset
- * \endif
+ * @sa QwtScaleWidget::selectedPenWidthOffset, QwtAbstractScaleDraw::setSelectedPenWidthOffset
  */
 void QwtScaleWidget::setSelectedPenWidthOffset(qreal offset)
 {
@@ -1139,16 +858,9 @@ void QwtScaleWidget::setSelectedPenWidthOffset(qreal offset)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the current pen width offset for the axis when it is in selected state
  * @return The current width offset value
- * \sa QwtScaleWidget::setSelectedPenWidthOffset, QwtAbstractScaleDraw::selectedPenWidthOffset
- * \endif
- * \if CHINESE
- * @brief 获取当前坐标轴在选中状态下的画笔宽度附加值
- * @return 当前的宽度附加值
- * \sa QwtScaleWidget::setSelectedPenWidthOffset, QwtAbstractScaleDraw::selectedPenWidthOffset
- * \endif
+ * @sa QwtScaleWidget::setSelectedPenWidthOffset, QwtAbstractScaleDraw::selectedPenWidthOffset
  */
 qreal QwtScaleWidget::selectedPenWidthOffset() const
 {
@@ -1156,18 +868,10 @@ qreal QwtScaleWidget::selectedPenWidthOffset() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the color bar of the scale widget
  * @param painter Painter
  * @param rect Bounding rectangle for the color bar
- * \sa setColorBarEnabled()
- * \endif
- * \if CHINESE
- * @brief 绘制刻度控件的颜色条
- * @param painter 绘制器
- * @param rect 颜色条的边界矩形
- * \sa setColorBarEnabled()
- * \endif
+ * @sa setColorBarEnabled()
  */
 void QwtScaleWidget::drawColorBar(QPainter* painter, const QRectF& rect) const
 {
@@ -1185,18 +889,10 @@ void QwtScaleWidget::drawColorBar(QPainter* painter, const QRectF& rect) const
 }
 
 /**
- * \if ENGLISH
  * @brief Rotate and paint a title according to its position into a given rectangle
  * @param painter Painter
  * @param align Alignment
  * @param rect Bounding rectangle
- * \endif
- * \if CHINESE
- * @brief 根据标题的位置旋转并绘制标题到指定矩形区域
- * @param painter 绘制器
- * @param align 对齐方式
- * @param rect 边界矩形
- * \endif
  */
 void QwtScaleWidget::drawTitle(QPainter* painter, QwtScaleDraw::Alignment align, const QRectF& rect) const
 {
@@ -1256,7 +952,7 @@ void QwtScaleWidget::drawTitle(QPainter* painter, QwtScaleDraw::Alignment align,
 }
 
 /*!
-   \brief Notify a change of the scale
+   @brief Notify a change of the scale
 
    This virtual function can be overloaded by derived
    classes. The default implementation updates the geometry
@@ -1269,14 +965,8 @@ void QwtScaleWidget::scaleChange()
 }
 
 /**
- * \if ENGLISH
  * @brief Get a size hint
  * @return Size hint
- * \endif
- * \if CHINESE
- * @brief 获取大小提示
- * @return 大小提示
- * \endif
  */
 QSize QwtScaleWidget::sizeHint() const
 {
@@ -1284,14 +974,8 @@ QSize QwtScaleWidget::sizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get a minimum size hint
  * @return Minimum size hint
- * \endif
- * \if CHINESE
- * @brief 获取最小大小提示
- * @return 最小大小提示
- * \endif
  */
 QSize QwtScaleWidget::minimumSizeHint() const
 {
@@ -1322,16 +1006,9 @@ QSize QwtScaleWidget::minimumSizeHint() const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the height of the title for a given width
  * @param width Width
  * @return Height
- * \endif
- * \if CHINESE
- * @brief 查找给定宽度下标题的高度
- * @param width 宽度
- * @return 高度
- * \endif
  */
 int QwtScaleWidget::titleHeightForWidth(int width) const
 {
@@ -1339,20 +1016,11 @@ int QwtScaleWidget::titleHeightForWidth(int width) const
 }
 
 /**
- * \if ENGLISH
  * @brief Find the minimum dimension for a given length
  * @details dim is the height, length the width seen in direction of the title.
  * @param length Width for horizontal, height for vertical scales
  * @param scaleFont Font of the scale
  * @return Height for horizontal, width for vertical scales
- * \endif
- * \if CHINESE
- * @brief 查找给定长度的最小尺寸
- * @details dim 是高度，length 是标题方向上的宽度。
- * @param length 水平刻度为宽度，垂直刻度为高度
- * @param scaleFont 刻度的字体
- * @return 水平刻度返回高度，垂直刻度返回宽度
- * \endif
  */
 int QwtScaleWidget::dimForLength(int length, const QFont& scaleFont) const
 {
@@ -1370,20 +1038,11 @@ int QwtScaleWidget::dimForLength(int length, const QFont& scaleFont) const
 }
 
 /**
- * \if ENGLISH
  * @brief Specify distances of the scale's endpoints from the widget's borders
  * @details The actual borders will never be less than minimum border distance.
  * @param dist1 Left or top distance
  * @param dist2 Right or bottom distance
- * \sa startBorderDist(), endBorderDist()
- * \endif
- * \if CHINESE
- * @brief 设置刻度两端与控件边框的距离
- * @details 实际边框距离不会小于最小边框距离。
- * @param dist1 左侧或顶部距离
- * @param dist2 右侧或底部距离
- * \sa startBorderDist(), endBorderDist()
- * \endif
+ * @sa startBorderDist(), endBorderDist()
  */
 void QwtScaleWidget::setBorderDist(int dist1, int dist2)
 {
@@ -1395,16 +1054,9 @@ void QwtScaleWidget::setBorderDist(int dist1, int dist2)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the start border distance
  * @return Start border distance
- * \sa setBorderDist()
- * \endif
- * \if CHINESE
- * @brief 获取起始边框距离
- * @return 起始边框距离
- * \sa setBorderDist()
- * \endif
+ * @sa setBorderDist()
  */
 int QwtScaleWidget::startBorderDist() const
 {
@@ -1412,16 +1064,9 @@ int QwtScaleWidget::startBorderDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the end border distance
  * @return End border distance
- * \sa setBorderDist()
- * \endif
- * \if CHINESE
- * @brief 获取末端边框距离
- * @return 末端边框距离
- * \sa setBorderDist()
- * \endif
+ * @sa setBorderDist()
  */
 int QwtScaleWidget::endBorderDist() const
 {
@@ -1429,7 +1074,6 @@ int QwtScaleWidget::endBorderDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate a hint for the border distances
  * @details This member function calculates the distance of the scale's endpoints
  *          from the widget borders which is required for the mark labels to fit
@@ -1438,17 +1082,7 @@ int QwtScaleWidget::endBorderDist() const
  * @param[out] start Border width at the beginning of the scale
  * @param[out] end Border width at the end of the scale
  * @warning The minimum border distance depends on the font.
- * \sa setMinBorderDist(), getMinBorderDist(), setBorderDist()
- * \endif
- * \if CHINESE
- * @brief 计算边框距离的"建议值"
- * @details 本函数根据刻度标记文字的大小，计算刻度两端与控件边框之间所需的距离，
- *          以确保文字完整显示。最终返回该距离与最小边框距离中的较大值。
- * @param[out] start 刻度起始端与边框的宽度
- * @param[out] end 刻度末端与边框的宽度
- * @warning 最小边框距离与当前字体有关。
- * \sa setMinBorderDist(), getMinBorderDist(), setBorderDist()
- * \endif
+ * @sa setMinBorderDist(), getMinBorderDist(), setBorderDist()
  */
 void QwtScaleWidget::getBorderDistHint(int& start, int& end) const
 {
@@ -1462,21 +1096,12 @@ void QwtScaleWidget::getBorderDistHint(int& start, int& end) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set a minimum value for the distances of the scale's endpoints from the widget borders
  * @details This is useful to avoid that the scales are "jumping" when the tick labels
  *          or their positions change often.
  * @param start Minimum for the start border
  * @param end Minimum for the end border
- * \sa getMinBorderDist(), getBorderDistHint(), startMinBorderDist(), endMinBorderDist()
- * \endif
- * \if CHINESE
- * @brief 设置刻度两端与控件边框的最小距离
- * @details 当刻度标签或其位置频繁变化时，可避免刻度出现"跳动"现象。
- * @param start 起始端最小边距
- * @param end 末端最小边距
- * \sa getMinBorderDist(), getBorderDistHint(), startMinBorderDist(), endMinBorderDist()
- * \endif
+ * @sa getMinBorderDist(), getBorderDistHint(), startMinBorderDist(), endMinBorderDist()
  */
 void QwtScaleWidget::setMinBorderDist(int start, int end)
 {
@@ -1485,16 +1110,9 @@ void QwtScaleWidget::setMinBorderDist(int start, int end)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the minimum value for the distances of the scale's endpoints from the widget borders (left or top)
  * @return Start minimum border distance
- * \sa getMinBorderDist(), getBorderDistHint()
- * \endif
- * \if CHINESE
- * @brief 获取刻度两端与控件边框的最小距离（左侧或顶部）
- * @return 起始端最小边框距离
- * \sa getMinBorderDist(), getBorderDistHint()
- * \endif
+ * @sa getMinBorderDist(), getBorderDistHint()
  */
 int QwtScaleWidget::startMinBorderDist() const
 {
@@ -1502,16 +1120,9 @@ int QwtScaleWidget::startMinBorderDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the minimum value for the distances of the scale's endpoints from the widget borders (right or bottom)
  * @return End minimum border distance
- * \sa getMinBorderDist(), getBorderDistHint()
- * \endif
- * \if CHINESE
- * @brief 获取刻度两端与控件边框的最小距离（右侧或底部）
- * @return 末端最小边框距离
- * \sa getMinBorderDist(), getBorderDistHint()
- * \endif
+ * @sa getMinBorderDist(), getBorderDistHint()
  */
 int QwtScaleWidget::endMinBorderDist() const
 {
@@ -1519,18 +1130,10 @@ int QwtScaleWidget::endMinBorderDist() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the minimum value for the distances of the scale's endpoints from the widget borders
  * @param[out] start Border width at the beginning of the scale
  * @param[out] end Border width at the end of the scale
- * \sa setMinBorderDist(), getBorderDistHint()
- * \endif
- * \if CHINESE
- * @brief 获取刻度两端与控件边框的最小距离
- * @param[out] start 刻度起始端的边框宽度
- * @param[out] end 刻度末端的边框宽度
- * \sa setMinBorderDist(), getBorderDistHint()
- * \endif
+ * @sa setMinBorderDist(), getBorderDistHint()
  */
 void QwtScaleWidget::getMinBorderDist(int& start, int& end) const
 {
@@ -1539,18 +1142,10 @@ void QwtScaleWidget::getMinBorderDist(int& start, int& end) const
 }
 
 /**
- * \if ENGLISH
  * @brief Assign a scale division
  * @details The scale division determines where to set the tick marks.
  * @param scaleDiv Scale Division
- * \sa For more information about scale divisions, see QwtScaleDiv.
- * \endif
- * \if CHINESE
- * @brief 设置刻度划分
- * @details 刻度划分决定了刻度标记的位置。
- * @param scaleDiv 刻度划分对象
- * \sa 更多关于刻度划分的信息，参见 QwtScaleDiv。
- * \endif
+ * @sa For more information about scale divisions, see QwtScaleDiv.
  */
 void QwtScaleWidget::setScaleDiv(const QwtScaleDiv& scaleDiv)
 {
@@ -1564,16 +1159,9 @@ void QwtScaleWidget::setScaleDiv(const QwtScaleDiv& scaleDiv)
 }
 
 /**
- * \if ENGLISH
  * @brief Set the transformation
  * @param transformation Transformation
- * \sa QwtAbstractScaleDraw::scaleDraw(), QwtScaleMap
- * \endif
- * \if CHINESE
- * @brief 设置变换
- * @param transformation 变换对象
- * \sa QwtAbstractScaleDraw::scaleDraw(), QwtScaleMap
- * \endif
+ * @sa QwtAbstractScaleDraw::scaleDraw(), QwtScaleMap
  */
 void QwtScaleWidget::setTransformation(QwtTransform* transformation)
 {
@@ -1582,16 +1170,9 @@ void QwtScaleWidget::setTransformation(QwtTransform* transformation)
 }
 
 /**
- * \if ENGLISH
  * @brief Enable/disable a color bar associated to the scale
  * @param on true to enable, false to disable
- * \sa isColorBarEnabled(), setColorBarWidth()
- * \endif
- * \if CHINESE
- * @brief 启用/禁用与刻度关联的颜色条
- * @param on true 启用，false 禁用
- * \sa isColorBarEnabled(), setColorBarWidth()
- * \endif
+ * @sa isColorBarEnabled(), setColorBarWidth()
  */
 void QwtScaleWidget::setColorBarEnabled(bool on)
 {
@@ -1602,16 +1183,9 @@ void QwtScaleWidget::setColorBarEnabled(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Check if color bar is enabled
  * @return true when the color bar is enabled
- * \sa setColorBarEnabled(), setColorBarWidth()
- * \endif
- * \if CHINESE
- * @brief 检查颜色条是否已启用
- * @return 如果颜色条已启用返回 true
- * \sa setColorBarEnabled(), setColorBarWidth()
- * \endif
+ * @sa setColorBarEnabled(), setColorBarWidth()
  */
 bool QwtScaleWidget::isColorBarEnabled() const
 {
@@ -1619,16 +1193,9 @@ bool QwtScaleWidget::isColorBarEnabled() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the width of the color bar
  * @param width Width
- * \sa colorBarWidth(), setColorBarEnabled()
- * \endif
- * \if CHINESE
- * @brief 设置颜色条的宽度
- * @param width 宽度
- * \sa colorBarWidth(), setColorBarEnabled()
- * \endif
+ * @sa colorBarWidth(), setColorBarEnabled()
  */
 void QwtScaleWidget::setColorBarWidth(int width)
 {
@@ -1640,16 +1207,9 @@ void QwtScaleWidget::setColorBarWidth(int width)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the width of the color bar
  * @return Width of the color bar
- * \sa setColorBarEnabled(), setColorBarWidth()
- * \endif
- * \if CHINESE
- * @brief 获取颜色条的宽度
- * @return 颜色条的宽度
- * \sa setColorBarEnabled(), setColorBarWidth()
- * \endif
+ * @sa setColorBarEnabled(), setColorBarWidth()
  */
 int QwtScaleWidget::colorBarWidth() const
 {
@@ -1657,16 +1217,9 @@ int QwtScaleWidget::colorBarWidth() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the value interval for the color bar
  * @return Value interval for the color bar
- * \sa setColorMap(), colorMap()
- * \endif
- * \if CHINESE
- * @brief 获取颜色条的值区间
- * @return 颜色条的值区间
- * \sa setColorMap(), colorMap()
- * \endif
+ * @sa setColorMap(), colorMap()
  */
 QwtInterval QwtScaleWidget::colorBarInterval() const
 {
@@ -1674,18 +1227,10 @@ QwtInterval QwtScaleWidget::colorBarInterval() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the color map and value interval used for displaying the color bar
  * @param interval Value interval
  * @param colorMap Color map
- * \sa colorMap(), colorBarInterval()
- * \endif
- * \if CHINESE
- * @brief 设置用于显示颜色条的颜色映射和值区间
- * @param interval 值区间
- * @param colorMap 颜色映射
- * \sa colorMap(), colorBarInterval()
- * \endif
+ * @sa colorMap(), colorBarInterval()
  */
 void QwtScaleWidget::setColorMap(const QwtInterval& interval, QwtColorMap* colorMap)
 {
@@ -1700,16 +1245,9 @@ void QwtScaleWidget::setColorMap(const QwtInterval& interval, QwtColorMap* color
 }
 
 /**
- * \if ENGLISH
  * @brief Get the color map
  * @return Color map
- * \sa setColorMap(), colorBarInterval()
- * \endif
- * \if CHINESE
- * @brief 获取颜色映射
- * @return 颜色映射
- * \sa setColorMap(), colorBarInterval()
- * \endif
+ * @sa setColorMap(), colorBarInterval()
  */
 const QwtColorMap* QwtScaleWidget::colorMap() const
 {

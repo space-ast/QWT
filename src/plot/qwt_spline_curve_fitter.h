@@ -32,22 +32,12 @@
 class QwtSpline;
 
 /**
- * \if ENGLISH
  * @brief A curve fitter using a spline interpolation
  *
  * The default setting for the spline is a cardinal spline with
  * uniform parametrization.
  *
  * @sa QwtSpline, QwtSplineLocal
- * \endif
- *
- * \if CHINESE
- * @brief 使用样条插值的曲线拟合器
- *
- * 样条的默认设置是具有均匀参数化的基数样条。
- *
- * @sa QwtSpline, QwtSplineLocal
- * \endif
  */
 class QWT_EXPORT QwtSplineCurveFitter : public QwtCurveFitter
 {
@@ -55,7 +45,7 @@ public:
     // Constructor
     QwtSplineCurveFitter();
     // Destructor
-    virtual ~QwtSplineCurveFitter();
+    ~QwtSplineCurveFitter() override;
 
     // Set spline
     void setSpline(QwtSpline*);

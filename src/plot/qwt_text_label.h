@@ -37,18 +37,10 @@ class QPaintEvent;
 class QPainter;
 
 /**
- * \if ENGLISH
  * @brief A Widget which displays a QwtText
  * @details QwtTextLabel displays a text label supporting rich text formatting
  *          and rotated text. The text can be aligned horizontally and vertically.
- * \sa QwtText
- * \endif
- * \if CHINESE
- * @brief 显示 QwtText 的控件
- * @details QwtTextLabel 显示支持富文本格式和旋转文本的文本标签。
- *          文本可以水平和垂直对齐。
- * \sa QwtText
- * \endif
+ * @sa QwtText
  */
 
 class QWT_EXPORT QwtTextLabel : public QFrame
@@ -65,7 +57,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     // Constructor with text and parent
     explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
     // Destructor
-    virtual ~QwtTextLabel();
+    ~QwtTextLabel() override;
 
     // Set the text as plain text
     void setPlainText( const QString& );
@@ -121,8 +113,7 @@ class QWT_EXPORT QwtTextLabel : public QFrame
     /// Return the default indent
     int defaultIndent() const;
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtTextLabel)
 };
 
 #endif

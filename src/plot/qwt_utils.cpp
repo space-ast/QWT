@@ -63,23 +63,13 @@ namespace Qwt
 {
 
 /**
- * \if ENGLISH
  * @brief Get the color of a plot item
  *
  * @note This function uses dynamic_cast
  * @param item Plot item
  * @param defaultColor Default color to return if the item's color cannot be obtained
  * @return Color of the plot item or defaultColor if not available
- * \endif
  *
- * \if CHINESE
- * @brief 获取item的颜色
- *
- * @note 此函数使用dynamic_cast
- * @param item 绘图项
- * @param defaultColor 默认颜色，无法获取时返回
- * @return 绘图项的颜色或默认颜色
- * \endif
  */
 QColor plotItemColor(const QwtPlotItem* item, const QColor& defaultColor)
 {
@@ -102,19 +92,11 @@ QColor plotItemColor(const QwtPlotItem* item, const QColor& defaultColor)
 }  // end namespace qwt
 
 /**
- * \if ENGLISH
  * @brief Expand a size to the global strut
  *
  * @param size Original size
  * @return Size expanded to the global strut if QWT_GLOBAL_STRUT is defined
- * \endif
  *
- * \if CHINESE
- * @brief 扩展大小到全局支撑
- *
- * @param size 原始大小
- * @return 如果定义了QWT_GLOBAL_STRUT，则扩展到全局支撑的大小
- * \endif
  */
 QSize qwtExpandedToGlobalStrut(const QSize& size)
 {

@@ -41,10 +41,10 @@ public:
     MainWindow()
     {
         TunerBox* tunerBox = new TunerBox();
-        tunerBox->setFrameStyle(QFrame::Panel | QFrame::Raised);
+        tunerBox->setFrameStyle(QFrame::NoFrame);
 
         AmplifierBox* amplifierBox = new AmplifierBox();
-        amplifierBox->setFrameStyle(QFrame::Panel | QFrame::Raised);
+        amplifierBox->setFrameStyle(QFrame::NoFrame);
 
         QVBoxLayout* layout = new QVBoxLayout(this);
         layout->setContentsMargins(QMargins());

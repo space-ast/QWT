@@ -10,7 +10,7 @@
  *   Summary of major modifications (see ChangeLog.md for full history):
  *   1. CMake build system & C++11 throughout.
  *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
+ *        - QwtPanner -> QwtCachePanner (pixmap-cache version)
  *        - New real-time QwtPlotPanner derived from QwtPicker.
  *   3. Zoomer supports multi-axis.
  *   4. Parasite-plot framework:
@@ -186,17 +186,10 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Creates a picker that is enabled, but without a state machine.
  *          Rubber band and tracker are disabled.
  * @param parent Parent widget, that will be observed
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个启用的选择器，但没有状态机。橡皮筋和追踪器被禁用。
- * @param parent 要观察的父控件
- * \endif
  */
 QwtPicker::QwtPicker(QWidget* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
@@ -204,18 +197,10 @@ QwtPicker::QwtPicker(QWidget* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param rubberBand Rubber band style
  * @param trackerMode Tracker mode
  * @param parent Parent widget, that will be observed
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @param rubberBand 橡皮筋样式
- * @param trackerMode 追踪器模式
- * @param parent 要观察的父控件
- * \endif
  */
 QwtPicker::QwtPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget* parent)
     : QObject(parent), QWT_PIMPL_CONSTRUCT
@@ -224,18 +209,13 @@ QwtPicker::QwtPicker(RubberBand rubberBand, DisplayMode trackerMode, QWidget* pa
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPicker::~QwtPicker()
 {
     m_data->isActive = false;
     setMouseTracking(false);
-    // 避免还有绘图事件没执行完，而在析构后执行绘图事件
+    // Avoid paint events executing after destruction
     if (m_data->rubberBandOverlay) {
         m_data->rubberBandOverlay->hide();
         m_data->rubberBandOverlay->deleteLater();
@@ -266,16 +246,9 @@ void QwtPicker::init(QWidget* parent, RubberBand rubberBand, DisplayMode tracker
 }
 
 /**
- * \if ENGLISH
  * @brief Set a state machine and delete the previous one
  * @param stateMachine State machine
- * \sa stateMachine()
- * \endif
- * \if CHINESE
- * @brief 设置状态机并删除前一个
- * @param stateMachine 状态机
- * \sa stateMachine()
- * \endif
+ * @sa stateMachine()
  */
 void QwtPicker::setStateMachine(QwtPickerMachine* stateMachine)
 {
@@ -289,16 +262,9 @@ void QwtPicker::setStateMachine(QwtPickerMachine* stateMachine)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the assigned state machine
  * @return Assigned state machine
- * \sa setStateMachine()
- * \endif
- * \if CHINESE
- * @brief 返回分配的状态机
- * @return 分配的状态机
- * \sa setStateMachine()
- * \endif
+ * @sa setStateMachine()
  */
 QwtPickerMachine* QwtPicker::stateMachine()
 {
@@ -306,16 +272,9 @@ QwtPickerMachine* QwtPicker::stateMachine()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the assigned state machine (const)
  * @return Assigned state machine
- * \sa setStateMachine()
- * \endif
- * \if CHINESE
- * @brief 返回分配的状态机（const）
- * @return 分配的状态机
- * \sa setStateMachine()
- * \endif
+ * @sa setStateMachine()
  */
 const QwtPickerMachine* QwtPicker::stateMachine() const
 {
@@ -323,14 +282,8 @@ const QwtPickerMachine* QwtPicker::stateMachine() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the parent widget, where the selection happens
  * @return Parent widget
- * \endif
- * \if CHINESE
- * @brief 返回发生选择的父控件
- * @return 父控件
- * \endif
  */
 QWidget* QwtPicker::parentWidget()
 {
@@ -342,14 +295,8 @@ QWidget* QwtPicker::parentWidget()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the parent widget, where the selection happens (const)
  * @return Parent widget
- * \endif
- * \if CHINESE
- * @brief 返回发生选择的父控件（const）
- * @return 父控件
- * \endif
  */
 const QWidget* QwtPicker::parentWidget() const
 {
@@ -361,18 +308,10 @@ const QWidget* QwtPicker::parentWidget() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the rubber band style
  * @details The default value is NoRubberBand.
  * @param rubberBand Rubber band style
- * \sa rubberBand(), RubberBand, setRubberBandPen()
- * \endif
- * \if CHINESE
- * @brief 设置橡皮筋样式
- * @details 默认值为 NoRubberBand。
- * @param rubberBand 橡皮筋样式
- * \sa rubberBand(), RubberBand, setRubberBandPen()
- * \endif
+ * @sa rubberBand(), RubberBand, setRubberBandPen()
  */
 void QwtPicker::setRubberBand(RubberBand rubberBand)
 {
@@ -380,16 +319,9 @@ void QwtPicker::setRubberBand(RubberBand rubberBand)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the rubber band style
  * @return Rubber band style
- * \sa setRubberBand(), RubberBand, rubberBandPen()
- * \endif
- * \if CHINESE
- * @brief 返回橡皮筋样式
- * @return 橡皮筋样式
- * \sa setRubberBand(), RubberBand, rubberBandPen()
- * \endif
+ * @sa setRubberBand(), RubberBand, rubberBandPen()
  */
 QwtPicker::RubberBand QwtPicker::rubberBand() const
 {
@@ -397,7 +329,6 @@ QwtPicker::RubberBand QwtPicker::rubberBand() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the display mode of the tracker
  * @details A tracker displays information about current position of
  *          the cursor as a string. The display mode controls
@@ -406,17 +337,7 @@ QwtPicker::RubberBand QwtPicker::rubberBand() const
  *          only when the selection is active (ActiveOnly).
  * @param mode Tracker display mode
  * @warning In case of AlwaysOn, mouseTracking will be enabled for the observed widget.
- * \sa trackerMode(), DisplayMode
- * \endif
- * \if CHINESE
- * @brief 设置追踪器的显示模式
- * @details 追踪器以字符串形式显示光标当前位置的信息。
- *          显示模式控制追踪器是否在观察部件有焦点和光标时显示（AlwaysOn），
- *          从不显示（AlwaysOff），或仅在活动选择时显示（ActiveOnly）。
- * @param mode 追踪器显示模式
- * @warning 在 AlwaysOn 情况下，将为观察部件启用鼠标追踪。
- * \sa trackerMode(), DisplayMode
- * \endif
+ * @sa trackerMode(), DisplayMode
  */
 void QwtPicker::setTrackerMode(DisplayMode mode)
 {
@@ -427,16 +348,9 @@ void QwtPicker::setTrackerMode(DisplayMode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the tracker display mode
  * @return Tracker display mode
- * \sa setTrackerMode(), DisplayMode
- * \endif
- * \if CHINESE
- * @brief 返回追踪器显示模式
- * @return 追踪器显示模式
- * \sa setTrackerMode(), DisplayMode
- * \endif
+ * @sa setTrackerMode(), DisplayMode
  */
 QwtPicker::DisplayMode QwtPicker::trackerMode() const
 {
@@ -444,7 +358,6 @@ QwtPicker::DisplayMode QwtPicker::trackerMode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the resize mode
  * @details The resize mode controls what to do with the selected points of an active
  *          selection when the observed widget is resized.
@@ -452,16 +365,7 @@ QwtPicker::DisplayMode QwtPicker::trackerMode() const
  *          KeepSize means the points remain unchanged.
  *          The default mode is Stretch.
  * @param mode Resize mode
- * \sa resizeMode(), ResizeMode
- * \endif
- * \if CHINESE
- * @brief 设置调整大小模式
- * @details 调整大小模式控制当观察部件调整大小时如何处理活动选择的选定点。
- *          Stretch 表示点根据新大小缩放，KeepSize 表示点保持不变。
- *          默认模式为 Stretch。
- * @param mode 调整大小模式
- * \sa resizeMode(), ResizeMode
- * \endif
+ * @sa resizeMode(), ResizeMode
  */
 void QwtPicker::setResizeMode(ResizeMode mode)
 {
@@ -469,16 +373,9 @@ void QwtPicker::setResizeMode(ResizeMode mode)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the resize mode
  * @return Resize mode
- * \sa setResizeMode(), ResizeMode
- * \endif
- * \if CHINESE
- * @brief 返回调整大小模式
- * @return 调整大小模式
- * \sa setResizeMode(), ResizeMode
- * \endif
+ * @sa setResizeMode(), ResizeMode
  */
 QwtPicker::ResizeMode QwtPicker::resizeMode() const
 {
@@ -486,19 +383,11 @@ QwtPicker::ResizeMode QwtPicker::resizeMode() const
 }
 
 /**
- * \if ENGLISH
  * @brief Enable or disable the picker
  * @details When enabled is true an event filter is installed for
  *          the observed widget, otherwise the event filter is removed.
  * @param enabled true or false
- * \sa isEnabled(), eventFilter()
- * \endif
- * \if CHINESE
- * @brief 启用或禁用选择器
- * @details 当 enabled 为 true 时，为观察部件安装事件过滤器，否则移除事件过滤器。
- * @param enabled true 或 false
- * \sa isEnabled(), eventFilter()
- * \endif
+ * @sa isEnabled(), eventFilter()
  */
 void QwtPicker::setEnabled(bool enabled)
 {
@@ -510,16 +399,9 @@ void QwtPicker::setEnabled(bool enabled)
 }
 
 /**
- * \if ENGLISH
  * @brief Return true when enabled, false otherwise
  * @return True when enabled
- * \sa setEnabled(), eventFilter()
- * \endif
- * \if CHINESE
- * @brief 启用时返回 true，否则返回 false
- * @return 启用时返回 true
- * \sa setEnabled(), eventFilter()
- * \endif
+ * @sa setEnabled(), eventFilter()
  */
 bool QwtPicker::isEnabled() const
 {
@@ -527,16 +409,9 @@ bool QwtPicker::isEnabled() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the font for the tracker
  * @param font Tracker font
- * \sa trackerFont(), setTrackerMode(), setTrackerPen()
- * \endif
- * \if CHINESE
- * @brief 设置追踪器的字体
- * @param font 追踪器字体
- * \sa trackerFont(), setTrackerMode(), setTrackerPen()
- * \endif
+ * @sa trackerFont(), setTrackerMode(), setTrackerPen()
  */
 void QwtPicker::setTrackerFont(const QFont& font)
 {
@@ -547,16 +422,9 @@ void QwtPicker::setTrackerFont(const QFont& font)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the tracker font
  * @return Tracker font
- * \sa setTrackerFont(), trackerMode(), trackerPen()
- * \endif
- * \if CHINESE
- * @brief 返回追踪器字体
- * @return 追踪器字体
- * \sa setTrackerFont(), trackerMode(), trackerPen()
- * \endif
+ * @sa setTrackerFont(), trackerMode(), trackerPen()
  */
 QFont QwtPicker::trackerFont() const
 {
@@ -564,16 +432,9 @@ QFont QwtPicker::trackerFont() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the pen for the tracker
  * @param pen Tracker pen
- * \sa trackerPen(), setTrackerMode(), setTrackerFont()
- * \endif
- * \if CHINESE
- * @brief 设置追踪器的画笔
- * @param pen 追踪器画笔
- * \sa trackerPen(), setTrackerMode(), setTrackerFont()
- * \endif
+ * @sa trackerPen(), setTrackerMode(), setTrackerFont()
  */
 void QwtPicker::setTrackerPen(const QPen& pen)
 {
@@ -584,16 +445,9 @@ void QwtPicker::setTrackerPen(const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the tracker pen
  * @return Tracker pen
- * \sa setTrackerPen(), trackerMode(), trackerFont()
- * \endif
- * \if CHINESE
- * @brief 返回追踪器画笔
- * @return 追踪器画笔
- * \sa setTrackerPen(), trackerMode(), trackerFont()
- * \endif
+ * @sa setTrackerPen(), trackerMode(), trackerFont()
  */
 QPen QwtPicker::trackerPen() const
 {
@@ -601,16 +455,9 @@ QPen QwtPicker::trackerPen() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the pen for the rubber band
  * @param pen Rubber band pen
- * \sa rubberBandPen(), setRubberBand()
- * \endif
- * \if CHINESE
- * @brief 设置橡皮筋的画笔
- * @param pen 橡皮筋画笔
- * \sa rubberBandPen(), setRubberBand()
- * \endif
+ * @sa rubberBandPen(), setRubberBand()
  */
 void QwtPicker::setRubberBandPen(const QPen& pen)
 {
@@ -621,16 +468,9 @@ void QwtPicker::setRubberBandPen(const QPen& pen)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the rubber band pen
  * @return Rubber band pen
- * \sa setRubberBandPen(), rubberBand()
- * \endif
- * \if CHINESE
- * @brief 返回橡皮筋画笔
- * @return 橡皮筋画笔
- * \sa setRubberBandPen(), rubberBand()
- * \endif
+ * @sa setRubberBandPen(), rubberBand()
  */
 QPen QwtPicker::rubberBandPen() const
 {
@@ -638,7 +478,6 @@ QPen QwtPicker::rubberBandPen() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the label for a position
  * @details In case of HLineRubberBand the label is the value of the
  *          y position, in case of VLineRubberBand the value of the x position.
@@ -646,16 +485,6 @@ QPen QwtPicker::rubberBandPen() const
  *          The format for the string conversion is "%d".
  * @param pos Position
  * @return Converted position as string
- * \endif
- * \if CHINESE
- * @brief 返回位置的标签
- * @details 对于 HLineRubberBand，标签是 y 位置的值；
- *          对于 VLineRubberBand，标签是 x 位置的值。
- *          否则，标签包含用 ',' 分隔的 x 和 y 位置。
- *          字符串转换格式为 "%d"。
- * @param pos 位置
- * @return 转换为字符串的位置
- * \endif
  */
 QwtText QwtPicker::trackerText(const QPoint& pos) const
 {
@@ -675,16 +504,9 @@ QwtText QwtPicker::trackerText(const QPoint& pos) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the mask for the tracker overlay
  * @return Region with one rectangle: trackerRect(trackerFont())
- * \sa QWidget::setMask(), trackerRect()
- * \endif
- * \if CHINESE
- * @brief 计算追踪器覆盖层的掩码
- * @return 包含一个矩形的区域：trackerRect(trackerFont())
- * \sa QWidget::setMask(), trackerRect()
- * \endif
+ * @sa QWidget::setMask(), trackerRect()
  */
 QRegion QwtPicker::trackerMask() const
 {
@@ -692,16 +514,9 @@ QRegion QwtPicker::trackerMask() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the mask for the rubber band overlay
  * @return Region for the mask
- * \sa QWidget::setMask()
- * \endif
- * \if CHINESE
- * @brief 计算橡皮筋覆盖层的掩码
- * @return 掩码区域
- * \sa QWidget::setMask()
- * \endif
+ * @sa QWidget::setMask()
  */
 QRegion QwtPicker::rubberBandMask() const
 {
@@ -789,16 +604,9 @@ QRegion QwtPicker::rubberBandMask() const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw a rubber band, depending on rubberBand()
  * @param painter Painter, initialized with a clip region
- * \sa rubberBand(), RubberBand
- * \endif
- * \if CHINESE
- * @brief 根据橡皮筋样式绘制橡皮筋
- * @param painter 已初始化剪裁区域的绘制器
- * \sa rubberBand(), RubberBand
- * \endif
+ * @sa rubberBand(), RubberBand
  */
 void QwtPicker::drawRubberBand(QPainter* painter) const
 {
@@ -871,16 +679,9 @@ void QwtPicker::drawRubberBand(QPainter* painter) const
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the tracker
  * @param painter Painter
- * \sa trackerRect(), trackerText()
- * \endif
- * \if CHINESE
- * @brief 绘制追踪器
- * @param painter 绘制器
- * \sa trackerRect(), trackerText()
- * \endif
+ * @sa trackerRect(), trackerText()
  */
 void QwtPicker::drawTracker(QPainter* painter) const
 {
@@ -893,7 +694,6 @@ void QwtPicker::drawTracker(QPainter* painter) const
 }
 
 /**
- * \if ENGLISH
  * @brief Map the pickedPoints() into a selection()
  * @details adjustedPoints() maps the points, that have been collected on
  *          the parentWidget() into a selection(). The default implementation
@@ -904,17 +704,6 @@ void QwtPicker::drawTracker(QPainter* painter) const
  *          - A selection could accept non intersecting polygons only.
  * @param points Selected points
  * @return Selected points unmodified
- * \endif
- * \if CHINESE
- * @brief 将 pickedPoints() 映射为 selection()
- * @details adjustedPoints() 将在 parentWidget() 上收集的点映射为 selection()。
- *          默认实现简单地返回未修改的点。
- *          selection() 与拾取点不同的原因取决于应用程序需求，例如：
- *          - 矩形选择可能需要特定的宽高比。
- *          - 选择可能只接受不相交的多边形。
- * @param points 选定的点
- * @return 未修改的选定点
- * \endif
  */
 QPolygon QwtPicker::adjustedPoints(const QPolygon& points) const
 {
@@ -922,16 +711,9 @@ QPolygon QwtPicker::adjustedPoints(const QPolygon& points) const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the selected points
  * @return Selected points
- * \sa pickedPoints(), adjustedPoints()
- * \endif
- * \if CHINESE
- * @brief 返回选定的点
- * @return 选定的点
- * \sa pickedPoints(), adjustedPoints()
- * \endif
+ * @sa pickedPoints(), adjustedPoints()
  */
 QPolygon QwtPicker::selection() const
 {
@@ -953,14 +735,8 @@ void QwtPicker::setActive(bool on)
 }
 
 /**
- * \if ENGLISH
  * @brief Return the current position of the tracker
  * @return Current position of the tracker
- * \endif
- * \if CHINESE
- * @brief 返回追踪器的当前位置
- * @return 追踪器的当前位置
- * \endif
  */
 QPoint QwtPicker::trackerPosition() const
 {
@@ -968,18 +744,10 @@ QPoint QwtPicker::trackerPosition() const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate the bounding rectangle for the tracker text from the current position of the tracker
  * @param font Font of the tracker text
  * @return Bounding rectangle of the tracker text
- * \sa trackerPosition()
- * \endif
- * \if CHINESE
- * @brief 从追踪器当前位置计算追踪器文本的边界矩形
- * @param font 追踪器文本的字体
- * @return 追踪器文本的边界矩形
- * \sa trackerPosition()
- * \endif
+ * @sa trackerPosition()
  */
 QRect QwtPicker::trackerRect(const QFont& font) const
 {
@@ -1037,17 +805,10 @@ QRect QwtPicker::trackerRect(const QFont& font) const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the tracker position manually
  * @details Normally this does not need to be called, but sometimes
  *          you may want to display the picker without a mouse.
  * @param pos Position to set
- * \endif
- * \if CHINESE
- * @brief 手动设置追踪器位置
- * @details 通常不需要调用此函数，但有时在没有鼠标时也想显示选择器可以使用此函数。
- * @param pos 要设置的位置
- * \endif
  */
 void QwtPicker::setTrackerPosition(const QPoint& pos)
 {
@@ -1055,7 +816,6 @@ void QwtPicker::setTrackerPosition(const QPoint& pos)
 }
 
 /**
- * \if ENGLISH
  * @brief Event filter for handling events
  * @details When isEnabled() is true all events of the observed widget are filtered.
  *          Mouse and keyboard events are translated into widgetMouse- and widgetKey-
@@ -1064,24 +824,10 @@ void QwtPicker::setTrackerPosition(const QPoint& pos)
  * @param object Object to be filtered
  * @param event Event
  * @return Always false
- * \sa widgetEnterEvent(), widgetLeaveEvent(), widgetMousePressEvent(),
+ * @sa widgetEnterEvent(), widgetLeaveEvent(), widgetMousePressEvent(),
  *      widgetMouseReleaseEvent(), widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
  *      widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent(),
  *      QObject::installEventFilter(), QObject::event()
- * \endif
- * \if CHINESE
- * @brief 处理事件的事件过滤器
- * @details 当 isEnabled() 为 true 时，观察部件的所有事件都会被过滤。
- *          鼠标和键盘事件被转换为 widgetMouse、widgetKey 和 widgetWheel 事件。
- *          Paint 和 Resize 事件被处理以保持橡皮筋和追踪器更新。
- * @param object 要过滤的对象
- * @param event 事件
- * @return 总是返回 false
- * \sa widgetEnterEvent(), widgetLeaveEvent(), widgetMousePressEvent(),
- *      widgetMouseReleaseEvent(), widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
- *      widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent(),
- *      QObject::installEventFilter(), QObject::event()
- * \endif
  */
 bool QwtPicker::eventFilter(QObject* object, QEvent* event)
 {
@@ -1154,9 +900,9 @@ bool QwtPicker::eventFilter(QObject* object, QEvent* event)
 /*!
    Handle a mouse press event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1168,9 +914,9 @@ void QwtPicker::widgetMousePressEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a mouse move event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1190,9 +936,9 @@ void QwtPicker::widgetMouseMoveEvent(QMouseEvent* mouseEvent)
 /*!
    Handle a enter event for the observed widget.
 
-   \param event Qt event
+   @param event Qt event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1204,9 +950,9 @@ void QwtPicker::widgetEnterEvent(QEvent* event)
 /*!
    Handle a leave event for the observed widget.
 
-   \param event Qt event
+   @param event Qt event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1222,9 +968,9 @@ void QwtPicker::widgetLeaveEvent(QEvent* event)
 /*!
    Handle a mouse release event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(),
+   @sa eventFilter(), widgetMousePressEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1236,9 +982,9 @@ void QwtPicker::widgetMouseReleaseEvent(QMouseEvent* mouseEvent)
 /*!
    Handle mouse double click event for the observed widget.
 
-   \param mouseEvent Mouse event
+   @param mouseEvent Mouse event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1252,9 +998,9 @@ void QwtPicker::widgetMouseDoubleClickEvent(QMouseEvent* mouseEvent)
 
    Move the last point of the selection in case of isActive() == true
 
-   \param wheelEvent Wheel event
+   @param wheelEvent Wheel event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetKeyPressEvent(), widgetKeyReleaseEvent()
  */
@@ -1282,9 +1028,9 @@ void QwtPicker::widgetWheelEvent(QWheelEvent* wheelEvent)
    move the cursor, the abort key aborts a selection. All other keys
    are handled by the current state machine.
 
-   \param keyEvent Key event
+   @param keyEvent Key event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyReleaseEvent(), stateMachine(),
       QwtEventPattern::KeyPatternCode
@@ -1332,9 +1078,9 @@ void QwtPicker::widgetKeyPressEvent(QKeyEvent* keyEvent)
 
    Passes the event to the state machine.
 
-   \param keyEvent Key event
+   @param keyEvent Key event
 
-   \sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
+   @sa eventFilter(), widgetMousePressEvent(), widgetMouseReleaseEvent(),
       widgetMouseDoubleClickEvent(), widgetMouseMoveEvent(),
       widgetWheelEvent(), widgetKeyPressEvent(), stateMachine()
  */
@@ -1348,7 +1094,7 @@ void QwtPicker::widgetKeyReleaseEvent(QKeyEvent* keyEvent)
    commands. Append and Move commands use the current position
    of the cursor ( QCursor::pos() ).
 
-   \param event Event
+   @param event Event
  */
 void QwtPicker::transition(const QEvent* event)
 {
@@ -1400,7 +1146,7 @@ void QwtPicker::transition(const QEvent* event)
 /*!
    Open a selection setting the state to active
 
-   \sa isActive(), end(), append(), move()
+   @sa isActive(), end(), append(), move()
  */
 void QwtPicker::begin()
 {
@@ -1424,14 +1170,14 @@ void QwtPicker::begin()
 }
 
 /*!
-   \brief Close a selection setting the state to inactive.
+   @brief Close a selection setting the state to inactive.
 
    The selection is validated and maybe fixed by accept().
 
-   \param ok If true, complete the selection and emit a selected signal
+   @param ok If true, complete the selection and emit a selected signal
             otherwise discard the selection.
-   \return true if the selection is accepted, false otherwise
-   \sa isActive(), begin(), append(), move(), selected(), accept()
+   @return true if the selection is accepted, false otherwise
+   @sa isActive(), begin(), append(), move(), selected(), accept()
  */
 bool QwtPicker::end(bool ok)
 {
@@ -1475,9 +1221,9 @@ void QwtPicker::reset()
    Append a point to the selection and update rubber band and tracker.
    The appended() signal is emitted.
 
-   \param pos Additional point
+   @param pos Additional point
 
-   \sa isActive(), begin(), end(), move(), appended()
+   @sa isActive(), begin(), end(), move(), appended()
  */
 void QwtPicker::append(const QPoint& pos)
 {
@@ -1493,8 +1239,8 @@ void QwtPicker::append(const QPoint& pos)
    Move the last point of the selection
    The moved() signal is emitted.
 
-   \param pos New position
-   \sa isActive(), begin(), end(), append()
+   @param pos New position
+   @sa isActive(), begin(), end(), append()
  */
 void QwtPicker::move(const QPoint& pos)
 {
@@ -1513,7 +1259,7 @@ void QwtPicker::move(const QPoint& pos)
    Remove the last point of the selection
    The removed() signal is emitted.
 
-   \sa isActive(), begin(), end(), append(), move()
+   @sa isActive(), begin(), end(), append(), move()
  */
 void QwtPicker::remove()
 {
@@ -1531,12 +1277,12 @@ void QwtPicker::remove()
 }
 
 /*!
-   \brief Validate and fix up the selection
+   @brief Validate and fix up the selection
 
    Accepts all selections unmodified
 
-   \param selection Selection to validate and fix up
-   \return true, when accepted, false otherwise
+   @param selection Selection to validate and fix up
+   @return true, when accepted, false otherwise
  */
 bool QwtPicker::accept(QPolygon& selection) const
 {
@@ -1545,14 +1291,8 @@ bool QwtPicker::accept(QPolygon& selection) const
 }
 
 /**
- * \if ENGLISH
  * @brief A picker is active between begin() and end()
  * @return True if the selection is active
- * \endif
- * \if CHINESE
- * @brief 选择器在 begin() 和 end() 之间处于活动状态
- * @return 如果选择处于活动状态则返回 true
- * \endif
  */
 bool QwtPicker::isActive() const
 {
@@ -1560,16 +1300,9 @@ bool QwtPicker::isActive() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the points that have been collected so far
  * @details The selection() is calculated from the pickedPoints() in adjustedPoints().
  * @return Picked points
- * \endif
- * \if CHINESE
- * @brief 返回到目前为止收集的点
- * @details selection() 从 pickedPoints() 在 adjustedPoints() 中计算。
- * @return 拾取的点
- * \endif
  */
 const QPolygon& QwtPicker::pickedPoints() const
 {
@@ -1580,10 +1313,10 @@ const QPolygon& QwtPicker::pickedPoints() const
    Scale the selection by the ratios of oldSize and newSize
    The changed() signal is emitted.
 
-   \param oldSize Previous size
-   \param newSize Current size
+   @param oldSize Previous size
+   @param newSize Current size
 
-   \sa ResizeMode, setResizeMode(), resizeMode()
+   @sa ResizeMode, setResizeMode(), resizeMode()
  */
 void QwtPicker::stretchSelection(const QSize& oldSize, const QSize& newSize)
 {
@@ -1611,7 +1344,7 @@ void QwtPicker::stretchSelection(const QSize& oldSize, const QSize& newSize)
    In case of enable is true, the previous value
    is saved, that is restored when enable is false.
 
-   \warning Even when enable is false, mouse tracking might be restored
+   @warning Even when enable is false, mouse tracking might be restored
            to true. When mouseTracking for the observed widget
            has been changed directly by QWidget::setMouseTracking
            while mouse tracking has been set to true, this value can't
@@ -1633,14 +1366,8 @@ void QwtPicker::setMouseTracking(bool enable)
 }
 
 /**
- * \if ENGLISH
  * @brief Find the area of the observed widget, where selection might happen
  * @return parentWidget()->contentsRect()
- * \endif
- * \if CHINESE
- * @brief 找到观察部件上可能发生选择的区域
- * @return parentWidget()->contentsRect()
- * \endif
  */
 QPainterPath QwtPicker::pickArea() const
 {
@@ -1716,14 +1443,8 @@ void QwtPicker::updateDisplay()
 }
 
 /**
- * \if ENGLISH
  * @brief Return the overlay displaying the rubber band
  * @return Overlay displaying the rubber band
- * \endif
- * \if CHINESE
- * @brief 返回显示橡皮筋的覆盖层
- * @return 显示橡皮筋的覆盖层
- * \endif
  */
 const QwtWidgetOverlay* QwtPicker::rubberBandOverlay() const
 {
@@ -1731,14 +1452,8 @@ const QwtWidgetOverlay* QwtPicker::rubberBandOverlay() const
 }
 
 /**
- * \if ENGLISH
  * @brief Return the overlay displaying the tracker text
  * @return Overlay displaying the tracker text
- * \endif
- * \if CHINESE
- * @brief 返回显示追踪器文本的覆盖层
- * @return 显示追踪器文本的覆盖层
- * \endif
  */
 const QwtWidgetOverlay* QwtPicker::trackerOverlay() const
 {

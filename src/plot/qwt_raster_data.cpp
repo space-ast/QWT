@@ -181,80 +181,58 @@ inline QPointF QwtRasterData::ContourPlane::intersection(
 class QwtRasterData::PrivateData
 {
   public:
+    QWT_DECLARE_PUBLIC(QwtRasterData)
+
+    PrivateData(QwtRasterData* p) : q_ptr(p)
+    {
+    }
+
     QwtRasterData::Attributes attributes;
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Creates a QwtRasterData object with default attributes.
- * \endif
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个具有默认属性的 QwtRasterData 对象。
- * \endif
  */
-QwtRasterData::QwtRasterData()
+QwtRasterData::QwtRasterData() : QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtRasterData::~QwtRasterData()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Specify an attribute of the data
  * @param[in] attribute Attribute to set
  * @param[in] on On/Off state
  * @sa Attribute, testAttribute()
- * \endif
- * \if CHINESE
- * @brief 指定数据的属性
- * @param[in] attribute 要设置的属性
- * @param[in] on 开/关状态
- * @sa Attribute, testAttribute()
- * \endif
  */
 void QwtRasterData::setAttribute( Attribute attribute, bool on )
 {
+    QWT_D(d);
     if ( on )
-        m_data->attributes |= attribute;
+        d->attributes |= attribute;
     else
-        m_data->attributes &= ~attribute;
+        d->attributes &= ~attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Test if an attribute is enabled
  * @param[in] attribute Attribute to test
  * @return True when attribute is enabled
  * @sa Attribute, setAttribute()
- * \endif
- * \if CHINESE
- * @brief 测试属性是否启用
- * @param[in] attribute 要测试的属性
- * @return 如果属性启用则返回 true
- * @sa Attribute, setAttribute()
- * \endif
  */
 bool QwtRasterData::testAttribute( Attribute attribute ) const
 {
-    return m_data->attributes & attribute;
+    QWT_DC(d);
+    return d->attributes & attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Initialize a raster
  * @details Before the composition of an image QwtPlotSpectrogram calls initRaster(),
  *          announcing the area and its resolution that will be requested.
@@ -265,18 +243,6 @@ bool QwtRasterData::testAttribute( Attribute attribute ) const
  * @param[in] area Area of the raster
  * @param[in] raster Number of horizontal and vertical pixels
  * @sa discardRaster(), value()
- * \endif
- * \if CHINESE
- * @brief 初始化栅格
- * @details 在图像合成之前，QwtPlotSpectrogram 调用 initRaster()，
- *          告知将要请求的区域及其分辨率。
- *
- *          默认实现不执行任何操作，但对于存储在文件中的数据集，
- *          重新实现 initRaster() 可能是个好主意，在其中对数据进行重采样并加载到内存。
- * @param[in] area 栅格区域
- * @param[in] raster 水平和垂直像素数
- * @sa discardRaster(), value()
- * \endif
  */
 void QwtRasterData::initRaster( const QRectF& area, const QSize& raster )
 {
@@ -285,29 +251,18 @@ void QwtRasterData::initRaster( const QRectF& area, const QSize& raster )
 }
 
 /**
- * \if ENGLISH
  * @brief Discard a raster
  * @details After the composition of an image QwtPlotSpectrogram calls discardRaster().
  *
  *          The default implementation does nothing, but if data has been loaded
  *          in initRaster(), it could be deleted now.
  * @sa initRaster(), value()
- * \endif
- * \if CHINESE
- * @brief 丢弃栅格
- * @details 图像合成后，QwtPlotSpectrogram 调用 discardRaster()。
- *
- *          默认实现不执行任何操作，但如果在 initRaster() 中加载了数据，
- *          现在可以将其删除。
- * @sa initRaster(), value()
- * \endif
  */
 void QwtRasterData::discardRaster()
 {
 }
 
 /**
- * \if ENGLISH
  * @brief Pixel hint
  * @details pixelHint() returns the geometry of a pixel, that can be used
  *          to calculate the resolution and alignment of the plot item, that is
@@ -329,23 +284,6 @@ void QwtRasterData::discardRaster()
  * @param[in] area In most implementations the resolution of the data doesn't
  *                 depend on the requested area.
  * @return Bounding rectangle of a pixel
- * \endif
- * \if CHINESE
- * @brief 像素提示
- * @details pixelHint() 返回像素的几何形状，可用于计算表示数据的绘图项的分辨率和对齐方式。
- *
- *          提示的宽度和高度需要是两个相邻点之间的水平和垂直距离。
- *          提示的中心必须是任意点的位置（哪个点不重要）。
- *
- *          空提示表示任何细节级别都有值。
- *
- *          限制图像的分辨率可能会显著提高性能，
- *          并在从栅格数据渲染 QImage 时大大减少内存使用量。
- *
- *          默认实现返回一个空矩形，建议以目标设备（如屏幕）分辨率渲染。
- * @param[in] area 在大多数实现中，数据的分辨率不依赖于请求的区域。
- * @return 像素的边界矩形
- * \endif
  */
 QRectF QwtRasterData::pixelHint( const QRectF& area ) const
 {
@@ -354,7 +292,6 @@ QRectF QwtRasterData::pixelHint( const QRectF& area ) const
 }
 
 /**
- * \if ENGLISH
  * @brief Calculate contour lines
  * @details An adaption of CONREC, a simple contouring algorithm.
  *          http://local.wasp.uwa.edu.au/~pbourke/papers/conrec/
@@ -363,17 +300,6 @@ QRectF QwtRasterData::pixelHint( const QRectF& area ) const
  * @param[in] levels List of limits, where to insert contour lines
  * @param[in] flags Flags to customize the contouring algorithm
  * @return Calculated contour lines
- * \endif
- * \if CHINESE
- * @brief 计算等高线
- * @details CONREC 算法的改编，一种简单的等高线算法。
- *          http://local.wasp.uwa.edu.au/~pbourke/papers/conrec/
- * @param[in] rect 等高线的边界矩形
- * @param[in] raster 栅格数据的数据像素数
- * @param[in] levels 插入等高线的界限列表
- * @param[in] flags 用于自定义等高线算法的标志
- * @return 计算的等高线
- * \endif
  */
 QwtRasterData::ContourLines QwtRasterData::contourLines(
     const QRectF& rect, const QSize& raster,

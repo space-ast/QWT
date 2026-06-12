@@ -35,66 +35,37 @@ template< typename T > class QVector;
 #endif
 
 /**
- * \if ENGLISH
  * @brief A class representing a matrix of values as raster data.
  * @details QwtMatrixRasterData implements an interface for a matrix of equidistant values,
  *          that can be used by a QwtPlotRasterItem.
  *          It implements a couple of resampling algorithms, to provide values for positions,
  *          that or not on the value matrix.
- * \endif
- * \if CHINESE
- * @brief 将数值矩阵表示为栅格数据的类。
- * @details QwtMatrixRasterData 为等距数值矩阵实现了接口，
- *          可用于 QwtPlotRasterItem。它实现了多种重采样算法，
- *          为不在数值矩阵上的位置提供数值。
- * \endif
  */
 class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
 {
   public:
     /**
-     * \if ENGLISH
      * @brief Resampling algorithm
      * @details The default setting is NearestNeighbour.
-     * \endif
      * 
-     * \if CHINESE
-     * @brief 重采样算法
-     * @details 默认设置为 NearestNeighbour。
-     * \endif
      */
     enum ResampleMode
     {
         /**
-         * \if ENGLISH
          * Return the value from the matrix that is nearest to the requested position.
-         * \endif
          * 
-         * \if CHINESE
-         * 返回矩阵中距离请求位置最近的值。
-         * \endif
          */
         NearestNeighbour,
 
         /**
-         * \if ENGLISH
          * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-         * \endif
          * 
-         * \if CHINESE
-         * 从矩阵中 4 个相邻值的距离和值进行插值。
-         * \endif
          */
         BilinearInterpolation,
 
         /**
-         * \if ENGLISH
          * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-         * \endif
          * 
-         * \if CHINESE
-         * 使用 Hermite 双三次插值从矩阵中 16 个相邻值进行插值。
-         * \endif
          */
         BicubicInterpolation
     };
@@ -102,7 +73,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
     // Constructor
     QwtMatrixRasterData();
     // Destructor
-    virtual ~QwtMatrixRasterData();
+    ~QwtMatrixRasterData() override;
 
     // Set the resampling algorithm
     void setResampleMode(ResampleMode mode);
@@ -136,8 +107,7 @@ class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
   private:
     void update();
 
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtMatrixRasterData)
 };
 
 #endif

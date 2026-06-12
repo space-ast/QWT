@@ -12,8 +12,9 @@
 
 class QwtPlotPicker::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotPicker)
 public:
-    PrivateData() : xAxisId(-1), yAxisId(-1)
+    PrivateData(QwtPlotPicker* p) : q_ptr(p), xAxisId(-1), yAxisId(-1)
     {
     }
 
@@ -22,7 +23,6 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @details Creates a plot picker attached to the specified canvas.
  *          The picker is set to those x- and y-axis of the plot that are enabled.
@@ -30,22 +30,9 @@ public:
  *          If both or no y-axis are enabled, it is set to QwtAxis::YLeft.
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 构造函数
- * @details 创建一个附加到指定画布的绘图画布选择器。
- *          选择器会绑定到绘图中已启用的 X 轴和 Y 轴。
- *          如果两个或没有 X 轴启用，选择器绑定到 QwtAxis::XBottom。
- *          如果两个或没有 Y 轴启用，选择器绑定到 QwtAxis::YLeft。
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
-QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
+QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     if (!canvas)
         return;
 
@@ -66,33 +53,21 @@ QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas)
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with axes
  * @details Creates a plot picker attached to the specified canvas with given axes.
  * @param[in] xAxisId X axis of the picker
  * @param[in] yAxisId Y axis of the picker
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 带坐标轴参数的构造函数
- * @details 创建一个附加到指定画布并绑定指定坐标轴的绘图画布选择器。
- * @param[in] xAxisId 选择器的 X 轴ID
- * @param[in] yAxisId 选择器的 Y 轴ID
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
-QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas)
+QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data          = new PrivateData;
-    m_data->xAxisId = xAxisId;
-    m_data->yAxisId = yAxisId;
+    QWT_D(d);
+    d->xAxisId = xAxisId;
+    d->yAxisId = yAxisId;
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor with axes, rubber band and tracker mode
  * @details Creates a plot picker with specified axes, rubber band style and tracker mode.
  * @param[in] xAxisId X axis of the picker
@@ -102,54 +77,26 @@ QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canv
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(), QwtPicker::setTrackerMode
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
- * 
- * \if CHINESE
- * @brief 带坐标轴、橡皮筋和跟踪模式的构造函数
- * @details 创建一个具有指定坐标轴、橡皮筋样式和跟踪模式的绘图画布选择器。
- * @param[in] xAxisId 选择器的 X 轴ID
- * @param[in] yAxisId 选择器的 Y 轴ID
- * @param[in] rubberBand 橡皮筋样式
- * @param[in] trackerMode 跟踪模式
- * @param[in] canvas 要观察的绘图画布，同时也是父对象
- * @sa QwtPicker, QwtPicker::setSelectionFlags(), QwtPicker::setRubberBand(), QwtPicker::setTrackerMode
- * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
- * \endif
  */
 QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, RubberBand rubberBand, DisplayMode trackerMode, QWidget* canvas)
-    : QwtPicker(rubberBand, trackerMode, canvas)
+    : QwtPicker(rubberBand, trackerMode, canvas), QWT_PIMPL_CONSTRUCT
 {
-    m_data          = new PrivateData;
-    m_data->xAxisId = xAxisId;
-    m_data->yAxisId = yAxisId;
+    QWT_D(d);
+    d->xAxisId = xAxisId;
+    d->yAxisId = yAxisId;
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
  * @details Destroys the plot picker and releases all allocated resources.
- * \endif
- * 
- * \if CHINESE
- * @brief 析构函数
- * @details 销毁绘图画布选择器并释放所有分配的资源。
- * \endif
  */
 QwtPlotPicker::~QwtPlotPicker()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the canvas widget
  * @return Observed plot canvas widget
- * \endif
- * 
- * \if CHINESE
- * @brief 获取画布控件
- * @return 被观察的绘图画布控件
- * \endif
  */
 QWidget* QwtPlotPicker::canvas()
 {
@@ -157,15 +104,8 @@ QWidget* QwtPlotPicker::canvas()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the canvas widget (const version)
  * @return Observed plot canvas widget
- * \endif
- * 
- * \if CHINESE
- * @brief 获取画布控件（常量版本）
- * @return 被观察的绘图画布控件
- * \endif
  */
 const QWidget* QwtPlotPicker::canvas() const
 {
@@ -173,15 +113,8 @@ const QWidget* QwtPlotPicker::canvas() const
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget
  * @return Plot widget containing the observed plot canvas
- * \endif
- * 
- * \if CHINESE
- * @brief 获取绘图控件
- * @return 包含被观察画布的绘图控件
- * \endif
  */
 QwtPlot* QwtPlotPicker::plot()
 {
@@ -193,15 +126,8 @@ QwtPlot* QwtPlotPicker::plot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the plot widget (const version)
  * @return Plot widget containing the observed plot canvas
- * \endif
- * 
- * \if CHINESE
- * @brief 获取绘图控件（常量版本）
- * @return 包含被观察画布的绘图控件
- * \endif
  */
 const QwtPlot* QwtPlotPicker::plot() const
 {
@@ -213,8 +139,8 @@ const QwtPlot* QwtPlotPicker::plot() const
 }
 
 /*!
-   \return Normalized bounding rectangle of the axes
-   \sa QwtPlot::autoReplot(), QwtPlot::replot().
+   @return Normalized bounding rectangle of the axes
+   @sa QwtPlot::autoReplot(), QwtPlot::replot().
  */
 QRectF QwtPlotPicker::scaleRect() const
 {
@@ -232,69 +158,49 @@ QRectF QwtPlotPicker::scaleRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Set the x and y axes
  * @details Binds the picker to the specified x and y axes.
  * @param[in] xAxisId X axis ID
  * @param[in] yAxisId Y axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 设置 X 轴和 Y 轴
- * @details 将选择器绑定到指定的 X 轴和 Y 轴。
- * @param[in] xAxisId X 轴ID
- * @param[in] yAxisId Y 轴ID
- * \endif
  */
 void QwtPlotPicker::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
 {
+    QWT_D(d);
     const QwtPlot* plt = plot();
     if (!plt)
         return;
 
-    if (xAxisId != m_data->xAxisId || yAxisId != m_data->yAxisId) {
-        m_data->xAxisId = xAxisId;
-        m_data->yAxisId = yAxisId;
+    if (xAxisId != d->xAxisId || yAxisId != d->yAxisId) {
+        d->xAxisId = xAxisId;
+        d->yAxisId = yAxisId;
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the x axis
  * @return X axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 获取 X 轴
- * @return X 轴ID
- * \endif
  */
 QwtAxisId QwtPlotPicker::xAxis() const
 {
-    return m_data->xAxisId;
+    QWT_DC(d);
+    return d->xAxisId;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the y axis
  * @return Y axis ID
- * \endif
- * 
- * \if CHINESE
- * @brief 获取 Y 轴
- * @return Y 轴ID
- * \endif
  */
 QwtAxisId QwtPlotPicker::yAxis() const
 {
-    return m_data->yAxisId;
+    QWT_DC(d);
+    return d->yAxisId;
 }
 
 /*!
    Translate a pixel position into a position string
 
-   \param pos Position in pixel coordinates
-   \return Position string
+   @param pos Position in pixel coordinates
+   @return Position string
  */
 QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 {
@@ -305,7 +211,7 @@ QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 }
 
 /*!
-   \brief Translate a position into a position string
+   @brief Translate a position into a position string
 
    In case of HLineRubberBand the label is the value of the
    y position, in case of VLineRubberBand the value of the x position.
@@ -313,8 +219,8 @@ QwtText QwtPlotPicker::trackerText(const QPoint& pos) const
 
    The format for the double to string conversion is "%.4f".
 
-   \param pos Position
-   \return Position string
+   @param pos Position
+   @return Position string
  */
 QwtText QwtPlotPicker::trackerTextF(const QPointF& pos) const
 {
@@ -336,10 +242,10 @@ QwtText QwtPlotPicker::trackerTextF(const QPointF& pos) const
 /*!
    Append a point to the selection and update rubber band and tracker.
 
-   \param pos Additional point
-   \sa isActive, begin(), end(), move(), appended()
+   @param pos Additional point
+   @sa isActive, begin(), end(), move(), appended()
 
-   \note The appended(const QPoint &), appended(const QDoublePoint &)
+   @note The appended(const QPoint &), appended(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPlotPicker::append(const QPoint& pos)
@@ -351,10 +257,10 @@ void QwtPlotPicker::append(const QPoint& pos)
 /*!
    Move the last point of the selection
 
-   \param pos New position
-   \sa isActive, begin(), end(), append()
+   @param pos New position
+   @sa isActive, begin(), end(), append()
 
-   \note The moved(const QPoint &), moved(const QDoublePoint &)
+   @note The moved(const QPoint &), moved(const QDoublePoint &)
         signals are emitted.
  */
 void QwtPlotPicker::move(const QPoint& pos)
@@ -366,9 +272,9 @@ void QwtPlotPicker::move(const QPoint& pos)
 /*!
    Close a selection setting the state to inactive.
 
-   \param ok If true, complete the selection and emit selected signals
+   @param ok If true, complete the selection and emit selected signals
             otherwise discard the selection.
-   \return True if the selection has been accepted, false otherwise
+   @return True if the selection has been accepted, false otherwise
  */
 
 bool QwtPlotPicker::end(bool ok)
@@ -423,8 +329,8 @@ bool QwtPlotPicker::end(bool ok)
 /*!
     Translate a rectangle from pixel into plot coordinates
 
-    \return Rectangle in plot coordinates
-    \sa transform()
+    @return Rectangle in plot coordinates
+    @sa transform()
  */
 QRectF QwtPlotPicker::invTransform(const QRect& rect) const
 {
@@ -436,8 +342,8 @@ QRectF QwtPlotPicker::invTransform(const QRect& rect) const
 
 /*!
     Translate a rectangle from plot into pixel coordinates
-    \return Rectangle in pixel coordinates
-    \sa invTransform()
+    @return Rectangle in pixel coordinates
+    @sa invTransform()
  */
 QRect QwtPlotPicker::transform(const QRectF& rect) const
 {
@@ -449,8 +355,8 @@ QRect QwtPlotPicker::transform(const QRectF& rect) const
 
 /*!
     Translate a point from pixel into plot coordinates
-    \return Point in plot coordinates
-    \sa transform()
+    @return Point in plot coordinates
+    @sa transform()
  */
 QPointF QwtPlotPicker::invTransform(const QPoint& pos) const
 {
@@ -462,8 +368,8 @@ QPointF QwtPlotPicker::invTransform(const QPoint& pos) const
 
 /*!
     Translate a point from plot into pixel coordinates
-    \return Point in pixel coordinates
-    \sa invTransform()
+    @return Point in pixel coordinates
+    @sa invTransform()
  */
 QPoint QwtPlotPicker::transform(const QPointF& pos) const
 {

@@ -30,9 +30,12 @@
 
 class QwtPlotSeriesItem::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotSeriesItem)
+
   public:
-    PrivateData()
-        : orientation( Qt::Vertical )
+    PrivateData( QwtPlotSeriesItem* p )
+        : q_ptr( p )
+        , orientation( Qt::Vertical )
     {
     }
 
@@ -40,78 +43,48 @@ class QwtPlotSeriesItem::PrivateData
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the curve
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 曲线标题
- * \endif
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QwtText& title )
     : QwtPlotItem( title )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] title Title of the curve
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] title 曲线标题
- * \endif
  */
 QwtPlotSeriesItem::QwtPlotSeriesItem( const QString& title )
     : QwtPlotItem( QwtText( title ) )
+    , QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData();
     setItemInterest( QwtPlotItem::ScaleInterest, true );
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotSeriesItem::~QwtPlotSeriesItem()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the orientation of the item
  * @details The orientation() might be used in specific way by a plot item.
  *          F.e. a QwtPlotCurve uses it to identify how to display the curve
  *          in QwtPlotCurve::Steps or QwtPlotCurve::Sticks style.
  * @param[in] orientation Orientation
  * @sa orientation()
- * \endif
- *
- * \if CHINESE
- * @brief 设置绘图项的方向
- * @details orientation() 可能被绘图项以特定方式使用。
- *          例如，QwtPlotCurve 使用它来识别如何在 QwtPlotCurve::Steps 或 QwtPlotCurve::Sticks 样式下显示曲线。
- * @param[in] orientation 方向
- * @sa orientation()
- * \endif
  */
 void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
 {
-    if ( m_data->orientation != orientation )
+    QWT_D(d);
+    if ( d->orientation != orientation )
     {
-        m_data->orientation = orientation;
+        d->orientation = orientation;
 
         legendChanged();
         itemChanged();
@@ -119,39 +92,22 @@ void QwtPlotSeriesItem::setOrientation( Qt::Orientation orientation )
 }
 
 /**
- * \if ENGLISH
  * @brief Get the orientation of the plot item
  * @return Orientation of the plot item
  * @sa setOrientation()
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘图项的方向
- * @return 绘图项的方向
- * @sa setOrientation()
- * \endif
  */
 Qt::Orientation QwtPlotSeriesItem::orientation() const
 {
-    return m_data->orientation;
+    QWT_DC(d);
+    return d->orientation;
 }
 
 /**
- * \if ENGLISH
  * @brief Draw the complete series
  * @param[in] painter Painter
  * @param[in] xMap Maps x-values into pixel coordinates.
  * @param[in] yMap Maps y-values into pixel coordinates.
  * @param[in] canvasRect Contents rectangle of the canvas
- * \endif
- *
- * \if CHINESE
- * @brief 绘制完整系列
- * @param[in] painter 绘图器
- * @param[in] xMap 将 x 值映射到像素坐标。
- * @param[in] yMap 将 y 值映射到像素坐标。
- * @param[in] canvasRect 画布的内容矩形
- * \endif
  */
 void QwtPlotSeriesItem::draw( QPainter* painter,
     const QwtScaleMap& xMap, const QwtScaleMap& yMap,
@@ -161,15 +117,8 @@ void QwtPlotSeriesItem::draw( QPainter* painter,
 }
 
 /**
- * \if ENGLISH
  * @brief Get the bounding rectangle
  * @return Bounding rectangle
- * \endif
- *
- * \if CHINESE
- * @brief 获取边界矩形
- * @return 边界矩形
- * \endif
  */
 QRectF QwtPlotSeriesItem::boundingRect() const
 {
@@ -177,17 +126,9 @@ QRectF QwtPlotSeriesItem::boundingRect() const
 }
 
 /**
- * \if ENGLISH
  * @brief Update the scale divisions
  * @param[in] xScaleDiv X scale division
  * @param[in] yScaleDiv Y scale division
- * \endif
- *
- * \if CHINESE
- * @brief 更新刻度划分
- * @param[in] xScaleDiv X 刻度划分
- * @param[in] yScaleDiv Y 刻度划分
- * \endif
  */
 void QwtPlotSeriesItem::updateScaleDiv(
     const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv )

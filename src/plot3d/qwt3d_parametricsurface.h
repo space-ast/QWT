@@ -1,5 +1,5 @@
-#ifndef qwt3d_parametricsurface_h
-#define qwt3d_parametricsurface_h
+#ifndef QWT3D_PARAMETRICSURFACE_H
+#define QWT3D_PARAMETRICSURFACE_H
 
 #include "qwt3d_gridmapping.h"
 
@@ -8,16 +8,11 @@ namespace Qwt3D {
 class SurfacePlot;
 
 /**
- * \if ENGLISH
  * @brief Abstract base class for parametric surfaces
- * \endif
- *
- * \if CHINESE
- * @brief 参数化表面的抽象基类
- * \endif
  */
 class QWT3D_EXPORT ParametricSurface : public GridMapping
 {
+    QWT_DECLARE_PRIVATE(ParametricSurface)
 
 public:
     // Constructs ParametricSurface object w/o assigned SurfacePlot
@@ -26,6 +21,7 @@ public:
     explicit ParametricSurface(Qwt3D::SurfacePlot &plotWidget);
     // Constructs ParametricSurface object and assigns a SurfacePlot
     explicit ParametricSurface(Qwt3D::SurfacePlot *plotWidget);
+    ~ParametricSurface() override;
     // Overwrite this
     virtual Qwt3D::Triple operator()(double u, double v) = 0;
     // Assigns a new SurfacePlot and creates a data representation for it
@@ -38,11 +34,8 @@ public:
     void assign(Qwt3D::SurfacePlot *plotWidget);
     // Provide information about periodicity of the 'u' resp. 'v' domains
     void setPeriodic(bool u, bool v);
-
-private:
-    bool uperiodic_, vperiodic_;
 };
 
 } // ns
 
-#endif /* include guarded */
+#endif // QWT3D_PARAMETRICSURFACE_H

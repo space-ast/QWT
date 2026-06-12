@@ -33,15 +33,9 @@
 class QPainter;
 
 /**
- * \if ENGLISH
- *   \brief Abstract base class for a compass rose
- *   \details QwtCompassRose is the abstract base class that defines the interface
+ *   @brief Abstract base class for a compass rose
+ *   @details QwtCompassRose is the abstract base class that defines the interface
  *            for drawing compass roses in QwtCompass.
- * \endif
- * \if CHINESE
- *   \brief 罗盘花的抽象基类
- *   \details QwtCompassRose是定义在QwtCompass中绘制罗盘花接口的抽象基类。
- * \endif
  */
 class QWT_EXPORT QwtCompassRose
 {
@@ -57,44 +51,28 @@ class QWT_EXPORT QwtCompassRose
     const QPalette& palette() const;
 
     /**
-     * \if ENGLISH
-     *   \brief Draw the rose
-     *   \param[in] painter Painter
-     *   \param[in] center Center point
-     *   \param[in] radius Radius of the rose
-     *   \param[in] north Position pointing north
-     *   \param[in] colorGroup Color group
-     * \endif
-     * \if CHINESE
-     *   \brief 绘制罗盘花
-     *   \param[in] painter 绘图设备
-     *   \param[in] center 中心点
-     *   \param[in] radius 罗盘花的半径
-     *   \param[in] north 指向北方的位置
-     *   \param[in] colorGroup 颜色组
-     * \endif
+     *   @brief Draw the rose
+     *   @param[in] painter Painter
+     *   @param[in] center Center point
+     *   @param[in] radius Radius of the rose
+     *   @param[in] north Position pointing north
+     *   @param[in] colorGroup Color group
      */
     virtual void draw( QPainter* painter,
         const QPointF& center, double radius, double north,
         QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
 
   private:
-    Q_DISABLE_COPY(QwtCompassRose)
+    QwtCompassRose(const QwtCompassRose&) = delete;
+    QwtCompassRose& operator=(const QwtCompassRose&) = delete;
 
     QPalette m_palette;
 };
 
 /**
- * \if ENGLISH
- *   \brief A simple rose for QwtCompass
- *   \details QwtSimpleCompassRose provides a simple compass rose implementation
+ *   @brief A simple rose for QwtCompass
+ *   @details QwtSimpleCompassRose provides a simple compass rose implementation
  *            with configurable thorn count and levels.
- * \endif
- * \if CHINESE
- *   \brief QwtCompass的简单罗盘花
- *   \details QwtSimpleCompassRose提供了一个简单的罗盘花实现，
- *            具有可配置的刺数和层级。
- * \endif
  */
 class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 {
@@ -102,7 +80,7 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Constructs a simple compass rose with specified number of thorns and levels
     QwtSimpleCompassRose( int numThorns = 8, int numThornLevels = -1 );
     // Destructor
-    virtual ~QwtSimpleCompassRose();
+    ~QwtSimpleCompassRose() override;
 
     // Sets the width of the rose heads (range: 0.03 to 0.4)
     void setWidth( double );
@@ -124,6 +102,11 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Returns the shrink factor for thorns
     double shrinkFactor() const;
 
+    // Set flat style
+    void setFlatStyle( bool );
+    // Return flat style
+    bool flatStyle() const;
+
     // Draw the rose (override from base class)
     virtual void draw( QPainter*,
         const QPointF& center, double radius, double north,
@@ -132,11 +115,11 @@ class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
     // Static helper to draw a rose with specified parameters
     static void drawRose( QPainter*, const QPalette&,
         const QPointF& center, double radius, double north, double width,
-        int numThorns, int numThornLevels, double shrinkFactor );
+        int numThorns, int numThornLevels, double shrinkFactor,
+        bool flatStyle = true );
 
   private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtSimpleCompassRose)
 };
 
 #endif

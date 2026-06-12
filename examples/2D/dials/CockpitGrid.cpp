@@ -210,7 +210,7 @@ QwtDial* CockpitGrid::createDial(int pos)
     if (dial) {
         dial->setReadOnly(true);
         dial->setLineWidth(4);
-        dial->setFrameShadow(QwtDial::Sunken);
+        dial->setFrameShadow(QwtDial::Plain);
     }
 
     return dial;

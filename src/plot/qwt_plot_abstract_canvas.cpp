@@ -18,7 +18,7 @@
  *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
  *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
  *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
+ *        - QwtGridRasterData (2-d table + interpolation)
  *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
  *   7. Bar-chart: expose pen/brush control.
  *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
@@ -168,8 +168,9 @@ static QPainterPath qwtBorderPath(const QWidget* canvas, const QRect& rect)
 
 class QwtPlotAbstractCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAbstractCanvas)
 public:
-    PrivateData() : focusIndicator(NoFocusIndicator), borderRadius(0)
+    PrivateData(QwtPlotAbstractCanvas* p) : q_ptr(p), focusIndicator(NoFocusIndicator), borderRadius(0)
     {
         styleSheet.hasBorder = false;
     }
@@ -195,19 +196,11 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] canvasWidget 绘图画布部件
- * \endif
  */
-QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
+QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget) : QWT_PIMPL_CONSTRUCT
 {
-    m_data               = new PrivateData;
     m_data->canvasWidget = canvasWidget;
 
 #ifndef QT_NO_CURSOR
@@ -217,141 +210,96 @@ QwtPlotAbstractCanvas::QwtPlotAbstractCanvas(QWidget* canvasWidget)
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotAbstractCanvas::~QwtPlotAbstractCanvas()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Return parent plot widget
  * @return Parent plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 返回父绘图部件
- * @return 父绘图部件
- * \endif
  */
 QwtPlot* QwtPlotAbstractCanvas::plot()
 {
-    return qobject_cast< QwtPlot* >(m_data->canvasWidget->parent());
+    QWT_D(d);
+    return qobject_cast< QwtPlot* >(d->canvasWidget->parent());
 }
 
 /**
- * \if ENGLISH
  * @brief Return parent plot widget
  * @return Parent plot widget
- * \endif
- *
- * \if CHINESE
- * @brief 返回父绘图部件
- * @return 父绘图部件
- * \endif
  */
 const QwtPlot* QwtPlotAbstractCanvas::plot() const
 {
-    return qobject_cast< const QwtPlot* >(m_data->canvasWidget->parent());
+    QWT_DC(d);
+    return qobject_cast< const QwtPlot* >(d->canvasWidget->parent());
 }
 
 /**
- * \if ENGLISH
  * @brief Set the focus indicator
  * @param[in] focusIndicator Focus indicator type
  * @sa FocusIndicator, focusIndicator()
- * \endif
- *
- * \if CHINESE
- * @brief 设置焦点指示器
- * @param[in] focusIndicator 焦点指示器类型
- * @sa FocusIndicator, focusIndicator()
- * \endif
  */
 void QwtPlotAbstractCanvas::setFocusIndicator(FocusIndicator focusIndicator)
 {
-    m_data->focusIndicator = focusIndicator;
+    QWT_D(d);
+    d->focusIndicator = focusIndicator;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the focus indicator
  * @return Focus indicator
  * @sa FocusIndicator, setFocusIndicator()
- * \endif
- *
- * \if CHINESE
- * @brief 获取焦点指示器
- * @return 焦点指示器
- * @sa FocusIndicator, setFocusIndicator()
- * \endif
  */
 QwtPlotAbstractCanvas::FocusIndicator QwtPlotAbstractCanvas::focusIndicator() const
 {
-    return m_data->focusIndicator;
+    QWT_DC(d);
+    return d->focusIndicator;
 }
 
 /*!
    Draw the focus indication
-   \param painter Painter
+   @param painter Painter
  */
 void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
 {
+    QWT_D(d);
+
     const int margin = 1;
 
-    QRect focusRect = m_data->canvasWidget->contentsRect();
+    QRect focusRect = d->canvasWidget->contentsRect();
     focusRect.setRect(focusRect.x() + margin,
                       focusRect.y() + margin,
                       focusRect.width() - 2 * margin,
                       focusRect.height() - 2 * margin);
 
-    QwtPainter::drawFocusRect(painter, m_data->canvasWidget, focusRect);
+    QwtPainter::drawFocusRect(painter, d->canvasWidget, focusRect);
 }
 
 /**
- * \if ENGLISH
  * @brief Set the radius for the corners of the border frame
  * @param[in] radius Radius of a rounded corner
  * @sa borderRadius()
- * \endif
- *
- * \if CHINESE
- * @brief 设置边框框架角落的半径
- * @param[in] radius 圆角的半径
- * @sa borderRadius()
- * \endif
  */
 void QwtPlotAbstractCanvas::setBorderRadius(double radius)
 {
-    m_data->borderRadius = qwtMaxF(0.0, radius);
+    QWT_D(d);
+    d->borderRadius = qwtMaxF(0.0, radius);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the radius for the corners of the border frame
  * @return Radius for the corners of the border frame
  * @sa setBorderRadius()
- * \endif
- *
- * \if CHINESE
- * @brief 获取边框框架角落的半径
- * @return 边框框架角落的半径
- * @sa setBorderRadius()
- * \endif
  */
 double QwtPlotAbstractCanvas::borderRadius() const
 {
-    return m_data->borderRadius;
+    QWT_DC(d);
+    return d->borderRadius;
 }
 
-//! \return Path for the canvas border
+//! @return Path for the canvas border
 QPainterPath QwtPlotAbstractCanvas::canvasBorderPath(const QRect& rect) const
 {
     return qwtBorderPath(canvasWidget(), rect);
@@ -359,13 +307,15 @@ QPainterPath QwtPlotAbstractCanvas::canvasBorderPath(const QRect& rect) const
 
 /*!
    Draw the border of the canvas
-   \param painter Painter
+   @param painter Painter
  */
 void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 {
+    QWT_D(d);
+
     const QWidget* w = canvasWidget();
 
-    if (m_data->borderRadius > 0) {
+    if (d->borderRadius > 0) {
         const int frameWidth = w->property("frameWidth").toInt();
         if (frameWidth > 0) {
             const int frameShape  = w->property("frameShape").toInt();
@@ -375,8 +325,8 @@ void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 
             QwtPainter::drawRoundedFrame(painter,
                                          frameRect,
-                                         m_data->borderRadius,
-                                         m_data->borderRadius,
+                                         d->borderRadius,
+                                         d->borderRadius,
                                          w->palette(),
                                          frameWidth,
                                          frameShape | frameShadow);
@@ -469,6 +419,8 @@ void QwtPlotAbstractCanvas::drawUnstyled(QPainter* painter)
 //! Helper function for the derived plot canvas
 void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackground)
 {
+    QWT_D(d);
+
     fillBackground(painter);
 
     if (hackStyledBackground) {
@@ -484,7 +436,7 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
         // The only way to avoid these annoying "artefacts"
         // is to paint the border on top of the plot items.
 
-        if (!m_data->styleSheet.hasBorder || m_data->styleSheet.borderPath.isEmpty()) {
+        if (!d->styleSheet.hasBorder || d->styleSheet.borderPath.isEmpty()) {
             // We have no border with at least one rounded corner
             hackStyledBackground = false;
         }
@@ -497,9 +449,9 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
 
         // paint background without border
         painter->setPen(Qt::NoPen);
-        painter->setBrush(m_data->styleSheet.background.brush);
-        painter->setBrushOrigin(m_data->styleSheet.background.origin);
-        painter->setClipPath(m_data->styleSheet.borderPath);
+        painter->setBrush(d->styleSheet.background.brush);
+        painter->setBrushOrigin(d->styleSheet.background.origin);
+        painter->setClipPath(d->styleSheet.borderPath);
         painter->drawRect(w->contentsRect());
 
         painter->restore();
@@ -519,15 +471,17 @@ void QwtPlotAbstractCanvas::drawStyled(QPainter* painter, bool hackStyledBackgro
     }
 }
 
-//!  \brief Draw the plot to the canvas
+//!  @brief Draw the plot to the canvas
 void QwtPlotAbstractCanvas::drawCanvas(QPainter* painter)
 {
+    QWT_D(d);
+
     QWidget* w = canvasWidget();
 
     painter->save();
 
-    if (!m_data->styleSheet.borderPath.isEmpty()) {
-        painter->setClipPath(m_data->styleSheet.borderPath, Qt::IntersectClip);
+    if (!d->styleSheet.borderPath.isEmpty()) {
+        painter->setClipPath(d->styleSheet.borderPath, Qt::IntersectClip);
     } else {
         if (borderRadius() > 0.0) {
             const QRect frameRect = w->property("frameRect").toRect();
@@ -547,6 +501,8 @@ void QwtPlotAbstractCanvas::drawCanvas(QPainter* painter)
 //! Update the cached information about the current style sheet
 void QwtPlotAbstractCanvas::updateStyleSheetInfo()
 {
+    QWT_D(d);
+
     QWidget* w = canvasWidget();
 
     if (!w->testAttribute(Qt::WA_StyledBackground))
@@ -562,36 +518,39 @@ void QwtPlotAbstractCanvas::updateStyleSheetInfo()
 
     painter.end();
 
-    m_data->styleSheet.hasBorder   = !recorder.border.rectList.isEmpty();
-    m_data->styleSheet.cornerRects = recorder.clipRects;
+    d->styleSheet.hasBorder   = !recorder.border.rectList.isEmpty();
+    d->styleSheet.cornerRects = recorder.clipRects;
 
     if (recorder.background.path.isEmpty()) {
         if (!recorder.border.rectList.isEmpty()) {
-            m_data->styleSheet.borderPath = qwtCombinePathList(w->rect(), recorder.border.pathList);
+            d->styleSheet.borderPath = qwtCombinePathList(w->rect(), recorder.border.pathList);
         }
     } else {
-        m_data->styleSheet.borderPath        = recorder.background.path;
-        m_data->styleSheet.background.brush  = recorder.background.brush;
-        m_data->styleSheet.background.origin = recorder.background.origin;
+        d->styleSheet.borderPath        = recorder.background.path;
+        d->styleSheet.background.brush  = recorder.background.brush;
+        d->styleSheet.background.origin = recorder.background.origin;
     }
 }
 
-//! \return canvas widget
+//! @return canvas widget
 QWidget* QwtPlotAbstractCanvas::canvasWidget()
 {
-    return m_data->canvasWidget;
+    QWT_D(d);
+    return d->canvasWidget;
 }
 
-//! \return canvas widget
+//! @return canvas widget
 const QWidget* QwtPlotAbstractCanvas::canvasWidget() const
 {
-    return m_data->canvasWidget;
+    QWT_DC(d);
+    return d->canvasWidget;
 }
 
 class QwtPlotAbstractGLCanvas::PrivateData
 {
+    QWT_DECLARE_PUBLIC(QwtPlotAbstractGLCanvas)
 public:
-    PrivateData() : frameStyle(QFrame::Panel | QFrame::Sunken), lineWidth(2), midLineWidth(0)
+    PrivateData(QwtPlotAbstractGLCanvas* p) : q_ptr(p), frameStyle(QFrame::Box | QFrame::Plain), lineWidth(1), midLineWidth(0)
     {
     }
 
@@ -603,62 +562,39 @@ public:
 };
 
 /**
- * \if ENGLISH
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
- * \endif
- *
- * \if CHINESE
- * @brief 构造函数
- * @param[in] canvasWidget 绘图画布部件
- * \endif
  */
-QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget)
+QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget), QWT_PIMPL_CONSTRUCT
 {
-    m_data = new PrivateData;
-
     qwtUpdateContentsRect(frameWidth(), canvasWidget);
     m_data->paintAttributes = QwtPlotAbstractGLCanvas::BackingStore;
 }
 
 /**
- * \if ENGLISH
  * @brief Destructor
- * \endif
- *
- * \if CHINESE
- * @brief 析构函数
- * \endif
  */
 QwtPlotAbstractGLCanvas::~QwtPlotAbstractGLCanvas()
 {
-    delete m_data;
 }
 
 /**
- * \if ENGLISH
  * @brief Changing the paint attributes
  * @param[in] attribute Paint attribute
  * @param[in] on On/Off
  * @sa testPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 更改绘制属性
- * @param[in] attribute 绘制属性
- * @param[in] on 开/关
- * @sa testPaintAttribute()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool on)
 {
-    if (bool(m_data->paintAttributes & attribute) == on)
+    QWT_D(d);
+
+    if (bool(d->paintAttributes & attribute) == on)
         return;
 
     if (on) {
-        m_data->paintAttributes |= attribute;
+        d->paintAttributes |= attribute;
     } else {
-        m_data->paintAttributes &= ~attribute;
+        d->paintAttributes &= ~attribute;
 
         if (attribute == BackingStore)
             clearBackingStore();
@@ -666,42 +602,28 @@ void QwtPlotAbstractGLCanvas::setPaintAttribute(PaintAttribute attribute, bool o
 }
 
 /**
- * \if ENGLISH
  * @brief Test whether a paint attribute is enabled
  * @param[in] attribute Paint attribute
  * @return true, when attribute is enabled
  * @sa setPaintAttribute()
- * \endif
- *
- * \if CHINESE
- * @brief 测试绘制属性是否启用
- * @param[in] attribute 绘制属性
- * @return 如果属性启用则返回 true
- * @sa setPaintAttribute()
- * \endif
  */
 bool QwtPlotAbstractGLCanvas::testPaintAttribute(PaintAttribute attribute) const
 {
-    return m_data->paintAttributes & attribute;
+    QWT_DC(d);
+    return d->paintAttributes & attribute;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame style
  * @param[in] style The bitwise OR between a shape and a shadow
  * @sa frameStyle(), QFrame::setFrameStyle(), setFrameShadow(), setFrameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架样式
- * @param[in] style 形状和阴影的按位或
- * @sa frameStyle(), QFrame::setFrameStyle(), setFrameShadow(), setFrameShape()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
 {
-    if (style != m_data->frameStyle) {
-        m_data->frameStyle = style;
+    QWT_D(d);
+
+    if (style != d->frameStyle) {
+        d->frameStyle = style;
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
 
         canvasWidget()->update();
@@ -709,207 +631,131 @@ void QwtPlotAbstractGLCanvas::setFrameStyle(int style)
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame style
  * @return The bitwise OR between a frameShape() and a frameShadow()
  * @sa setFrameStyle(), QFrame::frameStyle()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架样式
- * @return frameShape() 和 frameShadow() 的按位或
- * @sa setFrameStyle(), QFrame::frameStyle()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::frameStyle() const
 {
-    return m_data->frameStyle;
+    QWT_DC(d);
+    return d->frameStyle;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame shadow
  * @param[in] shadow Frame shadow
  * @sa frameShadow(), setFrameShape(), QFrame::setFrameShadow()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架阴影
- * @param[in] shadow 框架阴影
- * @sa frameShadow(), setFrameShape(), QFrame::setFrameShadow()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameShadow(QFrame::Shadow shadow)
 {
-    setFrameStyle((m_data->frameStyle & QFrame::Shape_Mask) | shadow);
+    QWT_D(d);
+    setFrameStyle((d->frameStyle & QFrame::Shape_Mask) | shadow);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame shadow
  * @return Frame shadow
  * @sa setFrameShadow(), QFrame::setFrameShadow()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架阴影
- * @return 框架阴影
- * @sa setFrameShadow(), QFrame::setFrameShadow()
- * \endif
  */
 QFrame::Shadow QwtPlotAbstractGLCanvas::frameShadow() const
 {
-    return (QFrame::Shadow)(m_data->frameStyle & QFrame::Shadow_Mask);
+    QWT_DC(d);
+    return (QFrame::Shadow)(d->frameStyle & QFrame::Shadow_Mask);
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame shape
  * @param[in] shape Frame shape
  * @sa frameShape(), setFrameShadow(), QFrame::frameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架形状
- * @param[in] shape 框架形状
- * @sa frameShape(), setFrameShadow(), QFrame::frameShape()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setFrameShape(QFrame::Shape shape)
 {
-    setFrameStyle((m_data->frameStyle & QFrame::Shadow_Mask) | shape);
+    QWT_D(d);
+    setFrameStyle((d->frameStyle & QFrame::Shadow_Mask) | shape);
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame shape
  * @return Frame shape
  * @sa setFrameShape(), QFrame::frameShape()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架形状
- * @return 框架形状
- * @sa setFrameShape(), QFrame::frameShape()
- * \endif
  */
 QFrame::Shape QwtPlotAbstractGLCanvas::frameShape() const
 {
-    return (QFrame::Shape)(m_data->frameStyle & QFrame::Shape_Mask);
+    QWT_DC(d);
+    return (QFrame::Shape)(d->frameStyle & QFrame::Shape_Mask);
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame line width
  * @details The default line width is 2 pixels.
  * @param[in] width Line width of the frame
  * @sa lineWidth(), setMidLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架线宽度
- * @details 默认线宽度为 2 像素。
- * @param[in] width 框架的线宽度
- * @sa lineWidth(), setMidLineWidth()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setLineWidth(int width)
 {
+    QWT_D(d);
+
     width = qMax(width, 0);
-    if (width != m_data->lineWidth) {
-        m_data->lineWidth = qMax(width, 0);
+    if (width != d->lineWidth) {
+        d->lineWidth = qMax(width, 0);
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
         canvasWidget()->update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the line width of the frame
  * @return Line width of the frame
  * @sa setLineWidth(), midLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架的线宽度
- * @return 框架的线宽度
- * @sa setLineWidth(), midLineWidth()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::lineWidth() const
 {
-    return m_data->lineWidth;
+    QWT_DC(d);
+    return d->lineWidth;
 }
 
 /**
- * \if ENGLISH
  * @brief Set the frame mid line width
  * @details The default midline width is 0 pixels.
  * @param[in] width Midline width of the frame
  * @sa midLineWidth(), setLineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 设置框架中线宽度
- * @details 默认中线宽度为 0 像素。
- * @param[in] width 框架的中线宽度
- * @sa midLineWidth(), setLineWidth()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::setMidLineWidth(int width)
 {
+    QWT_D(d);
+
     width = qMax(width, 0);
-    if (width != m_data->midLineWidth) {
-        m_data->midLineWidth = width;
+    if (width != d->midLineWidth) {
+        d->midLineWidth = width;
         qwtUpdateContentsRect(frameWidth(), canvasWidget());
         canvasWidget()->update();
     }
 }
 
 /**
- * \if ENGLISH
  * @brief Get the midline width of the frame
  * @return Midline width of the frame
  * @sa setMidLineWidth(), lineWidth()
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架的中线宽度
- * @return 框架的中线宽度
- * @sa setMidLineWidth(), lineWidth()
- * \endif
  */
 int QwtPlotAbstractGLCanvas::midLineWidth() const
 {
-    return m_data->midLineWidth;
+    QWT_DC(d);
+    return d->midLineWidth;
 }
 
 /**
- * \if ENGLISH
  * @brief Get the frame width depending on the style, line width and midline width
  * @return Frame width depending on the style, line width and midline width
- * \endif
- *
- * \if CHINESE
- * @brief 获取框架宽度，取决于样式、线宽和中线宽度
- * @return 框架宽度
- * \endif
  */
 int QwtPlotAbstractGLCanvas::frameWidth() const
 {
-    return (frameStyle() != QFrame::NoFrame) ? m_data->lineWidth : 0;
+    QWT_DC(d);
+    return (frameStyle() != QFrame::NoFrame) ? d->lineWidth : 0;
 }
 
 /**
- * \if ENGLISH
  * @brief Invalidate the paint cache and repaint the canvas
  * @sa invalidatePaintCache()
- * \endif
- *
- * \if CHINESE
- * @brief 使绘制缓存失效并重绘画布
- * @sa invalidatePaintCache()
- * \endif
  */
 void QwtPlotAbstractGLCanvas::replot()
 {
@@ -923,15 +769,8 @@ void QwtPlotAbstractGLCanvas::replot()
 }
 
 /**
- * \if ENGLISH
  * @brief Get the rectangle where the frame is drawn in
  * @return The rectangle where the frame is drawn in
- * \endif
- *
- * \if CHINESE
- * @brief 获取绘制框架的矩形区域
- * @return 绘制框架的矩形区域
- * \endif
  */
 QRect QwtPlotAbstractGLCanvas::frameRect() const
 {

@@ -31,7 +31,6 @@
 #include "qwt_plot_seriesitem.h"
 
 /**
- * \if ENGLISH
  * @brief QwtPlotTradingCurve illustrates movements in the price of a financial instrument over time
  * @details QwtPlotTradingCurve supports candlestick or bar ( OHLC ) charts
  *          that are used in the domain of technical analysis.
@@ -49,40 +48,16 @@
  *          is in widget coordinates independent from the zoom level.
  *          When setting the minimum and maximum to the same value, the width of
  *          the symbol is fixed.
- * \endif
  *
- * \if CHINESE
- * @brief QwtPlotTradingCurve 展示金融工具价格随时间的变化
- * @details QwtPlotTradingCurve 支持烛台图或柱状图（OHLC），
- *          这些图表用于技术分析领域。
- *
- *          每个符号的长度（高度或宽度，取决于方向）取决于相应的 OHLC 样本，
- *          另一个维度的大小可以通过以下方式控制：
- *
- *          - setSymbolExtent()
- *          - setSymbolMinWidth()
- *          - setSymbolMaxWidth()
- *
- *          范围是缩放坐标中的大小，因此当绘图放大时，符号宽度会增加。
- *          最小/最大宽度是在小部件坐标中，与缩放级别无关。
- *          当将最小值和最大值设置为相同值时，符号的宽度是固定的。
- * \endif
  */
 class QWT_EXPORT QwtPlotTradingCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtOHLCSample >
 {
 public:
     /**
-     * \if ENGLISH
      * @brief Symbol styles
      * @details The default setting is QwtPlotSeriesItem::CandleStick.
      * @sa setSymbolStyle(), symbolStyle()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 符号样式
-     * @details 默认设置是 QwtPlotSeriesItem::CandleStick。
-     * @sa setSymbolStyle(), symbolStyle()
-     * \endif
      */
     enum SymbolStyle
     {
@@ -90,62 +65,37 @@ public:
         NoSymbol = -1,
 
         /**
-         * \if ENGLISH
          * A line on the chart shows the price range (the highest and lowest
          * prices) over one unit of time, e.g. one day or one hour.
          * Tick marks project from each side of the line indicating the
          * opening and closing price.
-         * \endif
          *
-         * \if CHINESE
-         * 图表上的一条线显示一个时间单位（例如一天或一小时）内的价格范围（最高和最低价格）。
-         * 从线的两侧伸出的刻度标记表示开盘价和收盘价。
-         * \endif
          */
         Bar,
 
         /**
-         * \if ENGLISH
          * The range between opening/closing price are displayed as
          * a filled box. The fill brush depends on the direction of the
          * price movement. The box is connected to the highest/lowest
          * values by lines.
-         * \endif
          *
-         * \if CHINESE
-         * 开盘/收盘价之间的范围显示为填充框。填充画刷取决于价格变动的方向。
-         * 该框通过线条连接到最高/最低值。
-         * \endif
          */
         CandleStick,
 
         /**
-         * \if ENGLISH
          * SymbolTypes >= UserSymbol are displayed by drawUserSymbol(),
          * that needs to be overloaded and implemented in derived
          * curve classes.
          *
          * @sa drawUserSymbol()
-         * \endif
          *
-         * \if CHINESE
-         * SymbolTypes >= UserSymbol 通过 drawUserSymbol() 显示，
-         * 需要在派生的曲线类中重载和实现。
-         *
-         * @sa drawUserSymbol()
-         * \endif
          */
         UserSymbol = 100
     };
 
     /**
-     * \if ENGLISH
      * @brief Direction of a price movement
-     * \endif
      *
-     * \if CHINESE
-     * @brief 价格变动的方向
-     * \endif
      */
     enum Direction
     {
@@ -157,17 +107,10 @@ public:
     };
 
     /**
-     * \if ENGLISH
      * @brief Paint attributes
      * @details Attributes to modify the drawing algorithm.
      * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      *
-     * \if CHINESE
-     * @brief 绘制属性
-     * @details 用于修改绘制算法的属性。
-     * @sa setPaintAttribute(), testPaintAttribute()
-     * \endif
      */
     enum PaintAttribute
     {
@@ -183,7 +126,7 @@ public:
     explicit QwtPlotTradingCurve(const QwtText& title);
 
     // Destructor
-    virtual ~QwtPlotTradingCurve();
+    ~QwtPlotTradingCurve() override;
 
 // Get the runtime type information
     virtual int rtti() const override;
@@ -260,8 +203,7 @@ void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double wi
 virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
 private:
-    class PrivateData;
-    PrivateData* m_data;
+    QWT_DECLARE_PRIVATE(QwtPlotTradingCurve)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotTradingCurve::PaintAttributes)

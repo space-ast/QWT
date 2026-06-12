@@ -1,5 +1,5 @@
-#ifndef __qwt3d_io__
-#define __qwt3d_io__
+#ifndef QWT3D_IO_H
+#define QWT3D_IO_H
 
 #include <vector>
 #include <algorithm>
@@ -14,20 +14,11 @@ namespace Qwt3D
 class Plot3D;
 
 /**
- * \if ENGLISH
  * @brief Generic interface for standard and user written I/O handlers
  * @details IO provides a generic interface for standard and user written I/O handlers.
  *          It also provides functionality for the registering of such handlers in the
  *          framework. The interface mimics roughly Qt's QImageIO functions for defining
  *          image input/output functions.
- * \endif
- *
- * \if CHINESE
- * @brief 标准和用户自定义 I/O 处理器的通用接口
- * @details IO 提标准和用户自定义 I/O 处理器的通用接口，
- *          还提供在框架中注册此类处理器的功能。
- *          该接口大致模仿 Qt 的 QImageIO 函数来定义图像输入/输出函数。
- * \endif
  */
 class QWT3D_EXPORT IO
 {
@@ -37,16 +28,9 @@ public:
     using Function = bool (*)(Plot3D*, QString const& fname);
 
     /**
-     * \if ENGLISH
      * @brief Functor class for more flexible IO handler implementation
      * @details This class gives more flexibility in implementing userdefined IO handlers
      *          than the simple IO::Function type.
-     * \endif
-     *
-     * \if CHINESE
-     * @brief 更灵活的 IO 处理器实现的 Functor 类
-     * @details 该类比简单的 IO::Function 类型提供了更灵活的用户自定义 IO 处理器实现方式。
-     * \endif
      */
     class Functor
     {
@@ -91,7 +75,7 @@ private:
     {
     public:
         // Performs actual input
-        Functor* clone() const
+        Functor* clone() const override
         {
             return new Wrapper(*this);
         }
@@ -100,7 +84,7 @@ private:
         {
         }
         // Returns a pointer to the wrapped function
-        bool operator()(Plot3D* plot, QString const& fname)
+        bool operator()(Plot3D* plot, QString const& fname) override
         {
             return (hdl) ? (*hdl)(plot, fname) : false;
         }
@@ -151,33 +135,23 @@ private:
 };
 
 /**
- * \if ENGLISH
  * @brief Provides Qt's Pixmap output facilities
- * \endif
- *
- * \if CHINESE
- * @brief 提供 Qt 的 Pixmap 输出功能
- * \endif
  */
 class QWT3D_EXPORT PixmapWriter : public IO::Functor
 {
     friend class IO;
+    QWT_DECLARE_PRIVATE(PixmapWriter)
 
 public:
-    PixmapWriter() : quality_(-1)
-    {
-    }
+    PixmapWriter();
+    ~PixmapWriter() override;
+
     // Set output quality
     void setQuality(int val);
 
 private:
-    IO::Functor* clone() const
-    {
-        return new PixmapWriter(*this);
-    }
-    bool operator()(Plot3D* plot, QString const& fname);
-    QString fmt_;
-    int quality_;
+    IO::Functor* clone() const override;
+    bool operator()(Plot3D* plot, QString const& fname) override;
 };
 
 }  // ns
