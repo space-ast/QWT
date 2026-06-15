@@ -1,4 +1,4 @@
-﻿// 通用定义
+// 通用定义
 #include "../../src/qwt_version_info.h"
 #include "../../src/qwt_global.h"
 #include "../../src/plot/qwt_polar.h"
@@ -127,6 +127,12 @@
 #include "../../src/plot/qwt_plot_panner.h"
 #include "../../src/plot/qwt_plot_axis_zoomer.h"
 #include "../../src/plot/qwt_plot_canvas_zoomer.h"
+// utility classes
+#include "../../src/plot/qwt_plot_item_info.h"
+#include "../../src/plot/qwt_plot_data_access.h"
+#include "../../src/plot/qwt_plot_factory.h"
+#include "../../src/plot/qwt_plot_transform.h"
+#include "../../src/plot/qwt_plot_styling.h"
 // polar items
 #include "../../src/plot/qwt_polar_canvas.h"
 #include "../../src/plot/qwt_polar_item.h"

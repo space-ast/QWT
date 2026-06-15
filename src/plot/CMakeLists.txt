@@ -192,6 +192,12 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_figure_layout.h
         qwt_figure.h
         qwt_figure_widget_overlay.h
+        # utility classes
+        qwt_plot_item_info.h
+        qwt_plot_data_access.h
+        qwt_plot_factory.h
+        qwt_plot_transform.h
+        qwt_plot_styling.h
     )
     set(QWTPLOT_SOURCE_PLOT
         qwt_curve_fitter.cpp
@@ -260,6 +266,12 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_figure_layout.cpp
         qwt_figure.cpp
         qwt_figure_widget_overlay.cpp
+        # utility classes
+        qwt_plot_item_info.cpp
+        qwt_plot_data_access.cpp
+        qwt_plot_factory.cpp
+        qwt_plot_transform.cpp
+        qwt_plot_styling.cpp
     )
 
     list(APPEND QWTPLOT_HEADER_FILES ${QWTPLOT_HEADER_PLOT})
