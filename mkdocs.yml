@@ -68,6 +68,7 @@ plugins:
                     - Coding Standards: en/dev-guide/coding-standards.md
                     - Comment Standards: en/dev-guide/comment-standards.md
                     - PIMPL Pattern: en/dev-guide/pimpl-pattern.md
+                    - Doc Writing Guide: en/doc-writing-guide.md
             - User Guide:
                 - Basic Usage:
                     - Import Qwt: en/use-guide/import-qwt.md
@@ -129,7 +130,7 @@ plugins:
           name: 中文
           build: true
           nav:
-            - 首页: index.md
+            - 首页: zh/home.md
             - 入门指南:
                 - 概述:
                     - Qwt简介: zh/index.md
@@ -141,6 +142,7 @@ plugins:
                     - 编码规范: zh/dev-guide/coding-standards.md
                     - 注释规范: zh/dev-guide/comment-standards.md
                     - PIMPL模式: zh/dev-guide/pimpl-pattern.md
+                    - 文档编写指南: zh/doc-writing-guide.md
             - 使用指南:
                 - 基本使用:
                     - 引入qwt: zh/use-guide/import-qwt.md

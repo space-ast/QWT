@@ -31,8 +31,11 @@ There are only a handful of plotting libraries in the Qt ecosystem. The mainstre
 - [x] **Multi-axis support** — parasite axis architecture, unlimited axes
 - [x] **Axis interaction** — mouse drag and scroll-wheel zoom on axes
 - [x] **Integrated 2D/3D** — built-in 3D plotting module
-- [ ] C++11 optimization (in progress)
-- [ ] Large-scale data rendering optimization (in progress)
+- [x] **C++11 optimization** — modern C++ throughout: `override`, `nullptr`, smart pointers, range-based for loops
+- [x] **Large-scale data rendering optimization** — 4 curve downsampling algorithms + SIMD acceleration, smooth rendering of millions of points
+- [x] **Color cycle system** — customizable color cycle that auto-assigns colors to series data
+- [x] **Box chart** — `QwtPlotBoxChart` for statistical distribution visualization
+- [x] **Flat-style controls** — sliders, knobs, dials and other widgets support flat styling
 
 ## Quick Integration
 

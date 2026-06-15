@@ -38,6 +38,11 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
   - [x] 调整QwtPanner的实现，使其拖动时能实时渲染，并使其能支持多坐标轴
   - [x] 调整zoomer的实现，使其支持多坐标轴
 - [x] 集成3D绘图
+- [x] 箱线图（`QwtPlotBoxChart`）
+- [x] 曲线降采样算法（4种算法 + SIMD加速），百万级数据流畅渲染
+- [x] 颜色循环系统（`QwtColorCycle`）
+- [x] 箭头标记（`QwtPlotArrowMarker`）
+- [x] Flat风格控件（滑块、旋钮、刻度盘等）
 
 总之，我将继续维护`Qwt`，让其成为一个协议友好，性能优越，方便使用的Qt绘图库
 

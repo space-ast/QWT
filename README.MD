@@ -48,6 +48,15 @@ Goals and current progress:
 - [x] Modernized visual style  
 - [x] Figure class for layout management  
 - [x] Add parasite-axis support for unlimited axes
+- [x] Axis interaction (drag and scroll-wheel zoom on axes)
+- [x] Data picking with `QwtPlotSeriesDataPicker`
+- [x] Real-time canvas panner with multi-axis support (`QwtPlotPanner`)
+- [x] Canvas zoomer without axis binding (`QwtPlotCanvasZoomer`)
+- [x] Box chart (`QwtPlotBoxChart`)
+- [x] Curve downsampling with 4 algorithms + SIMD acceleration
+- [x] Color cycle system (`QwtColorCycle`)
+- [x] Arrow marker (`QwtPlotArrowMarker`)
+- [x] Flat-style controls (sliders, knobs, dials, etc.)
 
 In short, I will keep maintaining `Qwt` so it becomes a license-friendly, high-performance, and easy-to-use Qt plotting library.
 
