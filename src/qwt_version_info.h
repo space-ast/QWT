@@ -17,21 +17,21 @@
  * @def Qwt numeric version MAJ.{MIN}.PAT
  */
 #ifndef QWT_VERSION_MIN
-#define QWT_VERSION_MIN 2
+#define QWT_VERSION_MIN 3
 #endif
 
 /**
  * @def Qwt numeric version MAJ.MIN.{PAT}
  */
 #ifndef QWT_VERSION_PAT
-#define QWT_VERSION_PAT 1
+#define QWT_VERSION_PAT 0
 #endif
 
 /**
  * @def Version string
  */
 #ifndef QWT_VERSION_STR
-#define QWT_VERSION_STR "7.2.1"
+#define QWT_VERSION_STR "7.3.0"
 #endif
 
 #endif // QWT_VERSION_INFO_H
