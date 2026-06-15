@@ -81,6 +81,8 @@ plugins:
                     - Series Data: en/use-guide/series-data.md
                 - Styles & Symbols:
                     - Symbol: en/use-guide/symbol.md
+                - Utility Classes:
+                    - Plot Utilities: en/use-guide/plot-utilities.md
             - Charts:
                 - Core Plot Items:
                     - Curve: en/use-guide/curve.md
@@ -152,6 +154,8 @@ plugins:
                     - 数据系列: zh/use-guide/series-data.md
                 - 样式与符号:
                     - 符号样式: zh/use-guide/symbol.md
+                - 工具类:
+                    - 绘图工具类: zh/use-guide/plot-utilities.md
             - 图表类型:
                 - 核心绘图项:
                     - 曲线图: zh/use-guide/curve.md

@@ -832,7 +832,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
                 const FeaturePoint& fp = fps[ i ];
                 QString stry           = sampleDetail(fp);
                 out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-                           .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+                           .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
             }
         } else {
 
@@ -864,7 +864,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
                             out += "<br/>";
                         QString stry = sampleDetail(fp);
                         out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-                                   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+                                   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
                     }
                 } else {
                     // X axis visible, show group header
@@ -892,7 +892,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
                         out += "<br/>";
                         QString stry = sampleDetail(fp);
                         out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-                                   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+                                   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
                     }
                 }
             }
@@ -905,7 +905,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
                     const FeaturePoint& fp = fps[ i ];
                     QString stry           = fmtY(fp);
                     out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-                               .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+                               .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
                 }
             }
         }
@@ -923,7 +923,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
             const FeaturePoint& fp = fps[ i ];
             QString stry           = sampleDetail(fp);
             out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-                       .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+                       .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
         }
 #endif
     } else {
@@ -1005,7 +1005,7 @@ void QwtPlotSeriesDataPicker::drawFeaturePoint(
     const QwtScaleMap yMap = plot->canvasMap(item->yAxis());
     // Transform point to screen coordinates
     QPointF screenPos = QwtScaleMap::transform(xMap, yMap, itemPoint);
-    QColor itemColor  = Qwt::plotItemColor(item, Qt::black);
+    QColor itemColor  = QwtPlotStyling::color(item, Qt::black);
     // Draw the point
     painter->save();
     QColor fillColor = itemColor.darker(150);  // 150% darker, adjustable as needed
@@ -1240,7 +1240,7 @@ void QwtPlotSeriesDataPicker::drawRubberBand(QPainter* painter) const
         const QwtScaleMap yMap = itemPlot->canvasMap(fp.item->yAxis());
         // Transform point to screen coordinates
         QPointF screenPos = QwtScaleMap::transform(xMap, yMap, fp.feature);
-        QColor itemColor  = Qwt::plotItemColor(fp.item, Qt::black);
+        QColor itemColor  = QwtPlotStyling::color(fp.item, Qt::black);
         rbPen.setColor(itemColor);
         painter->save();
         painter->setPen(rbPen);
