@@ -37,22 +37,25 @@
 #endif
 #endif
 
-/*!
- * \brief 将尺寸扩展到全局最小尺寸（Qt5/Qt6 兼容性函数）
+/**
+ * @brief Expand a size to the global strut (Qt5/Qt6 compatibility function)
  *
- * 在 Qt 5.0-5.14 中，QApplication::globalStrut() 返回应用程序定义的最小控件尺寸。
- * 此函数将给定的尺寸扩展到至少该最小尺寸。
+ * In Qt 5.0-5.14, QApplication::globalStrut() returns the application-defined
+ * minimum widget size. This function expands the given size to at least that
+ * minimum size.
  *
- * 在 Qt 5.15+ 和 Qt 6 中，globalStrut() 已被移除，此函数直接返回原始尺寸不变。
+ * In Qt 5.15+ and Qt 6, globalStrut() has been removed and this function
+ * returns the original size unchanged.
  *
- * \param size 原始尺寸
- * \return 扩展到全局最小尺寸后的尺寸，或在 Qt 5.15+/Qt 6 中返回原始尺寸
+ * @param size Original size
+ * @return Size expanded to the global strut, or the original size on Qt 5.15+/Qt 6
  *
- * \internal
- * \warning 此函数仅供 Qwt 内部控件类使用（如 QwtDial、QwtKnob、QwtSlider 等），
- *          应用程序代码不应调用此函数。
+ * @internal
+ * @warning This function is for internal use by Qwt widget classes only
+ *          (such as QwtDial, QwtKnob, QwtSlider, etc.). Application code
+ *          should not call this function.
  *
- * \since Qwt 6.0
+ * @since Qwt 6.0
  */
 QSize qwtExpandedToGlobalStrut(const QSize& size)
 {
