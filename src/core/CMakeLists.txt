@@ -23,12 +23,42 @@ set(QWTCORE_HEADER_FILES
     qwt_colormap.h
     qwt_color_cycle.h
     qwt_colormap_preset.h
+    qwt_math.h
+    qwt_interval.h
+    qwt_point_3d.h
+    qwt_point_polar.h
+    qwt_system_clock.h
+    qwt_algorithm.hpp
+    qwt_qt5qt6_compat.hpp
+    qwt_samples.h
+    qwt_bezier.h
+    qwt_clipper.h
+    qwt_date.h
+    qwt_transform.h
+    qwt_scale_map.h
+    qwt_scale_div.h
+    qwt_simd_argminmax.h
+    qwt_box_statistics.h
+    qwt_grid_data.hpp
 )
 
 set(QWTCORE_SOURCE_FILES
     qwt_colormap.cpp
     qwt_color_cycle.cpp
     qwt_colormap_preset.cpp
+    qwt_math.cpp
+    qwt_interval.cpp
+    qwt_point_3d.cpp
+    qwt_point_polar.cpp
+    qwt_system_clock.cpp
+    qwt_bezier.cpp
+    qwt_clipper.cpp
+    qwt_date.cpp
+    qwt_transform.cpp
+    qwt_scale_map.cpp
+    qwt_scale_div.cpp
+    qwt_simd_argminmax.cpp
+    qwt_box_statistics.cpp
 )
 
 ########################################################

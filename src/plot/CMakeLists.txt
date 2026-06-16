@@ -20,20 +20,13 @@ set(CMAKE_AUTOMOC_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/moc)
 ########################################################
 set(QWTPLOT_HEADER_BASE
         qwt_abstract_scale_draw.h
-        qwt_bezier.h
-        qwt_clipper.h
         qwt_colormap_compat.h
         qwt_column_symbol.h
-        qwt_date.h
         qwt_date_scale_draw.h
         qwt_date_scale_engine.h
         qwt_dyngrid_layout.h
         qwt_graphic.h
-        qwt_interval.h
         qwt_interval_symbol.h
-        qwt_math.h
-        qwt_algorithm.hpp
-        qwt_qt5qt6_compat.hpp
         qwt_magnifier.h
         qwt_null_paintdevice.h
         qwt_painter.h
@@ -42,13 +35,9 @@ set(QWTPLOT_HEADER_BASE
         qwt_picker.h
         qwt_picker_machine.h
         qwt_pixel_matrix.h
-        qwt_point_3d.h
-        qwt_point_polar.h
         qwt_round_scale_draw.h
-        qwt_scale_div.h
         qwt_scale_draw.h
         qwt_scale_engine.h
-        qwt_scale_map.h
         qwt_spline.h
         qwt_spline_basis.h
         qwt_spline_parametrization.h
@@ -57,29 +46,38 @@ set(QWTPLOT_HEADER_BASE
         qwt_spline_pleasing.h
         qwt_spline_polynomial.h
         qwt_symbol.h
-        qwt_system_clock.h
         qwt_stylesheet_recorder.h
         qwt_text_engine.h
         qwt_text_label.h
         qwt_text.h
-        qwt_transform.h
         qwt_widget_overlay.h
         qwt_utils.h
+        # forward headers for core-migrated files
+        qwt_math.h
+        qwt_interval.h
+        qwt_point_3d.h
+        qwt_point_polar.h
+        qwt_system_clock.h
+        qwt_algorithm.hpp
+        qwt_qt5qt6_compat.hpp
+        qwt_samples.h
+        qwt_bezier.h
+        qwt_clipper.h
+        qwt_date.h
+        qwt_transform.h
+        qwt_scale_map.h
+        qwt_scale_div.h
+        qwt_grid_data.hpp
 )
 set(QWTPLOT_SOURCE_BASE
         qwt_abstract_scale_draw.cpp
-        qwt_bezier.cpp
-        qwt_clipper.cpp
         qwt_column_symbol.cpp
-        qwt_date.cpp
         qwt_date_scale_draw.cpp
         qwt_date_scale_engine.cpp
         qwt_dyngrid_layout.cpp
         qwt_event_pattern.cpp
         qwt_graphic.cpp
-        qwt_interval.cpp
         qwt_interval_symbol.cpp
-        qwt_math.cpp
         qwt_magnifier.cpp
         qwt_null_paintdevice.cpp
         qwt_painter.cpp
@@ -88,12 +86,8 @@ set(QWTPLOT_SOURCE_BASE
         qwt_picker.cpp
         qwt_picker_machine.cpp
         qwt_pixel_matrix.cpp
-        qwt_point_3d.cpp
-        qwt_point_polar.cpp
         qwt_round_scale_draw.cpp
-        qwt_scale_div.cpp
         qwt_scale_draw.cpp
-        qwt_scale_map.cpp
         qwt_scale_engine.cpp
         qwt_spline.cpp
         qwt_spline_basis.cpp
@@ -103,12 +97,10 @@ set(QWTPLOT_SOURCE_BASE
         qwt_spline_pleasing.cpp
         qwt_spline_polynomial.cpp
         qwt_symbol.cpp
-        qwt_system_clock.cpp
         qwt_stylesheet_recorder.cpp
         qwt_text_engine.cpp
         qwt_text_label.cpp
         qwt_text.cpp
-        qwt_transform.cpp
         qwt_widget_overlay.cpp
         qwt_utils.cpp
 )
@@ -143,7 +135,6 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_intervalcurve.h
         qwt_plot_tradingcurve.h
         qwt_plot_boxchart.h
-        qwt_box_statistics.h
         qwt_plot_layout_engine.h
         qwt_plot_layout.h
         qwt_parasite_plot_layout.h
@@ -174,15 +165,17 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.h
         qwt_plot_rescaler.h
         qwt_point_mapper.h
-        qwt_simd_argminmax.h
-        qwt_grid_data.hpp
         qwt_raster_data.h
         qwt_matrix_raster_data.h
         qwt_grid_raster_data.h
         qwt_vectorfield_symbol.h
         qwt_sampling_thread.h
-        qwt_samples.h
         qwt_series_data.h
+        # forward headers for core-migrated files
+        qwt_box_statistics.h
+        qwt_simd_argminmax.h
+        qwt_grid_data.hpp
+        qwt_samples.h
         qwt_series_store.h
         qwt_point_data.h
         qwt_scale_widget.h
@@ -222,7 +215,6 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_zoneitem.cpp
         qwt_plot_tradingcurve.cpp
         qwt_plot_boxchart.cpp
-        qwt_box_statistics.cpp
         qwt_plot_spectrogram.cpp
         qwt_plot_spectrocurve.cpp
         qwt_plot_scaleitem.cpp
@@ -252,7 +244,6 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.cpp
         qwt_plot_rescaler.cpp
         qwt_point_mapper.cpp
-        qwt_simd_argminmax.cpp
         qwt_raster_data.cpp
         qwt_matrix_raster_data.cpp
         qwt_grid_raster_data.cpp
