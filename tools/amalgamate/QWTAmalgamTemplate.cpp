@@ -14,8 +14,9 @@
 #include "../../src/plot/qwt_math.cpp"
 #include "../../src/plot/qwt_simd_argminmax.cpp"
 #include "../../src/plot/qwt_interval.cpp"
-#include "../../src/plot/qwt_color_map.cpp"
-#include "../../src/plot/qwt_color_cycle.cpp"
+#include "../../src/core/qwt_colormap.cpp"
+#include "../../src/core/qwt_color_cycle.cpp"
+#include "../../src/core/qwt_colormap_preset.cpp"
 #include "../../src/plot/qwt_pixel_matrix.cpp"
 #include "../../src/plot/qwt_transform.cpp"
 #include "../../src/plot/qwt_scale_map.cpp"
@@ -187,6 +188,8 @@
 #include "../../src/plot3d/qwt3d_gridplot.cpp"
 #include "../../src/plot3d/qwt3d_meshplot.cpp"
 #include "../../src/plot3d/qwt3d_io_gl2ps.cpp"
+#include "../../src/plot3d/qwt3d_colormap_color.cpp"
+#include "../../src/plot3d/qwt3d_theme.cpp"
 #ifdef _MSC_VER
 #pragma warning (pop)
 #pragma pop_macro ("_CRT_SECURE_NO_WARNINGS")
