@@ -1,3 +1,34 @@
+## tag:v7.3.1 (2026-06-16)
+
+### 新功能
+
+- **qwt::core 共享库**
+    - 提取 `qwt::core` 共享库（`qwtcore.dll`），包含颜色映射和调色板公共功能
+    - `QwtColorMap` 重构：移除 `QwtInterval` 依赖，新签名 `rgb(vMin, vMax, value)`
+    - `QwtColorCycle` 从 plot 模块迁移至 core
+    - 新增 `QwtColorMapPreset` 类，提供 22 种科学可视化色彩映射预设（viridis、plasma、inferno、magma、cividis、jet、hot、cool、spring、summer、autumn、winter、gray、bone、copper、rainbow、hsv、turbo、coolwarm、rdylbu、rdylgn、spectral）
+
+- **3D 主题系统**
+    - 新增 `Qwt3DTheme` 类，提供 10 种预设主题：Default、Dark、Scientific、Warm、Cool、Matplotlib、EarthTones、Ocean、HighContrast、Presentation
+    - 新增 `ColorMapColor` 适配器，桥接 2D 色彩映射到 3D 颜色函数
+    - 5 种光照预设：NoLighting、FlatLight、Studio、Outdoor、Soft
+    - `Plot3D::setTheme()`、`Plot3D::applyTheme()` 一键应用主题
+    - `StandardColor::setPreset()` 快速切换色彩映射预设
+
+### 架构变更
+
+- 三模块架构：`qwtcore.dll` → `qwtplot.dll` + `qwtplot3d.dll`
+- `plot` 和 `plot3d` 都依赖 `core`，但彼此独立
+- 运行时需要 `qwtcore.dll` + `qwtplot.dll`（+ `qwtplot3d.dll` 如果启用 3D）
+- `src/plot/` 中保留向后兼容的转发头文件，支持现有 `#include "qwt_color_map.h"` 路径
+
+### 构建系统
+
+- 新增 `src/core/CMakeLists.txt` 用于 core 库目标
+- 更新 `src/plot/CMakeLists.txt` 链接 `qwt::core`
+- 更新 `src/plot3d/CMakeLists.txt` 链接 `qwt::core` 并包含主题源文件
+- 更新 amalgamate 工具模板以包含 core 模块文件
+
 ## tag:v7.3.0 (2026-06-12)
 
 ### 新功能

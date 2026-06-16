@@ -143,10 +143,12 @@ cmake -S . -B build -G "Visual Studio 16 2019" -A x64 `
 ```
 build/
 ├── bin_qt<QtVersion>_<Config>_<arch>/   # 可执行文件和 DLL
+│   ├── qwtcore.dll                     # 公共基础库（颜色映射、调色板）
 │   ├── qwtplot.dll                       # 2D 绘图库
 │   ├── qwtplot3d.dll                     # 3D 绘图库
 │   └── *.exe                             # 示例/测试程序
 └── lib_qt<QtVersion>_<Config>_<arch>/   # 导入库（.lib）
+    ├── qwtcore.lib
     ├── qwtplot.lib
     └── qwtplot3d.lib
 ```

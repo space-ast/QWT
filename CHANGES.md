@@ -1,3 +1,34 @@
+## tag:v7.3.1 (2026-06-16)
+
+### New Features
+
+- **qwt::core Shared Library**
+    - Extracted `qwt::core` shared library (`qwtcore.dll`) containing color mapping and palette utilities
+    - `QwtColorMap` refactored: removed `QwtInterval` dependency, new signature `rgb(vMin, vMax, value)`
+    - `QwtColorCycle` migrated from plot module to core
+    - New `QwtColorMapPreset` class with 22 scientific colormap presets (viridis, plasma, inferno, magma, cividis, jet, hot, cool, spring, summer, autumn, winter, gray, bone, copper, rainbow, hsv, turbo, coolwarm, rdylbu, rdylgn, spectral)
+
+- **3D Theme System**
+    - New `Qwt3DTheme` class with 10 preset themes: Default, Dark, Scientific, Warm, Cool, Matplotlib, EarthTones, Ocean, HighContrast, Presentation
+    - New `ColorMapColor` adapter bridging 2D colormaps to 3D color functors
+    - 5 lighting presets: NoLighting, FlatLight, Studio, Outdoor, Soft
+    - `Plot3D::setTheme()`, `Plot3D::applyTheme()` for one-call theme application
+    - `StandardColor::setPreset()` for quick colormap preset switching
+
+### Architecture Changes
+
+- Three-module architecture: `qwtcore.dll` → `qwtplot.dll` + `qwtplot3d.dll`
+- `plot` and `plot3d` both link against `core` but remain independent of each other
+- Runtime deployment requires `qwtcore.dll` + `qwtplot.dll` (+ `qwtplot3d.dll` if 3D enabled)
+- Backward-compatible forwarding headers in `src/plot/` for existing `#include "qwt_color_map.h"` paths
+
+### Build System
+
+- New `src/core/CMakeLists.txt` for the core library target
+- Updated `src/plot/CMakeLists.txt` to link against `qwt::core`
+- Updated `src/plot3d/CMakeLists.txt` to link against `qwt::core` and include theme sources
+- Updated amalgamate tool templates to include core module files
+
 ## tag:v7.3.0 (2026-06-12)
 
 ### New Features

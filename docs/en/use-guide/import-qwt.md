@@ -81,14 +81,15 @@ target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot) # Automatically adds Qt 
 target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot3d) # Automatically adds Qt and OpenGL dependencies to the target
 ```
 
-The `qwt` project provides two modules:
+The `qwt` project provides three modules:
 
+- `core` module — shared base library containing color mapping (`QwtColorMap`), color cycle (`QwtColorCycle`), and colormap presets (`QwtColorMapPreset`)
 - `plot` module — the 2D plotting library, integrating the original Qwt functionality
 - `plot3d` module — the 3D plotting library, integrating the qwtplot3d functionality
 
 > **Dependency Notes**
 >
->    The Qt modules that Qwt depends on are `Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, and `PrintSupport` (for Qt6, `OpenGLWidgets` is also included). These modules are automatically added as dependencies when importing the `qwt` library.
+>    Both `plot` and `plot3d` depend on the `core` module. The Qt modules that Qwt depends on are `Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, and `PrintSupport` (for Qt6, `OpenGLWidgets` is also included). These modules are automatically added as dependencies when importing the `qwt` library.
 >
 >   Additionally, since `Qwt 7.1`, the qwtplot3d library has been merged. If the 3D option is enabled, the `OpenGL::GLU` dependency is automatically included.
 
@@ -96,7 +97,7 @@ The `qwt` project provides two modules:
 
 `QWT` uses several predefined macros during compilation. If you manage your project with `CMake`, these macros are automatically defined when loading the library via `find_package` — no manual configuration is needed.
 
-However, if you use an IDE such as `Visual Studio` to manually import the library, you need to specify the predefined macros in addition to adding the lib files. When importing the qwtplot library compiled as a DLL, you need the predefined macro `QWT_DLL`. When importing the qwtplot3d library, you need the predefined macro `QWT3D_DLL`.
+However, if you use an IDE such as `Visual Studio` to manually import the library, you need to specify the predefined macros in addition to adding the lib files. When importing the qwtcore library, you need the predefined macro `QWTCORE_DLL`. When importing the qwtplot library compiled as a DLL, you need the predefined macro `QWT_DLL`. When importing the qwtplot3d library, you need the predefined macro `QWT3D_DLL`.
 
 !!! tips "Tip"
     As a modern C++ project, it is strongly recommended to use CMake to build your project. All these predefined macros are pre-configured in the CMake configuration.

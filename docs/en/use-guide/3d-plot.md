@@ -10,6 +10,7 @@ Qwt 7.1 integrates the original `QwtPlot3D` library, providing 3D data visualiza
 - ✅ **OpenGL rendering**: High-performance 3D rendering using OpenGL
 - ✅ **Interactive operations**: Supports mouse rotation, zooming, and panning
 - ✅ **Lighting and materials**: Supports lighting effects and material configuration
+- ✅ **Theme system**: One-click visual style switching with 10 preset themes and 22 scientific colormaps
 
 ## 3D Plot Module Structure
 
@@ -54,6 +55,7 @@ classDiagram
 | `Qwt3DFunction` | 3D function plot, generates surfaces from mathematical functions |
 | `Qwt3DAxis` | 3D axis configuration |
 | `Qwt3DColorLegend` | 3D color bar |
+| `Qwt3DTheme` | 3D theme system, encapsulates background, mesh, colormap, axes, lighting, and all visual attributes |
 
 ## Usage
 
@@ -147,6 +149,72 @@ legend->show(plot);
 // Set color mapping
 plot->setColorFromData();  // Automatically map colors based on Z values
 ```
+
+### Theme System (v7.3.1+)
+
+The `Qwt3DTheme` class provides one-click switching of 3D plot visual styles, encapsulating all visual attributes including background color, mesh color, data colormap, axis colors, title styling, lighting presets, and shading modes.
+
+#### Built-in Preset Themes
+
+| Preset Name | Description |
+|-------------|-------------|
+| `Default` | White background + jet colormap + no lighting |
+| `Dark` | Dark gray background + viridis + soft lighting |
+| `Scientific` | White background + jet + studio lighting |
+| `Warm` | Warm-toned background + hot colormap |
+| `Cool` | Cool-toned background + cool colormap |
+| `Matplotlib` | matplotlib style (viridis + soft lighting) |
+| `EarthTones` | Earth tones + autumn colormap |
+| `Ocean` | Ocean tones + winter colormap |
+| `HighContrast` | Black background with white lines for high contrast |
+| `Presentation` | Large fonts + thick lines, suitable for presentations |
+
+#### Usage Examples
+
+```cpp
+#include <qwt3d_theme.h>
+
+// Method 1: Use preset theme (recommended)
+plot->applyTheme(Qwt3DTheme::Dark);
+
+// Method 2: Apply theme by name
+plot->applyTheme("Scientific");
+
+// Method 3: Custom theme
+Qwt3DTheme theme(Qwt3DTheme::Scientific);
+theme.setDataColorPreset("plasma");  // Use one of 22 scientific colormap presets
+theme.setShininess(20.0);
+theme.setLightingPreset(Qwt3DTheme::Studio);
+theme.apply(&plot);
+```
+
+#### Colormap Presets
+
+`Qwt3DTheme` provides 22 scientific visualization colormaps via the `core` module's `QwtColorMapPreset`:
+
+- Perceptually uniform: `viridis`, `plasma`, `inferno`, `magma`, `cividis`
+- Classic: `jet`, `hot`, `cool`, `spring`, `summer`, `autumn`, `winter`
+- Grayscale: `gray`, `bone`, `copper`
+- Rainbow: `rainbow`, `hsv`, `turbo`
+- Diverging: `coolwarm`, `rdylbu`, `rdylgn`, `spectral`
+
+```cpp
+// Switch colormap
+theme.setDataColorPreset("viridis");
+
+// View all available presets
+QStringList presets = QwtColorMapPreset::availablePresets();
+```
+
+#### Lighting Presets
+
+| Preset | Description |
+|--------|-------------|
+| `NoLighting` | No lighting, solid color rendering |
+| `FlatLight` | Uniform ambient light |
+| `Studio` | Classic three-point lighting |
+| `Outdoor` | Strong directional light + ambient |
+| `Soft` | Soft diffuse lighting |
 
 ## Build Configuration
 

@@ -29,16 +29,35 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 
 ## 架构关键点
 
-### 双库结构（非单库）
+### 三库结构（非单库）
 
-项目生成两个独立的 shared library：
+项目生成三个 shared library：
 
 | 目标 | CMake target | 输出名 | DLL 导出宏 |
 |------|-------------|--------|-----------|
+| 公共基础 | `qwt::core` | `qwtcore.dll` / `libqwtcore.so` | `QWTCORE_EXPORT` |
 | 2D 绘图 | `qwt::plot` | `qwtplot.dll` / `libqwtplot.so` | `QWT_EXPORT` |
 | 3D 绘图 | `qwt::plot3d` | `qwtplot3d.dll` / `libqwtplot3d.so` | `QWT3D_EXPORT` |
 
-两者独立构建，3D 模块通过 `QWT_CONFIG_QWTPLOT_3D` 控制。依赖：
+依赖关系：`plot` 和 `plot3d` 都依赖 `core`，但彼此互不依赖。
+
+```
+    ┌──────────┐
+    │ qwt::core │  ← 颜色映射、调色板、预设
+    └──────────┘
+      ↗        ↖
+┌──────────┐  ┌───────────┐
+│ qwt::plot │  │qwt::plot3d│
+│   (2D)    │  │   (3D)    │
+└──────────┘  └───────────┘
+```
+
+- **core**（`src/core/`）：`QwtColorMap` 及其子类、`QwtColorCycle`、`QwtColorMapPreset`（22 种科学 colormap 预设）
+- **plot**（`src/plot/`）：2D 绘图全套功能，通过 `target_link_libraries(plot PUBLIC qwt::core)` 链接 core
+- **plot3d**（`src/plot3d/`）：3D 绘图模块，通过 `QWT_CONFIG_QWTPLOT_3D` 控制，同样链接 core，包含 `Qwt3DTheme` 主题系统和 `ColorMapColor` 适配器
+
+各模块 Qt 依赖：
+- core：`Core Gui`(public)
 - 2D：`Core Gui Widgets`(public) + `Concurrent PrintSupport`(private)，可选 `OpenGL OpenGLWidgets Svg`
 - 3D：`OpenGL::GLU` + `Qt OpenGL Widgets`，内置 `gl2ps` 回退
 
@@ -159,6 +178,7 @@ QWT_DC(d);    // const PrivateData* d = d_func()
 | `QwtPlotPanner` (旧) | `QwtPlotCachePanner` |
 | - | `QwtPlotCanvasZoomer`（新增：整体画布缩放，不限轴数） |
 | - | `QwtPlotPanner`（新增：实时拖动，基于 QwtPicker） |
+| `QwtColorMap::rgb(const QwtInterval&, double)` | `QwtColorMap::rgb(double vMin, double vMax, double value)`（v7.3.1+，已移至 core 模块） |
 
 ## 关键架构概念
 
@@ -176,6 +196,26 @@ QWT_DC(d);    // const PrivateData* d = d_func()
 ### QwtFigure
 
 类似 matplotlib Figure 的多绘图布局容器，支持网格排列。通过 `QwtFigureWidgetOverlay` 提供交互操作（拖动、缩放子绘图）。
+
+### 3D 主题系统
+
+`Qwt3DTheme` 封装 3D 绘图的全部视觉属性（背景色、网格色/线宽、数据 colormap、坐标轴颜色、标题样式、光照预设、着色模式、绘图样式、材质参数）。10 种内置预设：`Default`、`Dark`、`Scientific`、`Warm`、`Cool`、`Matplotlib`、`EarthTones`、`Ocean`、`HighContrast`、`Presentation`。
+
+```cpp
+// 使用预设
+plot->applyTheme(Qwt3DTheme::Dark);
+plot->applyTheme("Scientific");
+
+// 手动定制
+Qwt3DTheme theme(Qwt3DTheme::Scientific);
+theme.setDataColorPreset("plasma");  // 使用 core 模块的 colormap 预设
+theme.setShininess(20.0);
+theme.apply(&plot);
+```
+
+`ColorMapColor` 适配器桥接 core 模块的 `QwtColorMap` 到 3D 的 `Qwt3D::Color` 接口，使得 22 种科学 colormap 预设（viridis, plasma, jet, hot 等）可直接用于 3D 表面图。
+
+光照预设（`Qwt3DTheme::LightingPreset`）：`NoLighting`、`FlatLight`、`Studio`、`Outdoor`、`Soft`。
 
 ## 不可触碰的文件
 
