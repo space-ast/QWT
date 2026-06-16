@@ -58,6 +58,9 @@ public:
     void setAlpha(double a);
     // Creates color vector for ColorLegend - essentially a copy from the internal vector
     Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) override;
+
+    // Set colormap from a preset name (e.g. "viridis", "plasma", "jet")
+    void setPreset(const QString& presetName, unsigned size = 100);
 };
 
 } // ns

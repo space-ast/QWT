@@ -1,5 +1,10 @@
 #include "qwt3d_color.h"
 #include "qwt3d_plot.h"
+#include "qwt_colormap.h"
+#include "qwt_colormap_preset.h"
+
+#include <qcolor.h>
+#include <qstring.h>
 
 using namespace Qwt3D;
 
@@ -113,4 +118,32 @@ RGBA StandardColor::operator()(double, double, double z) const
     if (static_cast< unsigned int >(index) > d->m_colors.size() - 1)
         index = static_cast< int >(d->m_colors.size() - 1);
     return d->m_colors[ index ];
+}
+
+/**
+ * @brief Set colormap from a preset name
+ * @param presetName Name of the colormap preset (e.g. "viridis", "plasma", "jet")
+ * @param size Number of color stops to sample from the colormap
+ * @details Uses QwtColorMapPreset to create a QwtLinearColorMap and samples it
+ *          at the specified number of points to fill the internal color vector.
+ */
+void StandardColor::setPreset(const QString& presetName, unsigned size)
+{
+    QWT_D(d);
+    
+    auto colorMap = QwtColorMapPreset::create(presetName);
+    
+    d->m_colors.resize(size);
+    for (unsigned i = 0; i < size; ++i) {
+        const double t = (size > 1) ? static_cast<double>(i) / (size - 1) : 0.5;
+        const QColor color = colorMap->color(0.0, 1.0, t);
+        
+        Qwt3D::RGBA rgba;
+        rgba.r = color.redF();
+        rgba.g = color.greenF();
+        rgba.b = color.blueF();
+        rgba.a = color.alphaF();
+        
+        d->m_colors[i] = rgba;
+    }
 }

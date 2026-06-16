@@ -52,6 +52,8 @@ set(QWTPLOT3D_HEADER_PLOT_3D
     qwt3d_graphplot.h
     qwt3d_multiplot.h
     qwt3d_io_gl2ps.h
+    qwt3d_colormap_color.h
+    qwt3d_theme.h
 )
 set(QWTPLOT3D_SOURCE_PLOT_3D
     qwt3d_axis.cpp
@@ -77,6 +79,8 @@ set(QWTPLOT3D_SOURCE_PLOT_3D
     qwt3d_gridplot.cpp
     qwt3d_meshplot.cpp
     qwt3d_io_gl2ps.cpp
+    qwt3d_colormap_color.cpp
+    qwt3d_theme.cpp
 )
 list(APPEND QWTPLOT3D_HEADER_FILES ${QWTPLOT3D_HEADER_PLOT_3D})
 list(APPEND QWTPLOT3D_SOURCE_FILES ${QWTPLOT3D_SOURCE_PLOT_3D})
@@ -94,6 +98,7 @@ add_library(${QWT_LIB_NAME}::${QWTPLOT3D_LIB_NAME} ALIAS ${QWTPLOT3D_LIB_NAME})
 # 依赖链接
 ########################################################
 target_link_libraries(${QWTPLOT3D_LIB_NAME} PUBLIC
+    ${QWT_LIB_NAME}::core
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::Widgets

@@ -342,14 +342,14 @@ void QwtPlotSpectroCurve::drawDots( QPainter* painter,
         if ( format == QwtColorMap::RGB )
         {
             const QRgb rgb = d->colorMap->rgb(
-                d->colorRange, sample.z() );
+                d->colorRange.minValue(), d->colorRange.maxValue(), sample.z() );
 
             painter->setPen( QPen( QColor::fromRgba( rgb ), d->penWidth ) );
         }
         else
         {
             const unsigned char index = d->colorMap->colorIndex(
-                256, d->colorRange, sample.z() );
+                256, d->colorRange.minValue(), d->colorRange.maxValue(), sample.z() );
 
             painter->setPen( QPen( QColor::fromRgba( d->colorTable[index] ),
                 d->penWidth ) );

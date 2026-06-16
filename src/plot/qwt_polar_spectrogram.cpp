@@ -362,6 +362,9 @@ void QwtPolarSpectrogram::renderTile(
     if ( !intensityRange.isValid() )
         return;
 
+    const double irMin = intensityRange.minValue();
+    const double irMax = intensityRange.maxValue();
+
     const bool doFastAtan = testPaintAttribute( ApproximatedAtan );
 
     const int y0 = imagePos.y();
@@ -406,7 +409,7 @@ void QwtPolarSpectrogram::renderTile(
                 }
                 else
                 {
-                    *line++ = d->colorMap->rgb( intensityRange, value );
+                    *line++ = d->colorMap->rgb( irMin, irMax, value );
                 }
             }
         }
@@ -437,7 +440,7 @@ void QwtPolarSpectrogram::renderTile(
 
                 const double value = d->data->value( azimuth, radius );
 
-                const uint index = d->colorMap->colorIndex( 256, intensityRange, value );
+                const uint index = d->colorMap->colorIndex( 256, irMin, irMax, value );
                 *line++ = static_cast< unsigned char >( index );
             }
         }

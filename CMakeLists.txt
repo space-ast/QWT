@@ -134,6 +134,7 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/classincludes"
 install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/qwt_version_info.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/qwt_global.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core/qwtcore_global.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${QWT_LIB_NAME}
     COMPONENT headers
 )

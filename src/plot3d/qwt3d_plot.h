@@ -5,6 +5,7 @@
 
 #include "qwt3d_coordsys.h"
 #include "qwt3d_enrichment_std.h"
+#include "qwt3d_theme.h"
 
 namespace Qwt3D
 {
@@ -133,6 +134,16 @@ public:
     void setTitleColor(Qwt3D::RGBA col);
     // Set caption text (one row only)
     void setTitle(const QString& title);
+
+    // Set and apply a theme
+    void setTheme(const Qwt3DTheme& theme);
+    // Get the current theme
+    Qwt3DTheme theme() const;
+
+    // Apply a theme preset by enum
+    void applyTheme(Qwt3DTheme::Preset preset);
+    // Apply a theme preset by name
+    void applyTheme(const QString& presetName);
 
     // Assign mouse states for rotations, scales, zoom and shifts
     void assignMouse(MouseState xrot,

@@ -82,6 +82,8 @@ public:
     bool m_lightingEnabled;
     bool m_initializedGL;
     bool m_renderPixmapRequest;
+
+    Qwt3DTheme m_theme;
 };
 
 }  // ns

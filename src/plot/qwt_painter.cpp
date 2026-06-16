@@ -28,6 +28,7 @@
 #include "qwt_math.h"
 #include "qwt_clipper.h"
 #include "qwt_color_map.h"
+#include "qwt_interval.h"
 #include "qwt_scale_map.h"
 #include "qwt_stylesheet_recorder.h"
 
@@ -1122,6 +1123,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
     QPainter pmPainter(&pixmap);
     pmPainter.translate(-devRect.x(), -devRect.y());
 
+    const double ivMin = interval.minValue();
+    const double ivMax = interval.maxValue();
+
     if (orientation == Qt::Horizontal) {
         QwtScaleMap sMap = scaleMap;
         sMap.setPaintInterval(rect.left(), rect.right());
@@ -1130,9 +1134,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
             const double value = sMap.invTransform(x);
 
             if (colorMap.format() == QwtColorMap::RGB)
-                c.setRgba(colorMap.rgb(interval, value));
+                c.setRgba(colorMap.rgb(ivMin, ivMax, value));
             else
-                c = colorTable[ colorMap.colorIndex(256, interval, value) ];
+                c = colorTable[ colorMap.colorIndex(256, ivMin, ivMax, value) ];
 
             pmPainter.setPen(c);
             pmPainter.drawLine(x, devRect.top(), x, devRect.bottom());
@@ -1146,9 +1150,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
             const double value = sMap.invTransform(y);
 
             if (colorMap.format() == QwtColorMap::RGB)
-                c.setRgba(colorMap.rgb(interval, value));
+                c.setRgba(colorMap.rgb(ivMin, ivMax, value));
             else
-                c = colorTable[ colorMap.colorIndex(256, interval, value) ];
+                c = colorTable[ colorMap.colorIndex(256, ivMin, ivMax, value) ];
 
             pmPainter.setPen(c);
             pmPainter.drawLine(devRect.left(), y, devRect.right(), y);

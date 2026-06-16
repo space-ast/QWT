@@ -296,6 +296,29 @@ void Plot3D::setTitle(const QString& title)
     d->m_title.setString(title);
 }
 
+void Plot3D::setTheme(const Qwt3DTheme& theme)
+{
+    QWT_D(d);
+    d->m_theme = theme;
+    theme.apply(this);
+}
+
+Qwt3DTheme Plot3D::theme() const
+{
+    QWT_DC(d);
+    return d->m_theme;
+}
+
+void Plot3D::applyTheme(Qwt3DTheme::Preset preset)
+{
+    setTheme(Qwt3DTheme::create(preset));
+}
+
+void Plot3D::applyTheme(const QString& presetName)
+{
+    setTheme(Qwt3DTheme::create(presetName));
+}
+
 double Plot3D::xLightRotation(unsigned idx) const
 {
     QWT_DC(d);

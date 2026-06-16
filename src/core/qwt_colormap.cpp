@@ -5,27 +5,9 @@
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the Qwt License, Version 1.0
- *
- * Modified by ChenZongYan in 2024 <czy.t@163.com>
- *   Summary of major modifications (see ChangeLog.md for full history):
- *   1. CMake build system & C++11 throughout.
- *   2. Core panner/ zoomer refactored:
- *        - QwtPanner → QwtCachePanner (pixmap-cache version)
- *        - New real-time QwtPlotPanner derived from QwtPicker.
- *   3. Zoomer supports multi-axis.
- *   4. Parasite-plot framework:
- *        - QwtFigure, QwtPlotParasiteLayout, QwtPlotTransparentCanvas,
- *        - QwtPlotScaleEventDispatcher, built-in pan/zoom on axis.
- *   5. New picker: QwtPlotSeriesDataPicker (works with date axis).
- *   6. Raster & color-map extensions:
- *        - QwtGridRasterData (2-D table + interpolation)
- *        - QwtLinearColorMap::stopColors(), stopPos() API rename.
- *   7. Bar-chart: expose pen/brush control.
- *   8. Amalgamated build: single QwtPlot.h / QwtPlot.cpp pair in src-amalgamate.
  *****************************************************************************/
 
-#include "qwt_color_map.h"
-#include "qwt_interval.h"
+#include "qwt_colormap.h"
 
 #include <qvector.h>
 
@@ -260,24 +242,25 @@ void QwtColorMap::setFormat(Format format)
 /**
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Number of colors.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and numColors - 1, or -1 for an invalid value.
  */
-uint QwtColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
+uint QwtColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0.0)
         return 0;
 
-    if (value <= interval.minValue())
+    if (value <= vMin)
         return 0;
 
     const int maxIndex = numColors - 1;
-    if (value >= interval.maxValue())
+    if (value >= vMax)
         return maxIndex;
 
-    const double v = maxIndex * ((value - interval.minValue()) / width);
+    const double v = maxIndex * ((value - vMin) / width);
     return static_cast< unsigned int >(v + 0.5);
 }
 
@@ -291,10 +274,8 @@ QVector< QRgb > QwtColorMap::colorTable256() const
 {
     QVector< QRgb > table(256);
 
-    const QwtInterval interval(0, 256);
-
     for (int i = 0; i < 256; i++)
-        table[ i ] = rgb(interval, i);
+        table[ i ] = rgb(0.0, 256.0, i);
 
     return table;
 }
@@ -310,11 +291,9 @@ QVector< QRgb > QwtColorMap::colorTable(int numColors) const
 {
     QVector< QRgb > table(numColors);
 
-    const QwtInterval interval(0.0, 1.0);
-
     const double step = 1.0 / (numColors - 1);
     for (int i = 0; i < numColors; i++)
-        table[ i ] = rgb(interval, step * i);
+        table[ i ] = rgb(0.0, 1.0, step * i);
 
     return table;
 }
@@ -456,43 +435,45 @@ QColor QwtLinearColorMap::color2() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtLinearColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
 {
     QWT_DC(d);
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0.0)
         return 0u;
 
-    const double ratio = (value - interval.minValue()) / width;
+    const double ratio = (value - vMin) / width;
     return d->colorStops.rgb(d->mode, ratio);
 }
 
 /**
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Size of the color table.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and 255.
  * @note NaN values are mapped to 0.
  */
-uint QwtLinearColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
+uint QwtLinearColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
     QWT_DC(d);
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0.0)
         return 0;
 
-    if (value <= interval.minValue())
+    if (value <= vMin)
         return 0;
 
-    if (value >= interval.maxValue())
+    if (value >= vMax)
         return numColors - 1;
 
-    const double v = (numColors - 1) * (value - interval.minValue()) / width;
+    const double v = (numColors - 1) * (value - vMin) / width;
     return static_cast< unsigned int >((d->mode == FixedColors) ? v : v + 0.5);
 }
 
@@ -596,24 +577,25 @@ int QwtAlphaColorMap::alpha2() const
 
 /**
  * @brief Map a value of a given interval into a alpha value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value, with an alpha value.
  */
-QRgb QwtAlphaColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtAlphaColorMap::rgb(double vMin, double vMax, double value) const
 {
     QWT_DC(d);
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0.0)
         return 0u;
 
-    if (value <= interval.minValue())
+    if (value <= vMin)
         return d->rgb;
 
-    if (value >= interval.maxValue())
+    if (value >= vMax)
         return d->rgbMax;
 
-    const double ratio = (value - interval.minValue()) / width;
+    const double ratio = (value - vMin) / width;
     const int alpha    = d->alpha1 + qRound(ratio * (d->alpha2 - d->alpha1));
 
     return d->rgb | (alpha << 24);
@@ -823,24 +805,25 @@ int QwtHueColorMap::alpha() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtHueColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtHueColorMap::rgb(double vMin, double vMax, double value) const
 {
     QWT_DC(d);
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0)
         return 0u;
 
-    if (value <= interval.minValue())
+    if (value <= vMin)
         return d->rgbMin;
 
-    if (value >= interval.maxValue())
+    if (value >= vMax)
         return d->rgbMax;
 
-    const double ratio = (value - interval.minValue()) / width;
+    const double ratio = (value - vMin) / width;
 
     int hue = d->hue1 + qRound(ratio * (d->hue2 - d->hue1));
     if (hue >= 360) {
@@ -1069,14 +1052,15 @@ int QwtSaturationValueColorMap::alpha() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtSaturationValueColorMap::rgb(double vMin, double vMax, double value) const
 {
     QWT_DC(d);
-    const double width = interval.width();
+    const double width = vMax - vMin;
     if (width <= 0)
         return 0u;
 
@@ -1084,39 +1068,39 @@ QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) 
 
     switch (d->tableType) {
     case PrivateData::Saturation: {
-        if (value <= interval.minValue())
+        if (value <= vMin)
             return d->rgbTable[ d->sat1 ];
 
-        if (value >= interval.maxValue())
+        if (value >= vMax)
             return d->rgbTable[ d->sat2 ];
 
-        const double ratio = (value - interval.minValue()) / width;
+        const double ratio = (value - vMin) / width;
         const int sat      = d->sat1 + qRound(ratio * (d->sat2 - d->sat1));
 
         return rgbTable[ sat ];
     }
     case PrivateData::Value: {
-        if (value <= interval.minValue())
+        if (value <= vMin)
             return d->rgbTable[ d->value1 ];
 
-        if (value >= interval.maxValue())
+        if (value >= vMax)
             return d->rgbTable[ d->value2 ];
 
-        const double ratio = (value - interval.minValue()) / width;
+        const double ratio = (value - vMin) / width;
         const int v        = d->value1 + qRound(ratio * (d->value2 - d->value1));
 
         return rgbTable[ v ];
     }
     default: {
         int s, v;
-        if (value <= interval.minValue()) {
+        if (value <= vMin) {
             s = d->sat1;
             v = d->value1;
-        } else if (value >= interval.maxValue()) {
+        } else if (value >= vMax) {
             s = d->sat2;
             v = d->value2;
         } else {
-            const double ratio = (value - interval.minValue()) / width;
+            const double ratio = (value - vMin) / width;
 
             v = d->value1 + qRound(ratio * (d->value2 - d->value1));
             s = d->sat1 + qRound(ratio * (d->sat2 - d->sat1));

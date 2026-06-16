@@ -318,7 +318,7 @@ QPen QwtPlotSpectrogram::contourPen(double level) const
         return QPen();
 
     const QwtInterval intensityRange = d->data->interval(Qt::ZAxis);
-    const QColor c(d->colorMap->rgb(intensityRange, level));
+    const QColor c(d->colorMap->rgb(intensityRange.minValue(), intensityRange.maxValue(), level));
 
     return QPen(c);
 }
@@ -586,6 +586,9 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
     if (range.width() <= 0.0)
         return;
 
+    const double rMin = range.minValue();
+    const double rMax = range.maxValue();
+
     const bool hasGaps = !d->data->testAttribute(QwtRasterData::WithoutGaps);
 
     if (d->colorMap->format() == QwtColorMap::RGB) {
@@ -607,9 +610,9 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
                 if (hasGaps && qwtIsNaN(value)) {
                     *line++ = 0u;
                 } else if (numColors == 0) {
-                    *line++ = colorMap->rgb(range, value);
+                    *line++ = colorMap->rgb(rMin, rMax, value);
                 } else {
-                    const uint index = colorMap->colorIndex(numColors, range, value);
+                    const uint index = colorMap->colorIndex(numColors, rMin, rMax, value);
                     *line++          = rgbTable[ index ];
                 }
             }
@@ -629,7 +632,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
                 if (hasGaps && qwtIsNaN(value)) {
                     *line++ = 0;
                 } else {
-                    const uint index = d->colorMap->colorIndex(256, range, value);
+                    const uint index = d->colorMap->colorIndex(256, rMin, rMax, value);
                     *line++          = static_cast< unsigned char >(index);
                 }
             }

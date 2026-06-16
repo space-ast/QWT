@@ -22,8 +22,7 @@ set(QWTPLOT_HEADER_BASE
         qwt_abstract_scale_draw.h
         qwt_bezier.h
         qwt_clipper.h
-        qwt_color_map.h
-        qwt_color_cycle.h
+        qwt_colormap_compat.h
         qwt_column_symbol.h
         qwt_date.h
         qwt_date_scale_draw.h
@@ -71,8 +70,6 @@ set(QWTPLOT_SOURCE_BASE
         qwt_abstract_scale_draw.cpp
         qwt_bezier.cpp
         qwt_clipper.cpp
-        qwt_color_map.cpp
-        qwt_color_cycle.cpp
         qwt_column_symbol.cpp
         qwt_date.cpp
         qwt_date_scale_draw.cpp
@@ -392,6 +389,9 @@ add_library(${QWT_LIB_NAME}::${QWTPLOT_LIB_NAME} ALIAS ${QWTPLOT_LIB_NAME})
 ########################################################
 # Dependency
 ########################################################
+target_link_libraries(${QWTPLOT_LIB_NAME} PUBLIC
+    ${QWT_LIB_NAME}::core
+)
 target_link_libraries(${QWTPLOT_LIB_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::Gui

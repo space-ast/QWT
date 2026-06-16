@@ -1091,7 +1091,7 @@ void QwtPlotVectorField::drawSymbol( QPainter* painter,
             range = d->boundingMagnitudeRange;
         }
 
-        const QColor c = d->colorMap->rgb( range, magnitude );
+        const QColor c = QColor::fromRgba(d->colorMap->rgb( range.minValue(), range.maxValue(), magnitude ));
 
 #if 1
         painter->setBrush( c );

@@ -586,7 +586,7 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
         int from;
         if (!values.isEmpty()) {
             from = qRound(scaleMap.transform(values[ 0 ]));
-            qwtDrawLine(painter, from, d->colorMap->color(interval, values[ 0 ]), pipeRect, liquidRect, d->orientation);
+            qwtDrawLine(painter, from, d->colorMap->color(interval.minValue(), interval.maxValue(), values[ 0 ]), pipeRect, liquidRect, d->orientation);
         }
 
         for (int i = 1; i < values.size(); i++) {
@@ -595,10 +595,10 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
             for (int pos = from + 1; pos < to; pos++) {
                 const double v = scaleMap.invTransform(pos);
 
-                qwtDrawLine(painter, pos, d->colorMap->color(interval, v), pipeRect, liquidRect, d->orientation);
+                qwtDrawLine(painter, pos, d->colorMap->color(interval.minValue(), interval.maxValue(), v), pipeRect, liquidRect, d->orientation);
             }
 
-            qwtDrawLine(painter, to, d->colorMap->color(interval, values[ i ]), pipeRect, liquidRect, d->orientation);
+            qwtDrawLine(painter, to, d->colorMap->color(interval.minValue(), interval.maxValue(), values[ i ]), pipeRect, liquidRect, d->orientation);
 
             from = to;
         }
