@@ -2,6 +2,7 @@
 
 #include <QAction>
 #include <QActionGroup>
+#include <QComboBox>
 #include <QFileDialog>
 #include <QLabel>
 #include <QMenu>
@@ -10,6 +11,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
+#include "qwt3d_theme.h"
 #include "qwt_figure.h"
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
@@ -136,11 +138,23 @@ void MainWindow::createToolBar()
     auto* animAction = toolbar->addAction("Animate Surface");
     animAction->setCheckable(true);
     connect(animAction, &QAction::toggled, this, &MainWindow::onAnimationToggled);
+    animAction->setChecked(true);
 
     // Auto-rotate toggle
     auto* rotateAction = toolbar->addAction("Auto Rotate");
     rotateAction->setCheckable(true);
     connect(rotateAction, &QAction::toggled, this, &MainWindow::onAutoRotateToggled);
+
+    toolbar->addSeparator();
+
+    // Theme selector
+    auto* themeLabel = new QLabel("Theme:");
+    toolbar->addWidget(themeLabel);
+    m_themeCombo = new QComboBox();
+    m_themeCombo->addItems(Qwt3D::Qwt3DTheme::availablePresets());
+    toolbar->addWidget(m_themeCombo);
+    connect(m_themeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &MainWindow::onThemeChanged);
 
     toolbar->addSeparator();
 
@@ -363,6 +377,13 @@ void MainWindow::onLegendToggled(bool on)
 void MainWindow::onOrthoToggled(bool on)
 {
     m_surfacePlot->setOrtho(on);
+}
+
+void MainWindow::onThemeChanged(int index)
+{
+    const QString name = m_themeCombo->itemText(index);
+    m_surfacePlot->applyTheme(name);
+    m_surfacePlot->update();
 }
 
 void MainWindow::onResetView()

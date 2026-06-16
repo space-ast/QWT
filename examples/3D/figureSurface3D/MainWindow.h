@@ -7,6 +7,7 @@
 
 class QAction;
 class QActionGroup;
+class QComboBox;
 class QLabel;
 class QTimer;
 class QwtFigure;
@@ -33,6 +34,7 @@ private Q_SLOTS:
     void onLightingToggled(bool on);
     void onLegendToggled(bool on);
     void onOrthoToggled(bool on);
+    void onThemeChanged(int index);
     void onResetView();
     void onSaveFigure();
 
@@ -57,6 +59,7 @@ private:
 
     QTimer* m_animTimer = nullptr;
     QTimer* m_rotateTimer = nullptr;
+    QComboBox* m_themeCombo = nullptr;
 
     // Time-series ring buffer
     static constexpr int TIME_SERIES_MAX = 200;

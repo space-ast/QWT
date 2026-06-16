@@ -580,6 +580,9 @@ void Plot3D::setDataColor(Color *col)
 
     d->m_dataColor->destroy();
     d->m_dataColor = col;
+
+    if (d->m_displayLegend)
+        d->m_dataColor->createVector(d->m_legend.colors);
 }
 
 /**
