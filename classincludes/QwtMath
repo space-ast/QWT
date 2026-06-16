@@ -1,1 +1,1 @@
-#include "../plot/qwt_math.h"
+#include "../core/qwt_math.h"

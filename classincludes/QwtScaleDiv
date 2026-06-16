@@ -1,1 +1,1 @@
-#include "../plot/qwt_scale_div.h"
+#include "../core/qwt_scale_div.h"

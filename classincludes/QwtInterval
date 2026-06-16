@@ -1,1 +1,1 @@
-#include "../plot/qwt_interval.h"
+#include "../core/qwt_interval.h"

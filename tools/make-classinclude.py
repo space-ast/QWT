@@ -19,21 +19,28 @@ from pathlib import Path
 
 # 固定文件映射 - 指定在哪个子目录中查找
 FIXED_FILES = {
-    'QwtMath': {'header': '../plot/qwt_math.h', 'subdir': 'plot'},
+    'QwtMath': {'header': '../core/qwt_math.h', 'subdir': 'core'},
     'QwtGlobal': {'header': '../plot/qwt_global.h', 'subdir': 'plot'}
 }
 
 # 需要处理的导出符号列表
-EXPORT_SYMBOLS = ['QWT_EXPORT', 'QWT3D_EXPORT']
+EXPORT_SYMBOLS = ['QWT_EXPORT', 'QWTCORE_EXPORT', 'QWT3D_EXPORT']
 
 # 导出符号到文件前缀的映射
 EXPORT_PREFIX = {
     'QWT_EXPORT': '',           # QWT_EXPORT -> 不添加前缀
+    'QWTCORE_EXPORT': '',       # QWTCORE_EXPORT -> 不添加前缀
     'QWT3D_EXPORT': 'Qwt3D'     # QWT3D_EXPORT -> 添加 Qwt3D 前缀
 }
 
 # 扫描目录配置
 SCAN_DIRS_CONFIG = {
+    'core': {
+        'path': 'core',
+        'include_prefix': '../core/',
+        'export_symbols': ['QWTCORE_EXPORT'],
+        'class_prefix': 'qwt_'
+    },
     'plot': {
         'path': 'plot',
         'include_prefix': '../plot/',

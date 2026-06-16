@@ -1,1 +1,1 @@
-#include "../plot/qwt_bezier.h"
+#include "../core/qwt_bezier.h" 
