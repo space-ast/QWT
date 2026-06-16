@@ -21,6 +21,14 @@
 - `plot` and `plot3d` both link against `core` but remain independent of each other
 - Runtime deployment requires `qwtcore.dll` + `qwtplot.dll` (+ `qwtplot3d.dll` if 3D enabled)
 - Backward-compatible forwarding headers in `src/plot/` for existing `#include "qwt_color_map.h"` paths
+- **Core Module Expansion**: Migrated 18 utility modules from `plot` to `core`, expanding core from 3 color-related modules to a complete foundational library of 21 modules:
+    - Math utilities: `qwt_math.h`, `qwt_simd_argminmax.h`
+    - Data types: `QwtInterval`, `QwtPoint3D`, `QwtPointPolar`, `QwtSamples`, `QwtBoxStatistics`
+    - Geometry: `QwtBezier`, `QwtClipper`
+    - Coordinate transforms: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`
+    - Date/Time: `QwtDate`, `QwtSystemClock`
+    - Algorithms & compatibility: `qwt_algorithm.hpp`, `qwt_qt5qt6_compat.hpp`
+    - Data containers: `QwtGridData`
 
 ### Build System
 

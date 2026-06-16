@@ -83,15 +83,38 @@ target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot3d) # Automatically adds Q
 
 The `qwt` project provides three modules:
 
-- `core` module — shared base library containing color mapping (`QwtColorMap`), color cycle (`QwtColorCycle`), and colormap presets (`QwtColorMapPreset`)
+- `core` module — shared base library containing 21 modules of foundational utilities:
+    - **Color utilities**: `QwtColorMap` (and subclasses), `QwtColorCycle`, `QwtColorMapPreset` (22 scientific colormap presets)
+    - **Math utilities**: `qwtMinF`, `qwtMaxF`, math constants, `qwtSimdArgMinMax` (SIMD-accelerated argmin/argmax)
+    - **Data types**: `QwtInterval`, `QwtPoint3D`, `QwtPointPolar`, `QwtSamples`, `QwtBoxStatistics`
+    - **Geometry**: `QwtBezier` (Bézier curves), `QwtClipper` (polygon clipping)
+    - **Coordinate transforms**: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`
+    - **Date/Time**: `QwtDate`, `QwtSystemClock`
+    - **Algorithms & compatibility**: `qwt_algorithm.hpp`, `qwt_qt5qt6_compat.hpp` (Qt5/Qt6 compatibility layer)
+    - **Data containers**: `QwtGridData`
 - `plot` module — the 2D plotting library, integrating the original Qwt functionality
 - `plot3d` module — the 3D plotting library, integrating the qwtplot3d functionality
 
+```
+    ┌────────────────────┐
+    │     qwt::core      │  ← foundational utilities (color, math, types, geometry, transforms, time)
+    └────────────────────┘
+          ↗         ↖
+ ┌────────────┐  ┌─────────────┐
+ │  qwt::plot  │  │ qwt::plot3d │
+ │    (2D)     │  │    (3D)     │
+ └────────────┘  └─────────────┘
+```
+
 > **Dependency Notes**
 >
->    Both `plot` and `plot3d` depend on the `core` module. The Qt modules that Qwt depends on are `Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, and `PrintSupport` (for Qt6, `OpenGLWidgets` is also included). These modules are automatically added as dependencies when importing the `qwt` library.
+>    Both `plot` and `plot3d` depend on the `core` module, but are independent of each other.
 >
->   Additionally, since `Qwt 7.1`, the qwtplot3d library has been merged. If the 3D option is enabled, the `OpenGL::GLU` dependency is automatically included.
+>    - `qwt::core` depends only on Qt `Core` + `Gui`
+>    - `qwt::plot` depends on Qt `Core` + `Gui` + `Widgets` + `Svg` + `Concurrent` + `OpenGL` + `PrintSupport` (Qt6 also includes `OpenGLWidgets`). All dependencies are added automatically when importing via CMake.
+>    - `qwt::plot3d` depends on Qt `Core` + `Gui` + `Widgets` + `OpenGL::GLU` + `Qt OpenGL Widgets`
+>
+>    If the 3D option is enabled, the `OpenGL::GLU` dependency is automatically included.
 
 ## Public Predefined Macros
 

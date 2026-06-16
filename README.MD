@@ -57,6 +57,7 @@ Goals and current progress:
 - [x] Color cycle system (`QwtColorCycle`)
 - [x] Arrow marker (`QwtPlotArrowMarker`)
 - [x] Flat-style controls (sliders, knobs, dials, etc.)
+- [x] Modular architecture: core (foundational utilities) + plot (2D plotting) + plot3d (3D plotting)
 
 In short, I will keep maintaining `Qwt` so it becomes a license-friendly, high-performance, and easy-to-use Qt plotting library.
 
@@ -69,10 +70,12 @@ After installing Qwt you can simply link it in your project:
 
 ```cmake
 find_package(qwt)
-# 2D plotting
+# 2D plotting (automatically links qwt::core)
 target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot)
-# 3D plotting
+# 3D plotting (automatically links qwt::core)
 target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot3d)
+# Foundational utilities only (math, data types, geometry, transforms, etc.)
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 ```
 
 ### Single Header & Source File

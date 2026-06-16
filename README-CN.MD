@@ -43,6 +43,7 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
 - [x] 颜色循环系统（`QwtColorCycle`）
 - [x] 箭头标记（`QwtPlotArrowMarker`）
 - [x] Flat风格控件（滑块、旋钮、刻度盘等）
+- [x] 模块化架构：core（基础工具库）+ plot（2D绘图）+ plot3d（3D绘图）
 
 总之，我将继续维护`Qwt`，让其成为一个协议友好，性能优越，方便使用的Qt绘图库
 
@@ -56,10 +57,12 @@ Qwt7.0已经支持`CMake`，并且未来将考虑抛弃`QMake`
 
 ```cmake
 find_package(qwt)
-# 引入2d绘图
+# 引入2D绘图（自动链接 qwt::core）
 target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot)
-# 引入3d绘图
+# 引入3D绘图（自动链接 qwt::core）
 target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::plot3d)
+# 仅引入基础工具库（数学函数、数据类型、几何算法、坐标变换等）
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 ```
 
 ### 单一头文件和源文件

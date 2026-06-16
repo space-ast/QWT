@@ -1,5 +1,7 @@
 # amalgamate（把工程整合为一个h+一个cpp）
 
+> **注意**：Qwt 7.x 采用三模块架构（`qwt::core`、`qwt::plot`、`qwt::plot3d`）。Amalgamate 工具会将所有三个模块的头文件和源文件合并为单一的 `QwtPlot.h` 和 `QwtPlot.cpp`。`QWTAmalgamTemplatePublicHeaders.h` 现在包含来自 `src/core/` 和 `src/plot/` 两个目录的头文件。
+
 amalgamate工具可以把一个工程所有的cpp文件合并为一个超大的cpp文件，把所有h文件合并为一个头文件，这样整个工程只有1个h文件和1个cpp文件，直接引入工程即可使用，对于那种无需编译为库的情况非常方便
 
 SARibbon借助[https://github.com/vinniefalco/Amalgamate.git](https://github.com/vinniefalco/Amalgamate.git) 这个工具，实现工程文件的合并

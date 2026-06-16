@@ -42,17 +42,17 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 依赖关系：`plot` 和 `plot3d` 都依赖 `core`，但彼此互不依赖。
 
 ```
-    ┌──────────┐
-    │ qwt::core │  ← 颜色映射、调色板、预设
-    └──────────┘
-      ↗        ↖
-┌──────────┐  ┌───────────┐
-│ qwt::plot │  │qwt::plot3d│
-│   (2D)    │  │   (3D)    │
-└──────────┘  └───────────┘
+    ┌──────────────────────────┐
+    │        qwt::core         │  ← 基础工具库（颜色、数学、数据类型、几何、变换、时间等）
+    └──────────────────────────┘
+           ↗              ↖
+  ┌──────────────┐  ┌───────────────┐
+  │   qwt::plot   │  │  qwt::plot3d  │
+  │     (2D)      │  │     (3D)      │
+  └──────────────┘  └───────────────┘
 ```
 
-- **core**（`src/core/`）：`QwtColorMap` 及其子类、`QwtColorCycle`、`QwtColorMapPreset`（22 种科学 colormap 预设）
+- **core**（`src/core/`）：完整基础工具库，21 个模块，详见下方 "Core Module Structure"
 - **plot**（`src/plot/`）：2D 绘图全套功能，通过 `target_link_libraries(plot PUBLIC qwt::core)` 链接 core
 - **plot3d**（`src/plot3d/`）：3D 绘图模块，通过 `QWT_CONFIG_QWTPLOT_3D` 控制，同样链接 core，包含 `Qwt3DTheme` 主题系统和 `ColorMapColor` 适配器
 
@@ -60,6 +60,58 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 - core：`Core Gui`(public)
 - 2D：`Core Gui Widgets`(public) + `Concurrent PrintSupport`(private)，可选 `OpenGL OpenGLWidgets Svg`
 - 3D：`OpenGL::GLU` + `Qt OpenGL Widgets`，内置 `gl2ps` 回退
+
+### Core Module Structure
+
+`src/core/` 包含 21 个模块，按功能分类如下：
+
+| 类别 | 文件 | 说明 |
+|------|------|------|
+| **全局** | `qwtcore_global.h` | 模块导出宏 `QWTCORE_EXPORT` |
+| **颜色工具** | `qwt_colormap.h/.cpp` | `QwtColorMap` 及子类（线性、HSV、饱和度等） |
+| | `qwt_colormap_preset.h/.cpp` | `QwtColorMapPreset`：22 种科学 colormap 预设 |
+| | `qwt_color_cycle.h/.cpp` | `QwtColorCycle`：颜色循环系统 |
+| **数学工具** | `qwt_math.h/.cpp` | 数学常量、`qwtMinF`/`qwtMaxF` 等工具函数 |
+| | `qwt_simd_argminmax.h/.cpp` | SIMD 加速的 argmin/argmax（SSE2/AVX2/NEON） |
+| **数据类型** | `qwt_interval.h/.cpp` | `QwtInterval`：区间类型 |
+| | `qwt_point_3d.h/.cpp` | `QwtPoint3D`：三维点 |
+| | `qwt_point_polar.h/.cpp` | `QwtPointPolar`：极坐标点 |
+| | `qwt_samples.h` | `QwtSamples`、`QwtBoxSample` 等样本数据结构 |
+| | `qwt_box_statistics.h/.cpp` | `QwtBoxStatistics`：箱线图统计量 |
+| **几何算法** | `qwt_bezier.h/.cpp` | `QwtBezier`：贝塞尔曲线（de Casteljau） |
+| | `qwt_clipper.h/.cpp` | `QwtClipper`：多边形裁剪算法 |
+| **坐标变换** | `qwt_transform.h/.cpp` | `QwtTransform` 及子类（线性、对数等） |
+| | `qwt_scale_map.h/.cpp` | `QwtScaleMap`：坐标映射 |
+| | `qwt_scale_div.h/.cpp` | `QwtScaleDiv`：刻度划分 |
+| **时间处理** | `qwt_date.h/.cpp` | `QwtDate`：日期时间工具 |
+| | `qwt_system_clock.h/.cpp` | `QwtSystemClock`：高精度计时器 |
+| **通用算法** | `qwt_algorithm.hpp` | `qwtSelectNextIterator` 等通用算法 |
+| | `qwt_qt5qt6_compat.hpp` | Qt5/Qt6 兼容层（`qwt::compat::` 命名空间） |
+| **数据容器** | `qwt_grid_data.hpp` | `QwtGridData`：网格数据容器 |
+
+`src/core/CMakeLists.txt` 完整文件列表：
+
+```cmake
+set(QWTCORE_HEADER_FILES
+    qwtcore_global.h
+    qwt_colormap.h           qwt_color_cycle.h        qwt_colormap_preset.h
+    qwt_math.h               qwt_interval.h           qwt_point_3d.h
+    qwt_point_polar.h        qwt_system_clock.h       qwt_algorithm.hpp
+    qwt_qt5qt6_compat.hpp    qwt_samples.h            qwt_bezier.h
+    qwt_clipper.h            qwt_date.h               qwt_transform.h
+    qwt_scale_map.h          qwt_scale_div.h          qwt_simd_argminmax.h
+    qwt_box_statistics.h     qwt_grid_data.hpp
+)
+
+set(QWTCORE_SOURCE_FILES
+    qwt_colormap.cpp         qwt_color_cycle.cpp      qwt_colormap_preset.cpp
+    qwt_math.cpp             qwt_interval.cpp         qwt_point_3d.cpp
+    qwt_point_polar.cpp      qwt_system_clock.cpp     qwt_bezier.cpp
+    qwt_clipper.cpp          qwt_date.cpp             qwt_transform.cpp
+    qwt_scale_map.cpp        qwt_scale_div.cpp        qwt_simd_argminmax.cpp
+    qwt_box_statistics.cpp
+)
+```
 
 ### 条件编译模块
 

@@ -21,6 +21,14 @@
 - `plot` 和 `plot3d` 都依赖 `core`，但彼此独立
 - 运行时需要 `qwtcore.dll` + `qwtplot.dll`（+ `qwtplot3d.dll` 如果启用 3D）
 - `src/plot/` 中保留向后兼容的转发头文件，支持现有 `#include "qwt_color_map.h"` 路径
+- **Core 模块扩展**：将 18 个通用工具模块从 `plot` 迁移至 `core`，core 模块从仅 3 个颜色相关模块扩展为包含 21 个模块的完整基础工具库：
+    - 数学工具：`qwt_math.h`、`qwt_simd_argminmax.h`
+    - 数据类型：`QwtInterval`、`QwtPoint3D`、`QwtPointPolar`、`QwtSamples`、`QwtBoxStatistics`
+    - 几何算法：`QwtBezier`、`QwtClipper`
+    - 坐标变换：`QwtTransform`、`QwtScaleMap`、`QwtScaleDiv`
+    - 时间处理：`QwtDate`、`QwtSystemClock`
+    - 通用算法与兼容层：`qwt_algorithm.hpp`、`qwt_qt5qt6_compat.hpp`
+    - 数据容器：`QwtGridData`
 
 ### 构建系统
 

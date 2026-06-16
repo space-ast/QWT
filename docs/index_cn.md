@@ -10,6 +10,44 @@
 - **C++标准**：C++11（Qt6时使用C++17）
 - **构建系统**：CMake
 
+## 基础工具模块 (core)
+
+`qwt::core`（`qwtcore.dll`）是项目的基础工具库，包含 21 个模块，`plot` 和 `plot3d` 都依赖此模块。
+
+```
+    ┌────────────────────┐
+    │     qwt::core      │  ← 基础工具库（颜色、数学、数据类型、几何、变换、时间等）
+    └────────────────────┘
+          ↗         ↖
+ ┌────────────┐  ┌─────────────┐
+ │  qwt::plot  │  │ qwt::plot3d │
+ │    (2D)     │  │    (3D)     │
+ └────────────┘  └─────────────┘
+```
+
+| 类别 | 类/模块 | 说明 |
+|------|---------|------|
+| 颜色工具 | `QwtColorMap` 及子类 | 颜色映射（线性、HSV、饱和度等） |
+| | `QwtColorMapPreset` | 22 种科学可视化色彩映射预设 |
+| | `QwtColorCycle` | 颜色循环系统 |
+| 数学工具 | `qwt_math.h` | 数学常量、`qwtMinF`/`qwtMaxF` 等工具函数 |
+| | `qwtSimdArgMinMax` | SIMD 加速的 argmin/argmax |
+| 数据类型 | `QwtInterval` | 区间类型 |
+| | `QwtPoint3D` | 三维点 |
+| | `QwtPointPolar` | 极坐标点 |
+| | `QwtSamples` | 样本数据结构 |
+| | `QwtBoxStatistics` | 箱线图统计量 |
+| 几何算法 | `QwtBezier` | 贝塞尔曲线（de Casteljau 算法） |
+| | `QwtClipper` | 多边形裁剪 |
+| 坐标变换 | `QwtTransform` | 坐标变换（线性、对数等） |
+| | `QwtScaleMap` | 坐标映射 |
+| | `QwtScaleDiv` | 刻度划分 |
+| 时间处理 | `QwtDate` | 日期时间工具 |
+| | `QwtSystemClock` | 高精度计时器 |
+| 通用算法 | `qwt_algorithm.hpp` | 通用算法工具 |
+| | `qwt_qt5qt6_compat.hpp` | Qt5/Qt6 兼容层 |
+| 数据容器 | `QwtGridData` | 网格数据容器 |
+
 ## 2D绘图核心模块
 
 | 类名 | 功能描述 |
@@ -78,19 +116,23 @@ Qwt使用 `QwtAxis::Position` 枚举标识坐标轴位置：
 
 ```cmake
 find_package(qwt REQUIRED)
-# 2D绘图
+# 2D绘图（自动链接 qwt::core）
 target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot)
-# 3D绘图
+# 3D绘图（自动链接 qwt::core）
 target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
+# 如果只需要基础工具（如数学函数、数据类型），可以只链接 core
+target_link_libraries(${PROJECT_NAME} PRIVATE qwt::core)
 ```
+
+依赖说明：
+- `qwt::core` 仅依赖 Qt `Core` + `Gui`
+- `qwt::plot` 依赖 Qt `Core` + `Gui` + `Widgets` + `Svg` + `Concurrent` + `OpenGL` + `PrintSupport`
+- `qwt::plot3d` 依赖 Qt `Core` + `Gui` + `Widgets` + `OpenGL::GLU` + Qt OpenGL Widgets
+- Qt6 额外需要：`OpenGLWidgets`
 
 ### 单文件直接引入
 
 将 `src-amalgamate/QwtPlot.h` 和 `src-amalgamate/QwtPlot.cpp` 加入项目。
-
-依赖的Qt模块：`Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, `PrintSupport`
-Qt6额外需要：`OpenGLWidgets`
-3D功能需要：`OpenGL::GLU`
 
 ## 版权信息
 
