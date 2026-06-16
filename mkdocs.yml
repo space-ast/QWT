@@ -84,6 +84,7 @@ plugins:
                     - Symbol: en/use-guide/symbol.md
                 - Utility Classes:
                     - Plot Utilities: en/use-guide/plot-utilities.md
+                    - PyPlot API: en/use-guide/pyplot-api.md
             - Charts:
                 - Core Plot Items:
                     - Curve: en/use-guide/curve.md
@@ -158,6 +159,7 @@ plugins:
                     - 符号样式: zh/use-guide/symbol.md
                 - 工具类:
                     - 绘图工具类: zh/use-guide/plot-utilities.md
+                    - PyPlot接口: zh/use-guide/pyplot-api.md
             - 图表类型:
                 - 核心绘图项:
                     - 曲线图: zh/use-guide/curve.md

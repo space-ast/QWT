@@ -527,3 +527,20 @@ void setupPlot(QwtPlot* plot)
 
 !!! example "相关示例"
     工具类的使用方式可以结合现有的 `examples/2D/` 下的示例进行理解。
+
+## 高层封装：QwtPyPlot
+
+如果你熟悉 matplotlib 的接口风格，可以使用 [QwtPyPlot](pyplot-api.md) 获得更简洁的绘图体验。`QwtPyPlot` 在内部使用上述工具类，但提供了类似 `plt.plot()` 的一站式接口：
+
+```cpp
+#include <QwtPyPlot>
+
+QwtPlot* plot = new QwtPlot;
+QwtPyPlot plt(plot);
+
+plt.plot(x, y, "r-o", "Temperature");  // 一行搞定
+plt.setTitle("My Plot");
+plt.grid(true);
+plt.legend();
+plot->show();
+```

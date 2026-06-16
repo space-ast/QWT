@@ -110,6 +110,7 @@
 #include "qwt_plot_data_access.h"
 #include "qwt_plot_transform.h"
 #include "qwt_plot_styling.h"
+#include "qwt_pyplot.h"
 //!@}
 
 /**

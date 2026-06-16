@@ -524,3 +524,20 @@ The utility classes cover all plot item types in Qwt 7:
 
 !!! example "Related Examples"
     See the examples under `examples/2D/` for practical usage of these utility classes in context.
+
+## Higher-Level Wrapper: QwtPyPlot
+
+If you are familiar with matplotlib's interface style, you can use [QwtPyPlot](pyplot-api.md) for a more concise plotting experience. `QwtPyPlot` uses the utility classes described above internally, but provides a one-stop interface similar to `plt.plot()`:
+
+```cpp
+#include <QwtPyPlot>
+
+QwtPlot* plot = new QwtPlot;
+QwtPyPlot plt(plot);
+
+plt.plot(x, y, "r-o", "Temperature");  // One line does it all
+plt.setTitle("My Plot");
+plt.grid(true);
+plt.legend();
+plot->show();
+```

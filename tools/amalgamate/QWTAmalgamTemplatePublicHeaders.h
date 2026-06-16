@@ -133,6 +133,7 @@
 #include "../../src/plot/qwt_plot_factory.h"
 #include "../../src/plot/qwt_plot_transform.h"
 #include "../../src/plot/qwt_plot_styling.h"
+#include "../../src/plot/qwt_pyplot.h"
 // polar items
 #include "../../src/plot/qwt_polar_canvas.h"
 #include "../../src/plot/qwt_polar_item.h"

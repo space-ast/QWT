@@ -83,6 +83,13 @@
 #include "../../src/plot/qwt_canvas_picker.cpp"
 #include "../../src/plot/qwt_cache_panner.cpp"
 #include "../../src/plot/qwt_utils.cpp"
+// utility classes
+#include "../../src/plot/qwt_plot_item_info.cpp"
+#include "../../src/plot/qwt_plot_data_access.cpp"
+#include "../../src/plot/qwt_plot_factory.cpp"
+#include "../../src/plot/qwt_plot_transform.cpp"
+#include "../../src/plot/qwt_plot_styling.cpp"
+#include "../../src/plot/qwt_pyplot.cpp"
 // plot items
 #include "../../src/plot/qwt_plot_dict.cpp"
 #include "../../src/plot/qwt_plot_abstract_canvas.cpp"

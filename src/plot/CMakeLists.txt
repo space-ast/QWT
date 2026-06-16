@@ -198,6 +198,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_factory.h
         qwt_plot_transform.h
         qwt_plot_styling.h
+        qwt_pyplot.h
     )
     set(QWTPLOT_SOURCE_PLOT
         qwt_curve_fitter.cpp
@@ -272,6 +273,7 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_factory.cpp
         qwt_plot_transform.cpp
         qwt_plot_styling.cpp
+        qwt_pyplot.cpp
     )
 
     list(APPEND QWTPLOT_HEADER_FILES ${QWTPLOT_HEADER_PLOT})
