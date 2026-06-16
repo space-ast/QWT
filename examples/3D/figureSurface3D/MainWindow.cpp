@@ -134,11 +134,11 @@ void MainWindow::createToolBar()
     auto* toolbar = addToolBar("Controls");
     toolbar->setMovable(false);
 
-    // Animation toggle
+    // Animation toggle (auto-start deferred until event loop runs, after GL context is ready)
     auto* animAction = toolbar->addAction("Animate Surface");
     animAction->setCheckable(true);
     connect(animAction, &QAction::toggled, this, &MainWindow::onAnimationToggled);
-    animAction->setChecked(true);
+    QTimer::singleShot(0, animAction, [animAction]() { animAction->setChecked(true); });
 
     // Auto-rotate toggle
     auto* rotateAction = toolbar->addAction("Auto Rotate");
