@@ -40,6 +40,13 @@ set(QWTCORE_HEADER_FILES
     qwt_simd_argminmax.h
     qwt_box_statistics.h
     qwt_grid_data.hpp
+    qwt_scale_engine.h
+    qwt_series_data.h
+    qwt_point_data.h
+    qwt_series_store.h
+    qwt_raster_data.h
+    qwt_matrix_raster_data.h
+    qwt_grid_raster_data.h
 )
 
 set(QWTCORE_SOURCE_FILES
@@ -59,6 +66,12 @@ set(QWTCORE_SOURCE_FILES
     qwt_scale_div.cpp
     qwt_simd_argminmax.cpp
     qwt_box_statistics.cpp
+    qwt_scale_engine.cpp
+    qwt_series_data.cpp
+    qwt_point_data.cpp
+    qwt_raster_data.cpp
+    qwt_matrix_raster_data.cpp
+    qwt_grid_raster_data.cpp
 )
 
 ########################################################

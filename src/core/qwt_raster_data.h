@@ -27,7 +27,7 @@
 #ifndef QWT_RASTER_DATA_H
 #define QWT_RASTER_DATA_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include <qnamespace.h>
 
 class QwtInterval;
@@ -59,7 +59,7 @@ class QMap;
  * @sa QwtMatrixRasterData
  * 
  */
-class QWT_EXPORT QwtRasterData
+class QWTCORE_EXPORT QwtRasterData
 {
 public:
     //! Contour lines

@@ -37,7 +37,6 @@ set(QWTPLOT_HEADER_BASE
         qwt_pixel_matrix.h
         qwt_round_scale_draw.h
         qwt_scale_draw.h
-        qwt_scale_engine.h
         qwt_spline.h
         qwt_spline_basis.h
         qwt_spline_parametrization.h
@@ -68,6 +67,7 @@ set(QWTPLOT_HEADER_BASE
         qwt_scale_map.h
         qwt_scale_div.h
         qwt_grid_data.hpp
+        qwt_scale_engine.h
 )
 set(QWTPLOT_SOURCE_BASE
         qwt_abstract_scale_draw.cpp
@@ -88,7 +88,6 @@ set(QWTPLOT_SOURCE_BASE
         qwt_pixel_matrix.cpp
         qwt_round_scale_draw.cpp
         qwt_scale_draw.cpp
-        qwt_scale_engine.cpp
         qwt_spline.cpp
         qwt_spline_basis.cpp
         qwt_spline_parametrization.cpp
@@ -165,19 +164,19 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.h
         qwt_plot_rescaler.h
         qwt_point_mapper.h
-        qwt_raster_data.h
-        qwt_matrix_raster_data.h
-        qwt_grid_raster_data.h
         qwt_vectorfield_symbol.h
         qwt_sampling_thread.h
-        qwt_series_data.h
         # forward headers for core-migrated files
         qwt_box_statistics.h
         qwt_simd_argminmax.h
         qwt_grid_data.hpp
         qwt_samples.h
+        qwt_series_data.h
         qwt_series_store.h
         qwt_point_data.h
+        qwt_raster_data.h
+        qwt_matrix_raster_data.h
+        qwt_grid_raster_data.h
         qwt_scale_widget.h
         qwt_figure_layout.h
         qwt_figure.h
@@ -244,13 +243,8 @@ if(QWT_CONFIG_QWTPLOT)
         qwt_plot_magnifier.cpp
         qwt_plot_rescaler.cpp
         qwt_point_mapper.cpp
-        qwt_raster_data.cpp
-        qwt_matrix_raster_data.cpp
-        qwt_grid_raster_data.cpp
         qwt_vectorfield_symbol.cpp
         qwt_sampling_thread.cpp
-        qwt_series_data.cpp
-        qwt_point_data.cpp
         qwt_scale_widget.cpp
         qwt_figure_layout.cpp
         qwt_figure.cpp

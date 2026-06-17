@@ -27,7 +27,7 @@
 #ifndef QWT_SCALE_ENGINE_H
 #define QWT_SCALE_ENGINE_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_scale_div.h"
 
 class QwtInterval;
@@ -36,7 +36,7 @@ class QwtTransform;
 /**
  * @brief Arithmetic including a tolerance
  */
-class QWT_EXPORT QwtScaleArithmetic
+class QWTCORE_EXPORT QwtScaleArithmetic
 {
 public:
     /// Ceiling with epsilon tolerance
@@ -58,7 +58,7 @@ public:
  *          Qwt offers implementations for logarithmic and linear scales.
  * @sa QwtLinearScaleEngine, QwtLogScaleEngine
  */
-class QWT_EXPORT QwtScaleEngine
+class QWTCORE_EXPORT QwtScaleEngine
 {
 public:
     /**
@@ -155,7 +155,7 @@ private:
  * @details The step size will fit into the pattern \f$\left\{ 1,2,5\right\} \cdot 10^{n}\f$, where n is an integer.
  */
 
-class QWT_EXPORT QwtLinearScaleEngine : public QwtScaleEngine
+class QWTCORE_EXPORT QwtLinearScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLinearScaleEngine(uint base = 10);
@@ -184,7 +184,7 @@ protected:
  * @warning The step size as well as the margins are measured in *decades*.
  */
 
-class QWT_EXPORT QwtLogScaleEngine : public QwtScaleEngine
+class QWTCORE_EXPORT QwtLogScaleEngine : public QwtScaleEngine
 {
 public:
     explicit QwtLogScaleEngine(uint base = 10);

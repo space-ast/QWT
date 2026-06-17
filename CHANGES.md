@@ -1,4 +1,4 @@
-## tag:v7.3.1 (2026-06-16)
+## tag:v7.3.1 (2026-06-17)
 
 ### New Features
 
@@ -7,6 +7,7 @@
     - `QwtColorMap` refactored: removed `QwtInterval` dependency, new signature `rgb(vMin, vMax, value)`
     - `QwtColorCycle` migrated from plot module to core
     - New `QwtColorMapPreset` class with 22 scientific colormap presets (viridis, plasma, inferno, magma, cividis, jet, hot, cool, spring, summer, autumn, winter, gray, bone, copper, rainbow, hsv, turbo, coolwarm, rdylbu, rdylgn, spectral)
+    - Backward-compatible `QwtColorMapCompat` namespace in `src/plot/qwt_colormap_compat.h` providing `QwtInterval`-based overloads
 
 - **3D Theme System**
     - New `Qwt3DTheme` class with 10 preset themes: Default, Dark, Scientific, Warm, Cool, Matplotlib, EarthTones, Ocean, HighContrast, Presentation
@@ -21,14 +22,16 @@
 - `plot` and `plot3d` both link against `core` but remain independent of each other
 - Runtime deployment requires `qwtcore.dll` + `qwtplot.dll` (+ `qwtplot3d.dll` if 3D enabled)
 - Backward-compatible forwarding headers in `src/plot/` for existing `#include "qwt_color_map.h"` paths
-- **Core Module Expansion**: Migrated 18 utility modules from `plot` to `core`, expanding core from 3 color-related modules to a complete foundational library of 21 modules:
-    - Math utilities: `qwt_math.h`, `qwt_simd_argminmax.h`
+- **Core Module Expansion**: Migrated 24 utility modules from `plot` to `core`, expanding core from 4 modules (color + global) to a complete foundational library of 28 modules:
+    - Math utilities: `qwt_math.h/.cpp`, `qwt_simd_argminmax.h/.cpp`
     - Data types: `QwtInterval`, `QwtPoint3D`, `QwtPointPolar`, `QwtSamples`, `QwtBoxStatistics`
     - Geometry: `QwtBezier`, `QwtClipper`
-    - Coordinate transforms: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`
+    - Coordinate transforms: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`, `QwtScaleEngine`
     - Date/Time: `QwtDate`, `QwtSystemClock`
     - Algorithms & compatibility: `qwt_algorithm.hpp`, `qwt_qt5qt6_compat.hpp`
     - Data containers: `QwtGridData`
+    - Data series: `QwtSeriesData`, `QwtPointData`, `QwtSeriesStore`
+    - Raster data: `QwtRasterData`, `QwtMatrixRasterData`, `QwtGridRasterData`
 
 ### Build System
 
@@ -36,6 +39,17 @@
 - Updated `src/plot/CMakeLists.txt` to link against `qwt::core`
 - Updated `src/plot3d/CMakeLists.txt` to link against `qwt::core` and include theme sources
 - Updated amalgamate tool templates to include core module files
+- Updated `classincludes/` headers to point to core module paths
+- Updated `tools/make-classinclude.py` for new module structure
+
+### Examples
+
+- **figureSurface3D** — added theme switching UI and fixed color legend refresh on theme change
+
+### Bug Fixes
+
+- Fixed 3D animation auto-start crash: deferred animation timer to `showEvent()` to prevent GL context access before widget is visible
+- Fixed `figureSurface3D` color legend not refreshing when theme is switched
 
 ## tag:v7.3.0 (2026-06-12)
 

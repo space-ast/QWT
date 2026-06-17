@@ -27,7 +27,7 @@
 #ifndef QWT_SERIES_STORE_H
 #define QWT_SERIES_STORE_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_series_data.h"
 
 /**

@@ -27,7 +27,7 @@
 #ifndef QWT_MATRIX_RASTER_DATA_H
 #define QWT_MATRIX_RASTER_DATA_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_raster_data.h"
 
 #if QT_VERSION < 0x060000
@@ -41,7 +41,7 @@ template< typename T > class QVector;
  *          It implements a couple of resampling algorithms, to provide values for positions,
  *          that or not on the value matrix.
  */
-class QWT_EXPORT QwtMatrixRasterData : public QwtRasterData
+class QWTCORE_EXPORT QwtMatrixRasterData : public QwtRasterData
 {
   public:
     /**

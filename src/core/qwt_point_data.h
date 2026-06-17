@@ -27,7 +27,7 @@
 #ifndef QWT_POINT_DATA_H
 #define QWT_POINT_DATA_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_series_data.h"
 
 #include <cstring>
@@ -193,7 +193,7 @@ private:
  * }
  * @endcode
  */
-class QWT_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
+class QWTCORE_EXPORT QwtSyntheticPointData : public QwtPointSeriesData
 {
 public:
     // Constructor

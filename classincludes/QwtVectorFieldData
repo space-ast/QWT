@@ -1,1 +1,1 @@
-#include "../plot/qwt_series_data.h"
+#include "../core/qwt_series_data.h"

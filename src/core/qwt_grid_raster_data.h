@@ -1,6 +1,6 @@
 #ifndef QWT_GRID_RASTER_DATA_H
 #define QWT_GRID_RASTER_DATA_H
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_raster_data.h"
 #if QT_VERSION < 0x060000
 template< typename T >
@@ -12,7 +12,7 @@ class QVector;
  * @details This class inherits from QwtRasterData and is used to represent 2D grid data.
  *          It supports various interpolation methods such as nearest neighbor and bilinear interpolation.
  */
-class QWT_EXPORT QwtGridRasterData : public QwtRasterData
+class QWTCORE_EXPORT QwtGridRasterData : public QwtRasterData
 {
 public:
     /**

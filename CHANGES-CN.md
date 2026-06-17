@@ -1,4 +1,4 @@
-## tag:v7.3.1 (2026-06-16)
+## tag:v7.3.1 (2026-06-17)
 
 ### 新功能
 
@@ -7,6 +7,7 @@
     - `QwtColorMap` 重构：移除 `QwtInterval` 依赖，新签名 `rgb(vMin, vMax, value)`
     - `QwtColorCycle` 从 plot 模块迁移至 core
     - 新增 `QwtColorMapPreset` 类，提供 22 种科学可视化色彩映射预设（viridis、plasma、inferno、magma、cividis、jet、hot、cool、spring、summer、autumn、winter、gray、bone、copper、rainbow、hsv、turbo、coolwarm、rdylbu、rdylgn、spectral）
+    - `src/plot/qwt_colormap_compat.h` 提供向后兼容的 `QwtColorMapCompat` 命名空间，包含基于 `QwtInterval` 的重载函数
 
 - **3D 主题系统**
     - 新增 `Qwt3DTheme` 类，提供 10 种预设主题：Default、Dark、Scientific、Warm、Cool、Matplotlib、EarthTones、Ocean、HighContrast、Presentation
@@ -21,14 +22,16 @@
 - `plot` 和 `plot3d` 都依赖 `core`，但彼此独立
 - 运行时需要 `qwtcore.dll` + `qwtplot.dll`（+ `qwtplot3d.dll` 如果启用 3D）
 - `src/plot/` 中保留向后兼容的转发头文件，支持现有 `#include "qwt_color_map.h"` 路径
-- **Core 模块扩展**：将 18 个通用工具模块从 `plot` 迁移至 `core`，core 模块从仅 3 个颜色相关模块扩展为包含 21 个模块的完整基础工具库：
-    - 数学工具：`qwt_math.h`、`qwt_simd_argminmax.h`
+- **Core 模块扩展**：将 24 个通用工具模块从 `plot` 迁移至 `core`，core 模块从 4 个模块（颜色 + 全局导出）扩展为包含 28 个模块的完整基础工具库：
+    - 数学工具：`qwt_math.h/.cpp`、`qwt_simd_argminmax.h/.cpp`
     - 数据类型：`QwtInterval`、`QwtPoint3D`、`QwtPointPolar`、`QwtSamples`、`QwtBoxStatistics`
     - 几何算法：`QwtBezier`、`QwtClipper`
-    - 坐标变换：`QwtTransform`、`QwtScaleMap`、`QwtScaleDiv`
+    - 坐标变换：`QwtTransform`、`QwtScaleMap`、`QwtScaleDiv`、`QwtScaleEngine`
     - 时间处理：`QwtDate`、`QwtSystemClock`
     - 通用算法与兼容层：`qwt_algorithm.hpp`、`qwt_qt5qt6_compat.hpp`
     - 数据容器：`QwtGridData`
+    - 数据系列：`QwtSeriesData`、`QwtPointData`、`QwtSeriesStore`
+    - 栅格数据：`QwtRasterData`、`QwtMatrixRasterData`、`QwtGridRasterData`
 
 ### 构建系统
 
@@ -36,6 +39,17 @@
 - 更新 `src/plot/CMakeLists.txt` 链接 `qwt::core`
 - 更新 `src/plot3d/CMakeLists.txt` 链接 `qwt::core` 并包含主题源文件
 - 更新 amalgamate 工具模板以包含 core 模块文件
+- 更新 `classincludes/` 头文件指向 core 模块路径
+- 更新 `tools/make-classinclude.py` 适配新模块结构
+
+### 示例
+
+- **figureSurface3D** — 新增主题切换 UI 并修复主题切换时颜色图例的刷新问题
+
+### Bug 修复
+
+- 修复 3D 动画自动启动崩溃问题：将动画定时器延迟到 `showEvent()` 中启动，避免在控件可见前访问 GL 上下文
+- 修复 `figureSurface3D` 切换主题时颜色图例不刷新的问题
 
 ## tag:v7.3.0 (2026-06-12)
 

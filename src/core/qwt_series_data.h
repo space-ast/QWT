@@ -27,7 +27,7 @@
 #ifndef QWT_SERIES_DATA_H
 #define QWT_SERIES_DATA_H
 
-#include "qwt_global.h"
+#include "qwtcore_global.h"
 #include "qwt_samples.h"
 #include "qwt_point_3d.h"
 
@@ -201,7 +201,7 @@ T QwtArraySeriesData< T >::sample(size_t i) const
  * @brief Interface for iterating over an array of points
  * @details QwtPointSeriesData provides access to QPointF samples stored in a QVector.
  */
-class QWT_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
+class QWTCORE_EXPORT QwtPointSeriesData : public QwtArraySeriesData< QPointF >
 {
 public:
     //! Constructor
@@ -215,7 +215,7 @@ public:
  * @brief Interface for iterating over an array of 3D points
  * @details QwtPoint3DSeriesData provides access to QwtPoint3D samples stored in a QVector.
  */
-class QWT_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
+class QWTCORE_EXPORT QwtPoint3DSeriesData : public QwtArraySeriesData< QwtPoint3D >
 {
 public:
     //! Constructor
@@ -229,7 +229,7 @@ public:
  * @brief Interface for iterating over an array of intervals
  * @details QwtIntervalSeriesData provides access to QwtIntervalSample samples stored in a QVector.
  */
-class QWT_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalSample >
+class QWTCORE_EXPORT QwtIntervalSeriesData : public QwtArraySeriesData< QwtIntervalSample >
 {
 public:
     //! Constructor
@@ -243,7 +243,7 @@ public:
  * @brief Interface for iterating over an array of set samples
  * @details QwtSetSeriesData provides access to QwtSetSample samples stored in a QVector.
  */
-class QWT_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
+class QWTCORE_EXPORT QwtSetSeriesData : public QwtArraySeriesData< QwtSetSample >
 {
 public:
     //! Constructor
@@ -257,7 +257,7 @@ public:
  * @brief Interface for iterating over an array of vector field samples
  * @details QwtVectorFieldData provides access to QwtVectorFieldSample samples stored in a QVector.
  */
-class QWT_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldSample >
+class QWTCORE_EXPORT QwtVectorFieldData : public QwtArraySeriesData< QwtVectorFieldSample >
 {
 public:
     //! Constructor
@@ -272,7 +272,7 @@ public:
  * @details QwtTradingChartData provides access to QwtOHLCSample samples stored in a QVector.
  *          Used for candlestick or OHLC chart financial data.
  */
-class QWT_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample >
+class QWTCORE_EXPORT QwtTradingChartData : public QwtArraySeriesData< QwtOHLCSample >
 {
 public:
     //! Constructor
@@ -287,7 +287,7 @@ public:
  * @details QwtBoxChartData provides access to QwtBoxSample samples stored in a QVector.
  *          Used for box-and-whisker plot statistical data.
  */
-class QWT_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
+class QWTCORE_EXPORT QwtBoxChartData : public QwtArraySeriesData< QwtBoxSample >
 {
 public:
     //! Constructor
@@ -302,7 +302,7 @@ public:
  * @details QwtBoxOutlierChartData provides access to QwtBoxOutlierSample samples stored in a QVector.
  *          Used for displaying outlier points in box-and-whisker plots.
  */
-class QWT_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
+class QWTCORE_EXPORT QwtBoxOutlierChartData : public QwtArraySeriesData< QwtBoxOutlierSample >
 {
 public:
     //! Constructor
@@ -315,23 +315,23 @@ public:
     int totalOutlierCount() const;
 };
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QPointF >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPointPolar >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtPointPolar >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtIntervalSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtIntervalSample >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >&, size_t from = 0, size_t to = 0);
 
-QWT_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
+QWTCORE_EXPORT QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >&, size_t from = 0, size_t to = 0);
 
 /**
  * @brief Binary search for a sorted series of samples
