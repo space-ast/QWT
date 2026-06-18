@@ -58,6 +58,10 @@ Goals and current progress:
 - [x] Arrow marker (`QwtPlotArrowMarker`)
 - [x] Flat-style controls (sliders, knobs, dials, etc.)
 - [x] Modular architecture: core (foundational utilities) + plot (2D plotting) + plot3d (3D plotting)
+- [x] Matplotlib-style plotting API (`QwtPyPlot`)
+- [x] 3D theme system with 10 presets + 5 lighting presets
+- [x] 22 scientific colormap presets (viridis, plasma, jet, turbo, ...)
+- [x] Standalone `qwt::core` foundational library (28 modules, no plotting dependency)
 
 In short, I will keep maintaining `Qwt` so it becomes a license-friendly, high-performance, and easy-to-use Qt plotting library.
 
@@ -193,9 +197,111 @@ Added `QwtPlotBoxChart` class for creating box-and-whisker plots to visualize st
 
 See documentation: [Box Chart Guide](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
 
+### Matplotlib-style Plotting API (`QwtPyPlot`)
+
+New in 7.3, `QwtPyPlot` is a high-level, stateful API inspired by Python's `matplotlib.pyplot`. It wraps a `QwtFigure` (or a single `QwtPlot`) and delegates to the existing Qwt infrastructure, so you get matplotlib-style brevity without giving up Qwt's power and fine-grained control.
+
+Familiar one-liners just work — `plot()`, `scatter()`, `bar()`, `hist()`, `imshow()`, `contour()`, `quiver()`, `fillBetween()`, `errorbar()`, `candlestick()` — together with `subplot()`, `twinx()`/`twiny()`, `savefig()`, and matplotlib format strings such as `"r-o"` (red line + circle markers):
+
+```cpp
+#include <QwtFigure>
+#include <QwtPyPlot>
+
+QwtFigure* fig = new QwtFigure;
+QwtPyPlot plt(fig);
+
+plt.subplot(2, 1, 1);
+plt.plot(x, y, "r-o", "Temperature");
+plt.setTitle("Sensor Data");
+plt.grid(true);
+plt.legend();
+
+plt.subplot(2, 1, 2);
+plt.bar({10, 20, 30, 40}, "b", "Sales");
+
+plt.savefig("output.png", 300);
+fig->show();
+```
+
+For details, refer to the tutorial: [QwtPyPlot — Matplotlib-style API](https://czyt1988.github.io/QWT/zh/use-guide/pyplot-api/)
+
+### 3D Plotting with Theme System
+
+The integrated 3D module (`qwt::plot3d`) provides surface plots, mesh plots, and function plots with OpenGL rendering and full mouse interaction (rotate / zoom / pan).
+
+New in 7.3, the `Qwt3D::Qwt3DTheme` system packages every visual property — background, mesh, colormap, axes, title, lighting, shading, and material — into a single descriptor, so a complete look can be applied in one call:
+
+```cpp
+using namespace Qwt3D;
+
+// One-call preset
+plot->applyTheme(Qwt3DTheme::Dark);
+
+// Or start from a preset and customize
+Qwt3DTheme theme(Qwt3DTheme::Scientific);
+theme.setDataColorPreset("plasma");
+theme.setLightingPreset(Qwt3DTheme::Studio);
+theme.setShininess(20.0);
+theme.apply(plot);
+```
+
+- 10 built-in themes: `Default`, `Dark`, `Scientific`, `Warm`, `Cool`, `Matplotlib`, `EarthTones`, `Ocean`, `HighContrast`, `Presentation`
+- 5 lighting presets: `NoLighting`, `FlatLight`, `Studio`, `Outdoor`, `Soft`
+- A `ColorMapColor` adapter bridges the core colormaps to 3D surfaces, so all 22 scientific presets work in 3D as well
+
+For details, refer to the tutorial: [3D Plotting](https://czyt1988.github.io/QWT/zh/use-guide/3d-plot/)
+
+### Scientific Colormap Presets
+
+`qwt::core` ships `QwtColorMapPreset` — 22 well-known scientific colormaps (the same names used by matplotlib / MATLAB), shared by 2D spectrograms and 3D surfaces:
+
+`viridis`, `plasma`, `inferno`, `magma`, `cividis`, `jet`, `hot`, `cool`, `spring`, `summer`, `autumn`, `winter`, `gray`, `bone`, `copper`, `rainbow`, `hsv`, `turbo`, `coolwarm`, `rdylbu`, `rdylgn`, `spectral`
+
+```cpp
+auto cmap = QwtColorMapPreset::create("viridis");
+// cmap->rgb(vMin, vMax, value) returns the color for a given data value
+```
+
+The perceptually uniform maps (`viridis`, `plasma`, `inferno`, `magma`, `cividis`) are colorblind-friendly and print-safe — ideal for scientific publication.
+
+### SIMD-Accelerated Curve Downsampling
+
+Rendering millions of points smoothly is now first-class. `QwtPlotCurve` offers four downsampling filters, and the MinMax-bucket path is accelerated with SIMD (SSE2 / AVX2 / NEON, auto-detected at runtime):
+
+- `FilterPoints` — the original weeding algorithm
+- `FilterPointsAggressive` — fast weeding for huge monotonic datasets 
+- `FilterPointsPixel` — per-pixel-column reduction for maximum speed
+- `FilterPointsLTTB` — shape-preserving LTTB (MinMax bucket)(new default)
+
+The result: million-point curves render at interactive frame rates. Benchmark it yourself with the `renderbench` example.
+
+For details, refer to the tutorial: [Curve Downsampling](https://czyt1988.github.io/QWT/zh/use-guide/curve-downsampling/)
+
+### Standalone Core Foundational Library
+
+`qwt::core` (`qwtcore.dll` / `libqwtcore.so`) is a complete foundational toolkit of 28 modules — usable on its own, with no plotting code pulled in:
+
+- Math & SIMD: `qwt_math`, `qwt_simd_argminmax`
+- Data types: `QwtInterval`, `QwtPoint3D`, `QwtPointPolar`, `QwtSamples`, `QwtBoxStatistics`
+- Geometry: `QwtBezier`, `QwtClipper`
+- Coordinate transforms: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`, `QwtScaleEngine`
+- Date / time: `QwtDate`, `QwtSystemClock`
+- Colormaps & color cycle: `QwtColorMap`, `QwtColorMapPreset`, `QwtColorCycle`
+- Data series & raster: `QwtSeriesData`, `QwtPointData`, `QwtSeriesStore`, `QwtRasterData`, `QwtMatrixRasterData`, `QwtGridRasterData`
+
+Link only what you need:
+
+```cmake
+# Just the foundational utilities — no plotting code pulled in
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
+```
+
 ### Other Modifications
 
 - Fixed the impact of `NAN` and `INF` values on plotting
+- `QwtPlotSeriesDataPicker` now picks from every series item type — trading curves, interval curves, histograms, vector fields, bar / box charts, and spectro curves
+- Modern C++ throughout the codebase: `override` / `final`, `nullptr`, move semantics, `constexpr`, `noexcept`, range-based for, and a unified PIMPL macro pattern (180+ files)
+- `renderbench` example for measuring curve-rendering performance and generating reports
 
 ## Changelog
 
@@ -258,6 +364,18 @@ See [CHANGES.MD](./CHANGES.md) for detailed logs.
 |:---:|:---:|:---:|
 |![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![Item Editor](./docs/assets/screenshots/itemeditor.png)|
 |`examples/rasterview`|`playground/svgmap`|`examples/itemeditor`|
+
+### 3D Visualization
+
+|  |  |  |
+|:---:|:---:|:---:|
+|![Simple 3D Plot](./docs/assets/screenshots-3D/simpleplot3D.png)|![3D Axes](./docs/assets/screenshots-3D/axes.png)|![3D Enrichments](./docs/assets/screenshots-3D/enrichments.png)|
+|`examples/3D/simpleplot3D`|`examples/3D/axes`|`examples/3D/enrichments`|
+
+|  |  |  |
+|:---:|:---:|:---:|
+|![3D Autoswitch](./docs/assets/screenshots-3D/autoswitch.png)||
+|`examples/3D/autoswitch`||
 
 ### Animated Demos
 

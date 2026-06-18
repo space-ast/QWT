@@ -44,6 +44,10 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
 - [x] 箭头标记（`QwtPlotArrowMarker`）
 - [x] Flat风格控件（滑块、旋钮、刻度盘等）
 - [x] 模块化架构：core（基础工具库）+ plot（2D绘图）+ plot3d（3D绘图）
+- [x] Matplotlib风格绘图接口（`QwtPyPlot`）
+- [x] 3D主题系统（10种预设 + 5种光照预设）
+- [x] 22种科学colormap预设（viridis、plasma、jet、turbo 等）
+- [x] 独立的 `qwt::core` 基础工具库（28个模块，无绘图依赖）
 
 总之，我将继续维护`Qwt`，让其成为一个协议友好，性能优越，方便使用的Qt绘图库
 
@@ -153,9 +157,111 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 
 具体可参见教程：[箱线图使用指南](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
 
+### Matplotlib风格绘图接口（`QwtPyPlot`）
+
+7.3 新增的 `QwtPyPlot` 是一套受 Python `matplotlib.pyplot` 启发的高层有状态接口。它封装了 `QwtFigure`（或单个 `QwtPlot`），底层委托给现有的 Qwt 设施，既拥有 matplotlib 般的简洁写法，又不损失 Qwt 的强大能力与精细控制。
+
+熟悉的单行调用开箱即用 —— `plot()`、`scatter()`、`bar()`、`hist()`、`imshow()`、`contour()`、`quiver()`、`fillBetween()`、`errorbar()`、`candlestick()`，配合 `subplot()`、`twinx()`/`twiny()`、`savefig()`，以及 matplotlib 风格的格式串（如 `"r-o"` 表示红色实线 + 圆形标记）：
+
+```cpp
+#include <QwtFigure>
+#include <QwtPyPlot>
+
+QwtFigure* fig = new QwtFigure;
+QwtPyPlot plt(fig);
+
+plt.subplot(2, 1, 1);
+plt.plot(x, y, "r-o", "Temperature");
+plt.setTitle("Sensor Data");
+plt.grid(true);
+plt.legend();
+
+plt.subplot(2, 1, 2);
+plt.bar({10, 20, 30, 40}, "b", "Sales");
+
+plt.savefig("output.png", 300);
+fig->show();
+```
+
+具体可参见教程：[QwtPyPlot — Matplotlib风格接口](https://czyt1988.github.io/QWT/zh/use-guide/pyplot-api/)
+
+### 3D绘图与主题系统
+
+集成的 3D 模块（`qwt::plot3d`）提供表面图、网格图和函数图，基于 OpenGL 渲染，并支持完整的鼠标交互（旋转 / 缩放 / 平移）。
+
+7.3 新增的 `Qwt3D::Qwt3DTheme` 主题系统将全部视觉属性 —— 背景、网格、colormap、坐标轴、标题、光照、着色模式、材质 —— 打包为一个描述符，一行调用即可套用整套风格：
+
+```cpp
+using namespace Qwt3D;
+
+// 一行套用预设
+plot->applyTheme(Qwt3DTheme::Dark);
+
+// 或在预设基础上定制
+Qwt3DTheme theme(Qwt3DTheme::Scientific);
+theme.setDataColorPreset("plasma");
+theme.setLightingPreset(Qwt3DTheme::Studio);
+theme.setShininess(20.0);
+theme.apply(plot);
+```
+
+- 10 种内置主题：`Default`、`Dark`、`Scientific`、`Warm`、`Cool`、`Matplotlib`、`EarthTones`、`Ocean`、`HighContrast`、`Presentation`
+- 5 种光照预设：`NoLighting`、`FlatLight`、`Studio`、`Outdoor`、`Soft`
+- `ColorMapColor` 适配器将 core 模块的 colormap 桥接到 3D 表面，因此 22 种科学预设同样可用于 3D
+
+具体可参见教程：[3D绘图](https://czyt1988.github.io/QWT/zh/use-guide/3d-plot/)
+
+### 科学Colormap预设
+
+`qwt::core` 内置 `QwtColorMapPreset` —— 22 种知名科学 colormap（与 matplotlib / MATLAB 同名），2D 光谱图与 3D 表面图共用：
+
+`viridis`、`plasma`、`inferno`、`magma`、`cividis`、`jet`、`hot`、`cool`、`spring`、`summer`、`autumn`、`winter`、`gray`、`bone`、`copper`、`rainbow`、`hsv`、`turbo`、`coolwarm`、`rdylbu`、`rdylgn`、`spectral`
+
+```cpp
+auto cmap = QwtColorMapPreset::create("viridis");
+// cmap->rgb(vMin, vMax, value) 返回给定数据值对应的颜色
+```
+
+其中感知均匀的 colormap（`viridis`、`plasma`、`inferno`、`magma`、`cividis`）对色盲友好且打印安全，非常适合科研论文。
+
+### SIMD加速的曲线降采样
+
+百万级数据点的流畅渲染现已成为一等公民。`QwtPlotCurve` 提供四种降采样算法，其中 MinMax-bucket 路径采用 SIMD 加速（SSE2 / AVX2 / NEON，运行时自动检测）：
+
+- `FilterPoints` —— 原始剔除算法
+- `FilterPointsAggressive` —— 针对单调大数据集的快速剔除
+- `FilterPointsPixel` —— 按像素列归约，速度最快
+- `FilterPointsLTTB` —— 保形的 LTTB（MinMax bucket）（新默认值）
+
+效果：百万点曲线可交互帧率渲染。可用 `renderbench` 示例自行基准测试。
+
+具体可参见教程：[曲线降采样](https://czyt1988.github.io/QWT/zh/use-guide/curve-downsampling/)
+
+### 独立的Core基础工具库
+
+`qwt::core`（`qwtcore.dll` / `libqwtcore.so`）是一套完整的基础工具库，包含 28 个模块，可独立使用，不引入任何绘图代码：
+
+- 数学与 SIMD：`qwt_math`、`qwt_simd_argminmax`
+- 数据类型：`QwtInterval`、`QwtPoint3D`、`QwtPointPolar`、`QwtSamples`、`QwtBoxStatistics`
+- 几何算法：`QwtBezier`、`QwtClipper`
+- 坐标变换：`QwtTransform`、`QwtScaleMap`、`QwtScaleDiv`、`QwtScaleEngine`
+- 日期/时间：`QwtDate`、`QwtSystemClock`
+- Colormap 与颜色循环：`QwtColorMap`、`QwtColorMapPreset`、`QwtColorCycle`
+- 数据系列与栅格：`QwtSeriesData`、`QwtPointData`、`QwtSeriesStore`、`QwtRasterData`、`QwtMatrixRasterData`、`QwtGridRasterData`
+
+按需链接即可：
+
+```cmake
+# 仅引入基础工具库，不引入任何绘图代码
+target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
+```
+
 ### 其它修改
 
 - 修复了`NAN`值和`INF`值对绘图的影响
+- `QwtPlotSeriesDataPicker` 现已支持所有系列图元类型的拾取 —— K线、区间曲线、直方图、矢量场、柱状/箱线图、光谱曲线等
+- 全代码库现代化 C++：`override`/`final`、`nullptr`、移动语义、`constexpr`、`noexcept`、范围 for，以及统一的 PIMPL 宏模式（180+ 文件）
+- `renderbench` 示例用于测量曲线渲染性能并生成报告
 
 ## changelog
 
@@ -238,6 +344,18 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 |:---:|:---:|:---:|
 |![Raster View 2](./docs/assets/screenshots/rasterview-2.png)|![SVG Map](./docs/assets/screenshots/svgmap.png)|![Item Editor](./docs/assets/screenshots/itemeditor.png)|
 |`examples/rasterview`|`playground/svgmap`|`examples/itemeditor`|
+
+### 3D可视化
+
+|  |  |  |
+|:---:|:---:|:---:|
+|![Simple 3D Plot](./docs/assets/screenshots-3D/simpleplot3D.png)|![3D Axes](./docs/assets/screenshots-3D/axes.png)|![3D Enrichments](./docs/assets/screenshots-3D/enrichments.png)|
+|`examples/3D/simpleplot3D`|`examples/3D/axes`|`examples/3D/enrichments`|
+
+|  |  |  |
+|:---:|:---:|:---:|
+|![3D Autoswitch](./docs/assets/screenshots-3D/autoswitch.png)||
+|`examples/3D/autoswitch`||
 
 ### 动态演示
 

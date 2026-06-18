@@ -79,7 +79,7 @@ public:
         , baseline(0.0)
         , symbol(nullptr)
         , pen(Qt::black)
-        , paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPointsAggressive)
+        , paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPointsLTTB)
     {
         curveFitter = new QwtSplineCurveFitter;
     }
