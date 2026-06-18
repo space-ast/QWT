@@ -192,6 +192,11 @@ void MainWindow::onTimerTick()
     }
 
     m_seriesData->setWindow(m_currentOffset, m_displaySize);
+    // Make the X-axis follow the sliding window so the curve always fills the
+    // canvas width and the axis labels scroll with the data.
+    m_plot->setAxisScale(QwtAxis::XBottom,
+        m_currentOffset, m_currentOffset + m_displaySize);
+
     m_currentOffset += m_step;
 
     if (m_currentOffset > m_seriesData->maxOffset(m_displaySize))
