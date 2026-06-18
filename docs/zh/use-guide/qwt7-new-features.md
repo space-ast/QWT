@@ -29,34 +29,38 @@ Qwt 7.0 内置完整的3D绘图能力，支持：
 
 | 类名 | 说明 |
 |------|------|
-| `Qwt3DPlot` | 3D绘图基类，提供基本框架和交互 |
-| `Qwt3DSurfacePlot` | 3D表面图，显示连续曲面 |
-| `Qwt3DGridPlot` | 3D网格图，显示离散网格数据 |
-| `Qwt3DFunction` | 3D函数绘图，根据数学函数生成曲面 |
+| `Qwt3D::Plot3D` | 3D绘图基类，提供基本框架和交互 |
+| `Qwt3D::SurfacePlot` | 3D表面图，显示连续曲面（同时支持网格和单元数据） |
+| `Qwt3D::Function` | 3D函数绘图，根据数学函数生成曲面 |
+
+!!! note "命名空间"
+    所有 3D 类均位于 `Qwt3D` 命名空间下。网上常见的 `Qwt3DPlot3D`/`Qwt3DSurfacePlot`/`Qwt3DFunction` 写法是**错误的**，真实类名在类本身上省略了冗余的 `Qwt3D` 前缀。
 
 ### 使用示例
 
 ```cpp
-#include <Qwt3DSurfacePlot>
-#include <Qwt3DFunction>
+#include <qwt3d_surfaceplot.h>
+#include <qwt3d_function.h>
+
+using namespace Qwt3D;
 
 // 创建表面图
-Qwt3DSurfacePlot* plot = new Qwt3DSurfacePlot();
+SurfacePlot* plot = new SurfacePlot();
 
 // 定义数学函数
-class MyFunction : public Qwt3DFunction
+class MyFunction : public Function
 {
 public:
-    virtual double operator()(double x, double y) override
+    double operator()(double x, double y) override
     {
         return std::sin(x) * std::cos(y);
     }
 };
 
-MyFunction* func = new MyFunction();
+MyFunction* func = new MyFunction(*plot);
 func->setDomain(-5, 5, -5, 5);  // x和y范围
-func->setResolution(50);         // 50x50网格
-func->create(plot);
+func->setMesh(50, 50);           // 50x50网格
+func->create();
 
 plot->setRotation(30, 0, 45);   // 设置视角
 plot->show();

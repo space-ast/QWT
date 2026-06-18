@@ -17,7 +17,7 @@ designed for data visualization in scientific computing and engineering applicat
 | `QwtPlot` | 2D plot widget, manages layout, axes, legend, and canvas |
 | `QwtPlotCurve` | Data curve item, supports various styles (lines, steps, dots, etc.) |
 | `QwtPlotGrid` | Grid item, provides major/minor grid lines |
-| `QwtPlotLegend` | Legend container |
+| `QwtLegend` | Legend container |
 | `QwtPlotMarker` | Marker item |
 | `QwtPlotSpectrogram` | Spectrogram item |
 | `QwtPlotBarChart` | Bar chart item |
@@ -30,7 +30,7 @@ designed for data visualization in scientific computing and engineering applicat
 | `QwtFigure` | Multi-plot layout container (similar to matplotlib Figure) |
 | `QwtFigureWidgetOverlay` | Figure interaction overlay, supports drag and resize |
 | `QwtPlotLayout` | Single plot layout manager |
-| `QwtPlotParasiteLayout` | Parasite plot layout manager |
+| `QwtParasitePlotLayout` | Parasite plot layout manager |
 
 ## Interaction Controls
 
@@ -47,12 +47,16 @@ designed for data visualization in scientific computing and engineering applicat
 
 ## 3D Plotting Module
 
+All 3D classes live in the `Qwt3D` namespace.
+
 | Class | Description |
 |-------|-------------|
-| `Qwt3DPlot` | 3D plot widget |
-| `Qwt3DSurfacePlot` | 3D surface plot |
-| `Qwt3DGridPlot` | 3D grid plot |
-| `Qwt3DFunction` | 3D function plot |
+| `Qwt3D::Plot3D` | 3D plot base class |
+| `Qwt3D::SurfacePlot` | 3D surface plot (handles both grid and cell data) |
+| `Qwt3D::Function` | 3D function plot |
+| `Qwt3D::GraphPlot` | Intermediate base class for graph-based 3D plots |
+| `Qwt3D::ColorLegend` | 3D color legend |
+| `Qwt3D::Qwt3DTheme` | 3D theme system (v7.3.1+) |
 
 ## Key Architecture Concepts
 
@@ -88,7 +92,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
 
 Add `QwtPlot.h` and `QwtPlot.cpp` from `src-amalgamate/` to your project.
 
-Required Qt modules: `Core`, `Gui`, `Widgets`, `Svg`, `Concurrent`, `OpenGL`, `PrintSupport`
+Required Qt modules: `Core`, `Gui`, `Widgets` (public); `Concurrent`, `PrintSupport` (private). Optional: `Svg` and `OpenGL`/`OpenGLWidgets` (gated by `QWT_CONFIG_QWTSVG` / `QWT_CONFIG_QWTOPENGL`).
 Qt6 additional: `OpenGLWidgets`
 3D features require: `OpenGL::GLU`
 

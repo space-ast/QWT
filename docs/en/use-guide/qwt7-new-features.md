@@ -29,34 +29,38 @@ Qwt 7.0 includes built-in complete 3D plotting capabilities, supporting:
 
 | Class | Description |
 |------|------|
-| `Qwt3DPlot` | 3D plot base class, providing the basic framework and interaction |
-| `Qwt3DSurfacePlot` | 3D surface plot, displaying continuous surfaces |
-| `Qwt3DGridPlot` | 3D grid plot, displaying discrete grid data |
-| `Qwt3DFunction` | 3D function plot, generating surfaces from mathematical functions |
+| `Qwt3D::Plot3D` | 3D plot base class, providing the basic framework and interaction |
+| `Qwt3D::SurfacePlot` | 3D surface plot, displaying continuous surfaces (handles both grid and cell data) |
+| `Qwt3D::Function` | 3D function plot, generating surfaces from mathematical functions |
+
+!!! note "Namespace"
+    All 3D classes live in the `Qwt3D` namespace. The `Qwt3DPlot3D`/`Qwt3DSurfacePlot`/`Qwt3DFunction` names sometimes seen online are **incorrect** — the real names omit the redundant `Qwt3D` prefix on the class itself.
 
 ### Usage Example
 
 ```cpp
-#include <Qwt3DSurfacePlot>
-#include <Qwt3DFunction>
+#include <qwt3d_surfaceplot.h>
+#include <qwt3d_function.h>
+
+using namespace Qwt3D;
 
 // Create a surface plot
-Qwt3DSurfacePlot* plot = new Qwt3DSurfacePlot();
+SurfacePlot* plot = new SurfacePlot();
 
 // Define a mathematical function
-class MyFunction : public Qwt3DFunction
+class MyFunction : public Function
 {
 public:
-    virtual double operator()(double x, double y) override
+    double operator()(double x, double y) override
     {
         return std::sin(x) * std::cos(y);
     }
 };
 
-MyFunction* func = new MyFunction();
+MyFunction* func = new MyFunction(*plot);
 func->setDomain(-5, 5, -5, 5);  // x and y range
-func->setResolution(50);         // 50x50 grid
-func->create(plot);
+func->setMesh(50, 50);           // 50x50 grid
+func->create();
 
 plot->setRotation(30, 0, 45);   // Set viewing angle
 plot->show();

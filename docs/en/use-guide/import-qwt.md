@@ -9,7 +9,7 @@ Here is a CMake example for direct import:
 ```cmake hl_lines="8 9"
 # QwtPlot depends on Core Gui Widgets Svg Concurrent OpenGL PrintSupport modules
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} 5.8 COMPONENTS Core Gui Widgets Svg Concurrent OpenGL PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} 5.12 COMPONENTS Core Gui Widgets Svg Concurrent OpenGL PrintSupport REQUIRED)
 
 
 add_executable(YOU_APP_TARGET
@@ -83,15 +83,15 @@ target_link_libraries(YOU_APP_TARGET PRIVATE qwt::plot3d) # Automatically adds Q
 
 The `qwt` project provides three modules:
 
-- `core` module — shared base library containing 21 modules of foundational utilities:
+- `core` module — shared base library containing 28 modules of foundational utilities:
     - **Color utilities**: `QwtColorMap` (and subclasses), `QwtColorCycle`, `QwtColorMapPreset` (22 scientific colormap presets)
-    - **Math utilities**: `qwtMinF`, `qwtMaxF`, math constants, `qwtSimdArgMinMax` (SIMD-accelerated argmin/argmax)
+    - **Math utilities**: `qwt_math.h`, `qwtSimdArgMinMax` (SIMD-accelerated argmin/argmax)
     - **Data types**: `QwtInterval`, `QwtPoint3D`, `QwtPointPolar`, `QwtSamples`, `QwtBoxStatistics`
     - **Geometry**: `QwtBezier` (Bézier curves), `QwtClipper` (polygon clipping)
-    - **Coordinate transforms**: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`
+    - **Coordinate transforms**: `QwtTransform`, `QwtScaleMap`, `QwtScaleDiv`, `QwtScaleEngine`
     - **Date/Time**: `QwtDate`, `QwtSystemClock`
     - **Algorithms & compatibility**: `qwt_algorithm.hpp`, `qwt_qt5qt6_compat.hpp` (Qt5/Qt6 compatibility layer)
-    - **Data containers**: `QwtGridData`
+    - **Data containers/series/raster**: `QwtGridData`, `QwtSeriesData`, `QwtPointData`, `QwtSeriesStore`, `QwtRasterData`, `QwtMatrixRasterData`, `QwtGridRasterData`
 - `plot` module — the 2D plotting library, integrating the original Qwt functionality
 - `plot3d` module — the 3D plotting library, integrating the qwtplot3d functionality
 
@@ -111,8 +111,8 @@ The `qwt` project provides three modules:
 >    Both `plot` and `plot3d` depend on the `core` module, but are independent of each other.
 >
 >    - `qwt::core` depends only on Qt `Core` + `Gui`
->    - `qwt::plot` depends on Qt `Core` + `Gui` + `Widgets` + `Svg` + `Concurrent` + `OpenGL` + `PrintSupport` (Qt6 also includes `OpenGLWidgets`). All dependencies are added automatically when importing via CMake.
->    - `qwt::plot3d` depends on Qt `Core` + `Gui` + `Widgets` + `OpenGL::GLU` + `Qt OpenGL Widgets`
+>    - `qwt::plot` depends on Qt `Core` + `Gui` + `Widgets` (public); `Concurrent` + `PrintSupport` (private). Optional: `Svg` and `OpenGL`/`OpenGLWidgets` (gated by `QWT_CONFIG_QWTSVG` / `QWT_CONFIG_QWTOPENGL`). All dependencies are added automatically when importing via CMake.
+>    - `qwt::plot3d` depends on Qt `Core` + `Gui` + `Widgets` + `OpenGL::GLU` + Qt OpenGL Widgets
 >
 >    If the 3D option is enabled, the `OpenGL::GLU` dependency is automatically included.
 

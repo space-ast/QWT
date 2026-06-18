@@ -5,7 +5,7 @@
 | 依赖 | 最低版本 | 说明 |
 |------|---------|------|
 | CMake | 3.5+ | 项目使用 CMake 构建系统（脚本自动检测 VS 内嵌或独立安装） |
-| C++17 编译器 | - | MSVC 2019+ / GCC 7+ / Clang 5+（Qt6 需 C++17，Qt5 用 C++11） |
+| C++17 编译器 | - | MSVC 2019+ / GCC 7+ / Clang 5+（Qt6 需 C++17，Qt5 仅需 C++11 即可） |
 | Qt | 5.12+ | 需要 Core、Gui、Widgets、Concurrent、PrintSupport 模块；可选 OpenGL、Svg |
 
 ## 一键构建（推荐）

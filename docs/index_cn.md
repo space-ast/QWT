@@ -12,7 +12,7 @@
 
 ## 基础工具模块 (core)
 
-`qwt::core`（`qwtcore.dll`）是项目的基础工具库，包含 21 个模块，`plot` 和 `plot3d` 都依赖此模块。
+`qwt::core`（`qwtcore.dll`）是项目的基础工具库，包含 28 个模块，`plot` 和 `plot3d` 都依赖此模块。
 
 ```
     ┌────────────────────┐
@@ -42,11 +42,18 @@
 | 坐标变换 | `QwtTransform` | 坐标变换（线性、对数等） |
 | | `QwtScaleMap` | 坐标映射 |
 | | `QwtScaleDiv` | 刻度划分 |
+| | `QwtScaleEngine` | 刻度引擎（线性、对数、日期） |
 | 时间处理 | `QwtDate` | 日期时间工具 |
 | | `QwtSystemClock` | 高精度计时器 |
 | 通用算法 | `qwt_algorithm.hpp` | 通用算法工具 |
 | | `qwt_qt5qt6_compat.hpp` | Qt5/Qt6 兼容层 |
 | 数据容器 | `QwtGridData` | 网格数据容器 |
+| 数据系列 | `QwtSeriesData` | 数据系列基类模板 |
+| | `QwtPointData` | 点数据（`QwtPointArrayData` 等） |
+| | `QwtSeriesStore` | 数据存储模板 |
+| 栅格数据 | `QwtRasterData` | 栅格数据基类 |
+| | `QwtMatrixRasterData` | 矩阵栅格数据 |
+| | `QwtGridRasterData` | 网格栅格数据（v7 新增） |
 
 ## 2D绘图核心模块
 
@@ -55,7 +62,7 @@
 | `QwtPlot` | 二维绘图主控件，管理布局、坐标轴、图例、画布 |
 | `QwtPlotCurve` | 数据曲线项，支持多种样式（连线、台阶、点等） |
 | `QwtPlotGrid` | 网格项，提供主/次网格线 |
-| `QwtPlotLegend` | 图例容器 |
+| `QwtLegend` | 图例容器 |
 | `QwtPlotMarker` | 标记项 |
 | `QwtPlotSpectrogram` | 光谱图项 |
 | `QwtPlotBarChart` | 柱状图项 |
@@ -68,7 +75,7 @@
 | `QwtFigure` | 多绘图布局容器（类似matplotlib的Figure） |
 | `QwtFigureWidgetOverlay` | Figure操作蒙版，支持拖动、缩放子绘图 |
 | `QwtPlotLayout` | 单个绘图布局管理器 |
-| `QwtPlotParasiteLayout` | 寄生绘图布局管理器 |
+| `QwtParasitePlotLayout` | 寄生绘图布局管理器 |
 
 ## 交互控件
 
@@ -85,12 +92,16 @@
 
 ## 3D绘图模块
 
+所有 3D 类位于 `Qwt3D` 命名空间下。
+
 | 类名 | 功能描述 |
 |------|----------|
-| `Qwt3DPlot` | 3D绘图主控件 |
-| `Qwt3DSurfacePlot` | 3D表面图 |
-| `Qwt3DGridPlot` | 3D网格图 |
-| `Qwt3DFunction` | 3D函数绘图 |
+| `Qwt3D::Plot3D` | 3D绘图基类 |
+| `Qwt3D::SurfacePlot` | 3D表面图（支持网格和单元数据） |
+| `Qwt3D::Function` | 3D函数绘图 |
+| `Qwt3D::GraphPlot` | 图形类3D绘图基类 |
+| `Qwt3D::ColorLegend` | 3D颜色条 |
+| `Qwt3D::Qwt3DTheme` | 3D主题系统（v7.3.1+） |
 
 ## 关键架构概念
 
@@ -126,7 +137,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE qwt::core)
 
 依赖说明：
 - `qwt::core` 仅依赖 Qt `Core` + `Gui`
-- `qwt::plot` 依赖 Qt `Core` + `Gui` + `Widgets` + `Svg` + `Concurrent` + `OpenGL` + `PrintSupport`
+- `qwt::plot` 依赖 Qt `Core` + `Gui` + `Widgets`（public），`Concurrent` + `PrintSupport`（private）；可选 `Svg`、`OpenGL` + `OpenGLWidgets`（由 `QWT_CONFIG_QWTSVG` / `QWT_CONFIG_QWTOPENGL` 控制）
 - `qwt::plot3d` 依赖 Qt `Core` + `Gui` + `Widgets` + `OpenGL::GLU` + Qt OpenGL Widgets
 - Qt6 额外需要：`OpenGLWidgets`
 

@@ -54,7 +54,7 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 
 - **core**（`src/core/`）：完整基础工具库，21 个模块，详见下方 "Core Module Structure"
 - **plot**（`src/plot/`）：2D 绘图全套功能，通过 `target_link_libraries(plot PUBLIC qwt::core)` 链接 core
-- **plot3d**（`src/plot3d/`）：3D 绘图模块，通过 `QWT_CONFIG_QWTPLOT_3D` 控制，同样链接 core，包含 `Qwt3DTheme` 主题系统和 `ColorMapColor` 适配器
+- **plot3d**（`src/plot3d/`）：3D 绘图模块，通过 `QWT_CONFIG_QWTPLOT_3D` 控制，同样链接 core，包含 `Qwt3D::Qwt3DTheme` 主题系统和 `ColorMapColor` 适配器
 
 各模块 Qt 依赖：
 - core：`Core Gui`(public)
@@ -63,7 +63,7 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 
 ### Core Module Structure
 
-`src/core/` 包含 21 个模块，按功能分类如下：
+`src/core/` 包含 28 个模块，按功能分类如下：
 
 | 类别 | 文件 | 说明 |
 |------|------|------|
@@ -83,11 +83,18 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="..."
 | **坐标变换** | `qwt_transform.h/.cpp` | `QwtTransform` 及子类（线性、对数等） |
 | | `qwt_scale_map.h/.cpp` | `QwtScaleMap`：坐标映射 |
 | | `qwt_scale_div.h/.cpp` | `QwtScaleDiv`：刻度划分 |
+| | `qwt_scale_engine.h/.cpp` | `QwtScaleEngine` 及子类：刻度引擎（线性、对数、日期） |
 | **时间处理** | `qwt_date.h/.cpp` | `QwtDate`：日期时间工具 |
 | | `qwt_system_clock.h/.cpp` | `QwtSystemClock`：高精度计时器 |
 | **通用算法** | `qwt_algorithm.hpp` | `qwtSelectNextIterator` 等通用算法 |
 | | `qwt_qt5qt6_compat.hpp` | Qt5/Qt6 兼容层（`qwt::compat::` 命名空间） |
 | **数据容器** | `qwt_grid_data.hpp` | `QwtGridData`：网格数据容器 |
+| **数据系列** | `qwt_series_data.h/.cpp` | `QwtSeriesData<T>`：数据系列基类模板 |
+| | `qwt_point_data.h/.cpp` | `QwtPointArrayData` 等点数据实现 |
+| | `qwt_series_store.h` | `QwtSeriesStore<T>`：数据存储模板 |
+| **栅格数据** | `qwt_raster_data.h/.cpp` | `QwtRasterData`：栅格数据基类 |
+| | `qwt_matrix_raster_data.h/.cpp` | `QwtMatrixRasterData`：矩阵栅格数据 |
+| | `qwt_grid_raster_data.h/.cpp` | `QwtGridRasterData`：网格栅格数据（v7 新增） |
 
 `src/core/CMakeLists.txt` 完整文件列表：
 
@@ -101,6 +108,9 @@ set(QWTCORE_HEADER_FILES
     qwt_clipper.h            qwt_date.h               qwt_transform.h
     qwt_scale_map.h          qwt_scale_div.h          qwt_simd_argminmax.h
     qwt_box_statistics.h     qwt_grid_data.hpp
+    qwt_scale_engine.h       qwt_series_data.h        qwt_point_data.h
+    qwt_series_store.h       qwt_raster_data.h        qwt_matrix_raster_data.h
+    qwt_grid_raster_data.h
 )
 
 set(QWTCORE_SOURCE_FILES
@@ -110,6 +120,9 @@ set(QWTCORE_SOURCE_FILES
     qwt_clipper.cpp          qwt_date.cpp             qwt_transform.cpp
     qwt_scale_map.cpp        qwt_scale_div.cpp        qwt_simd_argminmax.cpp
     qwt_box_statistics.cpp
+    qwt_scale_engine.cpp     qwt_series_data.cpp      qwt_point_data.cpp
+    qwt_raster_data.cpp      qwt_matrix_raster_data.cpp
+    qwt_grid_raster_data.cpp
 )
 ```
 
@@ -251,23 +264,23 @@ QWT_DC(d);    // const PrivateData* d = d_func()
 
 ### 3D 主题系统
 
-`Qwt3DTheme` 封装 3D 绘图的全部视觉属性（背景色、网格色/线宽、数据 colormap、坐标轴颜色、标题样式、光照预设、着色模式、绘图样式、材质参数）。10 种内置预设：`Default`、`Dark`、`Scientific`、`Warm`、`Cool`、`Matplotlib`、`EarthTones`、`Ocean`、`HighContrast`、`Presentation`。
+`Qwt3D::Qwt3DTheme` 封装 3D 绘图的全部视觉属性（背景色、网格色/线宽、数据 colormap、坐标轴颜色、标题样式、光照预设、着色模式、绘图样式、材质参数）。10 种内置预设：`Default`、`Dark`、`Scientific`、`Warm`、`Cool`、`Matplotlib`、`EarthTones`、`Ocean`、`HighContrast`、`Presentation`。
 
 ```cpp
 // 使用预设
-plot->applyTheme(Qwt3DTheme::Dark);
+plot->applyTheme(Qwt3D::Qwt3DTheme::Dark);
 plot->applyTheme("Scientific");
 
 // 手动定制
-Qwt3DTheme theme(Qwt3DTheme::Scientific);
+Qwt3D::Qwt3DTheme theme(Qwt3D::Qwt3DTheme::Scientific);
 theme.setDataColorPreset("plasma");  // 使用 core 模块的 colormap 预设
 theme.setShininess(20.0);
-theme.apply(&plot);
+theme.apply(plot);  // plot 是 Qwt3D::Plot3D* 指针
 ```
 
 `ColorMapColor` 适配器桥接 core 模块的 `QwtColorMap` 到 3D 的 `Qwt3D::Color` 接口，使得 22 种科学 colormap 预设（viridis, plasma, jet, hot 等）可直接用于 3D 表面图。
 
-光照预设（`Qwt3DTheme::LightingPreset`）：`NoLighting`、`FlatLight`、`Studio`、`Outdoor`、`Soft`。
+光照预设（`Qwt3D::Qwt3DTheme::LightingPreset`）：`NoLighting`、`FlatLight`、`Studio`、`Outdoor`、`Soft`。
 
 ## 不可触碰的文件
 

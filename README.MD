@@ -88,7 +88,7 @@ Example `CMakeLists.txt`:
 ```cmake
 # QwtPlot requires Core Gui Widgets Svg Concurrent OpenGL PrintSupport
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} 5.8 COMPONENTS Core Gui Widgets Svg Concurrent OpenGL PrintSupport REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} 5.12 COMPONENTS Core Gui Widgets Svg Concurrent OpenGL PrintSupport REQUIRED)
 
 add_executable(YOUR_APP_TARGET
     main.cpp

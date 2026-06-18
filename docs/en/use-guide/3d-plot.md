@@ -16,46 +16,48 @@ Qwt 7.1 integrates the original `QwtPlot3D` library, providing 3D data visualiza
 
 ```mermaid
 classDiagram
-    class Qwt3DPlot {
+    class Plot3D {
         +setCoordinateStyle()
         +setPlotStyle()
         +setRotation()
         +setScale()
         +updateData()
+        +enableMouse()
+        +showColorLegend()
+        +setDataColor()
     }
 
-    class Qwt3DSurfacePlot {
-        +setData()
-        +setResolution()
-        +createRepresentation()
-    }
-
-    class Qwt3DGridPlot {
-        +setData()
+    class SurfacePlot {
+        +loadFromData()
         +setResolution()
     }
 
-    class Qwt3DFunction {
+    class Function {
         +operator(x,y)
         +create()
+        +setDomain()
+        +setMesh()
     }
 
-    Qwt3DPlot <|-- Qwt3DSurfacePlot
-    Qwt3DPlot <|-- Qwt3DGridPlot
-    Qwt3DPlot --> Qwt3DFunction : uses
+    Plot3D <|-- SurfacePlot
+    Plot3D --> Function : uses
 ```
+
+!!! note "Namespace"
+    All 3D classes live in the `Qwt3D` namespace. Below they are shown without the
+    `Qwt3D::` prefix for brevity — qualify them (or add `using namespace Qwt3D;`) in your code.
 
 ## Core Classes
 
 | Class Name | Description |
 |------|------|
-| `Qwt3DPlot` | 3D plot base class, provides basic framework and interaction |
-| `Qwt3DSurfacePlot` | 3D surface plot, displays continuous surfaces |
-| `Qwt3DGridPlot` | 3D grid plot, displays discrete grid data |
-| `Qwt3DFunction` | 3D function plot, generates surfaces from mathematical functions |
-| `Qwt3DAxis` | 3D axis configuration |
-| `Qwt3DColorLegend` | 3D color bar |
-| `Qwt3DTheme` | 3D theme system, encapsulates background, mesh, colormap, axes, lighting, and all visual attributes |
+| `Qwt3D::Plot3D` | 3D plot base class, provides basic framework and interaction |
+| `Qwt3D::SurfacePlot` | 3D surface plot, displays continuous surfaces (handles both grid and cell data) |
+| `Qwt3D::Function` | 3D function plot, generates surfaces from mathematical functions |
+| `Qwt3D::GraphPlot` | Intermediate base class for graph-based 3D plots |
+| `Qwt3D::Axis` | 3D axis configuration |
+| `Qwt3D::ColorLegend` | 3D color bar |
+| `Qwt3D::Qwt3DTheme` | 3D theme system, encapsulates background, mesh, colormap, axes, lighting, and all visual attributes |
 
 ## Usage
 
@@ -66,32 +68,33 @@ The 3D plot example is located at: `examples/3D/simpleplot3D`. Screenshot:
 ### Basic Usage Example
 
 ```cpp
-#include <Qwt3DPlot>
-#include <Qwt3DSurfacePlot>
-#include <Qwt3DFunction>
+#include <qwt3d_surfaceplot.h>
+#include <qwt3d_function.h>
+
+using namespace Qwt3D;
 
 // Create surface plot
-Qwt3DSurfacePlot* plot = new Qwt3DSurfacePlot();
+SurfacePlot* plot = new SurfacePlot();
 
 // Define function
-class MyFunction : public Qwt3DFunction
+class MyFunction : public Function
 {
 public:
-    virtual double operator()(double x, double y) override
+    double operator()(double x, double y) override
     {
         return std::sin(x) * std::cos(y);  // Mathematical function
     }
 };
 
-// Create function object
-MyFunction* func = new MyFunction();
+// Create function object and assign it to the plot
+MyFunction* func = new MyFunction(*plot);
 
-// Set data range and resolution
+// Set data range and mesh resolution
 func->setDomain(-5, 5, -5, 5);  // x and y range
-func->setResolution(50);         // 50x50 grid
+func->setMesh(50, 50);           // 50x50 grid
 
 // Create surface
-func->create(plot);
+func->create();
 
 // Set rotation angles
 plot->setRotation(30, 0, 45);  // X, Y, Z axis rotation angles
@@ -103,26 +106,31 @@ plot->show();
 ### Data Loading
 
 ```cpp
+#include <qwt3d_surfaceplot.h>
+
+using namespace Qwt3D;
+
 // Load from data array
-Qwt3DSurfacePlot* plot = new Qwt3DSurfacePlot();
+SurfacePlot* plot = new SurfacePlot();
 
-// Set data range
-plot->setDomain(0, 100, 0, 100);  // X, Y range
-
-// Set resolution
-plot->setResolution(100);  // 100x100 grid
-
-// Load Z value data (100x100 array)
-double zData[100][100];
+// Allocate a 100x100 Z value array
+double* zData[100];
+for (int i = 0; i < 100; ++i)
+    zData[i] = new double[100];
 // ... fill data ...
-plot->loadFromData(zData, 100, 100);
+
+// Load Z value data with explicit X/Y range
+plot->loadFromData(zData, 100, 100, 0.0, 100.0, 0.0, 100.0);
+
+// Set resolution (1 = use all data; higher values downsample)
+plot->setResolution(1);
 ```
 
 ### Interactive Operations
 
 ```cpp
 // Enable mouse interaction
-plot->setMouseInteraction(true);
+plot->enableMouse(true);
 
 // Mouse operations:
 // - Left button drag: Rotate view
@@ -139,20 +147,20 @@ plot->setRotation(45, 30, 60);  // X, Y, Z axis rotation angles (degrees)
 ### Color Mapping
 
 ```cpp
-#include <Qwt3DColorLegend>
+#include <qwt3d_colormap_color.h>
 
-// Enable color bar
-Qwt3DColorLegend* legend = new Qwt3DColorLegend();
-legend->setLimits(0, 10);  // Z value range
-legend->show(plot);
+using namespace Qwt3D;
 
-// Set color mapping
-plot->setColorFromData();  // Automatically map colors based on Z values
+// Enable color legend
+plot->showColorLegend(true);
+
+// Set color mapping based on Z values using a core colormap preset
+plot->setDataColor(new ColorMapColor(plot, "viridis"));
 ```
 
 ### Theme System (v7.3.1+)
 
-The `Qwt3DTheme` class provides one-click switching of 3D plot visual styles, encapsulating all visual attributes including background color, mesh color, data colormap, axis colors, title styling, lighting presets, and shading modes.
+The `Qwt3D::Qwt3DTheme` class provides one-click switching of 3D plot visual styles, encapsulating all visual attributes including background color, mesh color, data colormap, axis colors, title styling, lighting presets, and shading modes.
 
 #### Built-in Preset Themes
 
@@ -175,22 +183,22 @@ The `Qwt3DTheme` class provides one-click switching of 3D plot visual styles, en
 #include <qwt3d_theme.h>
 
 // Method 1: Use preset theme (recommended)
-plot->applyTheme(Qwt3DTheme::Dark);
+plot->applyTheme(Qwt3D::Qwt3DTheme::Dark);
 
 // Method 2: Apply theme by name
 plot->applyTheme("Scientific");
 
 // Method 3: Custom theme
-Qwt3DTheme theme(Qwt3DTheme::Scientific);
+Qwt3D::Qwt3DTheme theme(Qwt3D::Qwt3DTheme::Scientific);
 theme.setDataColorPreset("plasma");  // Use one of 22 scientific colormap presets
 theme.setShininess(20.0);
-theme.setLightingPreset(Qwt3DTheme::Studio);
-theme.apply(&plot);
+theme.setLightingPreset(Qwt3D::Qwt3DTheme::Studio);
+theme.apply(plot);
 ```
 
 #### Colormap Presets
 
-`Qwt3DTheme` provides 22 scientific visualization colormaps via the `core` module's `QwtColorMapPreset`:
+`Qwt3D::Qwt3DTheme` provides 22 scientific visualization colormaps via the `core` module's `QwtColorMapPreset`:
 
 - Perceptually uniform: `viridis`, `plasma`, `inferno`, `magma`, `cividis`
 - Classic: `jet`, `hot`, `cool`, `spring`, `summer`, `autumn`, `winter`
@@ -235,14 +243,19 @@ target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
 
 ## Core Method Summary
 
-| Method | Description |
-|------|------|
-| `setDomain()` | Set X/Y data range |
-| `setResolution()` | Set grid resolution |
-| `setRotation()` | Set rotation angles |
-| `setScale()` | Set scale ratio |
-| `createRepresentation()` | Create surface representation |
-| `updateData()` | Update data |
+| Method | Class | Description |
+|------|------|------|
+| `setDomain()` | `Qwt3D::Function` / `Qwt3D::GridMapping` | Set X/Y data range |
+| `setMesh()` | `Qwt3D::Function` / `Qwt3D::GridMapping` | Set grid resolution (columns, rows) |
+| `setResolution()` | `Qwt3D::SurfacePlot` | Set data resolution (1 = all data) |
+| `loadFromData()` | `Qwt3D::SurfacePlot` | Load data array into the plot |
+| `create()` | `Qwt3D::Function` | Generate and attach surface data |
+| `setRotation()` | `Qwt3D::Plot3D` | Set rotation angles |
+| `setScale()` | `Qwt3D::Plot3D` | Set scale ratio |
+| `enableMouse()` | `Qwt3D::Plot3D` | Enable/disable mouse interaction |
+| `showColorLegend()` | `Qwt3D::Plot3D` | Show/hide color legend |
+| `setDataColor()` | `Qwt3D::Plot3D` | Set data color functor |
+| `updateData()` | `Qwt3D::Plot3D` | Recalculate and update data |
 
 !!! tip "3D Plot Recommendations"
     - Data size should not be too large (recommended under 100x100 grid)
