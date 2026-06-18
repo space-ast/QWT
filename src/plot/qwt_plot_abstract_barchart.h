@@ -39,7 +39,7 @@
  */
 class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
 {
-  public:
+public:
     /*!
         @brief Mode how to calculate the bar width
 
@@ -76,48 +76,48 @@ class QWT_EXPORT QwtPlotAbstractBarChart : public QwtPlotSeriesItem
     };
 
     // Constructor with title
-    explicit QwtPlotAbstractBarChart( const QwtText& title );
+    explicit QwtPlotAbstractBarChart(const QwtText& title);
     // Destructor
     ~QwtPlotAbstractBarChart() override;
 
     // Set the layout policy for bar width calculation
-    void setLayoutPolicy( LayoutPolicy );
+    void setLayoutPolicy(LayoutPolicy);
     // Get the layout policy
     LayoutPolicy layoutPolicy() const;
 
     // Set the layout hint for bar width calculation
-    void setLayoutHint( double );
+    void setLayoutHint(double);
     // Get the layout hint
     double layoutHint() const;
 
     // Set the spacing between bars
-    void setSpacing( int );
+    void setSpacing(int);
     // Get the spacing between bars
     int spacing() const;
 
     // Set the margin around the bars
-    void setMargin( int );
+    void setMargin(int);
     // Get the margin around the bars
     int margin() const;
 
     // Set the baseline value for the bars
-    void setBaseline( double );
+    void setBaseline(double);
     // Get the baseline value
     double baseline() const;
 
     // Calculate canvas margin hint for layout
-    virtual void getCanvasMarginHint(
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, double& left, double& top,
-        double& right, double& bottom) const override;
+    virtual void getCanvasMarginHint(const QwtScaleMap& xMap,
+                                     const QwtScaleMap& yMap,
+                                     const QRectF& canvasRect,
+                                     double& left,
+                                     double& top,
+                                     double& right,
+                                     double& bottom) const override;
 
+protected:
+    double sampleWidth(const QwtScaleMap& map, double canvasSize, double boundingSize, double value) const;
 
-  protected:
-    double sampleWidth( const QwtScaleMap& map,
-        double canvasSize, double boundingSize,
-        double value ) const;
-
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotAbstractBarChart)
 };
 

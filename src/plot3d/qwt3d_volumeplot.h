@@ -25,4 +25,4 @@ protected:
 
 }  // ns
 
-#endif // QWT3D_VOLUMEPLOT_H
+#endif  // QWT3D_VOLUMEPLOT_H

@@ -53,21 +53,21 @@ void SurfacePlot::createDataG()
         for (i = 0; i < lastcol - step; i += step) {
             glBegin(GL_TRIANGLE_STRIP);
             setColorFromVertexG(i, 0, hl);
-            glNormal3dv(d->m_actualDataG->normals[i][0]);
-            glVertex3dv(d->m_actualDataG->vertices[i][0]);
+            glNormal3dv(d->m_actualDataG->normals[ i ][ 0 ]);
+            glVertex3dv(d->m_actualDataG->vertices[ i ][ 0 ]);
 
             setColorFromVertexG(i + step, 0, hl);
-            glNormal3dv(d->m_actualDataG->normals[i + step][0]);
-            glVertex3dv(d->m_actualDataG->vertices[i + step][0]);
+            glNormal3dv(d->m_actualDataG->normals[ i + step ][ 0 ]);
+            glVertex3dv(d->m_actualDataG->vertices[ i + step ][ 0 ]);
 
             for (j = 0; j < lastrow - step; j += step) {
                 setColorFromVertexG(i, j + step, hl);
-                glNormal3dv(d->m_actualDataG->normals[i][j + step]);
-                glVertex3dv(d->m_actualDataG->vertices[i][j + step]);
+                glNormal3dv(d->m_actualDataG->normals[ i ][ j + step ]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ j + step ]);
 
                 setColorFromVertexG(i + step, j + step, hl);
-                glNormal3dv(d->m_actualDataG->normals[i + step][j + step]);
-                glVertex3dv(d->m_actualDataG->vertices[i + step][j + step]);
+                glNormal3dv(d->m_actualDataG->normals[ i + step ][ j + step ]);
+                glVertex3dv(d->m_actualDataG->vertices[ i + step ][ j + step ]);
             }
             glEnd();
         }
@@ -79,13 +79,13 @@ void SurfacePlot::createDataG()
         if (step < d->m_actualDataG->columns() && step < d->m_actualDataG->rows()) {
             glBegin(GL_LINE_LOOP);
             for (i = 0; i < d->m_actualDataG->columns() - step; i += step)
-                glVertex3dv(d->m_actualDataG->vertices[i][0]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ 0 ]);
             for (j = 0; j < d->m_actualDataG->rows() - step; j += step)
-                glVertex3dv(d->m_actualDataG->vertices[i][j]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ j ]);
             for (; i >= 0; i -= step)
-                glVertex3dv(d->m_actualDataG->vertices[i][j]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ j ]);
             for (; j >= 0; j -= step)
-                glVertex3dv(d->m_actualDataG->vertices[0][j]);
+                glVertex3dv(d->m_actualDataG->vertices[ 0 ][ j ]);
             glEnd();
         }
 
@@ -93,13 +93,13 @@ void SurfacePlot::createDataG()
         for (i = step; i < d->m_actualDataG->columns() - step; i += step) {
             glBegin(GL_LINE_STRIP);
             for (j = 0; j < d->m_actualDataG->rows(); j += step)
-                glVertex3dv(d->m_actualDataG->vertices[i][j]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ j ]);
             glEnd();
         }
         for (j = step; j < d->m_actualDataG->rows() - step; j += step) {
             glBegin(GL_LINE_STRIP);
             for (i = 0; i < d->m_actualDataG->columns(); i += step)
-                glVertex3dv(d->m_actualDataG->vertices[i][j]);
+                glVertex3dv(d->m_actualDataG->vertices[ i ][ j ]);
             glEnd();
         }
     }
@@ -111,8 +111,9 @@ void SurfacePlot::setColorFromVertexG(int ix, int iy, bool skip)
     if (skip)
         return;
 
-    RGBA col = (*dataColor())(d->m_actualDataG->vertices[ix][iy][0], d->m_actualDataG->vertices[ix][iy][1],
-                              d->m_actualDataG->vertices[ix][iy][2]);
+    RGBA col = (*dataColor())(d->m_actualDataG->vertices[ ix ][ iy ][ 0 ],
+                              d->m_actualDataG->vertices[ ix ][ iy ][ 1 ],
+                              d->m_actualDataG->vertices[ ix ][ iy ][ 2 ]);
 
     glColor4d(col.r, col.g, col.b, col.a);
 }
@@ -130,18 +131,18 @@ void SurfacePlot::createNormalsG()
 
     int step = resolution();
 
-    double diag = (d->m_actualDataG->hull().maxVertex - d->m_actualDataG->hull().minVertex).length()
-            * normalLength();
+    double diag = (d->m_actualDataG->hull().maxVertex - d->m_actualDataG->hull().minVertex).length() * normalLength();
 
     arrow.assign(*this);
     arrow.drawBegin();
     for (int i = 0; i <= d->m_actualDataG->columns() - step; i += step) {
         for (int j = 0; j <= d->m_actualDataG->rows() - step; j += step) {
-            basev = Triple(d->m_actualDataG->vertices[i][j][0], d->m_actualDataG->vertices[i][j][1],
-                           d->m_actualDataG->vertices[i][j][2]);
-            topv = Triple(d->m_actualDataG->vertices[i][j][0] + d->m_actualDataG->normals[i][j][0],
-                          d->m_actualDataG->vertices[i][j][1] + d->m_actualDataG->normals[i][j][1],
-                          d->m_actualDataG->vertices[i][j][2] + d->m_actualDataG->normals[i][j][2]);
+            basev = Triple(d->m_actualDataG->vertices[ i ][ j ][ 0 ],
+                           d->m_actualDataG->vertices[ i ][ j ][ 1 ],
+                           d->m_actualDataG->vertices[ i ][ j ][ 2 ]);
+            topv  = Triple(d->m_actualDataG->vertices[ i ][ j ][ 0 ] + d->m_actualDataG->normals[ i ][ j ][ 0 ],
+                          d->m_actualDataG->vertices[ i ][ j ][ 1 ] + d->m_actualDataG->normals[ i ][ j ][ 1 ],
+                          d->m_actualDataG->vertices[ i ][ j ][ 2 ] + d->m_actualDataG->normals[ i ][ j ][ 2 ]);
 
             norm = topv - basev;
             norm.normalize();
@@ -155,7 +156,7 @@ void SurfacePlot::createNormalsG()
     arrow.drawEnd();
 }
 
-void SurfacePlot::readIn(GridData &gdata, Triple **data, unsigned int columns, unsigned int rows)
+void SurfacePlot::readIn(GridData& gdata, Triple** data, unsigned int columns, unsigned int rows)
 {
     gdata.setSize(columns, rows);
 
@@ -164,29 +165,35 @@ void SurfacePlot::readIn(GridData &gdata, Triple **data, unsigned int columns, u
     /* fill out the vertex array for the mesh. */
     for (unsigned i = 0; i != columns; ++i) {
         for (unsigned j = 0; j != rows; ++j) {
-            gdata.vertices[i][j][0] = data[i][j].x;
-            gdata.vertices[i][j][1] = data[i][j].y;
-            gdata.vertices[i][j][2] = data[i][j].z;
+            gdata.vertices[ i ][ j ][ 0 ] = data[ i ][ j ].x;
+            gdata.vertices[ i ][ j ][ 1 ] = data[ i ][ j ].y;
+            gdata.vertices[ i ][ j ][ 2 ] = data[ i ][ j ].z;
 
-            if (data[i][j].x > range.maxVertex.x)
-                range.maxVertex.x = data[i][j].x;
-            if (data[i][j].y > range.maxVertex.y)
-                range.maxVertex.y = data[i][j].y;
-            if (data[i][j].z > range.maxVertex.z)
-                range.maxVertex.z = data[i][j].z;
-            if (data[i][j].x < range.minVertex.x)
-                range.minVertex.x = data[i][j].x;
-            if (data[i][j].y < range.minVertex.y)
-                range.minVertex.y = data[i][j].y;
-            if (data[i][j].z < range.minVertex.z)
-                range.minVertex.z = data[i][j].z;
+            if (data[ i ][ j ].x > range.maxVertex.x)
+                range.maxVertex.x = data[ i ][ j ].x;
+            if (data[ i ][ j ].y > range.maxVertex.y)
+                range.maxVertex.y = data[ i ][ j ].y;
+            if (data[ i ][ j ].z > range.maxVertex.z)
+                range.maxVertex.z = data[ i ][ j ].z;
+            if (data[ i ][ j ].x < range.minVertex.x)
+                range.minVertex.x = data[ i ][ j ].x;
+            if (data[ i ][ j ].y < range.minVertex.y)
+                range.minVertex.y = data[ i ][ j ].y;
+            if (data[ i ][ j ].z < range.minVertex.z)
+                range.minVertex.z = data[ i ][ j ].z;
         }
     }
     gdata.setHull(range);
 }
 
-void SurfacePlot::readIn(GridData &gdata, double **data, unsigned int columns, unsigned int rows,
-                         double minx, double maxx, double miny, double maxy)
+void SurfacePlot::readIn(GridData& gdata,
+                         double** data,
+                         unsigned int columns,
+                         unsigned int rows,
+                         double minx,
+                         double maxx,
+                         double miny,
+                         double maxy)
 {
     gdata.setPeriodic(false, false);
     gdata.setSize(columns, rows);
@@ -200,33 +207,33 @@ void SurfacePlot::readIn(GridData &gdata, double **data, unsigned int columns, u
     /* fill out the vertex array for the mesh. */
     for (unsigned i = 0; i != columns; ++i) {
         for (unsigned j = 0; j != rows; ++j) {
-            gdata.vertices[i][j][0] = minx + i * dx;
-            gdata.vertices[i][j][1] = miny + j * dy;
-            gdata.vertices[i][j][2] = data[i][j];
+            gdata.vertices[ i ][ j ][ 0 ] = minx + i * dx;
+            gdata.vertices[ i ][ j ][ 1 ] = miny + j * dy;
+            gdata.vertices[ i ][ j ][ 2 ] = data[ i ][ j ];
 
-            if (data[i][j] > tmax)
-                tmax = data[i][j];
-            if (data[i][j] < tmin)
-                tmin = data[i][j];
+            if (data[ i ][ j ] > tmax)
+                tmax = data[ i ][ j ];
+            if (data[ i ][ j ] < tmin)
+                tmin = data[ i ][ j ];
         }
     }
-    ParallelEpiped hull =
-            ParallelEpiped(Triple(gdata.vertices[0][0][0], gdata.vertices[0][0][1], tmin),
-                           Triple(gdata.vertices[gdata.columns() - 1][gdata.rows() - 1][0],
-                                  gdata.vertices[gdata.columns() - 1][gdata.rows() - 1][1], tmax));
+    ParallelEpiped hull = ParallelEpiped(Triple(gdata.vertices[ 0 ][ 0 ][ 0 ], gdata.vertices[ 0 ][ 0 ][ 1 ], tmin),
+                                         Triple(gdata.vertices[ gdata.columns() - 1 ][ gdata.rows() - 1 ][ 0 ],
+                                                gdata.vertices[ gdata.columns() - 1 ][ gdata.rows() - 1 ][ 1 ],
+                                                tmax));
 
     gdata.setHull(hull);
 }
 
-void SurfacePlot::calcNormals(GridData &gdata)
+void SurfacePlot::calcNormals(GridData& gdata)
 {
 
-    unsigned int rows = gdata.rows();
+    unsigned int rows    = gdata.rows();
     unsigned int columns = gdata.columns();
 
     // normals
 
-    Triple u, v, n; // for cross product
+    Triple u, v, n;  // for cross product
 
     for (unsigned i = 0; i != columns; ++i) {
         for (unsigned j = 0; j != rows; ++j) {
@@ -234,88 +241,88 @@ void SurfacePlot::calcNormals(GridData &gdata)
 
             if (i < columns - 1 && j < rows - 1) {
                 /*	get two vectors to cross */
-                u = Triple(gdata.vertices[i + 1][j][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i + 1][j][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i + 1][j][2] - gdata.vertices[i][j][2]);
+                u = Triple(gdata.vertices[ i + 1 ][ j ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i + 1 ][ j ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i + 1 ][ j ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
 
-                v = Triple(gdata.vertices[i][j + 1][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i][j + 1][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i][j + 1][2] - gdata.vertices[i][j][2]);
+                v = Triple(gdata.vertices[ i ][ j + 1 ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i ][ j + 1 ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i ][ j + 1 ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
                 /* get the normalized cross product */
-                n += normalizedcross(u, v); // right hand system here !
+                n += normalizedcross(u, v);  // right hand system here !
             }
 
             if (i > 0 && j < rows - 1) {
-                u = Triple(gdata.vertices[i][j + 1][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i][j + 1][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i][j + 1][2] - gdata.vertices[i][j][2]);
-                v = Triple(gdata.vertices[i - 1][j][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i - 1][j][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i - 1][j][2] - gdata.vertices[i][j][2]);
+                u = Triple(gdata.vertices[ i ][ j + 1 ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i ][ j + 1 ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i ][ j + 1 ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
+                v = Triple(gdata.vertices[ i - 1 ][ j ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i - 1 ][ j ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i - 1 ][ j ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
                 n += normalizedcross(u, v);
             }
 
             if (i > 0 && j > 0) {
-                u = Triple(gdata.vertices[i - 1][j][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i - 1][j][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i - 1][j][2] - gdata.vertices[i][j][2]);
+                u = Triple(gdata.vertices[ i - 1 ][ j ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i - 1 ][ j ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i - 1 ][ j ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
 
-                v = Triple(gdata.vertices[i][j - 1][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i][j - 1][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i][j - 1][2] - gdata.vertices[i][j][2]);
+                v = Triple(gdata.vertices[ i ][ j - 1 ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i ][ j - 1 ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i ][ j - 1 ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
                 n += normalizedcross(u, v);
             }
 
             if (i < columns - 1 && j > 0) {
-                u = Triple(gdata.vertices[i][j - 1][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i][j - 1][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i][j - 1][2] - gdata.vertices[i][j][2]);
+                u = Triple(gdata.vertices[ i ][ j - 1 ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i ][ j - 1 ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i ][ j - 1 ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
 
-                v = Triple(gdata.vertices[i + 1][j][0] - gdata.vertices[i][j][0],
-                           gdata.vertices[i + 1][j][1] - gdata.vertices[i][j][1],
-                           gdata.vertices[i + 1][j][2] - gdata.vertices[i][j][2]);
+                v = Triple(gdata.vertices[ i + 1 ][ j ][ 0 ] - gdata.vertices[ i ][ j ][ 0 ],
+                           gdata.vertices[ i + 1 ][ j ][ 1 ] - gdata.vertices[ i ][ j ][ 1 ],
+                           gdata.vertices[ i + 1 ][ j ][ 2 ] - gdata.vertices[ i ][ j ][ 2 ]);
                 n += normalizedcross(u, v);
             }
             n.normalize();
 
-            gdata.normals[i][j][0] = n.x;
-            gdata.normals[i][j][1] = n.y;
-            gdata.normals[i][j][2] = n.z;
+            gdata.normals[ i ][ j ][ 0 ] = n.x;
+            gdata.normals[ i ][ j ][ 1 ] = n.y;
+            gdata.normals[ i ][ j ][ 2 ] = n.z;
         }
     }
 }
 
-void SurfacePlot::sewPeriodic(GridData &gdata)
+void SurfacePlot::sewPeriodic(GridData& gdata)
 {
     // sewing
 
     Triple n;
 
     unsigned int columns = gdata.columns();
-    unsigned int rows = gdata.rows();
+    unsigned int rows    = gdata.rows();
 
     if (gdata.uperiodic()) {
         for (unsigned i = 0; i != columns; ++i) {
-            n = Triple(gdata.normals[i][0][0] + gdata.normals[i][rows - 1][0],
-                       gdata.normals[i][0][1] + gdata.normals[i][rows - 1][1],
-                       gdata.normals[i][0][2] + gdata.normals[i][rows - 1][2]);
+            n = Triple(gdata.normals[ i ][ 0 ][ 0 ] + gdata.normals[ i ][ rows - 1 ][ 0 ],
+                       gdata.normals[ i ][ 0 ][ 1 ] + gdata.normals[ i ][ rows - 1 ][ 1 ],
+                       gdata.normals[ i ][ 0 ][ 2 ] + gdata.normals[ i ][ rows - 1 ][ 2 ]);
 
             n.normalize();
-            gdata.normals[i][0][0] = gdata.normals[i][rows - 1][0] = n.x;
-            gdata.normals[i][0][1] = gdata.normals[i][rows - 1][1] = n.y;
-            gdata.normals[i][0][2] = gdata.normals[i][rows - 1][2] = n.z;
+            gdata.normals[ i ][ 0 ][ 0 ] = gdata.normals[ i ][ rows - 1 ][ 0 ] = n.x;
+            gdata.normals[ i ][ 0 ][ 1 ] = gdata.normals[ i ][ rows - 1 ][ 1 ] = n.y;
+            gdata.normals[ i ][ 0 ][ 2 ] = gdata.normals[ i ][ rows - 1 ][ 2 ] = n.z;
         }
     }
     if (gdata.vperiodic()) {
         for (unsigned j = 0; j != rows; ++j) {
-            n = Triple(gdata.normals[0][j][0] + gdata.normals[columns - 1][j][0],
-                       gdata.normals[0][j][1] + gdata.normals[columns - 1][j][1],
-                       gdata.normals[0][j][2] + gdata.normals[columns - 1][j][2]);
+            n = Triple(gdata.normals[ 0 ][ j ][ 0 ] + gdata.normals[ columns - 1 ][ j ][ 0 ],
+                       gdata.normals[ 0 ][ j ][ 1 ] + gdata.normals[ columns - 1 ][ j ][ 1 ],
+                       gdata.normals[ 0 ][ j ][ 2 ] + gdata.normals[ columns - 1 ][ j ][ 2 ]);
 
             n.normalize();
-            gdata.normals[0][j][0] = gdata.normals[columns - 1][j][0] = n.x;
-            gdata.normals[0][j][1] = gdata.normals[columns - 1][j][1] = n.y;
-            gdata.normals[0][j][2] = gdata.normals[columns - 1][j][2] = n.z;
+            gdata.normals[ 0 ][ j ][ 0 ] = gdata.normals[ columns - 1 ][ j ][ 0 ] = n.x;
+            gdata.normals[ 0 ][ j ][ 1 ] = gdata.normals[ columns - 1 ][ j ][ 1 ] = n.y;
+            gdata.normals[ 0 ][ j ][ 2 ] = gdata.normals[ columns - 1 ][ j ][ 2 ] = n.z;
         }
     }
 }
@@ -324,8 +331,7 @@ void SurfacePlot::sewPeriodic(GridData &gdata)
         Convert user grid data to internal vertex structure.
         See also NativeReader::read() and Function::create()
 */
-bool SurfacePlot::loadFromData(Triple **data, unsigned int columns, unsigned int rows,
-                               bool uperiodic, bool vperiodic)
+bool SurfacePlot::loadFromData(Triple** data, unsigned int columns, unsigned int rows, bool uperiodic, bool vperiodic)
 {
     QWT_D(d);
     d->m_actualDataC->clear();
@@ -347,8 +353,7 @@ bool SurfacePlot::loadFromData(Triple **data, unsigned int columns, unsigned int
         Convert user grid data to internal vertex structure.
         See also NativeReader::read() and Function::create()
 */
-bool SurfacePlot::loadFromData(double **data, unsigned int columns, unsigned int rows, double minx,
-                               double maxx, double miny, double maxy)
+bool SurfacePlot::loadFromData(double** data, unsigned int columns, unsigned int rows, double minx, double maxx, double miny, double maxy)
 {
     QWT_D(d);
     d->m_actualDataC->clear();
@@ -396,19 +401,20 @@ void SurfacePlot::Data2FloorG()
     for (int i = 0; i < d->m_actualDataG->columns() - step; i += step) {
         glBegin(GL_TRIANGLE_STRIP);
         setColorFromVertexG(i, 0);
-        glVertex3d(d->m_actualDataG->vertices[i][0][0], d->m_actualDataG->vertices[i][0][1], zshift);
+        glVertex3d(d->m_actualDataG->vertices[ i ][ 0 ][ 0 ], d->m_actualDataG->vertices[ i ][ 0 ][ 1 ], zshift);
 
         setColorFromVertexG(i + step, 0);
-        glVertex3d(d->m_actualDataG->vertices[i + step][0][0], d->m_actualDataG->vertices[i + step][0][1],
-                   zshift);
+        glVertex3d(d->m_actualDataG->vertices[ i + step ][ 0 ][ 0 ], d->m_actualDataG->vertices[ i + step ][ 0 ][ 1 ], zshift);
         for (int j = 0; j < d->m_actualDataG->rows() - step; j += step) {
             setColorFromVertexG(i, j + step);
-            glVertex3d(d->m_actualDataG->vertices[i][j + step][0],
-                       d->m_actualDataG->vertices[i][j + step][1], zshift);
+            glVertex3d(d->m_actualDataG->vertices[ i ][ j + step ][ 0 ],
+                       d->m_actualDataG->vertices[ i ][ j + step ][ 1 ],
+                       zshift);
 
             setColorFromVertexG(i + step, j + step);
-            glVertex3d(d->m_actualDataG->vertices[i + step][j + step][0],
-                       d->m_actualDataG->vertices[i + step][j + step][1], zshift);
+            glVertex3d(d->m_actualDataG->vertices[ i + step ][ j + step ][ 0 ],
+                       d->m_actualDataG->vertices[ i + step ][ j + step ][ 1 ],
+                       zshift);
         }
         glEnd();
     }
@@ -421,8 +427,7 @@ void SurfacePlot::Isolines2FloorG()
     if (isolines() <= 0 || !data || data->empty())
         return;
 
-    double count =
-            (data->hull().maxVertex.z - data->hull().minVertex.z) / isolines();
+    double count = (data->hull().maxVertex.z - data->hull().minVertex.z) / isolines();
 
     RGBA col;
 
@@ -433,8 +438,8 @@ void SurfacePlot::Isolines2FloorG()
     int cols = d->m_actualDataG->columns();
     int rows = d->m_actualDataG->rows();
 
-    Triple t[4];
-    vector<Triple> intersection;
+    Triple t[ 4 ];
+    vector< Triple > intersection;
 
     double lambda = 0;
 
@@ -445,38 +450,39 @@ void SurfacePlot::Isolines2FloorG()
 
         for (int i = 0; i < cols - step; i += step) {
             for (int j = 0; j < rows - step; j += step) {
-                t[0] = Triple(d->m_actualDataG->vertices[i][j][0], d->m_actualDataG->vertices[i][j][1],
-                              d->m_actualDataG->vertices[i][j][2]);
+                t[ 0 ] = Triple(d->m_actualDataG->vertices[ i ][ j ][ 0 ],
+                                d->m_actualDataG->vertices[ i ][ j ][ 1 ],
+                                d->m_actualDataG->vertices[ i ][ j ][ 2 ]);
 
-                col = (*dataColor())(t[0].x, t[0].y, t[0].z);
+                col = (*dataColor())(t[ 0 ].x, t[ 0 ].y, t[ 0 ].z);
                 glColor4d(col.r, col.g, col.b, col.a);
 
-                t[1] = Triple(d->m_actualDataG->vertices[i + step][j][0],
-                              d->m_actualDataG->vertices[i + step][j][1],
-                              d->m_actualDataG->vertices[i + step][j][2]);
-                t[2] = Triple(d->m_actualDataG->vertices[i + step][j + step][0],
-                              d->m_actualDataG->vertices[i + step][j + step][1],
-                              d->m_actualDataG->vertices[i + step][j + step][2]);
-                t[3] = Triple(d->m_actualDataG->vertices[i][j + step][0],
-                              d->m_actualDataG->vertices[i][j + step][1],
-                              d->m_actualDataG->vertices[i][j + step][2]);
+                t[ 1 ] = Triple(d->m_actualDataG->vertices[ i + step ][ j ][ 0 ],
+                                d->m_actualDataG->vertices[ i + step ][ j ][ 1 ],
+                                d->m_actualDataG->vertices[ i + step ][ j ][ 2 ]);
+                t[ 2 ] = Triple(d->m_actualDataG->vertices[ i + step ][ j + step ][ 0 ],
+                                d->m_actualDataG->vertices[ i + step ][ j + step ][ 1 ],
+                                d->m_actualDataG->vertices[ i + step ][ j + step ][ 2 ]);
+                t[ 3 ] = Triple(d->m_actualDataG->vertices[ i ][ j + step ][ 0 ],
+                                d->m_actualDataG->vertices[ i ][ j + step ][ 1 ],
+                                d->m_actualDataG->vertices[ i ][ j + step ][ 2 ]);
 
                 double diff = 0;
                 for (int m = 0; m != 4; ++m) {
                     int mm = (m + 1) % 4;
-                    if ((val >= t[m].z && val <= t[mm].z) || (val >= t[mm].z && val <= t[m].z)) {
-                        diff = t[mm].z - t[m].z;
+                    if ((val >= t[ m ].z && val <= t[ mm ].z) || (val >= t[ mm ].z && val <= t[ m ].z)) {
+                        diff = t[ mm ].z - t[ m ].z;
 
-                        if (isPracticallyZero(diff)) // degenerated
+                        if (isPracticallyZero(diff))  // degenerated
                         {
-                            intersection.push_back(t[m]);
-                            intersection.push_back(t[mm]);
+                            intersection.push_back(t[ m ]);
+                            intersection.push_back(t[ mm ]);
                             continue;
                         }
 
-                        lambda = (val - t[m].z) / diff;
-                        intersection.push_back(Triple(t[m].x + lambda * (t[mm].x - t[m].x),
-                                                      t[m].y + lambda * (t[mm].y - t[m].y), val));
+                        lambda = (val - t[ m ].z) / diff;
+                        intersection.push_back(Triple(
+                            t[ m ].x + lambda * (t[ mm ].x - t[ m ].x), t[ m ].y + lambda * (t[ mm ].y - t[ m ].y), val));
                     }
                 }
 
@@ -484,20 +490,20 @@ void SurfacePlot::Isolines2FloorG()
                     if (intersection.size() > 2) {
                         glBegin(GL_LINE_STRIP);
                         for (unsigned dd = 0; dd != intersection.size(); ++dd) {
-                            glVertex3d(intersection[dd].x, intersection[dd].y, zshift);
+                            glVertex3d(intersection[ dd ].x, intersection[ dd ].y, zshift);
                         }
                         glEnd();
                         glBegin(GL_POINTS);
-                        glVertex3d(intersection[0].x, intersection[0].y, zshift);
+                        glVertex3d(intersection[ 0 ].x, intersection[ 0 ].y, zshift);
                         glEnd();
                     } else if (intersection.size() == 2) {
                         glBegin(GL_LINES);
-                        glVertex3d(intersection[0].x, intersection[0].y, zshift);
-                        glVertex3d(intersection[1].x, intersection[1].y, zshift);
+                        glVertex3d(intersection[ 0 ].x, intersection[ 0 ].y, zshift);
+                        glVertex3d(intersection[ 1 ].x, intersection[ 1 ].y, zshift);
 
                         // small pixel gap problem (see OpenGL spec.)
-                        glVertex3d(intersection[1].x, intersection[1].y, zshift);
-                        glVertex3d(intersection[0].x, intersection[0].y, zshift);
+                        glVertex3d(intersection[ 1 ].x, intersection[ 1 ].y, zshift);
+                        glVertex3d(intersection[ 0 ].x, intersection[ 0 ].y, zshift);
                         glEnd();
                     }
 

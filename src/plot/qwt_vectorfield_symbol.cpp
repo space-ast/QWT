@@ -48,34 +48,31 @@ QwtVectorFieldSymbol::~QwtVectorFieldSymbol()
 class QwtVectorFieldArrow::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtVectorFieldArrow)
-  public:
-    PrivateData( QwtVectorFieldArrow* p, qreal headW, qreal tailW )
-        : q_ptr( p )
-        , headWidth( headW )
-        , tailWidth( tailW )
-        , length( headW + 4.0 )
+public:
+    PrivateData(QwtVectorFieldArrow* p, qreal headW, qreal tailW)
+        : q_ptr(p), headWidth(headW), tailWidth(tailW), length(headW + 4.0)
     {
         /*
             Arrow is drawn horizontally, pointing into positive x direction
             with tip at 0,0.
          */
 
-        path.lineTo( -headWidth, headWidth );
-        path.lineTo( -headWidth, tailWidth );
-        path.lineTo( -length, tailWidth );
-        path.lineTo( -length, -tailWidth );
-        path.lineTo( -headWidth, -tailWidth );
-        path.lineTo( -headWidth, -headWidth );
+        path.lineTo(-headWidth, headWidth);
+        path.lineTo(-headWidth, tailWidth);
+        path.lineTo(-length, tailWidth);
+        path.lineTo(-length, -tailWidth);
+        path.lineTo(-headWidth, -tailWidth);
+        path.lineTo(-headWidth, -headWidth);
 
         path.closeSubpath();
     }
 
-    void setLength( qreal l )
+    void setLength(qreal l)
     {
-        length = qMax( l, headWidth );
+        length = qMax(l, headWidth);
 
-        path.setElementPositionAt( 3, -length, tailWidth );
-        path.setElementPositionAt( 4, -length, -tailWidth );
+        path.setElementPositionAt(3, -length, tailWidth);
+        path.setElementPositionAt(4, -length, -tailWidth);
     }
 
     const qreal headWidth;
@@ -83,7 +80,6 @@ class QwtVectorFieldArrow::PrivateData
     qreal length;
 
     QPainterPath path;
-
 };
 
 /*!
@@ -97,8 +93,8 @@ class QwtVectorFieldArrow::PrivateData
     @sa setLength()
     *
  */
-QwtVectorFieldArrow::QwtVectorFieldArrow( qreal headWidth, qreal tailWidth )
-    : m_data( qwt_make_unique< PrivateData >( this, headWidth, tailWidth ) )
+QwtVectorFieldArrow::QwtVectorFieldArrow(qreal headWidth, qreal tailWidth)
+    : m_data(qwt_make_unique< PrivateData >(this, headWidth, tailWidth))
 {
 }
 
@@ -115,10 +111,10 @@ QwtVectorFieldArrow::~QwtVectorFieldArrow()
  * @param[in] length Length of the arrow in pixels
  * @sa length()
  */
-void QwtVectorFieldArrow::setLength( qreal length )
+void QwtVectorFieldArrow::setLength(qreal length)
 {
     QWT_D(d);
-    d->setLength( length );
+    d->setLength(length);
 }
 
 /**
@@ -136,26 +132,23 @@ qreal QwtVectorFieldArrow::length() const
  * @brief Draw the arrow using QPainter
  * @param[in] painter Painter to use for drawing
  */
-void QwtVectorFieldArrow::paint( QPainter* painter ) const
+void QwtVectorFieldArrow::paint(QPainter* painter) const
 {
     QWT_DC(d);
-    painter->drawPath( d->path );
+    painter->drawPath(d->path);
 }
 
 class QwtVectorFieldThinArrow::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtVectorFieldThinArrow)
-  public:
-    PrivateData( QwtVectorFieldThinArrow* p, qreal headW )
-        : q_ptr( p )
-        , headWidth( headW )
-        , length( headW + 4.0 )
+public:
+    PrivateData(QwtVectorFieldThinArrow* p, qreal headW) : q_ptr(p), headWidth(headW), length(headW + 4.0)
     {
-        path.lineTo( -headWidth, headWidth * 0.6 );
-        path.moveTo( 0, 0 );
-        path.lineTo( -headWidth, -headWidth * 0.6 );
-        path.moveTo( 0, 0 );
-        path.lineTo( -length, 0 );
+        path.lineTo(-headWidth, headWidth * 0.6);
+        path.moveTo(0, 0);
+        path.lineTo(-headWidth, -headWidth * 0.6);
+        path.moveTo(0, 0);
+        path.lineTo(-length, 0);
     }
 
     const qreal headWidth;
@@ -173,8 +166,8 @@ class QwtVectorFieldThinArrow::PrivateData
     @sa setLength()
     *
  */
-QwtVectorFieldThinArrow::QwtVectorFieldThinArrow( qreal headWidth )
-    : m_data( qwt_make_unique< PrivateData >( this, headWidth ) )
+QwtVectorFieldThinArrow::QwtVectorFieldThinArrow(qreal headWidth)
+    : m_data(qwt_make_unique< PrivateData >(this, headWidth))
 {
 }
 
@@ -192,18 +185,18 @@ QwtVectorFieldThinArrow::~QwtVectorFieldThinArrow()
  * @param[in] length Length of the arrow in pixels
  * @sa length()
  */
-void QwtVectorFieldThinArrow::setLength( qreal length )
+void QwtVectorFieldThinArrow::setLength(qreal length)
 {
     QWT_D(d);
     d->length = length;
 
-    const qreal headWidth = qMin( d->headWidth, length / 3.0 );
+    const qreal headWidth = qMin(d->headWidth, length / 3.0);
 
     QPainterPath& path = d->path;
 
-    path.setElementPositionAt( 1, -headWidth, headWidth * 0.6 );
-    path.setElementPositionAt( 3, -headWidth, -headWidth * 0.6 );
-    path.setElementPositionAt( 5, -length, 0 );
+    path.setElementPositionAt(1, -headWidth, headWidth * 0.6);
+    path.setElementPositionAt(3, -headWidth, -headWidth * 0.6);
+    path.setElementPositionAt(5, -length, 0);
 }
 
 /**
@@ -224,5 +217,5 @@ qreal QwtVectorFieldThinArrow::length() const
 void QwtVectorFieldThinArrow::paint(QPainter* p) const
 {
     QWT_DC(d);
-    p->drawPath( d->path );
+    p->drawPath(d->path);
 }

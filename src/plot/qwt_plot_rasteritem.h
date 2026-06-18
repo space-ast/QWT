@@ -39,42 +39,42 @@ class QwtInterval;
  * @details Raster data is a grid of pixel values, that can be represented
  *          as a QImage. It is used for many types of information like
  *          spectrograms, cartograms, geographical maps ...
- * 
+ *
  *          Often a plot has several types of raster data organized in layers.
  *          (e.g a geographical map, with weather statistics ).
  *          Using setAlpha() raster items can be stacked easily.
- * 
+ *
  *          QwtPlotRasterItem is only implemented for images of the following formats:
  *          QImage::Format_Indexed8, QImage::Format_ARGB32.
- * 
+ *
  * @sa QwtPlotSpectrogram
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
 {
-  public:
+public:
     /**
      * @brief Cache policy
      * @details The default policy is NoCache
-     * 
+     *
      */
     enum CachePolicy
     {
         /**
          * renderImage() is called each time the item has to be repainted
-         * 
+         *
          */
         NoCache,
 
         /**
          * renderImage() is called, whenever the image cache is not valid,
          * or the scales, or the size of the canvas has changed.
-         * 
+         *
          * This type of cache is useful for improving the performance
          * of hide/show operations or manipulations of the alpha value.
          * All other situations are handled by the canvas backing store.
-         * 
+         *
          */
         PaintCache
     };
@@ -83,7 +83,7 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
      * @brief Paint attributes
      * @details Attributes to modify the drawing algorithm.
      * @sa setPaintAttribute(), testPaintAttribute()
-     * 
+     *
      */
     enum PaintAttribute
     {
@@ -97,32 +97,32 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
          * Disabling this flag might make sense, to reduce the size of a
          * document/file. If this is possible for a document format
          * depends on the implementation of the specific QPaintEngine.
-         * 
+         *
          */
         PaintInDeviceResolution = 1
     };
 
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     // Constructor
-    explicit QwtPlotRasterItem( const QString& title = QString() );
+    explicit QwtPlotRasterItem(const QString& title = QString());
     // Constructor with title
-    explicit QwtPlotRasterItem( const QwtText& title );
+    explicit QwtPlotRasterItem(const QwtText& title);
     // Destructor
     ~QwtPlotRasterItem() override;
 
     // Set a paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
+    void setPaintAttribute(PaintAttribute, bool on = true);
     // Test a paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    bool testPaintAttribute(PaintAttribute) const;
 
     // Set the alpha value
-    void setAlpha( int alpha );
+    void setAlpha(int alpha);
     // Get the alpha value
     int alpha() const;
 
     // Set the cache policy
-    void setCachePolicy( CachePolicy );
+    void setCachePolicy(CachePolicy);
     // Get the cache policy
     CachePolicy cachePolicy() const;
 
@@ -130,45 +130,43 @@ class QWT_EXPORT QwtPlotRasterItem : public QwtPlotItem
     void invalidateCache();
 
     // Draw the raster item
-    virtual void draw( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
     // Get the pixel hint
-    virtual QRectF pixelHint( const QRectF& ) const;
+    virtual QRectF pixelHint(const QRectF&) const;
 
     // Get the interval for a specific axis
     virtual QwtInterval interval(Qt::Axis) const;
     // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-  protected:
+protected:
     // Render an image
-    virtual QImage renderImage( const QwtScaleMap& xMap,
-        const QwtScaleMap& yMap, const QRectF& area,
-        const QSize& imageSize ) const = 0;
+    virtual QImage
+    renderImage(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& area, const QSize& imageSize) const = 0;
 
     /// Get the image map
-    virtual QwtScaleMap imageMap( Qt::Orientation,
-        const QwtScaleMap& map, const QRectF& area,
-        const QSize& imageSize, double pixelSize) const;
+    virtual QwtScaleMap
+    imageMap(Qt::Orientation, const QwtScaleMap& map, const QRectF& area, const QSize& imageSize, double pixelSize) const;
 
-  private:
-    explicit QwtPlotRasterItem( const QwtPlotRasterItem& );
-    QwtPlotRasterItem& operator=( const QwtPlotRasterItem& );
+private:
+    explicit QwtPlotRasterItem(const QwtPlotRasterItem&);
+    QwtPlotRasterItem& operator=(const QwtPlotRasterItem&);
 
     /// Initialize the raster item
     void init();
 
     /// Compose the image
-    QImage compose( const QwtScaleMap&, const QwtScaleMap&,
-        const QRectF& imageArea, const QRectF& paintRect,
-        const QSize& imageSize, bool doCache) const;
-
+    QImage compose(const QwtScaleMap&,
+                   const QwtScaleMap&,
+                   const QRectF& imageArea,
+                   const QRectF& paintRect,
+                   const QSize& imageSize,
+                   bool doCache) const;
 
     QWT_DECLARE_PRIVATE(QwtPlotRasterItem)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRasterItem::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRasterItem::PaintAttributes)
 
 #endif

@@ -53,7 +53,8 @@ class QwtLegendLabel::PrivateData
     QWT_DECLARE_PUBLIC(QwtLegendLabel)
 
 public:
-    PrivateData(QwtLegendLabel* p) : q_ptr(p), itemMode(QwtLegendData::ReadOnly), isDown(false), spacing(cs_legendlabel_margin)
+    PrivateData(QwtLegendLabel* p)
+        : q_ptr(p), itemMode(QwtLegendData::ReadOnly), isDown(false), spacing(cs_legendlabel_margin)
     {
     }
 

@@ -42,36 +42,35 @@ class QWT_EXPORT QwtWheel : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY( Qt::Orientation orientation
-        READ orientation WRITE setOrientation )
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
 
-    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true  )
+    Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
 
-    Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
-    Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
+    Q_PROPERTY(double minimum READ minimum WRITE setMinimum)
+    Q_PROPERTY(double maximum READ maximum WRITE setMaximum)
 
-    Q_PROPERTY( double singleStep READ singleStep WRITE setSingleStep )
-    Q_PROPERTY( int pageStepCount READ pageStepCount WRITE setPageStepCount )
-    Q_PROPERTY( bool stepAlignment READ stepAlignment WRITE setStepAlignment )
+    Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep)
+    Q_PROPERTY(int pageStepCount READ pageStepCount WRITE setPageStepCount)
+    Q_PROPERTY(bool stepAlignment READ stepAlignment WRITE setStepAlignment)
 
-    Q_PROPERTY( bool tracking READ isTracking WRITE setTracking )
-    Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
-    Q_PROPERTY( bool inverted READ isInverted WRITE setInverted )
+    Q_PROPERTY(bool tracking READ isTracking WRITE setTracking)
+    Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
+    Q_PROPERTY(bool inverted READ isInverted WRITE setInverted)
 
-    Q_PROPERTY( double mass READ mass WRITE setMass )
-    Q_PROPERTY( int updateInterval READ updateInterval WRITE setUpdateInterval )
+    Q_PROPERTY(double mass READ mass WRITE setMass)
+    Q_PROPERTY(int updateInterval READ updateInterval WRITE setUpdateInterval)
 
-    Q_PROPERTY( double totalAngle READ totalAngle WRITE setTotalAngle )
-    Q_PROPERTY( double viewAngle READ viewAngle WRITE setViewAngle )
-    Q_PROPERTY( int tickCount READ tickCount WRITE setTickCount )
-    Q_PROPERTY( int wheelWidth READ wheelWidth WRITE setWheelWidth )
-    Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
-    Q_PROPERTY( int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth )
-    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
+    Q_PROPERTY(double totalAngle READ totalAngle WRITE setTotalAngle)
+    Q_PROPERTY(double viewAngle READ viewAngle WRITE setViewAngle)
+    Q_PROPERTY(int tickCount READ tickCount WRITE setTickCount)
+    Q_PROPERTY(int wheelWidth READ wheelWidth WRITE setWheelWidth)
+    Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
+    Q_PROPERTY(int wheelBorderWidth READ wheelBorderWidth WRITE setWheelBorderWidth)
+    Q_PROPERTY(bool flatStyle READ flatStyle WRITE setFlatStyle)
 
-  public:
+public:
     /// Constructor
-    explicit QwtWheel( QWidget* parent = nullptr );
+    explicit QwtWheel(QWidget* parent = nullptr);
     /// Destructor
     ~QwtWheel() override;
 
@@ -79,7 +78,7 @@ class QWT_EXPORT QwtWheel : public QWidget
     double value() const;
 
     /// Set the wheel orientation
-    void setOrientation( Qt::Orientation );
+    void setOrientation(Qt::Orientation);
     /// Return the orientation
     Qt::Orientation orientation() const;
 
@@ -89,88 +88,88 @@ class QWT_EXPORT QwtWheel : public QWidget
     double viewAngle() const;
 
     /// Set the number of ticks
-    void setTickCount( int );
+    void setTickCount(int);
     /// Return the number of ticks
     int tickCount() const;
 
     /// Set the wheel width
-    void setWheelWidth( int );
+    void setWheelWidth(int);
     /// Return the wheel width
     int wheelWidth() const;
 
     /// Set the wheel border width
-    void setWheelBorderWidth( int );
+    void setWheelBorderWidth(int);
     /// Return the wheel border width
     int wheelBorderWidth() const;
 
     /// Set the outer border width
-    void setBorderWidth( int );
+    void setBorderWidth(int);
     /// Return the outer border width
     int borderWidth() const;
 
     /// Set flat style
-    void setFlatStyle( bool );
+    void setFlatStyle(bool);
     /// Return flat style
     bool flatStyle() const;
 
     /// Set inverted appearance
-    void setInverted( bool );
+    void setInverted(bool);
     /// Return whether the wheel is inverted
     bool isInverted() const;
 
     /// Set wrapping mode
-    void setWrapping( bool );
+    void setWrapping(bool);
     /// Return whether wrapping is enabled
     bool wrapping() const;
 
     /// Set single step size
-    void setSingleStep( double );
+    void setSingleStep(double);
     /// Return single step size
     double singleStep() const;
 
     /// Set page step count
-    void setPageStepCount( int );
+    void setPageStepCount(int);
     /// Return page step count
     int pageStepCount() const;
 
     /// Set step alignment
-    void setStepAlignment( bool on );
+    void setStepAlignment(bool on);
     /// Return whether step alignment is enabled
     bool stepAlignment() const;
 
     /// Set value range
-    void setRange( double min, double max );
+    void setRange(double min, double max);
 
     /// Set minimum value
-    void setMinimum( double );
+    void setMinimum(double);
     /// Return minimum value
     double minimum() const;
 
     /// Set maximum value
-    void setMaximum( double );
+    void setMaximum(double);
     /// Return maximum value
     double maximum() const;
 
     /// Set update interval
-    void setUpdateInterval( int );
+    void setUpdateInterval(int);
     /// Return update interval
     int updateInterval() const;
 
     /// Set tracking mode
-    void setTracking( bool );
+    void setTracking(bool);
     /// Return whether tracking is enabled
     bool isTracking() const;
 
     /// Return mass for flywheel effect
     double mass() const;
 
-  public Q_SLOTS:
-    void setValue( double );
-    void setTotalAngle ( double );
-    void setViewAngle( double );
-    void setMass( double );
+public Q_SLOTS:
+    void setValue(double);
+    void setTotalAngle(double);
+    void setViewAngle(double);
+    void setMass(double);
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * @brief Notify a change of value
@@ -179,7 +178,7 @@ class QWT_EXPORT QwtWheel : public QWidget
      * @param[in] value New value
      * @sa setTracking()
      */
-    void valueChanged( double value );
+    void valueChanged(double value);
 
     /**
      * @brief Signal emitted when the user presses the wheel with the mouse
@@ -195,16 +194,16 @@ class QWT_EXPORT QwtWheel : public QWidget
      * @brief Signal emitted when the user moves the wheel with the mouse
      * @param[in] value New value
      */
-    void wheelMoved( double value );
+    void wheelMoved(double value);
 
-  protected:
-    virtual void paintEvent( QPaintEvent* ) override;
-    virtual void mousePressEvent( QMouseEvent* ) override;
-    virtual void mouseReleaseEvent( QMouseEvent* ) override;
-    virtual void mouseMoveEvent( QMouseEvent* ) override;
-    virtual void keyPressEvent( QKeyEvent* ) override;
-    virtual void wheelEvent( QWheelEvent* ) override;
-    virtual void timerEvent( QTimerEvent* ) override;
+protected:
+    virtual void paintEvent(QPaintEvent*) override;
+    virtual void mousePressEvent(QMouseEvent*) override;
+    virtual void mouseReleaseEvent(QMouseEvent*) override;
+    virtual void mouseMoveEvent(QMouseEvent*) override;
+    virtual void keyPressEvent(QKeyEvent*) override;
+    virtual void wheelEvent(QWheelEvent*) override;
+    virtual void timerEvent(QTimerEvent*) override;
 
     void stopFlying();
 
@@ -213,14 +212,14 @@ class QWT_EXPORT QwtWheel : public QWidget
     virtual QSize sizeHint() const override;
     virtual QSize minimumSizeHint() const override;
 
-    virtual void drawTicks( QPainter*, const QRectF& );
-    virtual void drawWheelBackground( QPainter*, const QRectF& );
+    virtual void drawTicks(QPainter*, const QRectF&);
+    virtual void drawWheelBackground(QPainter*, const QRectF&);
 
-    virtual double valueAt( const QPoint& ) const;
+    virtual double valueAt(const QPoint&) const;
 
-  private:
-    double alignedValue( double ) const;
-    double boundedValue( double ) const;
+private:
+    double alignedValue(double) const;
+    double boundedValue(double) const;
 
     QWT_DECLARE_PRIVATE(QwtWheel)
 };

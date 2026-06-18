@@ -41,7 +41,7 @@
 
 class QWTCORE_EXPORT QwtSystemClock
 {
-  public:
+public:
     // Check if the clock has been started
     bool isNull() const;
 
@@ -52,7 +52,7 @@ class QWTCORE_EXPORT QwtSystemClock
     // Return the elapsed time since the clock was started
     double elapsed() const;
 
-  private:
+private:
     QElapsedTimer m_timer;
 };
 

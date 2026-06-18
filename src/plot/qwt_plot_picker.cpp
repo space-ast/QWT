@@ -60,7 +60,8 @@ QwtPlotPicker::QwtPlotPicker(QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CON
  * @param[in] canvas Plot canvas to observe, also the parent object
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), scaleRect()
  */
-QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas) : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
+QwtPlotPicker::QwtPlotPicker(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas)
+    : QwtPicker(canvas), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->xAxisId = xAxisId;

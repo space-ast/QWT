@@ -45,67 +45,60 @@
 #include <qelapsedtimer.h>
 #endif
 
-
-static inline double qwtVector2Radians( double vx, double vy )
+static inline double qwtVector2Radians(double vx, double vy)
 {
-    if ( vx == 0.0 )
-        return ( vy >= 0 ) ? M_PI_2 : 3 * M_PI_2;
+    if (vx == 0.0)
+        return (vy >= 0) ? M_PI_2 : 3 * M_PI_2;
 
-    return std::atan2( vy, vx );
+    return std::atan2(vy, vx);
 }
 
-static inline double qwtVector2Magnitude( double vx, double vy )
+static inline double qwtVector2Magnitude(double vx, double vy)
 {
-    return sqrt( vx * vx + vy * vy );
+    return sqrt(vx * vx + vy * vy);
 }
 
-static QwtInterval qwtMagnitudeRange(
-    const QwtSeriesData< QwtVectorFieldSample >* series )
+static QwtInterval qwtMagnitudeRange(const QwtSeriesData< QwtVectorFieldSample >* series)
 {
-    if ( series->size() == 0 )
-        return QwtInterval( 0, 1 );
+    if (series->size() == 0)
+        return QwtInterval(0, 1);
 
-    const QwtVectorFieldSample s0 = series->sample( 0 );
+    const QwtVectorFieldSample s0 = series->sample(0);
 
     double min = s0.vx * s0.vx + s0.vy * s0.vy;
     double max = min;
 
-    for ( uint i = 1; i < series->size(); i++ )
-    {
-        const QwtVectorFieldSample s = series->sample( i );
-        const double l = s.vx * s.vx + s.vy * s.vy;
+    for (uint i = 1; i < series->size(); i++) {
+        const QwtVectorFieldSample s = series->sample(i);
+        const double l               = s.vx * s.vx + s.vy * s.vy;
 
-        if ( l < min )
+        if (l < min)
             min = l;
 
-        if ( l > max )
+        if (l > max)
             max = l;
     }
 
-    min = std::sqrt( min );
-    max = std::sqrt( max );
+    min = std::sqrt(min);
+    max = std::sqrt(max);
 
-    if ( max == min )
+    if (max == min)
         max += 1.0;
 
-    return QwtInterval( min, max );
+    return QwtInterval(min, max);
 }
 
-static inline QTransform qwtSymbolTransformation(
-    const QTransform& oldTransform, double x, double y,
-    double vx, double vy, double magnitude )
+static inline QTransform
+qwtSymbolTransformation(const QTransform& oldTransform, double x, double y, double vx, double vy, double magnitude)
 {
     QTransform transform = oldTransform;
 
-    if ( !transform.isIdentity() )
-    {
-        transform.translate( x, y );
+    if (!transform.isIdentity()) {
+        transform.translate(x, y);
 
-        const double radians = qwtVector2Radians( vx, vy );
-        transform.rotateRadians( radians );
-    }
-    else
-    {
+        const double radians = qwtVector2Radians(vx, vy);
+        transform.rotateRadians(radians);
+    } else {
         /*
             When starting with no transformation ( f.e on screen )
             the matrix can be found without having to use
@@ -113,19 +106,16 @@ static inline QTransform qwtSymbolTransformation(
          */
 
         qreal sin, cos;
-        if ( magnitude == 0.0 )
-        {
+        if (magnitude == 0.0) {
             // something
             sin = 1.0;
             cos = 0.0;
-        }
-        else
-        {
+        } else {
             sin = vy / magnitude;
             cos = vx / magnitude;
         }
 
-        transform.setMatrix( cos, sin, 0.0, -sin, cos, 0.0, x, y, 1.0 );
+        transform.setMatrix(cos, sin, 0.0, -sin, cos, 0.0, x, y, 1.0);
     }
 
     return transform;
@@ -133,144 +123,136 @@ static inline QTransform qwtSymbolTransformation(
 
 namespace
 {
-    class FilterMatrix
+class FilterMatrix
+{
+public:
+    class Entry
     {
-      public:
-        class Entry
+    public:
+        inline void addSample(double sx, double sy, double svx, double svy)
         {
-          public:
-            inline void addSample( double sx, double sy,
-                double svx, double svy )
-            {
-                x += sx;
-                y += sy;
+            x += sx;
+            y += sy;
 
-                vx += svx;
-                vy += svy;
+            vx += svx;
+            vy += svy;
 
-                count++;
-            }
+            count++;
+        }
 
-            quint32 count;
+        quint32 count;
 
-            // screen positions -> float is good enough
-            float x;
-            float y;
-            float vx;
-            float vy;
-        };
+        // screen positions -> float is good enough
+        float x;
+        float y;
+        float vx;
+        float vy;
+    };
 
-        FilterMatrix( const QRectF& dataRect,
-            const QRectF& canvasRect, const QSizeF& cellSize )
-        {
-            m_dx = cellSize.width();
-            m_dy = cellSize.height();
+    FilterMatrix(const QRectF& dataRect, const QRectF& canvasRect, const QSizeF& cellSize)
+    {
+        m_dx = cellSize.width();
+        m_dy = cellSize.height();
 
-            m_x0 = dataRect.x();
-            if ( m_x0 < canvasRect.x() )
-                m_x0 += int( ( canvasRect.x() - m_x0 ) / m_dx ) * m_dx;
+        m_x0 = dataRect.x();
+        if (m_x0 < canvasRect.x())
+            m_x0 += int((canvasRect.x() - m_x0) / m_dx) * m_dx;
 
-            m_y0 = dataRect.y();
-            if ( m_y0 < canvasRect.y() )
-                m_y0 += int( ( canvasRect.y() - m_y0 ) / m_dy ) * m_dy;
+        m_y0 = dataRect.y();
+        if (m_y0 < canvasRect.y())
+            m_y0 += int((canvasRect.y() - m_y0) / m_dy) * m_dy;
 
-            m_numColumns = canvasRect.width() / m_dx + 1;
-            m_numRows = canvasRect.height() / m_dy + 1;
+        m_numColumns = canvasRect.width() / m_dx + 1;
+        m_numRows    = canvasRect.height() / m_dy + 1;
 
 #if 1
-            /*
-                limit column and row count to a maximum of 1000000,
-                so that memory usage is not an issue
-             */
-            if ( m_numColumns > 1000 )
-            {
-                m_dx = canvasRect.width() / 1000;
-                m_numColumns = canvasRect.width() / m_dx + 1;
-            }
+        /*
+            limit column and row count to a maximum of 1000000,
+            so that memory usage is not an issue
+         */
+        if (m_numColumns > 1000) {
+            m_dx         = canvasRect.width() / 1000;
+            m_numColumns = canvasRect.width() / m_dx + 1;
+        }
 
-            if ( m_numRows > 1000 )
-            {
-                m_dy = canvasRect.height() / 1000;
-                m_numRows = canvasRect.height() / m_dx + 1;
-            }
+        if (m_numRows > 1000) {
+            m_dy      = canvasRect.height() / 1000;
+            m_numRows = canvasRect.height() / m_dx + 1;
+        }
 #endif
 
-            m_x1 = m_x0 + m_numColumns * m_dx;
-            m_y1 = m_y0 + m_numRows * m_dy;
+        m_x1 = m_x0 + m_numColumns * m_dx;
+        m_y1 = m_y0 + m_numRows * m_dy;
 
-            m_entries = ( Entry* )::calloc( m_numRows * m_numColumns, sizeof( Entry ) );
-            if ( m_entries == nullptr )
-            {
-                qWarning() << "QwtPlotVectorField: raster for filtering too fine - running out of memory";
-            }
+        m_entries = (Entry*)::calloc(m_numRows * m_numColumns, sizeof(Entry));
+        if (m_entries == nullptr) {
+            qWarning() << "QwtPlotVectorField: raster for filtering too fine - running out of memory";
         }
+    }
 
-        ~FilterMatrix()
-        {
-            if ( m_entries )
-                std::free( m_entries );
+    ~FilterMatrix()
+    {
+        if (m_entries)
+            std::free(m_entries);
+    }
+
+    inline int numColumns() const
+    {
+        return m_numColumns;
+    }
+
+    inline int numRows() const
+    {
+        return m_numRows;
+    }
+
+    inline void addSample(double x, double y, double u, double v)
+    {
+        if (x >= m_x0 && x < m_x1 && y >= m_y0 && y < m_y1) {
+            Entry& entry = m_entries[ indexOf(x, y) ];
+            entry.addSample(x, y, u, v);
         }
+    }
 
-        inline int numColumns() const
-        {
-            return m_numColumns;
-        }
+    const FilterMatrix::Entry* entries() const
+    {
+        return m_entries;
+    }
 
-        inline int numRows() const
-        {
-            return m_numRows;
-        }
+private:
+    inline int indexOf(qreal x, qreal y) const
+    {
+        const int col = (x - m_x0) / m_dx;
+        const int row = (y - m_y0) / m_dy;
 
-        inline void addSample( double x, double y,
-            double u, double v )
-        {
-            if ( x >= m_x0 && x < m_x1
-                && y >= m_y0 && y < m_y1 )
-            {
-                Entry& entry = m_entries[ indexOf( x, y ) ];
-                entry.addSample( x, y, u, v );
-            }
-        }
+        return row * m_numColumns + col;
+    }
 
-        const FilterMatrix::Entry* entries() const
-        {
-            return m_entries;
-        }
+    qreal m_x0, m_x1, m_y0, m_y1, m_dx, m_dy;
+    int m_numColumns;
+    int m_numRows;
 
-      private:
-        inline int indexOf( qreal x, qreal y ) const
-        {
-            const int col = ( x - m_x0 ) / m_dx;
-            const int row = ( y - m_y0 ) / m_dy;
-
-            return row * m_numColumns + col;
-        }
-
-        qreal m_x0, m_x1, m_y0, m_y1, m_dx, m_dy;
-        int m_numColumns;
-        int m_numRows;
-
-        Entry* m_entries;
-    };
+    Entry* m_entries;
+};
 }
 
 class QwtPlotVectorField::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotVectorField)
-  public:
+public:
     PrivateData(QwtPlotVectorField* p)
         : q_ptr(p)
-        , pen( Qt::black )
-        , brush( Qt::black )
-        , indicatorOrigin( QwtPlotVectorField::OriginHead )
-        , magnitudeScaleFactor( 1.0 )
-        , rasterSize( 20, 20 )
-        , minArrowLength( 0.0 )
-        , maxArrowLength( std::numeric_limits< short >::max() )
-        , magnitudeModes( MagnitudeAsLength )
+        , pen(Qt::black)
+        , brush(Qt::black)
+        , indicatorOrigin(QwtPlotVectorField::OriginHead)
+        , magnitudeScaleFactor(1.0)
+        , rasterSize(20, 20)
+        , minArrowLength(0.0)
+        , maxArrowLength(std::numeric_limits< short >::max())
+        , magnitudeModes(MagnitudeAsLength)
     {
         colorMap = nullptr;
-        symbol = new QwtVectorFieldThinArrow();
+        symbol   = new QwtVectorFieldThinArrow();
     }
 
     ~PrivateData()
@@ -309,8 +291,7 @@ class QwtPlotVectorField::PrivateData
  * @param[in] title Title of the curve
  *
  */
-QwtPlotVectorField::QwtPlotVectorField( const QwtText& title )
-    : QwtPlotSeriesItem( title ), QWT_PIMPL_CONSTRUCT
+QwtPlotVectorField::QwtPlotVectorField(const QwtText& title) : QwtPlotSeriesItem(title), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -320,8 +301,7 @@ QwtPlotVectorField::QwtPlotVectorField( const QwtText& title )
  * @param[in] title Title of the curve
  *
  */
-QwtPlotVectorField::QwtPlotVectorField( const QString& title )
-    : QwtPlotSeriesItem( QwtText( title ) ), QWT_PIMPL_CONSTRUCT
+QwtPlotVectorField::QwtPlotVectorField(const QString& title) : QwtPlotSeriesItem(QwtText(title)), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -341,12 +321,12 @@ QwtPlotVectorField::~QwtPlotVectorField()
  */
 void QwtPlotVectorField::init()
 {
-    setItemAttribute( QwtPlotItem::Legend );
-    setItemAttribute( QwtPlotItem::AutoScale );
+    setItemAttribute(QwtPlotItem::Legend);
+    setItemAttribute(QwtPlotItem::AutoScale);
 
-    setData( new QwtVectorFieldData() );
+    setData(new QwtVectorFieldData());
 
-    setZ( 20.0 );
+    setZ(20.0);
 }
 
 /**
@@ -356,11 +336,10 @@ void QwtPlotVectorField::init()
  * @sa pen(), brush()
  *
  */
-void QwtPlotVectorField::setPen( const QPen& pen )
+void QwtPlotVectorField::setPen(const QPen& pen)
 {
     QWT_D(d);
-    if ( d->pen != pen )
-    {
+    if (d->pen != pen) {
         d->pen = pen;
 
         itemChanged();
@@ -387,11 +366,10 @@ QPen QwtPlotVectorField::pen() const
  * @sa brush(), pen()
  *
  */
-void QwtPlotVectorField::setBrush( const QBrush& brush )
+void QwtPlotVectorField::setBrush(const QBrush& brush)
 {
     QWT_D(d);
-    if ( d->brush != brush )
-    {
+    if (d->brush != brush) {
         d->brush = brush;
 
         itemChanged();
@@ -417,12 +395,11 @@ QBrush QwtPlotVectorField::brush() const
  * @sa indicatorOrigin()
  *
  */
-void QwtPlotVectorField::setIndicatorOrigin( IndicatorOrigin origin )
+void QwtPlotVectorField::setIndicatorOrigin(IndicatorOrigin origin)
 {
     QWT_D(d);
     d->indicatorOrigin = origin;
-    if ( d->indicatorOrigin != origin )
-    {
+    if (d->indicatorOrigin != origin) {
         d->indicatorOrigin = origin;
         itemChanged();
     }
@@ -449,11 +426,10 @@ QwtPlotVectorField::IndicatorOrigin QwtPlotVectorField::indicatorOrigin() const
  * @sa magnitudeScaleFactor(), arrowLength()
  *
  */
-void QwtPlotVectorField::setMagnitudeScaleFactor( double factor )
+void QwtPlotVectorField::setMagnitudeScaleFactor(double factor)
 {
     QWT_D(d);
-    if ( factor != d->magnitudeScaleFactor )
-    {
+    if (factor != d->magnitudeScaleFactor) {
         d->magnitudeScaleFactor = factor;
         itemChanged();
     }
@@ -483,11 +459,10 @@ double QwtPlotVectorField::magnitudeScaleFactor() const
  * @sa rasterSize(), QwtPlotVectorField::FilterVectors
  *
  */
-void QwtPlotVectorField::setRasterSize( const QSizeF& size )
+void QwtPlotVectorField::setRasterSize(const QSizeF& size)
 {
     QWT_D(d);
-    if ( size != d->rasterSize )
-    {
+    if (size != d->rasterSize) {
         d->rasterSize = size;
         itemChanged();
     }
@@ -512,19 +487,17 @@ QSizeF QwtPlotVectorField::rasterSize() const
  * @sa testPaintAttribute()
  *
  */
-void QwtPlotVectorField::setPaintAttribute(
-    PaintAttribute attribute, bool on )
+void QwtPlotVectorField::setPaintAttribute(PaintAttribute attribute, bool on)
 {
     QWT_D(d);
     PaintAttributes attributes = d->paintAttributes;
 
-    if ( on )
+    if (on)
         attributes |= attribute;
     else
         attributes &= ~attribute;
 
-    if ( d->paintAttributes != attributes )
-    {
+    if (d->paintAttributes != attributes) {
         d->paintAttributes = attributes;
         itemChanged();
     }
@@ -536,11 +509,10 @@ void QwtPlotVectorField::setPaintAttribute(
  * @sa PaintAttribute, setPaintAttribute()
  *
  */
-bool QwtPlotVectorField::testPaintAttribute(
-    PaintAttribute attribute ) const
+bool QwtPlotVectorField::testPaintAttribute(PaintAttribute attribute) const
 {
     QWT_DC(d);
-    return ( d->paintAttributes & attribute );
+    return (d->paintAttributes & attribute);
 }
 
 /**
@@ -561,10 +533,10 @@ int QwtPlotVectorField::rtti() const
  * @sa symbol(), drawSymbol()
  *
  */
-void QwtPlotVectorField::setSymbol( QwtVectorFieldSymbol* symbol )
+void QwtPlotVectorField::setSymbol(QwtVectorFieldSymbol* symbol)
 {
     QWT_D(d);
-    if ( d->symbol == symbol )
+    if (d->symbol == symbol)
         return;
 
     delete d->symbol;
@@ -591,9 +563,9 @@ const QwtVectorFieldSymbol* QwtPlotVectorField::symbol() const
  * @param[in] samples Vector of points
  *
  */
-void QwtPlotVectorField::setSamples( const QVector< QwtVectorFieldSample >& samples )
+void QwtPlotVectorField::setSamples(const QVector< QwtVectorFieldSample >& samples)
 {
-    setData( new QwtVectorFieldData( samples ) );
+    setData(new QwtVectorFieldData(samples));
 }
 
 /**
@@ -604,9 +576,9 @@ void QwtPlotVectorField::setSamples( const QVector< QwtVectorFieldSample >& samp
  * @warning The item takes ownership of the data object, deleting it when its not used anymore.
  *
  */
-void QwtPlotVectorField::setSamples( QwtVectorFieldData* data )
+void QwtPlotVectorField::setSamples(QwtVectorFieldData* data)
 {
-    setData( data );
+    setData(data);
 }
 
 /**
@@ -617,14 +589,13 @@ void QwtPlotVectorField::setSamples( QwtVectorFieldData* data )
  * @sa colorMap(), magnitudeRange()
  *
  */
-void QwtPlotVectorField::setColorMap( QwtColorMap* colorMap )
+void QwtPlotVectorField::setColorMap(QwtColorMap* colorMap)
 {
     QWT_D(d);
-    if ( colorMap == nullptr )
+    if (colorMap == nullptr)
         return;
 
-    if ( colorMap != d->colorMap )
-    {
+    if (colorMap != d->colorMap) {
         delete d->colorMap;
         d->colorMap = colorMap;
     }
@@ -652,13 +623,13 @@ const QwtColorMap* QwtPlotVectorField::colorMap() const
  * @sa testMagnitudeMode()
  *
  */
-void QwtPlotVectorField::setMagnitudeMode( MagnitudeMode mode, bool on )
+void QwtPlotVectorField::setMagnitudeMode(MagnitudeMode mode, bool on)
 {
     QWT_D(d);
-    if ( on == testMagnitudeMode( mode ) )
+    if (on == testMagnitudeMode(mode))
         return;
 
-    if ( on )
+    if (on)
         d->magnitudeModes |= mode;
     else
         d->magnitudeModes &= ~mode;
@@ -672,7 +643,7 @@ void QwtPlotVectorField::setMagnitudeMode( MagnitudeMode mode, bool on )
  * @sa MagnitudeMode, setMagnitudeMode()
  *
  */
-bool QwtPlotVectorField::testMagnitudeMode( MagnitudeMode mode ) const
+bool QwtPlotVectorField::testMagnitudeMode(MagnitudeMode mode) const
 {
     QWT_DC(d);
     return d->magnitudeModes & mode;
@@ -687,11 +658,10 @@ bool QwtPlotVectorField::testMagnitudeMode( MagnitudeMode mode ) const
  * @sa magnitudeRange(), colorMap()
  *
  */
-void QwtPlotVectorField::setMagnitudeRange( const QwtInterval& magnitudeRange )
+void QwtPlotVectorField::setMagnitudeRange(const QwtInterval& magnitudeRange)
 {
     QWT_D(d);
-    if ( d->magnitudeRange != magnitudeRange )
-    {
+    if (d->magnitudeRange != magnitudeRange) {
         d->magnitudeRange = magnitudeRange;
         itemChanged();
     }
@@ -716,13 +686,12 @@ QwtInterval QwtPlotVectorField::magnitudeRange() const
  * @sa minArrowLength(), setMaxArrowLength(), arrowLength()
  *
  */
-void QwtPlotVectorField::setMinArrowLength( double length )
+void QwtPlotVectorField::setMinArrowLength(double length)
 {
     QWT_D(d);
-    length = qMax( length, 0.0 );
+    length = qMax(length, 0.0);
 
-    if ( d->minArrowLength != length )
-    {
+    if (d->minArrowLength != length) {
         d->minArrowLength = length;
         itemChanged();
     }
@@ -748,13 +717,12 @@ double QwtPlotVectorField::minArrowLength() const
  * @sa maxArrowLength(), setMinArrowLength(), arrowLength()
  *
  */
-void QwtPlotVectorField::setMaxArrowLength( double length )
+void QwtPlotVectorField::setMaxArrowLength(double length)
 {
     QWT_D(d);
-    length = qMax( length, 0.0 );
+    length = qMax(length, 0.0);
 
-    if ( d->maxArrowLength != length )
-    {
+    if (d->maxArrowLength != length) {
         d->maxArrowLength = length;
         itemChanged();
     }
@@ -787,7 +755,7 @@ double QwtPlotVectorField::maxArrowLength() const
  * @sa magnitudeScaleFactor, minArrowLength(), maxArrowLength()
  *
  */
-double QwtPlotVectorField::arrowLength( double magnitude ) const
+double QwtPlotVectorField::arrowLength(double magnitude) const
 {
     QWT_DC(d);
 #if 0
@@ -805,8 +773,8 @@ double QwtPlotVectorField::arrowLength( double magnitude ) const
 
     double length = magnitude * d->magnitudeScaleFactor;
 
-    if ( length > 0.0 )
-        length = qBound( d->minArrowLength, length, d->maxArrowLength );
+    if (length > 0.0)
+        length = qBound(d->minArrowLength, length, d->maxArrowLength);
 
     return length;
 }
@@ -837,29 +805,27 @@ QRectF QwtPlotVectorField::boundingRect() const
  * @sa QwtPlotItem::setLegendIconSize(), QwtPlotItem::legendData()
  *
  */
-QwtGraphic QwtPlotVectorField::legendIcon(
-    int index, const QSizeF& size ) const
+QwtGraphic QwtPlotVectorField::legendIcon(int index, const QSizeF& size) const
 {
     QWT_DC(d);
-    Q_UNUSED( index );
+    Q_UNUSED(index);
 
     QwtGraphic icon;
-    icon.setDefaultSize( size );
+    icon.setDefaultSize(size);
 
-    if ( size.isEmpty() )
+    if (size.isEmpty())
         return icon;
 
-    QPainter painter( &icon );
-    painter.setRenderHint( QPainter::Antialiasing,
-        testRenderHint( QwtPlotItem::RenderAntialiased ) );
+    QPainter painter(&icon);
+    painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
 
-    painter.translate( -size.width(), -0.5 * size.height() );
+    painter.translate(-size.width(), -0.5 * size.height());
 
-    painter.setPen( d->pen );
-    painter.setBrush( d->brush );
+    painter.setPen(d->pen);
+    painter.setBrush(d->brush);
 
-    d->symbol->setLength( size.width() - 2 );
-    d->symbol->paint( &painter );
+    d->symbol->setLength(size.width() - 2);
+    d->symbol->paint(&painter);
 
     return icon;
 }
@@ -875,20 +841,23 @@ QwtGraphic QwtPlotVectorField::legendIcon(
  *               series will be painted to its last sample.
  *
  */
-void QwtPlotVectorField::drawSeries( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int from, int to ) const
+void QwtPlotVectorField::drawSeries(QPainter* painter,
+                                    const QwtScaleMap& xMap,
+                                    const QwtScaleMap& yMap,
+                                    const QRectF& canvasRect,
+                                    int from,
+                                    int to) const
 {
-    if ( !painter || dataSize() <= 0 )
+    if (!painter || dataSize() <= 0)
         return;
 
-    if ( to < 0 )
+    if (to < 0)
         to = dataSize() - 1;
 
-    if ( from < 0 )
+    if (from < 0)
         from = 0;
 
-    if ( from > to )
+    if (from > to)
         return;
 
 #if DEBUG_RENDER
@@ -896,7 +865,7 @@ void QwtPlotVectorField::drawSeries( QPainter* painter,
     timer.start();
 #endif
 
-    drawSymbols( painter, xMap, yMap, canvasRect, from, to );
+    drawSymbols(painter, xMap, yMap, canvasRect, from, to);
 
 #if DEBUG_RENDER
     qDebug() << timer.elapsed();
@@ -915,43 +884,41 @@ void QwtPlotVectorField::drawSeries( QPainter* painter,
 
    @sa setSymbol(), drawSymbol(), drawSeries()
  */
-void QwtPlotVectorField::drawSymbols( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int from, int to ) const
+void QwtPlotVectorField::drawSymbols(QPainter* painter,
+                                     const QwtScaleMap& xMap,
+                                     const QwtScaleMap& yMap,
+                                     const QRectF& canvasRect,
+                                     int from,
+                                     int to) const
 {
     QWT_DC(d);
-    const bool doAlign = QwtPainter::roundingAlignment( painter );
-    const bool doClip = false;
+    const bool doAlign = QwtPainter::roundingAlignment(painter);
+    const bool doClip  = false;
 
     const bool isInvertingX = xMap.isInverting();
     const bool isInvertingY = yMap.isInverting();
 
     const QwtSeriesData< QwtVectorFieldSample >* series = data();
 
-    if ( d->magnitudeModes & MagnitudeAsColor )
-    {
+    if (d->magnitudeModes & MagnitudeAsColor) {
         // user input error, can't draw without color map
         // TODO: Discuss! Without colormap, silently fall back to uniform colors?
-        if ( d->colorMap == nullptr)
+        if (d->colorMap == nullptr)
             return;
-    }
-    else
-    {
-        painter->setPen( d->pen );
-        painter->setBrush( d->brush );
+    } else {
+        painter->setPen(d->pen);
+        painter->setBrush(d->brush);
     }
 
-    if ( ( d->paintAttributes & FilterVectors ) && !d->rasterSize.isEmpty() )
-    {
-        const QRectF dataRect = QwtScaleMap::transform(
-            xMap, yMap, boundingRect() );
+    if ((d->paintAttributes & FilterVectors) && !d->rasterSize.isEmpty()) {
+        const QRectF dataRect = QwtScaleMap::transform(xMap, yMap, boundingRect());
 
         // TODO: Discuss. How to handle raster size when switching from screen to print size!
         //       DPI-aware adjustment of rastersize? Or make "rastersize in screen coordinate"
         //       or "rastersize in plotcoordinetes" a user option?
 #if 1
         // define filter matrix based on screen/print coordinates
-        FilterMatrix matrix( dataRect, canvasRect, d->rasterSize );
+        FilterMatrix matrix(dataRect, canvasRect, d->rasterSize);
 #else
         // define filter matrix based on real coordinates
 
@@ -964,74 +931,61 @@ void QwtPlotVectorField::drawSymbols( QPainter* painter,
         if (yMap.sDist() != 0)
             yScale = yMap.pDist() / yMap.sDist();
 
-        QSizeF canvasRasterSize(xScale * d->rasterSize.width(), yScale * d->rasterSize.height() );
-        FilterMatrix matrix( dataRect, canvasRect, canvasRasterSize );
+        QSizeF canvasRasterSize(xScale * d->rasterSize.width(), yScale * d->rasterSize.height());
+        FilterMatrix matrix(dataRect, canvasRect, canvasRasterSize);
 #endif
 
-        for ( int i = from; i <= to; i++ )
-        {
-            const QwtVectorFieldSample sample = series->sample( i );
-            if ( !sample.isNull() )
-            {
-                matrix.addSample( xMap.transform( sample.x ),
-                    yMap.transform( sample.y ), sample.vx, sample.vy );
+        for (int i = from; i <= to; i++) {
+            const QwtVectorFieldSample sample = series->sample(i);
+            if (!sample.isNull()) {
+                matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
             }
         }
 
-        const int numEntries = matrix.numRows() * matrix.numColumns();
+        const int numEntries               = matrix.numRows() * matrix.numColumns();
         const FilterMatrix::Entry* entries = matrix.entries();
 
-        for ( int i = 0; i < numEntries; i++ )
-        {
-            const FilterMatrix::Entry& entry = entries[i];
+        for (int i = 0; i < numEntries; i++) {
+            const FilterMatrix::Entry& entry = entries[ i ];
 
-            if ( entry.count == 0 )
+            if (entry.count == 0)
                 continue;
 
             double xi = entry.x / entry.count;
             double yi = entry.y / entry.count;
 
-            if ( doAlign )
-            {
-                xi = qRound( xi );
-                yi = qRound( yi );
+            if (doAlign) {
+                xi = qRound(xi);
+                yi = qRound(yi);
             }
 
             const double vx = entry.vx / entry.count;
             const double vy = entry.vy / entry.count;
 
-            drawSymbol( painter, xi, yi,
-                isInvertingX ? -vx : vx, isInvertingY ? -vy : vy );
+            drawSymbol(painter, xi, yi, isInvertingX ? -vx : vx, isInvertingY ? -vy : vy);
         }
-    }
-    else
-    {
-        for ( int i = from; i <= to; i++ )
-        {
-            const QwtVectorFieldSample sample = series->sample( i );
+    } else {
+        for (int i = from; i <= to; i++) {
+            const QwtVectorFieldSample sample = series->sample(i);
 
             // arrows with zero length are never drawn
-            if ( sample.isNull() )
+            if (sample.isNull())
                 continue;
 
-            double xi = xMap.transform( sample.x );
-            double yi = yMap.transform( sample.y );
+            double xi = xMap.transform(sample.x);
+            double yi = yMap.transform(sample.y);
 
-            if ( doAlign )
-            {
-                xi = qRound( xi );
-                yi = qRound( yi );
+            if (doAlign) {
+                xi = qRound(xi);
+                yi = qRound(yi);
             }
 
-            if ( doClip )
-            {
-                if ( !canvasRect.contains( xi, yi ) )
+            if (doClip) {
+                if (!canvasRect.contains(xi, yi))
                     continue;
             }
 
-            drawSymbol( painter, xi, yi,
-                isInvertingX ? -sample.vx : sample.vx,
-                isInvertingY ? -sample.vy : sample.vy );
+            drawSymbol(painter, xi, yi, isInvertingX ? -sample.vx : sample.vx, isInvertingY ? -sample.vy : sample.vy);
         }
     }
 }
@@ -1044,64 +998,56 @@ void QwtPlotVectorField::drawSymbols( QPainter* painter,
 
    @sa setSymbol(), drawSeries()
  */
-void QwtPlotVectorField::drawSymbol( QPainter* painter,
-    double x, double y, double vx, double vy ) const
+void QwtPlotVectorField::drawSymbol(QPainter* painter, double x, double y, double vx, double vy) const
 {
     QWT_DC(d);
-    const double magnitude = qwtVector2Magnitude( vx, vy );
+    const double magnitude = qwtVector2Magnitude(vx, vy);
 
     const QTransform oldTransform = painter->transform();
 
-    QTransform transform = qwtSymbolTransformation( oldTransform,
-        x, y, vx, vy, magnitude );
+    QTransform transform = qwtSymbolTransformation(oldTransform, x, y, vx, vy, magnitude);
 
     QwtVectorFieldSymbol* symbol = d->symbol;
 
     double length = 0.0;
 
-    if ( d->magnitudeModes & MagnitudeAsLength )
-    {
-        length = arrowLength( magnitude );
+    if (d->magnitudeModes & MagnitudeAsLength) {
+        length = arrowLength(magnitude);
     }
 
-    symbol->setLength( length );
+    symbol->setLength(length);
 
-    if( d->indicatorOrigin == OriginTail )
-    {
+    if (d->indicatorOrigin == OriginTail) {
         const qreal dx = symbol->length();
-        transform.translate( dx, 0.0 );
-    }
-    else if ( d->indicatorOrigin == OriginCenter )
-    {
+        transform.translate(dx, 0.0);
+    } else if (d->indicatorOrigin == OriginCenter) {
         const qreal dx = symbol->length();
-        transform.translate( 0.5 * dx, 0.0 );
+        transform.translate(0.5 * dx, 0.0);
     }
 
-    if ( d->magnitudeModes & MagnitudeAsColor )
-    {
+    if (d->magnitudeModes & MagnitudeAsColor) {
         // Determine color for arrow if colored by magnitude.
 
         QwtInterval range = d->magnitudeRange;
 
-        if ( !range.isValid() )
-        {
-            if ( !d->boundingMagnitudeRange.isValid() )
-                const_cast< QwtInterval& >( d->boundingMagnitudeRange ) = qwtMagnitudeRange( data() );
+        if (!range.isValid()) {
+            if (!d->boundingMagnitudeRange.isValid())
+                const_cast< QwtInterval& >(d->boundingMagnitudeRange) = qwtMagnitudeRange(data());
 
             range = d->boundingMagnitudeRange;
         }
 
-        const QColor c = QColor::fromRgba(d->colorMap->rgb( range.minValue(), range.maxValue(), magnitude ));
+        const QColor c = QColor::fromRgba(d->colorMap->rgb(range.minValue(), range.maxValue(), magnitude));
 
 #if 1
-        painter->setBrush( c );
-        painter->setPen( c );
+        painter->setBrush(c);
+        painter->setPen(c);
 #endif
     }
 
-    painter->setWorldTransform( transform, false );
-    symbol->paint( painter );
-    painter->setWorldTransform( oldTransform, false );
+    painter->setWorldTransform(transform, false);
+    symbol->paint(painter);
+    painter->setWorldTransform(oldTransform, false);
 }
 
 void QwtPlotVectorField::dataChanged()

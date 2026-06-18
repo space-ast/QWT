@@ -14,8 +14,8 @@ public:
     PrivateData(ColorLegend* p) : q_ptr(p)
     {
         m_axisposition = ColorLegend::Left;
-        m_orientation = ColorLegend::BottomTop;
-        m_showaxis = true;
+        m_orientation  = ColorLegend::BottomTop;
+        m_showaxis     = true;
     }
 
     Label m_caption;
@@ -52,7 +52,7 @@ ColorLegend::~ColorLegend() = default;
  * @brief Sets the legend title string
  * @param s Title text string
  */
-void ColorLegend::setTitleString(QString const &s)
+void ColorLegend::setTitleString(QString const& s)
 {
     QWT_D(d);
     d->m_caption.setString(s);
@@ -65,7 +65,7 @@ void ColorLegend::setTitleString(QString const &s)
  * @param weight Font weight
  * @param italic Whether font is italic
  */
-void ColorLegend::setTitleFont(QString const &family, int pointSize, int weight, bool italic)
+void ColorLegend::setTitleFont(QString const& family, int pointSize, int weight, bool italic)
 {
     QWT_D(d);
     d->m_caption.setFont(family, pointSize, weight, italic);
@@ -126,7 +126,7 @@ void ColorLegend::setScale(SCALETYPE val)
  * @brief Sets a user-defined scale object
  * @param val Pointer to a Scale object
  */
-void ColorLegend::setScale(Scale *val)
+void ColorLegend::setScale(Scale* val)
 {
     QWT_D(d);
     d->m_axis.setScale(val);
@@ -140,7 +140,7 @@ void ColorLegend::setScale(Scale *val)
 void ColorLegend::setOrientation(ORIENTATION orientation, SCALEPOSITION pos)
 {
     QWT_D(d);
-    d->m_orientation = orientation;
+    d->m_orientation  = orientation;
     d->m_axisposition = pos;
 
     if (d->m_orientation == BottomTop) {
@@ -180,32 +180,32 @@ void ColorLegend::setGeometryInternal()
 
     switch (d->m_axisposition) {
     case ColorLegend::Left:
-        b = d->m_pe.minVertex;
-        e = d->m_pe.maxVertex;
+        b   = d->m_pe.minVertex;
+        e   = d->m_pe.maxVertex;
         e.x = b.x;
         d->m_axis.setTicOrientation(-1, 0, 0);
         d->m_axis.setNumberAnchor(CenterRight);
         diff = d->m_pe.maxVertex.x - d->m_pe.minVertex.x;
         break;
     case ColorLegend::Right:
-        e = d->m_pe.maxVertex;
-        b = d->m_pe.minVertex;
+        e   = d->m_pe.maxVertex;
+        b   = d->m_pe.minVertex;
         b.x = e.x;
         d->m_axis.setTicOrientation(+1, 0, 0);
         d->m_axis.setNumberAnchor(CenterLeft);
         diff = d->m_pe.maxVertex.x - d->m_pe.minVertex.x;
         break;
     case ColorLegend::Top:
-        e = d->m_pe.maxVertex;
-        b = d->m_pe.minVertex;
+        e   = d->m_pe.maxVertex;
+        b   = d->m_pe.minVertex;
         b.z = e.z;
         d->m_axis.setTicOrientation(0, 0, +1);
         d->m_axis.setNumberAnchor(BottomCenter);
         diff = d->m_pe.maxVertex.z - d->m_pe.minVertex.z;
         break;
     case ColorLegend::Bottom:
-        b = d->m_pe.minVertex;
-        e = d->m_pe.maxVertex;
+        b   = d->m_pe.minVertex;
+        e   = d->m_pe.maxVertex;
         e.z = b.z;
         d->m_axis.setTicOrientation(0, 0, -1);
         d->m_axis.setNumberAnchor(TopCenter);
@@ -266,7 +266,7 @@ void ColorLegend::draw()
     Triple two = d->m_pe.maxVertex;
 
     double h = (d->m_orientation == ColorLegend::BottomTop) ? (two - one).z / colors.size()
-                                                        : (two - one).x / colors.size();
+                                                            : (two - one).x / colors.size();
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -285,7 +285,7 @@ void ColorLegend::draw()
 
     if (d->m_orientation == ColorLegend::BottomTop) {
         for (unsigned i = 1; i <= size; ++i) {
-            rgb = colors[i - 1];
+            rgb = colors[ i - 1 ];
             glColor4d(rgb.r, rgb.g, rgb.b, rgb.a);
             glBegin(GL_POLYGON);
             glVertex3d(one.x, one.y, one.z + (i - 1) * h);
@@ -296,7 +296,7 @@ void ColorLegend::draw()
         }
     } else {
         for (unsigned i = 1; i <= size; ++i) {
-            rgb = colors[i - 1];
+            rgb = colors[ i - 1 ];
             glColor4d(rgb.r, rgb.g, rgb.b, rgb.a);
             glBegin(GL_POLYGON);
             glVertex3d(one.x + (i - 1) * h, one.y, one.z);

@@ -6,7 +6,8 @@
 #include "qwt3d_types.h"
 #include "qwt3d_io.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Provides EPS, PS, PDF, SVG, PGF and TeX output
@@ -20,21 +21,24 @@ class QWT3D_EXPORT VectorWriter : public IO::Functor
 
 public:
     // The possible output formats for the text parts of the scene
-    enum TEXTMODE {
+    enum TEXTMODE
+    {
         PIXEL,
         NATIVE,
         TEX
     };
 
     // The possible behaviour for landscape settings
-    enum LANDSCAPEMODE {
+    enum LANDSCAPEMODE
+    {
         ON,
         OFF,
         AUTO
     };
 
     // The possible sorting types which are translated in gl2ps types
-    enum SORTMODE {
+    enum SORTMODE
+    {
         NOSORT,
         SIMPLESORT,
         BSPSORT
@@ -61,21 +65,25 @@ public:
     // Returns compression mode (always false if zlib support has not been set)
     bool compressed() const;
 
-    bool setFormat(QString const &format);
+    bool setFormat(QString const& format);
 
 private:
-    IO::Functor *clone() const override;
-    bool operator()(Plot3D *plot, QString const &fname) override;
+    IO::Functor* clone() const override;
+    bool operator()(Plot3D* plot, QString const& fname) override;
 };
 
 GLint setDeviceLineWidth(GLfloat val);
 GLint setDevicePointSize(GLfloat val);
-GLint drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLenum type,
-                       const void *pixels);
-GLint drawDeviceText(const char *str, const char *fontname, int fontsize, Qwt3D::Triple pos,
-                     Qwt3D::RGBA rgba, Qwt3D::ANCHOR align, double gap);
+GLint drawDevicePixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
+GLint drawDeviceText(const char* str,
+                     const char* fontname,
+                     int fontsize,
+                     Qwt3D::Triple pos,
+                     Qwt3D::RGBA rgba,
+                     Qwt3D::ANCHOR align,
+                     double gap);
 void setDevicePolygonOffset(GLfloat factor, GLfloat units);
 
-} // ns
+}  // ns
 
-#endif // QWT3D_IO_GL2PS_H
+#endif  // QWT3D_IO_GL2PS_H

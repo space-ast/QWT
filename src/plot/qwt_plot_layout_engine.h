@@ -14,8 +14,8 @@ class QwtTextLabel;
 class QwtScaleWidget;
 /**
  * @brief Layout engine for QwtPlot components
- * @details Originally a private class in QwtPlotLayout, previously written as class LayoutEngine in qwt_plot_layout.cpp.
- *          It was extracted as a public class because other layouts need to use it.
+ * @details Originally a private class in QwtPlotLayout, previously written as class LayoutEngine in
+ * qwt_plot_layout.cpp. It was extracted as a public class because other layouts need to use it.
  */
 class QWT_EXPORT QwtPlotLayoutEngine
 {

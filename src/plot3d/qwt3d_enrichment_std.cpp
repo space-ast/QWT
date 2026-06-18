@@ -18,13 +18,8 @@ class CrossHair::PrivateData
     QWT_DECLARE_PUBLIC(CrossHair)
 
 public:
-    PrivateData(CrossHair *q)
-        : q_ptr(q)
-        , m_boxed(false)
-        , m_smooth(false)
-        , m_linewidth(1.0)
-        , m_radius(0.0)
-        , m_oldstate(GL_FALSE)
+    PrivateData(CrossHair* q)
+        : q_ptr(q), m_boxed(false), m_smooth(false), m_linewidth(1.0), m_radius(0.0), m_oldstate(GL_FALSE)
     {
     }
 
@@ -38,8 +33,7 @@ public:
 /**
  * @brief Default constructor
  */
-CrossHair::CrossHair()
-    : QWT_PIMPL_CONSTRUCT
+CrossHair::CrossHair() : QWT_PIMPL_CONSTRUCT
 {
     configure(0, 1, false, false);
 }
@@ -51,28 +45,25 @@ CrossHair::CrossHair()
  * @param smooth Smooth lines
  * @param boxed Draw a box around the crosshair
  */
-CrossHair::CrossHair(double rad, double linewidth, bool smooth, bool boxed)
-    : QWT_PIMPL_CONSTRUCT
+CrossHair::CrossHair(double rad, double linewidth, bool smooth, bool boxed) : QWT_PIMPL_CONSTRUCT
 {
     configure(rad, linewidth, smooth, boxed);
 }
 
-CrossHair::CrossHair(const CrossHair &other)
-    : VertexEnrichment(other)
-    , QWT_PIMPL_CONSTRUCT
+CrossHair::CrossHair(const CrossHair& other) : VertexEnrichment(other), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    const PrivateData *od = other.d_func();
-    d->m_boxed = od->m_boxed;
-    d->m_smooth = od->m_smooth;
-    d->m_linewidth = od->m_linewidth;
-    d->m_radius = od->m_radius;
-    d->m_oldstate = od->m_oldstate;
+    const PrivateData* od = other.d_func();
+    d->m_boxed            = od->m_boxed;
+    d->m_smooth           = od->m_smooth;
+    d->m_linewidth        = od->m_linewidth;
+    d->m_radius           = od->m_radius;
+    d->m_oldstate         = od->m_oldstate;
 }
 
 CrossHair::~CrossHair() = default;
 
-Enrichment *CrossHair::clone() const
+Enrichment* CrossHair::clone() const
 {
     return new CrossHair(*this);
 }
@@ -81,10 +72,10 @@ void CrossHair::configure(double rad, double linewidth, bool smooth, bool boxed)
 {
     plot = nullptr;
     QWT_D(d);
-    d->m_radius = rad;
+    d->m_radius    = rad;
     d->m_linewidth = linewidth;
-    d->m_smooth = smooth;
-    d->m_boxed = boxed;
+    d->m_smooth    = smooth;
+    d->m_boxed     = boxed;
 }
 
 void CrossHair::drawBegin()
@@ -110,7 +101,7 @@ void CrossHair::drawEnd()
         glDisable(GL_LINE_SMOOTH);
 }
 
-void CrossHair::draw(Qwt3D::Triple const &pos)
+void CrossHair::draw(Qwt3D::Triple const& pos)
 {
     QWT_D(d);
     RGBA rgba = (*plot->dataColor())(pos);
@@ -174,11 +165,7 @@ class Dot::PrivateData
     QWT_DECLARE_PUBLIC(Dot)
 
 public:
-    PrivateData(Dot *q)
-        : q_ptr(q)
-        , m_smooth(false)
-        , m_pointsize(1.0)
-        , m_oldstate(GL_FALSE)
+    PrivateData(Dot* q) : q_ptr(q), m_smooth(false), m_pointsize(1.0), m_oldstate(GL_FALSE)
     {
     }
 
@@ -190,8 +177,7 @@ public:
 /**
  * @brief Default constructor
  */
-Dot::Dot()
-    : QWT_PIMPL_CONSTRUCT
+Dot::Dot() : QWT_PIMPL_CONSTRUCT
 {
     configure(1, false);
 }
@@ -201,26 +187,23 @@ Dot::Dot()
  * @param pointsize Point size
  * @param smooth Smooth point rendering
  */
-Dot::Dot(double pointsize, bool smooth)
-    : QWT_PIMPL_CONSTRUCT
+Dot::Dot(double pointsize, bool smooth) : QWT_PIMPL_CONSTRUCT
 {
     configure(pointsize, smooth);
 }
 
-Dot::Dot(const Dot &other)
-    : VertexEnrichment(other)
-    , QWT_PIMPL_CONSTRUCT
+Dot::Dot(const Dot& other) : VertexEnrichment(other), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    const PrivateData *od = other.d_func();
-    d->m_smooth = od->m_smooth;
-    d->m_pointsize = od->m_pointsize;
-    d->m_oldstate = od->m_oldstate;
+    const PrivateData* od = other.d_func();
+    d->m_smooth           = od->m_smooth;
+    d->m_pointsize        = od->m_pointsize;
+    d->m_oldstate         = od->m_oldstate;
 }
 
 Dot::~Dot() = default;
 
-Enrichment *Dot::clone() const
+Enrichment* Dot::clone() const
 {
     return new Dot(*this);
 }
@@ -230,7 +213,7 @@ void Dot::configure(double pointsize, bool smooth)
     plot = nullptr;
     QWT_D(d);
     d->m_pointsize = pointsize;
-    d->m_smooth = smooth;
+    d->m_smooth    = smooth;
 }
 
 void Dot::drawBegin()
@@ -257,7 +240,7 @@ void Dot::drawEnd()
         glDisable(GL_POINT_SMOOTH);
 }
 
-void Dot::draw(Qwt3D::Triple const &pos)
+void Dot::draw(Qwt3D::Triple const& pos)
 {
     RGBA rgba = (*plot->dataColor())(pos);
     glColor4d(rgba.r, rgba.g, rgba.b, rgba.a);
@@ -275,13 +258,7 @@ class Cone::PrivateData
     QWT_DECLARE_PUBLIC(Cone)
 
 public:
-    PrivateData(Cone *q)
-        : q_ptr(q)
-        , m_hat(nullptr)
-        , m_disk(nullptr)
-        , m_quality(3)
-        , m_radius(0.0)
-        , m_oldstate(GL_FALSE)
+    PrivateData(Cone* q) : q_ptr(q), m_hat(nullptr), m_disk(nullptr), m_quality(3), m_radius(0.0), m_oldstate(GL_FALSE)
     {
     }
 
@@ -295,7 +272,7 @@ public:
 
     void initQuadrics()
     {
-        m_hat = gluNewQuadric();
+        m_hat  = gluNewQuadric();
         m_disk = gluNewQuadric();
 
         gluQuadricDrawStyle(m_hat, GLU_FILL);
@@ -306,8 +283,8 @@ public:
         gluQuadricOrientation(m_disk, GLU_OUTSIDE);
     }
 
-    GLUquadricObj *m_hat;
-    GLUquadricObj *m_disk;
+    GLUquadricObj* m_hat;
+    GLUquadricObj* m_disk;
     unsigned m_quality;
     double m_radius;
     GLboolean m_oldstate;
@@ -316,8 +293,7 @@ public:
 /**
  * @brief Default constructor
  */
-Cone::Cone()
-    : QWT_PIMPL_CONSTRUCT
+Cone::Cone() : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->initQuadrics();
@@ -329,23 +305,20 @@ Cone::Cone()
  * @param rad Cone radius
  * @param quality Number of faces for the cone
  */
-Cone::Cone(double rad, unsigned quality)
-    : QWT_PIMPL_CONSTRUCT
+Cone::Cone(double rad, unsigned quality) : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->initQuadrics();
     configure(rad, quality);
 }
 
-Cone::Cone(const Cone &other)
-    : VertexEnrichment(other)
-    , QWT_PIMPL_CONSTRUCT
+Cone::Cone(const Cone& other) : VertexEnrichment(other), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    const PrivateData *od = other.d_func();
-    d->m_quality = od->m_quality;
-    d->m_radius = od->m_radius;
-    d->m_oldstate = od->m_oldstate;
+    const PrivateData* od = other.d_func();
+    d->m_quality          = od->m_quality;
+    d->m_radius           = od->m_radius;
+    d->m_oldstate         = od->m_oldstate;
     d->initQuadrics();
 }
 
@@ -354,7 +327,7 @@ Cone::Cone(const Cone &other)
  */
 Cone::~Cone() = default;
 
-Enrichment *Cone::clone() const
+Enrichment* Cone::clone() const
 {
     return new Cone(*this);
 }
@@ -363,12 +336,12 @@ void Cone::configure(double rad, unsigned quality)
 {
     plot = nullptr;
     QWT_D(d);
-    d->m_radius = rad;
-    d->m_quality = quality;
+    d->m_radius   = rad;
+    d->m_quality  = quality;
     d->m_oldstate = GL_FALSE;
 }
 
-void Cone::draw(Qwt3D::Triple const &pos)
+void Cone::draw(Qwt3D::Triple const& pos)
 {
     QWT_D(d);
     RGBA rgba = (*plot->dataColor())(pos);
@@ -400,7 +373,7 @@ class Arrow::PrivateData
     QWT_DECLARE_PUBLIC(Arrow)
 
 public:
-    PrivateData(Arrow *q)
+    PrivateData(Arrow* q)
         : q_ptr(q)
         , m_hat(nullptr)
         , m_disk(nullptr)
@@ -428,9 +401,9 @@ public:
 
     void initQuadrics()
     {
-        m_hat = gluNewQuadric();
-        m_disk = gluNewQuadric();
-        m_base = gluNewQuadric();
+        m_hat    = gluNewQuadric();
+        m_disk   = gluNewQuadric();
+        m_base   = gluNewQuadric();
         m_bottom = gluNewQuadric();
 
         gluQuadricDrawStyle(m_hat, GLU_FILL);
@@ -447,10 +420,10 @@ public:
         gluQuadricOrientation(m_bottom, GLU_OUTSIDE);
     }
 
-    GLUquadricObj *m_hat;
-    GLUquadricObj *m_disk;
-    GLUquadricObj *m_base;
-    GLUquadricObj *m_bottom;
+    GLUquadricObj* m_hat;
+    GLUquadricObj* m_disk;
+    GLUquadricObj* m_base;
+    GLUquadricObj* m_bottom;
     GLboolean m_oldstate;
 
     int m_segments;
@@ -462,27 +435,24 @@ public:
     Qwt3D::RGBA m_rgba;
 };
 
-Arrow::Arrow()
-    : QWT_PIMPL_CONSTRUCT
+Arrow::Arrow() : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->initQuadrics();
     configure(3, 0.4, 0.06, 0.02);
 }
 
-Arrow::Arrow(const Arrow &other)
-    : VertexEnrichment(other)
-    , QWT_PIMPL_CONSTRUCT
+Arrow::Arrow(const Arrow& other) : VertexEnrichment(other), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    const PrivateData *od = other.d_func();
-    d->m_oldstate = od->m_oldstate;
-    d->m_segments = od->m_segments;
-    d->m_relConeLength = od->m_relConeLength;
-    d->m_relConeRadius = od->m_relConeRadius;
-    d->m_relStemRadius = od->m_relStemRadius;
-    d->m_top = od->m_top;
-    d->m_rgba = od->m_rgba;
+    const PrivateData* od = other.d_func();
+    d->m_oldstate         = od->m_oldstate;
+    d->m_segments         = od->m_segments;
+    d->m_relConeLength    = od->m_relConeLength;
+    d->m_relConeRadius    = od->m_relConeRadius;
+    d->m_relStemRadius    = od->m_relStemRadius;
+    d->m_top              = od->m_top;
+    d->m_rgba             = od->m_rgba;
     d->initQuadrics();
 }
 
@@ -491,7 +461,7 @@ Arrow::Arrow(const Arrow &other)
  */
 Arrow::~Arrow() = default;
 
-Enrichment *Arrow::clone() const
+Enrichment* Arrow::clone() const
 {
     return new Arrow(*this);
 }
@@ -508,8 +478,8 @@ void Arrow::configure(int segs, double relconelength, double relconerad, double 
 {
     plot = nullptr;
     QWT_D(d);
-    d->m_segments = segs;
-    d->m_oldstate = GL_FALSE;
+    d->m_segments      = segs;
+    d->m_oldstate      = GL_FALSE;
     d->m_relConeLength = relconelength;
     d->m_relConeRadius = relconerad;
     d->m_relStemRadius = relstemrad;
@@ -533,18 +503,18 @@ void Arrow::setColor(Qwt3D::RGBA rgba)
     d->m_rgba = rgba;
 }
 
-void Arrow::draw(Qwt3D::Triple const &pos)
+void Arrow::draw(Qwt3D::Triple const& pos)
 {
     QWT_D(d);
-    Triple end = d->m_top;
-    Triple beg = pos;
-    Triple vdiff = end - beg;
+    Triple end    = d->m_top;
+    Triple beg    = pos;
+    Triple vdiff  = end - beg;
     double length = vdiff.length();
     glColor4d(d->m_rgba.r, d->m_rgba.g, d->m_rgba.b, d->m_rgba.a);
 
-    double radius[2];
-    radius[0] = d->m_relConeRadius * length;
-    radius[1] = d->m_relStemRadius * length;
+    double radius[ 2 ];
+    radius[ 0 ] = d->m_relConeRadius * length;
+    radius[ 1 ] = d->m_relStemRadius * length;
 
     GLint mode;
     glGetIntegerv(GL_MATRIX_MODE, &mode);
@@ -562,13 +532,13 @@ void Arrow::draw(Qwt3D::Triple const &pos)
 
     glTranslatef(0, 0, baseheight);
 
-    gluCylinder(d->m_hat, radius[0], 0.0, d->m_relConeLength * length, d->m_segments, 1);
-    gluDisk(d->m_disk, radius[1], radius[0], d->m_segments, 1);
+    gluCylinder(d->m_hat, radius[ 0 ], 0.0, d->m_relConeLength * length, d->m_segments, 1);
+    gluDisk(d->m_disk, radius[ 1 ], radius[ 0 ], d->m_segments, 1);
 
     glTranslatef(0, 0, -baseheight);
 
-    gluCylinder(d->m_base, radius[1], radius[1], baseheight, d->m_segments, 1);
-    gluDisk(d->m_disk, 0, radius[1], d->m_segments, 1);
+    gluCylinder(d->m_base, radius[ 1 ], radius[ 1 ], baseheight, d->m_segments, 1);
+    gluDisk(d->m_disk, 0, radius[ 1 ], d->m_segments, 1);
 
     glPopMatrix();
     glMatrixMode(mode);
@@ -582,7 +552,7 @@ void Arrow::draw(Qwt3D::Triple const &pos)
  * @details Transforms a vector on the z axis with length |beg-end| to get them
  *          in coincidence with the vector(beg,end).
  */
-double Arrow::calcRotation(Triple &axis, FreeVector const &vec)
+double Arrow::calcRotation(Triple& axis, FreeVector const& vec)
 {
 
     Triple end = vec.top;
@@ -597,7 +567,7 @@ double Arrow::calcRotation(Triple &axis, FreeVector const &vec)
     Triple second = end - beg;
     second.normalize();
 
-    axis = normalizedcross(first, second);
+    axis          = normalizedcross(first, second);
     double cosphi = dotProduct(first, second);
 
     return 180 * acos(cosphi) / Qwt3D::PI;

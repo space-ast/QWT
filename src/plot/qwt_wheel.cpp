@@ -559,8 +559,8 @@ int QwtWheel::tickCount() const
 void QwtWheel::setWheelBorderWidth(int borderWidth)
 {
     QWT_D(d);
-    const int wd             = qMin(width(), height()) / 3;
-    borderWidth              = qMin(borderWidth, wd);
+    const int wd        = qMin(width(), height()) / 3;
+    borderWidth         = qMin(borderWidth, wd);
     d->wheelBorderWidth = qMax(borderWidth, 1);
     update();
 }
@@ -789,7 +789,7 @@ void QwtWheel::paintEvent(QPaintEvent* event)
 
     if (d->flatStyle) {
         const QRect r = contentsRect();
-        const int bw = d->borderWidth;
+        const int bw  = d->borderWidth;
         painter.save();
         painter.setPen(QPen(palette().color(QPalette::Mid), bw));
         painter.setBrush(Qt::NoBrush);

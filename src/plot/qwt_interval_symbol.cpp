@@ -34,20 +34,14 @@
 class QwtIntervalSymbol::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtIntervalSymbol)
-  public:
-    PrivateData( QwtIntervalSymbol* p )
-        : q_ptr( p )
-        , style( QwtIntervalSymbol::NoSymbol )
-        , width( 6 )
+public:
+    PrivateData(QwtIntervalSymbol* p) : q_ptr(p), style(QwtIntervalSymbol::NoSymbol), width(6)
     {
     }
 
-    bool operator==( const PrivateData& other ) const
+    bool operator==(const PrivateData& other) const
     {
-        return ( style == other.style )
-               && ( width == other.width )
-               && ( brush == other.brush )
-               && ( pen == other.pen );
+        return (style == other.style) && (width == other.width) && (brush == other.brush) && (pen == other.pen);
     }
 
     QwtIntervalSymbol::Style style;
@@ -62,8 +56,7 @@ class QwtIntervalSymbol::PrivateData
  * @param[in] style Style of the symbol
  * @sa setStyle(), style(), Style
  */
-QwtIntervalSymbol::QwtIntervalSymbol( Style style )
-    : QWT_PIMPL_CONSTRUCT
+QwtIntervalSymbol::QwtIntervalSymbol(Style style) : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->style = style;
@@ -73,8 +66,7 @@ QwtIntervalSymbol::QwtIntervalSymbol( Style style )
  * @brief Copy constructor
  * @param[in] other Symbol to copy
  */
-QwtIntervalSymbol::QwtIntervalSymbol( const QwtIntervalSymbol& other )
-    : QWT_PIMPL_CONSTRUCT
+QwtIntervalSymbol::QwtIntervalSymbol(const QwtIntervalSymbol& other) : QWT_PIMPL_CONSTRUCT
 {
     *m_data = *other.m_data;
 }
@@ -91,8 +83,7 @@ QwtIntervalSymbol::~QwtIntervalSymbol()
  * @param[in] other Symbol to assign
  * @return Reference to this symbol
  */
-QwtIntervalSymbol& QwtIntervalSymbol::operator=(
-    const QwtIntervalSymbol& other )
+QwtIntervalSymbol& QwtIntervalSymbol::operator=(const QwtIntervalSymbol& other)
 {
     QWT_D(d);
     *d = *other.m_data;
@@ -104,8 +95,7 @@ QwtIntervalSymbol& QwtIntervalSymbol::operator=(
  * @param[in] other Symbol to compare
  * @return True if symbols are equal
  */
-bool QwtIntervalSymbol::operator==(
-    const QwtIntervalSymbol& other ) const
+bool QwtIntervalSymbol::operator==(const QwtIntervalSymbol& other) const
 {
     QWT_DC(d);
     return *d == *other.m_data;
@@ -116,11 +106,10 @@ bool QwtIntervalSymbol::operator==(
  * @param[in] other Symbol to compare
  * @return True if symbols are not equal
  */
-bool QwtIntervalSymbol::operator!=(
-    const QwtIntervalSymbol& other ) const
+bool QwtIntervalSymbol::operator!=(const QwtIntervalSymbol& other) const
 {
     QWT_DC(d);
-    return !( *d == *other.m_data );
+    return !(*d == *other.m_data);
 }
 
 /**
@@ -128,7 +117,7 @@ bool QwtIntervalSymbol::operator!=(
  * @param[in] style Style
  * @sa style(), Style
  */
-void QwtIntervalSymbol::setStyle( Style style )
+void QwtIntervalSymbol::setStyle(Style style)
 {
     QWT_D(d);
     d->style = style;
@@ -151,7 +140,7 @@ QwtIntervalSymbol::Style QwtIntervalSymbol::style() const
  * @param[in] width Width
  * @sa width(), setStyle()
  */
-void QwtIntervalSymbol::setWidth( int width )
+void QwtIntervalSymbol::setWidth(int width)
 {
     QWT_D(d);
     d->width = width;
@@ -174,7 +163,7 @@ int QwtIntervalSymbol::width() const
  * @param[in] brush Brush
  * @sa brush()
  */
-void QwtIntervalSymbol::setBrush( const QBrush& brush )
+void QwtIntervalSymbol::setBrush(const QBrush& brush)
 {
     QWT_D(d);
     d->brush = brush;
@@ -201,10 +190,9 @@ const QBrush& QwtIntervalSymbol::brush() const
  * @param[in] style Pen style
  * @sa pen(), brush()
  */
-void QwtIntervalSymbol::setPen( const QColor& color,
-    qreal width, Qt::PenStyle style )
+void QwtIntervalSymbol::setPen(const QColor& color, qreal width, Qt::PenStyle style)
 {
-    setPen( QPen( color, width, style ) );
+    setPen(QPen(color, width, style));
 }
 
 /**
@@ -212,7 +200,7 @@ void QwtIntervalSymbol::setPen( const QColor& color,
  * @param[in] pen Pen
  * @sa pen(), setBrush()
  */
-void QwtIntervalSymbol::setPen( const QPen& pen )
+void QwtIntervalSymbol::setPen(const QPen& pen)
 {
     QWT_D(d);
     d->pen = pen;
@@ -237,120 +225,87 @@ const QPen& QwtIntervalSymbol::pen() const
  * @param[in] to End point of the interval in target device coordinates
  * @sa setStyle()
  */
-void QwtIntervalSymbol::draw( QPainter* painter, Qt::Orientation orientation,
-    const QPointF& from, const QPointF& to ) const
+void QwtIntervalSymbol::draw(QPainter* painter, Qt::Orientation orientation, const QPointF& from, const QPointF& to) const
 {
     QWT_DC(d);
-    const qreal pw = QwtPainter::effectivePenWidth( painter->pen() );
+    const qreal pw = QwtPainter::effectivePenWidth(painter->pen());
 
     QPointF p1 = from;
     QPointF p2 = to;
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
+    if (QwtPainter::roundingAlignment(painter)) {
         p1 = p1.toPoint();
         p2 = p2.toPoint();
     }
 
-    switch ( d->style )
-    {
-        case QwtIntervalSymbol::Bar:
-        {
-            QwtPainter::drawLine( painter, p1, p2 );
-            if ( d->width > pw )
-            {
-                if ( ( orientation == Qt::Horizontal )
-                    && ( p1.y() == p2.y() ) )
-                {
-                    const double sw = d->width;
+    switch (d->style) {
+    case QwtIntervalSymbol::Bar: {
+        QwtPainter::drawLine(painter, p1, p2);
+        if (d->width > pw) {
+            if ((orientation == Qt::Horizontal) && (p1.y() == p2.y())) {
+                const double sw = d->width;
 
-                    const double y = p1.y() - sw / 2;
-                    QwtPainter::drawLine( painter,
-                        p1.x(), y, p1.x(), y + sw );
-                    QwtPainter::drawLine( painter,
-                        p2.x(), y, p2.x(), y + sw );
-                }
-                else if ( ( orientation == Qt::Vertical )
-                    && ( p1.x() == p2.x() ) )
-                {
-                    const double sw = d->width;
+                const double y = p1.y() - sw / 2;
+                QwtPainter::drawLine(painter, p1.x(), y, p1.x(), y + sw);
+                QwtPainter::drawLine(painter, p2.x(), y, p2.x(), y + sw);
+            } else if ((orientation == Qt::Vertical) && (p1.x() == p2.x())) {
+                const double sw = d->width;
 
-                    const double x = p1.x() - sw / 2;
-                    QwtPainter::drawLine( painter,
-                        x, p1.y(), x + sw, p1.y() );
-                    QwtPainter::drawLine( painter,
-                        x, p2.y(), x + sw, p2.y() );
-                }
-                else
-                {
-                    const double sw = d->width;
+                const double x = p1.x() - sw / 2;
+                QwtPainter::drawLine(painter, x, p1.y(), x + sw, p1.y());
+                QwtPainter::drawLine(painter, x, p2.y(), x + sw, p2.y());
+            } else {
+                const double sw = d->width;
 
-                    const double dx = p2.x() - p1.x();
-                    const double dy = p2.y() - p1.y();
-                    const double angle = std::atan2( dy, dx ) + M_PI_2;
-                    double dw2 = sw / 2.0;
+                const double dx    = p2.x() - p1.x();
+                const double dy    = p2.y() - p1.y();
+                const double angle = std::atan2(dy, dx) + M_PI_2;
+                double dw2         = sw / 2.0;
 
-                    const double cx = qFastCos( angle ) * dw2;
-                    const double sy = qFastSin( angle ) * dw2;
+                const double cx = qFastCos(angle) * dw2;
+                const double sy = qFastSin(angle) * dw2;
 
-                    QwtPainter::drawLine( painter,
-                        p1.x() - cx, p1.y() - sy,
-                        p1.x() + cx, p1.y() + sy );
-                    QwtPainter::drawLine( painter,
-                        p2.x() - cx, p2.y() - sy,
-                        p2.x() + cx, p2.y() + sy );
-                }
+                QwtPainter::drawLine(painter, p1.x() - cx, p1.y() - sy, p1.x() + cx, p1.y() + sy);
+                QwtPainter::drawLine(painter, p2.x() - cx, p2.y() - sy, p2.x() + cx, p2.y() + sy);
             }
-            break;
         }
-        case QwtIntervalSymbol::Box:
-        {
-            if ( d->width <= pw )
-            {
-                QwtPainter::drawLine( painter, p1, p2 );
+        break;
+    }
+    case QwtIntervalSymbol::Box: {
+        if (d->width <= pw) {
+            QwtPainter::drawLine(painter, p1, p2);
+        } else {
+            if ((orientation == Qt::Horizontal) && (p1.y() == p2.y())) {
+                const double sw = d->width;
+
+                const double y = p1.y() - d->width / 2;
+                QwtPainter::drawRect(painter, p1.x(), y, p2.x() - p1.x(), sw);
+            } else if ((orientation == Qt::Vertical) && (p1.x() == p2.x())) {
+                const double sw = d->width;
+
+                const double x = p1.x() - d->width / 2;
+                QwtPainter::drawRect(painter, x, p1.y(), sw, p2.y() - p1.y());
+            } else {
+                const double sw = d->width;
+
+                const double dx    = p2.x() - p1.x();
+                const double dy    = p2.y() - p1.y();
+                const double angle = std::atan2(dy, dx) + M_PI_2;
+                double dw2         = sw / 2.0;
+
+                const double cx = qFastCos(angle) * dw2;
+                const double sy = qFastSin(angle) * dw2;
+
+                QPolygonF polygon;
+                polygon += QPointF(p1.x() - cx, p1.y() - sy);
+                polygon += QPointF(p1.x() + cx, p1.y() + sy);
+                polygon += QPointF(p2.x() + cx, p2.y() + sy);
+                polygon += QPointF(p2.x() - cx, p2.y() - sy);
+
+                QwtPainter::drawPolygon(painter, polygon);
             }
-            else
-            {
-                if ( ( orientation == Qt::Horizontal )
-                    && ( p1.y() == p2.y() ) )
-                {
-                    const double sw = d->width;
-
-                    const double y = p1.y() - d->width / 2;
-                    QwtPainter::drawRect( painter,
-                        p1.x(), y, p2.x() - p1.x(),  sw );
-                }
-                else if ( ( orientation == Qt::Vertical )
-                    && ( p1.x() == p2.x() ) )
-                {
-                    const double sw = d->width;
-
-                    const double x = p1.x() - d->width / 2;
-                    QwtPainter::drawRect( painter,
-                        x, p1.y(), sw, p2.y() - p1.y() );
-                }
-                else
-                {
-                    const double sw = d->width;
-
-                    const double dx = p2.x() - p1.x();
-                    const double dy = p2.y() - p1.y();
-                    const double angle = std::atan2( dy, dx ) + M_PI_2;
-                    double dw2 = sw / 2.0;
-
-                    const double cx = qFastCos( angle ) * dw2;
-                    const double sy = qFastSin( angle ) * dw2;
-
-                    QPolygonF polygon;
-                    polygon += QPointF( p1.x() - cx, p1.y() - sy );
-                    polygon += QPointF( p1.x() + cx, p1.y() + sy );
-                    polygon += QPointF( p2.x() + cx, p2.y() + sy );
-                    polygon += QPointF( p2.x() - cx, p2.y() - sy );
-
-                    QwtPainter::drawPolygon( painter, polygon );
-                }
-            }
-            break;
         }
-        default:;
+        break;
+    }
+    default:;
     }
 }

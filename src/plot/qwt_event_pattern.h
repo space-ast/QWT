@@ -44,7 +44,7 @@ class QKeyEvent;
  */
 class QWT_EXPORT QwtEventPattern
 {
-  public:
+public:
     /*!
        @brief Symbolic mouse input codes
 
@@ -163,12 +163,10 @@ class QWT_EXPORT QwtEventPattern
     //! A pattern for mouse events
     class MousePattern
     {
-      public:
+    public:
         //! Constructor
-        MousePattern( Qt::MouseButton btn = Qt::NoButton,
-            Qt::KeyboardModifiers modifierCodes = Qt::NoModifier ):
-            button( btn ),
-            modifiers( modifierCodes )
+        MousePattern(Qt::MouseButton btn = Qt::NoButton, Qt::KeyboardModifiers modifierCodes = Qt::NoModifier)
+            : button(btn), modifiers(modifierCodes)
         {
         }
 
@@ -182,12 +180,10 @@ class QWT_EXPORT QwtEventPattern
     //! A pattern for key events
     class KeyPattern
     {
-      public:
+    public:
         //! Constructor
-        KeyPattern( int keyCode = Qt::Key_unknown,
-            Qt::KeyboardModifiers modifierCodes = Qt::NoModifier ):
-            key( keyCode ),
-            modifiers( modifierCodes )
+        KeyPattern(int keyCode = Qt::Key_unknown, Qt::KeyboardModifiers modifierCodes = Qt::NoModifier)
+            : key(keyCode), modifiers(modifierCodes)
         {
         }
 
@@ -204,22 +200,20 @@ class QWT_EXPORT QwtEventPattern
     virtual ~QwtEventPattern();
 
     // Initialize mouse patterns depending on number of mouse buttons
-    void initMousePattern( int numButtons );
+    void initMousePattern(int numButtons);
     // Initialize key patterns with default settings
     void initKeyPattern();
 
     // Set a single mouse pattern by code
-    void setMousePattern( MousePatternCode, Qt::MouseButton button,
-        Qt::KeyboardModifiers = Qt::NoModifier );
+    void setMousePattern(MousePatternCode, Qt::MouseButton button, Qt::KeyboardModifiers = Qt::NoModifier);
 
     // Set a single key pattern by code
-    void setKeyPattern( KeyPatternCode, int key,
-        Qt::KeyboardModifiers modifiers = Qt::NoModifier );
+    void setKeyPattern(KeyPatternCode, int key, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
 
     // Set all mouse patterns
-    void setMousePattern( const QVector< MousePattern >& );
+    void setMousePattern(const QVector< MousePattern >&);
     // Set all key patterns
-    void setKeyPattern( const QVector< KeyPattern >& );
+    void setKeyPattern(const QVector< KeyPattern >&);
 
     // Return the mouse pattern vector (const)
     const QVector< MousePattern >& mousePattern() const;
@@ -232,37 +226,34 @@ class QWT_EXPORT QwtEventPattern
     QVector< KeyPattern >& keyPattern();
 
     // Check if mouse event matches a pattern code
-    bool mouseMatch( MousePatternCode, const QMouseEvent* ) const;
+    bool mouseMatch(MousePatternCode, const QMouseEvent*) const;
     // Check if key event matches a pattern code
-    bool keyMatch( KeyPatternCode, const QKeyEvent* ) const;
+    bool keyMatch(KeyPatternCode, const QKeyEvent*) const;
 
-  protected:
-    virtual bool mouseMatch( const MousePattern&, const QMouseEvent* ) const;
-    virtual bool keyMatch( const KeyPattern&, const QKeyEvent* ) const;
+protected:
+    virtual bool mouseMatch(const MousePattern&, const QMouseEvent*) const;
+    virtual bool keyMatch(const KeyPattern&, const QKeyEvent*) const;
 
-  private:
-
-#if defined( _MSC_VER )
+private:
+#if defined(_MSC_VER)
 #pragma warning(push)
-#pragma warning(disable: 4251)
+#pragma warning(disable : 4251)
 #endif
     QVector< MousePattern > m_mousePattern;
     QVector< KeyPattern > m_keyPattern;
-#if defined( _MSC_VER )
+#if defined(_MSC_VER)
 #pragma warning(pop)
 #endif
 };
 
 //! Compare operator
-inline bool operator==( QwtEventPattern::MousePattern b1,
-    QwtEventPattern::MousePattern b2 )
+inline bool operator==(QwtEventPattern::MousePattern b1, QwtEventPattern::MousePattern b2)
 {
     return b1.button == b2.button && b1.modifiers == b2.modifiers;
 }
 
 //! Compare operator
-inline bool operator==( QwtEventPattern::KeyPattern b1,
-    QwtEventPattern::KeyPattern b2 )
+inline bool operator==(QwtEventPattern::KeyPattern b1, QwtEventPattern::KeyPattern b2)
 {
     return b1.key == b2.key && b1.modifiers == b2.modifiers;
 }

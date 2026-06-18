@@ -109,11 +109,11 @@ public:
  * @details Sets the following item attributes:
  *          - QwtPlotItem::AutoScale: true
  *          - QwtPlotItem::Legend: false
- *          
+ *
  *          The z value is initialized by 8.0.
  * @param[in] title Title
  * @sa QwtPlotItem::setItemAttribute(), QwtPlotItem::setZ()
- * 
+ *
  */
 QwtPlotSpectrogram::QwtPlotSpectrogram(const QString& title) : QwtPlotRasterItem(title), QWT_PIMPL_CONSTRUCT
 {
@@ -134,7 +134,7 @@ QwtPlotSpectrogram::~QwtPlotSpectrogram()
 /**
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotSpectrogram
- * 
+ *
  */
 int QwtPlotSpectrogram::rtti() const
 {
@@ -148,7 +148,7 @@ int QwtPlotSpectrogram::rtti() const
  * @param[in] mode Display mode
  * @param[in] on On/Off
  * @sa DisplayMode, testDisplayMode()
- * 
+ *
  */
 void QwtPlotSpectrogram::setDisplayMode(DisplayMode mode, bool on)
 {
@@ -169,7 +169,7 @@ void QwtPlotSpectrogram::setDisplayMode(DisplayMode mode, bool on)
  * @details The display mode controls how the raster data will be represented.
  * @param[in] mode Display mode
  * @return true if mode is enabled
- * 
+ *
  */
 bool QwtPlotSpectrogram::testDisplayMode(DisplayMode mode) const
 {
@@ -183,7 +183,7 @@ bool QwtPlotSpectrogram::testDisplayMode(DisplayMode mode) const
  *          colors as an additional plot axis, showing a color bar.
  * @param[in] colorMap Color map
  * @sa colorMap(), QwtScaleWidget::setColorBarEnabled(), QwtScaleWidget::setColorMap()
- * 
+ *
  */
 void QwtPlotSpectrogram::setColorMap(QwtColorMap* colorMap)
 {
@@ -208,7 +208,7 @@ void QwtPlotSpectrogram::setColorMap(QwtColorMap* colorMap)
  * @brief Get the color map used for mapping intensity values to colors
  * @return Color map used for mapping the intensity values to colors
  * @sa setColorMap()
- * 
+ *
  */
 const QwtColorMap* QwtPlotSpectrogram::colorMap() const
 {
@@ -221,14 +221,14 @@ const QwtColorMap* QwtPlotSpectrogram::colorMap() const
  * @details When using a color table the mapping from the value into a color
  *          is usually faster as it can be done by simple lookups into a
  *          precalculated color table.
- *          
+ *
  *          Setting a table size > 0 enables using a color table, while setting
  *          the size to 0 disables it. The default size = 0, and no color table is used.
  * @param[in] numColors Number of colors. 0 means not using a color table
  * @note The colorTableSize has no effect when using a color table
  *       of QwtColorMap::Indexed, where the size is always 256.
  * @sa QwtColorMap::colorTable(), colorTableSize()
- * 
+ *
  */
 void QwtPlotSpectrogram::setColorTableSize(int numColors)
 {
@@ -245,7 +245,7 @@ void QwtPlotSpectrogram::setColorTableSize(int numColors)
  * @brief Get the color table size
  * @return Size of the color table, 0 means not using a color table
  * @sa QwtColorMap::colorTable(), setColorTableSize()
- * 
+ *
  */
 int QwtPlotSpectrogram::colorTableSize() const
 {
@@ -262,7 +262,7 @@ int QwtPlotSpectrogram::colorTableSize() const
  * @param[in] width Pen width
  * @param[in] style Pen style
  * @sa defaultContourPen(), contourPen()
- * 
+ *
  */
 void QwtPlotSpectrogram::setDefaultContourPen(const QColor& color, qreal width, Qt::PenStyle style)
 {
@@ -277,7 +277,7 @@ void QwtPlotSpectrogram::setDefaultContourPen(const QColor& color, qreal width, 
  *          for each contour level using contourPen().
  * @param[in] pen New default pen
  * @sa defaultContourPen(), contourPen()
- * 
+ *
  */
 void QwtPlotSpectrogram::setDefaultContourPen(const QPen& pen)
 {
@@ -294,7 +294,7 @@ void QwtPlotSpectrogram::setDefaultContourPen(const QPen& pen)
  * @brief Get the default contour pen
  * @return Default contour pen
  * @sa setDefaultContourPen()
- * 
+ *
  */
 QPen QwtPlotSpectrogram::defaultContourPen() const
 {
@@ -309,7 +309,7 @@ QPen QwtPlotSpectrogram::defaultContourPen() const
  * @return Pen for the contour line
  * @note contourPen is only used if defaultContourPen().style() == Qt::NoPen
  * @sa setDefaultContourPen(), setColorMap(), setContourLevels()
- * 
+ *
  */
 QPen QwtPlotSpectrogram::contourPen(double level) const
 {
@@ -329,7 +329,7 @@ QPen QwtPlotSpectrogram::contourPen(double level) const
  * @param[in] flag CONREC flag
  * @param[in] on On/Off
  * @sa testConrecFlag(), renderContourLines(), QwtRasterData::contourLines()
- * 
+ *
  */
 void QwtPlotSpectrogram::setConrecFlag(QwtRasterData::ConrecFlag flag, bool on)
 {
@@ -352,7 +352,7 @@ void QwtPlotSpectrogram::setConrecFlag(QwtRasterData::ConrecFlag flag, bool on)
  * @param[in] flag CONREC flag
  * @return true if enabled
  * @sa setConrecFlag(), renderContourLines(), QwtRasterData::contourLines()
- * 
+ *
  */
 bool QwtPlotSpectrogram::testConrecFlag(QwtRasterData::ConrecFlag flag) const
 {
@@ -365,7 +365,7 @@ bool QwtPlotSpectrogram::testConrecFlag(QwtRasterData::ConrecFlag flag) const
  * @param[in] levels Values of the contour levels
  * @sa contourLevels(), renderContourLines(), QwtRasterData::contourLines()
  * @note contourLevels returns the same levels but sorted.
- * 
+ *
  */
 void QwtPlotSpectrogram::setContourLevels(const QList< double >& levels)
 {
@@ -381,7 +381,7 @@ void QwtPlotSpectrogram::setContourLevels(const QList< double >& levels)
  * @brief Get the levels of the contour lines
  * @return Levels of the contour lines. The levels are sorted in increasing order.
  * @sa setContourLevels(), renderContourLines(), QwtRasterData::contourLines()
- * 
+ *
  */
 QList< double > QwtPlotSpectrogram::contourLevels() const
 {
@@ -394,7 +394,7 @@ QList< double > QwtPlotSpectrogram::contourLevels() const
  * @details The ownership of the data is managed by QwtPlotSpectrogram.
  * @param[in] data Spectrogram data
  * @sa data()
- * 
+ *
  */
 void QwtPlotSpectrogram::setData(QwtRasterData* data)
 {
@@ -412,7 +412,7 @@ void QwtPlotSpectrogram::setData(QwtRasterData* data)
  * @brief Get the spectrogram data (const version)
  * @return Spectrogram data
  * @sa setData()
- * 
+ *
  */
 const QwtRasterData* QwtPlotSpectrogram::data() const
 {
@@ -424,7 +424,7 @@ const QwtRasterData* QwtPlotSpectrogram::data() const
  * @brief Get the spectrogram data
  * @return Spectrogram data
  * @sa setData()
- * 
+ *
  */
 QwtRasterData* QwtPlotSpectrogram::data()
 {
@@ -439,7 +439,7 @@ QwtRasterData* QwtPlotSpectrogram::data()
  * @param[in] axis X, Y, or Z axis
  * @return Bounding interval for the axis
  * @sa QwtRasterData::interval()
- * 
+ *
  */
 QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
 {
@@ -459,7 +459,7 @@ QwtInterval QwtPlotSpectrogram::interval(Qt::Axis axis) const
  *                 depend on the requested area.
  * @return Bounding rectangle of a pixel
  * @sa QwtPlotRasterItem::pixelHint(), QwtRasterData::pixelHint(), render(), renderImage()
- * 
+ *
  */
 QRectF QwtPlotSpectrogram::pixelHint(const QRectF& area) const
 {
@@ -501,7 +501,7 @@ QImage QwtPlotSpectrogram::renderImage(const QwtScaleMap& xMap,
         return QImage();
 
     const QImage::Format format = (d->colorMap->format() == QwtColorMap::RGB) ? QImage::Format_ARGB32
-                                                                                   : QImage::Format_Indexed8;
+                                                                              : QImage::Format_Indexed8;
 
     QImage image(imageSize, format);
 
@@ -738,7 +738,7 @@ void QwtPlotSpectrogram::drawContourLines(QPainter* painter,
  * @param[in] yMap Maps y-values into pixel coordinates
  * @param[in] canvasRect Contents rectangle of the canvas in painter coordinates
  * @sa setDisplayMode(), renderImage(), QwtPlotRasterItem::draw(), drawContourLines()
- * 
+ *
  */
 void QwtPlotSpectrogram::draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const
 {

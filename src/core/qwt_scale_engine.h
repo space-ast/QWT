@@ -124,7 +124,8 @@ public:
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const = 0;
 
     /// Calculate a scale division
-    virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const = 0;
+    virtual QwtScaleDiv
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const = 0;
 
     /// Set the transformation
     void setTransformation(QwtTransform*);
@@ -144,7 +145,7 @@ protected:
     QwtInterval buildInterval(double value) const;
 
 private:
-    QwtScaleEngine(const QwtScaleEngine&) = delete;
+    QwtScaleEngine(const QwtScaleEngine&)            = delete;
     QwtScaleEngine& operator=(const QwtScaleEngine&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtScaleEngine)
@@ -163,7 +164,8 @@ public:
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
-    virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
+    virtual QwtScaleDiv
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
     QwtInterval align(const QwtInterval&, double stepSize) const;
@@ -172,7 +174,11 @@ protected:
 
     QList< double > buildMajorTicks(const QwtInterval& interval, double stepSize) const;
 
-    void buildMinorTicks(const QList< double >& majorTicks, int maxMinorSteps, double stepSize, QList< double >& minorTicks, QList< double >& mediumTicks) const;
+    void buildMinorTicks(const QList< double >& majorTicks,
+                         int maxMinorSteps,
+                         double stepSize,
+                         QList< double >& minorTicks,
+                         QList< double >& mediumTicks) const;
 };
 
 /**
@@ -192,7 +198,8 @@ public:
 
     virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
-    virtual QwtScaleDiv divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
+    virtual QwtScaleDiv
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
 protected:
     QwtInterval align(const QwtInterval&, double stepSize) const;
@@ -201,7 +208,11 @@ protected:
 
     QList< double > buildMajorTicks(const QwtInterval& interval, double stepSize) const;
 
-    void buildMinorTicks(const QList< double >& majorTicks, int maxMinorSteps, double stepSize, QList< double >& minorTicks, QList< double >& mediumTicks) const;
+    void buildMinorTicks(const QList< double >& majorTicks,
+                         int maxMinorSteps,
+                         double stepSize,
+                         QList< double >& minorTicks,
+                         QList< double >& mediumTicks) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtScaleEngine::Attributes)

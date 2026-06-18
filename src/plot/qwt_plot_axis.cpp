@@ -129,18 +129,22 @@ void QwtPlot::initAxesData()
     m_scaleData->axisData(QwtAxis::YRight).isVisible = false;
     m_scaleData->axisData(QwtAxis::XTop).isVisible   = false;
 
-    connect(
-        m_scaleData->axisData(QwtAxis::YLeft).scaleWidget, &QwtScaleWidget::requestScaleRangeUpdate, this, &QwtPlot::yLeftRequestScaleRangeUpdate
-    );
-    connect(
-        m_scaleData->axisData(QwtAxis::YRight).scaleWidget, &QwtScaleWidget::requestScaleRangeUpdate, this, &QwtPlot::yRightRequestScaleRangeUpdate
-    );
-    connect(
-        m_scaleData->axisData(QwtAxis::XBottom).scaleWidget, &QwtScaleWidget::requestScaleRangeUpdate, this, &QwtPlot::xBottomRequestScaleRangeUpdate
-    );
-    connect(
-        m_scaleData->axisData(QwtAxis::XTop).scaleWidget, &QwtScaleWidget::requestScaleRangeUpdate, this, &QwtPlot::xTopRequestScaleRangeUpdate
-    );
+    connect(m_scaleData->axisData(QwtAxis::YLeft).scaleWidget,
+            &QwtScaleWidget::requestScaleRangeUpdate,
+            this,
+            &QwtPlot::yLeftRequestScaleRangeUpdate);
+    connect(m_scaleData->axisData(QwtAxis::YRight).scaleWidget,
+            &QwtScaleWidget::requestScaleRangeUpdate,
+            this,
+            &QwtPlot::yRightRequestScaleRangeUpdate);
+    connect(m_scaleData->axisData(QwtAxis::XBottom).scaleWidget,
+            &QwtScaleWidget::requestScaleRangeUpdate,
+            this,
+            &QwtPlot::xBottomRequestScaleRangeUpdate);
+    connect(m_scaleData->axisData(QwtAxis::XTop).scaleWidget,
+            &QwtScaleWidget::requestScaleRangeUpdate,
+            this,
+            &QwtPlot::xTopRequestScaleRangeUpdate);
 }
 
 void QwtPlot::deleteAxesData()
@@ -198,7 +202,7 @@ QwtScaleWidget* QwtPlot::axisWidget(QwtAxisId axisId)
  * 2. If both XBottom and XTop are visible, prefer XBottom;
  * 3. If only one X axis is visible, return it;
  * 4. If both are invisible, return default QwtAxis::XBottom.
- * 
+ *
  * @return Selected X axis ID
  *
  */
@@ -220,7 +224,7 @@ QwtAxisId QwtPlot::visibleXAxisId() const
  * 2. If both YLeft and YRight are visible, prefer YLeft;
  * 3. If only one Y axis is visible, return it;
  * 4. If both are invisible, return default QwtAxis::YLeft.
- * 
+ *
  * @return Selected Y axis ID
  *
  */

@@ -14,6 +14,7 @@
 #pragma warning (push)
 #pragma warning (disable: 4996) // deprecated POSIX names
 #endif
+//core
 
 /*** Start of inlined file: qwt_math.cpp ***/
 #if QT_VERSION >= 0x050a00
@@ -313,6 +314,274 @@ QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count)
 }
 
 /*** End of inlined file: qwt_simd_argminmax.cpp ***/
+
+
+/*** Start of inlined file: qwt_box_statistics.cpp ***/
+#include <algorithm>
+
+/**
+ * @brief Constructor with default Tukey method
+ * @details Initializes the calculator with Tukey whisker method and coefficient 1.5.
+ */
+QwtBoxStatisticsCalculator::QwtBoxStatisticsCalculator()
+	: m_method(Tukey)
+	, m_coefficient(1.5)
+{
+}
+
+/**
+ * @brief Set the whisker calculation method
+ * @param[in] method The whisker method to use (Tukey, Percentile, MinMax, StandardDeviation, StandardError)
+ */
+void QwtBoxStatisticsCalculator::setWhiskerMethod(WhiskerMethod method)
+{
+	m_method = method;
+}
+
+/**
+ * @brief Get the whisker calculation method
+ * @return Current whisker method
+ */
+QwtBoxStatisticsCalculator::WhiskerMethod QwtBoxStatisticsCalculator::whiskerMethod() const
+{
+	return m_method;
+}
+
+/**
+ * @brief Set the whisker coefficient
+ * @param[in] coeff Coefficient value (1.5 for Tukey method, percentile value for Percentile method)
+ */
+void QwtBoxStatisticsCalculator::setWhiskerCoefficient(double coeff)
+{
+	m_coefficient = coeff;
+}
+
+/**
+ * @brief Get the whisker coefficient
+ * @return Current whisker coefficient
+ */
+double QwtBoxStatisticsCalculator::whiskerCoefficient() const
+{
+	return m_coefficient;
+}
+
+QVector<double> QwtBoxStatisticsCalculator::sortData(const QVector<double>& data)
+{
+	QVector<double> sorted = data;
+	std::sort(sorted.begin(), sorted.end());
+	return sorted;
+}
+
+double QwtBoxStatisticsCalculator::quantile(const QVector<double>& sorted, double p)
+{
+	if (sorted.isEmpty())
+		return 0.0;
+
+	const int n = sorted.size();
+	const double index = p * (n - 1);
+	const int lower = static_cast<int>(std::floor(index));
+	const int upper = static_cast<int>(std::ceil(index));
+
+	if (lower == upper)
+		return sorted[lower];
+
+	// Linear interpolation
+	const double frac = index - lower;
+	return sorted[lower] + frac * (sorted[upper] - sorted[lower]);
+}
+
+double QwtBoxStatisticsCalculator::median(const QVector<double>& sorted)
+{
+	return quantile(sorted, 0.5);
+}
+
+double QwtBoxStatisticsCalculator::iqr(const QVector<double>& sorted)
+{
+	return quantile(sorted, 0.75) - quantile(sorted, 0.25);
+}
+
+double QwtBoxStatisticsCalculator::mean(const QVector<double>& data)
+{
+	if (data.isEmpty())
+		return 0.0;
+
+	double sum = 0.0;
+	for (int i = 0; i < data.size(); ++i)
+		sum += data[i];
+
+	return sum / data.size();
+}
+
+double QwtBoxStatisticsCalculator::standardDeviation(const QVector<double>& data)
+{
+	if (data.size() < 2)
+		return 0.0;
+
+	const double m = mean(data);
+	double sumSq = 0.0;
+	for (int i = 0; i < data.size(); ++i)
+	{
+		const double diff = data[i] - m;
+		sumSq += diff * diff;
+	}
+
+	return std::sqrt(sumSq / (data.size() - 1));
+}
+
+/**
+ * @brief Compute boxplot statistics from sorted data
+ * @details Calculates whisker bounds, quartiles, median, and outlier count
+ *          using the specified whisker method.
+ * @param[in] position The position value for the resulting sample
+ * @param[in] sortedData Pre-sorted data vector
+ * @param[in] method Whisker calculation method (default: Tukey)
+ * @param[in] coefficient Whisker coefficient (default: 1.5)
+ * @return QwtBoxSample containing computed statistics
+ */
+QwtBoxSample QwtBoxStatisticsCalculator::calculate(
+	double position,
+	const QVector<double>& sortedData,
+	WhiskerMethod method,
+	double coefficient)
+{
+	if (sortedData.isEmpty())
+		return QwtBoxSample(position);
+
+	const double minVal = sortedData.first();
+	const double maxVal = sortedData.last();
+	const double med = median(sortedData);
+	const double q1 = quantile(sortedData, 0.25);
+	const double q3 = quantile(sortedData, 0.75);
+
+	double whiskerLower, whiskerUpper;
+
+	switch (method)
+	{
+		case Tukey:
+		{
+			const double iqrVal = q3 - q1;
+			whiskerLower = qwtMaxF(minVal, q1 - coefficient * iqrVal);
+			whiskerUpper = qwtMinF(maxVal, q3 + coefficient * iqrVal);
+			break;
+		}
+		case Percentile:
+		{
+			whiskerLower = quantile(sortedData, 1.0 - coefficient / 100.0);
+			whiskerUpper = quantile(sortedData, coefficient / 100.0);
+			break;
+		}
+		case MinMax:
+		{
+			whiskerLower = minVal;
+			whiskerUpper = maxVal;
+			break;
+		}
+		case StandardDeviation:
+		{
+			const double m = mean(sortedData);
+			const double sd = standardDeviation(sortedData);
+			whiskerLower = qwtMaxF(minVal, m - coefficient * sd);
+			whiskerUpper = qwtMinF(maxVal, m + coefficient * sd);
+			break;
+		}
+		case StandardError:
+		{
+			const double m = mean(sortedData);
+			const double sd = standardDeviation(sortedData);
+			const double se = sd / std::sqrt(static_cast<double>(sortedData.size()));
+			whiskerLower = qwtMaxF(minVal, m - coefficient * se);
+			whiskerUpper = qwtMinF(maxVal, m + coefficient * se);
+			break;
+		}
+		default:
+		{
+			whiskerLower = minVal;
+			whiskerUpper = maxVal;
+			break;
+		}
+	}
+
+	QwtBoxSample sample(position, whiskerLower, q1, med, q3, whiskerUpper);
+
+	// Count outliers
+	int outlierCount = 0;
+	for (int i = 0; i < sortedData.size(); ++i)
+	{
+		if (sortedData[i] < whiskerLower || sortedData[i] > whiskerUpper)
+			outlierCount++;
+	}
+	sample.outlierCount = outlierCount;
+
+	return sample;
+}
+
+/**
+ * @brief Compute boxplot statistics from unsorted raw data
+ * @details Sorts the data internally and then calculates statistics.
+ * @param[in] position The position value for the resulting sample
+ * @param[in] rawData Unsorted raw data vector
+ * @param[in] method Whisker calculation method (default: Tukey)
+ * @param[in] coefficient Whisker coefficient (default: 1.5)
+ * @return QwtBoxSample containing computed statistics
+ */
+QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(
+	double position,
+	const QVector<double>& rawData,
+	WhiskerMethod method,
+	double coefficient)
+{
+	QVector<double> sorted = sortData(rawData);
+	return calculate(position, sorted, method, coefficient);
+}
+
+/**
+ * @brief Extract outlier values from sorted data based on box sample
+ * @details Identifies all values outside the whisker bounds as outliers.
+ * @param[in] sample The box sample containing whisker bounds
+ * @param[in] sortedData Pre-sorted data vector
+ * @return Vector of outlier values
+ */
+QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
+	const QwtBoxSample& sample,
+	const QVector<double>& sortedData)
+{
+	QVector<double> outliers;
+
+	for (int i = 0; i < sortedData.size(); ++i)
+	{
+		const double val = sortedData[i];
+		if (val < sample.whiskerLower || val > sample.whiskerUpper)
+			outliers.append(val);
+	}
+
+	return outliers;
+}
+
+/**
+ * @brief Compute full boxplot statistics including outliers
+ * @details Calculates both the box sample and extracts outlier values in one call.
+ * @param[in] position The position value for the resulting samples
+ * @param[in] rawData Unsorted raw data vector
+ * @param[out] sample Output parameter for computed box statistics
+ * @param[out] outliers Output parameter for extracted outlier values
+ * @param[in] method Whisker calculation method (default: Tukey)
+ * @param[in] coefficient Whisker coefficient (default: 1.5)
+ */
+void QwtBoxStatisticsCalculator::calculateFull(
+	double position,
+	const QVector<double>& rawData,
+	QwtBoxSample& sample,
+	QwtBoxOutlierSample& outliers,
+	WhiskerMethod method,
+	double coefficient)
+{
+	QVector<double> sorted = sortData(rawData);
+	sample = calculate(position, sorted, method, coefficient);
+
+	QVector<double> outlierValues = extractOutliers(sample, sorted);
+	outliers = QwtBoxOutlierSample(position, std::move(outlierValues));
+}
+/*** End of inlined file: qwt_box_statistics.cpp ***/
 
 
 /*** Start of inlined file: qwt_interval.cpp ***/
@@ -660,7 +929,7 @@ QDebug operator<<(QDebug debug, const QwtInterval& interval)
 /*** End of inlined file: qwt_interval.cpp ***/
 
 
-/*** Start of inlined file: qwt_color_map.cpp ***/
+/*** Start of inlined file: qwt_colormap.cpp ***/
 #include <qvector.h>
 
 static inline QRgb qwtHsvToRgb(int h, int s, int v, int a)
@@ -894,24 +1163,25 @@ void QwtColorMap::setFormat(Format format)
 /**
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Number of colors.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and numColors - 1, or -1 for an invalid value.
  */
-uint QwtColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
+uint QwtColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0.0)
 		return 0;
 
-	if (value <= interval.minValue())
+	if (value <= vMin)
 		return 0;
 
 	const int maxIndex = numColors - 1;
-	if (value >= interval.maxValue())
+	if (value >= vMax)
 		return maxIndex;
 
-	const double v = maxIndex * ((value - interval.minValue()) / width);
+	const double v = maxIndex * ((value - vMin) / width);
 	return static_cast< unsigned int >(v + 0.5);
 }
 
@@ -925,10 +1195,8 @@ QVector< QRgb > QwtColorMap::colorTable256() const
 {
 	QVector< QRgb > table(256);
 
-	const QwtInterval interval(0, 256);
-
 	for (int i = 0; i < 256; i++)
-		table[ i ] = rgb(interval, i);
+		table[ i ] = rgb(0.0, 256.0, i);
 
 	return table;
 }
@@ -944,11 +1212,9 @@ QVector< QRgb > QwtColorMap::colorTable(int numColors) const
 {
 	QVector< QRgb > table(numColors);
 
-	const QwtInterval interval(0.0, 1.0);
-
 	const double step = 1.0 / (numColors - 1);
 	for (int i = 0; i < numColors; i++)
-		table[ i ] = rgb(interval, step * i);
+		table[ i ] = rgb(0.0, 1.0, step * i);
 
 	return table;
 }
@@ -1090,43 +1356,45 @@ QColor QwtLinearColorMap::color2() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtLinearColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
 {
 	QWT_DC(d);
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0.0)
 		return 0u;
 
-	const double ratio = (value - interval.minValue()) / width;
+	const double ratio = (value - vMin) / width;
 	return d->colorStops.rgb(d->mode, ratio);
 }
 
 /**
  * @brief Map a value of a given interval into a color index.
  * @param[in] numColors Size of the color table.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and 255.
  * @note NaN values are mapped to 0.
  */
-uint QwtLinearColorMap::colorIndex(int numColors, const QwtInterval& interval, double value) const
+uint QwtLinearColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
 	QWT_DC(d);
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0.0)
 		return 0;
 
-	if (value <= interval.minValue())
+	if (value <= vMin)
 		return 0;
 
-	if (value >= interval.maxValue())
+	if (value >= vMax)
 		return numColors - 1;
 
-	const double v = (numColors - 1) * (value - interval.minValue()) / width;
+	const double v = (numColors - 1) * (value - vMin) / width;
 	return static_cast< unsigned int >((d->mode == FixedColors) ? v : v + 0.5);
 }
 
@@ -1230,24 +1498,25 @@ int QwtAlphaColorMap::alpha2() const
 
 /**
  * @brief Map a value of a given interval into a alpha value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value, with an alpha value.
  */
-QRgb QwtAlphaColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtAlphaColorMap::rgb(double vMin, double vMax, double value) const
 {
 	QWT_DC(d);
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0.0)
 		return 0u;
 
-	if (value <= interval.minValue())
+	if (value <= vMin)
 		return d->rgb;
 
-	if (value >= interval.maxValue())
+	if (value >= vMax)
 		return d->rgbMax;
 
-	const double ratio = (value - interval.minValue()) / width;
+	const double ratio = (value - vMin) / width;
 	const int alpha    = d->alpha1 + qRound(ratio * (d->alpha2 - d->alpha1));
 
 	return d->rgb | (alpha << 24);
@@ -1457,24 +1726,25 @@ int QwtHueColorMap::alpha() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtHueColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtHueColorMap::rgb(double vMin, double vMax, double value) const
 {
 	QWT_DC(d);
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0)
 		return 0u;
 
-	if (value <= interval.minValue())
+	if (value <= vMin)
 		return d->rgbMin;
 
-	if (value >= interval.maxValue())
+	if (value >= vMax)
 		return d->rgbMax;
 
-	const double ratio = (value - interval.minValue()) / width;
+	const double ratio = (value - vMin) / width;
 
 	int hue = d->hue1 + qRound(ratio * (d->hue2 - d->hue1));
 	if (hue >= 360) {
@@ -1703,14 +1973,15 @@ int QwtSaturationValueColorMap::alpha() const
 
 /**
  * @brief Map a value of a given interval into a RGB value.
- * @param[in] interval Range for all values.
+ * @param[in] vMin Minimum of the value interval.
+ * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a RGB value.
  * @return RGB value for value.
  */
-QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) const
+QRgb QwtSaturationValueColorMap::rgb(double vMin, double vMax, double value) const
 {
 	QWT_DC(d);
-	const double width = interval.width();
+	const double width = vMax - vMin;
 	if (width <= 0)
 		return 0u;
 
@@ -1718,39 +1989,39 @@ QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) 
 
 	switch (d->tableType) {
 	case PrivateData::Saturation: {
-		if (value <= interval.minValue())
+		if (value <= vMin)
 			return d->rgbTable[ d->sat1 ];
 
-		if (value >= interval.maxValue())
+		if (value >= vMax)
 			return d->rgbTable[ d->sat2 ];
 
-		const double ratio = (value - interval.minValue()) / width;
+		const double ratio = (value - vMin) / width;
 		const int sat      = d->sat1 + qRound(ratio * (d->sat2 - d->sat1));
 
 		return rgbTable[ sat ];
 	}
 	case PrivateData::Value: {
-		if (value <= interval.minValue())
+		if (value <= vMin)
 			return d->rgbTable[ d->value1 ];
 
-		if (value >= interval.maxValue())
+		if (value >= vMax)
 			return d->rgbTable[ d->value2 ];
 
-		const double ratio = (value - interval.minValue()) / width;
+		const double ratio = (value - vMin) / width;
 		const int v        = d->value1 + qRound(ratio * (d->value2 - d->value1));
 
 		return rgbTable[ v ];
 	}
 	default: {
 		int s, v;
-		if (value <= interval.minValue()) {
+		if (value <= vMin) {
 			s = d->sat1;
 			v = d->value1;
-		} else if (value >= interval.maxValue()) {
+		} else if (value >= vMax) {
 			s = d->sat2;
 			v = d->value2;
 		} else {
-			const double ratio = (value - interval.minValue()) / width;
+			const double ratio = (value - vMin) / width;
 
 			v = d->value1 + qRound(ratio * (d->value2 - d->value1));
 			s = d->sat1 + qRound(ratio * (d->sat2 - d->sat1));
@@ -1761,7 +2032,7 @@ QRgb QwtSaturationValueColorMap::rgb(const QwtInterval& interval, double value) 
 	}
 }
 
-/*** End of inlined file: qwt_color_map.cpp ***/
+/*** End of inlined file: qwt_colormap.cpp ***/
 
 
 /*** Start of inlined file: qwt_color_cycle.cpp ***/
@@ -1916,51 +2187,425 @@ QVector< QColor > QwtColorCycle::paletteColors(Palette palette)
 /*** End of inlined file: qwt_color_cycle.cpp ***/
 
 
-/*** Start of inlined file: qwt_pixel_matrix.cpp ***/
-/**
- * @brief Constructor
- * @param[in] rect Bounding rectangle for the matrix
- */
-QwtPixelMatrix::QwtPixelMatrix( const QRect& rect )
-	: QBitArray( qMax( rect.width() * rect.height(), 0 ) )
-	, m_rect( rect )
+/*** Start of inlined file: qwt_colormap_preset.cpp ***/
+// Color stop data sourced from matplotlib colormaps.
+// Each preset defines key color stops at normalized positions [0.0, 1.0].
+
+static QVector< QPair< double, QColor > > viridisStops()
 {
+	return {
+		{ 0.000, QColor(68, 1, 84) },
+		{ 0.125, QColor(72, 36, 117) },
+		{ 0.250, QColor(64, 67, 135) },
+		{ 0.375, QColor(52, 94, 141) },
+		{ 0.500, QColor(33, 121, 133) },
+		{ 0.625, QColor(33, 148, 116) },
+		{ 0.750, QColor(94, 174, 83) },
+		{ 0.875, QColor(176, 199, 49) },
+		{ 1.000, QColor(253, 231, 37) }
+	};
+}
+
+static QVector< QPair< double, QColor > > plasmaStops()
+{
+	return {
+		{ 0.000, QColor(13, 8, 135) },
+		{ 0.125, QColor(75, 3, 161) },
+		{ 0.250, QColor(125, 3, 168) },
+		{ 0.375, QColor(168, 34, 150) },
+		{ 0.500, QColor(203, 70, 121) },
+		{ 0.625, QColor(229, 107, 93) },
+		{ 0.750, QColor(248, 148, 65) },
+		{ 0.875, QColor(253, 195, 40) },
+		{ 1.000, QColor(240, 249, 33) }
+	};
+}
+
+static QVector< QPair< double, QColor > > infernoStops()
+{
+	return {
+		{ 0.000, QColor(0, 0, 4) },
+		{ 0.125, QColor(22, 11, 57) },
+		{ 0.250, QColor(66, 10, 104) },
+		{ 0.375, QColor(106, 23, 110) },
+		{ 0.500, QColor(147, 38, 103) },
+		{ 0.625, QColor(188, 55, 84) },
+		{ 0.750, QColor(221, 81, 58) },
+		{ 0.875, QColor(243, 120, 25) },
+		{ 1.000, QColor(252, 255, 164) }
+	};
+}
+
+static QVector< QPair< double, QColor > > magmaStops()
+{
+	return {
+		{ 0.000, QColor(0, 0, 4) },
+		{ 0.125, QColor(18, 14, 54) },
+		{ 0.250, QColor(60, 19, 99) },
+		{ 0.375, QColor(101, 26, 120) },
+		{ 0.500, QColor(142, 43, 122) },
+		{ 0.625, QColor(183, 60, 111) },
+		{ 0.750, QColor(221, 91, 98) },
+		{ 0.875, QColor(249, 139, 94) },
+		{ 1.000, QColor(252, 253, 191) }
+	};
+}
+
+static QVector< QPair< double, QColor > > cividisStops()
+{
+	return {
+		{ 0.000, QColor(0, 32, 77) },
+		{ 0.125, QColor(0, 52, 102) },
+		{ 0.250, QColor(37, 70, 110) },
+		{ 0.375, QColor(69, 89, 112) },
+		{ 0.500, QColor(95, 108, 114) },
+		{ 0.625, QColor(120, 129, 117) },
+		{ 0.750, QColor(152, 152, 115) },
+		{ 0.875, QColor(192, 181, 102) },
+		{ 1.000, QColor(253, 231, 37) }
+	};
+}
+
+static QVector< QPair< double, QColor > > jetStops()
+{
+	return {
+		{ 0.000, QColor(0, 0, 128) },
+		{ 0.125, QColor(0, 0, 255) },
+		{ 0.250, QColor(0, 128, 255) },
+		{ 0.375, QColor(0, 255, 255) },
+		{ 0.500, QColor(128, 255, 128) },
+		{ 0.625, QColor(255, 255, 0) },
+		{ 0.750, QColor(255, 128, 0) },
+		{ 0.875, QColor(255, 0, 0) },
+		{ 1.000, QColor(128, 0, 0) }
+	};
+}
+
+static QVector< QPair< double, QColor > > hotStops()
+{
+	return {
+		{ 0.000, QColor(0, 0, 0) },
+		{ 0.333, QColor(255, 0, 0) },
+		{ 0.667, QColor(255, 255, 0) },
+		{ 1.000, QColor(255, 255, 255) }
+	};
+}
+
+static QVector< QPair< double, QColor > > coolStops()
+{
+	return {
+		{ 0.0, QColor(0, 255, 255) },
+		{ 1.0, QColor(255, 0, 255) }
+	};
+}
+
+static QVector< QPair< double, QColor > > springStops()
+{
+	return {
+		{ 0.0, QColor(255, 0, 255) },
+		{ 1.0, QColor(255, 255, 0) }
+	};
+}
+
+static QVector< QPair< double, QColor > > summerStops()
+{
+	return {
+		{ 0.0, QColor(0, 128, 102) },
+		{ 1.0, QColor(255, 255, 102) }
+	};
+}
+
+static QVector< QPair< double, QColor > > autumnStops()
+{
+	return {
+		{ 0.0, QColor(255, 0, 0) },
+		{ 1.0, QColor(255, 255, 0) }
+	};
+}
+
+static QVector< QPair< double, QColor > > winterStops()
+{
+	return {
+		{ 0.0, QColor(0, 0, 255) },
+		{ 1.0, QColor(0, 255, 128) }
+	};
+}
+
+static QVector< QPair< double, QColor > > grayStops()
+{
+	return {
+		{ 0.0, QColor(0, 0, 0) },
+		{ 1.0, QColor(255, 255, 255) }
+	};
+}
+
+static QVector< QPair< double, QColor > > boneStops()
+{
+	return {
+		{ 0.000, QColor(0, 0, 0) },
+		{ 0.333, QColor(54, 54, 82) },
+		{ 0.667, QColor(128, 155, 155) },
+		{ 1.000, QColor(255, 255, 255) }
+	};
+}
+
+static QVector< QPair< double, QColor > > copperStops()
+{
+	return {
+		{ 0.0, QColor(0, 0, 0) },
+		{ 1.0, QColor(255, 199, 127) }
+	};
+}
+
+static QVector< QPair< double, QColor > > rainbowStops()
+{
+	return {
+		{ 0.000, QColor(255, 0, 0) },
+		{ 0.167, QColor(255, 255, 0) },
+		{ 0.333, QColor(0, 255, 0) },
+		{ 0.500, QColor(0, 255, 255) },
+		{ 0.667, QColor(0, 0, 255) },
+		{ 0.833, QColor(255, 0, 255) },
+		{ 1.000, QColor(255, 0, 0) }
+	};
+}
+
+static QVector< QPair< double, QColor > > hsvStops()
+{
+	return {
+		{ 0.000, QColor(255, 0, 0) },
+		{ 0.167, QColor(255, 255, 0) },
+		{ 0.333, QColor(0, 255, 0) },
+		{ 0.500, QColor(0, 255, 255) },
+		{ 0.667, QColor(0, 0, 255) },
+		{ 0.833, QColor(255, 0, 255) },
+		{ 1.000, QColor(255, 0, 0) }
+	};
+}
+
+static QVector< QPair< double, QColor > > turboStops()
+{
+	return {
+		{ 0.000, QColor(48, 18, 59) },
+		{ 0.125, QColor(68, 79, 193) },
+		{ 0.250, QColor(63, 156, 243) },
+		{ 0.375, QColor(39, 210, 208) },
+		{ 0.500, QColor(69, 236, 127) },
+		{ 0.625, QColor(162, 247, 55) },
+		{ 0.750, QColor(232, 226, 26) },
+		{ 0.875, QColor(251, 150, 13) },
+		{ 1.000, QColor(122, 4, 3) }
+	};
+}
+
+static QVector< QPair< double, QColor > > coolWarmStops()
+{
+	return {
+		{ 0.000, QColor(59, 76, 192) },
+		{ 0.250, QColor(124, 159, 249) },
+		{ 0.500, QColor(221, 221, 221) },
+		{ 0.750, QColor(237, 133, 104) },
+		{ 1.000, QColor(180, 4, 38) }
+	};
+}
+
+static QVector< QPair< double, QColor > > rdYlBuStops()
+{
+	return {
+		{ 0.000, QColor(165, 0, 38) },
+		{ 0.100, QColor(215, 48, 39) },
+		{ 0.200, QColor(244, 109, 67) },
+		{ 0.300, QColor(253, 174, 97) },
+		{ 0.400, QColor(254, 224, 144) },
+		{ 0.500, QColor(255, 255, 191) },
+		{ 0.600, QColor(224, 243, 248) },
+		{ 0.700, QColor(171, 217, 233) },
+		{ 0.800, QColor(116, 173, 209) },
+		{ 0.900, QColor(69, 117, 180) },
+		{ 1.000, QColor(49, 54, 149) }
+	};
+}
+
+static QVector< QPair< double, QColor > > rdYlGnStops()
+{
+	return {
+		{ 0.000, QColor(165, 0, 38) },
+		{ 0.100, QColor(215, 48, 39) },
+		{ 0.200, QColor(244, 109, 67) },
+		{ 0.300, QColor(253, 174, 97) },
+		{ 0.400, QColor(254, 224, 139) },
+		{ 0.500, QColor(255, 255, 191) },
+		{ 0.600, QColor(217, 239, 139) },
+		{ 0.700, QColor(166, 217, 106) },
+		{ 0.800, QColor(102, 189, 99) },
+		{ 0.900, QColor(26, 152, 80) },
+		{ 1.000, QColor(0, 104, 55) }
+	};
+}
+
+static QVector< QPair< double, QColor > > spectralStops()
+{
+	return {
+		{ 0.000, QColor(158, 1, 66) },
+		{ 0.100, QColor(213, 62, 79) },
+		{ 0.200, QColor(244, 109, 67) },
+		{ 0.300, QColor(253, 174, 97) },
+		{ 0.400, QColor(254, 224, 139) },
+		{ 0.500, QColor(255, 255, 191) },
+		{ 0.600, QColor(230, 245, 152) },
+		{ 0.700, QColor(171, 221, 164) },
+		{ 0.800, QColor(102, 194, 165) },
+		{ 0.900, QColor(50, 136, 189) },
+		{ 1.000, QColor(94, 79, 162) }
+	};
 }
 
 /**
- * @brief Destructor
+ * @brief Get the color stops for a preset
+ * @param preset Preset selector
+ * @return Vector of (position, color) pairs
  */
-QwtPixelMatrix::~QwtPixelMatrix()
+QVector< QPair< double, QColor > > QwtColorMapPreset::colorStops(Preset preset)
 {
-}
-
-/**
- * @brief Set the bounding rectangle of the matrix
- * @param[in] rect Bounding rectangle
- * @note All bits are cleared
- */
-void QwtPixelMatrix::setRect( const QRect& rect )
-{
-	if ( rect != m_rect )
-	{
-		m_rect = rect;
-		const int sz = qMax( rect.width() * rect.height(), 0 );
-		resize( sz );
+	switch (preset) {
+		case Viridis: return viridisStops();
+		case Plasma: return plasmaStops();
+		case Inferno: return infernoStops();
+		case Magma: return magmaStops();
+		case Cividis: return cividisStops();
+		case Jet: return jetStops();
+		case Hot: return hotStops();
+		case Cool: return coolStops();
+		case Spring: return springStops();
+		case Summer: return summerStops();
+		case Autumn: return autumnStops();
+		case Winter: return winterStops();
+		case Gray: return grayStops();
+		case Bone: return boneStops();
+		case Copper: return copperStops();
+		case Rainbow: return rainbowStops();
+		case Hsv: return hsvStops();
+		case Turbo: return turboStops();
+		case CoolWarm: return coolWarmStops();
+		case RdYlBu: return rdYlBuStops();
+		case RdYlGn: return rdYlGnStops();
+		case Spectral: return spectralStops();
 	}
-
-	fill( false );
+	return viridisStops();
 }
 
 /**
- * @brief Get the bounding rectangle
- * @return Bounding rectangle
+ * @brief Create a QwtLinearColorMap from a preset
+ * @param preset Preset selector
+ * @return A QwtLinearColorMap with the preset's color stops applied
  */
-QRect QwtPixelMatrix::rect() const
+std::unique_ptr< QwtLinearColorMap > QwtColorMapPreset::create(Preset preset)
 {
-	return m_rect;
+	auto map = std::make_unique< QwtLinearColorMap >();
+	const auto stops = colorStops(preset);
+	if (stops.isEmpty())
+		return map;
+
+	map->setColorInterval(stops.first().second, stops.last().second);
+	for (int i = 1; i < stops.size() - 1; ++i)
+		map->addColorStop(stops[ i ].first, stops[ i ].second);
+
+	return map;
 }
 
-/*** End of inlined file: qwt_pixel_matrix.cpp ***/
+/**
+ * @brief Create a QwtLinearColorMap from a preset name (case-insensitive)
+ * @param name Preset name string
+ * @return A QwtLinearColorMap with the preset's color stops applied
+ */
+std::unique_ptr< QwtLinearColorMap > QwtColorMapPreset::create(const QString& name)
+{
+	return create(presetFromName(name));
+}
+
+/**
+ * @brief Get a list of all available preset names
+ * @return List of preset name strings
+ */
+QStringList QwtColorMapPreset::availablePresets()
+{
+	return {
+		"viridis", "plasma", "inferno", "magma", "cividis",
+		"jet", "hot", "cool", "spring", "summer", "autumn", "winter",
+		"gray", "bone", "copper",
+		"rainbow", "hsv", "turbo",
+		"coolwarm", "rdylbu", "rdylgn", "spectral"
+	};
+}
+
+/**
+ * @brief Convert a preset enum to its string name
+ * @param preset Preset selector
+ * @return Lowercase name string
+ */
+QString QwtColorMapPreset::presetName(Preset preset)
+{
+	switch (preset) {
+		case Viridis: return "viridis";
+		case Plasma: return "plasma";
+		case Inferno: return "inferno";
+		case Magma: return "magma";
+		case Cividis: return "cividis";
+		case Jet: return "jet";
+		case Hot: return "hot";
+		case Cool: return "cool";
+		case Spring: return "spring";
+		case Summer: return "summer";
+		case Autumn: return "autumn";
+		case Winter: return "winter";
+		case Gray: return "gray";
+		case Bone: return "bone";
+		case Copper: return "copper";
+		case Rainbow: return "rainbow";
+		case Hsv: return "hsv";
+		case Turbo: return "turbo";
+		case CoolWarm: return "coolwarm";
+		case RdYlBu: return "rdylbu";
+		case RdYlGn: return "rdylgn";
+		case Spectral: return "spectral";
+	}
+	return "viridis";
+}
+
+/**
+ * @brief Convert a string name to a preset enum
+ * @param name Case-insensitive preset name
+ * @return Preset enum value, or Viridis if not found
+ */
+QwtColorMapPreset::Preset QwtColorMapPreset::presetFromName(const QString& name)
+{
+	const QString lower = name.toLower();
+	if (lower == "viridis") return Viridis;
+	if (lower == "plasma") return Plasma;
+	if (lower == "inferno") return Inferno;
+	if (lower == "magma") return Magma;
+	if (lower == "cividis") return Cividis;
+	if (lower == "jet") return Jet;
+	if (lower == "hot") return Hot;
+	if (lower == "cool") return Cool;
+	if (lower == "spring") return Spring;
+	if (lower == "summer") return Summer;
+	if (lower == "autumn") return Autumn;
+	if (lower == "winter") return Winter;
+	if (lower == "gray") return Gray;
+	if (lower == "bone") return Bone;
+	if (lower == "copper") return Copper;
+	if (lower == "rainbow") return Rainbow;
+	if (lower == "hsv") return Hsv;
+	if (lower == "turbo") return Turbo;
+	if (lower == "coolwarm") return CoolWarm;
+	if (lower == "rdylbu") return RdYlBu;
+	if (lower == "rdylgn") return RdYlGn;
+	if (lower == "spectral") return Spectral;
+	return Viridis;
+}
+
+/*** End of inlined file: qwt_colormap_preset.cpp ***/
 
 
 /*** Start of inlined file: qwt_transform.cpp ***/
@@ -2403,875 +3048,6 @@ QDebug operator<<(QDebug debug, const QwtScaleMap& map)
 #endif
 
 /*** End of inlined file: qwt_scale_map.cpp ***/
-
-
-/*** Start of inlined file: qwt_dyngrid_layout.cpp ***/
-#include <qvector.h>
-#include <qlist.h>
-
-class QwtDynGridLayout::PrivateData
-{
-	QWT_DECLARE_PUBLIC(QwtDynGridLayout)
-public:
-	PrivateData( QwtDynGridLayout* p )
-		: q_ptr( p )
-		, isDirty(true)
-	{
-	}
-
-	void updateLayoutCache() const;
-
-	mutable QList< QLayoutItem* > itemList;
-
-	mutable uint maxColumns;
-	uint numRows;
-	uint numColumns;
-
-	Qt::Orientations expanding;
-
-	mutable bool isDirty;
-	mutable QVector< QSize > itemSizeHints;
-};
-
-void QwtDynGridLayout::PrivateData::updateLayoutCache() const
-{
-	itemSizeHints.resize(itemList.count());
-
-	int index = 0;
-
-	for (auto it = itemList.constBegin(); it != itemList.constEnd(); ++it, index++) {
-		itemSizeHints[ index ] = (*it)->sizeHint();
-	}
-
-	isDirty = false;
-}
-
-/**
- * @brief Constructor with parent widget, margin and spacing
- *
- * @param[in] parent Parent widget
- * @param[in] margin Margin around the layout
- * @param[in] spacing Spacing between items
- *
- */
-QwtDynGridLayout::QwtDynGridLayout(QWidget* parent, int margin, int spacing) : QLayout(parent)
-{
-	init();
-
-	setSpacing(spacing);
-	setContentsMargins(margin, margin, margin, margin);
-}
-
-/**
- * @brief Constructor with spacing only
- *
- * @param[in] spacing Spacing between items
- *
- */
-QwtDynGridLayout::QwtDynGridLayout(int spacing)
-{
-	init();
-	setSpacing(spacing);
-}
-
-/*!
-   Initialize the layout with default values.
- */
-void QwtDynGridLayout::init()
-{
-	QWT_PIMPL_CONSTRUCT_INIT();
-	QWT_D(d);
-	d->maxColumns = d->numRows = d->numColumns = 0;
-}
-
-/**
- * @brief Destructor
- *
- * @details Deletes all layout items and private data.
- *
- */
-QwtDynGridLayout::~QwtDynGridLayout()
-{
-	QWT_D(d);
-	qDeleteAll(d->itemList);
-}
-
-/**
- * @brief Invalidate all internal caches
- *
- * @details Marks the layout as dirty so it will recalculate on next layout operation.
- *
- */
-void QwtDynGridLayout::invalidate()
-{
-	QWT_D(d);
-	d->isDirty = true;
-	QLayout::invalidate();
-}
-
-/**
- * @brief Set the upper limit for the number of columns
- *
- * @param[in] maxColumns Upper limit, 0 means unlimited
- *
- */
-void QwtDynGridLayout::setMaxColumns(uint maxColumns)
-{
-	QWT_D(d);
-	d->maxColumns = maxColumns;
-}
-
-/**
- * @brief Get the upper limit for the number of columns
- *
- * @return Upper limit for the number of columns, 0 means unlimited
- *
- */
-uint QwtDynGridLayout::maxColumns() const
-{
-	QWT_DC(d);
-	return d->maxColumns;
-}
-
-/**
- * @brief Add an item to the next free position
- *
- * @param[in] item Layout item to add
- *
- */
-void QwtDynGridLayout::addItem(QLayoutItem* item)
-{
-	QWT_D(d);
-	d->itemList.append(item);
-	invalidate();
-}
-
-/**
- * @brief Check if the layout is empty
- *
- * @return true if the layout contains no items
- *
- */
-bool QwtDynGridLayout::isEmpty() const
-{
-	QWT_DC(d);
-	return d->itemList.isEmpty();
-}
-
-/**
- * @brief Get the number of layout items
- *
- * @return Number of items in the layout
- *
- */
-uint QwtDynGridLayout::itemCount() const
-{
-	QWT_DC(d);
-	return d->itemList.count();
-}
-
-/**
- * @brief Get the item at a specific index
- *
- * @param[in] index Index of the item
- * @return Item at the specified index, or nullptr if index is out of range
- *
- */
-QLayoutItem* QwtDynGridLayout::itemAt(int index) const
-{
-	QWT_DC(d);
-	if (index < 0 || index >= d->itemList.count())
-		return nullptr;
-
-	return d->itemList.at(index);
-}
-
-/**
- * @brief Remove and return the item at a specific index
- *
- * @param[in] index Index of the item to remove
- * @return Removed item, or nullptr if index is out of range
- *
- */
-QLayoutItem* QwtDynGridLayout::takeAt(int index)
-{
-	QWT_D(d);
-	if (index < 0 || index >= d->itemList.count())
-		return nullptr;
-
-	d->isDirty = true;
-	return d->itemList.takeAt(index);
-}
-
-/**
- * @brief Get the number of items in the layout
- *
- * @return Number of layout items
- *
- */
-int QwtDynGridLayout::count() const
-{
-	QWT_DC(d);
-	return d->itemList.count();
-}
-
-/**
- * @brief Set the expanding directions for the layout
- *
- * @details A value of Qt::Vertical or Qt::Horizontal means that it wants to grow
- * in only one dimension, while Qt::Vertical | Qt::Horizontal means that it wants
- * to grow in both dimensions.
- *
- * @param[in] expanding Or'd orientations
- *
- */
-void QwtDynGridLayout::setExpandingDirections(Qt::Orientations expanding)
-{
-	QWT_D(d);
-	d->expanding = expanding;
-}
-
-/**
- * @brief Get the expanding directions for the layout
- *
- * @return Orientations where the layout expands
- *
- */
-Qt::Orientations QwtDynGridLayout::expandingDirections() const
-{
-	QWT_DC(d);
-	return d->expanding;
-}
-
-/**
- * @brief Set the geometry for the layout
- *
- * @details Reorganizes columns and rows and resizes managed items within the rectangle.
- *
- * @param[in] rect Layout geometry
- *
- */
-void QwtDynGridLayout::setGeometry(const QRect& rect)
-{
-	QWT_D(d);
-	QLayout::setGeometry(rect);
-
-	if (isEmpty())
-		return;
-
-	d->numColumns = columnsForWidth(rect.width());
-	d->numRows    = itemCount() / d->numColumns;
-	if (itemCount() % d->numColumns)
-		d->numRows++;
-
-	const QList< QRect > itemGeometries = layoutItems(rect, d->numColumns);
-
-	int index = 0;
-	for (auto* item : qwt_as_const(d->itemList)) {
-		item->setGeometry(itemGeometries[ index ]);
-		index++;
-	}
-}
-
-/**
- * @brief Calculate the number of columns for a given width
- *
- * @details The calculation tries to use as many columns as possible, limited by maxColumns().
- *
- * @param[in] width Available width for all columns
- * @return Number of columns for the given width
- *
- */
-uint QwtDynGridLayout::columnsForWidth(int width) const
-{
-	QWT_DC(d);
-	if (isEmpty())
-		return 0;
-
-	uint maxColumns = itemCount();
-	if (d->maxColumns > 0)
-		maxColumns = qMin(d->maxColumns, maxColumns);
-
-	if (maxRowWidth(maxColumns) <= width)
-		return maxColumns;
-
-	for (uint numColumns = 2; numColumns <= maxColumns; numColumns++) {
-		const int rowWidth = maxRowWidth(numColumns);
-		if (rowWidth > width)
-			return numColumns - 1;
-	}
-
-	return 1;  // At least 1 column
-}
-
-/*!
-   Calculate the width of a layout for a given number of
-   columns.
-
-   @param numColumns Given number of columns
-   @param itemWidth Array of the width hints for all items
-  */
-int QwtDynGridLayout::maxRowWidth(int numColumns) const
-{
-	QWT_DC(d);
-	int col;
-
-	QVector< int > colWidth(numColumns);
-	for (col = 0; col < numColumns; col++)
-		colWidth[ col ] = 0;
-
-	if (d->isDirty)
-		d->updateLayoutCache();
-
-	for (int index = 0; index < d->itemSizeHints.count(); index++) {
-		col             = index % numColumns;
-		colWidth[ col ] = qMax(colWidth[ col ], d->itemSizeHints[ index ].width());
-	}
-
-	const QMargins m = contentsMargins();
-
-	int rowWidth = m.left() + m.right() + (numColumns - 1) * spacing();
-	for (col = 0; col < numColumns; col++)
-		rowWidth += colWidth[ col ];
-
-	return rowWidth;
-}
-
-/**
- * @brief Get the maximum width of all layout items
- *
- * @return Maximum width of all items
- *
- */
-int QwtDynGridLayout::maxItemWidth() const
-{
-	QWT_DC(d);
-	if (isEmpty())
-		return 0;
-
-	if (d->isDirty)
-		d->updateLayoutCache();
-
-	int w = 0;
-	for (int i = 0; i < d->itemSizeHints.count(); i++) {
-		const int itemW = d->itemSizeHints[ i ].width();
-		if (itemW > w)
-			w = itemW;
-	}
-
-	return w;
-}
-
-/**
- * @brief Calculate the geometries of the layout items
- *
- * @param[in] rect Rectangle where to place the items
- * @param[in] numColumns Number of columns
- * @return List of item geometries
- *
- */
-QList< QRect > QwtDynGridLayout::layoutItems(const QRect& rect, uint numColumns) const
-{
-	QWT_DC(d);
-	QList< QRect > itemGeometries;
-	if (numColumns == 0 || isEmpty())
-		return itemGeometries;
-
-	uint numRows = itemCount() / numColumns;
-	if (numColumns % itemCount())
-		numRows++;
-
-	if (numRows == 0)
-		return itemGeometries;
-
-	QVector< int > rowHeight(numRows);
-	QVector< int > colWidth(numColumns);
-
-	layoutGrid(numColumns, rowHeight, colWidth);
-
-	bool expandH, expandV;
-	expandH = expandingDirections() & Qt::Horizontal;
-	expandV = expandingDirections() & Qt::Vertical;
-
-	if (expandH || expandV)
-		stretchGrid(rect, numColumns, rowHeight, colWidth);
-
-	const int maxColumns    = d->maxColumns;
-	d->maxColumns      = numColumns;
-	const QRect alignedRect = alignmentRect(rect);
-	d->maxColumns      = maxColumns;
-
-	const int xOffset = expandH ? 0 : alignedRect.x();
-	const int yOffset = expandV ? 0 : alignedRect.y();
-
-	QVector< int > colX(numColumns);
-	QVector< int > rowY(numRows);
-
-	const int xySpace = spacing();
-
-	const QMargins m = contentsMargins();
-
-	rowY[ 0 ] = yOffset + m.top();
-	for (uint r = 1; r < numRows; r++)
-		rowY[ r ] = rowY[ r - 1 ] + rowHeight[ r - 1 ] + xySpace;
-
-	colX[ 0 ] = xOffset + m.left();
-	for (uint c = 1; c < numColumns; c++)
-		colX[ c ] = colX[ c - 1 ] + colWidth[ c - 1 ] + xySpace;
-
-	const int itemCount = d->itemList.size();
-	itemGeometries.reserve(itemCount);
-
-	for (int i = 0; i < itemCount; i++) {
-		const int row = i / numColumns;
-		const int col = i % numColumns;
-
-		const QRect itemGeometry(colX[ col ], rowY[ row ], colWidth[ col ], rowHeight[ row ]);
-		itemGeometries.append(itemGeometry);
-	}
-
-	return itemGeometries;
-}
-
-/*!
-   Calculate the dimensions for the columns and rows for a grid
-   of numColumns columns.
-
-   @param numColumns Number of columns.
-   @param rowHeight Array where to fill in the calculated row heights.
-   @param colWidth Array where to fill in the calculated column widths.
-  */
-
-void QwtDynGridLayout::layoutGrid(uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const
-{
-	QWT_DC(d);
-	if (numColumns <= 0)
-		return;
-
-	if (d->isDirty)
-		d->updateLayoutCache();
-
-	for (int index = 0; index < d->itemSizeHints.count(); index++) {
-		const int row = index / numColumns;
-		const int col = index % numColumns;
-
-		const QSize& size = d->itemSizeHints[ index ];
-
-		rowHeight[ row ] = (col == 0) ? size.height() : qMax(rowHeight[ row ], size.height());
-		colWidth[ col ]  = (row == 0) ? size.width() : qMax(colWidth[ col ], size.width());
-	}
-}
-
-/*!
-   Stretch columns in case of expanding() & QSizePolicy::Horizontal and
-   rows in case of expanding() & QSizePolicy::Vertical to fill the entire
-   rect. Rows and columns are stretched with the same factor.
-
-   @param rect Bounding rectangle
-   @param numColumns Number of columns
-   @param rowHeight Array to be filled with the calculated row heights
-   @param colWidth Array to be filled with the calculated column widths
-
-   @sa setExpanding(), expanding()
-  */
-void QwtDynGridLayout::stretchGrid(const QRect& rect, uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const
-{
-	if (numColumns == 0 || isEmpty())
-		return;
-
-	bool expandH, expandV;
-	expandH = expandingDirections() & Qt::Horizontal;
-	expandV = expandingDirections() & Qt::Vertical;
-
-	const QMargins m = contentsMargins();
-
-	if (expandH) {
-		int xDelta = rect.width() - m.left() - m.right() - (numColumns - 1) * spacing();
-		for (uint col = 0; col < numColumns; col++)
-			xDelta -= colWidth[ col ];
-
-		if (xDelta > 0) {
-			for (uint col = 0; col < numColumns; col++) {
-				const int space = xDelta / (numColumns - col);
-				colWidth[ col ] += space;
-				xDelta -= space;
-			}
-		}
-	}
-
-	if (expandV) {
-		uint numRows = itemCount() / numColumns;
-		if (itemCount() % numColumns)
-			numRows++;
-
-		int yDelta = rect.height() - m.top() - m.bottom() - (numRows - 1) * spacing();
-		for (uint row = 0; row < numRows; row++)
-			yDelta -= rowHeight[ row ];
-
-		if (yDelta > 0) {
-			for (uint row = 0; row < numRows; row++) {
-				const int space = yDelta / (numRows - row);
-				rowHeight[ row ] += space;
-				yDelta -= space;
-			}
-		}
-	}
-}
-
-/**
- * @brief Check if the layout has height for width
- *
- * @return true, indicating QwtDynGridLayout implements heightForWidth()
- *
- */
-bool QwtDynGridLayout::hasHeightForWidth() const
-{
-	return true;
-}
-
-/**
- * @brief Get the preferred height for a given width
- *
- * @param[in] width Width to calculate height for
- * @return Preferred height for the given width
- *
- */
-int QwtDynGridLayout::heightForWidth(int width) const
-{
-	if (isEmpty())
-		return 0;
-
-	const uint numColumns = columnsForWidth(width);
-	uint numRows          = itemCount() / numColumns;
-	if (itemCount() % numColumns)
-		numRows++;
-
-	QVector< int > rowHeight(numRows);
-	QVector< int > colWidth(numColumns);
-
-	layoutGrid(numColumns, rowHeight, colWidth);
-
-	const QMargins m = contentsMargins();
-
-	int h = m.top() + m.bottom() + (numRows - 1) * spacing();
-	for (uint row = 0; row < numRows; row++)
-		h += rowHeight[ row ];
-
-	return h;
-}
-
-/**
- * @brief Get the size hint for the layout
- *
- * @details If maxColumns() > 0 it is the size for a grid with maxColumns() columns,
- * otherwise it is the size for a grid with only one row.
- *
- * @return Size hint
- *
- */
-QSize QwtDynGridLayout::sizeHint() const
-{
-	QWT_DC(d);
-	if (isEmpty())
-		return QSize();
-
-	uint numColumns = itemCount();
-	if (d->maxColumns > 0)
-		numColumns = qMin(d->maxColumns, numColumns);
-
-	uint numRows = itemCount() / numColumns;
-	if (itemCount() % numColumns)
-		numRows++;
-
-	QVector< int > rowHeight(numRows);
-	QVector< int > colWidth(numColumns);
-
-	layoutGrid(numColumns, rowHeight, colWidth);
-
-	const QMargins m = contentsMargins();
-
-	int h = m.top() + m.bottom() + (numRows - 1) * spacing();
-	for (uint row = 0; row < numRows; row++)
-		h += rowHeight[ row ];
-
-	int w = m.left() + m.right() + (numColumns - 1) * spacing();
-	for (uint col = 0; col < numColumns; col++)
-		w += colWidth[ col ];
-
-	return QSize(w, h);
-}
-
-/**
- * @brief Get the number of rows in the current layout
- *
- * @warning The number of rows might change whenever the geometry changes.
- *
- * @return Number of rows
- *
- */
-uint QwtDynGridLayout::numRows() const
-{
-	QWT_DC(d);
-	return d->numRows;
-}
-
-/**
- * @brief Get the number of columns in the current layout
- *
- * @warning The number of columns might change whenever the geometry changes.
- *
- * @return Number of columns
- *
- */
-uint QwtDynGridLayout::numColumns() const
-{
-	QWT_DC(d);
-	return d->numColumns;
-}
-
-/*** End of inlined file: qwt_dyngrid_layout.cpp ***/
-
-
-/*** Start of inlined file: qwt_weeding_curve_fitter.cpp ***/
-#include <qpainterpath.h>
-#include <qpolygon.h>
-#include <qstack.h>
-#include <qvector.h>
-
-class QwtWeedingCurveFitter::PrivateData
-{
-	QWT_DECLARE_PUBLIC(QwtWeedingCurveFitter)
-  public:
-	PrivateData( QwtWeedingCurveFitter* p )
-		: q_ptr( p )
-		, tolerance( 1.0 )
-		, chunkSize( 0 )
-	{
-	}
-
-	double tolerance;
-	uint chunkSize;
-};
-
-class QwtWeedingCurveFitter::Line
-{
-  public:
-	Line( int i1 = 0, int i2 = 0 )
-		: from( i1 )
-		, to( i2 )
-	{
-	}
-
-	int from;
-	int to;
-};
-
-/**
- * @brief Constructor
- * @param tolerance Tolerance
- * @sa setTolerance(), tolerance()
- */
-QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
-	: QwtCurveFitter( QwtCurveFitter::Polygon )
-	, QWT_PIMPL_CONSTRUCT
-{
-	setTolerance( tolerance );
-}
-
-/**
- * @brief Destructor
- */
-QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
-{
-}
-
-/*!
-   Assign the tolerance
-
-   The tolerance is the maximum distance, that is acceptable
-   between the original curve and the smoothed curve.
-
-   Increasing the tolerance will reduce the number of the
-   resulting points.
-
-   @param tolerance Tolerance
-
-   @sa tolerance()
- */
-void QwtWeedingCurveFitter::setTolerance( double tolerance )
-{
-	QWT_D(d);
-	d->tolerance = qwtMaxF( tolerance, 0.0 );
-}
-
-/*!
-   @return Tolerance
-   @sa setTolerance()
- */
-double QwtWeedingCurveFitter::tolerance() const
-{
-	QWT_DC(d);
-	return d->tolerance;
-}
-
-/*!
-   Limit the number of points passed to a run of the algorithm
-
-   The runtime of the Douglas Peucker algorithm increases non linear
-   with the number of points. For a chunk size > 0 the polygon
-   is split into pieces passed to the algorithm one by one.
-
-   @param numPoints Maximum for the number of points passed to the algorithm
-
-   @sa chunkSize()
- */
-void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
-{
-	QWT_D(d);
-	if ( numPoints > 0 )
-		numPoints = qMax( numPoints, 3U );
-
-	d->chunkSize = numPoints;
-}
-
-/*!
-   @return Maximum for the number of points passed to a run
-		  of the algorithm - or 0, when unlimited
-   @sa setChunkSize()
- */
-uint QwtWeedingCurveFitter::chunkSize() const
-{
-	QWT_DC(d);
-	return d->chunkSize;
-}
-
-/*!
-   @param points Series of data points
-   @return Curve points
-   @sa fitCurvePath()
- */
-QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
-{
-	QWT_DC(d);
-	if ( points.isEmpty() )
-		return points;
-
-	QPolygonF fittedPoints;
-	if ( d->chunkSize == 0 )
-	{
-		fittedPoints = simplify( points );
-	}
-	else
-	{
-		for ( int i = 0; i < points.size(); i += d->chunkSize )
-		{
-			const QPolygonF p = points.mid( i, d->chunkSize );
-			fittedPoints += simplify( p );
-		}
-	}
-
-	return fittedPoints;
-}
-
-/*!
-   @param points Series of data points
-   @return Curve path
-   @sa fitCurve()
- */
-QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
-{
-	QPainterPath path;
-	path.addPolygon( fitCurve( points ) );
-	return path;
-}
-
-QPolygonF QwtWeedingCurveFitter::simplify( const QPolygonF& points ) const
-{
-	QWT_DC(d);
-	const double toleranceSqr = d->tolerance * d->tolerance;
-
-	QStack< Line > stack;
-	stack.reserve( 500 );
-
-	const QPointF* p = points.data();
-	const int nPoints = points.size();
-
-	QVector< bool > usePoint( nPoints, false );
-
-	stack.push( Line( 0, nPoints - 1 ) );
-
-	while ( !stack.isEmpty() )
-	{
-		const Line r = stack.pop();
-
-		// initialize line segment
-		const double vecX = p[r.to].x() - p[r.from].x();
-		const double vecY = p[r.to].y() - p[r.from].y();
-
-		const double vecLength = std::sqrt( vecX * vecX + vecY * vecY );
-
-		const double unitVecX = ( vecLength != 0.0 ) ? vecX / vecLength : 0.0;
-		const double unitVecY = ( vecLength != 0.0 ) ? vecY / vecLength : 0.0;
-
-		double maxDistSqr = 0.0;
-		int nVertexIndexMaxDistance = r.from + 1;
-		for ( int i = r.from + 1; i < r.to; i++ )
-		{
-			//compare to anchor
-			const double fromVecX = p[i].x() - p[r.from].x();
-			const double fromVecY = p[i].y() - p[r.from].y();
-
-			double distToSegmentSqr;
-			if ( fromVecX * unitVecX + fromVecY * unitVecY < 0.0 )
-			{
-				distToSegmentSqr = fromVecX * fromVecX + fromVecY * fromVecY;
-			}
-			else
-			{
-				const double toVecX = p[i].x() - p[r.to].x();
-				const double toVecY = p[i].y() - p[r.to].y();
-				const double toVecLength = toVecX * toVecX + toVecY * toVecY;
-
-				const double s = toVecX * ( -unitVecX ) + toVecY * ( -unitVecY );
-				if ( s < 0.0 )
-				{
-					distToSegmentSqr = toVecLength;
-				}
-				else
-				{
-					distToSegmentSqr = std::fabs( toVecLength - s * s );
-				}
-			}
-
-			if ( maxDistSqr < distToSegmentSqr )
-			{
-				maxDistSqr = distToSegmentSqr;
-				nVertexIndexMaxDistance = i;
-			}
-		}
-		if ( maxDistSqr <= toleranceSqr )
-		{
-			usePoint[r.from] = true;
-			usePoint[r.to] = true;
-		}
-		else
-		{
-			stack.push( Line( r.from, nVertexIndexMaxDistance ) );
-			stack.push( Line( nVertexIndexMaxDistance, r.to ) );
-		}
-	}
-
-	QPolygonF stripped;
-	for ( int i = 0; i < nPoints; i++ )
-	{
-		if ( usePoint[i] )
-			stripped += p[i];
-	}
-
-	return stripped;
-}
-
-/*** End of inlined file: qwt_weeding_curve_fitter.cpp ***/
 
 
 /*** Start of inlined file: qwt_point_3d.cpp ***/
@@ -5820,6 +5596,3045 @@ QVector< QwtInterval > QwtClipper::clipCircle(const QRectF& clipRect, const QPoi
 }
 
 /*** End of inlined file: qwt_clipper.cpp ***/
+
+
+/*** Start of inlined file: qwt_scale_div.cpp ***/
+/**
+ * @brief Construct a division without ticks
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ *
+ */
+QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound) : m_lowerBound(lowerBound), m_upperBound(upperBound)
+{
+}
+
+/**
+ * @brief Construct a scale division
+ *
+ * @param interval Interval
+ * @param ticks List of major, medium and minor ticks
+ *
+ */
+QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTickTypes ])
+	: m_lowerBound(interval.minValue()), m_upperBound(interval.maxValue())
+{
+	for (int i = 0; i < NTickTypes; i++)
+		m_ticks[ i ] = ticks[ i ];
+}
+
+/**
+ * @brief Construct a scale division
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ * @param ticks List of major, medium and minor ticks
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ *
+ */
+QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > ticks[ NTickTypes ])
+	: m_lowerBound(lowerBound), m_upperBound(upperBound)
+{
+	for (int i = 0; i < NTickTypes; i++)
+		m_ticks[ i ] = ticks[ i ];
+}
+
+/**
+ * @brief Construct a scale division
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ * @param minorTicks List of minor ticks
+ * @param mediumTicks List of medium ticks
+ * @param majorTicks List of major ticks
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ *
+ */
+QwtScaleDiv::QwtScaleDiv(double lowerBound,
+						 double upperBound,
+						 const QList< double >& minorTicks,
+						 const QList< double >& mediumTicks,
+						 const QList< double >& majorTicks)
+	: m_lowerBound(lowerBound), m_upperBound(upperBound)
+{
+	m_ticks[ MinorTick ]  = minorTicks;
+	m_ticks[ MediumTick ] = mediumTicks;
+	m_ticks[ MajorTick ]  = majorTicks;
+}
+
+/**
+ * @brief Copy constructor
+ */
+QwtScaleDiv::QwtScaleDiv(const QwtScaleDiv&) = default;
+
+/**
+ * @brief Copy assignment
+ */
+QwtScaleDiv& QwtScaleDiv::operator=(const QwtScaleDiv&) = default;
+
+/**
+ * @brief Change the interval
+ *
+ * @param lowerBound First boundary
+ * @param upperBound Second boundary
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ *
+ */
+void QwtScaleDiv::setInterval(double lowerBound, double upperBound)
+{
+	m_lowerBound = lowerBound;
+	m_upperBound = upperBound;
+}
+
+/**
+ * @brief Change the interval
+ *
+ * @param interval Interval
+ *
+ */
+void QwtScaleDiv::setInterval(const QwtInterval& interval)
+{
+	m_lowerBound = interval.minValue();
+	m_upperBound = interval.maxValue();
+}
+
+/**
+ * @brief Get the interval from lowerBound to upperBound
+ * @return Interval from lowerBound to upperBound
+ *
+ */
+QwtInterval QwtScaleDiv::interval() const
+{
+	return QwtInterval(m_lowerBound, m_upperBound);
+}
+
+/**
+ * @brief Set the first boundary
+ *
+ * @param lowerBound First boundary
+ * @sa lowerBound(), setUpperBound()
+ *
+ */
+void QwtScaleDiv::setLowerBound(double lowerBound) noexcept
+{
+	m_lowerBound = lowerBound;
+}
+
+/**
+ * @brief Get the first boundary
+ * @return First boundary
+ * @sa upperBound()
+ *
+ */
+double QwtScaleDiv::lowerBound() const noexcept
+{
+	return m_lowerBound;
+}
+
+/**
+ * @brief Set the second boundary
+ *
+ * @param upperBound Second boundary
+ * @sa upperBound(), setLowerBound()
+ *
+ */
+void QwtScaleDiv::setUpperBound(double upperBound) noexcept
+{
+	m_upperBound = upperBound;
+}
+
+/**
+ * @brief Get the upper bound
+ * @return Upper bound
+ * @sa lowerBound()
+ *
+ */
+double QwtScaleDiv::upperBound() const noexcept
+{
+	return m_upperBound;
+}
+
+/**
+ * @brief Get the range (upperBound - lowerBound)
+ * @return upperBound() - lowerBound()
+ *
+ */
+double QwtScaleDiv::range() const noexcept
+{
+	return m_upperBound - m_lowerBound;
+}
+
+/**
+ * @brief Equality operator
+ * @return true if this instance is equal to other
+ *
+ */
+bool QwtScaleDiv::operator==(const QwtScaleDiv& other) const
+{
+	if (m_lowerBound != other.m_lowerBound || m_upperBound != other.m_upperBound) {
+		return false;
+	}
+
+	for (int i = 0; i < NTickTypes; i++) {
+		if (m_ticks[ i ] != other.m_ticks[ i ])
+			return false;
+	}
+
+	return true;
+}
+
+/**
+ * @brief Inequality operator
+ * @return true if this instance is not equal to other
+ *
+ */
+bool QwtScaleDiv::operator!=(const QwtScaleDiv& other) const
+{
+	return (!(*this == other));
+}
+
+/**
+ * @brief Fuzzy comparison
+ * @param other Other scale division
+ * @return true if this instance is approximately equal to other
+ *
+ */
+bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
+{
+	if (qFuzzyCompare(m_lowerBound, other.m_lowerBound) && qFuzzyCompare(m_upperBound, other.m_upperBound)) {
+		for (int i = 0; i < NTickTypes; i++) {
+			if (!fuzzyRangeEqual(
+					m_ticks[ i ].begin(), m_ticks[ i ].end(), other.m_ticks[ i ].begin(), other.m_ticks[ i ].end())) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Check if the scale division is empty
+ * @return true if lowerBound() == upperBound()
+ *
+ */
+bool QwtScaleDiv::isEmpty() const
+{
+	return (m_lowerBound == m_upperBound);
+}
+
+/**
+ * @brief Check if the scale division is increasing
+ * @return true if lowerBound() <= upperBound()
+ *
+ */
+bool QwtScaleDiv::isIncreasing() const
+{
+	return m_lowerBound <= m_upperBound;
+}
+
+/**
+ * @brief Check if a value is between lowerBound() and upperBound()
+ *
+ * @param value Value
+ * @return true if value is within bounds
+ *
+ */
+bool QwtScaleDiv::contains(double value) const
+{
+	const double min = qMin(m_lowerBound, m_upperBound);
+	const double max = qMax(m_lowerBound, m_upperBound);
+
+	return value >= min && value <= max;
+}
+
+/**
+ * @brief Invert the scale division
+ * @sa inverted()
+ *
+ */
+void QwtScaleDiv::invert()
+{
+	qSwap(m_lowerBound, m_upperBound);
+
+	for (int i = 0; i < NTickTypes; i++) {
+		QList< double >& ticks = m_ticks[ i ];
+
+		const int size  = ticks.count();
+		const int size2 = size / 2;
+
+		for (int j = 0; j < size2; j++)
+			qSwap(ticks[ j ], ticks[ size - 1 - j ]);
+	}
+}
+
+/**
+ * @brief Get a scale division with inverted boundaries and ticks
+ * @return A scale division with inverted boundaries and ticks
+ * @sa invert()
+ *
+ */
+QwtScaleDiv QwtScaleDiv::inverted() const
+{
+	QwtScaleDiv other = *this;
+	other.invert();
+
+	return other;
+}
+
+/**
+ * @brief Return a scale division with an interval [lowerBound, upperBound]
+ *        where all ticks outside this interval are removed
+ *
+ * @param lowerBound Lower bound
+ * @param upperBound Upper bound
+ *
+ * @return Scale division with all ticks inside of the given interval
+ *
+ * @note lowerBound might be greater than upperBound for inverted scales
+ *
+ */
+QwtScaleDiv QwtScaleDiv::bounded(double lowerBound, double upperBound) const
+{
+	const double min = qMin(lowerBound, upperBound);
+	const double max = qMax(lowerBound, upperBound);
+
+	QwtScaleDiv sd;
+	sd.setInterval(lowerBound, upperBound);
+
+	for (int tickType = 0; tickType < QwtScaleDiv::NTickTypes; tickType++) {
+		const QList< double >& ticks = m_ticks[ tickType ];
+
+		QList< double > boundedTicks;
+		for (int i = 0; i < ticks.size(); i++) {
+			const double tick = ticks[ i ];
+			if (tick >= min && tick <= max)
+				boundedTicks += tick;
+		}
+
+		sd.setTicks(tickType, boundedTicks);
+	}
+
+	return sd;
+}
+
+/**
+ * @brief Assign ticks
+ *
+ * @param tickType MinorTick, MediumTick or MajorTick
+ * @param ticks Values of the tick positions
+ *
+ */
+void QwtScaleDiv::setTicks(int tickType, const QList< double >& ticks)
+{
+	if (tickType >= 0 && tickType < NTickTypes)
+		m_ticks[ tickType ] = ticks;
+}
+
+/**
+ * @brief Return a list of ticks
+ *
+ * @param tickType MinorTick, MediumTick or MajorTick
+ * @return Tick list
+ *
+ */
+QList< double > QwtScaleDiv::ticks(int tickType) const
+{
+	if (tickType >= 0 && tickType < NTickTypes)
+		return m_ticks[ tickType ];
+
+	return QList< double >();
+}
+
+#ifndef QT_NO_DEBUG_STREAM
+
+#include <qdebug.h>
+
+QDebug operator<<(QDebug debug, const QwtScaleDiv& scaleDiv)
+{
+	debug << scaleDiv.lowerBound() << "<->" << scaleDiv.upperBound();
+	debug << "Major: " << scaleDiv.ticks(QwtScaleDiv::MajorTick);
+	debug << "Medium: " << scaleDiv.ticks(QwtScaleDiv::MediumTick);
+	debug << "Minor: " << scaleDiv.ticks(QwtScaleDiv::MinorTick);
+
+	return debug;
+}
+
+#endif
+
+/*** End of inlined file: qwt_scale_div.cpp ***/
+
+
+/*** Start of inlined file: qwt_scale_engine.cpp ***/
+#include <qdebug.h>
+
+#include <limits>
+
+static inline double qwtLog(double base, double value)
+{
+	return std::log(value) / std::log(base);
+}
+
+static inline QwtInterval qwtLogInterval(double base, const QwtInterval& interval)
+{
+	return QwtInterval(qwtLog(base, interval.minValue()), qwtLog(base, interval.maxValue()));
+}
+
+static inline QwtInterval qwtPowInterval(double base, const QwtInterval& interval)
+{
+	return QwtInterval(std::pow(base, interval.minValue()), std::pow(base, interval.maxValue()));
+}
+
+#if 1
+
+// this version often doesn't find the best ticks: f.e for 15: 5, 10
+static double qwtStepSize(double intervalSize, int maxSteps, uint base)
+{
+	const double minStep = QwtScaleArithmetic::divideInterval(intervalSize, maxSteps, base);
+
+	if (minStep != 0.0) {
+		// # ticks per interval
+		const int numTicks = qwtCeil(qAbs(intervalSize / minStep)) - 1;
+
+		// Do the minor steps fit into the interval?
+		if (qwtFuzzyCompare((numTicks + 1) * qAbs(minStep), qAbs(intervalSize), intervalSize) > 0) {
+			// The minor steps doesn't fit into the interval
+			return 0.5 * intervalSize;
+		}
+	}
+
+	return minStep;
+}
+
+#else
+
+static double qwtStepSize(double intervalSize, int maxSteps, uint base)
+{
+	if (maxSteps <= 0)
+		return 0.0;
+
+	if (maxSteps > 2) {
+		for (int numSteps = maxSteps; numSteps > 1; numSteps--) {
+			const double stepSize = intervalSize / numSteps;
+
+			const double p        = std::floor(std::log(stepSize) / std::log(base));
+			const double fraction = std::pow(base, p);
+
+			for (uint n = base; n > 1; n /= 2) {
+				if (qFuzzyCompare(stepSize, n * fraction))
+					return stepSize;
+
+				if (n == 3 && (base % 2) == 0) {
+					if (qFuzzyCompare(stepSize, 2 * fraction))
+						return stepSize;
+				}
+			}
+		}
+	}
+
+	return intervalSize * 0.5;
+}
+
+#endif
+
+static const double cs_eps_ = 1.0e-6;
+
+/**
+ * @brief Ceil a value, relative to an interval
+ * @param value Value to be ceiled
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * @sa floorEps()
+ */
+double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
+{
+	const double eps = cs_eps_ * intervalSize;
+
+	value = (value - eps) / intervalSize;
+	return std::ceil(value) * intervalSize;
+}
+
+/**
+ * @brief Floor a value, relative to an interval
+ * @param value Value to be floored
+ * @param intervalSize Interval size
+ * @return Rounded value
+ * @sa ceilEps()
+ */
+double QwtScaleArithmetic::floorEps(double value, double intervalSize)
+{
+	const double eps = cs_eps_ * intervalSize;
+
+	value = (value + eps) / intervalSize;
+	return std::floor(value) * intervalSize;
+}
+
+/**
+ * @brief Divide an interval into steps
+ * @details Formula: \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ */
+double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
+{
+	if (numSteps == 0.0 || intervalSize == 0.0)
+		return 0.0;
+
+	return (intervalSize - (cs_eps_ * intervalSize)) / numSteps;
+}
+
+/**
+ * @brief Calculate a step size for a given interval
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @param base Base for the division (usually 10)
+ * @return Calculated step size
+ */
+double QwtScaleArithmetic::divideInterval(double intervalSize, int numSteps, uint base)
+{
+	if (numSteps <= 0)
+		return 0.0;
+
+	const double v = QwtScaleArithmetic::divideEps(intervalSize, numSteps);
+	if (v == 0.0)
+		return 0.0;
+
+	const double lx = qwtLog(base, std::fabs(v));
+	const double p  = std::floor(lx);
+
+	const double fraction = std::pow(base, lx - p);
+
+	uint n = base;
+	while ((n > 1) && (fraction <= n / 2))
+		n /= 2;
+
+	double stepSize = n * std::pow(base, p);
+	if (v < 0)
+		stepSize = -stepSize;
+
+	return stepSize;
+}
+
+class QwtScaleEngine::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtScaleEngine)
+public:
+	PrivateData(QwtScaleEngine* p)
+		: q_ptr(p)
+		, attributes(QwtScaleEngine::NoAttribute)
+		, lowerMargin(0.0)
+		, upperMargin(0.0)
+		, referenceValue(0.0)
+		, base(10)
+		, transform(nullptr)
+	{
+	}
+
+	~PrivateData()
+	{
+		delete transform;
+	}
+
+	QwtScaleEngine::Attributes attributes;
+
+	double lowerMargin;
+	double upperMargin;
+
+	double referenceValue;
+
+	uint base;
+
+	QwtTransform* transform;
+};
+
+/**
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * @sa setBase()
+ */
+QwtScaleEngine::QwtScaleEngine(uint base) : QWT_PIMPL_CONSTRUCT
+{
+	setBase(base);
+}
+
+//! Destructor
+QwtScaleEngine::~QwtScaleEngine()
+{
+}
+
+/**
+ * @brief Assign a transformation
+ * @param transform Transformation
+ * @details The transformation object is used as factory for clones that are returned by transformation().
+ *          The scale engine takes ownership of the transformation.
+ * @sa QwtTransform::copy(), transformation()
+ */
+void QwtScaleEngine::setTransformation(QwtTransform* transform)
+{
+	QWT_D(d);
+	if (transform != d->transform) {
+		delete d->transform;
+		d->transform = transform;
+	}
+}
+
+/**
+ * @brief Create and return a clone of the transformation of the engine
+ * @details When the engine has no special transformation nullptr is returned, indicating no transformation.
+ * @return A clone of the transformation
+ * @sa setTransformation()
+ */
+QwtTransform* QwtScaleEngine::transformation() const
+{
+	QWT_DC(d);
+	QwtTransform* transform = nullptr;
+	if (d->transform)
+		transform = d->transform->copy();
+
+	return transform;
+}
+
+/**
+ * @brief Return the margin at the lower end of the scale
+ * @return The margin at the lower end
+ * @details The default margin is 0.
+ * @sa setMargins()
+ */
+double QwtScaleEngine::lowerMargin() const
+{
+	QWT_DC(d);
+	return d->lowerMargin;
+}
+
+/**
+ * @brief Return the margin at the upper end of the scale
+ * @return The margin at the upper end
+ * @details The default margin is 0.
+ * @sa setMargins()
+ */
+double QwtScaleEngine::upperMargin() const
+{
+	QWT_DC(d);
+	return d->upperMargin;
+}
+
+/**
+ * @brief Specify margins at the scale's endpoints
+ * @param lower Minimum distance between the scale's lower boundary and the smallest enclosed value
+ * @param upper Minimum distance between the scale's upper boundary and the greatest enclosed value
+ * @details Margins can be used to leave a minimum amount of space between the enclosed intervals and the boundaries of the scale.
+ * @warning QwtLogScaleEngine measures the margins in decades.
+ * @sa upperMargin(), lowerMargin()
+ */
+void QwtScaleEngine::setMargins(double lower, double upper)
+{
+	QWT_D(d);
+	d->lowerMargin = qwtMaxF(lower, 0.0);
+	d->upperMargin = qwtMaxF(upper, 0.0);
+}
+
+/**
+ * @brief Calculate a step size for an interval size
+ * @param intervalSize Interval size
+ * @param numSteps Number of steps
+ * @return Step size
+ */
+double QwtScaleEngine::divideInterval(double intervalSize, int numSteps) const
+{
+	QWT_DC(d);
+	return QwtScaleArithmetic::divideInterval(intervalSize, numSteps, d->base);
+}
+
+/**
+ * @brief Check if an interval "contains" a value
+ * @param interval Interval
+ * @param value Value
+ * @return True, when the value is inside the interval
+ */
+bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
+{
+	if (!interval.isValid())
+		return false;
+
+	if (qwtFuzzyCompare(value, interval.minValue(), interval.width()) < 0)
+		return false;
+
+	if (qwtFuzzyCompare(value, interval.maxValue(), interval.width()) > 0)
+		return false;
+
+	return true;
+}
+
+/**
+ * @brief Remove ticks from a list, that are not inside an interval
+ * @param ticks Tick list
+ * @param interval Interval
+ * @return Stripped tick list
+ */
+QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInterval& interval) const
+{
+	if (!interval.isValid() || ticks.count() == 0)
+		return QList< double >();
+
+	if (contains(interval, ticks.first()) && contains(interval, ticks.last())) {
+		return ticks;
+	}
+
+	QList< double > strippedTicks;
+	for (const double tick : ticks) {
+		if (contains(interval, tick))
+			strippedTicks += tick;
+	}
+	return strippedTicks;
+}
+
+/**
+ * @brief Build an interval around a value
+ * @details In case of v == 0.0 the interval is [-0.5, 0.5], otherwise it is [0.5 * v, 1.5 * v]
+ * @param value Initial value
+ * @return Calculated interval
+ */
+QwtInterval QwtScaleEngine::buildInterval(double value) const
+{
+	const double delta = (value == 0.0) ? 0.5 : qAbs(0.5 * value);
+	const double max   = std::numeric_limits< double >::max();
+
+	if (max - delta < value)
+		return QwtInterval(max - delta, max);
+
+	if (-max + delta > value)
+		return QwtInterval(-max, -max + delta);
+
+	return QwtInterval(value - delta, value + delta);
+}
+
+/**
+ * @brief Change a scale attribute
+ * @param attribute Attribute to change
+ * @param on On/Off
+ * @sa Attribute, testAttribute()
+ */
+void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
+{
+	QWT_D(d);
+	if (on)
+		d->attributes |= attribute;
+	else
+		d->attributes &= ~attribute;
+}
+
+/**
+ * @brief Test if an attribute is enabled
+ * @param attribute Attribute to be tested
+ * @return True, if attribute is enabled
+ * @sa Attribute, setAttribute()
+ */
+bool QwtScaleEngine::testAttribute(Attribute attribute) const
+{
+	QWT_DC(d);
+	return (d->attributes & attribute);
+}
+
+/**
+ * @brief Change the scale attribute
+ * @param attributes Set scale attributes
+ * @sa Attribute, attributes()
+ */
+void QwtScaleEngine::setAttributes(Attributes attributes)
+{
+	QWT_D(d);
+	d->attributes = attributes;
+}
+
+/**
+ * @brief Return scale attributes
+ * @return Scale attributes
+ * @sa Attribute, setAttributes(), testAttribute()
+ */
+QwtScaleEngine::Attributes QwtScaleEngine::attributes() const
+{
+	QWT_DC(d);
+	return d->attributes;
+}
+
+/**
+ * @brief Specify a reference point
+ * @param reference New reference value
+ * @details The reference point is needed if options IncludeReference or Symmetric are active. Its default value is 0.0.
+ * @sa Attribute
+ */
+void QwtScaleEngine::setReference(double reference)
+{
+	QWT_D(d);
+	d->referenceValue = reference;
+}
+
+/**
+ * @brief Return the reference value
+ * @return The reference value
+ * @sa setReference(), setAttribute()
+ */
+double QwtScaleEngine::reference() const
+{
+	QWT_DC(d);
+	return d->referenceValue;
+}
+
+/**
+ * @brief Set the base of the scale engine
+ * @param base Base of the engine
+ * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base: f.e 2.
+ *          The default setting is 10.
+ * @sa base()
+ */
+void QwtScaleEngine::setBase(uint base)
+{
+	QWT_D(d);
+	d->base = qMax(base, 2U);
+}
+
+/**
+ * @brief Return base of the scale engine
+ * @return Base of the scale engine
+ * @sa setBase()
+ */
+uint QwtScaleEngine::base() const
+{
+	QWT_DC(d);
+	return d->base;
+}
+
+/**
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * @sa setBase()
+ */
+QwtLinearScaleEngine::QwtLinearScaleEngine(uint base) : QwtScaleEngine(base)
+{
+}
+
+//! Destructor
+QwtLinearScaleEngine::~QwtLinearScaleEngine()
+{
+}
+
+/**
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * @sa setAttribute()
+ */
+void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
+{
+	QwtInterval interval(x1, x2);
+	interval = interval.normalized();
+
+	interval.setMinValue(interval.minValue() - lowerMargin());
+	interval.setMaxValue(interval.maxValue() + upperMargin());
+
+	if (testAttribute(QwtScaleEngine::Symmetric))
+		interval = interval.symmetrize(reference());
+
+	if (testAttribute(QwtScaleEngine::IncludeReference))
+		interval = interval.extend(reference());
+
+	if (interval.width() == 0.0)
+		interval = buildInterval(interval.minValue());
+
+	stepSize = QwtScaleArithmetic::divideInterval(interval.width(), qMax(maxNumSteps, 1), base());
+
+	if (!testAttribute(QwtScaleEngine::Floating))
+		interval = align(interval, stepSize);
+
+	x1 = interval.minValue();
+	x2 = interval.maxValue();
+
+	if (testAttribute(QwtScaleEngine::Inverted)) {
+		qSwap(x1, x2);
+		stepSize = -stepSize;
+	}
+}
+
+/**
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ */
+QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
+{
+	QwtInterval interval = QwtInterval(x1, x2).normalized();
+
+	if (interval.widthL() > std::numeric_limits< double >::max()) {
+		qWarning() << "QwtLinearScaleEngine::divideScale: overflow";
+		return QwtScaleDiv();
+	}
+
+	if (interval.width() <= 0)
+		return QwtScaleDiv();
+
+	stepSize = qAbs(stepSize);
+	if (stepSize == 0.0) {
+		if (maxMajorSteps < 1)
+			maxMajorSteps = 1;
+
+		stepSize = QwtScaleArithmetic::divideInterval(interval.width(), maxMajorSteps, base());
+	}
+
+	QwtScaleDiv scaleDiv;
+
+	if (stepSize != 0.0) {
+		QList< double > ticks[ QwtScaleDiv::NTickTypes ];
+		buildTicks(interval, stepSize, maxMinorSteps, ticks);
+
+		scaleDiv = QwtScaleDiv(interval, ticks);
+	}
+
+	if (x1 > x2)
+		scaleDiv.invert();
+
+	return scaleDiv;
+}
+
+/**
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * @sa buildMajorTicks(), buildMinorTicks()
+ */
+void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
+									  double stepSize,
+									  int maxMinorSteps,
+									  QList< double > ticks[ QwtScaleDiv::NTickTypes ]) const
+{
+	const QwtInterval boundingInterval = align(interval, stepSize);
+
+	ticks[ QwtScaleDiv::MajorTick ] = buildMajorTicks(boundingInterval, stepSize);
+
+	if (maxMinorSteps > 0) {
+		buildMinorTicks(ticks[ QwtScaleDiv::MajorTick ],
+						maxMinorSteps,
+						stepSize,
+						ticks[ QwtScaleDiv::MinorTick ],
+						ticks[ QwtScaleDiv::MediumTick ]);
+	}
+
+	for (int i = 0; i < QwtScaleDiv::NTickTypes; i++) {
+		ticks[ i ] = strip(ticks[ i ], interval);
+
+		// ticks very close to 0.0 are explicitly set to 0.0
+
+		for (int j = 0; j < ticks[ i ].count(); j++) {
+			if (qwtFuzzyCompare(ticks[ i ][ j ], 0.0, stepSize) == 0)
+				ticks[ i ][ j ] = 0.0;
+		}
+	}
+}
+
+/**
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ */
+QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
+{
+	int numTicks = qRound(interval.width() / stepSize) + 1;
+	if (numTicks > 10000)
+		numTicks = 10000;
+
+	QList< double > ticks;
+	ticks.reserve(numTicks);
+
+	ticks += interval.minValue();
+	for (int i = 1; i < numTicks - 1; i++)
+		ticks += interval.minValue() + i * stepSize;
+	ticks += interval.maxValue();
+
+	return ticks;
+}
+
+/**
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ */
+void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
+										   int maxMinorSteps,
+										   double stepSize,
+										   QList< double >& minorTicks,
+										   QList< double >& mediumTicks) const
+{
+	double minStep = qwtStepSize(stepSize, maxMinorSteps, base());
+	if (minStep == 0.0)
+		return;
+
+	// # ticks per interval
+	const int numTicks = qwtCeil(qAbs(stepSize / minStep)) - 1;
+
+	int medIndex = -1;
+	if (numTicks % 2)
+		medIndex = numTicks / 2;
+
+	// calculate minor ticks
+
+	for (int i = 0; i < majorTicks.count(); i++) {
+		double val = majorTicks[ i ];
+		for (int k = 0; k < numTicks; k++) {
+			val += minStep;
+
+			double alignedValue = val;
+			if (qwtFuzzyCompare(val, 0.0, stepSize) == 0)
+				alignedValue = 0.0;
+
+			if (k == medIndex)
+				mediumTicks += alignedValue;
+			else
+				minorTicks += alignedValue;
+		}
+	}
+}
+
+/**
+ * @brief Align an interval to a step size
+ * @details The limits of an interval are aligned that both are integer multiples of the step size.
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ */
+QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double stepSize) const
+{
+	double x1 = interval.minValue();
+	double x2 = interval.maxValue();
+
+	// when there is no rounding beside some effect, when
+	// calculating with doubles, we keep the original value
+
+	const double eps = 0.000000000001;  // since Qt 4.8: qFuzzyIsNull
+	const double max = std::numeric_limits< double >::max();
+
+	if (-max + stepSize <= x1) {
+		const double x = QwtScaleArithmetic::floorEps(x1, stepSize);
+		if (qAbs(x) <= eps || !qFuzzyCompare(x1, x))
+			x1 = x;
+	}
+
+	if (max - stepSize >= x2) {
+		const double x = QwtScaleArithmetic::ceilEps(x2, stepSize);
+		if (qAbs(x) <= eps || !qFuzzyCompare(x2, x))
+			x2 = x;
+	}
+
+	return QwtInterval(x1, x2);
+}
+
+/**
+ * @brief Constructor
+ * @param base Base of the scale engine
+ * @sa setBase()
+ */
+QwtLogScaleEngine::QwtLogScaleEngine(uint base) : QwtScaleEngine(base)
+{
+	setTransformation(new QwtLogTransform());
+}
+
+//! Destructor
+QwtLogScaleEngine::~QwtLogScaleEngine()
+{
+}
+
+/**
+ * @brief Align and divide an interval
+ * @param maxNumSteps Max. number of steps
+ * @param x1 First limit of the interval (In/Out)
+ * @param x2 Second limit of the interval (In/Out)
+ * @param stepSize Step size (Out)
+ * @sa QwtScaleEngine::setAttribute()
+ */
+void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
+{
+	if (x1 > x2)
+		qSwap(x1, x2);
+
+	const double logBase = base();
+
+	QwtInterval interval(x1 / std::pow(logBase, lowerMargin()), x2 * std::pow(logBase, upperMargin()));
+
+	if (interval.maxValue() / interval.minValue() < logBase) {
+		// scale width is less than one step -> try to build a linear scale
+
+		QwtLinearScaleEngine linearScaler;
+		linearScaler.setAttributes(attributes());
+		linearScaler.setReference(reference());
+		linearScaler.setMargins(lowerMargin(), upperMargin());
+
+		linearScaler.autoScale(maxNumSteps, x1, x2, stepSize);
+
+		QwtInterval linearInterval = QwtInterval(x1, x2).normalized();
+		linearInterval             = linearInterval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
+
+		if (linearInterval.maxValue() / linearInterval.minValue() < logBase) {
+			stepSize = 0.0;
+			return;
+		}
+	}
+
+	double logRef = 1.0;
+	if (reference() > QwtLogTransform::LogMin / 2)
+		logRef = qwtMinF(reference(), QwtLogTransform::LogMax / 2);
+
+	if (testAttribute(QwtScaleEngine::Symmetric)) {
+		const double delta = qwtMaxF(interval.maxValue() / logRef, logRef / interval.minValue());
+		interval.setInterval(logRef / delta, logRef * delta);
+	}
+
+	if (testAttribute(QwtScaleEngine::IncludeReference))
+		interval = interval.extend(logRef);
+
+	interval = interval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
+
+	if (interval.width() == 0.0)
+		interval = buildInterval(interval.minValue());
+
+	stepSize = divideInterval(qwtLogInterval(logBase, interval).width(), qMax(maxNumSteps, 1));
+	if (stepSize < 1.0)
+		stepSize = 1.0;
+
+	if (!testAttribute(QwtScaleEngine::Floating))
+		interval = align(interval, stepSize);
+
+	x1 = interval.minValue();
+	x2 = interval.maxValue();
+
+	if (testAttribute(QwtScaleEngine::Inverted)) {
+		qSwap(x1, x2);
+		stepSize = -stepSize;
+	}
+}
+
+/**
+ * @brief Calculate a scale division for an interval
+ * @param x1 First interval limit
+ * @param x2 Second interval limit
+ * @param maxMajorSteps Maximum for the number of major steps
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size. If stepSize == 0, the engine calculates one.
+ * @return Calculated scale division
+ */
+QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
+{
+	QwtInterval interval = QwtInterval(x1, x2).normalized();
+	interval             = interval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
+
+	if (interval.width() <= 0)
+		return QwtScaleDiv();
+
+	const double logBase = base();
+
+	if (interval.maxValue() / interval.minValue() < logBase) {
+		// scale width is less than one decade -> build linear scale
+
+		QwtLinearScaleEngine linearScaler;
+		linearScaler.setAttributes(attributes());
+		linearScaler.setReference(reference());
+		linearScaler.setMargins(lowerMargin(), upperMargin());
+
+		return linearScaler.divideScale(x1, x2, maxMajorSteps, maxMinorSteps, 0.0);
+	}
+
+	stepSize = qAbs(stepSize);
+	if (stepSize == 0.0) {
+		if (maxMajorSteps < 1)
+			maxMajorSteps = 1;
+
+		stepSize = divideInterval(qwtLogInterval(logBase, interval).width(), maxMajorSteps);
+		if (stepSize < 1.0)
+			stepSize = 1.0;  // major step must be >= 1 decade
+	}
+
+	QwtScaleDiv scaleDiv;
+	if (stepSize != 0.0) {
+		QList< double > ticks[ QwtScaleDiv::NTickTypes ];
+		buildTicks(interval, stepSize, maxMinorSteps, ticks);
+
+		scaleDiv = QwtScaleDiv(interval, ticks);
+	}
+
+	if (x1 > x2)
+		scaleDiv.invert();
+
+	return scaleDiv;
+}
+
+/**
+ * @brief Calculate ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param ticks Arrays to be filled with the calculated ticks
+ * @sa buildMajorTicks(), buildMinorTicks()
+ */
+void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
+								   double stepSize,
+								   int maxMinorSteps,
+								   QList< double > ticks[ QwtScaleDiv::NTickTypes ]) const
+{
+	const QwtInterval boundingInterval = align(interval, stepSize);
+
+	ticks[ QwtScaleDiv::MajorTick ] = buildMajorTicks(boundingInterval, stepSize);
+
+	if (maxMinorSteps > 0) {
+		buildMinorTicks(ticks[ QwtScaleDiv::MajorTick ],
+						maxMinorSteps,
+						stepSize,
+						ticks[ QwtScaleDiv::MinorTick ],
+						ticks[ QwtScaleDiv::MediumTick ]);
+	}
+
+	for (int i = 0; i < QwtScaleDiv::NTickTypes; i++)
+		ticks[ i ] = strip(ticks[ i ], interval);
+}
+
+/**
+ * @brief Calculate major ticks for an interval
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Calculated ticks
+ */
+QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
+{
+	double width = qwtLogInterval(base(), interval).width();
+
+	int numTicks = qRound(width / stepSize) + 1;
+	if (numTicks > 10000)
+		numTicks = 10000;
+
+	const double lxmin = std::log(interval.minValue());
+	const double lxmax = std::log(interval.maxValue());
+	const double lstep = (lxmax - lxmin) / double(numTicks - 1);
+
+	QList< double > ticks;
+	ticks.reserve(numTicks);
+
+	ticks += interval.minValue();
+
+	for (int i = 1; i < numTicks - 1; i++)
+		ticks += std::exp(lxmin + double(i) * lstep);
+
+	ticks += interval.maxValue();
+
+	return ticks;
+}
+
+/**
+ * @brief Calculate minor/medium ticks for major ticks
+ * @param majorTicks Major ticks
+ * @param maxMinorSteps Maximum number of minor steps
+ * @param stepSize Step size
+ * @param minorTicks Array to be filled with the calculated minor ticks
+ * @param mediumTicks Array to be filled with the calculated medium ticks
+ */
+void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
+										int maxMinorSteps,
+										double stepSize,
+										QList< double >& minorTicks,
+										QList< double >& mediumTicks) const
+{
+	const double logBase = base();
+
+	if (stepSize < 1.1)  // major step width is one base
+	{
+		double minStep = divideInterval(stepSize, maxMinorSteps + 1);
+		if (minStep == 0.0)
+			return;
+
+		const int numSteps = qRound(stepSize / minStep);
+
+		int mediumTickIndex = -1;
+		if ((numSteps > 2) && (numSteps % 2 == 0))
+			mediumTickIndex = numSteps / 2;
+
+		for (int i = 0; i < majorTicks.count() - 1; i++) {
+			const double v = majorTicks[ i ];
+			const double s = logBase / numSteps;
+
+			if (s >= 1.0) {
+				if (!qFuzzyCompare(s, 1.0))
+					minorTicks += v * s;
+
+				for (int j = 2; j < numSteps; j++) {
+					minorTicks += v * j * s;
+				}
+			} else {
+				for (int j = 1; j < numSteps; j++) {
+					const double tick = v + j * v * (logBase - 1) / numSteps;
+					if (j == mediumTickIndex)
+						mediumTicks += tick;
+					else
+						minorTicks += tick;
+				}
+			}
+		}
+	} else {
+		double minStep = divideInterval(stepSize, maxMinorSteps);
+		if (minStep == 0.0)
+			return;
+
+		if (minStep < 1.0)
+			minStep = 1.0;
+
+		// # subticks per interval
+		int numTicks = qRound(stepSize / minStep) - 1;
+
+		// Do the minor steps fit into the interval?
+		if (qwtFuzzyCompare((numTicks + 1) * minStep, stepSize, stepSize) > 0) {
+			numTicks = 0;
+		}
+
+		if (numTicks < 1)
+			return;
+
+		int mediumTickIndex = -1;
+		if ((numTicks > 2) && (numTicks % 2))
+			mediumTickIndex = numTicks / 2;
+
+		// substep factor = base^substeps
+		const qreal minFactor = qwtMaxF(std::pow(logBase, minStep), logBase);
+
+		for (int i = 0; i < majorTicks.count(); i++) {
+			double tick = majorTicks[ i ];
+			for (int j = 0; j < numTicks; j++) {
+				tick *= minFactor;
+
+				if (j == mediumTickIndex)
+					mediumTicks += tick;
+				else
+					minorTicks += tick;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Align an interval to a step size
+ * @param interval Interval
+ * @param stepSize Step size
+ * @return Aligned interval
+ */
+QwtInterval QwtLogScaleEngine::align(const QwtInterval& interval, double stepSize) const
+{
+	const QwtInterval intv = qwtLogInterval(base(), interval);
+
+	double x1 = QwtScaleArithmetic::floorEps(intv.minValue(), stepSize);
+	if (qwtFuzzyCompare(interval.minValue(), x1, stepSize) == 0)
+		x1 = interval.minValue();
+
+	double x2 = QwtScaleArithmetic::ceilEps(intv.maxValue(), stepSize);
+	if (qwtFuzzyCompare(interval.maxValue(), x2, stepSize) == 0)
+		x2 = interval.maxValue();
+
+	return qwtPowInterval(base(), QwtInterval(x1, x2));
+}
+
+/*** End of inlined file: qwt_scale_engine.cpp ***/
+
+
+/*** Start of inlined file: qwt_system_clock.cpp ***/
+#include <qelapsedtimer.h>
+
+/**
+ * @brief Check if the elapsed timer is valid
+ * @return true if the timer is valid, false otherwise
+ *
+ */
+bool QwtSystemClock::isNull() const
+{
+	return m_timer.isValid();
+}
+
+/**
+ * @brief Start the elapsed timer
+ *
+ */
+void QwtSystemClock::start()
+{
+	m_timer.start();
+}
+
+/**
+ * @brief Restart the elapsed timer
+ * @return Elapsed time in multiples of milliseconds
+ *
+ */
+double QwtSystemClock::restart()
+{
+	const qint64 nsecs = m_timer.restart();
+	return nsecs / 1e6;
+}
+
+/**
+ * @brief Get elapsed time in multiples of milliseconds
+ * @return Elapsed time since the timer was started
+ *
+ */
+double QwtSystemClock::elapsed() const
+{
+	const qint64 nsecs = m_timer.nsecsElapsed();
+	return nsecs / 1e6;
+}
+
+/*** End of inlined file: qwt_system_clock.cpp ***/
+
+
+/*** Start of inlined file: qwt_point_data.cpp ***/
+/**
+ * @brief Constructor
+ *
+ * @param[in] size Number of points
+ * @param[in] interval Bounding interval for the points
+ *
+ * @sa setInterval(), setSize()
+ */
+QwtSyntheticPointData::QwtSyntheticPointData(size_t size, const QwtInterval& interval)
+	: m_size(size), m_interval(interval)
+{
+}
+
+/**
+ * @brief Change the number of points
+ *
+ * @param[in] size Number of points
+ *
+ * @sa size(), setInterval()
+ */
+void QwtSyntheticPointData::setSize(size_t size)
+{
+	m_size = size;
+}
+
+/**
+ * @brief Get the number of points
+ *
+ * @return Number of points
+ *
+ * @sa setSize(), interval()
+ */
+size_t QwtSyntheticPointData::size() const
+{
+	return m_size;
+}
+
+/**
+ * @brief Set the bounding interval
+ *
+ * @param[in] interval Interval
+ *
+ * @sa interval(), setSize()
+ */
+void QwtSyntheticPointData::setInterval(const QwtInterval& interval)
+{
+	m_interval = interval.normalized();
+}
+
+/**
+ * @brief Get the bounding interval
+ *
+ * @return Bounding interval
+ *
+ * @sa setInterval(), size()
+ */
+QwtInterval QwtSyntheticPointData::interval() const
+{
+	return m_interval;
+}
+
+/**
+ * @brief Set the "rectangle of interest"
+ *
+ * @details QwtPlotSeriesItem defines the current area of the plot canvas
+ *          as "rect of interest" ( QwtPlotSeriesItem::updateScaleDiv() ).
+ *          If interval().isValid() == false the x values are calculated
+ *          in the interval rect.left() -> rect.right().
+ *
+ * @param[in] rect Rectangle of interest
+ *
+ * @sa rectOfInterest()
+ */
+void QwtSyntheticPointData::setRectOfInterest(const QRectF& rect)
+{
+	m_rectOfInterest     = rect;
+	m_intervalOfInterest = QwtInterval(rect.left(), rect.right()).normalized();
+}
+
+/**
+ * @brief Get the "rectangle of interest"
+ *
+ * @return Rectangle of interest
+ *
+ * @sa setRectOfInterest()
+ */
+QRectF QwtSyntheticPointData::rectOfInterest() const
+{
+	return m_rectOfInterest;
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ *
+ * @details This implementation iterates over all points, which could often
+ *          be implemented much faster using the characteristics of the series.
+ *          When there are many points it is recommended to overload and
+ *          reimplement this method using the characteristics of the series
+ *          (if possible).
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtSyntheticPointData::boundingRect() const
+{
+	if (m_size == 0 || !(m_interval.isValid() || m_intervalOfInterest.isValid())) {
+		return QRectF(1.0, 1.0, -2.0, -2.0);  // something invalid
+	}
+
+	return qwtBoundingRect(*this);
+}
+
+/**
+ * @brief Calculate the point from an index
+ *
+ * @param[in] index Index
+ *
+ * @return QPointF(x(index), y(x(index)))
+ *
+ * @warning For invalid indices (index < 0 || index >= size()) (0, 0) is returned.
+ */
+QPointF QwtSyntheticPointData::sample(size_t index) const
+{
+	if (index >= m_size)
+		return QPointF(0, 0);
+
+	const double xValue = x(index);
+	const double yValue = y(xValue);
+
+	return QPointF(xValue, yValue);
+}
+
+/**
+ * @brief Calculate a x-value from an index
+ *
+ * @details x values are calculated by dividing an interval into
+ *          equidistant steps. If !interval().isValid() the
+ *          interval is calculated from the "rectangle of interest".
+ *
+ * @param[in] index Index of the requested point
+ *
+ * @return Calculated x coordinate
+ *
+ * @sa interval(), rectOfInterest(), y()
+ */
+double QwtSyntheticPointData::x(size_t index) const
+{
+	const QwtInterval& interval = m_interval.isValid() ? m_interval : m_intervalOfInterest;
+
+	if (!interval.isValid())
+		return 0.0;
+
+	if (m_size <= 1)
+		return interval.minValue();
+
+	const double dx = interval.width() / (m_size - 1);
+	return interval.minValue() + index * dx;
+}
+
+/*** End of inlined file: qwt_point_data.cpp ***/
+
+
+/*** Start of inlined file: qwt_series_data.cpp ***/
+// check nan or inf
+static inline bool isSampleNanOrInf(const QPointF& sample)
+{
+	return qwt_is_nan_or_inf(sample);
+}
+
+static inline bool isSampleNanOrInf(const QwtPoint3D& sample)
+{
+	return !std::isfinite(sample.x()) || !std::isfinite(sample.y()) || !std::isfinite(sample.z());
+}
+
+static inline bool isSampleNanOrInf(const QwtPointPolar& sample)
+{
+	return !std::isfinite(sample.azimuth()) || !std::isfinite(sample.radius());
+}
+
+static inline bool isSampleNanOrInf(const QwtSetSample& sample)
+{
+	// Special: directly returns false; judgement is done inside qwtBoundingRect(const QwtSetSample& sample)
+	Q_UNUSED(sample);
+	return false;
+}
+
+static inline bool isSampleNanOrInf(const QwtIntervalSample& sample)
+{
+
+	return !std::isfinite(sample.value) || !std::isfinite(sample.interval.minValue())
+		   || !std::isfinite(sample.interval.maxValue());
+}
+
+static inline bool isSampleNanOrInf(const QwtOHLCSample& sample)
+{
+
+	return !std::isfinite(sample.close) || !std::isfinite(sample.high) || !std::isfinite(sample.low)
+		   || !std::isfinite(sample.open) || !std::isfinite(sample.time);
+}
+
+static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
+{
+
+	return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
+}
+
+static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
+{
+	return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower)
+		   || !std::isfinite(sample.q1) || !std::isfinite(sample.median)
+		   || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+}
+
+static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
+{
+	if (!std::isfinite(sample.boxPosition))
+		return true;
+	for (int i = 0; i < sample.values.size(); ++i)
+	{
+		if (!std::isfinite(sample.values[i]))
+			return true;
+	}
+	return false;
+}
+
+static inline QRectF qwtBoundingRect(const QPointF& sample)
+{
+	return QRectF(sample.x(), sample.y(), 0.0, 0.0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtPoint3D& sample)
+{
+	return QRectF(sample.x(), sample.y(), 0.0, 0.0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtPointPolar& sample)
+{
+	return QRectF(sample.azimuth(), sample.radius(), 0.0, 0.0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtIntervalSample& sample)
+{
+	return QRectF(sample.interval.minValue(), sample.value, sample.interval.maxValue() - sample.interval.minValue(), 0.0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtSetSample& sample)
+{
+	if (sample.set.empty()) {
+		return QRectF(sample.value, 0.0, 0.0, -1.0);
+	}
+	// Avoid first point being nan or inf
+	int begin   = 0;
+	double minY = sample.set[ begin ];
+	double maxY = sample.set[ begin ];
+	while (begin < sample.set.size() && qwt_is_nan_or_inf(minY)) {
+		++begin;
+		minY = sample.set[ begin ];
+		maxY = sample.set[ begin ];
+	}
+	for (int i = begin + 1; i < sample.set.size(); ++i) {
+		// modify by czy at 2025-12
+		if (qwt_is_nan_or_inf(sample.set[ i ])) {
+			continue;
+		}
+		if (sample.set[ i ] < minY)
+			minY = sample.set[ i ];
+
+		if (sample.set[ i ] > maxY)
+			maxY = sample.set[ i ];
+	}
+
+	return QRectF(sample.value, minY, 0.0, maxY - minY);
+}
+
+static inline QRectF qwtBoundingRect(const QwtOHLCSample& sample)
+{
+	const QwtInterval interval = sample.boundingInterval();
+	return QRectF(interval.minValue(), sample.time, interval.width(), 0.0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtVectorFieldSample& sample)
+{
+	/*
+		When displaying a sample as an arrow its length will be
+		proportional to the magnitude - but not the same.
+		As the factor between length and magnitude is not known
+		we can't include vx/vy into the bounding rectangle.
+	 */
+
+	return QRectF(sample.x, sample.y, 0, 0);
+}
+
+static inline QRectF qwtBoundingRect(const QwtBoxSample& sample)
+{
+	return QRectF(sample.position, sample.whiskerLower, 0.0, sample.whiskerUpper - sample.whiskerLower);
+}
+
+static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
+{
+	if (sample.values.isEmpty())
+		return QRectF(sample.boxPosition, 0.0, 0.0, -1.0); // invalid
+
+	double minVal = sample.values[0];
+	double maxVal = sample.values[0];
+	for (int i = 1; i < sample.values.size(); ++i)
+	{
+		if (sample.values[i] < minVal)
+			minVal = sample.values[i];
+		if (sample.values[i] > maxVal)
+			maxVal = sample.values[i];
+	}
+	return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+
+template< class T >
+QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to)
+{
+	QRectF boundingRect(1.0, 1.0, -2.0, -2.0);  // invalid;
+
+	// Check for empty series first
+	if (series.size() == 0) {
+		return boundingRect;
+	}
+
+	if (to == 0) {
+		to = series.size() - 1;
+	}
+
+	if (to < from) {
+		return boundingRect;
+	}
+
+	size_t i;
+	for (i = from; i <= to; i++) {
+		// chenzongyan modify at 202512: add nan checking
+		if (isSampleNanOrInf(series.sample(i))) {
+			continue;
+		}
+		const QRectF rect = qwtBoundingRect(series.sample(i));
+		if (rect.width() >= 0.0 && rect.height() >= 0.0) {
+			boundingRect = rect;
+			i++;
+			break;
+		}
+	}
+
+	for (; i <= to; i++) {
+		// chenzongyan modify at 202512: add nan checking
+		if (isSampleNanOrInf(series.sample(i))) {
+			continue;
+		}
+		const QRectF rect = qwtBoundingRect(series.sample(i));
+		if (rect.width() >= 0.0 && rect.height() >= 0.0) {
+			boundingRect.setLeft(qMin(boundingRect.left(), rect.left()));
+			boundingRect.setRight(qMax(boundingRect.right(), rect.right()));
+			boundingRect.setTop(qMin(boundingRect.top(), rect.top()));
+			boundingRect.setBottom(qMax(boundingRect.bottom(), rect.bottom()));
+		}
+	}
+
+	return boundingRect;
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QPointF >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QPointF >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtPoint3D >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details The horizontal coordinates represent the azimuth, the vertical coordinates the radius.
+ *
+ *          Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtPointPolar >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtPointPolar >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtIntervalSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtIntervalSample >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtOHLCSample >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtSetSample >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtVectorFieldSample >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtBoxSample >(series, from, to);
+}
+
+/**
+ * @brief Calculate the bounding rectangle of a series subset
+ * @details Slow implementation, that iterates over the series.
+ *
+ * @param series Series
+ * @param from Index of the first sample, <= 0 means from the beginning
+ * @param to Index of the last sample, < 0 means to the end
+ *
+ * @return Bounding rectangle
+ */
+QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >& series, size_t from, size_t to)
+{
+	return qwtBoundingRectT< QwtBoxOutlierSample >(series, from, to);
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtPointSeriesData::QwtPointSeriesData(const QVector< QPointF >& samples) : QwtArraySeriesData< QPointF >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtPointSeriesData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtPoint3DSeriesData::QwtPoint3DSeriesData(const QVector< QwtPoint3D >& samples)
+	: QwtArraySeriesData< QwtPoint3D >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtPoint3DSeriesData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtIntervalSeriesData::QwtIntervalSeriesData(const QVector< QwtIntervalSample >& samples)
+	: QwtArraySeriesData< QwtIntervalSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtIntervalSeriesData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtVectorFieldData::QwtVectorFieldData(const QVector< QwtVectorFieldSample >& samples)
+	: QwtArraySeriesData< QwtVectorFieldSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtVectorFieldData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtSetSeriesData::QwtSetSeriesData(const QVector< QwtSetSample >& samples) : QwtArraySeriesData< QwtSetSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtSetSeriesData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtTradingChartData::QwtTradingChartData(const QVector< QwtOHLCSample >& samples)
+	: QwtArraySeriesData< QwtOHLCSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtTradingChartData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples)
+	: QwtArraySeriesData< QwtBoxSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtBoxChartData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Constructor
+ * @param samples Samples
+ */
+QwtBoxOutlierChartData::QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& samples)
+	: QwtArraySeriesData< QwtBoxOutlierSample >(samples)
+{
+}
+
+/**
+ * @brief Calculate the bounding rectangle
+ * @details The bounding rectangle is calculated once by iterating over all
+ *          points and is stored for all following requests.
+ *
+ * @return Bounding rectangle
+ */
+QRectF QwtBoxOutlierChartData::boundingRect() const
+{
+	if (cachedBoundingRect.width() < 0.0)
+		cachedBoundingRect = qwtBoundingRect(*this);
+
+	return cachedBoundingRect;
+}
+
+/**
+ * @brief Get total outlier count across all boxes
+ * @return Total count of all outlier values
+ */
+int QwtBoxOutlierChartData::totalOutlierCount() const
+{
+	int count = 0;
+	for (size_t i = 0; i < size(); ++i)
+		count += sample(i).count();
+	return count;
+}
+
+/*** End of inlined file: qwt_series_data.cpp ***/
+
+// plot
+
+/*** Start of inlined file: qwt_pixel_matrix.cpp ***/
+/**
+ * @brief Constructor
+ * @param[in] rect Bounding rectangle for the matrix
+ */
+QwtPixelMatrix::QwtPixelMatrix( const QRect& rect )
+	: QBitArray( qMax( rect.width() * rect.height(), 0 ) )
+	, m_rect( rect )
+{
+}
+
+/**
+ * @brief Destructor
+ */
+QwtPixelMatrix::~QwtPixelMatrix()
+{
+}
+
+/**
+ * @brief Set the bounding rectangle of the matrix
+ * @param[in] rect Bounding rectangle
+ * @note All bits are cleared
+ */
+void QwtPixelMatrix::setRect( const QRect& rect )
+{
+	if ( rect != m_rect )
+	{
+		m_rect = rect;
+		const int sz = qMax( rect.width() * rect.height(), 0 );
+		resize( sz );
+	}
+
+	fill( false );
+}
+
+/**
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle
+ */
+QRect QwtPixelMatrix::rect() const
+{
+	return m_rect;
+}
+
+/*** End of inlined file: qwt_pixel_matrix.cpp ***/
+
+
+
+/*** Start of inlined file: qwt_dyngrid_layout.cpp ***/
+#include <qvector.h>
+#include <qlist.h>
+
+class QwtDynGridLayout::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtDynGridLayout)
+public:
+	PrivateData( QwtDynGridLayout* p )
+		: q_ptr( p )
+		, isDirty(true)
+	{
+	}
+
+	void updateLayoutCache() const;
+
+	mutable QList< QLayoutItem* > itemList;
+
+	mutable uint maxColumns;
+	uint numRows;
+	uint numColumns;
+
+	Qt::Orientations expanding;
+
+	mutable bool isDirty;
+	mutable QVector< QSize > itemSizeHints;
+};
+
+void QwtDynGridLayout::PrivateData::updateLayoutCache() const
+{
+	itemSizeHints.resize(itemList.count());
+
+	int index = 0;
+
+	for (auto it = itemList.constBegin(); it != itemList.constEnd(); ++it, index++) {
+		itemSizeHints[ index ] = (*it)->sizeHint();
+	}
+
+	isDirty = false;
+}
+
+/**
+ * @brief Constructor with parent widget, margin and spacing
+ *
+ * @param[in] parent Parent widget
+ * @param[in] margin Margin around the layout
+ * @param[in] spacing Spacing between items
+ *
+ */
+QwtDynGridLayout::QwtDynGridLayout(QWidget* parent, int margin, int spacing) : QLayout(parent)
+{
+	init();
+
+	setSpacing(spacing);
+	setContentsMargins(margin, margin, margin, margin);
+}
+
+/**
+ * @brief Constructor with spacing only
+ *
+ * @param[in] spacing Spacing between items
+ *
+ */
+QwtDynGridLayout::QwtDynGridLayout(int spacing)
+{
+	init();
+	setSpacing(spacing);
+}
+
+/*!
+   Initialize the layout with default values.
+ */
+void QwtDynGridLayout::init()
+{
+	QWT_PIMPL_CONSTRUCT_INIT();
+	QWT_D(d);
+	d->maxColumns = d->numRows = d->numColumns = 0;
+}
+
+/**
+ * @brief Destructor
+ *
+ * @details Deletes all layout items and private data.
+ *
+ */
+QwtDynGridLayout::~QwtDynGridLayout()
+{
+	QWT_D(d);
+	qDeleteAll(d->itemList);
+}
+
+/**
+ * @brief Invalidate all internal caches
+ *
+ * @details Marks the layout as dirty so it will recalculate on next layout operation.
+ *
+ */
+void QwtDynGridLayout::invalidate()
+{
+	QWT_D(d);
+	d->isDirty = true;
+	QLayout::invalidate();
+}
+
+/**
+ * @brief Set the upper limit for the number of columns
+ *
+ * @param[in] maxColumns Upper limit, 0 means unlimited
+ *
+ */
+void QwtDynGridLayout::setMaxColumns(uint maxColumns)
+{
+	QWT_D(d);
+	d->maxColumns = maxColumns;
+}
+
+/**
+ * @brief Get the upper limit for the number of columns
+ *
+ * @return Upper limit for the number of columns, 0 means unlimited
+ *
+ */
+uint QwtDynGridLayout::maxColumns() const
+{
+	QWT_DC(d);
+	return d->maxColumns;
+}
+
+/**
+ * @brief Add an item to the next free position
+ *
+ * @param[in] item Layout item to add
+ *
+ */
+void QwtDynGridLayout::addItem(QLayoutItem* item)
+{
+	QWT_D(d);
+	d->itemList.append(item);
+	invalidate();
+}
+
+/**
+ * @brief Check if the layout is empty
+ *
+ * @return true if the layout contains no items
+ *
+ */
+bool QwtDynGridLayout::isEmpty() const
+{
+	QWT_DC(d);
+	return d->itemList.isEmpty();
+}
+
+/**
+ * @brief Get the number of layout items
+ *
+ * @return Number of items in the layout
+ *
+ */
+uint QwtDynGridLayout::itemCount() const
+{
+	QWT_DC(d);
+	return d->itemList.count();
+}
+
+/**
+ * @brief Get the item at a specific index
+ *
+ * @param[in] index Index of the item
+ * @return Item at the specified index, or nullptr if index is out of range
+ *
+ */
+QLayoutItem* QwtDynGridLayout::itemAt(int index) const
+{
+	QWT_DC(d);
+	if (index < 0 || index >= d->itemList.count())
+		return nullptr;
+
+	return d->itemList.at(index);
+}
+
+/**
+ * @brief Remove and return the item at a specific index
+ *
+ * @param[in] index Index of the item to remove
+ * @return Removed item, or nullptr if index is out of range
+ *
+ */
+QLayoutItem* QwtDynGridLayout::takeAt(int index)
+{
+	QWT_D(d);
+	if (index < 0 || index >= d->itemList.count())
+		return nullptr;
+
+	d->isDirty = true;
+	return d->itemList.takeAt(index);
+}
+
+/**
+ * @brief Get the number of items in the layout
+ *
+ * @return Number of layout items
+ *
+ */
+int QwtDynGridLayout::count() const
+{
+	QWT_DC(d);
+	return d->itemList.count();
+}
+
+/**
+ * @brief Set the expanding directions for the layout
+ *
+ * @details A value of Qt::Vertical or Qt::Horizontal means that it wants to grow
+ * in only one dimension, while Qt::Vertical | Qt::Horizontal means that it wants
+ * to grow in both dimensions.
+ *
+ * @param[in] expanding Or'd orientations
+ *
+ */
+void QwtDynGridLayout::setExpandingDirections(Qt::Orientations expanding)
+{
+	QWT_D(d);
+	d->expanding = expanding;
+}
+
+/**
+ * @brief Get the expanding directions for the layout
+ *
+ * @return Orientations where the layout expands
+ *
+ */
+Qt::Orientations QwtDynGridLayout::expandingDirections() const
+{
+	QWT_DC(d);
+	return d->expanding;
+}
+
+/**
+ * @brief Set the geometry for the layout
+ *
+ * @details Reorganizes columns and rows and resizes managed items within the rectangle.
+ *
+ * @param[in] rect Layout geometry
+ *
+ */
+void QwtDynGridLayout::setGeometry(const QRect& rect)
+{
+	QWT_D(d);
+	QLayout::setGeometry(rect);
+
+	if (isEmpty())
+		return;
+
+	d->numColumns = columnsForWidth(rect.width());
+	d->numRows    = itemCount() / d->numColumns;
+	if (itemCount() % d->numColumns)
+		d->numRows++;
+
+	const QList< QRect > itemGeometries = layoutItems(rect, d->numColumns);
+
+	int index = 0;
+	for (auto* item : qwt_as_const(d->itemList)) {
+		item->setGeometry(itemGeometries[ index ]);
+		index++;
+	}
+}
+
+/**
+ * @brief Calculate the number of columns for a given width
+ *
+ * @details The calculation tries to use as many columns as possible, limited by maxColumns().
+ *
+ * @param[in] width Available width for all columns
+ * @return Number of columns for the given width
+ *
+ */
+uint QwtDynGridLayout::columnsForWidth(int width) const
+{
+	QWT_DC(d);
+	if (isEmpty())
+		return 0;
+
+	uint maxColumns = itemCount();
+	if (d->maxColumns > 0)
+		maxColumns = qMin(d->maxColumns, maxColumns);
+
+	if (maxRowWidth(maxColumns) <= width)
+		return maxColumns;
+
+	for (uint numColumns = 2; numColumns <= maxColumns; numColumns++) {
+		const int rowWidth = maxRowWidth(numColumns);
+		if (rowWidth > width)
+			return numColumns - 1;
+	}
+
+	return 1;  // At least 1 column
+}
+
+/*!
+   Calculate the width of a layout for a given number of
+   columns.
+
+   @param numColumns Given number of columns
+   @param itemWidth Array of the width hints for all items
+  */
+int QwtDynGridLayout::maxRowWidth(int numColumns) const
+{
+	QWT_DC(d);
+	int col;
+
+	QVector< int > colWidth(numColumns);
+	for (col = 0; col < numColumns; col++)
+		colWidth[ col ] = 0;
+
+	if (d->isDirty)
+		d->updateLayoutCache();
+
+	for (int index = 0; index < d->itemSizeHints.count(); index++) {
+		col             = index % numColumns;
+		colWidth[ col ] = qMax(colWidth[ col ], d->itemSizeHints[ index ].width());
+	}
+
+	const QMargins m = contentsMargins();
+
+	int rowWidth = m.left() + m.right() + (numColumns - 1) * spacing();
+	for (col = 0; col < numColumns; col++)
+		rowWidth += colWidth[ col ];
+
+	return rowWidth;
+}
+
+/**
+ * @brief Get the maximum width of all layout items
+ *
+ * @return Maximum width of all items
+ *
+ */
+int QwtDynGridLayout::maxItemWidth() const
+{
+	QWT_DC(d);
+	if (isEmpty())
+		return 0;
+
+	if (d->isDirty)
+		d->updateLayoutCache();
+
+	int w = 0;
+	for (int i = 0; i < d->itemSizeHints.count(); i++) {
+		const int itemW = d->itemSizeHints[ i ].width();
+		if (itemW > w)
+			w = itemW;
+	}
+
+	return w;
+}
+
+/**
+ * @brief Calculate the geometries of the layout items
+ *
+ * @param[in] rect Rectangle where to place the items
+ * @param[in] numColumns Number of columns
+ * @return List of item geometries
+ *
+ */
+QList< QRect > QwtDynGridLayout::layoutItems(const QRect& rect, uint numColumns) const
+{
+	QWT_DC(d);
+	QList< QRect > itemGeometries;
+	if (numColumns == 0 || isEmpty())
+		return itemGeometries;
+
+	uint numRows = itemCount() / numColumns;
+	if (numColumns % itemCount())
+		numRows++;
+
+	if (numRows == 0)
+		return itemGeometries;
+
+	QVector< int > rowHeight(numRows);
+	QVector< int > colWidth(numColumns);
+
+	layoutGrid(numColumns, rowHeight, colWidth);
+
+	bool expandH, expandV;
+	expandH = expandingDirections() & Qt::Horizontal;
+	expandV = expandingDirections() & Qt::Vertical;
+
+	if (expandH || expandV)
+		stretchGrid(rect, numColumns, rowHeight, colWidth);
+
+	const int maxColumns    = d->maxColumns;
+	d->maxColumns      = numColumns;
+	const QRect alignedRect = alignmentRect(rect);
+	d->maxColumns      = maxColumns;
+
+	const int xOffset = expandH ? 0 : alignedRect.x();
+	const int yOffset = expandV ? 0 : alignedRect.y();
+
+	QVector< int > colX(numColumns);
+	QVector< int > rowY(numRows);
+
+	const int xySpace = spacing();
+
+	const QMargins m = contentsMargins();
+
+	rowY[ 0 ] = yOffset + m.top();
+	for (uint r = 1; r < numRows; r++)
+		rowY[ r ] = rowY[ r - 1 ] + rowHeight[ r - 1 ] + xySpace;
+
+	colX[ 0 ] = xOffset + m.left();
+	for (uint c = 1; c < numColumns; c++)
+		colX[ c ] = colX[ c - 1 ] + colWidth[ c - 1 ] + xySpace;
+
+	const int itemCount = d->itemList.size();
+	itemGeometries.reserve(itemCount);
+
+	for (int i = 0; i < itemCount; i++) {
+		const int row = i / numColumns;
+		const int col = i % numColumns;
+
+		const QRect itemGeometry(colX[ col ], rowY[ row ], colWidth[ col ], rowHeight[ row ]);
+		itemGeometries.append(itemGeometry);
+	}
+
+	return itemGeometries;
+}
+
+/*!
+   Calculate the dimensions for the columns and rows for a grid
+   of numColumns columns.
+
+   @param numColumns Number of columns.
+   @param rowHeight Array where to fill in the calculated row heights.
+   @param colWidth Array where to fill in the calculated column widths.
+  */
+
+void QwtDynGridLayout::layoutGrid(uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const
+{
+	QWT_DC(d);
+	if (numColumns <= 0)
+		return;
+
+	if (d->isDirty)
+		d->updateLayoutCache();
+
+	for (int index = 0; index < d->itemSizeHints.count(); index++) {
+		const int row = index / numColumns;
+		const int col = index % numColumns;
+
+		const QSize& size = d->itemSizeHints[ index ];
+
+		rowHeight[ row ] = (col == 0) ? size.height() : qMax(rowHeight[ row ], size.height());
+		colWidth[ col ]  = (row == 0) ? size.width() : qMax(colWidth[ col ], size.width());
+	}
+}
+
+/*!
+   Stretch columns in case of expanding() & QSizePolicy::Horizontal and
+   rows in case of expanding() & QSizePolicy::Vertical to fill the entire
+   rect. Rows and columns are stretched with the same factor.
+
+   @param rect Bounding rectangle
+   @param numColumns Number of columns
+   @param rowHeight Array to be filled with the calculated row heights
+   @param colWidth Array to be filled with the calculated column widths
+
+   @sa setExpanding(), expanding()
+  */
+void QwtDynGridLayout::stretchGrid(const QRect& rect, uint numColumns, QVector< int >& rowHeight, QVector< int >& colWidth) const
+{
+	if (numColumns == 0 || isEmpty())
+		return;
+
+	bool expandH, expandV;
+	expandH = expandingDirections() & Qt::Horizontal;
+	expandV = expandingDirections() & Qt::Vertical;
+
+	const QMargins m = contentsMargins();
+
+	if (expandH) {
+		int xDelta = rect.width() - m.left() - m.right() - (numColumns - 1) * spacing();
+		for (uint col = 0; col < numColumns; col++)
+			xDelta -= colWidth[ col ];
+
+		if (xDelta > 0) {
+			for (uint col = 0; col < numColumns; col++) {
+				const int space = xDelta / (numColumns - col);
+				colWidth[ col ] += space;
+				xDelta -= space;
+			}
+		}
+	}
+
+	if (expandV) {
+		uint numRows = itemCount() / numColumns;
+		if (itemCount() % numColumns)
+			numRows++;
+
+		int yDelta = rect.height() - m.top() - m.bottom() - (numRows - 1) * spacing();
+		for (uint row = 0; row < numRows; row++)
+			yDelta -= rowHeight[ row ];
+
+		if (yDelta > 0) {
+			for (uint row = 0; row < numRows; row++) {
+				const int space = yDelta / (numRows - row);
+				rowHeight[ row ] += space;
+				yDelta -= space;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Check if the layout has height for width
+ *
+ * @return true, indicating QwtDynGridLayout implements heightForWidth()
+ *
+ */
+bool QwtDynGridLayout::hasHeightForWidth() const
+{
+	return true;
+}
+
+/**
+ * @brief Get the preferred height for a given width
+ *
+ * @param[in] width Width to calculate height for
+ * @return Preferred height for the given width
+ *
+ */
+int QwtDynGridLayout::heightForWidth(int width) const
+{
+	if (isEmpty())
+		return 0;
+
+	const uint numColumns = columnsForWidth(width);
+	uint numRows          = itemCount() / numColumns;
+	if (itemCount() % numColumns)
+		numRows++;
+
+	QVector< int > rowHeight(numRows);
+	QVector< int > colWidth(numColumns);
+
+	layoutGrid(numColumns, rowHeight, colWidth);
+
+	const QMargins m = contentsMargins();
+
+	int h = m.top() + m.bottom() + (numRows - 1) * spacing();
+	for (uint row = 0; row < numRows; row++)
+		h += rowHeight[ row ];
+
+	return h;
+}
+
+/**
+ * @brief Get the size hint for the layout
+ *
+ * @details If maxColumns() > 0 it is the size for a grid with maxColumns() columns,
+ * otherwise it is the size for a grid with only one row.
+ *
+ * @return Size hint
+ *
+ */
+QSize QwtDynGridLayout::sizeHint() const
+{
+	QWT_DC(d);
+	if (isEmpty())
+		return QSize();
+
+	uint numColumns = itemCount();
+	if (d->maxColumns > 0)
+		numColumns = qMin(d->maxColumns, numColumns);
+
+	uint numRows = itemCount() / numColumns;
+	if (itemCount() % numColumns)
+		numRows++;
+
+	QVector< int > rowHeight(numRows);
+	QVector< int > colWidth(numColumns);
+
+	layoutGrid(numColumns, rowHeight, colWidth);
+
+	const QMargins m = contentsMargins();
+
+	int h = m.top() + m.bottom() + (numRows - 1) * spacing();
+	for (uint row = 0; row < numRows; row++)
+		h += rowHeight[ row ];
+
+	int w = m.left() + m.right() + (numColumns - 1) * spacing();
+	for (uint col = 0; col < numColumns; col++)
+		w += colWidth[ col ];
+
+	return QSize(w, h);
+}
+
+/**
+ * @brief Get the number of rows in the current layout
+ *
+ * @warning The number of rows might change whenever the geometry changes.
+ *
+ * @return Number of rows
+ *
+ */
+uint QwtDynGridLayout::numRows() const
+{
+	QWT_DC(d);
+	return d->numRows;
+}
+
+/**
+ * @brief Get the number of columns in the current layout
+ *
+ * @warning The number of columns might change whenever the geometry changes.
+ *
+ * @return Number of columns
+ *
+ */
+uint QwtDynGridLayout::numColumns() const
+{
+	QWT_DC(d);
+	return d->numColumns;
+}
+
+/*** End of inlined file: qwt_dyngrid_layout.cpp ***/
+
+
+/*** Start of inlined file: qwt_weeding_curve_fitter.cpp ***/
+#include <qpainterpath.h>
+#include <qpolygon.h>
+#include <qstack.h>
+#include <qvector.h>
+
+class QwtWeedingCurveFitter::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtWeedingCurveFitter)
+  public:
+	PrivateData( QwtWeedingCurveFitter* p )
+		: q_ptr( p )
+		, tolerance( 1.0 )
+		, chunkSize( 0 )
+	{
+	}
+
+	double tolerance;
+	uint chunkSize;
+};
+
+class QwtWeedingCurveFitter::Line
+{
+  public:
+	Line( int i1 = 0, int i2 = 0 )
+		: from( i1 )
+		, to( i2 )
+	{
+	}
+
+	int from;
+	int to;
+};
+
+/**
+ * @brief Constructor
+ * @param tolerance Tolerance
+ * @sa setTolerance(), tolerance()
+ */
+QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
+	: QwtCurveFitter( QwtCurveFitter::Polygon )
+	, QWT_PIMPL_CONSTRUCT
+{
+	setTolerance( tolerance );
+}
+
+/**
+ * @brief Destructor
+ */
+QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
+{
+}
+
+/*!
+   Assign the tolerance
+
+   The tolerance is the maximum distance, that is acceptable
+   between the original curve and the smoothed curve.
+
+   Increasing the tolerance will reduce the number of the
+   resulting points.
+
+   @param tolerance Tolerance
+
+   @sa tolerance()
+ */
+void QwtWeedingCurveFitter::setTolerance( double tolerance )
+{
+	QWT_D(d);
+	d->tolerance = qwtMaxF( tolerance, 0.0 );
+}
+
+/*!
+   @return Tolerance
+   @sa setTolerance()
+ */
+double QwtWeedingCurveFitter::tolerance() const
+{
+	QWT_DC(d);
+	return d->tolerance;
+}
+
+/*!
+   Limit the number of points passed to a run of the algorithm
+
+   The runtime of the Douglas Peucker algorithm increases non linear
+   with the number of points. For a chunk size > 0 the polygon
+   is split into pieces passed to the algorithm one by one.
+
+   @param numPoints Maximum for the number of points passed to the algorithm
+
+   @sa chunkSize()
+ */
+void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
+{
+	QWT_D(d);
+	if ( numPoints > 0 )
+		numPoints = qMax( numPoints, 3U );
+
+	d->chunkSize = numPoints;
+}
+
+/*!
+   @return Maximum for the number of points passed to a run
+		  of the algorithm - or 0, when unlimited
+   @sa setChunkSize()
+ */
+uint QwtWeedingCurveFitter::chunkSize() const
+{
+	QWT_DC(d);
+	return d->chunkSize;
+}
+
+/*!
+   @param points Series of data points
+   @return Curve points
+   @sa fitCurvePath()
+ */
+QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
+{
+	QWT_DC(d);
+	if ( points.isEmpty() )
+		return points;
+
+	QPolygonF fittedPoints;
+	if ( d->chunkSize == 0 )
+	{
+		fittedPoints = simplify( points );
+	}
+	else
+	{
+		for ( int i = 0; i < points.size(); i += d->chunkSize )
+		{
+			const QPolygonF p = points.mid( i, d->chunkSize );
+			fittedPoints += simplify( p );
+		}
+	}
+
+	return fittedPoints;
+}
+
+/*!
+   @param points Series of data points
+   @return Curve path
+   @sa fitCurve()
+ */
+QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
+{
+	QPainterPath path;
+	path.addPolygon( fitCurve( points ) );
+	return path;
+}
+
+QPolygonF QwtWeedingCurveFitter::simplify( const QPolygonF& points ) const
+{
+	QWT_DC(d);
+	const double toleranceSqr = d->tolerance * d->tolerance;
+
+	QStack< Line > stack;
+	stack.reserve( 500 );
+
+	const QPointF* p = points.data();
+	const int nPoints = points.size();
+
+	QVector< bool > usePoint( nPoints, false );
+
+	stack.push( Line( 0, nPoints - 1 ) );
+
+	while ( !stack.isEmpty() )
+	{
+		const Line r = stack.pop();
+
+		// initialize line segment
+		const double vecX = p[r.to].x() - p[r.from].x();
+		const double vecY = p[r.to].y() - p[r.from].y();
+
+		const double vecLength = std::sqrt( vecX * vecX + vecY * vecY );
+
+		const double unitVecX = ( vecLength != 0.0 ) ? vecX / vecLength : 0.0;
+		const double unitVecY = ( vecLength != 0.0 ) ? vecY / vecLength : 0.0;
+
+		double maxDistSqr = 0.0;
+		int nVertexIndexMaxDistance = r.from + 1;
+		for ( int i = r.from + 1; i < r.to; i++ )
+		{
+			//compare to anchor
+			const double fromVecX = p[i].x() - p[r.from].x();
+			const double fromVecY = p[i].y() - p[r.from].y();
+
+			double distToSegmentSqr;
+			if ( fromVecX * unitVecX + fromVecY * unitVecY < 0.0 )
+			{
+				distToSegmentSqr = fromVecX * fromVecX + fromVecY * fromVecY;
+			}
+			else
+			{
+				const double toVecX = p[i].x() - p[r.to].x();
+				const double toVecY = p[i].y() - p[r.to].y();
+				const double toVecLength = toVecX * toVecX + toVecY * toVecY;
+
+				const double s = toVecX * ( -unitVecX ) + toVecY * ( -unitVecY );
+				if ( s < 0.0 )
+				{
+					distToSegmentSqr = toVecLength;
+				}
+				else
+				{
+					distToSegmentSqr = std::fabs( toVecLength - s * s );
+				}
+			}
+
+			if ( maxDistSqr < distToSegmentSqr )
+			{
+				maxDistSqr = distToSegmentSqr;
+				nVertexIndexMaxDistance = i;
+			}
+		}
+		if ( maxDistSqr <= toleranceSqr )
+		{
+			usePoint[r.from] = true;
+			usePoint[r.to] = true;
+		}
+		else
+		{
+			stack.push( Line( r.from, nVertexIndexMaxDistance ) );
+			stack.push( Line( nVertexIndexMaxDistance, r.to ) );
+		}
+	}
+
+	QPolygonF stripped;
+	for ( int i = 0; i < nPoints; i++ )
+	{
+		if ( usePoint[i] )
+			stripped += p[i];
+	}
+
+	return stripped;
+}
+
+/*** End of inlined file: qwt_weeding_curve_fitter.cpp ***/
 
 
 /*** Start of inlined file: qwt_null_paintdevice.cpp ***/
@@ -8380,6 +11195,24 @@ bool QwtEventPattern::keyMatch(
 
 
 /*** Start of inlined file: qwt_painter.cpp ***/
+
+/*** Start of inlined file: qwt_clipper.h ***/
+#ifndef QWT_PLOT_CLIPPER_FWD_H
+#define QWT_PLOT_CLIPPER_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_clipper.h ***/
+
+
+/*** Start of inlined file: qwt_color_map.h ***/
+#ifndef QWT_PLOT_COLORMAP_FWD_H
+#define QWT_PLOT_COLORMAP_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_color_map.h ***/
+
 #include <qwidget.h>
 #include <qframe.h>
 #include <qrect.h>
@@ -9471,6 +12304,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
 	QPainter pmPainter(&pixmap);
 	pmPainter.translate(-devRect.x(), -devRect.y());
 
+	const double ivMin = interval.minValue();
+	const double ivMax = interval.maxValue();
+
 	if (orientation == Qt::Horizontal) {
 		QwtScaleMap sMap = scaleMap;
 		sMap.setPaintInterval(rect.left(), rect.right());
@@ -9479,9 +12315,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
 			const double value = sMap.invTransform(x);
 
 			if (colorMap.format() == QwtColorMap::RGB)
-				c.setRgba(colorMap.rgb(interval, value));
+				c.setRgba(colorMap.rgb(ivMin, ivMax, value));
 			else
-				c = colorTable[ colorMap.colorIndex(256, interval, value) ];
+				c = colorTable[ colorMap.colorIndex(256, ivMin, ivMax, value) ];
 
 			pmPainter.setPen(c);
 			pmPainter.drawLine(x, devRect.top(), x, devRect.bottom());
@@ -9495,9 +12331,9 @@ void QwtPainter::drawColorBar(QPainter* painter,
 			const double value = sMap.invTransform(y);
 
 			if (colorMap.format() == QwtColorMap::RGB)
-				c.setRgba(colorMap.rgb(interval, value));
+				c.setRgba(colorMap.rgb(ivMin, ivMax, value));
 			else
-				c = colorTable[ colorMap.colorIndex(256, interval, value) ];
+				c = colorTable[ colorMap.colorIndex(256, ivMin, ivMax, value) ];
 
 			pmPainter.setPen(c);
 			pmPainter.drawLine(devRect.left(), y, devRect.right(), y);
@@ -14934,379 +17770,6 @@ void QwtSamplingThread::run()
 /*** End of inlined file: qwt_sampling_thread.cpp ***/
 
 
-/*** Start of inlined file: qwt_scale_div.cpp ***/
-/**
- * @brief Construct a division without ticks
- *
- * @param lowerBound First boundary
- * @param upperBound Second boundary
- *
- * @note lowerBound might be greater than upperBound for inverted scales
- *
- */
-QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound) : m_lowerBound(lowerBound), m_upperBound(upperBound)
-{
-}
-
-/**
- * @brief Construct a scale division
- *
- * @param interval Interval
- * @param ticks List of major, medium and minor ticks
- *
- */
-QwtScaleDiv::QwtScaleDiv(const QwtInterval& interval, QList< double > ticks[ NTickTypes ])
-	: m_lowerBound(interval.minValue()), m_upperBound(interval.maxValue())
-{
-	for (int i = 0; i < NTickTypes; i++)
-		m_ticks[ i ] = ticks[ i ];
-}
-
-/**
- * @brief Construct a scale division
- *
- * @param lowerBound First boundary
- * @param upperBound Second boundary
- * @param ticks List of major, medium and minor ticks
- *
- * @note lowerBound might be greater than upperBound for inverted scales
- *
- */
-QwtScaleDiv::QwtScaleDiv(double lowerBound, double upperBound, QList< double > ticks[ NTickTypes ])
-	: m_lowerBound(lowerBound), m_upperBound(upperBound)
-{
-	for (int i = 0; i < NTickTypes; i++)
-		m_ticks[ i ] = ticks[ i ];
-}
-
-/**
- * @brief Construct a scale division
- *
- * @param lowerBound First boundary
- * @param upperBound Second boundary
- * @param minorTicks List of minor ticks
- * @param mediumTicks List of medium ticks
- * @param majorTicks List of major ticks
- *
- * @note lowerBound might be greater than upperBound for inverted scales
- *
- */
-QwtScaleDiv::QwtScaleDiv(double lowerBound,
-						 double upperBound,
-						 const QList< double >& minorTicks,
-						 const QList< double >& mediumTicks,
-						 const QList< double >& majorTicks)
-	: m_lowerBound(lowerBound), m_upperBound(upperBound)
-{
-	m_ticks[ MinorTick ]  = minorTicks;
-	m_ticks[ MediumTick ] = mediumTicks;
-	m_ticks[ MajorTick ]  = majorTicks;
-}
-
-/**
- * @brief Copy constructor
- */
-QwtScaleDiv::QwtScaleDiv(const QwtScaleDiv&) = default;
-
-/**
- * @brief Copy assignment
- */
-QwtScaleDiv& QwtScaleDiv::operator=(const QwtScaleDiv&) = default;
-
-/**
- * @brief Change the interval
- *
- * @param lowerBound First boundary
- * @param upperBound Second boundary
- *
- * @note lowerBound might be greater than upperBound for inverted scales
- *
- */
-void QwtScaleDiv::setInterval(double lowerBound, double upperBound)
-{
-	m_lowerBound = lowerBound;
-	m_upperBound = upperBound;
-}
-
-/**
- * @brief Change the interval
- *
- * @param interval Interval
- *
- */
-void QwtScaleDiv::setInterval(const QwtInterval& interval)
-{
-	m_lowerBound = interval.minValue();
-	m_upperBound = interval.maxValue();
-}
-
-/**
- * @brief Get the interval from lowerBound to upperBound
- * @return Interval from lowerBound to upperBound
- *
- */
-QwtInterval QwtScaleDiv::interval() const
-{
-	return QwtInterval(m_lowerBound, m_upperBound);
-}
-
-/**
- * @brief Set the first boundary
- *
- * @param lowerBound First boundary
- * @sa lowerBound(), setUpperBound()
- *
- */
-void QwtScaleDiv::setLowerBound(double lowerBound) noexcept
-{
-	m_lowerBound = lowerBound;
-}
-
-/**
- * @brief Get the first boundary
- * @return First boundary
- * @sa upperBound()
- *
- */
-double QwtScaleDiv::lowerBound() const noexcept
-{
-	return m_lowerBound;
-}
-
-/**
- * @brief Set the second boundary
- *
- * @param upperBound Second boundary
- * @sa upperBound(), setLowerBound()
- *
- */
-void QwtScaleDiv::setUpperBound(double upperBound) noexcept
-{
-	m_upperBound = upperBound;
-}
-
-/**
- * @brief Get the upper bound
- * @return Upper bound
- * @sa lowerBound()
- *
- */
-double QwtScaleDiv::upperBound() const noexcept
-{
-	return m_upperBound;
-}
-
-/**
- * @brief Get the range (upperBound - lowerBound)
- * @return upperBound() - lowerBound()
- *
- */
-double QwtScaleDiv::range() const noexcept
-{
-	return m_upperBound - m_lowerBound;
-}
-
-/**
- * @brief Equality operator
- * @return true if this instance is equal to other
- *
- */
-bool QwtScaleDiv::operator==(const QwtScaleDiv& other) const
-{
-	if (m_lowerBound != other.m_lowerBound || m_upperBound != other.m_upperBound) {
-		return false;
-	}
-
-	for (int i = 0; i < NTickTypes; i++) {
-		if (m_ticks[ i ] != other.m_ticks[ i ])
-			return false;
-	}
-
-	return true;
-}
-
-/**
- * @brief Inequality operator
- * @return true if this instance is not equal to other
- *
- */
-bool QwtScaleDiv::operator!=(const QwtScaleDiv& other) const
-{
-	return (!(*this == other));
-}
-
-/**
- * @brief Fuzzy comparison
- * @param other Other scale division
- * @return true if this instance is approximately equal to other
- *
- */
-bool QwtScaleDiv::fuzzyCompare(const QwtScaleDiv& other) const
-{
-	if (qFuzzyCompare(m_lowerBound, other.m_lowerBound) && qFuzzyCompare(m_upperBound, other.m_upperBound)) {
-		for (int i = 0; i < NTickTypes; i++) {
-			if (!fuzzyRangeEqual(
-					m_ticks[ i ].begin(), m_ticks[ i ].end(), other.m_ticks[ i ].begin(), other.m_ticks[ i ].end())) {
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
-}
-
-/**
- * @brief Check if the scale division is empty
- * @return true if lowerBound() == upperBound()
- *
- */
-bool QwtScaleDiv::isEmpty() const
-{
-	return (m_lowerBound == m_upperBound);
-}
-
-/**
- * @brief Check if the scale division is increasing
- * @return true if lowerBound() <= upperBound()
- *
- */
-bool QwtScaleDiv::isIncreasing() const
-{
-	return m_lowerBound <= m_upperBound;
-}
-
-/**
- * @brief Check if a value is between lowerBound() and upperBound()
- *
- * @param value Value
- * @return true if value is within bounds
- *
- */
-bool QwtScaleDiv::contains(double value) const
-{
-	const double min = qMin(m_lowerBound, m_upperBound);
-	const double max = qMax(m_lowerBound, m_upperBound);
-
-	return value >= min && value <= max;
-}
-
-/**
- * @brief Invert the scale division
- * @sa inverted()
- *
- */
-void QwtScaleDiv::invert()
-{
-	qSwap(m_lowerBound, m_upperBound);
-
-	for (int i = 0; i < NTickTypes; i++) {
-		QList< double >& ticks = m_ticks[ i ];
-
-		const int size  = ticks.count();
-		const int size2 = size / 2;
-
-		for (int j = 0; j < size2; j++)
-			qSwap(ticks[ j ], ticks[ size - 1 - j ]);
-	}
-}
-
-/**
- * @brief Get a scale division with inverted boundaries and ticks
- * @return A scale division with inverted boundaries and ticks
- * @sa invert()
- *
- */
-QwtScaleDiv QwtScaleDiv::inverted() const
-{
-	QwtScaleDiv other = *this;
-	other.invert();
-
-	return other;
-}
-
-/**
- * @brief Return a scale division with an interval [lowerBound, upperBound]
- *        where all ticks outside this interval are removed
- *
- * @param lowerBound Lower bound
- * @param upperBound Upper bound
- *
- * @return Scale division with all ticks inside of the given interval
- *
- * @note lowerBound might be greater than upperBound for inverted scales
- *
- */
-QwtScaleDiv QwtScaleDiv::bounded(double lowerBound, double upperBound) const
-{
-	const double min = qMin(lowerBound, upperBound);
-	const double max = qMax(lowerBound, upperBound);
-
-	QwtScaleDiv sd;
-	sd.setInterval(lowerBound, upperBound);
-
-	for (int tickType = 0; tickType < QwtScaleDiv::NTickTypes; tickType++) {
-		const QList< double >& ticks = m_ticks[ tickType ];
-
-		QList< double > boundedTicks;
-		for (int i = 0; i < ticks.size(); i++) {
-			const double tick = ticks[ i ];
-			if (tick >= min && tick <= max)
-				boundedTicks += tick;
-		}
-
-		sd.setTicks(tickType, boundedTicks);
-	}
-
-	return sd;
-}
-
-/**
- * @brief Assign ticks
- *
- * @param tickType MinorTick, MediumTick or MajorTick
- * @param ticks Values of the tick positions
- *
- */
-void QwtScaleDiv::setTicks(int tickType, const QList< double >& ticks)
-{
-	if (tickType >= 0 && tickType < NTickTypes)
-		m_ticks[ tickType ] = ticks;
-}
-
-/**
- * @brief Return a list of ticks
- *
- * @param tickType MinorTick, MediumTick or MajorTick
- * @return Tick list
- *
- */
-QList< double > QwtScaleDiv::ticks(int tickType) const
-{
-	if (tickType >= 0 && tickType < NTickTypes)
-		return m_ticks[ tickType ];
-
-	return QList< double >();
-}
-
-#ifndef QT_NO_DEBUG_STREAM
-
-#include <qdebug.h>
-
-QDebug operator<<(QDebug debug, const QwtScaleDiv& scaleDiv)
-{
-	debug << scaleDiv.lowerBound() << "<->" << scaleDiv.upperBound();
-	debug << "Major: " << scaleDiv.ticks(QwtScaleDiv::MajorTick);
-	debug << "Medium: " << scaleDiv.ticks(QwtScaleDiv::MediumTick);
-	debug << "Minor: " << scaleDiv.ticks(QwtScaleDiv::MinorTick);
-
-	return debug;
-}
-
-#endif
-
-/*** End of inlined file: qwt_scale_div.cpp ***/
-
-
 /*** Start of inlined file: qwt_abstract_scale_draw.cpp ***/
 #include <qpainter.h>
 #include <qpalette.h>
@@ -16747,991 +19210,6 @@ void QwtScaleDraw::updateMap()
 }
 
 /*** End of inlined file: qwt_scale_draw.cpp ***/
-
-
-/*** Start of inlined file: qwt_scale_engine.cpp ***/
-#include <qdebug.h>
-
-#include <limits>
-
-static inline double qwtLog(double base, double value)
-{
-	return std::log(value) / std::log(base);
-}
-
-static inline QwtInterval qwtLogInterval(double base, const QwtInterval& interval)
-{
-	return QwtInterval(qwtLog(base, interval.minValue()), qwtLog(base, interval.maxValue()));
-}
-
-static inline QwtInterval qwtPowInterval(double base, const QwtInterval& interval)
-{
-	return QwtInterval(std::pow(base, interval.minValue()), std::pow(base, interval.maxValue()));
-}
-
-#if 1
-
-// this version often doesn't find the best ticks: f.e for 15: 5, 10
-static double qwtStepSize(double intervalSize, int maxSteps, uint base)
-{
-	const double minStep = QwtScaleArithmetic::divideInterval(intervalSize, maxSteps, base);
-
-	if (minStep != 0.0) {
-		// # ticks per interval
-		const int numTicks = qwtCeil(qAbs(intervalSize / minStep)) - 1;
-
-		// Do the minor steps fit into the interval?
-		if (qwtFuzzyCompare((numTicks + 1) * qAbs(minStep), qAbs(intervalSize), intervalSize) > 0) {
-			// The minor steps doesn't fit into the interval
-			return 0.5 * intervalSize;
-		}
-	}
-
-	return minStep;
-}
-
-#else
-
-static double qwtStepSize(double intervalSize, int maxSteps, uint base)
-{
-	if (maxSteps <= 0)
-		return 0.0;
-
-	if (maxSteps > 2) {
-		for (int numSteps = maxSteps; numSteps > 1; numSteps--) {
-			const double stepSize = intervalSize / numSteps;
-
-			const double p        = std::floor(std::log(stepSize) / std::log(base));
-			const double fraction = std::pow(base, p);
-
-			for (uint n = base; n > 1; n /= 2) {
-				if (qFuzzyCompare(stepSize, n * fraction))
-					return stepSize;
-
-				if (n == 3 && (base % 2) == 0) {
-					if (qFuzzyCompare(stepSize, 2 * fraction))
-						return stepSize;
-				}
-			}
-		}
-	}
-
-	return intervalSize * 0.5;
-}
-
-#endif
-
-static const double cs_eps_ = 1.0e-6;
-
-/**
- * @brief Ceil a value, relative to an interval
- * @param value Value to be ceiled
- * @param intervalSize Interval size
- * @return Rounded value
- * @sa floorEps()
- */
-double QwtScaleArithmetic::ceilEps(double value, double intervalSize)
-{
-	const double eps = cs_eps_ * intervalSize;
-
-	value = (value - eps) / intervalSize;
-	return std::ceil(value) * intervalSize;
-}
-
-/**
- * @brief Floor a value, relative to an interval
- * @param value Value to be floored
- * @param intervalSize Interval size
- * @return Rounded value
- * @sa ceilEps()
- */
-double QwtScaleArithmetic::floorEps(double value, double intervalSize)
-{
-	const double eps = cs_eps_ * intervalSize;
-
-	value = (value + eps) / intervalSize;
-	return std::floor(value) * intervalSize;
-}
-
-/**
- * @brief Divide an interval into steps
- * @details Formula: \f$stepSize = (intervalSize - intervalSize * 10e^{-6}) / numSteps\f$
- * @param intervalSize Interval size
- * @param numSteps Number of steps
- * @return Step size
- */
-double QwtScaleArithmetic::divideEps(double intervalSize, double numSteps)
-{
-	if (numSteps == 0.0 || intervalSize == 0.0)
-		return 0.0;
-
-	return (intervalSize - (cs_eps_ * intervalSize)) / numSteps;
-}
-
-/**
- * @brief Calculate a step size for a given interval
- * @param intervalSize Interval size
- * @param numSteps Number of steps
- * @param base Base for the division (usually 10)
- * @return Calculated step size
- */
-double QwtScaleArithmetic::divideInterval(double intervalSize, int numSteps, uint base)
-{
-	if (numSteps <= 0)
-		return 0.0;
-
-	const double v = QwtScaleArithmetic::divideEps(intervalSize, numSteps);
-	if (v == 0.0)
-		return 0.0;
-
-	const double lx = qwtLog(base, std::fabs(v));
-	const double p  = std::floor(lx);
-
-	const double fraction = std::pow(base, lx - p);
-
-	uint n = base;
-	while ((n > 1) && (fraction <= n / 2))
-		n /= 2;
-
-	double stepSize = n * std::pow(base, p);
-	if (v < 0)
-		stepSize = -stepSize;
-
-	return stepSize;
-}
-
-class QwtScaleEngine::PrivateData
-{
-	QWT_DECLARE_PUBLIC(QwtScaleEngine)
-public:
-	PrivateData(QwtScaleEngine* p)
-		: q_ptr(p)
-		, attributes(QwtScaleEngine::NoAttribute)
-		, lowerMargin(0.0)
-		, upperMargin(0.0)
-		, referenceValue(0.0)
-		, base(10)
-		, transform(nullptr)
-	{
-	}
-
-	~PrivateData()
-	{
-		delete transform;
-	}
-
-	QwtScaleEngine::Attributes attributes;
-
-	double lowerMargin;
-	double upperMargin;
-
-	double referenceValue;
-
-	uint base;
-
-	QwtTransform* transform;
-};
-
-/**
- * @brief Constructor
- * @param base Base of the scale engine
- * @sa setBase()
- */
-QwtScaleEngine::QwtScaleEngine(uint base) : QWT_PIMPL_CONSTRUCT
-{
-	setBase(base);
-}
-
-//! Destructor
-QwtScaleEngine::~QwtScaleEngine()
-{
-}
-
-/**
- * @brief Assign a transformation
- * @param transform Transformation
- * @details The transformation object is used as factory for clones that are returned by transformation().
- *          The scale engine takes ownership of the transformation.
- * @sa QwtTransform::copy(), transformation()
- */
-void QwtScaleEngine::setTransformation(QwtTransform* transform)
-{
-	QWT_D(d);
-	if (transform != d->transform) {
-		delete d->transform;
-		d->transform = transform;
-	}
-}
-
-/**
- * @brief Create and return a clone of the transformation of the engine
- * @details When the engine has no special transformation nullptr is returned, indicating no transformation.
- * @return A clone of the transformation
- * @sa setTransformation()
- */
-QwtTransform* QwtScaleEngine::transformation() const
-{
-	QWT_DC(d);
-	QwtTransform* transform = nullptr;
-	if (d->transform)
-		transform = d->transform->copy();
-
-	return transform;
-}
-
-/**
- * @brief Return the margin at the lower end of the scale
- * @return The margin at the lower end
- * @details The default margin is 0.
- * @sa setMargins()
- */
-double QwtScaleEngine::lowerMargin() const
-{
-	QWT_DC(d);
-	return d->lowerMargin;
-}
-
-/**
- * @brief Return the margin at the upper end of the scale
- * @return The margin at the upper end
- * @details The default margin is 0.
- * @sa setMargins()
- */
-double QwtScaleEngine::upperMargin() const
-{
-	QWT_DC(d);
-	return d->upperMargin;
-}
-
-/**
- * @brief Specify margins at the scale's endpoints
- * @param lower Minimum distance between the scale's lower boundary and the smallest enclosed value
- * @param upper Minimum distance between the scale's upper boundary and the greatest enclosed value
- * @details Margins can be used to leave a minimum amount of space between the enclosed intervals and the boundaries of the scale.
- * @warning QwtLogScaleEngine measures the margins in decades.
- * @sa upperMargin(), lowerMargin()
- */
-void QwtScaleEngine::setMargins(double lower, double upper)
-{
-	QWT_D(d);
-	d->lowerMargin = qwtMaxF(lower, 0.0);
-	d->upperMargin = qwtMaxF(upper, 0.0);
-}
-
-/**
- * @brief Calculate a step size for an interval size
- * @param intervalSize Interval size
- * @param numSteps Number of steps
- * @return Step size
- */
-double QwtScaleEngine::divideInterval(double intervalSize, int numSteps) const
-{
-	QWT_DC(d);
-	return QwtScaleArithmetic::divideInterval(intervalSize, numSteps, d->base);
-}
-
-/**
- * @brief Check if an interval "contains" a value
- * @param interval Interval
- * @param value Value
- * @return True, when the value is inside the interval
- */
-bool QwtScaleEngine::contains(const QwtInterval& interval, double value) const
-{
-	if (!interval.isValid())
-		return false;
-
-	if (qwtFuzzyCompare(value, interval.minValue(), interval.width()) < 0)
-		return false;
-
-	if (qwtFuzzyCompare(value, interval.maxValue(), interval.width()) > 0)
-		return false;
-
-	return true;
-}
-
-/**
- * @brief Remove ticks from a list, that are not inside an interval
- * @param ticks Tick list
- * @param interval Interval
- * @return Stripped tick list
- */
-QList< double > QwtScaleEngine::strip(const QList< double >& ticks, const QwtInterval& interval) const
-{
-	if (!interval.isValid() || ticks.count() == 0)
-		return QList< double >();
-
-	if (contains(interval, ticks.first()) && contains(interval, ticks.last())) {
-		return ticks;
-	}
-
-	QList< double > strippedTicks;
-	for (const double tick : ticks) {
-		if (contains(interval, tick))
-			strippedTicks += tick;
-	}
-	return strippedTicks;
-}
-
-/**
- * @brief Build an interval around a value
- * @details In case of v == 0.0 the interval is [-0.5, 0.5], otherwise it is [0.5 * v, 1.5 * v]
- * @param value Initial value
- * @return Calculated interval
- */
-QwtInterval QwtScaleEngine::buildInterval(double value) const
-{
-	const double delta = (value == 0.0) ? 0.5 : qAbs(0.5 * value);
-	const double max   = std::numeric_limits< double >::max();
-
-	if (max - delta < value)
-		return QwtInterval(max - delta, max);
-
-	if (-max + delta > value)
-		return QwtInterval(-max, -max + delta);
-
-	return QwtInterval(value - delta, value + delta);
-}
-
-/**
- * @brief Change a scale attribute
- * @param attribute Attribute to change
- * @param on On/Off
- * @sa Attribute, testAttribute()
- */
-void QwtScaleEngine::setAttribute(Attribute attribute, bool on)
-{
-	QWT_D(d);
-	if (on)
-		d->attributes |= attribute;
-	else
-		d->attributes &= ~attribute;
-}
-
-/**
- * @brief Test if an attribute is enabled
- * @param attribute Attribute to be tested
- * @return True, if attribute is enabled
- * @sa Attribute, setAttribute()
- */
-bool QwtScaleEngine::testAttribute(Attribute attribute) const
-{
-	QWT_DC(d);
-	return (d->attributes & attribute);
-}
-
-/**
- * @brief Change the scale attribute
- * @param attributes Set scale attributes
- * @sa Attribute, attributes()
- */
-void QwtScaleEngine::setAttributes(Attributes attributes)
-{
-	QWT_D(d);
-	d->attributes = attributes;
-}
-
-/**
- * @brief Return scale attributes
- * @return Scale attributes
- * @sa Attribute, setAttributes(), testAttribute()
- */
-QwtScaleEngine::Attributes QwtScaleEngine::attributes() const
-{
-	QWT_DC(d);
-	return d->attributes;
-}
-
-/**
- * @brief Specify a reference point
- * @param reference New reference value
- * @details The reference point is needed if options IncludeReference or Symmetric are active. Its default value is 0.0.
- * @sa Attribute
- */
-void QwtScaleEngine::setReference(double reference)
-{
-	QWT_D(d);
-	d->referenceValue = reference;
-}
-
-/**
- * @brief Return the reference value
- * @return The reference value
- * @sa setReference(), setAttribute()
- */
-double QwtScaleEngine::reference() const
-{
-	QWT_DC(d);
-	return d->referenceValue;
-}
-
-/**
- * @brief Set the base of the scale engine
- * @param base Base of the engine
- * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base: f.e 2.
- *          The default setting is 10.
- * @sa base()
- */
-void QwtScaleEngine::setBase(uint base)
-{
-	QWT_D(d);
-	d->base = qMax(base, 2U);
-}
-
-/**
- * @brief Return base of the scale engine
- * @return Base of the scale engine
- * @sa setBase()
- */
-uint QwtScaleEngine::base() const
-{
-	QWT_DC(d);
-	return d->base;
-}
-
-/**
- * @brief Constructor
- * @param base Base of the scale engine
- * @sa setBase()
- */
-QwtLinearScaleEngine::QwtLinearScaleEngine(uint base) : QwtScaleEngine(base)
-{
-}
-
-//! Destructor
-QwtLinearScaleEngine::~QwtLinearScaleEngine()
-{
-}
-
-/**
- * @brief Align and divide an interval
- * @param maxNumSteps Max. number of steps
- * @param x1 First limit of the interval (In/Out)
- * @param x2 Second limit of the interval (In/Out)
- * @param stepSize Step size (Out)
- * @sa setAttribute()
- */
-void QwtLinearScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
-{
-	QwtInterval interval(x1, x2);
-	interval = interval.normalized();
-
-	interval.setMinValue(interval.minValue() - lowerMargin());
-	interval.setMaxValue(interval.maxValue() + upperMargin());
-
-	if (testAttribute(QwtScaleEngine::Symmetric))
-		interval = interval.symmetrize(reference());
-
-	if (testAttribute(QwtScaleEngine::IncludeReference))
-		interval = interval.extend(reference());
-
-	if (interval.width() == 0.0)
-		interval = buildInterval(interval.minValue());
-
-	stepSize = QwtScaleArithmetic::divideInterval(interval.width(), qMax(maxNumSteps, 1), base());
-
-	if (!testAttribute(QwtScaleEngine::Floating))
-		interval = align(interval, stepSize);
-
-	x1 = interval.minValue();
-	x2 = interval.maxValue();
-
-	if (testAttribute(QwtScaleEngine::Inverted)) {
-		qSwap(x1, x2);
-		stepSize = -stepSize;
-	}
-}
-
-/**
- * @brief Calculate a scale division for an interval
- * @param x1 First interval limit
- * @param x2 Second interval limit
- * @param maxMajorSteps Maximum for the number of major steps
- * @param maxMinorSteps Maximum number of minor steps
- * @param stepSize Step size. If stepSize == 0, the engine calculates one.
- * @return Calculated scale division
- */
-QwtScaleDiv QwtLinearScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
-{
-	QwtInterval interval = QwtInterval(x1, x2).normalized();
-
-	if (interval.widthL() > std::numeric_limits< double >::max()) {
-		qWarning() << "QwtLinearScaleEngine::divideScale: overflow";
-		return QwtScaleDiv();
-	}
-
-	if (interval.width() <= 0)
-		return QwtScaleDiv();
-
-	stepSize = qAbs(stepSize);
-	if (stepSize == 0.0) {
-		if (maxMajorSteps < 1)
-			maxMajorSteps = 1;
-
-		stepSize = QwtScaleArithmetic::divideInterval(interval.width(), maxMajorSteps, base());
-	}
-
-	QwtScaleDiv scaleDiv;
-
-	if (stepSize != 0.0) {
-		QList< double > ticks[ QwtScaleDiv::NTickTypes ];
-		buildTicks(interval, stepSize, maxMinorSteps, ticks);
-
-		scaleDiv = QwtScaleDiv(interval, ticks);
-	}
-
-	if (x1 > x2)
-		scaleDiv.invert();
-
-	return scaleDiv;
-}
-
-/**
- * @brief Calculate ticks for an interval
- * @param interval Interval
- * @param stepSize Step size
- * @param maxMinorSteps Maximum number of minor steps
- * @param ticks Arrays to be filled with the calculated ticks
- * @sa buildMajorTicks(), buildMinorTicks()
- */
-void QwtLinearScaleEngine::buildTicks(const QwtInterval& interval,
-									  double stepSize,
-									  int maxMinorSteps,
-									  QList< double > ticks[ QwtScaleDiv::NTickTypes ]) const
-{
-	const QwtInterval boundingInterval = align(interval, stepSize);
-
-	ticks[ QwtScaleDiv::MajorTick ] = buildMajorTicks(boundingInterval, stepSize);
-
-	if (maxMinorSteps > 0) {
-		buildMinorTicks(ticks[ QwtScaleDiv::MajorTick ],
-						maxMinorSteps,
-						stepSize,
-						ticks[ QwtScaleDiv::MinorTick ],
-						ticks[ QwtScaleDiv::MediumTick ]);
-	}
-
-	for (int i = 0; i < QwtScaleDiv::NTickTypes; i++) {
-		ticks[ i ] = strip(ticks[ i ], interval);
-
-		// ticks very close to 0.0 are explicitly set to 0.0
-
-		for (int j = 0; j < ticks[ i ].count(); j++) {
-			if (qwtFuzzyCompare(ticks[ i ][ j ], 0.0, stepSize) == 0)
-				ticks[ i ][ j ] = 0.0;
-		}
-	}
-}
-
-/**
- * @brief Calculate major ticks for an interval
- * @param interval Interval
- * @param stepSize Step size
- * @return Calculated ticks
- */
-QList< double > QwtLinearScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
-{
-	int numTicks = qRound(interval.width() / stepSize) + 1;
-	if (numTicks > 10000)
-		numTicks = 10000;
-
-	QList< double > ticks;
-	ticks.reserve(numTicks);
-
-	ticks += interval.minValue();
-	for (int i = 1; i < numTicks - 1; i++)
-		ticks += interval.minValue() + i * stepSize;
-	ticks += interval.maxValue();
-
-	return ticks;
-}
-
-/**
- * @brief Calculate minor/medium ticks for major ticks
- * @param majorTicks Major ticks
- * @param maxMinorSteps Maximum number of minor steps
- * @param stepSize Step size
- * @param minorTicks Array to be filled with the calculated minor ticks
- * @param mediumTicks Array to be filled with the calculated medium ticks
- */
-void QwtLinearScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
-										   int maxMinorSteps,
-										   double stepSize,
-										   QList< double >& minorTicks,
-										   QList< double >& mediumTicks) const
-{
-	double minStep = qwtStepSize(stepSize, maxMinorSteps, base());
-	if (minStep == 0.0)
-		return;
-
-	// # ticks per interval
-	const int numTicks = qwtCeil(qAbs(stepSize / minStep)) - 1;
-
-	int medIndex = -1;
-	if (numTicks % 2)
-		medIndex = numTicks / 2;
-
-	// calculate minor ticks
-
-	for (int i = 0; i < majorTicks.count(); i++) {
-		double val = majorTicks[ i ];
-		for (int k = 0; k < numTicks; k++) {
-			val += minStep;
-
-			double alignedValue = val;
-			if (qwtFuzzyCompare(val, 0.0, stepSize) == 0)
-				alignedValue = 0.0;
-
-			if (k == medIndex)
-				mediumTicks += alignedValue;
-			else
-				minorTicks += alignedValue;
-		}
-	}
-}
-
-/**
- * @brief Align an interval to a step size
- * @details The limits of an interval are aligned that both are integer multiples of the step size.
- * @param interval Interval
- * @param stepSize Step size
- * @return Aligned interval
- */
-QwtInterval QwtLinearScaleEngine::align(const QwtInterval& interval, double stepSize) const
-{
-	double x1 = interval.minValue();
-	double x2 = interval.maxValue();
-
-	// when there is no rounding beside some effect, when
-	// calculating with doubles, we keep the original value
-
-	const double eps = 0.000000000001;  // since Qt 4.8: qFuzzyIsNull
-	const double max = std::numeric_limits< double >::max();
-
-	if (-max + stepSize <= x1) {
-		const double x = QwtScaleArithmetic::floorEps(x1, stepSize);
-		if (qAbs(x) <= eps || !qFuzzyCompare(x1, x))
-			x1 = x;
-	}
-
-	if (max - stepSize >= x2) {
-		const double x = QwtScaleArithmetic::ceilEps(x2, stepSize);
-		if (qAbs(x) <= eps || !qFuzzyCompare(x2, x))
-			x2 = x;
-	}
-
-	return QwtInterval(x1, x2);
-}
-
-/**
- * @brief Constructor
- * @param base Base of the scale engine
- * @sa setBase()
- */
-QwtLogScaleEngine::QwtLogScaleEngine(uint base) : QwtScaleEngine(base)
-{
-	setTransformation(new QwtLogTransform());
-}
-
-//! Destructor
-QwtLogScaleEngine::~QwtLogScaleEngine()
-{
-}
-
-/**
- * @brief Align and divide an interval
- * @param maxNumSteps Max. number of steps
- * @param x1 First limit of the interval (In/Out)
- * @param x2 Second limit of the interval (In/Out)
- * @param stepSize Step size (Out)
- * @sa QwtScaleEngine::setAttribute()
- */
-void QwtLogScaleEngine::autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const
-{
-	if (x1 > x2)
-		qSwap(x1, x2);
-
-	const double logBase = base();
-
-	QwtInterval interval(x1 / std::pow(logBase, lowerMargin()), x2 * std::pow(logBase, upperMargin()));
-
-	if (interval.maxValue() / interval.minValue() < logBase) {
-		// scale width is less than one step -> try to build a linear scale
-
-		QwtLinearScaleEngine linearScaler;
-		linearScaler.setAttributes(attributes());
-		linearScaler.setReference(reference());
-		linearScaler.setMargins(lowerMargin(), upperMargin());
-
-		linearScaler.autoScale(maxNumSteps, x1, x2, stepSize);
-
-		QwtInterval linearInterval = QwtInterval(x1, x2).normalized();
-		linearInterval             = linearInterval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
-
-		if (linearInterval.maxValue() / linearInterval.minValue() < logBase) {
-			stepSize = 0.0;
-			return;
-		}
-	}
-
-	double logRef = 1.0;
-	if (reference() > QwtLogTransform::LogMin / 2)
-		logRef = qwtMinF(reference(), QwtLogTransform::LogMax / 2);
-
-	if (testAttribute(QwtScaleEngine::Symmetric)) {
-		const double delta = qwtMaxF(interval.maxValue() / logRef, logRef / interval.minValue());
-		interval.setInterval(logRef / delta, logRef * delta);
-	}
-
-	if (testAttribute(QwtScaleEngine::IncludeReference))
-		interval = interval.extend(logRef);
-
-	interval = interval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
-
-	if (interval.width() == 0.0)
-		interval = buildInterval(interval.minValue());
-
-	stepSize = divideInterval(qwtLogInterval(logBase, interval).width(), qMax(maxNumSteps, 1));
-	if (stepSize < 1.0)
-		stepSize = 1.0;
-
-	if (!testAttribute(QwtScaleEngine::Floating))
-		interval = align(interval, stepSize);
-
-	x1 = interval.minValue();
-	x2 = interval.maxValue();
-
-	if (testAttribute(QwtScaleEngine::Inverted)) {
-		qSwap(x1, x2);
-		stepSize = -stepSize;
-	}
-}
-
-/**
- * @brief Calculate a scale division for an interval
- * @param x1 First interval limit
- * @param x2 Second interval limit
- * @param maxMajorSteps Maximum for the number of major steps
- * @param maxMinorSteps Maximum number of minor steps
- * @param stepSize Step size. If stepSize == 0, the engine calculates one.
- * @return Calculated scale division
- */
-QwtScaleDiv QwtLogScaleEngine::divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize) const
-{
-	QwtInterval interval = QwtInterval(x1, x2).normalized();
-	interval             = interval.limited(QwtLogTransform::LogMin, QwtLogTransform::LogMax);
-
-	if (interval.width() <= 0)
-		return QwtScaleDiv();
-
-	const double logBase = base();
-
-	if (interval.maxValue() / interval.minValue() < logBase) {
-		// scale width is less than one decade -> build linear scale
-
-		QwtLinearScaleEngine linearScaler;
-		linearScaler.setAttributes(attributes());
-		linearScaler.setReference(reference());
-		linearScaler.setMargins(lowerMargin(), upperMargin());
-
-		return linearScaler.divideScale(x1, x2, maxMajorSteps, maxMinorSteps, 0.0);
-	}
-
-	stepSize = qAbs(stepSize);
-	if (stepSize == 0.0) {
-		if (maxMajorSteps < 1)
-			maxMajorSteps = 1;
-
-		stepSize = divideInterval(qwtLogInterval(logBase, interval).width(), maxMajorSteps);
-		if (stepSize < 1.0)
-			stepSize = 1.0;  // major step must be >= 1 decade
-	}
-
-	QwtScaleDiv scaleDiv;
-	if (stepSize != 0.0) {
-		QList< double > ticks[ QwtScaleDiv::NTickTypes ];
-		buildTicks(interval, stepSize, maxMinorSteps, ticks);
-
-		scaleDiv = QwtScaleDiv(interval, ticks);
-	}
-
-	if (x1 > x2)
-		scaleDiv.invert();
-
-	return scaleDiv;
-}
-
-/**
- * @brief Calculate ticks for an interval
- * @param interval Interval
- * @param stepSize Step size
- * @param maxMinorSteps Maximum number of minor steps
- * @param ticks Arrays to be filled with the calculated ticks
- * @sa buildMajorTicks(), buildMinorTicks()
- */
-void QwtLogScaleEngine::buildTicks(const QwtInterval& interval,
-								   double stepSize,
-								   int maxMinorSteps,
-								   QList< double > ticks[ QwtScaleDiv::NTickTypes ]) const
-{
-	const QwtInterval boundingInterval = align(interval, stepSize);
-
-	ticks[ QwtScaleDiv::MajorTick ] = buildMajorTicks(boundingInterval, stepSize);
-
-	if (maxMinorSteps > 0) {
-		buildMinorTicks(ticks[ QwtScaleDiv::MajorTick ],
-						maxMinorSteps,
-						stepSize,
-						ticks[ QwtScaleDiv::MinorTick ],
-						ticks[ QwtScaleDiv::MediumTick ]);
-	}
-
-	for (int i = 0; i < QwtScaleDiv::NTickTypes; i++)
-		ticks[ i ] = strip(ticks[ i ], interval);
-}
-
-/**
- * @brief Calculate major ticks for an interval
- * @param interval Interval
- * @param stepSize Step size
- * @return Calculated ticks
- */
-QList< double > QwtLogScaleEngine::buildMajorTicks(const QwtInterval& interval, double stepSize) const
-{
-	double width = qwtLogInterval(base(), interval).width();
-
-	int numTicks = qRound(width / stepSize) + 1;
-	if (numTicks > 10000)
-		numTicks = 10000;
-
-	const double lxmin = std::log(interval.minValue());
-	const double lxmax = std::log(interval.maxValue());
-	const double lstep = (lxmax - lxmin) / double(numTicks - 1);
-
-	QList< double > ticks;
-	ticks.reserve(numTicks);
-
-	ticks += interval.minValue();
-
-	for (int i = 1; i < numTicks - 1; i++)
-		ticks += std::exp(lxmin + double(i) * lstep);
-
-	ticks += interval.maxValue();
-
-	return ticks;
-}
-
-/**
- * @brief Calculate minor/medium ticks for major ticks
- * @param majorTicks Major ticks
- * @param maxMinorSteps Maximum number of minor steps
- * @param stepSize Step size
- * @param minorTicks Array to be filled with the calculated minor ticks
- * @param mediumTicks Array to be filled with the calculated medium ticks
- */
-void QwtLogScaleEngine::buildMinorTicks(const QList< double >& majorTicks,
-										int maxMinorSteps,
-										double stepSize,
-										QList< double >& minorTicks,
-										QList< double >& mediumTicks) const
-{
-	const double logBase = base();
-
-	if (stepSize < 1.1)  // major step width is one base
-	{
-		double minStep = divideInterval(stepSize, maxMinorSteps + 1);
-		if (minStep == 0.0)
-			return;
-
-		const int numSteps = qRound(stepSize / minStep);
-
-		int mediumTickIndex = -1;
-		if ((numSteps > 2) && (numSteps % 2 == 0))
-			mediumTickIndex = numSteps / 2;
-
-		for (int i = 0; i < majorTicks.count() - 1; i++) {
-			const double v = majorTicks[ i ];
-			const double s = logBase / numSteps;
-
-			if (s >= 1.0) {
-				if (!qFuzzyCompare(s, 1.0))
-					minorTicks += v * s;
-
-				for (int j = 2; j < numSteps; j++) {
-					minorTicks += v * j * s;
-				}
-			} else {
-				for (int j = 1; j < numSteps; j++) {
-					const double tick = v + j * v * (logBase - 1) / numSteps;
-					if (j == mediumTickIndex)
-						mediumTicks += tick;
-					else
-						minorTicks += tick;
-				}
-			}
-		}
-	} else {
-		double minStep = divideInterval(stepSize, maxMinorSteps);
-		if (minStep == 0.0)
-			return;
-
-		if (minStep < 1.0)
-			minStep = 1.0;
-
-		// # subticks per interval
-		int numTicks = qRound(stepSize / minStep) - 1;
-
-		// Do the minor steps fit into the interval?
-		if (qwtFuzzyCompare((numTicks + 1) * minStep, stepSize, stepSize) > 0) {
-			numTicks = 0;
-		}
-
-		if (numTicks < 1)
-			return;
-
-		int mediumTickIndex = -1;
-		if ((numTicks > 2) && (numTicks % 2))
-			mediumTickIndex = numTicks / 2;
-
-		// substep factor = base^substeps
-		const qreal minFactor = qwtMaxF(std::pow(logBase, minStep), logBase);
-
-		for (int i = 0; i < majorTicks.count(); i++) {
-			double tick = majorTicks[ i ];
-			for (int j = 0; j < numTicks; j++) {
-				tick *= minFactor;
-
-				if (j == mediumTickIndex)
-					mediumTicks += tick;
-				else
-					minorTicks += tick;
-			}
-		}
-	}
-}
-
-/**
- * @brief Align an interval to a step size
- * @param interval Interval
- * @param stepSize Step size
- * @return Aligned interval
- */
-QwtInterval QwtLogScaleEngine::align(const QwtInterval& interval, double stepSize) const
-{
-	const QwtInterval intv = qwtLogInterval(base(), interval);
-
-	double x1 = QwtScaleArithmetic::floorEps(intv.minValue(), stepSize);
-	if (qwtFuzzyCompare(interval.minValue(), x1, stepSize) == 0)
-		x1 = interval.minValue();
-
-	double x2 = QwtScaleArithmetic::ceilEps(intv.maxValue(), stepSize);
-	if (qwtFuzzyCompare(interval.maxValue(), x2, stepSize) == 0)
-		x2 = interval.maxValue();
-
-	return qwtPowInterval(base(), QwtInterval(x1, x2));
-}
-
-/*** End of inlined file: qwt_scale_engine.cpp ***/
 
 
 /*** Start of inlined file: qwt_scale_widget.cpp ***/
@@ -21657,7 +23135,7 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 		int from;
 		if (!values.isEmpty()) {
 			from = qRound(scaleMap.transform(values[ 0 ]));
-			qwtDrawLine(painter, from, d->colorMap->color(interval, values[ 0 ]), pipeRect, liquidRect, d->orientation);
+			qwtDrawLine(painter, from, d->colorMap->color(interval.minValue(), interval.maxValue(), values[ 0 ]), pipeRect, liquidRect, d->orientation);
 		}
 
 		for (int i = 1; i < values.size(); i++) {
@@ -21666,10 +23144,10 @@ void QwtThermo::drawLiquid(QPainter* painter, const QRect& pipeRect) const
 			for (int pos = from + 1; pos < to; pos++) {
 				const double v = scaleMap.invTransform(pos);
 
-				qwtDrawLine(painter, pos, d->colorMap->color(interval, v), pipeRect, liquidRect, d->orientation);
+				qwtDrawLine(painter, pos, d->colorMap->color(interval.minValue(), interval.maxValue(), v), pipeRect, liquidRect, d->orientation);
 			}
 
-			qwtDrawLine(painter, to, d->colorMap->color(interval, values[ i ]), pipeRect, liquidRect, d->orientation);
+			qwtDrawLine(painter, to, d->colorMap->color(interval.minValue(), interval.maxValue(), values[ i ]), pipeRect, liquidRect, d->orientation);
 
 			from = to;
 		}
@@ -22073,53 +23551,6 @@ QRect QwtThermo::alarmRect(const QRect& fillRect) const
 }
 
 /*** End of inlined file: qwt_thermo.cpp ***/
-
-
-/*** Start of inlined file: qwt_system_clock.cpp ***/
-#include <qelapsedtimer.h>
-
-/**
- * @brief Check if the elapsed timer is valid
- * @return true if the timer is valid, false otherwise
- *
- */
-bool QwtSystemClock::isNull() const
-{
-	return m_timer.isValid();
-}
-
-/**
- * @brief Start the elapsed timer
- *
- */
-void QwtSystemClock::start()
-{
-	m_timer.start();
-}
-
-/**
- * @brief Restart the elapsed timer
- * @return Elapsed time in multiples of milliseconds
- *
- */
-double QwtSystemClock::restart()
-{
-	const qint64 nsecs = m_timer.restart();
-	return nsecs / 1e6;
-}
-
-/**
- * @brief Get elapsed time in multiples of milliseconds
- * @return Elapsed time since the timer was started
- *
- */
-double QwtSystemClock::elapsed() const
-{
-	const qint64 nsecs = m_timer.nsecsElapsed();
-	return nsecs / 1e6;
-}
-
-/*** End of inlined file: qwt_system_clock.cpp ***/
 
 
 /*** Start of inlined file: qwt_symbol.cpp ***/
@@ -26548,6 +27979,15 @@ QVector< QLineF > QwtSplinePleasing::bezierControlLines(const QPolygonF& points)
 
 
 /*** Start of inlined file: qwt_spline.cpp ***/
+
+/*** Start of inlined file: qwt_bezier.h ***/
+#ifndef QWT_PLOT_BEZIER_FWD_H
+#define QWT_PLOT_BEZIER_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_bezier.h ***/
+
 #include <qpainterpath.h>
 
 namespace QwtSplineC1P
@@ -31933,169 +33373,25 @@ double QwtRoundScaleDraw::extent( const QFont& font ) const
 /*** End of inlined file: qwt_round_scale_draw.cpp ***/
 
 
-/*** Start of inlined file: qwt_point_data.cpp ***/
-/**
- * @brief Constructor
- *
- * @param[in] size Number of points
- * @param[in] interval Bounding interval for the points
- *
- * @sa setInterval(), setSize()
- */
-QwtSyntheticPointData::QwtSyntheticPointData(size_t size, const QwtInterval& interval)
-	: m_size(size), m_interval(interval)
-{
-}
-
-/**
- * @brief Change the number of points
- *
- * @param[in] size Number of points
- *
- * @sa size(), setInterval()
- */
-void QwtSyntheticPointData::setSize(size_t size)
-{
-	m_size = size;
-}
-
-/**
- * @brief Get the number of points
- *
- * @return Number of points
- *
- * @sa setSize(), interval()
- */
-size_t QwtSyntheticPointData::size() const
-{
-	return m_size;
-}
-
-/**
- * @brief Set the bounding interval
- *
- * @param[in] interval Interval
- *
- * @sa interval(), setSize()
- */
-void QwtSyntheticPointData::setInterval(const QwtInterval& interval)
-{
-	m_interval = interval.normalized();
-}
-
-/**
- * @brief Get the bounding interval
- *
- * @return Bounding interval
- *
- * @sa setInterval(), size()
- */
-QwtInterval QwtSyntheticPointData::interval() const
-{
-	return m_interval;
-}
-
-/**
- * @brief Set the "rectangle of interest"
- *
- * @details QwtPlotSeriesItem defines the current area of the plot canvas
- *          as "rect of interest" ( QwtPlotSeriesItem::updateScaleDiv() ).
- *          If interval().isValid() == false the x values are calculated
- *          in the interval rect.left() -> rect.right().
- *
- * @param[in] rect Rectangle of interest
- *
- * @sa rectOfInterest()
- */
-void QwtSyntheticPointData::setRectOfInterest(const QRectF& rect)
-{
-	m_rectOfInterest     = rect;
-	m_intervalOfInterest = QwtInterval(rect.left(), rect.right()).normalized();
-}
-
-/**
- * @brief Get the "rectangle of interest"
- *
- * @return Rectangle of interest
- *
- * @sa setRectOfInterest()
- */
-QRectF QwtSyntheticPointData::rectOfInterest() const
-{
-	return m_rectOfInterest;
-}
-
-/**
- * @brief Calculate the bounding rectangle
- *
- * @details This implementation iterates over all points, which could often
- *          be implemented much faster using the characteristics of the series.
- *          When there are many points it is recommended to overload and
- *          reimplement this method using the characteristics of the series
- *          (if possible).
- *
- * @return Bounding rectangle
- */
-QRectF QwtSyntheticPointData::boundingRect() const
-{
-	if (m_size == 0 || !(m_interval.isValid() || m_intervalOfInterest.isValid())) {
-		return QRectF(1.0, 1.0, -2.0, -2.0);  // something invalid
-	}
-
-	return qwtBoundingRect(*this);
-}
-
-/**
- * @brief Calculate the point from an index
- *
- * @param[in] index Index
- *
- * @return QPointF(x(index), y(x(index)))
- *
- * @warning For invalid indices (index < 0 || index >= size()) (0, 0) is returned.
- */
-QPointF QwtSyntheticPointData::sample(size_t index) const
-{
-	if (index >= m_size)
-		return QPointF(0, 0);
-
-	const double xValue = x(index);
-	const double yValue = y(xValue);
-
-	return QPointF(xValue, yValue);
-}
-
-/**
- * @brief Calculate a x-value from an index
- *
- * @details x values are calculated by dividing an interval into
- *          equidistant steps. If !interval().isValid() the
- *          interval is calculated from the "rectangle of interest".
- *
- * @param[in] index Index of the requested point
- *
- * @return Calculated x coordinate
- *
- * @sa interval(), rectOfInterest(), y()
- */
-double QwtSyntheticPointData::x(size_t index) const
-{
-	const QwtInterval& interval = m_interval.isValid() ? m_interval : m_intervalOfInterest;
-
-	if (!interval.isValid())
-		return 0.0;
-
-	if (m_size <= 1)
-		return interval.minValue();
-
-	const double dx = interval.width() / (m_size - 1);
-	return interval.minValue() + index * dx;
-}
-
-/*** End of inlined file: qwt_point_data.cpp ***/
-
-
 /*** Start of inlined file: qwt_point_mapper.cpp ***/
+
+/*** Start of inlined file: qwt_point_data.h ***/
+#ifndef QWT_PLOT_POINT_DATA_FWD_H
+#define QWT_PLOT_POINT_DATA_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_point_data.h ***/
+
+
+/*** Start of inlined file: qwt_simd_argminmax.h ***/
+#ifndef QWT_PLOT_SIMD_ARGMINMAX_FWD_H
+#define QWT_PLOT_SIMD_ARGMINMAX_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_simd_argminmax.h ***/
+
 #include <qpolygon.h>
 #include <qimage.h>
 #include <qpen.h>
@@ -33533,560 +34829,6 @@ QImage QwtPointMapper::toImage(const QwtScaleMap& xMap,
 }
 
 /*** End of inlined file: qwt_point_mapper.cpp ***/
-
-
-/*** Start of inlined file: qwt_series_data.cpp ***/
-// check nan or inf
-static inline bool isSampleNanOrInf(const QPointF& sample)
-{
-	return qwt_is_nan_or_inf(sample);
-}
-
-static inline bool isSampleNanOrInf(const QwtPoint3D& sample)
-{
-	return !std::isfinite(sample.x()) || !std::isfinite(sample.y()) || !std::isfinite(sample.z());
-}
-
-static inline bool isSampleNanOrInf(const QwtPointPolar& sample)
-{
-	return !std::isfinite(sample.azimuth()) || !std::isfinite(sample.radius());
-}
-
-static inline bool isSampleNanOrInf(const QwtSetSample& sample)
-{
-	// Special: directly returns false; judgement is done inside qwtBoundingRect(const QwtSetSample& sample)
-	Q_UNUSED(sample);
-	return false;
-}
-
-static inline bool isSampleNanOrInf(const QwtIntervalSample& sample)
-{
-
-	return !std::isfinite(sample.value) || !std::isfinite(sample.interval.minValue())
-		   || !std::isfinite(sample.interval.maxValue());
-}
-
-static inline bool isSampleNanOrInf(const QwtOHLCSample& sample)
-{
-
-	return !std::isfinite(sample.close) || !std::isfinite(sample.high) || !std::isfinite(sample.low)
-		   || !std::isfinite(sample.open) || !std::isfinite(sample.time);
-}
-
-static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
-{
-
-	return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
-}
-
-static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
-{
-	return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower)
-		   || !std::isfinite(sample.q1) || !std::isfinite(sample.median)
-		   || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
-}
-
-static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
-{
-	if (!std::isfinite(sample.boxPosition))
-		return true;
-	for (int i = 0; i < sample.values.size(); ++i)
-	{
-		if (!std::isfinite(sample.values[i]))
-			return true;
-	}
-	return false;
-}
-
-static inline QRectF qwtBoundingRect(const QPointF& sample)
-{
-	return QRectF(sample.x(), sample.y(), 0.0, 0.0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtPoint3D& sample)
-{
-	return QRectF(sample.x(), sample.y(), 0.0, 0.0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtPointPolar& sample)
-{
-	return QRectF(sample.azimuth(), sample.radius(), 0.0, 0.0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtIntervalSample& sample)
-{
-	return QRectF(sample.interval.minValue(), sample.value, sample.interval.maxValue() - sample.interval.minValue(), 0.0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtSetSample& sample)
-{
-	if (sample.set.empty()) {
-		return QRectF(sample.value, 0.0, 0.0, -1.0);
-	}
-	// Avoid first point being nan or inf
-	int begin   = 0;
-	double minY = sample.set[ begin ];
-	double maxY = sample.set[ begin ];
-	while (begin < sample.set.size() && qwt_is_nan_or_inf(minY)) {
-		++begin;
-		minY = sample.set[ begin ];
-		maxY = sample.set[ begin ];
-	}
-	for (int i = begin + 1; i < sample.set.size(); ++i) {
-		// modify by czy at 2025-12
-		if (qwt_is_nan_or_inf(sample.set[ i ])) {
-			continue;
-		}
-		if (sample.set[ i ] < minY)
-			minY = sample.set[ i ];
-
-		if (sample.set[ i ] > maxY)
-			maxY = sample.set[ i ];
-	}
-
-	return QRectF(sample.value, minY, 0.0, maxY - minY);
-}
-
-static inline QRectF qwtBoundingRect(const QwtOHLCSample& sample)
-{
-	const QwtInterval interval = sample.boundingInterval();
-	return QRectF(interval.minValue(), sample.time, interval.width(), 0.0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtVectorFieldSample& sample)
-{
-	/*
-		When displaying a sample as an arrow its length will be
-		proportional to the magnitude - but not the same.
-		As the factor between length and magnitude is not known
-		we can't include vx/vy into the bounding rectangle.
-	 */
-
-	return QRectF(sample.x, sample.y, 0, 0);
-}
-
-static inline QRectF qwtBoundingRect(const QwtBoxSample& sample)
-{
-	return QRectF(sample.position, sample.whiskerLower, 0.0, sample.whiskerUpper - sample.whiskerLower);
-}
-
-static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
-{
-	if (sample.values.isEmpty())
-		return QRectF(sample.boxPosition, 0.0, 0.0, -1.0); // invalid
-
-	double minVal = sample.values[0];
-	double maxVal = sample.values[0];
-	for (int i = 1; i < sample.values.size(); ++i)
-	{
-		if (sample.values[i] < minVal)
-			minVal = sample.values[i];
-		if (sample.values[i] > maxVal)
-			maxVal = sample.values[i];
-	}
-	return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-
-template< class T >
-QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to)
-{
-	QRectF boundingRect(1.0, 1.0, -2.0, -2.0);  // invalid;
-
-	// Check for empty series first
-	if (series.size() == 0) {
-		return boundingRect;
-	}
-
-	if (to == 0) {
-		to = series.size() - 1;
-	}
-
-	if (to < from) {
-		return boundingRect;
-	}
-
-	size_t i;
-	for (i = from; i <= to; i++) {
-		// chenzongyan modify at 202512: add nan checking
-		if (isSampleNanOrInf(series.sample(i))) {
-			continue;
-		}
-		const QRectF rect = qwtBoundingRect(series.sample(i));
-		if (rect.width() >= 0.0 && rect.height() >= 0.0) {
-			boundingRect = rect;
-			i++;
-			break;
-		}
-	}
-
-	for (; i <= to; i++) {
-		// chenzongyan modify at 202512: add nan checking
-		if (isSampleNanOrInf(series.sample(i))) {
-			continue;
-		}
-		const QRectF rect = qwtBoundingRect(series.sample(i));
-		if (rect.width() >= 0.0 && rect.height() >= 0.0) {
-			boundingRect.setLeft(qMin(boundingRect.left(), rect.left()));
-			boundingRect.setRight(qMax(boundingRect.right(), rect.right()));
-			boundingRect.setTop(qMin(boundingRect.top(), rect.top()));
-			boundingRect.setBottom(qMax(boundingRect.bottom(), rect.bottom()));
-		}
-	}
-
-	return boundingRect;
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QPointF >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QPointF >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtPoint3D >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtPoint3D >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details The horizontal coordinates represent the azimuth, the vertical coordinates the radius.
- *
- *          Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtPointPolar >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtPointPolar >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtIntervalSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtIntervalSample >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtOHLCSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtOHLCSample >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtSetSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtSetSample >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtVectorFieldSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtVectorFieldSample >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtBoxSample >(series, from, to);
-}
-
-/**
- * @brief Calculate the bounding rectangle of a series subset
- * @details Slow implementation, that iterates over the series.
- *
- * @param series Series
- * @param from Index of the first sample, <= 0 means from the beginning
- * @param to Index of the last sample, < 0 means to the end
- *
- * @return Bounding rectangle
- */
-QRectF qwtBoundingRect(const QwtSeriesData< QwtBoxOutlierSample >& series, size_t from, size_t to)
-{
-	return qwtBoundingRectT< QwtBoxOutlierSample >(series, from, to);
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtPointSeriesData::QwtPointSeriesData(const QVector< QPointF >& samples) : QwtArraySeriesData< QPointF >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtPointSeriesData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtPoint3DSeriesData::QwtPoint3DSeriesData(const QVector< QwtPoint3D >& samples)
-	: QwtArraySeriesData< QwtPoint3D >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtPoint3DSeriesData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtIntervalSeriesData::QwtIntervalSeriesData(const QVector< QwtIntervalSample >& samples)
-	: QwtArraySeriesData< QwtIntervalSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtIntervalSeriesData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtVectorFieldData::QwtVectorFieldData(const QVector< QwtVectorFieldSample >& samples)
-	: QwtArraySeriesData< QwtVectorFieldSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtVectorFieldData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtSetSeriesData::QwtSetSeriesData(const QVector< QwtSetSample >& samples) : QwtArraySeriesData< QwtSetSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtSetSeriesData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtTradingChartData::QwtTradingChartData(const QVector< QwtOHLCSample >& samples)
-	: QwtArraySeriesData< QwtOHLCSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtTradingChartData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples)
-	: QwtArraySeriesData< QwtBoxSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtBoxChartData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Constructor
- * @param samples Samples
- */
-QwtBoxOutlierChartData::QwtBoxOutlierChartData(const QVector< QwtBoxOutlierSample >& samples)
-	: QwtArraySeriesData< QwtBoxOutlierSample >(samples)
-{
-}
-
-/**
- * @brief Calculate the bounding rectangle
- * @details The bounding rectangle is calculated once by iterating over all
- *          points and is stored for all following requests.
- *
- * @return Bounding rectangle
- */
-QRectF QwtBoxOutlierChartData::boundingRect() const
-{
-	if (cachedBoundingRect.width() < 0.0)
-		cachedBoundingRect = qwtBoundingRect(*this);
-
-	return cachedBoundingRect;
-}
-
-/**
- * @brief Get total outlier count across all boxes
- * @return Total count of all outlier values
- */
-int QwtBoxOutlierChartData::totalOutlierCount() const
-{
-	int count = 0;
-	for (size_t i = 0; i < size(); ++i)
-		count += sample(i).count();
-	return count;
-}
-
-/*** End of inlined file: qwt_series_data.cpp ***/
 
 
 /*** Start of inlined file: qwt_picker_machine.cpp ***/
@@ -36714,9 +37456,8 @@ void QwtCachePanner::showCursor(bool on)
 
 /*** Start of inlined file: qwt_utils.cpp ***/
 #include <qapplication.h>
-#include <QtMath>
-#include <QPen>
 
+// Define QWT_GLOBAL_STRUT for Qt versions that support it
 #define QWT_GLOBAL_STRUT
 
 #if QT_VERSION >= 0x050000
@@ -36725,44 +37466,25 @@ void QwtCachePanner::showCursor(bool on)
 #endif
 #endif
 
-namespace Qwt
-{
-
 /**
- * @brief Get the color of a plot item
+ * @brief Expand a size to the global strut (Qt5/Qt6 compatibility function)
  *
- * @note This function uses dynamic_cast
- * @param item Plot item
- * @param defaultColor Default color to return if the item's color cannot be obtained
- * @return Color of the plot item or defaultColor if not available
+ * In Qt 5.0-5.14, QApplication::globalStrut() returns the application-defined
+ * minimum widget size. This function expands the given size to at least that
+ * minimum size.
  *
- */
-QColor plotItemColor(const QwtPlotItem* item, const QColor& defaultColor)
-{
-	if (const QwtPlotCurve* p = dynamic_cast< const QwtPlotCurve* >(item)) {
-		return p->pen().color();
-	} else if (const QwtPlotIntervalCurve* p = dynamic_cast< const QwtPlotIntervalCurve* >(item)) {
-		return p->pen().color();
-	} else if (const QwtPlotHistogram* p = dynamic_cast< const QwtPlotHistogram* >(item)) {
-		return p->brush().color();
-	} else if (const QwtPlotBarChart* p = dynamic_cast< const QwtPlotBarChart* >(item)) {
-		return p->brush().color();
-	} else if (const QwtPlotGrid* grid = dynamic_cast< const QwtPlotGrid* >(item)) {
-		return grid->majorPen().color();
-	} else if (const QwtPlotMarker* marker = dynamic_cast< const QwtPlotMarker* >(item)) {
-		return marker->linePen().color();
-	}
-	return defaultColor;
-}
-
-}  // end namespace qwt
-
-/**
- * @brief Expand a size to the global strut
+ * In Qt 5.15+ and Qt 6, globalStrut() has been removed and this function
+ * returns the original size unchanged.
  *
  * @param size Original size
- * @return Size expanded to the global strut if QWT_GLOBAL_STRUT is defined
+ * @return Size expanded to the global strut, or the original size on Qt 5.15+/Qt 6
  *
+ * @internal
+ * @warning This function is for internal use by Qwt widget classes only
+ *          (such as QwtDial, QwtKnob, QwtSlider, etc.). Application code
+ *          should not call this function.
+ *
+ * @since Qwt 6.0
  */
 QSize qwtExpandedToGlobalStrut(const QSize& size)
 {
@@ -36774,6 +37496,2931 @@ QSize qwtExpandedToGlobalStrut(const QSize& size)
 }
 
 /*** End of inlined file: qwt_utils.cpp ***/
+
+// utility classes
+
+/*** Start of inlined file: qwt_plot_item_info.cpp ***/
+/**
+ * @brief Check whether the item is a QwtPlotSeriesItem subclass
+ * @param item Plot item to check, may be nullptr
+ * @return true if item is derived from QwtPlotSeriesItem
+ */
+bool QwtPlotItemInfo::isSeriesItem(const QwtPlotItem* item)
+{
+	if (!item)
+		return false;
+
+	const int rtti = item->rtti();
+	switch (rtti) {
+	case QwtPlotItem::Rtti_PlotCurve:
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+	case QwtPlotItem::Rtti_PlotHistogram:
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+	case QwtPlotItem::Rtti_PlotBarChart:
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+	case QwtPlotItem::Rtti_PlotVectorField:
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Check whether the item stores QPointF data
+ * @param item Plot item to check
+ * @return true for QwtPlotCurve and QwtPlotBarChart
+ */
+bool QwtPlotItemInfo::isXYSeriesItem(const QwtPlotItem* item)
+{
+	if (!item)
+		return false;
+
+	const int rtti = item->rtti();
+	return rtti == QwtPlotItem::Rtti_PlotCurve || rtti == QwtPlotItem::Rtti_PlotBarChart;
+}
+
+/**
+ * @brief Check whether the item stores QwtIntervalSample data
+ * @param item Plot item to check
+ * @return true for QwtPlotIntervalCurve and QwtPlotHistogram
+ */
+bool QwtPlotItemInfo::isIntervalSeriesItem(const QwtPlotItem* item)
+{
+	if (!item)
+		return false;
+
+	const int rtti = item->rtti();
+	return rtti == QwtPlotItem::Rtti_PlotIntervalCurve || rtti == QwtPlotItem::Rtti_PlotHistogram;
+}
+
+/**
+ * @brief Check whether the item is a decorator (non-data item)
+ * @param item Plot item to check
+ * @return true for grid, marker, scale, legend, text label, zone, shape, graphic, arrow marker
+ */
+bool QwtPlotItemInfo::isDecoratorItem(const QwtPlotItem* item)
+{
+	if (!item)
+		return false;
+
+	const int rtti = item->rtti();
+	switch (rtti) {
+	case QwtPlotItem::Rtti_PlotGrid:
+	case QwtPlotItem::Rtti_PlotScale:
+	case QwtPlotItem::Rtti_PlotLegend:
+	case QwtPlotItem::Rtti_PlotMarker:
+	case QwtPlotItem::Rtti_PlotGraphic:
+	case QwtPlotItem::Rtti_PlotShape:
+	case QwtPlotItem::Rtti_PlotTextLabel:
+	case QwtPlotItem::Rtti_PlotZone:
+	case QwtPlotItem::Rtti_PlotArrowMarker:
+	case QwtPlotItem::Rtti_PlotSpectrogram:
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Check whether the item holds any data series
+ * @param item Plot item to check
+ * @return true for all QwtPlotSeriesItem subclasses
+ * @sa isSeriesItem()
+ */
+bool QwtPlotItemInfo::isDataItem(const QwtPlotItem* item)
+{
+	return isSeriesItem(item);
+}
+
+/**
+ * @brief Get all QwtPlotSeriesItem instances from a plot
+ * @param plot Plot to query
+ * @return List of series items
+ */
+QwtPlotItemList QwtPlotItemInfo::seriesItems(const QwtPlot* plot)
+{
+	if (!plot)
+		return QwtPlotItemList();
+
+	QwtPlotItemList result;
+	const QwtPlotItemList& items = plot->itemList();
+	for (QwtPlotItem* item : items) {
+		if (isSeriesItem(item))
+			result.append(item);
+	}
+	return result;
+}
+
+/**
+ * @brief Get all QPointF-based series items from a plot
+ * @param plot Plot to query
+ * @return List of XY series items (curves and bar charts)
+ */
+QwtPlotItemList QwtPlotItemInfo::xySeriesItems(const QwtPlot* plot)
+{
+	if (!plot)
+		return QwtPlotItemList();
+
+	QwtPlotItemList result;
+	const QwtPlotItemList& items = plot->itemList();
+	for (QwtPlotItem* item : items) {
+		if (isXYSeriesItem(item))
+			result.append(item);
+	}
+	return result;
+}
+
+/**
+ * @brief Filter items by a single rtti value
+ * @param plot Plot to query
+ * @param rtti Runtime type value to match
+ * @return List of items matching the rtti
+ * @sa QwtPlotDict::itemList(int)
+ */
+QwtPlotItemList QwtPlotItemInfo::filterByRtti(const QwtPlot* plot, int rtti)
+{
+	if (!plot)
+		return QwtPlotItemList();
+
+	return plot->itemList(rtti);
+}
+
+/**
+ * @brief Filter items by a set of rtti values
+ * @param plot Plot to query
+ * @param rttiSet Set of rtti values to match
+ * @return List of items whose rtti is in the set
+ */
+QwtPlotItemList QwtPlotItemInfo::filterByRtti(const QwtPlot* plot, const QSet< int >& rttiSet)
+{
+	if (!plot)
+		return QwtPlotItemList();
+
+	QwtPlotItemList result;
+	const QwtPlotItemList& items = plot->itemList();
+	for (QwtPlotItem* item : items) {
+		if (rttiSet.contains(item->rtti()))
+			result.append(item);
+	}
+	return result;
+}
+
+/**
+ * @brief Get all currently visible items from a plot
+ * @param plot Plot to query
+ * @return List of visible items
+ */
+QwtPlotItemList QwtPlotItemInfo::visibleItems(const QwtPlot* plot)
+{
+	if (!plot)
+		return QwtPlotItemList();
+
+	QwtPlotItemList result;
+	const QwtPlotItemList& items = plot->itemList();
+	for (QwtPlotItem* item : items) {
+		if (item->isVisible())
+			result.append(item);
+	}
+	return result;
+}
+
+/**
+ * @brief Get the number of data samples in a plot item
+ * @param item Plot item to query
+ * @return Number of samples, or -1 if the item does not hold a data series
+ */
+int QwtPlotItemInfo::dataSize(const QwtPlotItem* item)
+{
+	if (!item)
+		return -1;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return static_cast< int >(static_cast< const QwtPlotCurve* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return static_cast< int >(static_cast< const QwtPlotBarChart* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return static_cast< int >(static_cast< const QwtPlotHistogram* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return static_cast< int >(static_cast< const QwtPlotIntervalCurve* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return static_cast< int >(static_cast< const QwtPlotSpectroCurve* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		return static_cast< int >(static_cast< const QwtPlotTradingCurve* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+		return static_cast< int >(static_cast< const QwtPlotMultiBarChart* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotVectorField:
+		return static_cast< int >(static_cast< const QwtPlotVectorField* >(item)->dataSize());
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return static_cast< int >(static_cast< const QwtPlotBoxChart* >(item)->dataSize());
+	default:
+		return -1;
+	}
+}
+
+/**
+ * @brief Get the bounding rectangle of the item's data
+ * @param item Plot item to query
+ * @return Bounding rectangle, or an invalid QRectF if the item does not hold data
+ */
+QRectF QwtPlotItemInfo::dataRect(const QwtPlotItem* item)
+{
+	if (!item || !isSeriesItem(item))
+		return QRectF();
+
+	return item->boundingRect();
+}
+
+/**
+ * @brief Get a human-readable name for an rtti value
+ * @param rtti Runtime type value
+ * @return String name such as "PlotCurve", "PlotBarChart", etc.
+ */
+QString QwtPlotItemInfo::rttiName(int rtti)
+{
+	switch (rtti) {
+	case QwtPlotItem::Rtti_PlotItem:
+		return QStringLiteral("PlotItem");
+	case QwtPlotItem::Rtti_PlotGrid:
+		return QStringLiteral("PlotGrid");
+	case QwtPlotItem::Rtti_PlotScale:
+		return QStringLiteral("PlotScale");
+	case QwtPlotItem::Rtti_PlotLegend:
+		return QStringLiteral("PlotLegend");
+	case QwtPlotItem::Rtti_PlotMarker:
+		return QStringLiteral("PlotMarker");
+	case QwtPlotItem::Rtti_PlotCurve:
+		return QStringLiteral("PlotCurve");
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return QStringLiteral("PlotSpectroCurve");
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return QStringLiteral("PlotIntervalCurve");
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return QStringLiteral("PlotHistogram");
+	case QwtPlotItem::Rtti_PlotSpectrogram:
+		return QStringLiteral("PlotSpectrogram");
+	case QwtPlotItem::Rtti_PlotGraphic:
+		return QStringLiteral("PlotGraphic");
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		return QStringLiteral("PlotTradingCurve");
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return QStringLiteral("PlotBarChart");
+	case QwtPlotItem::Rtti_PlotMultiBarChart:
+		return QStringLiteral("PlotMultiBarChart");
+	case QwtPlotItem::Rtti_PlotShape:
+		return QStringLiteral("PlotShape");
+	case QwtPlotItem::Rtti_PlotTextLabel:
+		return QStringLiteral("PlotTextLabel");
+	case QwtPlotItem::Rtti_PlotZone:
+		return QStringLiteral("PlotZone");
+	case QwtPlotItem::Rtti_PlotVectorField:
+		return QStringLiteral("PlotVectorField");
+	case QwtPlotItem::Rtti_PlotArrowMarker:
+		return QStringLiteral("PlotArrowMarker");
+	case QwtPlotItem::Rtti_PlotBoxChart:
+		return QStringLiteral("PlotBoxChart");
+	default:
+		if (rtti >= QwtPlotItem::Rtti_PlotUserItem)
+			return QStringLiteral("PlotUserItem(%1)").arg(rtti);
+		return QStringLiteral("Unknown(%1)").arg(rtti);
+	}
+}
+
+/*** End of inlined file: qwt_plot_item_info.cpp ***/
+
+
+
+/*** Start of inlined file: qwt_plot_data_access.cpp ***/
+
+/*** Start of inlined file: qwt_point_3d.h ***/
+#ifndef QWT_PLOT_POINT_3D_FWD_H
+#define QWT_PLOT_POINT_3D_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_point_3d.h ***/
+
+#include <qpainterpath.h>
+
+// Helper: extract samples from a QwtSeriesStore<T>
+template< typename T >
+static QVector< T > extractSamples(const QwtSeriesStore< T >* store)
+{
+	QVector< T > result;
+	if (!store)
+		return result;
+
+	const size_t size = store->dataSize();
+	result.reserve(static_cast< int >(size));
+	for (size_t i = 0; i < size; ++i)
+		result.append(store->sample(i));
+
+	return result;
+}
+
+/**
+ * @brief Extract XY samples from a plot item
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @return Vector of QPointF samples, empty if item type is not supported
+ */
+QVector< QPointF > QwtPlotDataAccess::xySamples(const QwtPlotItem* item)
+{
+	if (!item)
+		return QVector< QPointF >();
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve: {
+		const auto* curve = static_cast< const QwtPlotCurve* >(item);
+		return extractSamples(static_cast< const QwtSeriesStore< QPointF >* >(curve));
+	}
+	case QwtPlotItem::Rtti_PlotBarChart: {
+		const auto* bar = static_cast< const QwtPlotBarChart* >(item);
+		return extractSamples(static_cast< const QwtSeriesStore< QPointF >* >(bar));
+	}
+	default:
+		return QVector< QPointF >();
+	}
+}
+
+/**
+ * @brief Extract XY samples into separate x and y vectors
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param[out] x Output vector for x coordinates
+ * @param[out] y Output vector for y coordinates
+ */
+void QwtPlotDataAccess::xySamples(const QwtPlotItem* item, QVector< double >& x, QVector< double >& y)
+{
+	const QVector< QPointF > pts = xySamples(item);
+	x.clear();
+	y.clear();
+	x.reserve(pts.size());
+	y.reserve(pts.size());
+	for (const QPointF& p : pts) {
+		x.append(p.x());
+		y.append(p.y());
+	}
+}
+
+/**
+ * @brief Set XY samples on a plot item
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param data Sample data to set
+ * @return true if successful, false if item type is not supported
+ */
+bool QwtPlotDataAccess::setXYSamples(QwtPlotItem* item, const QVector< QPointF >& data)
+{
+	if (!item)
+		return false;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		static_cast< QwtPlotCurve* >(item)->setSamples(data);
+		return true;
+	case QwtPlotItem::Rtti_PlotBarChart:
+		static_cast< QwtPlotBarChart* >(item)->setSamples(data);
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Set XY samples from separate x and y vectors
+ * @param item Plot item (must be QwtPlotCurve)
+ * @param x X coordinate vector
+ * @param y Y coordinate vector
+ * @return true if successful, false if item type is not supported
+ * @note Only QwtPlotCurve supports separate x/y vectors; QwtPlotBarChart is not supported here
+ */
+bool QwtPlotDataAccess::setXYSamples(QwtPlotItem* item, const QVector< double >& x, const QVector< double >& y)
+{
+	if (!item || x.size() != y.size())
+		return false;
+
+	if (item->rtti() == QwtPlotItem::Rtti_PlotCurve) {
+		static_cast< QwtPlotCurve* >(item)->setSamples(x, y);
+		return true;
+	}
+	return false;
+}
+
+/**
+ * @brief Extract interval samples from a plot item
+ * @param item Plot item (must be QwtPlotIntervalCurve or QwtPlotHistogram)
+ * @return Vector of QwtIntervalSample, empty if not supported
+ */
+QVector< QwtIntervalSample > QwtPlotDataAccess::intervalSamples(const QwtPlotItem* item)
+{
+	if (!item)
+		return QVector< QwtIntervalSample >();
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotIntervalCurve: {
+		const auto* curve = static_cast< const QwtPlotIntervalCurve* >(item);
+		return extractSamples(static_cast< const QwtSeriesStore< QwtIntervalSample >* >(curve));
+	}
+	case QwtPlotItem::Rtti_PlotHistogram: {
+		const auto* hist = static_cast< const QwtPlotHistogram* >(item);
+		return extractSamples(static_cast< const QwtSeriesStore< QwtIntervalSample >* >(hist));
+	}
+	default:
+		return QVector< QwtIntervalSample >();
+	}
+}
+
+/**
+ * @brief Set interval samples on a plot item
+ * @param item Plot item (must be QwtPlotIntervalCurve or QwtPlotHistogram)
+ * @param data Interval sample data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setIntervalSamples(QwtPlotItem* item, const QVector< QwtIntervalSample >& data)
+{
+	if (!item)
+		return false;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		static_cast< QwtPlotIntervalCurve* >(item)->setSamples(data);
+		return true;
+	case QwtPlotItem::Rtti_PlotHistogram:
+		static_cast< QwtPlotHistogram* >(item)->setSamples(data);
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Extract 3D point samples from a plot item
+ * @param item Plot item (must be QwtPlotSpectroCurve)
+ * @return Vector of QwtPoint3D samples
+ */
+QVector< QwtPoint3D > QwtPlotDataAccess::xyzSamples(const QwtPlotItem* item)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotSpectroCurve)
+		return QVector< QwtPoint3D >();
+
+	const auto* curve = static_cast< const QwtPlotSpectroCurve* >(item);
+	return extractSamples(static_cast< const QwtSeriesStore< QwtPoint3D >* >(curve));
+}
+
+/**
+ * @brief Set 3D point samples on a plot item
+ * @param item Plot item (must be QwtPlotSpectroCurve)
+ * @param data 3D point data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setXyzSamples(QwtPlotItem* item, const QVector< QwtPoint3D >& data)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotSpectroCurve)
+		return false;
+
+	static_cast< QwtPlotSpectroCurve* >(item)->setSamples(data);
+	return true;
+}
+
+/**
+ * @brief Extract OHLC samples from a plot item
+ * @param item Plot item (must be QwtPlotTradingCurve)
+ * @return Vector of QwtOHLCSample
+ */
+QVector< QwtOHLCSample > QwtPlotDataAccess::ohlcSamples(const QwtPlotItem* item)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotTradingCurve)
+		return QVector< QwtOHLCSample >();
+
+	const auto* curve = static_cast< const QwtPlotTradingCurve* >(item);
+	return extractSamples(static_cast< const QwtSeriesStore< QwtOHLCSample >* >(curve));
+}
+
+/**
+ * @brief Set OHLC samples on a plot item
+ * @param item Plot item (must be QwtPlotTradingCurve)
+ * @param data OHLC sample data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setOhlcSamples(QwtPlotItem* item, const QVector< QwtOHLCSample >& data)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotTradingCurve)
+		return false;
+
+	static_cast< QwtPlotTradingCurve* >(item)->setSamples(data);
+	return true;
+}
+
+/**
+ * @brief Extract set samples from a plot item
+ * @param item Plot item (must be QwtPlotMultiBarChart)
+ * @return Vector of QwtSetSample
+ */
+QVector< QwtSetSample > QwtPlotDataAccess::setSamples(const QwtPlotItem* item)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotMultiBarChart)
+		return QVector< QwtSetSample >();
+
+	const auto* bar = static_cast< const QwtPlotMultiBarChart* >(item);
+	return extractSamples(static_cast< const QwtSeriesStore< QwtSetSample >* >(bar));
+}
+
+/**
+ * @brief Set set samples on a plot item
+ * @param item Plot item (must be QwtPlotMultiBarChart)
+ * @param data Set sample data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setSetSamples(QwtPlotItem* item, const QVector< QwtSetSample >& data)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotMultiBarChart)
+		return false;
+
+	static_cast< QwtPlotMultiBarChart* >(item)->setSamples(data);
+	return true;
+}
+
+/**
+ * @brief Extract vector field samples from a plot item
+ * @param item Plot item (must be QwtPlotVectorField)
+ * @return Vector of QwtVectorFieldSample
+ */
+QVector< QwtVectorFieldSample > QwtPlotDataAccess::vectorFieldSamples(const QwtPlotItem* item)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotVectorField)
+		return QVector< QwtVectorFieldSample >();
+
+	const auto* field = static_cast< const QwtPlotVectorField* >(item);
+	return extractSamples(static_cast< const QwtSeriesStore< QwtVectorFieldSample >* >(field));
+}
+
+/**
+ * @brief Set vector field samples on a plot item
+ * @param item Plot item (must be QwtPlotVectorField)
+ * @param data Vector field sample data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setVectorFieldSamples(QwtPlotItem* item, const QVector< QwtVectorFieldSample >& data)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotVectorField)
+		return false;
+
+	static_cast< QwtPlotVectorField* >(item)->setSamples(data);
+	return true;
+}
+
+/**
+ * @brief Extract box samples from a plot item
+ * @param item Plot item (must be QwtPlotBoxChart)
+ * @return Vector of QwtBoxSample
+ */
+QVector< QwtBoxSample > QwtPlotDataAccess::boxSamples(const QwtPlotItem* item)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotBoxChart)
+		return QVector< QwtBoxSample >();
+
+	const auto* box = static_cast< const QwtPlotBoxChart* >(item);
+	return extractSamples(static_cast< const QwtSeriesStore< QwtBoxSample >* >(box));
+}
+
+/**
+ * @brief Set box samples on a plot item
+ * @param item Plot item (must be QwtPlotBoxChart)
+ * @param data Box sample data
+ * @return true if successful
+ */
+bool QwtPlotDataAccess::setBoxSamples(QwtPlotItem* item, const QVector< QwtBoxSample >& data)
+{
+	if (!item || item->rtti() != QwtPlotItem::Rtti_PlotBoxChart)
+		return false;
+
+	static_cast< QwtPlotBoxChart* >(item)->setSamples(data);
+	return true;
+}
+
+/**
+ * @brief Extract XY samples within a rectangular range
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param range Rectangular range in data coordinates
+ * @return Filtered samples that fall within the range
+ */
+QVector< QPointF > QwtPlotDataAccess::xySamplesInRange(const QwtPlotItem* item, const QRectF& range)
+{
+	const QVector< QPointF > all = xySamples(item);
+	QVector< QPointF > result;
+	result.reserve(all.size());
+	for (const QPointF& p : all) {
+		if (range.contains(p))
+			result.append(p);
+	}
+	return result;
+}
+
+/**
+ * @brief Extract XY samples within a path range
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param range Path range in data coordinates
+ * @return Filtered samples that fall within the path
+ */
+QVector< QPointF > QwtPlotDataAccess::xySamplesInRange(const QwtPlotItem* item, const QPainterPath& range)
+{
+	const QVector< QPointF > all = xySamples(item);
+	QVector< QPointF > result;
+	result.reserve(all.size());
+	for (const QPointF& p : all) {
+		if (range.contains(p))
+			result.append(p);
+	}
+	return result;
+}
+
+/**
+ * @brief Remove XY samples within a rectangular range
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param range Rectangular range in data coordinates
+ * @return Number of samples removed
+ */
+int QwtPlotDataAccess::removeSamplesInRange(QwtPlotItem* item, const QRectF& range)
+{
+	if (!item)
+		return 0;
+
+	const QVector< QPointF > all = xySamples(item);
+	QVector< QPointF > remaining;
+	remaining.reserve(all.size());
+
+	int removed = 0;
+	for (const QPointF& p : all) {
+		if (range.contains(p))
+			++removed;
+		else
+			remaining.append(p);
+	}
+
+	if (removed > 0)
+		setXYSamples(item, remaining);
+
+	return removed;
+}
+
+/**
+ * @brief Remove XY samples within a path range
+ * @param item Plot item (must be QwtPlotCurve or QwtPlotBarChart)
+ * @param range Path range in data coordinates
+ * @return Number of samples removed
+ */
+int QwtPlotDataAccess::removeSamplesInRange(QwtPlotItem* item, const QPainterPath& range)
+{
+	if (!item)
+		return 0;
+
+	const QVector< QPointF > all = xySamples(item);
+	QVector< QPointF > remaining;
+	remaining.reserve(all.size());
+
+	int removed = 0;
+	for (const QPointF& p : all) {
+		if (range.contains(p))
+			++removed;
+		else
+			remaining.append(p);
+	}
+
+	if (removed > 0)
+		setXYSamples(item, remaining);
+
+	return removed;
+}
+
+/*** End of inlined file: qwt_plot_data_access.cpp ***/
+
+
+/*** Start of inlined file: qwt_plot_factory.cpp ***/
+/**
+ * @brief Create a curve from QPointF data and attach it to a plot
+ * @param plot Target plot
+ * @param title Curve title
+ * @param data Sample data as QPointF vector
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached curve
+ */
+QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
+										  const QVector< QPointF >& data,
+										  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotCurve(title);
+	curve->setSamples(data);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a curve from separate x and y vectors and attach it to a plot
+ * @param plot Target plot
+ * @param title Curve title
+ * @param x X coordinate vector
+ * @param y Y coordinate vector
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached curve
+ */
+QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
+										  const QVector< double >& x, const QVector< double >& y,
+										  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotCurve(title);
+	curve->setSamples(x, y);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a curve from y-only data (x = index) and attach it to a plot
+ * @param plot Target plot
+ * @param title Curve title
+ * @param y Y coordinate vector (x is auto-generated as 0, 1, 2, ...)
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached curve
+ */
+QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
+										  const QVector< double >& y,
+										  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotCurve(title);
+	curve->setSamples(y);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a bar chart from y-only values and attach it to a plot
+ * @param plot Target plot
+ * @param title Bar chart title
+ * @param values Y values (x is auto-generated as 0, 1, 2, ...)
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached bar chart
+ */
+QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& title,
+												const QVector< double >& values,
+												QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* bar = new QwtPlotBarChart(title);
+	bar->setSamples(values);
+	bar->setAxes(xAxis, yAxis);
+	bar->attach(plot);
+	return bar;
+}
+
+/**
+ * @brief Create a bar chart from QPointF data and attach it to a plot
+ * @param plot Target plot
+ * @param title Bar chart title
+ * @param data Sample data as QPointF vector
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached bar chart
+ */
+QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& title,
+												const QVector< QPointF >& data,
+												QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* bar = new QwtPlotBarChart(title);
+	bar->setSamples(data);
+	bar->setAxes(xAxis, yAxis);
+	bar->attach(plot);
+	return bar;
+}
+
+/**
+ * @brief Create a multi bar chart from QwtSetSample data
+ * @param plot Target plot
+ * @param title Multi bar chart title
+ * @param data Set sample data
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached multi bar chart
+ */
+QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const QString& title,
+														  const QVector< QwtSetSample >& data,
+														  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* bar = new QwtPlotMultiBarChart(title);
+	bar->setSamples(data);
+	bar->setAxes(xAxis, yAxis);
+	bar->attach(plot);
+	return bar;
+}
+
+/**
+ * @brief Create a multi bar chart from nested vectors
+ * @param plot Target plot
+ * @param title Multi bar chart title
+ * @param data Nested vector where each inner vector is one bar group
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached multi bar chart
+ */
+QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const QString& title,
+														  const QVector< QVector< double > >& data,
+														  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* bar = new QwtPlotMultiBarChart(title);
+	bar->setSamples(data);
+	bar->setAxes(xAxis, yAxis);
+	bar->attach(plot);
+	return bar;
+}
+
+/**
+ * @brief Create a histogram from interval samples
+ * @param plot Target plot
+ * @param title Histogram title
+ * @param data Interval sample data
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached histogram
+ */
+QwtPlotHistogram* QwtPlotFactory::createHistogram(QwtPlot* plot, const QString& title,
+												  const QVector< QwtIntervalSample >& data,
+												  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* hist = new QwtPlotHistogram(title);
+	hist->setSamples(data);
+	hist->setAxes(xAxis, yAxis);
+	hist->attach(plot);
+	return hist;
+}
+
+/**
+ * @brief Create an interval curve
+ * @param plot Target plot
+ * @param title Interval curve title
+ * @param data Interval sample data
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached interval curve
+ */
+QwtPlotIntervalCurve* QwtPlotFactory::createIntervalCurve(QwtPlot* plot, const QString& title,
+														  const QVector< QwtIntervalSample >& data,
+														  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotIntervalCurve(title);
+	curve->setSamples(data);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a trading curve (K-line / OHLC)
+ * @param plot Target plot
+ * @param title Trading curve title
+ * @param data OHLC sample data
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached trading curve
+ */
+QwtPlotTradingCurve* QwtPlotFactory::createTradingCurve(QwtPlot* plot, const QString& title,
+														const QVector< QwtOHLCSample >& data,
+														QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotTradingCurve(title);
+	curve->setSamples(data);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a spectro curve from 3D point data
+ * @param plot Target plot
+ * @param title Spectro curve title
+ * @param data 3D point data (x, y, z where z is typically mapped to color)
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached spectro curve
+ */
+QwtPlotSpectroCurve* QwtPlotFactory::createSpectroCurve(QwtPlot* plot, const QString& title,
+														const QVector< QwtPoint3D >& data,
+														QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* curve = new QwtPlotSpectroCurve(title);
+	curve->setSamples(data);
+	curve->setAxes(xAxis, yAxis);
+	curve->attach(plot);
+	return curve;
+}
+
+/**
+ * @brief Create a vector field from samples
+ * @param plot Target plot
+ * @param title Vector field title
+ * @param data Vector field sample data (position + vector)
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached vector field
+ */
+QwtPlotVectorField* QwtPlotFactory::createVectorField(QwtPlot* plot, const QString& title,
+													  const QVector< QwtVectorFieldSample >& data,
+													  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* field = new QwtPlotVectorField(title);
+	field->setSamples(data);
+	field->setAxes(xAxis, yAxis);
+	field->attach(plot);
+	return field;
+}
+
+/**
+ * @brief Create a box chart from box samples
+ * @param plot Target plot
+ * @param title Box chart title
+ * @param data Box sample data
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached box chart
+ */
+QwtPlotBoxChart* QwtPlotFactory::createBoxChart(QwtPlot* plot, const QString& title,
+												const QVector< QwtBoxSample >& data,
+												QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* box = new QwtPlotBoxChart(title);
+	box->setSamples(data);
+	box->setAxes(xAxis, yAxis);
+	box->attach(plot);
+	return box;
+}
+
+/**
+ * @brief Create and attach a grid to a plot
+ * @param plot Target plot
+ * @param enableMinor Whether to enable minor grid lines
+ * @param majorPen Pen for major grid lines
+ * @param minorPen Pen for minor grid lines
+ * @return The newly created and attached grid
+ */
+QwtPlotGrid* QwtPlotFactory::createGrid(QwtPlot* plot, bool enableMinor,
+										const QPen& majorPen, const QPen& minorPen)
+{
+	auto* grid = new QwtPlotGrid();
+	grid->setMajorPen(majorPen);
+	if (enableMinor) {
+		grid->enableXMin(true);
+		grid->enableYMin(true);
+		grid->setMinorPen(minorPen);
+	}
+	grid->attach(plot);
+	return grid;
+}
+
+/**
+ * @brief Create a point marker with optional label
+ * @param plot Target plot
+ * @param pos Marker position in data coordinates
+ * @param label Optional text label
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached marker
+ */
+QwtPlotMarker* QwtPlotFactory::createMarker(QwtPlot* plot, const QPointF& pos,
+											const QString& label,
+											QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* marker = new QwtPlotMarker();
+	marker->setValue(pos);
+	marker->setAxes(xAxis, yAxis);
+	if (!label.isEmpty())
+		marker->setLabel(QwtText(label));
+	marker->attach(plot);
+	return marker;
+}
+
+/**
+ * @brief Create a horizontal line marker
+ * @param plot Target plot
+ * @param y Y position of the line
+ * @param pen Line pen
+ * @return The newly created and attached horizontal line marker
+ */
+QwtPlotMarker* QwtPlotFactory::createHLine(QwtPlot* plot, double y, const QPen& pen)
+{
+	auto* marker = new QwtPlotMarker();
+	marker->setLineStyle(QwtPlotMarker::HLine);
+	marker->setYValue(y);
+	marker->setLinePen(pen);
+	marker->attach(plot);
+	return marker;
+}
+
+/**
+ * @brief Create a vertical line marker
+ * @param plot Target plot
+ * @param x X position of the line
+ * @param pen Line pen
+ * @return The newly created and attached vertical line marker
+ */
+QwtPlotMarker* QwtPlotFactory::createVLine(QwtPlot* plot, double x, const QPen& pen)
+{
+	auto* marker = new QwtPlotMarker();
+	marker->setLineStyle(QwtPlotMarker::VLine);
+	marker->setXValue(x);
+	marker->setLinePen(pen);
+	marker->attach(plot);
+	return marker;
+}
+
+/**
+ * @brief Create a highlighted zone
+ * @param plot Target plot
+ * @param interval The interval range to highlight
+ * @param orientation Vertical or horizontal zone
+ * @param brush Fill brush for the zone
+ * @return The newly created and attached zone item
+ */
+QwtPlotZoneItem* QwtPlotFactory::createZone(QwtPlot* plot, const QwtInterval& interval,
+											Qt::Orientation orientation, const QBrush& brush)
+{
+	auto* zone = new QwtPlotZoneItem();
+	zone->setInterval(interval.minValue(), interval.maxValue());
+	zone->setOrientation(orientation);
+	zone->setBrush(brush);
+	zone->attach(plot);
+	return zone;
+}
+
+/**
+ * @brief Create an arrow marker
+ * @param plot Target plot
+ * @param start Arrow start point in data coordinates
+ * @param end Arrow end point in data coordinates
+ * @param xAxis X axis to bind to
+ * @param yAxis Y axis to bind to
+ * @return The newly created and attached arrow marker
+ */
+QwtPlotArrowMarker* QwtPlotFactory::createArrowMarker(QwtPlot* plot,
+													  const QPointF& start, const QPointF& end,
+													  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	auto* arrow = new QwtPlotArrowMarker();
+	arrow->setPoints(start, end);
+	arrow->setAxes(xAxis, yAxis);
+	arrow->attach(plot);
+	return arrow;
+}
+
+/**
+ * @brief Create a graphic item
+ * @param plot Target plot
+ * @param rect Bounding rectangle in data coordinates
+ * @param graphic The graphic to display
+ * @return The newly created and attached graphic item
+ */
+QwtPlotGraphicItem* QwtPlotFactory::createGraphic(QwtPlot* plot, const QRectF& rect,
+												  const QwtGraphic& graphic)
+{
+	auto* item = new QwtPlotGraphicItem();
+	item->setGraphic(rect, graphic);
+	item->attach(plot);
+	return item;
+}
+
+/**
+ * @brief Create a text label on the canvas
+ * @param plot Target plot
+ * @param text Label text
+ * @param alignment Alignment within the canvas (applied via QwtText render flags)
+ * @return The newly created and attached text label
+ */
+QwtPlotTextLabel* QwtPlotFactory::createTextLabel(QwtPlot* plot, const QString& text,
+												  Qt::Alignment alignment)
+{
+	auto* label = new QwtPlotTextLabel();
+	QwtText textObj(text);
+	textObj.setRenderFlags(alignment);
+	label->setText(textObj);
+	label->attach(plot);
+	return label;
+}
+
+/**
+ * @brief Create an in-canvas legend item
+ * @param plot Target plot
+ * @return The newly created and attached legend item
+ */
+QwtPlotLegendItem* QwtPlotFactory::createLegend(QwtPlot* plot)
+{
+	auto* legend = new QwtPlotLegendItem();
+	legend->attach(plot);
+	return legend;
+}
+
+/**
+ * @brief Create a scale item at a specific axis
+ * @param plot Target plot
+ * @param axis Axis to display the scale on
+ * @return The newly created and attached scale item
+ */
+QwtPlotScaleItem* QwtPlotFactory::createScaleItem(QwtPlot* plot, QwtAxisId axis)
+{
+	QwtScaleDraw::Alignment alignment = QwtScaleDraw::BottomScale;
+	if (axis == QwtAxis::YLeft)
+		alignment = QwtScaleDraw::LeftScale;
+	else if (axis == QwtAxis::YRight)
+		alignment = QwtScaleDraw::RightScale;
+	else if (axis == QwtAxis::XTop)
+		alignment = QwtScaleDraw::TopScale;
+
+	auto* scale = new QwtPlotScaleItem(alignment);
+	scale->setScaleDiv(plot->axisScaleDiv(axis));
+	scale->setScaleDivFromAxis(false);
+	scale->attach(plot);
+	return scale;
+}
+
+/*** End of inlined file: qwt_plot_factory.cpp ***/
+
+
+/*** Start of inlined file: qwt_plot_transform.cpp ***/
+#include <qpainterpath.h>
+
+/**
+ * @brief Transform a point from one axis pair to another
+ * @param plot Plot to query
+ * @param point Data coordinates in the source axis system
+ * @param fromX Source X axis
+ * @param fromY Source Y axis
+ * @param toX Target X axis
+ * @param toY Target Y axis
+ * @return Data coordinates in the target axis system (same screen position)
+ * @details This method first transforms the data point to screen coordinates
+ *          using the source axes, then transforms back to data coordinates
+ *          using the target axes.
+ */
+QPointF QwtPlotTransform::transformPoint(const QwtPlot* plot, const QPointF& point,
+										 QwtAxisId fromX, QwtAxisId fromY,
+										 QwtAxisId toX, QwtAxisId toY)
+{
+	if (!plot)
+		return point;
+
+	if (fromX == toX && fromY == toY)
+		return point;
+
+	double x = point.x();
+	double y = point.y();
+
+	if (fromX != toX) {
+		const QwtScaleMap xMap1 = plot->canvasMap(fromX);
+		const QwtScaleMap xMap2 = plot->canvasMap(toX);
+		const double screenX = xMap1.transform(x);
+		x = xMap2.invTransform(screenX);
+	}
+
+	if (fromY != toY) {
+		const QwtScaleMap yMap1 = plot->canvasMap(fromY);
+		const QwtScaleMap yMap2 = plot->canvasMap(toY);
+		const double screenY = yMap1.transform(y);
+		y = yMap2.invTransform(screenY);
+	}
+
+	return QPointF(x, y);
+}
+
+/**
+ * @brief Transform a path from one axis pair to another
+ * @param plot Plot to query
+ * @param path Path in source axis data coordinates
+ * @param fromX Source X axis
+ * @param fromY Source Y axis
+ * @param toX Target X axis
+ * @param toY Target Y axis
+ * @return Transformed path in target axis data coordinates
+ */
+QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot, const QPainterPath& path,
+											 QwtAxisId fromX, QwtAxisId fromY,
+											 QwtAxisId toX, QwtAxisId toY)
+{
+	if (!plot || (fromX == toX && fromY == toY))
+		return path;
+
+	QPainterPath result;
+	result.setFillRule(path.fillRule());
+
+	for (int i = 0; i < path.elementCount(); ++i) {
+		const QPainterPath::Element& el = path.elementAt(i);
+		const QPointF transformed = transformPoint(plot, QPointF(el.x, el.y),
+												   fromX, fromY, toX, toY);
+		switch (el.type) {
+		case QPainterPath::MoveToElement:
+			result.moveTo(transformed);
+			break;
+		case QPainterPath::LineToElement:
+			result.lineTo(transformed);
+			break;
+		case QPainterPath::CurveToElement:
+			result.cubicTo(transformed,
+						   transformPoint(plot, QPointF(path.elementAt(i + 1).x, path.elementAt(i + 1).y),
+										  fromX, fromY, toX, toY),
+						   transformPoint(plot, QPointF(path.elementAt(i + 2).x, path.elementAt(i + 2).y),
+										  fromX, fromY, toX, toY));
+			i += 2;
+			break;
+		case QPainterPath::CurveToDataElement:
+			// Skip - handled by CurveToElement
+			break;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * @brief Convert screen position to data coordinates
+ * @param plot Plot to query
+ * @param screenPos Position in canvas widget pixel coordinates
+ * @param xAxis X axis to use for conversion
+ * @param yAxis Y axis to use for conversion
+ * @return Data coordinates corresponding to the screen position
+ */
+QPointF QwtPlotTransform::toPlotPoint(const QwtPlot* plot, const QPointF& screenPos,
+									  QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	if (!plot)
+		return QPointF();
+
+	const QwtScaleMap xMap = plot->canvasMap(xAxis);
+	const QwtScaleMap yMap = plot->canvasMap(yAxis);
+
+	return QPointF(xMap.invTransform(screenPos.x()), yMap.invTransform(screenPos.y()));
+}
+
+/**
+ * @brief Convert data coordinates to screen position
+ * @param plot Plot to query
+ * @param plotPoint Data coordinates
+ * @param xAxis X axis to use for conversion
+ * @param yAxis Y axis to use for conversion
+ * @return Screen position in canvas widget pixel coordinates
+ */
+QPointF QwtPlotTransform::toScreenPoint(const QwtPlot* plot, const QPointF& plotPoint,
+										QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	if (!plot)
+		return QPointF();
+
+	const QwtScaleMap xMap = plot->canvasMap(xAxis);
+	const QwtScaleMap yMap = plot->canvasMap(yAxis);
+
+	return QPointF(xMap.transform(plotPoint.x()), yMap.transform(plotPoint.y()));
+}
+
+/**
+ * @brief Compute the data-coordinate offset for 1 pixel displacement
+ * @param plot Plot to query
+ * @param xAxis X axis
+ * @param yAxis Y axis
+ * @return Positive offset in data coordinates that corresponds to 1 pixel
+ *         at the center of the plot
+ */
+QPointF QwtPlotTransform::onePixelOffset(const QwtPlot* plot, QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	if (!plot)
+		return QPointF(0.0, 0.0);
+
+	const QPoint center = plot->rect().center();
+	const double x1 = plot->invTransform(xAxis, center.x());
+	const double y1 = plot->invTransform(yAxis, center.y());
+	const double x2 = plot->invTransform(xAxis, center.x() + 1);
+	const double y2 = plot->invTransform(yAxis, center.y() + 1);
+
+	return QPointF(x2 - x1, y2 - y1);
+}
+
+/**
+ * @brief Get the currently visible data range
+ * @param plot Plot to query
+ * @param xAxis X axis
+ * @param yAxis Y axis
+ * @return Rectangle in data coordinates representing the visible area
+ */
+QRectF QwtPlotTransform::visibleRange(const QwtPlot* plot, QwtAxisId xAxis, QwtAxisId yAxis)
+{
+	if (!plot)
+		return QRectF();
+
+	const QwtScaleDiv& xDiv = plot->axisScaleDiv(xAxis);
+	const QwtScaleDiv& yDiv = plot->axisScaleDiv(yAxis);
+
+	const double xMin = xDiv.lowerBound();
+	const double xMax = xDiv.upperBound();
+	const double yMin = yDiv.lowerBound();
+	const double yMax = yDiv.upperBound();
+
+	return QRectF(xMin, yMin, xMax - xMin, yMax - yMin);
+}
+
+/**
+ * @brief Get the union of all data item bounding rectangles
+ * @param plot Plot to query
+ * @param onlyVisible If true, only include visible items
+ * @return Union of all data bounding rectangles, or an invalid rect if no data items exist
+ */
+QRectF QwtPlotTransform::totalDataRange(const QwtPlot* plot, bool onlyVisible)
+{
+	if (!plot)
+		return QRectF();
+
+	QRectF totalRect;
+	bool first = true;
+
+	const QwtPlotItemList& items = plot->itemList();
+	for (QwtPlotItem* item : items) {
+		if (onlyVisible && !item->isVisible())
+			continue;
+
+		const QRectF itemRect = item->boundingRect();
+		if (!itemRect.isValid())
+			continue;
+
+		if (first) {
+			totalRect = itemRect;
+			first = false;
+		} else {
+			totalRect = totalRect.united(itemRect);
+		}
+	}
+
+	return totalRect;
+}
+
+/*** End of inlined file: qwt_plot_transform.cpp ***/
+
+
+/*** Start of inlined file: qwt_plot_styling.cpp ***/
+/**
+ * @brief Get the representative color of a plot item
+ * @param item Plot item to query
+ * @param defaultColor Color to return if the item type is not recognized
+ * @return The primary color of the item (from pen or brush)
+ * @details Uses the item's rtti to dispatch to the correct type-specific API.
+ *          For curves, returns the pen color; for bar charts, the brush color;
+ *          for grids, the major pen color; etc.
+ */
+QColor QwtPlotStyling::color(const QwtPlotItem* item, const QColor& defaultColor)
+{
+	if (!item)
+		return defaultColor;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve: {
+		const auto* curve = static_cast< const QwtPlotCurve* >(item);
+		return curve->pen().color();
+	}
+	case QwtPlotItem::Rtti_PlotBarChart: {
+		const auto* bar = static_cast< const QwtPlotBarChart* >(item);
+		return bar->brush().color();
+	}
+	case QwtPlotItem::Rtti_PlotMultiBarChart: {
+		// QwtPlotMultiBarChart uses symbols per series, not a single pen
+		return defaultColor;
+	}
+	case QwtPlotItem::Rtti_PlotHistogram: {
+		const auto* hist = static_cast< const QwtPlotHistogram* >(item);
+		return hist->brush().color();
+	}
+	case QwtPlotItem::Rtti_PlotIntervalCurve: {
+		const auto* curve = static_cast< const QwtPlotIntervalCurve* >(item);
+		return curve->brush().color();
+	}
+	case QwtPlotItem::Rtti_PlotTradingCurve: {
+		const auto* curve = static_cast< const QwtPlotTradingCurve* >(item);
+		return curve->symbolPen().color();
+	}
+	case QwtPlotItem::Rtti_PlotSpectroCurve: {
+		// SpectroCurve uses color map, not a pen color
+		return defaultColor;
+	}
+	case QwtPlotItem::Rtti_PlotGrid: {
+		const auto* grid = static_cast< const QwtPlotGrid* >(item);
+		return grid->majorPen().color();
+	}
+	case QwtPlotItem::Rtti_PlotMarker: {
+		const auto* marker = static_cast< const QwtPlotMarker* >(item);
+		return marker->linePen().color();
+	}
+	default:
+		return defaultColor;
+	}
+}
+
+/**
+ * @brief Set the color of a plot item
+ * @param item Plot item to modify
+ * @param color New color to apply
+ * @return true if the color was successfully applied
+ * @details For curves, sets the pen color; for bar charts and histograms,
+ *          sets both pen color and brush color; for grids, sets the major pen color.
+ */
+bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
+{
+	if (!item)
+		return false;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve: {
+		auto* curve = static_cast< QwtPlotCurve* >(item);
+		QPen p = curve->pen();
+		p.setColor(color);
+		curve->setPen(p);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotBarChart: {
+		auto* bar = static_cast< QwtPlotBarChart* >(item);
+		QPen p = bar->pen();
+		p.setColor(color);
+		bar->setPen(p);
+		QBrush b = bar->brush();
+		b.setColor(color);
+		bar->setBrush(b);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotHistogram: {
+		auto* hist = static_cast< QwtPlotHistogram* >(item);
+		QPen p = hist->pen();
+		p.setColor(color);
+		hist->setPen(p);
+		QBrush b = hist->brush();
+		b.setColor(color);
+		hist->setBrush(b);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotIntervalCurve: {
+		auto* curve = static_cast< QwtPlotIntervalCurve* >(item);
+		QPen p = curve->pen();
+		p.setColor(color);
+		curve->setPen(p);
+		QBrush b = curve->brush();
+		b.setColor(color);
+		curve->setBrush(b);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotTradingCurve: {
+		auto* curve = static_cast< QwtPlotTradingCurve* >(item);
+		QPen p = curve->symbolPen();
+		p.setColor(color);
+		curve->setSymbolPen(p);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		// SpectroCurve uses color map, not a pen color
+		return false;
+	case QwtPlotItem::Rtti_PlotGrid: {
+		auto* grid = static_cast< QwtPlotGrid* >(item);
+		QPen p = grid->majorPen();
+		p.setColor(color);
+		grid->setMajorPen(p);
+		return true;
+	}
+	case QwtPlotItem::Rtti_PlotMarker: {
+		auto* marker = static_cast< QwtPlotMarker* >(item);
+		QPen p = marker->linePen();
+		p.setColor(color);
+		marker->setLinePen(p);
+		return true;
+	}
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Get the pen of a plot item
+ * @param item Plot item to query
+ * @return The primary pen of the item, or a default QPen if not recognized
+ */
+QPen QwtPlotStyling::pen(const QwtPlotItem* item)
+{
+	if (!item)
+		return QPen();
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return static_cast< const QwtPlotCurve* >(item)->pen();
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return static_cast< const QwtPlotBarChart* >(item)->pen();
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return static_cast< const QwtPlotHistogram* >(item)->pen();
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return static_cast< const QwtPlotIntervalCurve* >(item)->pen();
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		return static_cast< const QwtPlotTradingCurve* >(item)->symbolPen();
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return QPen(); // SpectroCurve uses color map, not a pen
+	case QwtPlotItem::Rtti_PlotGrid:
+		return static_cast< const QwtPlotGrid* >(item)->majorPen();
+	case QwtPlotItem::Rtti_PlotMarker:
+		return static_cast< const QwtPlotMarker* >(item)->linePen();
+	default:
+		return QPen();
+	}
+}
+
+/**
+ * @brief Set the pen of a plot item
+ * @param item Plot item to modify
+ * @param pen New pen to apply
+ * @return true if the pen was successfully applied
+ */
+bool QwtPlotStyling::setPen(QwtPlotItem* item, const QPen& pen)
+{
+	if (!item)
+		return false;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		static_cast< QwtPlotCurve* >(item)->setPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotBarChart:
+		static_cast< QwtPlotBarChart* >(item)->setPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotHistogram:
+		static_cast< QwtPlotHistogram* >(item)->setPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		static_cast< QwtPlotIntervalCurve* >(item)->setPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotTradingCurve:
+		static_cast< QwtPlotTradingCurve* >(item)->setSymbolPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotSpectroCurve:
+		return false; // SpectroCurve uses color map, not a pen
+	case QwtPlotItem::Rtti_PlotGrid:
+		static_cast< QwtPlotGrid* >(item)->setMajorPen(pen);
+		return true;
+	case QwtPlotItem::Rtti_PlotMarker:
+		static_cast< QwtPlotMarker* >(item)->setLinePen(pen);
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Get the brush of a plot item
+ * @param item Plot item to query
+ * @return The primary brush of the item, or a default QBrush if not recognized
+ */
+QBrush QwtPlotStyling::brush(const QwtPlotItem* item)
+{
+	if (!item)
+		return QBrush();
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		return static_cast< const QwtPlotCurve* >(item)->brush();
+	case QwtPlotItem::Rtti_PlotBarChart:
+		return static_cast< const QwtPlotBarChart* >(item)->brush();
+	case QwtPlotItem::Rtti_PlotHistogram:
+		return static_cast< const QwtPlotHistogram* >(item)->brush();
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		return static_cast< const QwtPlotIntervalCurve* >(item)->brush();
+	default:
+		return QBrush();
+	}
+}
+
+/**
+ * @brief Set the brush of a plot item
+ * @param item Plot item to modify
+ * @param brush New brush to apply
+ * @return true if the brush was successfully applied
+ */
+bool QwtPlotStyling::setBrush(QwtPlotItem* item, const QBrush& brush)
+{
+	if (!item)
+		return false;
+
+	switch (item->rtti()) {
+	case QwtPlotItem::Rtti_PlotCurve:
+		static_cast< QwtPlotCurve* >(item)->setBrush(brush);
+		return true;
+	case QwtPlotItem::Rtti_PlotBarChart:
+		static_cast< QwtPlotBarChart* >(item)->setBrush(brush);
+		return true;
+	case QwtPlotItem::Rtti_PlotHistogram:
+		static_cast< QwtPlotHistogram* >(item)->setBrush(brush);
+		return true;
+	case QwtPlotItem::Rtti_PlotIntervalCurve:
+		static_cast< QwtPlotIntervalCurve* >(item)->setBrush(brush);
+		return true;
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Set a symbol on a curve with style and size
+ * @param curve Target curve
+ * @param style Symbol style (ellipse, rect, diamond, etc.)
+ * @param size Symbol size in pixels
+ */
+void QwtPlotStyling::setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style, const QSize& size)
+{
+	if (!curve)
+		return;
+
+	auto* symbol = new QwtSymbol(style, QBrush(curve->pen().color()), curve->pen(), size);
+	curve->setSymbol(symbol);
+}
+
+/**
+ * @brief Set a symbol on a curve with style, color and size
+ * @param curve Target curve
+ * @param style Symbol style
+ * @param color Symbol fill color
+ * @param size Symbol size in pixels
+ */
+void QwtPlotStyling::setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style,
+							   const QColor& color, const QSize& size)
+{
+	if (!curve)
+		return;
+
+	QPen symbolPen(curve->pen().color());
+	auto* symbol = new QwtSymbol(style, QBrush(color), symbolPen, size);
+	curve->setSymbol(symbol);
+}
+
+/**
+ * @brief Set curve line pen style and width
+ * @param curve Target curve
+ * @param style Pen style (solid, dashed, dotted, etc.)
+ * @param width Pen width (0 = cosmetic)
+ */
+void QwtPlotStyling::setLineStyle(QwtPlotCurve* curve, Qt::PenStyle style, qreal width)
+{
+	if (!curve)
+		return;
+
+	QPen p = curve->pen();
+	p.setStyle(style);
+	if (width >= 0.0)
+		p.setWidthF(width);
+	curve->setPen(p);
+}
+
+/**
+ * @brief Recommend a pen width based on the number of data points
+ * @param pointCount Number of data points in the series
+ * @return Recommended pen width
+ * @details For large datasets (>10000 points), a thinner pen improves rendering
+ *          performance and visual clarity. For small datasets, a wider pen
+ *          provides better visibility.
+ */
+qreal QwtPlotStyling::recommendPenWidth(int pointCount)
+{
+	if (pointCount > 100000)
+		return 0.5;
+	if (pointCount > 10000)
+		return 1.0;
+	if (pointCount > 1000)
+		return 1.5;
+	if (pointCount > 100)
+		return 2.0;
+	return 2.5;
+}
+
+/**
+ * @brief Force an immediate replot even when autoReplot is disabled
+ * @param plot Target plot
+ * @details Temporarily enables ImmediatePaint on the canvas (if it is a QwtPlotCanvas),
+ *          performs a replot, and restores the previous paint attributes.
+ */
+void QwtPlotStyling::forceReplot(QwtPlot* plot)
+{
+	if (!plot)
+		return;
+
+	QwtPlotCanvas* canvas = qobject_cast< QwtPlotCanvas* >(plot->canvas());
+	if (canvas) {
+		const bool wasImmediate = canvas->testPaintAttribute(QwtPlotCanvas::ImmediatePaint);
+		if (!wasImmediate)
+			canvas->setPaintAttribute(QwtPlotCanvas::ImmediatePaint, true);
+
+		plot->replot();
+
+		if (!wasImmediate)
+			canvas->setPaintAttribute(QwtPlotCanvas::ImmediatePaint, false);
+	} else {
+		plot->replot();
+	}
+}
+
+/*** End of inlined file: qwt_plot_styling.cpp ***/
+
+
+/*** Start of inlined file: qwt_pyplot.cpp ***/
+#include <qmath.h>
+#include <qdebug.h>
+#include <qstringlist.h>
+#include <qpoint.h>
+#include <qrect.h>
+
+#include <algorithm>
+#include <cmath>
+
+
+/*** Start of inlined file: qwt_matrix_raster_data.h ***/
+#ifndef QWT_PLOT_MATRIX_RASTER_DATA_FWD_H
+#define QWT_PLOT_MATRIX_RASTER_DATA_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_matrix_raster_data.h ***/
+
+// ============================================================================
+// QwtFormatString implementation
+// ============================================================================
+
+/**
+ * @brief Parse a matplotlib-style format string
+ * @param fmt Format string (e.g. "r-o", "b--", "g^:", "ko")
+ * @return Parsed format structure
+ *
+ * @details Supported components:
+ *   - Colors: b(blue), g(green), r(red), c(cyan), m(magenta), y(yellow), k(black), w(white)
+ *   - Markers: o(circle), s(square), ^(triangle up), v(triangle down), D(diamond),
+ *              x(cross), +(plus), *(star), .(dot)
+ *   - Line styles: -(solid), --(dash), -.(dashdot), :(dot)
+ */
+QwtFormatString QwtFormatString::parse(const QString& fmt)
+{
+	QwtFormatString result;
+	if (fmt.isEmpty()) {
+		return result;
+	}
+
+	QString s = fmt.trimmed();
+	int i = 0;
+
+	// Parse color (single character at start)
+	if (i < s.length()) {
+		QChar ch = s[i];
+		QColor c;
+		switch (ch.toLatin1()) {
+			case 'b': c = QColor(Qt::blue); break;
+			case 'g': c = QColor(Qt::green); break;
+			case 'r': c = QColor(Qt::red); break;
+			case 'c': c = QColor(Qt::cyan); break;
+			case 'm': c = QColor(Qt::magenta); break;
+			case 'y': c = QColor(Qt::yellow); break;
+			case 'k': c = QColor(Qt::black); break;
+			case 'w': c = QColor(Qt::white); break;
+			default: break;
+		}
+		if (c.isValid()) {
+			result.color = c;
+			result.hasColor = true;
+			i++;
+		}
+	}
+
+	// Parse line style (must check before marker since '-' can be ambiguous)
+	if (i < s.length()) {
+		if (s.mid(i).startsWith("--")) {
+			result.lineStyle = Qt::DashLine;
+			result.hasLineStyle = true;
+			i += 2;
+		}
+		else if (s.mid(i).startsWith("-.")) {
+			result.lineStyle = Qt::DashDotLine;
+			result.hasLineStyle = true;
+			i += 2;
+		}
+		else if (i < s.length() && s[i] == '-') {
+			// Single dash - could be solid line or part of marker context
+			// Check if next char is a marker or end of string
+			if (i + 1 >= s.length()) {
+				result.lineStyle = Qt::SolidLine;
+				result.hasLineStyle = true;
+				i++;
+			}
+			else {
+				QChar next = s[i + 1];
+				if (next == '-' || next == '.') {
+					// Already handled above, shouldn't reach here
+					i++;
+				}
+				else {
+					result.lineStyle = Qt::SolidLine;
+					result.hasLineStyle = true;
+					i++;
+				}
+			}
+		}
+		else if (i < s.length() && s[i] == ':') {
+			result.lineStyle = Qt::DotLine;
+			result.hasLineStyle = true;
+			i++;
+		}
+	}
+
+	// Parse marker
+	if (i < s.length()) {
+		QChar ch = s[i];
+		QwtSymbol::Style marker = QwtSymbol::NoSymbol;
+		switch (ch.toLatin1()) {
+			case 'o': marker = QwtSymbol::Ellipse; break;
+			case 's': marker = QwtSymbol::Rect; break;
+			case '^': marker = QwtSymbol::Triangle; break;
+			case 'v': marker = QwtSymbol::DTriangle; break;
+			case 'D': case 'd': marker = QwtSymbol::Diamond; break;
+			case 'x': marker = QwtSymbol::XCross; break;
+			case '+': marker = QwtSymbol::Cross; break;
+			case '*': marker = QwtSymbol::Star1; break;
+			case '.': marker = QwtSymbol::Ellipse; break;
+			default: break;
+		}
+		if (marker != QwtSymbol::NoSymbol) {
+			result.marker = marker;
+			result.hasMarker = true;
+			i++;
+		}
+	}
+
+	// If only marker specified without line style, suppress the line
+	// (matplotlib behavior: "ro" = red circles, no line)
+	if (result.hasMarker && !result.hasLineStyle) {
+		result.noLine = true;
+	}
+
+	return result;
+}
+
+// ============================================================================
+// QwtPyPlot::PrivateData
+// ============================================================================
+
+class QwtPyPlot::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtPyPlot)
+
+public:
+	PrivateData(QwtPyPlot* p);
+
+	QwtFigure* figure { nullptr };
+	QwtPlot* currentAxes { nullptr };
+	QwtPlotPanner* panner { nullptr };
+	QwtPlotCanvasZoomer* zoomer { nullptr };
+};
+
+QwtPyPlot::PrivateData::PrivateData(QwtPyPlot* p)
+	: q_ptr(p)
+{
+}
+
+// ============================================================================
+// QwtPyPlot implementation
+// ============================================================================
+
+/**
+ * @brief Construct a QwtPyPlot from a QwtFigure
+ * @param figure The figure to operate on
+ * @param parent Parent QObject
+ */
+QwtPyPlot::QwtPyPlot(QwtFigure* figure, QObject* parent)
+	: QObject(parent)
+	, QWT_PIMPL_CONSTRUCT
+{
+	QWT_D(d);
+	d->figure = figure;
+	if (figure) {
+		QList<QwtPlot*> axes = figure->allAxes();
+		if (!axes.isEmpty()) {
+			d->currentAxes = figure->gca();
+			if (!d->currentAxes) {
+				d->currentAxes = axes.first();
+			}
+		}
+	}
+}
+
+/**
+ * @brief Construct a QwtPyPlot from a single QwtPlot
+ * @param plot The plot to operate on
+ * @param parent Parent QObject
+ */
+QwtPyPlot::QwtPyPlot(QwtPlot* plot, QObject* parent)
+	: QObject(parent)
+	, QWT_PIMPL_CONSTRUCT
+{
+	QWT_D(d);
+	d->figure = nullptr;
+	d->currentAxes = plot;
+}
+
+QwtPyPlot::~QwtPyPlot() = default;
+
+// ---- State management ----
+
+QwtFigure* QwtPyPlot::gcf() const
+{
+	QWT_DC(d);
+	return d->figure;
+}
+
+QwtPlot* QwtPyPlot::gca() const
+{
+	QWT_DC(d);
+	if (d->currentAxes) {
+		return d->currentAxes;
+	}
+	if (d->figure) {
+		return const_cast<QwtPyPlot*>(this)->subplot(1, 1, 1);
+	}
+	return nullptr;
+}
+
+void QwtPyPlot::sca(QwtPlot* plot)
+{
+	QWT_D(d);
+	d->currentAxes = plot;
+	if (d->figure && plot) {
+		d->figure->setCurrentAxes(plot);
+	}
+}
+
+// ---- Figure operations ----
+
+/**
+ * @brief Create a subplot in a grid layout
+ * @param rows Number of rows in the grid
+ * @param cols Number of columns in the grid
+ * @param index 1-based index of the subplot (row-major order)
+ * @return The newly created QwtPlot
+ */
+QwtPlot* QwtPyPlot::subplot(int rows, int cols, int index)
+{
+	QWT_D(d);
+	if (!d->figure) {
+		qWarning() << "QwtPyPlot::subplot: no figure available";
+		return nullptr;
+	}
+	if (index < 1 || index > rows * cols) {
+		qWarning() << "QwtPyPlot::subplot: index out of range";
+		return nullptr;
+	}
+
+	int row = (index - 1) / cols;
+	int col = (index - 1) % cols;
+
+	auto* plot = new QwtPlot;
+	d->figure->addGridAxes(plot, rows, cols, row, col);
+	d->figure->setCurrentAxes(plot);
+	d->currentAxes = plot;
+	return plot;
+}
+
+QwtPlot* QwtPyPlot::addAxes(const QRectF& rect)
+{
+	QWT_D(d);
+	if (!d->figure) {
+		qWarning() << "QwtPyPlot::addAxes: no figure available";
+		return nullptr;
+	}
+	auto* plot = new QwtPlot;
+	d->figure->addAxes(plot, rect);
+	d->figure->setCurrentAxes(plot);
+	d->currentAxes = plot;
+	return plot;
+}
+
+QwtPlot* QwtPyPlot::twinx(QwtPlot* host)
+{
+	QWT_D(d);
+	if (!d->figure) {
+		qWarning() << "QwtPyPlot::twinx: no figure available";
+		return nullptr;
+	}
+	QwtPlot* h = host ? host : d->currentAxes;
+	if (!h) {
+		qWarning() << "QwtPyPlot::twinx: no host plot available";
+		return nullptr;
+	}
+	QwtPlot* parasite = d->figure->createParasiteAxes(h, QwtAxis::YRight);
+	if (parasite) {
+		parasite->setParasiteShareAxis(QwtAxis::XBottom, true);
+		d->currentAxes = parasite;
+	}
+	return parasite;
+}
+
+QwtPlot* QwtPyPlot::twiny(QwtPlot* host)
+{
+	QWT_D(d);
+	if (!d->figure) {
+		qWarning() << "QwtPyPlot::twiny: no figure available";
+		return nullptr;
+	}
+	QwtPlot* h = host ? host : d->currentAxes;
+	if (!h) {
+		qWarning() << "QwtPyPlot::twiny: no host plot available";
+		return nullptr;
+	}
+	QwtPlot* parasite = d->figure->createParasiteAxes(h, QwtAxis::XTop);
+	if (parasite) {
+		parasite->setParasiteShareAxis(QwtAxis::YLeft, true);
+		d->currentAxes = parasite;
+	}
+	return parasite;
+}
+
+void QwtPyPlot::tightLayout()
+{
+	QWT_D(d);
+	if (!d->figure) {
+		return;
+	}
+	// Align Y-axes across all plots
+	QList<QwtPlot*> axes = d->figure->allAxes();
+	if (axes.size() > 1) {
+		d->figure->addAxisAlignment(axes, QwtAxis::YLeft);
+		d->figure->applyAllAxisAlignments(true);
+	}
+}
+
+// ---- Plotting methods ----
+
+QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& y,
+							  const QString& fmt,
+							  const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* curve = QwtPlotFactory::createCurve(ax, label, y);
+	if (!fmt.isEmpty()) {
+		applyFormat(curve, QwtFormatString::parse(fmt));
+	}
+	ax->replot();
+	return curve;
+}
+
+QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& x, const QVector<double>& y,
+							  const QString& fmt,
+							  const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* curve = QwtPlotFactory::createCurve(ax, label, x, y);
+	if (!fmt.isEmpty()) {
+		applyFormat(curve, QwtFormatString::parse(fmt));
+	}
+	ax->replot();
+	return curve;
+}
+
+QwtPlotCurve* QwtPyPlot::plot(const QVector<QPointF>& data,
+							  const QString& fmt,
+							  const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* curve = QwtPlotFactory::createCurve(ax, label, data);
+	if (!fmt.isEmpty()) {
+		applyFormat(curve, QwtFormatString::parse(fmt));
+	}
+	ax->replot();
+	return curve;
+}
+
+/**
+ * @brief Create a scatter plot (markers only, no lines)
+ * @param x X coordinates
+ * @param y Y coordinates
+ * @param size Marker size in points
+ * @param color Color name (e.g. "r", "blue", "#ff0000")
+ * @param label Legend label
+ * @return The created curve
+ */
+QwtPlotCurve* QwtPyPlot::scatter(const QVector<double>& x, const QVector<double>& y,
+								 double size,
+								 const QString& color,
+								 const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* curve = QwtPlotFactory::createCurve(ax, label, x, y);
+	curve->setStyle(QwtPlotCurve::NoCurve);
+
+	QColor c = color.isEmpty() ? QColor(Qt::blue) : namedColor(color);
+	int sz = qMax(4, static_cast<int>(size / 3.0));
+	QwtPlotStyling::setSymbol(curve, QwtSymbol::Ellipse, c, QSize(sz, sz));
+
+	ax->replot();
+	return curve;
+}
+
+QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& values,
+								const QString& color,
+								const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* chart = QwtPlotFactory::createBarChart(ax, label, values);
+	if (!color.isEmpty()) {
+		QColor c = namedColor(color);
+		chart->setBrush(QBrush(c));
+		chart->setPen(QPen(c.darker(120), 1.0));
+	}
+	ax->replot();
+	return chart;
+}
+
+QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& x, const QVector<double>& values,
+								double width,
+								const QString& color,
+								const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	// Build QPointF data from x and values
+	QVector<QPointF> data;
+	data.reserve(qMin(x.size(), values.size()));
+	for (int i = 0; i < qMin(x.size(), values.size()); i++) {
+		data.append(QPointF(x[i], values[i]));
+	}
+
+	auto* chart = QwtPlotFactory::createBarChart(ax, label, data);
+	Q_UNUSED(width)  // Width control would require custom symbol
+	if (!color.isEmpty()) {
+		QColor c = namedColor(color);
+		chart->setBrush(QBrush(c));
+		chart->setPen(QPen(c.darker(120), 1.0));
+	}
+	ax->replot();
+	return chart;
+}
+
+/**
+ * @brief Create a histogram from raw data with automatic binning
+ * @param data Raw data values
+ * @param bins Number of bins
+ * @param color Bar color
+ * @param label Legend label
+ * @return The created histogram
+ */
+QwtPlotHistogram* QwtPyPlot::hist(const QVector<double>& data, int bins,
+								  const QString& color,
+								  const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax || data.isEmpty()) return nullptr;
+
+	// Compute bin edges
+	double minVal = *std::min_element(data.constBegin(), data.constEnd());
+	double maxVal = *std::max_element(data.constBegin(), data.constEnd());
+	if (qFuzzyCompare(minVal, maxVal)) {
+		minVal -= 0.5;
+		maxVal += 0.5;
+	}
+	double binWidth = (maxVal - minVal) / bins;
+
+	// Count values in each bin
+	QVector<double> counts(bins, 0.0);
+	for (double v : data) {
+		int idx = static_cast<int>((v - minVal) / binWidth);
+		if (idx >= bins) idx = bins - 1;
+		if (idx < 0) idx = 0;
+		counts[idx] += 1.0;
+	}
+
+	// Create interval samples
+	QVector<QwtIntervalSample> samples;
+	samples.reserve(bins);
+	for (int i = 0; i < bins; i++) {
+		double left = minVal + i * binWidth;
+		double right = left + binWidth;
+		samples.append(QwtIntervalSample(counts[i], left, right));
+	}
+
+	auto* hist = QwtPlotFactory::createHistogram(ax, label, samples);
+	if (!color.isEmpty()) {
+		QColor c = namedColor(color);
+		hist->setBrush(QBrush(c));
+		hist->setPen(QPen(c.darker(120), 1.0));
+	}
+	ax->replot();
+	return hist;
+}
+
+QwtPlotBoxChart* QwtPyPlot::boxplot(const QVector<QwtBoxSample>& data,
+									const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* chart = QwtPlotFactory::createBoxChart(ax, label, data);
+	ax->replot();
+	return chart;
+}
+
+/**
+ * @brief Fill the area between two curves
+ * @param x X coordinates
+ * @param y1 Upper curve values
+ * @param y2 Lower curve values
+ * @param color Fill color
+ * @param alpha Fill opacity (0.0-1.0)
+ * @return The created interval curve
+ */
+QwtPlotIntervalCurve* QwtPyPlot::fillBetween(const QVector<double>& x,
+											 const QVector<double>& y1,
+											 const QVector<double>& y2,
+											 const QString& color,
+											 double alpha)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y1.size()), static_cast<size_t>(y2.size())}));
+	QVector<QwtIntervalSample> samples;
+	samples.reserve(n);
+	for (int i = 0; i < n; i++) {
+		double lo = qMin(y1[i], y2[i]);
+		double hi = qMax(y1[i], y2[i]);
+		samples.append(QwtIntervalSample(0.0, lo, hi));
+	}
+
+	auto* curve = QwtPlotFactory::createIntervalCurve(ax, QString(), samples);
+	curve->setStyle(QwtPlotIntervalCurve::Tube);
+
+	QColor c = color.isEmpty() ? QColor(Qt::blue) : namedColor(color);
+	c.setAlphaF(alpha);
+	curve->setBrush(QBrush(c));
+	curve->setPen(QPen(Qt::NoPen));
+
+	ax->replot();
+	return curve;
+}
+
+/**
+ * @brief Create error bars with symmetric y-error
+ * @param x X coordinates
+ * @param y Y values (center)
+ * @param yerr Error values (symmetric)
+ * @param fmt Format string for the center line
+ * @param label Legend label
+ * @return The created interval curve representing error bars
+ */
+QwtPlotIntervalCurve* QwtPyPlot::errorbar(const QVector<double>& x,
+										  const QVector<double>& y,
+										  const QVector<double>& yerr,
+										  const QString& fmt,
+										  const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y.size()), static_cast<size_t>(yerr.size())}));
+	QVector<QwtIntervalSample> samples;
+	samples.reserve(n);
+	for (int i = 0; i < n; i++) {
+		samples.append(QwtIntervalSample(x[i], y[i] - yerr[i], y[i] + yerr[i]));
+	}
+
+	auto* curve = QwtPlotFactory::createIntervalCurve(ax, label, samples);
+	curve->setOrientation(Qt::Horizontal);  // X is position, Y is interval
+	curve->setStyle(QwtPlotIntervalCurve::Tube);
+
+	QColor c = Qt::black;
+	if (!fmt.isEmpty()) {
+		auto f = QwtFormatString::parse(fmt);
+		if (f.hasColor) c = f.color;
+	}
+	curve->setPen(QPen(c, 1.0));
+	curve->setBrush(QBrush());
+
+	ax->replot();
+	return curve;
+}
+
+/**
+ * @brief Display a 2D matrix as a color-mapped image
+ * @param data 2D matrix (rows x cols)
+ * @param cmap Color map name ("viridis", "hot", "cool", "jet", "gray")
+ * @param vmin Minimum value for color scaling (0 = auto)
+ * @param vmax Maximum value for color scaling (0 = auto)
+ * @return The created spectrogram
+ */
+QwtPlotSpectrogram* QwtPyPlot::imshow(const QVector<QVector<double>>& data,
+									  const QString& cmap,
+									  double vmin, double vmax)
+{
+	QwtPlot* ax = gca();
+	if (!ax || data.isEmpty() || data.first().isEmpty()) return nullptr;
+
+	int rows = data.size();
+	int cols = data.first().size();
+
+	// Flatten to 1D
+	QVector<double> flat;
+	flat.reserve(rows * cols);
+	double minVal = std::numeric_limits<double>::max();
+	double maxVal = std::numeric_limits<double>::lowest();
+	for (const auto& row : data) {
+		for (double v : row) {
+			flat.append(v);
+			if (v < minVal) minVal = v;
+			if (v > maxVal) maxVal = v;
+		}
+	}
+
+	if (vmin != 0.0 || vmax != 0.0) {
+		minVal = vmin;
+		maxVal = vmax;
+	}
+
+	auto* rasterData = new QwtMatrixRasterData();
+	rasterData->setValueMatrix(flat, cols);
+	rasterData->setInterval(Qt::XAxis, QwtInterval(0, cols));
+	rasterData->setInterval(Qt::YAxis, QwtInterval(0, rows));
+	rasterData->setInterval(Qt::ZAxis, QwtInterval(minVal, maxVal));
+
+	auto* spectro = new QwtPlotSpectrogram();
+	spectro->setData(rasterData);
+	spectro->setDisplayMode(QwtPlotSpectrogram::ImageMode);
+
+	QwtLinearColorMap* colorMap = createColorMap(cmap);
+	if (colorMap) {
+		spectro->setColorMap(colorMap);
+	}
+
+	spectro->attach(ax);
+	ax->setAxisScale(QwtAxis::XBottom, 0, cols);
+	ax->setAxisScale(QwtAxis::YLeft, 0, rows);
+	ax->replot();
+	return spectro;
+}
+
+/**
+ * @brief Draw contour lines from a 2D matrix
+ * @param data 2D matrix (rows x cols)
+ * @param levels Contour levels (empty = auto-generate 10 levels)
+ * @param cmap Color map name
+ * @return The created spectrogram with contour mode
+ */
+QwtPlotSpectrogram* QwtPyPlot::contour(const QVector<QVector<double>>& data,
+									   const QList<double>& levels,
+									   const QString& cmap)
+{
+	QwtPlot* ax = gca();
+	if (!ax || data.isEmpty() || data.first().isEmpty()) return nullptr;
+
+	int rows = data.size();
+	int cols = data.first().size();
+
+	QVector<double> flat;
+	flat.reserve(rows * cols);
+	double minVal = std::numeric_limits<double>::max();
+	double maxVal = std::numeric_limits<double>::lowest();
+	for (const auto& row : data) {
+		for (double v : row) {
+			flat.append(v);
+			if (v < minVal) minVal = v;
+			if (v > maxVal) maxVal = v;
+		}
+	}
+
+	auto* rasterData = new QwtMatrixRasterData();
+	rasterData->setValueMatrix(flat, cols);
+	rasterData->setInterval(Qt::XAxis, QwtInterval(0, cols));
+	rasterData->setInterval(Qt::YAxis, QwtInterval(0, rows));
+	rasterData->setInterval(Qt::ZAxis, QwtInterval(minVal, maxVal));
+
+	auto* spectro = new QwtPlotSpectrogram();
+	spectro->setData(rasterData);
+	spectro->setDisplayMode(QwtPlotSpectrogram::ContourMode);
+
+	QList<double> contourLevels = levels;
+	if (contourLevels.isEmpty()) {
+		// Auto-generate 10 levels
+		double step = (maxVal - minVal) / 11.0;
+		for (int i = 1; i <= 10; i++) {
+			contourLevels.append(minVal + i * step);
+		}
+	}
+	spectro->setContourLevels(contourLevels);
+
+	QwtLinearColorMap* colorMap = createColorMap(cmap);
+	if (colorMap) {
+		spectro->setColorMap(colorMap);
+	}
+
+	spectro->attach(ax);
+	ax->setAxisScale(QwtAxis::XBottom, 0, cols);
+	ax->setAxisScale(QwtAxis::YLeft, 0, rows);
+	ax->replot();
+	return spectro;
+}
+
+/**
+ * @brief Create a quiver (vector field) plot
+ * @param x X positions
+ * @param y Y positions
+ * @param u X components of vectors
+ * @param v Y components of vectors
+ * @param color Arrow color
+ * @return The created vector field
+ */
+QwtPlotVectorField* QwtPyPlot::quiver(const QVector<double>& x, const QVector<double>& y,
+									  const QVector<double>& u, const QVector<double>& v,
+									  const QString& color)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y.size()), static_cast<size_t>(u.size()), static_cast<size_t>(v.size())}));
+	QVector<QwtVectorFieldSample> samples;
+	samples.reserve(n);
+	for (int i = 0; i < n; i++) {
+		samples.append(QwtVectorFieldSample(x[i], y[i], u[i], v[i]));
+	}
+
+	auto* field = QwtPlotFactory::createVectorField(ax, QString(), samples);
+	if (!color.isEmpty()) {
+		QColor c = namedColor(color);
+		field->setPen(QPen(c, 1.0));
+	}
+	ax->replot();
+	return field;
+}
+
+QwtPlotTradingCurve* QwtPyPlot::candlestick(const QVector<QwtOHLCSample>& data,
+											const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* curve = QwtPlotFactory::createTradingCurve(ax, label, data);
+	ax->replot();
+	return curve;
+}
+
+// ---- Auxiliary elements ----
+
+QwtPlotGrid* QwtPyPlot::grid(bool show, bool minor)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	// Find existing grid to avoid duplicates
+	QwtPlotGrid* g = nullptr;
+	auto items = ax->itemList(QwtPlotItem::Rtti_PlotGrid);
+	if (!items.isEmpty()) {
+		g = static_cast<QwtPlotGrid*>(items.first());
+	}
+
+	if (!g) {
+		g = QwtPlotFactory::createGrid(ax, minor);
+	}
+	else {
+		// Existing grid found — update minor grid settings
+		g->enableXMin(minor);
+		g->enableYMin(minor);
+	}
+	g->setVisible(show);
+	ax->replot();
+	return g;
+}
+
+QwtPlotMarker* QwtPyPlot::axhline(double y, const QString& fmt)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* marker = QwtPlotFactory::createHLine(ax, y);
+	if (!fmt.isEmpty()) {
+		applyFormat(marker, QwtFormatString::parse(fmt));
+	}
+	ax->replot();
+	return marker;
+}
+
+QwtPlotMarker* QwtPyPlot::axvline(double x, const QString& fmt)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* marker = QwtPlotFactory::createVLine(ax, x);
+	if (!fmt.isEmpty()) {
+		applyFormat(marker, QwtFormatString::parse(fmt));
+	}
+	ax->replot();
+	return marker;
+}
+
+QwtPlotZoneItem* QwtPyPlot::axhspan(double y1, double y2,
+									const QString& color, double alpha)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	QColor c = color.isEmpty() ? QColor(0, 0, 255) : namedColor(color);
+	c.setAlphaF(alpha);
+
+	auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(y1, y2), qMax(y1, y2)),
+											Qt::Horizontal, QBrush(c));
+	ax->replot();
+	return zone;
+}
+
+QwtPlotZoneItem* QwtPyPlot::axvspan(double x1, double x2,
+									const QString& color, double alpha)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	QColor c = color.isEmpty() ? QColor(0, 0, 255) : namedColor(color);
+	c.setAlphaF(alpha);
+
+	auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(x1, x2), qMax(x1, x2)),
+											Qt::Vertical, QBrush(c));
+	ax->replot();
+	return zone;
+}
+
+QwtPlotArrowMarker* QwtPyPlot::annotate(const QString& text,
+										const QPointF& xy, const QPointF& xytext)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	auto* arrow = QwtPlotFactory::createArrowMarker(ax, xytext, xy);
+	Q_UNUSED(text)  // Text label would require additional marker setup
+	ax->replot();
+	return arrow;
+}
+
+QwtPlotLegendItem* QwtPyPlot::legend(const QString& loc)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return nullptr;
+
+	Q_UNUSED(loc)  // Location handling could be enhanced later
+
+	// Find existing legend to avoid duplicates
+	auto items = ax->itemList(QwtPlotItem::Rtti_PlotLegend);
+	if (!items.isEmpty()) {
+		return static_cast<QwtPlotLegendItem*>(items.first());
+	}
+
+	auto* leg = QwtPlotFactory::createLegend(ax);
+	ax->replot();
+	return leg;
+}
+
+// ---- Axis configuration ----
+
+void QwtPyPlot::setTitle(const QString& title)
+{
+	QwtPlot* ax = gca();
+	if (ax) {
+		ax->setTitle(title);
+	}
+}
+
+void QwtPyPlot::setXLabel(const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (ax) {
+		ax->setAxisTitle(QwtAxis::XBottom, label);
+	}
+}
+
+void QwtPyPlot::setYLabel(const QString& label)
+{
+	QwtPlot* ax = gca();
+	if (ax) {
+		ax->setAxisTitle(QwtAxis::YLeft, label);
+	}
+}
+
+void QwtPyPlot::setXLim(double min, double max)
+{
+	QwtPlot* ax = gca();
+	if (ax) {
+		ax->setAxisScale(QwtAxis::XBottom, min, max);
+		ax->replot();
+	}
+}
+
+void QwtPyPlot::setYLim(double min, double max)
+{
+	QwtPlot* ax = gca();
+	if (ax) {
+		ax->setAxisScale(QwtAxis::YLeft, min, max);
+		ax->replot();
+	}
+}
+
+void QwtPyPlot::setXScale(const QString& scale)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	if (scale.compare("log", Qt::CaseInsensitive) == 0) {
+		ax->setAxisToLogScale(QwtAxis::XBottom);
+	}
+	else {
+		ax->setAxisToLinearScale(QwtAxis::XBottom);
+	}
+	ax->replot();
+}
+
+void QwtPyPlot::setYScale(const QString& scale)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	if (scale.compare("log", Qt::CaseInsensitive) == 0) {
+		ax->setAxisToLogScale(QwtAxis::YLeft);
+	}
+	else {
+		ax->setAxisToLinearScale(QwtAxis::YLeft);
+	}
+	ax->replot();
+}
+
+void QwtPyPlot::setXTicks(const QVector<double>& ticks, const QStringList& labels)
+{
+	QwtPlot* ax = gca();
+	if (!ax || ticks.isEmpty()) return;
+
+	QwtScaleDiv div;
+	div.setInterval(ticks.first(), ticks.last());
+	div.setTicks(QwtScaleDiv::MajorTick, ticks.toList());
+	ax->setAxisScaleDiv(QwtAxis::XBottom, div);
+
+	Q_UNUSED(labels)  // Custom labels would require a custom QwtScaleDraw
+	ax->replot();
+}
+
+void QwtPyPlot::setYTicks(const QVector<double>& ticks, const QStringList& labels)
+{
+	QwtPlot* ax = gca();
+	if (!ax || ticks.isEmpty()) return;
+
+	QwtScaleDiv div;
+	div.setInterval(ticks.first(), ticks.last());
+	div.setTicks(QwtScaleDiv::MajorTick, ticks.toList());
+	ax->setAxisScaleDiv(QwtAxis::YLeft, div);
+
+	Q_UNUSED(labels)  // Custom labels would require a custom QwtScaleDraw
+	ax->replot();
+}
+
+void QwtPyPlot::invertXAxis()
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	QwtInterval interval = ax->axisInterval(QwtAxis::XBottom);
+	ax->setAxisScale(QwtAxis::XBottom, interval.maxValue(), interval.minValue());
+	ax->replot();
+}
+
+void QwtPyPlot::invertYAxis()
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	QwtInterval interval = ax->axisInterval(QwtAxis::YLeft);
+	ax->setAxisScale(QwtAxis::YLeft, interval.maxValue(), interval.minValue());
+	ax->replot();
+}
+
+// ---- Appearance ----
+
+void QwtPyPlot::setFaceColor(const QString& color)
+{
+	QWT_D(d);
+	if (!d->figure) return;
+
+	QColor c = namedColor(color);
+	d->figure->setFaceColor(c);
+}
+
+void QwtPyPlot::setAxesColor(const QString& color)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	QColor c = namedColor(color);
+	ax->setCanvasBackground(QBrush(c));
+	ax->replot();
+}
+
+void QwtPyPlot::colorbar(QwtPlotSpectrogram* spectro)
+{
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	Q_UNUSED(spectro)  // Colorbar implementation would require right-axis setup
+	// Basic implementation: enable color bar on the right axis
+	QwtScaleWidget* scaleWidget = ax->axisWidget(QwtAxis::YRight);
+	if (scaleWidget && spectro) {
+		const QwtColorMap* cmap = spectro->colorMap();
+		if (cmap && spectro->data()) {
+			QwtInterval interval = spectro->data()->interval(Qt::ZAxis);
+			scaleWidget->setColorBarEnabled(true);
+			scaleWidget->setColorMap(interval, const_cast<QwtColorMap*>(cmap));
+			ax->setAxisVisible(QwtAxis::YRight, true);
+			ax->replot();
+		}
+	}
+}
+
+// ---- Output ----
+
+bool QwtPyPlot::savefig(const QString& filename, int dpi)
+{
+	QWT_DC(d);
+	if (d->figure) {
+		return d->figure->saveFig(filename, dpi);
+	}
+	qWarning() << "QwtPyPlot::savefig: no figure available for saving";
+	return false;
+}
+
+void QwtPyPlot::show()
+{
+	QWT_D(d);
+	if (d->figure) {
+		d->figure->show();
+	}
+	else if (d->currentAxes) {
+		d->currentAxes->show();
+	}
+}
+
+// ---- Interaction ----
+
+void QwtPyPlot::enablePan(bool enable)
+{
+	QWT_D(d);
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	if (enable && !d->panner) {
+		// Check if a panner already exists on the canvas (possibly created by another QwtPyPlot instance)
+		d->panner = ax->canvas()->findChild<QwtPlotPanner*>();
+	}
+	if (enable && !d->panner) {
+		d->panner = new QwtPlotPanner(ax->canvas());
+	}
+	if (d->panner) {
+		d->panner->setEnabled(enable);
+	}
+}
+
+void QwtPyPlot::enableZoom(bool enable)
+{
+	QWT_D(d);
+	QwtPlot* ax = gca();
+	if (!ax) return;
+
+	if (enable && !d->zoomer) {
+		// Check if a zoomer already exists on the canvas (possibly created by another QwtPyPlot instance)
+		d->zoomer = ax->canvas()->findChild<QwtPlotCanvasZoomer*>();
+	}
+	if (enable && !d->zoomer) {
+		d->zoomer = new QwtPlotCanvasZoomer(ax->canvas());
+	}
+	if (d->zoomer) {
+		d->zoomer->setEnabled(enable);
+	}
+}
+
+// ---- Private helpers ----
+
+void QwtPyPlot::applyFormat(QwtPlotCurve* curve, const QwtFormatString& f)
+{
+	if (!curve) return;
+
+	QColor c = f.hasColor ? f.color : curve->pen().color();
+
+	if (f.noLine) {
+		curve->setStyle(QwtPlotCurve::NoCurve);
+	}
+	else {
+		curve->setStyle(QwtPlotCurve::Lines);
+		curve->setPen(QPen(c, 1.5, f.hasLineStyle ? f.lineStyle : Qt::SolidLine));
+	}
+
+	if (f.hasMarker) {
+		int sz = (f.marker == QwtSymbol::Ellipse && f.noLine) ? 4 : 6;
+		QwtPlotStyling::setSymbol(curve, f.marker, c, QSize(sz, sz));
+	}
+}
+
+void QwtPyPlot::applyFormat(QwtPlotMarker* marker, const QwtFormatString& f)
+{
+	if (!marker) return;
+
+	QColor c = f.hasColor ? f.color : QColor(Qt::gray);
+	Qt::PenStyle style = f.hasLineStyle ? f.lineStyle : Qt::DashLine;
+	marker->setLinePen(QPen(c, 1.0, style));
+}
+
+QColor QwtPyPlot::namedColor(const QString& name)
+{
+	if (name.isEmpty()) return QColor();
+
+	// Single-character matplotlib colors
+	if (name.length() == 1) {
+		switch (name[0].toLatin1()) {
+			case 'b': return QColor(Qt::blue);
+			case 'g': return QColor(Qt::green);
+			case 'r': return QColor(Qt::red);
+			case 'c': return QColor(Qt::cyan);
+			case 'm': return QColor(Qt::magenta);
+			case 'y': return QColor(Qt::yellow);
+			case 'k': return QColor(Qt::black);
+			case 'w': return QColor(Qt::white);
+			default: break;
+		}
+	}
+
+	// Try as QColor name (e.g. "blue", "#ff0000")
+	QColor c(name);
+	if (c.isValid()) return c;
+
+	return QColor(Qt::blue);  // Default fallback
+}
+
+/**
+ * @brief Create a color map by name
+ * @param name Color map name ("viridis", "hot", "cool", "jet", "gray")
+ * @return Newly allocated QwtLinearColorMap, or nullptr if unknown
+ */
+QwtLinearColorMap* QwtPyPlot::createColorMap(const QString& name)
+{
+	auto* map = new QwtLinearColorMap(QwtColorMap::RGB);
+	map->setMode(QwtLinearColorMap::ScaledColors);
+
+	if (name.compare("viridis", Qt::CaseInsensitive) == 0) {
+		map->addColorStop(0.0, QColor(68, 1, 84));
+		map->addColorStop(0.25, QColor(59, 82, 139));
+		map->addColorStop(0.5, QColor(33, 145, 140));
+		map->addColorStop(0.75, QColor(94, 201, 98));
+		map->addColorStop(1.0, QColor(253, 231, 37));
+	}
+	else if (name.compare("hot", Qt::CaseInsensitive) == 0) {
+		map->addColorStop(0.0, QColor(Qt::black));
+		map->addColorStop(0.33, QColor(Qt::red));
+		map->addColorStop(0.67, QColor(Qt::yellow));
+		map->addColorStop(1.0, QColor(Qt::white));
+	}
+	else if (name.compare("cool", Qt::CaseInsensitive) == 0) {
+		map->setColorInterval(QColor(Qt::cyan), QColor(Qt::magenta));
+	}
+	else if (name.compare("jet", Qt::CaseInsensitive) == 0) {
+		map->addColorStop(0.0, QColor(0, 0, 128));
+		map->addColorStop(0.125, QColor(0, 0, 255));
+		map->addColorStop(0.375, QColor(0, 255, 255));
+		map->addColorStop(0.625, QColor(255, 255, 0));
+		map->addColorStop(0.875, QColor(255, 0, 0));
+		map->addColorStop(1.0, QColor(128, 0, 0));
+	}
+	else if (name.compare("gray", Qt::CaseInsensitive) == 0 ||
+			 name.compare("grey", Qt::CaseInsensitive) == 0) {
+		map->setColorInterval(QColor(Qt::black), QColor(Qt::white));
+	}
+	else {
+		// Default to viridis
+		map->addColorStop(0.0, QColor(68, 1, 84));
+		map->addColorStop(0.25, QColor(59, 82, 139));
+		map->addColorStop(0.5, QColor(33, 145, 140));
+		map->addColorStop(0.75, QColor(94, 201, 98));
+		map->addColorStop(1.0, QColor(253, 231, 37));
+	}
+
+	return map;
+}
+
+/*** End of inlined file: qwt_pyplot.cpp ***/
 
 // plot items
 
@@ -38337,6 +41984,222 @@ void QwtPlotOpenGLCanvas::resizeGL(int, int)
 
 /*** End of inlined file: qwt_plot_opengl_canvas.cpp ***/
 
+// QwtPlotGLCanvas depends on the Qt5-only QGLWidget (<qgl.h>), excluded on Qt6
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
+/*** Start of inlined file: qwt_plot_glcanvas.cpp ***/
+#include <qcoreevent.h>
+#include <qpainter.h>
+#include <qpainterpath.h>
+#include <qglframebufferobject.h>
+
+namespace
+{
+class QwtPlotGLCanvasFormat : public QGLFormat
+{
+public:
+	QwtPlotGLCanvasFormat() : QGLFormat(QGLFormat::defaultFormat())
+	{
+		setSampleBuffers(true);
+	}
+};
+}
+
+class QwtPlotGLCanvas::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtPlotGLCanvas)
+public:
+	PrivateData(QwtPlotGLCanvas* p) : q_ptr(p), fboDirty(true), fbo(nullptr)
+	{
+	}
+
+	~PrivateData()
+	{
+		delete fbo;
+	}
+
+	bool fboDirty;
+	QGLFramebufferObject* fbo;
+};
+
+/**
+ * @brief Constructor
+ * @param[in] plot Parent plot widget
+ * @sa QwtPlot::setCanvas()
+ */
+QwtPlotGLCanvas::QwtPlotGLCanvas(QwtPlot* plot)
+	: QGLWidget(QwtPlotGLCanvasFormat(), plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
+{
+	init();
+}
+/**
+ * @brief Constructor
+ * @param[in] format OpenGL rendering options
+ * @param[in] plot Parent plot widget
+ * @sa QwtPlot::setCanvas()
+ */
+QwtPlotGLCanvas::QwtPlotGLCanvas(const QGLFormat& format, QwtPlot* plot)
+	: QGLWidget(format, plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
+{
+	init();
+}
+
+/**
+ * @brief Destructor
+ */
+QwtPlotGLCanvas::~QwtPlotGLCanvas()
+{
+}
+
+void QwtPlotGLCanvas::init()
+{
+#if 1
+	setAttribute(Qt::WA_OpaquePaintEvent, true);
+#endif
+	setLineWidth(1);
+	setFrameShadow(QFrame::Plain);
+	setFrameShape(QFrame::Box);
+}
+
+/*!
+   Paint event
+
+   @param event Paint event
+   @sa QwtPlot::drawCanvas()
+ */
+void QwtPlotGLCanvas::paintEvent(QPaintEvent* event)
+{
+	QGLWidget::paintEvent(event);
+}
+
+/**
+ * @brief Qt event handler for QEvent::PolishRequest and QEvent::StyleChange
+ * @param[in] event Qt Event
+ * @return See QGLWidget::event()
+ */
+bool QwtPlotGLCanvas::event(QEvent* event)
+{
+	const bool ok = QGLWidget::event(event);
+
+	if (event->type() == QEvent::PolishRequest || event->type() == QEvent::StyleChange) {
+		// assuming, that we always have a styled background
+		// when we have a style sheet
+
+		setAttribute(Qt::WA_StyledBackground, testAttribute(Qt::WA_StyleSheet));
+	}
+
+	return ok;
+}
+
+/**
+ * @brief Invalidate the paint cache and repaint the canvas
+ * @sa invalidatePaintCache()
+ */
+void QwtPlotGLCanvas::replot()
+{
+	QwtPlotAbstractGLCanvas::replot();
+}
+
+/**
+ * @brief Invalidate the internal backing store
+ */
+void QwtPlotGLCanvas::invalidateBackingStore()
+{
+	QWT_D(d);
+	d->fboDirty = true;
+}
+
+void QwtPlotGLCanvas::clearBackingStore()
+{
+	QWT_D(d);
+	delete d->fbo;
+	d->fbo = nullptr;
+}
+
+/**
+ * @brief Calculate the painter path for a styled or rounded border
+ * @details When the canvas has no styled background or rounded borders
+ *          the painter path is empty.
+ * @param[in] rect Bounding rectangle of the canvas
+ * @return Painter path, that can be used for clipping
+ */
+QPainterPath QwtPlotGLCanvas::borderPath(const QRect& rect) const
+{
+	return canvasBorderPath(rect);
+}
+
+//! No operation - reserved for some potential use in the future
+void QwtPlotGLCanvas::initializeGL()
+{
+}
+
+//! Paint the plot
+void QwtPlotGLCanvas::paintGL()
+{
+	QWT_D(d);
+	const bool hasFocusIndicator = hasFocus() && focusIndicator() == CanvasFocusIndicator;
+
+	QPainter painter;
+
+	if (testPaintAttribute(QwtPlotGLCanvas::BackingStore)) {
+		const qreal pixelRatio = QwtPainter::devicePixelRatio(nullptr);
+		const QRect rect(0, 0, width() * pixelRatio, height() * pixelRatio);
+
+		if (hasFocusIndicator)
+			painter.begin(this);
+
+		if (d->fbo) {
+			if (d->fbo->size() != rect.size()) {
+				delete d->fbo;
+				d->fbo = nullptr;
+			}
+		}
+
+		if (d->fbo == nullptr) {
+			QGLFramebufferObjectFormat format;
+			format.setSamples(4);
+			format.setAttachment(QGLFramebufferObject::CombinedDepthStencil);
+
+			d->fbo      = new QGLFramebufferObject(rect.size(), format);
+			d->fboDirty = true;
+		}
+
+		if (d->fboDirty) {
+			QPainter fboPainter(d->fbo);
+			fboPainter.scale(pixelRatio, pixelRatio);
+			draw(&fboPainter);
+			fboPainter.end();
+
+			d->fboDirty = false;
+		}
+
+		/*
+			Why do we have this strange translation - but, anyway
+			QwtPlotGLCanvas in combination with scaling factor
+			is not very likely to happen as using QwtPlotOpenGLCanvas
+			usually makes more sense then.
+		 */
+
+		QGLFramebufferObject::blitFramebuffer(nullptr, rect.translated(0, height() - rect.height()), d->fbo, rect);
+	} else {
+		painter.begin(this);
+		draw(&painter);
+	}
+
+	if (hasFocusIndicator)
+		drawFocusIndicator(&painter);
+}
+
+//! No operation - reserved for some potential use in the future
+void QwtPlotGLCanvas::resizeGL(int, int)
+{
+	// nothing to do
+}
+
+/*** End of inlined file: qwt_plot_glcanvas.cpp ***/
+
+
+#endif
 
 /*** Start of inlined file: qwt_plot_item.cpp ***/
 #include <qpainter.h>
@@ -39051,6 +42914,7 @@ QRectF QwtPlotItem::paintRect( const QwtScaleMap& xMap,
 }
 
 /*** End of inlined file: qwt_plot_item.cpp ***/
+
 
 
 /*** Start of inlined file: qwt_plot_legenditem.cpp ***/
@@ -41114,7 +44978,7 @@ public:
 		, baseline(0.0)
 		, symbol(nullptr)
 		, pen(Qt::black)
-		, paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPointsAggressive)
+		, paintAttributes(QwtPlotCurve::ClipPolygons | QwtPlotCurve::FilterPointsLTTB)
 	{
 		curveFitter = new QwtSplineCurveFitter;
 	}
@@ -45593,7 +49457,1102 @@ QwtGraphic QwtPlotMarker::legendIcon( int index, const QSizeF& size ) const
 /*** End of inlined file: qwt_plot_marker.cpp ***/
 
 
+/*** Start of inlined file: qwt_plot_arrowmarker.cpp ***/
+#include <qpainter.h>
+#include <qpainterpath.h>
+#include <qmath.h>
+
+// Endpoint parameters class for managing arrow head and tail properties
+class EndpointParams
+{
+public:
+	EndpointParams() : style(QwtPlotArrowMarker::NoEndpoint), size(8.0, 8.0), pathValid(false)
+	{
+		pen   = QPen(Qt::black, 1.0);
+		brush = Qt::transparent;
+	}
+
+	EndpointParams(QwtPlotArrowMarker::EndpointStyle s,
+				   const QSizeF& sz,
+				   const QPen& p   = QPen(Qt::black, 1.0),
+				   const QBrush& b = Qt::transparent)
+		: style(s), size(sz), pen(p), brush(b), pathValid(false)
+	{
+	}
+
+	// Getters
+	QwtPlotArrowMarker::EndpointStyle getStyle() const
+	{
+		return style;
+	}
+	const QSizeF& getSize() const
+	{
+		return size;
+	}
+	const QPen& getPen() const
+	{
+		return pen;
+	}
+	const QBrush& getBrush() const
+	{
+		return brush;
+	}
+	const QPainterPath& getCustomPath() const
+	{
+		return customPath;
+	}
+	const QPainterPath& getCachedPath() const
+	{
+		return cachedPath;
+	}
+	bool isPathValid() const
+	{
+		return pathValid;
+	}
+
+	// Setters that invalidate cache
+	void setStyle(QwtPlotArrowMarker::EndpointStyle s)
+	{
+		if (style != s) {
+			style = s;
+			invalidatePath();
+		}
+	}
+
+	void setSize(const QSizeF& sz)
+	{
+		if (size != sz) {
+			size = sz;
+			invalidatePath();
+		}
+	}
+
+	void setPen(const QPen& p)
+	{
+		pen = p;
+	}
+	void setBrush(const QBrush& b)
+	{
+		brush = b;
+	}
+
+	void setCustomPath(const QPainterPath& path)
+	{
+		if (customPath != path) {
+			customPath = path;
+			invalidatePath();
+		}
+	}
+
+	// Cache management
+	void invalidatePath() const
+	{
+		pathValid = false;
+	}
+
+	void updatePath() const
+	{
+		if (!pathValid) {
+			cachedPath = createEndpointPath(style, size, customPath);
+			pathValid  = true;
+		}
+	}
+
+	// Create endpoint path based on style and size
+	static QPainterPath
+	createEndpointPath(QwtPlotArrowMarker::EndpointStyle style, const QSizeF& size, const QPainterPath& customPath)
+	{
+		QPainterPath path;
+
+		switch (style) {
+		case QwtPlotArrowMarker::ArrowHead:
+			//! *1                          -----
+			//!     *                        |
+			//!         *                   |
+			//!    (0,0)     x(0,0)        height
+			//!         *                   |
+			//!     *                        |
+			//! *2                          ------
+			//!
+			//! |    width     |
+			path.moveTo(0, 0);                               // x
+			path.lineTo(-size.width(), size.height() / 2);   // 1
+			path.moveTo(0, 0);                               // x
+			path.lineTo(-size.width(), -size.height() / 2);  // 2
+			break;
+
+		case QwtPlotArrowMarker::Circle:
+			//!    * *            ---
+			//!  *     *           |
+			//! *        x(0,0)    height
+			//!  *      *          |
+			//!    * *            ---
+			//! |  width |
+			path.addEllipse(QPointF(-size.width() / 2, 0), size.width() / 2, size.height() / 2);
+			break;
+		case QwtPlotArrowMarker::Square:
+			//! *  *  *  *  *          ---
+			//! *           *          |
+			//! *           x(0,0)    height
+			//! *           *          |
+			//! *  *  *  *  *          ---
+			//! |  width |
+			path.addRect(-size.width(), -size.height() / 2, size.width(), size.height());
+			break;
+
+		case QwtPlotArrowMarker::Diamond:
+			//!      *1
+			//!    *   *
+			//!  *        *
+			//! 2*        x(0,0)    height
+			//!  *        *
+			//!    *   *
+			//!      *3
+			//! |  width |
+			path.moveTo(0, 0);                                   // x
+			path.lineTo(-size.width() / 2, size.height() / 2);   // 1
+			path.lineTo(-size.width(), 0);                       // 2
+			path.lineTo(-size.width() / 2, -size.height() / 2);  // 3
+			path.closeSubpath();
+			break;
+
+		case QwtPlotArrowMarker::Triangle:
+			//! *1                          -----
+			//! *   *                        |
+			//! *        *                   |
+			//! *   (0,0)     x(0,0)        height
+			//! *        *                   |
+			//! *   *                        |
+			//! *2                          ------
+			//!
+			//! |    width     |
+			path.moveTo(0, 0);                               // x
+			path.lineTo(-size.width(), size.height() / 2);   // 1
+			path.lineTo(-size.width(), -size.height() / 2);  // 2
+			path.closeSubpath();
+			break;
+
+		case QwtPlotArrowMarker::CustomPath:
+			if (!customPath.isEmpty()) {
+				path = customPath;
+				// Origin is at the rightmost center of the path
+				QRectF bounds = path.boundingRect();
+				if (!bounds.isEmpty()) {
+					QTransform transform;
+					transform.translate(-bounds.right(), -bounds.center().y());  // move the rightmost point of the path to (0,0)
+					path = transform.map(path);
+				}
+			}
+			break;
+
+		case QwtPlotArrowMarker::NoEndpoint:
+		default:
+			break;
+		}
+
+		return path;
+	}
+
+private:
+	QwtPlotArrowMarker::EndpointStyle style;
+	QSizeF size;
+	QPen pen;
+	QBrush brush;
+	QPainterPath customPath;
+
+	// Cached path for performance optimization
+	mutable QPainterPath cachedPath;
+	mutable bool pathValid;
+};
+
+class QwtPlotArrowMarker::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtPlotArrowMarker)
+public:
+	PrivateData(QwtPlotArrowMarker* p)
+		: q_ptr(p)
+		, startPoint(0.0, 0.0)
+		, endPoint(0.0, 0.0)
+		, length(50.0)
+		, angle(45.0)
+		, positionMode(QwtPlotArrowMarker::ExplicitPoints)
+		, headParams(QwtPlotArrowMarker::ArrowHead, QSizeF(10.0, 10.0), QPen(Qt::black, 1.0), Qt::red)
+		, tailParams(QwtPlotArrowMarker::NoEndpoint, QSizeF(8.0, 8.0), QPen(Qt::black, 1.0), Qt::blue)
+	{
+		linePen = QPen(Qt::black, 1.0);
+	}
+
+	QPointF startPoint;
+	QPointF endPoint;
+	double length;
+	double angle;
+	PositionMode positionMode;
+
+	QPen linePen;
+
+	// Endpoint parameters
+	EndpointParams headParams;
+	EndpointParams tailParams;
+
+	// Convenience methods for backward compatibility
+	void invalidateHeadPath() const
+	{
+		headParams.invalidatePath();
+	}
+	void invalidateTailPath() const
+	{
+		tailParams.invalidatePath();
+	}
+	void invalidateAllPaths() const
+	{
+		headParams.invalidatePath();
+		tailParams.invalidatePath();
+	}
+
+	void updateHeadPath() const
+	{
+		headParams.updatePath();
+	}
+	void updateTailPath() const
+	{
+		tailParams.updatePath();
+	}
+};
+
+/**
+ * @brief Default constructor
+ * @details Creates a new QwtPlotArrowMarker with default settings.
+ *          The arrow has a length of 50 pixels, angle of 45 degrees,
+ *          arrow head style, and default colors.
+ *
+ */
+QwtPlotArrowMarker::QwtPlotArrowMarker() : QWT_PIMPL_CONSTRUCT
+{
+	setZ(30.0);
+	setItemAttribute(QwtPlotItem::AutoScale, false);
+	setLegendIconSize(QSize(24, 12));
+}
+
+/**
+ * @brief Constructor with title
+ * @param[in] title Title of the marker
+ *
+ */
+QwtPlotArrowMarker::QwtPlotArrowMarker(const QString& title) : QwtPlotItem(QwtText(title)), QWT_PIMPL_CONSTRUCT
+{
+	setZ(30.0);
+	setItemAttribute(QwtPlotItem::AutoScale, false);
+	setLegendIconSize(QSize(24, 12));
+}
+
+/**
+ * @brief Constructor with QwtText title
+ * @param[in] title Title of the marker
+ *
+ */
+QwtPlotArrowMarker::QwtPlotArrowMarker(const QwtText& title) : QwtPlotItem(title), QWT_PIMPL_CONSTRUCT
+{
+	setZ(30.0);
+	setItemAttribute(QwtPlotItem::AutoScale, false);
+	setLegendIconSize(QSize(24, 12));
+}
+
+/**
+ * @brief Destructor
+ *
+ */
+QwtPlotArrowMarker::~QwtPlotArrowMarker()
+{
+}
+
+/**
+ * @brief Get the runtime type information
+ * @return The RTTI value for QwtPlotArrowMarker (QwtPlotItem::Rtti_PlotArrowMarker)
+ *
+ */
+int QwtPlotArrowMarker::rtti() const
+{
+	return QwtPlotItem::Rtti_PlotArrowMarker;
+}
+
+// Position and geometry methods
+
+/**
+ * @brief Get the start point of the arrow
+ * @return The start point in plot coordinates
+ *
+ */
+QPointF QwtPlotArrowMarker::startPoint() const
+{
+	QWT_DC(d);
+	return d->startPoint;
+}
+
+/**
+ * @brief Get the end point of the arrow
+ * @return End point in plot coordinates
+ *
+ */
+QPointF QwtPlotArrowMarker::endPoint() const
+{
+	QWT_DC(d);
+	if (d->positionMode == ExplicitPoints)
+		return d->endPoint;
+	else
+		return calculateEndPoint();
+}
+
+/**
+ * @brief Set the start point in plot coordinates
+ * @param[in] point Start point in plot coordinates
+ *
+ */
+void QwtPlotArrowMarker::setStartPoint(const QPointF& point)
+{
+	QWT_D(d);
+	if (d->startPoint != point) {
+		d->startPoint = point;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Set the end point in plot coordinates
+ * @param[in] point End point in plot coordinates
+ *
+ */
+void QwtPlotArrowMarker::setEndPoint(const QPointF& point)
+{
+	QWT_D(d);
+	if (d->endPoint != point) {
+		d->endPoint = point;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Set both start and end points in plot coordinates
+ * @param[in] start Start point in plot coordinates
+ * @param[in] end End point in plot coordinates
+ *
+ */
+void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
+{
+	QWT_D(d);
+	bool changed = false;
+
+	if (d->startPoint != start) {
+		d->startPoint = start;
+		changed            = true;
+	}
+
+	if (d->endPoint != end) {
+		d->endPoint = end;
+		changed          = true;
+	}
+
+	if (changed) {
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the arrow length in pixels
+ * @return Arrow length in pixels
+ *
+ */
+double QwtPlotArrowMarker::length() const
+{
+	QWT_DC(d);
+	return d->length;
+}
+
+/**
+ * @brief Set the arrow length in pixels
+ * @param[in] length The arrow length in pixels (must be non-negative)
+ * @details The arrow length is used when position mode is StartLengthAngle.
+ *          Invalid values (NaN, Infinity) are rejected with a warning.
+ *
+ */
+void QwtPlotArrowMarker::setLength(double length)
+{
+	QWT_D(d);
+	// Validate input
+	if (qIsNaN(length) || qIsInf(length)) {
+		qWarning("QwtPlotArrowMarker::setLength: Invalid length value");
+		return;
+	}
+
+	if (length < 0.0)
+		length = 0.0;
+
+	if (d->length != length) {
+		d->length = length;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the rotation angle in degrees
+ * @return Rotation angle in degrees
+ *
+ */
+double QwtPlotArrowMarker::angle() const
+{
+	QWT_DC(d);
+	return d->angle;
+}
+
+/**
+ * @brief Set the rotation angle in degrees
+ * @param[in] angle Rotation angle in degrees
+ *
+ */
+void QwtPlotArrowMarker::setAngle(double angle)
+{
+	QWT_D(d);
+	// Validate input
+	if (qIsNaN(angle) || qIsInf(angle)) {
+		qWarning("QwtPlotArrowMarker::setAngle: Invalid angle value");
+		return;
+	}
+
+	// Normalize angle to 0-360 range
+	angle = fmod(angle, 360.0);
+	if (angle < 0.0)
+		angle += 360.0;
+
+	if (d->angle != angle) {
+		d->angle = angle;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the positioning mode
+ * @return Positioning mode
+ *
+ */
+QwtPlotArrowMarker::PositionMode QwtPlotArrowMarker::positionMode() const
+{
+	QWT_DC(d);
+	return d->positionMode;
+}
+
+/**
+ * @brief Set the positioning mode
+ * @param[in] mode Positioning mode
+ *
+ */
+void QwtPlotArrowMarker::setPositionMode(PositionMode mode)
+{
+	QWT_D(d);
+	if (d->positionMode != mode) {
+		d->positionMode = mode;
+		itemChanged();
+	}
+}
+
+// Style and appearance methods
+
+/**
+ * @brief Get the arrow line pen
+ * @return Arrow line pen
+ *
+ */
+const QPen& QwtPlotArrowMarker::linePen() const
+{
+	QWT_DC(d);
+	return d->linePen;
+}
+
+/**
+ * @brief Set the arrow line pen
+ * @param[in] pen Arrow line pen
+ *
+ */
+void QwtPlotArrowMarker::setLinePen(const QPen& pen)
+{
+	QWT_D(d);
+	if (d->linePen != pen) {
+		d->linePen = pen;
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Convenience method to set line color and width
+ * @param[in] color Line color
+ * @param[in] width Line width
+ * @param[in] style Line style
+ *
+ */
+void QwtPlotArrowMarker::setLinePen(const QColor& color, qreal width, Qt::PenStyle style)
+{
+	setLinePen(QPen(color, width, style));
+}
+
+/**
+ * @brief Get the head style
+ * @return Head style
+ *
+ */
+QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::headStyle() const
+{
+	QWT_DC(d);
+	return d->headParams.getStyle();
+}
+
+/**
+ * @brief Set the head style
+ * @param[in] style Head style
+ *
+ */
+void QwtPlotArrowMarker::setHeadStyle(EndpointStyle style)
+{
+	QWT_D(d);
+	if (d->headParams.getStyle() != style) {
+		d->headParams.setStyle(style);
+		d->invalidateHeadPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the tail style
+ * @return Tail style
+ *
+ */
+QwtPlotArrowMarker::EndpointStyle QwtPlotArrowMarker::tailStyle() const
+{
+	QWT_DC(d);
+	return d->tailParams.getStyle();
+}
+
+/**
+ * @brief Set the tail style
+ * @param[in] style Tail style
+ *
+ */
+void QwtPlotArrowMarker::setTailStyle(EndpointStyle style)
+{
+	QWT_D(d);
+	if (d->tailParams.getStyle() != style) {
+		d->tailParams.setStyle(style);
+		d->invalidateTailPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the head size in pixels
+ * @return Head size in pixels
+ *
+ */
+QSizeF QwtPlotArrowMarker::headSize() const
+{
+	QWT_DC(d);
+	return d->headParams.getSize();
+}
+
+/**
+ * @brief Set the head size in pixels
+ * @param[in] size Head size in pixels
+ *
+ */
+void QwtPlotArrowMarker::setHeadSize(const QSizeF& size)
+{
+	QWT_D(d);
+	QSizeF newSize = size;
+	if (newSize.width() < 0.0)
+		newSize.setWidth(0.0);
+	if (newSize.height() < 0.0)
+		newSize.setHeight(0.0);
+
+	if (d->headParams.getSize() != newSize) {
+		d->headParams.setSize(newSize);
+		d->invalidateHeadPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Convenience method to set head size with equal width and height
+ * @param[in] size Head size (both width and height)
+ *
+ */
+void QwtPlotArrowMarker::setHeadSize(qreal size)
+{
+	setHeadSize(QSizeF(size, size));
+}
+
+/**
+ * @brief Get the tail size in pixels
+ * @return Tail size in pixels
+ *
+ */
+QSizeF QwtPlotArrowMarker::tailSize() const
+{
+	QWT_DC(d);
+	return d->tailParams.getSize();
+}
+
+/**
+ * @brief Set the tail size in pixels
+ * @param[in] size Tail size in pixels
+ *
+ */
+void QwtPlotArrowMarker::setTailSize(const QSizeF& size)
+{
+	QWT_D(d);
+	QSizeF newSize = size;
+	if (newSize.width() < 0.0)
+		newSize.setWidth(0.0);
+	if (newSize.height() < 0.0)
+		newSize.setHeight(0.0);
+
+	if (d->tailParams.getSize() != newSize) {
+		d->tailParams.setSize(newSize);
+		d->invalidateTailPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Convenience method to set tail size with equal width and height
+ * @param[in] size Tail size (both width and height)
+ *
+ */
+void QwtPlotArrowMarker::setTailSize(qreal size)
+{
+	setTailSize(QSizeF(size, size));
+}
+
+/**
+ * @brief Get the head brush
+ * @return Head brush
+ *
+ */
+const QBrush& QwtPlotArrowMarker::headBrush() const
+{
+	QWT_DC(d);
+	return d->headParams.getBrush();
+}
+
+/**
+ * @brief Set the head brush
+ * @param[in] brush Head brush
+ *
+ */
+void QwtPlotArrowMarker::setHeadBrush(const QBrush& brush)
+{
+	QWT_D(d);
+	if (d->headParams.getBrush() != brush) {
+		d->headParams.setBrush(brush);
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the tail brush
+ * @return Tail brush
+ *
+ */
+const QBrush& QwtPlotArrowMarker::tailBrush() const
+{
+	QWT_DC(d);
+	return d->tailParams.getBrush();
+}
+
+/**
+ * @brief Set the tail brush
+ * @param[in] brush Tail brush
+ *
+ */
+void QwtPlotArrowMarker::setTailBrush(const QBrush& brush)
+{
+	QWT_D(d);
+	if (d->tailParams.getBrush() != brush) {
+		d->tailParams.setBrush(brush);
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the head pen
+ * @return Head pen
+ *
+ */
+const QPen& QwtPlotArrowMarker::headPen() const
+{
+	QWT_DC(d);
+	return d->headParams.getPen();
+}
+
+/**
+ * @brief Set the head pen
+ * @param[in] pen Head pen
+ *
+ */
+void QwtPlotArrowMarker::setHeadPen(const QPen& pen)
+{
+	QWT_D(d);
+	if (d->headParams.getPen() != pen) {
+		d->headParams.setPen(pen);
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the tail pen
+ * @return Tail pen
+ *
+ */
+const QPen& QwtPlotArrowMarker::tailPen() const
+{
+	QWT_DC(d);
+	return d->tailParams.getPen();
+}
+
+/**
+ * @brief Set the tail pen
+ * @param[in] pen Tail pen
+ *
+ */
+void QwtPlotArrowMarker::setTailPen(const QPen& pen)
+{
+	QWT_D(d);
+	if (d->tailParams.getPen() != pen) {
+		d->tailParams.setPen(pen);
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Set a custom path for head endpoint
+ * @param[in] path Custom QPainterPath for head
+ *
+ */
+void QwtPlotArrowMarker::setHeadCustomPath(const QPainterPath& path)
+{
+	QWT_D(d);
+	if (d->headParams.getCustomPath() != path) {
+		d->headParams.setCustomPath(path);
+		d->invalidateHeadPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the custom head path
+ * @return Custom head path
+ *
+ */
+QPainterPath QwtPlotArrowMarker::headCustomPath() const
+{
+	QWT_DC(d);
+	return d->headParams.getCustomPath();
+}
+
+/**
+ * @brief Set a custom path for tail endpoint
+ * @param[in] path Custom QPainterPath for tail
+ *
+ */
+void QwtPlotArrowMarker::setTailCustomPath(const QPainterPath& path)
+{
+	QWT_D(d);
+	if (d->tailParams.getCustomPath() != path) {
+		d->tailParams.setCustomPath(path);
+		d->invalidateTailPath();
+		itemChanged();
+	}
+}
+
+/**
+ * @brief Get the custom tail path
+ * @return Custom tail path
+ *
+ */
+QPainterPath QwtPlotArrowMarker::tailCustomPath() const
+{
+	QWT_DC(d);
+	return d->tailParams.getCustomPath();
+}
+
+// Drawing methods
+
+/**
+ * @brief Draw the arrow marker on the plot
+ * @param[in] painter The painter to use for drawing
+ * @param[in] xMap X-axis scale map for coordinate transformation
+ * @param[in] yMap Y-axis scale map for coordinate transformation
+ * @param[in] canvasRect The canvas rectangle in painter coordinates
+ * @details This method draws the arrow marker including the line,
+ *          head, and tail endpoints. It handles both positioning modes
+ *          (ExplicitPoints and StartLengthAngle) and applies proper
+ *          rotation to endpoints based on arrow direction.
+ *
+ */
+void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const
+{
+	QWT_DC(d);
+	if (!painter || !painter->isActive())
+		return;
+
+	// Convert start point to canvas coordinates
+	QPointF canvasStart = toCanvasPoint(d->startPoint, xMap, yMap);
+
+	// Calculate or get end point
+	QPointF canvasEnd;
+	if (d->positionMode == ExplicitPoints) {
+		canvasEnd = toCanvasPoint(d->endPoint, xMap, yMap);
+	} else {
+		// For StartLengthAngle mode, we need to calculate end point in canvas coordinates
+		// Since length is in pixels, we can calculate directly in canvas space
+		double angleRad = qDegreesToRadians(d->angle);
+		canvasEnd =
+			canvasStart
+			+ QPointF(d->length * qCos(angleRad),
+					  -d->length
+						  * qSin(angleRad)  // Negative because y increases downward in canvas coordinates
+			);
+	}
+
+	// Draw arrow line
+	drawArrowLine(painter, canvasStart, canvasEnd);
+
+	// Calculate arrow direction for head rotation
+	QPointF direction = canvasEnd - canvasStart;
+	double lineAngle  = qRadiansToDegrees(qAtan2(direction.y(), direction.x()));  // qAtan2 returns radians in range [-pi, pi]
+
+	// Draw tail (at start point)
+	if (d->tailParams.getStyle() != NoEndpoint) {
+		// Update cached path if needed
+		d->updateTailPath();
+		drawCachedEndpoint(painter,
+						   canvasStart,
+						   d->tailParams.getCachedPath(),
+						   d->tailParams.getSize(),
+						   d->tailParams.getPen(),
+						   d->tailParams.getBrush(),
+						   lineAngle);
+	}
+
+	// Draw head (at end point)
+	if (d->headParams.getStyle() != NoEndpoint) {
+		// Update cached path if needed
+		d->updateHeadPath();
+		drawCachedEndpoint(painter,
+						   canvasEnd,
+						   d->headParams.getCachedPath(),
+						   d->headParams.getSize(),
+						   d->headParams.getPen(),
+						   d->headParams.getBrush(),
+						   lineAngle);
+	}
+}
+
+/**
+ * @brief Get the bounding rectangle
+ * @return Bounding rectangle
+ *
+ */
+QRectF QwtPlotArrowMarker::boundingRect() const
+{
+	QWT_DC(d);
+	QPointF endPoint = (d->positionMode == ExplicitPoints) ? d->endPoint : calculateEndPoint();
+
+	QRectF rect(d->startPoint, endPoint);
+	rect = rect.normalized();
+
+	// Add some margin for endpoint sizes
+	double margin = qMax(d->headParams.getSize().width(), d->headParams.getSize().height());
+	margin        = qMax(margin, qMax(d->tailParams.getSize().width(), d->tailParams.getSize().height()));
+
+	if (margin > 0.0) {
+		rect.adjust(-margin, -margin, margin, margin);
+	}
+
+	return rect;
+}
+
+/**
+ * @brief Get the legend icon
+ * @param[in] index Index of the legend entry
+ * @param[in] size Size of the icon
+ * @return Legend icon graphic
+ *
+ */
+QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
+{
+	QWT_DC(d);
+	Q_UNUSED(index);
+
+	if (size.isEmpty())
+		return QwtGraphic();
+
+	QwtGraphic icon;
+	icon.setDefaultSize(size);
+	icon.setRenderHint(QwtGraphic::RenderPensUnscaled, true);
+
+	QPainter painter(&icon);
+	painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
+
+	// Draw a sample arrow in the legend
+	QRectF rect(QPointF(0, 0), size);
+	rect.adjust(1, 1, -1, -1);  // Add some margin
+
+	QPointF start(rect.left(), rect.center().y());
+	QPointF end(rect.right(), rect.center().y());
+
+	const double endpointScale = rect.height() * 0.6;
+
+	// Draw tail at left end
+	if (d->tailParams.getStyle() != NoEndpoint) {
+		QSizeF tailSize = d->tailParams.getSize();
+		tailSize = tailSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
+
+		d->updateTailPath();
+		drawCachedEndpoint(&painter,
+						   start,
+						   d->tailParams.getCachedPath(),
+						   tailSize,
+						   d->tailParams.getPen(),
+						   d->tailParams.getBrush(),
+						   0.0);
+	}
+
+	// Draw line
+	painter.setPen(d->linePen);
+	painter.drawLine(start, end);
+
+	// Draw head at right end
+	if (d->headParams.getStyle() != NoEndpoint) {
+		QSizeF headSize = d->headParams.getSize();
+		headSize = headSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
+
+		d->updateHeadPath();
+		drawCachedEndpoint(&painter,
+						   end,
+						   d->headParams.getCachedPath(),
+						   headSize,
+						   d->headParams.getPen(),
+						   d->headParams.getBrush(),
+						   0.0);
+	}
+
+	return icon;
+}
+
+// Protected methods
+
+//! Draw the arrow line
+void QwtPlotArrowMarker::drawArrowLine(QPainter* painter, const QPointF& canvasStart, const QPointF& canvasEnd) const
+{
+	QWT_DC(d);
+	if (!painter || !painter->isActive())
+		return;
+
+	// Check if points are valid
+	if (qIsNaN(canvasStart.x()) || qIsNaN(canvasStart.y()) || qIsNaN(canvasEnd.x()) || qIsNaN(canvasEnd.y())) {
+		qWarning("QwtPlotArrowMarker::drawArrowLine: Invalid canvas coordinates");
+		return;
+	}
+
+	if (canvasStart == canvasEnd)
+		return;
+
+	painter->save();
+	painter->setPen(d->linePen);
+	painter->drawLine(canvasStart, canvasEnd);
+	painter->restore();
+}
+
+//! Convert plot coordinates to canvas coordinates
+QPointF QwtPlotArrowMarker::toCanvasPoint(const QPointF& plotPoint, const QwtScaleMap& xMap, const QwtScaleMap& yMap) const
+{
+	return QPointF(xMap.transform(plotPoint.x()), yMap.transform(plotPoint.y()));
+}
+
+//! Calculate end point based on start point, length, and angle
+QPointF QwtPlotArrowMarker::calculateEndPoint() const
+{
+	QWT_DC(d);
+	double angleRad = qDegreesToRadians(d->angle);
+	return d->startPoint + QPointF(d->length * qCos(angleRad), d->length * qSin(angleRad));
+}
+
+/**
+ * @brief Draw a cached endpoint path
+ * @param[in] painter The painter to use for drawing
+ * @param[in] position The position to draw the endpoint at (canvas coordinates)
+ * @param[in] cachedPath The pre-cached QPainterPath for the endpoint
+ * @param[in] size The size of the endpoint in pixels
+ * @param[in] pen The pen to use for drawing the endpoint outline
+ * @param[in] brush The brush to use for filling the endpoint
+ * @param[in] rotation The rotation angle in degrees (0 = positive X direction)
+ * @details This method draws a cached endpoint path with proper scaling,
+ *          positioning, and rotation. It is optimized for performance by
+ *          reusing pre-computed QPainterPath objects.
+ *
+ */
+void QwtPlotArrowMarker::drawCachedEndpoint(QPainter* painter,
+											const QPointF& position,
+											const QPainterPath& cachedPath,
+											const QSizeF& size,
+											const QPen& pen,
+											const QBrush& brush,
+											double rotation) const
+{
+	if (!painter || cachedPath.isEmpty() || size.isEmpty())
+		return;
+
+	painter->save();
+
+	// Set up pen and brush
+	painter->setPen(pen);
+	painter->setBrush(brush);
+
+	// Translate to position and apply rotation if needed
+	painter->translate(position);
+	if (!qFuzzyIsNull(rotation)) {
+		painter->rotate(rotation);
+	}
+
+	// Scale and position the cached path
+	QPainterPath scaledPath = cachedPath;
+
+	// Get the bounding rectangle of the cached path
+	QRectF pathBounds = cachedPath.boundingRect();
+	if (!pathBounds.isEmpty()) {
+		// Calculate scaling factors to fit the specified size
+		// The cached path is centered at (0, 0) and normalized to unit size
+		qreal scaleX = size.width() / (pathBounds.width() > 0 ? pathBounds.width() : 1.0);
+		qreal scaleY = size.height() / (pathBounds.height() > 0 ? pathBounds.height() : 1.0);
+
+		QTransform transform;
+		transform.scale(scaleX, scaleY);
+
+		scaledPath = transform.map(scaledPath);
+		painter->drawPath(scaledPath);
+	}
+
+	painter->restore();
+}
+/*** End of inlined file: qwt_plot_arrowmarker.cpp ***/
+
+
 /*** Start of inlined file: qwt_plot_multi_barchart.cpp ***/
+
+/*** Start of inlined file: qwt_color_cycle.h ***/
+#ifndef QWT_PLOT_COLORCYCLE_FWD_H
+#define QWT_PLOT_COLORCYCLE_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_color_cycle.h ***/
+
 #include <qmap.h>
 
 inline static bool qwtIsIncreasing(
@@ -47848,7 +52807,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 				const FeaturePoint& fp = fps[ i ];
 				QString stry           = sampleDetail(fp);
 				out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-						   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+						   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
 			}
 		} else {
 
@@ -47880,7 +52839,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 							out += "<br/>";
 						QString stry = sampleDetail(fp);
 						out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-								   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+								   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
 					}
 				} else {
 					// X axis visible, show group header
@@ -47908,7 +52867,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 						out += "<br/>";
 						QString stry = sampleDetail(fp);
 						out += QString(R"(<font color="%1">■</font>%2: <b>%3</b>)")
-								   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+								   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
 					}
 				}
 			}
@@ -47921,7 +52880,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 					const FeaturePoint& fp = fps[ i ];
 					QString stry           = fmtY(fp);
 					out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-							   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+							   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
 				}
 			}
 		}
@@ -47939,7 +52898,7 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
 			const FeaturePoint& fp = fps[ i ];
 			QString stry           = sampleDetail(fp);
 			out += QString(R"(<font color="%1">■</font>%2:<b>%3</b>)")
-					   .arg(Qwt::plotItemColor(fp.item).name(), fp.item->title().text(), stry);
+					   .arg(QwtPlotStyling::color(fp.item).name(), fp.item->title().text(), stry);
 		}
 #endif
 	} else {
@@ -48021,7 +52980,7 @@ void QwtPlotSeriesDataPicker::drawFeaturePoint(
 	const QwtScaleMap yMap = plot->canvasMap(item->yAxis());
 	// Transform point to screen coordinates
 	QPointF screenPos = QwtScaleMap::transform(xMap, yMap, itemPoint);
-	QColor itemColor  = Qwt::plotItemColor(item, Qt::black);
+	QColor itemColor  = QwtPlotStyling::color(item, Qt::black);
 	// Draw the point
 	painter->save();
 	QColor fillColor = itemColor.darker(150);  // 150% darker, adjustable as needed
@@ -48255,7 +53214,7 @@ void QwtPlotSeriesDataPicker::drawRubberBand(QPainter* painter) const
 		const QwtScaleMap yMap = itemPlot->canvasMap(fp.item->yAxis());
 		// Transform point to screen coordinates
 		QPointF screenPos = QwtScaleMap::transform(xMap, yMap, fp.feature);
-		QColor itemColor  = Qwt::plotItemColor(fp.item, Qt::black);
+		QColor itemColor  = QwtPlotStyling::color(fp.item, Qt::black);
 		rbPen.setColor(itemColor);
 		painter->save();
 		painter->setPen(rbPen);
@@ -48708,6 +53667,232 @@ void QwtPlotSeriesDataPicker::onParasitePlotAttached(QwtPlot* parasiteplot, bool
 }
 
 /*** End of inlined file: qwt_plot_series_data_picker.cpp ***/
+
+
+/*** Start of inlined file: qwt_plot_series_data_picker_group.cpp ***/
+#include <QWidget>
+#include <QPointer>
+
+class QwtPlotSeriesDataPickerGroup::PrivateData
+{
+	QWT_DECLARE_PUBLIC(QwtPlotSeriesDataPickerGroup)
+public:
+	PrivateData(QwtPlotSeriesDataPickerGroup* p);
+	QList< QwtPlotSeriesDataPicker* > pickers;
+	bool enable { true };
+};
+
+QwtPlotSeriesDataPickerGroup::PrivateData::PrivateData(QwtPlotSeriesDataPickerGroup* p) : q_ptr(p)
+{
+}
+
+//----------------------------------------------------
+// QwtPlotSeriesDataPickerGroup
+//----------------------------------------------------
+/**
+ * @brief Constructor
+ * @param[in] par Parent object
+ */
+QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObject(par),QWT_PIMPL_CONSTRUCT
+{
+}
+
+/**
+ * @brief Destructor
+ */
+QwtPlotSeriesDataPickerGroup::~QwtPlotSeriesDataPickerGroup()
+{
+}
+
+/**
+ * @brief Adds a picker to the synchronization group
+ * @param pick Pointer to QwtPlotSeriesDataPicker instance to be added to the group
+ * @note The picker must belong to a QwtPlot with properly configured axes. Adding a null
+ *       pointer or a picker already in the group has no effect. The group does not take
+ *       ownership of the picker.
+ * @warning Pickers from plots with significantly different X-axis scales may show positioning
+ *          artifacts due to proportional mapping limitations.
+ */
+void QwtPlotSeriesDataPickerGroup::addPicker(QwtPlotSeriesDataPicker* pick)
+{
+	if (m_data->pickers.contains(pick)) {
+		return;
+	}
+	m_data->pickers.append(pick);
+	connect(pick, &QwtPlotSeriesDataPicker::moved, this, &QwtPlotSeriesDataPickerGroup::onPickerMove);
+	connect(pick, &QwtPlotSeriesDataPicker::activated, this, &QwtPlotSeriesDataPickerGroup::onPickerActivated);
+	connect(pick, &QwtPlotSeriesDataPicker::destroyed, this, &QwtPlotSeriesDataPickerGroup::onPickerDestroy);
+	connect(pick, &QwtPlotSeriesDataPicker::clicked, this, &QwtPlotSeriesDataPickerGroup::onPickerClicked);
+	connect(pick, &QwtPlotSeriesDataPicker::doubleClicked, this, &QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked);
+}
+
+/**
+ * @brief Remove a picker from the group
+ * @param[in] pick Pointer to QwtPlotSeriesDataPicker instance to be removed from the group
+ * @note If the picker is not in the group, this function has no effect.
+ */
+void QwtPlotSeriesDataPickerGroup::removePicker(QwtPlotSeriesDataPicker* pick)
+{
+	m_data->pickers.removeAll(pick);
+}
+
+/**
+ * @brief Returns the list of all pickers currently in the group
+ * @return QList containing pointers to all managed QwtPlotSeriesDataPicker instances
+ * @note The returned list is a copy; modifications to it do not affect the internal group state.
+ *       Use addPicker() to modify group membership.
+ */
+QList< QwtPlotSeriesDataPicker* > QwtPlotSeriesDataPickerGroup::pickers() const
+{
+	return m_data->pickers;
+}
+
+/**
+ * @brief Set enabled state
+ * @details When disabled, picker synchronization will not occur.
+ * @param[in] on Enable/disable synchronization
+ * @sa isEnabled()
+ */
+void QwtPlotSeriesDataPickerGroup::setEnabled(bool on)
+{
+	m_data->enable = on;
+}
+
+/**
+ * @brief Check if synchronization is enabled
+ * @return True if enabled
+ * @sa setEnabled()
+ */
+bool QwtPlotSeriesDataPickerGroup::isEnabled() const
+{
+	return m_data->enable;
+}
+
+void QwtPlotSeriesDataPickerGroup::onPickerMove(const QPoint& pos)
+{
+	if (!isEnabled()) {
+		return;
+	}
+	QwtPlotSeriesDataPicker* pick = qobject_cast< QwtPlotSeriesDataPicker* >(sender());
+	if (!pick) {
+		return;
+	}
+	// Convert to percentages relative to this picker's widget
+	QWidget* canvas = pick->canvas();
+	if (!canvas) {
+		return;
+	}
+	double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+	double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
+	// Have other pickers also set position at this location
+	for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+		if (p == pick) {
+			continue;
+		}
+		QWidget* c = p->canvas();
+		if (!c) {
+			continue;
+		}
+		double x = c->width() * xPresent;
+		double y = c->height() * yPresent;
+		p->setTrackerPosition(QPoint(x, y));
+		p->update();
+	}
+}
+
+void QwtPlotSeriesDataPickerGroup::onPickerActivated(bool on)
+{
+	if (!isEnabled()) {
+		return;
+	}
+	QwtPlotSeriesDataPicker* pick = qobject_cast< QwtPlotSeriesDataPicker* >(sender());
+	if (!pick) {
+		return;
+	}
+	for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+		if (p == pick) {
+			continue;
+		}
+		p->setActive(on);
+	}
+}
+
+void QwtPlotSeriesDataPickerGroup::onPickerDestroy(QObject* obj)
+{
+	m_data->pickers.removeAll(static_cast< QwtPlotSeriesDataPicker* >(obj));
+}
+
+/**
+ * @brief Handles click signal from a picker, syncs other pickers, then emits group's clicked signal
+ * @param picker The picker that emitted the click signal
+ * @param pos The click position
+ */
+void QwtPlotSeriesDataPickerGroup::onPickerClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+	if (!isEnabled()) {
+		return;
+	}
+
+	QWidget* canvas = picker->canvas();
+	if (!canvas) {
+		return;
+	}
+
+	// Sync all other pickers to the proportional position
+	double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+	double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
+
+	for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+		if (p != picker) {
+			QWidget* c = p->canvas();
+			if (c) {
+				double x = c->width() * xPresent;
+				double y = c->height() * yPresent;
+				p->setTrackerPosition(QPoint(x, y));
+				p->update();  // Trigger featurePoint recalculation at synced position
+			}
+		}
+	}
+
+	emit clicked(picker, pos);
+}
+
+/**
+ * @brief Handles double-click signal from a picker, syncs other pickers, then emits group's doubleClicked signal
+ * @param picker The picker that emitted the double-click signal
+ * @param pos The double-click position
+ */
+void QwtPlotSeriesDataPickerGroup::onPickerDoubleClicked(QwtPlotSeriesDataPicker* picker, const QPoint& pos)
+{
+	if (!isEnabled()) {
+		return;
+	}
+
+	QWidget* canvas = picker->canvas();
+	if (!canvas) {
+		return;
+	}
+
+	// Sync all other pickers to the proportional position
+	double xPresent = qBound(0.0, static_cast< double >(pos.x()) / canvas->width(), 1.0);
+	double yPresent = qBound(0.0, static_cast< double >(pos.y()) / canvas->height(), 1.0);
+
+	for (QwtPlotSeriesDataPicker* p : qwt_as_const(m_data->pickers)) {
+		if (p != picker) {
+			QWidget* c = p->canvas();
+			if (c) {
+				double x = c->width() * xPresent;
+				double y = c->height() * yPresent;
+				p->setTrackerPosition(QPoint(x, y));
+				p->update();  // Trigger featurePoint recalculation at synced position
+			}
+		}
+	}
+
+	emit doubleClicked(picker, pos);
+}
+
+/*** End of inlined file: qwt_plot_series_data_picker_group.cpp ***/
 
 
 /*** Start of inlined file: qwt_plot_rasteritem.cpp ***/
@@ -51994,14 +57179,14 @@ void QwtPlotSpectroCurve::drawDots( QPainter* painter,
 		if ( format == QwtColorMap::RGB )
 		{
 			const QRgb rgb = d->colorMap->rgb(
-				d->colorRange, sample.z() );
+				d->colorRange.minValue(), d->colorRange.maxValue(), sample.z() );
 
 			painter->setPen( QPen( QColor::fromRgba( rgb ), d->penWidth ) );
 		}
 		else
 		{
 			const unsigned char index = d->colorMap->colorIndex(
-				256, d->colorRange, sample.z() );
+				256, d->colorRange.minValue(), d->colorRange.maxValue(), sample.z() );
 
 			painter->setPen( QPen( QColor::fromRgba( d->colorTable[index] ),
 				d->penWidth ) );
@@ -52304,7 +57489,7 @@ QPen QwtPlotSpectrogram::contourPen(double level) const
 		return QPen();
 
 	const QwtInterval intensityRange = d->data->interval(Qt::ZAxis);
-	const QColor c(d->colorMap->rgb(intensityRange, level));
+	const QColor c(d->colorMap->rgb(intensityRange.minValue(), intensityRange.maxValue(), level));
 
 	return QPen(c);
 }
@@ -52572,6 +57757,9 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 	if (range.width() <= 0.0)
 		return;
 
+	const double rMin = range.minValue();
+	const double rMax = range.maxValue();
+
 	const bool hasGaps = !d->data->testAttribute(QwtRasterData::WithoutGaps);
 
 	if (d->colorMap->format() == QwtColorMap::RGB) {
@@ -52593,9 +57781,9 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 				if (hasGaps && qwtIsNaN(value)) {
 					*line++ = 0u;
 				} else if (numColors == 0) {
-					*line++ = colorMap->rgb(range, value);
+					*line++ = colorMap->rgb(rMin, rMax, value);
 				} else {
-					const uint index = colorMap->colorIndex(numColors, range, value);
+					const uint index = colorMap->colorIndex(numColors, rMin, rMax, value);
 					*line++          = rgbTable[ index ];
 				}
 			}
@@ -52615,7 +57803,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 				if (hasGaps && qwtIsNaN(value)) {
 					*line++ = 0;
 				} else {
-					const uint index = d->colorMap->colorIndex(256, range, value);
+					const uint index = d->colorMap->colorIndex(256, rMin, rMax, value);
 					*line++          = static_cast< unsigned char >(index);
 				}
 			}
@@ -54868,7 +60056,7 @@ void QwtPlotVectorField::drawSymbol( QPainter* painter,
 			range = d->boundingMagnitudeRange;
 		}
 
-		const QColor c = d->colorMap->rgb( range, magnitude );
+		const QColor c = QColor::fromRgba(d->colorMap->rgb( range.minValue(), range.maxValue(), magnitude ));
 
 #if 1
 		painter->setBrush( c );
@@ -55961,6 +61149,15 @@ QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
 
 
 /*** Start of inlined file: qwt_plot_panner.cpp ***/
+
+/*** Start of inlined file: qwt_transform.h ***/
+#ifndef QWT_PLOT_TRANSFORM_FWD_H
+#define QWT_PLOT_TRANSFORM_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_transform.h ***/
+
 #include <qevent.h>
 #include <qpainter.h>
 
@@ -60219,6 +65416,9 @@ void QwtPolarSpectrogram::renderTile(
 	if ( !intensityRange.isValid() )
 		return;
 
+	const double irMin = intensityRange.minValue();
+	const double irMax = intensityRange.maxValue();
+
 	const bool doFastAtan = testPaintAttribute( ApproximatedAtan );
 
 	const int y0 = imagePos.y();
@@ -60263,7 +65463,7 @@ void QwtPolarSpectrogram::renderTile(
 				}
 				else
 				{
-					*line++ = d->colorMap->rgb( intensityRange, value );
+					*line++ = d->colorMap->rgb( irMin, irMax, value );
 				}
 			}
 		}
@@ -60294,7 +65494,7 @@ void QwtPolarSpectrogram::renderTile(
 
 				const double value = d->data->value( azimuth, radius );
 
-				const uint index = d->colorMap->colorIndex( 256, intensityRange, value );
+				const uint index = d->colorMap->colorIndex( 256, irMin, irMax, value );
 				*line++ = static_cast< unsigned char >( index );
 			}
 		}
@@ -62449,7 +67649,10 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 		const int oldMarg = p->axisWidget(axisId)->margin();
 		r                 = shrinkRect(r, oldEdge + oldMarg, axisId);
 
-		layers.append({ p, r });
+		AxisLayer pLayer;
+		pLayer.plot = p;
+		pLayer.scaleRect = r;
+		layers.append(pLayer);
 	}
 	if (layers.isEmpty()) {
 		return;
@@ -62767,7 +67970,6 @@ void QwtPlot::zoomAxis(QwtAxisId axisId, double factor, const QPoint& centerPosP
 	}
 	setAxisScale(axisId, currentMin, currentMax);
 }
-
 /*** End of inlined file: qwt_plot.cpp ***/
 
 
@@ -65664,6 +70866,15 @@ QRectF QwtParasitePlotLayout::parasiteScaleRect(QwtAxisId aid) const
 #include <QDebug>
 #include <QTimer>
 // qwt
+
+
+/*** Start of inlined file: qwt_qt5qt6_compat.hpp ***/
+#ifndef QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
+#define QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_qt5qt6_compat.hpp ***/
 
 class QwtPlotScaleEventDispatcher::PrivateData
 {
@@ -71464,6 +76675,15 @@ void QwtFigure::resizeEvent(QResizeEvent* event)
 // std
 #include <algorithm>
 // qwt
+
+/*** Start of inlined file: qwt_algorithm.hpp ***/
+#ifndef QWT_PLOT_ALGORITHM_HPP_FWD_H
+#define QWT_PLOT_ALGORITHM_HPP_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_algorithm.hpp ***/
+
 
 #ifndef QwtFigureWidgetOverlay_DEBUG_PRINT
 #define QwtFigureWidgetOverlay_DEBUG_PRINT 0
@@ -83046,6 +88266,9 @@ void Axis::setScale(Qwt3D::SCALETYPE val)
 
 
 /*** Start of inlined file: qwt3d_color.cpp ***/
+#include <qcolor.h>
+#include <qstring.h>
+
 using namespace Qwt3D;
 
 class StandardColor::PrivateData
@@ -83158,6 +88381,34 @@ RGBA StandardColor::operator()(double, double, double z) const
 	if (static_cast< unsigned int >(index) > d->m_colors.size() - 1)
 		index = static_cast< int >(d->m_colors.size() - 1);
 	return d->m_colors[ index ];
+}
+
+/**
+ * @brief Set colormap from a preset name
+ * @param presetName Name of the colormap preset (e.g. "viridis", "plasma", "jet")
+ * @param size Number of color stops to sample from the colormap
+ * @details Uses QwtColorMapPreset to create a QwtLinearColorMap and samples it
+ *          at the specified number of points to fill the internal color vector.
+ */
+void StandardColor::setPreset(const QString& presetName, unsigned size)
+{
+	QWT_D(d);
+
+	auto colorMap = QwtColorMapPreset::create(presetName);
+
+	d->m_colors.resize(size);
+	for (unsigned i = 0; i < size; ++i) {
+		const double t = (size > 1) ? static_cast<double>(i) / (size - 1) : 0.5;
+		const QColor color = colorMap->color(0.0, 1.0, t);
+
+		Qwt3D::RGBA rgba;
+		rgba.r = color.redF();
+		rgba.g = color.greenF();
+		rgba.b = color.blueF();
+		rgba.a = color.alphaF();
+
+		d->m_colors[i] = rgba;
+	}
 }
 /*** End of inlined file: qwt3d_color.cpp ***/
 
@@ -84192,6 +89443,8 @@ public:
 	bool m_lightingEnabled;
 	bool m_initializedGL;
 	bool m_renderPixmapRequest;
+
+	Qwt3DTheme m_theme;
 };
 
 }  // ns
@@ -85546,6 +90799,29 @@ void Plot3D::setTitle(const QString& title)
 	d->m_title.setString(title);
 }
 
+void Plot3D::setTheme(const Qwt3DTheme& theme)
+{
+	QWT_D(d);
+	d->m_theme = theme;
+	theme.apply(this);
+}
+
+Qwt3DTheme Plot3D::theme() const
+{
+	QWT_DC(d);
+	return d->m_theme;
+}
+
+void Plot3D::applyTheme(Qwt3DTheme::Preset preset)
+{
+	setTheme(Qwt3DTheme::create(preset));
+}
+
+void Plot3D::applyTheme(const QString& presetName)
+{
+	setTheme(Qwt3DTheme::create(presetName));
+}
+
 double Plot3D::xLightRotation(unsigned idx) const
 {
 	QWT_DC(d);
@@ -85807,6 +91083,9 @@ void Plot3D::setDataColor(Color *col)
 
 	d->m_dataColor->destroy();
 	d->m_dataColor = col;
+
+	if (d->m_displayLegend)
+		d->m_dataColor->createVector(d->m_legend.colors);
 }
 
 /**
@@ -90809,6 +96088,467 @@ void Qwt3D::setDevicePolygonOffset(GLfloat factor, GLfloat units)
 }
 
 /*** End of inlined file: qwt3d_io_gl2ps.cpp ***/
+
+
+/*** Start of inlined file: qwt3d_colormap_color.cpp ***/
+#include <qcolor.h>
+#include <qstring.h>
+
+using namespace Qwt3D;
+
+ColorMapColor::ColorMapColor(Plot3D* plot, const QString& presetName, unsigned size)
+	: m_plot(plot)
+	, m_colorMap(QwtColorMapPreset::create(presetName).release())
+	, m_manualMin(0.0)
+	, m_manualMax(1.0)
+	, m_useManualInterval(false)
+	, m_alpha(1.0)
+{
+	rebuildColorVector(size);
+}
+
+ColorMapColor::ColorMapColor(Plot3D* plot, ::QwtColorMap* colorMap, unsigned size)
+	: m_plot(plot)
+	, m_colorMap(colorMap)
+	, m_manualMin(0.0)
+	, m_manualMax(1.0)
+	, m_useManualInterval(false)
+	, m_alpha(1.0)
+{
+	rebuildColorVector(size);
+}
+
+ColorMapColor::~ColorMapColor()
+{
+	delete m_colorMap;
+}
+
+RGBA ColorMapColor::operator()(double, double, double z) const
+{
+	double zMin, zMax;
+	if (m_useManualInterval) {
+		zMin = m_manualMin;
+		zMax = m_manualMax;
+	} else if (m_plot) {
+		const ParallelEpiped hull = m_plot->hull();
+		zMin = hull.minVertex.z;
+		zMax = hull.maxVertex.z;
+	} else {
+		zMin = 0.0;
+		zMax = 1.0;
+	}
+
+	const QRgb rgb = m_colorMap->rgb(zMin, zMax, z);
+	RGBA rgba;
+	rgba.r = qRed(rgb) / 255.0;
+	rgba.g = qGreen(rgb) / 255.0;
+	rgba.b = qBlue(rgb) / 255.0;
+	rgba.a = qAlpha(rgb) / 255.0 * m_alpha;
+	return rgba;
+}
+
+ColorVector& ColorMapColor::createVector(ColorVector& vec)
+{
+	rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+	vec = m_colors;
+	return vec;
+}
+
+void ColorMapColor::setColorMap(::QwtColorMap* map)
+{
+	if (map != m_colorMap) {
+		delete m_colorMap;
+		m_colorMap = map;
+	}
+	rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+}
+
+const ::QwtColorMap* ColorMapColor::colorMap() const
+{
+	return m_colorMap;
+}
+
+void ColorMapColor::setInterval(double min, double max)
+{
+	m_manualMin = min;
+	m_manualMax = max;
+	m_useManualInterval = true;
+	rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+}
+
+void ColorMapColor::reset(unsigned size)
+{
+	rebuildColorVector(size);
+}
+
+void ColorMapColor::setAlpha(double a)
+{
+	if (a < 0.0 || a > 1.0)
+		return;
+	m_alpha = a;
+	rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+}
+
+void ColorMapColor::rebuildColorVector(unsigned size)
+{
+	m_colors.resize(size);
+
+	double zMin, zMax;
+	if (m_useManualInterval) {
+		zMin = m_manualMin;
+		zMax = m_manualMax;
+	} else if (m_plot) {
+		const ParallelEpiped hull = m_plot->hull();
+		zMin = hull.minVertex.z;
+		zMax = hull.maxVertex.z;
+	} else {
+		zMin = 0.0;
+		zMax = 1.0;
+	}
+
+	if (!m_colorMap)
+		return;
+
+	for (unsigned i = 0; i < size; ++i) {
+		const double t = (size > 1) ? static_cast<double>(i) / (size - 1) : 0.0;
+		const double z = zMin + t * (zMax - zMin);
+		const QRgb rgb = m_colorMap->rgb(zMin, zMax, z);
+
+		RGBA& rgba = m_colors[i];
+		rgba.r = qRed(rgb) / 255.0;
+		rgba.g = qGreen(rgb) / 255.0;
+		rgba.b = qBlue(rgb) / 255.0;
+		rgba.a = qAlpha(rgb) / 255.0 * m_alpha;
+	}
+}
+
+/*** End of inlined file: qwt3d_colormap_color.cpp ***/
+
+
+/*** Start of inlined file: qwt3d_theme.cpp ***/
+#include <qfont.h>
+
+using namespace Qwt3D;
+
+Qwt3DTheme::Qwt3DTheme()
+	: m_backgroundColor(1.0, 1.0, 1.0, 1.0)
+	, m_meshColor(0.0, 0.0, 0.0, 1.0)
+	, m_meshLineWidth(1.0)
+	, m_smoothMesh(false)
+	, m_dataColorPreset("viridis")
+	, m_axesColor(0.0, 0.0, 0.0, 1.0)
+	, m_numberColor(0.0, 0.0, 0.0, 1.0)
+	, m_labelColor(0.0, 0.0, 0.0, 1.0)
+	, m_gridLinesColor(0.2, 0.2, 0.2, 1.0)
+	, m_titleColor(0.0, 0.0, 0.0, 1.0)
+	, m_titleFontFamily("Courier")
+	, m_titleFontSize(16)
+	, m_titleFontBold(true)
+	, m_lightingPreset(NoLighting)
+	, m_shading(GOURAUD)
+	, m_plotStyle(FILLEDMESH)
+	, m_shininess(5.0)
+	, m_specularIntensity(0.3)
+{
+}
+
+Qwt3DTheme::Qwt3DTheme(Preset preset)
+	: Qwt3DTheme()
+{
+	*this = create(preset);
+}
+
+Qwt3DTheme::~Qwt3DTheme() = default;
+
+Qwt3DTheme::Qwt3DTheme(const Qwt3DTheme&) = default;
+Qwt3DTheme& Qwt3DTheme::operator=(const Qwt3DTheme&) = default;
+
+Qwt3DTheme Qwt3DTheme::create(Preset preset)
+{
+	Qwt3DTheme theme;
+
+	switch (preset) {
+		case Default:
+			theme.m_dataColorPreset = "jet";
+			break;
+
+		case Dark:
+			theme.m_backgroundColor = RGBA(0.15, 0.15, 0.15, 1.0);
+			theme.m_meshColor = RGBA(0.5, 0.5, 0.5, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_smoothMesh = true;
+			theme.m_dataColorPreset = "viridis";
+			theme.m_axesColor = RGBA(0.8, 0.8, 0.8, 1.0);
+			theme.m_numberColor = RGBA(0.8, 0.8, 0.8, 1.0);
+			theme.m_labelColor = RGBA(0.9, 0.9, 0.9, 1.0);
+			theme.m_gridLinesColor = RGBA(0.35, 0.35, 0.35, 1.0);
+			theme.m_titleColor = RGBA(0.95, 0.95, 0.95, 1.0);
+			theme.m_lightingPreset = Soft;
+			theme.m_shininess = 5.0;
+			theme.m_specularIntensity = 0.1;
+			break;
+
+		case Scientific:
+			theme.m_dataColorPreset = "jet";
+			theme.m_meshLineWidth = 0.8;
+			theme.m_titleFontFamily = "Helvetica";
+			theme.m_titleFontSize = 14;
+			theme.m_lightingPreset = Studio;
+			theme.m_shininess = 10.0;
+			theme.m_specularIntensity = 0.3;
+			break;
+
+		case Warm:
+			theme.m_backgroundColor = RGBA(0.98, 0.95, 0.90, 1.0);
+			theme.m_meshColor = RGBA(0.3, 0.15, 0.0, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_dataColorPreset = "hot";
+			theme.m_axesColor = RGBA(0.3, 0.15, 0.0, 1.0);
+			theme.m_numberColor = RGBA(0.3, 0.15, 0.0, 1.0);
+			theme.m_labelColor = RGBA(0.3, 0.15, 0.0, 1.0);
+			theme.m_gridLinesColor = RGBA(0.7, 0.55, 0.4, 1.0);
+			theme.m_titleColor = RGBA(0.3, 0.15, 0.0, 1.0);
+			theme.m_lightingPreset = FlatLight;
+			theme.m_shininess = 3.0;
+			theme.m_specularIntensity = 0.1;
+			break;
+
+		case Cool:
+			theme.m_backgroundColor = RGBA(0.93, 0.96, 1.0, 1.0);
+			theme.m_meshColor = RGBA(0.0, 0.15, 0.35, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_dataColorPreset = "cool";
+			theme.m_axesColor = RGBA(0.0, 0.15, 0.35, 1.0);
+			theme.m_numberColor = RGBA(0.0, 0.15, 0.35, 1.0);
+			theme.m_labelColor = RGBA(0.0, 0.15, 0.35, 1.0);
+			theme.m_gridLinesColor = RGBA(0.5, 0.6, 0.75, 1.0);
+			theme.m_titleColor = RGBA(0.0, 0.15, 0.35, 1.0);
+			theme.m_lightingPreset = FlatLight;
+			theme.m_shininess = 3.0;
+			theme.m_specularIntensity = 0.1;
+			break;
+
+		case Matplotlib:
+			theme.m_meshColor = RGBA(0.2, 0.2, 0.2, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_dataColorPreset = "viridis";
+			theme.m_axesColor = RGBA(0.2, 0.2, 0.2, 1.0);
+			theme.m_numberColor = RGBA(0.2, 0.2, 0.2, 1.0);
+			theme.m_labelColor = RGBA(0.2, 0.2, 0.2, 1.0);
+			theme.m_gridLinesColor = RGBA(0.75, 0.75, 0.75, 1.0);
+			theme.m_titleColor = RGBA(0.2, 0.2, 0.2, 1.0);
+			theme.m_titleFontFamily = "sans-serif";
+			theme.m_titleFontSize = 14;
+			theme.m_lightingPreset = Soft;
+			theme.m_shininess = 5.0;
+			theme.m_specularIntensity = 0.2;
+			break;
+
+		case EarthTones:
+			theme.m_backgroundColor = RGBA(0.96, 0.94, 0.88, 1.0);
+			theme.m_meshColor = RGBA(0.35, 0.25, 0.15, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_dataColorPreset = "autumn";
+			theme.m_axesColor = RGBA(0.35, 0.25, 0.15, 1.0);
+			theme.m_numberColor = RGBA(0.35, 0.25, 0.15, 1.0);
+			theme.m_labelColor = RGBA(0.35, 0.25, 0.15, 1.0);
+			theme.m_gridLinesColor = RGBA(0.65, 0.55, 0.45, 1.0);
+			theme.m_titleColor = RGBA(0.35, 0.25, 0.15, 1.0);
+			theme.m_lightingPreset = Outdoor;
+			theme.m_shininess = 5.0;
+			theme.m_specularIntensity = 0.2;
+			break;
+
+		case Ocean:
+			theme.m_backgroundColor = RGBA(0.90, 0.95, 1.0, 1.0);
+			theme.m_meshColor = RGBA(0.0, 0.1, 0.3, 1.0);
+			theme.m_meshLineWidth = 0.5;
+			theme.m_dataColorPreset = "winter";
+			theme.m_axesColor = RGBA(0.0, 0.1, 0.3, 1.0);
+			theme.m_numberColor = RGBA(0.0, 0.1, 0.3, 1.0);
+			theme.m_labelColor = RGBA(0.0, 0.1, 0.3, 1.0);
+			theme.m_gridLinesColor = RGBA(0.5, 0.65, 0.8, 1.0);
+			theme.m_titleColor = RGBA(0.0, 0.1, 0.3, 1.0);
+			theme.m_lightingPreset = FlatLight;
+			theme.m_shininess = 3.0;
+			theme.m_specularIntensity = 0.1;
+			break;
+
+		case HighContrast:
+			theme.m_backgroundColor = RGBA(0.0, 0.0, 0.0, 1.0);
+			theme.m_meshColor = RGBA(1.0, 1.0, 1.0, 1.0);
+			theme.m_dataColorPreset = "gray";
+			theme.m_axesColor = RGBA(1.0, 1.0, 1.0, 1.0);
+			theme.m_numberColor = RGBA(1.0, 1.0, 1.0, 1.0);
+			theme.m_labelColor = RGBA(1.0, 1.0, 1.0, 1.0);
+			theme.m_gridLinesColor = RGBA(0.5, 0.5, 0.5, 1.0);
+			theme.m_titleColor = RGBA(1.0, 1.0, 1.0, 1.0);
+			break;
+
+		case Presentation:
+			theme.m_meshLineWidth = 1.5;
+			theme.m_dataColorPreset = "plasma";
+			theme.m_gridLinesColor = RGBA(0.6, 0.6, 0.6, 1.0);
+			theme.m_titleFontFamily = "Arial";
+			theme.m_titleFontSize = 20;
+			theme.m_lightingPreset = Studio;
+			theme.m_shininess = 10.0;
+			theme.m_specularIntensity = 0.4;
+			break;
+	}
+	return theme;
+}
+
+Qwt3DTheme Qwt3DTheme::create(const QString& name)
+{
+	const QString lower = name.toLower();
+	if (lower == "default") return create(Default);
+	if (lower == "dark") return create(Dark);
+	if (lower == "scientific") return create(Scientific);
+	if (lower == "warm") return create(Warm);
+	if (lower == "cool") return create(Cool);
+	if (lower == "matplotlib") return create(Matplotlib);
+	if (lower == "earthtones" || lower == "earth") return create(EarthTones);
+	if (lower == "ocean") return create(Ocean);
+	if (lower == "highcontrast" || lower == "contrast") return create(HighContrast);
+	if (lower == "presentation") return create(Presentation);
+	return create(Default);
+}
+
+QStringList Qwt3DTheme::availablePresets()
+{
+	return {
+		"Default", "Dark", "Scientific", "Warm", "Cool",
+		"Matplotlib", "EarthTones", "Ocean", "HighContrast", "Presentation"
+	};
+}
+
+// Getters/Setters
+RGBA Qwt3DTheme::backgroundColor() const { return m_backgroundColor; }
+void Qwt3DTheme::setBackgroundColor(RGBA c) { m_backgroundColor = c; }
+
+RGBA Qwt3DTheme::meshColor() const { return m_meshColor; }
+void Qwt3DTheme::setMeshColor(RGBA c) { m_meshColor = c; }
+
+double Qwt3DTheme::meshLineWidth() const { return m_meshLineWidth; }
+void Qwt3DTheme::setMeshLineWidth(double w) { m_meshLineWidth = w; }
+
+bool Qwt3DTheme::smoothMesh() const { return m_smoothMesh; }
+void Qwt3DTheme::setSmoothMesh(bool v) { m_smoothMesh = v; }
+
+QString Qwt3DTheme::dataColorPreset() const { return m_dataColorPreset; }
+void Qwt3DTheme::setDataColorPreset(const QString& name) { m_dataColorPreset = name; }
+
+QwtColorMap* Qwt3DTheme::createColorMap() const
+{
+	return QwtColorMapPreset::create(m_dataColorPreset).release();
+}
+
+RGBA Qwt3DTheme::axesColor() const { return m_axesColor; }
+void Qwt3DTheme::setAxesColor(RGBA c) { m_axesColor = c; }
+
+RGBA Qwt3DTheme::numberColor() const { return m_numberColor; }
+void Qwt3DTheme::setNumberColor(RGBA c) { m_numberColor = c; }
+
+RGBA Qwt3DTheme::labelColor() const { return m_labelColor; }
+void Qwt3DTheme::setLabelColor(RGBA c) { m_labelColor = c; }
+
+RGBA Qwt3DTheme::gridLinesColor() const { return m_gridLinesColor; }
+void Qwt3DTheme::setGridLinesColor(RGBA c) { m_gridLinesColor = c; }
+
+RGBA Qwt3DTheme::titleColor() const { return m_titleColor; }
+void Qwt3DTheme::setTitleColor(RGBA c) { m_titleColor = c; }
+
+QString Qwt3DTheme::titleFontFamily() const { return m_titleFontFamily; }
+void Qwt3DTheme::setTitleFontFamily(const QString& f) { m_titleFontFamily = f; }
+
+int Qwt3DTheme::titleFontSize() const { return m_titleFontSize; }
+void Qwt3DTheme::setTitleFontSize(int s) { m_titleFontSize = s; }
+
+bool Qwt3DTheme::titleFontBold() const { return m_titleFontBold; }
+void Qwt3DTheme::setTitleFontBold(bool b) { m_titleFontBold = b; }
+
+Qwt3DTheme::LightingPreset Qwt3DTheme::lightingPreset() const { return m_lightingPreset; }
+void Qwt3DTheme::setLightingPreset(LightingPreset p) { m_lightingPreset = p; }
+
+SHADINGSTYLE Qwt3DTheme::shading() const { return m_shading; }
+void Qwt3DTheme::setShading(SHADINGSTYLE s) { m_shading = s; }
+
+PLOTSTYLE Qwt3DTheme::plotStyle() const { return m_plotStyle; }
+void Qwt3DTheme::setPlotStyle(PLOTSTYLE s) { m_plotStyle = s; }
+
+double Qwt3DTheme::shininess() const { return m_shininess; }
+void Qwt3DTheme::setShininess(double v) { m_shininess = v; }
+
+double Qwt3DTheme::specularIntensity() const { return m_specularIntensity; }
+void Qwt3DTheme::setSpecularIntensity(double v) { m_specularIntensity = v; }
+
+void Qwt3DTheme::apply(Plot3D* plot) const
+{
+	if (!plot)
+		return;
+
+	plot->setBackgroundColor(m_backgroundColor);
+	plot->setMeshColor(m_meshColor);
+	plot->setMeshLineWidth(m_meshLineWidth);
+	plot->setSmoothMesh(m_smoothMesh);
+
+	plot->setDataColor(new ColorMapColor(plot, m_dataColorPreset));
+
+	CoordinateSystem* coords = plot->coordinates();
+	if (coords) {
+		coords->setAxesColor(m_axesColor);
+		coords->setNumberColor(m_numberColor);
+		coords->setLabelColor(m_labelColor);
+		coords->setGridLinesColor(m_gridLinesColor);
+	}
+
+	plot->setTitleColor(m_titleColor);
+	plot->setTitleFont(m_titleFontFamily, m_titleFontSize,
+					   m_titleFontBold ? QFont::Bold : QFont::Normal);
+
+	switch (m_lightingPreset) {
+		case NoLighting:
+			plot->disableLighting();
+			break;
+		case FlatLight:
+			plot->enableLighting();
+			plot->setLightComponent(GL_AMBIENT, 0.6, 0.6, 0.6);
+			plot->setLightComponent(GL_DIFFUSE, 0.4, 0.4, 0.4);
+			plot->setLightComponent(GL_SPECULAR, 0.0, 0.0, 0.0);
+			break;
+		case Studio:
+			plot->enableLighting();
+			plot->setLightComponent(GL_AMBIENT, 0.2, 0.2, 0.2);
+			plot->setLightComponent(GL_DIFFUSE, 0.8, 0.8, 0.8);
+			plot->setLightComponent(GL_SPECULAR, m_specularIntensity, m_specularIntensity, m_specularIntensity);
+			plot->setLightRotation(45.0, 0.0, 0.0, 0);
+			break;
+		case Outdoor:
+			plot->enableLighting();
+			plot->setLightComponent(GL_AMBIENT, 0.3, 0.3, 0.35);
+			plot->setLightComponent(GL_DIFFUSE, 1.0, 0.95, 0.8);
+			plot->setLightComponent(GL_SPECULAR, m_specularIntensity, m_specularIntensity, m_specularIntensity);
+			plot->setLightRotation(90.0, 0.0, 0.0, 0);
+			break;
+		case Soft:
+			plot->enableLighting();
+			plot->setLightComponent(GL_AMBIENT, 0.5, 0.5, 0.5);
+			plot->setLightComponent(GL_DIFFUSE, 0.5, 0.5, 0.5);
+			plot->setLightComponent(GL_SPECULAR, m_specularIntensity, m_specularIntensity, m_specularIntensity);
+			break;
+	}
+
+	plot->setShading(m_shading);
+	plot->setPlotStyle(m_plotStyle);
+	plot->setShininess(m_shininess);
+	plot->setMaterialComponent(GL_SPECULAR, m_specularIntensity, m_specularIntensity, m_specularIntensity);
+	plot->setMaterialComponent(GL_DIFFUSE, 1.0, 1.0, 1.0);
+
+	plot->updateData();
+}
+
+/*** End of inlined file: qwt3d_theme.cpp ***/
 
 #ifdef _MSC_VER
 #pragma warning (pop)

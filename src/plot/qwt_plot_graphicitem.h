@@ -37,69 +37,67 @@
  * @details QwtPlotGraphicItem renders a sequence of recorded painter commands
  *          into a specific plot area. Recording of painter commands can be
  *          done manually by QPainter or e.g. QSvgRenderer.
- * 
+ *
  * @sa QwtPlotShapeItem, QwtPlotSvgItem
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotGraphicItem : public QwtPlotItem
 {
-  public:
+public:
     /**
      * @brief Constructor
      *
      */
-explicit QwtPlotGraphicItem( const QString& title = QString() );
+    explicit QwtPlotGraphicItem(const QString& title = QString());
 
     /**
      * @brief Constructor with QwtText title
      *
      */
-explicit QwtPlotGraphicItem( const QwtText& title );
+    explicit QwtPlotGraphicItem(const QwtText& title);
 
     /**
      * @brief Destructor
      *
      */
-~QwtPlotGraphicItem() override;
+    ~QwtPlotGraphicItem() override;
 
     /**
      * @brief Set graphic with its bounding rectangle
      *
      */
-void setGraphic( const QRectF& rect, const QwtGraphic& );
+    void setGraphic(const QRectF& rect, const QwtGraphic&);
 
     /**
      * @brief Get graphic
      *
      */
-QwtGraphic graphic() const;
+    QwtGraphic graphic() const;
 
     /**
      * @brief Get the bounding rectangle
      *
      */
-virtual QRectF boundingRect() const override;
+    virtual QRectF boundingRect() const override;
 
     /**
      * @brief Draw the graphic
      *
      */
-virtual void draw( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
     /**
      * @brief Get the runtime type information
      *
      */
-virtual int rtti() const override;
+    virtual int rtti() const override;
 
-  private:
+private:
     /**
      * @brief Initialize the item
      */
-void init();
+    void init();
 
     QWT_DECLARE_PRIVATE(QwtPlotGraphicItem)
 };

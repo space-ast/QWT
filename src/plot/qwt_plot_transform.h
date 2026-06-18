@@ -48,40 +48,36 @@ public:
     // ---- Cross-axis transformation ----
 
     // Transform a point from one axis pair to another (same screen position)
-    static QPointF transformPoint(const QwtPlot* plot, const QPointF& point,
-                                  QwtAxisId fromX, QwtAxisId fromY,
-                                  QwtAxisId toX, QwtAxisId toY);
+    static QPointF
+    transformPoint(const QwtPlot* plot, const QPointF& point, QwtAxisId fromX, QwtAxisId fromY, QwtAxisId toX, QwtAxisId toY);
 
     // Transform a path from one axis pair to another
-    static QPainterPath transformPath(const QwtPlot* plot, const QPainterPath& path,
-                                      QwtAxisId fromX, QwtAxisId fromY,
-                                      QwtAxisId toX, QwtAxisId toY);
+    static QPainterPath
+    transformPath(const QwtPlot* plot, const QPainterPath& path, QwtAxisId fromX, QwtAxisId fromY, QwtAxisId toX, QwtAxisId toY);
 
     // ---- Screen / data coordinate conversion ----
 
     // Convert screen position to data coordinates
-    static QPointF toPlotPoint(const QwtPlot* plot, const QPointF& screenPos,
+    static QPointF toPlotPoint(const QwtPlot* plot,
+                               const QPointF& screenPos,
                                QwtAxisId xAxis = QwtAxis::XBottom,
                                QwtAxisId yAxis = QwtAxis::YLeft);
 
     // Convert data coordinates to screen position
-    static QPointF toScreenPoint(const QwtPlot* plot, const QPointF& plotPoint,
+    static QPointF toScreenPoint(const QwtPlot* plot,
+                                 const QPointF& plotPoint,
                                  QwtAxisId xAxis = QwtAxis::XBottom,
                                  QwtAxisId yAxis = QwtAxis::YLeft);
 
     // ---- Pixel offset ----
 
     // Compute the data-coordinate offset corresponding to 1 pixel
-    static QPointF onePixelOffset(const QwtPlot* plot,
-                                  QwtAxisId xAxis = QwtAxis::XBottom,
-                                  QwtAxisId yAxis = QwtAxis::YLeft);
+    static QPointF onePixelOffset(const QwtPlot* plot, QwtAxisId xAxis = QwtAxis::XBottom, QwtAxisId yAxis = QwtAxis::YLeft);
 
     // ---- Visible range ----
 
     // Get the currently visible data range
-    static QRectF visibleRange(const QwtPlot* plot,
-                               QwtAxisId xAxis = QwtAxis::XBottom,
-                               QwtAxisId yAxis = QwtAxis::YLeft);
+    static QRectF visibleRange(const QwtPlot* plot, QwtAxisId xAxis = QwtAxis::XBottom, QwtAxisId yAxis = QwtAxis::YLeft);
 
     // ---- Total data range ----
 
@@ -89,4 +85,4 @@ public:
     static QRectF totalDataRange(const QwtPlot* plot, bool onlyVisible = true);
 };
 
-#endif // QWT_PLOT_TRANSFORM_H
+#endif  // QWT_PLOT_TRANSFORM_H

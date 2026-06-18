@@ -11,28 +11,28 @@
 
 #if QT_VERSION >= 0x050200
 
-static QwtPointPolar qwtPointToPolar( const QPointF& point )
+static QwtPointPolar qwtPointToPolar(const QPointF& point)
 {
-    return QwtPointPolar( point );
+    return QwtPointPolar(point);
 }
 
 #endif
 
 namespace
 {
-    static const struct RegisterQwtPointPolar
+static const struct RegisterQwtPointPolar
+{
+    inline RegisterQwtPointPolar()
     {
-        inline RegisterQwtPointPolar()
-        {
-            qRegisterMetaType< QwtPointPolar >();
+        qRegisterMetaType< QwtPointPolar >();
 
 #if QT_VERSION >= 0x050200
-            QMetaType::registerConverter< QPointF, QwtPointPolar >( qwtPointToPolar );
-            QMetaType::registerConverter< QwtPointPolar, QPointF >( &QwtPointPolar::toPoint );
+        QMetaType::registerConverter< QPointF, QwtPointPolar >(qwtPointToPolar);
+        QMetaType::registerConverter< QwtPointPolar, QPointF >(&QwtPointPolar::toPoint);
 #endif
-        }
+    }
 
-    } qwtRegisterQwtPointPolar;
+} qwtRegisterQwtPointPolar;
 }
 
 /**
@@ -43,10 +43,10 @@ namespace
  * @sa setPoint(), toPoint()
  *
  */
-QwtPointPolar::QwtPointPolar( const QPointF& p )
+QwtPointPolar::QwtPointPolar(const QPointF& p)
 {
-    m_radius = std::sqrt( qwtSqr( p.x() ) + qwtSqr( p.y() ) );
-    m_azimuth = std::atan2( p.y(), p.x() );
+    m_radius  = std::sqrt(qwtSqr(p.x()) + qwtSqr(p.y()));
+    m_azimuth = std::atan2(p.y(), p.x());
 }
 
 /**
@@ -57,10 +57,10 @@ QwtPointPolar::QwtPointPolar( const QPointF& p )
  * @sa QwtPointPolar(QPointF), toPoint()
  *
  */
-void QwtPointPolar::setPoint( const QPointF& p )
+void QwtPointPolar::setPoint(const QPointF& p)
 {
-    m_radius = std::sqrt( qwtSqr( p.x() ) + qwtSqr( p.y() ) );
-    m_azimuth = std::atan2( p.y(), p.x() );
+    m_radius  = std::sqrt(qwtSqr(p.x()) + qwtSqr(p.y()));
+    m_azimuth = std::atan2(p.y(), p.x());
 }
 
 /**
@@ -75,13 +75,13 @@ void QwtPointPolar::setPoint( const QPointF& p )
  */
 QPointF QwtPointPolar::toPoint() const
 {
-    if ( m_radius <= 0.0 )
-        return QPointF( 0.0, 0.0 );
+    if (m_radius <= 0.0)
+        return QPointF(0.0, 0.0);
 
-    const double x = m_radius * std::cos( m_azimuth );
-    const double y = m_radius * std::sin( m_azimuth );
+    const double x = m_radius * std::cos(m_azimuth);
+    const double y = m_radius * std::sin(m_azimuth);
 
-    return QPointF( x, y );
+    return QPointF(x, y);
 }
 
 /**
@@ -96,7 +96,7 @@ QPointF QwtPointPolar::toPoint() const
  * @sa normalized()
  *
  */
-bool QwtPointPolar::operator==( const QwtPointPolar& other ) const
+bool QwtPointPolar::operator==(const QwtPointPolar& other) const
 {
     return m_radius == other.m_radius && m_azimuth == other.m_azimuth;
 }
@@ -113,7 +113,7 @@ bool QwtPointPolar::operator==( const QwtPointPolar& other ) const
  * @sa normalized()
  *
  */
-bool QwtPointPolar::operator!=( const QwtPointPolar& other ) const
+bool QwtPointPolar::operator!=(const QwtPointPolar& other) const
 {
     return m_radius != other.m_radius || m_azimuth != other.m_azimuth;
 }
@@ -129,29 +129,27 @@ bool QwtPointPolar::operator!=( const QwtPointPolar& other ) const
  */
 QwtPointPolar QwtPointPolar::normalized() const
 {
-    const double radius = qwtMaxF( m_radius, 0.0 );
+    const double radius = qwtMaxF(m_radius, 0.0);
 
     double azimuth = m_azimuth;
-    if ( azimuth < -2.0 * M_PI || azimuth >= 2 * M_PI )
-        azimuth = std::fmod( m_azimuth, 2 * M_PI );
+    if (azimuth < -2.0 * M_PI || azimuth >= 2 * M_PI)
+        azimuth = std::fmod(m_azimuth, 2 * M_PI);
 
-    if ( azimuth < 0.0 )
+    if (azimuth < 0.0)
         azimuth += 2 * M_PI;
 
-    return QwtPointPolar( azimuth, radius );
+    return QwtPointPolar(azimuth, radius);
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 
 #include <qdebug.h>
 
-QDebug operator<<( QDebug debug, const QwtPointPolar& point )
+QDebug operator<<(QDebug debug, const QwtPointPolar& point)
 {
-    debug.nospace() << "QwtPointPolar("
-                    << point.azimuth() << "," << point.radius() << ")";
+    debug.nospace() << "QwtPointPolar(" << point.azimuth() << "," << point.radius() << ")";
 
     return debug.space();
 }
 
 #endif
-

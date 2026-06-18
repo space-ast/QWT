@@ -30,9 +30,12 @@
  *          using the source axes, then transforms back to data coordinates
  *          using the target axes.
  */
-QPointF QwtPlotTransform::transformPoint(const QwtPlot* plot, const QPointF& point,
-                                         QwtAxisId fromX, QwtAxisId fromY,
-                                         QwtAxisId toX, QwtAxisId toY)
+QPointF QwtPlotTransform::transformPoint(const QwtPlot* plot,
+                                         const QPointF& point,
+                                         QwtAxisId fromX,
+                                         QwtAxisId fromY,
+                                         QwtAxisId toX,
+                                         QwtAxisId toY)
 {
     if (!plot)
         return point;
@@ -46,15 +49,15 @@ QPointF QwtPlotTransform::transformPoint(const QwtPlot* plot, const QPointF& poi
     if (fromX != toX) {
         const QwtScaleMap xMap1 = plot->canvasMap(fromX);
         const QwtScaleMap xMap2 = plot->canvasMap(toX);
-        const double screenX = xMap1.transform(x);
-        x = xMap2.invTransform(screenX);
+        const double screenX    = xMap1.transform(x);
+        x                       = xMap2.invTransform(screenX);
     }
 
     if (fromY != toY) {
         const QwtScaleMap yMap1 = plot->canvasMap(fromY);
         const QwtScaleMap yMap2 = plot->canvasMap(toY);
-        const double screenY = yMap1.transform(y);
-        y = yMap2.invTransform(screenY);
+        const double screenY    = yMap1.transform(y);
+        y                       = yMap2.invTransform(screenY);
     }
 
     return QPointF(x, y);
@@ -70,9 +73,12 @@ QPointF QwtPlotTransform::transformPoint(const QwtPlot* plot, const QPointF& poi
  * @param toY Target Y axis
  * @return Transformed path in target axis data coordinates
  */
-QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot, const QPainterPath& path,
-                                             QwtAxisId fromX, QwtAxisId fromY,
-                                             QwtAxisId toX, QwtAxisId toY)
+QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot,
+                                             const QPainterPath& path,
+                                             QwtAxisId fromX,
+                                             QwtAxisId fromY,
+                                             QwtAxisId toX,
+                                             QwtAxisId toY)
 {
     if (!plot || (fromX == toX && fromY == toY))
         return path;
@@ -82,8 +88,7 @@ QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot, const QPainter
 
     for (int i = 0; i < path.elementCount(); ++i) {
         const QPainterPath::Element& el = path.elementAt(i);
-        const QPointF transformed = transformPoint(plot, QPointF(el.x, el.y),
-                                                   fromX, fromY, toX, toY);
+        const QPointF transformed       = transformPoint(plot, QPointF(el.x, el.y), fromX, fromY, toX, toY);
         switch (el.type) {
         case QPainterPath::MoveToElement:
             result.moveTo(transformed);
@@ -92,11 +97,10 @@ QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot, const QPainter
             result.lineTo(transformed);
             break;
         case QPainterPath::CurveToElement:
-            result.cubicTo(transformed,
-                           transformPoint(plot, QPointF(path.elementAt(i + 1).x, path.elementAt(i + 1).y),
-                                          fromX, fromY, toX, toY),
-                           transformPoint(plot, QPointF(path.elementAt(i + 2).x, path.elementAt(i + 2).y),
-                                          fromX, fromY, toX, toY));
+            result.cubicTo(
+                transformed,
+                transformPoint(plot, QPointF(path.elementAt(i + 1).x, path.elementAt(i + 1).y), fromX, fromY, toX, toY),
+                transformPoint(plot, QPointF(path.elementAt(i + 2).x, path.elementAt(i + 2).y), fromX, fromY, toX, toY));
             i += 2;
             break;
         case QPainterPath::CurveToDataElement:
@@ -116,8 +120,7 @@ QPainterPath QwtPlotTransform::transformPath(const QwtPlot* plot, const QPainter
  * @param yAxis Y axis to use for conversion
  * @return Data coordinates corresponding to the screen position
  */
-QPointF QwtPlotTransform::toPlotPoint(const QwtPlot* plot, const QPointF& screenPos,
-                                      QwtAxisId xAxis, QwtAxisId yAxis)
+QPointF QwtPlotTransform::toPlotPoint(const QwtPlot* plot, const QPointF& screenPos, QwtAxisId xAxis, QwtAxisId yAxis)
 {
     if (!plot)
         return QPointF();
@@ -136,8 +139,7 @@ QPointF QwtPlotTransform::toPlotPoint(const QwtPlot* plot, const QPointF& screen
  * @param yAxis Y axis to use for conversion
  * @return Screen position in canvas widget pixel coordinates
  */
-QPointF QwtPlotTransform::toScreenPoint(const QwtPlot* plot, const QPointF& plotPoint,
-                                        QwtAxisId xAxis, QwtAxisId yAxis)
+QPointF QwtPlotTransform::toScreenPoint(const QwtPlot* plot, const QPointF& plotPoint, QwtAxisId xAxis, QwtAxisId yAxis)
 {
     if (!plot)
         return QPointF();
@@ -162,10 +164,10 @@ QPointF QwtPlotTransform::onePixelOffset(const QwtPlot* plot, QwtAxisId xAxis, Q
         return QPointF(0.0, 0.0);
 
     const QPoint center = plot->rect().center();
-    const double x1 = plot->invTransform(xAxis, center.x());
-    const double y1 = plot->invTransform(yAxis, center.y());
-    const double x2 = plot->invTransform(xAxis, center.x() + 1);
-    const double y2 = plot->invTransform(yAxis, center.y() + 1);
+    const double x1     = plot->invTransform(xAxis, center.x());
+    const double y1     = plot->invTransform(yAxis, center.y());
+    const double x2     = plot->invTransform(xAxis, center.x() + 1);
+    const double y2     = plot->invTransform(yAxis, center.y() + 1);
 
     return QPointF(x2 - x1, y2 - y1);
 }
@@ -218,7 +220,7 @@ QRectF QwtPlotTransform::totalDataRange(const QwtPlot* plot, bool onlyVisible)
 
         if (first) {
             totalRect = itemRect;
-            first = false;
+            first     = false;
         } else {
             totalRect = totalRect.united(itemRect);
         }

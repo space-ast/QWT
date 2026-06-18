@@ -24,14 +24,14 @@ struct QWT_EXPORT QwtPlotCanvasZoomState
 public:
     // Default constructor
     QwtPlotCanvasZoomState();
-    
+
     // Constructor with plot and axis intervals
     QwtPlotCanvasZoomState(QwtPlot* p,
                            const QwtInterval& yLeft,
                            const QwtInterval& yRight,
                            const QwtInterval& xBottom,
                            const QwtInterval& xTop);
-    
+
     // Create zoom state from current plot axis ranges
     static QwtPlotCanvasZoomState fromPlot(QwtPlot* plot);
 
@@ -40,7 +40,7 @@ public:
 
     // Check if two zoom states are equal
     bool operator==(const QwtPlotCanvasZoomState& other) const;
-    
+
     // Check if two zoom states are not equal
     bool operator!=(const QwtPlotCanvasZoomState& other) const;
 
@@ -85,7 +85,7 @@ class QWT_EXPORT QwtPlotCanvasZoomer : public QwtCanvasPicker
 public:
     // Constructor
     explicit QwtPlotCanvasZoomer(QWidget* canvas, bool doReplot = true);
-    
+
     // Destructor
     ~QwtPlotCanvasZoomer() override;
 
@@ -94,22 +94,22 @@ public:
 
     // Enable or disable automatic replot after zoom operations
     void setAutoReplot(bool on = true);
-    
+
     // Check if automatic replot is enabled
     bool isAutoReplot() const;
-    
+
     // Get the base zoom state (initial unzoomed state)
     QList< QwtPlotCanvasZoomState > zoomBase() const;
-    
+
     // Get the current zoom state
     QList< QwtPlotCanvasZoomState > zoomState() const;
-    
+
     // Set maximum number of zoom levels in the stack, -1 for unlimited
     void setMaxStackDepth(int);
-    
+
     // Get maximum stack depth
     int maxStackDepth() const;
-    
+
     // Get the zoom stack containing all zoom states
     const QStack< QList< QwtPlotCanvasZoomState > >& zoomStack() const;
 
@@ -119,10 +119,10 @@ public:
 public Q_SLOTS:
     // Navigate in the zoom stack by offset (negative = zoom out, positive = zoom in)
     virtual void zoom(int offset);
-    
+
     // Append a new zoom state to the stack
     virtual void appendZoom(const QList< QwtPlotCanvasZoomState >& rect);
-    
+
 Q_SIGNALS:
     /**
      * @brief Signal emitted when the plot has been zoomed in or out

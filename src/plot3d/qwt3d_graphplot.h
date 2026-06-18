@@ -3,7 +3,8 @@
 
 #include "qwt3d_plot.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Base class for graph plotting widgets
@@ -20,6 +21,6 @@ protected:
     virtual void createData() override = 0;
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_GRAPHPLOT_H
+#endif  // QWT3D_GRAPHPLOT_H

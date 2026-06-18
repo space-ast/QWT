@@ -5,7 +5,8 @@
 #include "qwt3d_global.h"
 #include "qwt3d_types.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Abstract base class for general mappings
@@ -15,11 +16,16 @@ class QWT3D_EXPORT Mapping
 
 public:
     // Destructor
-    virtual ~Mapping() { }
+    virtual ~Mapping()
+    {
+    }
     // Descriptive String
-    virtual QString name() const { return QString(""); }
+    virtual QString name() const
+    {
+        return QString("");
+    }
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_MAPPING_H
+#endif  // QWT3D_MAPPING_H

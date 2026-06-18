@@ -401,7 +401,7 @@ public:
     Data();
     virtual ~Data();
     // Destroy content
-    virtual void clear()       = 0;
+    virtual void clear() = 0;
     // No data
     virtual bool empty() const = 0;
     void setHull(Qwt3D::ParallelEpiped const& h);
@@ -430,8 +430,7 @@ public:
     void clear();
     bool empty() const;
     // Destroys content and set new size, elements are uninitialized
-    void setSize(unsigned int columns,
-                 unsigned int rows);
+    void setSize(unsigned int columns, unsigned int rows);
 
     // Mesh vertices
     DataMatrix vertices;

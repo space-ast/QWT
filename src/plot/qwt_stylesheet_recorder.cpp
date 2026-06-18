@@ -44,7 +44,7 @@ void QwtStyleSheetRecorder::updateState(const QPaintEngineState& state)
 void QwtStyleSheetRecorder::drawRects(const QRectF* rects, int count)
 {
     for (int i = 0; i < count; i++)
-border.rectList += rects[ i ];
+        border.rectList += rects[ i ];
 }
 
 /**
@@ -123,10 +123,8 @@ void QwtStyleSheetRecorder::setCornerRects(const QPainterPath& path)
         case QPainterPath::CurveToDataElement: {
             if (clipRects.size() > 0) {
                 QRectF r = clipRects.last();
-                r.setCoords(qwtMinF(r.left(), el.x),
-                            qwtMinF(r.top(), el.y),
-                            qwtMaxF(r.right(), el.x),
-                            qwtMaxF(r.bottom(), el.y));
+                r.setCoords(
+                    qwtMinF(r.left(), el.x), qwtMinF(r.top(), el.y), qwtMaxF(r.right(), el.x), qwtMaxF(r.bottom(), el.y));
                 clipRects.last() = r.normalized();
             }
             break;

@@ -45,28 +45,28 @@
  */
 class QWT_EXPORT QwtAbstractLegend : public QFrame
 {
-        Q_OBJECT
+    Q_OBJECT
 
 public:
-        // Constructor for QwtAbstractLegend
-        explicit QwtAbstractLegend(QWidget* parent = nullptr);
-        
-        // Destructor for QwtAbstractLegend
-        ~QwtAbstractLegend() override;
+    // Constructor for QwtAbstractLegend
+    explicit QwtAbstractLegend(QWidget* parent = nullptr);
 
-        // Render the legend into a given rectangle
-        virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
+    // Destructor for QwtAbstractLegend
+    ~QwtAbstractLegend() override;
 
-        // Return true when no plot item is inserted
-        virtual bool isEmpty() const = 0;
+    // Render the legend into a given rectangle
+    virtual void renderLegend(QPainter* painter, const QRectF& rect, bool fillBackground) const = 0;
 
-        // Return scroll extent
-        virtual int scrollExtent(Qt::Orientation) const;
+    // Return true when no plot item is inserted
+    virtual bool isEmpty() const = 0;
+
+    // Return scroll extent
+    virtual int scrollExtent(Qt::Orientation) const;
 
 public Q_SLOTS:
 
-        // Update the entries for a plot item
-        virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
+    // Update the entries for a plot item
+    virtual void updateLegend(const QVariant& itemInfo, const QList< QwtLegendData >& data) = 0;
 };
 
 #endif

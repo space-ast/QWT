@@ -135,4 +135,4 @@
  */
 QSize QWT_EXPORT qwtExpandedToGlobalStrut(const QSize& size);
 
-#endif // QWT_UTILS_H
+#endif  // QWT_UTILS_H

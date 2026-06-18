@@ -55,26 +55,23 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
 {
     Q_OBJECT
 
-    Q_ENUMS( ScalePosition )
-    Q_ENUMS( OriginMode )
+    Q_ENUMS(ScalePosition)
+    Q_ENUMS(OriginMode)
 
-    Q_PROPERTY( Qt::Orientation orientation
-        READ orientation WRITE setOrientation )
-    Q_PROPERTY( ScalePosition scalePosition
-        READ scalePosition WRITE setScalePosition )
-    Q_PROPERTY( OriginMode originMode READ originMode WRITE setOriginMode )
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
+    Q_PROPERTY(ScalePosition scalePosition READ scalePosition WRITE setScalePosition)
+    Q_PROPERTY(OriginMode originMode READ originMode WRITE setOriginMode)
 
-    Q_PROPERTY( bool alarmEnabled READ alarmEnabled WRITE setAlarmEnabled )
-    Q_PROPERTY( double alarmLevel READ alarmLevel WRITE setAlarmLevel )
-    Q_PROPERTY( double origin READ origin WRITE setOrigin )
-    Q_PROPERTY( int spacing READ spacing WRITE setSpacing )
-    Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
-    Q_PROPERTY( int pipeWidth READ pipeWidth WRITE setPipeWidth )
-    Q_PROPERTY( bool flatStyle READ flatStyle WRITE setFlatStyle )
-    Q_PROPERTY( double value READ value WRITE setValue USER true )
+    Q_PROPERTY(bool alarmEnabled READ alarmEnabled WRITE setAlarmEnabled)
+    Q_PROPERTY(double alarmLevel READ alarmLevel WRITE setAlarmLevel)
+    Q_PROPERTY(double origin READ origin WRITE setOrigin)
+    Q_PROPERTY(int spacing READ spacing WRITE setSpacing)
+    Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
+    Q_PROPERTY(int pipeWidth READ pipeWidth WRITE setPipeWidth)
+    Q_PROPERTY(bool flatStyle READ flatStyle WRITE setFlatStyle)
+    Q_PROPERTY(double value READ value WRITE setValue USER true)
 
-  public:
-
+public:
     /**
      * @brief Position of the scale
      * @sa setScalePosition(), setOrientation()
@@ -108,79 +105,79 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     };
 
     // Constructor
-    explicit QwtThermo( QWidget* parent = nullptr );
+    explicit QwtThermo(QWidget* parent = nullptr);
     // Destructor
     ~QwtThermo() override;
 
     // Set the orientation
-    void setOrientation( Qt::Orientation );
+    void setOrientation(Qt::Orientation);
     // Return the orientation
     Qt::Orientation orientation() const;
 
     // Set the scale position
-    void setScalePosition( ScalePosition );
+    void setScalePosition(ScalePosition);
     // Return the scale position
     ScalePosition scalePosition() const;
 
     // Set the spacing
-    void setSpacing( int );
+    void setSpacing(int);
     // Return the spacing
     int spacing() const;
 
     // Set the border width
-    void setBorderWidth( int );
+    void setBorderWidth(int);
     // Return the border width
     int borderWidth() const;
 
     // Set the origin mode
-    void setOriginMode( OriginMode );
+    void setOriginMode(OriginMode);
     // Return the origin mode
     OriginMode originMode() const;
 
     // Set the origin
-    void setOrigin( double );
+    void setOrigin(double);
     // Return the origin
     double origin() const;
 
     // Set the fill brush
-    void setFillBrush( const QBrush& );
+    void setFillBrush(const QBrush&);
     // Return the fill brush
     QBrush fillBrush() const;
 
     // Set the alarm brush
-    void setAlarmBrush( const QBrush& );
+    void setAlarmBrush(const QBrush&);
     // Return the alarm brush
     QBrush alarmBrush() const;
 
     // Set the alarm level
-    void setAlarmLevel( double );
+    void setAlarmLevel(double);
     // Return the alarm level
     double alarmLevel() const;
 
     // Set whether alarm is enabled
-    void setAlarmEnabled( bool );
+    void setAlarmEnabled(bool);
     // Return whether alarm is enabled
     bool alarmEnabled() const;
 
     // Set the color map
-    void setColorMap( QwtColorMap* );
+    void setColorMap(QwtColorMap*);
     // Return the color map
     QwtColorMap* colorMap();
     // Return the color map (const version)
     const QwtColorMap* colorMap() const;
 
     // Set the pipe width
-    void setPipeWidth( int );
+    void setPipeWidth(int);
     // Return the pipe width
     int pipeWidth() const;
 
     // Set flat style
-    void setFlatStyle( bool );
+    void setFlatStyle(bool);
     // Return flat style
     bool flatStyle() const;
 
     // Set the range flags
-    void setRangeFlags( QwtInterval::BorderFlags );
+    void setRangeFlags(QwtInterval::BorderFlags);
     // Return the range flags
     QwtInterval::BorderFlags rangeFlags() const;
 
@@ -193,26 +190,26 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     virtual QSize minimumSizeHint() const override;
 
     // Set the scale draw
-    void setScaleDraw( QwtScaleDraw* );
+    void setScaleDraw(QwtScaleDraw*);
     // Return the scale draw
     const QwtScaleDraw* scaleDraw() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // Set the current value
-    virtual void setValue( double );
+    virtual void setValue(double);
 
-  protected:
+protected:
     /// Draw the liquid
-    virtual void drawLiquid( QPainter*, const QRect& ) const;
+    virtual void drawLiquid(QPainter*, const QRect&) const;
     /// Handle scale changes
     virtual void scaleChange() override;
 
     /// Handle paint events
-    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void paintEvent(QPaintEvent*) override;
     /// Handle resize events
-    virtual void resizeEvent( QResizeEvent* ) override;
+    virtual void resizeEvent(QResizeEvent*) override;
     /// Handle change events
-    virtual void changeEvent( QEvent* ) override;
+    virtual void changeEvent(QEvent*) override;
 
     /// Return the scale draw
     QwtScaleDraw* scaleDraw();
@@ -220,13 +217,13 @@ class QWT_EXPORT QwtThermo : public QwtAbstractScale
     /// Return the pipe rectangle
     QRect pipeRect() const;
     /// Return the fill rectangle
-    QRect fillRect( const QRect& ) const;
+    QRect fillRect(const QRect&) const;
     /// Return the alarm rectangle
-    QRect alarmRect( const QRect& ) const;
+    QRect alarmRect(const QRect&) const;
 
-  private:
+private:
     /// Layout the thermo
-    void layoutThermo( bool );
+    void layoutThermo(bool);
 
     QWT_DECLARE_PRIVATE(QwtThermo)
 };

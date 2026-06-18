@@ -37,7 +37,7 @@ class QwtPlot;
  */
 class QWT_EXPORT QwtPlotAbstractCanvas
 {
-  public:
+public:
     /**
      * @brief Focus indicator
      * @details The default setting is NoFocusIndicator
@@ -66,7 +66,7 @@ class QWT_EXPORT QwtPlotAbstractCanvas
     };
 
     // Constructor
-    explicit QwtPlotAbstractCanvas( QWidget* canvasWidget );
+    explicit QwtPlotAbstractCanvas(QWidget* canvasWidget);
     // Destructor
     ~QwtPlotAbstractCanvas();
 
@@ -76,33 +76,33 @@ class QWT_EXPORT QwtPlotAbstractCanvas
     const QwtPlot* plot() const;
 
     // Set the focus indicator
-    void setFocusIndicator( FocusIndicator );
+    void setFocusIndicator(FocusIndicator);
     // Get the focus indicator
     FocusIndicator focusIndicator() const;
 
     // Set the border radius
-    void setBorderRadius( double );
+    void setBorderRadius(double);
     // Get the border radius
     double borderRadius() const;
 
-  protected:
+protected:
     QWidget* canvasWidget();
     const QWidget* canvasWidget() const;
 
-    virtual void drawFocusIndicator( QPainter* );
-    virtual void drawBorder( QPainter* );
-    virtual void drawBackground( QPainter* );
+    virtual void drawFocusIndicator(QPainter*);
+    virtual void drawBorder(QPainter*);
+    virtual void drawBackground(QPainter*);
 
-    void fillBackground( QPainter* );
-    void drawCanvas( QPainter* );
-    void drawStyled( QPainter*, bool );
-    void drawUnstyled( QPainter* );
+    void fillBackground(QPainter*);
+    void drawCanvas(QPainter*);
+    void drawStyled(QPainter*, bool);
+    void drawUnstyled(QPainter*);
 
-    QPainterPath canvasBorderPath( const QRect& rect ) const;
+    QPainterPath canvasBorderPath(const QRect& rect) const;
     void updateStyleSheetInfo();
 
-  private:
-    QwtPlotAbstractCanvas(const QwtPlotAbstractCanvas&) = delete;
+private:
+    QwtPlotAbstractCanvas(const QwtPlotAbstractCanvas&)            = delete;
     QwtPlotAbstractCanvas& operator=(const QwtPlotAbstractCanvas&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPlotAbstractCanvas)
@@ -113,7 +113,7 @@ class QWT_EXPORT QwtPlotAbstractCanvas
  */
 class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
 {
-  public:
+public:
     /**
      * @brief Paint attributes
      * @details The default setting enables BackingStore and Opaque.
@@ -139,40 +139,40 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
     };
 
     //! Paint attributes
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     // Constructor
-    explicit QwtPlotAbstractGLCanvas( QWidget* canvasWidget );
+    explicit QwtPlotAbstractGLCanvas(QWidget* canvasWidget);
     // Destructor
     ~QwtPlotAbstractGLCanvas();
 
     // Set a paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
+    void setPaintAttribute(PaintAttribute, bool on = true);
     // Test a paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    bool testPaintAttribute(PaintAttribute) const;
 
     // Set the frame style
-    void setFrameStyle( int style );
+    void setFrameStyle(int style);
     // Get the frame style
     int frameStyle() const;
 
     // Set the frame shadow
-    void setFrameShadow( QFrame::Shadow );
+    void setFrameShadow(QFrame::Shadow);
     // Get the frame shadow
     QFrame::Shadow frameShadow() const;
 
     // Set the frame shape
-    void setFrameShape( QFrame::Shape );
+    void setFrameShape(QFrame::Shape);
     // Get the frame shape
     QFrame::Shape frameShape() const;
 
     // Set the line width
-    void setLineWidth( int );
+    void setLineWidth(int);
     // Get the line width
     int lineWidth() const;
 
     // Set the mid line width
-    void setMidLineWidth( int );
+    void setMidLineWidth(int);
     // Get the mid line width
     int midLineWidth() const;
 
@@ -184,16 +184,16 @@ class QWT_EXPORT QwtPlotAbstractGLCanvas : public QwtPlotAbstractCanvas
     //! Invalidate the internal backing store
     virtual void invalidateBackingStore() = 0;
 
-  protected:
+protected:
     void replot();
-    void draw( QPainter* );
+    void draw(QPainter*);
 
-  private:
+private:
     virtual void clearBackingStore() = 0;
 
     QWT_DECLARE_PRIVATE(QwtPlotAbstractGLCanvas)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotAbstractGLCanvas::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotAbstractGLCanvas::PaintAttributes)
 
 #endif

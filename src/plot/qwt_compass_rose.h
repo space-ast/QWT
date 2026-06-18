@@ -39,14 +39,14 @@ class QPainter;
  */
 class QWT_EXPORT QwtCompassRose
 {
-  public:
+public:
     // Constructor
     QwtCompassRose();
     // Destructor
     virtual ~QwtCompassRose();
 
     // Sets the palette for the rose
-    virtual void setPalette( const QPalette& );
+    virtual void setPalette(const QPalette&);
     // Returns the palette of the rose
     const QPalette& palette() const;
 
@@ -58,12 +58,14 @@ class QWT_EXPORT QwtCompassRose
      *   @param[in] north Position pointing north
      *   @param[in] colorGroup Color group
      */
-    virtual void draw( QPainter* painter,
-        const QPointF& center, double radius, double north,
-        QPalette::ColorGroup colorGroup = QPalette::Active ) const = 0;
+    virtual void draw(QPainter* painter,
+                      const QPointF& center,
+                      double radius,
+                      double north,
+                      QPalette::ColorGroup colorGroup = QPalette::Active) const = 0;
 
-  private:
-    QwtCompassRose(const QwtCompassRose&) = delete;
+private:
+    QwtCompassRose(const QwtCompassRose&)            = delete;
     QwtCompassRose& operator=(const QwtCompassRose&) = delete;
 
     QPalette m_palette;
@@ -76,49 +78,54 @@ class QWT_EXPORT QwtCompassRose
  */
 class QWT_EXPORT QwtSimpleCompassRose : public QwtCompassRose
 {
-  public:
+public:
     // Constructs a simple compass rose with specified number of thorns and levels
-    QwtSimpleCompassRose( int numThorns = 8, int numThornLevels = -1 );
+    QwtSimpleCompassRose(int numThorns = 8, int numThornLevels = -1);
     // Destructor
     ~QwtSimpleCompassRose() override;
 
     // Sets the width of the rose heads (range: 0.03 to 0.4)
-    void setWidth( double );
+    void setWidth(double);
     // Returns the width of the rose heads
     double width() const;
 
     // Sets the number of thorns on one level (aligned to multiple of 4, minimum 4)
-    void setNumThorns( int );
+    void setNumThorns(int);
     // Returns the number of thorns
     int numThorns() const;
 
     // Sets the number of thorn levels
-    void setNumThornLevels( int );
+    void setNumThornLevels(int);
     // Returns the number of thorn levels
     int numThornLevels() const;
 
     // Sets the shrink factor for thorns with each level (default: 0.9)
-    void setShrinkFactor( double factor );
+    void setShrinkFactor(double factor);
     // Returns the shrink factor for thorns
     double shrinkFactor() const;
 
     // Set flat style
-    void setFlatStyle( bool );
+    void setFlatStyle(bool);
     // Return flat style
     bool flatStyle() const;
 
     // Draw the rose (override from base class)
-    virtual void draw( QPainter*,
-        const QPointF& center, double radius, double north,
-        QPalette::ColorGroup = QPalette::Active ) const override;
+    virtual void
+    draw(QPainter*, const QPointF& center, double radius, double north, QPalette::ColorGroup = QPalette::Active) const override;
 
     // Static helper to draw a rose with specified parameters
-    static void drawRose( QPainter*, const QPalette&,
-        const QPointF& center, double radius, double north, double width,
-        int numThorns, int numThornLevels, double shrinkFactor,
-        bool flatStyle = true );
+    static void drawRose(QPainter*,
+                         const QPalette&,
+                         const QPointF& center,
+                         double radius,
+                         double north,
+                         double width,
+                         int numThorns,
+                         int numThornLevels,
+                         double shrinkFactor,
+                         bool flatStyle = true);
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtSimpleCompassRose)
 };
 

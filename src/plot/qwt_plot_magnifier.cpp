@@ -32,8 +32,7 @@ class QwtPlotMagnifier::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotMagnifier)
 public:
-    PrivateData(QwtPlotMagnifier* p)
-        : q_ptr(p)
+    PrivateData(QwtPlotMagnifier* p) : q_ptr(p)
     {
         for (int axis = 0; axis < QwtAxis::AxisPositions; axis++)
             isAxisEnabled[ axis ] = true;

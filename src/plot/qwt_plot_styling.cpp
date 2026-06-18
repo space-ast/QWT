@@ -98,14 +98,14 @@ bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
     switch (item->rtti()) {
     case QwtPlotItem::Rtti_PlotCurve: {
         auto* curve = static_cast< QwtPlotCurve* >(item);
-        QPen p = curve->pen();
+        QPen p      = curve->pen();
         p.setColor(color);
         curve->setPen(p);
         return true;
     }
     case QwtPlotItem::Rtti_PlotBarChart: {
         auto* bar = static_cast< QwtPlotBarChart* >(item);
-        QPen p = bar->pen();
+        QPen p    = bar->pen();
         p.setColor(color);
         bar->setPen(p);
         QBrush b = bar->brush();
@@ -115,7 +115,7 @@ bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
     }
     case QwtPlotItem::Rtti_PlotHistogram: {
         auto* hist = static_cast< QwtPlotHistogram* >(item);
-        QPen p = hist->pen();
+        QPen p     = hist->pen();
         p.setColor(color);
         hist->setPen(p);
         QBrush b = hist->brush();
@@ -125,7 +125,7 @@ bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
     }
     case QwtPlotItem::Rtti_PlotIntervalCurve: {
         auto* curve = static_cast< QwtPlotIntervalCurve* >(item);
-        QPen p = curve->pen();
+        QPen p      = curve->pen();
         p.setColor(color);
         curve->setPen(p);
         QBrush b = curve->brush();
@@ -135,7 +135,7 @@ bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
     }
     case QwtPlotItem::Rtti_PlotTradingCurve: {
         auto* curve = static_cast< QwtPlotTradingCurve* >(item);
-        QPen p = curve->symbolPen();
+        QPen p      = curve->symbolPen();
         p.setColor(color);
         curve->setSymbolPen(p);
         return true;
@@ -145,14 +145,14 @@ bool QwtPlotStyling::setColor(QwtPlotItem* item, const QColor& color)
         return false;
     case QwtPlotItem::Rtti_PlotGrid: {
         auto* grid = static_cast< QwtPlotGrid* >(item);
-        QPen p = grid->majorPen();
+        QPen p     = grid->majorPen();
         p.setColor(color);
         grid->setMajorPen(p);
         return true;
     }
     case QwtPlotItem::Rtti_PlotMarker: {
         auto* marker = static_cast< QwtPlotMarker* >(item);
-        QPen p = marker->linePen();
+        QPen p       = marker->linePen();
         p.setColor(color);
         marker->setLinePen(p);
         return true;
@@ -184,7 +184,7 @@ QPen QwtPlotStyling::pen(const QwtPlotItem* item)
     case QwtPlotItem::Rtti_PlotTradingCurve:
         return static_cast< const QwtPlotTradingCurve* >(item)->symbolPen();
     case QwtPlotItem::Rtti_PlotSpectroCurve:
-        return QPen(); // SpectroCurve uses color map, not a pen
+        return QPen();  // SpectroCurve uses color map, not a pen
     case QwtPlotItem::Rtti_PlotGrid:
         return static_cast< const QwtPlotGrid* >(item)->majorPen();
     case QwtPlotItem::Rtti_PlotMarker:
@@ -222,7 +222,7 @@ bool QwtPlotStyling::setPen(QwtPlotItem* item, const QPen& pen)
         static_cast< QwtPlotTradingCurve* >(item)->setSymbolPen(pen);
         return true;
     case QwtPlotItem::Rtti_PlotSpectroCurve:
-        return false; // SpectroCurve uses color map, not a pen
+        return false;  // SpectroCurve uses color map, not a pen
     case QwtPlotItem::Rtti_PlotGrid:
         static_cast< QwtPlotGrid* >(item)->setMajorPen(pen);
         return true;
@@ -309,8 +309,7 @@ void QwtPlotStyling::setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style, cons
  * @param color Symbol fill color
  * @param size Symbol size in pixels
  */
-void QwtPlotStyling::setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style,
-                               const QColor& color, const QSize& size)
+void QwtPlotStyling::setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style, const QColor& color, const QSize& size)
 {
     if (!curve)
         return;

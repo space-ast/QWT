@@ -17,9 +17,9 @@ class QWT_EXPORT QwtParasitePlotLayout : public QwtPlotLayout
 public:
     QwtParasitePlotLayout();
     ~QwtParasitePlotLayout() override;
-	virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options()) override;
+    virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options()) override;
 
-	virtual QSize minimumSizeHint(const QwtPlot* plot) const override;
+    virtual QSize minimumSizeHint(const QwtPlot* plot) const override;
     /// Get the parasite axis scale rect without offset
     QRectF parasiteScaleRect(QwtAxisId aid) const;
 

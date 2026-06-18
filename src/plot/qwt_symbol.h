@@ -49,7 +49,7 @@ class QwtGraphic;
  */
 class QWT_EXPORT QwtSymbol
 {
-  public:
+public:
     /**
      * @brief Symbol Style
      * @sa setStyle(), style()
@@ -180,98 +180,96 @@ class QWT_EXPORT QwtSymbol
 
 public:
     // Constructor with style
-    explicit QwtSymbol( Style = NoSymbol );
+    explicit QwtSymbol(Style = NoSymbol);
     // Constructor with style, brush, pen and size
-    QwtSymbol( Style, const QBrush&, const QPen&, const QSize& );
+    QwtSymbol(Style, const QBrush&, const QPen&, const QSize&);
     // Constructor with painter path, brush and pen
-    QwtSymbol( const QPainterPath&, const QBrush&, const QPen& );
+    QwtSymbol(const QPainterPath&, const QBrush&, const QPen&);
 
     // Destructor
     virtual ~QwtSymbol();
 
     // Set cache policy
-    void setCachePolicy( CachePolicy );
+    void setCachePolicy(CachePolicy);
     // Get cache policy
     CachePolicy cachePolicy() const;
 
     // Set size
-    void setSize( const QSize& );
+    void setSize(const QSize&);
     // Set size with width and height
-    void setSize( int width, int height = -1 );
+    void setSize(int width, int height = -1);
     // Get size
     const QSize& size() const;
 
     // Set pin point
-    void setPinPoint( const QPointF& pos, bool enable = true );
+    void setPinPoint(const QPointF& pos, bool enable = true);
     // Get pin point
     QPointF pinPoint() const;
 
     // Enable/disable pin point
-    void setPinPointEnabled( bool );
+    void setPinPointEnabled(bool);
     // Check if pin point is enabled
     bool isPinPointEnabled() const;
 
     // Set color
-    virtual void setColor( const QColor& );
+    virtual void setColor(const QColor&);
 
     // Set brush
-    void setBrush( const QBrush& );
+    void setBrush(const QBrush&);
     // Get brush
     const QBrush& brush() const;
 
     // Set pen with color, width and style
-    void setPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     // Set pen
-    void setPen( const QPen& );
+    void setPen(const QPen&);
     // Get pen
     const QPen& pen() const;
 
     // Set style
-    void setStyle( Style );
+    void setStyle(Style);
     // Get style
     Style style() const;
 
     // Set painter path
-    void setPath( const QPainterPath& );
+    void setPath(const QPainterPath&);
     // Get painter path
     const QPainterPath& path() const;
 
     // Set pixmap
-    void setPixmap( const QPixmap& );
+    void setPixmap(const QPixmap&);
     // Get pixmap
     const QPixmap& pixmap() const;
 
     // Set graphic
-    void setGraphic( const QwtGraphic& );
+    void setGraphic(const QwtGraphic&);
     // Get graphic
     const QwtGraphic& graphic() const;
 
 #ifndef QWT_NO_SVG
     // Set SVG document
-    void setSvgDocument( const QByteArray& );
+    void setSvgDocument(const QByteArray&);
 #endif
 
     // Draw symbol in rectangle
-    void drawSymbol( QPainter*, const QRectF& ) const;
+    void drawSymbol(QPainter*, const QRectF&) const;
     // Draw symbol at point
-    void drawSymbol( QPainter*, const QPointF& ) const;
+    void drawSymbol(QPainter*, const QPointF&) const;
     // Draw symbols at polygon points
-    void drawSymbols( QPainter*, const QPolygonF& ) const;
+    void drawSymbols(QPainter*, const QPolygonF&) const;
     // Draw symbols at points
-    void drawSymbols( QPainter*,
-        const QPointF*, int numPoints ) const;
+    void drawSymbols(QPainter*, const QPointF*, int numPoints) const;
 
     // Get bounding rectangle
     virtual QRect boundingRect() const;
     // Invalidate cache
     void invalidateCache();
 
-  protected:
-    virtual void renderSymbols( QPainter*,
-        const QPointF*, int numPoints ) const;
+protected:
+    virtual void renderSymbols(QPainter*, const QPointF*, int numPoints) const;
 
-  private:
-    QwtSymbol(const QwtSymbol&) = delete;
+private:
+    QwtSymbol(const QwtSymbol&)            = delete;
     QwtSymbol& operator=(const QwtSymbol&) = delete;
     QWT_DECLARE_PRIVATE(QwtSymbol)
 };
@@ -283,10 +281,9 @@ public:
  * @sa drawSymbols()
  *
  */
-inline void QwtSymbol::drawSymbol(
-    QPainter* painter, const QPointF& pos ) const
+inline void QwtSymbol::drawSymbol(QPainter* painter, const QPointF& pos) const
 {
-    drawSymbols( painter, &pos, 1 );
+    drawSymbols(painter, &pos, 1);
 }
 
 /**
@@ -296,10 +293,9 @@ inline void QwtSymbol::drawSymbol(
  * @sa drawSymbol()
  *
  */
-inline void QwtSymbol::drawSymbols(
-    QPainter* painter, const QPolygonF& points ) const
+inline void QwtSymbol::drawSymbols(QPainter* painter, const QPolygonF& points) const
 {
-    drawSymbols( painter, points.data(), points.size() );
+    drawSymbols(painter, points.data(), points.size());
 }
 
 #endif

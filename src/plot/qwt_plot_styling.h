@@ -76,12 +76,10 @@ public:
     // ---- Curve symbol ----
 
     // Set a symbol on a curve with style and size
-    static void setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style,
-                          const QSize& size = QSize(8, 8));
+    static void setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style, const QSize& size = QSize(8, 8));
 
     // Set a symbol on a curve with style, color and size
-    static void setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style,
-                          const QColor& color, const QSize& size = QSize(8, 8));
+    static void setSymbol(QwtPlotCurve* curve, QwtSymbol::Style style, const QColor& color, const QSize& size = QSize(8, 8));
 
     // ---- Curve line style ----
 
@@ -99,4 +97,4 @@ public:
     static void forceReplot(QwtPlot* plot);
 };
 
-#endif // QWT_PLOT_STYLING_H
+#endif  // QWT_PLOT_STYLING_H

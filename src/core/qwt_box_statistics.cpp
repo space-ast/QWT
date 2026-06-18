@@ -18,9 +18,7 @@
  * @brief Constructor with default Tukey method
  * @details Initializes the calculator with Tukey whisker method and coefficient 1.5.
  */
-QwtBoxStatisticsCalculator::QwtBoxStatisticsCalculator()
-    : m_method(Tukey)
-    , m_coefficient(1.5)
+QwtBoxStatisticsCalculator::QwtBoxStatisticsCalculator() : m_method(Tukey), m_coefficient(1.5)
 {
 }
 
@@ -60,66 +58,65 @@ double QwtBoxStatisticsCalculator::whiskerCoefficient() const
     return m_coefficient;
 }
 
-QVector<double> QwtBoxStatisticsCalculator::sortData(const QVector<double>& data)
+QVector< double > QwtBoxStatisticsCalculator::sortData(const QVector< double >& data)
 {
-    QVector<double> sorted = data;
+    QVector< double > sorted = data;
     std::sort(sorted.begin(), sorted.end());
     return sorted;
 }
 
-double QwtBoxStatisticsCalculator::quantile(const QVector<double>& sorted, double p)
+double QwtBoxStatisticsCalculator::quantile(const QVector< double >& sorted, double p)
 {
     if (sorted.isEmpty())
         return 0.0;
-    
-    const int n = sorted.size();
+
+    const int n        = sorted.size();
     const double index = p * (n - 1);
-    const int lower = static_cast<int>(std::floor(index));
-    const int upper = static_cast<int>(std::ceil(index));
-    
+    const int lower    = static_cast< int >(std::floor(index));
+    const int upper    = static_cast< int >(std::ceil(index));
+
     if (lower == upper)
-        return sorted[lower];
-    
+        return sorted[ lower ];
+
     // Linear interpolation
     const double frac = index - lower;
-    return sorted[lower] + frac * (sorted[upper] - sorted[lower]);
+    return sorted[ lower ] + frac * (sorted[ upper ] - sorted[ lower ]);
 }
 
-double QwtBoxStatisticsCalculator::median(const QVector<double>& sorted)
+double QwtBoxStatisticsCalculator::median(const QVector< double >& sorted)
 {
     return quantile(sorted, 0.5);
 }
 
-double QwtBoxStatisticsCalculator::iqr(const QVector<double>& sorted)
+double QwtBoxStatisticsCalculator::iqr(const QVector< double >& sorted)
 {
     return quantile(sorted, 0.75) - quantile(sorted, 0.25);
 }
 
-double QwtBoxStatisticsCalculator::mean(const QVector<double>& data)
+double QwtBoxStatisticsCalculator::mean(const QVector< double >& data)
 {
     if (data.isEmpty())
         return 0.0;
-    
+
     double sum = 0.0;
     for (int i = 0; i < data.size(); ++i)
-        sum += data[i];
-    
+        sum += data[ i ];
+
     return sum / data.size();
 }
 
-double QwtBoxStatisticsCalculator::standardDeviation(const QVector<double>& data)
+double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& data)
 {
     if (data.size() < 2)
         return 0.0;
-    
+
     const double m = mean(data);
-    double sumSq = 0.0;
-    for (int i = 0; i < data.size(); ++i)
-    {
-        const double diff = data[i] - m;
+    double sumSq   = 0.0;
+    for (int i = 0; i < data.size(); ++i) {
+        const double diff = data[ i ] - m;
         sumSq += diff * diff;
     }
-    
+
     return std::sqrt(sumSq / (data.size() - 1));
 }
 
@@ -133,80 +130,71 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector<double>& data
  * @param[in] coefficient Whisker coefficient (default: 1.5)
  * @return QwtBoxSample containing computed statistics
  */
-QwtBoxSample QwtBoxStatisticsCalculator::calculate(
-    double position,
-    const QVector<double>& sortedData,
-    WhiskerMethod method,
-    double coefficient)
+QwtBoxSample QwtBoxStatisticsCalculator::calculate(double position,
+                                                   const QVector< double >& sortedData,
+                                                   WhiskerMethod method,
+                                                   double coefficient)
 {
     if (sortedData.isEmpty())
         return QwtBoxSample(position);
-    
+
     const double minVal = sortedData.first();
     const double maxVal = sortedData.last();
-    const double med = median(sortedData);
-    const double q1 = quantile(sortedData, 0.25);
-    const double q3 = quantile(sortedData, 0.75);
-    
+    const double med    = median(sortedData);
+    const double q1     = quantile(sortedData, 0.25);
+    const double q3     = quantile(sortedData, 0.75);
+
     double whiskerLower, whiskerUpper;
-    
-    switch (method)
-    {
-        case Tukey:
-        {
-            const double iqrVal = q3 - q1;
-            whiskerLower = qwtMaxF(minVal, q1 - coefficient * iqrVal);
-            whiskerUpper = qwtMinF(maxVal, q3 + coefficient * iqrVal);
-            break;
-        }
-        case Percentile:
-        {
-            whiskerLower = quantile(sortedData, 1.0 - coefficient / 100.0);
-            whiskerUpper = quantile(sortedData, coefficient / 100.0);
-            break;
-        }
-        case MinMax:
-        {
-            whiskerLower = minVal;
-            whiskerUpper = maxVal;
-            break;
-        }
-        case StandardDeviation:
-        {
-            const double m = mean(sortedData);
-            const double sd = standardDeviation(sortedData);
-            whiskerLower = qwtMaxF(minVal, m - coefficient * sd);
-            whiskerUpper = qwtMinF(maxVal, m + coefficient * sd);
-            break;
-        }
-        case StandardError:
-        {
-            const double m = mean(sortedData);
-            const double sd = standardDeviation(sortedData);
-            const double se = sd / std::sqrt(static_cast<double>(sortedData.size()));
-            whiskerLower = qwtMaxF(minVal, m - coefficient * se);
-            whiskerUpper = qwtMinF(maxVal, m + coefficient * se);
-            break;
-        }
-        default:
-        {
-            whiskerLower = minVal;
-            whiskerUpper = maxVal;
-            break;
-        }
+
+    switch (method) {
+    case Tukey: {
+        const double iqrVal = q3 - q1;
+        whiskerLower        = qwtMaxF(minVal, q1 - coefficient * iqrVal);
+        whiskerUpper        = qwtMinF(maxVal, q3 + coefficient * iqrVal);
+        break;
     }
-    
+    case Percentile: {
+        whiskerLower = quantile(sortedData, 1.0 - coefficient / 100.0);
+        whiskerUpper = quantile(sortedData, coefficient / 100.0);
+        break;
+    }
+    case MinMax: {
+        whiskerLower = minVal;
+        whiskerUpper = maxVal;
+        break;
+    }
+    case StandardDeviation: {
+        const double m  = mean(sortedData);
+        const double sd = standardDeviation(sortedData);
+        whiskerLower    = qwtMaxF(minVal, m - coefficient * sd);
+        whiskerUpper    = qwtMinF(maxVal, m + coefficient * sd);
+        break;
+    }
+    case StandardError: {
+        const double m  = mean(sortedData);
+        const double sd = standardDeviation(sortedData);
+        const double se = sd / std::sqrt(static_cast< double >(sortedData.size()));
+        whiskerLower    = qwtMaxF(minVal, m - coefficient * se);
+        whiskerUpper    = qwtMinF(maxVal, m + coefficient * se);
+        break;
+    }
+    default: {
+        whiskerLower = minVal;
+        whiskerUpper = maxVal;
+        break;
+    }
+    }
+
     QwtBoxSample sample(position, whiskerLower, q1, med, q3, whiskerUpper);
-    
+
     // Count outliers
     int outlierCount = 0;
-    for (int i = 0; i < sortedData.size(); ++i)
-    {
-        if (sortedData[i] < whiskerLower || sortedData[i] > whiskerUpper)
+    for (int i = 0; i < sortedData.size(); ++i) {
+        if (sortedData[ i ] < whiskerLower || sortedData[ i ] > whiskerUpper)
             outlierCount++;
     }
     sample.outlierCount = outlierCount;
-    
+
     return sample;
 }
 
@@ -219,13 +207,12 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(
  * @param[in] coefficient Whisker coefficient (default: 1.5)
  * @return QwtBoxSample containing computed statistics
  */
-QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(
-    double position,
-    const QVector<double>& rawData,
-    WhiskerMethod method,
-    double coefficient)
+QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(double position,
+                                                          const QVector< double >& rawData,
+                                                          WhiskerMethod method,
+                                                          double coefficient)
 {
-    QVector<double> sorted = sortData(rawData);
+    QVector< double > sorted = sortData(rawData);
     return calculate(position, sorted, method, coefficient);
 }
 
@@ -236,19 +223,16 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(
  * @param[in] sortedData Pre-sorted data vector
  * @return Vector of outlier values
  */
-QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
-    const QwtBoxSample& sample,
-    const QVector<double>& sortedData)
+QVector< double > QwtBoxStatisticsCalculator::extractOutliers(const QwtBoxSample& sample, const QVector< double >& sortedData)
 {
-    QVector<double> outliers;
-    
-    for (int i = 0; i < sortedData.size(); ++i)
-    {
-        const double val = sortedData[i];
+    QVector< double > outliers;
+
+    for (int i = 0; i < sortedData.size(); ++i) {
+        const double val = sortedData[ i ];
         if (val < sample.whiskerLower || val > sample.whiskerUpper)
             outliers.append(val);
     }
-    
+
     return outliers;
 }
 
@@ -262,17 +246,16 @@ QVector<double> QwtBoxStatisticsCalculator::extractOutliers(
  * @param[in] method Whisker calculation method (default: Tukey)
  * @param[in] coefficient Whisker coefficient (default: 1.5)
  */
-void QwtBoxStatisticsCalculator::calculateFull(
-    double position,
-    const QVector<double>& rawData,
-    QwtBoxSample& sample,
-    QwtBoxOutlierSample& outliers,
-    WhiskerMethod method,
-    double coefficient)
+void QwtBoxStatisticsCalculator::calculateFull(double position,
+                                               const QVector< double >& rawData,
+                                               QwtBoxSample& sample,
+                                               QwtBoxOutlierSample& outliers,
+                                               WhiskerMethod method,
+                                               double coefficient)
 {
-    QVector<double> sorted = sortData(rawData);
-    sample = calculate(position, sorted, method, coefficient);
-    
-    QVector<double> outlierValues = extractOutliers(sample, sorted);
-    outliers = QwtBoxOutlierSample(position, std::move(outlierValues));
+    QVector< double > sorted = sortData(rawData);
+    sample                   = calculate(position, sorted, method, coefficient);
+
+    QVector< double > outlierValues = extractOutliers(sample, sorted);
+    outliers                        = QwtBoxOutlierSample(position, std::move(outlierValues));
 }

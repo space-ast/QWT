@@ -47,19 +47,19 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
 {
     Q_OBJECT
 
-  public:
+public:
     // Constructor for QwtLegend
-    explicit QwtLegend( QWidget* parent = nullptr );
+    explicit QwtLegend(QWidget* parent = nullptr);
     // Destructor
     ~QwtLegend() override;
 
     // Set the maximum number of columns
-    void setMaxColumns( uint numColums );
+    void setMaxColumns(uint numColums);
     // Return the maximum number of columns
     uint maxColumns() const;
 
     // Set the default mode for legend items
-    void setDefaultItemMode( QwtLegendData::Mode );
+    void setDefaultItemMode(QwtLegendData::Mode);
     // Return the default mode for legend items
     QwtLegendData::Mode defaultItemMode() const;
 
@@ -69,20 +69,20 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     const QWidget* contentsWidget() const;
 
     // Return the legend widget for a specific item
-    QWidget* legendWidget( const QVariant&  ) const;
+    QWidget* legendWidget(const QVariant&) const;
     // Return all legend widgets for a specific item
-    QList< QWidget* > legendWidgets( const QVariant& ) const;
+    QList< QWidget* > legendWidgets(const QVariant&) const;
 
     // Return the item info for a specific widget
-    QVariant itemInfo( const QWidget* ) const;
+    QVariant itemInfo(const QWidget*) const;
 
     // Event filter for event handling
-    virtual bool eventFilter( QObject*, QEvent* ) override;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
     // Return the size hint
     virtual QSize sizeHint() const override;
     // Return the height for a given width
-    virtual int heightForWidth( int w ) const override;
+    virtual int heightForWidth(int w) const override;
 
     // Return the horizontal scroll bar
     QScrollBar* horizontalScrollBar() const;
@@ -90,19 +90,17 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
     QScrollBar* verticalScrollBar() const;
 
     // Render the legend to a painter
-    virtual void renderLegend( QPainter*,
-        const QRectF&, bool fillBackground ) const override;
+    virtual void renderLegend(QPainter*, const QRectF&, bool fillBackground) const override;
 
     // Render a single legend item
-    virtual void renderItem( QPainter*,
-        const QWidget*, const QRectF&, bool fillBackground ) const;
+    virtual void renderItem(QPainter*, const QWidget*, const QRectF&, bool fillBackground) const;
 
     // Check if the legend is empty
     virtual bool isEmpty() const override;
     // Return the scroll extent for a specific orientation
-    virtual int scrollExtent( Qt::Orientation ) const override;
+    virtual int scrollExtent(Qt::Orientation) const override;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * @brief Signal emitted when the user clicks on a legend label in Clickable mode
      * @param itemInfo Info for the item of the selected legend item
@@ -110,7 +108,7 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
      * @note Clicks are disabled as default
      * @sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
      */
-    void clicked( const QVariant& itemInfo, int index );
+    void clicked(const QVariant& itemInfo, int index);
 
     /**
      * @brief Signal emitted when the user clicks on a legend label in Checkable mode
@@ -120,21 +118,20 @@ class QWT_EXPORT QwtLegend : public QwtAbstractLegend
      * @note Clicks are disabled as default
      * @sa setDefaultItemMode(), defaultItemMode(), QwtPlot::itemToInfo()
      */
-    void checked( const QVariant& itemInfo, bool on, int index );
+    void checked(const QVariant& itemInfo, bool on, int index);
 
-  public Q_SLOTS:
-    virtual void updateLegend( const QVariant&,
-        const QList< QwtLegendData >& ) override;
+public Q_SLOTS:
+    virtual void updateLegend(const QVariant&, const QList< QwtLegendData >&) override;
 
-  protected Q_SLOTS:
+protected Q_SLOTS:
     void itemClicked();
-    void itemChecked( bool );
+    void itemChecked(bool);
 
-  protected:
-    virtual QWidget* createWidget( const QwtLegendData& ) const;
-    virtual void updateWidget( QWidget*, const QwtLegendData& );
+protected:
+    virtual QWidget* createWidget(const QwtLegendData&) const;
+    virtual void updateWidget(QWidget*, const QwtLegendData&);
 
-  private:
+private:
     void updateTabOrder();
 
     QWT_DECLARE_PRIVATE(QwtLegend)

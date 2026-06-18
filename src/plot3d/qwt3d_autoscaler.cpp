@@ -64,14 +64,10 @@ public:
 
     double m_start, m_stop;
     int m_intervals;
-    std::vector<double> m_mantissi;
+    std::vector< double > m_mantissi;
 };
 
-LinearAutoScaler::PrivateData::PrivateData(LinearAutoScaler* p)
-    : q_ptr(p)
-    , m_start(0.)
-    , m_stop(0.)
-    , m_intervals(0)
+LinearAutoScaler::PrivateData::PrivateData(LinearAutoScaler* p) : q_ptr(p), m_start(0.), m_stop(0.), m_intervals(0)
 {
 }
 
@@ -82,12 +78,11 @@ LinearAutoScaler::PrivateData::PrivateData(LinearAutoScaler* p)
  ****************************/
 
 //! Initializes with an {1,2,5} sequence of mantissas
-LinearAutoScaler::LinearAutoScaler()
-    : QWT_PIMPL_CONSTRUCT
+LinearAutoScaler::LinearAutoScaler() : QWT_PIMPL_CONSTRUCT
 {
     init(0, 1, 1);
     QWT_D(d);
-    d->m_mantissi = std::vector< double >(3);
+    d->m_mantissi      = std::vector< double >(3);
     d->m_mantissi[ 0 ] = 1;
     d->m_mantissi[ 1 ] = 2;
     d->m_mantissi[ 2 ] = 5;
@@ -98,13 +93,12 @@ LinearAutoScaler::LinearAutoScaler()
 val mantisse A increasing ordered vector of values representing
 mantisse values between 1 and 9.
 */
-LinearAutoScaler::LinearAutoScaler(std::vector< double >& mantisse)
-    : QWT_PIMPL_CONSTRUCT
+LinearAutoScaler::LinearAutoScaler(std::vector< double >& mantisse) : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     init(0, 1, 1);
     if (mantisse.empty()) {
-        d->m_mantissi = std::vector< double >(3);
+        d->m_mantissi      = std::vector< double >(3);
         d->m_mantissi[ 0 ] = 1;
         d->m_mantissi[ 1 ] = 2;
         d->m_mantissi[ 2 ] = 5;
@@ -125,10 +119,10 @@ void LinearAutoScaler::copyStateFrom(const LinearAutoScaler& other)
 {
     QWT_D(d);
     const auto* od = other.d_func();
-    d->m_start = od->m_start;
-    d->m_stop = od->m_stop;
+    d->m_start     = od->m_start;
+    d->m_stop      = od->m_stop;
     d->m_intervals = od->m_intervals;
-    d->m_mantissi = od->m_mantissi;
+    d->m_mantissi  = od->m_mantissi;
 }
 
 /**
@@ -139,11 +133,11 @@ AutoScaler* LinearAutoScaler::clone() const
 {
     auto* copy = new LinearAutoScaler();
     QWT_DC(d);
-    auto* copyD = copy->d_func();
-    copyD->m_start = d->m_start;
-    copyD->m_stop = d->m_stop;
+    auto* copyD        = copy->d_func();
+    copyD->m_start     = d->m_start;
+    copyD->m_stop      = d->m_stop;
     copyD->m_intervals = d->m_intervals;
-    copyD->m_mantissi = d->m_mantissi;
+    copyD->m_mantissi  = d->m_mantissi;
     return copy;
 }
 
@@ -154,14 +148,14 @@ AutoScaler* LinearAutoScaler::clone() const
 void LinearAutoScaler::init(double start, double stop, int ivals)
 {
     QWT_D(d);
-    d->m_start = start;
-    d->m_stop = stop;
+    d->m_start     = start;
+    d->m_stop      = stop;
     d->m_intervals = ivals;
 
     if (d->m_start > d->m_stop) {
         double tmp = d->m_start;
         d->m_start = d->m_stop;
-        d->m_stop = tmp;
+        d->m_stop  = tmp;
     }
     if (d->m_intervals < 1)
         d->m_intervals = 1;
@@ -249,8 +243,8 @@ int LinearAutoScaler::execute(double& a, double& b, double start, double stop, i
     int ival      = segments(l_ival, r_ival, d->m_start, d->m_stop, anchor, c, n);
 
     if (ival >= d->m_intervals) {
-        a             = anchor - l_ival * c * pow(10.0, n);
-        b             = anchor + r_ival * c * pow(10.0, n);
+        a              = anchor - l_ival * c * pow(10.0, n);
+        b              = anchor + r_ival * c * pow(10.0, n);
         d->m_intervals = ival;
         return d->m_intervals;
     }
@@ -295,8 +289,8 @@ int LinearAutoScaler::execute(double& a, double& b, double start, double stop, i
                 l_ival = prev_l_ival;
                 r_ival = prev_r_ival;
             }
-            a             = anchor - l_ival * c * pow(10.0, n);
-            b             = anchor + r_ival * c * pow(10.0, n);
+            a              = anchor - l_ival * c * pow(10.0, n);
+            b              = anchor + r_ival * c * pow(10.0, n);
             d->m_intervals = ival;
             break;
         }

@@ -70,25 +70,42 @@ QwtFormatString QwtFormatString::parse(const QString& fmt)
     }
 
     QString s = fmt.trimmed();
-    int i = 0;
+    int i     = 0;
 
     // Parse color (single character at start)
     if (i < s.length()) {
-        QChar ch = s[i];
+        QChar ch = s[ i ];
         QColor c;
         switch (ch.toLatin1()) {
-            case 'b': c = QColor(Qt::blue); break;
-            case 'g': c = QColor(Qt::green); break;
-            case 'r': c = QColor(Qt::red); break;
-            case 'c': c = QColor(Qt::cyan); break;
-            case 'm': c = QColor(Qt::magenta); break;
-            case 'y': c = QColor(Qt::yellow); break;
-            case 'k': c = QColor(Qt::black); break;
-            case 'w': c = QColor(Qt::white); break;
-            default: break;
+        case 'b':
+            c = QColor(Qt::blue);
+            break;
+        case 'g':
+            c = QColor(Qt::green);
+            break;
+        case 'r':
+            c = QColor(Qt::red);
+            break;
+        case 'c':
+            c = QColor(Qt::cyan);
+            break;
+        case 'm':
+            c = QColor(Qt::magenta);
+            break;
+        case 'y':
+            c = QColor(Qt::yellow);
+            break;
+        case 'k':
+            c = QColor(Qt::black);
+            break;
+        case 'w':
+            c = QColor(Qt::white);
+            break;
+        default:
+            break;
         }
         if (c.isValid()) {
-            result.color = c;
+            result.color    = c;
             result.hasColor = true;
             i++;
         }
@@ -97,38 +114,33 @@ QwtFormatString QwtFormatString::parse(const QString& fmt)
     // Parse line style (must check before marker since '-' can be ambiguous)
     if (i < s.length()) {
         if (s.mid(i).startsWith("--")) {
-            result.lineStyle = Qt::DashLine;
+            result.lineStyle    = Qt::DashLine;
             result.hasLineStyle = true;
             i += 2;
-        }
-        else if (s.mid(i).startsWith("-.")) {
-            result.lineStyle = Qt::DashDotLine;
+        } else if (s.mid(i).startsWith("-.")) {
+            result.lineStyle    = Qt::DashDotLine;
             result.hasLineStyle = true;
             i += 2;
-        }
-        else if (i < s.length() && s[i] == '-') {
+        } else if (i < s.length() && s[ i ] == '-') {
             // Single dash - could be solid line or part of marker context
             // Check if next char is a marker or end of string
             if (i + 1 >= s.length()) {
-                result.lineStyle = Qt::SolidLine;
+                result.lineStyle    = Qt::SolidLine;
                 result.hasLineStyle = true;
                 i++;
-            }
-            else {
-                QChar next = s[i + 1];
+            } else {
+                QChar next = s[ i + 1 ];
                 if (next == '-' || next == '.') {
                     // Already handled above, shouldn't reach here
                     i++;
-                }
-                else {
-                    result.lineStyle = Qt::SolidLine;
+                } else {
+                    result.lineStyle    = Qt::SolidLine;
                     result.hasLineStyle = true;
                     i++;
                 }
             }
-        }
-        else if (i < s.length() && s[i] == ':') {
-            result.lineStyle = Qt::DotLine;
+        } else if (i < s.length() && s[ i ] == ':') {
+            result.lineStyle    = Qt::DotLine;
             result.hasLineStyle = true;
             i++;
         }
@@ -136,22 +148,42 @@ QwtFormatString QwtFormatString::parse(const QString& fmt)
 
     // Parse marker
     if (i < s.length()) {
-        QChar ch = s[i];
+        QChar ch                = s[ i ];
         QwtSymbol::Style marker = QwtSymbol::NoSymbol;
         switch (ch.toLatin1()) {
-            case 'o': marker = QwtSymbol::Ellipse; break;
-            case 's': marker = QwtSymbol::Rect; break;
-            case '^': marker = QwtSymbol::Triangle; break;
-            case 'v': marker = QwtSymbol::DTriangle; break;
-            case 'D': case 'd': marker = QwtSymbol::Diamond; break;
-            case 'x': marker = QwtSymbol::XCross; break;
-            case '+': marker = QwtSymbol::Cross; break;
-            case '*': marker = QwtSymbol::Star1; break;
-            case '.': marker = QwtSymbol::Ellipse; break;
-            default: break;
+        case 'o':
+            marker = QwtSymbol::Ellipse;
+            break;
+        case 's':
+            marker = QwtSymbol::Rect;
+            break;
+        case '^':
+            marker = QwtSymbol::Triangle;
+            break;
+        case 'v':
+            marker = QwtSymbol::DTriangle;
+            break;
+        case 'D':
+        case 'd':
+            marker = QwtSymbol::Diamond;
+            break;
+        case 'x':
+            marker = QwtSymbol::XCross;
+            break;
+        case '+':
+            marker = QwtSymbol::Cross;
+            break;
+        case '*':
+            marker = QwtSymbol::Star1;
+            break;
+        case '.':
+            marker = QwtSymbol::Ellipse;
+            break;
+        default:
+            break;
         }
         if (marker != QwtSymbol::NoSymbol) {
-            result.marker = marker;
+            result.marker    = marker;
             result.hasMarker = true;
             i++;
         }
@@ -183,8 +215,7 @@ public:
     QwtPlotCanvasZoomer* zoomer { nullptr };
 };
 
-QwtPyPlot::PrivateData::PrivateData(QwtPyPlot* p)
-    : q_ptr(p)
+QwtPyPlot::PrivateData::PrivateData(QwtPyPlot* p) : q_ptr(p)
 {
 }
 
@@ -197,14 +228,12 @@ QwtPyPlot::PrivateData::PrivateData(QwtPyPlot* p)
  * @param figure The figure to operate on
  * @param parent Parent QObject
  */
-QwtPyPlot::QwtPyPlot(QwtFigure* figure, QObject* parent)
-    : QObject(parent)
-    , QWT_PIMPL_CONSTRUCT
+QwtPyPlot::QwtPyPlot(QwtFigure* figure, QObject* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->figure = figure;
     if (figure) {
-        QList<QwtPlot*> axes = figure->allAxes();
+        QList< QwtPlot* > axes = figure->allAxes();
         if (!axes.isEmpty()) {
             d->currentAxes = figure->gca();
             if (!d->currentAxes) {
@@ -219,12 +248,10 @@ QwtPyPlot::QwtPyPlot(QwtFigure* figure, QObject* parent)
  * @param plot The plot to operate on
  * @param parent Parent QObject
  */
-QwtPyPlot::QwtPyPlot(QwtPlot* plot, QObject* parent)
-    : QObject(parent)
-    , QWT_PIMPL_CONSTRUCT
+QwtPyPlot::QwtPyPlot(QwtPlot* plot, QObject* parent) : QObject(parent), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    d->figure = nullptr;
+    d->figure      = nullptr;
     d->currentAxes = plot;
 }
 
@@ -245,7 +272,7 @@ QwtPlot* QwtPyPlot::gca() const
         return d->currentAxes;
     }
     if (d->figure) {
-        return const_cast<QwtPyPlot*>(this)->subplot(1, 1, 1);
+        return const_cast< QwtPyPlot* >(this)->subplot(1, 1, 1);
     }
     return nullptr;
 }
@@ -351,7 +378,7 @@ void QwtPyPlot::tightLayout()
         return;
     }
     // Align Y-axes across all plots
-    QList<QwtPlot*> axes = d->figure->allAxes();
+    QList< QwtPlot* > axes = d->figure->allAxes();
     if (axes.size() > 1) {
         d->figure->addAxisAlignment(axes, QwtAxis::YLeft);
         d->figure->applyAllAxisAlignments(true);
@@ -360,12 +387,11 @@ void QwtPyPlot::tightLayout()
 
 // ---- Plotting methods ----
 
-QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& y,
-                              const QString& fmt,
-                              const QString& label)
+QwtPlotCurve* QwtPyPlot::plot(const QVector< double >& y, const QString& fmt, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* curve = QwtPlotFactory::createCurve(ax, label, y);
     if (!fmt.isEmpty()) {
@@ -375,12 +401,11 @@ QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& y,
     return curve;
 }
 
-QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& x, const QVector<double>& y,
-                              const QString& fmt,
-                              const QString& label)
+QwtPlotCurve* QwtPyPlot::plot(const QVector< double >& x, const QVector< double >& y, const QString& fmt, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* curve = QwtPlotFactory::createCurve(ax, label, x, y);
     if (!fmt.isEmpty()) {
@@ -390,12 +415,11 @@ QwtPlotCurve* QwtPyPlot::plot(const QVector<double>& x, const QVector<double>& y
     return curve;
 }
 
-QwtPlotCurve* QwtPyPlot::plot(const QVector<QPointF>& data,
-                              const QString& fmt,
-                              const QString& label)
+QwtPlotCurve* QwtPyPlot::plot(const QVector< QPointF >& data, const QString& fmt, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* curve = QwtPlotFactory::createCurve(ax, label, data);
     if (!fmt.isEmpty()) {
@@ -414,31 +438,32 @@ QwtPlotCurve* QwtPyPlot::plot(const QVector<QPointF>& data,
  * @param label Legend label
  * @return The created curve
  */
-QwtPlotCurve* QwtPyPlot::scatter(const QVector<double>& x, const QVector<double>& y,
+QwtPlotCurve* QwtPyPlot::scatter(const QVector< double >& x,
+                                 const QVector< double >& y,
                                  double size,
                                  const QString& color,
                                  const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* curve = QwtPlotFactory::createCurve(ax, label, x, y);
     curve->setStyle(QwtPlotCurve::NoCurve);
 
     QColor c = color.isEmpty() ? QColor(Qt::blue) : namedColor(color);
-    int sz = qMax(4, static_cast<int>(size / 3.0));
+    int sz   = qMax(4, static_cast< int >(size / 3.0));
     QwtPlotStyling::setSymbol(curve, QwtSymbol::Ellipse, c, QSize(sz, sz));
 
     ax->replot();
     return curve;
 }
 
-QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& values,
-                                const QString& color,
-                                const QString& label)
+QwtPlotBarChart* QwtPyPlot::bar(const QVector< double >& values, const QString& color, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* chart = QwtPlotFactory::createBarChart(ax, label, values);
     if (!color.isEmpty()) {
@@ -450,19 +475,21 @@ QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& values,
     return chart;
 }
 
-QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& x, const QVector<double>& values,
+QwtPlotBarChart* QwtPyPlot::bar(const QVector< double >& x,
+                                const QVector< double >& values,
                                 double width,
                                 const QString& color,
                                 const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     // Build QPointF data from x and values
-    QVector<QPointF> data;
+    QVector< QPointF > data;
     data.reserve(qMin(x.size(), values.size()));
     for (int i = 0; i < qMin(x.size(), values.size()); i++) {
-        data.append(QPointF(x[i], values[i]));
+        data.append(QPointF(x[ i ], values[ i ]));
     }
 
     auto* chart = QwtPlotFactory::createBarChart(ax, label, data);
@@ -484,12 +511,11 @@ QwtPlotBarChart* QwtPyPlot::bar(const QVector<double>& x, const QVector<double>&
  * @param label Legend label
  * @return The created histogram
  */
-QwtPlotHistogram* QwtPyPlot::hist(const QVector<double>& data, int bins,
-                                  const QString& color,
-                                  const QString& label)
+QwtPlotHistogram* QwtPyPlot::hist(const QVector< double >& data, int bins, const QString& color, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax || data.isEmpty()) return nullptr;
+    if (!ax || data.isEmpty())
+        return nullptr;
 
     // Compute bin edges
     double minVal = *std::min_element(data.constBegin(), data.constEnd());
@@ -501,21 +527,23 @@ QwtPlotHistogram* QwtPyPlot::hist(const QVector<double>& data, int bins,
     double binWidth = (maxVal - minVal) / bins;
 
     // Count values in each bin
-    QVector<double> counts(bins, 0.0);
+    QVector< double > counts(bins, 0.0);
     for (double v : data) {
-        int idx = static_cast<int>((v - minVal) / binWidth);
-        if (idx >= bins) idx = bins - 1;
-        if (idx < 0) idx = 0;
-        counts[idx] += 1.0;
+        int idx = static_cast< int >((v - minVal) / binWidth);
+        if (idx >= bins)
+            idx = bins - 1;
+        if (idx < 0)
+            idx = 0;
+        counts[ idx ] += 1.0;
     }
 
     // Create interval samples
-    QVector<QwtIntervalSample> samples;
+    QVector< QwtIntervalSample > samples;
     samples.reserve(bins);
     for (int i = 0; i < bins; i++) {
-        double left = minVal + i * binWidth;
+        double left  = minVal + i * binWidth;
         double right = left + binWidth;
-        samples.append(QwtIntervalSample(counts[i], left, right));
+        samples.append(QwtIntervalSample(counts[ i ], left, right));
     }
 
     auto* hist = QwtPlotFactory::createHistogram(ax, label, samples);
@@ -528,11 +556,11 @@ QwtPlotHistogram* QwtPyPlot::hist(const QVector<double>& data, int bins,
     return hist;
 }
 
-QwtPlotBoxChart* QwtPyPlot::boxplot(const QVector<QwtBoxSample>& data,
-                                    const QString& label)
+QwtPlotBoxChart* QwtPyPlot::boxplot(const QVector< QwtBoxSample >& data, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* chart = QwtPlotFactory::createBoxChart(ax, label, data);
     ax->replot();
@@ -548,21 +576,23 @@ QwtPlotBoxChart* QwtPyPlot::boxplot(const QVector<QwtBoxSample>& data,
  * @param alpha Fill opacity (0.0-1.0)
  * @return The created interval curve
  */
-QwtPlotIntervalCurve* QwtPyPlot::fillBetween(const QVector<double>& x,
-                                             const QVector<double>& y1,
-                                             const QVector<double>& y2,
+QwtPlotIntervalCurve* QwtPyPlot::fillBetween(const QVector< double >& x,
+                                             const QVector< double >& y1,
+                                             const QVector< double >& y2,
                                              const QString& color,
                                              double alpha)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
-    int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y1.size()), static_cast<size_t>(y2.size())}));
-    QVector<QwtIntervalSample> samples;
+    int n = static_cast< int >(std::min(
+        { static_cast< size_t >(x.size()), static_cast< size_t >(y1.size()), static_cast< size_t >(y2.size()) }));
+    QVector< QwtIntervalSample > samples;
     samples.reserve(n);
     for (int i = 0; i < n; i++) {
-        double lo = qMin(y1[i], y2[i]);
-        double hi = qMax(y1[i], y2[i]);
+        double lo = qMin(y1[ i ], y2[ i ]);
+        double hi = qMax(y1[ i ], y2[ i ]);
         samples.append(QwtIntervalSample(0.0, lo, hi));
     }
 
@@ -587,20 +617,22 @@ QwtPlotIntervalCurve* QwtPyPlot::fillBetween(const QVector<double>& x,
  * @param label Legend label
  * @return The created interval curve representing error bars
  */
-QwtPlotIntervalCurve* QwtPyPlot::errorbar(const QVector<double>& x,
-                                          const QVector<double>& y,
-                                          const QVector<double>& yerr,
+QwtPlotIntervalCurve* QwtPyPlot::errorbar(const QVector< double >& x,
+                                          const QVector< double >& y,
+                                          const QVector< double >& yerr,
                                           const QString& fmt,
                                           const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
-    int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y.size()), static_cast<size_t>(yerr.size())}));
-    QVector<QwtIntervalSample> samples;
+    int n = static_cast< int >(std::min(
+        { static_cast< size_t >(x.size()), static_cast< size_t >(y.size()), static_cast< size_t >(yerr.size()) }));
+    QVector< QwtIntervalSample > samples;
     samples.reserve(n);
     for (int i = 0; i < n; i++) {
-        samples.append(QwtIntervalSample(x[i], y[i] - yerr[i], y[i] + yerr[i]));
+        samples.append(QwtIntervalSample(x[ i ], y[ i ] - yerr[ i ], y[ i ] + yerr[ i ]));
     }
 
     auto* curve = QwtPlotFactory::createIntervalCurve(ax, label, samples);
@@ -610,7 +642,8 @@ QwtPlotIntervalCurve* QwtPyPlot::errorbar(const QVector<double>& x,
     QColor c = Qt::black;
     if (!fmt.isEmpty()) {
         auto f = QwtFormatString::parse(fmt);
-        if (f.hasColor) c = f.color;
+        if (f.hasColor)
+            c = f.color;
     }
     curve->setPen(QPen(c, 1.0));
     curve->setBrush(QBrush());
@@ -627,26 +660,27 @@ QwtPlotIntervalCurve* QwtPyPlot::errorbar(const QVector<double>& x,
  * @param vmax Maximum value for color scaling (0 = auto)
  * @return The created spectrogram
  */
-QwtPlotSpectrogram* QwtPyPlot::imshow(const QVector<QVector<double>>& data,
-                                      const QString& cmap,
-                                      double vmin, double vmax)
+QwtPlotSpectrogram* QwtPyPlot::imshow(const QVector< QVector< double > >& data, const QString& cmap, double vmin, double vmax)
 {
     QwtPlot* ax = gca();
-    if (!ax || data.isEmpty() || data.first().isEmpty()) return nullptr;
+    if (!ax || data.isEmpty() || data.first().isEmpty())
+        return nullptr;
 
     int rows = data.size();
     int cols = data.first().size();
 
     // Flatten to 1D
-    QVector<double> flat;
+    QVector< double > flat;
     flat.reserve(rows * cols);
-    double minVal = std::numeric_limits<double>::max();
-    double maxVal = std::numeric_limits<double>::lowest();
+    double minVal = std::numeric_limits< double >::max();
+    double maxVal = std::numeric_limits< double >::lowest();
     for (const auto& row : data) {
         for (double v : row) {
             flat.append(v);
-            if (v < minVal) minVal = v;
-            if (v > maxVal) maxVal = v;
+            if (v < minVal)
+                minVal = v;
+            if (v > maxVal)
+                maxVal = v;
         }
     }
 
@@ -684,25 +718,27 @@ QwtPlotSpectrogram* QwtPyPlot::imshow(const QVector<QVector<double>>& data,
  * @param cmap Color map name
  * @return The created spectrogram with contour mode
  */
-QwtPlotSpectrogram* QwtPyPlot::contour(const QVector<QVector<double>>& data,
-                                       const QList<double>& levels,
-                                       const QString& cmap)
+QwtPlotSpectrogram*
+QwtPyPlot::contour(const QVector< QVector< double > >& data, const QList< double >& levels, const QString& cmap)
 {
     QwtPlot* ax = gca();
-    if (!ax || data.isEmpty() || data.first().isEmpty()) return nullptr;
+    if (!ax || data.isEmpty() || data.first().isEmpty())
+        return nullptr;
 
     int rows = data.size();
     int cols = data.first().size();
 
-    QVector<double> flat;
+    QVector< double > flat;
     flat.reserve(rows * cols);
-    double minVal = std::numeric_limits<double>::max();
-    double maxVal = std::numeric_limits<double>::lowest();
+    double minVal = std::numeric_limits< double >::max();
+    double maxVal = std::numeric_limits< double >::lowest();
     for (const auto& row : data) {
         for (double v : row) {
             flat.append(v);
-            if (v < minVal) minVal = v;
-            if (v > maxVal) maxVal = v;
+            if (v < minVal)
+                minVal = v;
+            if (v > maxVal)
+                maxVal = v;
         }
     }
 
@@ -716,7 +752,7 @@ QwtPlotSpectrogram* QwtPyPlot::contour(const QVector<QVector<double>>& data,
     spectro->setData(rasterData);
     spectro->setDisplayMode(QwtPlotSpectrogram::ContourMode);
 
-    QList<double> contourLevels = levels;
+    QList< double > contourLevels = levels;
     if (contourLevels.isEmpty()) {
         // Auto-generate 10 levels
         double step = (maxVal - minVal) / 11.0;
@@ -747,18 +783,24 @@ QwtPlotSpectrogram* QwtPyPlot::contour(const QVector<QVector<double>>& data,
  * @param color Arrow color
  * @return The created vector field
  */
-QwtPlotVectorField* QwtPyPlot::quiver(const QVector<double>& x, const QVector<double>& y,
-                                      const QVector<double>& u, const QVector<double>& v,
+QwtPlotVectorField* QwtPyPlot::quiver(const QVector< double >& x,
+                                      const QVector< double >& y,
+                                      const QVector< double >& u,
+                                      const QVector< double >& v,
                                       const QString& color)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
-    int n = static_cast<int>(std::min({static_cast<size_t>(x.size()), static_cast<size_t>(y.size()), static_cast<size_t>(u.size()), static_cast<size_t>(v.size())}));
-    QVector<QwtVectorFieldSample> samples;
+    int n = static_cast< int >(std::min({ static_cast< size_t >(x.size()),
+                                          static_cast< size_t >(y.size()),
+                                          static_cast< size_t >(u.size()),
+                                          static_cast< size_t >(v.size()) }));
+    QVector< QwtVectorFieldSample > samples;
     samples.reserve(n);
     for (int i = 0; i < n; i++) {
-        samples.append(QwtVectorFieldSample(x[i], y[i], u[i], v[i]));
+        samples.append(QwtVectorFieldSample(x[ i ], y[ i ], u[ i ], v[ i ]));
     }
 
     auto* field = QwtPlotFactory::createVectorField(ax, QString(), samples);
@@ -770,11 +812,11 @@ QwtPlotVectorField* QwtPyPlot::quiver(const QVector<double>& x, const QVector<do
     return field;
 }
 
-QwtPlotTradingCurve* QwtPyPlot::candlestick(const QVector<QwtOHLCSample>& data,
-                                            const QString& label)
+QwtPlotTradingCurve* QwtPyPlot::candlestick(const QVector< QwtOHLCSample >& data, const QString& label)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* curve = QwtPlotFactory::createTradingCurve(ax, label, data);
     ax->replot();
@@ -786,19 +828,19 @@ QwtPlotTradingCurve* QwtPyPlot::candlestick(const QVector<QwtOHLCSample>& data,
 QwtPlotGrid* QwtPyPlot::grid(bool show, bool minor)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     // Find existing grid to avoid duplicates
     QwtPlotGrid* g = nullptr;
-    auto items = ax->itemList(QwtPlotItem::Rtti_PlotGrid);
+    auto items     = ax->itemList(QwtPlotItem::Rtti_PlotGrid);
     if (!items.isEmpty()) {
-        g = static_cast<QwtPlotGrid*>(items.first());
+        g = static_cast< QwtPlotGrid* >(items.first());
     }
 
     if (!g) {
         g = QwtPlotFactory::createGrid(ax, minor);
-    }
-    else {
+    } else {
         // Existing grid found — update minor grid settings
         g->enableXMin(minor);
         g->enableYMin(minor);
@@ -811,7 +853,8 @@ QwtPlotGrid* QwtPyPlot::grid(bool show, bool minor)
 QwtPlotMarker* QwtPyPlot::axhline(double y, const QString& fmt)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* marker = QwtPlotFactory::createHLine(ax, y);
     if (!fmt.isEmpty()) {
@@ -824,7 +867,8 @@ QwtPlotMarker* QwtPyPlot::axhline(double y, const QString& fmt)
 QwtPlotMarker* QwtPyPlot::axvline(double x, const QString& fmt)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* marker = QwtPlotFactory::createVLine(ax, x);
     if (!fmt.isEmpty()) {
@@ -834,41 +878,39 @@ QwtPlotMarker* QwtPyPlot::axvline(double x, const QString& fmt)
     return marker;
 }
 
-QwtPlotZoneItem* QwtPyPlot::axhspan(double y1, double y2,
-                                    const QString& color, double alpha)
+QwtPlotZoneItem* QwtPyPlot::axhspan(double y1, double y2, const QString& color, double alpha)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     QColor c = color.isEmpty() ? QColor(0, 0, 255) : namedColor(color);
     c.setAlphaF(alpha);
 
-    auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(y1, y2), qMax(y1, y2)),
-                                            Qt::Horizontal, QBrush(c));
+    auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(y1, y2), qMax(y1, y2)), Qt::Horizontal, QBrush(c));
     ax->replot();
     return zone;
 }
 
-QwtPlotZoneItem* QwtPyPlot::axvspan(double x1, double x2,
-                                    const QString& color, double alpha)
+QwtPlotZoneItem* QwtPyPlot::axvspan(double x1, double x2, const QString& color, double alpha)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     QColor c = color.isEmpty() ? QColor(0, 0, 255) : namedColor(color);
     c.setAlphaF(alpha);
 
-    auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(x1, x2), qMax(x1, x2)),
-                                            Qt::Vertical, QBrush(c));
+    auto* zone = QwtPlotFactory::createZone(ax, QwtInterval(qMin(x1, x2), qMax(x1, x2)), Qt::Vertical, QBrush(c));
     ax->replot();
     return zone;
 }
 
-QwtPlotArrowMarker* QwtPyPlot::annotate(const QString& text,
-                                        const QPointF& xy, const QPointF& xytext)
+QwtPlotArrowMarker* QwtPyPlot::annotate(const QString& text, const QPointF& xy, const QPointF& xytext)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     auto* arrow = QwtPlotFactory::createArrowMarker(ax, xytext, xy);
     Q_UNUSED(text)  // Text label would require additional marker setup
@@ -879,14 +921,15 @@ QwtPlotArrowMarker* QwtPyPlot::annotate(const QString& text,
 QwtPlotLegendItem* QwtPyPlot::legend(const QString& loc)
 {
     QwtPlot* ax = gca();
-    if (!ax) return nullptr;
+    if (!ax)
+        return nullptr;
 
     Q_UNUSED(loc)  // Location handling could be enhanced later
 
     // Find existing legend to avoid duplicates
     auto items = ax->itemList(QwtPlotItem::Rtti_PlotLegend);
     if (!items.isEmpty()) {
-        return static_cast<QwtPlotLegendItem*>(items.first());
+        return static_cast< QwtPlotLegendItem* >(items.first());
     }
 
     auto* leg = QwtPlotFactory::createLegend(ax);
@@ -941,12 +984,12 @@ void QwtPyPlot::setYLim(double min, double max)
 void QwtPyPlot::setXScale(const QString& scale)
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     if (scale.compare("log", Qt::CaseInsensitive) == 0) {
         ax->setAxisToLogScale(QwtAxis::XBottom);
-    }
-    else {
+    } else {
         ax->setAxisToLinearScale(QwtAxis::XBottom);
     }
     ax->replot();
@@ -955,21 +998,22 @@ void QwtPyPlot::setXScale(const QString& scale)
 void QwtPyPlot::setYScale(const QString& scale)
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     if (scale.compare("log", Qt::CaseInsensitive) == 0) {
         ax->setAxisToLogScale(QwtAxis::YLeft);
-    }
-    else {
+    } else {
         ax->setAxisToLinearScale(QwtAxis::YLeft);
     }
     ax->replot();
 }
 
-void QwtPyPlot::setXTicks(const QVector<double>& ticks, const QStringList& labels)
+void QwtPyPlot::setXTicks(const QVector< double >& ticks, const QStringList& labels)
 {
     QwtPlot* ax = gca();
-    if (!ax || ticks.isEmpty()) return;
+    if (!ax || ticks.isEmpty())
+        return;
 
     QwtScaleDiv div;
     div.setInterval(ticks.first(), ticks.last());
@@ -980,10 +1024,11 @@ void QwtPyPlot::setXTicks(const QVector<double>& ticks, const QStringList& label
     ax->replot();
 }
 
-void QwtPyPlot::setYTicks(const QVector<double>& ticks, const QStringList& labels)
+void QwtPyPlot::setYTicks(const QVector< double >& ticks, const QStringList& labels)
 {
     QwtPlot* ax = gca();
-    if (!ax || ticks.isEmpty()) return;
+    if (!ax || ticks.isEmpty())
+        return;
 
     QwtScaleDiv div;
     div.setInterval(ticks.first(), ticks.last());
@@ -997,7 +1042,8 @@ void QwtPyPlot::setYTicks(const QVector<double>& ticks, const QStringList& label
 void QwtPyPlot::invertXAxis()
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     QwtInterval interval = ax->axisInterval(QwtAxis::XBottom);
     ax->setAxisScale(QwtAxis::XBottom, interval.maxValue(), interval.minValue());
@@ -1007,7 +1053,8 @@ void QwtPyPlot::invertXAxis()
 void QwtPyPlot::invertYAxis()
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     QwtInterval interval = ax->axisInterval(QwtAxis::YLeft);
     ax->setAxisScale(QwtAxis::YLeft, interval.maxValue(), interval.minValue());
@@ -1019,7 +1066,8 @@ void QwtPyPlot::invertYAxis()
 void QwtPyPlot::setFaceColor(const QString& color)
 {
     QWT_D(d);
-    if (!d->figure) return;
+    if (!d->figure)
+        return;
 
     QColor c = namedColor(color);
     d->figure->setFaceColor(c);
@@ -1028,7 +1076,8 @@ void QwtPyPlot::setFaceColor(const QString& color)
 void QwtPyPlot::setAxesColor(const QString& color)
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     QColor c = namedColor(color);
     ax->setCanvasBackground(QBrush(c));
@@ -1038,7 +1087,8 @@ void QwtPyPlot::setAxesColor(const QString& color)
 void QwtPyPlot::colorbar(QwtPlotSpectrogram* spectro)
 {
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     Q_UNUSED(spectro)  // Colorbar implementation would require right-axis setup
     // Basic implementation: enable color bar on the right axis
@@ -1048,7 +1098,7 @@ void QwtPyPlot::colorbar(QwtPlotSpectrogram* spectro)
         if (cmap && spectro->data()) {
             QwtInterval interval = spectro->data()->interval(Qt::ZAxis);
             scaleWidget->setColorBarEnabled(true);
-            scaleWidget->setColorMap(interval, const_cast<QwtColorMap*>(cmap));
+            scaleWidget->setColorMap(interval, const_cast< QwtColorMap* >(cmap));
             ax->setAxisVisible(QwtAxis::YRight, true);
             ax->replot();
         }
@@ -1072,8 +1122,7 @@ void QwtPyPlot::show()
     QWT_D(d);
     if (d->figure) {
         d->figure->show();
-    }
-    else if (d->currentAxes) {
+    } else if (d->currentAxes) {
         d->currentAxes->show();
     }
 }
@@ -1084,11 +1133,12 @@ void QwtPyPlot::enablePan(bool enable)
 {
     QWT_D(d);
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     if (enable && !d->panner) {
         // Check if a panner already exists on the canvas (possibly created by another QwtPyPlot instance)
-        d->panner = ax->canvas()->findChild<QwtPlotPanner*>();
+        d->panner = ax->canvas()->findChild< QwtPlotPanner* >();
     }
     if (enable && !d->panner) {
         d->panner = new QwtPlotPanner(ax->canvas());
@@ -1102,11 +1152,12 @@ void QwtPyPlot::enableZoom(bool enable)
 {
     QWT_D(d);
     QwtPlot* ax = gca();
-    if (!ax) return;
+    if (!ax)
+        return;
 
     if (enable && !d->zoomer) {
         // Check if a zoomer already exists on the canvas (possibly created by another QwtPyPlot instance)
-        d->zoomer = ax->canvas()->findChild<QwtPlotCanvasZoomer*>();
+        d->zoomer = ax->canvas()->findChild< QwtPlotCanvasZoomer* >();
     }
     if (enable && !d->zoomer) {
         d->zoomer = new QwtPlotCanvasZoomer(ax->canvas());
@@ -1120,14 +1171,14 @@ void QwtPyPlot::enableZoom(bool enable)
 
 void QwtPyPlot::applyFormat(QwtPlotCurve* curve, const QwtFormatString& f)
 {
-    if (!curve) return;
+    if (!curve)
+        return;
 
     QColor c = f.hasColor ? f.color : curve->pen().color();
 
     if (f.noLine) {
         curve->setStyle(QwtPlotCurve::NoCurve);
-    }
-    else {
+    } else {
         curve->setStyle(QwtPlotCurve::Lines);
         curve->setPen(QPen(c, 1.5, f.hasLineStyle ? f.lineStyle : Qt::SolidLine));
     }
@@ -1140,35 +1191,47 @@ void QwtPyPlot::applyFormat(QwtPlotCurve* curve, const QwtFormatString& f)
 
 void QwtPyPlot::applyFormat(QwtPlotMarker* marker, const QwtFormatString& f)
 {
-    if (!marker) return;
+    if (!marker)
+        return;
 
-    QColor c = f.hasColor ? f.color : QColor(Qt::gray);
+    QColor c           = f.hasColor ? f.color : QColor(Qt::gray);
     Qt::PenStyle style = f.hasLineStyle ? f.lineStyle : Qt::DashLine;
     marker->setLinePen(QPen(c, 1.0, style));
 }
 
 QColor QwtPyPlot::namedColor(const QString& name)
 {
-    if (name.isEmpty()) return QColor();
+    if (name.isEmpty())
+        return QColor();
 
     // Single-character matplotlib colors
     if (name.length() == 1) {
-        switch (name[0].toLatin1()) {
-            case 'b': return QColor(Qt::blue);
-            case 'g': return QColor(Qt::green);
-            case 'r': return QColor(Qt::red);
-            case 'c': return QColor(Qt::cyan);
-            case 'm': return QColor(Qt::magenta);
-            case 'y': return QColor(Qt::yellow);
-            case 'k': return QColor(Qt::black);
-            case 'w': return QColor(Qt::white);
-            default: break;
+        switch (name[ 0 ].toLatin1()) {
+        case 'b':
+            return QColor(Qt::blue);
+        case 'g':
+            return QColor(Qt::green);
+        case 'r':
+            return QColor(Qt::red);
+        case 'c':
+            return QColor(Qt::cyan);
+        case 'm':
+            return QColor(Qt::magenta);
+        case 'y':
+            return QColor(Qt::yellow);
+        case 'k':
+            return QColor(Qt::black);
+        case 'w':
+            return QColor(Qt::white);
+        default:
+            break;
         }
     }
 
     // Try as QColor name (e.g. "blue", "#ff0000")
     QColor c(name);
-    if (c.isValid()) return c;
+    if (c.isValid())
+        return c;
 
     return QColor(Qt::blue);  // Default fallback
 }
@@ -1189,29 +1252,23 @@ QwtLinearColorMap* QwtPyPlot::createColorMap(const QString& name)
         map->addColorStop(0.5, QColor(33, 145, 140));
         map->addColorStop(0.75, QColor(94, 201, 98));
         map->addColorStop(1.0, QColor(253, 231, 37));
-    }
-    else if (name.compare("hot", Qt::CaseInsensitive) == 0) {
+    } else if (name.compare("hot", Qt::CaseInsensitive) == 0) {
         map->addColorStop(0.0, QColor(Qt::black));
         map->addColorStop(0.33, QColor(Qt::red));
         map->addColorStop(0.67, QColor(Qt::yellow));
         map->addColorStop(1.0, QColor(Qt::white));
-    }
-    else if (name.compare("cool", Qt::CaseInsensitive) == 0) {
+    } else if (name.compare("cool", Qt::CaseInsensitive) == 0) {
         map->setColorInterval(QColor(Qt::cyan), QColor(Qt::magenta));
-    }
-    else if (name.compare("jet", Qt::CaseInsensitive) == 0) {
+    } else if (name.compare("jet", Qt::CaseInsensitive) == 0) {
         map->addColorStop(0.0, QColor(0, 0, 128));
         map->addColorStop(0.125, QColor(0, 0, 255));
         map->addColorStop(0.375, QColor(0, 255, 255));
         map->addColorStop(0.625, QColor(255, 255, 0));
         map->addColorStop(0.875, QColor(255, 0, 0));
         map->addColorStop(1.0, QColor(128, 0, 0));
-    }
-    else if (name.compare("gray", Qt::CaseInsensitive) == 0 ||
-             name.compare("grey", Qt::CaseInsensitive) == 0) {
+    } else if (name.compare("gray", Qt::CaseInsensitive) == 0 || name.compare("grey", Qt::CaseInsensitive) == 0) {
         map->setColorInterval(QColor(Qt::black), QColor(Qt::white));
-    }
-    else {
+    } else {
         // Default to viridis
         map->addColorStop(0.0, QColor(68, 1, 84));
         map->addColorStop(0.25, QColor(59, 82, 139));

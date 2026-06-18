@@ -22,7 +22,7 @@
 class QwtPolarCanvas::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPolarCanvas)
-  public:
+public:
     PrivateData(QwtPolarCanvas* p) : q_ptr(p), backingStore(nullptr)
     {
     }

@@ -147,9 +147,7 @@ class QwtPlotRenderer::PrivateData
     QWT_DECLARE_PUBLIC(QwtPlotRenderer)
 public:
     PrivateData(QwtPlotRenderer* p)
-        : q_ptr(p)
-        , discardFlags(QwtPlotRenderer::DiscardNone)
-        , layoutFlags(QwtPlotRenderer::DefaultLayout)
+        : q_ptr(p), discardFlags(QwtPlotRenderer::DiscardNone), layoutFlags(QwtPlotRenderer::DefaultLayout)
     {
     }
 
@@ -879,13 +877,8 @@ void QwtPlotRenderer::renderCanvas(const QwtPlot* plot, QPainter* painter, const
             } else {
                 const int midLineWidth = canvas->property("midLineWidth").toInt();
 
-                QwtPainter::drawFrame(painter,
-                                      canvasRect,
-                                      canvas->palette(),
-                                      canvas->foregroundRole(),
-                                      frameWidth,
-                                      midLineWidth,
-                                      frameStyle);
+                QwtPainter::drawFrame(
+                    painter, canvasRect, canvas->palette(), canvas->foregroundRole(), frameWidth, midLineWidth, frameStyle);
             }
             painter->restore();
         }
@@ -1009,12 +1002,8 @@ bool QwtPlotRenderer::exportTo(QwtPlot* plot, const QString& documentName, const
         filter += imageFilter;
     }
 
-    fileName = QFileDialog::getSaveFileName(nullptr,
-                                            tr("Export File Name"),
-                                            fileName,
-                                            filter.join(";;"),
-                                            nullptr,
-                                            QFileDialog::DontConfirmOverwrite);
+    fileName = QFileDialog::getSaveFileName(
+        nullptr, tr("Export File Name"), fileName, filter.join(";;"), nullptr, QFileDialog::DontConfirmOverwrite);
 #endif
     if (fileName.isEmpty())
         return false;

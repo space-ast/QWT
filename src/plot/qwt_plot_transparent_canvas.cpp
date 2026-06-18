@@ -22,7 +22,8 @@ QwtPlotTransparentCanvas::QwtPlotTransparentCanvas(QwtPlot* plot) : QFrame(plot)
     setAttribute(Qt::WA_NoSystemBackground);
     setAttribute(Qt::WA_TransparentForMouseEvents, false);  // Typically needs to handle mouse events
     // Disable all attributes that may produce opaque effects
-    setAttribute(Qt::WA_OpaquePaintEvent, false);  // Qt will no longer erase background with background color/brush before paintEvent()
+    setAttribute(Qt::WA_OpaquePaintEvent,
+                 false);  // Qt will no longer erase background with background color/brush before paintEvent()
     setAttribute(Qt::WA_StyledBackground, false);
     setAutoFillBackground(false);
 

@@ -40,15 +40,15 @@ class QList;
  * @details A spectrogram displays 3-dimensional data, where the 3rd dimension
  *          ( the intensity ) is displayed using colors. The colors are calculated
  *          from the values using a color map.
- * 
+ *
  *          On multi-core systems the performance of the image composition
  *          can often be improved by dividing the area into tiles - each of them
  *          rendered in a different thread ( see QwtPlotItem::setRenderThreadCount() ).
- * 
+ *
  *          In ContourMode contour lines are painted for the contour levels.
- * 
+ *
  * @sa QwtRasterData, QwtColorMap, QwtPlotItem::setRenderThreadCount()
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotSpectrogram : public QwtPlotRasterItem
@@ -58,7 +58,7 @@ public:
      * @brief Display modes
      * @details The display mode controls how the raster data will be represented.
      * @sa setDisplayMode(), testDisplayMode()
-     * 
+     *
      */
 
     enum DisplayMode
@@ -134,10 +134,8 @@ protected:
     /**
      * @brief Render the image
      */
-    virtual QImage renderImage(const QwtScaleMap& xMap,
-                               const QwtScaleMap& yMap,
-                               const QRectF& area,
-                               const QSize& imageSize) const override;
+    virtual QImage
+    renderImage(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& area, const QSize& imageSize) const override;
 
     /**
      * @brief Calculate the contour raster size

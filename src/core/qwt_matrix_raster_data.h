@@ -31,7 +31,8 @@
 #include "qwt_raster_data.h"
 
 #if QT_VERSION < 0x060000
-template< typename T > class QVector;
+template< typename T >
+class QVector;
 #endif
 
 /**
@@ -43,29 +44,29 @@ template< typename T > class QVector;
  */
 class QWTCORE_EXPORT QwtMatrixRasterData : public QwtRasterData
 {
-  public:
+public:
     /**
      * @brief Resampling algorithm
      * @details The default setting is NearestNeighbour.
-     * 
+     *
      */
     enum ResampleMode
     {
         /**
          * Return the value from the matrix that is nearest to the requested position.
-         * 
+         *
          */
         NearestNeighbour,
 
         /**
          * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-         * 
+         *
          */
         BilinearInterpolation,
 
         /**
          * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-         * 
+         *
          */
         BicubicInterpolation
     };
@@ -81,17 +82,17 @@ class QWTCORE_EXPORT QwtMatrixRasterData : public QwtRasterData
     ResampleMode resampleMode() const;
 
     // Assign the bounding interval for an axis
-    void setInterval( Qt::Axis, const QwtInterval& );
+    void setInterval(Qt::Axis, const QwtInterval&);
     // Return bounding interval for an axis
-    virtual QwtInterval interval( Qt::Axis axis) const override final;
+    virtual QwtInterval interval(Qt::Axis axis) const override final;
 
     // Assign a value matrix
-    void setValueMatrix( const QVector< double >& values, int numColumns );
+    void setValueMatrix(const QVector< double >& values, int numColumns);
     // Return value matrix
     const QVector< double > valueMatrix() const;
 
     // Change a single value in the matrix
-    void setValue( int row, int col, double value );
+    void setValue(int row, int col, double value);
 
     // Return number of columns of the value matrix
     int numColumns() const;
@@ -99,12 +100,12 @@ class QWTCORE_EXPORT QwtMatrixRasterData : public QwtRasterData
     int numRows() const;
 
     // Calculate the pixel hint
-    virtual QRectF pixelHint( const QRectF& ) const override;
+    virtual QRectF pixelHint(const QRectF&) const override;
 
     // Return the value at a raster position
-    virtual double value( double x, double y ) const override;
+    virtual double value(double x, double y) const override;
 
-  private:
+private:
     void update();
 
     QWT_DECLARE_PRIVATE(QwtMatrixRasterData)

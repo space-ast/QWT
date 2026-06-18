@@ -9,7 +9,8 @@
 
 #include "qwt3d_drawable.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief A Qt string or an output device dependent string
@@ -28,11 +29,10 @@ public:
     Label& operator=(const Label& other);
     Label& operator=(Label&& other) noexcept;
     // Construct label and initialize with font
-    Label(const QString &family, int pointSize, int weight = QFont::Normal, bool italic = false);
+    Label(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
     // Sets the labels font
-    void setFont(QString const &family, int pointSize, int weight = QFont::Normal,
-                 bool italic = false);
+    void setFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
     // Fine tunes label
     void adjust(int gap);
@@ -52,7 +52,7 @@ public:
     virtual void setColor(Qwt3D::RGBA rgba) override;
 
     // Sets the labels string
-    void setString(QString const &s);
+    void setString(QString const& s);
     // Actual drawing
     virtual void draw() override;
 
@@ -61,14 +61,13 @@ public:
 
 private:
     void init();
-    void init(const QString &family, int pointSize, int weight = QFont::Normal,
-              bool italic = false);
+    void init(const QString& family, int pointSize, int weight = QFont::Normal, bool italic = false);
     void update();
     void convert2screen();
     double width() const;
     double height() const;
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_LABEL_H
+#endif  // QWT3D_LABEL_H

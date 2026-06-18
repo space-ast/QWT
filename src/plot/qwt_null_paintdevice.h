@@ -44,8 +44,8 @@
  */
 class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
 {
-  public:
-/**
+public:
+    /**
      * @brief Render mode for the paint device
      * @details Controls how vector graphic primitives are processed.
      */
@@ -67,7 +67,7 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     ~QwtNullPaintDevice() override;
 
     //! Set the render mode
-    void setMode( Mode );
+    void setMode(Mode);
     //! Get the render mode
     Mode mode() const;
 
@@ -75,17 +75,17 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     virtual QPaintEngine* paintEngine() const override;
 
     //! Return metric information for the paint device
-    virtual int metric( PaintDeviceMetric ) const override;
+    virtual int metric(PaintDeviceMetric) const override;
 
     //! Draw rectangles (integer version)
-    virtual void drawRects(const QRect*, int );
+    virtual void drawRects(const QRect*, int);
     //! Draw rectangles (floating point version)
-    virtual void drawRects(const QRectF*, int );
+    virtual void drawRects(const QRectF*, int);
 
     //! Draw lines (integer version)
-    virtual void drawLines(const QLine*, int );
+    virtual void drawLines(const QLine*, int);
     //! Draw lines (floating point version)
-    virtual void drawLines(const QLineF*, int );
+    virtual void drawLines(const QLineF*, int);
 
     //! Draw ellipse (floating point version)
     virtual void drawEllipse(const QRectF&);
@@ -96,41 +96,36 @@ class QWT_EXPORT QwtNullPaintDevice : public QPaintDevice
     virtual void drawPath(const QPainterPath&);
 
     //! Draw points (floating point version)
-    virtual void drawPoints(const QPointF*, int );
+    virtual void drawPoints(const QPointF*, int);
     //! Draw points (integer version)
-    virtual void drawPoints(const QPoint*, int );
+    virtual void drawPoints(const QPoint*, int);
 
     //! Draw polygon (floating point version)
-    virtual void drawPolygon( const QPointF*, int,
-        QPaintEngine::PolygonDrawMode );
+    virtual void drawPolygon(const QPointF*, int, QPaintEngine::PolygonDrawMode);
 
     //! Draw polygon (integer version)
-    virtual void drawPolygon( const QPoint*, int,
-        QPaintEngine::PolygonDrawMode );
+    virtual void drawPolygon(const QPoint*, int, QPaintEngine::PolygonDrawMode);
 
     //! Draw a pixmap
-    virtual void drawPixmap(const QRectF&,
-        const QPixmap&, const QRectF&);
+    virtual void drawPixmap(const QRectF&, const QPixmap&, const QRectF&);
 
     //! Draw a text item
     virtual void drawTextItem(const QPointF&, const QTextItem&);
 
     //! Draw a tiled pixmap
-    virtual void drawTiledPixmap(const QRectF&,
-        const QPixmap&, const QPointF& );
+    virtual void drawTiledPixmap(const QRectF&, const QPixmap&, const QPointF&);
 
     //! Draw an image
-    virtual void drawImage(const QRectF&, const QImage&,
-        const QRectF&, Qt::ImageConversionFlags );
+    virtual void drawImage(const QRectF&, const QImage&, const QRectF&, Qt::ImageConversionFlags);
 
     //! Update the paint engine state
-    virtual void updateState( const QPaintEngineState& );
+    virtual void updateState(const QPaintEngineState&);
 
-  protected:
+protected:
     //! @return Size needed to implement metric()
     virtual QSize sizeMetrics() const = 0;
 
-  private:
+private:
     class PaintEngine;
     PaintEngine* m_engine;
 

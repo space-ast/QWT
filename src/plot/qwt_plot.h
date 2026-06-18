@@ -524,8 +524,7 @@ protected:
     void doLayout();
 
     // NEW: Draw inside ticks for axes with TickInside direction
-    void drawInsideTicks(QPainter*, const QRectF& canvasRect,
-                         const QwtScaleMap maps[QwtAxis::AxisPositions]) const;
+    void drawInsideTicks(QPainter*, const QRectF& canvasRect, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const;
 
 private Q_SLOTS:
     // Update legend items
@@ -555,11 +554,7 @@ private:
     void topParasiteTriggerHostUpdateAxisMargins();
 
     // Helper: Draw a single inside tick
-    void drawSingleInsideTick(QPainter* painter,
-                              double tickPixelPos,
-                              double tickLength,
-                              double backbonePos,
-                              int axisPos) const;
+    void drawSingleInsideTick(QPainter* painter, double tickPixelPos, double tickLength, double backbonePos, int axisPos) const;
 
     class ScaleData;
     ScaleData* m_scaleData;

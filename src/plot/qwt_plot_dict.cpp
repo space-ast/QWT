@@ -30,49 +30,43 @@
 class QwtPlotDict::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotDict)
-  public:
-    PrivateData(QwtPlotDict* p)
-        : q_ptr(p)
-        , autoDelete(true)
+public:
+    PrivateData(QwtPlotDict* p) : q_ptr(p), autoDelete(true)
     {
     }
 
     class ItemList : public QList< QwtPlotItem* >
     {
-      public:
-        void insertItem( QwtPlotItem* item )
+    public:
+        void insertItem(QwtPlotItem* item)
         {
-            if ( item == nullptr )
+            if (item == nullptr)
                 return;
 
-            auto it =
-                std::upper_bound( begin(), end(), item, LessZThan() );
-            insert( it, item );
+            auto it = std::upper_bound(begin(), end(), item, LessZThan());
+            insert(it, item);
         }
 
-        void removeItem( QwtPlotItem* item )
+        void removeItem(QwtPlotItem* item)
         {
-            if ( item == nullptr )
+            if (item == nullptr)
                 return;
 
-            auto it =
-                std::lower_bound( begin(), end(), item, LessZThan() );
+            auto it = std::lower_bound(begin(), end(), item, LessZThan());
 
-            for ( ; it != end(); ++it )
-            {
-                if ( item == *it )
-                {
-                    erase( it );
+            for (; it != end(); ++it) {
+                if (item == *it) {
+                    erase(it);
                     break;
                 }
             }
         }
-      private:
+
+    private:
         class LessZThan
         {
-          public:
-            inline bool operator()( const QwtPlotItem* item1,
-                const QwtPlotItem* item2 ) const
+        public:
+            inline bool operator()(const QwtPlotItem* item1, const QwtPlotItem* item2) const
             {
                 return item1->z() < item2->z();
             }
@@ -88,8 +82,7 @@ class QwtPlotDict::PrivateData
  * @details Auto deletion is enabled.
  * @sa setAutoDelete(), QwtPlotItem::attach()
  */
-QwtPlotDict::QwtPlotDict()
-    : QWT_PIMPL_CONSTRUCT
+QwtPlotDict::QwtPlotDict() : QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -101,7 +94,7 @@ QwtPlotDict::QwtPlotDict()
 QwtPlotDict::~QwtPlotDict()
 {
     QWT_D(d);
-    detachItems( QwtPlotItem::Rtti_PlotItem, d->autoDelete );
+    detachItems(QwtPlotItem::Rtti_PlotItem, d->autoDelete);
 }
 
 /**
@@ -111,7 +104,7 @@ QwtPlotDict::~QwtPlotDict()
  * @param[in] autoDelete True to enable auto deletion
  * @sa autoDelete(), insertItem()
  */
-void QwtPlotDict::setAutoDelete( bool autoDelete )
+void QwtPlotDict::setAutoDelete(bool autoDelete)
 {
     QWT_D(d);
     d->autoDelete = autoDelete;
@@ -134,10 +127,10 @@ bool QwtPlotDict::autoDelete() const
    @param item PlotItem
    @sa removeItem()
  */
-void QwtPlotDict::insertItem( QwtPlotItem* item )
+void QwtPlotDict::insertItem(QwtPlotItem* item)
 {
     QWT_D(d);
-    d->itemList.insertItem( item );
+    d->itemList.insertItem(item);
 }
 
 /*!
@@ -146,10 +139,10 @@ void QwtPlotDict::insertItem( QwtPlotItem* item )
    @param item PlotItem
    @sa insertItem()
  */
-void QwtPlotDict::removeItem( QwtPlotItem* item )
+void QwtPlotDict::removeItem(QwtPlotItem* item)
 {
     QWT_D(d);
-    d->itemList.removeItem( item );
+    d->itemList.removeItem(item);
 }
 
 /**
@@ -158,21 +151,19 @@ void QwtPlotDict::removeItem( QwtPlotItem* item )
  *                 otherwise only those items of the type rtti.
  * @param[in] autoDelete If true, delete all detached items
  */
-void QwtPlotDict::detachItems( int rtti, bool autoDelete )
+void QwtPlotDict::detachItems(int rtti, bool autoDelete)
 {
     QWT_D(d);
     PrivateData::ItemList list = d->itemList;
-    QwtPlotItemIterator it = list.constBegin();
-    while ( it != list.constEnd() )
-    {
+    QwtPlotItemIterator it     = list.constBegin();
+    while (it != list.constEnd()) {
         QwtPlotItem* item = *it;
 
-        ++it; // increment before removing item from the list
+        ++it;  // increment before removing item from the list
 
-        if ( rtti == QwtPlotItem::Rtti_PlotItem || item->rtti() == rtti )
-        {
-            item->attach( nullptr );
-            if ( autoDelete )
+        if (rtti == QwtPlotItem::Rtti_PlotItem || item->rtti() == rtti) {
+            item->attach(nullptr);
+            if (autoDelete)
                 delete item;
         }
     }
@@ -197,19 +188,18 @@ const QwtPlotItemList& QwtPlotDict::itemList() const
  * @return List of all attached plot items of a specific type
  * @sa QwtPlotItem::rtti()
  */
-QwtPlotItemList QwtPlotDict::itemList( int rtti ) const
+QwtPlotItemList QwtPlotDict::itemList(int rtti) const
 {
     QWT_DC(d);
-    if ( rtti == QwtPlotItem::Rtti_PlotItem )
+    if (rtti == QwtPlotItem::Rtti_PlotItem)
         return d->itemList;
 
     QwtPlotItemList items;
 
     PrivateData::ItemList list = d->itemList;
-    for ( QwtPlotItemIterator it = list.constBegin(); it != list.constEnd(); ++it )
-    {
+    for (QwtPlotItemIterator it = list.constBegin(); it != list.constEnd(); ++it) {
         QwtPlotItem* item = *it;
-        if ( item->rtti() == rtti )
+        if (item->rtti() == rtti)
             items += item;
     }
 

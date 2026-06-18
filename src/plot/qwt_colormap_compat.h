@@ -40,6 +40,6 @@ inline QColor color(const QwtColorMap& map, const QwtInterval& interval, double 
     return map.color(interval.minValue(), interval.maxValue(), value);
 }
 
-} // namespace QwtColorMapCompat
+}  // namespace QwtColorMapCompat
 
 #endif

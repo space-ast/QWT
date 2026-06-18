@@ -11,49 +11,45 @@
 class QwtPolarItemDict::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPolarItemDict)
-  public:
+public:
     PrivateData(QwtPolarItemDict* p) : q_ptr(p)
     {
     }
 
     class ItemList : public QList< QwtPolarItem* >
     {
-      public:
-        void insertItem( QwtPolarItem* item )
+    public:
+        void insertItem(QwtPolarItem* item)
         {
-            if ( item == nullptr )
+            if (item == nullptr)
                 return;
 
             // Unfortunately there is no inSort operation
             // for lists in Qt4. The implementation below
             // is slow, but there shouldn't be many plot items.
 
-            for ( auto it = begin(); it != end(); ++it )
-            {
-                if ( *it == item )
+            for (auto it = begin(); it != end(); ++it) {
+                if (*it == item)
                     return;
 
-                if ( ( *it )->z() > item->z() )
-                {
-                    insert( it, item );
+                if ((*it)->z() > item->z()) {
+                    insert(it, item);
                     return;
                 }
             }
-            append( item );
+            append(item);
         }
 
-        void removeItem( QwtPolarItem* item )
+        void removeItem(QwtPolarItem* item)
         {
-            if ( item == nullptr )
+            if (item == nullptr)
                 return;
 
             int i = 0;
 
-            for ( auto it = begin(); it != end(); ++it )
-            {
-                if ( item == *it )
-                {
-                    removeAt( i );
+            for (auto it = begin(); it != end(); ++it) {
+                if (item == *it) {
+                    removeAt(i);
                     return;
                 }
                 i++;
@@ -85,7 +81,7 @@ QwtPolarItemDict::QwtPolarItemDict()
 QwtPolarItemDict::~QwtPolarItemDict()
 {
     QWT_D(d);
-    detachItems( QwtPolarItem::Rtti_PolarItem, d->autoDelete );
+    detachItems(QwtPolarItem::Rtti_PolarItem, d->autoDelete);
 }
 
 /**
@@ -95,7 +91,7 @@ QwtPolarItemDict::~QwtPolarItemDict()
  * @param autoDelete Auto delete flag
  * @sa autoDelete, attachItem
  */
-void QwtPolarItemDict::setAutoDelete( bool autoDelete )
+void QwtPolarItemDict::setAutoDelete(bool autoDelete)
 {
     QWT_D(d);
     d->autoDelete = autoDelete;
@@ -117,10 +113,10 @@ bool QwtPolarItemDict::autoDelete() const
  * @param item PlotItem
  * @sa removeItem()
  */
-void QwtPolarItemDict::insertItem( QwtPolarItem* item )
+void QwtPolarItemDict::insertItem(QwtPolarItem* item)
 {
     QWT_D(d);
-    d->itemList.insertItem( item );
+    d->itemList.insertItem(item);
 }
 
 /**
@@ -128,10 +124,10 @@ void QwtPolarItemDict::insertItem( QwtPolarItem* item )
  * @param item PlotItem
  * @sa insertItem()
  */
-void QwtPolarItemDict::removeItem( QwtPolarItem* item )
+void QwtPolarItemDict::removeItem(QwtPolarItem* item)
 {
     QWT_D(d);
-    d->itemList.removeItem( item );
+    d->itemList.removeItem(item);
 }
 
 /**
@@ -140,21 +136,19 @@ void QwtPolarItemDict::removeItem( QwtPolarItem* item )
  *             otherwise only those items of the type rtti.
  * @param autoDelete If true, delete all detached items
  */
-void QwtPolarItemDict::detachItems( int rtti, bool autoDelete )
+void QwtPolarItemDict::detachItems(int rtti, bool autoDelete)
 {
     QWT_D(d);
     PrivateData::ItemList list = d->itemList;
-    QwtPolarItemIterator it = list.constBegin();
-    while ( it != list.constEnd() )
-    {
+    QwtPolarItemIterator it    = list.constBegin();
+    while (it != list.constEnd()) {
         QwtPolarItem* item = *it;
 
-        ++it; // increment before removing item from the list
+        ++it;  // increment before removing item from the list
 
-        if ( rtti == QwtPolarItem::Rtti_PolarItem || item->rtti() == rtti )
-        {
-            item->attach( nullptr );
-            if ( autoDelete )
+        if (rtti == QwtPolarItem::Rtti_PolarItem || item->rtti() == rtti) {
+            item->attach(nullptr);
+            if (autoDelete)
                 delete item;
         }
     }

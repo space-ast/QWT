@@ -18,25 +18,25 @@ public:
     /**
      * @brief Resampling algorithm
      * @details The default setting is NearestNeighbour.
-     * 
+     *
      */
     enum ResampleMode
     {
         /**
          * Return the value from the matrix that is nearest to the requested position.
-         * 
+         *
          */
         NearestNeighbour,
 
         /**
          * Interpolate the value from the distances and values of the 4 surrounding values in the matrix.
-         * 
+         *
          */
         BilinearInterpolation,
 
         /**
          * Interpolate the value from the 16 surrounding values in the matrix using hermite bicubic interpolation.
-         * 
+         *
          */
         BicubicInterpolation
     };

@@ -132,18 +132,16 @@ public:
     bool autoReplot { true };
     bool autoReplotTemp { true };  ///< Used to temporarily store the autoReplot state
 
-    bool isParasitePlot { false };                                ///< Marks this plot as a parasite plot
+    bool isParasitePlot { false };  ///< Marks this plot as a parasite plot
     QMetaObject::Connection shareConn[ QwtAxis::AxisPositions ];  // Records signal-slot connections for syncing parasite axes with host axes, only relevant for parasite axes
     QString plotId;
 
     // NEW: tick direction for each axis
-    TickDirection tickDirection[QwtAxis::AxisPositions] = {
-        TickOutside, TickOutside, TickOutside, TickOutside
-    };
+    TickDirection tickDirection[ QwtAxis::AxisPositions ] = { TickOutside, TickOutside, TickOutside, TickOutside };
 
     // Color cycle for automatic item coloring
     QwtColorCycle colorCycle;
-    int colorCycleCounters[20] = {};  // per-rtti counter for built-in types
+    int colorCycleCounters[ 20 ] = {};  // per-rtti counter for built-in types
 };
 
 QwtPlot::PrivateData::PrivateData(QwtPlot* p) : q_ptr(p)
@@ -229,7 +227,7 @@ void QwtPlot::initPlot(const QwtText& title)
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 
-    //create uuid
+    // create uuid
     m_data->plotId = QUuid::createUuid().toString();
 
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -816,8 +814,8 @@ void QwtPlot::doLayout()
 
 /**
  * set the plot id.
- * 
- * @param id 
+ *
+ * @param id
  */
 void QwtPlot::setPlotId(const QString& id)
 {
@@ -839,9 +837,12 @@ void QwtPlot::setPlotId(const QString& id)
 
    updateCanvasMargins(), QwtPlotItem::getCanvasMarginHint()
  */
-void QwtPlot::getCanvasMarginsHint(
-    const QwtScaleMap maps[], const QRectF& canvasRect, double& left, double& top, double& right, double& bottom
-) const
+void QwtPlot::getCanvasMarginsHint(const QwtScaleMap maps[],
+                                   const QRectF& canvasRect,
+                                   double& left,
+                                   double& top,
+                                   double& right,
+                                   double& bottom) const
 {
     left = top = right = bottom = -1.0;
 
@@ -852,8 +853,7 @@ void QwtPlot::getCanvasMarginsHint(
 
             double m[ AxisPositions ];
             item->getCanvasMarginHint(
-                maps[ item->xAxis() ], maps[ item->yAxis() ], canvasRect, m[ YLeft ], m[ XTop ], m[ YRight ], m[ XBottom ]
-            );
+                maps[ item->xAxis() ], maps[ item->yAxis() ], canvasRect, m[ YLeft ], m[ XTop ], m[ YRight ], m[ XBottom ]);
 
             left   = qwtMaxF(left, m[ YLeft ]);
             top    = qwtMaxF(top, m[ XTop ]);
@@ -880,7 +880,8 @@ void QwtPlot::updateCanvasMargins()
         maps[ axisId ] = canvasMap(axisId);
 
     double margins[ AxisPositions ];
-    getCanvasMarginsHint(maps, canvas()->contentsRect(), margins[ YLeft ], margins[ XTop ], margins[ YRight ], margins[ XBottom ]);
+    getCanvasMarginsHint(
+        maps, canvas()->contentsRect(), margins[ YLeft ], margins[ XTop ], margins[ YRight ], margins[ XBottom ]);
 
     bool doUpdate = false;
     for (int axisPos = 0; axisPos < AxisPositions; axisPos++) {
@@ -904,43 +905,30 @@ void QwtPlot::updateCanvasMargins()
    @param backbonePos Backbone position (canvas edge)
    @param axisPos Axis position (YLeft, YRight, XTop, XBottom)
  */
-void QwtPlot::drawSingleInsideTick(QPainter* painter,
-                                   double tickPixelPos,
-                                   double tickLength,
-                                   double backbonePos,
-                                   int axisPos) const
+void QwtPlot::drawSingleInsideTick(QPainter* painter, double tickPixelPos, double tickLength, double backbonePos, int axisPos) const
 {
     using namespace QwtAxis;
     const double len = tickLength;
 
-    switch (axisPos)
-    {
+    switch (axisPos) {
     case YLeft:
         // From canvas left edge, draw toward right (inside)
-        QwtPainter::drawLine(painter,
-            backbonePos, tickPixelPos,
-            backbonePos + len, tickPixelPos);
+        QwtPainter::drawLine(painter, backbonePos, tickPixelPos, backbonePos + len, tickPixelPos);
         break;
 
     case YRight:
         // From canvas right edge, draw toward left (inside)
-        QwtPainter::drawLine(painter,
-            backbonePos, tickPixelPos,
-            backbonePos - len, tickPixelPos);
+        QwtPainter::drawLine(painter, backbonePos, tickPixelPos, backbonePos - len, tickPixelPos);
         break;
 
     case XTop:
         // From canvas top edge, draw toward bottom (inside)
-        QwtPainter::drawLine(painter,
-            tickPixelPos, backbonePos,
-            tickPixelPos, backbonePos + len);
+        QwtPainter::drawLine(painter, tickPixelPos, backbonePos, tickPixelPos, backbonePos + len);
         break;
 
     case XBottom:
         // From canvas bottom edge, draw toward top (inside)
-        QwtPainter::drawLine(painter,
-            tickPixelPos, backbonePos,
-            tickPixelPos, backbonePos - len);
+        QwtPainter::drawLine(painter, tickPixelPos, backbonePos, tickPixelPos, backbonePos - len);
         break;
     }
 }
@@ -955,13 +943,11 @@ void QwtPlot::drawSingleInsideTick(QPainter* painter,
    @param canvasRect Canvas rectangle
    @param maps Scale maps for all axes
  */
-void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
-                              const QwtScaleMap maps[QwtAxis::AxisPositions]) const
+void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect, const QwtScaleMap maps[ QwtAxis::AxisPositions ]) const
 {
     using namespace QwtAxis;
 
-    for (int axisPos = 0; axisPos < AxisPositions; axisPos++)
-    {
+    for (int axisPos = 0; axisPos < AxisPositions; axisPos++) {
         if (axisTickDirection(axisPos) != TickInside)
             continue;
 
@@ -986,12 +972,11 @@ void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
 
         // Get scale division
         const QwtScaleDiv& scaleDiv = scaleDraw->scaleDiv();
-        const QwtScaleMap& map = maps[axisPos];
+        const QwtScaleMap& map      = maps[ axisPos ];
 
         // Calculate backbone position (canvas edge)
         double backbonePos;
-        switch (axisPos)
-        {
+        switch (axisPos) {
         case YLeft:
             backbonePos = canvasRect.left();
             break;
@@ -1007,28 +992,25 @@ void QwtPlot::drawInsideTicks(QPainter* painter, const QRectF& canvasRect,
         }
 
         // Draw all tick types
-        const QList<double>& minorTicks = scaleDiv.ticks(QwtScaleDiv::MinorTick);
-        const QList<double>& mediumTicks = scaleDiv.ticks(QwtScaleDiv::MediumTick);
-        const QList<double>& majorTicks = scaleDiv.ticks(QwtScaleDiv::MajorTick);
+        const QList< double >& minorTicks  = scaleDiv.ticks(QwtScaleDiv::MinorTick);
+        const QList< double >& mediumTicks = scaleDiv.ticks(QwtScaleDiv::MediumTick);
+        const QList< double >& majorTicks  = scaleDiv.ticks(QwtScaleDiv::MajorTick);
 
-        double minorLen = scaleDraw->tickLength(QwtScaleDiv::MinorTick);
+        double minorLen  = scaleDraw->tickLength(QwtScaleDiv::MinorTick);
         double mediumLen = scaleDraw->tickLength(QwtScaleDiv::MediumTick);
-        double majorLen = scaleDraw->tickLength(QwtScaleDiv::MajorTick);
+        double majorLen  = scaleDraw->tickLength(QwtScaleDiv::MajorTick);
 
-        for (const double tickValue : minorTicks)
-        {
+        for (const double tickValue : minorTicks) {
             double tickPixelPos = map.transform(tickValue);
             drawSingleInsideTick(painter, tickPixelPos, minorLen, backbonePos, axisPos);
         }
 
-        for (const double tickValue : mediumTicks)
-        {
+        for (const double tickValue : mediumTicks) {
             double tickPixelPos = map.transform(tickValue);
             drawSingleInsideTick(painter, tickPixelPos, mediumLen, backbonePos, axisPos);
         }
 
-        for (const double tickValue : majorTicks)
-        {
+        for (const double tickValue : majorTicks) {
             double tickPixelPos = map.transform(tickValue);
             drawSingleInsideTick(painter, tickPixelPos, majorLen, backbonePos, axisPos);
         }
@@ -1221,7 +1203,7 @@ QColor QwtPlot::nextColorForItem(int rtti)
     QWT_D(d);
     int idx = 0;
     if (rtti >= 0 && rtti < 20)
-        idx = d->colorCycleCounters[rtti]++;
+        idx = d->colorCycleCounters[ rtti ]++;
 
     return d->colorCycle.color(idx);
 }
@@ -1978,24 +1960,18 @@ void QwtPlot::setAxisTickDirection(QwtAxisId axisId, TickDirection direction)
         return;
 
     QWT_D(d);
-    if (d->tickDirection[axisId] != direction)
-    {
-        d->tickDirection[axisId] = direction;
+    if (d->tickDirection[ axisId ] != direction) {
+        d->tickDirection[ axisId ] = direction;
 
         // When ticks are inside, disable the outside tick component
         QwtScaleWidget* scaleWidget = axisWidget(axisId);
-        if (scaleWidget)
-        {
+        if (scaleWidget) {
             QwtScaleDraw* scaleDraw = scaleWidget->scaleDraw();
-            if (scaleDraw)
-            {
-                if (direction == TickInside)
-                {
+            if (scaleDraw) {
+                if (direction == TickInside) {
                     // Disable outside ticks, keep backbone and labels
                     scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, false);
-                }
-                else
-                {
+                } else {
                     // Restore outside ticks
                     scaleDraw->enableComponent(QwtAbstractScaleDraw::Ticks, true);
                 }
@@ -2025,7 +2001,7 @@ QwtPlot::TickDirection QwtPlot::axisTickDirection(QwtAxisId axisId) const
         return TickOutside;
 
     QWT_DC(d);
-    return d->tickDirection[axisId];
+    return d->tickDirection[ axisId ];
 }
 
 /**
@@ -2169,7 +2145,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
         r                 = shrinkRect(r, oldEdge + oldMarg, axisId);
 
         AxisLayer pLayer;
-        pLayer.plot = p;
+        pLayer.plot      = p;
         pLayer.scaleRect = r;
         layers.append(pLayer);
     }
@@ -2179,7 +2155,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 
     for (int i = 0; i < layers.size(); ++i) {
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << “   layers[“ << i << “] scaleRect=” << layers[ i ].scaleRect;
+        qDebug() << “ layers[“ << i << “] scaleRect =” << layers[ i ].scaleRect;
 #endif
     }
 
@@ -2203,8 +2179,8 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
             axisWidget->setMargin(margin);
         }
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << “    [“ << i << “]setEdgeMargin(“ << edgeMargin << “)”;
-        qDebug() << “    [“ << i << “]setMargin(“ << margin << “)”;
+        qDebug() << “ [“ << i << “] setEdgeMargin(“ << edgeMargin << “)”;
+        qDebug() << “ [“ << i << “] setMargin(“ << margin << “)”;
 #endif
     }
 }

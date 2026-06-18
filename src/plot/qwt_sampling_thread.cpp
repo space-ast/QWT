@@ -31,9 +31,7 @@ class QwtSamplingThread::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtSamplingThread)
 public:
-    PrivateData( QwtSamplingThread* p )
-        : q_ptr( p )
-        , msecsInterval( 1e3 )
+    PrivateData(QwtSamplingThread* p) : q_ptr(p), msecsInterval(1e3)
     {
     }
 
@@ -44,17 +42,15 @@ public:
 /**
  * @brief Constructor
  * @param parent Parent object
- * 
+ *
  */
-QwtSamplingThread::QwtSamplingThread(QObject* parent)
-    : QThread(parent)
-    , QWT_PIMPL_CONSTRUCT
+QwtSamplingThread::QwtSamplingThread(QObject* parent) : QThread(parent), QWT_PIMPL_CONSTRUCT
 {
 }
 
 /**
  * @brief Destructor
- * 
+ *
  */
 QwtSamplingThread::~QwtSamplingThread()
 {
@@ -62,12 +58,12 @@ QwtSamplingThread::~QwtSamplingThread()
 
 /**
  * @brief Change the interval (in ms), when sample() is called.
- * 
+ *
  * The default interval is 1000.0 ( = 1s )
- * 
+ *
  * @param msecs Interval
  * @sa interval()
- * 
+ *
  */
 void QwtSamplingThread::setInterval(double msecs)
 {
@@ -82,7 +78,7 @@ void QwtSamplingThread::setInterval(double msecs)
  * @brief Get the interval (in ms), between 2 calls of sample()
  * @return Interval in milliseconds
  * @sa setInterval()
- * 
+ *
  */
 double QwtSamplingThread::interval() const
 {
@@ -94,7 +90,7 @@ double QwtSamplingThread::interval() const
  * @brief Get the time (in ms) since the thread was started
  * @return Elapsed time in milliseconds
  * @sa QThread::start(), run()
- * 
+ *
  */
 double QwtSamplingThread::elapsed() const
 {
@@ -108,7 +104,7 @@ double QwtSamplingThread::elapsed() const
 /**
  * @brief Terminate the collecting thread
  * @sa QThread::start(), run()
- * 
+ *
  */
 void QwtSamplingThread::stop()
 {
@@ -119,7 +115,7 @@ void QwtSamplingThread::stop()
 /**
  * @brief Loop collecting samples started from QThread::start()
  * @sa stop()
- * 
+ *
  */
 void QwtSamplingThread::run()
 {

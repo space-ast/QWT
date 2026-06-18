@@ -36,16 +36,14 @@ class QwtColorMap;
  * @brief Curve that displays 3D points as dots, where the z coordinate is mapped to a color
  * @details QwtPlotSpectroCurve displays 3D points as dots, with the z coordinate mapped to a color
  *          using a color map.
- * 
+ *
  */
-class QWT_EXPORT QwtPlotSpectroCurve
-    : public QwtPlotSeriesItem
-    , public QwtSeriesStore< QwtPoint3D >
+class QWT_EXPORT QwtPlotSpectroCurve : public QwtPlotSeriesItem, public QwtSeriesStore< QwtPoint3D >
 {
-  public:
+public:
     /**
      * @brief Paint attributes
-     * 
+     *
      */
     enum PaintAttribute
     {
@@ -53,12 +51,12 @@ class QWT_EXPORT QwtPlotSpectroCurve
         ClipPoints = 1
     };
 
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     /// Constructor
-    explicit QwtPlotSpectroCurve( const QString& title = QString() );
+    explicit QwtPlotSpectroCurve(const QString& title = QString());
     /// Constructor with title
-    explicit QwtPlotSpectroCurve( const QwtText& title );
+    explicit QwtPlotSpectroCurve(const QwtText& title);
 
     /// Destructor
     ~QwtPlotSpectroCurve() override;
@@ -67,48 +65,50 @@ class QWT_EXPORT QwtPlotSpectroCurve
     virtual int rtti() const override;
 
     /// Set a paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
+    void setPaintAttribute(PaintAttribute, bool on = true);
     /// Test a paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    bool testPaintAttribute(PaintAttribute) const;
 
     /// Set the samples
-    void setSamples( const QVector< QwtPoint3D >& );
+    void setSamples(const QVector< QwtPoint3D >&);
     /// Set the samples
-    void setSamples( QwtSeriesData< QwtPoint3D >* );
+    void setSamples(QwtSeriesData< QwtPoint3D >*);
 
     /// Set the color map
-    void setColorMap( QwtColorMap* );
+    void setColorMap(QwtColorMap*);
     /// Get the color map
     const QwtColorMap* colorMap() const;
 
     /// Set the color range
-    void setColorRange( const QwtInterval& );
+    void setColorRange(const QwtInterval&);
     /// Get the color range
     const QwtInterval& colorRange() const;
 
     /// Draw the series
-    virtual void drawSeries( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const override;
+    virtual void drawSeries(QPainter*,
+                            const QwtScaleMap& xMap,
+                            const QwtScaleMap& yMap,
+                            const QRectF& canvasRect,
+                            int from,
+                            int to) const override;
 
     /// Set the pen width
-    void setPenWidth( double );
+    void setPenWidth(double);
     /// Get the pen width
     double penWidth() const;
 
-  protected:
+protected:
     /// Draw the dots
-    virtual void drawDots( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const;
+    virtual void
+    drawDots(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-  private:
+private:
     /// Initialize the spectro curve
     void init();
 
     QWT_DECLARE_PRIVATE(QwtPlotSpectroCurve)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotSpectroCurve::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotSpectroCurve::PaintAttributes)
 
 #endif

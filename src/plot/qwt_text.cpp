@@ -167,7 +167,12 @@ class QwtText::PrivateData
     QWT_DECLARE_PUBLIC(QwtText)
 public:
     PrivateData(QwtText* p)
-        : q_ptr(p), renderFlags(Qt::AlignCenter), borderRadius(0), borderPen(Qt::NoPen), backgroundBrush(Qt::NoBrush), textEngine(nullptr)
+        : q_ptr(p)
+        , renderFlags(Qt::AlignCenter)
+        , borderRadius(0)
+        , borderPen(Qt::NoPen)
+        , backgroundBrush(Qt::NoBrush)
+        , textEngine(nullptr)
     {
     }
 
@@ -202,8 +207,7 @@ public:
  * @brief Default constructor
  *
  */
-QwtText::QwtText()
-    : QWT_PIMPL_CONSTRUCT
+QwtText::QwtText() : QWT_PIMPL_CONSTRUCT
 {
     m_data->textEngine = textEngine(m_data->text, PlainText);
 
@@ -217,8 +221,7 @@ QwtText::QwtText()
  * @param textFormat Text format
  *
  */
-QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
-    : QWT_PIMPL_CONSTRUCT
+QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat) : QWT_PIMPL_CONSTRUCT
 {
     m_data->text       = text;
     m_data->format     = textFormat;
@@ -232,8 +235,7 @@ QwtText::QwtText(const QString& text, QwtText::TextFormat textFormat)
  * @param other Other QwtText to copy from
  *
  */
-QwtText::QwtText(const QwtText& other)
-    : QWT_PIMPL_CONSTRUCT
+QwtText::QwtText(const QwtText& other) : QWT_PIMPL_CONSTRUCT
 {
     *m_data = *other.m_data;
 
@@ -246,9 +248,7 @@ QwtText::QwtText(const QwtText& other)
  * @param other Other QwtText to move from
  *
  */
-QwtText::QwtText(QwtText&& other) noexcept
-    : m_data(std::move(other.m_data))
-    , m_layoutCache(other.m_layoutCache)
+QwtText::QwtText(QwtText&& other) noexcept : m_data(std::move(other.m_data)), m_layoutCache(other.m_layoutCache)
 {
     other.m_layoutCache = nullptr;
 }
@@ -272,8 +272,8 @@ QwtText& QwtText::operator=(const QwtText& other)
 {
     QWT_D(d);
     const PrivateData* od = other.d_func();
-    *d             = *od;
-    *m_layoutCache = *other.m_layoutCache;
+    *d                    = *od;
+    *m_layoutCache        = *other.m_layoutCache;
     return *this;
 }
 
@@ -285,8 +285,7 @@ QwtText& QwtText::operator=(const QwtText& other)
  */
 QwtText& QwtText::operator=(QwtText&& other) noexcept
 {
-    if (this != &other)
-    {
+    if (this != &other) {
         m_data = std::move(other.m_data);
         delete m_layoutCache;
         m_layoutCache       = other.m_layoutCache;
@@ -305,11 +304,10 @@ bool QwtText::operator==(const QwtText& other) const
 {
     QWT_DC(d);
     const PrivateData* od = other.d_func();
-    return d->renderFlags == od->renderFlags && d->text == od->text
-           && d->font == od->font && d->color == od->color
+    return d->renderFlags == od->renderFlags && d->text == od->text && d->font == od->font && d->color == od->color
            && d->borderRadius == od->borderRadius && d->borderPen == od->borderPen
-           && d->backgroundBrush == od->backgroundBrush
-           && d->paintAttributes == od->paintAttributes && d->textEngine == od->textEngine;
+           && d->backgroundBrush == od->backgroundBrush && d->paintAttributes == od->paintAttributes
+           && d->textEngine == od->textEngine;
 }
 
 /**

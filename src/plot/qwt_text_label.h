@@ -47,67 +47,66 @@ class QWT_EXPORT QwtTextLabel : public QFrame
 {
     Q_OBJECT
 
-    Q_PROPERTY( int indent READ indent WRITE setIndent )
-    Q_PROPERTY( int margin READ margin WRITE setMargin )
-    Q_PROPERTY( QString plainText READ plainText WRITE setPlainText )
+    Q_PROPERTY(int indent READ indent WRITE setIndent)
+    Q_PROPERTY(int margin READ margin WRITE setMargin)
+    Q_PROPERTY(QString plainText READ plainText WRITE setPlainText)
 
-  public:
+public:
     // Constructor with parent
-    explicit QwtTextLabel( QWidget* parent = nullptr );
+    explicit QwtTextLabel(QWidget* parent = nullptr);
     // Constructor with text and parent
-    explicit QwtTextLabel( const QwtText&, QWidget* parent = nullptr );
+    explicit QwtTextLabel(const QwtText&, QWidget* parent = nullptr);
     // Destructor
     ~QwtTextLabel() override;
 
     // Set the text as plain text
-    void setPlainText( const QString& );
+    void setPlainText(const QString&);
     // Return the text as plain text
     QString plainText() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // Set the text with auto format detection
-    void setText( const QString&,
-        QwtText::TextFormat textFormat = QwtText::AutoText );
+    void setText(const QString&, QwtText::TextFormat textFormat = QwtText::AutoText);
     // Set the text
-    virtual void setText( const QwtText& );
+    virtual void setText(const QwtText&);
 
     // Clear the text
     void clear();
 
-  public:
+public:
     // Return the text
     const QwtText& text() const;
 
     // Return the indent
     int indent() const;
     // Set the indent
-    void setIndent( int );
+    void setIndent(int);
 
     // Return the margin
     int margin() const;
     // Set the margin
-    void setMargin( int );
+    void setMargin(int);
 
     // Return the size hint
     virtual QSize sizeHint() const override;
     // Return the minimum size hint
     virtual QSize minimumSizeHint() const override;
     // Return the height for a given width
-    virtual int heightForWidth( int ) const override;
+    virtual int heightForWidth(int) const override;
 
     // Return the rectangle for the text
     QRect textRect() const;
 
     // Draw the text
-    virtual void drawText( QPainter*, const QRectF& );
+    virtual void drawText(QPainter*, const QRectF&);
 
-  protected:
+protected:
     /// Paint event handler
-    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void paintEvent(QPaintEvent*) override;
     /// Draw the contents
-    virtual void drawContents( QPainter* );
+    virtual void drawContents(QPainter*);
 
-  private:
+private:
     /// Initialize the label
     void init();
     /// Return the default indent

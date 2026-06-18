@@ -47,29 +47,29 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
 {
     Q_OBJECT
 
-    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
+    Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
 
-    Q_PROPERTY( uint totalSteps READ totalSteps WRITE setTotalSteps )
-    Q_PROPERTY( uint singleSteps READ singleSteps WRITE setSingleSteps )
-    Q_PROPERTY( uint pageSteps READ pageSteps WRITE setPageSteps )
-    Q_PROPERTY( bool stepAlignment READ stepAlignment WRITE setStepAlignment )
+    Q_PROPERTY(uint totalSteps READ totalSteps WRITE setTotalSteps)
+    Q_PROPERTY(uint singleSteps READ singleSteps WRITE setSingleSteps)
+    Q_PROPERTY(uint pageSteps READ pageSteps WRITE setPageSteps)
+    Q_PROPERTY(bool stepAlignment READ stepAlignment WRITE setStepAlignment)
 
-    Q_PROPERTY( bool readOnly READ isReadOnly WRITE setReadOnly )
-    Q_PROPERTY( bool tracking READ isTracking WRITE setTracking )
-    Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
+    Q_PROPERTY(bool tracking READ isTracking WRITE setTracking)
+    Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
 
-    Q_PROPERTY( bool invertedControls READ invertedControls WRITE setInvertedControls )
+    Q_PROPERTY(bool invertedControls READ invertedControls WRITE setInvertedControls)
 
-  public:
+public:
     /// Constructor for QwtAbstractSlider (English only)
-    explicit QwtAbstractSlider( QWidget* parent = nullptr );
-    
+    explicit QwtAbstractSlider(QWidget* parent = nullptr);
+
     /// Destructor for QwtAbstractSlider (English only)
     ~QwtAbstractSlider() override;
 
     /// Set whether the slider is valid (English only)
-    void setValid( bool );
-    
+    void setValid(bool);
+
     /// Return whether the slider is valid (English only)
     bool isValid() const;
 
@@ -77,58 +77,58 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
     double value() const;
 
     /// Set whether wrapping is enabled (English only)
-    void setWrapping( bool );
-    
+    void setWrapping(bool);
+
     /// Return whether wrapping is enabled (English only)
     bool wrapping() const;
 
     /// Set the total number of steps (English only)
-    void setTotalSteps( uint );
-    
+    void setTotalSteps(uint);
+
     /// Return the total number of steps (English only)
     uint totalSteps() const;
 
     /// Set the number of single steps (English only)
-    void setSingleSteps( uint );
-    
+    void setSingleSteps(uint);
+
     /// Return the number of single steps (English only)
     uint singleSteps() const;
 
     /// Set the number of page steps (English only)
-    void setPageSteps( uint );
-    
+    void setPageSteps(uint);
+
     /// Return the number of page steps (English only)
     uint pageSteps() const;
 
     /// Set whether step alignment is enabled (English only)
-    void setStepAlignment( bool );
-    
+    void setStepAlignment(bool);
+
     /// Return whether step alignment is enabled (English only)
     bool stepAlignment() const;
 
     /// Set whether tracking is enabled (English only)
-    void setTracking( bool );
-    
+    void setTracking(bool);
+
     /// Return whether tracking is enabled (English only)
     bool isTracking() const;
 
     /// Set whether the slider is read-only (English only)
-    void setReadOnly( bool );
-    
+    void setReadOnly(bool);
+
     /// Return whether the slider is read-only (English only)
     bool isReadOnly() const;
 
     /// Set whether controls are inverted (English only)
-    void setInvertedControls( bool );
-    
+    void setInvertedControls(bool);
+
     /// Return whether controls are inverted (English only)
     bool invertedControls() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /// Set the slider value (English only)
-    void setValue( double value );
+    void setValue(double value);
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * @brief Notify a change of value
@@ -137,7 +137,7 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
      * @param value New value
      * @sa setTracking(), sliderMoved()
      */
-    void valueChanged( double value );
+    void valueChanged(double value);
 
     /**
      * @brief Signal emitted when the user presses the movable part of the slider
@@ -154,47 +154,46 @@ class QWT_EXPORT QwtAbstractSlider : public QwtAbstractScale
      * @param value New value
      * @sa valueChanged()
      */
-    void sliderMoved( double value );
+    void sliderMoved(double value);
 
-  protected:
+protected:
     /// Handle mouse press events (English only)
-    virtual void mousePressEvent( QMouseEvent* ) override;
-    
+    virtual void mousePressEvent(QMouseEvent*) override;
+
     /// Handle mouse release events (English only)
-    virtual void mouseReleaseEvent( QMouseEvent* ) override;
-    
+    virtual void mouseReleaseEvent(QMouseEvent*) override;
+
     /// Handle mouse move events (English only)
-    virtual void mouseMoveEvent( QMouseEvent* ) override;
-    
+    virtual void mouseMoveEvent(QMouseEvent*) override;
+
     /// Handle key press events (English only)
-    virtual void keyPressEvent( QKeyEvent* ) override;
-    
+    virtual void keyPressEvent(QKeyEvent*) override;
+
     /// Handle wheel events (English only)
-    virtual void wheelEvent( QWheelEvent* ) override;
+    virtual void wheelEvent(QWheelEvent*) override;
 
     // Determine what to do when the user presses a mouse button
-    virtual bool isScrollPosition( const QPoint& pos ) const = 0;
+    virtual bool isScrollPosition(const QPoint& pos) const = 0;
 
     // Determine the value for a new position of the movable part of the slider
-    virtual double scrolledTo( const QPoint& pos ) const = 0;
+    virtual double scrolledTo(const QPoint& pos) const = 0;
 
     /// Increment the value by a number of steps (English only)
-    void incrementValue( int stepCount );
+    void incrementValue(int stepCount);
 
     /// Handle scale changes (English only)
     virtual void scaleChange() override;
 
-  protected:
+protected:
     /// Handle slider changes (English only)
     virtual void sliderChange();
 
     /// Calculate incremented value (English only)
-    double incrementedValue(
-        double value, int stepCount ) const;
+    double incrementedValue(double value, int stepCount) const;
 
-  private:
-    double alignedValue( double ) const;
-    double boundedValue( double ) const;
+private:
+    double alignedValue(double) const;
+    double boundedValue(double) const;
 
     QWT_DECLARE_PRIVATE(QwtAbstractSlider)
 };

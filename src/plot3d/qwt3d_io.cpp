@@ -15,7 +15,9 @@ class PixmapWriter::PrivateData
     QWT_DECLARE_PUBLIC(PixmapWriter)
 
 public:
-    PrivateData(PixmapWriter* q) : q_ptr(q), m_quality(-1) {}
+    PrivateData(PixmapWriter* q) : q_ptr(q), m_quality(-1)
+    {
+    }
 
     QString m_fmt;
     int m_quality;
@@ -31,8 +33,8 @@ IO::Functor* PixmapWriter::clone() const
 {
     auto* copy = new PixmapWriter();
     QWT_DC(d);
-    auto* copyD = copy->d_func();
-    copyD->m_fmt = d->m_fmt;
+    auto* copyD      = copy->d_func();
+    copyD->m_fmt     = d->m_fmt;
     copyD->m_quality = d->m_quality;
     return copy;
 }

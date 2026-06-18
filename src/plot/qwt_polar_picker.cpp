@@ -50,7 +50,6 @@ QwtPolarPicker::~QwtPolarPicker()
 {
 }
 
-
 /**
  * @brief Get the observed plot canvas
  * @return Observed plot canvas

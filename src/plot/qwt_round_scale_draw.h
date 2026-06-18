@@ -45,44 +45,44 @@
 
 class QWT_EXPORT QwtRoundScaleDraw : public QwtAbstractScaleDraw
 {
-  public:
+public:
     /// Constructor
     QwtRoundScaleDraw();
     /// Destructor
     ~QwtRoundScaleDraw() override;
 
     /// Set the radius
-    void setRadius( double radius );
+    void setRadius(double radius);
     /// @return the radius
     double radius() const;
 
     /// Move the center
-    void moveCenter( double x, double y );
+    void moveCenter(double x, double y);
     /// Move the center
-    void moveCenter( const QPointF& );
+    void moveCenter(const QPointF&);
     /// @return the center
     QPointF center() const;
 
     /// Set the angle range
-    void setAngleRange( double angle1, double angle2 );
+    void setAngleRange(double angle1, double angle2);
 
-    virtual double extent( const QFont& ) const override;
+    virtual double extent(const QFont&) const override;
 
-  protected:
-    virtual void drawTick( QPainter*, double value, double len ) const override;
+protected:
+    virtual void drawTick(QPainter*, double value, double len) const override;
 
-    virtual void drawBackbone( QPainter* ) const override;
+    virtual void drawBackbone(QPainter*) const override;
 
-    virtual void drawLabel( QPainter*, double value ) const override;
+    virtual void drawLabel(QPainter*, double value) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtRoundScaleDraw)
 };
 
 /// Move the center of the scale draw, leaving the radius unchanged
-inline void QwtRoundScaleDraw::moveCenter( double x, double y )
+inline void QwtRoundScaleDraw::moveCenter(double x, double y)
 {
-    moveCenter( QPointF( x, y ) );
+    moveCenter(QPointF(x, y));
 }
 
 #endif

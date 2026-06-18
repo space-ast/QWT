@@ -4,7 +4,8 @@
 #include "qwt3d_global.h"
 #include "qwt3d_types.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 class Plot3D;
 
@@ -19,28 +20,36 @@ class QWT3D_EXPORT Enrichment
 {
 public:
     // Type of the Enrichment - only VERTEXENRICHMENT's are defined at this moment
-    enum TYPE {
+    enum TYPE
+    {
         VERTEXENRICHMENT,
         EDGEENRICHMENT,
         FACEENRICHMENT,
         VOXELENRICHMENT
     };
 
-    Enrichment() : plot(nullptr) { }
-    virtual ~Enrichment() { }
+    Enrichment() : plot(nullptr)
+    {
+    }
+    virtual ~Enrichment()
+    {
+    }
     // The derived class should give back a new Derived(something) here
-    virtual Enrichment *clone() const = 0;
+    virtual Enrichment* clone() const = 0;
     // Empty per default. Can be overwritten
     virtual void drawBegin() {};
     // Empty per default. Can be overwritten
     virtual void drawEnd() {};
     // Assign to existent plot
-    virtual void assign(Plot3D const &pl) { plot = &pl; }
+    virtual void assign(Plot3D const& pl)
+    {
+        plot = &pl;
+    }
     // Overwrite
     virtual TYPE type() const = 0;
 
 protected:
-    const Plot3D *plot;
+    const Plot3D* plot;
 };
 
 /**
@@ -52,11 +61,13 @@ protected:
 class QWT3D_EXPORT VertexEnrichment : public Enrichment
 {
 public:
-    VertexEnrichment() : Qwt3D::Enrichment() { }
+    VertexEnrichment() : Qwt3D::Enrichment()
+    {
+    }
     // The derived class should give back a new Derived(something) here
-    virtual Enrichment *clone() const = 0;
+    virtual Enrichment* clone() const = 0;
     // Overwrite this
-    virtual void draw(Qwt3D::Triple const &) = 0;
+    virtual void draw(Qwt3D::Triple const&) = 0;
     // This gives VERTEXENRICHMENT
     TYPE type() const override
     {
@@ -64,6 +75,6 @@ public:
     }
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_ENRICHMENT_H
+#endif  // QWT3D_ENRICHMENT_H

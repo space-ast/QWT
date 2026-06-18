@@ -3,7 +3,8 @@
 
 #include "qwt3d_plot.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Multi-plot widget for combining multiple plot areas
@@ -14,12 +15,14 @@ class QWT3D_EXPORT MultiPlot : public Plot3D
 {
 public:
     // Constructor
-    explicit MultiPlot(QWidget* parent = nullptr) { }
+    explicit MultiPlot(QWidget* parent = nullptr)
+    {
+    }
 
 protected:
     virtual void createData() override = 0;
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_MULTIPLOT_H
+#endif  // QWT3D_MULTIPLOT_H

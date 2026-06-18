@@ -21,8 +21,7 @@
  */
 class QWT_EXPORT QwtPolarLayout
 {
-  public:
-
+public:
     //! @brief Options to configure the plot layout engine
     enum Option
     {
@@ -30,16 +29,16 @@ class QWT_EXPORT QwtPolarLayout
         IgnoreScrollbars = 0x01,
 
         //! Ignore all frames.
-        IgnoreFrames     = 0x02,
+        IgnoreFrames = 0x02,
 
         //! Ignore the title.
-        IgnoreTitle      = 0x04,
+        IgnoreTitle = 0x04,
 
         //! Ignore the legend.
-        IgnoreLegend     = 0x08
+        IgnoreLegend = 0x08
     };
 
-    Q_DECLARE_FLAGS( Options, Option )
+    Q_DECLARE_FLAGS(Options, Option)
 
     /// Constructor
     explicit QwtPolarLayout();
@@ -47,20 +46,19 @@ class QWT_EXPORT QwtPolarLayout
     virtual ~QwtPolarLayout();
 
     /// Set the legend position with ratio
-    void setLegendPosition( QwtPolarPlot::LegendPosition pos, double ratio );
+    void setLegendPosition(QwtPolarPlot::LegendPosition pos, double ratio);
     /// Set the legend position
-    void setLegendPosition( QwtPolarPlot::LegendPosition pos );
+    void setLegendPosition(QwtPolarPlot::LegendPosition pos);
     /// Get the legend position
     QwtPolarPlot::LegendPosition legendPosition() const;
 
     /// Set the legend ratio
-    void setLegendRatio( double ratio );
+    void setLegendRatio(double ratio);
     /// Get the legend ratio
     double legendRatio() const;
 
     /// Activate the layout
-    virtual void activate( const QwtPolarPlot*,
-        const QRectF& rect, Options options = Options() );
+    virtual void activate(const QwtPolarPlot*, const QRectF& rect, Options options = Options());
 
     /// Invalidate the layout
     virtual void invalidate();
@@ -74,13 +72,13 @@ class QWT_EXPORT QwtPolarLayout
 
     class LayoutData;
 
-  protected:
-    QRectF layoutLegend( Options options, QRectF& ) const;
+protected:
+    QRectF layoutLegend(Options options, QRectF&) const;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPolarLayout)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarLayout::Options )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarLayout::Options)
 
 #endif

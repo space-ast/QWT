@@ -176,7 +176,7 @@ protected:
     void drawBox(QPainter*, const QwtColumnRect&) const;
 
 private:
-    QwtColumnSymbol(const QwtColumnSymbol&) = delete;
+    QwtColumnSymbol(const QwtColumnSymbol&)            = delete;
     QwtColumnSymbol& operator=(const QwtColumnSymbol&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtColumnSymbol)

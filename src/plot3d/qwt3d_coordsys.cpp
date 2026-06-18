@@ -8,7 +8,8 @@ class CoordinateSystem::PrivateData
     QWT_DECLARE_PUBLIC(CoordinateSystem)
 
 public:
-    PrivateData(CoordinateSystem* p) : q_ptr(p)
+    PrivateData(CoordinateSystem* p)
+        : q_ptr(p)
         , m_style(BOX)
         , m_smooth(true)
         , m_autodecoration(true)
@@ -264,7 +265,7 @@ void CoordinateSystem::chooseAxes()
                 }
             }
         }  // for axes
-    }  // for idx
+    }      // for idx
 
     // fit z axis in - the onthewall axis if the decorated axes build a continous line, the opposite
     // else

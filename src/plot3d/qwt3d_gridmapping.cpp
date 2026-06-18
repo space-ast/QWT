@@ -8,20 +8,13 @@ class GridMapping::PrivateData
     QWT_DECLARE_PUBLIC(GridMapping)
 
 public:
-    PrivateData(GridMapping *q)
-        : q_ptr(q)
-        , m_plotwidget(nullptr)
-        , m_umesh(0)
-        , m_vmesh(0)
-        , m_minu(0.0)
-        , m_maxu(0.0)
-        , m_minv(0.0)
-        , m_maxv(0.0)
+    PrivateData(GridMapping* q)
+        : q_ptr(q), m_plotwidget(nullptr), m_umesh(0), m_vmesh(0), m_minu(0.0), m_maxu(0.0), m_minv(0.0), m_maxv(0.0)
     {
     }
 
     Qwt3D::ParallelEpiped m_range;
-    Qwt3D::SurfacePlot *m_plotwidget;
+    Qwt3D::SurfacePlot* m_plotwidget;
     unsigned int m_umesh;
     unsigned int m_vmesh;
     double m_minu;
@@ -35,13 +28,11 @@ public:
  * @details Initializes with no plot widget, zero mesh dimensions, zero domain,
  *          and unrestricted z range.
  */
-GridMapping::GridMapping()
-    : QWT_PIMPL_CONSTRUCT
+GridMapping::GridMapping() : QWT_PIMPL_CONSTRUCT
 {
     setMesh(0, 0);
     setDomain(0, 0, 0, 0);
-    restrictRange(ParallelEpiped(Triple(-DBL_MAX, -DBL_MAX, -DBL_MAX),
-                                 Triple(DBL_MAX, DBL_MAX, DBL_MAX)));
+    restrictRange(ParallelEpiped(Triple(-DBL_MAX, -DBL_MAX, -DBL_MAX), Triple(DBL_MAX, DBL_MAX, DBL_MAX)));
 }
 
 GridMapping::~GridMapping() = default;
@@ -78,31 +69,31 @@ void GridMapping::setDomain(double minu, double maxu, double minv, double maxv)
  * @brief Restricts the data range to a parallelepiped
  * @param p The parallelepiped defining the restricted range
  */
-void GridMapping::restrictRange(Qwt3D::ParallelEpiped const &p)
+void GridMapping::restrictRange(Qwt3D::ParallelEpiped const& p)
 {
     QWT_D(d);
     d->m_range = p;
 }
 
-Qwt3D::SurfacePlot *GridMapping::plotWidget() const
+Qwt3D::SurfacePlot* GridMapping::plotWidget() const
 {
     QWT_DC(d);
     return d->m_plotwidget;
 }
 
-void GridMapping::setPlotWidget(Qwt3D::SurfacePlot *pw)
+void GridMapping::setPlotWidget(Qwt3D::SurfacePlot* pw)
 {
     QWT_D(d);
     d->m_plotwidget = pw;
 }
 
-Qwt3D::ParallelEpiped &GridMapping::range()
+Qwt3D::ParallelEpiped& GridMapping::range()
 {
     QWT_D(d);
     return d->m_range;
 }
 
-const Qwt3D::ParallelEpiped &GridMapping::range() const
+const Qwt3D::ParallelEpiped& GridMapping::range() const
 {
     QWT_DC(d);
     return d->m_range;

@@ -60,7 +60,7 @@
  */
 class QWT_EXPORT QwtSplineParametrization
 {
-  public:
+public:
     //! Parametrization type
     enum Type
     {
@@ -110,7 +110,6 @@ class QWT_EXPORT QwtSplineParametrization
          */
         ParameterCentripetal,
 
-
         /*!
            Parametrization using the manhattan length between two control points
 
@@ -123,7 +122,7 @@ class QWT_EXPORT QwtSplineParametrization
     };
 
     // Constructor with parametrization type
-    explicit QwtSplineParametrization( int type );
+    explicit QwtSplineParametrization(int type);
     // Destructor
     virtual ~QwtSplineParametrization();
 
@@ -131,16 +130,16 @@ class QWT_EXPORT QwtSplineParametrization
     int type() const;
 
     // Calculate parameter value increment for 2 points
-    virtual double valueIncrement( const QPointF&, const QPointF& ) const;
+    virtual double valueIncrement(const QPointF&, const QPointF&) const;
 
-    static double valueIncrementX( const QPointF&, const QPointF& );
-    static double valueIncrementY( const QPointF&, const QPointF& );
-    static double valueIncrementUniform( const QPointF&, const QPointF& );
-    static double valueIncrementChordal( const QPointF&, const QPointF& );
-    static double valueIncrementCentripetal( const QPointF&, const QPointF& );
-    static double valueIncrementManhattan( const QPointF&, const QPointF& );
+    static double valueIncrementX(const QPointF&, const QPointF&);
+    static double valueIncrementY(const QPointF&, const QPointF&);
+    static double valueIncrementUniform(const QPointF&, const QPointF&);
+    static double valueIncrementChordal(const QPointF&, const QPointF&);
+    static double valueIncrementCentripetal(const QPointF&, const QPointF&);
+    static double valueIncrementManhattan(const QPointF&, const QPointF&);
 
-  private:
+private:
     const int m_type;
 };
 
@@ -152,8 +151,7 @@ class QWT_EXPORT QwtSplineParametrization
  *
  * @return point2.x() - point1.x()
  */
-inline double QwtSplineParametrization::valueIncrementX(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementX(const QPointF& point1, const QPointF& point2)
 {
     return point2.x() - point1.x();
 }
@@ -166,8 +164,7 @@ inline double QwtSplineParametrization::valueIncrementX(
  *
  * @return point2.y() - point1.y()
  */
-inline double QwtSplineParametrization::valueIncrementY(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementY(const QPointF& point1, const QPointF& point2)
 {
     return point2.y() - point1.y();
 }
@@ -180,11 +177,10 @@ inline double QwtSplineParametrization::valueIncrementY(
  *
  * @return 1.0
  */
-inline double QwtSplineParametrization::valueIncrementUniform(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementUniform(const QPointF& point1, const QPointF& point2)
 {
-    Q_UNUSED( point1 )
-    Q_UNUSED( point2 )
+    Q_UNUSED(point1)
+    Q_UNUSED(point2)
 
     return 1.0;
 }
@@ -197,13 +193,12 @@ inline double QwtSplineParametrization::valueIncrementUniform(
  *
  * @return qSqrt( dx * dx + dy * dy )
  */
-inline double QwtSplineParametrization::valueIncrementChordal(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementChordal(const QPointF& point1, const QPointF& point2)
 {
     const double dx = point2.x() - point1.x();
     const double dy = point2.y() - point1.y();
 
-    return std::sqrt( dx * dx + dy * dy );
+    return std::sqrt(dx * dx + dy * dy);
 }
 
 /**
@@ -214,10 +209,9 @@ inline double QwtSplineParametrization::valueIncrementChordal(
  *
  * @return The square root of a chordal increment
  */
-inline double QwtSplineParametrization::valueIncrementCentripetal(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementCentripetal(const QPointF& point1, const QPointF& point2)
 {
-    return std::sqrt( valueIncrementChordal( point1, point2 ) );
+    return std::sqrt(valueIncrementChordal(point1, point2));
 }
 
 /**
@@ -228,10 +222,9 @@ inline double QwtSplineParametrization::valueIncrementCentripetal(
  *
  * @return | point2.x() - point1.x() | + | point2.y() - point1.y() |
  */
-inline double QwtSplineParametrization::valueIncrementManhattan(
-    const QPointF& point1, const QPointF& point2 )
+inline double QwtSplineParametrization::valueIncrementManhattan(const QPointF& point1, const QPointF& point2)
 {
-    return qAbs( point2.x() - point1.x() ) + qAbs( point2.y() - point1.y() );
+    return qAbs(point2.x() - point1.x()) + qAbs(point2.y() - point1.y());
 }
 
 #endif

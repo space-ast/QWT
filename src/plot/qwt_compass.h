@@ -33,8 +33,8 @@
 
 class QwtCompassRose;
 class QString;
-template< class Key, class T > class QMap;
-
+template< class Key, class T >
+class QMap;
 
 /**
  *   @brief A special scale draw made for QwtCompass
@@ -45,24 +45,24 @@ template< class Key, class T > class QMap;
  */
 class QWT_EXPORT QwtCompassScaleDraw : public QwtRoundScaleDraw
 {
-  public:
+public:
     // Constructs a compass scale draw with default label map (N, NE, E, SE, S, SW, W, NW)
     explicit QwtCompassScaleDraw();
     // Constructs a compass scale draw with a custom label map
-    explicit QwtCompassScaleDraw( const QMap< double, QString >& map );
+    explicit QwtCompassScaleDraw(const QMap< double, QString >& map);
 
     // Destructor
     ~QwtCompassScaleDraw() override;
 
     // Sets the map that maps values to labels
-    void setLabelMap( const QMap< double, QString >& map );
+    void setLabelMap(const QMap< double, QString >& map);
     // Returns the map that maps values to labels
     QMap< double, QString > labelMap() const;
 
     // Returns the label for a given value by looking up the label map
-    virtual QwtText label( double value ) const override;
+    virtual QwtText label(double value) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtCompassScaleDraw)
 };
 
@@ -78,29 +78,27 @@ class QWT_EXPORT QwtCompass : public QwtDial
 {
     Q_OBJECT
 
-  public:
+public:
     // Constructs a compass widget with a scale, no needle and no rose
-    explicit QwtCompass( QWidget* parent = nullptr );
+    explicit QwtCompass(QWidget* parent = nullptr);
     // Destructor
     ~QwtCompass() override;
 
     // Sets a compass rose that will be drawn inside the compass
-    void setRose( QwtCompassRose* rose );
+    void setRose(QwtCompassRose* rose);
     // Returns the compass rose (const version)
     const QwtCompassRose* rose() const;
     // Returns the compass rose
     QwtCompassRose* rose();
 
-  protected:
-    virtual void drawRose( QPainter*, const QPointF& center,
-        double radius, double north, QPalette::ColorGroup ) const;
+protected:
+    virtual void drawRose(QPainter*, const QPointF& center, double radius, double north, QPalette::ColorGroup) const;
 
-    virtual void drawScaleContents( QPainter*,
-        const QPointF& center, double radius ) const override;
+    virtual void drawScaleContents(QPainter*, const QPointF& center, double radius) const override;
 
-    virtual void keyPressEvent( QKeyEvent* ) override;
+    virtual void keyPressEvent(QKeyEvent*) override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtCompass)
 };
 

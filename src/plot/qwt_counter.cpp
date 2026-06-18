@@ -39,7 +39,8 @@ class QwtCounter::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtCounter)
 public:
-    PrivateData(QwtCounter* p) : q_ptr(p), minimum(0.0), maximum(0.0), singleStep(1.0), isValid(false), value(0.0), wrapping(false)
+    PrivateData(QwtCounter* p)
+        : q_ptr(p), minimum(0.0), maximum(0.0), singleStep(1.0), isValid(false), value(0.0), wrapping(false)
     {
         increment[ Button1 ] = 1;
         increment[ Button2 ] = 10;

@@ -6,7 +6,8 @@
 #include "qwt3d_axis.h"
 #include "qwt3d_color.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief A flat color legend
@@ -19,7 +20,8 @@ class QWT3D_EXPORT ColorLegend : public Drawable
 
 public:
     // Possible anchor points for caption and axis
-    enum SCALEPOSITION {
+    enum SCALEPOSITION
+    {
         Top,
         Bottom,
         Left,
@@ -27,7 +29,8 @@ public:
     };
 
     // Orientation of the legend
-    enum ORIENTATION {
+    enum ORIENTATION
+    {
         BottomTop,
         LeftRight
     };
@@ -40,8 +43,7 @@ public:
     virtual void draw() override;
 
     // Sets the relative position of the legend inside widget
-    void setRelPosition(Qwt3D::Tuple relMin,
-                   Qwt3D::Tuple relMax);
+    void setRelPosition(Qwt3D::Tuple relMin, Qwt3D::Tuple relMax);
     // Sets legend orientation and scale position
     void setOrientation(ORIENTATION, SCALEPOSITION);
     // Sets the limit of the scale
@@ -57,16 +59,15 @@ public:
     // Sets whether the axis is autoscaled or not
     void setAutoScale(bool val);
     // Sets another scale
-    void setScale(Qwt3D::Scale *scale);
+    void setScale(Qwt3D::Scale* scale);
     // Sets one of the predefined scale types
     void setScale(Qwt3D::SCALETYPE);
 
     // Sets the legends caption string
-    void setTitleString(QString const &s);
+    void setTitleString(QString const& s);
 
     // Sets the legends caption font
-    void setTitleFont(QString const &family, int pointSize, int weight = QFont::Normal,
-                    bool italic = false);
+    void setTitleFont(QString const& family, int pointSize, int weight = QFont::Normal, bool italic = false);
 
     // The color vector
     Qwt3D::ColorVector colors;
@@ -76,6 +77,6 @@ private:
     void setGeometryInternal();
 };
 
-} // ns
+}  // ns
 
 #endif

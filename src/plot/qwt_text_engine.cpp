@@ -36,25 +36,20 @@
 #include <qtextdocument.h>
 #include <qabstracttextdocumentlayout.h>
 
-static QString taggedRichText( const QString& text, int flags )
+static QString taggedRichText(const QString& text, int flags)
 {
     QString richText = text;
 
     // By default QSimpleRichText is Qt::AlignLeft
-    if ( flags & Qt::AlignJustify )
-    {
-        richText.prepend( QLatin1String( "<div align=\"justify\">" ) );
-        richText.append( QLatin1String ( "</div>" ) );
-    }
-    else if ( flags & Qt::AlignRight )
-    {
-        richText.prepend( QLatin1String ( "<div align=\"right\">" ) );
-        richText.append( QLatin1String ( "</div>" ) );
-    }
-    else if ( flags & Qt::AlignHCenter )
-    {
-        richText.prepend( QLatin1String ( "<div align=\"center\">" ) );
-        richText.append( QLatin1String ( "</div>" ) );
+    if (flags & Qt::AlignJustify) {
+        richText.prepend(QLatin1String("<div align=\"justify\">"));
+        richText.append(QLatin1String("</div>"));
+    } else if (flags & Qt::AlignRight) {
+        richText.prepend(QLatin1String("<div align=\"right\">"));
+        richText.append(QLatin1String("</div>"));
+    } else if (flags & Qt::AlignHCenter) {
+        richText.prepend(QLatin1String("<div align=\"center\">"));
+        richText.append(QLatin1String("</div>"));
     }
 
     return richText;
@@ -62,93 +57,89 @@ static QString taggedRichText( const QString& text, int flags )
 
 namespace
 {
-    class QwtRichTextDocument : public QTextDocument
+class QwtRichTextDocument : public QTextDocument
+{
+public:
+    QwtRichTextDocument(const QString& text, int flags, const QFont& font)
     {
-      public:
-        QwtRichTextDocument( const QString& text, int flags, const QFont& font )
-        {
-            setUndoRedoEnabled( false );
-            setDefaultFont( font );
-            setHtml( text );
+        setUndoRedoEnabled(false);
+        setDefaultFont(font);
+        setHtml(text);
 
-            // make sure we have a document layout
-            ( void )documentLayout();
+        // make sure we have a document layout
+        (void)documentLayout();
 
-            QTextOption option = defaultTextOption();
-            if ( flags & Qt::TextWordWrap )
-                option.setWrapMode( QTextOption::WordWrap );
-            else
-                option.setWrapMode( QTextOption::NoWrap );
+        QTextOption option = defaultTextOption();
+        if (flags & Qt::TextWordWrap)
+            option.setWrapMode(QTextOption::WordWrap);
+        else
+            option.setWrapMode(QTextOption::NoWrap);
 
-            option.setAlignment( static_cast< Qt::Alignment >( flags ) );
-            setDefaultTextOption( option );
+        option.setAlignment(static_cast< Qt::Alignment >(flags));
+        setDefaultTextOption(option);
 
-            QTextFrame* root = rootFrame();
-            QTextFrameFormat fm = root->frameFormat();
-            fm.setBorder( 0 );
-            fm.setMargin( 0 );
-            fm.setPadding( 0 );
-            fm.setBottomMargin( 0 );
-            fm.setLeftMargin( 0 );
-            root->setFrameFormat( fm );
+        QTextFrame* root    = rootFrame();
+        QTextFrameFormat fm = root->frameFormat();
+        fm.setBorder(0);
+        fm.setMargin(0);
+        fm.setPadding(0);
+        fm.setBottomMargin(0);
+        fm.setLeftMargin(0);
+        root->setFrameFormat(fm);
 
-            adjustSize();
-        }
-    };
+        adjustSize();
+    }
+};
 }
 
 class QwtPlainTextEngine::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlainTextEngine)
-  public:
+public:
     PrivateData(QwtPlainTextEngine* p) : q_ptr(p)
     {
     }
 
-    int effectiveAscent( const QFont& font ) const
+    int effectiveAscent(const QFont& font) const
     {
         const QString fontKey = font.key();
 
-        auto it =
-            m_ascentCache.constFind( fontKey );
+        auto it = m_ascentCache.constFind(fontKey);
 
-        if ( it != m_ascentCache.constEnd() )
+        if (it != m_ascentCache.constEnd())
             return *it;
 
-        const int ascent = findAscent( font );
-        m_ascentCache.insert( fontKey, ascent );
+        const int ascent = findAscent(font);
+        m_ascentCache.insert(fontKey, ascent);
 
         return ascent;
     }
 
-  private:
-    static int findAscent( const QFont& font )
+private:
+    static int findAscent(const QFont& font)
     {
-        static const QString dummy( "E" );
-        static const QColor white( Qt::white );
+        static const QString dummy("E");
+        static const QColor white(Qt::white);
 
-        const QFontMetrics fm( font );
+        const QFontMetrics fm(font);
 
-        QPixmap pm( QwtPainter::horizontalAdvance( fm, dummy ), fm.height() );
-        pm.fill( white );
+        QPixmap pm(QwtPainter::horizontalAdvance(fm, dummy), fm.height());
+        pm.fill(white);
 
-        QPainter p( &pm );
-        p.setFont( font );
-        p.drawText( 0, 0,  pm.width(), pm.height(), 0, dummy );
+        QPainter p(&pm);
+        p.setFont(font);
+        p.drawText(0, 0, pm.width(), pm.height(), 0, dummy);
         p.end();
 
         const QImage img = pm.toImage();
 
         int row = 0;
-        for ( row = 0; row < img.height(); row++ )
-        {
-            const QRgb* line = reinterpret_cast< const QRgb* >(
-                img.scanLine( row ) );
+        for (row = 0; row < img.height(); row++) {
+            const QRgb* line = reinterpret_cast< const QRgb* >(img.scanLine(row));
 
             const int w = pm.width();
-            for ( int col = 0; col < w; col++ )
-            {
-                if ( line[col] != white.rgb() )
+            for (int col = 0; col < w; col++) {
+                if (line[ col ] != white.rgb())
                     return fm.ascent() - row + 1;
             }
         }
@@ -176,8 +167,7 @@ QwtTextEngine::~QwtTextEngine()
 /**
  * @brief Constructor
  */
-QwtPlainTextEngine::QwtPlainTextEngine()
-    : QWT_PIMPL_CONSTRUCT
+QwtPlainTextEngine::QwtPlainTextEngine() : QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -197,12 +187,10 @@ QwtPlainTextEngine::~QwtPlainTextEngine()
  * @return Calculated height
  * @sa textSize()
  */
-double QwtPlainTextEngine::heightForWidth( const QFont& font, int flags,
-    const QString& text, double width ) const
+double QwtPlainTextEngine::heightForWidth(const QFont& font, int flags, const QString& text, double width) const
 {
-    const QFontMetricsF fm( font );
-    const QRectF rect = fm.boundingRect(
-        QRectF( 0, 0, width, QWIDGETSIZE_MAX ), flags, text );
+    const QFontMetricsF fm(font);
+    const QRectF rect = fm.boundingRect(QRectF(0, 0, width, QWIDGETSIZE_MAX), flags, text);
 
     return rect.height();
 }
@@ -215,12 +203,10 @@ double QwtPlainTextEngine::heightForWidth( const QFont& font, int flags,
  * @return Calculated size
  * @sa heightForWidth()
  */
-QSizeF QwtPlainTextEngine::textSize( const QFont& font,
-    int flags, const QString& text ) const
+QSizeF QwtPlainTextEngine::textSize(const QFont& font, int flags, const QString& text) const
 {
-    const QFontMetricsF fm( font );
-    const QRectF rect = fm.boundingRect(
-        QRectF( 0, 0, QWIDGETSIZE_MAX, QWIDGETSIZE_MAX ), flags, text );
+    const QFontMetricsF fm(font);
+    const QRectF rect = fm.boundingRect(QRectF(0, 0, QWIDGETSIZE_MAX, QWIDGETSIZE_MAX), flags, text);
 
     return rect.size();
 }
@@ -234,14 +220,13 @@ QSizeF QwtPlainTextEngine::textSize( const QFont& font,
  * @param bottom Return value for the bottom margin
  * @sa textMargins()
  */
-void QwtPlainTextEngine::textMargins( const QFont& font, const QString&,
-    double& left, double& right, double& top, double& bottom ) const
+void QwtPlainTextEngine::textMargins(const QFont& font, const QString&, double& left, double& right, double& top, double& bottom) const
 {
     QWT_DC(d);
     left = right = top = 0;
 
-    const QFontMetricsF fm( font );
-    top = fm.ascent() - d->effectiveAscent( font );
+    const QFontMetricsF fm(font);
+    top    = fm.ascent() - d->effectiveAscent(font);
     bottom = fm.descent();
 }
 
@@ -254,10 +239,9 @@ void QwtPlainTextEngine::textMargins( const QFont& font, const QString&,
  * @param text Text to be rendered
  * @sa draw()
  */
-void QwtPlainTextEngine::draw( QPainter* painter, const QRectF& rect,
-    int flags, const QString& text ) const
+void QwtPlainTextEngine::draw(QPainter* painter, const QRectF& rect, int flags, const QString& text) const
 {
-    QwtPainter::drawText( painter, rect, flags, text );
+    QwtPainter::drawText(painter, rect, flags, text);
 }
 
 /**
@@ -265,7 +249,7 @@ void QwtPlainTextEngine::draw( QPainter* painter, const QRectF& rect,
  * @return Always true. All texts can be rendered by QwtPlainTextEngine
  * @sa mightRender()
  */
-bool QwtPlainTextEngine::mightRender( const QString& ) const
+bool QwtPlainTextEngine::mightRender(const QString&) const
 {
     return true;
 }
@@ -288,12 +272,11 @@ QwtRichTextEngine::QwtRichTextEngine()
  * @return Calculated height
  * @sa textSize()
  */
-double QwtRichTextEngine::heightForWidth( const QFont& font, int flags,
-    const QString& text, double width ) const
+double QwtRichTextEngine::heightForWidth(const QFont& font, int flags, const QString& text, double width) const
 {
-    QwtRichTextDocument doc( text, flags, font );
+    QwtRichTextDocument doc(text, flags, font);
 
-    doc.setPageSize( QSizeF( width, QWIDGETSIZE_MAX ) );
+    doc.setPageSize(QSizeF(width, QWIDGETSIZE_MAX));
     return doc.documentLayout()->documentSize().height();
 }
 
@@ -305,16 +288,14 @@ double QwtRichTextEngine::heightForWidth( const QFont& font, int flags,
  * @return Calculated size
  * @sa heightForWidth()
  */
-QSizeF QwtRichTextEngine::textSize( const QFont& font,
-    int flags, const QString& text ) const
+QSizeF QwtRichTextEngine::textSize(const QFont& font, int flags, const QString& text) const
 {
-    QwtRichTextDocument doc( text, flags, font );
+    QwtRichTextDocument doc(text, flags, font);
 
     QTextOption option = doc.defaultTextOption();
-    if ( option.wrapMode() != QTextOption::NoWrap )
-    {
-        option.setWrapMode( QTextOption::NoWrap );
-        doc.setDefaultTextOption( option );
+    if (option.wrapMode() != QTextOption::NoWrap) {
+        option.setWrapMode(QTextOption::NoWrap);
+        doc.setDefaultTextOption(option);
         doc.adjustSize();
     }
 
@@ -329,11 +310,10 @@ QSizeF QwtRichTextEngine::textSize( const QFont& font,
  * @param text Text to be rendered
  * @sa draw()
  */
-void QwtRichTextEngine::draw( QPainter* painter, const QRectF& rect,
-    int flags, const QString& text ) const
+void QwtRichTextEngine::draw(QPainter* painter, const QRectF& rect, int flags, const QString& text) const
 {
-    QwtRichTextDocument doc( text, flags, painter->font() );
-    QwtPainter::drawSimpleRichText( painter, rect, flags, doc );
+    QwtRichTextDocument doc(text, flags, painter->font());
+    QwtPainter::drawSimpleRichText(painter, rect, flags, doc);
 }
 
 /**
@@ -343,9 +323,9 @@ void QwtRichTextEngine::draw( QPainter* painter, const QRectF& rect,
  * @return Tagged text
  * @sa taggedRichText()
  */
-QString QwtRichTextEngine::taggedText( const QString& text, int flags ) const
+QString QwtRichTextEngine::taggedText(const QString& text, int flags) const
 {
-    return taggedRichText( text, flags );
+    return taggedRichText(text, flags);
 }
 
 /**
@@ -354,9 +334,9 @@ QString QwtRichTextEngine::taggedText( const QString& text, int flags ) const
  * @return Qt::mightBeRichText(text)
  * @sa mightRender()
  */
-bool QwtRichTextEngine::mightRender( const QString& text ) const
+bool QwtRichTextEngine::mightRender(const QString& text) const
 {
-    return Qt::mightBeRichText( text );
+    return Qt::mightBeRichText(text);
 }
 
 /**
@@ -367,10 +347,9 @@ bool QwtRichTextEngine::mightRender( const QString& text ) const
  * @param bottom Return 0
  * @sa textMargins()
  */
-void QwtRichTextEngine::textMargins( const QFont&, const QString&,
-    double& left, double& right, double& top, double& bottom ) const
+void QwtRichTextEngine::textMargins(const QFont&, const QString&, double& left, double& right, double& top, double& bottom) const
 {
     left = right = top = bottom = 0;
 }
 
-#endif // !QT_NO_RICHTEXT
+#endif  // !QT_NO_RICHTEXT

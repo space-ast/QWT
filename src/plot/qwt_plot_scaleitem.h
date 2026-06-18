@@ -35,24 +35,24 @@ class QPalette;
 
 /**
  * @brief A class which draws a scale inside the plot canvas
- * @details QwtPlotScaleItem can be used to draw an axis inside the plot canvas. 
+ * @details QwtPlotScaleItem can be used to draw an axis inside the plot canvas.
  *          It might be synchronized to one of the axis of the plot, but can also display its own ticks and labels.
- * 
- *          It is allowed to synchronize the scale item with a disabled axis. In plots with vertical and horizontal scale items,
- *          it might be necessary to remove ticks at the intersections, by overloading updateScaleDiv().
- * 
+ *
+ *          It is allowed to synchronize the scale item with a disabled axis. In plots with vertical and horizontal
+ * scale items, it might be necessary to remove ticks at the intersections, by overloading updateScaleDiv().
+ *
  *          The scale might be at a specific position (e.g 0.0) or it might be aligned to a canvas border.
- * 
+ *
  * @par Example
  * The following example shows how to replace the left axis, by a scale item at the x position 0.0.
  * @code
  *   QwtPlotScaleItem *scaleItem = new QwtPlotScaleItem( QwtScaleDraw::RightScale, 0.0 );
  *   scaleItem->setFont( plot->axisWidget( QwtAxis::YLeft )->font() );
  *   scaleItem->attach(plot);
- * 
+ *
  *   plot->setAxisVisible( QwtAxis::YLeft, false );
  * @endcode
- * 
+ *
  */
 class QWT_EXPORT QwtPlotScaleItem : public QwtPlotItem
 {

@@ -212,7 +212,8 @@ public:
                 QRectF bounds = path.boundingRect();
                 if (!bounds.isEmpty()) {
                     QTransform transform;
-                    transform.translate(-bounds.right(), -bounds.center().y());  // move the rightmost point of the path to (0,0)
+                    transform.translate(-bounds.right(),
+                                        -bounds.center().y());  // move the rightmost point of the path to (0,0)
                     path = transform.map(path);
                 }
             }
@@ -416,12 +417,12 @@ void QwtPlotArrowMarker::setPoints(const QPointF& start, const QPointF& end)
 
     if (d->startPoint != start) {
         d->startPoint = start;
-        changed            = true;
+        changed       = true;
     }
 
     if (d->endPoint != end) {
         d->endPoint = end;
-        changed          = true;
+        changed     = true;
     }
 
     if (changed) {
@@ -884,12 +885,10 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
         // For StartLengthAngle mode, we need to calculate end point in canvas coordinates
         // Since length is in pixels, we can calculate directly in canvas space
         double angleRad = qDegreesToRadians(d->angle);
-        canvasEnd =
-            canvasStart
-            + QPointF(d->length * qCos(angleRad),
-                      -d->length
-                          * qSin(angleRad)  // Negative because y increases downward in canvas coordinates
-            );
+        canvasEnd       = canvasStart
+                    + QPointF(d->length * qCos(angleRad),
+                              -d->length * qSin(angleRad)  // Negative because y increases downward in canvas coordinates
+                    );
     }
 
     // Draw arrow line
@@ -897,7 +896,7 @@ void QwtPlotArrowMarker::draw(QPainter* painter, const QwtScaleMap& xMap, const 
 
     // Calculate arrow direction for head rotation
     QPointF direction = canvasEnd - canvasStart;
-    double lineAngle  = qRadiansToDegrees(qAtan2(direction.y(), direction.x()));  // qAtan2 returns radians in range [-pi, pi]
+    double lineAngle = qRadiansToDegrees(qAtan2(direction.y(), direction.x()));  // qAtan2 returns radians in range [-pi, pi]
 
     // Draw tail (at start point)
     if (d->tailParams.getStyle() != NoEndpoint) {
@@ -984,16 +983,11 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
     // Draw tail at left end
     if (d->tailParams.getStyle() != NoEndpoint) {
         QSizeF tailSize = d->tailParams.getSize();
-        tailSize = tailSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
+        tailSize        = tailSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
 
         d->updateTailPath();
-        drawCachedEndpoint(&painter,
-                           start,
-                           d->tailParams.getCachedPath(),
-                           tailSize,
-                           d->tailParams.getPen(),
-                           d->tailParams.getBrush(),
-                           0.0);
+        drawCachedEndpoint(
+            &painter, start, d->tailParams.getCachedPath(), tailSize, d->tailParams.getPen(), d->tailParams.getBrush(), 0.0);
     }
 
     // Draw line
@@ -1003,16 +997,11 @@ QwtGraphic QwtPlotArrowMarker::legendIcon(int index, const QSizeF& size) const
     // Draw head at right end
     if (d->headParams.getStyle() != NoEndpoint) {
         QSizeF headSize = d->headParams.getSize();
-        headSize = headSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
+        headSize        = headSize.scaled(endpointScale, endpointScale, Qt::KeepAspectRatio);
 
         d->updateHeadPath();
-        drawCachedEndpoint(&painter,
-                           end,
-                           d->headParams.getCachedPath(),
-                           headSize,
-                           d->headParams.getPen(),
-                           d->headParams.getBrush(),
-                           0.0);
+        drawCachedEndpoint(
+            &painter, end, d->headParams.getCachedPath(), headSize, d->headParams.getPen(), d->headParams.getBrush(), 0.0);
     }
 
     return icon;

@@ -5,7 +5,8 @@
 #include "qwt3d_global.h"
 #include "qwt3d_types.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Abstract base class for color functors
@@ -18,19 +19,26 @@ class QWT3D_EXPORT Color
 {
 public:
     // Implement your color model here
-    virtual Qwt3D::RGBA operator()(double x, double y,
-                                   double z) const = 0;
-    virtual Qwt3D::RGBA operator()(Qwt3D::Triple const &t) const
+    virtual Qwt3D::RGBA operator()(double x, double y, double z) const = 0;
+    virtual Qwt3D::RGBA operator()(Qwt3D::Triple const& t) const
     {
         return this->operator()(t.x, t.y, t.z);
     }
     // Should create a color vector usable by ColorLegend. The default implementation returns its argument
-    virtual Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) { return vec; }
+    virtual Qwt3D::ColorVector& createVector(Qwt3D::ColorVector& vec)
+    {
+        return vec;
+    }
 
-    void destroy() const { delete this; }
+    void destroy() const
+    {
+        delete this;
+    }
 
 protected:
-    virtual ~Color() { }
+    virtual ~Color()
+    {
+    }
 };
 
 class Plot3D;
@@ -46,23 +54,22 @@ class QWT3D_EXPORT StandardColor : public Color
 
 public:
     // Initializes with data and set up a ColorVector with a size of 100 z values (default)
-    explicit StandardColor(Qwt3D::Plot3D *data, unsigned size = 100);
+    explicit StandardColor(Qwt3D::Plot3D* data, unsigned size = 100);
     ~StandardColor() override;
     // Receives z-dependent color from ColorVector
-    Qwt3D::RGBA operator()(double x, double y,
-                           double z) const override;
-    void setColorVector(Qwt3D::ColorVector const &cv);
+    Qwt3D::RGBA operator()(double x, double y, double z) const override;
+    void setColorVector(Qwt3D::ColorVector const& cv);
     // Resets the standard colors
     void reset(unsigned size = 100);
     // Sets unitary alpha value for all colors
     void setAlpha(double a);
     // Creates color vector for ColorLegend - essentially a copy from the internal vector
-    Qwt3D::ColorVector &createVector(Qwt3D::ColorVector &vec) override;
+    Qwt3D::ColorVector& createVector(Qwt3D::ColorVector& vec) override;
 
     // Set colormap from a preset name (e.g. "viridis", "plasma", "jet")
     void setPreset(const QString& presetName, unsigned size = 100);
 };
 
-} // ns
+}  // ns
 
 #endif

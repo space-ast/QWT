@@ -80,19 +80,23 @@ public:
     // ---- Curve ----
 
     // Create a curve from QPointF data
-    static QwtPlotCurve* createCurve(QwtPlot* plot, const QString& title,
+    static QwtPlotCurve* createCurve(QwtPlot* plot,
+                                     const QString& title,
                                      const QVector< QPointF >& data,
                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                      QwtAxisId yAxis = QwtAxis::YLeft);
 
     // Create a curve from separate x and y vectors
-    static QwtPlotCurve* createCurve(QwtPlot* plot, const QString& title,
-                                     const QVector< double >& x, const QVector< double >& y,
+    static QwtPlotCurve* createCurve(QwtPlot* plot,
+                                     const QString& title,
+                                     const QVector< double >& x,
+                                     const QVector< double >& y,
                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                      QwtAxisId yAxis = QwtAxis::YLeft);
 
     // Create a curve from y-only data (x = index)
-    static QwtPlotCurve* createCurve(QwtPlot* plot, const QString& title,
+    static QwtPlotCurve* createCurve(QwtPlot* plot,
+                                     const QString& title,
                                      const QVector< double >& y,
                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                      QwtAxisId yAxis = QwtAxis::YLeft);
@@ -100,13 +104,15 @@ public:
     // ---- Bar chart ----
 
     // Create a bar chart from y-only values
-    static QwtPlotBarChart* createBarChart(QwtPlot* plot, const QString& title,
+    static QwtPlotBarChart* createBarChart(QwtPlot* plot,
+                                           const QString& title,
                                            const QVector< double >& values,
                                            QwtAxisId xAxis = QwtAxis::XBottom,
                                            QwtAxisId yAxis = QwtAxis::YLeft);
 
     // Create a bar chart from QPointF data
-    static QwtPlotBarChart* createBarChart(QwtPlot* plot, const QString& title,
+    static QwtPlotBarChart* createBarChart(QwtPlot* plot,
+                                           const QString& title,
                                            const QVector< QPointF >& data,
                                            QwtAxisId xAxis = QwtAxis::XBottom,
                                            QwtAxisId yAxis = QwtAxis::YLeft);
@@ -114,13 +120,15 @@ public:
     // ---- Multi bar chart ----
 
     // Create a multi bar chart from QwtSetSample data
-    static QwtPlotMultiBarChart* createMultiBarChart(QwtPlot* plot, const QString& title,
+    static QwtPlotMultiBarChart* createMultiBarChart(QwtPlot* plot,
+                                                     const QString& title,
                                                      const QVector< QwtSetSample >& data,
                                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                                      QwtAxisId yAxis = QwtAxis::YLeft);
 
     // Create a multi bar chart from nested vectors
-    static QwtPlotMultiBarChart* createMultiBarChart(QwtPlot* plot, const QString& title,
+    static QwtPlotMultiBarChart* createMultiBarChart(QwtPlot* plot,
+                                                     const QString& title,
                                                      const QVector< QVector< double > >& data,
                                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                                      QwtAxisId yAxis = QwtAxis::YLeft);
@@ -128,7 +136,8 @@ public:
     // ---- Histogram ----
 
     // Create a histogram from interval samples
-    static QwtPlotHistogram* createHistogram(QwtPlot* plot, const QString& title,
+    static QwtPlotHistogram* createHistogram(QwtPlot* plot,
+                                             const QString& title,
                                              const QVector< QwtIntervalSample >& data,
                                              QwtAxisId xAxis = QwtAxis::XBottom,
                                              QwtAxisId yAxis = QwtAxis::YLeft);
@@ -136,7 +145,8 @@ public:
     // ---- Interval curve ----
 
     // Create an interval curve
-    static QwtPlotIntervalCurve* createIntervalCurve(QwtPlot* plot, const QString& title,
+    static QwtPlotIntervalCurve* createIntervalCurve(QwtPlot* plot,
+                                                     const QString& title,
                                                      const QVector< QwtIntervalSample >& data,
                                                      QwtAxisId xAxis = QwtAxis::XBottom,
                                                      QwtAxisId yAxis = QwtAxis::YLeft);
@@ -144,7 +154,8 @@ public:
     // ---- Trading curve (K-line / OHLC) ----
 
     // Create a trading curve from OHLC samples
-    static QwtPlotTradingCurve* createTradingCurve(QwtPlot* plot, const QString& title,
+    static QwtPlotTradingCurve* createTradingCurve(QwtPlot* plot,
+                                                   const QString& title,
                                                    const QVector< QwtOHLCSample >& data,
                                                    QwtAxisId xAxis = QwtAxis::XBottom,
                                                    QwtAxisId yAxis = QwtAxis::YLeft);
@@ -152,7 +163,8 @@ public:
     // ---- Spectro curve (3D) ----
 
     // Create a spectro curve from 3D point data
-    static QwtPlotSpectroCurve* createSpectroCurve(QwtPlot* plot, const QString& title,
+    static QwtPlotSpectroCurve* createSpectroCurve(QwtPlot* plot,
+                                                   const QString& title,
                                                    const QVector< QwtPoint3D >& data,
                                                    QwtAxisId xAxis = QwtAxis::XBottom,
                                                    QwtAxisId yAxis = QwtAxis::YLeft);
@@ -160,7 +172,8 @@ public:
     // ---- Vector field ----
 
     // Create a vector field from samples
-    static QwtPlotVectorField* createVectorField(QwtPlot* plot, const QString& title,
+    static QwtPlotVectorField* createVectorField(QwtPlot* plot,
+                                                 const QString& title,
                                                  const QVector< QwtVectorFieldSample >& data,
                                                  QwtAxisId xAxis = QwtAxis::XBottom,
                                                  QwtAxisId yAxis = QwtAxis::YLeft);
@@ -168,7 +181,8 @@ public:
     // ---- Box chart ----
 
     // Create a box chart from box samples
-    static QwtPlotBoxChart* createBoxChart(QwtPlot* plot, const QString& title,
+    static QwtPlotBoxChart* createBoxChart(QwtPlot* plot,
+                                           const QString& title,
                                            const QVector< QwtBoxSample >& data,
                                            QwtAxisId xAxis = QwtAxis::XBottom,
                                            QwtAxisId yAxis = QwtAxis::YLeft);
@@ -177,52 +191,52 @@ public:
 
     // Create and attach a grid
     static QwtPlotGrid* createGrid(QwtPlot* plot,
-                                   bool enableMinor = false,
+                                   bool enableMinor     = false,
                                    const QPen& majorPen = QPen(Qt::gray, 0, Qt::DotLine),
                                    const QPen& minorPen = QPen(Qt::lightGray, 0, Qt::DotLine));
 
     // ---- Marker ----
 
     // Create a point marker with optional label
-    static QwtPlotMarker* createMarker(QwtPlot* plot, const QPointF& pos,
+    static QwtPlotMarker* createMarker(QwtPlot* plot,
+                                       const QPointF& pos,
                                        const QString& label = QString(),
-                                       QwtAxisId xAxis = QwtAxis::XBottom,
-                                       QwtAxisId yAxis = QwtAxis::YLeft);
+                                       QwtAxisId xAxis      = QwtAxis::XBottom,
+                                       QwtAxisId yAxis      = QwtAxis::YLeft);
 
     // Create a horizontal line marker
-    static QwtPlotMarker* createHLine(QwtPlot* plot, double y,
-                                      const QPen& pen = QPen(Qt::gray, 0, Qt::DashLine));
+    static QwtPlotMarker* createHLine(QwtPlot* plot, double y, const QPen& pen = QPen(Qt::gray, 0, Qt::DashLine));
 
     // Create a vertical line marker
-    static QwtPlotMarker* createVLine(QwtPlot* plot, double x,
-                                      const QPen& pen = QPen(Qt::gray, 0, Qt::DashLine));
+    static QwtPlotMarker* createVLine(QwtPlot* plot, double x, const QPen& pen = QPen(Qt::gray, 0, Qt::DashLine));
 
     // ---- Zone ----
 
     // Create a highlighted zone
-    static QwtPlotZoneItem* createZone(QwtPlot* plot, const QwtInterval& interval,
+    static QwtPlotZoneItem* createZone(QwtPlot* plot,
+                                       const QwtInterval& interval,
                                        Qt::Orientation orientation = Qt::Vertical,
-                                       const QBrush& brush = QBrush(QColor(0, 0, 255, 30)));
+                                       const QBrush& brush         = QBrush(QColor(0, 0, 255, 30)));
 
     // ---- Arrow marker ----
 
     // Create an arrow marker
     static QwtPlotArrowMarker* createArrowMarker(QwtPlot* plot,
-                                                 const QPointF& start, const QPointF& end,
+                                                 const QPointF& start,
+                                                 const QPointF& end,
                                                  QwtAxisId xAxis = QwtAxis::XBottom,
                                                  QwtAxisId yAxis = QwtAxis::YLeft);
 
     // ---- Graphic ----
 
     // Create a graphic item
-    static QwtPlotGraphicItem* createGraphic(QwtPlot* plot, const QRectF& rect,
-                                             const QwtGraphic& graphic);
+    static QwtPlotGraphicItem* createGraphic(QwtPlot* plot, const QRectF& rect, const QwtGraphic& graphic);
 
     // ---- Text label ----
 
     // Create a text label on the canvas
-    static QwtPlotTextLabel* createTextLabel(QwtPlot* plot, const QString& text,
-                                             Qt::Alignment alignment = Qt::AlignTop | Qt::AlignHCenter);
+    static QwtPlotTextLabel*
+    createTextLabel(QwtPlot* plot, const QString& text, Qt::Alignment alignment = Qt::AlignTop | Qt::AlignHCenter);
 
     // ---- Legend ----
 
@@ -235,4 +249,4 @@ public:
     static QwtPlotScaleItem* createScaleItem(QwtPlot* plot, QwtAxisId axis);
 };
 
-#endif // QWT_PLOT_FACTORY_H
+#endif  // QWT_PLOT_FACTORY_H

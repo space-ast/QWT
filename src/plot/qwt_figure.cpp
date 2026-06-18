@@ -68,7 +68,7 @@ QwtFigure::PrivateData::PrivateData(QwtFigure* p) : q_ptr(p)
 
 void QwtFigure::PrivateData::plotWillRemove(QwtPlot* p)
 {
-    for(auto& alCfg : alignmentConfigs){
+    for (auto& alCfg : alignmentConfigs) {
         alCfg.plots.removeAll(p);
     }
 }
@@ -86,7 +86,6 @@ QwtFigure::QwtFigure(QWidget* parent, Qt::WindowFlags f) : QFrame(parent, f), QW
 {
     setLayout(new QwtFigureLayout());
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
 }
 
 QwtFigure::~QwtFigure()
@@ -330,7 +329,7 @@ bool QwtFigure::takeAxes(QwtPlot* plot)
     // Check if the plot to remove is the current axes
     bool removingCurrent = (plot == currentAxes());
     m_data->plotWillRemove(plot);
-    QLayout* lay         = layout();
+    QLayout* lay = layout();
     if (lay) {
         for (int i = 0; i < lay->count(); ++i) {
             QLayoutItem* item = lay->itemAt(i);
@@ -953,13 +952,13 @@ int QwtFigure::axisAligmentCount() const
  * @param index Index of the alignment configuration to retrieve
  * @return QPair containing the plot list and axis ID
  */
-QPair<QList<QwtPlot*>, int> QwtFigure::axisAligmentInfo(int index) const
+QPair< QList< QwtPlot* >, int > QwtFigure::axisAligmentInfo(int index) const
 {
-    if(index >= axisAligmentCount() || index < 0 ){
+    if (index >= axisAligmentCount() || index < 0) {
         return {};
     }
     auto ali = m_data->alignmentConfigs.value(index);
-    return qMakePair(ali.plots,ali.axisId);
+    return qMakePair(ali.plots, ali.axisId);
 }
 
 /**
@@ -1040,12 +1039,10 @@ void QwtFigure::alignAxes(QList< QwtPlot* > plots, int axisId, bool update)
     if (update) {
         for (QwtPlot* plot : qwt_as_const(plots)) {
             plot->updateLayout();
-            plot->replot();      // Replot
+            plot->replot();  // Replot
         }
     }
 }
-
-
 
 void QwtFigure::paintEvent(QPaintEvent* event)
 {

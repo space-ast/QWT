@@ -13,7 +13,9 @@ class StandardColor::PrivateData
     QWT_DECLARE_PUBLIC(StandardColor)
 
 public:
-    PrivateData(StandardColor* q) : q_ptr(q), m_data(nullptr) {}
+    PrivateData(StandardColor* q) : q_ptr(q), m_data(nullptr)
+    {
+    }
 
     Qwt3D::ColorVector m_colors;
     Qwt3D::Plot3D* m_data;
@@ -26,8 +28,7 @@ public:
  * @details Creates a standard color mapping with the specified size and resets
  *          the color vector to default gradient values.
  */
-StandardColor::StandardColor(Plot3D* data, unsigned size)
-    : QWT_PIMPL_CONSTRUCT
+StandardColor::StandardColor(Plot3D* data, unsigned size) : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     Q_ASSERT(data);
@@ -83,9 +84,9 @@ void StandardColor::setAlpha(double a)
     RGBA elem;
 
     for (unsigned int i = 0; i != d->m_colors.size(); ++i) {
-        elem               = d->m_colors[ i ];
-        elem.a             = a;
-        d->m_colors[ i ]   = elem;
+        elem             = d->m_colors[ i ];
+        elem.a           = a;
+        d->m_colors[ i ] = elem;
     }
 }
 
@@ -130,20 +131,20 @@ RGBA StandardColor::operator()(double, double, double z) const
 void StandardColor::setPreset(const QString& presetName, unsigned size)
 {
     QWT_D(d);
-    
+
     auto colorMap = QwtColorMapPreset::create(presetName);
-    
+
     d->m_colors.resize(size);
     for (unsigned i = 0; i < size; ++i) {
-        const double t = (size > 1) ? static_cast<double>(i) / (size - 1) : 0.5;
+        const double t     = (size > 1) ? static_cast< double >(i) / (size - 1) : 0.5;
         const QColor color = colorMap->color(0.0, 1.0, t);
-        
+
         Qwt3D::RGBA rgba;
         rgba.r = color.redF();
         rgba.g = color.greenF();
         rgba.b = color.blueF();
         rgba.a = color.alphaF();
-        
-        d->m_colors[i] = rgba;
+
+        d->m_colors[ i ] = rgba;
     }
 }

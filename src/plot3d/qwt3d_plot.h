@@ -300,8 +300,7 @@ public Q_SLOTS:
     void setLightShift(double xVal, double yVal, double zVal, unsigned int idx = 0);
 
     // Saves content to pixmap format
-    virtual bool savePixmap(QString const& fileName,
-                            QString const& format);
+    virtual bool savePixmap(QString const& fileName, QString const& format);
     // Saves content to vector format
     virtual bool saveVector(QString const& fileName,
                             QString const& format,
@@ -367,4 +366,4 @@ private:
 
 }  // ns
 
-#endif // QWT3D_PLOT_H
+#endif  // QWT3D_PLOT_H

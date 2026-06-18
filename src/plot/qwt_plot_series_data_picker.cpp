@@ -71,9 +71,8 @@
  * @see QwtSeriesData
  * @see QwtPlotSeriesDataPicker::pickNearestPoint
  */
-QPair< size_t, size_t > calculateSearchWindow(
-    size_t curveSize, double targetX, const QwtSeriesData< QPointF >& data, int windowSize = -5
-)
+QPair< size_t, size_t >
+calculateSearchWindow(size_t curveSize, double targetX, const QwtSeriesData< QPointF >& data, int windowSize = -5)
 {
     // Initialize default range: entire curve
     size_t startIndex;
@@ -112,9 +111,8 @@ QPair< size_t, size_t > calculateSearchWindow(
     realWindowSize = std::min< size_t >(realWindowSize, curveSize);
 
     // Use binary search to locate approximate position of target X coordinate
-    size_t centerIndex = qwtUpperSampleIndex< QPointF >(data, targetX, [](const double x, const QPointF& point) -> bool {
-        return (x < point.x());
-    });
+    size_t centerIndex = qwtUpperSampleIndex< QPointF >(
+        data, targetX, [](const double x, const QPointF& point) -> bool { return (x < point.x()); });
 
     // Compute window boundaries based on center position
     if (centerIndex == curveSize) {
@@ -190,23 +188,23 @@ static size_t seriesItemDataSize(QwtPlotItem* item)
 {
     switch (item->rtti()) {
     case QwtPlotItem::Rtti_PlotCurve:
-        return static_cast<QwtPlotCurve*>(item)->dataSize();
+        return static_cast< QwtPlotCurve* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotIntervalCurve:
-        return static_cast<QwtPlotIntervalCurve*>(item)->dataSize();
+        return static_cast< QwtPlotIntervalCurve* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotHistogram:
-        return static_cast<QwtPlotHistogram*>(item)->dataSize();
+        return static_cast< QwtPlotHistogram* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotTradingCurve:
-        return static_cast<QwtPlotTradingCurve*>(item)->dataSize();
+        return static_cast< QwtPlotTradingCurve* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotVectorField:
-        return static_cast<QwtPlotVectorField*>(item)->dataSize();
+        return static_cast< QwtPlotVectorField* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotSpectroCurve:
-        return static_cast<QwtPlotSpectroCurve*>(item)->dataSize();
+        return static_cast< QwtPlotSpectroCurve* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotBarChart:
-        return static_cast<QwtPlotBarChart*>(item)->dataSize();
+        return static_cast< QwtPlotBarChart* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotMultiBarChart:
-        return static_cast<QwtPlotMultiBarChart*>(item)->dataSize();
+        return static_cast< QwtPlotMultiBarChart* >(item)->dataSize();
     case QwtPlotItem::Rtti_PlotBoxChart:
-        return static_cast<QwtPlotBoxChart*>(item)->dataSize();
+        return static_cast< QwtPlotBoxChart* >(item)->dataSize();
     default:
         return 0;
     }
@@ -217,30 +215,31 @@ static double extractXValue(QwtPlotItem* item, size_t index)
 {
     switch (item->rtti()) {
     case QwtPlotItem::Rtti_PlotCurve:
-        return static_cast<QwtPlotCurve*>(item)->sample(index).x();
+        return static_cast< QwtPlotCurve* >(item)->sample(index).x();
     case QwtPlotItem::Rtti_PlotBarChart:
-        return static_cast<QwtPlotBarChart*>(item)->sample(index).x();
+        return static_cast< QwtPlotBarChart* >(item)->sample(index).x();
     case QwtPlotItem::Rtti_PlotSpectroCurve:
-        return static_cast<QwtPlotSpectroCurve*>(item)->sample(index).x();
+        return static_cast< QwtPlotSpectroCurve* >(item)->sample(index).x();
     case QwtPlotItem::Rtti_PlotIntervalCurve:
-        return static_cast<QwtPlotIntervalCurve*>(item)->sample(index).value;
+        return static_cast< QwtPlotIntervalCurve* >(item)->sample(index).value;
     case QwtPlotItem::Rtti_PlotHistogram:
-        return static_cast<QwtPlotHistogram*>(item)->sample(index).value;
+        return static_cast< QwtPlotHistogram* >(item)->sample(index).value;
     case QwtPlotItem::Rtti_PlotTradingCurve:
-        return static_cast<QwtPlotTradingCurve*>(item)->sample(index).time;
+        return static_cast< QwtPlotTradingCurve* >(item)->sample(index).time;
     case QwtPlotItem::Rtti_PlotVectorField:
-        return static_cast<QwtPlotVectorField*>(item)->sample(index).x;
+        return static_cast< QwtPlotVectorField* >(item)->sample(index).x;
     case QwtPlotItem::Rtti_PlotMultiBarChart:
-        return static_cast<QwtPlotMultiBarChart*>(item)->sample(index).value;
+        return static_cast< QwtPlotMultiBarChart* >(item)->sample(index).value;
     case QwtPlotItem::Rtti_PlotBoxChart:
-        return static_cast<QwtPlotBoxChart*>(item)->sample(index).position;
+        return static_cast< QwtPlotBoxChart* >(item)->sample(index).position;
     default:
         return 0.0;
     }
 }
 
 // Extract position (for screen drawing) and full sample data from any series item
-struct SampleInfo {
+struct SampleInfo
+{
     QPointF position;
     QVariant sampleData;
 };
@@ -250,54 +249,54 @@ static SampleInfo extractSampleInfo(QwtPlotItem* item, size_t index)
     SampleInfo info;
     switch (item->rtti()) {
     case QwtPlotItem::Rtti_PlotCurve: {
-        QPointF p = static_cast<QwtPlotCurve*>(item)->sample(index);
+        QPointF p     = static_cast< QwtPlotCurve* >(item)->sample(index);
         info.position = p;
         break;
     }
     case QwtPlotItem::Rtti_PlotBarChart: {
-        QPointF p = static_cast<QwtPlotBarChart*>(item)->sample(index);
+        QPointF p     = static_cast< QwtPlotBarChart* >(item)->sample(index);
         info.position = p;
         break;
     }
     case QwtPlotItem::Rtti_PlotSpectroCurve: {
-        QwtPoint3D p = static_cast<QwtPlotSpectroCurve*>(item)->sample(index);
-        info.position = p.toPoint();
+        QwtPoint3D p    = static_cast< QwtPlotSpectroCurve* >(item)->sample(index);
+        info.position   = p.toPoint();
         info.sampleData = QVariant::fromValue(p);
         break;
     }
     case QwtPlotItem::Rtti_PlotIntervalCurve: {
-        QwtIntervalSample s = static_cast<QwtPlotIntervalCurve*>(item)->sample(index);
-        info.position = QPointF(s.value, s.interval.minValue());
-        info.sampleData = QVariant::fromValue(s);
+        QwtIntervalSample s = static_cast< QwtPlotIntervalCurve* >(item)->sample(index);
+        info.position       = QPointF(s.value, s.interval.minValue());
+        info.sampleData     = QVariant::fromValue(s);
         break;
     }
     case QwtPlotItem::Rtti_PlotHistogram: {
-        QwtIntervalSample s = static_cast<QwtPlotHistogram*>(item)->sample(index);
-        info.position = QPointF(s.value, s.interval.minValue());
-        info.sampleData = QVariant::fromValue(s);
+        QwtIntervalSample s = static_cast< QwtPlotHistogram* >(item)->sample(index);
+        info.position       = QPointF(s.value, s.interval.minValue());
+        info.sampleData     = QVariant::fromValue(s);
         break;
     }
     case QwtPlotItem::Rtti_PlotTradingCurve: {
-        QwtOHLCSample s = static_cast<QwtPlotTradingCurve*>(item)->sample(index);
-        info.position = QPointF(s.time, s.close);
+        QwtOHLCSample s = static_cast< QwtPlotTradingCurve* >(item)->sample(index);
+        info.position   = QPointF(s.time, s.close);
         info.sampleData = QVariant::fromValue(s);
         break;
     }
     case QwtPlotItem::Rtti_PlotVectorField: {
-        QwtVectorFieldSample s = static_cast<QwtPlotVectorField*>(item)->sample(index);
-        info.position = s.pos();
-        info.sampleData = QVariant::fromValue(s);
+        QwtVectorFieldSample s = static_cast< QwtPlotVectorField* >(item)->sample(index);
+        info.position          = s.pos();
+        info.sampleData        = QVariant::fromValue(s);
         break;
     }
     case QwtPlotItem::Rtti_PlotMultiBarChart: {
-        QwtSetSample s = static_cast<QwtPlotMultiBarChart*>(item)->sample(index);
-        info.position = QPointF(s.value, s.added());
+        QwtSetSample s  = static_cast< QwtPlotMultiBarChart* >(item)->sample(index);
+        info.position   = QPointF(s.value, s.added());
         info.sampleData = QVariant::fromValue(s);
         break;
     }
     case QwtPlotItem::Rtti_PlotBoxChart: {
-        QwtBoxSample s = static_cast<QwtPlotBoxChart*>(item)->sample(index);
-        info.position = QPointF(s.position, s.median);
+        QwtBoxSample s  = static_cast< QwtPlotBoxChart* >(item)->sample(index);
+        info.position   = QPointF(s.position, s.median);
         info.sampleData = QVariant::fromValue(s);
         break;
     }
@@ -355,13 +354,13 @@ static size_t findUpperIndex(QwtPlotItem* item, double targetX)
     }
     switch (item->rtti()) {
     case QwtPlotItem::Rtti_PlotCurve:
-        return qwtUpperSampleIndex<QPointF>(
-            *static_cast<QwtPlotCurve*>(item)->data(), targetX,
-            [](double x, const QPointF& p) -> bool { return x < p.x(); });
+        return qwtUpperSampleIndex< QPointF >(*static_cast< QwtPlotCurve* >(item)->data(),
+                                              targetX,
+                                              [](double x, const QPointF& p) -> bool { return x < p.x(); });
     case QwtPlotItem::Rtti_PlotBarChart:
-        return qwtUpperSampleIndex<QPointF>(
-            *static_cast<QwtPlotBarChart*>(item)->data(), targetX,
-            [](double x, const QPointF& p) -> bool { return x < p.x(); });
+        return qwtUpperSampleIndex< QPointF >(*static_cast< QwtPlotBarChart* >(item)->data(),
+                                              targetX,
+                                              [](double x, const QPointF& p) -> bool { return x < p.x(); });
     default:
         return genericUpperSampleIndex(item, size, targetX);
     }
@@ -415,7 +414,7 @@ public:
     struct XGroup
     {
         GroupKey key;
-        QString xValue;  // Common X value
+        QString xValue;    // Common X value
         QList< int > fps;  // Indices into featurePoints list (not pointers, to avoid Qt6 QList reallocation issues)
     };
     QVector< XGroup > xGroups;
@@ -434,7 +433,10 @@ public:
     bool markFeaturePoint { true };  ///< Whether to mark captured feature points
     QPoint mousePos;
     bool enableShowXOnPicker { true };
-    QPoint textTrackerOffset { 15, 0 };  ///< Tracker text offset; effective in TextFollowMouse mode (setting this prevents text from being too close to mouse cursor)
+    QPoint textTrackerOffset {
+        15,
+        0
+    };  ///< Tracker text offset; effective in TextFollowMouse mode (setting this prevents text from being too close to mouse cursor)
 };
 
 QwtPlotSeriesDataPicker::PrivateData::PrivateData(QwtPlotSeriesDataPicker* p) : q_ptr(p)
@@ -772,49 +774,50 @@ QString QwtPlotSeriesDataPicker::valueString(const QList< FeaturePoint >& fps) c
     };
 
     // Format type-specific sample detail (returns empty for simple QPointF types)
-    auto sampleDetail = [&fmtY](const FeaturePoint& fp) -> QString {
+    auto sampleDetail = [ &fmtY ](const FeaturePoint& fp) -> QString {
         if (!fp.sampleData.isValid()) {
             return fmtY(fp);
         }
-        if (fp.sampleData.canConvert<QwtOHLCSample>()) {
-            auto s = fp.sampleData.value<QwtOHLCSample>();
+        if (fp.sampleData.canConvert< QwtOHLCSample >()) {
+            auto s = fp.sampleData.value< QwtOHLCSample >();
             return QString("O:%1 H:%2 L:%3 C:%4")
-                .arg(QString::number(s.open, 'g', 6), QString::number(s.high, 'g', 6),
-                     QString::number(s.low, 'g', 6), QString::number(s.close, 'g', 6));
+                .arg(QString::number(s.open, 'g', 6),
+                     QString::number(s.high, 'g', 6),
+                     QString::number(s.low, 'g', 6),
+                     QString::number(s.close, 'g', 6));
         }
-        if (fp.sampleData.canConvert<QwtIntervalSample>()) {
-            auto s = fp.sampleData.value<QwtIntervalSample>();
+        if (fp.sampleData.canConvert< QwtIntervalSample >()) {
+            auto s = fp.sampleData.value< QwtIntervalSample >();
             return QString("[%1, %2]")
-                .arg(QString::number(s.interval.minValue(), 'g', 6),
-                     QString::number(s.interval.maxValue(), 'g', 6));
+                .arg(QString::number(s.interval.minValue(), 'g', 6), QString::number(s.interval.maxValue(), 'g', 6));
         }
-        if (fp.sampleData.canConvert<QwtVectorFieldSample>()) {
-            auto s = fp.sampleData.value<QwtVectorFieldSample>();
+        if (fp.sampleData.canConvert< QwtVectorFieldSample >()) {
+            auto s     = fp.sampleData.value< QwtVectorFieldSample >();
             double mag = std::sqrt(s.vx * s.vx + s.vy * s.vy);
             return QString("v:(%1,%2) |v|=%3")
-                .arg(QString::number(s.vx, 'g', 4), QString::number(s.vy, 'g', 4),
-                     QString::number(mag, 'g', 4));
+                .arg(QString::number(s.vx, 'g', 4), QString::number(s.vy, 'g', 4), QString::number(mag, 'g', 4));
         }
-        if (fp.sampleData.canConvert<QwtBoxSample>()) {
-            auto s = fp.sampleData.value<QwtBoxSample>();
+        if (fp.sampleData.canConvert< QwtBoxSample >()) {
+            auto s = fp.sampleData.value< QwtBoxSample >();
             return QString("Med:%1 Q1:%2 Q3:%3 [%4-%5]")
-                .arg(QString::number(s.median, 'g', 6), QString::number(s.q1, 'g', 6),
-                     QString::number(s.q3, 'g', 6), QString::number(s.whiskerLower, 'g', 6),
+                .arg(QString::number(s.median, 'g', 6),
+                     QString::number(s.q1, 'g', 6),
+                     QString::number(s.q3, 'g', 6),
+                     QString::number(s.whiskerLower, 'g', 6),
                      QString::number(s.whiskerUpper, 'g', 6));
         }
-        if (fp.sampleData.canConvert<QwtSetSample>()) {
-            auto s = fp.sampleData.value<QwtSetSample>();
+        if (fp.sampleData.canConvert< QwtSetSample >()) {
+            auto s = fp.sampleData.value< QwtSetSample >();
             QStringList parts;
             for (double v : s.set) {
                 parts << QString::number(v, 'g', 4);
             }
             return QString("[%1]").arg(parts.join(","));
         }
-        if (fp.sampleData.canConvert<QwtPoint3D>()) {
-            auto p = fp.sampleData.value<QwtPoint3D>();
+        if (fp.sampleData.canConvert< QwtPoint3D >()) {
+            auto p = fp.sampleData.value< QwtPoint3D >();
             return QString("(%1, %2, %3)")
-                .arg(QString::number(p.x(), 'g', 6), QString::number(p.y(), 'g', 6),
-                     QString::number(p.z(), 'g', 6));
+                .arg(QString::number(p.x(), 'g', 6), QString::number(p.y(), 'g', 6), QString::number(p.z(), 'g', 6));
         }
         return fmtY(fp);
     };
@@ -993,9 +996,10 @@ void QwtPlotSeriesDataPicker::drawAllFeaturePoints(QPainter* painter) const
  * @see setDrawFeaturePointSize()
  * @see drawAllFeaturePoints()
  */
-void QwtPlotSeriesDataPicker::drawFeaturePoint(
-    QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint
-) const
+void QwtPlotSeriesDataPicker::drawFeaturePoint(QPainter* painter,
+                                               const QwtPlot* plot,
+                                               const QwtPlotItem* item,
+                                               const QPointF& itemPoint) const
 {
     if (!plot || !item) {
         return;
@@ -1061,7 +1065,7 @@ void QwtPlotSeriesDataPicker::widgetMouseDoubleClickEvent(QMouseEvent* event)
  * @return Copy of the internal FeaturePoint list
  * @note Call from a clicked/doubleClicked signal handler to get data at the click position
  */
-QList<QwtPlotSeriesDataPicker::FeaturePoint> QwtPlotSeriesDataPicker::featurePoints() const
+QList< QwtPlotSeriesDataPicker::FeaturePoint > QwtPlotSeriesDataPicker::featurePoints() const
 {
     QWT_DC(d);
     return d->featurePoints;
@@ -1169,7 +1173,6 @@ QRect QwtPlotSeriesDataPicker::trackerRect(const QFont& f) const
 
     return r;
 }
-
 
 QRect QwtPlotSeriesDataPicker::ensureRectInBounds(const QRect& rect, const QRect& bounds) const
 {
@@ -1370,10 +1373,8 @@ int QwtPlotSeriesDataPicker::pickYValue(const QwtPlot* p, const QPoint& pos, boo
                 }
 
                 // Find the corresponding point in curve data
-                size_t index =
-                    qwtUpperSampleIndex< QPointF >(*curve->data(), mouseXValue, [](const double x, const QPointF& pos) -> bool {
-                        return (x < pos.x());
-                    });
+                size_t index = qwtUpperSampleIndex< QPointF >(
+                    *curve->data(), mouseXValue, [](const double x, const QPointF& pos) -> bool { return (x < pos.x()); });
 
                 if (index == curveSize) {
                     continue;
@@ -1435,9 +1436,8 @@ int QwtPlotSeriesDataPicker::pickYValue(const QwtPlot* p, const QPoint& pos, boo
                 continue;
             }
 
-            size_t index = qwtUpperSampleIndex< QPointF >(*curve->data(), x, [](const double x, const QPointF& pos) -> bool {
-                return (x < pos.x());
-            });
+            size_t index = qwtUpperSampleIndex< QPointF >(
+                *curve->data(), x, [](const double x, const QPointF& pos) -> bool { return (x < pos.x()); });
 
             if (index == curveSize) {
                 continue;
@@ -1499,25 +1499,25 @@ int QwtPlotSeriesDataPicker::pickYValue(const QwtPlot* p, const QPoint& pos, boo
             fp.index = index;
 
             // Interpolation only for QPointF-based types (Curve, BarChart)
-            const bool canInterpolate = interpolate && dataSize > 2 && index > 0
-                && (item->rtti() == QwtPlotItem::Rtti_PlotCurve
-                    || item->rtti() == QwtPlotItem::Rtti_PlotBarChart);
+            const bool canInterpolate =
+                interpolate && dataSize > 2 && index > 0
+                && (item->rtti() == QwtPlotItem::Rtti_PlotCurve || item->rtti() == QwtPlotItem::Rtti_PlotBarChart);
 
             if (canInterpolate) {
                 const double x2 = extractXValue(item, index);
                 const double x1 = extractXValue(item, index - 1);
-                SampleInfo s2 = extractSampleInfo(item, index);
-                SampleInfo s1 = extractSampleInfo(item, index - 1);
+                SampleInfo s2   = extractSampleInfo(item, index);
+                SampleInfo s1   = extractSampleInfo(item, index - 1);
                 if (qFuzzyCompare(x1, x2)) {
                     fp.feature = s2.position;
                 } else {
-                    double t = (x - x1) / (x2 - x1);
+                    double t   = (x - x1) / (x2 - x1);
                     fp.feature = QPointF(x, s1.position.y() + t * (s2.position.y() - s1.position.y()));
                 }
             } else {
                 SampleInfo info = extractSampleInfo(item, index);
-                fp.feature = info.position;
-                fp.sampleData = info.sampleData;
+                fp.feature      = info.position;
+                fp.sampleData   = info.sampleData;
             }
 
             featurePoints.append(fp);
@@ -1577,30 +1577,28 @@ int QwtPlotSeriesDataPicker::pickNearestPoint(const QwtPlot* plot, const QPoint&
             if (dataSize < 1000 || windowSize == 0) {
                 realWindowSize = dataSize;
             } else if (windowSize < 0) {
-                double pct = std::abs(windowSize) / 100.0;
-                realWindowSize = static_cast<size_t>(dataSize * pct);
-                realWindowSize = std::max<size_t>(realWindowSize, 50);
-                realWindowSize = std::min<size_t>(realWindowSize, 1000);
+                double pct     = std::abs(windowSize) / 100.0;
+                realWindowSize = static_cast< size_t >(dataSize * pct);
+                realWindowSize = std::max< size_t >(realWindowSize, 50);
+                realWindowSize = std::min< size_t >(realWindowSize, 1000);
             } else {
-                realWindowSize = static_cast<size_t>(windowSize);
+                realWindowSize = static_cast< size_t >(windowSize);
             }
-            realWindowSize = std::min<size_t>(realWindowSize, dataSize);
+            realWindowSize = std::min< size_t >(realWindowSize, dataSize);
 
             size_t halfWindow = realWindowSize / 2;
             size_t startIndex = (centerIndex > halfWindow) ? centerIndex - halfWindow : 0;
-            size_t endIndex = std::min(centerIndex + halfWindow, dataSize - 1);
+            size_t endIndex   = std::min(centerIndex + halfWindow, dataSize - 1);
 
             // Pre-compute scale factors to avoid per-point QwtScaleMap::transform calls
             // QwtScaleMap::transform(v) = p1 + (v - s1) * (p2 - p1) / (s2 - s1)
-            const double xScale = (xMap.s2() != xMap.s1())
-                ? (xMap.p2() - xMap.p1()) / (xMap.s2() - xMap.s1()) : 1.0;
-            const double xOff = xMap.p1() - xMap.s1() * xScale;
-            const double yScale = (yMap.s2() != yMap.s1())
-                ? (yMap.p2() - yMap.p1()) / (yMap.s2() - yMap.s1()) : 1.0;
-            const double yOff = yMap.p1() - yMap.s1() * yScale;
+            const double xScale = (xMap.s2() != xMap.s1()) ? (xMap.p2() - xMap.p1()) / (xMap.s2() - xMap.s1()) : 1.0;
+            const double xOff   = xMap.p1() - xMap.s1() * xScale;
+            const double yScale = (yMap.s2() != yMap.s1()) ? (yMap.p2() - yMap.p1()) / (yMap.s2() - yMap.s1()) : 1.0;
+            const double yOff   = yMap.p1() - yMap.s1() * yScale;
 
             // Search for the nearest point within the window
-            double minDistance = std::numeric_limits<double>::max();
+            double minDistance    = std::numeric_limits< double >::max();
             size_t candidateIndex = startIndex;
             QPointF candidatePosition;
             QVariant candidateSampleData;
@@ -1608,30 +1606,30 @@ int QwtPlotSeriesDataPicker::pickNearestPoint(const QwtPlot* plot, const QPoint&
             for (size_t i = startIndex; i <= endIndex; ++i) {
                 SampleInfo info = extractSampleInfo(item, i);
                 // Inline screen transform using pre-computed scale factors
-                double screenX = info.position.x() * xScale + xOff;
-                double screenY = info.position.y() * yScale + yOff;
-                double dx = screenX - pos.x();
-                double dy = screenY - pos.y();
+                double screenX        = info.position.x() * xScale + xOff;
+                double screenY        = info.position.y() * yScale + yOff;
+                double dx             = screenX - pos.x();
+                double dy             = screenY - pos.y();
                 double screenDistance = dx * dx + dy * dy;
 
                 if (screenDistance < minDistance) {
-                    minDistance = screenDistance;
-                    candidateIndex = i;
-                    candidatePosition = info.position;
+                    minDistance         = screenDistance;
+                    candidateIndex      = i;
+                    candidatePosition   = info.position;
                     candidateSampleData = info.sampleData;
                 }
             }
 
             if (minDistance < minScreenDistance) {
                 minScreenDistance = minDistance;
-                fp.item    = item;
-                fp.feature = candidatePosition;
-                fp.index   = candidateIndex;
-                fp.sampleData = candidateSampleData;
+                fp.item           = item;
+                fp.feature        = candidatePosition;
+                fp.index          = candidateIndex;
+                fp.sampleData     = candidateSampleData;
             }
         }
     }
-    if (minScreenDistance < std::numeric_limits<double>::max()) {
+    if (minScreenDistance < std::numeric_limits< double >::max()) {
         featurePoints.append(fp);
         return 1;
     }

@@ -47,18 +47,18 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 {
     Q_OBJECT
 
-  public:
-// Constructor
-    explicit QwtPlotMagnifier( QWidget* );
+public:
+    // Constructor
+    explicit QwtPlotMagnifier(QWidget*);
 
     // Destructor
     ~QwtPlotMagnifier() override;
 
     // Enable or disable an axis for magnification
-    void setAxisEnabled( QwtAxisId, bool on );
+    void setAxisEnabled(QwtAxisId, bool on);
 
     // Check if an axis is enabled for magnification
-    bool isAxisEnabled( QwtAxisId ) const;
+    bool isAxisEnabled(QwtAxisId) const;
 
     // Return the observed plot canvas
     QWidget* canvas();
@@ -74,9 +74,9 @@ class QWT_EXPORT QwtPlotMagnifier : public QwtMagnifier
 
 public Q_SLOTS:
     // Rescale the plot axes by the given factor
-    virtual void rescale( double factor ) override;
+    virtual void rescale(double factor) override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotMagnifier)
 };
 

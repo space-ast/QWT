@@ -3,7 +3,8 @@
 
 #include "qwt3d_plot.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief A class representing surfaces
@@ -16,34 +17,40 @@ class QWT3D_EXPORT SurfacePlot : public Plot3D
     Q_OBJECT
 
 public:
-    SurfacePlot(QWidget *parent = nullptr);
+    SurfacePlot(QWidget* parent = nullptr);
     ~SurfacePlot() override;
     // Recalculates surface normals
     void updateNormals();
     // Returns data resolution (1 means all data)
     int resolution() const;
     // Returns the number of mesh cells for the ORIGINAL data
-    std::pair<int, int> facets() const;
-    bool loadFromData(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
-                      bool uperiodic = false, bool vperiodic = false);
-    bool loadFromData(double **data, unsigned int columns, unsigned int rows, double minx,
-                      double maxx, double miny, double maxy);
-    bool loadFromData(Qwt3D::TripleField const &data, Qwt3D::CellField const &poly);
+    std::pair< int, int > facets() const;
+    bool loadFromData(Qwt3D::Triple** data, unsigned int columns, unsigned int rows, bool uperiodic = false, bool vperiodic = false);
+    bool loadFromData(double** data, unsigned int columns, unsigned int rows, double minx, double maxx, double miny, double maxy);
+    bool loadFromData(Qwt3D::TripleField const& data, Qwt3D::CellField const& poly);
 
     // Deprecated - Use loadFromData instead
-    bool createDataRepresentation(Qwt3D::Triple **data, unsigned int columns, unsigned int rows,
-                                  bool uperiodic = false, bool vperiodic = false)
+    bool createDataRepresentation(Qwt3D::Triple** data,
+                                  unsigned int columns,
+                                  unsigned int rows,
+                                  bool uperiodic = false,
+                                  bool vperiodic = false)
     {
         return loadFromData(data, columns, rows, uperiodic, vperiodic);
     }
     // Deprecated - Use loadFromData instead
-    bool createDataRepresentation(double **data, unsigned int columns, unsigned int rows,
-                                  double minx, double maxx, double miny, double maxy)
+    bool createDataRepresentation(double** data,
+                                  unsigned int columns,
+                                  unsigned int rows,
+                                  double minx,
+                                  double maxx,
+                                  double miny,
+                                  double maxy)
     {
         return loadFromData(data, columns, rows, minx, maxx, miny, maxy);
     }
     // Deprecated - Use loadFromData instead
-    bool createDataRepresentation(Qwt3D::TripleField const &data, Qwt3D::CellField const &poly)
+    bool createDataRepresentation(Qwt3D::TripleField const& data, Qwt3D::CellField const& poly)
     {
         return loadFromData(data, poly);
     }
@@ -82,16 +89,22 @@ protected:
 
     void calculateHull() override;
     void createData() override;
-    void createEnrichment(Qwt3D::Enrichment &p) override;
+    void createEnrichment(Qwt3D::Enrichment& p) override;
     virtual void createFloorData();
     void createNormals();
     void createPoints();
 
-    void readIn(Qwt3D::GridData &gdata, Triple **data, unsigned int columns, unsigned int rows);
-    void readIn(Qwt3D::GridData &gdata, double **data, unsigned int columns, unsigned int rows,
-                double minx, double maxx, double miny, double maxy);
-    void calcNormals(GridData &gdata);
-    void sewPeriodic(GridData &gdata);
+    void readIn(Qwt3D::GridData& gdata, Triple** data, unsigned int columns, unsigned int rows);
+    void readIn(Qwt3D::GridData& gdata,
+                double** data,
+                unsigned int columns,
+                unsigned int rows,
+                double minx,
+                double maxx,
+                double miny,
+                double maxy);
+    void calcNormals(GridData& gdata);
+    void sewPeriodic(GridData& gdata);
 
 private:
     void Data2Floor();
@@ -112,6 +125,6 @@ private:
     void setColorFromVertexC(int node, bool skip = false);
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_SURFACEPLOT_H
+#endif  // QWT3D_SURFACEPLOT_H

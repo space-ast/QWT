@@ -56,65 +56,58 @@
  */
 class QWT_EXPORT QwtDateScaleEngine : public QwtLinearScaleEngine
 {
-  public:
+public:
     /// Constructor with time specification
-    explicit QwtDateScaleEngine( Qt::TimeSpec = Qt::LocalTime );
-    
+    explicit QwtDateScaleEngine(Qt::TimeSpec = Qt::LocalTime);
+
     /// Destructor
     ~QwtDateScaleEngine() override;
 
     /// Set the time specification used by the engine
-    void setTimeSpec( Qt::TimeSpec );
-    
+    void setTimeSpec(Qt::TimeSpec);
+
     /// Get the time specification used by the engine
     Qt::TimeSpec timeSpec() const;
 
     /// Set the offset in seconds from Coordinated Universal Time
-    void setUtcOffset( int seconds );
-    
+    void setUtcOffset(int seconds);
+
     /// Get the offset in seconds from Coordinated Universal Time
     int utcOffset() const;
 
     /// Set how to identify the first week of a year
-    void setWeek0Type( QwtDate::Week0Type );
-    
+    void setWeek0Type(QwtDate::Week0Type);
+
     /// Get how to identify the first week of a year
     QwtDate::Week0Type week0Type() const;
 
     /// Set upper limit for the number of weeks
-    void setMaxWeeks( int );
-    
+    void setMaxWeeks(int);
+
     /// Get upper limit for the number of weeks
     int maxWeeks() const;
 
     /// Align and divide an interval
-    virtual void autoScale(
-        int maxNumSteps, double& x1, double& x2,
-        double& stepSize ) const override;
+    virtual void autoScale(int maxNumSteps, double& x1, double& x2, double& stepSize) const override;
 
     /// Calculate a scale division for a date/time interval
-    virtual QwtScaleDiv divideScale(
-        double x1, double x2,
-        int maxMajorSteps, int maxMinorSteps,
-        double stepSize = 0.0 ) const override;
+    virtual QwtScaleDiv
+    divideScale(double x1, double x2, int maxMajorSteps, int maxMinorSteps, double stepSize = 0.0) const override;
 
     /// Classification of a date/time interval division
-    virtual QwtDate::IntervalType intervalType(
-        const QDateTime&, const QDateTime&, int maxSteps ) const;
+    virtual QwtDate::IntervalType intervalType(const QDateTime&, const QDateTime&, int maxSteps) const;
 
     /// Translate a double value into a QDateTime object
-    QDateTime toDateTime( double ) const;
+    QDateTime toDateTime(double) const;
 
-  protected:
-    virtual QDateTime alignDate( const QDateTime&, double stepSize,
-        QwtDate::IntervalType, bool up ) const;
+protected:
+    virtual QDateTime alignDate(const QDateTime&, double stepSize, QwtDate::IntervalType, bool up) const;
 
-  private:
-    QwtScaleDiv buildScaleDiv( const QDateTime&, const QDateTime&,
-        int maxMajorSteps, int maxMinorSteps,
-        QwtDate::IntervalType ) const;
+private:
+    QwtScaleDiv
+    buildScaleDiv(const QDateTime&, const QDateTime&, int maxMajorSteps, int maxMinorSteps, QwtDate::IntervalType) const;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtDateScaleEngine)
 };
 

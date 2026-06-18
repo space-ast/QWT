@@ -34,14 +34,13 @@
  * @param radians Angle in radians
  * @return Normalized angle in radians
  */
-double qwtNormalizeRadians( double radians )
+double qwtNormalizeRadians(double radians)
 {
-    double a = std::fmod( radians, 2.0 * M_PI );
-    if ( a < 0.0 )
+    double a = std::fmod(radians, 2.0 * M_PI);
+    if (a < 0.0)
         a += 2.0 * M_PI;
 
     return a;
-
 }
 
 /**
@@ -49,10 +48,10 @@ double qwtNormalizeRadians( double radians )
  * @param degrees Angle in degrees
  * @return Normalized angle in degrees
  */
-double qwtNormalizeDegrees( double degrees )
+double qwtNormalizeDegrees(double degrees)
 {
-    double a = std::fmod( degrees, 360.0 );
-    if ( a < 0.0 )
+    double a = std::fmod(degrees, 360.0);
+    if (a < 0.0)
         a += 360.0;
 
     return a;
@@ -68,6 +67,6 @@ quint32 qwtRand()
 #if QT_VERSION >= 0x050a00
     return QRandomGenerator::global()->generate();
 #else
-    return static_cast< quint32 >( qrand() ); // [0, RAND_MAX ]
+    return static_cast< quint32 >(qrand());  // [0, RAND_MAX ]
 #endif
 }

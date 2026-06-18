@@ -120,8 +120,7 @@ class QwtPlotCachePanner::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotCachePanner)
 public:
-    PrivateData(QwtPlotCachePanner* p)
-        : q_ptr(p)
+    PrivateData(QwtPlotCachePanner* p) : q_ptr(p)
     {
         for (int axis = 0; axis < QwtAxis::AxisPositions; axis++)
             isAxisEnabled[ axis ] = true;

@@ -72,4 +72,4 @@ private:
 };
 }  // ns
 
-#endif // QWT3D_PORTABILITY_H
+#endif  // QWT3D_PORTABILITY_H

@@ -59,20 +59,20 @@ class QWT_EXPORT QwtCounter : public QWidget
 {
     Q_OBJECT
 
-    Q_PROPERTY( double value READ value WRITE setValue NOTIFY valueChanged USER true )
-    Q_PROPERTY( double minimum READ minimum WRITE setMinimum )
-    Q_PROPERTY( double maximum READ maximum WRITE setMaximum )
-    Q_PROPERTY( double singleStep READ singleStep WRITE setSingleStep )
+    Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged USER true)
+    Q_PROPERTY(double minimum READ minimum WRITE setMinimum)
+    Q_PROPERTY(double maximum READ maximum WRITE setMaximum)
+    Q_PROPERTY(double singleStep READ singleStep WRITE setSingleStep)
 
-    Q_PROPERTY( int numButtons READ numButtons WRITE setNumButtons )
-    Q_PROPERTY( int stepButton1 READ stepButton1 WRITE setStepButton1 )
-    Q_PROPERTY( int stepButton2 READ stepButton2 WRITE setStepButton2 )
-    Q_PROPERTY( int stepButton3 READ stepButton3 WRITE setStepButton3 )
+    Q_PROPERTY(int numButtons READ numButtons WRITE setNumButtons)
+    Q_PROPERTY(int stepButton1 READ stepButton1 WRITE setStepButton1)
+    Q_PROPERTY(int stepButton2 READ stepButton2 WRITE setStepButton2)
+    Q_PROPERTY(int stepButton3 READ stepButton3 WRITE setStepButton3)
 
-    Q_PROPERTY( bool readOnly READ isReadOnly WRITE setReadOnly )
-    Q_PROPERTY( bool wrapping READ wrapping WRITE setWrapping )
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
+    Q_PROPERTY(bool wrapping READ wrapping WRITE setWrapping)
 
-  public:
+public:
     /**
      * @brief Button index
      */
@@ -92,34 +92,34 @@ class QWT_EXPORT QwtCounter : public QWidget
     };
 
     /// Constructor
-    explicit QwtCounter( QWidget* parent = nullptr );
+    explicit QwtCounter(QWidget* parent = nullptr);
     /// Destructor
     ~QwtCounter() override;
 
     /// Set the counter to be in valid/invalid state
-    void setValid( bool );
+    void setValid(bool);
     /// Return true if the value is valid
     bool isValid() const;
 
     /// Enable or disable wrapping
-    void setWrapping( bool );
+    void setWrapping(bool);
     /// Return true if wrapping is enabled
     bool wrapping() const;
 
     /// Return true if the counter is read only
     bool isReadOnly() const;
     /// Set the counter to read only mode
-    void setReadOnly( bool );
+    void setReadOnly(bool);
 
     /// Set the number of buttons on each side
-    void setNumButtons( int );
+    void setNumButtons(int);
     /// Return the number of buttons
     int numButtons() const;
 
     /// Set the number of increment steps for a button
-    void setIncSteps( QwtCounter::Button, int numSteps );
+    void setIncSteps(QwtCounter::Button, int numSteps);
     /// Return the number of increment steps for a button
-    int incSteps( QwtCounter::Button ) const;
+    int incSteps(QwtCounter::Button) const;
 
     /// Return a size hint
     virtual QSize sizeHint() const override;
@@ -127,71 +127,70 @@ class QWT_EXPORT QwtCounter : public QWidget
     /// Return the single step size
     double singleStep() const;
     /// Set the single step size
-    void setSingleStep( double stepSize );
+    void setSingleStep(double stepSize);
 
     /// Set the range of the counter
-    void setRange( double min, double max );
+    void setRange(double min, double max);
 
     /// Return the minimum value
     double minimum() const;
     /// Set the minimum value
-    void setMinimum( double );
+    void setMinimum(double);
 
     /// Return the maximum value
     double maximum() const;
     /// Set the maximum value
-    void setMaximum( double );
+    void setMaximum(double);
 
     /// Set the number of increment steps for button 1
-    void setStepButton1( int nSteps );
+    void setStepButton1(int nSteps);
     /// Return the number of increment steps for button 1
     int stepButton1() const;
 
     /// Set the number of increment steps for button 2
-    void setStepButton2( int nSteps );
+    void setStepButton2(int nSteps);
     /// Return the number of increment steps for button 2
     int stepButton2() const;
 
     /// Set the number of increment steps for button 3
-    void setStepButton3( int nSteps );
+    void setStepButton3(int nSteps);
     /// Return the number of increment steps for button 3
     int stepButton3() const;
 
     /// Return the current value
     double value() const;
 
-  public Q_SLOTS:
-    void setValue( double );
+public Q_SLOTS:
+    void setValue(double);
 
-
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * @brief Signal emitted when a button has been released
      * @param value The new value
      */
-    void buttonReleased ( double value );
+    void buttonReleased(double value);
 
     /**
      * @brief Signal emitted when the counter's value has changed
      * @param value The new value
      */
-    void valueChanged ( double value );
+    void valueChanged(double value);
 
-  protected:
-    virtual bool event( QEvent* ) override;
-    virtual void wheelEvent( QWheelEvent* ) override;
-    virtual void keyPressEvent( QKeyEvent* ) override;
+protected:
+    virtual bool event(QEvent*) override;
+    virtual void wheelEvent(QWheelEvent*) override;
+    virtual void keyPressEvent(QKeyEvent*) override;
 
-  private Q_SLOTS:
+private Q_SLOTS:
     void btnReleased();
     void btnClicked();
     void textChanged();
 
-  private:
-    void incrementValue( int numSteps );
+private:
+    void incrementValue(int numSteps);
     void initCounter();
     void updateButtons();
-    void showNumber( double );
+    void showNumber(double);
 
     QWT_DECLARE_PRIVATE(QwtCounter)
 };

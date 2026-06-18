@@ -204,8 +204,7 @@ void QwtPolarPlot::insertLegend(QwtAbstractLegend* legend, QwtPolarPlot::LegendP
         if (d->legend) {
             QwtLegend* lgd = qobject_cast< QwtLegend* >(legend);
             if (lgd) {
-                connect(this, &QwtPolarPlot::legendDataChanged,
-                        lgd, &QwtLegend::updateLegend);
+                connect(this, &QwtPolarPlot::legendDataChanged, lgd, &QwtLegend::updateLegend);
             }
 
             if (d->legend->parent() != this)

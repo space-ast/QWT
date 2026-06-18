@@ -37,7 +37,7 @@ class QPolygonF;
  */
 class QWT_EXPORT QwtCurveFitter
 {
-  public:
+public:
     /*!
        @brief Preferred mode of the fitting algorithm
        @details Even if a QPainterPath can always be created from a QPolygonF,
@@ -67,16 +67,16 @@ class QWT_EXPORT QwtCurveFitter
     Mode mode() const;
 
     // Find a curve which has the best fit to a series of data points
-    virtual QPolygonF fitCurve( const QPolygonF& polygon ) const = 0;
+    virtual QPolygonF fitCurve(const QPolygonF& polygon) const = 0;
 
     // Find a curve path which has the best fit to a series of data points
-    virtual QPainterPath fitCurvePath( const QPolygonF& polygon ) const = 0;
+    virtual QPainterPath fitCurvePath(const QPolygonF& polygon) const = 0;
 
-  protected:
-    explicit QwtCurveFitter( Mode mode );
+protected:
+    explicit QwtCurveFitter(Mode mode);
 
-  private:
-    QwtCurveFitter(const QwtCurveFitter&) = delete;
+private:
+    QwtCurveFitter(const QwtCurveFitter&)            = delete;
     QwtCurveFitter& operator=(const QwtCurveFitter&) = delete;
 
     const Mode m_mode;

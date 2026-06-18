@@ -99,9 +99,8 @@ class QwtWidgetOverlay::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtWidgetOverlay)
 public:
-    PrivateData( QwtWidgetOverlay* p )
-        : q_ptr( p )
-        , maskMode(QwtWidgetOverlay::MaskHint), renderMode(QwtWidgetOverlay::AutoRenderMode), rgbaBuffer(nullptr)
+    PrivateData(QwtWidgetOverlay* p)
+        : q_ptr(p), maskMode(QwtWidgetOverlay::MaskHint), renderMode(QwtWidgetOverlay::AutoRenderMode), rgbaBuffer(nullptr)
     {
     }
 
@@ -128,9 +127,7 @@ public:
  * @param widget Parent widget, where the overlay is aligned to
  *
  */
-QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget)
-    : QWidget(widget)
-    , QWT_PIMPL_CONSTRUCT
+QwtWidgetOverlay::QwtWidgetOverlay(QWidget* widget) : QWidget(widget), QWT_PIMPL_CONSTRUCT
 {
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setAttribute(Qt::WA_NoSystemBackground);

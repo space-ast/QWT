@@ -39,264 +39,240 @@
 
 namespace QwtTriangle
 {
-    enum Type
-    {
-        Left,
-        Right,
-        Up,
-        Down
-    };
+enum Type
+{
+    Left,
+    Right,
+    Up,
+    Down
+};
 }
 
-static QwtGraphic qwtPathGraphic( const QPainterPath& path,
-    const QPen& pen, const QBrush& brush )
+static QwtGraphic qwtPathGraphic(const QPainterPath& path, const QPen& pen, const QBrush& brush)
 {
     QwtGraphic graphic;
-    graphic.setRenderHint( QwtGraphic::RenderPensUnscaled );
+    graphic.setRenderHint(QwtGraphic::RenderPensUnscaled);
 
-    QPainter painter( &graphic );
-    painter.setPen( pen );
-    painter.setBrush( brush );
-    painter.drawPath( path );
+    QPainter painter(&graphic);
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.drawPath(path);
     painter.end();
 
     return graphic;
 }
 
-static inline QRectF qwtScaledBoundingRect(
-    const QwtGraphic& graphic, const QSizeF size )
+static inline QRectF qwtScaledBoundingRect(const QwtGraphic& graphic, const QSizeF size)
 {
     QSizeF scaledSize = size;
-    if ( scaledSize.isEmpty() )
+    if (scaledSize.isEmpty())
         scaledSize = graphic.defaultSize();
 
     const QSizeF sz = graphic.controlPointRect().size();
 
     double sx = 1.0;
-    if ( sz.width() > 0.0 )
+    if (sz.width() > 0.0)
         sx = scaledSize.width() / sz.width();
 
     double sy = 1.0;
-    if ( sz.height() > 0.0 )
+    if (sz.height() > 0.0)
         sy = scaledSize.height() / sz.height();
 
-    return graphic.scaledBoundingRect( sx, sy );
+    return graphic.scaledBoundingRect(sx, sy);
 }
 
-static inline void qwtDrawPixmapSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawPixmapSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     QSize size = symbol.size();
-    if ( size.isEmpty() )
+    if (size.isEmpty())
         size = symbol.pixmap().size();
 
     const QTransform transform = painter->transform();
-    if ( transform.isScaling() )
-    {
-        const QRect r( 0, 0, size.width(), size.height() );
-        size = transform.mapRect( r ).size();
+    if (transform.isScaling()) {
+        const QRect r(0, 0, size.width(), size.height());
+        size = transform.mapRect(r).size();
     }
 
     QPixmap pm = symbol.pixmap();
-    if ( pm.size() != size )
-        pm = pm.scaled( size );
+    if (pm.size() != size)
+        pm = pm.scaled(size);
 
-    QPointF pinPoint( 0.5 * size.width(), 0.5 * size.height() );
-    if ( symbol.isPinPointEnabled() )
+    QPointF pinPoint(0.5 * size.width(), 0.5 * size.height());
+    if (symbol.isPinPointEnabled())
         pinPoint = symbol.pinPoint();
 
     painter->resetTransform();
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
-        const QPointF pos = transform.map( points[i] ) - pinPoint;
+    for (int i = 0; i < numPoints; i++) {
+        const QPointF pos = transform.map(points[ i ]) - pinPoint;
 
-        QwtPainter::drawPixmap( painter,
-            QRect( pos.toPoint(), pm.size() ), pm );
+        QwtPainter::drawPixmap(painter, QRect(pos.toPoint(), pm.size()), pm);
     }
 }
 
 #ifndef QWT_NO_SVG
 
-static inline void qwtDrawSvgSymbols( QPainter* painter,
-    const QPointF* points, int numPoints,
-    QSvgRenderer* renderer, const QwtSymbol& symbol )
+static inline void
+qwtDrawSvgSymbols(QPainter* painter, const QPointF* points, int numPoints, QSvgRenderer* renderer, const QwtSymbol& symbol)
 {
-    if ( renderer == nullptr || !renderer->isValid() )
+    if (renderer == nullptr || !renderer->isValid())
         return;
 
     const QRectF viewBox = renderer->viewBoxF();
-    if ( viewBox.isEmpty() )
+    if (viewBox.isEmpty())
         return;
 
     QSizeF sz = symbol.size();
-    if ( !sz.isValid() )
+    if (!sz.isValid())
         sz = viewBox.size();
 
     const double sx = sz.width() / viewBox.width();
     const double sy = sz.height() / viewBox.height();
 
     QPointF pinPoint = viewBox.center();
-    if ( symbol.isPinPointEnabled() )
+    if (symbol.isPinPointEnabled())
         pinPoint = symbol.pinPoint();
 
-    const double dx = sx * ( pinPoint.x() - viewBox.left() );
-    const double dy = sy * ( pinPoint.y() - viewBox.top() );
+    const double dx = sx * (pinPoint.x() - viewBox.left());
+    const double dy = sy * (pinPoint.y() - viewBox.top());
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
-        const double x = points[i].x() - dx;
-        const double y = points[i].y() - dy;
+    for (int i = 0; i < numPoints; i++) {
+        const double x = points[ i ].x() - dx;
+        const double y = points[ i ].y() - dy;
 
-        renderer->render( painter,
-            QRectF( x, y, sz.width(), sz.height() ) );
+        renderer->render(painter, QRectF(x, y, sz.width(), sz.height()));
     }
 }
 
 #endif
 
-static inline void qwtDrawGraphicSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtGraphic& graphic,
-    const QwtSymbol& symbol )
+static inline void qwtDrawGraphicSymbols(QPainter* painter,
+                                         const QPointF* points,
+                                         int numPoints,
+                                         const QwtGraphic& graphic,
+                                         const QwtSymbol& symbol)
 {
     const QRectF pointRect = graphic.controlPointRect();
-    if ( pointRect.isEmpty() )
+    if (pointRect.isEmpty())
         return;
 
     double sx = 1.0;
     double sy = 1.0;
 
     const QSize sz = symbol.size();
-    if ( sz.isValid() )
-    {
+    if (sz.isValid()) {
         sx = sz.width() / pointRect.width();
         sy = sz.height() / pointRect.height();
     }
 
     QPointF pinPoint = pointRect.center();
-    if ( symbol.isPinPointEnabled() )
+    if (symbol.isPinPointEnabled())
         pinPoint = symbol.pinPoint();
 
     const QTransform transform = painter->transform();
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
+    for (int i = 0; i < numPoints; i++) {
         QTransform tr = transform;
-        tr.translate( points[i].x(), points[i].y() );
-        tr.scale( sx, sy );
-        tr.translate( -pinPoint.x(), -pinPoint.y() );
+        tr.translate(points[ i ].x(), points[ i ].y());
+        tr.scale(sx, sy);
+        tr.translate(-pinPoint.x(), -pinPoint.y());
 
-        painter->setTransform( tr );
+        painter->setTransform(tr);
 
-        graphic.render( painter );
+        graphic.render(painter);
     }
 
-    painter->setTransform( transform );
+    painter->setTransform(transform);
 }
 
-static inline void qwtDrawEllipseSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawEllipseSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
-    painter->setBrush( symbol.brush() );
-    painter->setPen( symbol.pen() );
+    painter->setBrush(symbol.brush());
+    painter->setPen(symbol.pen());
 
     const QSize size = symbol.size();
 
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        const int sw = size.width();
-        const int sh = size.height();
+    if (QwtPainter::roundingAlignment(painter)) {
+        const int sw  = size.width();
+        const int sh  = size.height();
         const int sw2 = size.width() / 2;
         const int sh2 = size.height() / 2;
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const int x = qRound( points[i].x() );
-            const int y = qRound( points[i].y() );
+        for (int i = 0; i < numPoints; i++) {
+            const int x = qRound(points[ i ].x());
+            const int y = qRound(points[ i ].y());
 
-            const QRectF r( x - sw2, y - sh2, sw, sh );
-            QwtPainter::drawEllipse( painter, r );
+            const QRectF r(x - sw2, y - sh2, sw, sh);
+            QwtPainter::drawEllipse(painter, r);
         }
-    }
-    else
-    {
-        const double sw = size.width();
-        const double sh = size.height();
+    } else {
+        const double sw  = size.width();
+        const double sh  = size.height();
         const double sw2 = 0.5 * size.width();
         const double sh2 = 0.5 * size.height();
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const double x = points[i].x();
-            const double y = points[i].y();
+        for (int i = 0; i < numPoints; i++) {
+            const double x = points[ i ].x();
+            const double y = points[ i ].y();
 
-            const QRectF r( x - sw2, y - sh2, sw, sh );
-            QwtPainter::drawEllipse( painter, r );
+            const QRectF r(x - sw2, y - sh2, sw, sh);
+            QwtPainter::drawEllipse(painter, r);
         }
     }
 }
 
-static inline void qwtDrawRectSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawRectSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
 
     QPen pen = symbol.pen();
-    pen.setJoinStyle( Qt::MiterJoin );
-    painter->setPen( pen );
-    painter->setBrush( symbol.brush() );
-    painter->setRenderHint( QPainter::Antialiasing, false );
+    pen.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen);
+    painter->setBrush(symbol.brush());
+    painter->setRenderHint(QPainter::Antialiasing, false);
 
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        const int sw = size.width();
-        const int sh = size.height();
+    if (QwtPainter::roundingAlignment(painter)) {
+        const int sw  = size.width();
+        const int sh  = size.height();
         const int sw2 = size.width() / 2;
         const int sh2 = size.height() / 2;
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const int x = qRound( points[i].x() );
-            const int y = qRound( points[i].y() );
+        for (int i = 0; i < numPoints; i++) {
+            const int x = qRound(points[ i ].x());
+            const int y = qRound(points[ i ].y());
 
-            const QRect r( x - sw2, y - sh2, sw, sh );
-            QwtPainter::drawRect( painter, r );
+            const QRect r(x - sw2, y - sh2, sw, sh);
+            QwtPainter::drawRect(painter, r);
         }
-    }
-    else
-    {
-        const double sw = size.width();
-        const double sh = size.height();
+    } else {
+        const double sw  = size.width();
+        const double sh  = size.height();
         const double sw2 = 0.5 * size.width();
         const double sh2 = 0.5 * size.height();
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const double x = points[i].x();
-            const double y = points[i].y();
+        for (int i = 0; i < numPoints; i++) {
+            const double x = points[ i ].x();
+            const double y = points[ i ].y();
 
-            const QRectF r( x - sw2, y - sh2, sw, sh );
-            QwtPainter::drawRect( painter, r );
+            const QRectF r(x - sw2, y - sh2, sw, sh);
+            QwtPainter::drawRect(painter, r);
         }
     }
 }
 
-static inline void qwtDrawDiamondSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawDiamondSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
 
     QPen pen = symbol.pen();
-    pen.setJoinStyle( Qt::MiterJoin );
-    painter->setPen( pen );
-    painter->setBrush( symbol.brush() );
+    pen.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen);
+    painter->setBrush(symbol.brush());
 
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const int x = qRound( points[i].x() );
-            const int y = qRound( points[i].y() );
+    if (QwtPainter::roundingAlignment(painter)) {
+        for (int i = 0; i < numPoints; i++) {
+            const int x = qRound(points[ i ].x());
+            const int y = qRound(points[ i ].y());
 
             const int x1 = x - size.width() / 2;
             const int y1 = y - size.height() / 2;
@@ -304,19 +280,16 @@ static inline void qwtDrawDiamondSymbols( QPainter* painter,
             const int y2 = y1 + size.height();
 
             QPolygonF polygon;
-            polygon += QPointF( x, y1 );
-            polygon += QPointF( x1, y );
-            polygon += QPointF( x, y2 );
-            polygon += QPointF( x2, y );
+            polygon += QPointF(x, y1);
+            polygon += QPointF(x1, y);
+            polygon += QPointF(x, y2);
+            polygon += QPointF(x2, y);
 
-            QwtPainter::drawPolygon( painter, polygon );
+            QwtPainter::drawPolygon(painter, polygon);
         }
-    }
-    else
-    {
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const QPointF& pos = points[i];
+    } else {
+        for (int i = 0; i < numPoints; i++) {
+            const QPointF& pos = points[ i ];
 
             const double x1 = pos.x() - 0.5 * size.width();
             const double y1 = pos.y() - 0.5 * size.height();
@@ -324,54 +297,49 @@ static inline void qwtDrawDiamondSymbols( QPainter* painter,
             const double y2 = y1 + size.height();
 
             QPolygonF polygon;
-            polygon += QPointF( pos.x(), y1 );
-            polygon += QPointF( x2, pos.y() );
-            polygon += QPointF( pos.x(), y2 );
-            polygon += QPointF( x1, pos.y() );
+            polygon += QPointF(pos.x(), y1);
+            polygon += QPointF(x2, pos.y());
+            polygon += QPointF(pos.x(), y2);
+            polygon += QPointF(x1, pos.y());
 
-            QwtPainter::drawPolygon( painter, polygon );
+            QwtPainter::drawPolygon(painter, polygon);
         }
     }
 }
 
-static inline void qwtDrawTriangleSymbols(
-    QPainter* painter, QwtTriangle::Type type,
-    const QPointF* points, int numPoints,
-    const QwtSymbol& symbol )
+static inline void
+qwtDrawTriangleSymbols(QPainter* painter, QwtTriangle::Type type, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
 
     QPen pen = symbol.pen();
-    pen.setJoinStyle( Qt::MiterJoin );
-    painter->setPen( pen );
+    pen.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen);
 
-    painter->setBrush( symbol.brush() );
+    painter->setBrush(symbol.brush());
 
-    const bool doAlign = QwtPainter::roundingAlignment( painter );
+    const bool doAlign = QwtPainter::roundingAlignment(painter);
 
     double sw2 = 0.5 * size.width();
     double sh2 = 0.5 * size.height();
 
-    if ( doAlign )
-    {
-        sw2 = std::floor( sw2 );
-        sh2 = std::floor( sh2 );
+    if (doAlign) {
+        sw2 = std::floor(sw2);
+        sh2 = std::floor(sh2);
     }
 
-    QPolygonF triangle( 3 );
+    QPolygonF triangle(3);
     QPointF* trianglePoints = triangle.data();
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
-        const QPointF& pos = points[i];
+    for (int i = 0; i < numPoints; i++) {
+        const QPointF& pos = points[ i ];
 
         double x = pos.x();
         double y = pos.y();
 
-        if ( doAlign )
-        {
-            x = qRound( x );
-            y = qRound( y );
+        if (doAlign) {
+            x = qRound(x);
+            y = qRound(y);
         }
 
         const double x1 = x - sw2;
@@ -379,294 +347,248 @@ static inline void qwtDrawTriangleSymbols(
         const double y1 = y - sh2;
         const double y2 = y1 + size.height();
 
-        switch ( type )
-        {
-            case QwtTriangle::Left:
-            {
-                trianglePoints[0].rx() = x2;
-                trianglePoints[0].ry() = y1;
+        switch (type) {
+        case QwtTriangle::Left: {
+            trianglePoints[ 0 ].rx() = x2;
+            trianglePoints[ 0 ].ry() = y1;
 
-                trianglePoints[1].rx() = x1;
-                trianglePoints[1].ry() = y;
+            trianglePoints[ 1 ].rx() = x1;
+            trianglePoints[ 1 ].ry() = y;
 
-                trianglePoints[2].rx() = x2;
-                trianglePoints[2].ry() = y2;
+            trianglePoints[ 2 ].rx() = x2;
+            trianglePoints[ 2 ].ry() = y2;
 
-                break;
-            }
-            case QwtTriangle::Right:
-            {
-                trianglePoints[0].rx() = x1;
-                trianglePoints[0].ry() = y1;
-
-                trianglePoints[1].rx() = x2;
-                trianglePoints[1].ry() = y;
-
-                trianglePoints[2].rx() = x1;
-                trianglePoints[2].ry() = y2;
-
-                break;
-            }
-            case QwtTriangle::Up:
-            {
-                trianglePoints[0].rx() = x1;
-                trianglePoints[0].ry() = y2;
-
-                trianglePoints[1].rx() = x;
-                trianglePoints[1].ry() = y1;
-
-                trianglePoints[2].rx() = x2;
-                trianglePoints[2].ry() = y2;
-
-                break;
-            }
-            case QwtTriangle::Down:
-            {
-                trianglePoints[0].rx() = x1;
-                trianglePoints[0].ry() = y1;
-
-                trianglePoints[1].rx() = x;
-                trianglePoints[1].ry() = y2;
-
-                trianglePoints[2].rx() = x2;
-                trianglePoints[2].ry() = y1;
-
-                break;
-            }
+            break;
         }
-        QwtPainter::drawPolygon( painter, triangle );
+        case QwtTriangle::Right: {
+            trianglePoints[ 0 ].rx() = x1;
+            trianglePoints[ 0 ].ry() = y1;
+
+            trianglePoints[ 1 ].rx() = x2;
+            trianglePoints[ 1 ].ry() = y;
+
+            trianglePoints[ 2 ].rx() = x1;
+            trianglePoints[ 2 ].ry() = y2;
+
+            break;
+        }
+        case QwtTriangle::Up: {
+            trianglePoints[ 0 ].rx() = x1;
+            trianglePoints[ 0 ].ry() = y2;
+
+            trianglePoints[ 1 ].rx() = x;
+            trianglePoints[ 1 ].ry() = y1;
+
+            trianglePoints[ 2 ].rx() = x2;
+            trianglePoints[ 2 ].ry() = y2;
+
+            break;
+        }
+        case QwtTriangle::Down: {
+            trianglePoints[ 0 ].rx() = x1;
+            trianglePoints[ 0 ].ry() = y1;
+
+            trianglePoints[ 1 ].rx() = x;
+            trianglePoints[ 1 ].ry() = y2;
+
+            trianglePoints[ 2 ].rx() = x2;
+            trianglePoints[ 2 ].ry() = y1;
+
+            break;
+        }
+        }
+        QwtPainter::drawPolygon(painter, triangle);
     }
 }
 
-static inline void qwtDrawLineSymbols(
-    QPainter* painter, int orientations,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void
+qwtDrawLineSymbols(QPainter* painter, int orientations, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
 
     int off = 0;
 
     QPen pen = symbol.pen();
-    if ( pen.width() > 1 )
-    {
-        pen.setCapStyle( Qt::FlatCap );
+    if (pen.width() > 1) {
+        pen.setCapStyle(Qt::FlatCap);
         off = 1;
     }
 
-    painter->setPen( pen );
-    painter->setRenderHint( QPainter::Antialiasing, false );
+    painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing, false);
 
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        const int sw = qwtFloor( size.width() );
-        const int sh = qwtFloor( size.height() );
+    if (QwtPainter::roundingAlignment(painter)) {
+        const int sw  = qwtFloor(size.width());
+        const int sh  = qwtFloor(size.height());
         const int sw2 = size.width() / 2;
         const int sh2 = size.height() / 2;
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            if ( orientations & Qt::Horizontal )
-            {
-                const int x = qRound( points[i].x() ) - sw2;
-                const int y = qRound( points[i].y() );
+        for (int i = 0; i < numPoints; i++) {
+            if (orientations & Qt::Horizontal) {
+                const int x = qRound(points[ i ].x()) - sw2;
+                const int y = qRound(points[ i ].y());
 
-                QwtPainter::drawLine( painter, x, y, x + sw + off, y );
+                QwtPainter::drawLine(painter, x, y, x + sw + off, y);
             }
-            if ( orientations & Qt::Vertical )
-            {
-                const int x = qRound( points[i].x() );
-                const int y = qRound( points[i].y() ) - sh2;
+            if (orientations & Qt::Vertical) {
+                const int x = qRound(points[ i ].x());
+                const int y = qRound(points[ i ].y()) - sh2;
 
-                QwtPainter::drawLine( painter, x, y, x, y + sh + off );
+                QwtPainter::drawLine(painter, x, y, x, y + sh + off);
             }
         }
-    }
-    else
-    {
-        const double sw = size.width();
-        const double sh = size.height();
+    } else {
+        const double sw  = size.width();
+        const double sh  = size.height();
         const double sw2 = 0.5 * size.width();
         const double sh2 = 0.5 * size.height();
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            if ( orientations & Qt::Horizontal )
-            {
-                const double x = points[i].x() - sw2;
-                const double y = points[i].y();
+        for (int i = 0; i < numPoints; i++) {
+            if (orientations & Qt::Horizontal) {
+                const double x = points[ i ].x() - sw2;
+                const double y = points[ i ].y();
 
-                QwtPainter::drawLine( painter, x, y, x + sw, y );
+                QwtPainter::drawLine(painter, x, y, x + sw, y);
             }
-            if ( orientations & Qt::Vertical )
-            {
-                const double y = points[i].y() - sh2;
-                const double x = points[i].x();
+            if (orientations & Qt::Vertical) {
+                const double y = points[ i ].y() - sh2;
+                const double x = points[ i ].x();
 
-                QwtPainter::drawLine( painter, x, y, x, y + sh );
+                QwtPainter::drawLine(painter, x, y, x, y + sh);
             }
         }
     }
 }
 
-static inline void qwtDrawXCrossSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawXCrossSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
-    int off = 0;
+    int off          = 0;
 
     QPen pen = symbol.pen();
-    if ( pen.width() > 1 )
-    {
-        pen.setCapStyle( Qt::FlatCap );
+    if (pen.width() > 1) {
+        pen.setCapStyle(Qt::FlatCap);
         off = 1;
     }
-    painter->setPen( pen );
+    painter->setPen(pen);
 
-
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        const int sw = size.width();
-        const int sh = size.height();
+    if (QwtPainter::roundingAlignment(painter)) {
+        const int sw  = size.width();
+        const int sh  = size.height();
         const int sw2 = size.width() / 2;
         const int sh2 = size.height() / 2;
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const QPointF& pos = points[i];
+        for (int i = 0; i < numPoints; i++) {
+            const QPointF& pos = points[ i ];
 
-            const int x = qRound( pos.x() );
-            const int y = qRound( pos.y() );
+            const int x = qRound(pos.x());
+            const int y = qRound(pos.y());
 
             const int x1 = x - sw2;
             const int x2 = x1 + sw + off;
             const int y1 = y - sh2;
             const int y2 = y1 + sh + off;
 
-            QwtPainter::drawLine( painter, x1, y1, x2, y2 );
-            QwtPainter::drawLine( painter, x2, y1, x1, y2 );
+            QwtPainter::drawLine(painter, x1, y1, x2, y2);
+            QwtPainter::drawLine(painter, x2, y1, x1, y2);
         }
-    }
-    else
-    {
-        const double sw = size.width();
-        const double sh = size.height();
+    } else {
+        const double sw  = size.width();
+        const double sh  = size.height();
         const double sw2 = 0.5 * size.width();
         const double sh2 = 0.5 * size.height();
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const QPointF& pos = points[i];
+        for (int i = 0; i < numPoints; i++) {
+            const QPointF& pos = points[ i ];
 
             const double x1 = pos.x() - sw2;
             const double x2 = x1 + sw;
             const double y1 = pos.y() - sh2;
             const double y2 = y1 + sh;
 
-            QwtPainter::drawLine( painter, x1, y1, x2, y2 );
-            QwtPainter::drawLine( painter, x1, y2, x2, y1 );
+            QwtPainter::drawLine(painter, x1, y1, x2, y2);
+            QwtPainter::drawLine(painter, x1, y2, x2, y1);
         }
     }
 }
 
-static inline void qwtDrawStar1Symbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawStar1Symbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     const QSize size = symbol.size();
-    painter->setPen( symbol.pen() );
+    painter->setPen(symbol.pen());
 
-    if ( QwtPainter::roundingAlignment( painter ) )
-    {
-        QRect r( 0, 0, size.width(), size.height() );
+    if (QwtPainter::roundingAlignment(painter)) {
+        QRect r(0, 0, size.width(), size.height());
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            r.moveCenter( points[i].toPoint() );
+        for (int i = 0; i < numPoints; i++) {
+            r.moveCenter(points[ i ].toPoint());
 
             const double sqrt1_2 = 0.70710678118654752440; /* 1/sqrt(2) */
 
-            const double d1 = r.width() / 2.0 * ( 1.0 - sqrt1_2 );
+            const double d1 = r.width() / 2.0 * (1.0 - sqrt1_2);
 
-            QwtPainter::drawLine( painter,
-                qRound( r.left() + d1 ), qRound( r.top() + d1 ),
-                qRound( r.right() - d1 ), qRound( r.bottom() - d1 ) );
-            QwtPainter::drawLine( painter,
-                qRound( r.left() + d1 ), qRound( r.bottom() - d1 ),
-                qRound( r.right() - d1), qRound( r.top() + d1 ) );
+            QwtPainter::drawLine(
+                painter, qRound(r.left() + d1), qRound(r.top() + d1), qRound(r.right() - d1), qRound(r.bottom() - d1));
+            QwtPainter::drawLine(
+                painter, qRound(r.left() + d1), qRound(r.bottom() - d1), qRound(r.right() - d1), qRound(r.top() + d1));
 
             const QPoint c = r.center();
 
-            QwtPainter::drawLine( painter,
-                c.x(), r.top(), c.x(), r.bottom() );
-            QwtPainter::drawLine( painter,
-                r.left(), c.y(), r.right(), c.y() );
+            QwtPainter::drawLine(painter, c.x(), r.top(), c.x(), r.bottom());
+            QwtPainter::drawLine(painter, r.left(), c.y(), r.right(), c.y());
         }
-    }
-    else
-    {
-        QRectF r( 0, 0, size.width(), size.height() );
+    } else {
+        QRectF r(0, 0, size.width(), size.height());
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            r.moveCenter( points[i] );
+        for (int i = 0; i < numPoints; i++) {
+            r.moveCenter(points[ i ]);
 
             const double sqrt1_2 = 0.70710678118654752440; /* 1/sqrt(2) */
 
             const QPointF c = r.center();
-            const double d1 = r.width() / 2.0 * ( 1.0 - sqrt1_2 );
+            const double d1 = r.width() / 2.0 * (1.0 - sqrt1_2);
 
-            QwtPainter::drawLine( painter,
-                r.left() + d1, r.top() + d1,
-                r.right() - d1, r.bottom() - d1 );
-            QwtPainter::drawLine( painter,
-                r.left() + d1, r.bottom() - d1,
-                r.right() - d1, r.top() + d1 );
-            QwtPainter::drawLine( painter,
-                c.x(), r.top(),
-                c.x(), r.bottom() );
-            QwtPainter::drawLine( painter,
-                r.left(), c.y(),
-                r.right(), c.y() );
+            QwtPainter::drawLine(painter, r.left() + d1, r.top() + d1, r.right() - d1, r.bottom() - d1);
+            QwtPainter::drawLine(painter, r.left() + d1, r.bottom() - d1, r.right() - d1, r.top() + d1);
+            QwtPainter::drawLine(painter, c.x(), r.top(), c.x(), r.bottom());
+            QwtPainter::drawLine(painter, r.left(), c.y(), r.right(), c.y());
         }
     }
 }
 
-static inline void qwtDrawStar2Symbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawStar2Symbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
     QPen pen = symbol.pen();
-    if ( pen.width() > 1 )
-        pen.setCapStyle( Qt::FlatCap );
-    pen.setJoinStyle( Qt::MiterJoin );
-    painter->setPen( pen );
+    if (pen.width() > 1)
+        pen.setCapStyle(Qt::FlatCap);
+    pen.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen);
 
-    painter->setBrush( symbol.brush() );
+    painter->setBrush(symbol.brush());
 
-    const double cos30 = 0.866025; // cos(30°)
+    const double cos30 = 0.866025;  // cos(30°)
 
     const double dy = 0.25 * symbol.size().height();
     const double dx = 0.5 * symbol.size().width() * cos30 / 3.0;
 
-    QPolygonF star( 12 );
+    QPolygonF star(12);
     QPointF* starPoints = star.data();
 
-    const bool doAlign = QwtPainter::roundingAlignment( painter );
+    const bool doAlign = QwtPainter::roundingAlignment(painter);
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
-        double x = points[i].x();
-        double y = points[i].y();
-        if ( doAlign )
-        {
-            x = qRound( x );
-            y = qRound( y );
+    for (int i = 0; i < numPoints; i++) {
+        double x = points[ i ].x();
+        double y = points[ i ].y();
+        if (doAlign) {
+            x = qRound(x);
+            y = qRound(y);
         }
 
         double x1 = x - 3 * dx;
         double y1 = y - 2 * dy;
-        if ( doAlign )
-        {
-            x1 = qRound( x - 3 * dx );
-            y1 = qRound( y - 2 * dy );
+        if (doAlign) {
+            x1 = qRound(x - 3 * dx);
+            y1 = qRound(y - 2 * dy);
         }
 
         const double x2 = x1 + 1 * dx;
@@ -681,78 +603,74 @@ static inline void qwtDrawStar2Symbols( QPainter* painter,
         const double y4 = y1 + 3 * dy;
         const double y5 = y1 + 4 * dy;
 
-        starPoints[0].rx() = x4;
-        starPoints[0].ry() = y1;
+        starPoints[ 0 ].rx() = x4;
+        starPoints[ 0 ].ry() = y1;
 
-        starPoints[1].rx() = x5;
-        starPoints[1].ry() = y2;
+        starPoints[ 1 ].rx() = x5;
+        starPoints[ 1 ].ry() = y2;
 
-        starPoints[2].rx() = x7;
-        starPoints[2].ry() = y2;
+        starPoints[ 2 ].rx() = x7;
+        starPoints[ 2 ].ry() = y2;
 
-        starPoints[3].rx() = x6;
-        starPoints[3].ry() = y3;
+        starPoints[ 3 ].rx() = x6;
+        starPoints[ 3 ].ry() = y3;
 
-        starPoints[4].rx() = x7;
-        starPoints[4].ry() = y4;
+        starPoints[ 4 ].rx() = x7;
+        starPoints[ 4 ].ry() = y4;
 
-        starPoints[5].rx() = x5;
-        starPoints[5].ry() = y4;
+        starPoints[ 5 ].rx() = x5;
+        starPoints[ 5 ].ry() = y4;
 
-        starPoints[6].rx() = x4;
-        starPoints[6].ry() = y5;
+        starPoints[ 6 ].rx() = x4;
+        starPoints[ 6 ].ry() = y5;
 
-        starPoints[7].rx() = x3;
-        starPoints[7].ry() = y4;
+        starPoints[ 7 ].rx() = x3;
+        starPoints[ 7 ].ry() = y4;
 
-        starPoints[8].rx() = x1;
-        starPoints[8].ry() = y4;
+        starPoints[ 8 ].rx() = x1;
+        starPoints[ 8 ].ry() = y4;
 
-        starPoints[9].rx() = x2;
-        starPoints[9].ry() = y3;
+        starPoints[ 9 ].rx() = x2;
+        starPoints[ 9 ].ry() = y3;
 
-        starPoints[10].rx() = x1;
-        starPoints[10].ry() = y2;
+        starPoints[ 10 ].rx() = x1;
+        starPoints[ 10 ].ry() = y2;
 
-        starPoints[11].rx() = x3;
-        starPoints[11].ry() = y2;
+        starPoints[ 11 ].rx() = x3;
+        starPoints[ 11 ].ry() = y2;
 
-        QwtPainter::drawPolygon( painter, star );
+        QwtPainter::drawPolygon(painter, star);
     }
 }
 
-static inline void qwtDrawHexagonSymbols( QPainter* painter,
-    const QPointF* points, int numPoints, const QwtSymbol& symbol )
+static inline void qwtDrawHexagonSymbols(QPainter* painter, const QPointF* points, int numPoints, const QwtSymbol& symbol)
 {
-    painter->setBrush( symbol.brush() );
-    painter->setPen( symbol.pen() );
+    painter->setBrush(symbol.brush());
+    painter->setPen(symbol.pen());
 
-    const double cos30 = 0.866025; // cos(30°)
-    const double dx = 0.5 * ( symbol.size().width() - cos30 );
+    const double cos30 = 0.866025;  // cos(30°)
+    const double dx    = 0.5 * (symbol.size().width() - cos30);
 
     const double dy = 0.25 * symbol.size().height();
 
-    QPolygonF hexaPolygon( 6 );
+    QPolygonF hexaPolygon(6);
     QPointF* hexaPoints = hexaPolygon.data();
 
-    const bool doAlign = QwtPainter::roundingAlignment( painter );
+    const bool doAlign = QwtPainter::roundingAlignment(painter);
 
-    for ( int i = 0; i < numPoints; i++ )
-    {
-        double x = points[i].x();
-        double y = points[i].y();
-        if ( doAlign )
-        {
-            x = qRound( x );
-            y = qRound( y );
+    for (int i = 0; i < numPoints; i++) {
+        double x = points[ i ].x();
+        double y = points[ i ].y();
+        if (doAlign) {
+            x = qRound(x);
+            y = qRound(y);
         }
 
         double x1 = x - dx;
         double y1 = y - 2 * dy;
-        if ( doAlign )
-        {
-            x1 = std::ceil( x1 );
-            y1 = std::ceil( y1 );
+        if (doAlign) {
+            x1 = std::ceil(x1);
+            y1 = std::ceil(y1);
         }
 
         const double x2 = x1 + 1 * dx;
@@ -762,25 +680,25 @@ static inline void qwtDrawHexagonSymbols( QPainter* painter,
         const double y3 = y1 + 3 * dy;
         const double y4 = y1 + 4 * dy;
 
-        hexaPoints[0].rx() = x2;
-        hexaPoints[0].ry() = y1;
+        hexaPoints[ 0 ].rx() = x2;
+        hexaPoints[ 0 ].ry() = y1;
 
-        hexaPoints[1].rx() = x3;
-        hexaPoints[1].ry() = y2;
+        hexaPoints[ 1 ].rx() = x3;
+        hexaPoints[ 1 ].ry() = y2;
 
-        hexaPoints[2].rx() = x3;
-        hexaPoints[2].ry() = y3;
+        hexaPoints[ 2 ].rx() = x3;
+        hexaPoints[ 2 ].ry() = y3;
 
-        hexaPoints[3].rx() = x2;
-        hexaPoints[3].ry() = y4;
+        hexaPoints[ 3 ].rx() = x2;
+        hexaPoints[ 3 ].ry() = y4;
 
-        hexaPoints[4].rx() = x1;
-        hexaPoints[4].ry() = y3;
+        hexaPoints[ 4 ].rx() = x1;
+        hexaPoints[ 4 ].ry() = y3;
 
-        hexaPoints[5].rx() = x1;
-        hexaPoints[5].ry() = y2;
+        hexaPoints[ 5 ].rx() = x1;
+        hexaPoints[ 5 ].ry() = y2;
 
-        QwtPainter::drawPolygon( painter, hexaPolygon );
+        QwtPainter::drawPolygon(painter, hexaPolygon);
     }
 }
 
@@ -788,13 +706,9 @@ class QwtSymbol::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtSymbol)
 
-  public:
-    PrivateData( QwtSymbol* p )
-        : q_ptr( p )
-        , style( QwtSymbol::NoSymbol )
-        , brush( Qt::NoBrush )
-        , pen( QColor("#555555"), 0 )
-        , isPinPointEnabled( false )
+public:
+    PrivateData(QwtSymbol* p)
+        : q_ptr(p), style(QwtSymbol::NoSymbol), brush(Qt::NoBrush), pen(QColor("#555555"), 0), isPinPointEnabled(false)
     {
         cache.policy = QwtSymbol::AutoCache;
 #ifndef QWT_NO_SVG
@@ -859,8 +773,7 @@ class QwtSymbol::PrivateData
  * black outline with zero width, no size and style 'NoSymbol'.
  *
  */
-QwtSymbol::QwtSymbol( Style style )
-    : QWT_PIMPL_CONSTRUCT
+QwtSymbol::QwtSymbol(Style style) : QWT_PIMPL_CONSTRUCT
 {
     m_data->style = style;
 }
@@ -875,14 +788,13 @@ QwtSymbol::QwtSymbol( Style style )
  * @sa setStyle(), setBrush(), setPen(), setSize()
  *
  */
-QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
-    const QPen& pen, const QSize& size )
+QwtSymbol::QwtSymbol(QwtSymbol::Style style, const QBrush& brush, const QPen& pen, const QSize& size)
     : QWT_PIMPL_CONSTRUCT
 {
     m_data->style = style;
     m_data->brush = brush;
-    m_data->pen = pen;
-    m_data->size = size;
+    m_data->pen   = pen;
+    m_data->size  = size;
 }
 
 /**
@@ -899,14 +811,12 @@ QwtSymbol::QwtSymbol( QwtSymbol::Style style, const QBrush& brush,
  * @sa setPath(), setBrush(), setPen(), setSize()
  *
  */
-QwtSymbol::QwtSymbol( const QPainterPath& path,
-    const QBrush& brush, const QPen& pen )
-    : QWT_PIMPL_CONSTRUCT
+QwtSymbol::QwtSymbol(const QPainterPath& path, const QBrush& brush, const QPen& pen) : QWT_PIMPL_CONSTRUCT
 {
     m_data->style = QwtSymbol::Path;
     m_data->brush = brush;
-    m_data->pen = pen;
-    setPath( path );
+    m_data->pen   = pen;
+    setPath(path);
 }
 
 /**
@@ -924,12 +834,10 @@ QwtSymbol::~QwtSymbol()
  * @sa CachePolicy, cachePolicy()
  *
  */
-void QwtSymbol::setCachePolicy(
-    QwtSymbol::CachePolicy policy )
+void QwtSymbol::setCachePolicy(QwtSymbol::CachePolicy policy)
 {
     QWT_D(d);
-    if ( d->cache.policy != policy )
-    {
+    if (d->cache.policy != policy) {
         d->cache.policy = policy;
         invalidateCache();
     }
@@ -988,10 +896,10 @@ QwtSymbol::CachePolicy QwtSymbol::cachePolicy() const
  * @endcode
  *
  */
-void QwtSymbol::setPath( const QPainterPath& path )
+void QwtSymbol::setPath(const QPainterPath& path)
 {
     QWT_D(d);
-    d->style = QwtSymbol::Path;
+    d->style     = QwtSymbol::Path;
     d->path.path = path;
     d->path.graphic.reset();
 }
@@ -1016,10 +924,10 @@ const QPainterPath& QwtSymbol::path() const
  * @note brush() and pen() have no effect
  *
  */
-void QwtSymbol::setPixmap( const QPixmap& pixmap )
+void QwtSymbol::setPixmap(const QPixmap& pixmap)
 {
     QWT_D(d);
-    d->style = QwtSymbol::Pixmap;
+    d->style         = QwtSymbol::Pixmap;
     d->pixmap.pixmap = pixmap;
 }
 
@@ -1046,10 +954,10 @@ const QPixmap& QwtSymbol::pixmap() const
  * @note brush() and pen() have no effect
  *
  */
-void QwtSymbol::setGraphic( const QwtGraphic& graphic )
+void QwtSymbol::setGraphic(const QwtGraphic& graphic)
 {
     QWT_D(d);
-    d->style = QwtSymbol::Graphic;
+    d->style           = QwtSymbol::Graphic;
     d->graphic.graphic = graphic;
 }
 
@@ -1075,33 +983,33 @@ const QwtGraphic& QwtSymbol::graphic() const
  * @note brush() and pen() have no effect
  *
  */
-void QwtSymbol::setSvgDocument( const QByteArray& svgDocument )
+void QwtSymbol::setSvgDocument(const QByteArray& svgDocument)
 {
     QWT_D(d);
     d->style = QwtSymbol::SvgDocument;
-    if ( d->svg.renderer == nullptr )
+    if (d->svg.renderer == nullptr)
         d->svg.renderer = new QSvgRenderer();
 
-    d->svg.renderer->load( svgDocument );
+    d->svg.renderer->load(svgDocument);
 }
 
 #endif
 
 /**
  * @brief Specify the symbol's size
- * @details If the 'height' parameter is left out or less than 0, and the 'width' parameter is greater than or equal to 0,
- *          the symbol size will be set to (width, width).
+ * @details If the 'height' parameter is left out or less than 0, and the 'width' parameter is greater than or equal to
+ * 0, the symbol size will be set to (width, width).
  * @param width Width
  * @param height Height (defaults to -1)
  * @sa size(), setSize(const QSize&)
  *
  */
-void QwtSymbol::setSize( int width, int height )
+void QwtSymbol::setSize(int width, int height)
 {
-    if ( ( width >= 0 ) && ( height < 0 ) )
+    if ((width >= 0) && (height < 0))
         height = width;
 
-    setSize( QSize( width, height ) );
+    setSize(QSize(width, height));
 }
 
 /**
@@ -1110,11 +1018,10 @@ void QwtSymbol::setSize( int width, int height )
  * @sa size(), setSize(int, int)
  *
  */
-void QwtSymbol::setSize( const QSize& size )
+void QwtSymbol::setSize(const QSize& size)
 {
     QWT_D(d);
-    if ( size.isValid() && size != d->size )
-    {
+    if (size.isValid() && size != d->size) {
         d->size = size;
         invalidateCache();
     }
@@ -1139,15 +1046,14 @@ const QSize& QwtSymbol::size() const
  * @sa brush()
  *
  */
-void QwtSymbol::setBrush( const QBrush& brush )
+void QwtSymbol::setBrush(const QBrush& brush)
 {
     QWT_D(d);
-    if ( brush != d->brush )
-    {
+    if (brush != d->brush) {
         d->brush = brush;
         invalidateCache();
 
-        if ( d->style == QwtSymbol::Path )
+        if (d->style == QwtSymbol::Path)
             d->path.graphic.reset();
     }
 }
@@ -1174,10 +1080,9 @@ const QBrush& QwtSymbol::brush() const
  * @sa pen(), brush()
  *
  */
-void QwtSymbol::setPen( const QColor& color,
-    qreal width, Qt::PenStyle style )
+void QwtSymbol::setPen(const QColor& color, qreal width, Qt::PenStyle style)
 {
-    setPen( QPen( color, width, style ) );
+    setPen(QPen(color, width, style));
 }
 
 /**
@@ -1187,15 +1092,14 @@ void QwtSymbol::setPen( const QColor& color,
  * @sa pen(), setBrush()
  *
  */
-void QwtSymbol::setPen( const QPen& pen )
+void QwtSymbol::setPen(const QPen& pen)
 {
     QWT_D(d);
-    if ( pen != d->pen )
-    {
+    if (pen != d->pen) {
         d->pen = pen;
         invalidateCache();
 
-        if ( d->style == QwtSymbol::Path )
+        if (d->style == QwtSymbol::Path)
             d->path.graphic.reset();
     }
 }
@@ -1220,53 +1124,45 @@ const QPen& QwtSymbol::pen() const
  * @sa setBrush(), setPen(), brush(), pen()
  *
  */
-void QwtSymbol::setColor( const QColor& color )
+void QwtSymbol::setColor(const QColor& color)
 {
     QWT_D(d);
-    switch ( d->style )
-    {
-        case QwtSymbol::Ellipse:
-        case QwtSymbol::Rect:
-        case QwtSymbol::Diamond:
-        case QwtSymbol::Triangle:
-        case QwtSymbol::UTriangle:
-        case QwtSymbol::DTriangle:
-        case QwtSymbol::RTriangle:
-        case QwtSymbol::LTriangle:
-        case QwtSymbol::Star2:
-        case QwtSymbol::Hexagon:
-        {
-            if ( d->brush.color() != color )
-            {
-                d->brush.setColor( color );
-                invalidateCache();
-            }
-            break;
+    switch (d->style) {
+    case QwtSymbol::Ellipse:
+    case QwtSymbol::Rect:
+    case QwtSymbol::Diamond:
+    case QwtSymbol::Triangle:
+    case QwtSymbol::UTriangle:
+    case QwtSymbol::DTriangle:
+    case QwtSymbol::RTriangle:
+    case QwtSymbol::LTriangle:
+    case QwtSymbol::Star2:
+    case QwtSymbol::Hexagon: {
+        if (d->brush.color() != color) {
+            d->brush.setColor(color);
+            invalidateCache();
         }
-        case QwtSymbol::Cross:
-        case QwtSymbol::XCross:
-        case QwtSymbol::HLine:
-        case QwtSymbol::VLine:
-        case QwtSymbol::Star1:
-        {
-            if ( d->pen.color() != color )
-            {
-                d->pen.setColor( color );
-                invalidateCache();
-            }
-            break;
+        break;
+    }
+    case QwtSymbol::Cross:
+    case QwtSymbol::XCross:
+    case QwtSymbol::HLine:
+    case QwtSymbol::VLine:
+    case QwtSymbol::Star1: {
+        if (d->pen.color() != color) {
+            d->pen.setColor(color);
+            invalidateCache();
         }
-        default:
-        {
-            if ( d->brush.color() != color ||
-                d->pen.color() != color )
-            {
-                invalidateCache();
-            }
+        break;
+    }
+    default: {
+        if (d->brush.color() != color || d->pen.color() != color) {
+            invalidateCache();
+        }
 
-            d->brush.setColor( color );
-            d->pen.setColor( color );
-        }
+        d->brush.setColor(color);
+        d->pen.setColor(color);
+    }
     }
 }
 
@@ -1280,19 +1176,17 @@ void QwtSymbol::setColor( const QColor& color )
  * @sa pinPoint(), setPinPointEnabled()
  *
  */
-void QwtSymbol::setPinPoint( const QPointF& pos, bool enable )
+void QwtSymbol::setPinPoint(const QPointF& pos, bool enable)
 {
     QWT_D(d);
-    if ( d->pinPoint != pos )
-    {
+    if (d->pinPoint != pos) {
         d->pinPoint = pos;
-        if ( d->isPinPointEnabled )
-        {
+        if (d->isPinPointEnabled) {
             invalidateCache();
         }
     }
 
-    setPinPointEnabled( enable );
+    setPinPointEnabled(enable);
 }
 
 /**
@@ -1313,11 +1207,10 @@ QPointF QwtSymbol::pinPoint() const
  * @sa setPinPoint(), isPinPointEnabled()
  *
  */
-void QwtSymbol::setPinPointEnabled( bool on )
+void QwtSymbol::setPinPointEnabled(bool on)
 {
     QWT_D(d);
-    if ( d->isPinPointEnabled != on )
-    {
+    if (d->isPinPointEnabled != on) {
         d->isPinPointEnabled = on;
         invalidateCache();
     }
@@ -1345,10 +1238,9 @@ bool QwtSymbol::isPinPointEnabled() const
  * @sa drawSymbol()
  *
  */
-void QwtSymbol::drawSymbols( QPainter* painter,
-    const QPointF* points, int numPoints ) const
+void QwtSymbol::drawSymbols(QPainter* painter, const QPointF* points, int numPoints) const
 {
-    if ( numPoints <= 0 )
+    if (numPoints <= 0)
         return;
 
     QWT_DC(d);
@@ -1358,106 +1250,86 @@ void QwtSymbol::drawSymbols( QPainter* painter,
     // Don't use the pixmap, when the paint device
     // could generate scalable vectors
 
-    if ( QwtPainter::roundingAlignment( painter ) &&
-        !painter->transform().isScaling() )
-    {
-        if ( d->cache.policy == QwtSymbol::Cache )
-        {
+    if (QwtPainter::roundingAlignment(painter) && !painter->transform().isScaling()) {
+        if (d->cache.policy == QwtSymbol::Cache) {
             useCache = true;
-        }
-        else if ( d->cache.policy == QwtSymbol::AutoCache )
-        {
-            switch( painter->paintEngine()->type() )
-            {
-                case QPaintEngine::OpenGL:
-                case QPaintEngine::OpenGL2:
-                {
-                    // using a FBO as cache ?
+        } else if (d->cache.policy == QwtSymbol::AutoCache) {
+            switch (painter->paintEngine()->type()) {
+            case QPaintEngine::OpenGL:
+            case QPaintEngine::OpenGL2: {
+                // using a FBO as cache ?
+                useCache = false;
+                break;
+            }
+            case QPaintEngine::OpenVG:
+            case QPaintEngine::SVG:
+            case QPaintEngine::Pdf:
+            case QPaintEngine::Picture: {
+                // vector graphics
+                useCache = false;
+                break;
+            }
+            case QPaintEngine::X11: {
+                switch (d->style) {
+                case QwtSymbol::XCross:
+                case QwtSymbol::HLine:
+                case QwtSymbol::VLine:
+                case QwtSymbol::Cross: {
+                    // for the very simple shapes using vector graphics is
+                    // usually faster.
+
                     useCache = false;
                     break;
                 }
-                case QPaintEngine::OpenVG:
-                case QPaintEngine::SVG:
-                case QPaintEngine::Pdf:
-                case QPaintEngine::Picture:
-                {
-                    // vector graphics
-                    useCache = false;
-                    break;
-                }
-                case QPaintEngine::X11:
-                {
-                    switch( d->style )
-                    {
-                        case QwtSymbol::XCross:
-                        case QwtSymbol::HLine:
-                        case QwtSymbol::VLine:
-                        case QwtSymbol::Cross:
-                        {
-                            // for the very simple shapes using vector graphics is
-                            // usually faster.
 
-                            useCache = false;
-                            break;
-                        }
+                case QwtSymbol::Pixmap: {
+                    if (d->size.isEmpty() || d->size == d->pixmap.pixmap.size()) {
+                        // no need to have a pixmap cache for a pixmap
+                        // of the same size
 
-                        case QwtSymbol::Pixmap:
-                        {
-                            if ( d->size.isEmpty() ||
-                                d->size == d->pixmap.pixmap.size() )
-                            {
-                                // no need to have a pixmap cache for a pixmap
-                                // of the same size
-
-                                useCache = false;
-                            }
-                            break;
-                        }
-                        default:
-                            break;
+                        useCache = false;
                     }
                     break;
                 }
                 default:
-                {
-                    useCache = true;
+                    break;
                 }
+                break;
+            }
+            default: {
+                useCache = true;
+            }
             }
         }
     }
 
-    if ( useCache )
-    {
+    if (useCache) {
         const QRect br = boundingRect();
 
-        if ( d->cache.pixmap.isNull() )
-        {
-            d->cache.pixmap = QwtPainter::backingStore( nullptr, br.size() );
-            d->cache.pixmap.fill( Qt::transparent );
+        if (d->cache.pixmap.isNull()) {
+            d->cache.pixmap = QwtPainter::backingStore(nullptr, br.size());
+            d->cache.pixmap.fill(Qt::transparent);
 
-            QPainter p( &d->cache.pixmap );
-            p.setRenderHints( painter->renderHints() );
-            p.translate( -br.topLeft() );
+            QPainter p(&d->cache.pixmap);
+            p.setRenderHints(painter->renderHints());
+            p.translate(-br.topLeft());
 
-            const QPointF pos( 0.0, 0.0 );
-            renderSymbols( &p, &pos, 1 );
+            const QPointF pos(0.0, 0.0);
+            renderSymbols(&p, &pos, 1);
         }
 
         const int dx = br.left();
         const int dy = br.top();
 
-        for ( int i = 0; i < numPoints; i++ )
-        {
-            const int left = qRound( points[i].x() ) + dx;
-            const int top = qRound( points[i].y() ) + dy;
+        for (int i = 0; i < numPoints; i++) {
+            const int left = qRound(points[ i ].x()) + dx;
+            const int top  = qRound(points[ i ].y()) + dy;
 
-            painter->drawPixmap( left, top, d->cache.pixmap );
+            painter->drawPixmap(left, top, d->cache.pixmap);
         }
-    }
-    else
-    {
+    } else {
         painter->save();
-        renderSymbols( painter, points, numPoints );
+        renderSymbols(painter, points, numPoints);
         painter->restore();
     }
 }
@@ -1472,73 +1344,56 @@ void QwtSymbol::drawSymbols( QPainter* painter,
  * @sa drawSymbols()
  *
  */
-void QwtSymbol::drawSymbol( QPainter* painter, const QRectF& rect ) const
+void QwtSymbol::drawSymbol(QPainter* painter, const QRectF& rect) const
 {
     QWT_DC(d);
 
-    if ( d->style == QwtSymbol::NoSymbol )
+    if (d->style == QwtSymbol::NoSymbol)
         return;
 
-    if ( d->style == QwtSymbol::Graphic )
-    {
-        d->graphic.graphic.render(
-            painter, rect, Qt::KeepAspectRatio );
-    }
-    else if ( d->style == QwtSymbol::Path )
-    {
-        if ( d->path.graphic.isNull() )
-        {
-            d->path.graphic = qwtPathGraphic(
-                d->path.path, d->pen, d->brush );
+    if (d->style == QwtSymbol::Graphic) {
+        d->graphic.graphic.render(painter, rect, Qt::KeepAspectRatio);
+    } else if (d->style == QwtSymbol::Path) {
+        if (d->path.graphic.isNull()) {
+            d->path.graphic = qwtPathGraphic(d->path.path, d->pen, d->brush);
         }
 
-        d->path.graphic.render(
-            painter, rect, Qt::KeepAspectRatio );
+        d->path.graphic.render(painter, rect, Qt::KeepAspectRatio);
         return;
-    }
-    else if ( d->style == QwtSymbol::SvgDocument )
-    {
+    } else if (d->style == QwtSymbol::SvgDocument) {
 #ifndef QWT_NO_SVG
-        if ( d->svg.renderer )
-        {
+        if (d->svg.renderer) {
             QRectF scaledRect;
 
             QSizeF sz = d->svg.renderer->viewBoxF().size();
-            if ( !sz.isEmpty() )
-            {
-                sz.scale( rect.size(), Qt::KeepAspectRatio );
-                scaledRect.setSize( sz );
-                scaledRect.moveCenter( rect.center() );
-            }
-            else
-            {
+            if (!sz.isEmpty()) {
+                sz.scale(rect.size(), Qt::KeepAspectRatio);
+                scaledRect.setSize(sz);
+                scaledRect.moveCenter(rect.center());
+            } else {
                 scaledRect = rect;
             }
 
-            d->svg.renderer->render(
-                painter, scaledRect );
+            d->svg.renderer->render(painter, scaledRect);
         }
 #endif
-    }
-    else
-    {
+    } else {
         const QRect br = boundingRect();
 
         // scale the symbol size to fit into rect.
 
-        const double ratio = qMin( rect.width() / br.width(),
-            rect.height() / br.height() );
+        const double ratio = qMin(rect.width() / br.width(), rect.height() / br.height());
 
         painter->save();
 
-        painter->translate( rect.center() );
-        painter->scale( ratio, ratio );
+        painter->translate(rect.center());
+        painter->scale(ratio, ratio);
 
         const bool isPinPointEnabled = d->isPinPointEnabled;
-        d->isPinPointEnabled = false;
+        d->isPinPointEnabled         = false;
 
         const QPointF pos;
-        renderSymbols( painter, &pos, 1 );
+        renderSymbols(painter, &pos, 1);
 
         d->isPinPointEnabled = isPinPointEnabled;
 
@@ -1553,123 +1408,91 @@ void QwtSymbol::drawSymbol( QPainter* painter, const QRectF& rect ) const
    @param points Positions of the symbols
    @param numPoints Number of points
  */
-void QwtSymbol::renderSymbols( QPainter* painter,
-    const QPointF* points, int numPoints ) const
+void QwtSymbol::renderSymbols(QPainter* painter, const QPointF* points, int numPoints) const
 {
     QWT_DC(d);
 
-    switch ( d->style )
-    {
-        case QwtSymbol::Ellipse:
-        {
-            qwtDrawEllipseSymbols( painter, points, numPoints, *this );
-            break;
+    switch (d->style) {
+    case QwtSymbol::Ellipse: {
+        qwtDrawEllipseSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Rect: {
+        qwtDrawRectSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Diamond: {
+        qwtDrawDiamondSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Cross: {
+        qwtDrawLineSymbols(painter, Qt::Horizontal | Qt::Vertical, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::XCross: {
+        qwtDrawXCrossSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Triangle:
+    case QwtSymbol::UTriangle: {
+        qwtDrawTriangleSymbols(painter, QwtTriangle::Up, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::DTriangle: {
+        qwtDrawTriangleSymbols(painter, QwtTriangle::Down, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::RTriangle: {
+        qwtDrawTriangleSymbols(painter, QwtTriangle::Right, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::LTriangle: {
+        qwtDrawTriangleSymbols(painter, QwtTriangle::Left, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::HLine: {
+        qwtDrawLineSymbols(painter, Qt::Horizontal, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::VLine: {
+        qwtDrawLineSymbols(painter, Qt::Vertical, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Star1: {
+        qwtDrawStar1Symbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Star2: {
+        qwtDrawStar2Symbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Hexagon: {
+        qwtDrawHexagonSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Path: {
+        if (d->path.graphic.isNull()) {
+            d->path.graphic = qwtPathGraphic(d->path.path, d->pen, d->brush);
         }
-        case QwtSymbol::Rect:
-        {
-            qwtDrawRectSymbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Diamond:
-        {
-            qwtDrawDiamondSymbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Cross:
-        {
-            qwtDrawLineSymbols( painter, Qt::Horizontal | Qt::Vertical,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::XCross:
-        {
-            qwtDrawXCrossSymbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Triangle:
-        case QwtSymbol::UTriangle:
-        {
-            qwtDrawTriangleSymbols( painter, QwtTriangle::Up,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::DTriangle:
-        {
-            qwtDrawTriangleSymbols( painter, QwtTriangle::Down,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::RTriangle:
-        {
-            qwtDrawTriangleSymbols( painter, QwtTriangle::Right,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::LTriangle:
-        {
-            qwtDrawTriangleSymbols( painter, QwtTriangle::Left,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::HLine:
-        {
-            qwtDrawLineSymbols( painter, Qt::Horizontal,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::VLine:
-        {
-            qwtDrawLineSymbols( painter, Qt::Vertical,
-                points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Star1:
-        {
-            qwtDrawStar1Symbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Star2:
-        {
-            qwtDrawStar2Symbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Hexagon:
-        {
-            qwtDrawHexagonSymbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Path:
-        {
-            if ( d->path.graphic.isNull() )
-            {
-                d->path.graphic = qwtPathGraphic( d->path.path,
-                    d->pen, d->brush );
-            }
 
-            qwtDrawGraphicSymbols( painter, points, numPoints,
-                d->path.graphic, *this );
-            break;
-        }
-        case QwtSymbol::Pixmap:
-        {
-            qwtDrawPixmapSymbols( painter, points, numPoints, *this );
-            break;
-        }
-        case QwtSymbol::Graphic:
-        {
-            qwtDrawGraphicSymbols( painter, points, numPoints,
-                d->graphic.graphic, *this );
-            break;
-        }
-        case QwtSymbol::SvgDocument:
-        {
+        qwtDrawGraphicSymbols(painter, points, numPoints, d->path.graphic, *this);
+        break;
+    }
+    case QwtSymbol::Pixmap: {
+        qwtDrawPixmapSymbols(painter, points, numPoints, *this);
+        break;
+    }
+    case QwtSymbol::Graphic: {
+        qwtDrawGraphicSymbols(painter, points, numPoints, d->graphic.graphic, *this);
+        break;
+    }
+    case QwtSymbol::SvgDocument: {
 #ifndef QWT_NO_SVG
-            qwtDrawSvgSymbols( painter, points, numPoints,
-                d->svg.renderer, *this );
+        qwtDrawSvgSymbols(painter, points, numPoints, d->svg.renderer, *this);
 #endif
-            break;
-        }
-        default:;
+        break;
+    }
+    default:;
     }
 }
 
@@ -1687,118 +1510,104 @@ QRect QwtSymbol::boundingRect() const
 
     bool pinPointTranslation = false;
 
-    switch ( d->style )
-    {
-        case QwtSymbol::Ellipse:
-        case QwtSymbol::Rect:
-        case QwtSymbol::Hexagon:
-        {
-            qreal pw = 0.0;
-            if ( d->pen.style() != Qt::NoPen )
-                pw = QwtPainter::effectivePenWidth( d->pen );
+    switch (d->style) {
+    case QwtSymbol::Ellipse:
+    case QwtSymbol::Rect:
+    case QwtSymbol::Hexagon: {
+        qreal pw = 0.0;
+        if (d->pen.style() != Qt::NoPen)
+            pw = QwtPainter::effectivePenWidth(d->pen);
 
-            rect.setSize( d->size + QSizeF( pw, pw ) );
-            rect.moveCenter( QPointF( 0.0, 0.0 ) );
+        rect.setSize(d->size + QSizeF(pw, pw));
+        rect.moveCenter(QPointF(0.0, 0.0));
 
-            break;
+        break;
+    }
+    case QwtSymbol::XCross:
+    case QwtSymbol::Diamond:
+    case QwtSymbol::Triangle:
+    case QwtSymbol::UTriangle:
+    case QwtSymbol::DTriangle:
+    case QwtSymbol::RTriangle:
+    case QwtSymbol::LTriangle:
+    case QwtSymbol::Star1:
+    case QwtSymbol::Star2: {
+        qreal pw = 0.0;
+        if (d->pen.style() != Qt::NoPen)
+            pw = QwtPainter::effectivePenWidth(d->pen);
+
+        rect.setSize(d->size + QSizeF(2 * pw, 2 * pw));
+        rect.moveCenter(QPointF(0.0, 0.0));
+        break;
+    }
+    case QwtSymbol::Path: {
+        if (d->path.graphic.isNull()) {
+            d->path.graphic = qwtPathGraphic(d->path.path, d->pen, d->brush);
         }
-        case QwtSymbol::XCross:
-        case QwtSymbol::Diamond:
-        case QwtSymbol::Triangle:
-        case QwtSymbol::UTriangle:
-        case QwtSymbol::DTriangle:
-        case QwtSymbol::RTriangle:
-        case QwtSymbol::LTriangle:
-        case QwtSymbol::Star1:
-        case QwtSymbol::Star2:
-        {
-            qreal pw = 0.0;
-            if ( d->pen.style() != Qt::NoPen )
-                pw = QwtPainter::effectivePenWidth( d->pen );
 
-            rect.setSize( d->size + QSizeF( 2 * pw, 2 * pw ) );
-            rect.moveCenter( QPointF( 0.0, 0.0 ) );
-            break;
-        }
-        case QwtSymbol::Path:
-        {
-            if ( d->path.graphic.isNull() )
-            {
-                d->path.graphic = qwtPathGraphic(
-                    d->path.path, d->pen, d->brush );
-            }
+        rect                = qwtScaledBoundingRect(d->path.graphic, d->size);
+        pinPointTranslation = true;
 
-            rect = qwtScaledBoundingRect(
-                d->path.graphic, d->size );
-            pinPointTranslation = true;
+        break;
+    }
+    case QwtSymbol::Pixmap: {
+        if (d->size.isEmpty())
+            rect.setSize(d->pixmap.pixmap.size());
+        else
+            rect.setSize(d->size);
 
-            break;
-        }
-        case QwtSymbol::Pixmap:
-        {
-            if ( d->size.isEmpty() )
-                rect.setSize( d->pixmap.pixmap.size() );
-            else
-                rect.setSize( d->size );
+        pinPointTranslation = true;
 
-            pinPointTranslation = true;
+        break;
+    }
+    case QwtSymbol::Graphic: {
+        rect                = qwtScaledBoundingRect(d->graphic.graphic, d->size);
+        pinPointTranslation = true;
 
-            break;
-        }
-        case QwtSymbol::Graphic:
-        {
-            rect = qwtScaledBoundingRect(
-                d->graphic.graphic, d->size );
-            pinPointTranslation = true;
-
-            break;
-        }
+        break;
+    }
 #ifndef QWT_NO_SVG
-        case QwtSymbol::SvgDocument:
-        {
-            if ( d->svg.renderer )
-                rect = d->svg.renderer->viewBoxF();
+    case QwtSymbol::SvgDocument: {
+        if (d->svg.renderer)
+            rect = d->svg.renderer->viewBoxF();
 
-            if ( d->size.isValid() && !rect.isEmpty() )
-            {
-                QSizeF sz = rect.size();
+        if (d->size.isValid() && !rect.isEmpty()) {
+            QSizeF sz = rect.size();
 
-                const double sx = d->size.width() / sz.width();
-                const double sy = d->size.height() / sz.height();
+            const double sx = d->size.width() / sz.width();
+            const double sy = d->size.height() / sz.height();
 
-                QTransform transform;
-                transform.scale( sx, sy );
+            QTransform transform;
+            transform.scale(sx, sy);
 
-                rect = transform.mapRect( rect );
-            }
-            pinPointTranslation = true;
-            break;
+            rect = transform.mapRect(rect);
         }
+        pinPointTranslation = true;
+        break;
+    }
 #endif
-        default:
-        {
-            rect.setSize( d->size );
-            rect.moveCenter( QPointF( 0.0, 0.0 ) );
-        }
+    default: {
+        rect.setSize(d->size);
+        rect.moveCenter(QPointF(0.0, 0.0));
+    }
     }
 
-    if ( pinPointTranslation )
-    {
-        QPointF pinPoint( 0.0, 0.0 );
-        if ( d->isPinPointEnabled )
+    if (pinPointTranslation) {
+        QPointF pinPoint(0.0, 0.0);
+        if (d->isPinPointEnabled)
             pinPoint = rect.center() - d->pinPoint;
 
-        rect.moveCenter( pinPoint );
+        rect.moveCenter(pinPoint);
     }
 
     QRect r;
-    r.setLeft( qwtFloor( rect.left() ) );
-    r.setTop( qwtFloor( rect.top() ) );
-    r.setRight( qwtCeil( rect.right() ) );
-    r.setBottom( qwtCeil( rect.bottom() ) );
+    r.setLeft(qwtFloor(rect.left()));
+    r.setTop(qwtFloor(rect.top()));
+    r.setRight(qwtCeil(rect.right()));
+    r.setBottom(qwtCeil(rect.bottom()));
 
-    if ( d->style != QwtSymbol::Pixmap )
-        r.adjust( -1, -1, 1, 1 ); // for antialiasing
+    if (d->style != QwtSymbol::Pixmap)
+        r.adjust(-1, -1, 1, 1);  // for antialiasing
 
     return r;
 }
@@ -1814,7 +1623,7 @@ QRect QwtSymbol::boundingRect() const
 void QwtSymbol::invalidateCache()
 {
     QWT_D(d);
-    if ( !d->cache.pixmap.isNull() )
+    if (!d->cache.pixmap.isNull())
         d->cache.pixmap = QPixmap();
 }
 
@@ -1824,11 +1633,10 @@ void QwtSymbol::invalidateCache()
  * @sa style()
  *
  */
-void QwtSymbol::setStyle( QwtSymbol::Style style )
+void QwtSymbol::setStyle(QwtSymbol::Style style)
 {
     QWT_D(d);
-    if ( d->style != style )
-    {
+    if (d->style != style) {
         d->style = style;
         invalidateCache();
     }

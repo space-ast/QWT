@@ -50,16 +50,16 @@ class QWT_EXPORT QwtKnob : public QwtAbstractSlider
 {
     Q_OBJECT
 
-    Q_ENUMS ( KnobStyle MarkerStyle )
+    Q_ENUMS(KnobStyle MarkerStyle)
 
-    Q_PROPERTY( KnobStyle knobStyle READ knobStyle WRITE setKnobStyle )
-    Q_PROPERTY( int knobWidth READ knobWidth WRITE setKnobWidth )
-    Q_PROPERTY( Qt::Alignment alignment READ alignment WRITE setAlignment )
-    Q_PROPERTY( double totalAngle READ totalAngle WRITE setTotalAngle )
-    Q_PROPERTY( int numTurns READ numTurns WRITE setNumTurns )
-    Q_PROPERTY( MarkerStyle markerStyle READ markerStyle WRITE setMarkerStyle )
-    Q_PROPERTY( int markerSize READ markerSize WRITE setMarkerSize )
-    Q_PROPERTY( int borderWidth READ borderWidth WRITE setBorderWidth )
+    Q_PROPERTY(KnobStyle knobStyle READ knobStyle WRITE setKnobStyle)
+    Q_PROPERTY(int knobWidth READ knobWidth WRITE setKnobWidth)
+    Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment)
+    Q_PROPERTY(double totalAngle READ totalAngle WRITE setTotalAngle)
+    Q_PROPERTY(int numTurns READ numTurns WRITE setNumTurns)
+    Q_PROPERTY(MarkerStyle markerStyle READ markerStyle WRITE setMarkerStyle)
+    Q_PROPERTY(int markerSize READ markerSize WRITE setMarkerSize)
+    Q_PROPERTY(int borderWidth READ borderWidth WRITE setBorderWidth)
 
 public:
     /**
@@ -111,47 +111,47 @@ public:
     };
 
     /// Constructor
-    explicit QwtKnob( QWidget* parent = nullptr );
+    explicit QwtKnob(QWidget* parent = nullptr);
     /// Destructor
     ~QwtKnob() override;
 
     /// Set alignment of the knob inside contentsRect()
-    void setAlignment( Qt::Alignment );
+    void setAlignment(Qt::Alignment);
     /// Return alignment of the knob
     Qt::Alignment alignment() const;
 
     /// Set the knob's width (diameter)
-    void setKnobWidth( int );
+    void setKnobWidth(int);
     /// Return the knob's width
     int knobWidth() const;
 
     /// Set the number of turns for the knob
-    void setNumTurns( int );
+    void setNumTurns(int);
     /// Return the number of turns
     int numTurns() const;
 
     /// Set the total angle which the knob can be turned
-    void setTotalAngle ( double angle );
+    void setTotalAngle(double angle);
     /// Return the total angle
     double totalAngle() const;
 
     /// Set the knob style
-    void setKnobStyle( KnobStyle );
+    void setKnobStyle(KnobStyle);
     /// Return the knob style
     KnobStyle knobStyle() const;
 
     /// Set the border width
-    void setBorderWidth( int );
+    void setBorderWidth(int);
     /// Return the border width
     int borderWidth() const;
 
     /// Set the marker style
-    void setMarkerStyle( MarkerStyle );
+    void setMarkerStyle(MarkerStyle);
     /// Return the marker style
     MarkerStyle markerStyle() const;
 
     /// Set the marker size
-    void setMarkerSize( int );
+    void setMarkerSize(int);
     /// Return the marker size
     int markerSize() const;
 
@@ -161,7 +161,7 @@ public:
     virtual QSize minimumSizeHint() const override;
 
     /// Set the scale draw
-    void setScaleDraw( QwtRoundScaleDraw* );
+    void setScaleDraw(QwtRoundScaleDraw*);
 
     /// Return the scale draw (const version)
     const QwtRoundScaleDraw* scaleDraw() const;
@@ -171,21 +171,20 @@ public:
     /// Return the bounding rectangle of the knob
     QRect knobRect() const;
 
-  protected:
-    virtual void paintEvent( QPaintEvent* ) override;
-    virtual void changeEvent( QEvent* ) override;
+protected:
+    virtual void paintEvent(QPaintEvent*) override;
+    virtual void changeEvent(QEvent*) override;
 
-    virtual void drawKnob( QPainter*, const QRectF& ) const;
+    virtual void drawKnob(QPainter*, const QRectF&) const;
 
-    virtual void drawFocusIndicator( QPainter* ) const;
+    virtual void drawFocusIndicator(QPainter*) const;
 
-    virtual void drawMarker( QPainter*,
-        const QRectF&, double angle ) const;
+    virtual void drawMarker(QPainter*, const QRectF&, double angle) const;
 
-    virtual double scrolledTo( const QPoint& ) const override;
-    virtual bool isScrollPosition( const QPoint& ) const override;
+    virtual double scrolledTo(const QPoint&) const override;
+    virtual bool isScrollPosition(const QPoint&) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtKnob)
 };
 

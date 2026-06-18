@@ -184,7 +184,7 @@ public:
     int axisAligmentCount() const;
 
     // Get axis alignment information at specified index
-    QPair<QList< QwtPlot* >,int> axisAligmentInfo(int index) const;
+    QPair< QList< QwtPlot* >, int > axisAligmentInfo(int index) const;
 
 public:
     // Align axes of multiple QwtPlot objects
@@ -215,7 +215,6 @@ Q_SIGNALS:
      * @note Parasite axes cannot be set as current axes
      */
     void currentAxesChanged(QwtPlot* current);
-
 
 protected:
     void paintEvent(QPaintEvent* event) override;

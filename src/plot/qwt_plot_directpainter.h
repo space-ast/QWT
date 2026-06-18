@@ -54,7 +54,7 @@ class QwtPlotSeriesItem;
  */
 class QWT_EXPORT QwtPlotDirectPainter : public QObject
 {
-  public:
+public:
     /**
      * @brief Paint attributes
      * @sa setAttribute(), testAttribute(), drawSeries()
@@ -80,45 +80,45 @@ class QWT_EXPORT QwtPlotDirectPainter : public QObject
         CopyBackingStore = 0x04
     };
 
-Q_DECLARE_FLAGS( Attributes, Attribute )
+    Q_DECLARE_FLAGS(Attributes, Attribute)
 
     // Constructor
-explicit QwtPlotDirectPainter( QObject* parent = nullptr );
+    explicit QwtPlotDirectPainter(QObject* parent = nullptr);
 
     // Destructor
-~QwtPlotDirectPainter() override;
+    ~QwtPlotDirectPainter() override;
 
     // Set attribute
-void setAttribute( Attribute, bool on );
+    void setAttribute(Attribute, bool on);
 
     // Test attribute
-bool testAttribute( Attribute ) const;
+    bool testAttribute(Attribute) const;
 
     // Set clipping
-void setClipping( bool );
+    void setClipping(bool);
 
     // Check if clipping is enabled
-bool hasClipping() const;
+    bool hasClipping() const;
 
     // Set clip region
-void setClipRegion( const QRegion& );
+    void setClipRegion(const QRegion&);
 
     // Get clip region
-QRegion clipRegion() const;
+    QRegion clipRegion() const;
 
     // Draw series
-void drawSeries( QwtPlotSeriesItem*, int from, int to );
+    void drawSeries(QwtPlotSeriesItem*, int from, int to);
 
     // Reset the painter
-void reset();
+    void reset();
 
     // Event filter
-virtual bool eventFilter( QObject*, QEvent* ) override;
+    virtual bool eventFilter(QObject*, QEvent*) override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotDirectPainter)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotDirectPainter::Attributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotDirectPainter::Attributes)
 
 #endif

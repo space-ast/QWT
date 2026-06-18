@@ -54,14 +54,14 @@ IO::Functor* VectorWriter::clone() const
 {
     auto* copy = new VectorWriter();
     QWT_DC(d);
-    auto* copyD = copy->d_func();
+    auto* copyD          = copy->d_func();
     copyD->m_gl2psFormat = d->m_gl2psFormat;
     copyD->m_formatError = d->m_formatError;
-    copyD->m_compressed = d->m_compressed;
-    copyD->m_sortMode = d->m_sortMode;
-    copyD->m_landscape = d->m_landscape;
-    copyD->m_textMode = d->m_textMode;
-    copyD->m_texFname = d->m_texFname;
+    copyD->m_compressed  = d->m_compressed;
+    copyD->m_sortMode    = d->m_sortMode;
+    copyD->m_landscape   = d->m_landscape;
+    copyD->m_textMode    = d->m_textMode;
+    copyD->m_texFname    = d->m_texFname;
     return copy;
 }
 

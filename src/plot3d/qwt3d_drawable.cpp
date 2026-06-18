@@ -10,37 +10,33 @@ class Drawable::PrivateData
     QWT_DECLARE_PUBLIC(Drawable)
 
 public:
-    PrivateData(Drawable* q)
-        : q_ptr(q)
+    PrivateData(Drawable* q) : q_ptr(q)
     {
     }
 
-    GLboolean m_ls = 0;
-    GLboolean m_pols = 0;
-    GLint m_polmode[2] = {0, 0};
-    GLfloat m_lw = 0.0f;
-    GLint m_blsrc = 0;
-    GLint m_bldst = 0;
-    GLdouble m_col[4] = {0.0, 0.0, 0.0, 0.0};
-    GLint m_pattern = 0;
-    GLint m_factor = 0;
-    GLboolean m_sallowed = 0;
-    GLboolean m_tex2d = 0;
-    GLint m_matrixmode = 0;
-    GLfloat m_poloffs[2] = {0.0f, 0.0f};
+    GLboolean m_ls          = 0;
+    GLboolean m_pols        = 0;
+    GLint m_polmode[ 2 ]    = { 0, 0 };
+    GLfloat m_lw            = 0.0f;
+    GLint m_blsrc           = 0;
+    GLint m_bldst           = 0;
+    GLdouble m_col[ 4 ]     = { 0.0, 0.0, 0.0, 0.0 };
+    GLint m_pattern         = 0;
+    GLint m_factor          = 0;
+    GLboolean m_sallowed    = 0;
+    GLboolean m_tex2d       = 0;
+    GLint m_matrixmode      = 0;
+    GLfloat m_poloffs[ 2 ]  = { 0.0f, 0.0f };
     GLboolean m_poloffsfill = 0;
 
-    std::list<Drawable *> m_dlist;
+    std::list< Drawable* > m_dlist;
 };
 
-Drawable::Drawable()
-    : QWT_PIMPL_CONSTRUCT
+Drawable::Drawable() : QWT_PIMPL_CONSTRUCT
 {
 }
 
-Drawable::Drawable(Drawable&& other) noexcept
-    : m_data(std::move(other.m_data))
-    , color(other.color)
+Drawable::Drawable(Drawable&& other) noexcept : m_data(std::move(other.m_data)), color(other.color)
 {
     std::copy(std::begin(other.modelMatrix), std::end(other.modelMatrix), std::begin(modelMatrix));
     std::copy(std::begin(other.projMatrix), std::end(other.projMatrix), std::begin(projMatrix));
@@ -51,7 +47,7 @@ Drawable& Drawable::operator=(Drawable&& other) noexcept
 {
     if (this != &other) {
         m_data = std::move(other.m_data);
-        color = other.color;
+        color  = other.color;
         std::copy(std::begin(other.modelMatrix), std::end(other.modelMatrix), std::begin(modelMatrix));
         std::copy(std::begin(other.projMatrix), std::end(other.projMatrix), std::begin(projMatrix));
         std::copy(std::begin(other.viewport), std::end(other.viewport), std::begin(viewport));

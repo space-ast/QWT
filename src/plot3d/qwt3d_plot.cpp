@@ -59,9 +59,7 @@ Plot3D::PrivateData::PrivateData(Plot3D* q)
  * @param parent Parent widget
  * @details This should be the first call in your derived classes constructors.
  */
-Plot3D::Plot3D(QWidget *parent)
-    : QOpenGLWidget(parent)
-    , QWT_PIMPL_CONSTRUCT
+Plot3D::Plot3D(QWidget* parent) : QOpenGLWidget(parent), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
 
@@ -72,7 +70,9 @@ Plot3D::Plot3D(QWidget *parent)
     setTitlePosition(0.95);
 
     setFocusPolicy(Qt::StrongFocus);
-    assignMouse(Qt::LeftButton, MouseState(Qt::LeftButton, Qt::ShiftModifier), Qt::LeftButton,
+    assignMouse(Qt::LeftButton,
+                MouseState(Qt::LeftButton, Qt::ShiftModifier),
+                Qt::LeftButton,
                 MouseState(Qt::LeftButton, Qt::AltModifier),
                 MouseState(Qt::LeftButton, Qt::AltModifier),
                 MouseState(Qt::LeftButton, Qt::AltModifier | Qt::ShiftModifier),
@@ -80,8 +80,12 @@ Plot3D::Plot3D(QWidget *parent)
                 MouseState(Qt::LeftButton, Qt::ControlModifier),
                 MouseState(Qt::LeftButton, Qt::ControlModifier));
 
-    assignKeyboard(Qt::Key_Down, Qt::Key_Up, KeyboardState(Qt::Key_Right, Qt::ShiftModifier),
-                   KeyboardState(Qt::Key_Left, Qt::ShiftModifier), Qt::Key_Right, Qt::Key_Left,
+    assignKeyboard(Qt::Key_Down,
+                   Qt::Key_Up,
+                   KeyboardState(Qt::Key_Right, Qt::ShiftModifier),
+                   KeyboardState(Qt::Key_Left, Qt::ShiftModifier),
+                   Qt::Key_Right,
+                   Qt::Key_Left,
                    KeyboardState(Qt::Key_Right, Qt::AltModifier),
                    KeyboardState(Qt::Key_Left, Qt::AltModifier),
                    KeyboardState(Qt::Key_Down, Qt::AltModifier),
@@ -111,7 +115,7 @@ Plot3D::~Plot3D()
 {
     QWT_D(d);
     makeCurrent();
-    SaveGlDeleteLists(d->m_displayLists[0], static_cast<GLsizei>(d->m_displayLists.size()));
+    SaveGlDeleteLists(d->m_displayLists[ 0 ], static_cast< GLsizei >(d->m_displayLists.size()));
     d->m_dataColor->destroy();
     delete d->m_userPlotStyle;
     for (ELIT it = d->m_enrichmentList.begin(); it != d->m_enrichmentList.end(); ++it)
@@ -406,7 +410,7 @@ void Plot3D::initializeGL()
 
     disableLighting();
 
-    GLfloat whiteAmb[4] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat whiteAmb[ 4 ] = { 1.0, 1.0, 1.0, 1.0 };
 
     setLightShift(0, 0, 3000);
     glEnable(GL_COLOR_MATERIAL);
@@ -490,7 +494,7 @@ void Plot3D::paintGL()
 
     for (unsigned i = 0; i != d->m_displayLists.size(); ++i) {
         if (i != LegendObject)
-            glCallList(d->m_displayLists[i]);
+            glCallList(d->m_displayLists[ i ]);
     }
     d->m_coordinates.draw();
 
@@ -531,7 +535,7 @@ void Plot3D::createCoordinateSystem(Triple beg, Triple end)
 void Plot3D::createCoordinateSystem()
 {
     calculateHull();
-    Triple beg = hull().minVertex; // Irix 6.5 compiler bug
+    Triple beg = hull().minVertex;  // Irix 6.5 compiler bug
     Triple end = hull().maxVertex;
     createCoordinateSystem(beg, end);
 }
@@ -573,7 +577,7 @@ void Plot3D::setBackgroundColor(RGBA rgba)
  * @brief Assigns a new coloring object for the data
  * @param col Pointer to a new Color object
  */
-void Plot3D::setDataColor(Color *col)
+void Plot3D::setDataColor(Color* col)
 {
     QWT_D(d);
     Q_ASSERT(d->m_dataColor);
@@ -622,7 +626,7 @@ void Plot3D::setPlotStyle(PLOTSTYLE val)
         return;
     delete d->m_userPlotStyle;
     d->m_userPlotStyle = nullptr;
-    d->m_plotStyle = val;
+    d->m_plotStyle     = val;
 }
 
 /**
@@ -630,7 +634,7 @@ void Plot3D::setPlotStyle(PLOTSTYLE val)
  * @param obj Reference to an Enrichment object
  * @return Pointer to the cloned enrichment object
  */
-Qwt3D::Enrichment *Plot3D::setPlotStyle(Qwt3D::Enrichment const &obj)
+Qwt3D::Enrichment* Plot3D::setPlotStyle(Qwt3D::Enrichment const& obj)
 {
     QWT_D(d);
     if (&obj == d->m_userPlotStyle)
@@ -638,7 +642,7 @@ Qwt3D::Enrichment *Plot3D::setPlotStyle(Qwt3D::Enrichment const &obj)
 
     delete d->m_userPlotStyle;
     d->m_userPlotStyle = obj.clone();
-    d->m_plotStyle = Qwt3D::USER;
+    d->m_plotStyle     = Qwt3D::USER;
     return d->m_userPlotStyle;
 }
 
@@ -729,7 +733,7 @@ void Plot3D::setTitlePosition(double rely, double relx, Qwt3D::ANCHOR anchor)
  * @param weight Font weight
  * @param italic Whether font is italic
  */
-void Plot3D::setTitleFont(const QString &family, int pointSize, int weight, bool italic)
+void Plot3D::setTitleFont(const QString& family, int pointSize, int weight, bool italic)
 {
     QWT_D(d);
     d->m_title.setFont(family, pointSize, weight, italic);
@@ -740,7 +744,7 @@ void Plot3D::setTitleFont(const QString &family, int pointSize, int weight, bool
  * @param e Reference to an Enrichment object
  * @return Pointer to the cloned enrichment object added to the list
  */
-Enrichment *Plot3D::addEnrichment(Enrichment const &e)
+Enrichment* Plot3D::addEnrichment(Enrichment const& e)
 {
     QWT_D(d);
     if (d->m_enrichmentList.end() == std::find(d->m_enrichmentList.begin(), d->m_enrichmentList.end(), &e))
@@ -753,7 +757,7 @@ Enrichment *Plot3D::addEnrichment(Enrichment const &e)
  * @param e Pointer to the Enrichment object to remove
  * @return True if the enrichment was found and removed, false otherwise
  */
-bool Plot3D::degrade(Enrichment *e)
+bool Plot3D::degrade(Enrichment* e)
 {
     QWT_D(d);
     ELIT it = std::find(d->m_enrichmentList.begin(), d->m_enrichmentList.end(), e);
@@ -786,10 +790,10 @@ void Plot3D::updateData()
 
     calculateHull();
 
-    SaveGlDeleteLists(d->m_displayLists[DataObject], 1); // data only
+    SaveGlDeleteLists(d->m_displayLists[ DataObject ], 1);  // data only
 
-    d->m_displayLists[DataObject] = glGenLists(1);
-    glNewList(d->m_displayLists[DataObject], GL_COMPILE);
+    d->m_displayLists[ DataObject ] = glGenLists(1);
+    glNewList(d->m_displayLists[ DataObject ], GL_COMPILE);
 
     this->createEnrichments();
     this->createData();

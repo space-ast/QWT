@@ -71,7 +71,7 @@ public:
     virtual QVector< QRgb > colorTable256() const;
 
 private:
-    QwtColorMap(const QwtColorMap&) = delete;
+    QwtColorMap(const QwtColorMap&)            = delete;
     QwtColorMap& operator=(const QwtColorMap&) = delete;
 
     Format m_format;
@@ -209,13 +209,13 @@ private:
 };
 
 // Map a value into a color.
-    inline QColor QwtColorMap::color(double vMin, double vMax, double value) const
+inline QColor QwtColorMap::color(double vMin, double vMax, double value) const
 {
     return QColor::fromRgba(rgb(vMin, vMax, value));
 }
 
 // Return the intended format of the color map.
-    inline QwtColorMap::Format QwtColorMap::format() const
+inline QwtColorMap::Format QwtColorMap::format() const
 {
     return m_format;
 }

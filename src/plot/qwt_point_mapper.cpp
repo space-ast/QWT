@@ -199,9 +199,12 @@ private:
 }
 
 template< class Polygon, class Point, class PolygonQuadrupel >
-static Polygon
-qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeriesData< QPointF >* series, int from, int to,
-                 int reserveSize = 0)
+static Polygon qwtMapPointsQuad(const QwtScaleMap& xMap,
+                                const QwtScaleMap& yMap,
+                                const QwtSeriesData< QPointF >* series,
+                                int from,
+                                int to,
+                                int reserveSize = 0)
 {
     Polygon polyline;
 
@@ -298,8 +301,8 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
         return polyline;
 
     // estimate reserve sizes: 4 points per pixel dimension
-    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
-    const int yPixels = qAbs(qRound(yMap.p2() - yMap.p1())) + 1;
+    const int xPixels  = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int yPixels  = qAbs(qRound(yMap.p2() - yMap.p1())) + 1;
     const int reserve1 = 4 * qMax(xPixels, yPixels) + 16;
     const int reserve2 = 4 * qMin(xPixels, yPixels) + 16;
 
@@ -310,11 +313,13 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
     const Qt::Orientation orientation = qwtProbeOrientation(series, from, to);
 
     if (orientation == Qt::Horizontal) {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(
+            xMap, yMap, series, from, to, reserve1);
 
         polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(polyline, reserve2);
     } else {
-        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(xMap, yMap, series, from, to, reserve1);
+        polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelX< Polygon, Point > >(
+            xMap, yMap, series, from, to, reserve1);
 
         polyline = qwtMapPointsQuad< Polygon, Point, QwtPolygonQuadrupelY< Polygon, Point > >(polyline, reserve2);
     }
@@ -324,8 +329,8 @@ qwtMapPointsQuad(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QwtSeri
 
 // Binary search for visible range in monotonic X data with linear scale.
 // Returns true if the range was successfully narrowed.
-static bool qwtFindVisibleRange(const QwtScaleMap& xMap, const QwtSeriesData< QPointF >* series, int from, int to, int& visFrom,
-                                int& visTo)
+static bool
+qwtFindVisibleRange(const QwtScaleMap& xMap, const QwtSeriesData< QPointF >* series, int from, int to, int& visFrom, int& visTo)
 {
     if (!xMap.isLinear() || to - from < 20)
         return false;
@@ -418,7 +423,7 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
         int count;
     };
 
-    QVector< Bin > bins(xPixels, Bin{0, 0, 0, 0, 0});
+    QVector< Bin > bins(xPixels, Bin { 0, 0, 0, 0, 0 });
 
     const int xMin        = qRound(xMap.p1());
     const bool linearPath = xMap.isLinear() && yMap.isLinear();
@@ -430,8 +435,8 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
             const QPointF sample = series->sample(i);
             if (qwt_is_nan_or_inf(sample))
                 continue;
-            const int x = qRound(sample.x() * xCnv + xOff);
-            const int y = qRound(sample.y() * yCnv + yOff);
+            const int x   = qRound(sample.x() * xCnv + xOff);
+            const int y   = qRound(sample.y() * yCnv + yOff);
             const int col = x - xMin;
             if (col < 0 || col >= xPixels)
                 continue;
@@ -478,7 +483,7 @@ qwtPixelColumnReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qwt
         const Bin& bin = bins[ col ];
         if (bin.count == 0)
             continue;
-        const int x = xMin + col;
+        const int x   = xMin + col;
         outPts[ n++ ] = Point(x, bin.firstY);
         if (bin.count < 4) {
             // for very few points in a column, just emit them in order
@@ -517,14 +522,14 @@ struct QwtRawPointData
 static QwtRawPointData qwtTryGetRawPointData(const QwtSeriesData< QPointF >* series)
 {
     if (auto* arr = dynamic_cast< const QwtPointArrayData< double >* >(series))
-        return {arr->xData().constData(), arr->yData().constData()};
+        return { arr->xData().constData(), arr->yData().constData() };
     if (auto* ptr = dynamic_cast< const QwtCPointerData< double >* >(series))
-        return {ptr->xData(), ptr->yData()};
+        return { ptr->xData(), ptr->yData() };
     if (auto* val = dynamic_cast< const QwtValuePointData< double >* >(series))
-        return {nullptr, val->yData().constData()};
+        return { nullptr, val->yData().constData() };
     if (auto* cval = dynamic_cast< const QwtCPointerValueData< double >* >(series))
-        return {nullptr, cval->yData()};
-    return {nullptr, nullptr};
+        return { nullptr, cval->yData() };
+    return { nullptr, nullptr };
 }
 
 // MinMax bucket downsampling: divide data into N equal-count buckets,
@@ -544,8 +549,8 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
     if (numPoints <= 0)
         return polyline;
 
-    const int xPixels = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
-    const int numBuckets = qMax(2, 2 * xPixels); // 2 points per bucket (min + max)
+    const int xPixels    = qAbs(qRound(xMap.p2() - xMap.p1())) + 1;
+    const int numBuckets = qMax(2, 2 * xPixels);  // 2 points per bucket (min + max)
 
     if (numPoints <= numBuckets * 2) {
         // not enough points to benefit from bucketing, fall back to quad
@@ -569,8 +574,7 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
             // NaN pre-scan: check if any NaN exists in the visible Y range
             bool hasNaN = false;
             for (int i = visFrom; i <= visTo; ++i) {
-                if (std::isnan(raw.y[i]))
-                {
+                if (std::isnan(raw.y[ i ])) {
                     hasNaN = true;
                     break;
                 }
@@ -587,13 +591,13 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
                         continue;
 
                     const QwtArgMinMaxResult r = qwtSimdArgMinMax(raw.y + start, count);
-                    const int minI = start + r.minIdx;
-                    const int maxI = start + r.maxIdx;
+                    const int minI             = start + r.minIdx;
+                    const int maxI             = start + r.maxIdx;
 
                     int minX, maxX;
                     if (raw.x != nullptr) {
-                        minX = qRound(raw.x[minI] * xCnv + xOff);
-                        maxX = qRound(raw.x[maxI] * xCnv + xOff);
+                        minX = qRound(raw.x[ minI ] * xCnv + xOff);
+                        maxX = qRound(raw.x[ maxI ] * xCnv + xOff);
                     } else {
                         minX = qRound(minI * xCnv + xOff);
                         maxX = qRound(maxI * xCnv + xOff);
@@ -623,25 +627,31 @@ qwtMinMaxBucketReduce(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const Qw
                     bool first = true;
 
                     for (int i = start; i <= qMin(end, visTo); i++) {
-                        const double y = raw.y[i];
+                        const double y = raw.y[ i ];
                         if (std::isnan(y))
                             continue;
 
                         if (first) {
                             minIdx = maxIdx = i;
                             minY = maxY = y;
-                            first = false;
+                            first       = false;
                         } else {
-                            if (y < minY) { minY = y; minIdx = i; }
-                            if (y > maxY) { maxY = y; maxIdx = i; }
+                            if (y < minY) {
+                                minY   = y;
+                                minIdx = i;
+                            }
+                            if (y > maxY) {
+                                maxY   = y;
+                                maxIdx = i;
+                            }
                         }
                     }
 
                     if (!first) {
                         int sxMin, sxMax;
                         if (raw.x != nullptr) {
-                            sxMin = qRound(raw.x[minIdx] * xCnv + xOff);
-                            sxMax = qRound(raw.x[maxIdx] * xCnv + xOff);
+                            sxMin = qRound(raw.x[ minIdx ] * xCnv + xOff);
+                            sxMax = qRound(raw.x[ maxIdx ] * xCnv + xOff);
                         } else {
                             sxMin = qRound(minIdx * xCnv + xOff);
                             sxMax = qRound(maxIdx * xCnv + xOff);

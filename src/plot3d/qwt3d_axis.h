@@ -8,7 +8,6 @@
 #include "qwt3d_scale.h"
 #include "qwt3d_autoscaler.h"
 
-
 namespace Qwt3D
 {
 

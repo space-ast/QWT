@@ -49,7 +49,7 @@
  */
 class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
 {
-  public:
+public:
     //! Constructor
     QwtSplineCubic();
     //! Destructor
@@ -59,18 +59,18 @@ class QWT_EXPORT QwtSplineCubic : public QwtSplineC2
     virtual uint locality() const override;
 
     //! Get painter path from polygon
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
     //! Get Bezier control lines
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& points ) const override;
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF& points) const override;
 
     //! Get polynomials from polygon
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
+    virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const override;
     //! Get slopes at control points
-    virtual QVector< double > slopes( const QPolygonF& ) const override;
+    virtual QVector< double > slopes(const QPolygonF&) const override;
     //! Get curvatures at control points
-    virtual QVector< double > curvatures( const QPolygonF& ) const override;
+    virtual QVector< double > curvatures(const QPolygonF&) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtSplineCubic)
 };
 

@@ -40,27 +40,24 @@ class QwtScaleDiv;
  * @details QwtPlotSeriesItem is the base class for plot items that represent a series of samples,
  *          such as curves, bars, and other data visualization elements.
  */
-class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
-    public virtual QwtAbstractSeriesStore
+class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem, public virtual QwtAbstractSeriesStore
 {
-  public:
+public:
     // Constructor
-    explicit QwtPlotSeriesItem( const QString& title = QString() );
+    explicit QwtPlotSeriesItem(const QString& title = QString());
     // Constructor with title
-    explicit QwtPlotSeriesItem( const QwtText& title );
+    explicit QwtPlotSeriesItem(const QwtText& title);
 
     // Destructor
     ~QwtPlotSeriesItem() override;
 
     // Set the orientation
-    void setOrientation( Qt::Orientation );
+    void setOrientation(Qt::Orientation);
     // Get the orientation
     Qt::Orientation orientation() const;
 
     // Draw the series item
-    virtual void draw( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
     /**
      * @brief Draw a subset of the samples
@@ -72,21 +69,23 @@ class QWT_EXPORT QwtPlotSeriesItem : public QwtPlotItem,
      * @param to Index of the last point to be painted. If to < 0 the
      *           curve will be painted to its last point.
      */
-    virtual void drawSeries( QPainter* painter,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to ) const = 0;
+    virtual void drawSeries(QPainter* painter,
+                            const QwtScaleMap& xMap,
+                            const QwtScaleMap& yMap,
+                            const QRectF& canvasRect,
+                            int from,
+                            int to) const = 0;
 
     // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
     // Update the scale divisions
-    virtual void updateScaleDiv(
-        const QwtScaleDiv&, const QwtScaleDiv& ) override;
+    virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&) override;
 
-  protected:
+protected:
     virtual void dataChanged() override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotSeriesItem)
 };
 

@@ -90,10 +90,10 @@ template< typename T,
 class QwtGridData
 {
 public:
-    using value_type       = T;           ///< @brief Type of the stored values
-    using x_container_type = XContainer;  ///< @brief Type of the x-axis container
-    using y_container_type = YContainer;  ///< @brief Type of the y-axis container
-    using data_column_type = DataColumn;  ///< @brief Type of a single column in the data matrix
+    using value_type          = T;              ///< @brief Type of the stored values
+    using x_container_type    = XContainer;     ///< @brief Type of the x-axis container
+    using y_container_type    = YContainer;     ///< @brief Type of the y-axis container
+    using data_column_type    = DataColumn;     ///< @brief Type of a single column in the data matrix
     using data_container_type = DataContainer;  ///< @brief Type of the data matrix
     using size_type           = typename DataColumn::size_type;
     /**

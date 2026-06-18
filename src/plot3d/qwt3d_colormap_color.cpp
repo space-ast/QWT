@@ -29,12 +29,7 @@ ColorMapColor::ColorMapColor(Plot3D* plot, const QString& presetName, unsigned s
 }
 
 ColorMapColor::ColorMapColor(Plot3D* plot, ::QwtColorMap* colorMap, unsigned size)
-    : m_plot(plot)
-    , m_colorMap(colorMap)
-    , m_manualMin(0.0)
-    , m_manualMax(1.0)
-    , m_useManualInterval(false)
-    , m_alpha(1.0)
+    : m_plot(plot), m_colorMap(colorMap), m_manualMin(0.0), m_manualMax(1.0), m_useManualInterval(false), m_alpha(1.0)
 {
     rebuildColorVector(size);
 }
@@ -52,8 +47,8 @@ RGBA ColorMapColor::operator()(double, double, double z) const
         zMax = m_manualMax;
     } else if (m_plot) {
         const ParallelEpiped hull = m_plot->hull();
-        zMin = hull.minVertex.z;
-        zMax = hull.maxVertex.z;
+        zMin                      = hull.minVertex.z;
+        zMax                      = hull.maxVertex.z;
     } else {
         zMin = 0.0;
         zMax = 1.0;
@@ -70,7 +65,7 @@ RGBA ColorMapColor::operator()(double, double, double z) const
 
 ColorVector& ColorMapColor::createVector(ColorVector& vec)
 {
-    rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+    rebuildColorVector(static_cast< unsigned >(m_colors.size()));
     vec = m_colors;
     return vec;
 }
@@ -81,7 +76,7 @@ void ColorMapColor::setColorMap(::QwtColorMap* map)
         delete m_colorMap;
         m_colorMap = map;
     }
-    rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+    rebuildColorVector(static_cast< unsigned >(m_colors.size()));
 }
 
 const ::QwtColorMap* ColorMapColor::colorMap() const
@@ -91,10 +86,10 @@ const ::QwtColorMap* ColorMapColor::colorMap() const
 
 void ColorMapColor::setInterval(double min, double max)
 {
-    m_manualMin = min;
-    m_manualMax = max;
+    m_manualMin         = min;
+    m_manualMax         = max;
     m_useManualInterval = true;
-    rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+    rebuildColorVector(static_cast< unsigned >(m_colors.size()));
 }
 
 void ColorMapColor::reset(unsigned size)
@@ -107,7 +102,7 @@ void ColorMapColor::setAlpha(double a)
     if (a < 0.0 || a > 1.0)
         return;
     m_alpha = a;
-    rebuildColorVector(static_cast<unsigned>(m_colors.size()));
+    rebuildColorVector(static_cast< unsigned >(m_colors.size()));
 }
 
 void ColorMapColor::rebuildColorVector(unsigned size)
@@ -120,8 +115,8 @@ void ColorMapColor::rebuildColorVector(unsigned size)
         zMax = m_manualMax;
     } else if (m_plot) {
         const ParallelEpiped hull = m_plot->hull();
-        zMin = hull.minVertex.z;
-        zMax = hull.maxVertex.z;
+        zMin                      = hull.minVertex.z;
+        zMax                      = hull.maxVertex.z;
     } else {
         zMin = 0.0;
         zMax = 1.0;
@@ -131,14 +126,14 @@ void ColorMapColor::rebuildColorVector(unsigned size)
         return;
 
     for (unsigned i = 0; i < size; ++i) {
-        const double t = (size > 1) ? static_cast<double>(i) / (size - 1) : 0.0;
+        const double t = (size > 1) ? static_cast< double >(i) / (size - 1) : 0.0;
         const double z = zMin + t * (zMax - zMin);
         const QRgb rgb = m_colorMap->rgb(zMin, zMax, z);
 
-        RGBA& rgba = m_colors[i];
-        rgba.r = qRed(rgb) / 255.0;
-        rgba.g = qGreen(rgb) / 255.0;
-        rgba.b = qBlue(rgb) / 255.0;
-        rgba.a = qAlpha(rgb) / 255.0 * m_alpha;
+        RGBA& rgba = m_colors[ i ];
+        rgba.r     = qRed(rgb) / 255.0;
+        rgba.g     = qGreen(rgb) / 255.0;
+        rgba.b     = qBlue(rgb) / 255.0;
+        rgba.a     = qAlpha(rgb) / 255.0 * m_alpha;
     }
 }

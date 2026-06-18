@@ -36,7 +36,8 @@ class QColor;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T > class QVector;
+template< typename T >
+class QVector;
 #endif
 
 /**
@@ -44,27 +45,25 @@ template< typename T > class QVector;
  *        is associated with a value ( \f$y = f([x1,x2])\f$ )
  * @details The representation depends on the style() and an optional symbol()
  *          that is displayed for each interval.
- * 
+ *
  * @note The term "histogram" is used in a different way in the areas of
  *       digital image processing and statistics. Wikipedia introduces the
  *       terms "image histogram" and "color histogram" to avoid confusions.
  *       While "image histograms" can be displayed by a QwtPlotCurve there
  *       is no applicable plot item for a "color histogram" yet.
- * 
+ *
  * @sa QwtPlotBarChart, QwtPlotMultiBarChart
- * 
+ *
  */
 
-class QWT_EXPORT QwtPlotHistogram
-    : public QwtPlotSeriesItem
-    , public QwtSeriesStore< QwtIntervalSample >
+class QWT_EXPORT QwtPlotHistogram : public QwtPlotSeriesItem, public QwtSeriesStore< QwtIntervalSample >
 {
-  public:
+public:
     /**
      * @brief Histogram styles
      * @details The default style is QwtPlotHistogram::Columns.
      * @sa setStyle(), style(), setSymbol(), symbol(), setBaseline()
-     * 
+     *
      */
     enum HistogramStyle
     {
@@ -73,7 +72,7 @@ class QWT_EXPORT QwtPlotHistogram
          * using the pen() and fill it with the brush(). The outline style
          * requires, that the intervals are in increasing order and
          * not overlapping.
-         * 
+         *
          */
         Outline,
 
@@ -81,13 +80,13 @@ class QWT_EXPORT QwtPlotHistogram
          * Draw a column for each interval. When a symbol() has been set
          * the symbol is used otherwise the column is displayed as
          * plain rectangle using pen() and brush().
-         * 
+         *
          */
         Columns,
 
         /**
          * Draw a simple line using the pen() for each interval.
-         * 
+         *
          */
         Lines,
 
@@ -95,122 +94,115 @@ class QWT_EXPORT QwtPlotHistogram
          * Styles >= UserStyle are reserved for derived
          * classes that overload drawSeries() with
          * additional application specific ways to display a histogram.
-         * 
+         *
          */
         UserStyle = 100
     };
 
     // Constructor
-explicit QwtPlotHistogram( const QString& title = QString() );
+    explicit QwtPlotHistogram(const QString& title = QString());
 
     // Constructor with QwtText title
-explicit QwtPlotHistogram( const QwtText& title );
+    explicit QwtPlotHistogram(const QwtText& title);
 
     // Destructor
-~QwtPlotHistogram() override;
+    ~QwtPlotHistogram() override;
 
     // Get the runtime type information
-virtual int rtti() const override;
+    virtual int rtti() const override;
 
     // Attach the histogram to a plot (applies color cycle if pen/brush not user-set)
     void attach(QwtPlot* plot) override;
 
     // Set pen
-void setPen( const QColor&,
-    qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 
     // Set pen
-void setPen( const QPen& );
+    void setPen(const QPen&);
 
     // Get pen
-const QPen& pen() const;
+    const QPen& pen() const;
 
     // Set brush
-void setBrush( const QBrush& );
+    void setBrush(const QBrush&);
 
     // Get brush
-const QBrush& brush() const;
+    const QBrush& brush() const;
 
     // Set samples from a vector
-void setSamples( const QVector< QwtIntervalSample >& );
+    void setSamples(const QVector< QwtIntervalSample >&);
 
     // Set samples from a series data
-void setSamples( QwtSeriesData< QwtIntervalSample >* );
+    void setSamples(QwtSeriesData< QwtIntervalSample >*);
 
     // Set baseline
-void setBaseline( double );
+    void setBaseline(double);
 
     // Get baseline
-double baseline() const;
+    double baseline() const;
 
     // Set histogram style
-void setStyle( HistogramStyle style );
+    void setStyle(HistogramStyle style);
 
     // Get histogram style
-HistogramStyle style() const;
+    HistogramStyle style() const;
 
     // Set symbol
-void setSymbol( const QwtColumnSymbol* );
+    void setSymbol(const QwtColumnSymbol*);
 
     // Get symbol
-const QwtColumnSymbol* symbol() const;
+    const QwtColumnSymbol* symbol() const;
 
     // Draw the series
-virtual void drawSeries( QPainter*,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int from, int to ) const override;
+    virtual void drawSeries(QPainter*,
+                            const QwtScaleMap& xMap,
+                            const QwtScaleMap& yMap,
+                            const QRectF& canvasRect,
+                            int from,
+                            int to) const override;
 
     // Get the bounding rectangle
-virtual QRectF boundingRect() const override;
+    virtual QRectF boundingRect() const override;
 
     // Get the legend icon
-virtual QwtGraphic legendIcon(
-    int index, const QSizeF& ) const override;
+    virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-  protected:
+protected:
     /**
      * @brief Get the column rectangle
      */
-virtual QwtColumnRect columnRect( const QwtIntervalSample&,
-    const QwtScaleMap&, const QwtScaleMap& ) const;
+    virtual QwtColumnRect columnRect(const QwtIntervalSample&, const QwtScaleMap&, const QwtScaleMap&) const;
 
     /**
      * @brief Draw a column
      */
-virtual void drawColumn( QPainter*, const QwtColumnRect&,
-    const QwtIntervalSample& ) const;
+    virtual void drawColumn(QPainter*, const QwtColumnRect&, const QwtIntervalSample&) const;
 
     /**
      * @brief Draw columns
      */
-void drawColumns( QPainter*,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    int from, int to ) const;
+    void drawColumns(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
 
     /**
      * @brief Draw outline
      */
-void drawOutline( QPainter*,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    int from, int to ) const;
+    void drawOutline(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
 
     /**
      * @brief Draw lines
      */
-void drawLines( QPainter*,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    int from, int to ) const;
+    void drawLines(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, int from, int to) const;
 
-  private:
+private:
     /**
      * @brief Initialize the histogram
      */
-void init();
+    void init();
 
     /**
      * @brief Flush polygon
      */
-void flushPolygon( QPainter*, double baseLine, QPolygonF& ) const;
+    void flushPolygon(QPainter*, double baseLine, QPolygonF&) const;
 
     QWT_DECLARE_PRIVATE(QwtPlotHistogram)
 };

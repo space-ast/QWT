@@ -37,7 +37,9 @@ public:
     QRectF mOldNormRect;                                ///< Saves the old widget position for redo/undo
     QRectF mWillSetNormRect;                            ///< The normalized rect to be set
     QSize mControlPointSize { 8, 8 };                   ///< Control point size
-    QwtFigureWidgetOverlay::ControlType mControlType { QwtFigureWidgetOverlay::OutSide };  ///< Records the current resize control position
+    QwtFigureWidgetOverlay::ControlType mControlType {
+        QwtFigureWidgetOverlay::OutSide
+    };  ///< Records the current resize control position
 
     bool mShowPrecentText { true };  ///< Show percentage text
 };

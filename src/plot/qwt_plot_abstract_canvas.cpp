@@ -269,10 +269,8 @@ void QwtPlotAbstractCanvas::drawFocusIndicator(QPainter* painter)
     const int margin = 1;
 
     QRect focusRect = d->canvasWidget->contentsRect();
-    focusRect.setRect(focusRect.x() + margin,
-                      focusRect.y() + margin,
-                      focusRect.width() - 2 * margin,
-                      focusRect.height() - 2 * margin);
+    focusRect.setRect(
+        focusRect.x() + margin, focusRect.y() + margin, focusRect.width() - 2 * margin, focusRect.height() - 2 * margin);
 
     QwtPainter::drawFocusRect(painter, d->canvasWidget, focusRect);
 }
@@ -323,13 +321,8 @@ void QwtPlotAbstractCanvas::drawBorder(QPainter* painter)
 
             const QRectF frameRect = w->property("frameRect").toRect();
 
-            QwtPainter::drawRoundedFrame(painter,
-                                         frameRect,
-                                         d->borderRadius,
-                                         d->borderRadius,
-                                         w->palette(),
-                                         frameWidth,
-                                         frameShape | frameShadow);
+            QwtPainter::drawRoundedFrame(
+                painter, frameRect, d->borderRadius, d->borderRadius, w->palette(), frameWidth, frameShape | frameShadow);
         }
     } else {
         const int frameShape  = w->property("frameShape").toInt();
@@ -550,7 +543,8 @@ class QwtPlotAbstractGLCanvas::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotAbstractGLCanvas)
 public:
-    PrivateData(QwtPlotAbstractGLCanvas* p) : q_ptr(p), frameStyle(QFrame::Box | QFrame::Plain), lineWidth(1), midLineWidth(0)
+    PrivateData(QwtPlotAbstractGLCanvas* p)
+        : q_ptr(p), frameStyle(QFrame::Box | QFrame::Plain), lineWidth(1), midLineWidth(0)
     {
     }
 
@@ -565,7 +559,8 @@ public:
  * @brief Constructor
  * @param[in] canvasWidget plot canvas widget
  */
-QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget) : QwtPlotAbstractCanvas(canvasWidget), QWT_PIMPL_CONSTRUCT
+QwtPlotAbstractGLCanvas::QwtPlotAbstractGLCanvas(QWidget* canvasWidget)
+    : QwtPlotAbstractCanvas(canvasWidget), QWT_PIMPL_CONSTRUCT
 {
     qwtUpdateContentsRect(frameWidth(), canvasWidget);
     m_data->paintAttributes = QwtPlotAbstractGLCanvas::BackingStore;

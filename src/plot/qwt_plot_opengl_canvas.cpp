@@ -59,7 +59,8 @@ public:
  * @param[in] plot Parent plot widget
  * @sa QwtPlot::setCanvas()
  */
-QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot) : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
+QwtPlotOpenGLCanvas::QwtPlotOpenGLCanvas(QwtPlot* plot)
+    : QOpenGLWidget(plot), QwtPlotAbstractGLCanvas(this), QWT_PIMPL_CONSTRUCT
 {
     QSurfaceFormat fmt = format();
     fmt.setSamples(4);

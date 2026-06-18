@@ -61,7 +61,7 @@ public:
     virtual QwtTransform* copy() const = 0;
 
 private:
-    QwtTransform(const QwtTransform&) = delete;
+    QwtTransform(const QwtTransform&)            = delete;
     QwtTransform& operator=(const QwtTransform&) = delete;
 };
 

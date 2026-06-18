@@ -81,4 +81,4 @@ public:
     static QString rttiName(int rtti);
 };
 
-#endif // QWT_PLOT_ITEM_INFO_H
+#endif  // QWT_PLOT_ITEM_INFO_H

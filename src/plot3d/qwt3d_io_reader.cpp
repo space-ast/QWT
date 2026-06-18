@@ -21,7 +21,9 @@ class NativeReader::PrivateData
     QWT_DECLARE_PUBLIC(NativeReader)
 
 public:
-    PrivateData(NativeReader* q) : q_ptr(q), m_minZ(-DBL_MAX), m_maxZ(DBL_MAX) {}
+    PrivateData(NativeReader* q) : q_ptr(q), m_minZ(-DBL_MAX), m_maxZ(DBL_MAX)
+    {
+    }
 
     double m_minZ;
     double m_maxZ;
@@ -169,7 +171,7 @@ IO::Functor* NativeReader::clone() const
 {
     auto* copy = new NativeReader();
     QWT_DC(d);
-    auto* copyD = copy->d_func();
+    auto* copyD   = copy->d_func();
     copyD->m_minZ = d->m_minZ;
     copyD->m_maxZ = d->m_maxZ;
     return copy;

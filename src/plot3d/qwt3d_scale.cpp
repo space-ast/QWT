@@ -17,20 +17,14 @@ public:
 
     friend class Axis;
 
-    std::vector<double> m_majors, m_minors;
+    std::vector< double > m_majors, m_minors;
     double m_start, m_stop;
     int m_majorIntervals, m_minorIntervals;
     double m_mstart, m_mstop;
 };
 
 Scale::PrivateData::PrivateData(Scale* p)
-    : q_ptr(p)
-    , m_start(0.)
-    , m_stop(0.)
-    , m_majorIntervals(0)
-    , m_minorIntervals(0)
-    , m_mstart(0.)
-    , m_mstop(0.)
+    : q_ptr(p), m_start(0.), m_stop(0.), m_majorIntervals(0), m_minorIntervals(0), m_mstart(0.), m_mstop(0.)
 {
 }
 
@@ -40,8 +34,7 @@ Scale::PrivateData::PrivateData(Scale* p)
  *
  ****************************/
 
-Scale::Scale()
-    : QWT_PIMPL_CONSTRUCT
+Scale::Scale() : QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -61,15 +54,15 @@ void Scale::destroy() const
 void Scale::copyFrom(const Scale& other)
 {
     QWT_D(d);
-    const auto* od = other.d_func();
-    d->m_majors = od->m_majors;
-    d->m_minors = od->m_minors;
-    d->m_start = od->m_start;
-    d->m_stop = od->m_stop;
+    const auto* od      = other.d_func();
+    d->m_majors         = od->m_majors;
+    d->m_minors         = od->m_minors;
+    d->m_start          = od->m_start;
+    d->m_stop           = od->m_stop;
     d->m_majorIntervals = od->m_majorIntervals;
     d->m_minorIntervals = od->m_minorIntervals;
-    d->m_mstart = od->m_mstart;
-    d->m_mstop = od->m_mstop;
+    d->m_mstart         = od->m_mstart;
+    d->m_mstop          = od->m_mstop;
 }
 
 /**
@@ -84,7 +77,7 @@ QString Scale::ticLabel(unsigned int idx) const
 {
     QWT_DC(d);
     if (idx < d->m_majors.size()) {
-        return QString::number(d->m_majors[idx]);
+        return QString::number(d->m_majors[ idx ]);
     }
     return QString("");
 }
@@ -99,11 +92,11 @@ void Scale::setLimits(double start, double stop)
     QWT_D(d);
     if (start < stop) {
         d->m_start = start;
-        d->m_stop = stop;
+        d->m_stop  = stop;
         return;
     }
     d->m_start = stop;
-    d->m_stop = start;
+    d->m_stop  = start;
 }
 
 /**
@@ -136,11 +129,11 @@ void Scale::setMajorLimits(double start, double stop)
     QWT_D(d);
     if (start < stop) {
         d->m_mstart = start;
-        d->m_mstop = stop;
+        d->m_mstop  = stop;
         return;
     }
     d->m_mstart = stop;
-    d->m_mstop = start;
+    d->m_mstop  = start;
 }
 
 /**
@@ -167,7 +160,7 @@ int Scale::minors() const
  * @brief Returns const reference to major tic positions
  * @return Const reference to the vector of major tic positions
  */
-const std::vector<double>& Scale::majorTicks() const
+const std::vector< double >& Scale::majorTicks() const
 {
     QWT_DC(d);
     return d->m_majors;
@@ -177,7 +170,7 @@ const std::vector<double>& Scale::majorTicks() const
  * @brief Returns const reference to minor tic positions
  * @return Const reference to the vector of minor tic positions
  */
-const std::vector<double>& Scale::minorTicks() const
+const std::vector< double >& Scale::minorTicks() const
 {
     QWT_DC(d);
     return d->m_minors;
@@ -193,7 +186,7 @@ const std::vector<double>& Scale::minorTicks() const
  * @return Number of major intervals after autoscaling
  * @details The default implementation sets a=start, b=stop and returns ivals.
  */
-int Scale::autoscale(double &a, double &b, double start, double stop, int ivals)
+int Scale::autoscale(double& a, double& b, double start, double stop, int ivals)
 {
     a = start;
     b = stop;
@@ -215,8 +208,7 @@ public:
     LinearAutoScaler m_autoscaler;
 };
 
-LinearScale::PrivateData::PrivateData(LinearScale* p)
-    : q_ptr(p)
+LinearScale::PrivateData::PrivateData(LinearScale* p) : q_ptr(p)
 {
 }
 
@@ -226,8 +218,7 @@ LinearScale::PrivateData::PrivateData(LinearScale* p)
  *
  ****************************/
 
-LinearScale::LinearScale()
-    : QWT_PIMPL_CONSTRUCT
+LinearScale::LinearScale() : QWT_PIMPL_CONSTRUCT
 {
 }
 
@@ -242,7 +233,7 @@ LinearScale::~LinearScale() = default;
  * @param ivals Requested number of major intervals
  * @return Number of major intervals after autoscaling
  */
-int LinearScale::autoscale(double &a, double &b, double start, double stop, int ivals)
+int LinearScale::autoscale(double& a, double& b, double start, double stop, int ivals)
 {
     QWT_D(d);
     return d->m_autoscaler.execute(a, b, start, stop, ivals);
@@ -285,21 +276,21 @@ void LinearScale::calculate()
 
     // remaining tics
     for (i = 1; i <= sd->m_majorIntervals; ++i) {
-        double t = double(i) / sd->m_majorIntervals;
+        double t   = double(i) / sd->m_majorIntervals;
         runningval = sd->m_mstart + t * interval;
         if (runningval > sd->m_stop)
             break;
-        if (isPracticallyZero(sd->m_mstart, -t * interval)) // prevent rounding errors near 0
+        if (isPracticallyZero(sd->m_mstart, -t * interval))  // prevent rounding errors near 0
             runningval = 0.0;
         sd->m_majors.push_back(runningval);
     }
-    sd->m_majorIntervals = static_cast<int>(sd->m_majors.size());
+    sd->m_majorIntervals = static_cast< int >(sd->m_majors.size());
     if (sd->m_majorIntervals)
         --sd->m_majorIntervals;
 
     // minors
 
-    if (!sd->m_majorIntervals || !sd->m_minorIntervals) // no valid interval
+    if (!sd->m_majorIntervals || !sd->m_minorIntervals)  // no valid interval
     {
         sd->m_minorIntervals = 0;
         return;
@@ -308,7 +299,7 @@ void LinearScale::calculate()
     // sd->m_start      sd->m_mstart
     //  |_____________|_____ _ _ _
 
-    double step = (sd->m_majors[1] - sd->m_majors[0]) / sd->m_minorIntervals;
+    double step = (sd->m_majors[ 1 ] - sd->m_majors[ 0 ]) / sd->m_minorIntervals;
     if (isPracticallyZero(step))
         return;
 
@@ -322,7 +313,7 @@ void LinearScale::calculate()
     //  ________|_____ _ _ _ _ _ ___|__________
 
     for (i = 0; i != sd->m_majorIntervals; ++i) {
-        runningval = sd->m_majors[i] + step;
+        runningval = sd->m_majors[ i ] + step;
         for (int j = 0; j != sd->m_minorIntervals; ++j) {
             sd->m_minors.push_back(runningval);
             runningval += step;
@@ -345,28 +336,28 @@ void LinearScale::calculate()
  *
  ****************************/
 
-void LogScale::setupCounter(double &k, int &step)
+void LogScale::setupCounter(double& k, int& step)
 {
     auto* sd = Scale::d_func();
     switch (sd->m_minorIntervals) {
     case 9:
-        k = 9;
+        k    = 9;
         step = 1;
         break;
     case 5:
-        k = 8;
+        k    = 8;
         step = 2;
         break;
     case 3:
-        k = 5;
+        k    = 5;
         step = 3;
         break;
     case 2:
-        k = 5;
+        k    = 5;
         step = 5;
         break;
     default:
-        k = 9;
+        k    = 9;
         step = 1;
     }
 }
@@ -400,11 +391,11 @@ void LogScale::calculate()
             sd->m_majors.push_back(runningval);
         ++runningval;
     }
-    sd->m_majorIntervals = static_cast<int>(sd->m_majors.size());
+    sd->m_majorIntervals = static_cast< int >(sd->m_majors.size());
     if (sd->m_majorIntervals)
         --sd->m_majorIntervals;
 
-    if (sd->m_majors.size() < 1) // not even a single major tic
+    if (sd->m_majors.size() < 1)  // not even a single major tic
     {
         return;
     }
@@ -417,11 +408,11 @@ void LogScale::calculate()
     double k;
     int step;
     setupCounter(k, step);
-    runningval = log10(k) + (sd->m_majors[0] - 1);
+    runningval = log10(k) + (sd->m_majors[ 0 ] - 1);
     while (runningval > sd->m_start && k > 1) {
         sd->m_minors.push_back(runningval);
         k -= step;
-        runningval = log10(k) + (sd->m_majors[0] - 1);
+        runningval = log10(k) + (sd->m_majors[ 0 ] - 1);
     }
 
     //       sd->m_mstart            sd->m_mstop
@@ -429,11 +420,11 @@ void LogScale::calculate()
 
     for (int i = 0; i != sd->m_majorIntervals; ++i) {
         setupCounter(k, step);
-        runningval = log10(k) + (sd->m_majors[i]);
+        runningval = log10(k) + (sd->m_majors[ i ]);
         while (k > 1) {
             sd->m_minors.push_back(runningval);
             k -= step;
-            runningval = log10(k) + (sd->m_majors[i]);
+            runningval = log10(k) + (sd->m_majors[ i ]);
         }
     }
 
@@ -470,7 +461,7 @@ void LogScale::setMinors(int val)
  */
 LogScale::LogScale()
 {
-    auto* sd = Scale::d_func();
+    auto* sd             = Scale::d_func();
     sd->m_minorIntervals = 9;
 }
 
@@ -496,7 +487,7 @@ QString LogScale::ticLabel(unsigned int idx) const
 {
     QWT_DC(d);
     if (idx < d->m_majors.size()) {
-        double val = d->m_majors[idx];
+        double val = d->m_majors[ idx ];
         return QString::number(pow(double(10), val));
     }
     return QString("");

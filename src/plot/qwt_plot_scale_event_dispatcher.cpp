@@ -19,7 +19,7 @@ public:
     struct ScaleCache
     {
         QwtScaleWidget* scaleWidget;
-        QRect eventRect;    // Rectangle in the base plot coordinate system, i.e., the coordinate system of the current event object
+        QRect eventRect;  // Rectangle in the base plot coordinate system, i.e., the coordinate system of the current event object
         QwtPlot* basePlot;  // Base plot, i.e., the plot corresponding to the current event filter
         bool isValid;
 
@@ -387,7 +387,8 @@ bool QwtPlotScaleEventDispatcher::handleMouseRelease(QwtPlot* bindPlot, QMouseEv
     if (e->button() == Qt::LeftButton) {
         d->isMousePressed = false;
         // Left button: only handle if previously pressed and in current scale area; do not combine with onMyScale check here, dragging outside the plot area would not be recognized
-        return (targetScale != nullptr);  // Return true when targetScale is non-null to intercept the event, so upper-level handlers can process it, e.g., QwtFigureWidgetOverlay
+        return (targetScale
+                != nullptr);  // Return true when targetScale is non-null to intercept the event, so upper-level handlers can process it, e.g., QwtFigureWidgetOverlay
     }
     return false;
 }

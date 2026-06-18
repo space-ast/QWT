@@ -43,9 +43,11 @@
  * @param yAxis Y axis to bind to
  * @return The newly created and attached curve
  */
-QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
+QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot,
+                                          const QString& title,
                                           const QVector< QPointF >& data,
-                                          QwtAxisId xAxis, QwtAxisId yAxis)
+                                          QwtAxisId xAxis,
+                                          QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotCurve(title);
     curve->setSamples(data);
@@ -64,9 +66,12 @@ QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
  * @param yAxis Y axis to bind to
  * @return The newly created and attached curve
  */
-QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
-                                          const QVector< double >& x, const QVector< double >& y,
-                                          QwtAxisId xAxis, QwtAxisId yAxis)
+QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot,
+                                          const QString& title,
+                                          const QVector< double >& x,
+                                          const QVector< double >& y,
+                                          QwtAxisId xAxis,
+                                          QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotCurve(title);
     curve->setSamples(x, y);
@@ -84,9 +89,8 @@ QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
  * @param yAxis Y axis to bind to
  * @return The newly created and attached curve
  */
-QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
-                                          const QVector< double >& y,
-                                          QwtAxisId xAxis, QwtAxisId yAxis)
+QwtPlotCurve*
+QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title, const QVector< double >& y, QwtAxisId xAxis, QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotCurve(title);
     curve->setSamples(y);
@@ -104,9 +108,11 @@ QwtPlotCurve* QwtPlotFactory::createCurve(QwtPlot* plot, const QString& title,
  * @param yAxis Y axis to bind to
  * @return The newly created and attached bar chart
  */
-QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& title,
+QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot,
+                                                const QString& title,
                                                 const QVector< double >& values,
-                                                QwtAxisId xAxis, QwtAxisId yAxis)
+                                                QwtAxisId xAxis,
+                                                QwtAxisId yAxis)
 {
     auto* bar = new QwtPlotBarChart(title);
     bar->setSamples(values);
@@ -124,9 +130,11 @@ QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& ti
  * @param yAxis Y axis to bind to
  * @return The newly created and attached bar chart
  */
-QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& title,
+QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot,
+                                                const QString& title,
                                                 const QVector< QPointF >& data,
-                                                QwtAxisId xAxis, QwtAxisId yAxis)
+                                                QwtAxisId xAxis,
+                                                QwtAxisId yAxis)
 {
     auto* bar = new QwtPlotBarChart(title);
     bar->setSamples(data);
@@ -144,9 +152,11 @@ QwtPlotBarChart* QwtPlotFactory::createBarChart(QwtPlot* plot, const QString& ti
  * @param yAxis Y axis to bind to
  * @return The newly created and attached multi bar chart
  */
-QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const QString& title,
+QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot,
+                                                          const QString& title,
                                                           const QVector< QwtSetSample >& data,
-                                                          QwtAxisId xAxis, QwtAxisId yAxis)
+                                                          QwtAxisId xAxis,
+                                                          QwtAxisId yAxis)
 {
     auto* bar = new QwtPlotMultiBarChart(title);
     bar->setSamples(data);
@@ -164,9 +174,11 @@ QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const Q
  * @param yAxis Y axis to bind to
  * @return The newly created and attached multi bar chart
  */
-QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const QString& title,
+QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot,
+                                                          const QString& title,
                                                           const QVector< QVector< double > >& data,
-                                                          QwtAxisId xAxis, QwtAxisId yAxis)
+                                                          QwtAxisId xAxis,
+                                                          QwtAxisId yAxis)
 {
     auto* bar = new QwtPlotMultiBarChart(title);
     bar->setSamples(data);
@@ -184,9 +196,11 @@ QwtPlotMultiBarChart* QwtPlotFactory::createMultiBarChart(QwtPlot* plot, const Q
  * @param yAxis Y axis to bind to
  * @return The newly created and attached histogram
  */
-QwtPlotHistogram* QwtPlotFactory::createHistogram(QwtPlot* plot, const QString& title,
+QwtPlotHistogram* QwtPlotFactory::createHistogram(QwtPlot* plot,
+                                                  const QString& title,
                                                   const QVector< QwtIntervalSample >& data,
-                                                  QwtAxisId xAxis, QwtAxisId yAxis)
+                                                  QwtAxisId xAxis,
+                                                  QwtAxisId yAxis)
 {
     auto* hist = new QwtPlotHistogram(title);
     hist->setSamples(data);
@@ -204,9 +218,11 @@ QwtPlotHistogram* QwtPlotFactory::createHistogram(QwtPlot* plot, const QString& 
  * @param yAxis Y axis to bind to
  * @return The newly created and attached interval curve
  */
-QwtPlotIntervalCurve* QwtPlotFactory::createIntervalCurve(QwtPlot* plot, const QString& title,
+QwtPlotIntervalCurve* QwtPlotFactory::createIntervalCurve(QwtPlot* plot,
+                                                          const QString& title,
                                                           const QVector< QwtIntervalSample >& data,
-                                                          QwtAxisId xAxis, QwtAxisId yAxis)
+                                                          QwtAxisId xAxis,
+                                                          QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotIntervalCurve(title);
     curve->setSamples(data);
@@ -224,9 +240,11 @@ QwtPlotIntervalCurve* QwtPlotFactory::createIntervalCurve(QwtPlot* plot, const Q
  * @param yAxis Y axis to bind to
  * @return The newly created and attached trading curve
  */
-QwtPlotTradingCurve* QwtPlotFactory::createTradingCurve(QwtPlot* plot, const QString& title,
+QwtPlotTradingCurve* QwtPlotFactory::createTradingCurve(QwtPlot* plot,
+                                                        const QString& title,
                                                         const QVector< QwtOHLCSample >& data,
-                                                        QwtAxisId xAxis, QwtAxisId yAxis)
+                                                        QwtAxisId xAxis,
+                                                        QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotTradingCurve(title);
     curve->setSamples(data);
@@ -244,9 +262,11 @@ QwtPlotTradingCurve* QwtPlotFactory::createTradingCurve(QwtPlot* plot, const QSt
  * @param yAxis Y axis to bind to
  * @return The newly created and attached spectro curve
  */
-QwtPlotSpectroCurve* QwtPlotFactory::createSpectroCurve(QwtPlot* plot, const QString& title,
+QwtPlotSpectroCurve* QwtPlotFactory::createSpectroCurve(QwtPlot* plot,
+                                                        const QString& title,
                                                         const QVector< QwtPoint3D >& data,
-                                                        QwtAxisId xAxis, QwtAxisId yAxis)
+                                                        QwtAxisId xAxis,
+                                                        QwtAxisId yAxis)
 {
     auto* curve = new QwtPlotSpectroCurve(title);
     curve->setSamples(data);
@@ -264,9 +284,11 @@ QwtPlotSpectroCurve* QwtPlotFactory::createSpectroCurve(QwtPlot* plot, const QSt
  * @param yAxis Y axis to bind to
  * @return The newly created and attached vector field
  */
-QwtPlotVectorField* QwtPlotFactory::createVectorField(QwtPlot* plot, const QString& title,
+QwtPlotVectorField* QwtPlotFactory::createVectorField(QwtPlot* plot,
+                                                      const QString& title,
                                                       const QVector< QwtVectorFieldSample >& data,
-                                                      QwtAxisId xAxis, QwtAxisId yAxis)
+                                                      QwtAxisId xAxis,
+                                                      QwtAxisId yAxis)
 {
     auto* field = new QwtPlotVectorField(title);
     field->setSamples(data);
@@ -284,9 +306,11 @@ QwtPlotVectorField* QwtPlotFactory::createVectorField(QwtPlot* plot, const QStri
  * @param yAxis Y axis to bind to
  * @return The newly created and attached box chart
  */
-QwtPlotBoxChart* QwtPlotFactory::createBoxChart(QwtPlot* plot, const QString& title,
+QwtPlotBoxChart* QwtPlotFactory::createBoxChart(QwtPlot* plot,
+                                                const QString& title,
                                                 const QVector< QwtBoxSample >& data,
-                                                QwtAxisId xAxis, QwtAxisId yAxis)
+                                                QwtAxisId xAxis,
+                                                QwtAxisId yAxis)
 {
     auto* box = new QwtPlotBoxChart(title);
     box->setSamples(data);
@@ -303,8 +327,7 @@ QwtPlotBoxChart* QwtPlotFactory::createBoxChart(QwtPlot* plot, const QString& ti
  * @param minorPen Pen for minor grid lines
  * @return The newly created and attached grid
  */
-QwtPlotGrid* QwtPlotFactory::createGrid(QwtPlot* plot, bool enableMinor,
-                                        const QPen& majorPen, const QPen& minorPen)
+QwtPlotGrid* QwtPlotFactory::createGrid(QwtPlot* plot, bool enableMinor, const QPen& majorPen, const QPen& minorPen)
 {
     auto* grid = new QwtPlotGrid();
     grid->setMajorPen(majorPen);
@@ -326,9 +349,8 @@ QwtPlotGrid* QwtPlotFactory::createGrid(QwtPlot* plot, bool enableMinor,
  * @param yAxis Y axis to bind to
  * @return The newly created and attached marker
  */
-QwtPlotMarker* QwtPlotFactory::createMarker(QwtPlot* plot, const QPointF& pos,
-                                            const QString& label,
-                                            QwtAxisId xAxis, QwtAxisId yAxis)
+QwtPlotMarker*
+QwtPlotFactory::createMarker(QwtPlot* plot, const QPointF& pos, const QString& label, QwtAxisId xAxis, QwtAxisId yAxis)
 {
     auto* marker = new QwtPlotMarker();
     marker->setValue(pos);
@@ -381,8 +403,8 @@ QwtPlotMarker* QwtPlotFactory::createVLine(QwtPlot* plot, double x, const QPen& 
  * @param brush Fill brush for the zone
  * @return The newly created and attached zone item
  */
-QwtPlotZoneItem* QwtPlotFactory::createZone(QwtPlot* plot, const QwtInterval& interval,
-                                            Qt::Orientation orientation, const QBrush& brush)
+QwtPlotZoneItem*
+QwtPlotFactory::createZone(QwtPlot* plot, const QwtInterval& interval, Qt::Orientation orientation, const QBrush& brush)
 {
     auto* zone = new QwtPlotZoneItem();
     zone->setInterval(interval.minValue(), interval.maxValue());
@@ -401,9 +423,8 @@ QwtPlotZoneItem* QwtPlotFactory::createZone(QwtPlot* plot, const QwtInterval& in
  * @param yAxis Y axis to bind to
  * @return The newly created and attached arrow marker
  */
-QwtPlotArrowMarker* QwtPlotFactory::createArrowMarker(QwtPlot* plot,
-                                                      const QPointF& start, const QPointF& end,
-                                                      QwtAxisId xAxis, QwtAxisId yAxis)
+QwtPlotArrowMarker*
+QwtPlotFactory::createArrowMarker(QwtPlot* plot, const QPointF& start, const QPointF& end, QwtAxisId xAxis, QwtAxisId yAxis)
 {
     auto* arrow = new QwtPlotArrowMarker();
     arrow->setPoints(start, end);
@@ -419,8 +440,7 @@ QwtPlotArrowMarker* QwtPlotFactory::createArrowMarker(QwtPlot* plot,
  * @param graphic The graphic to display
  * @return The newly created and attached graphic item
  */
-QwtPlotGraphicItem* QwtPlotFactory::createGraphic(QwtPlot* plot, const QRectF& rect,
-                                                  const QwtGraphic& graphic)
+QwtPlotGraphicItem* QwtPlotFactory::createGraphic(QwtPlot* plot, const QRectF& rect, const QwtGraphic& graphic)
 {
     auto* item = new QwtPlotGraphicItem();
     item->setGraphic(rect, graphic);
@@ -435,8 +455,7 @@ QwtPlotGraphicItem* QwtPlotFactory::createGraphic(QwtPlot* plot, const QRectF& r
  * @param alignment Alignment within the canvas (applied via QwtText render flags)
  * @return The newly created and attached text label
  */
-QwtPlotTextLabel* QwtPlotFactory::createTextLabel(QwtPlot* plot, const QString& text,
-                                                  Qt::Alignment alignment)
+QwtPlotTextLabel* QwtPlotFactory::createTextLabel(QwtPlot* plot, const QString& text, Qt::Alignment alignment)
 {
     auto* label = new QwtPlotTextLabel();
     QwtText textObj(text);

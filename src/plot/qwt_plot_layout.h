@@ -80,56 +80,54 @@ public:
         IgnoreFooter = 0x20
     };
 
-    Q_DECLARE_FLAGS( Options, Option )
+    Q_DECLARE_FLAGS(Options, Option)
 
     explicit QwtPlotLayout();
     virtual ~QwtPlotLayout();
 
-    void setCanvasMargin( int margin, int axis = -1 );
-    int canvasMargin( int axisId ) const;
+    void setCanvasMargin(int margin, int axis = -1);
+    int canvasMargin(int axisId) const;
 
-    void setAlignCanvasToScales( bool );
-    void setAlignCanvasToScale( int axisId, bool );
-    bool alignCanvasToScale( int axisId ) const;
+    void setAlignCanvasToScales(bool);
+    void setAlignCanvasToScale(int axisId, bool);
+    bool alignCanvasToScale(int axisId) const;
 
-    void setSpacing( int );
+    void setSpacing(int);
     int spacing() const;
 
-    void setLegendPosition( QwtPlot::LegendPosition pos, double ratio );
-    void setLegendPosition( QwtPlot::LegendPosition pos );
+    void setLegendPosition(QwtPlot::LegendPosition pos, double ratio);
+    void setLegendPosition(QwtPlot::LegendPosition pos);
     QwtPlot::LegendPosition legendPosition() const;
 
-    void setLegendRatio( double ratio );
+    void setLegendRatio(double ratio);
     double legendRatio() const;
 
-    virtual QSize minimumSizeHint( const QwtPlot* ) const;
-    virtual void activate( const QwtPlot* plot, const QRectF& plotRect,
-        Options options = Options() );
+    virtual QSize minimumSizeHint(const QwtPlot*) const;
+    virtual void activate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
     virtual void invalidate();
 
     QRectF titleRect() const;
     QRectF footerRect() const;
     QRectF legendRect() const;
-    QRectF scaleRect( QwtAxisId ) const;
+    QRectF scaleRect(QwtAxisId) const;
     QRectF canvasRect() const;
 
 protected:
-    void setTitleRect( const QRectF& );
-    void setFooterRect( const QRectF& );
-    void setLegendRect( const QRectF& );
-    void setScaleRect( QwtAxisId, const QRectF& );
-    void setCanvasRect( const QRectF& );
+    void setTitleRect(const QRectF&);
+    void setFooterRect(const QRectF&);
+    void setLegendRect(const QRectF&);
+    void setScaleRect(QwtAxisId, const QRectF&);
+    void setCanvasRect(const QRectF&);
     QwtPlotLayoutEngine* layoutEngine();
-    void doActivate( const QwtPlot* plot, const QRectF& plotRect,
-        Options options = Options() );
+    void doActivate(const QwtPlot* plot, const QRectF& plotRect, Options options = Options());
 
 private:
-    QwtPlotLayout(const QwtPlotLayout&) = delete;
+    QwtPlotLayout(const QwtPlotLayout&)            = delete;
     QwtPlotLayout& operator=(const QwtPlotLayout&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPlotLayout)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotLayout::Options )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotLayout::Options)
 
 #endif

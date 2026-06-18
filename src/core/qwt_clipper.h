@@ -37,7 +37,8 @@ class QPolygon;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T > class QVector;
+template< typename T >
+class QVector;
 #endif
 
 /**
@@ -45,33 +46,26 @@ template< typename T > class QVector;
  */
 namespace QwtClipper
 {
-    // Clip polygon against a rectangle
-    QWTCORE_EXPORT void clipPolygon( const QRect&,
-        QPolygon&, bool closePolygon = false );
+// Clip polygon against a rectangle
+QWTCORE_EXPORT void clipPolygon(const QRect&, QPolygon&, bool closePolygon = false);
 
-    // Clip polygon against a float rectangle
-    QWTCORE_EXPORT void clipPolygon( const QRectF&,
-        QPolygon&, bool closePolygon = false );
+// Clip polygon against a float rectangle
+QWTCORE_EXPORT void clipPolygon(const QRectF&, QPolygon&, bool closePolygon = false);
 
-    // Clip float polygon against a float rectangle
-    QWTCORE_EXPORT void clipPolygonF( const QRectF&,
-        QPolygonF&, bool closePolygon = false );
+// Clip float polygon against a float rectangle
+QWTCORE_EXPORT void clipPolygonF(const QRectF&, QPolygonF&, bool closePolygon = false);
 
-    // Return clipped polygon
-    QWTCORE_EXPORT QPolygon clippedPolygon( const QRect&,
-        const QPolygon&, bool closePolygon = false );
+// Return clipped polygon
+QWTCORE_EXPORT QPolygon clippedPolygon(const QRect&, const QPolygon&, bool closePolygon = false);
 
-    // Return clipped polygon (float rect)
-    QWTCORE_EXPORT QPolygon clippedPolygon( const QRectF&,
-        const QPolygon&, bool closePolygon = false );
+// Return clipped polygon (float rect)
+QWTCORE_EXPORT QPolygon clippedPolygon(const QRectF&, const QPolygon&, bool closePolygon = false);
 
-    // Return clipped float polygon
-    QWTCORE_EXPORT QPolygonF clippedPolygonF( const QRectF&,
-        const QPolygonF&, bool closePolygon = false );
+// Return clipped float polygon
+QWTCORE_EXPORT QPolygonF clippedPolygonF(const QRectF&, const QPolygonF&, bool closePolygon = false);
 
-    // Clip circle and return arcs as intervals
-    QWTCORE_EXPORT QVector< QwtInterval > clipCircle(
-        const QRectF&, const QPointF&, double radius );
+// Clip circle and return arcs as intervals
+QWTCORE_EXPORT QVector< QwtInterval > clipCircle(const QRectF&, const QPointF&, double radius);
 };
 
 #endif

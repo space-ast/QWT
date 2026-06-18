@@ -358,7 +358,7 @@ protected:
     QwtGraphic defaultIcon(const QBrush&, const QSizeF&) const;
 
 private:
-    QwtPlotItem(const QwtPlotItem&) = delete;
+    QwtPlotItem(const QwtPlotItem&)            = delete;
     QwtPlotItem& operator=(const QwtPlotItem&) = delete;
     QWT_DECLARE_PRIVATE(QwtPlotItem)
 };

@@ -75,8 +75,7 @@ public:
  * @brief Default constructor
  * @details Constructs an uninitialized axis with default parameters.
  */
-Axis::Axis()
-    : QWT_PIMPL_CONSTRUCT
+Axis::Axis() : QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -93,8 +92,7 @@ Axis::~Axis()
  * @param beg Start position of the axis
  * @param end End position of the axis
  */
-Axis::Axis(Triple beg, Triple end)
-    : QWT_PIMPL_CONSTRUCT
+Axis::Axis(Triple beg, Triple end) : QWT_PIMPL_CONSTRUCT
 {
     init();
     setPosition(beg, end);
@@ -563,7 +561,8 @@ void Axis::drawTicLabel(Triple pos, int mtic)
     if (!d->m_drawNumbers || (mtic < 0))
         return;
 
-    d->m_markerLabel[ mtic ].setFont(d->m_numberFont.family(), d->m_numberFont.pointSize(), d->m_numberFont.weight(), d->m_numberFont.italic());
+    d->m_markerLabel[ mtic ].setFont(
+        d->m_numberFont.family(), d->m_numberFont.pointSize(), d->m_numberFont.weight(), d->m_numberFont.italic());
     d->m_markerLabel[ mtic ].setColor(d->m_numberColor);
     d->m_markerLabel[ mtic ].setString(d->m_scale->ticLabel(mtic));
     d->m_markerLabel[ mtic ].setPosition(pos, d->m_scaleNumberAnchor);
@@ -578,8 +577,12 @@ Triple Axis::drawTic(Triple nadir, double length)
     double ilength = (d->m_symtics) ? -length : 0.0;
 
     glBegin(GL_LINES);
-    glVertex3d(nadir.x + ilength * d->m_orientation.x, nadir.y + ilength * d->m_orientation.y, nadir.z + ilength * d->m_orientation.z);
-    glVertex3d(nadir.x + length * d->m_orientation.x, nadir.y + length * d->m_orientation.y, nadir.z + length * d->m_orientation.z);
+    glVertex3d(nadir.x + ilength * d->m_orientation.x,
+               nadir.y + ilength * d->m_orientation.y,
+               nadir.z + ilength * d->m_orientation.z);
+    glVertex3d(nadir.x + length * d->m_orientation.x,
+               nadir.y + length * d->m_orientation.y,
+               nadir.z + length * d->m_orientation.z);
     glEnd();
     return nadir;
 }
@@ -681,7 +684,7 @@ Triple Axis::biggestNumberString()
     double width, height;
 
     for (unsigned i = 0; i != size; ++i) {
-        width  = fabs((World2ViewPort(d->m_markerLabel[ i ].second()) - World2ViewPort(d->m_markerLabel[ i ].first())).x);
+        width = fabs((World2ViewPort(d->m_markerLabel[ i ].second()) - World2ViewPort(d->m_markerLabel[ i ].first())).x);
         height = fabs((World2ViewPort(d->m_markerLabel[ i ].second()) - World2ViewPort(d->m_markerLabel[ i ].first())).y);
 
         if (width > ret.x)

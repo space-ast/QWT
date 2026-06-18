@@ -40,9 +40,7 @@ class QwtPlotBarChart::PrivateData
 
 public:
     PrivateData(QwtPlotBarChart* p)
-        : q_ptr(p)
-        , symbol(new QwtColumnSymbol(QwtColumnSymbol::Box))
-        , legendMode(QwtPlotBarChart::LegendChartTitle)
+        : q_ptr(p), symbol(new QwtColumnSymbol(QwtColumnSymbol::Box)), legendMode(QwtPlotBarChart::LegendChartTitle)
     {
     }
 
@@ -53,7 +51,7 @@ public:
 
     QwtColumnSymbol* symbol;
     QwtPlotBarChart::LegendMode legendMode;
-    bool m_userSetPen = false;
+    bool m_userSetPen   = false;
     bool m_userSetBrush = false;
 };
 
@@ -61,9 +59,7 @@ public:
  * @brief Constructor
  * @param[in] title Title of the chart
  */
-QwtPlotBarChart::QwtPlotBarChart(const QwtText& title)
-    : QwtPlotAbstractBarChart(title)
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotBarChart::QwtPlotBarChart(const QwtText& title) : QwtPlotAbstractBarChart(title), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -72,9 +68,7 @@ QwtPlotBarChart::QwtPlotBarChart(const QwtText& title)
  * @brief Constructor
  * @param[in] title Title of the chart
  */
-QwtPlotBarChart::QwtPlotBarChart(const QString& title)
-    : QwtPlotAbstractBarChart(QwtText(title))
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotBarChart::QwtPlotBarChart(const QString& title) : QwtPlotAbstractBarChart(QwtText(title)), QWT_PIMPL_CONSTRUCT
 {
     init();
 }

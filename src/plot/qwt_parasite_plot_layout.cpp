@@ -78,14 +78,14 @@ void QwtParasitePlotLayout::activate(const QwtPlot* plot, const QRectF& plotRect
  */
 QSize QwtParasitePlotLayout::minimumSizeHint(const QwtPlot* plot) const
 {
-	// For parasite axes, minimum size is mainly determined by the enabled axes
-	QwtPlot* hostPlot = plot->hostPlot();
-	if (hostPlot) {
-		QwtPlotLayout* lay = hostPlot->plotLayout();
-		if (lay) {
-			return lay->minimumSizeHint(hostPlot);
-		}
-	}
+    // For parasite axes, minimum size is mainly determined by the enabled axes
+    QwtPlot* hostPlot = plot->hostPlot();
+    if (hostPlot) {
+        QwtPlotLayout* lay = hostPlot->plotLayout();
+        if (lay) {
+            return lay->minimumSizeHint(hostPlot);
+        }
+    }
     return QwtPlotLayout::minimumSizeHint(plot);
 }
 

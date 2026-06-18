@@ -3,7 +3,8 @@
 
 #include "qwt3d_io.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Functor for reading of native files containing grid data
@@ -19,13 +20,19 @@ public:
     ~NativeReader() override;
 
 private:
-    IO::Functor *clone() const override;
-    bool operator()(Plot3D *plot, QString const &fname) override;
-    static const char *magicstring;
-    bool collectInfo(FILE *&file, QString const &fname, unsigned &xmesh, unsigned &ymesh,
-                     double &minx, double &maxx, double &miny, double &maxy);
+    IO::Functor* clone() const override;
+    bool operator()(Plot3D* plot, QString const& fname) override;
+    static const char* magicstring;
+    bool collectInfo(FILE*& file,
+                     QString const& fname,
+                     unsigned& xmesh,
+                     unsigned& ymesh,
+                     double& minx,
+                     double& maxx,
+                     double& miny,
+                     double& maxy);
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_IO_READER_H
+#endif  // QWT3D_IO_READER_H

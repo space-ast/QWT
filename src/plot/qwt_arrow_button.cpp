@@ -40,8 +40,7 @@ class QwtArrowButton::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtArrowButton)
 public:
-    PrivateData( QwtArrowButton* p )
-        : q_ptr( p )
+    PrivateData(QwtArrowButton* p) : q_ptr(p)
     {
     }
 
@@ -77,8 +76,7 @@ static QStyleOptionButton styleOpt(const QwtArrowButton* btn)
  *   @param[in] parent Parent widget
  */
 QwtArrowButton::QwtArrowButton(int num, Qt::ArrowType arrowType, QWidget* parent)
-    : QPushButton(parent)
-    , QWT_PIMPL_CONSTRUCT
+    : QPushButton(parent), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->num       = qBound(1, num, cs_arrowButton_maxNum);

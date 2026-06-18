@@ -73,18 +73,16 @@ static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
 
 static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
 {
-    return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower)
-           || !std::isfinite(sample.q1) || !std::isfinite(sample.median)
-           || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+    return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower) || !std::isfinite(sample.q1)
+           || !std::isfinite(sample.median) || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
 }
 
 static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
 {
     if (!std::isfinite(sample.boxPosition))
         return true;
-    for (int i = 0; i < sample.values.size(); ++i)
-    {
-        if (!std::isfinite(sample.values[i]))
+    for (int i = 0; i < sample.values.size(); ++i) {
+        if (!std::isfinite(sample.values[ i ]))
             return true;
     }
     return false;
@@ -165,16 +163,15 @@ static inline QRectF qwtBoundingRect(const QwtBoxSample& sample)
 static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
 {
     if (sample.values.isEmpty())
-        return QRectF(sample.boxPosition, 0.0, 0.0, -1.0); // invalid
+        return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
 
-    double minVal = sample.values[0];
-    double maxVal = sample.values[0];
-    for (int i = 1; i < sample.values.size(); ++i)
-    {
-        if (sample.values[i] < minVal)
-            minVal = sample.values[i];
-        if (sample.values[i] > maxVal)
-            maxVal = sample.values[i];
+    double minVal = sample.values[ 0 ];
+    double maxVal = sample.values[ 0 ];
+    for (int i = 1; i < sample.values.size(); ++i) {
+        if (sample.values[ i ] < minVal)
+            minVal = sample.values[ i ];
+        if (sample.values[ i ] > maxVal)
+            maxVal = sample.values[ i ];
     }
     return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
 }
@@ -522,8 +519,7 @@ QRectF QwtTradingChartData::boundingRect() const
  * @brief Constructor
  * @param samples Samples
  */
-QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples)
-    : QwtArraySeriesData< QwtBoxSample >(samples)
+QwtBoxChartData::QwtBoxChartData(const QVector< QwtBoxSample >& samples) : QwtArraySeriesData< QwtBoxSample >(samples)
 {
 }
 

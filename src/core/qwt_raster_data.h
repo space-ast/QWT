@@ -41,23 +41,23 @@ class QMap;
 
 /**
  * @brief QwtRasterData defines an interface to any type of raster data.
- * 
+ *
  * QwtRasterData is an abstract interface, that is used by
  * QwtPlotRasterItem to find the values at the pixels of its raster.
- * 
+ *
  * Gaps inside the bounding rectangle of the data can be indicated by NaN
  * values ( when WithoutGaps is disabled ).
- * 
+ *
  * Often a raster item is used to display values from a matrix. Then the
  * derived raster data class needs to implement some sort of resampling,
  * that maps the raster of the matrix into the requested raster of
  * the raster item ( depending on resolution and scales of the canvas ).
- * 
+ *
  * QwtMatrixRasterData implements raster data, that returns values from
  * a given 2D matrix.
- * 
+ *
  * @sa QwtMatrixRasterData
- * 
+ *
  */
 class QWTCORE_EXPORT QwtRasterData
 {
@@ -67,28 +67,28 @@ public:
 
     /**
      * @brief Raster data attributes
-     * 
+     *
      * Additional information that is used to improve processing
      * of the data.
-     * 
+     *
      */
     enum Attribute
     {
         /**
          * The bounding rectangle of the data is spanned by
          * the interval(Qt::XAxis) and interval(Qt::YAxis).
-         * 
+         *
          * WithoutGaps indicates, that the data has no gaps
          * ( unknown values ) in this area and the result of
          * value() does not need to be checked for NaN values.
-         * 
+         *
          * Enabling this flag will have an positive effect on
          * the performance of rendering a QwtPlotSpectrogram.
-         * 
+         *
          * The default setting is false.
-         * 
+         *
          * @note NaN values indicate an undefined value
-         * 
+         *
          */
         WithoutGaps = 0x01
     };
@@ -97,7 +97,7 @@ public:
 
     /**
      * @brief Flags to modify the contour algorithm
-     * 
+     *
      */
     enum ConrecFlag
     {
@@ -120,7 +120,7 @@ public:
     /// Test an attribute
     bool testAttribute(Attribute) const;
 
-// Get the bounding interval for an axis
+    // Get the bounding interval for an axis
     virtual QwtInterval interval(Qt::Axis) const = 0;
 
     /// Return a hint for the raster item, about how to align the pixels
@@ -141,7 +141,7 @@ public:
     class ContourPlane;
 
 private:
-    QwtRasterData(const QwtRasterData&) = delete;
+    QwtRasterData(const QwtRasterData&)            = delete;
     QwtRasterData& operator=(const QwtRasterData&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtRasterData)

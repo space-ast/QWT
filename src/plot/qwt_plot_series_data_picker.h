@@ -27,7 +27,7 @@ public:
      */
     enum PickSeriesMode
     {
-        PickYValue,  ///< Pick y-value (default)
+        PickYValue,       ///< Pick y-value (default)
         PickNearestPoint  ///< Pick the nearest point to the mouse cursor position (this mode may be time-consuming, use with caution when there are many curve points)
     };
 
@@ -36,16 +36,16 @@ public:
      */
     enum TextPlacement
     {
-        TextPlaceAuto,         ///< Auto placement (top for pick y, follow mouse for pick nearest)
-        TextFollowOnTop,       ///< On top of the plot area (default)
-        TextFollowOnBottom,    ///< On bottom of the plot area
-        TextFollowMouse,       ///< Follow mouse pointer
-        TextOnCanvasTopRight,  ///< Text on canvas top right
-        TextOnCanvasTopLeft,   ///< Text on canvas top left
+        TextPlaceAuto,            ///< Auto placement (top for pick y, follow mouse for pick nearest)
+        TextFollowOnTop,          ///< On top of the plot area (default)
+        TextFollowOnBottom,       ///< On bottom of the plot area
+        TextFollowMouse,          ///< Follow mouse pointer
+        TextOnCanvasTopRight,     ///< Text on canvas top right
+        TextOnCanvasTopLeft,      ///< Text on canvas top left
         TextOnCanvasBottomRight,  ///< Text on canvas bottom right
         TextOnCanvasBottomLeft,   ///< Text on canvas bottom left
-        TextOnCanvasTopAuto,  ///< Text on canvas top, left or right auto-detected based on mouse position
-        TextOnCanvasBottomAuto  ///< Text on canvas bottom, left or right auto-detected based on mouse position
+        TextOnCanvasTopAuto,      ///< Text on canvas top, left or right auto-detected based on mouse position
+        TextOnCanvasBottomAuto    ///< Text on canvas bottom, left or right auto-detected based on mouse position
     };
 
     /**
@@ -107,7 +107,7 @@ public:
     int drawFeaturePointSize() const;
 
     // Returns the list of feature points currently picked by the tracker
-    QList<FeaturePoint> featurePoints() const;
+    QList< FeaturePoint > featurePoints() const;
 
     /// Set text background brush
     void setTextBackgroundBrush(const QBrush& br);
@@ -175,7 +175,8 @@ protected:
     // Generate text content for an item
     virtual QString valueString(const QList< FeaturePoint >& fps) const;
     // Draw a feature point
-    virtual void drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
+    virtual void
+    drawFeaturePoint(QPainter* painter, const QwtPlot* plot, const QwtPlotItem* item, const QPointF& itemPoint) const;
     // Mouse move
     virtual void move(const QPoint& pos) override;
     // Format value according to axis type; for date axes the value is a large float but users need to see a format like 2024-10-01

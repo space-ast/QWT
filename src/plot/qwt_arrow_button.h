@@ -38,9 +38,9 @@
  */
 class QWT_EXPORT QwtArrowButton : public QPushButton
 {
-  public:
+public:
     // Constructs an arrow button with specified number of arrows and arrow type
-    explicit QwtArrowButton ( int num, Qt::ArrowType, QWidget* parent = nullptr );
+    explicit QwtArrowButton(int num, Qt::ArrowType, QWidget* parent = nullptr);
     // Destructor
     ~QwtArrowButton() override;
 
@@ -54,18 +54,16 @@ class QWT_EXPORT QwtArrowButton : public QPushButton
     // Returns a minimum size hint for the button
     virtual QSize minimumSizeHint() const override;
 
-  protected:
-    virtual void paintEvent( QPaintEvent*) override;
-    virtual void keyPressEvent( QKeyEvent* ) override;
+protected:
+    virtual void paintEvent(QPaintEvent*) override;
+    virtual void keyPressEvent(QKeyEvent*) override;
 
-    virtual void drawButtonLabel( QPainter* );
-    virtual void drawArrow( QPainter*,
-        const QRect&, Qt::ArrowType ) const;
+    virtual void drawButtonLabel(QPainter*);
+    virtual void drawArrow(QPainter*, const QRect&, Qt::ArrowType) const;
     virtual QRect labelRect() const;
-    virtual QSize arrowSize( Qt::ArrowType,
-        const QSize& boundingSize ) const;
+    virtual QSize arrowSize(Qt::ArrowType, const QSize& boundingSize) const;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtArrowButton)
 };
 

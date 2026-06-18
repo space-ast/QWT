@@ -124,10 +124,7 @@ class QwtColumnSymbol::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtColumnSymbol)
 public:
-    PrivateData( QwtColumnSymbol* p )
-        : q_ptr( p )
-        , style(QwtColumnSymbol::Box)
-        , frameStyle(QwtColumnSymbol::Plain)
+    PrivateData(QwtColumnSymbol* p) : q_ptr(p), style(QwtColumnSymbol::Box), frameStyle(QwtColumnSymbol::Plain)
     {
     }
 
@@ -143,8 +140,7 @@ public:
  * @param[in] style Style of the symbol
  * @sa setStyle(), style(), Style
  */
-QwtColumnSymbol::QwtColumnSymbol(Style style)
-    : QWT_PIMPL_CONSTRUCT
+QwtColumnSymbol::QwtColumnSymbol(Style style) : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->style = style;

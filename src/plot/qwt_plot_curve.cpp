@@ -110,9 +110,7 @@ public:
  * @brief Constructor with QwtText title
  * @param[in] title Title of the curve
  */
-QwtPlotCurve::QwtPlotCurve(const QwtText& title)
-    : QwtPlotSeriesItem(title)
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotCurve::QwtPlotCurve(const QwtText& title) : QwtPlotSeriesItem(title), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -121,9 +119,7 @@ QwtPlotCurve::QwtPlotCurve(const QwtText& title)
  * @brief Constructor with QString title
  * @param[in] title Title of the curve
  */
-QwtPlotCurve::QwtPlotCurve(const QString& title)
-    : QwtPlotSeriesItem(QwtText(title))
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotCurve::QwtPlotCurve(const QString& title) : QwtPlotSeriesItem(QwtText(title)), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -170,7 +166,7 @@ void QwtPlotCurve::attach(QwtPlot* plot)
     QWT_D(d);
     if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
         const QColor c = plot->nextColorForItem(rtti());
-        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
+        d->pen         = QPen(c, d->pen.widthF(), d->pen.style());
     }
     QwtPlotItem::attach(plot);
 }
@@ -684,14 +680,8 @@ void QwtPlotCurve::drawDots(QPainter* painter,
         QwtPainter::drawPoints(painter, points);
         fillCurve(painter, xMap, yMap, canvasRect, points);
     } else if (d->paintAttributes & ImageBuffer) {
-        const QImage image = mapper.toImage(xMap,
-                                            yMap,
-                                            data(),
-                                            from,
-                                            to,
-                                            d->pen,
-                                            painter->testRenderHint(QPainter::Antialiasing),
-                                            renderThreadCount());
+        const QImage image = mapper.toImage(
+            xMap, yMap, data(), from, to, d->pen, painter->testRenderHint(QPainter::Antialiasing), renderThreadCount());
 
         painter->drawImage(canvasRect.toAlignedRect(), image);
     } else if (d->paintAttributes & MinimizeMemory) {

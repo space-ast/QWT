@@ -40,26 +40,26 @@
  */
 class QWT_EXPORT QwtPixelMatrix : public QBitArray
 {
-  public:
+public:
     // Constructor with bounding rectangle
-    explicit QwtPixelMatrix( const QRect& rect );
+    explicit QwtPixelMatrix(const QRect& rect);
     // Destructor
     ~QwtPixelMatrix();
 
     // Set the bounding rectangle of the matrix
-    void setRect( const QRect& rect );
+    void setRect(const QRect& rect);
     // Get the bounding rectangle
     QRect rect() const;
 
     // Test if a pixel has been set
-    bool testPixel( int x, int y ) const;
+    bool testPixel(int x, int y) const;
     // Set a pixel and test if it was set before
-    bool testAndSetPixel( int x, int y, bool on );
+    bool testAndSetPixel(int x, int y, bool on);
 
     // Calculate the index in the bit field for a position
-    int index( int x, int y ) const;
+    int index(int x, int y) const;
 
-  private:
+private:
     QRect m_rect;
 };
 
@@ -69,10 +69,10 @@ class QWT_EXPORT QwtPixelMatrix : public QBitArray
  * @param[in] y Y-coordinate
  * @return true when position is outside of rect(), or when the pixel has already been set
  */
-inline bool QwtPixelMatrix::testPixel( int x, int y ) const
+inline bool QwtPixelMatrix::testPixel(int x, int y) const
 {
-    const int idx = index( x, y );
-    return ( idx >= 0 ) ? testBit( idx ) : true;
+    const int idx = index(x, y);
+    return (idx >= 0) ? testBit(idx) : true;
 }
 
 /**
@@ -82,14 +82,14 @@ inline bool QwtPixelMatrix::testPixel( int x, int y ) const
  * @param[in] on Set/Clear the pixel
  * @return true when position is outside of rect(), or when the pixel was set before
  */
-inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
+inline bool QwtPixelMatrix::testAndSetPixel(int x, int y, bool on)
 {
-    const int idx = index( x, y );
-    if ( idx < 0 )
+    const int idx = index(x, y);
+    if (idx < 0)
         return true;
 
-    const bool onBefore = testBit( idx );
-    setBit( idx, on );
+    const bool onBefore = testBit(idx);
+    setBit(idx, on);
 
     return onBefore;
 }
@@ -100,14 +100,14 @@ inline bool QwtPixelMatrix::testAndSetPixel( int x, int y, bool on )
  * @param[in] y Y-coordinate
  * @return Index when rect() contains position, otherwise -1
  */
-inline int QwtPixelMatrix::index( int x, int y ) const
+inline int QwtPixelMatrix::index(int x, int y) const
 {
     const int dx = x - m_rect.x();
-    if ( dx < 0 || dx >= m_rect.width() )
+    if (dx < 0 || dx >= m_rect.width())
         return -1;
 
     const int dy = y - m_rect.y();
-    if ( dy < 0 || dy >= m_rect.height() )
+    if (dy < 0 || dy >= m_rect.height())
         return -1;
 
     return dy * m_rect.width() + dx;

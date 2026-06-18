@@ -302,7 +302,9 @@ class QwtLinearColorMap::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtLinearColorMap)
 public:
-    PrivateData(QwtLinearColorMap* p) : q_ptr(p) {}
+    PrivateData(QwtLinearColorMap* p) : q_ptr(p)
+    {
+    }
 
     ColorStops colorStops;
     QwtLinearColorMap::Mode mode;
@@ -620,7 +622,8 @@ public:
     QRgb rgbTable[ 360 ];
 };
 
-QwtHueColorMap::PrivateData::PrivateData(QwtHueColorMap* p) : q_ptr(p), hue1(0), hue2(359), saturation(255), value(255), alpha(255)
+QwtHueColorMap::PrivateData::PrivateData(QwtHueColorMap* p)
+    : q_ptr(p), hue1(0), hue2(359), saturation(255), value(255), alpha(255)
 {
     updateTable();
 }
@@ -840,7 +843,8 @@ class QwtSaturationValueColorMap::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtSaturationValueColorMap)
 public:
-    PrivateData(QwtSaturationValueColorMap* p) : q_ptr(p), hue(0), sat1(255), sat2(255), value1(0), value2(255), alpha(255), tableType(Invalid)
+    PrivateData(QwtSaturationValueColorMap* p)
+        : q_ptr(p), hue(0), sat1(255), sat2(255), value1(0), value2(255), alpha(255), tableType(Invalid)
     {
         updateTable();
     }

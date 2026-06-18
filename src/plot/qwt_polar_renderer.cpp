@@ -410,12 +410,8 @@ bool QwtPolarRenderer::exportTo(QwtPolarPlot* plot, const QString& documentName,
         filter += imageFilter;
     }
 
-    fileName = QFileDialog::getSaveFileName(nullptr,
-                                            tr("Export File Name"),
-                                            fileName,
-                                            filter.join(";;"),
-                                            nullptr,
-                                            QFileDialog::DontConfirmOverwrite);
+    fileName = QFileDialog::getSaveFileName(
+        nullptr, tr("Export File Name"), fileName, filter.join(";;"), nullptr, QFileDialog::DontConfirmOverwrite);
 #endif
     if (fileName.isEmpty())
         return false;

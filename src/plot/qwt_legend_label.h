@@ -43,37 +43,37 @@ class QwtText;
 class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
 {
     Q_OBJECT
-  public:
+public:
     // Constructor for QwtLegendLabel
-    explicit QwtLegendLabel( QWidget* parent = nullptr );
-    
+    explicit QwtLegendLabel(QWidget* parent = nullptr);
+
     // Destructor for QwtLegendLabel
     ~QwtLegendLabel() override;
 
     // Set the legend data
-    void setData( const QwtLegendData& );
-    
+    void setData(const QwtLegendData&);
+
     // Return the legend data
     const QwtLegendData& data() const;
 
     // Set the item mode
-    void setItemMode( QwtLegendData::Mode );
-    
+    void setItemMode(QwtLegendData::Mode);
+
     // Return the item mode
     QwtLegendData::Mode itemMode() const;
 
     // Set the spacing between icon and text
-    void setSpacing( int spacing );
-    
+    void setSpacing(int spacing);
+
     // Return the spacing
     int spacing() const;
 
     // Set the text label
-    virtual void setText( const QwtText& ) override;
+    virtual void setText(const QwtText&) override;
 
     // Set the icon
-    void setIcon( const QPixmap& );
-    
+    void setIcon(const QPixmap&);
+
     // Return the icon
     QPixmap icon() const;
 
@@ -83,11 +83,11 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
     // Return whether the item is checked
     bool isChecked() const;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     // Set whether the item is checked
-    void setChecked( bool on );
+    void setChecked(bool on);
 
-  Q_SIGNALS:
+Q_SIGNALS:
     /**
      * @brief Signal emitted when the legend item has been clicked
      */
@@ -107,31 +107,31 @@ class QWT_EXPORT QwtLegendLabel : public QwtTextLabel
      * @brief Signal emitted when the legend item has been toggled
      * @param on True if checked, false otherwise
      */
-    void checked( bool );
+    void checked(bool);
 
-  protected:
+protected:
     /// Set whether the button is down (English only)
-    void setDown( bool );
-    
+    void setDown(bool);
+
     /// Return whether the button is down (English only)
     bool isDown() const;
 
     /// Handle paint events (English only)
-    virtual void paintEvent( QPaintEvent* ) override;
-    
-    /// Handle mouse press events (English only)
-    virtual void mousePressEvent( QMouseEvent* ) override;
-    
-    /// Handle mouse release events (English only)
-    virtual void mouseReleaseEvent( QMouseEvent* ) override;
-    
-    /// Handle key press events (English only)
-    virtual void keyPressEvent( QKeyEvent* ) override;
-    
-    /// Handle key release events (English only)
-    virtual void keyReleaseEvent( QKeyEvent* ) override;
+    virtual void paintEvent(QPaintEvent*) override;
 
-  private:
+    /// Handle mouse press events (English only)
+    virtual void mousePressEvent(QMouseEvent*) override;
+
+    /// Handle mouse release events (English only)
+    virtual void mouseReleaseEvent(QMouseEvent*) override;
+
+    /// Handle key press events (English only)
+    virtual void keyPressEvent(QKeyEvent*) override;
+
+    /// Handle key release events (English only)
+    virtual void keyReleaseEvent(QKeyEvent*) override;
+
+private:
     QWT_DECLARE_PRIVATE(QwtLegendLabel)
 };
 

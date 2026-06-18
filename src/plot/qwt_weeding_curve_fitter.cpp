@@ -35,11 +35,8 @@
 class QwtWeedingCurveFitter::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtWeedingCurveFitter)
-  public:
-    PrivateData( QwtWeedingCurveFitter* p )
-        : q_ptr( p )
-        , tolerance( 1.0 )
-        , chunkSize( 0 )
+public:
+    PrivateData(QwtWeedingCurveFitter* p) : q_ptr(p), tolerance(1.0), chunkSize(0)
     {
     }
 
@@ -49,10 +46,8 @@ class QwtWeedingCurveFitter::PrivateData
 
 class QwtWeedingCurveFitter::Line
 {
-  public:
-    Line( int i1 = 0, int i2 = 0 )
-        : from( i1 )
-        , to( i2 )
+public:
+    Line(int i1 = 0, int i2 = 0) : from(i1), to(i2)
     {
     }
 
@@ -65,11 +60,10 @@ class QwtWeedingCurveFitter::Line
  * @param tolerance Tolerance
  * @sa setTolerance(), tolerance()
  */
-QwtWeedingCurveFitter::QwtWeedingCurveFitter( double tolerance )
-    : QwtCurveFitter( QwtCurveFitter::Polygon )
-    , QWT_PIMPL_CONSTRUCT
+QwtWeedingCurveFitter::QwtWeedingCurveFitter(double tolerance)
+    : QwtCurveFitter(QwtCurveFitter::Polygon), QWT_PIMPL_CONSTRUCT
 {
-    setTolerance( tolerance );
+    setTolerance(tolerance);
 }
 
 /**
@@ -92,10 +86,10 @@ QwtWeedingCurveFitter::~QwtWeedingCurveFitter()
 
    @sa tolerance()
  */
-void QwtWeedingCurveFitter::setTolerance( double tolerance )
+void QwtWeedingCurveFitter::setTolerance(double tolerance)
 {
     QWT_D(d);
-    d->tolerance = qwtMaxF( tolerance, 0.0 );
+    d->tolerance = qwtMaxF(tolerance, 0.0);
 }
 
 /*!
@@ -119,11 +113,11 @@ double QwtWeedingCurveFitter::tolerance() const
 
    @sa chunkSize()
  */
-void QwtWeedingCurveFitter::setChunkSize( uint numPoints )
+void QwtWeedingCurveFitter::setChunkSize(uint numPoints)
 {
     QWT_D(d);
-    if ( numPoints > 0 )
-        numPoints = qMax( numPoints, 3U );
+    if (numPoints > 0)
+        numPoints = qMax(numPoints, 3U);
 
     d->chunkSize = numPoints;
 }
@@ -144,23 +138,19 @@ uint QwtWeedingCurveFitter::chunkSize() const
    @return Curve points
    @sa fitCurvePath()
  */
-QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
+QPolygonF QwtWeedingCurveFitter::fitCurve(const QPolygonF& points) const
 {
     QWT_DC(d);
-    if ( points.isEmpty() )
+    if (points.isEmpty())
         return points;
 
     QPolygonF fittedPoints;
-    if ( d->chunkSize == 0 )
-    {
-        fittedPoints = simplify( points );
-    }
-    else
-    {
-        for ( int i = 0; i < points.size(); i += d->chunkSize )
-        {
-            const QPolygonF p = points.mid( i, d->chunkSize );
-            fittedPoints += simplify( p );
+    if (d->chunkSize == 0) {
+        fittedPoints = simplify(points);
+    } else {
+        for (int i = 0; i < points.size(); i += d->chunkSize) {
+            const QPolygonF p = points.mid(i, d->chunkSize);
+            fittedPoints += simplify(p);
         }
     }
 
@@ -172,94 +162,81 @@ QPolygonF QwtWeedingCurveFitter::fitCurve( const QPolygonF& points ) const
    @return Curve path
    @sa fitCurve()
  */
-QPainterPath QwtWeedingCurveFitter::fitCurvePath( const QPolygonF& points ) const
+QPainterPath QwtWeedingCurveFitter::fitCurvePath(const QPolygonF& points) const
 {
     QPainterPath path;
-    path.addPolygon( fitCurve( points ) );
+    path.addPolygon(fitCurve(points));
     return path;
 }
 
-QPolygonF QwtWeedingCurveFitter::simplify( const QPolygonF& points ) const
+QPolygonF QwtWeedingCurveFitter::simplify(const QPolygonF& points) const
 {
     QWT_DC(d);
     const double toleranceSqr = d->tolerance * d->tolerance;
 
     QStack< Line > stack;
-    stack.reserve( 500 );
+    stack.reserve(500);
 
-    const QPointF* p = points.data();
+    const QPointF* p  = points.data();
     const int nPoints = points.size();
 
-    QVector< bool > usePoint( nPoints, false );
+    QVector< bool > usePoint(nPoints, false);
 
-    stack.push( Line( 0, nPoints - 1 ) );
+    stack.push(Line(0, nPoints - 1));
 
-    while ( !stack.isEmpty() )
-    {
+    while (!stack.isEmpty()) {
         const Line r = stack.pop();
 
         // initialize line segment
-        const double vecX = p[r.to].x() - p[r.from].x();
-        const double vecY = p[r.to].y() - p[r.from].y();
+        const double vecX = p[ r.to ].x() - p[ r.from ].x();
+        const double vecY = p[ r.to ].y() - p[ r.from ].y();
 
-        const double vecLength = std::sqrt( vecX * vecX + vecY * vecY );
+        const double vecLength = std::sqrt(vecX * vecX + vecY * vecY);
 
-        const double unitVecX = ( vecLength != 0.0 ) ? vecX / vecLength : 0.0;
-        const double unitVecY = ( vecLength != 0.0 ) ? vecY / vecLength : 0.0;
+        const double unitVecX = (vecLength != 0.0) ? vecX / vecLength : 0.0;
+        const double unitVecY = (vecLength != 0.0) ? vecY / vecLength : 0.0;
 
-        double maxDistSqr = 0.0;
+        double maxDistSqr           = 0.0;
         int nVertexIndexMaxDistance = r.from + 1;
-        for ( int i = r.from + 1; i < r.to; i++ )
-        {
-            //compare to anchor
-            const double fromVecX = p[i].x() - p[r.from].x();
-            const double fromVecY = p[i].y() - p[r.from].y();
+        for (int i = r.from + 1; i < r.to; i++) {
+            // compare to anchor
+            const double fromVecX = p[ i ].x() - p[ r.from ].x();
+            const double fromVecY = p[ i ].y() - p[ r.from ].y();
 
             double distToSegmentSqr;
-            if ( fromVecX * unitVecX + fromVecY * unitVecY < 0.0 )
-            {
+            if (fromVecX * unitVecX + fromVecY * unitVecY < 0.0) {
                 distToSegmentSqr = fromVecX * fromVecX + fromVecY * fromVecY;
-            }
-            else
-            {
-                const double toVecX = p[i].x() - p[r.to].x();
-                const double toVecY = p[i].y() - p[r.to].y();
+            } else {
+                const double toVecX      = p[ i ].x() - p[ r.to ].x();
+                const double toVecY      = p[ i ].y() - p[ r.to ].y();
                 const double toVecLength = toVecX * toVecX + toVecY * toVecY;
 
-                const double s = toVecX * ( -unitVecX ) + toVecY * ( -unitVecY );
-                if ( s < 0.0 )
-                {
+                const double s = toVecX * (-unitVecX) + toVecY * (-unitVecY);
+                if (s < 0.0) {
                     distToSegmentSqr = toVecLength;
-                }
-                else
-                {
-                    distToSegmentSqr = std::fabs( toVecLength - s * s );
+                } else {
+                    distToSegmentSqr = std::fabs(toVecLength - s * s);
                 }
             }
 
-            if ( maxDistSqr < distToSegmentSqr )
-            {
-                maxDistSqr = distToSegmentSqr;
+            if (maxDistSqr < distToSegmentSqr) {
+                maxDistSqr              = distToSegmentSqr;
                 nVertexIndexMaxDistance = i;
             }
         }
-        if ( maxDistSqr <= toleranceSqr )
-        {
-            usePoint[r.from] = true;
-            usePoint[r.to] = true;
-        }
-        else
-        {
-            stack.push( Line( r.from, nVertexIndexMaxDistance ) );
-            stack.push( Line( nVertexIndexMaxDistance, r.to ) );
+        if (maxDistSqr <= toleranceSqr) {
+            usePoint[ r.from ] = true;
+            usePoint[ r.to ]   = true;
+        } else {
+            stack.push(Line(r.from, nVertexIndexMaxDistance));
+            stack.push(Line(nVertexIndexMaxDistance, r.to));
         }
     }
 
     QPolygonF stripped;
-    for ( int i = 0; i < nPoints; i++ )
-    {
-        if ( usePoint[i] )
-            stripped += p[i];
+    for (int i = 0; i < nPoints; i++) {
+        if (usePoint[ i ])
+            stripped += p[ i ];
     }
 
     return stripped;

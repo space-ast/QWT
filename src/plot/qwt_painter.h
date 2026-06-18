@@ -109,7 +109,8 @@ public:
 
     static void drawRoundFrame(QPainter*, const QRectF&, const QPalette&, int lineWidth, int frameStyle);
 
-    static void drawRoundedFrame(QPainter*, const QRectF&, qreal xRadius, qreal yRadius, const QPalette&, int lineWidth, int frameStyle);
+    static void
+    drawRoundedFrame(QPainter*, const QRectF&, qreal xRadius, qreal yRadius, const QPalette&, int lineWidth, int frameStyle);
 
     static void drawFrame(QPainter*,
                           const QRectF& rect,
@@ -122,7 +123,8 @@ public:
     static void drawFocusRect(QPainter*, const QWidget*);
     static void drawFocusRect(QPainter*, const QWidget*, const QRect&);
 
-    static void drawColorBar(QPainter*, const QwtColorMap&, const QwtInterval&, const QwtScaleMap&, Qt::Orientation, const QRectF&);
+    static void
+    drawColorBar(QPainter*, const QwtColorMap&, const QwtInterval&, const QwtScaleMap&, Qt::Orientation, const QRectF&);
 
     static bool isAligning(const QPainter*);
     static bool isX11GraphicsSystem();

@@ -83,7 +83,7 @@
  */
 class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
 {
-  public:
+public:
     /**
      * @brief Hint how to render a graphic
      *
@@ -104,7 +104,7 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
         RenderPensUnscaled = 0x1
     };
 
-    Q_DECLARE_FLAGS( RenderHints, RenderHint )
+    Q_DECLARE_FLAGS(RenderHints, RenderHint)
 
     /**
      * @brief Indicator if the graphic contains a specific type of painter command
@@ -113,27 +113,27 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     enum CommandType
     {
         //! The graphic contains scalable vector data
-        VectorData     = 1 << 0,
+        VectorData = 1 << 0,
 
         //! The graphic contains raster data ( QPixmap or QImage )
-        RasterData     = 1 << 1,
+        RasterData = 1 << 1,
 
         //! The graphic contains transformations beyond simple translations
         Transformation = 1 << 2
     };
 
-    Q_DECLARE_FLAGS( CommandTypes, CommandType )
+    Q_DECLARE_FLAGS(CommandTypes, CommandType)
 
     // Constructor
     QwtGraphic();
     // Copy constructor
-    QwtGraphic( const QwtGraphic& );
+    QwtGraphic(const QwtGraphic&);
 
     // Destructor
     ~QwtGraphic() override;
 
     // Assignment operator
-    QwtGraphic& operator=( const QwtGraphic& );
+    QwtGraphic& operator=(const QwtGraphic&);
 
     // Clear all stored commands
     void reset();
@@ -147,38 +147,31 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     CommandTypes commandTypes() const;
 
     // Replay all recorded painter commands
-    void render( QPainter* ) const;
+    void render(QPainter*) const;
 
     // Render graphic scaled to fit into given size
-    void render( QPainter*, const QSizeF&,
-        Qt::AspectRatioMode = Qt::IgnoreAspectRatio ) const;
+    void render(QPainter*, const QSizeF&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio) const;
 
     // Render graphic aligned to a position
-    void render( QPainter*, const QPointF&,
-        Qt::Alignment = Qt::AlignTop | Qt::AlignLeft ) const;
+    void render(QPainter*, const QPointF&, Qt::Alignment = Qt::AlignTop | Qt::AlignLeft) const;
 
     // Render graphic scaled to fit into given rectangle
-    void render( QPainter*, const QRectF&,
-        Qt::AspectRatioMode = Qt::IgnoreAspectRatio ) const;
+    void render(QPainter*, const QRectF&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio) const;
 
     // Convert graphic to QPixmap in default size
-    QPixmap toPixmap( qreal devicePixelRatio = 0.0 ) const;
+    QPixmap toPixmap(qreal devicePixelRatio = 0.0) const;
 
     // Convert graphic to QPixmap with specified size
-    QPixmap toPixmap( const QSize&,
-        Qt::AspectRatioMode = Qt::IgnoreAspectRatio,
-        qreal devicePixelRatio = 0.0 ) const;
+    QPixmap toPixmap(const QSize&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio, qreal devicePixelRatio = 0.0) const;
 
     // Convert graphic to QImage in default size
-    QImage toImage( qreal devicePixelRatio = 0.0 ) const;
+    QImage toImage(qreal devicePixelRatio = 0.0) const;
 
     // Convert graphic to QImage with specified size
-    QImage toImage( const QSize&,
-        Qt::AspectRatioMode = Qt::IgnoreAspectRatio,
-        qreal devicePixelRatio = 0.0 ) const;
+    QImage toImage(const QSize&, Qt::AspectRatioMode = Qt::IgnoreAspectRatio, qreal devicePixelRatio = 0.0) const;
 
     // Calculate the scaled bounding rectangle
-    QRectF scaledBoundingRect( qreal sx, qreal sy ) const;
+    QRectF scaledBoundingRect(qreal sx, qreal sy) const;
 
     // Get the bounding rectangle
     QRectF boundingRect() const;
@@ -188,52 +181,50 @@ class QWT_EXPORT QwtGraphic : public QwtNullPaintDevice
     // Get the list of recorded paint commands
     const QVector< QwtPainterCommand >& commands() const;
     // Set the paint commands
-    void setCommands( const QVector< QwtPainterCommand >& );
+    void setCommands(const QVector< QwtPainterCommand >&);
 
     // Set the default size
-    void setDefaultSize( const QSizeF& );
+    void setDefaultSize(const QSizeF&);
     // Get the default size
     QSizeF defaultSize() const;
 
     // Get the height for a given width
-    qreal heightForWidth( qreal width ) const;
+    qreal heightForWidth(qreal width) const;
     // Get the width for a given height
-    qreal widthForHeight( qreal height ) const;
+    qreal widthForHeight(qreal height) const;
 
     // Set a render hint
-    void setRenderHint( RenderHint, bool on = true );
+    void setRenderHint(RenderHint, bool on = true);
     // Test a render hint
-    bool testRenderHint( RenderHint ) const;
+    bool testRenderHint(RenderHint) const;
 
     // Get the render hints
     RenderHints renderHints() const;
 
-  protected:
+protected:
     virtual QSize sizeMetrics() const override;
 
-    virtual void drawPath( const QPainterPath& ) override;
+    virtual void drawPath(const QPainterPath&) override;
 
-    virtual void drawPixmap( const QRectF&,
-        const QPixmap&, const QRectF& ) override;
+    virtual void drawPixmap(const QRectF&, const QPixmap&, const QRectF&) override;
 
-    virtual void drawImage( const QRectF&, const QImage&,
-        const QRectF&, Qt::ImageConversionFlags ) override;
+    virtual void drawImage(const QRectF&, const QImage&, const QRectF&, Qt::ImageConversionFlags) override;
 
-    virtual void updateState( const QPaintEngineState& ) override;
+    virtual void updateState(const QPaintEngineState&) override;
 
-  private:
-    void renderGraphic( QPainter*, QTransform* ) const;
+private:
+    void renderGraphic(QPainter*, QTransform*) const;
 
-    void updateBoundingRect( const QRectF& );
-    void updateControlPointRect( const QRectF& );
+    void updateBoundingRect(const QRectF&);
+    void updateControlPointRect(const QRectF&);
 
     class PathInfo;
 
     QWT_DECLARE_PRIVATE(QwtGraphic)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::RenderHints )
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtGraphic::CommandTypes )
-Q_DECLARE_METATYPE( QwtGraphic )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtGraphic::RenderHints)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtGraphic::CommandTypes)
+Q_DECLARE_METATYPE(QwtGraphic)
 
 #endif

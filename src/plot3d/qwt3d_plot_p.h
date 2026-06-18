@@ -6,7 +6,8 @@
 
 #include <QPoint>
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 class Plot3D::PrivateData
 {

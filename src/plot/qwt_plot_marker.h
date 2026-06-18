@@ -40,10 +40,10 @@ class QwtSymbol;
  * @details A marker can be a horizontal line, a vertical line,
  *          a symbol, a label or any combination of them, which can
  *          be drawn around a center point inside a bounding rectangle.
- * 
+ *
  *          The setSymbol() member assigns a symbol to the marker.
  *          The symbol is drawn at the specified point.
- * 
+ *
  *          With setLabel(), a label can be assigned to the marker.
  *          The setLabelAlignment() member specifies where the label is
  *          drawn. All the Align*-constants in Qt::AlignmentFlags (see Qt documentation)
@@ -52,21 +52,20 @@ class QwtSymbol;
  *          the marker, which means, for example, that the label would be printed
  *          left above the center point if the alignment was set to
  *          Qt::AlignLeft | Qt::AlignTop.
- * 
+ *
  * @note QwtPlotTextLabel is intended to align a text label
  *       according to the geometry of canvas
  *       ( unrelated to plot coordinates )
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
 {
-  public:
-
+public:
     /**
      * @brief Line styles
      * @sa setLineStyle(), lineStyle()
-     * 
+     *
      */
     enum LineStyle
     {
@@ -86,9 +85,9 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
     /// Constructor
     explicit QwtPlotMarker();
     /// Constructor with title
-    explicit QwtPlotMarker( const QString& title );
+    explicit QwtPlotMarker(const QString& title);
     /// Constructor with QwtText title
-    explicit QwtPlotMarker( const QwtText& title );
+    explicit QwtPlotMarker(const QwtText& title);
 
     /// Destructor
     ~QwtPlotMarker() override;
@@ -104,78 +103,71 @@ class QWT_EXPORT QwtPlotMarker : public QwtPlotItem
     QPointF value() const;
 
     /// Set the x-value
-    void setXValue( double );
+    void setXValue(double);
     /// Set the y-value
-    void setYValue( double );
+    void setYValue(double);
     /// Set the value
-    void setValue( double, double );
+    void setValue(double, double);
     /// Set the value from a point
-    void setValue( const QPointF& );
+    void setValue(const QPointF&);
 
     /// Set the line style
-    void setLineStyle( LineStyle );
+    void setLineStyle(LineStyle);
     /// Get the line style
     LineStyle lineStyle() const;
 
     /// Set the line pen
-    void setLinePen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setLinePen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     /// Set the line pen
-    void setLinePen( const QPen& );
+    void setLinePen(const QPen&);
     /// Get the line pen
     const QPen& linePen() const;
 
     /// Set the symbol
-    void setSymbol( const QwtSymbol* );
+    void setSymbol(const QwtSymbol*);
     /// Get the symbol
     const QwtSymbol* symbol() const;
 
     /// Set the label
-    void setLabel( const QwtText& );
+    void setLabel(const QwtText&);
     /// Get the label
     QwtText label() const;
 
     /// Set the label alignment
-    void setLabelAlignment( Qt::Alignment );
+    void setLabelAlignment(Qt::Alignment);
     /// Get the label alignment
     Qt::Alignment labelAlignment() const;
 
     /// Set the label orientation
-    void setLabelOrientation( Qt::Orientation );
+    void setLabelOrientation(Qt::Orientation);
     /// Get the label orientation
     Qt::Orientation labelOrientation() const;
 
     /// Set the spacing
-    void setSpacing( int );
+    void setSpacing(int);
     /// Get the spacing
     int spacing() const;
 
     /// Draw the marker
-    virtual void draw( QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF&) const override;
 
     /// Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
     /// Get the legend icon
-    virtual QwtGraphic legendIcon(
-        int index, const QSizeF& ) const override;
+    virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
-  protected:
+protected:
     /// Draw the lines
-    virtual void drawLines( QPainter*,
-        const QRectF&, const QPointF& ) const;
+    virtual void drawLines(QPainter*, const QRectF&, const QPointF&) const;
 
     /// Draw the symbol
-    virtual void drawSymbol( QPainter*,
-        const QRectF&, const QPointF& ) const;
+    virtual void drawSymbol(QPainter*, const QRectF&, const QPointF&) const;
 
     /// Draw the label
-    virtual void drawLabel( QPainter*,
-        const QRectF&, const QPointF& ) const;
+    virtual void drawLabel(QPainter*, const QRectF&, const QPointF&) const;
 
-  private:
-
+private:
     QWT_DECLARE_PRIVATE(QwtPlotMarker)
 };
 

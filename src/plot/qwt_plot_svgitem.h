@@ -41,18 +41,18 @@ class QByteArray;
  */
 class QWT_EXPORT QwtPlotSvgItem : public QwtPlotGraphicItem
 {
-  public:
+public:
     // Constructor
-    explicit QwtPlotSvgItem( const QString& title = QString() );
+    explicit QwtPlotSvgItem(const QString& title = QString());
     // Constructor with QwtText title
-    explicit QwtPlotSvgItem( const QwtText& title );
+    explicit QwtPlotSvgItem(const QwtText& title);
     // Destructor
     ~QwtPlotSvgItem() override;
 
     // Load an SVG file
-    bool loadFile( const QRectF&, const QString& fileName );
+    bool loadFile(const QRectF&, const QString& fileName);
     // Load SVG data
-    bool loadData( const QRectF&, const QByteArray& );
+    bool loadData(const QRectF&, const QByteArray&);
 };
 
 #endif

@@ -202,7 +202,9 @@ class QwtPlotLayout::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotLayout)
 public:
-    PrivateData(QwtPlotLayout* p) : q_ptr(p) {}
+    PrivateData(QwtPlotLayout* p) : q_ptr(p)
+    {
+    }
 
     QRectF titleRect;
     QRectF footerRect;
@@ -218,8 +220,7 @@ public:
  * @details Creates a new QwtPlotLayout instance with default settings.
  *          The legend position is set to BottomLegend and canvas margin is set to -1.
  */
-QwtPlotLayout::QwtPlotLayout()
-    : QWT_PIMPL_CONSTRUCT
+QwtPlotLayout::QwtPlotLayout() : QWT_PIMPL_CONSTRUCT
 {
     setLegendPosition(QwtPlot::BottomLegend);
     setCanvasMargin(-1);

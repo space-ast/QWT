@@ -44,99 +44,92 @@ class QwtScaleDiv;
  *          be assigned with setXDiv() and setYDiv().
  *          The draw() member draws the grid within a bounding
  *          rectangle.
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotGrid : public QwtPlotItem
 {
-  public:
+public:
     // Constructor
-explicit QwtPlotGrid();
+    explicit QwtPlotGrid();
 
     // Destructor
-~QwtPlotGrid() override;
+    ~QwtPlotGrid() override;
 
     // Get the runtime type information
-virtual int rtti() const override;
+    virtual int rtti() const override;
 
     // Enable/disable x-axis grid
-void enableX( bool );
+    void enableX(bool);
 
     // Check if x-axis grid is enabled
-bool xEnabled() const;
+    bool xEnabled() const;
 
     // Enable/disable y-axis grid
-void enableY( bool );
+    void enableY(bool);
 
     // Check if y-axis grid is enabled
-bool yEnabled() const;
+    bool yEnabled() const;
 
     // Enable/disable minor x-axis grid
-void enableXMin( bool );
+    void enableXMin(bool);
 
     // Check if minor x-axis grid is enabled
-bool xMinEnabled() const;
+    bool xMinEnabled() const;
 
     // Enable/disable minor y-axis grid
-void enableYMin( bool );
+    void enableYMin(bool);
 
     // Check if minor y-axis grid is enabled
-bool yMinEnabled() const;
+    bool yMinEnabled() const;
 
     // Set x-axis scale division
-void setXDiv( const QwtScaleDiv& );
+    void setXDiv(const QwtScaleDiv&);
 
     // Get x-axis scale division
-const QwtScaleDiv& xScaleDiv() const;
+    const QwtScaleDiv& xScaleDiv() const;
 
     // Set y-axis scale division
-void setYDiv( const QwtScaleDiv& );
+    void setYDiv(const QwtScaleDiv&);
 
     // Get y-axis scale division
-const QwtScaleDiv& yScaleDiv() const;
+    const QwtScaleDiv& yScaleDiv() const;
 
     // Set pen for both major and minor grid lines
-void setPen( const QColor&,
-    qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 
     // Set pen for both major and minor grid lines
-void setPen( const QPen& );
+    void setPen(const QPen&);
 
     // Set pen for major grid lines
-void setMajorPen( const QColor&,
-    qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setMajorPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 
     // Set pen for major grid lines
-void setMajorPen( const QPen& );
+    void setMajorPen(const QPen&);
 
     // Get pen for major grid lines
-const QPen& majorPen() const;
+    const QPen& majorPen() const;
 
     // Set pen for minor grid lines
-void setMinorPen( const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine );
+    void setMinorPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
 
     // Set pen for minor grid lines
-void setMinorPen( const QPen& );
+    void setMinorPen(const QPen&);
 
     // Get pen for minor grid lines
-const QPen& minorPen() const;
+    const QPen& minorPen() const;
 
     // Draw the grid
-virtual void draw( QPainter*,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const override;
 
     // Update scale divisions
-virtual void updateScaleDiv(
-    const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv ) override;
+    virtual void updateScaleDiv(const QwtScaleDiv& xScaleDiv, const QwtScaleDiv& yScaleDiv) override;
 
-  private:
+private:
     /**
      * @brief Draw grid lines
      */
-void drawLines( QPainter*, const QRectF&,
-    Qt::Orientation, const QwtScaleMap&,
-    const QList< double >& ) const;
+    void drawLines(QPainter*, const QRectF&, Qt::Orientation, const QwtScaleMap&, const QList< double >&) const;
 
     QWT_DECLARE_PRIVATE(QwtPlotGrid)
 };

@@ -36,13 +36,8 @@
 class QwtRoundScaleDraw::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtRoundScaleDraw)
-  public:
-    PrivateData( QwtRoundScaleDraw* p )
-        : q_ptr( p )
-        , center( 50.0, 50.0 )
-        , radius( 50.0 )
-        , startAngle( -135.0 )
-        , endAngle( 135.0 )
+public:
+    PrivateData(QwtRoundScaleDraw* p) : q_ptr(p), center(50.0, 50.0), radius(50.0), startAngle(-135.0), endAngle(135.0)
     {
     }
 
@@ -58,12 +53,11 @@ class QwtRoundScaleDraw::PrivateData
  * @details The range of the scale is initialized to [0, 100], the center is set to (50, 50)
  *          with a radius of 50. The angle range is set to [-135, 135].
  */
-QwtRoundScaleDraw::QwtRoundScaleDraw()
-    : QWT_PIMPL_CONSTRUCT
+QwtRoundScaleDraw::QwtRoundScaleDraw() : QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
-    setRadius( 50 );
-    scaleMap().setPaintInterval( d->startAngle, d->endAngle );
+    setRadius(50);
+    scaleMap().setPaintInterval(d->startAngle, d->endAngle);
 }
 
 //! Destructor
@@ -77,7 +71,7 @@ QwtRoundScaleDraw::~QwtRoundScaleDraw()
  * @details Radius is the radius of the backbone without ticks and labels.
  * @sa moveCenter()
  */
-void QwtRoundScaleDraw::setRadius( double radius )
+void QwtRoundScaleDraw::setRadius(double radius)
 {
     QWT_D(d);
     d->radius = radius;
@@ -100,7 +94,7 @@ double QwtRoundScaleDraw::radius() const
  * @param center New center
  * @sa setRadius()
  */
-void QwtRoundScaleDraw::moveCenter( const QPointF& center )
+void QwtRoundScaleDraw::moveCenter(const QPointF& center)
 {
     QWT_D(d);
     d->center = center;
@@ -130,7 +124,7 @@ QPointF QwtRoundScaleDraw::center() const
  * - For angles more or equal than 360 degrees above or below min(angle1, angle2), scale marks will not be drawn.
  * - If you need a counterclockwise scale, use QwtScaleDiv::setInterval()
  */
-void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
+void QwtRoundScaleDraw::setAngleRange(double angle1, double angle2)
 {
     QWT_D(d);
 #if 0
@@ -139,15 +133,14 @@ void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
 #endif
 
     d->startAngle = angle1;
-    d->endAngle = angle2;
+    d->endAngle   = angle2;
 
-    if ( d->startAngle == d->endAngle )
-    {
+    if (d->startAngle == d->endAngle) {
         d->startAngle -= 1;
         d->endAngle += 1;
     }
 
-    scaleMap().setPaintInterval( d->startAngle, d->endAngle );
+    scaleMap().setPaintInterval(d->startAngle, d->endAngle);
 }
 
 /**
@@ -156,41 +149,34 @@ void QwtRoundScaleDraw::setAngleRange( double angle1, double angle2 )
  * @param value Value
  * @sa drawTick(), drawBackbone()
  */
-void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
+void QwtRoundScaleDraw::drawLabel(QPainter* painter, double value) const
 {
     QWT_DC(d);
-    const double tval = scaleMap().transform( value );
-    if ( ( tval >= d->startAngle + 360.0 )
-        || ( tval <= d->startAngle - 360.0 ) )
-    {
+    const double tval = scaleMap().transform(value);
+    if ((tval >= d->startAngle + 360.0) || (tval <= d->startAngle - 360.0)) {
         return;
     }
 
-    const QwtText label = tickLabel( painter->font(), value );
-    if ( label.isEmpty() )
+    const QwtText label = tickLabel(painter->font(), value);
+    if (label.isEmpty())
         return;
 
     double radius = d->radius;
-    if ( hasComponent( QwtAbstractScaleDraw::Ticks ) ||
-        hasComponent( QwtAbstractScaleDraw::Backbone ) )
-    {
+    if (hasComponent(QwtAbstractScaleDraw::Ticks) || hasComponent(QwtAbstractScaleDraw::Backbone)) {
         radius += spacing();
     }
 
-    if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
-        radius += tickLength( QwtScaleDiv::MajorTick );
+    if (hasComponent(QwtAbstractScaleDraw::Ticks))
+        radius += tickLength(QwtScaleDiv::MajorTick);
 
-    const QSizeF sz = label.textSize( painter->font() );
-    const double arc = qwtRadians( tval );
+    const QSizeF sz  = label.textSize(painter->font());
+    const double arc = qwtRadians(tval);
 
-    const double x = d->center.x() +
-        ( radius + sz.width() / 2.0 ) * std::sin( arc );
-    const double y = d->center.y() -
-        ( radius + sz.height() / 2.0 ) * std::cos( arc );
+    const double x = d->center.x() + (radius + sz.width() / 2.0) * std::sin(arc);
+    const double y = d->center.y() - (radius + sz.height() / 2.0) * std::cos(arc);
 
-    const QRectF r( x - sz.width() / 2, y - sz.height() / 2,
-        sz.width(), sz.height() );
-    label.draw( painter, r );
+    const QRectF r(x - sz.width() / 2, y - sz.height() / 2, sz.width(), sz.height());
+    label.draw(painter, r);
 }
 
 /**
@@ -200,32 +186,30 @@ void QwtRoundScaleDraw::drawLabel( QPainter* painter, double value ) const
  * @param len Length of the tick
  * @sa drawBackbone(), drawLabel()
  */
-void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) const
+void QwtRoundScaleDraw::drawTick(QPainter* painter, double value, double len) const
 {
     QWT_DC(d);
-    if ( len <= 0 )
+    if (len <= 0)
         return;
 
-    const double tval = scaleMap().transform( value );
+    const double tval = scaleMap().transform(value);
 
-    const double cx = d->center.x();
-    const double cy = d->center.y();
+    const double cx     = d->center.x();
+    const double cy     = d->center.y();
     const double radius = d->radius;
 
-    if ( ( tval < d->startAngle + 360.0 )
-        && ( tval > d->startAngle - 360.0 ) )
-    {
-        const double arc = qwtRadians( tval );
+    if ((tval < d->startAngle + 360.0) && (tval > d->startAngle - 360.0)) {
+        const double arc = qwtRadians(tval);
 
-        const double sinArc = std::sin( arc );
-        const double cosArc = std::cos( arc );
+        const double sinArc = std::sin(arc);
+        const double cosArc = std::cos(arc);
 
         const double x1 = cx + radius * sinArc;
-        const double x2 = cx + ( radius + len ) * sinArc;
+        const double x2 = cx + (radius + len) * sinArc;
         const double y1 = cy - radius * cosArc;
-        const double y2 = cy - ( radius + len ) * cosArc;
+        const double y2 = cy - (radius + len) * cosArc;
 
-        QwtPainter::drawLine( painter, x1, y1, x2, y2 );
+        QwtPainter::drawLine(painter, x1, y1, x2, y2);
     }
 }
 
@@ -234,21 +218,20 @@ void QwtRoundScaleDraw::drawTick( QPainter* painter, double value, double len ) 
  * @param painter Painter
  * @sa drawTick(), drawLabel()
  */
-void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
+void QwtRoundScaleDraw::drawBackbone(QPainter* painter) const
 {
     QWT_DC(d);
     const double deg1 = scaleMap().p1();
     const double deg2 = scaleMap().p2();
 
-    const int a1 = qRound( qwtMinF( deg1, deg2 ) - 90 );
-    const int a2 = qRound( qwtMaxF( deg1, deg2 ) - 90 );
+    const int a1 = qRound(qwtMinF(deg1, deg2) - 90);
+    const int a2 = qRound(qwtMaxF(deg1, deg2) - 90);
 
     const double radius = d->radius;
-    const double x = d->center.x() - radius;
-    const double y = d->center.y() - radius;
+    const double x      = d->center.x() - radius;
+    const double y      = d->center.y() - radius;
 
-    painter->drawArc( QRectF( x, y, 2 * radius, 2 * radius ),
-        -a2 * 16, ( a2 - a1 + 1 ) * 16 );          // counterclockwise
+    painter->drawArc(QRectF(x, y, 2 * radius, 2 * radius), -a2 * 16, (a2 - a1 + 1) * 16);  // counterclockwise
 }
 
 /**
@@ -262,62 +245,54 @@ void QwtRoundScaleDraw::drawBackbone( QPainter* painter ) const
  *          that might be a few pixels too large.
  * @sa setMinimumExtent(), minimumExtent()
  */
-double QwtRoundScaleDraw::extent( const QFont& font ) const
+double QwtRoundScaleDraw::extent(const QFont& font) const
 {
     QWT_DC(d);
     double extent = 0.0;
 
-    if ( hasComponent( QwtAbstractScaleDraw::Labels ) )
-    {
-        const QwtScaleDiv& sd = scaleDiv();
-        const QList< double >& ticks = sd.ticks( QwtScaleDiv::MajorTick );
-        for ( int i = 0; i < ticks.count(); i++ )
-        {
-            const double value = ticks[i];
-            if ( !sd.contains( value ) )
+    if (hasComponent(QwtAbstractScaleDraw::Labels)) {
+        const QwtScaleDiv& sd        = scaleDiv();
+        const QList< double >& ticks = sd.ticks(QwtScaleDiv::MajorTick);
+        for (int i = 0; i < ticks.count(); i++) {
+            const double value = ticks[ i ];
+            if (!sd.contains(value))
                 continue;
 
-            const double tval = scaleMap().transform( value );
-            if ( ( tval < d->startAngle + 360 )
-                && ( tval > d->startAngle - 360 ) )
-            {
-                const QwtText label = tickLabel( font, value );
-                if ( label.isEmpty() )
+            const double tval = scaleMap().transform(value);
+            if ((tval < d->startAngle + 360) && (tval > d->startAngle - 360)) {
+                const QwtText label = tickLabel(font, value);
+                if (label.isEmpty())
                     continue;
 
-                const double arc = qwtRadians( tval );
+                const double arc = qwtRadians(tval);
 
-                const QSizeF sz = label.textSize( font );
-                const double off = qMax( sz.width(), sz.height() );
+                const QSizeF sz  = label.textSize(font);
+                const double off = qMax(sz.width(), sz.height());
 
-                double x = off * std::sin( arc );
-                double y = off * std::cos( arc );
+                double x = off * std::sin(arc);
+                double y = off * std::cos(arc);
 
-                const double dist = std::sqrt( x * x + y * y );
-                if ( dist > extent )
+                const double dist = std::sqrt(x * x + y * y);
+                if (dist > extent)
                     extent = dist;
             }
         }
     }
 
-    if ( hasComponent( QwtAbstractScaleDraw::Ticks ) )
-    {
+    if (hasComponent(QwtAbstractScaleDraw::Ticks)) {
         extent += maxTickLength();
     }
 
-    if ( hasComponent( QwtAbstractScaleDraw::Backbone ) )
-    {
-        extent += qwtMaxF( penWidthF(), 1.0 );
+    if (hasComponent(QwtAbstractScaleDraw::Backbone)) {
+        extent += qwtMaxF(penWidthF(), 1.0);
     }
 
-    if ( hasComponent( QwtAbstractScaleDraw::Labels ) &&
-        ( hasComponent( QwtAbstractScaleDraw::Ticks ) ||
-        hasComponent( QwtAbstractScaleDraw::Backbone ) ) )
-    {
+    if (hasComponent(QwtAbstractScaleDraw::Labels)
+        && (hasComponent(QwtAbstractScaleDraw::Ticks) || hasComponent(QwtAbstractScaleDraw::Backbone))) {
         extent += spacing();
     }
 
-    extent = qwtMaxF( extent, minimumExtent() );
+    extent = qwtMaxF(extent, minimumExtent());
 
     return extent;
 }

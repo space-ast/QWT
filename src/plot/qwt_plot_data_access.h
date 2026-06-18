@@ -177,4 +177,4 @@ QVector< T > QwtPlotDataAccess::samples(const QwtSeriesStore< T >* store, int fr
     return result;
 }
 
-#endif // QWT_PLOT_DATA_ACCESS_H
+#endif  // QWT_PLOT_DATA_ACCESS_H

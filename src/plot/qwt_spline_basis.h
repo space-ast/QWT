@@ -40,14 +40,14 @@
  */
 class QWT_EXPORT QwtSplineBasis : public QwtSpline
 {
-  public:
+public:
     //! Constructor
     QwtSplineBasis();
     //! Destructor
     ~QwtSplineBasis() override;
 
     //! Get painter path from polygon
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
     //! Get locality (always 2)
     virtual uint locality() const override;
 };

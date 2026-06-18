@@ -139,8 +139,8 @@ public:
     QwtScaleDiv bounded(double lowerBound, double upperBound) const;
 
 private:
-    double m_lowerBound{0.0};
-    double m_upperBound{0.0};
+    double m_lowerBound { 0.0 };
+    double m_upperBound { 0.0 };
     QList< double > m_ticks[ NTickTypes ];
 };
 

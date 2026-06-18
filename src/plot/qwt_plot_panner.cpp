@@ -281,8 +281,7 @@ void QwtPlotPanner::widgetMousePressEvent(QMouseEvent* mouseEvent)
 
     // Note: We don't use begin() to record position because in AlwaysOff mode,
     // trackerPosition() cannot get the click position, so we record it here
-    if (mouseMatch(QwtEventPattern::MouseSelect1,
-                   static_cast< const QMouseEvent* >(mouseEvent))) {
+    if (mouseMatch(QwtEventPattern::MouseSelect1, static_cast< const QMouseEvent* >(mouseEvent))) {
         d->beginPos = d->initialPos = d->currentPos = mouseEvent->pos();
     }
 

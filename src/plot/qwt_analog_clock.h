@@ -57,7 +57,7 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
 {
     Q_OBJECT
 
-  public:
+public:
     /**
      *   @brief Hand type enumeration
      *   @details Defines the types of clock hands available.
@@ -79,19 +79,19 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
     };
 
     // Constructs an analog clock widget
-    explicit QwtAnalogClock( QWidget* parent = nullptr );
+    explicit QwtAnalogClock(QWidget* parent = nullptr);
     // Destructor
     ~QwtAnalogClock() override;
 
     // Sets a specific clock hand needle
-    void setHand( Hand, QwtDialNeedle* );
+    void setHand(Hand, QwtDialNeedle*);
 
     // Returns a specific clock hand needle (const version)
-    const QwtDialNeedle* hand( Hand ) const;
+    const QwtDialNeedle* hand(Hand) const;
     // Returns a specific clock hand needle
-    QwtDialNeedle* hand( Hand );
+    QwtDialNeedle* hand(Hand);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      *   @brief Set the clock to display the current time
      *   @details Updates the clock display to show the current system time.
@@ -102,20 +102,18 @@ class QWT_EXPORT QwtAnalogClock : public QwtDial
      *   @brief Set the clock to display a specific time
      *   @param[in] time Time to display
      */
-    void setTime( const QTime& );
+    void setTime(const QTime&);
 
-  protected:
-    virtual void drawNeedle( QPainter*, const QPointF&, double radius,
-        double direction, QPalette::ColorGroup ) const override;
+protected:
+    virtual void drawNeedle(QPainter*, const QPointF&, double radius, double direction, QPalette::ColorGroup) const override;
 
-    virtual void drawHand( QPainter*, Hand, const QPointF&,
-        double radius, double direction, QPalette::ColorGroup ) const;
+    virtual void drawHand(QPainter*, Hand, const QPointF&, double radius, double direction, QPalette::ColorGroup) const;
 
-  private:
+private:
     // use setHand instead
-    void setNeedle( QwtDialNeedle* );
+    void setNeedle(QwtDialNeedle*);
 
-    QwtDialNeedle* m_hand[NHands];
+    QwtDialNeedle* m_hand[ NHands ];
 };
 
 #endif

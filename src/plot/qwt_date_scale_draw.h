@@ -60,31 +60,31 @@ class QWT_EXPORT QwtDateScaleDraw : public QwtScaleDraw
 public:
     /// Constructor with time specification
     explicit QwtDateScaleDraw(Qt::TimeSpec timeSpec = Qt::LocalTime);
-    
+
     /// Destructor
     ~QwtDateScaleDraw() override;
 
     /// Set the default format string for a datetime interval type
     void setDateFormat(QwtDate::IntervalType, const QString&);
-    
+
     /// Get the default format string for a datetime interval type
     QString dateFormat(QwtDate::IntervalType) const;
 
     /// Set the time specification used for the tick labels
     void setTimeSpec(Qt::TimeSpec);
-    
+
     /// Get the time specification used for the tick labels
     Qt::TimeSpec timeSpec() const;
 
     /// Set the offset in seconds from Coordinated Universal Time
     void setUtcOffset(int seconds);
-    
+
     /// Get the offset in seconds from Coordinated Universal Time
     int utcOffset() const;
 
     /// Set how to identify the first week of a year
     void setWeek0Type(QwtDate::Week0Type);
-    
+
     /// Get how to identify the first week of a year
     QwtDate::Week0Type week0Type() const;
 

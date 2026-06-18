@@ -28,16 +28,14 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
 {
     Q_OBJECT
 
-  public:
+public:
     /// Constructor
-    explicit QwtPolarPicker( QwtPolarCanvas* );
+    explicit QwtPolarPicker(QwtPolarCanvas*);
     /// Destructor
     ~QwtPolarPicker() override;
 
     /// Constructor with rubber band and tracker mode
-    explicit QwtPolarPicker(
-        RubberBand rubberBand, DisplayMode trackerMode,
-        QwtPolarCanvas* );
+    explicit QwtPolarPicker(RubberBand rubberBand, DisplayMode trackerMode, QwtPolarCanvas*);
 
     /// Get the plot
     QwtPolarPlot* plot();
@@ -52,51 +50,51 @@ class QWT_EXPORT QwtPolarPicker : public QwtPicker
     /// Get the pick rectangle
     virtual QRect pickRect() const;
 
-  Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * @brief A signal emitted in case of selectionFlags() & PointSelection
      * @param pos Selected point
      */
-    void selected( const QwtPointPolar& pos );
+    void selected(const QwtPointPolar& pos);
 
     /**
      * @brief A signal emitting the selected points, at the end of a selection
      * @param points Selected points
      */
-    void selected( const QVector< QwtPointPolar >& points );
+    void selected(const QVector< QwtPointPolar >& points);
 
     /**
      * @brief A signal emitted when a point has been appended to the selection
      * @param pos Position of the appended point
      * @sa append(), moved()
      */
-    void appended( const QwtPointPolar& pos );
+    void appended(const QwtPointPolar& pos);
 
     /**
      * @brief A signal emitted whenever the last appended point of the selection has been moved
      * @param pos Position of the moved last point of the selection
      * @sa move(), appended()
      */
-    void moved( const QwtPointPolar& pos );
+    void moved(const QwtPointPolar& pos);
 
-  protected:
+protected:
     /// Inverse transform a point
-    QwtPointPolar invTransform( const QPoint& ) const;
+    QwtPointPolar invTransform(const QPoint&) const;
 
     /// Get the tracker text
-    virtual QwtText trackerText( const QPoint& ) const override;
+    virtual QwtText trackerText(const QPoint&) const override;
     /// Get the tracker text for a polar point
-    virtual QwtText trackerTextPolar( const QwtPointPolar& ) const;
+    virtual QwtText trackerTextPolar(const QwtPointPolar&) const;
 
     /// Move the selection
-    virtual void move( const QPoint& ) override;
+    virtual void move(const QPoint&) override;
     /// Append a point to the selection
-    virtual void append( const QPoint& ) override;
+    virtual void append(const QPoint&) override;
     /// End the selection
-    virtual bool end( bool ok = true ) override;
+    virtual bool end(bool ok = true) override;
 
-  private:
+private:
     virtual QPainterPath pickArea() const override;
 
     QWT_DECLARE_PRIVATE(QwtPolarPicker)

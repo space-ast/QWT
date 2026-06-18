@@ -47,7 +47,7 @@ class QwtGraphic;
  */
 class QWT_EXPORT QwtLegendData
 {
-  public:
+public:
     /**
      * @brief Mode defining how a legend entry interacts
      */
@@ -92,7 +92,7 @@ class QWT_EXPORT QwtLegendData
         /**
          * @brief Values < UserRole are reserved for internal use
          */
-        UserRole  = 32
+        UserRole = 32
     };
 
     // Constructor
@@ -109,17 +109,17 @@ class QWT_EXPORT QwtLegendData
     QwtLegendData& operator=(QwtLegendData&&) noexcept = default;
 
     // Set all values
-    void setValues( const QMap< int, QVariant >& );
+    void setValues(const QMap< int, QVariant >&);
     // Return all values
     const QMap< int, QVariant >& values() const;
 
     // Set a value for a specific role
-    void setValue( int role, const QVariant& );
+    void setValue(int role, const QVariant&);
     // Return the value for a specific role
-    QVariant value( int role ) const;
+    QVariant value(int role) const;
 
     // Check if a value exists for a specific role
-    bool hasRole( int role ) const;
+    bool hasRole(int role) const;
     // Check if the legend data is valid
     bool isValid() const;
 
@@ -130,7 +130,7 @@ class QWT_EXPORT QwtLegendData
     // Return the mode
     Mode mode() const;
 
-  private:
+private:
     QMap< int, QVariant > m_map;
 };
 

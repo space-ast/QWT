@@ -35,35 +35,35 @@ class QwtText;
 /**
  * @brief A plot item, which displays a text label
  * @details QwtPlotTextLabel displays a text label aligned to the plot canvas.
- * 
+ *
  *          In opposite to QwtPlotMarker the position of the label is unrelated to
  *          plot coordinates.
- * 
+ *
  *          As drawing a text is an expensive operation the label is cached
  *          in a pixmap to speed up replots.
- * 
+ *
  * @par Example
  *  The following code shows how to add a title.
  *  @code
  *    QwtText title( "Plot Title" );
  *    title.setRenderFlags( Qt::AlignHCenter | Qt::AlignTop );
- * 
+ *
  *    QFont font;
  *    font.setBold( true );
  *    title.setFont( font );
- * 
+ *
  *    QwtPlotTextLabel *titleItem = new QwtPlotTextLabel();
  *    titleItem->setText( title );
  *    titleItem->attach( plot );
  *  @endcode
- * 
+ *
  * @sa QwtPlotMarker
- * 
+ *
  */
 
 class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
 {
-  public:
+public:
     // Constructor
     QwtPlotTextLabel();
     // Destructor
@@ -73,32 +73,30 @@ class QWT_EXPORT QwtPlotTextLabel : public QwtPlotItem
     virtual int rtti() const override;
 
     // Set the text
-    void setText( const QwtText& );
+    void setText(const QwtText&);
     // Get the text
     QwtText text() const;
 
     // Set the margin
-    void setMargin( int margin );
+    void setMargin(int margin);
     // Get the margin
     int margin() const;
 
     // Calculate the text rectangle
-    virtual QRectF textRect( const QRectF&, const QSizeF& ) const;
+    virtual QRectF textRect(const QRectF&, const QSizeF&) const;
 
-  protected:
+protected:
     /**
      * @brief Draw the text label
      */
-    virtual void draw( QPainter*,
-        const QwtScaleMap&, const QwtScaleMap&,
-        const QRectF&) const override;
+    virtual void draw(QPainter*, const QwtScaleMap&, const QwtScaleMap&, const QRectF&) const override;
 
     /**
      * @brief Invalidate the cached pixmap
      */
     void invalidateCache();
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotTextLabel)
 };
 

@@ -30,9 +30,7 @@
  * @brief Constructor
  * @param[in] rect Bounding rectangle for the matrix
  */
-QwtPixelMatrix::QwtPixelMatrix( const QRect& rect )
-    : QBitArray( qMax( rect.width() * rect.height(), 0 ) )
-    , m_rect( rect )
+QwtPixelMatrix::QwtPixelMatrix(const QRect& rect) : QBitArray(qMax(rect.width() * rect.height(), 0)), m_rect(rect)
 {
 }
 
@@ -48,16 +46,15 @@ QwtPixelMatrix::~QwtPixelMatrix()
  * @param[in] rect Bounding rectangle
  * @note All bits are cleared
  */
-void QwtPixelMatrix::setRect( const QRect& rect )
+void QwtPixelMatrix::setRect(const QRect& rect)
 {
-    if ( rect != m_rect )
-    {
-        m_rect = rect;
-        const int sz = qMax( rect.width() * rect.height(), 0 );
-        resize( sz );
+    if (rect != m_rect) {
+        m_rect       = rect;
+        const int sz = qMax(rect.width() * rect.height(), 0);
+        resize(sz);
     }
 
-    fill( false );
+    fill(false);
 }
 
 /**

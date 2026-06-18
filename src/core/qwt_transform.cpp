@@ -52,7 +52,7 @@ QwtTransform::~QwtTransform()
  * @param value Value to be bounded
  * @return Value unmodified
  */
-double QwtTransform::bounded( double value ) const
+double QwtTransform::bounded(double value) const
 {
     return value;
 }
@@ -60,8 +60,7 @@ double QwtTransform::bounded( double value ) const
 /**
  * @brief Default constructor
  */
-QwtNullTransform::QwtNullTransform():
-    QwtTransform()
+QwtNullTransform::QwtNullTransform() : QwtTransform()
 {
 }
 
@@ -77,7 +76,7 @@ QwtNullTransform::~QwtNullTransform()
  * @param value Value to be transformed
  * @return Value unmodified
  */
-double QwtNullTransform::transform( double value ) const
+double QwtNullTransform::transform(double value) const
 {
     return value;
 }
@@ -87,7 +86,7 @@ double QwtNullTransform::transform( double value ) const
  * @param value Value to be transformed
  * @return Value unmodified
  */
-double QwtNullTransform::invTransform( double value ) const
+double QwtNullTransform::invTransform(double value) const
 {
     return value;
 }
@@ -104,8 +103,7 @@ QwtTransform* QwtNullTransform::copy() const
 /**
  * @brief Default constructor
  */
-QwtLogTransform::QwtLogTransform():
-    QwtTransform()
+QwtLogTransform::QwtLogTransform() : QwtTransform()
 {
 }
 
@@ -122,9 +120,9 @@ QwtLogTransform::~QwtLogTransform()
  * @return log( value )
  *
  */
-double QwtLogTransform::transform( double value ) const
+double QwtLogTransform::transform(double value) const
 {
-    return std::log( value );
+    return std::log(value);
 }
 
 /**
@@ -133,9 +131,9 @@ double QwtLogTransform::transform( double value ) const
  * @return exp( value )
  *
  */
-double QwtLogTransform::invTransform( double value ) const
+double QwtLogTransform::invTransform(double value) const
 {
-    return std::exp( value );
+    return std::exp(value);
 }
 
 /**
@@ -144,9 +142,9 @@ double QwtLogTransform::invTransform( double value ) const
  * @return qBound( LogMin, value, LogMax )
  *
  */
-double QwtLogTransform::bounded( double value ) const
+double QwtLogTransform::bounded(double value) const
 {
-    return qBound( LogMin, value, LogMax );
+    return qBound(LogMin, value, LogMax);
 }
 
 /**
@@ -164,9 +162,7 @@ QwtTransform* QwtLogTransform::copy() const
  * @param exponent Exponent
  *
  */
-QwtPowerTransform::QwtPowerTransform( double exponent ):
-    QwtTransform(),
-    m_exponent( exponent )
+QwtPowerTransform::QwtPowerTransform(double exponent) : QwtTransform(), m_exponent(exponent)
 {
 }
 
@@ -184,13 +180,12 @@ QwtPowerTransform::~QwtPowerTransform()
  * @return Exponentiation preserving the sign
  *
  */
-double QwtPowerTransform::transform( double value ) const
+double QwtPowerTransform::transform(double value) const
 {
-    if ( value < 0.0 )
-        return -std::pow( -value, 1.0 / m_exponent );
+    if (value < 0.0)
+        return -std::pow(-value, 1.0 / m_exponent);
     else
-        return std::pow( value, 1.0 / m_exponent );
-
+        return std::pow(value, 1.0 / m_exponent);
 }
 
 /**
@@ -199,12 +194,12 @@ double QwtPowerTransform::transform( double value ) const
  * @return Inverse exponentiation preserving the sign
  *
  */
-double QwtPowerTransform::invTransform( double value ) const
+double QwtPowerTransform::invTransform(double value) const
 {
-    if ( value < 0.0 )
-        return -std::pow( -value, m_exponent );
+    if (value < 0.0)
+        return -std::pow(-value, m_exponent);
     else
-        return std::pow( value, m_exponent );
+        return std::pow(value, m_exponent);
 }
 
 /**
@@ -214,5 +209,5 @@ double QwtPowerTransform::invTransform( double value ) const
  */
 QwtTransform* QwtPowerTransform::copy() const
 {
-    return new QwtPowerTransform( m_exponent );
+    return new QwtPowerTransform(m_exponent);
 }

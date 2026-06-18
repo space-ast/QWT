@@ -4,7 +4,8 @@
 #include "qwt3d_surfaceplot.h"
 #include "qwt3d_plot_p.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 class SurfacePlot::PrivateData
 {

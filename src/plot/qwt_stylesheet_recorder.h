@@ -12,10 +12,10 @@
 
 /**
  * @brief A paint device that records style sheet information for rendering.
- * 
+ *
  * QwtStyleSheetRecorder is used to capture style information (borders, backgrounds, etc.)
  * for rendering styled widgets or elements.
- * 
+ *
  */
 class QWT_EXPORT QwtStyleSheetRecorder final : public QwtNullPaintDevice
 {

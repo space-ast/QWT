@@ -63,9 +63,9 @@ public:
     bool operator!=(const QwtPoint3D&) const noexcept;
 
 private:
-    double m_x{0.0};
-    double m_y{0.0};
-    double m_z{0.0};
+    double m_x { 0.0 };
+    double m_y { 0.0 };
+    double m_z { 0.0 };
 };
 
 Q_DECLARE_TYPEINFO(QwtPoint3D, Q_MOVABLE_TYPE);
@@ -79,10 +79,7 @@ QWTCORE_EXPORT QDebug operator<<(QDebug, const QwtPoint3D&);
  * @brief Default constructor - constructs a null point
  * @sa isNull()
  */
-inline QwtPoint3D::QwtPoint3D()
-    : m_x( 0.0 )
-    , m_y( 0.0 )
-    , m_z( 0.0 )
+inline QwtPoint3D::QwtPoint3D() : m_x(0.0), m_y(0.0), m_z(0.0)
 {
 }
 
@@ -92,10 +89,7 @@ inline QwtPoint3D::QwtPoint3D()
  * @param y Y coordinate
  * @param z Z coordinate (default 0.0)
  */
-inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
-    : m_x( x )
-    , m_y( y )
-    , m_z( z )
+inline QwtPoint3D::QwtPoint3D(double x, double y, double z = 0.0) : m_x(x), m_y(y), m_z(z)
 {
 }
 
@@ -103,10 +97,7 @@ inline QwtPoint3D::QwtPoint3D( double x, double y, double z = 0.0 )
  * @brief Constructs a point with x and y coordinates from a 2D point, and z coordinate of 0
  * @param other 2D point
  */
-inline QwtPoint3D::QwtPoint3D( const QPointF& other )
-    : m_x( other.x() )
-    , m_y( other.y() )
-    , m_z( 0.0 )
+inline QwtPoint3D::QwtPoint3D(const QPointF& other) : m_x(other.x()), m_y(other.y()), m_z(0.0)
 {
 }
 
@@ -155,19 +146,19 @@ inline double& QwtPoint3D::rz() noexcept
 }
 
 //! Set the x-coordinate of the point to x
-inline void QwtPoint3D::setX( double x ) noexcept
+inline void QwtPoint3D::setX(double x) noexcept
 {
     m_x = x;
 }
 
 //! Set the y-coordinate of the point to y
-inline void QwtPoint3D::setY( double y ) noexcept
+inline void QwtPoint3D::setY(double y) noexcept
 {
     m_y = y;
 }
 
 //! Set the z-coordinate of the point to z
-inline void QwtPoint3D::setZ( double z ) noexcept
+inline void QwtPoint3D::setZ(double z) noexcept
 {
     m_z = z;
 }
@@ -177,19 +168,19 @@ inline void QwtPoint3D::setZ( double z ) noexcept
  */
 inline QPointF QwtPoint3D::toPoint() const noexcept
 {
-    return QPointF( m_x, m_y );
+    return QPointF(m_x, m_y);
 }
 
 //! Return true if this point and other are equal
-inline bool QwtPoint3D::operator==( const QwtPoint3D& other ) const noexcept
+inline bool QwtPoint3D::operator==(const QwtPoint3D& other) const noexcept
 {
-    return ( m_x == other.m_x ) && ( m_y == other.m_y ) && ( m_z == other.m_z );
+    return (m_x == other.m_x) && (m_y == other.m_y) && (m_z == other.m_z);
 }
 
 //! Return true if this point and other are different
-inline bool QwtPoint3D::operator!=( const QwtPoint3D& other ) const noexcept
+inline bool QwtPoint3D::operator!=(const QwtPoint3D& other) const noexcept
 {
-    return !operator==( other );
+    return !operator==(other);
 }
 
 #endif

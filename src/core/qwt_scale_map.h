@@ -120,13 +120,13 @@ protected:
 private:
     void updateFactor();
 
-    double m_s1{0.0}, m_s2{1.0};  // scale interval boundaries
-    double m_p1{0.0}, m_p2{1.0};  // paint device interval boundaries
+    double m_s1 { 0.0 }, m_s2 { 1.0 };  // scale interval boundaries
+    double m_p1 { 0.0 }, m_p2 { 1.0 };  // paint device interval boundaries
 
-    double m_cnv{1.0};  // conversion factor
-    double m_ts1{0.0};
+    double m_cnv { 1.0 };  // conversion factor
+    double m_ts1 { 0.0 };
 
-    QwtTransform* m_transform{nullptr};
+    QwtTransform* m_transform { nullptr };
 };
 
 /**

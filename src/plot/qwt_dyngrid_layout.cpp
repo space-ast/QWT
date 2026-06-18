@@ -33,9 +33,7 @@ class QwtDynGridLayout::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtDynGridLayout)
 public:
-    PrivateData( QwtDynGridLayout* p )
-        : q_ptr( p )
-        , isDirty(true)
+    PrivateData(QwtDynGridLayout* p) : q_ptr(p), isDirty(true)
     {
     }
 
@@ -417,9 +415,9 @@ QList< QRect > QwtDynGridLayout::layoutItems(const QRect& rect, uint numColumns)
         stretchGrid(rect, numColumns, rowHeight, colWidth);
 
     const int maxColumns    = d->maxColumns;
-    d->maxColumns      = numColumns;
+    d->maxColumns           = numColumns;
     const QRect alignedRect = alignmentRect(rect);
-    d->maxColumns      = maxColumns;
+    d->maxColumns           = maxColumns;
 
     const int xOffset = expandH ? 0 : alignedRect.x();
     const int yOffset = expandV ? 0 : alignedRect.y();

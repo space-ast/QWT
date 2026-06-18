@@ -18,7 +18,8 @@
 #include "qwt_samples.h"
 
 class QwtSymbol;
-template<typename T> class QwtSeriesData;
+template< typename T >
+class QwtSeriesData;
 
 /**
  * @brief Plot item for box-and-whisker (boxplot) visualization
@@ -27,14 +28,12 @@ template<typename T> class QwtSeriesData;
  *          - Median line inside the box
  *          - Whiskers extending to data range or calculated bounds
  *          - Outlier symbols for points outside whiskers
- *          
+ *
  *          Supports multiple box styles (Rectangle, Diamond, Notch),
  *          horizontal/vertical orientation, and extensive customization.
- * 
+ *
  */
-class QWT_EXPORT QwtPlotBoxChart
-    : public QwtPlotSeriesItem
-    , public QwtSeriesStore<QwtBoxSample>
+class QWT_EXPORT QwtPlotBoxChart : public QwtPlotSeriesItem, public QwtSeriesStore< QwtBoxSample >
 {
 public:
     /**
@@ -44,17 +43,17 @@ public:
     {
         //! No box body, only whiskers and outliers
         NoBox,
-        
+
         //! Traditional rectangular box (Q1-Q3)
         Rect,
-        
+
         //! Diamond shape connecting extremes
         Diamond,
-        
+
         //! Rectangle with notch indentation at median
         Notch
     };
-    
+
     /**
      * @brief Whisker display style
      */
@@ -62,14 +61,14 @@ public:
     {
         //! No whisker lines drawn
         NoWhiskers,
-        
+
         //! Traditional T-bar whiskers with horizontal caps (default)
         StandardWhisker,
-        
+
         //! Simple line from whiskerLower to whiskerUpper
         MinMaxLine
     };
-    
+
     /**
      * @brief Paint attributes for performance optimization
      */
@@ -77,31 +76,31 @@ public:
     {
         //! Clip boxes before painting (performance for zoomed views)
         ClipBoxes = 0x01,
-        
+
         //! Clip outlier symbols before painting
         ClipOutliers = 0x02,
-        
+
         //! Use image buffer for rendering (optimization for many boxes)
         ImageBuffer = 0x04
     };
-    
+
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
-    
+
     /**
      * @brief Constructor
      */
     explicit QwtPlotBoxChart(const QString& title = QString());
-    
+
     /**
      * @brief Constructor with QwtText title
      */
     explicit QwtPlotBoxChart(const QwtText& title);
-    
+
     /**
      * @brief Destructor
      */
     ~QwtPlotBoxChart() override;
-    
+
     // Get runtime type information
     virtual int rtti() const override;
 
@@ -110,129 +109,136 @@ public:
 
     // Set paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
-    
+
     // Test paint attribute
     bool testPaintAttribute(PaintAttribute) const;
-    
+
     // Set box samples
-    void setSamples(const QVector<QwtBoxSample>&);
-    void setSamples(QwtSeriesData<QwtBoxSample>*);
-    
+    void setSamples(const QVector< QwtBoxSample >&);
+    void setSamples(QwtSeriesData< QwtBoxSample >*);
+
     // Set outlier samples (optional)
-    void setOutliers(const QVector<QwtBoxOutlierSample>&);
-    void setOutliers(QwtSeriesData<QwtBoxOutlierSample>*);
-    
+    void setOutliers(const QVector< QwtBoxOutlierSample >&);
+    void setOutliers(QwtSeriesData< QwtBoxOutlierSample >*);
+
     // Get outlier data
-    const QwtSeriesData<QwtBoxOutlierSample>* outlierData() const;
-    
+    const QwtSeriesData< QwtBoxOutlierSample >* outlierData() const;
+
     // Set box style
     void setBoxStyle(BoxStyle);
     BoxStyle boxStyle() const;
-    
+
     // Set whisker style
     void setWhiskerStyle(WhiskerStyle);
     WhiskerStyle whiskerStyle() const;
-    
+
     // Set orientation (vertical: x-position, horizontal: y-position)
     void setOrientation(Qt::Orientation);
     Qt::Orientation orientation() const;
-    
+
     // Set box width in scale coordinates
     void setBoxExtent(double extent);
     double boxExtent() const;
-    
+
     // Set minimum box width in pixels
     void setMinBoxWidth(double pixels);
     double minBoxWidth() const;
-    
+
     // Set maximum box width in pixels (negative = unlimited)
     void setMaxBoxWidth(double pixels);
     double maxBoxWidth() const;
-    
+
     // Set pen for box outline and whiskers
     void setPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     void setPen(const QPen&);
     const QPen& pen() const;
-    
+
     // Set brush for box body fill
     void setBrush(const QBrush&);
     const QBrush& brush() const;
-    
+
     // Set pen for median line
     void setMedianPen(const QPen&);
     QPen medianPen() const;
-    
+
     // Set symbol for outliers
     void setOutlierSymbol(const QwtSymbol*);
     const QwtSymbol* outlierSymbol() const;
-    
+
     // Set symbol for mean marker
     void setMeanSymbol(const QwtSymbol*);
     const QwtSymbol* meanSymbol() const;
-    
+
     // Show/hide median line
     void setMedianVisible(bool);
     bool isMedianVisible() const;
-    
+
     // Show/hide mean marker
     void setMeanVisible(bool);
     bool isMeanVisible() const;
-    
+
     // Set outlier jitter width (for overlapping outliers)
     void setOutlierJitter(double jitterWidth);
     double outlierJitter() const;
-    
+
     // Draw the series
     virtual void drawSeries(QPainter*,
-        const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-        const QRectF& canvasRect, int from, int to) const override;
-    
+                            const QwtScaleMap& xMap,
+                            const QwtScaleMap& yMap,
+                            const QRectF& canvasRect,
+                            int from,
+                            int to) const override;
+
     // Get bounding rectangle
     virtual QRectF boundingRect() const override;
-    
+
     // Get legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
-    
+
 protected:
     //! Initialize
     void init();
-    
+
     //! Calculate scaled box width in pixels
-    virtual double scaledBoxWidth(
-        const QwtScaleMap& posMap,
-        const QwtScaleMap& valueMap,
-        const QRectF& canvasRect) const;
-    
+    virtual double scaledBoxWidth(const QwtScaleMap& posMap, const QwtScaleMap& valueMap, const QRectF& canvasRect) const;
+
     //! Draw a single box
-    virtual void drawBox(QPainter*, const QwtBoxSample&,
-        Qt::Orientation, double boxWidth, double posPixel,
-        const QwtScaleMap& valueMap) const;
-    
+    virtual void
+    drawBox(QPainter*, const QwtBoxSample&, Qt::Orientation, double boxWidth, double posPixel, const QwtScaleMap& valueMap) const;
+
     //! Draw whiskers for a single box
-    virtual void drawWhiskers(QPainter*, const QwtBoxSample&,
-        Qt::Orientation, double boxWidth, double posPixel,
-        const QwtScaleMap& valueMap) const;
-    
+    virtual void drawWhiskers(QPainter*,
+                              const QwtBoxSample&,
+                              Qt::Orientation,
+                              double boxWidth,
+                              double posPixel,
+                              const QwtScaleMap& valueMap) const;
+
     //! Draw median line for a single box
-    virtual void drawMedian(QPainter*, const QwtBoxSample&,
-        Qt::Orientation, double boxWidth, double posPixel,
-        const QwtScaleMap& valueMap) const;
-    
+    virtual void drawMedian(QPainter*,
+                            const QwtBoxSample&,
+                            Qt::Orientation,
+                            double boxWidth,
+                            double posPixel,
+                            const QwtScaleMap& valueMap) const;
+
     //! Draw outliers for boxes in range
     virtual void drawOutliers(QPainter*,
-        const QwtScaleMap& posMap, const QwtScaleMap& valueMap,
-        const QRectF& canvasRect, int from, int to) const;
-    
+                              const QwtScaleMap& posMap,
+                              const QwtScaleMap& valueMap,
+                              const QRectF& canvasRect,
+                              int from,
+                              int to) const;
+
     //! Draw a single outlier symbol
-    virtual void drawOutlierSymbol(QPainter*, double posPixel, double valuePixel,
-        const QwtSymbol& symbol) const;
-    
+    virtual void drawOutlierSymbol(QPainter*, double posPixel, double valuePixel, const QwtSymbol& symbol) const;
+
 private:
     QWT_DECLARE_PRIVATE(QwtPlotBoxChart)
 
-    QwtSeriesData<QwtBoxOutlierSample>* m_outlierData;
+    QwtSeriesData< QwtBoxOutlierSample >* m_outlierData;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotBoxChart::PaintAttributes)
 
-#endif // QWT_PLOT_BOXCHART_H
+#endif  // QWT_PLOT_BOXCHART_H

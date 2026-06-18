@@ -31,11 +31,8 @@ class QwtDateScaleDraw::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtDateScaleDraw)
 public:
-    PrivateData( QwtDateScaleDraw* p, Qt::TimeSpec spec )
-        : q_ptr( p )
-        , timeSpec(spec)
-        , utcOffset(0)
-        , week0Type(QwtDate::FirstThursday)
+    PrivateData(QwtDateScaleDraw* p, Qt::TimeSpec spec)
+        : q_ptr(p), timeSpec(spec), utcOffset(0), week0Type(QwtDate::FirstThursday)
     {
         // modify by qwt7.0 change to ISO datetime format
         /**
@@ -74,8 +71,7 @@ public:
  * @sa setTimeSpec(), setWeek0Type()
  *
  */
-QwtDateScaleDraw::QwtDateScaleDraw(Qt::TimeSpec timeSpec)
-    : m_data( qwt_make_unique< PrivateData >( this, timeSpec ) )
+QwtDateScaleDraw::QwtDateScaleDraw(Qt::TimeSpec timeSpec) : m_data(qwt_make_unique< PrivateData >(this, timeSpec))
 {
 }
 

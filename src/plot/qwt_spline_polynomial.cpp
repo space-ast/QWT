@@ -28,24 +28,24 @@
 
 namespace
 {
-    static const struct RegisterQwtSplinePolynomial
+static const struct RegisterQwtSplinePolynomial
+{
+    inline RegisterQwtSplinePolynomial()
     {
-        inline RegisterQwtSplinePolynomial()
-            { qRegisterMetaType< QwtSplinePolynomial >(); }
+        qRegisterMetaType< QwtSplinePolynomial >();
+    }
 
-    } qwtRegisterQwtSplinePolynomial;
+} qwtRegisterQwtSplinePolynomial;
 }
 
 #ifndef QT_NO_DEBUG_STREAM
 
 #include <qdebug.h>
 
-QDebug operator<<( QDebug debug, const QwtSplinePolynomial& polynomial )
+QDebug operator<<(QDebug debug, const QwtSplinePolynomial& polynomial)
 {
-    debug.nospace() << "Polynom(" << polynomial.c3 << ", "
-                    << polynomial.c2 << ", " << polynomial.c1 << ")";
+    debug.nospace() << "Polynom(" << polynomial.c3 << ", " << polynomial.c2 << ", " << polynomial.c1 << ")";
     return debug.space();
 }
 
 #endif
-

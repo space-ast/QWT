@@ -34,8 +34,7 @@
  * @brief Default constructor
  * @details The scale and paint device intervals are both set to [0,1].
  */
-QwtScaleMap::QwtScaleMap()
-    : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
+QwtScaleMap::QwtScaleMap() : m_s1(0.0), m_s2(1.0), m_p1(0.0), m_p2(1.0), m_cnv(1.0), m_ts1(0.0), m_transform(nullptr)
 {
 }
 
@@ -43,7 +42,13 @@ QwtScaleMap::QwtScaleMap()
  * @brief Copy constructor
  */
 QwtScaleMap::QwtScaleMap(const QwtScaleMap& other)
-    : m_s1(other.m_s1), m_s2(other.m_s2), m_p1(other.m_p1), m_p2(other.m_p2), m_cnv(other.m_cnv), m_ts1(other.m_ts1), m_transform(nullptr)
+    : m_s1(other.m_s1)
+    , m_s2(other.m_s2)
+    , m_p1(other.m_p1)
+    , m_p2(other.m_p2)
+    , m_cnv(other.m_cnv)
+    , m_ts1(other.m_ts1)
+    , m_transform(nullptr)
 {
     if (other.m_transform)
         m_transform = other.m_transform->copy();

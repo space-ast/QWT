@@ -447,8 +447,8 @@ double QwtScaleEngine::reference() const
 /**
  * @brief Set the base of the scale engine
  * @param base Base of the engine
- * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base: f.e 2.
- *          The default setting is 10.
+ * @details While a base of 10 is what 99.9% of all applications need, certain scales might need a different base:
+ * f.e 2. The default setting is 10.
  * @sa base()
  */
 void QwtScaleEngine::setBase(uint base)

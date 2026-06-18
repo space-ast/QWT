@@ -391,7 +391,7 @@ inline size_t qwtUpperSampleIndex(const QwtSeriesData< T >& series, double value
 {
     const size_t count = series.size();
     if (count == 0) {
-        return count; // Return 0 as "not found" marker (valid indices start from 0, count is beyond valid range)
+        return count;  // Return 0 as "not found" marker (valid indices start from 0, count is beyond valid range)
     }
 
     const size_t indexMax = count - 1;
@@ -402,7 +402,7 @@ inline size_t qwtUpperSampleIndex(const QwtSeriesData< T >& series, double value
     }
 
     size_t indexMin = 0;
-    size_t n        = indexMax; // n represents the current search interval size
+    size_t n        = indexMax;  // n represents the current search interval size
 
     while (n > 0) {
         const size_t half     = n >> 1;

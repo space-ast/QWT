@@ -8,28 +8,24 @@ class ParametricSurface::PrivateData
     QWT_DECLARE_PUBLIC(ParametricSurface)
 
 public:
-    PrivateData(ParametricSurface* q) : q_ptr(q), m_uperiodic(false), m_vperiodic(false) {}
+    PrivateData(ParametricSurface* q) : q_ptr(q), m_uperiodic(false), m_vperiodic(false)
+    {
+    }
 
     bool m_uperiodic;
     bool m_vperiodic;
 };
 
-ParametricSurface::ParametricSurface()
-    : GridMapping()
-    , QWT_PIMPL_CONSTRUCT
+ParametricSurface::ParametricSurface() : GridMapping(), QWT_PIMPL_CONSTRUCT
 {
 }
 
-ParametricSurface::ParametricSurface(SurfacePlot& pw)
-    : GridMapping()
-    , QWT_PIMPL_CONSTRUCT
+ParametricSurface::ParametricSurface(SurfacePlot& pw) : GridMapping(), QWT_PIMPL_CONSTRUCT
 {
     setPlotWidget(&pw);
 }
 
-ParametricSurface::ParametricSurface(SurfacePlot* pw)
-    : GridMapping()
-    , QWT_PIMPL_CONSTRUCT
+ParametricSurface::ParametricSurface(SurfacePlot* pw) : GridMapping(), QWT_PIMPL_CONSTRUCT
 {
     setPlotWidget(pw);
 }

@@ -21,9 +21,7 @@ SurfacePlot::PrivateData::PrivateData(SurfacePlot* q)
  * @details Initializes with dataNormals()==false, NOFLOOR, resolution() == 1
  *
  */
-SurfacePlot::SurfacePlot(QWidget* parent)
-    : Plot3D(parent)
-    , QWT_PIMPL_CONSTRUCT
+SurfacePlot::SurfacePlot(QWidget* parent) : Plot3D(parent), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->m_actualDataG = new GridData();
@@ -156,8 +154,8 @@ void SurfacePlot::setResolution(int res)
 void SurfacePlot::updateNormals()
 {
     QWT_D(d);
-    Qwt3D::Data* data = actualData();
-    std::vector<GLuint>& dl = displayLists();
+    Qwt3D::Data* data         = actualData();
+    std::vector< GLuint >& dl = displayLists();
 
     SaveGlDeleteLists(dl[ NormalObject ], 1);
 

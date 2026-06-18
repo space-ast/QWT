@@ -120,7 +120,7 @@ public:
 
     Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
-// Constructor
+    // Constructor
     explicit QwtPlotTradingCurve(const QString& title = QString());
     // Constructor with title
     explicit QwtPlotTradingCurve(const QwtText& title);
@@ -128,52 +128,52 @@ public:
     // Destructor
     ~QwtPlotTradingCurve() override;
 
-// Get the runtime type information
+    // Get the runtime type information
     virtual int rtti() const override;
 
-// Set a paint attribute
+    // Set a paint attribute
     void setPaintAttribute(PaintAttribute, bool on = true);
     // Test a paint attribute
     bool testPaintAttribute(PaintAttribute) const;
 
-// Set the samples
+    // Set the samples
     void setSamples(const QVector< QwtOHLCSample >&);
     // Set the samples
     void setSamples(QwtSeriesData< QwtOHLCSample >*);
 
-// Set the symbol style
+    // Set the symbol style
     void setSymbolStyle(SymbolStyle style);
     // Get the symbol style
     SymbolStyle symbolStyle() const;
 
-// Set the symbol pen
+    // Set the symbol pen
     void setSymbolPen(const QColor&, qreal width = 0.0, Qt::PenStyle = Qt::SolidLine);
     // Set the symbol pen
     void setSymbolPen(const QPen&);
     // Get the symbol pen
     QPen symbolPen() const;
 
-// Set the symbol brush
+    // Set the symbol brush
     void setSymbolBrush(Direction, const QBrush&);
     // Get the symbol brush
     QBrush symbolBrush(Direction) const;
 
-// Set the symbol extent
+    // Set the symbol extent
     void setSymbolExtent(double);
     // Get the symbol extent
     double symbolExtent() const;
 
-// Set the minimum symbol width
+    // Set the minimum symbol width
     void setMinSymbolWidth(double);
     // Get the minimum symbol width
     double minSymbolWidth() const;
 
-// Set the maximum symbol width
+    // Set the maximum symbol width
     void setMaxSymbolWidth(double);
     // Get the maximum symbol width
     double maxSymbolWidth() const;
 
-// Draw the series
+    // Draw the series
     virtual void drawSeries(QPainter*,
                             const QwtScaleMap& xMap,
                             const QwtScaleMap& yMap,
@@ -181,26 +181,26 @@ public:
                             int from,
                             int to) const override;
 
-// Get the bounding rectangle
+    // Get the bounding rectangle
     virtual QRectF boundingRect() const override;
 
-// Get the legend icon
+    // Get the legend icon
     virtual QwtGraphic legendIcon(int index, const QSizeF&) const override;
 
 protected:
     void init();
 
-virtual void
+    virtual void
     drawSymbols(QPainter*, const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect, int from, int to) const;
 
-virtual void
+    virtual void
     drawUserSymbol(QPainter*, SymbolStyle, const QwtOHLCSample&, Qt::Orientation, bool inverted, double symbolWidth) const;
 
-void drawBar(QPainter*, const QwtOHLCSample&, Qt::Orientation, bool inverted, double width) const;
+    void drawBar(QPainter*, const QwtOHLCSample&, Qt::Orientation, bool inverted, double width) const;
 
-void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double width) const;
+    void drawCandleStick(QPainter*, const QwtOHLCSample&, Qt::Orientation, double width) const;
 
-virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
+    virtual double scaledSymbolWidth(const QwtScaleMap& xMap, const QwtScaleMap& yMap, const QRectF& canvasRect) const;
 
 private:
     QWT_DECLARE_PRIVATE(QwtPlotTradingCurve)

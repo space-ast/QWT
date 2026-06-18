@@ -1,7 +1,8 @@
 #ifndef QWT3D_AUTOPTR_H
 #define QWT3D_AUTOPTR_H
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Simple auto pointer providing deep copies for raw pointer
@@ -13,20 +14,28 @@ namespace Qwt3D {
  *          The pointer requires also heap based objects with regard to the template
  *          argument in order to be able to get ownership and control over destruction.
  */
-template<typename T>
+template< typename T >
 class ClonePtr
 {
 public:
     // Standard ctor
-    explicit ClonePtr(T *ptr = nullptr) : rawptr_(ptr) { }
+    explicit ClonePtr(T* ptr = nullptr) : rawptr_(ptr)
+    {
+    }
     // Dtor (calls T::destroy)
-    ~ClonePtr() { destroyRawPtr(); }
+    ~ClonePtr()
+    {
+        destroyRawPtr();
+    }
 
     // Copy ctor (calls (virtual) clone())
-    ClonePtr(ClonePtr const &val) { rawptr_ = val.rawptr_->clone(); }
+    ClonePtr(ClonePtr const& val)
+    {
+        rawptr_ = val.rawptr_->clone();
+    }
 
     // Assignment in the same spirit as copy ctor
-    ClonePtr<T> &operator=(ClonePtr const &val)
+    ClonePtr< T >& operator=(ClonePtr const& val)
     {
         if (this == &val)
             return *this;
@@ -38,13 +47,19 @@ public:
     }
 
     // Pointer-like access operator
-    T *operator->() const { return rawptr_; }
+    T* operator->() const
+    {
+        return rawptr_;
+    }
 
     // Dereferencing operator
-    T &operator*() const { return *rawptr_; }
+    T& operator*() const
+    {
+        return *rawptr_;
+    }
 
 private:
-    T *rawptr_;
+    T* rawptr_;
     void destroyRawPtr()
     {
         if (rawptr_)
@@ -53,6 +68,6 @@ private:
     }
 };
 
-} // ns
+}  // ns
 
-#endif // QWT3D_AUTOPTR_H
+#endif  // QWT3D_AUTOPTR_H

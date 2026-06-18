@@ -41,28 +41,27 @@ class QPainter;
 
 class QWT_EXPORT QwtDialNeedle
 {
-  public:
+public:
     /// Constructor
     QwtDialNeedle();
     /// Destructor
     virtual ~QwtDialNeedle();
 
     /// Set the palette for the needle
-    virtual void setPalette( const QPalette& );
+    virtual void setPalette(const QPalette&);
     /// Return the palette of the needle
     const QPalette& palette() const;
 
     /// Set flat style
-    void setFlatStyle( bool );
+    void setFlatStyle(bool);
     /// Return flat style
     bool flatStyle() const;
 
     /// Draw the needle
-    virtual void draw( QPainter*, const QPointF& center,
-        double length, double direction,
-        QPalette::ColorGroup = QPalette::Active ) const;
+    virtual void
+    draw(QPainter*, const QPointF& center, double length, double direction, QPalette::ColorGroup = QPalette::Active) const;
 
-  protected:
+protected:
     /*!
        @brief Draw the needle
 
@@ -78,18 +77,16 @@ class QWT_EXPORT QwtDialNeedle
 
        @sa setPalette(), palette()
      */
-    virtual void drawNeedle( QPainter* painter,
-        double length, QPalette::ColorGroup colorGroup ) const = 0;
+    virtual void drawNeedle(QPainter* painter, double length, QPalette::ColorGroup colorGroup) const = 0;
 
-    virtual void drawKnob( QPainter*, double width,
-        const QBrush&, bool sunken ) const;
+    virtual void drawKnob(QPainter*, double width, const QBrush&, bool sunken) const;
 
-  protected:
+protected:
     QPalette m_palette;
     bool m_flatStyle;
 
-  private:
-    QwtDialNeedle(const QwtDialNeedle&) = delete;
+private:
+    QwtDialNeedle(const QwtDialNeedle&)            = delete;
     QwtDialNeedle& operator=(const QwtDialNeedle&) = delete;
 };
 
@@ -103,7 +100,7 @@ class QWT_EXPORT QwtDialNeedle
 
 class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
 {
-  public:
+public:
     /**
      * @brief Style of the needle
      */
@@ -117,19 +114,17 @@ class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
     };
 
     /// Constructor
-    QwtDialSimpleNeedle( Style, bool hasKnob = true,
-        const QColor& mid = Qt::gray, const QColor& base = Qt::darkGray );
+    QwtDialSimpleNeedle(Style, bool hasKnob = true, const QColor& mid = Qt::gray, const QColor& base = Qt::darkGray);
 
     /// Set the width of the needle
-    void setWidth( double width );
+    void setWidth(double width);
     /// Return the width of the needle
     double width() const;
 
-  protected:
-    virtual void drawNeedle( QPainter*, double length,
-        QPalette::ColorGroup ) const override;
+protected:
+    virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const override;
 
-  private:
+private:
     Style m_style;
     bool m_hasKnob;
     double m_width;
@@ -148,7 +143,7 @@ class QWT_EXPORT QwtDialSimpleNeedle : public QwtDialNeedle
 
 class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
 {
-  public:
+public:
     /**
      * @brief Style of the needle
      */
@@ -162,14 +157,12 @@ class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
     };
 
     /// Constructor
-    QwtCompassMagnetNeedle( Style = TriangleStyle,
-        const QColor& light = Qt::white, const QColor& dark = Qt::red );
+    QwtCompassMagnetNeedle(Style = TriangleStyle, const QColor& light = Qt::white, const QColor& dark = Qt::red);
 
-  protected:
-    virtual void drawNeedle( QPainter*,
-        double length, QPalette::ColorGroup ) const override;
+protected:
+    virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const override;
 
-  private:
+private:
     Style m_style;
 };
 
@@ -184,7 +177,7 @@ class QWT_EXPORT QwtCompassMagnetNeedle : public QwtDialNeedle
 
 class QWT_EXPORT QwtCompassWindArrow : public QwtDialNeedle
 {
-  public:
+public:
     /**
      * @brief Style of the arrow
      */
@@ -198,14 +191,12 @@ class QWT_EXPORT QwtCompassWindArrow : public QwtDialNeedle
     };
 
     /// Constructor
-    QwtCompassWindArrow( Style, const QColor& light = Qt::white,
-        const QColor& dark = Qt::gray );
+    QwtCompassWindArrow(Style, const QColor& light = Qt::white, const QColor& dark = Qt::gray);
 
-  protected:
-    virtual void drawNeedle( QPainter*,
-        double length, QPalette::ColorGroup ) const override;
+protected:
+    virtual void drawNeedle(QPainter*, double length, QPalette::ColorGroup) const override;
 
-  private:
+private:
     Style m_style;
 };
 

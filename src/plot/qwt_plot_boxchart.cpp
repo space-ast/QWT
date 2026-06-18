@@ -39,11 +39,11 @@ public:
         , outlierJitter(0.0)
         , paintAttributes(ClipBoxes | ClipOutliers)
     {
-        pen = QPen(Qt::black, 1.0);
-        brush = QBrush(Qt::NoBrush);
-        medianPen = QPen(Qt::black, 2.0);
+        pen           = QPen(Qt::black, 1.0);
+        brush         = QBrush(Qt::NoBrush);
+        medianPen     = QPen(Qt::black, 2.0);
         outlierSymbol = nullptr;
-        meanSymbol = nullptr;
+        meanSymbol    = nullptr;
     }
 
     BoxStyle boxStyle;
@@ -70,9 +70,7 @@ public:
  *
  */
 QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
-    : QwtPlotSeriesItem(QwtText(title))
-    , QWT_PIMPL_CONSTRUCT
-    , m_outlierData(nullptr)
+    : QwtPlotSeriesItem(QwtText(title)), QWT_PIMPL_CONSTRUCT, m_outlierData(nullptr)
 {
     init();
 }
@@ -83,9 +81,7 @@ QwtPlotBoxChart::QwtPlotBoxChart(const QString& title)
  *
  */
 QwtPlotBoxChart::QwtPlotBoxChart(const QwtText& title)
-    : QwtPlotSeriesItem(title)
-    , QWT_PIMPL_CONSTRUCT
-    , m_outlierData(nullptr)
+    : QwtPlotSeriesItem(title), QWT_PIMPL_CONSTRUCT, m_outlierData(nullptr)
 {
     init();
 }
@@ -111,7 +107,7 @@ void QwtPlotBoxChart::init()
 /**
  * @brief Get the runtime type information
  * @return Rtti_PlotBoxChart
- * 
+ *
  */
 int QwtPlotBoxChart::rtti() const
 {
@@ -130,8 +126,8 @@ void QwtPlotBoxChart::attach(QwtPlot* plot)
     QWT_D(d);
     if (plot && !d->m_userSetPen && d->pen.color() == QColor(Qt::black)) {
         const QColor c = plot->nextColorForItem(rtti());
-        d->pen = QPen(c, d->pen.widthF(), d->pen.style());
-        d->brush = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
+        d->pen         = QPen(c, d->pen.widthF(), d->pen.style());
+        d->brush       = QBrush(QColor(c.red(), c.green(), c.blue(), 128));
     }
     QwtPlotItem::attach(plot);
 }
@@ -140,7 +136,7 @@ void QwtPlotBoxChart::attach(QwtPlot* plot)
  * @brief Set a paint attribute
  * @param[in] attr Paint attribute to set
  * @param[in] on True to enable, false to disable
- * 
+ *
  */
 void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
 {
@@ -155,7 +151,7 @@ void QwtPlotBoxChart::setPaintAttribute(PaintAttribute attr, bool on)
  * @brief Test if a paint attribute is enabled
  * @param[in] attr Paint attribute to test
  * @return True if the attribute is enabled
- * 
+ *
  */
 bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
 {
@@ -166,13 +162,12 @@ bool QwtPlotBoxChart::testPaintAttribute(PaintAttribute attr) const
 /**
  * @brief Set the box style
  * @param[in] style Box style to set
- * 
+ *
  */
 void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
 {
     QWT_D(d);
-    if (d->boxStyle != style)
-    {
+    if (d->boxStyle != style) {
         d->boxStyle = style;
         legendChanged();
         itemChanged();
@@ -182,7 +177,7 @@ void QwtPlotBoxChart::setBoxStyle(BoxStyle style)
 /**
  * @brief Get the box style
  * @return Current box style
- * 
+ *
  */
 QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
 {
@@ -193,13 +188,12 @@ QwtPlotBoxChart::BoxStyle QwtPlotBoxChart::boxStyle() const
 /**
  * @brief Set the whisker style
  * @param[in] style Whisker style to set
- * 
+ *
  */
 void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
 {
     QWT_D(d);
-    if (d->whiskerStyle != style)
-    {
+    if (d->whiskerStyle != style) {
         d->whiskerStyle = style;
         legendChanged();
         itemChanged();
@@ -209,7 +203,7 @@ void QwtPlotBoxChart::setWhiskerStyle(WhiskerStyle style)
 /**
  * @brief Get the whisker style
  * @return Current whisker style
- * 
+ *
  */
 QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
 {
@@ -221,13 +215,12 @@ QwtPlotBoxChart::WhiskerStyle QwtPlotBoxChart::whiskerStyle() const
  * @brief Set the orientation
  * @details Vertical orientation means x-position, horizontal means y-position.
  * @param[in] orient Orientation to set
- * 
+ *
  */
 void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
 {
     QWT_D(d);
-    if (d->orientation != orient)
-    {
+    if (d->orientation != orient) {
         d->orientation = orient;
         legendChanged();
         itemChanged();
@@ -237,7 +230,7 @@ void QwtPlotBoxChart::setOrientation(Qt::Orientation orient)
 /**
  * @brief Get the orientation
  * @return Current orientation
- * 
+ *
  */
 Qt::Orientation QwtPlotBoxChart::orientation() const
 {
@@ -248,14 +241,13 @@ Qt::Orientation QwtPlotBoxChart::orientation() const
 /**
  * @brief Set the box extent (width in scale coordinates)
  * @param[in] extent Box extent to set
- * 
+ *
  */
 void QwtPlotBoxChart::setBoxExtent(double extent)
 {
     QWT_D(d);
     extent = qwtMaxF(0.0, extent);
-    if (d->boxExtent != extent)
-    {
+    if (d->boxExtent != extent) {
         d->boxExtent = extent;
         legendChanged();
         itemChanged();
@@ -265,7 +257,7 @@ void QwtPlotBoxChart::setBoxExtent(double extent)
 /**
  * @brief Get the box extent
  * @return Current box extent
- * 
+ *
  */
 double QwtPlotBoxChart::boxExtent() const
 {
@@ -276,14 +268,13 @@ double QwtPlotBoxChart::boxExtent() const
 /**
  * @brief Set the minimum box width in pixels
  * @param[in] pixels Minimum width to set
- * 
+ *
  */
 void QwtPlotBoxChart::setMinBoxWidth(double pixels)
 {
     QWT_D(d);
     pixels = qwtMaxF(0.0, pixels);
-    if (d->minBoxWidth != pixels)
-    {
+    if (d->minBoxWidth != pixels) {
         d->minBoxWidth = pixels;
         legendChanged();
         itemChanged();
@@ -293,7 +284,7 @@ void QwtPlotBoxChart::setMinBoxWidth(double pixels)
 /**
  * @brief Get the minimum box width
  * @return Minimum box width in pixels
- * 
+ *
  */
 double QwtPlotBoxChart::minBoxWidth() const
 {
@@ -304,13 +295,12 @@ double QwtPlotBoxChart::minBoxWidth() const
 /**
  * @brief Set the maximum box width in pixels
  * @param[in] pixels Maximum width to set (negative = unlimited)
- * 
+ *
  */
 void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
 {
     QWT_D(d);
-    if (d->maxBoxWidth != pixels)
-    {
+    if (d->maxBoxWidth != pixels) {
         d->maxBoxWidth = pixels;
         legendChanged();
         itemChanged();
@@ -320,7 +310,7 @@ void QwtPlotBoxChart::setMaxBoxWidth(double pixels)
 /**
  * @brief Get the maximum box width
  * @return Maximum box width in pixels (negative = unlimited)
- * 
+ *
  */
 double QwtPlotBoxChart::maxBoxWidth() const
 {
@@ -333,7 +323,7 @@ double QwtPlotBoxChart::maxBoxWidth() const
  * @param[in] color Pen color
  * @param[in] width Pen width
  * @param[in] style Pen style
- * 
+ *
  */
 void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle style)
 {
@@ -343,14 +333,13 @@ void QwtPlotBoxChart::setPen(const QColor& color, qreal width, Qt::PenStyle styl
 /**
  * @brief Set the pen for box outline and whiskers
  * @param[in] pen Pen to set
- * 
+ *
  */
 void QwtPlotBoxChart::setPen(const QPen& pen)
 {
     QWT_D(d);
     d->m_userSetPen = true;
-    if (d->pen != pen)
-    {
+    if (d->pen != pen) {
         d->pen = pen;
         legendChanged();
         itemChanged();
@@ -360,7 +349,7 @@ void QwtPlotBoxChart::setPen(const QPen& pen)
 /**
  * @brief Get the pen for box outline and whiskers
  * @return Current pen
- * 
+ *
  */
 const QPen& QwtPlotBoxChart::pen() const
 {
@@ -371,13 +360,12 @@ const QPen& QwtPlotBoxChart::pen() const
 /**
  * @brief Set the brush for box body fill
  * @param[in] brush Brush to set
- * 
+ *
  */
 void QwtPlotBoxChart::setBrush(const QBrush& brush)
 {
     QWT_D(d);
-    if (d->brush != brush)
-    {
+    if (d->brush != brush) {
         d->brush = brush;
         legendChanged();
         itemChanged();
@@ -387,7 +375,7 @@ void QwtPlotBoxChart::setBrush(const QBrush& brush)
 /**
  * @brief Get the brush for box body fill
  * @return Current brush
- * 
+ *
  */
 const QBrush& QwtPlotBoxChart::brush() const
 {
@@ -398,13 +386,12 @@ const QBrush& QwtPlotBoxChart::brush() const
 /**
  * @brief Set the pen for median line
  * @param[in] pen Pen to set
- * 
+ *
  */
 void QwtPlotBoxChart::setMedianPen(const QPen& pen)
 {
     QWT_D(d);
-    if (d->medianPen != pen)
-    {
+    if (d->medianPen != pen) {
         d->medianPen = pen;
         legendChanged();
         itemChanged();
@@ -414,7 +401,7 @@ void QwtPlotBoxChart::setMedianPen(const QPen& pen)
 /**
  * @brief Get the pen for median line
  * @return Current median pen
- * 
+ *
  */
 QPen QwtPlotBoxChart::medianPen() const
 {
@@ -425,13 +412,12 @@ QPen QwtPlotBoxChart::medianPen() const
 /**
  * @brief Set the symbol for outliers
  * @param[in] symbol Symbol to set
- * 
+ *
  */
 void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
 {
     QWT_D(d);
-    if (d->outlierSymbol != symbol)
-    {
+    if (d->outlierSymbol != symbol) {
         delete d->outlierSymbol;
         d->outlierSymbol = symbol;
         legendChanged();
@@ -442,7 +428,7 @@ void QwtPlotBoxChart::setOutlierSymbol(const QwtSymbol* symbol)
 /**
  * @brief Get the symbol for outliers
  * @return Current outlier symbol
- * 
+ *
  */
 const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
 {
@@ -453,13 +439,12 @@ const QwtSymbol* QwtPlotBoxChart::outlierSymbol() const
 /**
  * @brief Set the symbol for mean marker
  * @param[in] symbol Symbol to set
- * 
+ *
  */
 void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
 {
     QWT_D(d);
-    if (d->meanSymbol != symbol)
-    {
+    if (d->meanSymbol != symbol) {
         delete d->meanSymbol;
         d->meanSymbol = symbol;
         legendChanged();
@@ -470,7 +455,7 @@ void QwtPlotBoxChart::setMeanSymbol(const QwtSymbol* symbol)
 /**
  * @brief Get the symbol for mean marker
  * @return Current mean symbol
- * 
+ *
  */
 const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
 {
@@ -481,13 +466,12 @@ const QwtSymbol* QwtPlotBoxChart::meanSymbol() const
 /**
  * @brief Set whether the median line is visible
  * @param[in] visible True to show, false to hide
- * 
+ *
  */
 void QwtPlotBoxChart::setMedianVisible(bool visible)
 {
     QWT_D(d);
-    if (d->medianVisible != visible)
-    {
+    if (d->medianVisible != visible) {
         d->medianVisible = visible;
         itemChanged();
     }
@@ -496,7 +480,7 @@ void QwtPlotBoxChart::setMedianVisible(bool visible)
 /**
  * @brief Check if the median line is visible
  * @return True if visible
- * 
+ *
  */
 bool QwtPlotBoxChart::isMedianVisible() const
 {
@@ -507,13 +491,12 @@ bool QwtPlotBoxChart::isMedianVisible() const
 /**
  * @brief Set whether the mean marker is visible
  * @param[in] visible True to show, false to hide
- * 
+ *
  */
 void QwtPlotBoxChart::setMeanVisible(bool visible)
 {
     QWT_D(d);
-    if (d->meanVisible != visible)
-    {
+    if (d->meanVisible != visible) {
         d->meanVisible = visible;
         itemChanged();
     }
@@ -522,7 +505,7 @@ void QwtPlotBoxChart::setMeanVisible(bool visible)
 /**
  * @brief Check if the mean marker is visible
  * @return True if visible
- * 
+ *
  */
 bool QwtPlotBoxChart::isMeanVisible() const
 {
@@ -533,7 +516,7 @@ bool QwtPlotBoxChart::isMeanVisible() const
 /**
  * @brief Set the outlier jitter width
  * @param[in] jitterWidth Jitter width for overlapping outliers
- * 
+ *
  */
 void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
 {
@@ -544,7 +527,7 @@ void QwtPlotBoxChart::setOutlierJitter(double jitterWidth)
 /**
  * @brief Get the outlier jitter width
  * @return Jitter width for overlapping outliers
- * 
+ *
  */
 double QwtPlotBoxChart::outlierJitter() const
 {
@@ -555,9 +538,9 @@ double QwtPlotBoxChart::outlierJitter() const
 /**
  * @brief Set box samples from a vector
  * @param[in] samples Vector of box samples
- * 
+ *
  */
-void QwtPlotBoxChart::setSamples(const QVector<QwtBoxSample>& samples)
+void QwtPlotBoxChart::setSamples(const QVector< QwtBoxSample >& samples)
 {
     setData(new QwtBoxChartData(samples));
 }
@@ -565,9 +548,9 @@ void QwtPlotBoxChart::setSamples(const QVector<QwtBoxSample>& samples)
 /**
  * @brief Set box samples from series data
  * @param[in] data Series data to set
- * 
+ *
  */
-void QwtPlotBoxChart::setSamples(QwtSeriesData<QwtBoxSample>* data)
+void QwtPlotBoxChart::setSamples(QwtSeriesData< QwtBoxSample >* data)
 {
     setData(data);
 }
@@ -575,9 +558,9 @@ void QwtPlotBoxChart::setSamples(QwtSeriesData<QwtBoxSample>* data)
 /**
  * @brief Set outlier samples from a vector
  * @param[in] samples Vector of outlier samples
- * 
+ *
  */
-void QwtPlotBoxChart::setOutliers(const QVector<QwtBoxOutlierSample>& samples)
+void QwtPlotBoxChart::setOutliers(const QVector< QwtBoxOutlierSample >& samples)
 {
     delete m_outlierData;
     m_outlierData = new QwtBoxOutlierChartData(samples);
@@ -587,9 +570,9 @@ void QwtPlotBoxChart::setOutliers(const QVector<QwtBoxOutlierSample>& samples)
 /**
  * @brief Set outlier samples from series data
  * @param[in] data Series data to set
- * 
+ *
  */
-void QwtPlotBoxChart::setOutliers(QwtSeriesData<QwtBoxOutlierSample>* data)
+void QwtPlotBoxChart::setOutliers(QwtSeriesData< QwtBoxOutlierSample >* data)
 {
     delete m_outlierData;
     m_outlierData = data;
@@ -599,9 +582,9 @@ void QwtPlotBoxChart::setOutliers(QwtSeriesData<QwtBoxOutlierSample>* data)
 /**
  * @brief Get the outlier data
  * @return Current outlier data
- * 
+ *
  */
-const QwtSeriesData<QwtBoxOutlierSample>* QwtPlotBoxChart::outlierData() const
+const QwtSeriesData< QwtBoxOutlierSample >* QwtPlotBoxChart::outlierData() const
 {
     return m_outlierData;
 }
@@ -609,33 +592,27 @@ const QwtSeriesData<QwtBoxOutlierSample>* QwtPlotBoxChart::outlierData() const
 /**
  * @brief Get the bounding rectangle
  * @return Bounding rectangle of all samples
- * 
+ *
  */
 QRectF QwtPlotBoxChart::boundingRect() const
 {
     QWT_DC(d);
     QRectF rect = QwtPlotSeriesItem::boundingRect();
 
-    if (rect.isValid())
-    {
+    if (rect.isValid()) {
         const double padding = d->boxExtent * 0.5;
-        if (d->orientation == Qt::Vertical)
-        {
+        if (d->orientation == Qt::Vertical) {
             rect.setLeft(rect.left() - padding);
             rect.setRight(rect.right() + padding);
-        }
-        else
-        {
+        } else {
             rect.setTop(rect.top() - padding);
             rect.setBottom(rect.bottom() + padding);
         }
     }
 
-    if (m_outlierData && m_outlierData->size() > 0)
-    {
+    if (m_outlierData && m_outlierData->size() > 0) {
         const QRectF outlierRect = m_outlierData->boundingRect();
-        if (outlierRect.isValid())
-        {
+        if (outlierRect.isValid()) {
             rect = rect.united(outlierRect);
         }
     }
@@ -643,10 +620,7 @@ QRectF QwtPlotBoxChart::boundingRect() const
     return rect;
 }
 
-double QwtPlotBoxChart::scaledBoxWidth(
-    const QwtScaleMap& posMap,
-    const QwtScaleMap& valueMap,
-    const QRectF& canvasRect) const
+double QwtPlotBoxChart::scaledBoxWidth(const QwtScaleMap& posMap, const QwtScaleMap& valueMap, const QRectF& canvasRect) const
 {
     QWT_DC(d);
     Q_UNUSED(valueMap);
@@ -656,7 +630,7 @@ double QwtPlotBoxChart::scaledBoxWidth(
         return d->minBoxWidth;
 
     const double pos = posMap.transform(posMap.s1() + d->boxExtent);
-    double width = qAbs(pos - posMap.p1());
+    double width     = qAbs(pos - posMap.p1());
 
     width = qwtMaxF(width, d->minBoxWidth);
     if (d->maxBoxWidth > 0.0)
@@ -673,11 +647,14 @@ double QwtPlotBoxChart::scaledBoxWidth(
  * @param[in] canvasRect Canvas rectangle
  * @param[in] from Starting index
  * @param[in] to Ending index
- * 
+ *
  */
 void QwtPlotBoxChart::drawSeries(QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int from, int to) const
+                                 const QwtScaleMap& xMap,
+                                 const QwtScaleMap& yMap,
+                                 const QRectF& canvasRect,
+                                 int from,
+                                 int to) const
 {
     QWT_DC(d);
 
@@ -693,173 +670,154 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
     painter->save();
 
     const Qt::Orientation orient = d->orientation;
-    const QwtScaleMap* posMap = (orient == Qt::Vertical) ? &xMap : &yMap;
-    const QwtScaleMap* valueMap = (orient == Qt::Vertical) ? &yMap : &xMap;
+    const QwtScaleMap* posMap    = (orient == Qt::Vertical) ? &xMap : &yMap;
+    const QwtScaleMap* valueMap  = (orient == Qt::Vertical) ? &yMap : &xMap;
 
     const double boxWidth = scaledBoxWidth(*posMap, *valueMap, canvasRect);
-    const bool doAlign = QwtPainter::roundingAlignment(painter);
+    const bool doAlign    = QwtPainter::roundingAlignment(painter);
 
     painter->setPen(d->pen);
 
-    for (int i = from; i <= to; i++)
-    {
+    for (int i = from; i <= to; i++) {
         const QwtBoxSample& sample = this->sample(i);
 
         double posPixel = posMap->transform(sample.position);
         if (doAlign)
             posPixel = qRound(posPixel);
 
-        if (d->boxStyle != NoBox)
-        {
+        if (d->boxStyle != NoBox) {
             painter->setBrush(d->brush);
             drawBox(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (d->whiskerStyle != NoWhiskers)
-        {
+        if (d->whiskerStyle != NoWhiskers) {
             drawWhiskers(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (d->medianVisible)
-        {
+        if (d->medianVisible) {
             drawMedian(painter, sample, orient, boxWidth, posPixel, *valueMap);
         }
 
-        if (d->meanVisible && d->meanSymbol)
-        {
+        if (d->meanVisible && d->meanSymbol) {
             double medianPixel = valueMap->transform(sample.median);
             if (doAlign)
                 medianPixel = qRound(medianPixel);
 
-            d->meanSymbol->drawSymbol(painter,
-                (orient == Qt::Vertical) ? QPointF(posPixel, medianPixel)
-                                         : QPointF(medianPixel, posPixel));
+            d->meanSymbol->drawSymbol(
+                painter, (orient == Qt::Vertical) ? QPointF(posPixel, medianPixel) : QPointF(medianPixel, posPixel));
         }
     }
 
-    if (m_outlierData && m_outlierData->size() > 0)
-    {
+    if (m_outlierData && m_outlierData->size() > 0) {
         drawOutliers(painter, *posMap, *valueMap, canvasRect, from, to);
     }
 
     painter->restore();
 }
 
-void QwtPlotBoxChart::drawBox(QPainter* painter, const QwtBoxSample& sample,
-    Qt::Orientation orient, double boxWidth, double posPixel,
-    const QwtScaleMap& valueMap) const
+void QwtPlotBoxChart::drawBox(QPainter* painter,
+                              const QwtBoxSample& sample,
+                              Qt::Orientation orient,
+                              double boxWidth,
+                              double posPixel,
+                              const QwtScaleMap& valueMap) const
 {
     QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
-    const double q1Pixel = valueMap.transform(sample.q1);
-    const double q3Pixel = valueMap.transform(sample.q3);
+    const double q1Pixel     = valueMap.transform(sample.q1);
+    const double q3Pixel     = valueMap.transform(sample.q3);
     const double medianPixel = valueMap.transform(sample.median);
 
-    if (doAlign)
-    {
+    if (doAlign) {
         const double aligned = qRound(posPixel);
-        posPixel = aligned;
+        posPixel             = aligned;
     }
 
     const double halfWidth = boxWidth * 0.5;
 
-    switch (d->boxStyle)
-    {
-        case Rect:
-        {
-            if (orient == Qt::Vertical)
-            {
-                QRectF rect(posPixel - halfWidth, q3Pixel,
-                           boxWidth, q1Pixel - q3Pixel);
-                QwtPainter::drawRect(painter, rect);
-            }
-            else
-            {
-                QRectF rect(q1Pixel, posPixel - halfWidth,
-                           q3Pixel - q1Pixel, boxWidth);
-                QwtPainter::drawRect(painter, rect);
-            }
-            break;
+    switch (d->boxStyle) {
+    case Rect: {
+        if (orient == Qt::Vertical) {
+            QRectF rect(posPixel - halfWidth, q3Pixel, boxWidth, q1Pixel - q3Pixel);
+            QwtPainter::drawRect(painter, rect);
+        } else {
+            QRectF rect(q1Pixel, posPixel - halfWidth, q3Pixel - q1Pixel, boxWidth);
+            QwtPainter::drawRect(painter, rect);
         }
+        break;
+    }
 
-        case Diamond:
-        {
-            QPolygonF poly(4);
-            if (orient == Qt::Vertical)
-            {
-                poly[0] = QPointF(posPixel, q3Pixel);
-                poly[1] = QPointF(posPixel + halfWidth, medianPixel);
-                poly[2] = QPointF(posPixel, q1Pixel);
-                poly[3] = QPointF(posPixel - halfWidth, medianPixel);
-            }
-            else
-            {
-                poly[0] = QPointF(q3Pixel, posPixel);
-                poly[1] = QPointF(medianPixel, posPixel + halfWidth);
-                poly[2] = QPointF(q1Pixel, posPixel);
-                poly[3] = QPointF(medianPixel, posPixel - halfWidth);
-            }
-            QwtPainter::drawPolygon(painter, poly);
-            break;
+    case Diamond: {
+        QPolygonF poly(4);
+        if (orient == Qt::Vertical) {
+            poly[ 0 ] = QPointF(posPixel, q3Pixel);
+            poly[ 1 ] = QPointF(posPixel + halfWidth, medianPixel);
+            poly[ 2 ] = QPointF(posPixel, q1Pixel);
+            poly[ 3 ] = QPointF(posPixel - halfWidth, medianPixel);
+        } else {
+            poly[ 0 ] = QPointF(q3Pixel, posPixel);
+            poly[ 1 ] = QPointF(medianPixel, posPixel + halfWidth);
+            poly[ 2 ] = QPointF(q1Pixel, posPixel);
+            poly[ 3 ] = QPointF(medianPixel, posPixel - halfWidth);
         }
+        QwtPainter::drawPolygon(painter, poly);
+        break;
+    }
 
-        case Notch:
-        {
-            const double notchWidth = halfWidth * 0.25;
-            const double notchOffset = (q3Pixel - q1Pixel) * 0.1;
+    case Notch: {
+        const double notchWidth  = halfWidth * 0.25;
+        const double notchOffset = (q3Pixel - q1Pixel) * 0.1;
 
-            QPolygonF poly(10);
-            if (orient == Qt::Vertical)
-            {
-                poly[0] = QPointF(posPixel - halfWidth, q3Pixel);
-                poly[1] = QPointF(posPixel - halfWidth, medianPixel - notchOffset);
-                poly[2] = QPointF(posPixel - notchWidth, medianPixel);
-                poly[3] = QPointF(posPixel - halfWidth, medianPixel + notchOffset);
-                poly[4] = QPointF(posPixel - halfWidth, q1Pixel);
-                poly[5] = QPointF(posPixel + halfWidth, q1Pixel);
-                poly[6] = QPointF(posPixel + halfWidth, medianPixel + notchOffset);
-                poly[7] = QPointF(posPixel + notchWidth, medianPixel);
-                poly[8] = QPointF(posPixel + halfWidth, medianPixel - notchOffset);
-                poly[9] = QPointF(posPixel + halfWidth, q3Pixel);
-            }
-            else
-            {
-                poly[0] = QPointF(q1Pixel, posPixel - halfWidth);
-                poly[1] = QPointF(medianPixel - notchOffset, posPixel - halfWidth);
-                poly[2] = QPointF(medianPixel, posPixel - notchWidth);
-                poly[3] = QPointF(medianPixel + notchOffset, posPixel - halfWidth);
-                poly[4] = QPointF(q3Pixel, posPixel - halfWidth);
-                poly[5] = QPointF(q3Pixel, posPixel + halfWidth);
-                poly[6] = QPointF(medianPixel + notchOffset, posPixel + halfWidth);
-                poly[7] = QPointF(medianPixel, posPixel + notchWidth);
-                poly[8] = QPointF(medianPixel - notchOffset, posPixel + halfWidth);
-                poly[9] = QPointF(q1Pixel, posPixel + halfWidth);
-            }
-            QwtPainter::drawPolygon(painter, poly);
-            break;
+        QPolygonF poly(10);
+        if (orient == Qt::Vertical) {
+            poly[ 0 ] = QPointF(posPixel - halfWidth, q3Pixel);
+            poly[ 1 ] = QPointF(posPixel - halfWidth, medianPixel - notchOffset);
+            poly[ 2 ] = QPointF(posPixel - notchWidth, medianPixel);
+            poly[ 3 ] = QPointF(posPixel - halfWidth, medianPixel + notchOffset);
+            poly[ 4 ] = QPointF(posPixel - halfWidth, q1Pixel);
+            poly[ 5 ] = QPointF(posPixel + halfWidth, q1Pixel);
+            poly[ 6 ] = QPointF(posPixel + halfWidth, medianPixel + notchOffset);
+            poly[ 7 ] = QPointF(posPixel + notchWidth, medianPixel);
+            poly[ 8 ] = QPointF(posPixel + halfWidth, medianPixel - notchOffset);
+            poly[ 9 ] = QPointF(posPixel + halfWidth, q3Pixel);
+        } else {
+            poly[ 0 ] = QPointF(q1Pixel, posPixel - halfWidth);
+            poly[ 1 ] = QPointF(medianPixel - notchOffset, posPixel - halfWidth);
+            poly[ 2 ] = QPointF(medianPixel, posPixel - notchWidth);
+            poly[ 3 ] = QPointF(medianPixel + notchOffset, posPixel - halfWidth);
+            poly[ 4 ] = QPointF(q3Pixel, posPixel - halfWidth);
+            poly[ 5 ] = QPointF(q3Pixel, posPixel + halfWidth);
+            poly[ 6 ] = QPointF(medianPixel + notchOffset, posPixel + halfWidth);
+            poly[ 7 ] = QPointF(medianPixel, posPixel + notchWidth);
+            poly[ 8 ] = QPointF(medianPixel - notchOffset, posPixel + halfWidth);
+            poly[ 9 ] = QPointF(q1Pixel, posPixel + halfWidth);
         }
+        QwtPainter::drawPolygon(painter, poly);
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
-void QwtPlotBoxChart::drawWhiskers(QPainter* painter, const QwtBoxSample& sample,
-    Qt::Orientation orient, double boxWidth, double posPixel,
-    const QwtScaleMap& valueMap) const
+void QwtPlotBoxChart::drawWhiskers(QPainter* painter,
+                                   const QwtBoxSample& sample,
+                                   Qt::Orientation orient,
+                                   double boxWidth,
+                                   double posPixel,
+                                   const QwtScaleMap& valueMap) const
 {
     QWT_DC(d);
     const bool doAlign = QwtPainter::roundingAlignment(painter);
 
     const double whiskerLowerPixel = valueMap.transform(sample.whiskerLower);
     const double whiskerUpperPixel = valueMap.transform(sample.whiskerUpper);
-    const double q1Pixel = valueMap.transform(sample.q1);
-    const double q3Pixel = valueMap.transform(sample.q3);
+    const double q1Pixel           = valueMap.transform(sample.q1);
+    const double q3Pixel           = valueMap.transform(sample.q3);
 
-    if (doAlign)
-    {
-    }
+    if (doAlign) { }
 
     const double capWidth = boxWidth * 0.3;
 
@@ -867,68 +825,54 @@ void QwtPlotBoxChart::drawWhiskers(QPainter* painter, const QwtBoxSample& sample
     whiskerPen.setCapStyle(Qt::FlatCap);
     painter->setPen(whiskerPen);
 
-    switch (d->whiskerStyle)
-    {
-        case StandardWhisker:
-        {
-            if (orient == Qt::Vertical)
-            {
-                QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel,
-                                     posPixel, q1Pixel);
-                QwtPainter::drawLine(painter, posPixel - capWidth * 0.5, whiskerLowerPixel,
-                                     posPixel + capWidth * 0.5, whiskerLowerPixel);
+    switch (d->whiskerStyle) {
+    case StandardWhisker: {
+        if (orient == Qt::Vertical) {
+            QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel, posPixel, q1Pixel);
+            QwtPainter::drawLine(
+                painter, posPixel - capWidth * 0.5, whiskerLowerPixel, posPixel + capWidth * 0.5, whiskerLowerPixel);
 
-                QwtPainter::drawLine(painter, posPixel, q3Pixel,
-                                     posPixel, whiskerUpperPixel);
-                QwtPainter::drawLine(painter, posPixel - capWidth * 0.5, whiskerUpperPixel,
-                                     posPixel + capWidth * 0.5, whiskerUpperPixel);
-            }
-            else
-            {
-                QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel,
-                                     q1Pixel, posPixel);
-                QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel - capWidth * 0.5,
-                                     whiskerLowerPixel, posPixel + capWidth * 0.5);
+            QwtPainter::drawLine(painter, posPixel, q3Pixel, posPixel, whiskerUpperPixel);
+            QwtPainter::drawLine(
+                painter, posPixel - capWidth * 0.5, whiskerUpperPixel, posPixel + capWidth * 0.5, whiskerUpperPixel);
+        } else {
+            QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel, q1Pixel, posPixel);
+            QwtPainter::drawLine(
+                painter, whiskerLowerPixel, posPixel - capWidth * 0.5, whiskerLowerPixel, posPixel + capWidth * 0.5);
 
-                QwtPainter::drawLine(painter, q3Pixel, posPixel,
-                                     whiskerUpperPixel, posPixel);
-                QwtPainter::drawLine(painter, whiskerUpperPixel, posPixel - capWidth * 0.5,
-                                     whiskerUpperPixel, posPixel + capWidth * 0.5);
-            }
-            break;
+            QwtPainter::drawLine(painter, q3Pixel, posPixel, whiskerUpperPixel, posPixel);
+            QwtPainter::drawLine(
+                painter, whiskerUpperPixel, posPixel - capWidth * 0.5, whiskerUpperPixel, posPixel + capWidth * 0.5);
         }
+        break;
+    }
 
-        case MinMaxLine:
-        {
-            if (orient == Qt::Vertical)
-            {
-                QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel,
-                                     posPixel, whiskerUpperPixel);
-            }
-            else
-            {
-                QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel,
-                                     whiskerUpperPixel, posPixel);
-            }
-            break;
+    case MinMaxLine: {
+        if (orient == Qt::Vertical) {
+            QwtPainter::drawLine(painter, posPixel, whiskerLowerPixel, posPixel, whiskerUpperPixel);
+        } else {
+            QwtPainter::drawLine(painter, whiskerLowerPixel, posPixel, whiskerUpperPixel, posPixel);
         }
+        break;
+    }
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
-void QwtPlotBoxChart::drawMedian(QPainter* painter, const QwtBoxSample& sample,
-    Qt::Orientation orient, double boxWidth, double posPixel,
-    const QwtScaleMap& valueMap) const
+void QwtPlotBoxChart::drawMedian(QPainter* painter,
+                                 const QwtBoxSample& sample,
+                                 Qt::Orientation orient,
+                                 double boxWidth,
+                                 double posPixel,
+                                 const QwtScaleMap& valueMap) const
 {
     QWT_DC(d);
     const double medianPixel = valueMap.transform(sample.median);
-    const bool doAlign = QwtPainter::roundingAlignment(painter);
+    const bool doAlign       = QwtPainter::roundingAlignment(painter);
 
-    if (doAlign)
-    {
-    }
+    if (doAlign) { }
 
     const double halfWidth = boxWidth * 0.5;
 
@@ -942,21 +886,19 @@ void QwtPlotBoxChart::drawMedian(QPainter* painter, const QwtBoxSample& sample,
     else if (d->boxStyle == Notch)
         lineHalfWidth *= 0.8;
 
-    if (orient == Qt::Vertical)
-    {
-        QwtPainter::drawLine(painter, posPixel - lineHalfWidth, medianPixel,
-                             posPixel + lineHalfWidth, medianPixel);
-    }
-    else
-    {
-        QwtPainter::drawLine(painter, medianPixel, posPixel - lineHalfWidth,
-                             medianPixel, posPixel + lineHalfWidth);
+    if (orient == Qt::Vertical) {
+        QwtPainter::drawLine(painter, posPixel - lineHalfWidth, medianPixel, posPixel + lineHalfWidth, medianPixel);
+    } else {
+        QwtPainter::drawLine(painter, medianPixel, posPixel - lineHalfWidth, medianPixel, posPixel + lineHalfWidth);
     }
 }
 
 void QwtPlotBoxChart::drawOutliers(QPainter* painter,
-    const QwtScaleMap& posMap, const QwtScaleMap& valueMap,
-    const QRectF& canvasRect, int from, int to) const
+                                   const QwtScaleMap& posMap,
+                                   const QwtScaleMap& valueMap,
+                                   const QRectF& canvasRect,
+                                   int from,
+                                   int to) const
 {
     QWT_DC(d);
 
@@ -964,47 +906,40 @@ void QwtPlotBoxChart::drawOutliers(QPainter* painter,
         return;
 
     const QwtSymbol* symbol = d->outlierSymbol;
-    if (!symbol)
-    {
+    if (!symbol) {
         static QwtSymbol defaultSymbol(QwtSymbol::XCross, QBrush(), QPen(Qt::black), QSize(8, 8));
         symbol = &defaultSymbol;
     }
 
     const Qt::Orientation orient = d->orientation;
-    const bool doAlign = QwtPainter::roundingAlignment(painter);
-    const double jitter = d->outlierJitter;
+    const bool doAlign           = QwtPainter::roundingAlignment(painter);
+    const double jitter          = d->outlierJitter;
 
     QRandomGenerator* rng = nullptr;
     if (jitter > 0)
         rng = QRandomGenerator::global();
 
-    for (size_t i = 0; i < m_outlierData->size(); ++i)
-    {
+    for (size_t i = 0; i < m_outlierData->size(); ++i) {
         const QwtBoxOutlierSample& outlierSample = m_outlierData->sample(i);
 
         double basePosPixel = posMap.transform(outlierSample.boxPosition);
         if (doAlign)
             basePosPixel = qRound(basePosPixel);
 
-        for (int j = 0; j < outlierSample.count(); ++j)
-        {
-            double valuePixel = valueMap.transform(outlierSample.values[j]);
+        for (int j = 0; j < outlierSample.count(); ++j) {
+            double valuePixel = valueMap.transform(outlierSample.values[ j ]);
             if (doAlign)
                 valuePixel = qRound(valuePixel);
 
             double posPixel = basePosPixel;
-            if (jitter > 0 && rng)
-            {
+            if (jitter > 0 && rng) {
                 const double offset = rng->bounded(jitter) - jitter * 0.5;
                 posPixel += offset;
             }
 
-            QPointF point = (orient == Qt::Vertical)
-                ? QPointF(posPixel, valuePixel)
-                : QPointF(valuePixel, posPixel);
+            QPointF point = (orient == Qt::Vertical) ? QPointF(posPixel, valuePixel) : QPointF(valuePixel, posPixel);
 
-            if (d->paintAttributes & ClipOutliers)
-            {
+            if (d->paintAttributes & ClipOutliers) {
                 if (!canvasRect.contains(point))
                     continue;
             }
@@ -1014,14 +949,11 @@ void QwtPlotBoxChart::drawOutliers(QPainter* painter,
     }
 }
 
-void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, double valuePixel,
-    const QwtSymbol& symbol) const
+void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, double valuePixel, const QwtSymbol& symbol) const
 {
     QWT_DC(d);
     const Qt::Orientation orient = d->orientation;
-    QPointF point = (orient == Qt::Vertical)
-        ? QPointF(posPixel, valuePixel)
-        : QPointF(valuePixel, posPixel);
+    QPointF point = (orient == Qt::Vertical) ? QPointF(posPixel, valuePixel) : QPointF(valuePixel, posPixel);
     symbol.drawSymbol(painter, point);
 }
 
@@ -1030,7 +962,7 @@ void QwtPlotBoxChart::drawOutlierSymbol(QPainter* painter, double posPixel, doub
  * @param[in] index Legend entry index
  * @param[in] size Icon size
  * @return Legend icon graphic
- * 
+ *
  */
 QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
 {
@@ -1044,39 +976,36 @@ QwtGraphic QwtPlotBoxChart::legendIcon(int index, const QSizeF& size) const
 
     const QRectF rect(0, 0, size.width(), size.height());
 
-    const double centerX = rect.center().x();
-    const double centerY = rect.center().y();
+    const double centerX   = rect.center().x();
+    const double centerY   = rect.center().y();
     const double boxHeight = rect.height() * 0.4;
-    const double boxWidth = rect.width() * 0.3;
+    const double boxWidth  = rect.width() * 0.3;
 
     painter.setPen(d->pen);
     painter.setBrush(d->brush);
 
-    if (d->boxStyle != NoBox)
-    {
-        QRectF boxRect(centerX - boxWidth * 0.5, centerY - boxHeight * 0.5,
-                       boxWidth, boxHeight);
+    if (d->boxStyle != NoBox) {
+        QRectF boxRect(centerX - boxWidth * 0.5, centerY - boxHeight * 0.5, boxWidth, boxHeight);
         painter.drawRect(boxRect);
     }
 
-    if (d->whiskerStyle != NoWhiskers)
-    {
+    if (d->whiskerStyle != NoWhiskers) {
         const double whiskerLen = rect.height() * 0.2;
-        painter.drawLine(centerX, centerY - boxHeight * 0.5,
-                         centerX, centerY - boxHeight * 0.5 - whiskerLen);
-        painter.drawLine(centerX - boxWidth * 0.15, centerY - boxHeight * 0.5 - whiskerLen,
-                         centerX + boxWidth * 0.15, centerY - boxHeight * 0.5 - whiskerLen);
-        painter.drawLine(centerX, centerY + boxHeight * 0.5,
-                         centerX, centerY + boxHeight * 0.5 + whiskerLen);
-        painter.drawLine(centerX - boxWidth * 0.15, centerY + boxHeight * 0.5 + whiskerLen,
-                         centerX + boxWidth * 0.15, centerY + boxHeight * 0.5 + whiskerLen);
+        painter.drawLine(centerX, centerY - boxHeight * 0.5, centerX, centerY - boxHeight * 0.5 - whiskerLen);
+        painter.drawLine(centerX - boxWidth * 0.15,
+                         centerY - boxHeight * 0.5 - whiskerLen,
+                         centerX + boxWidth * 0.15,
+                         centerY - boxHeight * 0.5 - whiskerLen);
+        painter.drawLine(centerX, centerY + boxHeight * 0.5, centerX, centerY + boxHeight * 0.5 + whiskerLen);
+        painter.drawLine(centerX - boxWidth * 0.15,
+                         centerY + boxHeight * 0.5 + whiskerLen,
+                         centerX + boxWidth * 0.15,
+                         centerY + boxHeight * 0.5 + whiskerLen);
     }
 
-    if (d->medianVisible)
-    {
+    if (d->medianVisible) {
         painter.setPen(d->medianPen);
-        painter.drawLine(centerX - boxWidth * 0.5, centerY,
-                         centerX + boxWidth * 0.5, centerY);
+        painter.drawLine(centerX - boxWidth * 0.5, centerY, centerX + boxWidth * 0.5, centerY);
     }
 
     painter.end();

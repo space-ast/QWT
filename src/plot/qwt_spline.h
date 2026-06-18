@@ -37,7 +37,8 @@ class QLineF;
 class QPolygonF;
 
 #if QT_VERSION < 0x060000
-template< typename T > class QVector;
+template< typename T >
+class QVector;
 #endif
 
 /**
@@ -71,7 +72,7 @@ template< typename T > class QVector;
  */
 class QWT_EXPORT QwtSpline
 {
-  public:
+public:
     /**
      * @brief Boundary type specifying the spline at its endpoints
      *
@@ -174,41 +175,40 @@ class QWT_EXPORT QwtSpline
     virtual ~QwtSpline();
 
     //! Set parametrization by type
-    void setParametrization( int type );
+    void setParametrization(int type);
     //! Set parametrization object
-    void setParametrization( QwtSplineParametrization* );
+    void setParametrization(QwtSplineParametrization*);
     //! Get parametrization
     const QwtSplineParametrization* parametrization() const;
 
     //! Set boundary type
-    void setBoundaryType( BoundaryType );
+    void setBoundaryType(BoundaryType);
     //! Get boundary type
     BoundaryType boundaryType() const;
 
     //! Set boundary value
-    void setBoundaryValue( BoundaryPosition, double value );
+    void setBoundaryValue(BoundaryPosition, double value);
     //! Get boundary value
-    double boundaryValue( BoundaryPosition ) const;
+    double boundaryValue(BoundaryPosition) const;
 
     //! Set boundary condition
-    void setBoundaryCondition( BoundaryPosition, int condition );
+    void setBoundaryCondition(BoundaryPosition, int condition);
     //! Get boundary condition
-    int boundaryCondition( BoundaryPosition ) const;
+    int boundaryCondition(BoundaryPosition) const;
 
     //! Set boundary conditions for both ends
-    void setBoundaryConditions( int condition,
-        double valueBegin = 0.0, double valueEnd = 0.0 );
+    void setBoundaryConditions(int condition, double valueBegin = 0.0, double valueEnd = 0.0);
 
     //! Get polygon approximation with tolerance
-    virtual QPolygonF polygon( const QPolygonF&, double tolerance ) const;
+    virtual QPolygonF polygon(const QPolygonF&, double tolerance) const;
     //! Get painter path from polygon (pure virtual)
-    virtual QPainterPath painterPath( const QPolygonF& ) const = 0;
+    virtual QPainterPath painterPath(const QPolygonF&) const = 0;
 
     //! Get locality (number of points used for calculation)
     virtual uint locality() const;
 
-  private:
-    QwtSpline(const QwtSpline&) = delete;
+private:
+    QwtSpline(const QwtSpline&)            = delete;
     QwtSpline& operator=(const QwtSpline&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtSpline)
@@ -222,21 +222,19 @@ class QWT_EXPORT QwtSpline
  */
 class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
 {
-  public:
+public:
     QwtSplineInterpolating();
     ~QwtSplineInterpolating() override;
 
-    virtual QPolygonF equidistantPolygon( const QPolygonF&,
-        double distance, bool withNodes ) const;
+    virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const;
 
-    virtual QPolygonF polygon(
-        const QPolygonF&, double tolerance ) const override;
+    virtual QPolygonF polygon(const QPolygonF&, double tolerance) const override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const = 0;
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const = 0;
 
-  private:
-    QwtSplineInterpolating(const QwtSplineInterpolating&) = delete;
+private:
+    QwtSplineInterpolating(const QwtSplineInterpolating&)            = delete;
     QwtSplineInterpolating& operator=(const QwtSplineInterpolating&) = delete;
 };
 
@@ -247,7 +245,7 @@ class QWT_EXPORT QwtSplineInterpolating : public QwtSpline
  */
 class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
 {
-  public:
+public:
     QwtSplineG1();
     ~QwtSplineG1() override;
 };
@@ -265,22 +263,21 @@ class QWT_EXPORT QwtSplineG1 : public QwtSplineInterpolating
  */
 class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
 {
-  public:
+public:
     QwtSplineC1();
     ~QwtSplineC1() override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 
-    virtual QPolygonF equidistantPolygon( const QPolygonF&,
-        double distance, bool withNodes ) const override;
+    virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const override;
 
     // these methods are the non parametric part
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const;
-    virtual QVector< double > slopes( const QPolygonF& ) const = 0;
+    virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const;
+    virtual QVector< double > slopes(const QPolygonF&) const = 0;
 
-    virtual double slopeAtBeginning( const QPolygonF&, double slopeNext ) const;
-    virtual double slopeAtEnd( const QPolygonF&, double slopeBefore ) const;
+    virtual double slopeAtBeginning(const QPolygonF&, double slopeNext) const;
+    virtual double slopeAtEnd(const QPolygonF&, double slopeBefore) const;
 };
 
 /**
@@ -296,7 +293,7 @@ class QWT_EXPORT QwtSplineC1 : public QwtSplineG1
  */
 class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
 {
-  public:
+public:
     /*!
        Boundary condition that requires C2 continuity
 
@@ -325,16 +322,15 @@ class QWT_EXPORT QwtSplineC2 : public QwtSplineC1
     QwtSplineC2();
     ~QwtSplineC2() override;
 
-    virtual QPainterPath painterPath( const QPolygonF& ) const override;
-    virtual QVector< QLineF > bezierControlLines( const QPolygonF& ) const override;
+    virtual QPainterPath painterPath(const QPolygonF&) const override;
+    virtual QVector< QLineF > bezierControlLines(const QPolygonF&) const override;
 
-    virtual QPolygonF equidistantPolygon( const QPolygonF&,
-        double distance, bool withNodes ) const override;
+    virtual QPolygonF equidistantPolygon(const QPolygonF&, double distance, bool withNodes) const override;
 
     // calculating the parametric equations
-    virtual QVector< QwtSplinePolynomial > polynomials( const QPolygonF& ) const override;
-    virtual QVector< double > slopes( const QPolygonF& ) const override;
-    virtual QVector< double > curvatures( const QPolygonF& ) const = 0;
+    virtual QVector< QwtSplinePolynomial > polynomials(const QPolygonF&) const override;
+    virtual QVector< double > slopes(const QPolygonF&) const override;
+    virtual QVector< double > curvatures(const QPolygonF&) const = 0;
 };
 
 #endif

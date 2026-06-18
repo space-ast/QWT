@@ -59,7 +59,7 @@ QwtLegendData& QwtLegendData::operator=(const QwtLegendData&) = default;
  * @param map Values
  * @sa values()
  */
-void QwtLegendData::setValues( const QMap< int, QVariant >& map )
+void QwtLegendData::setValues(const QMap< int, QVariant >& map)
 {
     m_map = map;
 }
@@ -80,9 +80,9 @@ const QMap< int, QVariant >& QwtLegendData::values() const
  * @return True, when the internal map has an entry for role
  * @sa setValue(), value()
  */
-bool QwtLegendData::hasRole( int role ) const
+bool QwtLegendData::hasRole(int role) const
 {
-    return m_map.contains( role );
+    return m_map.contains(role);
 }
 
 /**
@@ -91,9 +91,9 @@ bool QwtLegendData::hasRole( int role ) const
  * @param data Attribute value
  * @sa value()
  */
-void QwtLegendData::setValue( int role, const QVariant& data )
+void QwtLegendData::setValue(int role, const QVariant& data)
 {
-    m_map[role] = data;
+    m_map[ role ] = data;
 }
 
 /**
@@ -102,12 +102,12 @@ void QwtLegendData::setValue( int role, const QVariant& data )
  * @return Attribute value for a specific role
  * @sa setValue()
  */
-QVariant QwtLegendData::value( int role ) const
+QVariant QwtLegendData::value(int role) const
 {
-    if ( !m_map.contains( role ) )
+    if (!m_map.contains(role))
         return QVariant();
 
-    return m_map[role];
+    return m_map[ role ];
 }
 
 /**
@@ -129,14 +129,11 @@ QwtText QwtLegendData::title() const
 {
     QwtText text;
 
-    const QVariant titleValue = value( QwtLegendData::TitleRole );
-    if ( titleValue.canConvert< QwtText >() )
-    {
-        text = qvariant_cast< QwtText >( titleValue );
-    }
-    else if ( titleValue.canConvert< QString >() )
-    {
-        text.setText( qvariant_cast< QString >( titleValue ) );
+    const QVariant titleValue = value(QwtLegendData::TitleRole);
+    if (titleValue.canConvert< QwtText >()) {
+        text = qvariant_cast< QwtText >(titleValue);
+    } else if (titleValue.canConvert< QString >()) {
+        text.setText(qvariant_cast< QString >(titleValue));
     }
 
     return text;
@@ -149,12 +146,11 @@ QwtText QwtLegendData::title() const
  */
 QwtGraphic QwtLegendData::icon() const
 {
-    const QVariant iconValue = value( QwtLegendData::IconRole );
+    const QVariant iconValue = value(QwtLegendData::IconRole);
 
     QwtGraphic graphic;
-    if ( iconValue.canConvert< QwtGraphic >() )
-    {
-        graphic = qvariant_cast< QwtGraphic >( iconValue );
+    if (iconValue.canConvert< QwtGraphic >()) {
+        graphic = qvariant_cast< QwtGraphic >(iconValue);
     }
 
     return graphic;
@@ -168,13 +164,11 @@ QwtGraphic QwtLegendData::icon() const
  */
 QwtLegendData::Mode QwtLegendData::mode() const
 {
-    const QVariant modeValue = value( QwtLegendData::ModeRole );
-    if ( modeValue.canConvert< int >() )
-    {
-        const int mode = qvariant_cast< int >( modeValue );
-        return static_cast< QwtLegendData::Mode >( mode );
+    const QVariant modeValue = value(QwtLegendData::ModeRole);
+    if (modeValue.canConvert< int >()) {
+        const int mode = qvariant_cast< int >(modeValue);
+        return static_cast< QwtLegendData::Mode >(mode);
     }
 
     return QwtLegendData::ReadOnly;
 }
-

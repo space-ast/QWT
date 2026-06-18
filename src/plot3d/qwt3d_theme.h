@@ -18,7 +18,8 @@
 
 class QwtColorMap;
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 class Plot3D;
 
@@ -145,6 +146,6 @@ private:
     double m_specularIntensity;
 };
 
-} // namespace Qwt3D
+}  // namespace Qwt3D
 
 #endif

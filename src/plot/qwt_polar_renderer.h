@@ -36,52 +36,46 @@ class QWT_EXPORT QwtPolarRenderer : public QObject
 {
     Q_OBJECT
 
-  public:
+public:
     /// Constructor
-    explicit QwtPolarRenderer( QObject* parent = nullptr );
+    explicit QwtPolarRenderer(QObject* parent = nullptr);
     /// Destructor
     ~QwtPolarRenderer() override;
 
     /// Render a polar plot to a document
-    void renderDocument( QwtPolarPlot*, const QString& format,
-        const QSizeF& sizeMM, int resolution = 85 );
+    void renderDocument(QwtPolarPlot*, const QString& format, const QSizeF& sizeMM, int resolution = 85);
 
     /// Render a polar plot to a document with title
-    void renderDocument( QwtPolarPlot*,
-        const QString& title, const QString& format,
-        const QSizeF& sizeMM, int resolution = 85 );
+    void renderDocument(QwtPolarPlot*, const QString& title, const QString& format, const QSizeF& sizeMM, int resolution = 85);
 
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
     /// Render a polar plot to a SVG generator
-    void renderTo( QwtPolarPlot*, QSvgGenerator& ) const;
+    void renderTo(QwtPolarPlot*, QSvgGenerator&) const;
 #endif
 #endif
 
 #ifndef QT_NO_PRINTER
     /// Render a polar plot to a printer
-    void renderTo( QwtPolarPlot*, QPrinter& ) const;
+    void renderTo(QwtPolarPlot*, QPrinter&) const;
 #endif
 
     /// Render a polar plot to a paint device
-    void renderTo( QwtPolarPlot*, QPaintDevice& ) const;
+    void renderTo(QwtPolarPlot*, QPaintDevice&) const;
 
     /// Render a polar plot to a painter
-    virtual void render( QwtPolarPlot*,
-        QPainter*, const QRectF& rect ) const;
+    virtual void render(QwtPolarPlot*, QPainter*, const QRectF& rect) const;
 
     /// Export a polar plot to a document
-    bool exportTo( QwtPolarPlot*, const QString& documentName,
-        const QSizeF& sizeMM = QSizeF( 200, 200 ), int resolution = 85 );
+    bool exportTo(QwtPolarPlot*, const QString& documentName, const QSizeF& sizeMM = QSizeF(200, 200), int resolution = 85);
 
     /// Render the title
-    virtual void renderTitle( QPainter*, const QRectF& ) const;
+    virtual void renderTitle(QPainter*, const QRectF&) const;
 
     /// Render the legend
-    virtual void renderLegend(
-        const QwtPolarPlot*, QPainter*, const QRectF& ) const;
+    virtual void renderLegend(const QwtPolarPlot*, QPainter*, const QRectF&) const;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPolarRenderer)
 };
 

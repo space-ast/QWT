@@ -57,11 +57,11 @@ struct QWT_EXPORT QwtFormatString
 {
     QColor color;
     QwtSymbol::Style marker = QwtSymbol::NoSymbol;
-    Qt::PenStyle lineStyle = Qt::SolidLine;
-    bool hasColor = false;
-    bool hasMarker = false;
-    bool hasLineStyle = false;
-    bool noLine = false;
+    Qt::PenStyle lineStyle  = Qt::SolidLine;
+    bool hasColor           = false;
+    bool hasMarker          = false;
+    bool hasLineStyle       = false;
+    bool noLine             = false;
 
     // Parse a matplotlib format string
     static QwtFormatString parse(const QString& fmt);
@@ -153,78 +153,73 @@ public:
     // ---- Plotting methods (operate on gca()) ----
 
     // Plot y-only data (x = index)
-    QwtPlotCurve* plot(const QVector<double>& y,
-                       const QString& fmt = QString(),
-                       const QString& label = QString());
+    QwtPlotCurve* plot(const QVector< double >& y, const QString& fmt = QString(), const QString& label = QString());
 
     // Plot x-y data from separate vectors
-    QwtPlotCurve* plot(const QVector<double>& x, const QVector<double>& y,
-                       const QString& fmt = QString(),
+    QwtPlotCurve* plot(const QVector< double >& x,
+                       const QVector< double >& y,
+                       const QString& fmt   = QString(),
                        const QString& label = QString());
 
     // Plot from QPointF data
-    QwtPlotCurve* plot(const QVector<QPointF>& data,
-                       const QString& fmt = QString(),
-                       const QString& label = QString());
+    QwtPlotCurve* plot(const QVector< QPointF >& data, const QString& fmt = QString(), const QString& label = QString());
 
     // Scatter plot (markers only, no lines)
-    QwtPlotCurve* scatter(const QVector<double>& x, const QVector<double>& y,
-                          double size = 20,
+    QwtPlotCurve* scatter(const QVector< double >& x,
+                          const QVector< double >& y,
+                          double size          = 20,
                           const QString& color = QString(),
                           const QString& label = QString());
 
     // Bar chart from y-only values (x = index)
-    QwtPlotBarChart* bar(const QVector<double>& values,
-                         const QString& color = QString(),
-                         const QString& label = QString());
+    QwtPlotBarChart* bar(const QVector< double >& values, const QString& color = QString(), const QString& label = QString());
 
     // Bar chart from x-y data with configurable width
-    QwtPlotBarChart* bar(const QVector<double>& x, const QVector<double>& values,
-                         double width = 0.8,
+    QwtPlotBarChart* bar(const QVector< double >& x,
+                         const QVector< double >& values,
+                         double width         = 0.8,
                          const QString& color = QString(),
                          const QString& label = QString());
 
     // Histogram from raw data with automatic binning
-    QwtPlotHistogram* hist(const QVector<double>& data, int bins = 10,
-                           const QString& color = QString(),
-                           const QString& label = QString());
+    QwtPlotHistogram*
+    hist(const QVector< double >& data, int bins = 10, const QString& color = QString(), const QString& label = QString());
 
     // Box plot from pre-computed box samples
-    QwtPlotBoxChart* boxplot(const QVector<QwtBoxSample>& data,
-                             const QString& label = QString());
+    QwtPlotBoxChart* boxplot(const QVector< QwtBoxSample >& data, const QString& label = QString());
 
     // Fill the area between two curves
-    QwtPlotIntervalCurve* fillBetween(const QVector<double>& x,
-                                      const QVector<double>& y1,
-                                      const QVector<double>& y2,
+    QwtPlotIntervalCurve* fillBetween(const QVector< double >& x,
+                                      const QVector< double >& y1,
+                                      const QVector< double >& y2,
                                       const QString& color = QString(),
-                                      double alpha = 0.3);
+                                      double alpha         = 0.3);
 
     // Error bars (symmetric y-error)
-    QwtPlotIntervalCurve* errorbar(const QVector<double>& x,
-                                   const QVector<double>& y,
-                                   const QVector<double>& yerr,
-                                   const QString& fmt = QString(),
+    QwtPlotIntervalCurve* errorbar(const QVector< double >& x,
+                                   const QVector< double >& y,
+                                   const QVector< double >& yerr,
+                                   const QString& fmt   = QString(),
                                    const QString& label = QString());
 
     // Display a 2D matrix as a color-mapped image
-    QwtPlotSpectrogram* imshow(const QVector<QVector<double>>& data,
-                               const QString& cmap = "viridis",
-                               double vmin = 0.0, double vmax = 0.0);
+    QwtPlotSpectrogram*
+    imshow(const QVector< QVector< double > >& data, const QString& cmap = "viridis", double vmin = 0.0, double vmax = 0.0);
 
     // Draw contour lines from a 2D matrix
-    QwtPlotSpectrogram* contour(const QVector<QVector<double>>& data,
-                                const QList<double>& levels = {},
-                                const QString& cmap = "viridis");
+    QwtPlotSpectrogram* contour(const QVector< QVector< double > >& data,
+                                const QList< double >& levels = {},
+                                const QString& cmap           = "viridis");
 
     // Quiver plot (vector field)
-    QwtPlotVectorField* quiver(const QVector<double>& x, const QVector<double>& y,
-                               const QVector<double>& u, const QVector<double>& v,
+    QwtPlotVectorField* quiver(const QVector< double >& x,
+                               const QVector< double >& y,
+                               const QVector< double >& u,
+                               const QVector< double >& v,
                                const QString& color = QString());
 
     // Candlestick (OHLC) chart
-    QwtPlotTradingCurve* candlestick(const QVector<QwtOHLCSample>& data,
-                                     const QString& label = QString());
+    QwtPlotTradingCurve* candlestick(const QVector< QwtOHLCSample >& data, const QString& label = QString());
 
     // ---- Auxiliary elements ----
 
@@ -238,16 +233,13 @@ public:
     QwtPlotMarker* axvline(double x, const QString& fmt = QString());
 
     // Add a horizontal colored span between y1 and y2
-    QwtPlotZoneItem* axhspan(double y1, double y2,
-                             const QString& color = QString(), double alpha = 0.3);
+    QwtPlotZoneItem* axhspan(double y1, double y2, const QString& color = QString(), double alpha = 0.3);
 
     // Add a vertical colored span between x1 and x2
-    QwtPlotZoneItem* axvspan(double x1, double x2,
-                             const QString& color = QString(), double alpha = 0.3);
+    QwtPlotZoneItem* axvspan(double x1, double x2, const QString& color = QString(), double alpha = 0.3);
 
     // Add an arrow annotation from xytext to xy
-    QwtPlotArrowMarker* annotate(const QString& text,
-                                 const QPointF& xy, const QPointF& xytext);
+    QwtPlotArrowMarker* annotate(const QString& text, const QPointF& xy, const QPointF& xytext);
 
     // Add a legend (in-canvas legend item)
     QwtPlotLegendItem* legend(const QString& loc = "best");
@@ -276,12 +268,10 @@ public:
     void setYScale(const QString& scale);
 
     // Set custom X-axis tick positions and optional labels
-    void setXTicks(const QVector<double>& ticks,
-                   const QStringList& labels = {});
+    void setXTicks(const QVector< double >& ticks, const QStringList& labels = {});
 
     // Set custom Y-axis tick positions and optional labels
-    void setYTicks(const QVector<double>& ticks,
-                   const QStringList& labels = {});
+    void setYTicks(const QVector< double >& ticks, const QStringList& labels = {});
 
     // Invert the X-axis
     void invertXAxis();
@@ -332,4 +322,4 @@ private:
     QWT_DECLARE_PRIVATE(QwtPyPlot)
 };
 
-#endif // QWT_PYPLOT_H
+#endif  // QWT_PYPLOT_H

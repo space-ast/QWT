@@ -33,7 +33,7 @@ class QwtScaleDiv;
  */
 class QWT_EXPORT QwtPolarItem
 {
-  public:
+public:
     /*!
      * @brief Runtime type information
      * @details RttiValues is used to cast plot items, without having to enable runtime type information of the compiler.
@@ -69,7 +69,7 @@ class QWT_EXPORT QwtPolarItem
     enum ItemAttribute
     {
         //! The item is represented on the legend.
-        Legend    = 0x01,
+        Legend = 0x01,
 
         /*!
            The boundingRect() of the item is included in the
@@ -78,7 +78,7 @@ class QWT_EXPORT QwtPolarItem
         AutoScale = 0x02
     };
 
-    Q_DECLARE_FLAGS( ItemAttributes, ItemAttribute )
+    Q_DECLARE_FLAGS(ItemAttributes, ItemAttribute)
 
     /*!
      * @brief Render hints
@@ -90,15 +90,15 @@ class QWT_EXPORT QwtPolarItem
         RenderAntialiased = 0x01
     };
 
-    Q_DECLARE_FLAGS( RenderHints, RenderHint )
+    Q_DECLARE_FLAGS(RenderHints, RenderHint)
 
     /// Constructor
-    explicit QwtPolarItem( const QwtText& title = QwtText() );
+    explicit QwtPolarItem(const QwtText& title = QwtText());
     /// Destructor
     virtual ~QwtPolarItem();
 
     /// Attach the item to a plot
-    void attach( QwtPolarPlot* plot );
+    void attach(QwtPolarPlot* plot);
     /// Detach the item from its plot
     void detach();
 
@@ -106,9 +106,9 @@ class QWT_EXPORT QwtPolarItem
     QwtPolarPlot* plot() const;
 
     /// Set the title from a QString
-    void setTitle( const QString& title );
+    void setTitle(const QString& title);
     /// Set the title from a QwtText
-    void setTitle( const QwtText& title );
+    void setTitle(const QwtText& title);
     /// Get the title
     const QwtText& title() const;
 
@@ -116,33 +116,33 @@ class QWT_EXPORT QwtPolarItem
     virtual int rtti() const;
 
     /// Set an item attribute
-    void setItemAttribute( ItemAttribute, bool on = true );
+    void setItemAttribute(ItemAttribute, bool on = true);
     /// Test an item attribute
-    bool testItemAttribute( ItemAttribute ) const;
+    bool testItemAttribute(ItemAttribute) const;
 
     /// Set a render hint
-    void setRenderHint( RenderHint, bool on = true );
+    void setRenderHint(RenderHint, bool on = true);
     /// Test a render hint
-    bool testRenderHint( RenderHint ) const;
+    bool testRenderHint(RenderHint) const;
 
     /// Set the number of render threads
-    void setRenderThreadCount( uint numThreads );
+    void setRenderThreadCount(uint numThreads);
     /// Get the number of render threads
     uint renderThreadCount() const;
 
     /// Get the z value
     double z() const;
     /// Set the z value
-    void setZ( double z );
+    void setZ(double z);
 
     /// Show the item
     void show();
     /// Hide the item
     void hide();
     /// Set the visibility
-    virtual void setVisible( bool );
+    virtual void setVisible(bool);
     /// Get the visibility
-    bool isVisible () const;
+    bool isVisible() const;
 
     /// Update the item and trigger autoRefresh
     virtual void itemChanged();
@@ -158,41 +158,42 @@ class QWT_EXPORT QwtPolarItem
      * @param radius Radius of the complete plot area in painter coordinates
      * @param canvasRect Contents rect of the canvas in painter coordinates
      */
-    virtual void draw( QPainter* painter,
-        const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
-        const QPointF& pole, double radius,
-        const QRectF& canvasRect ) const = 0;
+    virtual void draw(QPainter* painter,
+                      const QwtScaleMap& azimuthMap,
+                      const QwtScaleMap& radialMap,
+                      const QPointF& pole,
+                      double radius,
+                      const QRectF& canvasRect) const = 0;
 
     /// Get the bounding interval for a scale
-    virtual QwtInterval boundingInterval( int scaleId ) const;
+    virtual QwtInterval boundingInterval(int scaleId) const;
 
     /// Update the scale division
-    virtual void updateScaleDiv( const QwtScaleDiv&,
-        const QwtScaleDiv&, const QwtInterval& );
+    virtual void updateScaleDiv(const QwtScaleDiv&, const QwtScaleDiv&, const QwtInterval&);
 
     /// Get the margin hint
     virtual int marginHint() const;
 
     /// Set the legend icon size
-    void setLegendIconSize( const QSize& );
+    void setLegendIconSize(const QSize&);
     /// Get the legend icon size
     QSize legendIconSize() const;
 
     /// Get the legend data
     virtual QList< QwtLegendData > legendData() const;
     /// Get the legend icon
-    virtual QwtGraphic legendIcon( int index, const QSizeF& ) const;
+    virtual QwtGraphic legendIcon(int index, const QSizeF&) const;
 
-  private:
-    QwtPolarItem(const QwtPolarItem&) = delete;
+private:
+    QwtPolarItem(const QwtPolarItem&)            = delete;
     QwtPolarItem& operator=(const QwtPolarItem&) = delete;
 
     QWT_DECLARE_PRIVATE(QwtPolarItem)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::ItemAttributes )
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarItem::RenderHints )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarItem::ItemAttributes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarItem::RenderHints)
 
-Q_DECLARE_METATYPE( QwtPolarItem* )
+Q_DECLARE_METATYPE(QwtPolarItem*)
 
 #endif

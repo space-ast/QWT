@@ -57,7 +57,7 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
 {
     Q_OBJECT
 
-  public:
+public:
     /**
      * @brief Discard flags
      * @details Flags to control which components of the plot are rendered
@@ -65,30 +65,30 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
     enum DiscardFlag
     {
         /// Render all components of the plot
-        DiscardNone             = 0x00,
+        DiscardNone = 0x00,
 
         /// Don't render the background of the plot
-        DiscardBackground       = 0x01,
+        DiscardBackground = 0x01,
 
         /// Don't render the title of the plot
-        DiscardTitle            = 0x02,
+        DiscardTitle = 0x02,
 
         /// Don't render the legend of the plot
-        DiscardLegend           = 0x04,
+        DiscardLegend = 0x04,
 
         /// Don't render the background of the canvas
         DiscardCanvasBackground = 0x08,
 
         /// Don't render the footer of the plot
-        DiscardFooter           = 0x10,
+        DiscardFooter = 0x10,
 
         ///< Don't render the frame of the canvas
         ///< @note This flag has no effect when using style sheets, where the frame is part of the background
-        DiscardCanvasFrame           = 0x20
+        DiscardCanvasFrame = 0x20
 
     };
 
-    Q_DECLARE_FLAGS( DiscardFlags, DiscardFlag )
+    Q_DECLARE_FLAGS(DiscardFlags, DiscardFlag)
 
     /**
      * @brief Layout flags
@@ -98,107 +98,94 @@ class QWT_EXPORT QwtPlotRenderer : public QObject
     enum LayoutFlag
     {
         /// Use the default layout as on screen
-        DefaultLayout   = 0x00,
+        DefaultLayout = 0x00,
 
         ///< Instead of the scales a box is painted around the plot canvas, where the scale ticks are aligned to.
         FrameWithScales = 0x01
     };
 
-    Q_DECLARE_FLAGS( LayoutFlags, LayoutFlag )
+    Q_DECLARE_FLAGS(LayoutFlags, LayoutFlag)
 
     // Constructor
-    explicit QwtPlotRenderer( QObject* = nullptr );
+    explicit QwtPlotRenderer(QObject* = nullptr);
     // Destructor
     ~QwtPlotRenderer() override;
 
     // Set a discard flag
-    void setDiscardFlag( DiscardFlag flag, bool on = true );
+    void setDiscardFlag(DiscardFlag flag, bool on = true);
     // Test a discard flag
-    bool testDiscardFlag( DiscardFlag flag ) const;
+    bool testDiscardFlag(DiscardFlag flag) const;
 
     // Set discard flags
-    void setDiscardFlags( DiscardFlags flags );
+    void setDiscardFlags(DiscardFlags flags);
     // Get discard flags
     DiscardFlags discardFlags() const;
 
     // Set a layout flag
-    void setLayoutFlag( LayoutFlag flag, bool on = true );
+    void setLayoutFlag(LayoutFlag flag, bool on = true);
     // Test a layout flag
-    bool testLayoutFlag( LayoutFlag flag ) const;
+    bool testLayoutFlag(LayoutFlag flag) const;
 
     // Set layout flags
-    void setLayoutFlags( LayoutFlags flags );
+    void setLayoutFlags(LayoutFlags flags);
     // Get layout flags
     LayoutFlags layoutFlags() const;
 
     // Render the plot to a document
-    void renderDocument( QwtPlot*, const QString& fileName,
-        const QSizeF& sizeMM, int resolution = 85 );
+    void renderDocument(QwtPlot*, const QString& fileName, const QSizeF& sizeMM, int resolution = 85);
 
     // Render the plot to a document with specified format
-    void renderDocument( QwtPlot*, 
-        const QString& fileName, const QString& format, 
-        const QSizeF& sizeMM, int resolution = 85 );
+    void renderDocument(QwtPlot*, const QString& fileName, const QString& format, const QSizeF& sizeMM, int resolution = 85);
 
 #ifndef QWT_NO_SVG
 #ifdef QT_SVG_LIB
     // Render the plot to an SVG generator
-    void renderTo( QwtPlot*, QSvgGenerator& ) const;
+    void renderTo(QwtPlot*, QSvgGenerator&) const;
 #endif
 #endif
 
 #ifndef QT_NO_PRINTER
     // Render the plot to a printer
-    void renderTo( QwtPlot*, QPrinter& ) const;
+    void renderTo(QwtPlot*, QPrinter&) const;
 #endif
 
     // Render the plot to a paint device
-    void renderTo( QwtPlot*, QPaintDevice& ) const;
+    void renderTo(QwtPlot*, QPaintDevice&) const;
 
     // Render the plot
-    virtual void render( QwtPlot*,
-        QPainter*, const QRectF& plotRect ) const;
+    virtual void render(QwtPlot*, QPainter*, const QRectF& plotRect) const;
 
     // Render the title
-    virtual void renderTitle( const QwtPlot*,
-        QPainter*, const QRectF& titleRect ) const;
+    virtual void renderTitle(const QwtPlot*, QPainter*, const QRectF& titleRect) const;
 
     // Render the footer
-    virtual void renderFooter( const QwtPlot*,
-        QPainter*, const QRectF& footerRect ) const;
+    virtual void renderFooter(const QwtPlot*, QPainter*, const QRectF& footerRect) const;
 
     // Render a scale
-    virtual void renderScale( const QwtPlot*, QPainter*,
-        QwtAxisId, int startDist, int endDist,
-        int baseDist, const QRectF& scaleRect ) const;
+    virtual void
+    renderScale(const QwtPlot*, QPainter*, QwtAxisId, int startDist, int endDist, int baseDist, const QRectF& scaleRect) const;
 
     // Render the canvas
-    virtual void renderCanvas( const QwtPlot*,
-        QPainter*, const QRectF& canvasRect,
-        const QwtScaleMap* maps ) const;
+    virtual void renderCanvas(const QwtPlot*, QPainter*, const QRectF& canvasRect, const QwtScaleMap* maps) const;
 
     // Render the legend
-    virtual void renderLegend(
-        const QwtPlot*, QPainter*, const QRectF& legendRect ) const;
+    virtual void renderLegend(const QwtPlot*, QPainter*, const QRectF& legendRect) const;
 
     // Export the plot to a document
-    bool exportTo( QwtPlot*, const QString& documentName,
-        const QSizeF& sizeMM = QSizeF( 300, 200 ), int resolution = 85 );
+    bool exportTo(QwtPlot*, const QString& documentName, const QSizeF& sizeMM = QSizeF(300, 200), int resolution = 85);
 
-  private:
+private:
     // Build canvas maps
-    void buildCanvasMaps( const QwtPlot*,
-        const QRectF&, QwtScaleMap maps[] ) const;
+    void buildCanvasMaps(const QwtPlot*, const QRectF&, QwtScaleMap maps[]) const;
 
     // Update canvas margins
-    bool updateCanvasMargins( QwtPlot*,
-        const QRectF&, const QwtScaleMap maps[] ) const;
+    bool updateCanvasMargins(QwtPlot*, const QRectF&, const QwtScaleMap maps[]) const;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPlotRenderer)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::DiscardFlags )
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPlotRenderer::LayoutFlags )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRenderer::DiscardFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPlotRenderer::LayoutFlags)
 
 #endif

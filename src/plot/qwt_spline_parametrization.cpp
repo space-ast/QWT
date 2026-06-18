@@ -34,8 +34,7 @@
  * @param[in] type Parametrization type
  * @sa type()
  */
-QwtSplineParametrization::QwtSplineParametrization( int type )
-    : m_type( type )
+QwtSplineParametrization::QwtSplineParametrization(int type) : m_type(type)
 {
 }
 
@@ -54,39 +53,30 @@ QwtSplineParametrization::~QwtSplineParametrization()
  *
  * @return Value increment
  */
-double QwtSplineParametrization::valueIncrement(
-    const QPointF& point1, const QPointF& point2 ) const
+double QwtSplineParametrization::valueIncrement(const QPointF& point1, const QPointF& point2) const
 {
-    switch( m_type )
-    {
-        case QwtSplineParametrization::ParameterX:
-        {
-            return valueIncrementX( point1, point2 );
-        }
-        case QwtSplineParametrization::ParameterY:
-        {
-            return valueIncrementY( point1, point2 );
-        }
-        case QwtSplineParametrization::ParameterCentripetal:
-        {
-            return valueIncrementCentripetal( point1, point2 );
-        }
-        case QwtSplineParametrization::ParameterChordal:
-        {
-            return valueIncrementChordal( point1, point2 );
-        }
-        case QwtSplineParametrization::ParameterManhattan:
-        {
-            return valueIncrementManhattan( point1, point2 );
-        }
-        case QwtSplineParametrization::ParameterUniform:
-        {
-            return valueIncrementUniform( point1, point2 );
-        }
-        default:
-        {
-            return 1;
-        }
+    switch (m_type) {
+    case QwtSplineParametrization::ParameterX: {
+        return valueIncrementX(point1, point2);
+    }
+    case QwtSplineParametrization::ParameterY: {
+        return valueIncrementY(point1, point2);
+    }
+    case QwtSplineParametrization::ParameterCentripetal: {
+        return valueIncrementCentripetal(point1, point2);
+    }
+    case QwtSplineParametrization::ParameterChordal: {
+        return valueIncrementChordal(point1, point2);
+    }
+    case QwtSplineParametrization::ParameterManhattan: {
+        return valueIncrementManhattan(point1, point2);
+    }
+    case QwtSplineParametrization::ParameterUniform: {
+        return valueIncrementUniform(point1, point2);
+    }
+    default: {
+        return 1;
+    }
     }
 }
 

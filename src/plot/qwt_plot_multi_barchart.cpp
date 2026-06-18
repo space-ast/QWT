@@ -36,16 +36,14 @@
 
 #include <qmap.h>
 
-inline static bool qwtIsIncreasing(
-    const QwtScaleMap& map, const QVector< double >& values )
+inline static bool qwtIsIncreasing(const QwtScaleMap& map, const QVector< double >& values)
 {
     bool isInverting = map.isInverting();
 
-    for ( int i = 0; i < values.size(); i++ )
-    {
+    for (int i = 0; i < values.size(); i++) {
         const double y = values[ i ];
-        if ( y != 0.0 )
-            return ( map.isInverting() != ( y > 0.0 ) );
+        if (y != 0.0)
+            return (map.isInverting() != (y > 0.0));
     }
 
     return !isInverting;
@@ -55,10 +53,8 @@ class QwtPlotMultiBarChart::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotMultiBarChart)
 
-  public:
-    PrivateData(QwtPlotMultiBarChart* p)
-        : q_ptr(p)
-        , style( QwtPlotMultiBarChart::Grouped )
+public:
+    PrivateData(QwtPlotMultiBarChart* p) : q_ptr(p), style(QwtPlotMultiBarChart::Grouped)
     {
     }
 
@@ -73,9 +69,7 @@ class QwtPlotMultiBarChart::PrivateData
  * @param[in] title Title of the chart
  *
  */
-QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
-    : QwtPlotAbstractBarChart( title )
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotMultiBarChart::QwtPlotMultiBarChart(const QwtText& title) : QwtPlotAbstractBarChart(title), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -85,9 +79,8 @@ QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QwtText& title )
  * @param[in] title Title of the chart
  *
  */
-QwtPlotMultiBarChart::QwtPlotMultiBarChart( const QString& title )
-    : QwtPlotAbstractBarChart( QwtText( title ) )
-    , QWT_PIMPL_CONSTRUCT
+QwtPlotMultiBarChart::QwtPlotMultiBarChart(const QString& title)
+    : QwtPlotAbstractBarChart(QwtText(title)), QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -103,13 +96,13 @@ QwtPlotMultiBarChart::~QwtPlotMultiBarChart()
 
 void QwtPlotMultiBarChart::init()
 {
-    setData( new QwtSetSeriesData() );
+    setData(new QwtSetSeriesData());
 }
 
 /**
  * @brief Get the runtime type information
  * @return QwtPlotItem::Rtti_PlotMultiBarChart
- * 
+ *
  */
 int QwtPlotMultiBarChart::rtti() const
 {
@@ -130,14 +123,14 @@ void QwtPlotMultiBarChart::attach(QwtPlot* plot)
         int numValues = 0;
         if (dataSize() > 0) {
             const QwtSetSample s = sample(0);
-            numValues = s.set.size();
+            numValues            = s.set.size();
         }
 
         const QwtColorCycle cc = plot->colorCycle();
         plot->nextColorForItem(rtti());
 
         for (int i = 0; i < numValues; i++) {
-            auto* sym = new QwtColumnSymbol(QwtColumnSymbol::Box);
+            auto* sym      = new QwtColumnSymbol(QwtColumnSymbol::Box);
             const QColor c = cc.color(i);
             sym->setBrush(c);
             sym->setPen(QPen(c.darker(150), 1));
@@ -150,29 +143,27 @@ void QwtPlotMultiBarChart::attach(QwtPlot* plot)
 /**
  * @brief Initialize data with an array of samples
  * @param[in] samples Vector of samples
- * 
+ *
  */
-void QwtPlotMultiBarChart::setSamples(
-    const QVector< QwtSetSample >& samples )
+void QwtPlotMultiBarChart::setSamples(const QVector< QwtSetSample >& samples)
 {
-    setData( new QwtSetSeriesData( samples ) );
+    setData(new QwtSetSeriesData(samples));
 }
 
 /**
  * @brief Initialize data with an array of samples
  * @param[in] samples Vector of vectors containing values
- * 
+ *
  */
-void QwtPlotMultiBarChart::setSamples(
-    const QVector< QVector< double > >& samples )
+void QwtPlotMultiBarChart::setSamples(const QVector< QVector< double > >& samples)
 {
     QVector< QwtSetSample > s;
-    s.reserve( samples.size() );
+    s.reserve(samples.size());
 
-    for ( int i = 0; i < samples.size(); i++ )
-        s += QwtSetSample( i, samples[ i ] );
+    for (int i = 0; i < samples.size(); i++)
+        s += QwtSetSample(i, samples[ i ]);
 
-    setData( new QwtSetSeriesData( s ) );
+    setData(new QwtSetSeriesData(s));
 }
 
 /**
@@ -182,12 +173,11 @@ void QwtPlotMultiBarChart::setSamples(
  * @param[in] data Data
  * @warning The item takes ownership of the data object, deleting
  *          it when its not used anymore.
- * 
+ *
  */
-void QwtPlotMultiBarChart::setSamples(
-    QwtSeriesData< QwtSetSample >* data )
+void QwtPlotMultiBarChart::setSamples(QwtSeriesData< QwtSetSample >* data)
 {
-    setData( data );
+    setData(data);
 }
 
 /**
@@ -195,9 +185,9 @@ void QwtPlotMultiBarChart::setSamples(
  * @details The titles are used for the legend.
  * @param[in] titles Bar titles
  * @sa barTitles(), legendData()
- * 
+ *
  */
-void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
+void QwtPlotMultiBarChart::setBarTitles(const QList< QwtText >& titles)
 {
     QWT_D(d);
     d->barTitles = titles;
@@ -208,7 +198,7 @@ void QwtPlotMultiBarChart::setBarTitles( const QList< QwtText >& titles )
  * @brief Get the bar titles
  * @return Bar titles
  * @sa setBarTitles(), legendData()
- * 
+ *
  */
 QList< QwtText > QwtPlotMultiBarChart::barTitles() const
 {
@@ -223,39 +213,30 @@ QList< QwtText > QwtPlotMultiBarChart::barTitles() const
  * @param[in] valueIndex Index of a value in a set
  * @param[in] symbol Symbol used for drawing a bar
  * @sa symbol(), resetSymbolMap(), specialSymbol()
- * 
+ *
  */
-void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
+void QwtPlotMultiBarChart::setSymbol(int valueIndex, QwtColumnSymbol* symbol)
 {
     QWT_D(d);
     d->m_userSetSymbols = true;
-    if ( valueIndex < 0 )
+    if (valueIndex < 0)
         return;
 
-    auto it =
-        d->symbolMap.find(valueIndex);
-    if ( it == d->symbolMap.end() )
-    {
-        if ( symbol != nullptr )
-        {
-            d->symbolMap.insert( valueIndex, symbol );
+    auto it = d->symbolMap.find(valueIndex);
+    if (it == d->symbolMap.end()) {
+        if (symbol != nullptr) {
+            d->symbolMap.insert(valueIndex, symbol);
 
             legendChanged();
             itemChanged();
         }
-    }
-    else
-    {
-        if ( symbol != it.value() )
-        {
+    } else {
+        if (symbol != it.value()) {
             delete it.value();
 
-            if ( symbol == nullptr )
-            {
-                d->symbolMap.remove( valueIndex );
-            }
-            else
-            {
+            if (symbol == nullptr) {
+                d->symbolMap.remove(valueIndex);
+            } else {
                 it.value() = symbol;
             }
 
@@ -270,15 +251,14 @@ void QwtPlotMultiBarChart::setSymbol( int valueIndex, QwtColumnSymbol* symbol )
  * @param[in] valueIndex Index of a value in a set
  * @return The symbol that had been set by setSymbol() or nullptr
  * @sa setSymbol(), specialSymbol(), drawBar()
- * 
+ *
  */
-const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
+const QwtColumnSymbol* QwtPlotMultiBarChart::symbol(int valueIndex) const
 {
     QWT_DC(d);
-    auto it =
-        d->symbolMap.constFind( valueIndex );
+    auto it = d->symbolMap.constFind(valueIndex);
 
-    return ( it == d->symbolMap.constEnd() ) ? nullptr : it.value();
+    return (it == d->symbolMap.constEnd()) ? nullptr : it.value();
 }
 
 /*!
@@ -289,23 +269,22 @@ const QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex ) const
 
    @sa setSymbol(), specialSymbol(), drawBar()
  */
-QwtColumnSymbol* QwtPlotMultiBarChart::symbol( int valueIndex )
+QwtColumnSymbol* QwtPlotMultiBarChart::symbol(int valueIndex)
 {
     QWT_D(d);
-    QMap< int, QwtColumnSymbol* >::const_iterator it =
-        d->symbolMap.constFind( valueIndex );
+    QMap< int, QwtColumnSymbol* >::const_iterator it = d->symbolMap.constFind(valueIndex);
 
-    return ( it == d->symbolMap.constEnd() ) ? nullptr : it.value();
+    return (it == d->symbolMap.constEnd()) ? nullptr : it.value();
 }
 
 /**
  * @brief Remove all symbols from the symbol map
- * 
+ *
  */
 void QwtPlotMultiBarChart::resetSymbolMap()
 {
     QWT_D(d);
-    qDeleteAll( d->symbolMap );
+    qDeleteAll(d->symbolMap);
     d->symbolMap.clear();
 }
 
@@ -329,11 +308,10 @@ void QwtPlotMultiBarChart::resetSymbolMap()
    @return nullptr, meaning that the value is not special
 
  */
-QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
-    int sampleIndex, int valueIndex ) const
+QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(int sampleIndex, int valueIndex) const
 {
-    Q_UNUSED( sampleIndex );
-    Q_UNUSED( valueIndex );
+    Q_UNUSED(sampleIndex);
+    Q_UNUSED(valueIndex);
 
     return nullptr;
 }
@@ -342,13 +320,12 @@ QwtColumnSymbol* QwtPlotMultiBarChart::specialSymbol(
  * @brief Set the style of the chart
  * @param[in] style Chart style
  * @sa style()
- * 
+ *
  */
-void QwtPlotMultiBarChart::setStyle( ChartStyle style )
+void QwtPlotMultiBarChart::setStyle(ChartStyle style)
 {
     QWT_D(d);
-    if ( style != d->style )
-    {
+    if (style != d->style) {
         d->style = style;
 
         legendChanged();
@@ -360,7 +337,7 @@ void QwtPlotMultiBarChart::setStyle( ChartStyle style )
  * @brief Get the style of the chart
  * @return Style of the chart
  * @sa setStyle()
- * 
+ *
  */
 QwtPlotMultiBarChart::ChartStyle QwtPlotMultiBarChart::style() const
 {
@@ -371,34 +348,30 @@ QwtPlotMultiBarChart::ChartStyle QwtPlotMultiBarChart::style() const
 /**
  * @brief Get the bounding rectangle of all samples
  * @return Bounding rectangle of all samples. For an empty series the rectangle is invalid.
- * 
+ *
  */
 QRectF QwtPlotMultiBarChart::boundingRect() const
 {
     QWT_DC(d);
     const size_t numSamples = dataSize();
 
-    if ( numSamples == 0 )
+    if (numSamples == 0)
         return QwtPlotSeriesItem::boundingRect();
 
     const double baseLine = baseline();
 
     QRectF rect;
 
-    if ( d->style != QwtPlotMultiBarChart::Stacked )
-    {
+    if (d->style != QwtPlotMultiBarChart::Stacked) {
         rect = QwtPlotSeriesItem::boundingRect();
 
-        if ( rect.height() >= 0 )
-        {
-            if ( rect.bottom() < baseLine )
-                rect.setBottom( baseLine );
-            if ( rect.top() > baseLine )
-                rect.setTop( baseLine );
+        if (rect.height() >= 0) {
+            if (rect.bottom() < baseLine)
+                rect.setBottom(baseLine);
+            if (rect.top() > baseLine)
+                rect.setTop(baseLine);
         }
-    }
-    else
-    {
+    } else {
         double xMin, xMax, yMin, yMax;
 
         xMin = xMax = 0.0;
@@ -406,29 +379,25 @@ QRectF QwtPlotMultiBarChart::boundingRect() const
 
         const QwtSeriesData< QwtSetSample >* series = data();
 
-        for ( size_t i = 0; i < numSamples; i++ )
-        {
-            const QwtSetSample sample = series->sample( i );
-            if ( i == 0 )
-            {
+        for (size_t i = 0; i < numSamples; i++) {
+            const QwtSetSample sample = series->sample(i);
+            if (i == 0) {
                 xMin = xMax = sample.value;
-            }
-            else
-            {
-                xMin = qwtMinF( xMin, sample.value );
-                xMax = qwtMaxF( xMax, sample.value );
+            } else {
+                xMin = qwtMinF(xMin, sample.value);
+                xMax = qwtMaxF(xMax, sample.value);
             }
 
             const double y = baseLine + sample.added();
 
-            yMin = qwtMinF( yMin, y );
-            yMax = qwtMaxF( yMax, y );
+            yMin = qwtMinF(yMin, y);
+            yMax = qwtMaxF(yMax, y);
         }
-        rect.setRect( xMin, yMin, xMax - xMin, yMax - yMin );
+        rect.setRect(xMin, yMin, xMax - xMin, yMax - yMin);
     }
 
-    if ( orientation() == Qt::Horizontal )
-        rect.setRect( rect.y(), rect.x(), rect.height(), rect.width() );
+    if (orientation() == Qt::Horizontal)
+        rect.setRect(rect.y(), rect.x(), rect.height(), rect.width());
 
     return rect;
 }
@@ -442,31 +411,31 @@ QRectF QwtPlotMultiBarChart::boundingRect() const
  * @param[in] from Index of the first point to be painted
  * @param[in] to Index of the last point to be painted. If to < 0, the curve will be painted to its last point.
  * @sa drawSample()
- * 
+ *
  */
-void QwtPlotMultiBarChart::drawSeries( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int from, int to ) const
+void QwtPlotMultiBarChart::drawSeries(QPainter* painter,
+                                      const QwtScaleMap& xMap,
+                                      const QwtScaleMap& yMap,
+                                      const QRectF& canvasRect,
+                                      int from,
+                                      int to) const
 {
-    if ( to < 0 )
+    if (to < 0)
         to = dataSize() - 1;
 
-    if ( from < 0 )
+    if (from < 0)
         from = 0;
 
-    if ( from > to )
+    if (from > to)
         return;
 
-
     const QRectF br = data()->boundingRect();
-    const QwtInterval interval( br.left(), br.right() );
+    const QwtInterval interval(br.left(), br.right());
 
     painter->save();
 
-    for ( int i = from; i <= to; i++ )
-    {
-        drawSample( painter, xMap, yMap,
-            canvasRect, interval, i, sample( i ) );
+    for (int i = from; i <= to; i++) {
+        drawSample(painter, xMap, yMap, canvasRect, interval, i, sample(i));
     }
 
     painter->restore();
@@ -485,37 +454,30 @@ void QwtPlotMultiBarChart::drawSeries( QPainter* painter,
 
    @sa drawSeries()
  */
-void QwtPlotMultiBarChart::drawSample( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, const QwtInterval& boundingInterval,
-    int index, const QwtSetSample& sample ) const
+void QwtPlotMultiBarChart::drawSample(QPainter* painter,
+                                      const QwtScaleMap& xMap,
+                                      const QwtScaleMap& yMap,
+                                      const QRectF& canvasRect,
+                                      const QwtInterval& boundingInterval,
+                                      int index,
+                                      const QwtSetSample& sample) const
 {
     QWT_DC(d);
-    if ( sample.set.size() <= 0 )
+    if (sample.set.size() <= 0)
         return;
 
     double sampleW;
 
-    if ( orientation() == Qt::Horizontal )
-    {
-        sampleW = sampleWidth( yMap, canvasRect.height(),
-            boundingInterval.width(), sample.value );
-    }
-    else
-    {
-        sampleW = sampleWidth( xMap, canvasRect.width(),
-            boundingInterval.width(), sample.value );
+    if (orientation() == Qt::Horizontal) {
+        sampleW = sampleWidth(yMap, canvasRect.height(), boundingInterval.width(), sample.value);
+    } else {
+        sampleW = sampleWidth(xMap, canvasRect.width(), boundingInterval.width(), sample.value);
     }
 
-    if ( d->style == Stacked )
-    {
-        drawStackedBars( painter, xMap, yMap,
-            canvasRect, index, sampleW, sample );
-    }
-    else
-    {
-        drawGroupedBars( painter, xMap, yMap,
-            canvasRect, index, sampleW, sample );
+    if (d->style == Stacked) {
+        drawStackedBars(painter, xMap, yMap, canvasRect, index, sampleW, sample);
+    } else {
+        drawGroupedBars(painter, xMap, yMap, canvasRect, index, sampleW, sample);
     }
 }
 
@@ -532,69 +494,65 @@ void QwtPlotMultiBarChart::drawSample( QPainter* painter,
 
    @sa drawSeries(), sampleWidth()
  */
-void QwtPlotMultiBarChart::drawGroupedBars( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int index, double sampleWidth,
-    const QwtSetSample& sample ) const
+void QwtPlotMultiBarChart::drawGroupedBars(QPainter* painter,
+                                           const QwtScaleMap& xMap,
+                                           const QwtScaleMap& yMap,
+                                           const QRectF& canvasRect,
+                                           int index,
+                                           double sampleWidth,
+                                           const QwtSetSample& sample) const
 {
-    Q_UNUSED( canvasRect );
+    Q_UNUSED(canvasRect);
 
     const int numBars = sample.set.size();
-    if ( numBars == 0 )
+    if (numBars == 0)
         return;
 
-    if ( orientation() == Qt::Vertical )
-    {
+    if (orientation() == Qt::Vertical) {
         const double barWidth = sampleWidth / numBars;
 
-        const double y1 = yMap.transform( baseline() );
-        const double x0 = xMap.transform( sample.value ) - 0.5 * sampleWidth;
+        const double y1 = yMap.transform(baseline());
+        const double x0 = xMap.transform(sample.value) - 0.5 * sampleWidth;
 
-        for ( int i = 0; i < numBars; i++ )
-        {
+        for (int i = 0; i < numBars; i++) {
             const double x1 = x0 + i * barWidth;
             const double x2 = x1 + barWidth;
 
-            const double y2 = yMap.transform( sample.set[i] );
+            const double y2 = yMap.transform(sample.set[ i ]);
 
             QwtColumnRect barRect;
-            barRect.direction = ( y1 < y2 ) ?
-                QwtColumnRect::TopToBottom : QwtColumnRect::BottomToTop;
+            barRect.direction = (y1 < y2) ? QwtColumnRect::TopToBottom : QwtColumnRect::BottomToTop;
 
-            barRect.hInterval = QwtInterval( x1, x2 ).normalized();
-            if ( i != 0 )
-                barRect.hInterval.setBorderFlags( QwtInterval::ExcludeMinimum );
+            barRect.hInterval = QwtInterval(x1, x2).normalized();
+            if (i != 0)
+                barRect.hInterval.setBorderFlags(QwtInterval::ExcludeMinimum);
 
-            barRect.vInterval = QwtInterval( y1, y2 ).normalized();
+            barRect.vInterval = QwtInterval(y1, y2).normalized();
 
-            drawBar( painter, index, i, barRect );
+            drawBar(painter, index, i, barRect);
         }
-    }
-    else
-    {
+    } else {
         const double barHeight = sampleWidth / numBars;
 
-        const double x1 = xMap.transform( baseline() );
-        const double y0 = yMap.transform( sample.value ) - 0.5 * sampleWidth;
+        const double x1 = xMap.transform(baseline());
+        const double y0 = yMap.transform(sample.value) - 0.5 * sampleWidth;
 
-        for ( int i = 0; i < numBars; i++ )
-        {
+        for (int i = 0; i < numBars; i++) {
             double y1 = y0 + i * barHeight;
             double y2 = y1 + barHeight;
 
-            double x2 = xMap.transform( sample.set[i] );
+            double x2 = xMap.transform(sample.set[ i ]);
 
             QwtColumnRect barRect;
-            barRect.direction = x1 < x2 ?
-                QwtColumnRect::LeftToRight : QwtColumnRect::RightToLeft;
+            barRect.direction = x1 < x2 ? QwtColumnRect::LeftToRight : QwtColumnRect::RightToLeft;
 
-            barRect.hInterval = QwtInterval( x1, x2 ).normalized();
+            barRect.hInterval = QwtInterval(x1, x2).normalized();
 
-            barRect.vInterval = QwtInterval( y1, y2 );
-            if ( i != 0 )
-                barRect.vInterval.setBorderFlags( QwtInterval::ExcludeMinimum );
+            barRect.vInterval = QwtInterval(y1, y2);
+            if (i != 0)
+                barRect.vInterval.setBorderFlags(QwtInterval::ExcludeMinimum);
 
-            drawBar( painter, index, i, barRect );
+            drawBar(painter, index, i, barRect);
         }
     }
 }
@@ -612,99 +570,93 @@ void QwtPlotMultiBarChart::drawGroupedBars( QPainter* painter,
 
    @sa drawSeries(), sampleWidth()
  */
-void QwtPlotMultiBarChart::drawStackedBars( QPainter* painter,
-    const QwtScaleMap& xMap, const QwtScaleMap& yMap,
-    const QRectF& canvasRect, int index,
-    double sampleWidth, const QwtSetSample& sample ) const
+void QwtPlotMultiBarChart::drawStackedBars(QPainter* painter,
+                                           const QwtScaleMap& xMap,
+                                           const QwtScaleMap& yMap,
+                                           const QRectF& canvasRect,
+                                           int index,
+                                           double sampleWidth,
+                                           const QwtSetSample& sample) const
 {
-    Q_UNUSED( canvasRect ); // clipping the bars ?
+    Q_UNUSED(canvasRect);  // clipping the bars ?
 
     const int numBars = sample.set.size();
-    if ( numBars == 0 )
+    if (numBars == 0)
         return;
 
     QwtInterval::BorderFlag borderFlags = QwtInterval::IncludeBorders;
 
-    if ( orientation() == Qt::Vertical )
-    {
-        const double x1 = xMap.transform( sample.value ) - 0.5 * sampleWidth;
+    if (orientation() == Qt::Vertical) {
+        const double x1 = xMap.transform(sample.value) - 0.5 * sampleWidth;
         const double x2 = x1 + sampleWidth;
 
-        const bool increasing = qwtIsIncreasing( yMap, sample.set );
+        const bool increasing = qwtIsIncreasing(yMap, sample.set);
 
         QwtColumnRect bar;
-        bar.direction = increasing ?
-            QwtColumnRect::TopToBottom : QwtColumnRect::BottomToTop;
+        bar.direction = increasing ? QwtColumnRect::TopToBottom : QwtColumnRect::BottomToTop;
 
-        bar.hInterval = QwtInterval( x1, x2 ).normalized();
+        bar.hInterval = QwtInterval(x1, x2).normalized();
 
         double sum = baseline();
 
-        for ( int i = 0; i < numBars; i++ )
-        {
+        for (int i = 0; i < numBars; i++) {
             const double si = sample.set[ i ];
-            if ( si == 0.0 )
+            if (si == 0.0)
                 continue;
 
-            const double y1 = yMap.transform( sum );
-            const double y2 = yMap.transform( sum + si );
+            const double y1 = yMap.transform(sum);
+            const double y2 = yMap.transform(sum + si);
 
-            if ( ( y2 > y1 ) != increasing )
-            {
+            if ((y2 > y1) != increasing) {
                 // stacked bars need to be in the same direction
                 continue;
             }
 
-            bar.vInterval = QwtInterval( y1, y2 ).normalized();
-            bar.vInterval.setBorderFlags( borderFlags );
+            bar.vInterval = QwtInterval(y1, y2).normalized();
+            bar.vInterval.setBorderFlags(borderFlags);
 
-            drawBar( painter, index, i, bar );
+            drawBar(painter, index, i, bar);
 
             sum += si;
 
-            if ( increasing )
+            if (increasing)
                 borderFlags = QwtInterval::ExcludeMinimum;
             else
                 borderFlags = QwtInterval::ExcludeMaximum;
         }
-    }
-    else
-    {
-        const double y1 = yMap.transform( sample.value ) - 0.5 * sampleWidth;
+    } else {
+        const double y1 = yMap.transform(sample.value) - 0.5 * sampleWidth;
         const double y2 = y1 + sampleWidth;
 
-        const bool increasing = qwtIsIncreasing( xMap, sample.set );
+        const bool increasing = qwtIsIncreasing(xMap, sample.set);
 
         QwtColumnRect bar;
-        bar.direction = increasing ?
-            QwtColumnRect::LeftToRight : QwtColumnRect::RightToLeft;
-        bar.vInterval = QwtInterval( y1, y2 ).normalized();
+        bar.direction = increasing ? QwtColumnRect::LeftToRight : QwtColumnRect::RightToLeft;
+        bar.vInterval = QwtInterval(y1, y2).normalized();
 
         double sum = baseline();
 
-        for ( int i = 0; i < sample.set.size(); i++ )
-        {
+        for (int i = 0; i < sample.set.size(); i++) {
             const double si = sample.set[ i ];
-            if ( si == 0.0 )
+            if (si == 0.0)
                 continue;
 
-            const double x1 = xMap.transform( sum );
-            const double x2 = xMap.transform( sum + si );
+            const double x1 = xMap.transform(sum);
+            const double x2 = xMap.transform(sum + si);
 
-            if ( ( x2 > x1 ) != increasing )
-            {
+            if ((x2 > x1) != increasing) {
                 // stacked bars need to be in the same direction
                 continue;
             }
 
-            bar.hInterval = QwtInterval( x1, x2 ).normalized();
-            bar.hInterval.setBorderFlags( borderFlags );
+            bar.hInterval = QwtInterval(x1, x2).normalized();
+            bar.hInterval.setBorderFlags(borderFlags);
 
-            drawBar( painter, index, i, bar );
+            drawBar(painter, index, i, bar);
 
             sum += si;
 
-            if ( increasing )
+            if (increasing)
                 borderFlags = QwtInterval::ExcludeMinimum;
             else
                 borderFlags = QwtInterval::ExcludeMaximum;
@@ -723,28 +675,24 @@ void QwtPlotMultiBarChart::drawStackedBars( QPainter* painter,
 
    @sa drawSeries()
  */
-void QwtPlotMultiBarChart::drawBar( QPainter* painter,
-    int sampleIndex, int valueIndex, const QwtColumnRect& rect ) const
+void QwtPlotMultiBarChart::drawBar(QPainter* painter, int sampleIndex, int valueIndex, const QwtColumnRect& rect) const
 {
     const QwtColumnSymbol* specialSym = nullptr;
-    if ( sampleIndex >= 0 )
-        specialSym = specialSymbol( sampleIndex, valueIndex );
+    if (sampleIndex >= 0)
+        specialSym = specialSymbol(sampleIndex, valueIndex);
 
     const QwtColumnSymbol* sym = specialSym;
-    if ( sym == nullptr )
-        sym = symbol( valueIndex );
+    if (sym == nullptr)
+        sym = symbol(valueIndex);
 
-    if ( sym )
-    {
-        sym->draw( painter, rect );
-    }
-    else
-    {
+    if (sym) {
+        sym->draw(painter, rect);
+    } else {
         // we build a temporary default symbol
-        QwtColumnSymbol columnSymbol( QwtColumnSymbol::Box );
-        columnSymbol.setLineWidth( 1 );
-        columnSymbol.setFrameStyle( QwtColumnSymbol::Plain );
-        columnSymbol.draw( painter, rect );
+        QwtColumnSymbol columnSymbol(QwtColumnSymbol::Box);
+        columnSymbol.setLineWidth(1);
+        columnSymbol.setFrameStyle(QwtColumnSymbol::Plain);
+        columnSymbol.draw(painter, rect);
     }
 
     delete specialSym;
@@ -756,25 +704,21 @@ void QwtPlotMultiBarChart::drawBar( QPainter* painter,
  *          Each element contains a bar title and an icon showing its corresponding bar.
  * @return List of legend data entries
  * @sa barTitles(), legendIcon(), legendIconSize()
- * 
+ *
  */
 QList< QwtLegendData > QwtPlotMultiBarChart::legendData() const
 {
     QWT_DC(d);
     QList< QwtLegendData > list;
-    list.reserve( d->barTitles.size() );
+    list.reserve(d->barTitles.size());
 
-    for ( int i = 0; i < d->barTitles.size(); i++ )
-    {
+    for (int i = 0; i < d->barTitles.size(); i++) {
         QwtLegendData data;
 
-        data.setValue( QwtLegendData::TitleRole,
-            QVariant::fromValue( d->barTitles[i] ) );
+        data.setValue(QwtLegendData::TitleRole, QVariant::fromValue(d->barTitles[ i ]));
 
-        if ( !legendIconSize().isEmpty() )
-        {
-            data.setValue( QwtLegendData::IconRole,
-                QVariant::fromValue( legendIcon( i, legendIconSize() ) ) );
+        if (!legendIconSize().isEmpty()) {
+            data.setValue(QwtLegendData::IconRole, QVariant::fromValue(legendIcon(i, legendIconSize())));
         }
 
         list += data;
@@ -789,25 +733,22 @@ QList< QwtLegendData > QwtPlotMultiBarChart::legendData() const
  * @param[in] size Icon size
  * @return An icon showing a bar
  * @sa drawBar(), legendData()
- * 
+ *
  */
-QwtGraphic QwtPlotMultiBarChart::legendIcon( int index,
-    const QSizeF& size ) const
+QwtGraphic QwtPlotMultiBarChart::legendIcon(int index, const QSizeF& size) const
 {
     QwtColumnRect column;
-    column.hInterval = QwtInterval( 0.0, size.width() - 1.0 );
-    column.vInterval = QwtInterval( 0.0, size.height() - 1.0 );
+    column.hInterval = QwtInterval(0.0, size.width() - 1.0);
+    column.vInterval = QwtInterval(0.0, size.height() - 1.0);
 
     QwtGraphic icon;
-    icon.setDefaultSize( size );
-    icon.setRenderHint( QwtGraphic::RenderPensUnscaled, true );
+    icon.setDefaultSize(size);
+    icon.setRenderHint(QwtGraphic::RenderPensUnscaled, true);
 
-    QPainter painter( &icon );
-    painter.setRenderHint( QPainter::Antialiasing,
-        testRenderHint( QwtPlotItem::RenderAntialiased ) );
+    QPainter painter(&icon);
+    painter.setRenderHint(QPainter::Antialiasing, testRenderHint(QwtPlotItem::RenderAntialiased));
 
-    drawBar( &painter, -1, index, column );
+    drawBar(&painter, -1, index, column);
 
     return icon;
 }
-

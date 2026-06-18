@@ -62,24 +62,24 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
 {
     Q_OBJECT
 
-    Q_PROPERTY( QFrame::Shadow frameShadow READ frameShadow WRITE setFrameShadow )
-    Q_PROPERTY( QFrame::Shape frameShape READ frameShape WRITE setFrameShape )
-    Q_PROPERTY( int lineWidth READ lineWidth WRITE setLineWidth )
-    Q_PROPERTY( int midLineWidth READ midLineWidth WRITE setMidLineWidth )
-    Q_PROPERTY( int frameWidth READ frameWidth )
-    Q_PROPERTY( QRect frameRect READ frameRect DESIGNABLE false )
+    Q_PROPERTY(QFrame::Shadow frameShadow READ frameShadow WRITE setFrameShadow)
+    Q_PROPERTY(QFrame::Shape frameShape READ frameShape WRITE setFrameShape)
+    Q_PROPERTY(int lineWidth READ lineWidth WRITE setLineWidth)
+    Q_PROPERTY(int midLineWidth READ midLineWidth WRITE setMidLineWidth)
+    Q_PROPERTY(int frameWidth READ frameWidth)
+    Q_PROPERTY(QRect frameRect READ frameRect DESIGNABLE false)
 
-    Q_PROPERTY( double borderRadius READ borderRadius WRITE setBorderRadius )
+    Q_PROPERTY(double borderRadius READ borderRadius WRITE setBorderRadius)
 
-  public:
-        /**
+public:
+    /**
      * @brief Constructor
      */
-    explicit QwtPlotGLCanvas( QwtPlot* = nullptr );
+    explicit QwtPlotGLCanvas(QwtPlot* = nullptr);
     /**
      * @brief Constructor with QGLFormat
      */
-    explicit QwtPlotGLCanvas( const QGLFormat&, QwtPlot* = nullptr );
+    explicit QwtPlotGLCanvas(const QGLFormat&, QwtPlot* = nullptr);
     /**
      * @brief Destructor
      */
@@ -92,24 +92,24 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     /**
      * @brief Get the border path
      */
-    Q_INVOKABLE QPainterPath borderPath( const QRect& ) const;
+    Q_INVOKABLE QPainterPath borderPath(const QRect&) const;
 
     /**
      * @brief Handle events
      */
-    virtual bool event( QEvent* ) override;
+    virtual bool event(QEvent*) override;
 
-  public Q_SLOTS:
+public Q_SLOTS:
     /**
      * @brief Replot the canvas
      */
     void replot();
 
-  protected:
+protected:
     /**
      * @brief Paint event handler
      */
-    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void paintEvent(QPaintEvent*) override;
 
     /**
      * @brief Initialize OpenGL
@@ -122,9 +122,9 @@ class QWT_EXPORT QwtPlotGLCanvas : public QGLWidget, public QwtPlotAbstractGLCan
     /**
      * @brief Resize OpenGL view
      */
-    virtual void resizeGL( int width, int height ) override;
+    virtual void resizeGL(int width, int height) override;
 
-  private:
+private:
     /**
      * @brief Initialize the canvas
      */

@@ -31,7 +31,8 @@
 
 class QwtEventPattern;
 class QEvent;
-template< typename T > class QList;
+template< typename T >
+class QList;
 
 /**
  * @brief A state machine for QwtPicker selections
@@ -42,7 +43,7 @@ template< typename T > class QList;
 
 class QWT_EXPORT QwtPickerMachine
 {
-  public:
+public:
     /*!
        Type of a selection.
        @sa selectionType()
@@ -73,27 +74,26 @@ class QWT_EXPORT QwtPickerMachine
     };
 
     // Constructor with selection type
-    explicit QwtPickerMachine( SelectionType );
+    explicit QwtPickerMachine(SelectionType);
     // Destructor
     virtual ~QwtPickerMachine();
 
     // Transition function that processes events and returns commands
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) = 0;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) = 0;
     // Reset the state machine to initial state
     void reset();
 
     // Return the current state
     int state() const;
     // Set the current state
-    void setState( int );
+    void setState(int);
 
     // Return the selection type
     SelectionType selectionType() const;
 
-  private:
+private:
     const SelectionType m_selectionType;
-    int m_state{0};
+    int m_state { 0 };
 };
 
 /**
@@ -104,13 +104,12 @@ class QWT_EXPORT QwtPickerMachine
  */
 class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerTrackerMachine();
 
     // Transition function for tracking mouse movements
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -121,13 +120,12 @@ class QWT_EXPORT QwtPickerTrackerMachine : public QwtPickerMachine
  */
 class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerClickPointMachine();
 
     // Transition function for click point selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -138,13 +136,12 @@ class QWT_EXPORT QwtPickerClickPointMachine : public QwtPickerMachine
  */
 class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerDragPointMachine();
 
     // Transition function for drag point selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -160,13 +157,12 @@ class QWT_EXPORT QwtPickerDragPointMachine : public QwtPickerMachine
 
 class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerClickRectMachine();
 
     // Transition function for click rectangle selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -180,13 +176,12 @@ class QWT_EXPORT QwtPickerClickRectMachine : public QwtPickerMachine
 
 class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerDragRectMachine();
 
     // Transition function for drag rectangle selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -202,13 +197,12 @@ class QWT_EXPORT QwtPickerDragRectMachine : public QwtPickerMachine
 
 class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerDragLineMachine();
 
     // Transition function for drag line selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 /**
@@ -222,13 +216,12 @@ class QWT_EXPORT QwtPickerDragLineMachine : public QwtPickerMachine
 
 class QWT_EXPORT QwtPickerPolygonMachine : public QwtPickerMachine
 {
-  public:
+public:
     // Constructor
     QwtPickerPolygonMachine();
 
     // Transition function for polygon selection
-    virtual QList< Command > transition(
-        const QwtEventPattern&, const QEvent* ) override;
+    virtual QList< Command > transition(const QwtEventPattern&, const QEvent*) override;
 };
 
 #endif

@@ -49,21 +49,21 @@ class QPainterPath;
  */
 class QWT_EXPORT QwtVectorFieldSymbol
 {
-  public:
+public:
     //! Constructor
     QwtVectorFieldSymbol();
     //! Destructor
     virtual ~QwtVectorFieldSymbol();
 
     //! Set the length of the symbol/arrow
-    virtual void setLength( qreal length ) = 0;
+    virtual void setLength(qreal length) = 0;
     //! Return the length of the symbol/arrow
     virtual qreal length() const = 0;
     //! Draw the symbol/arrow
-    virtual void paint( QPainter* ) const = 0;
+    virtual void paint(QPainter*) const = 0;
 
-  private:
-    QwtVectorFieldSymbol(const QwtVectorFieldSymbol&) = delete;
+private:
+    QwtVectorFieldSymbol(const QwtVectorFieldSymbol&)            = delete;
     QwtVectorFieldSymbol& operator=(const QwtVectorFieldSymbol&) = delete;
 };
 
@@ -74,20 +74,20 @@ class QWT_EXPORT QwtVectorFieldSymbol
  */
 class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
 {
-  public:
+public:
     //! Constructor with head and tail width parameters
-    QwtVectorFieldArrow( qreal headWidth = 6.0, qreal tailWidth = 1.0 );
+    QwtVectorFieldArrow(qreal headWidth = 6.0, qreal tailWidth = 1.0);
     //! Destructor
     virtual ~QwtVectorFieldArrow() override;
 
     //! Set the length of the arrow
-    virtual void setLength( qreal length ) override;
+    virtual void setLength(qreal length) override;
     //! Return the length of the arrow
     virtual qreal length() const override;
     //! Draw the arrow
-    virtual void paint( QPainter* ) const override;
+    virtual void paint(QPainter*) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtVectorFieldArrow)
 };
 
@@ -98,20 +98,20 @@ class QWT_EXPORT QwtVectorFieldArrow : public QwtVectorFieldSymbol
  */
 class QWT_EXPORT QwtVectorFieldThinArrow : public QwtVectorFieldSymbol
 {
-  public:
+public:
     //! Constructor with head width parameter
-    QwtVectorFieldThinArrow( qreal headWidth = 6.0 );
+    QwtVectorFieldThinArrow(qreal headWidth = 6.0);
     //! Destructor
     virtual ~QwtVectorFieldThinArrow() override;
 
     //! Set the length of the arrow
-    virtual void setLength( qreal length ) override;
+    virtual void setLength(qreal length) override;
     //! Return the length of the arrow
     virtual qreal length() const override;
     //! Draw the arrow
-    virtual void paint( QPainter* ) const override;
+    virtual void paint(QPainter*) const override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtVectorFieldThinArrow)
 };
 

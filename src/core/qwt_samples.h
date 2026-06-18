@@ -37,7 +37,7 @@
  * @brief Base class for statistical samples with position and range
  * @details Provides common fields for samples that have a position on one axis
  *          and a statistical range on the other axis (used by boxplots, OHLC charts).
- * 
+ *
  */
 class QWTCORE_EXPORT QwtStatisticalSample
 {
@@ -47,25 +47,21 @@ public:
      * @details All values set to 0.0
      */
     QwtStatisticalSample(double position = 0.0);
-    
+
     //! Position on the "time" axis (x for vertical, y for horizontal orientation)
     double position;
-    
+
     //! Lower bound of the statistical range
     double lower;
-    
+
     //! Upper bound of the statistical range
     double upper;
-    
+
     //! Central reference value
     double center;
 };
 
-inline QwtStatisticalSample::QwtStatisticalSample(double pos)
-    : position(pos)
-    , lower(0.0)
-    , upper(0.0)
-    , center(0.0)
+inline QwtStatisticalSample::QwtStatisticalSample(double pos) : position(pos), lower(0.0), upper(0.0), center(0.0)
 {
 }
 
@@ -361,7 +357,7 @@ inline bool QwtVectorFieldSample::isNull() const
  * @details Contains all statistical values needed to render a boxplot:
  *          whisker endpoints, quartiles, median, and outlier count.
  *          Actual outlier values are stored separately in QwtBoxOutlierSample.
- * 
+ *
  */
 class QWTCORE_EXPORT QwtBoxSample : public QwtStatisticalSample
 {
@@ -371,7 +367,7 @@ public:
      * @details All values set to 0.0
      */
     QwtBoxSample(double position = 0.0);
-    
+
     /**
      * @brief Full constructor with all statistical values
      * @param position Position on the axis
@@ -381,74 +377,59 @@ public:
      * @param q3 Third quartile (75th percentile)
      * @param whiskerUpper Upper whisker endpoint
      */
-    QwtBoxSample(double position, double whiskerLower, double q1,
-                 double median, double q3, double whiskerUpper);
-    
+    QwtBoxSample(double position, double whiskerLower, double q1, double median, double q3, double whiskerUpper);
+
     /**
      * @brief Check if sample has valid ordering
      * @details Returns true if whiskerLower <= q1 <= median <= q3 <= whiskerUpper
      */
     bool isValid() const;
-    
+
     /**
      * @brief Get bounding interval including whiskers
      * @return Interval from whiskerLower to whiskerUpper
      */
     QwtInterval boundingInterval() const;
-    
+
     /**
      * @brief Get box body interval (Q1 to Q3)
      * @return Interval from q1 to q3
      */
     QwtInterval boxInterval() const;
-    
+
     //! Lower whisker endpoint
     double whiskerLower;
-    
+
     //! First quartile (25th percentile)
     double q1;
-    
+
     //! Median (50th percentile) - also stored in inherited 'center' field
     double median;
-    
+
     //! Third quartile (75th percentile)
     double q3;
-    
+
     //! Upper whisker endpoint
     double whiskerUpper;
-    
+
     //! Number of outliers (stored separately, this is count only)
     int outlierCount;
 };
 
 inline QwtBoxSample::QwtBoxSample(double pos)
-    : QwtStatisticalSample(pos)
-    , whiskerLower(0.0)
-    , q1(0.0)
-    , median(0.0)
-    , q3(0.0)
-    , whiskerUpper(0.0)
-    , outlierCount(0)
+    : QwtStatisticalSample(pos), whiskerLower(0.0), q1(0.0), median(0.0), q3(0.0), whiskerUpper(0.0), outlierCount(0)
 {
 }
 
-inline QwtBoxSample::QwtBoxSample(double pos, double wl, double q1v,
-                                   double med, double q3v, double wu)
-    : QwtStatisticalSample(pos)
-    , whiskerLower(wl)
-    , q1(q1v)
-    , median(med)
-    , q3(q3v)
-    , whiskerUpper(wu)
-    , outlierCount(0)
+inline QwtBoxSample::QwtBoxSample(double pos, double wl, double q1v, double med, double q3v, double wu)
+    : QwtStatisticalSample(pos), whiskerLower(wl), q1(q1v), median(med), q3(q3v), whiskerUpper(wu), outlierCount(0)
 {
     center = median;
 }
 
 inline bool QwtBoxSample::isValid() const
 {
-    return (whiskerLower <= q1) && (q1 <= median) && 
-           (median <= q3) && (q3 <= whiskerUpper);
+    return (whiskerLower <= q1) && (q1 <= median) && (median <= q3) && (q3 <= whiskerUpper);
 }
 
 inline QwtInterval QwtBoxSample::boundingInterval() const
@@ -465,7 +446,7 @@ inline QwtInterval QwtBoxSample::boxInterval() const
  * @brief Outlier values for a single boxplot position
  * @details Contains all outlier values associated with one box position.
  *          One QwtBoxOutlierSample corresponds to one QwtBoxSample.
- * 
+ *
  */
 class QWTCORE_EXPORT QwtBoxOutlierSample
 {
@@ -474,47 +455,49 @@ public:
      * @brief Default constructor
      */
     QwtBoxOutlierSample(double boxPosition = 0.0);
-    
+
     /**
      * @brief Constructor with position and outlier values
      * @param boxPosition Position matching parent QwtBoxSample
      * @param values All outlier values for this box
      */
-    QwtBoxOutlierSample(double boxPosition, const QVector<double>& values);
-    
+    QwtBoxOutlierSample(double boxPosition, const QVector< double >& values);
+
     /**
      * @brief Constructor with move semantics
      */
-    QwtBoxOutlierSample(double boxPosition, QVector<double>&& values);
-    
+    QwtBoxOutlierSample(double boxPosition, QVector< double >&& values);
+
     //! Check if no outliers present
-    bool isEmpty() const { return values.isEmpty(); }
-    
+    bool isEmpty() const
+    {
+        return values.isEmpty();
+    }
+
     //! Get number of outliers
-    int count() const { return values.size(); }
-    
+    int count() const
+    {
+        return values.size();
+    }
+
     //! Position of the parent box (matches QwtBoxSample.position)
     double boxPosition;
-    
+
     //! All outlier values for this box
-    QVector<double> values;
+    QVector< double > values;
 };
 
-inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos)
-    : boxPosition(pos)
-    , values()
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos) : boxPosition(pos), values()
 {
 }
 
-inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, const QVector<double>& vals)
-    : boxPosition(pos)
-    , values(vals)
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, const QVector< double >& vals)
+    : boxPosition(pos), values(vals)
 {
 }
 
-inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector<double>&& vals)
-    : boxPosition(pos)
-    , values(std::move(vals))
+inline QwtBoxOutlierSample::QwtBoxOutlierSample(double pos, QVector< double >&& vals)
+    : boxPosition(pos), values(std::move(vals))
 {
 }
 

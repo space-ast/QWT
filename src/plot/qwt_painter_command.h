@@ -49,7 +49,7 @@ class QPainterPath;
  */
 class QWT_EXPORT QwtPainterCommand
 {
-  public:
+public:
     //! Type of the paint command
     enum Type
     {
@@ -113,20 +113,17 @@ class QWT_EXPORT QwtPainterCommand
     QwtPainterCommand(const QwtPainterCommand&);
     QwtPainterCommand(QwtPainterCommand&&) noexcept;
 
-    explicit QwtPainterCommand( const QPainterPath& );
+    explicit QwtPainterCommand(const QPainterPath&);
 
-    QwtPainterCommand( const QRectF& rect,
-        const QPixmap&, const QRectF& subRect );
+    QwtPainterCommand(const QRectF& rect, const QPixmap&, const QRectF& subRect);
 
-    QwtPainterCommand( const QRectF& rect,
-        const QImage&, const QRectF& subRect,
-        Qt::ImageConversionFlags );
+    QwtPainterCommand(const QRectF& rect, const QImage&, const QRectF& subRect, Qt::ImageConversionFlags);
 
-    explicit QwtPainterCommand( const QPaintEngineState& );
+    explicit QwtPainterCommand(const QPaintEngineState&);
 
     ~QwtPainterCommand();
 
-    QwtPainterCommand& operator=(const QwtPainterCommand& );
+    QwtPainterCommand& operator=(const QwtPainterCommand&);
     QwtPainterCommand& operator=(QwtPainterCommand&&) noexcept;
 
     Type type() const;
@@ -143,14 +140,13 @@ class QWT_EXPORT QwtPainterCommand
     StateData* stateData();
     const StateData* stateData() const;
 
-  private:
-    void copy( const QwtPainterCommand& );
+private:
+    void copy(const QwtPainterCommand&);
     void reset();
 
     Type m_type;
 
-    union
-    {
+    union {
         QPainterPath* m_path;
         PixmapData* m_pixmapData;
         ImageData* m_imageData;
@@ -171,22 +167,19 @@ inline const QPainterPath* QwtPainterCommand::path() const
 }
 
 //! @return Attributes how to paint a QPixmap
-inline const QwtPainterCommand::PixmapData*
-QwtPainterCommand::pixmapData() const
+inline const QwtPainterCommand::PixmapData* QwtPainterCommand::pixmapData() const
 {
     return m_pixmapData;
 }
 
 //! @return Attributes how to paint a QImage
-inline const QwtPainterCommand::ImageData*
-QwtPainterCommand::imageData() const
+inline const QwtPainterCommand::ImageData* QwtPainterCommand::imageData() const
 {
     return m_imageData;
 }
 
 //! @return Attributes of a state change
-inline const QwtPainterCommand::StateData*
-QwtPainterCommand::stateData() const
+inline const QwtPainterCommand::StateData* QwtPainterCommand::stateData() const
 {
     return m_stateData;
 }

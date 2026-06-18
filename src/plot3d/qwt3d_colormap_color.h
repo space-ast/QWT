@@ -16,7 +16,8 @@
 class QwtColorMap;
 class QString;
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 class Plot3D;
 
@@ -27,13 +28,9 @@ class Plot3D;
 class QWT3D_EXPORT ColorMapColor : public Color
 {
 public:
-    explicit ColorMapColor(Plot3D* plot,
-                           const QString& presetName = QString("viridis"),
-                           unsigned size = 256);
+    explicit ColorMapColor(Plot3D* plot, const QString& presetName = QString("viridis"), unsigned size = 256);
 
-    ColorMapColor(Plot3D* plot,
-                  ::QwtColorMap* colorMap,
-                  unsigned size = 256);
+    ColorMapColor(Plot3D* plot, ::QwtColorMap* colorMap, unsigned size = 256);
 
     ~ColorMapColor() override;
 
@@ -59,6 +56,6 @@ private:
     double m_alpha;
 };
 
-} // namespace Qwt3D
+}  // namespace Qwt3D
 
 #endif

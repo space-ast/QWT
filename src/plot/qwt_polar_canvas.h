@@ -26,7 +26,7 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
 {
     Q_OBJECT
 
-  public:
+public:
     /**
      * @brief Paint attributes
      * @details The default setting enables BackingStore
@@ -42,10 +42,10 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
         BackingStore = 0x01
     };
 
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     /// Constructor
-    explicit QwtPolarCanvas( QwtPolarPlot* );
+    explicit QwtPolarCanvas(QwtPolarPlot*);
     /// Destructor
     ~QwtPolarCanvas() override;
 
@@ -55,9 +55,9 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
     const QwtPolarPlot* plot() const;
 
     /// Set a paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
+    void setPaintAttribute(PaintAttribute, bool on = true);
     /// Test a paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    bool testPaintAttribute(PaintAttribute) const;
 
     /// Get the backing store
     const QPixmap* backingStore() const;
@@ -65,20 +65,20 @@ class QWT_EXPORT QwtPolarCanvas : public QFrame
     void invalidateBackingStore();
 
     /// Inverse transform from widget coordinates to polar coordinates
-    QwtPointPolar invTransform( const QPoint& ) const;
+    QwtPointPolar invTransform(const QPoint&) const;
     /// Transform from polar coordinates to widget coordinates
-    QPoint transform( const QwtPointPolar& ) const;
+    QPoint transform(const QwtPointPolar&) const;
 
-  protected:
+protected:
     /// Handle paint events
-    virtual void paintEvent( QPaintEvent* ) override;
+    virtual void paintEvent(QPaintEvent*) override;
     /// Handle resize events
-    virtual void resizeEvent( QResizeEvent* ) override;
+    virtual void resizeEvent(QResizeEvent*) override;
 
-  private:
+private:
     QWT_DECLARE_PRIVATE(QwtPolarCanvas)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarCanvas::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarCanvas::PaintAttributes)
 
 #endif

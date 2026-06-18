@@ -434,11 +434,7 @@ void QwtAbstractScale::scaleChange()
 void QwtAbstractScale::rescale(double lowerBound, double upperBound, double stepSize)
 {
     QWT_D(d);
-    const QwtScaleDiv scaleDiv = d->scaleEngine->divideScale(lowerBound,
-                                                                  upperBound,
-                                                                  d->maxMajor,
-                                                                  d->maxMinor,
-                                                                  stepSize);
+    const QwtScaleDiv scaleDiv = d->scaleEngine->divideScale(lowerBound, upperBound, d->maxMajor, d->maxMinor, stepSize);
 
     if (scaleDiv != d->scaleDraw->scaleDiv()) {
 #if 1

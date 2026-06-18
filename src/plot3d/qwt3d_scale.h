@@ -6,7 +6,8 @@
 #include "qwt3d_types.h"
 #include "qwt3d_autoptr.h"
 
-namespace Qwt3D {
+namespace Qwt3D
+{
 
 /**
  * @brief Non-visual scale class encapsulating tic generation
@@ -20,7 +21,7 @@ namespace Qwt3D {
 class QWT3D_EXPORT Scale
 {
     friend class Axis;
-    friend class ClonePtr<Scale>;
+    friend class ClonePtr< Scale >;
 
 protected:
     QWT_DECLARE_PRIVATE(Scale)
@@ -42,15 +43,15 @@ protected:
     int minors() const;
 
     // Derived classes should return a new heap based object here
-    virtual Scale *clone() const = 0;
+    virtual Scale* clone() const = 0;
     // This function should setup the 2 vectors for major and minor positions
     virtual void calculate() = 0;
-    virtual int autoscale(double &a, double &b, double start, double stop, int ivals);
+    virtual int autoscale(double& a, double& b, double start, double stop, int ivals);
 
     // Returns const reference to major tic positions
-    const std::vector<double>& majorTicks() const;
+    const std::vector< double >& majorTicks() const;
     // Returns const reference to minor tic positions
-    const std::vector<double>& minorTicks() const;
+    const std::vector< double >& minorTicks() const;
 
     // Copies Scale base state from another Scale (used by derived clone())
     void copyFrom(const Scale& other);
@@ -65,16 +66,16 @@ private:
 class QWT3D_EXPORT LinearScale : public Scale
 {
     friend class Axis;
-    friend class ClonePtr<Scale>;
+    friend class ClonePtr< Scale >;
 
 protected:
     QWT_DECLARE_PRIVATE(LinearScale)
 
     LinearScale();
     ~LinearScale() override;
-    int autoscale(double &a, double &b, double start, double stop, int ivals) override;
+    int autoscale(double& a, double& b, double start, double stop, int ivals) override;
     // Returns a new heap based object utilized from ClonePtr
-    Scale *clone() const override;
+    Scale* clone() const override;
     void calculate() override;
 };
 
@@ -84,7 +85,7 @@ protected:
 class QWT3D_EXPORT LogScale : public Scale
 {
     friend class Axis;
-    friend class ClonePtr<Scale>;
+    friend class ClonePtr< Scale >;
 
 protected:
     QString ticLabel(unsigned int idx) const override;
@@ -93,13 +94,13 @@ protected:
     LogScale();
     ~LogScale() override;
     // Returns a new heap based object utilized from ClonePtr
-    Scale *clone() const override;
+    Scale* clone() const override;
     void calculate() override;
 
 private:
-    void setupCounter(double &k, int &step);
+    void setupCounter(double& k, int& step);
 };
 
-} // namespace Qwt3D
+}  // namespace Qwt3D
 
-#endif // QWT3D_SCALE_H
+#endif  // QWT3D_SCALE_H

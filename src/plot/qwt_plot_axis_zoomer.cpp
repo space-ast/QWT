@@ -91,8 +91,7 @@ class QwtPlotAxisZoomer::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotAxisZoomer)
 public:
-    PrivateData(QwtPlotAxisZoomer* p)
-        : q_ptr(p)
+    PrivateData(QwtPlotAxisZoomer* p) : q_ptr(p)
     {
     }
 
@@ -108,7 +107,7 @@ public:
  *          canvas that are enabled. If both or no x-axis are enabled, the picker
  *          is set to QwtAxis::XBottom. If both or no y-axis are
  *          enabled, it is set to QwtAxis::YLeft.
- * 
+ *
  *          The zoomer is initialized with a QwtPickerDragRectMachine,
  *          the tracker mode is set to QwtPicker::ActiveOnly and the rubber band
  *          is set to QwtPicker::RectRubberBand.
@@ -117,7 +116,7 @@ public:
  *                     the zoomer with its scales. This might be necessary,
  *                     when the plot is in a state with pending scale changes.
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * 
+ *
  */
 QwtPlotAxisZoomer::QwtPlotAxisZoomer(QWidget* canvas, bool doReplot) : QwtPlotPicker(canvas)
 {
@@ -137,7 +136,7 @@ QwtPlotAxisZoomer::QwtPlotAxisZoomer(QWidget* canvas, bool doReplot) : QwtPlotPi
  *                     the zoomer with its scales. This might be necessary,
  *                     when the plot is in a state with pending scale changes.
  * @sa QwtPlot::autoReplot(), QwtPlot::replot(), setZoomBase()
- * 
+ *
  */
 
 QwtPlotAxisZoomer::QwtPlotAxisZoomer(QwtAxisId xAxisId, QwtAxisId yAxisId, QWidget* canvas, bool doReplot)
@@ -177,7 +176,7 @@ QwtPlotAxisZoomer::~QwtPlotAxisZoomer()
  * @sa maxStackDepth()
  * @note depth doesn't include the zoom base, so zoomStack().count() might be
  *       maxStackDepth() + 1.
- * 
+ *
  */
 void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
 {
@@ -202,7 +201,7 @@ void QwtPlotAxisZoomer::setMaxStackDepth(int depth)
  * @brief Returns the maximal depth of the zoom stack.
  * @return Maximal depth of the zoom stack.
  * @sa setMaxStackDepth()
- * 
+ *
  */
 int QwtPlotAxisZoomer::maxStackDepth() const
 {
@@ -215,7 +214,7 @@ int QwtPlotAxisZoomer::maxStackDepth() const
  * @return The zoom stack. zoomStack()[0] is the zoom base,
  *         zoomStack()[1] the first zoomed rectangle.
  * @sa setZoomStack(), zoomRectIndex()
- * 
+ *
  */
 const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
 {
@@ -227,7 +226,7 @@ const QStack< QRectF >& QwtPlotAxisZoomer::zoomStack() const
  * @brief Returns the initial rectangle of the zoomer.
  * @return Initial rectangle of the zoomer.
  * @sa setZoomBase(), zoomRect()
- * 
+ *
  */
 QRectF QwtPlotAxisZoomer::zoomBase() const
 {
@@ -241,7 +240,7 @@ QRectF QwtPlotAxisZoomer::zoomBase() const
  *                      the zoomer with its scales. This might be necessary,
  *                      when the plot is in a state with pending scale changes.
  * @sa zoomBase(), scaleRect(), QwtPlot::autoReplot(), QwtPlot::replot()
- * 
+ *
  */
 void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
 {
@@ -266,7 +265,7 @@ void QwtPlotAxisZoomer::setZoomBase(bool doReplot)
  *          reinitialized with it as zoom base. plot is zoomed to scaleRect().
  * @param[in] base Zoom base rectangle.
  * @sa zoomBase(), scaleRect()
- * 
+ *
  */
 void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
 {
@@ -294,7 +293,7 @@ void QwtPlotAxisZoomer::setZoomBase(const QRectF& base)
  * @brief Returns the rectangle at the current position on the zoom stack.
  * @return Rectangle at the current position on the zoom stack.
  * @sa zoomRectIndex(), scaleRect()
- * 
+ *
  */
 QRectF QwtPlotAxisZoomer::zoomRect() const
 {
@@ -305,7 +304,7 @@ QRectF QwtPlotAxisZoomer::zoomRect() const
 /**
  * @brief Returns the index of current position of zoom stack.
  * @return Index of current position of zoom stack.
- * 
+ *
  */
 uint QwtPlotAxisZoomer::zoomRectIndex() const
 {
@@ -320,7 +319,7 @@ uint QwtPlotAxisZoomer::zoomRectIndex() const
  * @param[in] rect Rectangle to zoom to.
  * @note If the maximal stack depth is reached, zoom is ignored.
  * @note The zoomed signal is emitted.
- * 
+ *
  */
 
 void QwtPlotAxisZoomer::zoom(const QRectF& rect)
@@ -353,7 +352,7 @@ void QwtPlotAxisZoomer::zoom(const QRectF& rect)
  * @param[in] offset Offset relative to the current position of the zoom stack.
  * @note The zoomed signal is emitted.
  * @sa zoomRectIndex()
- * 
+ *
  */
 void QwtPlotAxisZoomer::zoom(int offset)
 {
@@ -384,7 +383,7 @@ void QwtPlotAxisZoomer::zoom(int offset)
  *                          of the stack.
  * @note The zoomed signal might be emitted.
  * @sa zoomStack(), zoomRectIndex()
- * 
+ *
  */
 void QwtPlotAxisZoomer::setZoomStack(const QStack< QRectF >& zoomStack, int zoomRectIndex)
 {
@@ -452,7 +451,7 @@ void QwtPlotAxisZoomer::rescale()
  * @brief Reinitializes the axes, and sets the zoom base to their scales.
  * @param[in] xAxisId X axis.
  * @param[in] yAxisId Y axis.
- * 
+ *
  */
 
 void QwtPlotAxisZoomer::setAxes(QwtAxisId xAxisId, QwtAxisId yAxisId)
@@ -515,7 +514,7 @@ void QwtPlotAxisZoomer::widgetKeyPressEvent(QKeyEvent* ke)
  * @param[in] dx X offset.
  * @param[in] dy Y offset.
  * @note The changed rectangle is limited by the zoom base.
- * 
+ *
  */
 void QwtPlotAxisZoomer::moveBy(double dx, double dy)
 {
@@ -529,7 +528,7 @@ void QwtPlotAxisZoomer::moveBy(double dx, double dy)
  * @param[in] pos New position.
  * @sa QRectF::moveTo()
  * @note The changed rectangle is limited by the zoom base.
- * 
+ *
  */
 void QwtPlotAxisZoomer::moveTo(const QPointF& pos)
 {

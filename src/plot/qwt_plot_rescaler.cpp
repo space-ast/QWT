@@ -50,8 +50,7 @@ class QwtPlotRescaler::PrivateData
     QWT_DECLARE_PUBLIC(QwtPlotRescaler)
 public:
     PrivateData(QwtPlotRescaler* p)
-        : q_ptr(p)
-        , referenceAxis(QwtAxis::XBottom), rescalePolicy(QwtPlotRescaler::Expanding), isEnabled(false), inReplot(0)
+        : q_ptr(p), referenceAxis(QwtAxis::XBottom), rescalePolicy(QwtPlotRescaler::Expanding), isEnabled(false), inReplot(0)
     {
     }
 
@@ -89,7 +88,8 @@ private:
    @sa setRescalePolicy(), setReferenceAxis()
 
  */
-QwtPlotRescaler::QwtPlotRescaler(QWidget* canvas, QwtAxisId referenceAxis, RescalePolicy policy) : QObject(canvas), QWT_PIMPL_CONSTRUCT
+QwtPlotRescaler::QwtPlotRescaler(QWidget* canvas, QwtAxisId referenceAxis, RescalePolicy policy)
+    : QObject(canvas), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     d->referenceAxis = referenceAxis;

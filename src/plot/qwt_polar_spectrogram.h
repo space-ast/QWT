@@ -26,7 +26,7 @@ class QwtColorMap;
  */
 class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
 {
-  public:
+public:
     /**
      * @brief Attributes to modify the drawing algorithm
      * @details The default setting disables ApproximatedAtan
@@ -41,7 +41,7 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
         ApproximatedAtan = 0x01
     };
 
-    Q_DECLARE_FLAGS( PaintAttributes, PaintAttribute )
+    Q_DECLARE_FLAGS(PaintAttributes, PaintAttribute)
 
     /// Constructor
     explicit QwtPolarSpectrogram();
@@ -49,52 +49,54 @@ class QWT_EXPORT QwtPolarSpectrogram : public QwtPolarItem
     ~QwtPolarSpectrogram() override;
 
     /// Set the data
-    void setData( QwtRasterData* data );
+    void setData(QwtRasterData* data);
     /// Get the data
     const QwtRasterData* data() const;
 
     /// Set the color map
-    void setColorMap( QwtColorMap* );
+    void setColorMap(QwtColorMap*);
     /// Get the color map
     const QwtColorMap* colorMap() const;
 
     /// Set a paint attribute
-    void setPaintAttribute( PaintAttribute, bool on = true );
+    void setPaintAttribute(PaintAttribute, bool on = true);
     /// Test a paint attribute
-    bool testPaintAttribute( PaintAttribute ) const;
+    bool testPaintAttribute(PaintAttribute) const;
 
     /// Get the runtime type information
     virtual int rtti() const override;
 
     /// Draw the spectrogram
-    virtual void draw( QPainter* painter,
-        const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
-        const QPointF& pole, double radius,
-        const QRectF& canvasRect ) const override;
+    virtual void draw(QPainter* painter,
+                      const QwtScaleMap& azimuthMap,
+                      const QwtScaleMap& radialMap,
+                      const QPointF& pole,
+                      double radius,
+                      const QRectF& canvasRect) const override;
 
     /// Get the bounding interval for a scale
-    virtual QwtInterval boundingInterval( int scaleId ) const override;
+    virtual QwtInterval boundingInterval(int scaleId) const override;
 
-  protected:
+protected:
     /// Render an image
-    virtual QImage renderImage(
-        const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
-        const QPointF& pole, const QRect& rect ) const;
+    virtual QImage
+    renderImage(const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap, const QPointF& pole, const QRect& rect) const;
 
     /// Render a tile
-    virtual void renderTile(
-        const QwtScaleMap& azimuthMap, const QwtScaleMap& radialMap,
-        const QPointF& pole, const QPoint& imagePos,
-        const QRect& tile, QImage* image ) const;
+    virtual void renderTile(const QwtScaleMap& azimuthMap,
+                            const QwtScaleMap& radialMap,
+                            const QPointF& pole,
+                            const QPoint& imagePos,
+                            const QRect& tile,
+                            QImage* image) const;
 
-  private:
+private:
     class TileInfo;
-    void renderTileInfo( const QwtScaleMap&, const QwtScaleMap&,
-        const QPointF& pole, TileInfo* ) const;
+    void renderTileInfo(const QwtScaleMap&, const QwtScaleMap&, const QPointF& pole, TileInfo*) const;
 
     QWT_DECLARE_PRIVATE(QwtPolarSpectrogram)
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( QwtPolarSpectrogram::PaintAttributes )
+Q_DECLARE_OPERATORS_FOR_FLAGS(QwtPolarSpectrogram::PaintAttributes)
 
 #endif

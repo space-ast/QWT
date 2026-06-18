@@ -36,35 +36,33 @@
 
 class QwtRasterData::ContourPlane
 {
-  public:
-    explicit inline ContourPlane( double z ):
-        m_z( z )
+public:
+    explicit inline ContourPlane(double z) : m_z(z)
     {
     }
 
-    inline bool intersect( const QwtPoint3D vertex[3],
-        QPointF line[2], bool ignoreOnPlane ) const;
+    inline bool intersect(const QwtPoint3D vertex[ 3 ], QPointF line[ 2 ], bool ignoreOnPlane) const;
 
-    inline double z() const { return m_z; }
+    inline double z() const
+    {
+        return m_z;
+    }
 
-  private:
-    inline int compare( double z ) const;
-    inline QPointF intersection(
-        const QwtPoint3D& p1, const QwtPoint3D& p2 ) const;
+private:
+    inline int compare(double z) const;
+    inline QPointF intersection(const QwtPoint3D& p1, const QwtPoint3D& p2) const;
 
     double m_z;
 };
 
-inline bool QwtRasterData::ContourPlane::intersect(
-    const QwtPoint3D vertex[3], QPointF line[2],
-    bool ignoreOnPlane ) const
+inline bool QwtRasterData::ContourPlane::intersect(const QwtPoint3D vertex[ 3 ], QPointF line[ 2 ], bool ignoreOnPlane) const
 {
     bool found = true;
 
     // Are the vertices below (-1), on (0) or above (1) the plan ?
-    const int eq1 = compare( vertex[0].z() );
-    const int eq2 = compare( vertex[1].z() );
-    const int eq3 = compare( vertex[2].z() );
+    const int eq1 = compare(vertex[ 0 ].z());
+    const int eq2 = compare(vertex[ 1 ].z());
+    const int eq3 = compare(vertex[ 2 ].z());
 
     /*
         (a) All the vertices lie below the contour level.
@@ -79,108 +77,103 @@ inline bool QwtRasterData::ContourPlane::intersect(
         (j) All the vertices lie above the contour level.
      */
 
-    static const int tab[3][3][3] =
-    {
-        // jump table to avoid nested case statements
-        { { 0, 0, 8 }, { 0, 2, 5 }, { 7, 6, 9 } },
-        { { 0, 3, 4 }, { 1, 10, 1 }, { 4, 3, 0 } },
-        { { 9, 6, 7 }, { 5, 2, 0 }, { 8, 0, 0 } }
+    static const int tab[ 3 ][ 3 ][ 3 ] = { // jump table to avoid nested case statements
+                                            { { 0, 0, 8 }, { 0, 2, 5 }, { 7, 6, 9 } },
+                                            { { 0, 3, 4 }, { 1, 10, 1 }, { 4, 3, 0 } },
+                                            { { 9, 6, 7 }, { 5, 2, 0 }, { 8, 0, 0 } }
     };
 
-    const int edgeType = tab[eq1 + 1][eq2 + 1][eq3 + 1];
-    switch ( edgeType )
-    {
-        case 1:
-            // d(0,0,-1), h(0,0,1)
-            line[0] = vertex[0].toPoint();
-            line[1] = vertex[1].toPoint();
-            break;
-        case 2:
-            // d(-1,0,0), h(1,0,0)
-            line[0] = vertex[1].toPoint();
-            line[1] = vertex[2].toPoint();
-            break;
-        case 3:
-            // d(0,-1,0), h(0,1,0)
-            line[0] = vertex[2].toPoint();
-            line[1] = vertex[0].toPoint();
-            break;
-        case 4:
-            // e(0,-1,1), e(0,1,-1)
-            line[0] = vertex[0].toPoint();
-            line[1] = intersection( vertex[1], vertex[2] );
-            break;
-        case 5:
-            // e(-1,0,1), e(1,0,-1)
-            line[0] = vertex[1].toPoint();
-            line[1] = intersection( vertex[2], vertex[0] );
-            break;
-        case 6:
-            // e(-1,1,0), e(1,0,-1)
-            line[0] = vertex[2].toPoint();
-            line[1] = intersection( vertex[0], vertex[1] );
-            break;
-        case 7:
-            // c(-1,1,-1), f(1,1,-1)
-            line[0] = intersection( vertex[0], vertex[1] );
-            line[1] = intersection( vertex[1], vertex[2] );
-            break;
-        case 8:
-            // c(-1,-1,1), f(1,1,-1)
-            line[0] = intersection( vertex[1], vertex[2] );
-            line[1] = intersection( vertex[2], vertex[0] );
-            break;
-        case 9:
-            // f(-1,1,1), c(1,-1,-1)
-            line[0] = intersection( vertex[2], vertex[0] );
-            line[1] = intersection( vertex[0], vertex[1] );
-            break;
-        case 10:
-            // g(0,0,0)
-            // The CONREC algorithm has no satisfying solution for
-            // what to do, when all vertices are on the plane.
+    const int edgeType = tab[ eq1 + 1 ][ eq2 + 1 ][ eq3 + 1 ];
+    switch (edgeType) {
+    case 1:
+        // d(0,0,-1), h(0,0,1)
+        line[ 0 ] = vertex[ 0 ].toPoint();
+        line[ 1 ] = vertex[ 1 ].toPoint();
+        break;
+    case 2:
+        // d(-1,0,0), h(1,0,0)
+        line[ 0 ] = vertex[ 1 ].toPoint();
+        line[ 1 ] = vertex[ 2 ].toPoint();
+        break;
+    case 3:
+        // d(0,-1,0), h(0,1,0)
+        line[ 0 ] = vertex[ 2 ].toPoint();
+        line[ 1 ] = vertex[ 0 ].toPoint();
+        break;
+    case 4:
+        // e(0,-1,1), e(0,1,-1)
+        line[ 0 ] = vertex[ 0 ].toPoint();
+        line[ 1 ] = intersection(vertex[ 1 ], vertex[ 2 ]);
+        break;
+    case 5:
+        // e(-1,0,1), e(1,0,-1)
+        line[ 0 ] = vertex[ 1 ].toPoint();
+        line[ 1 ] = intersection(vertex[ 2 ], vertex[ 0 ]);
+        break;
+    case 6:
+        // e(-1,1,0), e(1,0,-1)
+        line[ 0 ] = vertex[ 2 ].toPoint();
+        line[ 1 ] = intersection(vertex[ 0 ], vertex[ 1 ]);
+        break;
+    case 7:
+        // c(-1,1,-1), f(1,1,-1)
+        line[ 0 ] = intersection(vertex[ 0 ], vertex[ 1 ]);
+        line[ 1 ] = intersection(vertex[ 1 ], vertex[ 2 ]);
+        break;
+    case 8:
+        // c(-1,-1,1), f(1,1,-1)
+        line[ 0 ] = intersection(vertex[ 1 ], vertex[ 2 ]);
+        line[ 1 ] = intersection(vertex[ 2 ], vertex[ 0 ]);
+        break;
+    case 9:
+        // f(-1,1,1), c(1,-1,-1)
+        line[ 0 ] = intersection(vertex[ 2 ], vertex[ 0 ]);
+        line[ 1 ] = intersection(vertex[ 0 ], vertex[ 1 ]);
+        break;
+    case 10:
+        // g(0,0,0)
+        // The CONREC algorithm has no satisfying solution for
+        // what to do, when all vertices are on the plane.
 
-            if ( ignoreOnPlane )
-                found = false;
-            else
-            {
-                line[0] = vertex[2].toPoint();
-                line[1] = vertex[0].toPoint();
-            }
-            break;
-        default:
+        if (ignoreOnPlane)
             found = false;
+        else {
+            line[ 0 ] = vertex[ 2 ].toPoint();
+            line[ 1 ] = vertex[ 0 ].toPoint();
+        }
+        break;
+    default:
+        found = false;
     }
 
     return found;
 }
 
-inline int QwtRasterData::ContourPlane::compare( double z ) const
+inline int QwtRasterData::ContourPlane::compare(double z) const
 {
-    if ( z > m_z )
+    if (z > m_z)
         return 1;
 
-    if ( z < m_z )
+    if (z < m_z)
         return -1;
 
     return 0;
 }
 
-inline QPointF QwtRasterData::ContourPlane::intersection(
-    const QwtPoint3D& p1, const QwtPoint3D& p2 ) const
+inline QPointF QwtRasterData::ContourPlane::intersection(const QwtPoint3D& p1, const QwtPoint3D& p2) const
 {
     const double h1 = p1.z() - m_z;
     const double h2 = p2.z() - m_z;
 
-    const double x = ( h2 * p1.x() - h1 * p2.x() ) / ( h2 - h1 );
-    const double y = ( h2 * p1.y() - h1 * p2.y() ) / ( h2 - h1 );
+    const double x = (h2 * p1.x() - h1 * p2.x()) / (h2 - h1);
+    const double y = (h2 * p1.y() - h1 * p2.y()) / (h2 - h1);
 
-    return QPointF( x, y );
+    return QPointF(x, y);
 }
 
 class QwtRasterData::PrivateData
 {
-  public:
+public:
     QWT_DECLARE_PUBLIC(QwtRasterData)
 
     PrivateData(QwtRasterData* p) : q_ptr(p)
@@ -211,10 +204,10 @@ QwtRasterData::~QwtRasterData()
  * @param[in] on On/Off state
  * @sa Attribute, testAttribute()
  */
-void QwtRasterData::setAttribute( Attribute attribute, bool on )
+void QwtRasterData::setAttribute(Attribute attribute, bool on)
 {
     QWT_D(d);
-    if ( on )
+    if (on)
         d->attributes |= attribute;
     else
         d->attributes &= ~attribute;
@@ -226,7 +219,7 @@ void QwtRasterData::setAttribute( Attribute attribute, bool on )
  * @return True when attribute is enabled
  * @sa Attribute, setAttribute()
  */
-bool QwtRasterData::testAttribute( Attribute attribute ) const
+bool QwtRasterData::testAttribute(Attribute attribute) const
 {
     QWT_DC(d);
     return d->attributes & attribute;
@@ -244,10 +237,10 @@ bool QwtRasterData::testAttribute( Attribute attribute ) const
  * @param[in] raster Number of horizontal and vertical pixels
  * @sa discardRaster(), value()
  */
-void QwtRasterData::initRaster( const QRectF& area, const QSize& raster )
+void QwtRasterData::initRaster(const QRectF& area, const QSize& raster)
 {
-    Q_UNUSED( area );
-    Q_UNUSED( raster );
+    Q_UNUSED(area);
+    Q_UNUSED(raster);
 }
 
 /**
@@ -285,9 +278,9 @@ void QwtRasterData::discardRaster()
  *                 depend on the requested area.
  * @return Bounding rectangle of a pixel
  */
-QRectF QwtRasterData::pixelHint( const QRectF& area ) const
+QRectF QwtRasterData::pixelHint(const QRectF& area) const
 {
-    Q_UNUSED( area );
+    Q_UNUSED(area);
     return QRectF();
 }
 
@@ -301,31 +294,28 @@ QRectF QwtRasterData::pixelHint( const QRectF& area ) const
  * @param[in] flags Flags to customize the contouring algorithm
  * @return Calculated contour lines
  */
-QwtRasterData::ContourLines QwtRasterData::contourLines(
-    const QRectF& rect, const QSize& raster,
-    const QList< double >& levels, ConrecFlags flags ) const
+QwtRasterData::ContourLines
+QwtRasterData::contourLines(const QRectF& rect, const QSize& raster, const QList< double >& levels, ConrecFlags flags) const
 {
     ContourLines contourLines;
 
-    if ( levels.size() == 0 || !rect.isValid() || !raster.isValid() )
+    if (levels.size() == 0 || !rect.isValid() || !raster.isValid())
         return contourLines;
 
     const double dx = rect.width() / raster.width();
     const double dy = rect.height() / raster.height();
 
-    const bool ignoreOnPlane =
-        flags & QwtRasterData::IgnoreAllVerticesOnLevel;
+    const bool ignoreOnPlane = flags & QwtRasterData::IgnoreAllVerticesOnLevel;
 
-    const QwtInterval range = interval( Qt::ZAxis );
-    bool ignoreOutOfRange = false;
-    if ( range.isValid() )
+    const QwtInterval range = interval(Qt::ZAxis);
+    bool ignoreOutOfRange   = false;
+    if (range.isValid())
         ignoreOutOfRange = flags & IgnoreOutOfRange;
 
-    QwtRasterData* that = const_cast< QwtRasterData* >( this );
-    that->initRaster( rect, raster );
+    QwtRasterData* that = const_cast< QwtRasterData* >(this);
+    that->initRaster(rect, raster);
 
-    for ( int y = 0; y < raster.height() - 1; y++ )
-    {
+    for (int y = 0; y < raster.height() - 1; y++) {
         enum Position
         {
             Center,
@@ -338,103 +328,84 @@ QwtRasterData::ContourLines QwtRasterData::contourLines(
             NumPositions
         };
 
-        QwtPoint3D xy[NumPositions];
+        QwtPoint3D xy[ NumPositions ];
 
-        for ( int x = 0; x < raster.width() - 1; x++ )
-        {
-            const QPointF pos( rect.x() + x * dx, rect.y() + y * dy );
+        for (int x = 0; x < raster.width() - 1; x++) {
+            const QPointF pos(rect.x() + x * dx, rect.y() + y * dy);
 
-            if ( x == 0 )
-            {
-                xy[TopRight].setX( pos.x() );
-                xy[TopRight].setY( pos.y() );
-                xy[TopRight].setZ(
-                    value( xy[TopRight].x(), xy[TopRight].y() )
-                    );
+            if (x == 0) {
+                xy[ TopRight ].setX(pos.x());
+                xy[ TopRight ].setY(pos.y());
+                xy[ TopRight ].setZ(value(xy[ TopRight ].x(), xy[ TopRight ].y()));
 
-                xy[BottomRight].setX( pos.x() );
-                xy[BottomRight].setY( pos.y() + dy );
-                xy[BottomRight].setZ(
-                    value( xy[BottomRight].x(), xy[BottomRight].y() )
-                    );
+                xy[ BottomRight ].setX(pos.x());
+                xy[ BottomRight ].setY(pos.y() + dy);
+                xy[ BottomRight ].setZ(value(xy[ BottomRight ].x(), xy[ BottomRight ].y()));
             }
 
-            xy[TopLeft] = xy[TopRight];
-            xy[BottomLeft] = xy[BottomRight];
+            xy[ TopLeft ]    = xy[ TopRight ];
+            xy[ BottomLeft ] = xy[ BottomRight ];
 
-            xy[TopRight].setX( pos.x() + dx );
-            xy[TopRight].setY( pos.y() );
-            xy[BottomRight].setX( pos.x() + dx );
-            xy[BottomRight].setY( pos.y() + dy );
+            xy[ TopRight ].setX(pos.x() + dx);
+            xy[ TopRight ].setY(pos.y());
+            xy[ BottomRight ].setX(pos.x() + dx);
+            xy[ BottomRight ].setY(pos.y() + dy);
 
-            xy[TopRight].setZ(
-                value( xy[TopRight].x(), xy[TopRight].y() )
-                );
-            xy[BottomRight].setZ(
-                value( xy[BottomRight].x(), xy[BottomRight].y() )
-                );
+            xy[ TopRight ].setZ(value(xy[ TopRight ].x(), xy[ TopRight ].y()));
+            xy[ BottomRight ].setZ(value(xy[ BottomRight ].x(), xy[ BottomRight ].y()));
 
-            double zMin = xy[TopLeft].z();
+            double zMin = xy[ TopLeft ].z();
             double zMax = zMin;
             double zSum = zMin;
 
-            for ( int i = TopRight; i <= BottomLeft; i++ )
-            {
-                const double z = xy[i].z();
+            for (int i = TopRight; i <= BottomLeft; i++) {
+                const double z = xy[ i ].z();
 
                 zSum += z;
-                if ( z < zMin )
+                if (z < zMin)
                     zMin = z;
-                if ( z > zMax )
+                if (z > zMax)
                     zMax = z;
             }
 
-            if ( qIsNaN( zSum ) )
-            {
+            if (qIsNaN(zSum)) {
                 // one of the points is NaN
                 continue;
             }
 
-            if ( ignoreOutOfRange )
-            {
-                if ( !range.contains( zMin ) || !range.contains( zMax ) )
+            if (ignoreOutOfRange) {
+                if (!range.contains(zMin) || !range.contains(zMax))
                     continue;
             }
 
-            if ( zMax < levels[0] ||
-                zMin > levels[levels.size() - 1] )
-            {
+            if (zMax < levels[ 0 ] || zMin > levels[ levels.size() - 1 ]) {
                 continue;
             }
 
-            xy[Center].setX( pos.x() + 0.5 * dx );
-            xy[Center].setY( pos.y() + 0.5 * dy );
-            xy[Center].setZ( 0.25 * zSum );
+            xy[ Center ].setX(pos.x() + 0.5 * dx);
+            xy[ Center ].setY(pos.y() + 0.5 * dy);
+            xy[ Center ].setZ(0.25 * zSum);
 
             const int numLevels = levels.size();
-            for ( int l = 0; l < numLevels; l++ )
-            {
-                const double level = levels[l];
-                if ( level < zMin || level > zMax )
+            for (int l = 0; l < numLevels; l++) {
+                const double level = levels[ l ];
+                if (level < zMin || level > zMax)
                     continue;
-                QPolygonF& lines = contourLines[level];
-                const ContourPlane plane( level );
+                QPolygonF& lines = contourLines[ level ];
+                const ContourPlane plane(level);
 
-                QPointF line[2];
-                QwtPoint3D vertex[3];
+                QPointF line[ 2 ];
+                QwtPoint3D vertex[ 3 ];
 
-                for ( int m = TopLeft; m < NumPositions; m++ )
-                {
-                    vertex[0] = xy[m];
-                    vertex[1] = xy[0];
-                    vertex[2] = xy[m != BottomLeft ? m + 1 : TopLeft];
+                for (int m = TopLeft; m < NumPositions; m++) {
+                    vertex[ 0 ] = xy[ m ];
+                    vertex[ 1 ] = xy[ 0 ];
+                    vertex[ 2 ] = xy[ m != BottomLeft ? m + 1 : TopLeft ];
 
-                    const bool intersects =
-                        plane.intersect( vertex, line, ignoreOnPlane );
-                    if ( intersects )
-                    {
-                        lines += line[0];
-                        lines += line[1];
+                    const bool intersects = plane.intersect(vertex, line, ignoreOnPlane);
+                    if (intersects) {
+                        lines += line[ 0 ];
+                        lines += line[ 1 ];
                     }
                 }
             }

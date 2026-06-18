@@ -23,7 +23,7 @@ QwtPlotSeriesDataPickerGroup::PrivateData::PrivateData(QwtPlotSeriesDataPickerGr
  * @brief Constructor
  * @param[in] par Parent object
  */
-QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObject(par),QWT_PIMPL_CONSTRUCT
+QwtPlotSeriesDataPickerGroup::QwtPlotSeriesDataPickerGroup(QObject* par) : QObject(par), QWT_PIMPL_CONSTRUCT
 {
 }
 

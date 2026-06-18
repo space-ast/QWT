@@ -3,7 +3,8 @@
 
 using namespace Qwt3D;
 
-namespace {
+namespace
+{
 bool deviceFonts = false;
 }
 
@@ -41,8 +42,7 @@ public:
 /**
  * @brief Default constructor
  */
-Label::Label()
-    : QWT_PIMPL_CONSTRUCT
+Label::Label() : QWT_PIMPL_CONSTRUCT
 {
     init();
 }
@@ -54,8 +54,7 @@ Label::Label()
  * @param weight Font weight
  * @param italic Whether font is italic
  */
-Label::Label(const QString& family, int pointSize, int weight, bool italic)
-    : QWT_PIMPL_CONSTRUCT
+Label::Label(const QString& family, int pointSize, int weight, bool italic) : QWT_PIMPL_CONSTRUCT
 {
     init(family, pointSize, weight, italic);
 }
@@ -68,32 +67,28 @@ Label::~Label() = default;
 /**
  * @brief Copy constructor
  */
-Label::Label(const Label& other)
-    : Drawable()
-    , QWT_PIMPL_CONSTRUCT
+Label::Label(const Label& other) : Drawable(), QWT_PIMPL_CONSTRUCT
 {
     QWT_D(d);
     const PrivateData* od = other.d_func();
-    d->m_beg = od->m_beg;
-    d->m_end = od->m_end;
-    d->m_pos = od->m_pos;
-    d->m_pm = od->m_pm;
-    d->m_buf = od->m_buf;
-    d->m_tex = od->m_tex;
-    d->m_font = od->m_font;
-    d->m_text = od->m_text;
-    d->m_anchor = od->m_anchor;
-    d->m_gap = od->m_gap;
-    d->m_flagForUpdate = od->m_flagForUpdate;
-    color = other.color;
+    d->m_beg              = od->m_beg;
+    d->m_end              = od->m_end;
+    d->m_pos              = od->m_pos;
+    d->m_pm               = od->m_pm;
+    d->m_buf              = od->m_buf;
+    d->m_tex              = od->m_tex;
+    d->m_font             = od->m_font;
+    d->m_text             = od->m_text;
+    d->m_anchor           = od->m_anchor;
+    d->m_gap              = od->m_gap;
+    d->m_flagForUpdate    = od->m_flagForUpdate;
+    color                 = other.color;
 }
 
 /**
  * @brief Move constructor
  */
-Label::Label(Label&& other) noexcept
-    : Drawable(std::move(other))
-    , m_data(std::move(other.m_data))
+Label::Label(Label&& other) noexcept : Drawable(std::move(other)), m_data(std::move(other.m_data))
 {
 }
 
@@ -105,18 +100,18 @@ Label& Label::operator=(const Label& other)
     if (this != &other) {
         QWT_D(d);
         const PrivateData* od = other.d_func();
-        d->m_beg = od->m_beg;
-        d->m_end = od->m_end;
-        d->m_pos = od->m_pos;
-        d->m_pm = od->m_pm;
-        d->m_buf = od->m_buf;
-        d->m_tex = od->m_tex;
-        d->m_font = od->m_font;
-        d->m_text = od->m_text;
-        d->m_anchor = od->m_anchor;
-        d->m_gap = od->m_gap;
-        d->m_flagForUpdate = od->m_flagForUpdate;
-        color = other.color;
+        d->m_beg              = od->m_beg;
+        d->m_end              = od->m_end;
+        d->m_pos              = od->m_pos;
+        d->m_pm               = od->m_pm;
+        d->m_buf              = od->m_buf;
+        d->m_tex              = od->m_tex;
+        d->m_font             = od->m_font;
+        d->m_text             = od->m_text;
+        d->m_anchor           = od->m_anchor;
+        d->m_gap              = od->m_gap;
+        d->m_flagForUpdate    = od->m_flagForUpdate;
+        color                 = other.color;
     }
     return *this;
 }
@@ -147,10 +142,10 @@ void Label::init()
     d->m_end = d->m_beg;
     d->m_pos = d->m_beg;
     setColor(0, 0, 0);
-    d->m_pm = QPixmap(0, 0);
-    d->m_font = QFont();
-    d->m_anchor = BottomLeft;
-    d->m_gap = 0;
+    d->m_pm            = QPixmap(0, 0);
+    d->m_font          = QFont();
+    d->m_anchor        = BottomLeft;
+    d->m_gap           = 0;
     d->m_flagForUpdate = true;
 }
 
@@ -173,7 +168,7 @@ void Label::useDeviceFonts(bool val)
 void Label::setFont(const QString& family, int pointSize, int weight, bool italic)
 {
     QWT_D(d);
-    d->m_font = QFont(family, pointSize, weight, italic);
+    d->m_font          = QFont(family, pointSize, weight, italic);
     d->m_flagForUpdate = true;
 }
 
@@ -184,7 +179,7 @@ void Label::setFont(const QString& family, int pointSize, int weight, bool itali
 void Label::setString(QString const& s)
 {
     QWT_D(d);
-    d->m_text = s;
+    d->m_text          = s;
     d->m_flagForUpdate = true;
 }
 
@@ -227,7 +222,7 @@ void Label::setPosition(Triple pos, ANCHOR a)
 {
     QWT_D(d);
     d->m_anchor = a;
-    d->m_pos = pos;
+    d->m_pos    = pos;
 }
 
 /**
@@ -253,18 +248,15 @@ void Label::update()
 
     QFontInfo info(d->m_font);
 
-    QRect r = QRect(
-            QPoint(0, 0),
-            fm.size(Qwt3D::SingleLine, d->m_text)); // fm.boundingRect(text_)  misbehaviour under linux;
+    QRect r = QRect(QPoint(0, 0), fm.size(Qwt3D::SingleLine, d->m_text));  // fm.boundingRect(text_)  misbehaviour under linux;
 
     r.translate(0, -r.top());
 
     d->m_pm = QPixmap(r.width(), r.bottom());
 
-    if (d->m_pm.isNull()) // else crash under linux
+    if (d->m_pm.isNull())  // else crash under linux
     {
-        r = QRect(QPoint(0, 0),
-                  fm.size(Qwt3D::SingleLine, QString(" "))); // draw empty space else //todo
+        r = QRect(QPoint(0, 0), fm.size(Qwt3D::SingleLine, QString(" ")));  // draw empty space else //todo
         r.translate(0, -r.top());
         d->m_pm = QPixmap(r.width(), r.bottom());
     }
@@ -340,7 +332,7 @@ void Label::convert2screen()
     default:
         break;
     }
-    start = World2ViewPort(d->m_beg);
+    start    = World2ViewPort(d->m_beg);
     d->m_end = ViewPort2World(start + Triple(width(), height(), 0));
 }
 
@@ -375,8 +367,7 @@ void Label::draw()
     int h = d->m_tex.height();
 
     if (deviceFonts) {
-        drawDeviceText(QWT3DLOCAL8BIT(d->m_text), "Courier", d->m_font.pointSize(), d->m_pos,
-                       color, d->m_anchor, d->m_gap);
+        drawDeviceText(QWT3DLOCAL8BIT(d->m_text), "Courier", d->m_font.pointSize(), d->m_pos, color, d->m_anchor, d->m_gap);
     } else {
         drawDevicePixels(w, h, GL_RGBA, GL_UNSIGNED_BYTE, d->m_tex.bits());
     }
