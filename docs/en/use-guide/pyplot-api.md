@@ -471,3 +471,7 @@ int main(int argc, char* argv[])
 
 !!! example "Related Examples"
     A complete example is located in `examples/2D/pyplot/`, containing 8 tabs demonstrating various QwtPyPlot features.
+
+Screenshot of the PyPlot example:
+
+![PyPlot](../../assets/screenshots/pyplot.png)

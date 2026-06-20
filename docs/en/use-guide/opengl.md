@@ -102,3 +102,9 @@ plot->setCanvas(canvas);
 !!! example "Related examples"
     - `examples/realtime` — real-time plotting with high data throughput
     - `examples/oscilloscope` — oscilloscope-style waveform display
+
+Screenshots of real-time plotting and oscilloscope:
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![Oscilloscope](../../assets/screenshots/oscilloscope.png)

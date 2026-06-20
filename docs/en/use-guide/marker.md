@@ -272,3 +272,7 @@ Label alignment relative to the marker point is controlled by `Qt::AlignmentFlag
 !!! example "Related Examples"
     - Curve peak annotation: `examples/2D/bode`
     - Curve tracker: `playground/curvetracker`
+
+Screenshot of the curve peak annotation:
+
+![Bode Plot](../../assets/screenshots/bode.png)

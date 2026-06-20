@@ -74,19 +74,19 @@ There are only a handful of plotting libraries in the Qt ecosystem. The mainstre
   `examples/figure`
 
 - ![Simple Plot](../assets/screenshots/simpleplot.png)
-  `examples/simpleplot`
+  `examples/2D/simpleplot`
 
 - ![Bar Chart](../assets/screenshots/BarChart-grouped.png)
-  `examples/barchart`
+  `examples/2D/barchart`
 
 - ![Scatter Plot](../assets/screenshots/scatterplot.png)
-  `examples/scatterplot`
+  `examples/2D/scatterplot`
 
 - ![Curve Demo](../assets/screenshots/curvedemo.png)
-  `examples/curvedemo`
+  `examples/2D/curvedemo`
 
 - ![Box Chart](../assets/screenshots/BoxChart.png)
-  `examples/boxchart`
+  `examples/2D/boxchart`
 
 </div>
 
@@ -95,13 +95,22 @@ There are only a handful of plotting libraries in the Qt ecosystem. The mainstre
 <div class="grid cards" markdown>
 
 - ![CPU Monitor](../assets/screenshots/cpuplot.png)
-  `examples/cpuplot`
+  `examples/2D/cpuplot`
 
 - ![Real-Time Plot](../assets/screenshots/realtime.png)
-  `examples/realtime`
+  `examples/2D/realtime`
 
 - ![Oscilloscope](../assets/screenshots/oscilloscope.png)
-  `examples/oscilloscope`
+  `examples/2D/oscilloscope`
+
+- ![Radio](../assets/screenshots/radio.png)
+  `examples/2D/radio`
+
+- ![Sysinfo](../assets/screenshots/sysinfo.png)
+  `examples/2D/sysinfo`
+
+- ![Animated](../assets/screenshots/animated.png)
+  `examples/2D/animation`
 
 </div>
 
@@ -110,22 +119,82 @@ There are only a handful of plotting libraries in the Qt ecosystem. The mainstre
 <div class="grid cards" markdown>
 
 - ![Spectrogram](../assets/screenshots/spectrogram.png)
-  `examples/spectrogram`
+  `examples/2D/spectrogram`
 
 - ![Vector Field](../assets/screenshots/vectorfield.png)
   `playground/vectorfield`
 
 - ![Stock Chart](../assets/screenshots/stockchart.png)
-  `examples/stockchart`
+  `examples/2D/stockchart`
 
 - ![Polar Demo](../assets/screenshots/polardemo.png)
-  `examples/polardemo`
+  `examples/2D/polardemo`
 
 - ![Parasite Plot](../assets/screenshots/parasite-plot.png)
   `examples/parasitePlot`
 
 - ![Bode Plot](../assets/screenshots/bode.png)
-  `examples/bode`
+  `examples/2D/bode`
+
+- ![Shapes](../assets/screenshots/shapes.png)
+  `playground/shapes`
+
+- ![Scale Engine](../assets/screenshots/scaleengine.png)
+  `playground/scaleengine`
+
+- ![PyPlot](../assets/screenshots/pyplot.png)
+  `examples/2D/pyplot`
+
+</div>
+
+### More Examples
+
+<div class="grid cards" markdown>
+
+- ![Distrowatch](../assets/screenshots/distrowatch.png)
+  `examples/2D/distrowatch`
+
+- ![Friedberg Bar](../assets/screenshots/friedberg-bar.png)
+  `examples/2D/friedberg`
+
+- ![Friedberg Tube](../assets/screenshots/friedberg-tube.png)
+  `examples/2D/friedberg`
+
+- ![Item Editor](../assets/screenshots/itemeditor.png)
+  `examples/2D/itemeditor`
+
+- ![Rasterview 1](../assets/screenshots/rasterview-1.png)
+  `examples/2D/rasterview`
+
+- ![Rasterview 2](../assets/screenshots/rasterview-2.png)
+  `examples/2D/rasterview`
+
+- ![Refresh Test](../assets/screenshots/refreshtest.png)
+  `examples/2D/refreshtest`
+
+- ![Spline Editor](../assets/screenshots/splineeditor.png)
+  `examples/2D/splineeditor`
+
+- ![TV Plot](../assets/screenshots/tvplot.png)
+  `examples/2D/tvplot`
+
+- ![Curve Tracker](../assets/screenshots/curvetracker.png)
+  `playground/curvetracker`
+
+- ![Graphic Scale](../assets/screenshots/graphicscale.png)
+  `playground/graphicscale`
+
+- ![Plot Matrix](../assets/screenshots/plotmatrix.png)
+  `playground/plotmatrix`
+
+- ![Rescaler](../assets/screenshots/rescaler.png)
+  `playground/rescaler`
+
+- ![SVG Map](../assets/screenshots/svgmap.png)
+  `playground/svgmap`
+
+- ![Time Scale](../assets/screenshots/timescale.png)
+  `playground/timescale`
 
 </div>
 

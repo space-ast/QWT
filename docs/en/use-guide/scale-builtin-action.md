@@ -20,7 +20,7 @@ Once enabled, the following effects are available:
 
 ### Axis Scroll Wheel Zoom
 
-![qwt-scale-builtin-action-zpom](../../assets/screenshots/qwt-scale-builtin-action-zoom.gif)
+![qwt-scale-builtin-action-zoom](../../assets/screenshots/qwt-scale-builtin-action-zoom.gif)
 
 - Left-click on any axis to select it
 - Scroll the mouse wheel to zoom the selected axis, with the zoom center at the current mouse position

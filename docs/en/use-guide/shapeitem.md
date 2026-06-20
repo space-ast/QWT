@@ -127,3 +127,7 @@ shapeItem->setBrush(QBrush(Qt::yellow, Qt::FDiagPattern));  // Diagonal line fil
 
 !!! example "Related Examples"
     - Shape demo: `playground/shapes`
+
+Screenshot of the shape demo:
+
+![Shapes](../../assets/screenshots/shapes.png)

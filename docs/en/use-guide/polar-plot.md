@@ -230,3 +230,7 @@ struct QwtPointPolar {
 !!! example "Related Examples"
     - Polar demo: `examples/2D/polardemo`
     - Polar spectrogram: `examples/2D/polarspectrogram`
+
+Screenshot of the polar spectrogram:
+
+![Polar Spectrogram](../../assets/screenshots/polarspectrogram.png)

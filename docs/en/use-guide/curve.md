@@ -533,3 +533,11 @@ private:
     - Real-time data: `examples/2D/cpuplot`
     - Real-time plotting: `examples/2D/realtime`
     - Oscilloscope: `examples/2D/oscilloscope`
+
+Screenshots of real-time data, real-time plotting, and oscilloscope:
+
+![CPU Monitor](../../assets/screenshots/cpuplot.png)
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![Oscilloscope](../../assets/screenshots/oscilloscope.png)

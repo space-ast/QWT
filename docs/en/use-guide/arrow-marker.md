@@ -196,3 +196,7 @@ arrow->setLegendIconSize(QSize(32, 16));
 
 !!! example "Related Examples"
     - Arrow annotation demo: `examples/2D/sinusplot`
+
+Screenshot of the arrow annotation:
+
+![Sinusplot](../../assets/screenshots/sinusplot.png)

@@ -20,7 +20,7 @@
 
 ### 坐标轴滚轮缩放操作
 
-![qwt-scale-builtin-action-zpom](../../assets/screenshots/qwt-scale-builtin-action-zoom.gif)
+![qwt-scale-builtin-action-zoom](../../assets/screenshots/qwt-scale-builtin-action-zoom.gif)
 
 - 在任意坐标轴上单击鼠标左键选中该坐标轴
 - 滚动鼠标滚轮可对该坐标轴进行缩放，缩放中心点位于鼠标当前位置

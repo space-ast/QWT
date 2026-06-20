@@ -240,3 +240,11 @@ All widgets inherit from `QwtAbstractSlider` and share the following methods:
 !!! example "Related Examples"
     - Widget demo: `examples/2D/controls`
     - Compass: `examples/2D/dials`
+
+More screenshots of the widget demo:
+
+![Wheel & Thermo Controls](../../assets/screenshots/controls-wheel-thermo.png)
+
+![Dial Cockpit](../../assets/screenshots/dials-cockpit.png)
+
+![Dial Compass](../../assets/screenshots/dials-compass.png)

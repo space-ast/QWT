@@ -471,3 +471,7 @@ int main(int argc, char* argv[])
 
 !!! example "相关示例"
     完整示例位于 `examples/2D/pyplot/` 目录，包含 8 个 Tab 页展示各种 QwtPyPlot 功能。
+
+PyPlot 的例子截图如下：
+
+![PyPlot](../../assets/screenshots/pyplot.png)

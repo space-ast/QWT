@@ -196,3 +196,7 @@ plot->setAxisScaleDiv(QwtAxis::XBottom, scaleDiv);
 
 !!! example "相关示例"
     - 刻度引擎演示：`playground/scaleengine`
+
+刻度引擎演示的例子截图如下：
+
+![Scale Engine](../../assets/screenshots/scaleengine.png)

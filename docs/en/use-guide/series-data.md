@@ -258,3 +258,9 @@ plot->replot();
 !!! example "Related Examples"
     - Real-time data: `examples/2D/realtime`
     - CPU monitor: `examples/2D/cpuplot`
+
+Screenshots of real-time data and CPU monitor:
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![CPU Monitor](../../assets/screenshots/cpuplot.png)

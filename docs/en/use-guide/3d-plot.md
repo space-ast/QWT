@@ -266,3 +266,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
     - Basic 3D plot: `examples/3D/simpleplot3D`
     - 3D axis configuration: `examples/3D/axes`
     - 3D enrichments: `examples/3D/enrichments`
+    - 3D auto switch: `examples/3D/autoswitch`
+    - Dynamic 3D surface (QwtFigure integration): `examples/3D/figureSurface3D`
+
+Screenshots of 3D axis configuration, 3D enrichments, 3D auto switch, and dynamic 3D surface:
+
+![3D Axes](../../assets/screenshots-3D/axes.png)
+
+![3D Enrichments](../../assets/screenshots-3D/enrichments.png)
+
+![3D Autoswitch](../../assets/screenshots-3D/autoswitch.png)
+
+![3D Figure Surface](../../assets/screenshots-3D/figureSurface3D.png)
