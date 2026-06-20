@@ -154,6 +154,11 @@ hide:
 <span>向量场</span>
 </a>
 
+<a class="qwt-gallery-item" href="boxchart/">
+<img src="../assets/screenshots/BoxChart.png" alt="箱线图" loading="lazy">
+<span>箱线图</span>
+</a>
+
 <a class="qwt-gallery-item" href="tradingcurve/">
 <img src="../assets/screenshots/stockchart.png" alt="K线图" loading="lazy">
 <span>K 线图</span>
@@ -164,9 +169,20 @@ hide:
 <span>极坐标绘图</span>
 </a>
 
-</div>
+<a class="qwt-gallery-item" href="3d-plot/">
+<img src="../assets/screenshots-3D/simpleplot3D.png" alt="3D 曲面" loading="lazy">
+<span>3D 曲面</span>
+</a>
 
-<div class="qwt-gallery">
+<a class="qwt-gallery-item" href="3d-plot/">
+<img src="../assets/screenshots-3D/enrichments.png" alt="3D 增强" loading="lazy">
+<span>3D 增强</span>
+</a>
+
+<a class="qwt-gallery-item" href="parasite-axes/">
+<img src="../assets/screenshots/parasite-plot.png" alt="多坐标轴绘图" loading="lazy">
+<span>多坐标轴</span>
+</a>
 
 <a class="qwt-gallery-item" href="curve/">
 <img src="../assets/screenshots/oscilloscope.png" alt="示波器" loading="lazy">
@@ -178,23 +194,23 @@ hide:
 <span>实时绘图</span>
 </a>
 
-<a class="qwt-gallery-item" href="parasite-axes/">
-<img src="../assets/screenshots/parasite-plot.png" alt="多坐标轴绘图" loading="lazy">
-<span>多坐标轴绘图</span>
-</a>
-
 <a class="qwt-gallery-item" href="scale-builtin-action/">
 <img src="../assets/screenshots/qwt-scale-builtin-action-zoom.gif" alt="坐标轴交互" loading="lazy">
 <span>坐标轴交互</span>
 </a>
 
-</div>
+<a class="qwt-gallery-item" href="widgets-controls/">
+<img src="../assets/screenshots/dials-compass.png" alt="仪表罗盘" loading="lazy">
+<span>仪表罗盘</span>
+</a>
 
 </div>
 
-<div class="qwt-quickstart">
+</div>
 
-<div class="qwt-quickstart-inner">
+<div class="qwt-quickstart" markdown>
+
+<div class="qwt-quickstart-inner" markdown>
 
 <div class="qwt-section-head">
 <h2>快速开始</h2>

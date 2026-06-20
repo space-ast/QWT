@@ -56,6 +56,7 @@ Goals and current progress:
 - [x] Curve downsampling with 4 algorithms + SIMD acceleration
 - [x] Color cycle system (`QwtColorCycle`)
 - [x] Arrow marker (`QwtPlotArrowMarker`)
+- [x] Inside ticks support (`TickInside` / `TickOutside`)
 - [x] Flat-style controls (sliders, knobs, dials, etc.)
 - [x] Modular architecture: core (foundational utilities) + plot (2D plotting) + plot3d (3D plotting)
 - [x] Matplotlib-style plotting API (`QwtPyPlot`)
@@ -196,6 +197,26 @@ Added `QwtPlotBoxChart` class for creating box-and-whisker plots to visualize st
 - Outlier detection with customizable symbols
 
 See documentation: [Box Chart Guide](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
+
+### Inside Ticks
+
+Added `QwtPlot::setAxisTickDirection()` to draw axis tick marks from the canvas edge toward the interior (ticks inside), while the backbone and tick labels remain outside — useful for compact layouts or distinctive visual styles:
+
+- Each axis can be set independently to `TickInside` or `TickOutside` (default)
+- Major, medium, and minor ticks are all drawn inside, inheriting the length, color, and pen width of the outside ticks
+- Works with logarithmic and inverted scales — inside ticks render correctly under every scale engine
+- Can be combined with parasite axes, where each parasite plot sets its own tick direction
+
+```cpp
+// Draw YLeft and XBottom ticks inside
+plot->setAxisTickDirection(QwtAxis::YLeft, QwtPlot::TickInside);
+plot->setAxisTickDirection(QwtAxis::XBottom, QwtPlot::TickInside);
+plot->replot();
+```
+
+![ticks_inside](./docs/assets/screenshots/ticks_inside.png)
+
+For details, refer to the tutorial: [Inside Ticks Guide](https://czyt1988.github.io/QWT/zh/use-guide/ticks-inside/). Example code is located in `examples/2D/ticks_inside`.
 
 ### Matplotlib-style Plotting API (`QwtPyPlot`)
 

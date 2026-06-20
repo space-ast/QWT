@@ -155,6 +155,11 @@ designed for scientific computing and engineering data visualization.
 <span>Vector Field</span>
 </a>
 
+<a class="qwt-gallery-item" href="en/use-guide/boxchart/">
+<img src="assets/screenshots/BoxChart.png" alt="Box Chart" loading="lazy">
+<span>Box Chart</span>
+</a>
+
 <a class="qwt-gallery-item" href="en/use-guide/tradingcurve/">
 <img src="assets/screenshots/stockchart.png" alt="Stock Chart" loading="lazy">
 <span>K-Line / Stock</span>
@@ -165,9 +170,20 @@ designed for scientific computing and engineering data visualization.
 <span>Polar Plot</span>
 </a>
 
-</div>
+<a class="qwt-gallery-item" href="en/use-guide/3d-plot/">
+<img src="assets/screenshots-3D/simpleplot3D.png" alt="3D Surface" loading="lazy">
+<span>3D Surface</span>
+</a>
 
-<div class="qwt-gallery">
+<a class="qwt-gallery-item" href="en/use-guide/3d-plot/">
+<img src="assets/screenshots-3D/enrichments.png" alt="3D Enrichments" loading="lazy">
+<span>3D Enrichments</span>
+</a>
+
+<a class="qwt-gallery-item" href="en/use-guide/parasite-axes/">
+<img src="assets/screenshots/parasite-plot.png" alt="Parasite Plot" loading="lazy">
+<span>Multi-Axis</span>
+</a>
 
 <a class="qwt-gallery-item" href="en/use-guide/curve/">
 <img src="assets/screenshots/oscilloscope.png" alt="Oscilloscope" loading="lazy">
@@ -179,23 +195,23 @@ designed for scientific computing and engineering data visualization.
 <span>Real-Time Plot</span>
 </a>
 
-<a class="qwt-gallery-item" href="en/use-guide/parasite-axes/">
-<img src="assets/screenshots/parasite-plot.png" alt="Parasite Plot" loading="lazy">
-<span>Multi-Axis Plot</span>
-</a>
-
 <a class="qwt-gallery-item" href="en/use-guide/scale-builtin-action/">
 <img src="assets/screenshots/qwt-scale-builtin-action-zoom.gif" alt="Axis Zoom" loading="lazy">
 <span>Axis Interaction</span>
 </a>
 
-</div>
+<a class="qwt-gallery-item" href="en/use-guide/widgets-controls/">
+<img src="assets/screenshots/dials-compass.png" alt="Dials &amp; Compass" loading="lazy">
+<span>Dials &amp; Compass</span>
+</a>
 
 </div>
 
-<div class="qwt-quickstart">
+</div>
 
-<div class="qwt-quickstart-inner">
+<div class="qwt-quickstart" markdown>
+
+<div class="qwt-quickstart-inner" markdown>
 
 <div class="qwt-section-head">
 <h2>Quick Start</h2>
