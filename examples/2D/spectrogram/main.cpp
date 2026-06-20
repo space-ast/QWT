@@ -14,6 +14,9 @@
 #include <QSlider>
 #include <QLabel>
 #include <QCheckBox>
+#include <QVariant>
+
+#include <QwtColorMapPreset>
 
 namespace
 {
@@ -40,15 +43,32 @@ MainWindow::MainWindow( QWidget* parent )
 #endif
 
     QComboBox* mapBox = new QComboBox();
-    mapBox->addItem( "RGB" );
-    mapBox->addItem( "Hue" );
-    mapBox->addItem( "Saturation" );
-    mapBox->addItem( "Value" );
-    mapBox->addItem( "Sat.+Value" );
-    mapBox->addItem( "Alpha" );
     mapBox->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-    connect( mapBox, SIGNAL(currentIndexChanged(int)),
-        plot, SLOT(setColorMap(int)) );
+
+    // Modern scientific colormap presets (stored as QString in itemData)
+    for ( const QString& name : QwtColorMapPreset::availablePresets() )
+        mapBox->addItem( name, name );
+
+    mapBox->insertSeparator( mapBox->count() );
+
+    // Classic Qwt colormap types (stored as int in itemData)
+    mapBox->addItem( "RGB", Plot::RGBMap );
+    mapBox->addItem( "Hue", Plot::HueMap );
+    mapBox->addItem( "Saturation", Plot::SaturationMap );
+    mapBox->addItem( "Value", Plot::ValueMap );
+    mapBox->addItem( "Sat.+Value", Plot::SVMap );
+    mapBox->addItem( "Alpha", Plot::AlphaMap );
+
+    mapBox->setCurrentIndex( 0 );
+
+    QObject::connect( mapBox, QOverload< int >::of( &QComboBox::currentIndexChanged ),
+        plot, [mapBox, plot]( int ) {
+            const QVariant data = mapBox->currentData();
+            if ( data.userType() == QMetaType::QString )
+                plot->setColorMapPreset( data.toString() );
+            else
+                plot->setColorMap( data.toInt() );
+        } );
 
 
     QComboBox* colorTableBox = new QComboBox();

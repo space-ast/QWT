@@ -6,6 +6,7 @@
 #include "Plot.h"
 
 #include <QwtColorMap>
+#include <QwtColorMapPreset>
 #include <QwtPlotSpectrogram>
 #include <QwtScaleWidget>
 #include <QwtScaleDraw>
@@ -219,7 +220,7 @@ Plot::Plot(QWidget* parent) : QwtPlot(parent), m_alpha(255)
 
     plotLayout()->setAlignCanvasToScales(true);
 
-    setColorMap(Plot::RGBMap);
+    setColorMapPreset("viridis");
 
     // LeftButton for the zooming
     // MidButton for the panning
@@ -280,12 +281,29 @@ void Plot::setColorTableSize(int type)
     replot();
 }
 
+void Plot::setColorMapPreset(const QString& name)
+{
+    QwtScaleWidget* axis        = axisWidget(QwtAxis::YRight);
+    const QwtInterval zInterval = m_spectrogram->data()->interval(Qt::ZAxis);
+
+    m_presetName = name;
+    m_mapType    = -1;
+
+    m_spectrogram->setColorMap(QwtColorMapPreset::create(name).release());
+    axis->setColorMap(zInterval, QwtColorMapPreset::create(name).release());
+
+    m_spectrogram->setAlpha(m_alpha);
+
+    replot();
+}
+
 void Plot::setColorMap(int type)
 {
     QwtScaleWidget* axis        = axisWidget(QwtAxis::YRight);
     const QwtInterval zInterval = m_spectrogram->data()->interval(Qt::ZAxis);
 
     m_mapType = type;
+    m_presetName.clear();
 
     const QwtColorMap::Format format = QwtColorMap::RGB;
 

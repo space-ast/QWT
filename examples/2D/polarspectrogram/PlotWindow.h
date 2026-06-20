@@ -6,6 +6,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QString>
 
 class Plot;
 class QwtScaleWidget;
@@ -16,6 +17,8 @@ class PlotWindow : public QWidget
     PlotWindow( QWidget* = NULL );
 
     Plot* plot() { return m_plot; }
+
+    void setColorMapPreset( const QString& name );
 
   private:
     Plot* m_plot;

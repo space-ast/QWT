@@ -37,6 +37,8 @@ public Q_SLOTS:
     void setColorTableSize(int);
     void setAlpha(int);
 
+    void setColorMapPreset(const QString& name);
+
 #ifndef QT_NO_PRINTER
     void printPlot();
 #endif
@@ -48,4 +50,5 @@ private:
 
     int m_mapType;
     int m_alpha;
+    QString m_presetName;
 };

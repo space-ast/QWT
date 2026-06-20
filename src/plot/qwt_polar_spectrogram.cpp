@@ -10,6 +10,7 @@
 #include "qwt_polar.h"
 #include "qwt_polar_plot.h"
 #include "qwt_color_map.h"
+#include "qwt_colormap_preset.h"
 #include "qwt_scale_map.h"
 #include "qwt_raster_data.h"
 #include "qwt_math.h"
@@ -39,7 +40,7 @@ class QwtPolarSpectrogram::PrivateData
 public:
     PrivateData(QwtPolarSpectrogram* p) : q_ptr(p), data(nullptr)
     {
-        colorMap = new QwtLinearColorMap();
+        colorMap = QwtColorMapPreset::create(QwtColorMapPreset::Viridis).release();
     }
 
     ~PrivateData()
