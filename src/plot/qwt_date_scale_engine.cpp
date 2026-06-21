@@ -27,6 +27,7 @@
 #include "qwt_date_scale_engine.h"
 #include "qwt_math.h"
 #include "qwt_interval.h"
+#include "qwt_qt5qt6_compat.hpp"
 
 #include <qdatetime.h>
 
@@ -353,7 +354,7 @@ static double qwtDivideMajorStep(double stepSize, int maxMinSteps, QwtDate::Inte
 static QList< double > qwtDstTicks(const QDateTime& dateTime, int secondsMajor, int secondsMinor)
 {
     if (secondsMinor <= 0)
-        QList< double >();
+        return QList< double >();
 
     QDateTime minDate = dateTime.addSecs(-secondsMajor);
     minDate           = QwtDate::floor(minDate, QwtDate::Hour);
@@ -391,7 +392,7 @@ static QwtScaleDiv qwtDivideToSeconds(const QDateTime& minDate,
     }
 
     bool daylightSaving = false;
-    if (minDate.timeSpec() == Qt::LocalTime) {
+    if (minDate.timeZone() == qwt::compat::systemTimeZone()) {
         daylightSaving = intervalType > QwtDate::Hour;
         if (intervalType == QwtDate::Hour) {
             daylightSaving = stepSize > 1;
@@ -969,13 +970,8 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
 
     QDateTime dt = dateTime;
 
-    if (dateTime.timeSpec() == Qt::OffsetFromUTC) {
-#if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc(0);
-#else
-        dt.setUtcOffset(0);
-#endif
-    }
+    if (dateTime.timeSpec() == Qt::OffsetFromUTC)
+        dt.setTimeZone(qwt::compat::utcTimeZone());
 
     switch (intervalType) {
     case QwtDate::Millisecond: {
@@ -1101,13 +1097,8 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
     }
     }
 
-    if (dateTime.timeSpec() == Qt::OffsetFromUTC) {
-#if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc(dateTime.offsetFromUtc());
-#else
-        dt.setUtcOffset(dateTime.utcOffset());
-#endif
-    }
+    if (dateTime.timeSpec() == Qt::OffsetFromUTC)
+        dt.setTimeZone(qwt::compat::offsetTimeZone(dateTime.offsetFromUtc()));
 
     return dt;
 }
@@ -1123,21 +1114,16 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
 QDateTime QwtDateScaleEngine::toDateTime(double value) const
 {
     QWT_DC(d);
-    QDateTime dt = QwtDate::toDateTime(value, d->timeSpec);
+    const QTimeZone timeZone = QwtDate::toTimeZone(d->timeSpec, d->utcOffset);
+    QDateTime dt = QwtDate::toDateTime(value, timeZone);
     if (!dt.isValid()) {
         const QDate date = (value <= 0.0) ? QwtDate::minDate() : QwtDate::maxDate();
 
-        dt = QDateTime(date, QTime(0, 0), d->timeSpec);
+        dt = QDateTime(date, QTime(0, 0), timeZone);
     }
 
-    if (d->timeSpec == Qt::OffsetFromUTC) {
+    if (d->timeSpec == Qt::OffsetFromUTC)
         dt = dt.addSecs(d->utcOffset);
-#if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc(d->utcOffset);
-#else
-        dt.setUtcOffset(d->utcOffset);
-#endif
-    }
 
     return dt;
 }

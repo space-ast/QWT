@@ -29,6 +29,7 @@
 
 #include "qwtcore_global.h"
 #include <qdatetime.h>
+#include <QTimeZone>
 
 /**
  * @brief A collection of methods around date/time values
@@ -124,8 +125,14 @@ public:
     // Get maximum date
     static QDate maxDate();
 
+    // Convert Qt::TimeSpec to QTimeZone
+    static QTimeZone toTimeZone(Qt::TimeSpec timeSpec, int offsetSeconds = 0);
+
     // Convert double to QDateTime
     static QDateTime toDateTime(double value, Qt::TimeSpec = Qt::UTC);
+
+    // Convert double to QDateTime with a specific time zone
+    static QDateTime toDateTime(double value, const QTimeZone& timeZone);
 
     // Convert QDateTime to double
     static double toDouble(const QDateTime&);
