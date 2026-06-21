@@ -1,3 +1,30 @@
+## tag:v7.3.2 (2026-06-20)
+
+### 新功能
+
+- **QwtColorMapPreset 应用于光谱图**
+    - `QwtPlotSpectrogram` 和 `QwtPolarSpectrogram` 默认使用 Viridis 色彩映射替代旧的蓝-黄线性映射
+    - 光谱图和极坐标光谱图示例新增预设切换 UI 控件
+    - 经典色彩映射类型保留向后兼容
+
+- **QwtPolarPlot 背景统一**
+    - 统一 `QwtPolarPlot` 背景行为与 `QwtPlot` 一致
+
+### 变更
+
+- **3D 默认色彩映射迁移至 viridis**
+    - `StandardColor::reset()` 从蓝-红渐变改为 viridis 预设
+    - `Qwt3DTheme` 默认预设从 "jet" 改为 "viridis"，符合现代可视化标准
+    - 刷新 3D 截图资源以反映新的默认色彩映射
+
+### 文档
+
+- **文档结构重组** — 扁平化目录层级，新增 40+ 篇用户指南
+    - 覆盖曲线、图表、3D 绘图、交互工具和控件等全部主要功能
+    - 新增开发者指南：编码规范、注释规范、PIMPL 模式用法
+    - 更新 mkdocs.yml 导航，反映新的扁平结构和 i18n 文件夹组织
+    - 统一截图和示例路径链接
+
 ## tag:v7.3.1 (2026-06-17)
 
 ### 新功能
