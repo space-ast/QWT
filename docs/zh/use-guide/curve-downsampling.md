@@ -516,15 +516,10 @@ QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count)
 
 ```cpp
 // 大多数场景：使用默认设置即可
-// QwtPlotCurve 默认启用 ClipPolygons | FilterPointsAggressive
+// QwtPlotCurve 默认启用 ClipPolygons | FilterPointsLTTB
+// 百万级数据和信号分析场景下，默认的 LTTB 即为最优选择，无需手动设置
 
-// 百万级数据追求最佳性能：
-curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
-
-// 需要保留 X 方向亚像素精度的信号分析：
-curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
-
-// 简单的趋势观察（可接受像素对齐）：
+// 仅当需要 Pixel-Column Reduce（可接受像素对齐）时才手动切换：
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
 ```
 
