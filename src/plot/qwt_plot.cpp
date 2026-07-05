@@ -1469,7 +1469,7 @@ bool QwtPlot::isParasiteShareAxis(QwtAxisId axisId) const
 {
     QWT_DC(d);
     if (axisId < 0 || axisId >= QwtAxis::AxisPositions) {
-        return false;  // Invalid axis treated as “not shared”
+        return false;  // Invalid axis treated as "not shared"
     }
     return bool(d->shareConn[ axisId ]);
 }
@@ -2062,7 +2062,7 @@ int QwtPlot::parasitePlotCount() const
  *   being closer to the outside of the canvas.
  *
  * Calculation flow:
- * 1. Collect the “net” rectangles of the host and all visible parasite axes (with old edgeMargin and margin stripped);
+ * 1. Collect the "net" rectangles of the host and all visible parasite axes (with old edgeMargin and margin stripped);
  * 2. For each level i:
  *    - margin     = sum of net rectangle sizes from level 0 to i-1;
  *    - edgeMargin = sum of net rectangle sizes from level i+1 to the last level;
@@ -2098,7 +2098,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
     struct AxisLayer
     {
         QwtPlot* plot = nullptr;
-        QRectF scaleRect;  // “Net” rectangle with old edgeMargin/margin removed
+        QRectF scaleRect;  // "Net" rectangle with old edgeMargin/margin removed
     };
     const auto shrinkRect = [](QRectF r, int delta, QwtAxisId id) -> QRectF {
         if (delta == 0)
@@ -2155,7 +2155,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 
     for (int i = 0; i < layers.size(); ++i) {
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << “ layers[“ << i << “] scaleRect =” << layers[ i ].scaleRect;
+        qDebug() << " layers[" << i << "] scaleRect =" << layers[ i ].scaleRect;
 #endif
     }
 
@@ -2179,8 +2179,8 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
             axisWidget->setMargin(margin);
         }
 #if QwtPlot_DEBUG_PRINT
-        qDebug() << “ [“ << i << “] setEdgeMargin(“ << edgeMargin << “)”;
-        qDebug() << “ [“ << i << “] setMargin(“ << margin << “)”;
+        qDebug() << " [" << i << "] setEdgeMargin(" << edgeMargin << ")";
+        qDebug() << " [" << i << "] setMargin(" << margin << ")";
 #endif
     }
 }
