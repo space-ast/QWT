@@ -266,3 +266,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE qwt::plot3d)
     - 基础3D绘图：`examples/3D/simpleplot3D`
     - 3D轴配置：`examples/3D/axes`
     - 3D增强：`examples/3D/enrichments`
+    - 3D自动切换：`examples/3D/autoswitch`
+    - 动态3D曲面（QwtFigure集成）：`examples/3D/figureSurface3D`
+
+3D轴配置、3D增强、3D自动切换与动态3D曲面的例子截图如下：
+
+![3D Axes](../../assets/screenshots-3D/axes.png)
+
+![3D Enrichments](../../assets/screenshots-3D/enrichments.png)
+
+![3D Autoswitch](../../assets/screenshots-3D/autoswitch.png)
+
+![3D Figure Surface](../../assets/screenshots-3D/figureSurface3D.png)

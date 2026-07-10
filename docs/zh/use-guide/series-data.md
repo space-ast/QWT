@@ -258,3 +258,9 @@ plot->replot();
 !!! example "相关示例"
     - 实时数据：`examples/2D/realtime`
     - CPU监控：`examples/2D/cpuplot`
+
+实时数据与CPU监控的例子截图如下：
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![CPU Monitor](../../assets/screenshots/cpuplot.png)

@@ -29,6 +29,7 @@
 #include "qwt_interval.h"
 #include "qwt_scale_map.h"
 #include "qwt_color_map.h"
+#include "qwt_colormap_preset.h"
 #include "qwt_math.h"
 
 #include <qimage.h>
@@ -65,7 +66,7 @@ class QwtPlotSpectrogram::PrivateData
 public:
     PrivateData(QwtPlotSpectrogram* p) : q_ptr(p), data(nullptr), colorTableSize(0)
     {
-        colorMap    = new QwtLinearColorMap();
+        colorMap    = QwtColorMapPreset::create(QwtColorMapPreset::Viridis).release();
         displayMode = ImageMode;
 
         conrecFlags = QwtRasterData::IgnoreAllVerticesOnLevel;

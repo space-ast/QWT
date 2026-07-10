@@ -524,3 +524,11 @@ private:
     - 实时数据：`examples/2D/cpuplot`
     - 实时绘图：`examples/2D/realtime`
     - 示波器：`examples/2D/oscilloscope`
+
+实时数据与实时绘图、示波器的例子截图如下：
+
+![CPU Monitor](../../assets/screenshots/cpuplot.png)
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![Oscilloscope](../../assets/screenshots/oscilloscope.png)

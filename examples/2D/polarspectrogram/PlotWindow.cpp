@@ -11,29 +11,9 @@
 #include <QwtPolarSpectrogram>
 #include <QwtScaleWidget>
 #include <QwtColorMap>
+#include <QwtColorMapPreset>
 
 #include <QLayout>
-
-namespace
-{
-    class ColorMap : public QwtLinearColorMap
-    {
-      public:
-        ColorMap()
-            : QwtLinearColorMap( Qt::darkBlue, Qt::yellow )
-        {
-#if 1
-            addColorStop( 0.00, Qt::black );
-            addColorStop( 0.05, Qt::darkRed );
-#else
-            addColorStop( 0.05, Qt::blue );
-#endif
-            addColorStop( 0.3, Qt::cyan );
-            addColorStop( 0.6, Qt::green );
-            addColorStop( 0.98, Qt::red );
-        }
-    };
-}
 
 PlotWindow::PlotWindow( QWidget* parent )
     : QWidget( parent )
@@ -53,8 +33,10 @@ PlotWindow::PlotWindow( QWidget* parent )
     const QwtInterval interval =
         m_plot->spectrogram()->data()->interval( Qt::ZAxis );
 
-    m_colorScale->setColorMap( interval, new ColorMap() );
-    m_plot->spectrogram()->setColorMap( new ColorMap() );
+    m_colorScale->setColorMap( interval,
+        QwtColorMapPreset::create( QwtColorMapPreset::Viridis ).release() );
+    m_plot->spectrogram()->setColorMap(
+        QwtColorMapPreset::create( QwtColorMapPreset::Viridis ).release() );
 
     QwtLinearScaleEngine scaleEngine;
     m_colorScale->setScaleDiv(
@@ -67,4 +49,17 @@ PlotWindow::PlotWindow( QWidget* parent )
     QHBoxLayout* layout = new QHBoxLayout( this );
     layout->addWidget( m_plot, 10 );
     layout->addWidget( m_colorScale, 10 );
+}
+
+void PlotWindow::setColorMapPreset( const QString& name )
+{
+    const QwtInterval interval =
+        m_plot->spectrogram()->data()->interval( Qt::ZAxis );
+
+    m_colorScale->setColorMap( interval,
+        QwtColorMapPreset::create( name ).release() );
+    m_plot->spectrogram()->setColorMap(
+        QwtColorMapPreset::create( name ).release() );
+
+    m_plot->replot();
 }

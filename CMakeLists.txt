@@ -1,4 +1,4 @@
-
+﻿
 # QWT CMake By Czyt1988
 
 cmake_minimum_required(VERSION 3.5)
@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.5)
 ########################################################
 set(QWT_VERSION_MAJOR 7)
 set(QWT_VERSION_MINOR 3)
-set(QWT_VERSION_PATCH 1)
+set(QWT_VERSION_PATCH 3)
 set(QWT_VERSION "${QWT_VERSION_MAJOR}.${QWT_VERSION_MINOR}.${QWT_VERSION_PATCH}")
 message(STATUS "QWT Version is ${QWT_VERSION}")
 

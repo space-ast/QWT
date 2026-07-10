@@ -102,3 +102,9 @@ plot->setCanvas(canvas);
 !!! example "相关示例"
     - `examples/realtime` — 高吞吐量的实时绘图
     - `examples/oscilloscope` — 示波器风格的波形显示
+
+实时绘图与示波器的例子截图如下：
+
+![Real-Time Plot](../../assets/screenshots/realtime.png)
+
+![Oscilloscope](../../assets/screenshots/oscilloscope.png)

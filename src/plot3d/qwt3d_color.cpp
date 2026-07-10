@@ -40,25 +40,14 @@ StandardColor::StandardColor(Plot3D* data, unsigned size) : QWT_PIMPL_CONSTRUCT
 StandardColor::~StandardColor() = default;
 
 /**
- * @brief Resets the color vector to a default gradient
+ * @brief Resets the color vector to the default colormap
  * @param size Number of color entries to generate
- * @details Creates a color vector of the given size with a blue-to-red gradient.
+ * @details Creates a color vector of the given size sampled from the viridis
+ *          colormap, the modern perceptually-uniform default.
  */
 void StandardColor::reset(unsigned size)
 {
-    QWT_D(d);
-    d->m_colors = ColorVector(size);
-    RGBA elem;
-
-    double dsize = size;
-
-    for (unsigned int i = 0; i != size; ++i) {
-        elem.r           = i / dsize;
-        elem.g           = i / dsize / 4;
-        elem.b           = 1 - i / dsize;
-        elem.a           = 1.0;
-        d->m_colors[ i ] = elem;
-    }
+    setPreset(QStringLiteral("viridis"), size);
 }
 
 /**

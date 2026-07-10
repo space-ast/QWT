@@ -26,6 +26,7 @@
 
 #include "qwt_date.h"
 #include "qwt_math.h"
+#include "qwt_qt5qt6_compat.hpp"
 
 #include <qdebug.h>
 #include <qlocale.h>
@@ -128,13 +129,14 @@ static inline Qt::DayOfWeek qwtFirstDayOfWeek()
 static inline void qwtFloorTime(QwtDate::IntervalType intervalType, QDateTime& dt)
 {
     // when dt is inside the special hour where DST is ending
-    // an hour is no unique. Therefore we have to
+    // an hour is not unique. Therefore we have to
     // use UTC time.
 
-    const Qt::TimeSpec timeSpec = dt.timeSpec();
+    const QTimeZone timeZone = dt.timeZone();
+    const bool isLocalTime = (timeZone == qwt::compat::systemTimeZone());
 
-    if (timeSpec == Qt::LocalTime)
-        dt = dt.toTimeSpec(Qt::UTC);
+    if (isLocalTime)
+        dt = dt.toTimeZone(qwt::compat::utcTimeZone());
 
     const QTime t = dt.time();
     switch (intervalType) {
@@ -154,13 +156,13 @@ static inline void qwtFloorTime(QwtDate::IntervalType intervalType, QDateTime& d
         break;
     }
 
-    if (timeSpec == Qt::LocalTime)
-        dt = dt.toTimeSpec(Qt::LocalTime);
+    if (isLocalTime)
+        dt = dt.toTimeZone(timeZone);
 }
 
-static inline QDateTime qwtToTimeSpec(const QDateTime& dt, Qt::TimeSpec spec)
+static inline QDateTime qwtToTimeZone(const QDateTime& dt, const QTimeZone& timeZone)
 {
-    if (dt.timeSpec() == spec)
+    if (dt.timeZone() == timeZone)
         return dt;
 
     const qint64 jd = dt.date().toJulianDay();
@@ -171,11 +173,11 @@ static inline QDateTime qwtToTimeSpec(const QDateTime& dt, Qt::TimeSpec spec)
         // for those dates
 
         QDateTime dt2 = dt;
-        dt2.setTimeSpec(spec);
+        dt2.setTimeZone(timeZone);
         return dt2;
     }
 
-    return dt.toTimeSpec(spec);
+    return dt.toTimeZone(timeZone);
 }
 
 #if 0
@@ -239,18 +241,37 @@ static inline QDate qwtToDate(int year, int month = 1, int day = 1)
 }
 
 /**
+ * @brief Convert a Qt::TimeSpec to a QTimeZone
+ * @param timeSpec Time specification
+ * @param offsetSeconds Offset in seconds (used for Qt::OffsetFromUTC)
+ * @return QTimeZone corresponding to the time specification
+ */
+QTimeZone QwtDate::toTimeZone(Qt::TimeSpec timeSpec, int offsetSeconds)
+{
+    switch (timeSpec) {
+    case Qt::UTC:
+        return qwt::compat::utcTimeZone();
+    case Qt::LocalTime:
+        return qwt::compat::systemTimeZone();
+    case Qt::OffsetFromUTC:
+        return qwt::compat::offsetTimeZone(offsetSeconds);
+    default:
+        return qwt::compat::utcTimeZone();
+    }
+}
+
+/**
  * @brief Translate from double to QDateTime
  *
  * @param value Number of milliseconds since the epoch,
  *              1970-01-01T00:00:00 UTC
- * @param timeSpec Time specification
+ * @param timeZone Time zone
  * @return Datetime value
  *
- * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
- * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+ * @sa toDouble(), QwtDate::toDateTime(double, Qt::TimeSpec)
  *
  */
-QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
+QDateTime QwtDate::toDateTime(double value, const QTimeZone& timeZone)
 {
     const int msecsPerDay = 86400000;
 
@@ -268,12 +289,29 @@ QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 
     static const QTime timeNull(0, 0, 0, 0);
 
-    QDateTime dt(d, timeNull.addMSecs(msecs), Qt::UTC);
+    QDateTime dt(d, timeNull.addMSecs(msecs), qwt::compat::utcTimeZone());
 
-    if (timeSpec == Qt::LocalTime)
-        dt = qwtToTimeSpec(dt, timeSpec);
+    if (timeZone != qwt::compat::utcTimeZone())
+        dt = qwtToTimeZone(dt, timeZone);
 
     return dt;
+}
+
+/**
+ * @brief Translate from double to QDateTime
+ *
+ * @param value Number of milliseconds since the epoch,
+ *              1970-01-01T00:00:00 UTC
+ * @param timeSpec Time specification
+ * @return Datetime value
+ *
+ * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
+ * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+ *
+ */
+QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
+{
+    return QwtDate::toDateTime(value, QwtDate::toTimeZone(timeSpec));
 }
 
 /**
@@ -291,7 +329,7 @@ double QwtDate::toDouble(const QDateTime& dateTime)
 {
     const int msecsPerDay = 86400000;
 
-    const QDateTime dt = qwtToTimeSpec(dateTime, Qt::UTC);
+    const QDateTime dt = qwtToTimeZone(dateTime, qwt::compat::utcTimeZone());
 
     const double days = dt.date().toJulianDay() - QwtDate::JulianDayForEpoch;
 
@@ -599,27 +637,7 @@ int QwtDate::weekNumber(const QDate& date, Week0Type type)
  */
 int QwtDate::utcOffset(const QDateTime& dateTime)
 {
-    int seconds = 0;
-
-    switch (dateTime.timeSpec()) {
-    case Qt::UTC: {
-        break;
-    }
-    case Qt::OffsetFromUTC: {
-#if QT_VERSION >= 0x050200
-        seconds = dateTime.offsetFromUtc();
-#else
-        seconds = dateTime.utcOffset();
-#endif
-        break;
-    }
-    default: {
-        const QDateTime dt1(dateTime.date(), dateTime.time(), Qt::UTC);
-        seconds = dateTime.secsTo(dt1);
-    }
-    }
-
-    return seconds;
+    return dateTime.offsetFromUtc();
 }
 
 /**

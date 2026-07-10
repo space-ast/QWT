@@ -230,3 +230,7 @@ struct QwtPointPolar {
 !!! example "相关示例"
     - 极坐标演示：`examples/2D/polardemo`
     - 极坐标光谱图：`examples/2D/polarspectrogram`
+
+极坐标光谱图的例子截图如下：
+
+![Polar Spectrogram](../../assets/screenshots/polarspectrogram.png)

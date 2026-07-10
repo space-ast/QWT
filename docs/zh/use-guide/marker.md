@@ -272,3 +272,7 @@ peakMarker->attach(plot);
 !!! example "相关示例"
     - 曲线峰值标注：`examples/2D/bode`
     - 曲线追踪器：`playground/curvetracker`
+
+曲线峰值标注的例子截图如下：
+
+![Bode Plot](../../assets/screenshots/bode.png)

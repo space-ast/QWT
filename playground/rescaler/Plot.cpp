@@ -1,4 +1,4 @@
-/*****************************************************************************
+﻿/*****************************************************************************
  * Qwt Examples - Copyright (C) 2002 Uwe Rathmann
  * This file may be used under the terms of the 3-clause BSD License
  *****************************************************************************/
@@ -130,7 +130,7 @@ Plot::Plot(QWidget* parent, const QwtInterval& interval) : QwtPlot(parent)
         RectItem* item = new RectItem(RectItem::Ellipse);
         item->setRenderHint(QwtPlotItem::RenderAntialiased, true);
         item->setRect(area);
-        item->setPen(QPen(Qt::yellow));
+        item->setPen(QPen(Qt::blue));
         item->attach(this);
     }
 

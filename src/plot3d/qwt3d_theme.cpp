@@ -56,7 +56,7 @@ Qwt3DTheme Qwt3DTheme::create(Preset preset)
 
     switch (preset) {
     case Default:
-        theme.m_dataColorPreset = "jet";
+        theme.m_dataColorPreset = "viridis";
         break;
 
     case Dark:

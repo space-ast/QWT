@@ -196,3 +196,7 @@ arrow->setLegendIconSize(QSize(32, 16));
 
 !!! example "相关示例"
     - 箭头标注示例：`examples/2D/sinusplot`
+
+箭头标注的例子截图如下：
+
+![Sinusplot](../../assets/screenshots/sinusplot.png)

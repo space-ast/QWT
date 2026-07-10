@@ -1,3 +1,30 @@
+## tag:v7.3.2 (2026-06-20)
+
+### New Features
+
+- **QwtColorMapPreset Applied to Spectrograms**
+    - `QwtPlotSpectrogram` and `QwtPolarSpectrogram` now use Viridis as the default colormap, replacing the legacy blue-to-yellow linear map
+    - Spectrogram and polar spectrogram examples updated with preset switching UI controls
+    - Classic colormap types remain available for backward compatibility
+
+- **QwtPolarPlot Background Unification**
+    - Unified `QwtPolarPlot` background behavior with `QwtPlot`
+
+### Changes
+
+- **3D Default Colormap Migrated to Viridis**
+    - `StandardColor::reset()` replaced blue-to-red gradient with viridis preset
+    - `Qwt3DTheme` default preset changed from "jet" to "viridis" for consistency with modern visualization standards
+    - Refreshed 3D screenshot assets to reflect the updated default colormap
+
+### Documentation
+
+- **Documentation Restructure** — flattened directory hierarchy, added 40+ new user guides
+    - Covers curves, charts, 3D plots, interaction tools, and widgets
+    - New developer guides: coding standards, comment conventions, PIMPL pattern usage
+    - Updated mkdocs.yml navigation for the new flat structure with i18n folder organization
+    - Unified screenshot and example path links
+
 ## tag:v7.3.1 (2026-06-17)
 
 ### New Features

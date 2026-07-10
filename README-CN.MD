@@ -42,6 +42,7 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
 - [x] 曲线降采样算法（4种算法 + SIMD加速），百万级数据流畅渲染
 - [x] 颜色循环系统（`QwtColorCycle`）
 - [x] 箭头标记（`QwtPlotArrowMarker`）
+- [x] 支持坐标刻度朝内(ticks inside)
 - [x] Flat风格控件（滑块、旋钮、刻度盘等）
 - [x] 模块化架构：core（基础工具库）+ plot（2D绘图）+ plot3d（3D绘图）
 - [x] Matplotlib风格绘图接口（`QwtPyPlot`）
@@ -55,7 +56,7 @@ Qt 生态里能画图的库不多，主流的为`QCustomPlot`、`Qwt`、`Qt Char
 
 ### Cmake支持
 
-Qwt7.0已经支持`CMake`，并且未来将考虑抛弃`QMake`
+Qwt7.0已经支持`CMake`，并且抛弃`QMake`
 
 安装Qwt后，你的项目只需如下即可引入Qwt，免去以往繁琐的配置和预定义宏：
 
@@ -74,6 +75,10 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 参考`QCustomPlot`，我把原`Qwt`整个工程合并为`QwtPlot.h`和`QwtPlot.cpp`，只要把这两个文件引入项目即可使用2D和3D绘图
 
 具体参阅:[QWT库的引入](https://czyt1988.github.io/QWT/zh/use-guide/import-qwt)
+
+参见例子：`examples\staticExample`
+
+![staticExample](./docs/assets/screenshots/staticExample.png)
 
 ### 美化了风格
 
@@ -156,6 +161,26 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 ![Box Chart](./docs/assets/screenshots/BoxChart.png)
 
 具体可参见教程：[箱线图使用指南](https://czyt1988.github.io/QWT/zh/use-guide/boxchart/)
+
+### 坐标刻度可朝内显示
+
+新增 `QwtPlot::setAxisTickDirection()` 接口，支持将坐标轴刻度从画布边缘向画布内部绘制（ticks inside），而轴线与刻度标签仍保留在外部，适用于紧凑布局或特殊视觉风格：
+
+- 每个坐标轴可独立设置为 `TickInside`（朝内）或 `TickOutside`（朝外，默认）
+- 主刻度、中刻度、次刻度均同步朝内绘制，并继承朝外刻度的长度、颜色、线宽等样式
+- 兼容对数刻度（log）与倒置刻度（inverted），各类刻度引擎下朝内方向均能正确渲染
+- 可与寄生轴配合使用，每个寄生绘图独立设置刻度方向
+
+```cpp
+// 将 YLeft 与 XBottom 轴刻度设为朝内
+plot->setAxisTickDirection(QwtAxis::YLeft, QwtPlot::TickInside);
+plot->setAxisTickDirection(QwtAxis::XBottom, QwtPlot::TickInside);
+plot->replot();
+```
+
+![ticks_inside](./docs/assets/screenshots/ticks_inside.png)
+
+具体可参见教程：[刻度朝内显示使用指南](https://czyt1988.github.io/QWT/zh/use-guide/ticks-inside/)，示例代码位于 `examples/2D/ticks_inside`
 
 ### Matplotlib风格绘图接口（`QwtPyPlot`）
 
@@ -354,8 +379,8 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 
 |  |  |  |
 |:---:|:---:|:---:|
-|![3D Autoswitch](./docs/assets/screenshots-3D/autoswitch.png)||
-|`examples/3D/autoswitch`||
+|![3D Autoswitch](./docs/assets/screenshots-3D/autoswitch.png)|![figureSurface3D](./docs/assets/screenshots-3D/figureSurface3D.png)|
+|`examples/3D/autoswitch`|`examples/3D/figureSurface3D`|
 
 ### 动态演示
 

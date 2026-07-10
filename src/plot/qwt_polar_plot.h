@@ -170,6 +170,11 @@ public:
     /// Get the plot background
     const QBrush& plotBackground() const;
 
+    /// Set the background color
+    void setBackgroundColor(const QColor& c);
+    /// Get the background color
+    QColor backgroundColor() const;
+
     /// Draw the canvas
     virtual void drawCanvas(QPainter*, const QRectF&) const;
 

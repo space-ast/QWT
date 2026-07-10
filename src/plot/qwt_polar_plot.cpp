@@ -316,6 +316,30 @@ const QBrush& QwtPolarPlot::plotBackground() const
 }
 
 /**
+ * @brief Set the background color
+ * @param c Background color
+ * @sa backgroundColor()
+ */
+void QwtPolarPlot::setBackgroundColor(const QColor& c)
+{
+    QPalette p = palette();
+    p.setColor(backgroundRole(), c);
+    setPalette(p);
+
+    setAutoFillBackground(true);
+}
+
+/**
+ * @brief Get the background color
+ * @return Background color
+ * @sa setBackgroundColor()
+ */
+QColor QwtPolarPlot::backgroundColor() const
+{
+    return palette().color(backgroundRole());
+}
+
+/**
  * @brief Set or reset the autoReplot option
  * @details If the autoReplot option is set, the plot will be updated implicitly by manipulating member functions.
  *          Since this may be time-consuming, it is recommended to leave this option switched off and call replot()
@@ -790,6 +814,9 @@ void QwtPolarPlot::initPlot(const QwtText& title)
 
     d->autoReplot  = false;
     d->canvasBrush = QBrush(Qt::white);
+
+    setBackgroundRole(QPalette::Base);
+    setAutoFillBackground(true);
 
     for (int scaleId = 0; scaleId < QwtPolar::ScaleCount; scaleId++) {
         QwtPolarPlotScaleData& scaleData = d->scaleData[ scaleId ];

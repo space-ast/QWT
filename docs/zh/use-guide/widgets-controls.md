@@ -240,3 +240,11 @@ compass->setNeedle(new QwtCompassWindArrow());
 !!! example "相关示例"
     - 控件演示：`examples/2D/controls`
     - 指南针：`examples/2D/dials`
+
+控件演示的更多截图如下：
+
+![Wheel & Thermo Controls](../../assets/screenshots/controls-wheel-thermo.png)
+
+![Dial Cockpit](../../assets/screenshots/dials-cockpit.png)
+
+![Dial Compass](../../assets/screenshots/dials-compass.png)

@@ -51,6 +51,7 @@ theme:
 plugins:
   - search
   - i18n:
+      docs_structure: folder
       languages:
         - locale: en
           name: English
@@ -60,68 +61,69 @@ plugins:
             - Home: index.md
             - Getting Started:
                 - Overview:
-                    - Qwt Introduction: en/use-guide/qwt7-new-features.md
+                    - Qwt Introduction: introduction.md
+                    - Qwt 7.0 New Features: use-guide/qwt7-new-features.md
                 - Build Guide:
-                    - Build Instructions: en/build-guide/build-instructions.md
+                    - Build Instructions: build-guide/build-instructions.md
                 - Development Guide:
-                    - Dev Guide Home: en/dev-guide/index.md
-                    - Coding Standards: en/dev-guide/coding-standards.md
-                    - Comment Standards: en/dev-guide/comment-standards.md
-                    - PIMPL Pattern: en/dev-guide/pimpl-pattern.md
-                    - Doc Writing Guide: en/doc-writing-guide.md
+                    - Dev Guide Home: dev-guide/index.md
+                    - Coding Standards: dev-guide/coding-standards.md
+                    - Comment Standards: dev-guide/comment-standards.md
+                    - PIMPL Pattern: dev-guide/pimpl-pattern.md
+                    - Doc Writing Guide: doc-writing-guide.md
             - User Guide:
                 - Basic Usage:
-                    - Import Qwt: en/use-guide/import-qwt.md
-                    - First Plot: en/use-guide/first-plot.md
-                    - Picker State Machine: en/use-guide/picker-state-machine.md
+                    - Import Qwt: use-guide/import-qwt.md
+                    - First Plot: use-guide/first-plot.md
+                    - Picker State Machine: use-guide/picker-state-machine.md
                 - Plot Container & Layout:
-                    - Figure Widget: en/use-guide/figure-widget.md
-                    - Parasite Axes: en/use-guide/parasite-axes.md
-                    - Plot Layout: en/use-guide/plot-layout.md
+                    - Figure Widget: use-guide/figure-widget.md
+                    - Parasite Axes: use-guide/parasite-axes.md
+                    - Plot Layout: use-guide/plot-layout.md
                 - Data Processing:
-                    - Series Data: en/use-guide/series-data.md
+                    - Series Data: use-guide/series-data.md
                 - Styles & Symbols:
-                    - Symbol: en/use-guide/symbol.md
+                    - Symbol: use-guide/symbol.md
                 - Utility Classes:
-                    - Plot Utilities: en/use-guide/plot-utilities.md
-                    - PyPlot API: en/use-guide/pyplot-api.md
+                    - Plot Utilities: use-guide/plot-utilities.md
+                    - PyPlot API: use-guide/pyplot-api.md
             - Charts:
                 - Core Plot Items:
-                    - Curve: en/use-guide/curve.md
-                    - Curve Downsampling: en/use-guide/curve-downsampling.md
-                    - Scatter: en/use-guide/scatter.md
-                    - Grid: en/use-guide/grid.md
-                    - Marker: en/use-guide/marker.md
-                    - Arrow Marker: en/use-guide/arrow-marker.md
-                    - Bar Chart: en/use-guide/barchart.md
-                    - Box Chart: en/use-guide/boxchart.md
-                    - Histogram: en/use-guide/histogram.md
-                    - Spectrogram: en/use-guide/spectrogram.md
-                    - Trading Curve: en/use-guide/tradingcurve.md
-                    - Vector Field: en/use-guide/vectorfield.md
-                    - Interval Curve: en/use-guide/intervalcurve.md
-                    - Shape Item: en/use-guide/shapeitem.md
-                    - Text Label: en/use-guide/textlabel.md
+                    - Curve: use-guide/curve.md
+                    - Curve Downsampling: use-guide/curve-downsampling.md
+                    - Scatter: use-guide/scatter.md
+                    - Grid: use-guide/grid.md
+                    - Marker: use-guide/marker.md
+                    - Arrow Marker: use-guide/arrow-marker.md
+                    - Bar Chart: use-guide/barchart.md
+                    - Box Chart: use-guide/boxchart.md
+                    - Histogram: use-guide/histogram.md
+                    - Spectrogram: use-guide/spectrogram.md
+                    - Trading Curve: use-guide/tradingcurve.md
+                    - Vector Field: use-guide/vectorfield.md
+                    - Interval Curve: use-guide/intervalcurve.md
+                    - Shape Item: use-guide/shapeitem.md
+                    - Text Label: use-guide/textlabel.md
                 - Polar Plot:
-                    - Polar Plot: en/use-guide/polar-plot.md
+                    - Polar Plot: use-guide/polar-plot.md
                 - 3D Plot:
-                    - 3D Plot Introduction: en/use-guide/3d-plot.md
-                    - OpenGL Canvas: en/use-guide/opengl.md
+                    - 3D Plot Introduction: use-guide/3d-plot.md
+                    - OpenGL Canvas: use-guide/opengl.md
                 - Control Widgets:
-                    - Widgets & Controls: en/use-guide/widgets-controls.md
+                    - Widgets & Controls: use-guide/widgets-controls.md
             - Interaction:
                 - Plot Interaction:
-                    - Scale Built-in Action: en/use-guide/scale-builtin-action.md
-                    - Pick Value: en/use-guide/pick-value.md
-                    - Panner: en/use-guide/panner.md
-                    - Zoomer: en/use-guide/zoomer.md
-                    - Renderer: en/use-guide/renderer.md
+                    - Scale Built-in Action: use-guide/scale-builtin-action.md
+                    - Pick Value: use-guide/pick-value.md
+                    - Panner: use-guide/panner.md
+                    - Zoomer: use-guide/zoomer.md
+                    - Renderer: use-guide/renderer.md
                 - Axis System:
-                    - Scale Widget: en/use-guide/scale-widget.md
-                    - Ticks Inside: en/use-guide/ticks-inside.md
-                    - Scale Engine: en/use-guide/scale-engine.md
+                    - Scale Widget: use-guide/scale-widget.md
+                    - Ticks Inside: use-guide/ticks-inside.md
+                    - Scale Engine: use-guide/scale-engine.md
                 - Legend:
-                    - Legend Widget: en/use-guide/legend.md
+                    - Legend Widget: use-guide/legend.md
             - API:
                 - API Docs:
                     - API Home: doxygen_en/index.html
@@ -131,72 +133,72 @@ plugins:
           name: 中文
           build: true
           nav:
-            - 首页: zh/home.md
+            - 首页: index.md
             - 入门指南:
                 - 概述:
-                    - Qwt简介: zh/index.md
-                    - Qwt 7.0新特性: zh/use-guide/qwt7-new-features.md
+                    - Qwt简介: introduction.md
+                    - Qwt 7.0新特性: use-guide/qwt7-new-features.md
                 - 构建指南:
-                    - 构建说明: zh/build-guide/build-instructions.md
+                    - 构建说明: build-guide/build-instructions.md
                 - 开发指引:
-                    - 开发指引首页: zh/dev-guide/index.md
-                    - 编码规范: zh/dev-guide/coding-standards.md
-                    - 注释规范: zh/dev-guide/comment-standards.md
-                    - PIMPL模式: zh/dev-guide/pimpl-pattern.md
-                    - 文档编写指南: zh/doc-writing-guide.md
+                    - 开发指引首页: dev-guide/index.md
+                    - 编码规范: dev-guide/coding-standards.md
+                    - 注释规范: dev-guide/comment-standards.md
+                    - PIMPL模式: dev-guide/pimpl-pattern.md
+                    - 文档编写指南: doc-writing-guide.md
             - 使用指南:
                 - 基本使用:
-                    - 引入qwt: zh/use-guide/import-qwt.md
-                    - 第一个绘图: zh/use-guide/first-plot.md
-                    - 状态机介绍: zh/use-guide/picker-state-machine.md
+                    - 引入qwt: use-guide/import-qwt.md
+                    - 第一个绘图: use-guide/first-plot.md
+                    - 状态机介绍: use-guide/picker-state-machine.md
                 - 绘图容器与布局:
-                    - Figure绘图容器: zh/use-guide/figure-widget.md
-                    - 多坐标轴的创建: zh/use-guide/parasite-axes.md
-                    - 布局管理: zh/use-guide/plot-layout.md
+                    - Figure绘图容器: use-guide/figure-widget.md
+                    - 多坐标轴的创建: use-guide/parasite-axes.md
+                    - 布局管理: use-guide/plot-layout.md
                 - 数据处理:
-                    - 数据系列: zh/use-guide/series-data.md
+                    - 数据系列: use-guide/series-data.md
                 - 样式与符号:
-                    - 符号样式: zh/use-guide/symbol.md
+                    - 符号样式: use-guide/symbol.md
                 - 工具类:
-                    - 绘图工具类: zh/use-guide/plot-utilities.md
-                    - PyPlot接口: zh/use-guide/pyplot-api.md
+                    - 绘图工具类: use-guide/plot-utilities.md
+                    - PyPlot接口: use-guide/pyplot-api.md
             - 图表类型:
                 - 核心绘图项:
-                    - 曲线图: zh/use-guide/curve.md
-                    - 曲线降采样算法: zh/use-guide/curve-downsampling.md
-                    - 散点图: zh/use-guide/scatter.md
-                    - 网格线: zh/use-guide/grid.md
-                    - 标记点: zh/use-guide/marker.md
-                    - 箭头标记: zh/use-guide/arrow-marker.md
-                    - 柱状图: zh/use-guide/barchart.md
-                    - 箱形图: zh/use-guide/boxchart.md
-                    - 直方图: zh/use-guide/histogram.md
-                    - 光谱图/热力图: zh/use-guide/spectrogram.md
-                    - K线图: zh/use-guide/tradingcurve.md
-                    - 向量场图: zh/use-guide/vectorfield.md
-                    - 区间曲线: zh/use-guide/intervalcurve.md
-                    - 形状项: zh/use-guide/shapeitem.md
-                    - 文本标签: zh/use-guide/textlabel.md
+                    - 曲线图: use-guide/curve.md
+                    - 曲线降采样算法: use-guide/curve-downsampling.md
+                    - 散点图: use-guide/scatter.md
+                    - 网格线: use-guide/grid.md
+                    - 标记点: use-guide/marker.md
+                    - 箭头标记: use-guide/arrow-marker.md
+                    - 柱状图: use-guide/barchart.md
+                    - 箱形图: use-guide/boxchart.md
+                    - 直方图: use-guide/histogram.md
+                    - 光谱图/热力图: use-guide/spectrogram.md
+                    - K线图: use-guide/tradingcurve.md
+                    - 向量场图: use-guide/vectorfield.md
+                    - 区间曲线: use-guide/intervalcurve.md
+                    - 形状项: use-guide/shapeitem.md
+                    - 文本标签: use-guide/textlabel.md
                 - 极坐标绘图:
-                    - 极坐标绘图: zh/use-guide/polar-plot.md
+                    - 极坐标绘图: use-guide/polar-plot.md
                 - 3D绘图:
-                    - 3D绘图简介: zh/use-guide/3d-plot.md
-                    - OpenGL画布: zh/use-guide/opengl.md
+                    - 3D绘图简介: use-guide/3d-plot.md
+                    - OpenGL画布: use-guide/opengl.md
                 - 控件组件:
-                    - 仪表盘与滑块: zh/use-guide/widgets-controls.md
+                    - 仪表盘与滑块: use-guide/widgets-controls.md
             - 交互操作:
                 - 绘图交互:
-                    - 坐标轴交互动作: zh/use-guide/scale-builtin-action.md
-                    - 数据拾取工具: zh/use-guide/pick-value.md
-                    - 平移工具: zh/use-guide/panner.md
-                    - 缩放工具: zh/use-guide/zoomer.md
-                    - 绘图导出: zh/use-guide/renderer.md
+                    - 坐标轴交互动作: use-guide/scale-builtin-action.md
+                    - 数据拾取工具: use-guide/pick-value.md
+                    - 平移工具: use-guide/panner.md
+                    - 缩放工具: use-guide/zoomer.md
+                    - 绘图导出: use-guide/renderer.md
                 - 坐标轴系统:
-                    - 坐标轴控件: zh/use-guide/scale-widget.md
-                    - 刻度朝内显示: zh/use-guide/ticks-inside.md
-                    - 刻度计算引擎: zh/use-guide/scale-engine.md
+                    - 坐标轴控件: use-guide/scale-widget.md
+                    - 刻度朝内显示: use-guide/ticks-inside.md
+                    - 刻度计算引擎: use-guide/scale-engine.md
                 - 图例系统:
-                    - 图例控件: zh/use-guide/legend.md
+                    - 图例控件: use-guide/legend.md
             - API:
                 - API文档:
                     - API文档首页: doxygen_cn/index.html

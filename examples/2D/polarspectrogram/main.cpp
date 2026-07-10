@@ -10,6 +10,10 @@
 #include <QMainWindow>
 #include <QToolBar>
 #include <QToolButton>
+#include <QComboBox>
+#include <QLabel>
+
+#include <QwtColorMapPreset>
 
 namespace
 {
@@ -45,12 +49,19 @@ MainWindow::MainWindow( QWidget* parent )
     ToolButton* btnRotate = new ToolButton( "Rotate" );
     ToolButton* btnMirror = new ToolButton( "Mirror" );
 
+    QComboBox* themeBox = new QComboBox();
+    for ( const QString& name : QwtColorMapPreset::availablePresets() )
+        themeBox->addItem( name, name );
+    themeBox->setCurrentIndex( 0 );
+
     QToolBar* toolBar = new QToolBar();
 
     toolBar->addWidget( btnExport );
     toolBar->addWidget( btnGrid );
     toolBar->addWidget( btnRotate );
     toolBar->addWidget( btnMirror );
+    toolBar->addWidget( new QLabel( "  Theme " ) );
+    toolBar->addWidget( themeBox );
 
     addToolBar( toolBar );
 
@@ -60,6 +71,11 @@ MainWindow::MainWindow( QWidget* parent )
     connect( btnGrid, SIGNAL(toggled(bool)), plot, SLOT(showGrid(bool)) );
     connect( btnRotate, SIGNAL(clicked()), plot, SLOT(rotate()) );
     connect( btnMirror, SIGNAL(clicked()), plot, SLOT(mirror()) );
+
+    QObject::connect( themeBox, QOverload< int >::of( &QComboBox::currentIndexChanged ),
+        plotWindow, [themeBox, plotWindow]( int ) {
+            plotWindow->setColorMapPreset( themeBox->currentData().toString() );
+        } );
 }
 
 int main( int argc, char* argv[] )
