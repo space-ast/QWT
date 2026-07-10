@@ -113,6 +113,10 @@ target_link_libraries(YOUR_APP_TARGET
 )
 ```
 
+### Using qmake with Qwt 7.0
+
+Qwt 7 no longer uses `qmake` as its primary build system, but `qmake` integration is still fully supported. See the `examples/qmakeExample` example for a working demonstration, or refer to the documentation: [qmake Single-File Build](docs/zh/build-guide/qmake-single-file.md)
+
 ### Modernized Visual Style
 
 The original Qwt style used an outdated beveled look inconsistent with modern aesthetics.  

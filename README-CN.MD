@@ -80,6 +80,10 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 
 ![staticExample](./docs/assets/screenshots/staticExample.png)
 
+### 通过 qmake 使用 Qwt 7.0
+
+Qwt 7 不再使用 `qmake` 作为主构建系统，但仍然完全支持通过 `qmake` 集成。你可以参考 `examples/qmakeExample` 示例了解具体用法，或查阅文档：[qmake 单文件构建](docs\zh\build-guide\qmake-single-file.md)
+
 ### 美化了风格
 
 原有的Qwt样式使用的是很老旧的浮雕风，和现代审美不符，为此我针对性的优化，主要去除了默认的凹陷风格，坐标轴紧贴绘图不进行分离，总体视觉更符合现代风格
