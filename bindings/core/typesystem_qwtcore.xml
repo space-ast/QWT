@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<typesystem package="qwtcore">
+    <!-- Reference PySide6's already-generated Qt types; do not regenerate them. -->
+    <load-typesystem name="typesystem_core.xml" generate="no"/>
+    <load-typesystem name="typesystem_gui.xml" generate="no"/>
+
+    <!-- POC: single value type -->
+    <value-type name="QwtInterval"/>
+</typesystem>
