@@ -34,9 +34,13 @@ set_target_properties(${QWT_APP_NAME} PROPERTIES
 )
 install(TARGETS ${QWT_APP_NAME} RUNTIME DESTINATION bin LIBRARY DESTINATION bin ARCHIVE DESTINATION lib)
 
-# Optional unit tests for pure logic (NanDataGenerator, BenchmarkRunner::analyze)
+# Optional unit tests for pure logic (NanDataGenerator, BenchmarkRunner::analyze).
+# One Qt Test binary per test class (QTEST_MAIN defines main()) — matches the
+# repo convention (tests/picker_click_test etc. are one executable each).
 if(QWT_CONFIG_BUILD_TESTS)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Test REQUIRED)
+
+    # Test 1: NanDataGenerator NaN placement/count logic.
     add_executable(nanperf_test
         tests/tst_NanDataGenerator.cpp
         NanDataGenerator.cpp
@@ -48,8 +52,26 @@ if(QWT_CONFIG_BUILD_TESTS)
         WIN32_EXECUTABLE FALSE
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
-    # Match the repo's test pattern so ctest can discover the test and the
-    # console binary emits its Qt Test output (WIN32_EXECUTABLE FALSE).
+
+    # Test 2: BenchmarkRunner::analyze bottleneck analysis (pure function).
+    # Links PlotPanel.cpp because BenchmarkRunner.cpp references PlotPanel symbols.
+    add_executable(nanperf_analyze_test
+        tests/tst_BenchmarkAnalysis.cpp
+        NanDataGenerator.cpp
+        BenchmarkRunner.cpp
+        PlotPanel.cpp
+    )
+    target_link_libraries(nanperf_analyze_test PRIVATE qwt::plot Qt${QT_VERSION_MAJOR}::Test)
+    set_target_properties(nanperf_analyze_test PROPERTIES
+        AUTOMOC ON
+        CXX_EXTENSIONS OFF
+        WIN32_EXECUTABLE FALSE
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    )
+
+    # Match the repo's test pattern so ctest can discover the tests and the
+    # console binaries emit Qt Test output (WIN32_EXECUTABLE FALSE).
     enable_testing()
     add_test(NAME nanperf_test COMMAND nanperf_test)
+    add_test(NAME nanperf_analyze_test COMMAND nanperf_analyze_test)
 endif()
