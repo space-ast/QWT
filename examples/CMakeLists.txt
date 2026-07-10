@@ -47,3 +47,7 @@ if(QWT_CONFIG_BUILD_STATIC_EXAMPLE)
     # 静态编译示例
     add_subdirectory(staticExample)
 endif()
+
+# NOTE: qmakeExample is a qmake-based project that uses the src-amalgamate
+#       single file. It is NOT built by CMake.
+#       Build it with: cd examples/qmakeExample && qmake && make
