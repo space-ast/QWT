@@ -96,10 +96,39 @@
          inherited methods (size, sample, setSamples, samples, setRectOfInterest)
          are NOT exposed on these subclasses. Only the overridden virtual
          boundingRect() is available. Declaring template instantiations as
-         object-types was tried but does not resolve the base. Task 3 can
-         address this via <inject-code> or by wrapping the QWT_PYTHON_WRAPPER
-         non-pure-virtual path if Python subclassing of series data is needed. -->
-    <object-type name="QwtPointSeriesData"/>
+         object-types was tried but does not resolve the base.
+
+         Task 3 fix: QWT_PYTHON_WRAPPER is now forwarded to shiboken's clang
+         parser (see Shiboken6ToolsConfig.cmake), so the QwtSeriesData<T>
+         pure-virtuals become non-pure with default impls (the template base is
+         no longer abstract, so the concrete subclasses instantiate cleanly).
+         The template-inherited methods themselves are still not auto-exposed
+         (shiboken cannot resolve the template base), so they are re-declared
+         on QwtPointSeriesData via <add-function> below. The add-functions
+         call through to the C++ implementation (this->size()/this->sample());
+         a Python subclass that overrides size()/sample() shadows the bound
+         method, so s.size() dispatches to the Python override. -->
+    <object-type name="QwtPointSeriesData">
+        <!-- Re-expose the template-inherited accessors that shiboken dropped
+             because the QwtArraySeriesData<QPointF> base is unresolvable.
+             size_t maps to Py_ssize_t/size_t via the size_t primitive. -->
+        <add-function signature="size()" return-type="size_t">
+            <inject-code class="target" position="beginning">
+<![CDATA[
+                size_t _result = %CPPSELF->QwtPointSeriesData::size();
+                %PYARG_0 = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<size_t>(), &_result);
+]]>
+            </inject-code>
+        </add-function>
+        <add-function signature="sample(size_t)" return-type="QPointF">
+            <inject-code class="target" position="beginning">
+<![CDATA[
+                QPointF _result = %CPPSELF->QwtPointSeriesData::sample(%1);
+                %PYARG_0 = Shiboken::Conversions::copyToPython(Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QPointF_IDX]), &_result);
+]]>
+            </inject-code>
+        </add-function>
+    </object-type>
     <object-type name="QwtPoint3DSeriesData"/>
     <object-type name="QwtIntervalSeriesData"/>
     <object-type name="QwtSetSeriesData"/>

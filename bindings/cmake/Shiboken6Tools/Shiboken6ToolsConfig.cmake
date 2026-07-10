@@ -164,6 +164,20 @@ macro(shiboken_generator_create_binding)
     # package subdir create the <ext>/ level.
     set(_out_dir ${CMAKE_CURRENT_BINARY_DIR})
 
+    # Forward generation-time defines to shiboken's libclang parser.
+    # `target_compile_definitions` only affects the MSVC compile of the generated
+    # .cpp files, NOT shiboken's own parse of the headers. Headers like
+    # qwt_series_data.h use QWT_PYTHON_WRAPPER to switch the QwtSeriesData<T>
+    # pure-virtuals (size/sample/boundingRect) to non-pure-virtual default impls;
+    # if the define is absent at parse time the methods stay pure-virtual and the
+    # abstract template base cannot be subclassed from Python. Pass each define
+    # through shiboken's --clang-option so libclang sees it while parsing.
+    set(_gen_defines QWT_PYTHON_WRAPPER QT_NO_KEYWORDS QWTCORE_DLL)
+    set(_clang_defines "")
+    foreach(_d ${_gen_defines})
+        list(APPEND _clang_defines "--clang-option=-D${_d}")
+    endforeach()
+
     set(_shiboken_command
         ${SHIBOKEN6_EXECUTABLE}
         --generator-set=shiboken
@@ -173,6 +187,7 @@ macro(shiboken_generator_create_binding)
         --enable-pyside-extensions
         --avoid-protected-hack
         --lean-headers
+        ${_clang_defines}
         ${_global_header}
         ${_typesystem}
     )
