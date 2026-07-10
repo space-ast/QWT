@@ -1,6 +1,5 @@
 # bindings/CMakeLists.txt
-# PySide6 / Shiboken6 bindings for Qwt.
-# This POC binds a single class (QwtInterval) to validate the toolchain.
+# PySide6 / Shiboken6 bindings for Qwt (qwtcore module: all core value/object types).
 
 cmake_minimum_required(VERSION 3.5)
 
@@ -29,10 +28,55 @@ set(_qwt_global_header ${CMAKE_CURRENT_SOURCE_DIR}/core/global.h)
 set(_qwt_typesystem ${CMAKE_CURRENT_SOURCE_DIR}/core/typesystem_qwtcore.xml)
 
 # Shiboken generates one wrapper .cpp per type + one module wrapper.
-# For the POC there is only QwtInterval.
+# Explicit list (lowercased class names) per controller resolution: the glob
+# approach would be empty on first configure because shiboken_generator_create_binding
+# needs the sources for the MODULE target at configure time. Reconcile against
+# the actual files in build/bindings/qwtcore/ after the first generation run.
 set(_qwt_generated_sources
     ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtcore_module_wrapper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtinterval_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtpoint3d_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtpointpolar_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtscalediv_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtscalemap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtstatisticalsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtintervalsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtsetsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtohlcsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtvectorfieldsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtboxsample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtboxoutliersample_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtbezier_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtcolormap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtlinearcolormap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtalphacolormap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwthuecolormap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtsaturationvaluecolormap_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtcolormappreset_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtcolorcycle_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwttransform_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtnulltransform_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtlogtransform_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtpowertransform_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtscalearithmetic_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtscaleengine_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtlinearscaleengine_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtlogscaleengine_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtpointseriesdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtpoint3dseriesdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtintervalseriesdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtsetseriesdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtvectorfielddata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwttradingchartdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtboxchartdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtboxoutlierchartdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtsyntheticpointdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtrasterdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtmatrixrasterdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtgridrasterdata_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtboxstatisticscalculator_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtsystemclock_wrapper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/${_qwt_bindings_lib}/qwtdate_wrapper.cpp
 )
 
 shiboken_generator_create_binding(
