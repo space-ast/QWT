@@ -230,8 +230,8 @@ auto cmap = QwtColorMapPreset::create("viridis");
 
 - `FilterPoints` —— 原始剔除算法
 - `FilterPointsAggressive` —— 针对单调大数据集的快速剔除
-- `FilterPointsPixel` —— 按像素列归约，速度最快
-- `FilterPointsLTTB` —— 保形的 LTTB（MinMax bucket）（新默认值）
+- `FilterPointsPixel` —— 按像素列归约，适用于像素对齐的粗趋势
+- `FilterPointsLTTB` —— 保形且性能最优的 LTTB（MinMax bucket）（新默认值）
 
 效果：百万点曲线可交互帧率渲染。可用 `renderbench` 示例自行基准测试。
 

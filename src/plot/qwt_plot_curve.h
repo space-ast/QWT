@@ -184,8 +184,7 @@ public:
 
     /**
      * @brief Attributes to modify the drawing algorithm
-     * @details The default setting enables ClipPolygons | FilterPoints |
-     * FilterPointsAggressive
+     * @details The default setting enables ClipPolygons | FilterPointsLTTB
      * @sa setPaintAttribute(), testPaintAttribute()
      */
     enum PaintAttribute

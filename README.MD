@@ -270,8 +270,8 @@ Rendering millions of points smoothly is now first-class. `QwtPlotCurve` offers 
 
 - `FilterPoints` — the original weeding algorithm
 - `FilterPointsAggressive` — fast weeding for huge monotonic datasets 
-- `FilterPointsPixel` — per-pixel-column reduction for maximum speed
-- `FilterPointsLTTB` — shape-preserving LTTB (MinMax bucket)(new default)
+- `FilterPointsPixel` — per-pixel-column reduction for pixel-aligned trend observation
+- `FilterPointsLTTB` — shape-preserving and best-performing LTTB (MinMax bucket) (new default)
 
 The result: million-point curves render at interactive frame rates. Benchmark it yourself with the `renderbench` example.
 
