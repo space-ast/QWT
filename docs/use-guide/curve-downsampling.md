@@ -515,17 +515,15 @@ Benchmark data measured on Qwt 7.2.1 + Qt 5.15.16 (canvas 680×490 px, 100 frame
 ### Quick Selection
 
 ```cpp
-// Most scenarios: use default settings
-// QwtPlotCurve enables ClipPolygons | FilterPointsAggressive by default
-
-// Million-level data for best performance:
-curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+// Most scenarios: use the default settings
+// QwtPlotCurve enables ClipPolygons | FilterPointsLTTB by default
 
 // Signal analysis requiring sub-pixel X precision:
-curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+// The default FilterPointsLTTB already meets this need; no extra setup is required
 
-// Simple trend observation (pixel alignment acceptable):
+// Special case: coarse trend observation that requires pixel-column alignment:
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
+// Note: benchmarks show Pixel is slower than the default LTTB; use only when alignment is required
 ```
 
 ### Attribute Mutual Exclusion

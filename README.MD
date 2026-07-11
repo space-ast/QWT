@@ -113,6 +113,10 @@ target_link_libraries(YOUR_APP_TARGET
 )
 ```
 
+### Using qmake with Qwt 7.0
+
+Qwt 7 no longer uses `qmake` as its primary build system, but `qmake` integration is still fully supported. See the `examples/qmakeExample` example for a working demonstration, or refer to the documentation: [qmake Single-File Build](docs/zh/build-guide/qmake-single-file.md)
+
 ### Modernized Visual Style
 
 The original Qwt style used an outdated beveled look inconsistent with modern aesthetics.  
@@ -291,8 +295,8 @@ Rendering millions of points smoothly is now first-class. `QwtPlotCurve` offers 
 
 - `FilterPoints` — the original weeding algorithm
 - `FilterPointsAggressive` — fast weeding for huge monotonic datasets 
-- `FilterPointsPixel` — per-pixel-column reduction for maximum speed
-- `FilterPointsLTTB` — shape-preserving LTTB (MinMax bucket)(new default)
+- `FilterPointsPixel` — per-pixel-column reduction for pixel-aligned trend observation
+- `FilterPointsLTTB` — shape-preserving and best-performing LTTB (MinMax bucket) (new default)
 
 The result: million-point curves render at interactive frame rates. Benchmark it yourself with the `renderbench` example.
 

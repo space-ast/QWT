@@ -80,6 +80,10 @@ target_link_libraries(${YOUR_APP_TARGET} PUBLIC qwt::core)
 
 ![staticExample](./docs/assets/screenshots/staticExample.png)
 
+### 通过 qmake 使用 Qwt 7.0
+
+Qwt 7 不再使用 `qmake` 作为主构建系统，但仍然完全支持通过 `qmake` 集成。你可以参考 `examples/qmakeExample` 示例了解具体用法，或查阅文档：[qmake 单文件构建](docs\zh\build-guide\qmake-single-file.md)
+
 ### 美化了风格
 
 原有的Qwt样式使用的是很老旧的浮雕风，和现代审美不符，为此我针对性的优化，主要去除了默认的凹陷风格，坐标轴紧贴绘图不进行分离，总体视觉更符合现代风格
@@ -255,8 +259,8 @@ auto cmap = QwtColorMapPreset::create("viridis");
 
 - `FilterPoints` —— 原始剔除算法
 - `FilterPointsAggressive` —— 针对单调大数据集的快速剔除
-- `FilterPointsPixel` —— 按像素列归约，速度最快
-- `FilterPointsLTTB` —— 保形的 LTTB（MinMax bucket）（新默认值）
+- `FilterPointsPixel` —— 按像素列归约，适用于像素对齐的粗趋势
+- `FilterPointsLTTB` —— 保形且性能最优的 LTTB（MinMax bucket）（新默认值）
 
 效果：百万点曲线可交互帧率渲染。可用 `renderbench` 示例自行基准测试。
 

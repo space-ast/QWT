@@ -103,6 +103,14 @@ if(QWT_CONFIG_BUILD_TESTS)
 endif()
 
 ########################################################
+# Python Bindings (PySide6 / Shiboken6)
+########################################################
+option(QWT_CONFIG_BUILD_BINDINGS "Build PySide6 Python bindings via Shiboken6" OFF)
+if(QWT_CONFIG_BUILD_BINDINGS)
+    add_subdirectory(bindings)
+endif()
+
+########################################################
 # install
 ########################################################
 include(CMakePackageConfigHelpers)

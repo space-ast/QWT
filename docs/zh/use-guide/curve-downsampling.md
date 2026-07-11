@@ -521,6 +521,7 @@ QwtArgMinMaxResult qwtSimdArgMinMax(const double* data, int count)
 
 // 仅当需要 Pixel-Column Reduce（可接受像素对齐）时才手动切换：
 curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
+// 注意：实测 Pixel 性能不如默认的 LTTB，仅在有特殊对齐需求时使用
 ```
 
 ### 属性互斥

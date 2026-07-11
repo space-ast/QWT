@@ -297,8 +297,8 @@ QBitmap QwtPlotCachePanner::contentsMask() const
 QPixmap QwtPlotCachePanner::grab() const
 {
     const QWidget* cv = canvas();
-    if (cv && cv->inherits("QGLWidget")) {
-        // we can't grab from a QGLWidget
+    if (cv && (cv->inherits("QGLWidget") || cv->inherits("QOpenGLWidget"))) {
+        // we can't grab from a QGLWidget/QOpenGLWidget
 
         QPixmap pm(cv->size());
         QwtPainter::fillPixmap(cv, pm);
