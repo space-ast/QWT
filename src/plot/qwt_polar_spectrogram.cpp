@@ -398,7 +398,7 @@ void QwtPolarSpectrogram::renderTile(const QwtScaleMap& azimuthMap,
                 const double radius  = radialMap.invTransform(r);
 
                 const double value = d->data->value(azimuth, radius);
-                if (qIsNaN(value)) {
+                if (qwt_is_nan_or_inf(value)) {
                     *line++ = 0u;
                 } else {
                     *line++ = d->colorMap->rgb(irMin, irMax, value);
@@ -428,8 +428,12 @@ void QwtPolarSpectrogram::renderTile(const QwtScaleMap& azimuthMap,
 
                 const double value = d->data->value(azimuth, radius);
 
-                const uint index = d->colorMap->colorIndex(256, irMin, irMax, value);
-                *line++          = static_cast< unsigned char >(index);
+                if (qwt_is_nan_or_inf(value)) {
+                    *line++ = 0;
+                } else {
+                    const uint index = d->colorMap->colorIndex(256, irMin, irMax, value);
+                    *line++          = static_cast< unsigned char >(index);
+                }
             }
         }
     }
