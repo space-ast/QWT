@@ -387,6 +387,9 @@ void QwtPolarCurve::drawLines(QPainter* painter,
         }
         points.resize(validCount);
 
+        if (validCount == 0)
+            return;
+
         points = d->curveFitter->fitCurve(points);
 
         polyline.resize(points.size());
@@ -403,9 +406,9 @@ void QwtPolarCurve::drawLines(QPainter* painter,
             polylineData[ i ] = qwtPolar2Pos(pole, r, a);
         }
     } else {
-        polyline.resize(size);
         QPointF* polylineData = polyline.data();
 
+        int validCount = 0;
         for (int i = from; i <= to; i++) {
             QwtPointPolar point = sample(i);
             if (isSampleNanOrInf(point))
@@ -414,11 +417,12 @@ void QwtPolarCurve::drawLines(QPainter* painter,
             if (!qwtInsidePole(radialMap, point.radius())) {
                 double r                 = radialMap.transform(point.radius());
                 const double a           = azimuthMap.transform(point.azimuth());
-                polylineData[ i - from ] = qwtPolar2Pos(pole, r, a);
+                polylineData[ validCount++ ] = qwtPolar2Pos(pole, r, a);
             } else {
-                polylineData[ i - from ] = pole;
+                polylineData[ validCount++ ] = pole;
             }
         }
+        polyline.resize(validCount);
     }
 
     QRectF clipRect;

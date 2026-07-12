@@ -42,6 +42,8 @@ inline static bool qwtIsIncreasing(const QwtScaleMap& map, const QVector< double
 
     for (int i = 0; i < values.size(); i++) {
         const double y = values[ i ];
+        if (qwt_is_nan_or_inf(y))
+            continue;
         if (y != 0.0)
             return (map.isInverting() != (y > 0.0));
     }

@@ -45,9 +45,8 @@ bool isSampleNanOrInf(const QwtPointPolar& sample)
 
 bool isSampleNanOrInf(const QwtSetSample& sample)
 {
-    // Special: directly returns false; judgement is done inside qwtBoundingRect(const QwtSetSample& sample)
-    Q_UNUSED(sample);
-    return false;
+    // Check the position (value) field; set elements are checked inside qwtBoundingRect
+    return qwt_is_nan_or_inf(sample.value);
 }
 
 bool isSampleNanOrInf(const QwtIntervalSample& sample)

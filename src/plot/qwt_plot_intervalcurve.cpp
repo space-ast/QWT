@@ -431,6 +431,44 @@ void QwtPlotIntervalCurve::drawTube(QPainter* painter,
     QPolygonF polygon(2 * size);
     QPointF* points = polygon.data();
 
+    // Pre-scan for first valid sample to seed leading-NaN fallback
+    QPointF seedMin, seedMax;
+    bool hasValid = false;
+    for (uint k = 0; k < size; k++) {
+        const QwtIntervalSample s = sample(from + k);
+        if (!isSampleNanOrInf(s)) {
+            if (orientation() == Qt::Vertical) {
+                double x  = xMap.transform(s.value);
+                double y1 = yMap.transform(s.interval.minValue());
+                double y2 = yMap.transform(s.interval.maxValue());
+                if (doAlign) {
+                    x  = qRound(x);
+                    y1 = qRound(y1);
+                    y2 = qRound(y2);
+                }
+                seedMin = QPointF(x, y1);
+                seedMax = QPointF(x, y2);
+            } else {
+                double y  = yMap.transform(s.value);
+                double x1 = xMap.transform(s.interval.minValue());
+                double x2 = xMap.transform(s.interval.maxValue());
+                if (doAlign) {
+                    y  = qRound(y);
+                    x1 = qRound(x1);
+                    x2 = qRound(x2);
+                }
+                seedMin = QPointF(x1, y);
+                seedMax = QPointF(x2, y);
+            }
+            hasValid = true;
+            break;
+        }
+    }
+    if (!hasValid) {
+        painter->restore();
+        return;
+    }
+
     for (uint i = 0; i < size; i++) {
         QPointF& minValue = points[ i ];
         QPointF& maxValue = points[ 2 * size - 1 - i ];
@@ -442,8 +480,8 @@ void QwtPlotIntervalCurve::drawTube(QPainter* painter,
                 minValue = points[ i - 1 ];
                 maxValue = points[ 2 * size - i ];
             } else {
-                minValue = QPointF(0, 0);
-                maxValue = QPointF(0, 0);
+                minValue = seedMin;
+                maxValue = seedMax;
             }
             continue;
         }

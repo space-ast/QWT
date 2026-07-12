@@ -250,6 +250,9 @@ void QwtColorMap::setFormat(Format format)
  */
 uint QwtColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0;
+
     const double width = vMax - vMin;
     if (width <= 0.0)
         return 0;
