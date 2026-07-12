@@ -35,12 +35,12 @@ bool isSampleNanOrInf(const QPointF& sample)
 
 bool isSampleNanOrInf(const QwtPoint3D& sample)
 {
-    return !std::isfinite(sample.x()) || !std::isfinite(sample.y()) || !std::isfinite(sample.z());
+    return qwt_is_nan_or_inf(sample.x()) || qwt_is_nan_or_inf(sample.y()) || qwt_is_nan_or_inf(sample.z());
 }
 
 bool isSampleNanOrInf(const QwtPointPolar& sample)
 {
-    return !std::isfinite(sample.azimuth()) || !std::isfinite(sample.radius());
+    return qwt_is_nan_or_inf(sample.azimuth()) || qwt_is_nan_or_inf(sample.radius());
 }
 
 bool isSampleNanOrInf(const QwtSetSample& sample)
@@ -52,36 +52,35 @@ bool isSampleNanOrInf(const QwtSetSample& sample)
 
 bool isSampleNanOrInf(const QwtIntervalSample& sample)
 {
-
-    return !std::isfinite(sample.value) || !std::isfinite(sample.interval.minValue())
-           || !std::isfinite(sample.interval.maxValue());
+    return qwt_is_nan_or_inf(sample.value) || qwt_is_nan_or_inf(sample.interval.minValue())
+           || qwt_is_nan_or_inf(sample.interval.maxValue());
 }
 
 bool isSampleNanOrInf(const QwtOHLCSample& sample)
 {
-
-    return !std::isfinite(sample.close) || !std::isfinite(sample.high) || !std::isfinite(sample.low)
-           || !std::isfinite(sample.open) || !std::isfinite(sample.time);
+    return qwt_is_nan_or_inf(sample.open) || qwt_is_nan_or_inf(sample.high) || qwt_is_nan_or_inf(sample.low)
+           || qwt_is_nan_or_inf(sample.close) || qwt_is_nan_or_inf(sample.time);
 }
 
 bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
 {
-
-    return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
+    return qwt_is_nan_or_inf(sample.x) || qwt_is_nan_or_inf(sample.y) || qwt_is_nan_or_inf(sample.vx)
+           || qwt_is_nan_or_inf(sample.vy);
 }
 
 bool isSampleNanOrInf(const QwtBoxSample& sample)
 {
-    return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower) || !std::isfinite(sample.q1)
-           || !std::isfinite(sample.median) || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+    return qwt_is_nan_or_inf(sample.position) || qwt_is_nan_or_inf(sample.whiskerLower) || qwt_is_nan_or_inf(sample.q1)
+           || qwt_is_nan_or_inf(sample.median) || qwt_is_nan_or_inf(sample.q3)
+           || qwt_is_nan_or_inf(sample.whiskerUpper);
 }
 
 bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
 {
-    if (!std::isfinite(sample.boxPosition))
+    if (qwt_is_nan_or_inf(sample.boxPosition))
         return true;
     for (int i = 0; i < sample.values.size(); ++i) {
-        if (!std::isfinite(sample.values[ i ]))
+        if (qwt_is_nan_or_inf(sample.values[ i ]))
             return true;
     }
     return false;
