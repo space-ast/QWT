@@ -36,6 +36,16 @@
 
 class QwtPointPolar;
 
+QWTCORE_EXPORT bool isSampleNanOrInf(const QPointF& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPoint3D& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPointPolar& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtSetSample& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtIntervalSample& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtOHLCSample& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtVectorFieldSample& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxSample& sample);
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxOutlierSample& sample);
+
 /**
  * @brief Abstract interface for iterating over samples
  * @details Qwt offers several implementations of the QwtSeriesData API,
