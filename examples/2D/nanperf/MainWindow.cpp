@@ -27,21 +27,21 @@ MainWindow::MainWindow(QWidget* parent)
     , m_pointsSpin(new QSpinBox(this))
     , m_nanFractionSpin(new QDoubleSpinBox(this))
     , m_repeatsSpin(new QSpinBox(this))
-    , m_applyBtn(new QPushButton(QStringLiteral("应用并重绘"), this))
-    , m_sweepBtn(new QPushButton(QStringLiteral("运行基准扫描"), this))
-    , m_exportBtn(new QPushButton(QStringLiteral("导出Markdown"), this))
+    , m_applyBtn(new QPushButton(QStringLiteral("Apply & Redraw"), this))
+    , m_sweepBtn(new QPushButton(QStringLiteral("Run Benchmark Sweep"), this))
+    , m_exportBtn(new QPushButton(QStringLiteral("Export Markdown"), this))
     , m_progress(new QProgressBar(this))
     , m_table(new QTableWidget(this))
     , m_analysisLabel(new QLabel(this))
     , m_runner(nullptr)
 {
     m_table->setColumnCount(6);
-    m_table->setHorizontalHeaderLabels({ QStringLiteral("情况"),
-                                         QStringLiteral("模式"),
+    m_table->setHorizontalHeaderLabels({ QStringLiteral("Case"),
+                                         QStringLiteral("Mode"),
                                          QStringLiteral("boundingRect(ms)"),
                                          QStringLiteral("replot(ms)"),
                                          QStringLiteral("FPS"),
-                                         QStringLiteral("NaN点数") });
+                                         QStringLiteral("NaN Points") });
     m_table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -67,14 +67,14 @@ MainWindow::MainWindow(QWidget* parent)
     outer->addLayout(buildControls());
     outer->addWidget(m_progress);
     outer->addLayout(grid, 1);
-    outer->addWidget(new QLabel(QStringLiteral("指标:")));
+    outer->addWidget(new QLabel(QStringLiteral("Metrics:")));
     outer->addWidget(m_table, 1);
-    outer->addWidget(new QLabel(QStringLiteral("瓶颈分析:")));
+    outer->addWidget(new QLabel(QStringLiteral("Bottleneck Analysis:")));
     outer->addWidget(m_analysisLabel);
     setCentralWidget(central);
 
     refreshPanels();
-    setWindowTitle(QStringLiteral("nanperf — NaN 渲染与性能"));
+    setWindowTitle(QStringLiteral("nanperf — NaN Rendering & Performance"));
     resize(1280, 960);
 }
 
@@ -97,13 +97,13 @@ QLayout* MainWindow::buildControls()
     m_repeatsSpin->setValue(20);
 
     auto* bar = new QHBoxLayout;
-    bar->addWidget(new QLabel(QStringLiteral("模式:")));
+    bar->addWidget(new QLabel(QStringLiteral("Mode:")));
     bar->addWidget(m_modeCombo);
-    bar->addWidget(new QLabel(QStringLiteral("点数:")));
+    bar->addWidget(new QLabel(QStringLiteral("Points:")));
     bar->addWidget(m_pointsSpin);
-    bar->addWidget(new QLabel(QStringLiteral("NaN比例:")));
+    bar->addWidget(new QLabel(QStringLiteral("NaN Ratio:")));
     bar->addWidget(m_nanFractionSpin);
-    bar->addWidget(new QLabel(QStringLiteral("重复:")));
+    bar->addWidget(new QLabel(QStringLiteral("Repeats:")));
     bar->addWidget(m_repeatsSpin);
     bar->addWidget(m_applyBtn);
     bar->addWidget(m_sweepBtn);
@@ -139,7 +139,7 @@ void MainWindow::onRunSweep()
     m_exportBtn->setEnabled(false);
     m_progress->setRange(0, 25);
     m_progress->setValue(0);
-    m_analysisLabel->setText(QStringLiteral("扫描中..."));
+    m_analysisLabel->setText(QStringLiteral("Sweeping..."));
     QApplication::processEvents();
 
     m_runner->runSweep(m_pointsSpin->value(), m_nanFractionSpin->value(), m_repeatsSpin->value());
@@ -182,7 +182,7 @@ void MainWindow::onExport()
     if (m_lastResults.isEmpty())
         return;
     const QString path = QFileDialog::getSaveFileName(
-        this, QStringLiteral("导出 Markdown"), QStringLiteral("nanperf-report.md"), QStringLiteral("Markdown (*.md)"));
+        this, QStringLiteral("Export Markdown"), QStringLiteral("nanperf-report.md"), QStringLiteral("Markdown (*.md)"));
     if (path.isEmpty())
         return;
     QFile file(path);
@@ -190,7 +190,7 @@ void MainWindow::onExport()
         return;
     QTextStream out(&file);
     out << "# nanperf benchmark report\n\n";
-    out << "| 情况 | 模式 | boundingRect(ms) | replot(ms) | FPS | NaN点数 |\n";
+    out << "| Case | Mode | boundingRect(ms) | replot(ms) | FPS | NaN Points |\n";
     out << "|------|------|------------------|------------|-----|--------|\n";
     for (const auto& r : qwt_as_const(m_lastResults)) {
         out << QString("| %1 | %2 | %3 | %4 | %5 | %6 |\n")

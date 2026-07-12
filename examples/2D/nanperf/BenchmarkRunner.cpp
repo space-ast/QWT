@@ -128,13 +128,13 @@ QString BenchmarkRunner::analyze(const QVector< BenchResult >& results)
     const double otherRatio   = (otherBaseAvg > 0.0) ? otherNanAvg / otherBaseAvg : 0.0;
 
     QString text;
-    text += QStringLiteral("瓶颈分析:\n");
-    text += QStringLiteral("• boundingRect 平均 %1 ms（与模式无关）→ 自动量程 O(n) 扫描瓶颈\n").arg(brAvg, 0, 'f', 3);
-    text += QStringLiteral("• FilterPointsLTTB 含 NaN replot %1 ms vs 基准 %2 ms（%3x）→ AVX2 SIMD 被 NaN 禁用\n")
+    text += QStringLiteral("Bottleneck Analysis:\n");
+    text += QStringLiteral("• boundingRect avg %1 ms (mode-independent) → autoscale O(n) scan bottleneck\n").arg(brAvg, 0, 'f', 3);
+    text += QStringLiteral("• FilterPointsLTTB with NaN replot %1 ms vs baseline %2 ms (%3x) → AVX2 SIMD disabled by NaN\n")
                 .arg(lttbNanAvg, 0, 'f', 3)
                 .arg(lttbBaseAvg, 0, 'f', 3)
                 .arg(lttbRatio, 0, 'f', 2);
-    text += QStringLiteral("• 其他模式 NaN 惩罚 %1x（%2 ms vs 基准 %3 ms）→ 确认悬崖为 LTTB 特有\n")
+    text += QStringLiteral("• Other modes NaN penalty %1x (%2 ms vs baseline %3 ms) → confirms cliff is LTTB-specific\n")
                 .arg(otherRatio, 0, 'f', 2)
                 .arg(otherNanAvg, 0, 'f', 3)
                 .arg(otherBaseAvg, 0, 'f', 3);

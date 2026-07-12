@@ -69,15 +69,15 @@ QString NanDataGenerator::caseLabel(NanCase cs)
 {
     switch (cs) {
     case NanCase::Leading:
-        return QStringLiteral("开头NaN");
+        return QStringLiteral("Leading NaN");
     case NanCase::LeadingTrailing:
-        return QStringLiteral("头尾NaN");
+        return QStringLiteral("Leading & Trailing NaN");
     case NanCase::Middle:
-        return QStringLiteral("中间NaN");
+        return QStringLiteral("Middle NaN");
     case NanCase::Trailing:
-        return QStringLiteral("结尾NaN");
+        return QStringLiteral("Trailing NaN");
     case NanCase::Baseline:
-        return QStringLiteral("无NaN基准");
+        return QStringLiteral("No NaN Baseline");
     }
     return QString();
 }
