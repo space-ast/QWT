@@ -117,8 +117,10 @@ static inline QRectF qwtBoundingRect(const QwtSetSample& sample)
     double maxY = sample.set[ begin ];
     while (begin < sample.set.size() && qwt_is_nan_or_inf(minY)) {
         ++begin;
-        minY = sample.set[ begin ];
-        maxY = sample.set[ begin ];
+        if (begin < sample.set.size()) {
+            minY = sample.set[ begin ];
+            maxY = sample.set[ begin ];
+        }
     }
     for (int i = begin + 1; i < sample.set.size(); ++i) {
         // modify by czy at 2025-12
@@ -163,14 +165,26 @@ static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
     if (sample.values.isEmpty())
         return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
 
-    double minVal = sample.values[ 0 ];
-    double maxVal = sample.values[ 0 ];
-    for (int i = 1; i < sample.values.size(); ++i) {
-        if (sample.values[ i ] < minVal)
+    double minVal = 0.0;
+    double maxVal = 0.0;
+    bool found = false;
+    for (int i = 0; i < sample.values.size(); ++i) {
+        if (qwt_is_nan_or_inf(sample.values[ i ]))
+            continue;
+        if (!found) {
             minVal = sample.values[ i ];
-        if (sample.values[ i ] > maxVal)
             maxVal = sample.values[ i ];
+            found = true;
+        } else {
+            if (sample.values[ i ] < minVal)
+                minVal = sample.values[ i ];
+            if (sample.values[ i ] > maxVal)
+                maxVal = sample.values[ i ];
+        }
     }
+    if (!found)
+        return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
+
     return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
 }
 
