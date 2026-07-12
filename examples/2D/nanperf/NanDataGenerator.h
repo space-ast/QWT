@@ -11,11 +11,16 @@ enum class NanCase
     LeadingTrailing,  ///< NaN at both ends, signal in the middle
     Middle,           ///< Signal at both ends, NaN in the middle
     Trailing,         ///< Signal first, NaN at the end
+    XyNan,            ///< NaN in both X and Y at the middle (breaks monotonic X)
+    XyInterleavedNan, ///< Alternating X-only and Y-only NaN in the middle
     Baseline          ///< No NaN (reference)
 };
 
 /// Generates X/Y sample arrays for the NaN rendering/performance example.
-/// X is the monotonic finite index 0..N-1; NaN is placed only in Y.
+/// For most cases X is the monotonic finite index 0..N-1 and NaN is placed
+/// only in Y. XyNan injects NaN into both X and Y simultaneously.
+/// XyInterleavedNan alternates X-only and Y-only NaN so no point has both
+/// coordinates NaN.
 class NanDataGenerator
 {
 public:
@@ -28,7 +33,7 @@ public:
     /// Exact number of NaN points produced for @a cs.
     static int nanCount(NanCase cs, int numPoints, double nanFraction);
 
-    /// Human-readable label (Chinese) for @a cs.
+    /// Human-readable label for @a cs.
     static QString caseLabel(NanCase cs);
 };
 

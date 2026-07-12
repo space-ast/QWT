@@ -22,6 +22,8 @@ int NanDataGenerator::nanCount(NanCase cs, int numPoints, double nanFraction)
     case NanCase::Leading:
     case NanCase::Middle:
     case NanCase::Trailing:
+    case NanCase::XyNan:
+    case NanCase::XyInterleavedNan:
         return nanN;
     case NanCase::LeadingTrailing:
         return 2 * (nanN / 2);
@@ -44,24 +46,46 @@ void NanDataGenerator::generate(NanCase cs, int numPoints, double nanFraction, Q
         x[ i ] = static_cast< double >(i);
 
         bool isNan = false;
+        bool xNan  = false;
+        bool yNan  = false;
         switch (cs) {
         case NanCase::Leading:
             isNan = (i < nanN);
+            yNan  = isNan;
             break;
         case NanCase::LeadingTrailing:
             isNan = (i < half) || (i >= numPoints - half);
+            yNan  = isNan;
             break;
         case NanCase::Middle:
+        case NanCase::XyNan:
             isNan = (i >= midStart) && (i < midStart + nanN);
+            yNan  = isNan;
+            if (cs == NanCase::XyNan && isNan)
+                xNan = true;
             break;
+        case NanCase::XyInterleavedNan: {
+            const bool inRange = (i >= midStart) && (i < midStart + nanN);
+            if (inRange) {
+                if ((i - midStart) % 2 == 0)
+                    xNan = true;  // even: X-only NaN
+                else
+                    yNan = true;  // odd: Y-only NaN
+            }
+            isNan = inRange;
+            break;
+        }
         case NanCase::Trailing:
             isNan = (i >= numPoints - nanN);
+            yNan  = isNan;
             break;
         case NanCase::Baseline:
             isNan = false;
             break;
         }
-        y[ i ] = isNan ? nan : signalValue(i);
+        y[ i ] = yNan ? nan : signalValue(i);
+        if (xNan)
+            x[ i ] = nan;
     }
 }
 
@@ -76,6 +100,10 @@ QString NanDataGenerator::caseLabel(NanCase cs)
         return QStringLiteral("Middle NaN");
     case NanCase::Trailing:
         return QStringLiteral("Trailing NaN");
+    case NanCase::XyNan:
+        return QStringLiteral("X+Y Middle NaN");
+    case NanCase::XyInterleavedNan:
+        return QStringLiteral("X/Y Interleaved NaN");
     case NanCase::Baseline:
         return QStringLiteral("No NaN Baseline");
     }

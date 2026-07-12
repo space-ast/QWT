@@ -51,12 +51,12 @@ MainWindow::MainWindow(QWidget* parent)
     m_progress->setRange(0, 1);
     m_progress->setValue(0);
 
-    const NanCase cases[ 4 ] = { NanCase::Leading, NanCase::LeadingTrailing, NanCase::Middle, NanCase::Trailing };
+    const NanCase cases[ 6 ] = { NanCase::Leading, NanCase::LeadingTrailing, NanCase::Middle, NanCase::Trailing, NanCase::XyNan, NanCase::XyInterleavedNan };
     auto* grid               = new QGridLayout;
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 6; ++i) {
         auto* panel = new PlotPanel(cases[ i ]);
         m_panels.append(panel);
-        grid->addWidget(panel, i / 2, i % 2);
+        grid->addWidget(panel, i / 3, i % 3);
     }
     m_runner = new BenchmarkRunner(m_panels, this);
     connect(m_runner, &BenchmarkRunner::progress, this, &MainWindow::onProgress);
@@ -122,8 +122,7 @@ void MainWindow::refreshPanels()
     const double f = m_nanFractionSpin->value();
     const int mode = m_modeCombo->currentIndex();
     for (auto* panel : qwt_as_const(m_panels)) {
-        panel->setCurveData(n, f);
-        panel->setMode(mode);
+        panel->apply(n, f, mode);
     }
 }
 
@@ -137,7 +136,7 @@ void MainWindow::onRunSweep()
     m_sweepBtn->setEnabled(false);
     m_applyBtn->setEnabled(false);
     m_exportBtn->setEnabled(false);
-    m_progress->setRange(0, 25);
+    m_progress->setRange(0, m_panels.size() * filterModes().size() + filterModes().size());
     m_progress->setValue(0);
     m_analysisLabel->setText(QStringLiteral("Sweeping..."));
     QApplication::processEvents();

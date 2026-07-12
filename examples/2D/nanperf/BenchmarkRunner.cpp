@@ -20,7 +20,7 @@ BenchResult BenchmarkRunner::measureOn(PlotPanel* panel, NanCase cs, int modeInd
     panel->setMode(modeIndex);
     panel->setFixedScales(numPoints);
 
-    // --- boundingRect timing (bottleneck #2: autoscale O(n) scan) ---
+    // --- boundingRect timing (cold-cache O(n) scan, NOT autoscale — fixed scales used) ---
     qint64 totalNs = 0;
     for (int r = 0; r < repeats; ++r) {
         curve->setSamples(x, y);  // invalidate cache (untimed)
@@ -35,7 +35,7 @@ BenchResult BenchmarkRunner::measureOn(PlotPanel* panel, NanCase cs, int modeInd
     curve->setSamples(x, y);
     curve->data()->boundingRect();
 
-    // --- replot timing (bottleneck #1: render/mapping, incl. LTTB SIMD cliff) ---
+    // --- replot timing (pure render/mapping; LTTB SIMD cliff visible here) ---
     totalNs = 0;
     for (int r = 0; r < repeats; ++r) {
         m_timer.start();
@@ -89,13 +89,21 @@ void BenchmarkRunner::runSweep(int numPoints, double nanFraction, int repeats)
 
 QString BenchmarkRunner::analyze(const QVector< BenchResult >& results)
 {
-    double brSum = 0.0;
-    int brN      = 0;
+    // boundingRect: split by baseline vs NaN (position-independent — the O(n)
+    // scan visits every sample; NaN points are skipped after an isfinite check).
+    double brBaseSum = 0.0, brNanSum = 0.0;
+    int brBaseN = 0, brNanN = 0;
     for (const auto& r : results) {
-        brSum += r.boundingRectMs;
-        ++brN;
+        if (r.caseId == NanCase::Baseline) {
+            brBaseSum += r.boundingRectMs;
+            ++brBaseN;
+        } else {
+            brNanSum += r.boundingRectMs;
+            ++brNanN;
+        }
     }
-    const double brAvg = brN ? brSum / brN : 0.0;
+    const double brBaseAvg = brBaseN ? brBaseSum / brBaseN : 0.0;
+    const double brNanAvg  = brNanN ? brNanSum / brNanN : 0.0;
 
     auto avgReplot = [](const QVector< BenchResult >& rs) {
         double s = 0.0;
@@ -107,6 +115,12 @@ QString BenchmarkRunner::analyze(const QVector< BenchResult >& results)
         return n ? s / n : 0.0;
     };
 
+    // LTTB is the only mode with a SIMD fast path (qwtSimdArgMinMax inside
+    // qwtMinMaxBucketReduce). When *any* NaN is present, a pre-scan globally
+    // disables SIMD and falls back to scalar. The ratio isolates this:
+    //   ratio > 1.0  → SIMD cliff dominates (NaN is slower, visible at low NaN%)
+    //   ratio < 1.0  → data reduction dominates (NaN is faster, visible at high NaN%)
+    // Other modes have no SIMD path — their ratio reflects pure data reduction.
     QVector< BenchResult > lttbNan, lttbBase, otherNan, otherBase;
     for (const auto& r : results) {
         const bool isLttb = r.modeLabel == QLatin1String("FilterPointsLTTB");
@@ -127,17 +141,61 @@ QString BenchmarkRunner::analyze(const QVector< BenchResult >& results)
     const double lttbRatio    = (lttbBaseAvg > 0.0) ? lttbNanAvg / lttbBaseAvg : 0.0;
     const double otherRatio   = (otherBaseAvg > 0.0) ? otherNanAvg / otherBaseAvg : 0.0;
 
+    // The differential (lttbRatio - otherRatio) isolates the SIMD cliff from
+    // the data-reduction effect shared by all modes.
+    const double simdCliffDelta = lttbRatio - otherRatio;
+
     QString text;
     text += QString("Bottleneck Analysis:\n");
-    text +=
-        QString(u8"• boundingRect avg %1 ms (mode-independent) → autoscale O(n) scan bottleneck\n").arg(brAvg, 0, 'f', 3);
-    text += QString(u8"• FilterPointsLTTB with NaN replot %1 ms vs baseline %2 ms (%3x) → AVX2 SIMD disabled by NaN\n")
+
+    // 1. boundingRect — cold-cache O(n) scan (NOT autoscale; fixed scales used).
+    text += QString(u8"• boundingRect: baseline %1 ms vs NaN %2 ms — "
+                    u8"cold-cache O(n) scan (cached in practice, re-computed only on data change)\n")
+                .arg(brBaseAvg, 0, 'f', 3)
+                .arg(brNanAvg, 0, 'f', 3);
+
+    // 2. LTTB — SIMD cliff.
+    text += QString(u8"• FilterPointsLTTB: NaN %1 ms vs baseline %2 ms (%3x) — "
+                    u8"qwtMinMaxBucketReduce disables SIMD on any NaN (scalar fallback); "
+                    u8"ratio > 1.0 = SIMD cliff dominates, < 1.0 = data reduction dominates\n")
                 .arg(lttbNanAvg, 0, 'f', 3)
                 .arg(lttbBaseAvg, 0, 'f', 3)
                 .arg(lttbRatio, 0, 'f', 2);
-    text += QString(u8"• Other modes NaN penalty %1x (%2 ms vs baseline %3 ms) → confirms cliff is LTTB-specific\n")
-                .arg(otherRatio, 0, 'f', 2)
+
+    // 3. Other modes — no SIMD, pure data reduction.
+    text += QString(u8"• Other modes: NaN %1 ms vs baseline %2 ms (%3x) — "
+                    u8"no SIMD path; ratio reflects pure data reduction (fewer finite points to map)\n")
                 .arg(otherNanAvg, 0, 'f', 3)
-                .arg(otherBaseAvg, 0, 'f', 3);
+                .arg(otherBaseAvg, 0, 'f', 3)
+                .arg(otherRatio, 0, 'f', 2);
+
+    // 4. Differential — isolates SIMD cliff from data reduction.
+    // Based on empirical data across NaN ratios (5%, 90%, 95%):
+    //   - delta < 0      → LTTB benefits MORE from NaN (SIMD penalty negligible for small buckets)
+    //   - 0 <= delta <= 0.1 → SIMD penalty marginal (barely detectable)
+    //   - delta > 0.1    → SIMD cliff clearly visible (not yet observed in any test)
+    const QString deltaStr = QString::number(simdCliffDelta, 'f', 2);
+    const QString sign      = (simdCliffDelta >= 0.0) ? QStringLiteral("+") + deltaStr : deltaStr;
+
+    if (simdCliffDelta > 0.1) {
+        text += QString(u8"• LTTB ratio %1x vs other ratio %2x (delta %3) → "
+                        u8"SIMD cliff clearly visible: LTTB penalized by scalar fallback at this NaN ratio\n")
+                    .arg(lttbRatio, 0, 'f', 2)
+                    .arg(otherRatio, 0, 'f', 2)
+                    .arg(sign);
+    } else if (simdCliffDelta >= 0.0) {
+        text += QString(u8"• LTTB ratio %1x vs other ratio %2x (delta %3) → "
+                        u8"SIMD penalty marginal at this NaN ratio (scalar overhead negligible for small buckets)\n")
+                    .arg(lttbRatio, 0, 'f', 2)
+                    .arg(otherRatio, 0, 'f', 2)
+                    .arg(sign);
+    } else {
+        text += QString(u8"• LTTB ratio %1x vs other ratio %2x (delta %3) → "
+                        u8"LTTB benefits more from data reduction (SIMD penalty negligible at this NaN ratio)\n")
+                    .arg(lttbRatio, 0, 'f', 2)
+                    .arg(otherRatio, 0, 'f', 2)
+                    .arg(sign);
+    }
+
     return text;
 }

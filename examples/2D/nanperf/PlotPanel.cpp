@@ -2,6 +2,7 @@
 #include "FilterModes.h"
 
 #include <QLabel>
+#include <QElapsedTimer>
 #include <QVBoxLayout>
 
 #include <qwt_plot.h>
@@ -58,6 +59,20 @@ void PlotPanel::setFixedScales(int numPoints)
 {
     m_plot->setAxisScale(QwtAxis::XBottom, 0.0, qMax(1, numPoints - 1));
     m_plot->setAxisScale(QwtAxis::YLeft, -1.5, 1.5);
+}
+
+void PlotPanel::apply(int numPoints, double nanFraction, int modeIndex)
+{
+    QVector< double > x, y;
+    NanDataGenerator::generate(m_case, numPoints, nanFraction, x, y);
+    m_curve->setSamples(x, y);
+    setFixedScales(numPoints);
+    applyMode(m_curve, modeIndex);
+
+    QElapsedTimer timer;
+    timer.start();
+    m_plot->replot();
+    showReplotTime(timer.nsecsElapsed() / 1.0e6);
 }
 
 void PlotPanel::showReplotTime(double ms)

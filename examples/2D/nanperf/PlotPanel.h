@@ -23,6 +23,9 @@ public:
     /// Fix axis scales so replot does not autoscale (pure render).
     void setFixedScales(int numPoints);
 
+    /// Set data, apply mode, replot, and show the measured replot time.
+    void apply(int numPoints, double nanFraction, int modeIndex);
+
     QwtPlot* plot() const
     {
         return m_plot;
