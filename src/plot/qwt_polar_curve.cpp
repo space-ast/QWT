@@ -377,10 +377,15 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 
     if (d->curveFitter) {
         QPolygonF points(size);
+        int validCount = 0;
         for (int j = from; j <= to; j++) {
             const QwtPointPolar point = sample(j);
-            points[ j - from ]        = QPointF(point.azimuth(), point.radius());
+            if (isSampleNanOrInf(point))
+                continue;
+
+            points[ validCount++ ] = QPointF(point.azimuth(), point.radius());
         }
+        points.resize(validCount);
 
         points = d->curveFitter->fitCurve(points);
 
@@ -403,6 +408,9 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 
         for (int i = from; i <= to; i++) {
             QwtPointPolar point = sample(i);
+            if (isSampleNanOrInf(point))
+                continue;
+
             if (!qwtInsidePole(radialMap, point.radius())) {
                 double r                 = radialMap.transform(point.radius());
                 const double a           = azimuthMap.transform(point.azimuth());
@@ -463,6 +471,9 @@ void QwtPolarCurve::drawSymbols(QPainter* painter,
         QPolygonF points;
         for (int j = 0; j < n; j++) {
             const QwtPointPolar point = sample(i + j);
+
+            if (isSampleNanOrInf(point))
+                continue;
 
             if (!qwtInsidePole(radialMap, point.radius())) {
                 const double r = radialMap.transform(point.radius());
