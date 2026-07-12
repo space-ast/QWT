@@ -154,7 +154,7 @@ void QwtGridRasterData::setValue(const QVector< double >& x, const QVector< doub
     if (dy.empty()) {
         d->dyMin = 0;
     } else {
-        d->dyMin = *std::max_element(dy.begin(), dy.end());
+        d->dyMin = *std::min_element(dy.begin(), dy.end());
     }
 }
 
