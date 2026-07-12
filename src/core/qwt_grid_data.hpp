@@ -4,13 +4,15 @@
  *****************************************************************************/
 #ifndef QWT_GRID_DATA_HPP
 #define QWT_GRID_DATA_HPP
-#include "qwt_math.h"
+
 #include <vector>
 #include <algorithm>
 #include <limits>
 #include <cmath>
 #include <cassert>
 #include <stdexcept>
+
+#include "qwt_math.h"
 
 /**
  * @class QwtGridData

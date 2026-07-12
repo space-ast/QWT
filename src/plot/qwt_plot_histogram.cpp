@@ -437,6 +437,7 @@ void QwtPlotHistogram::drawOutline(QPainter* painter, const QwtScaleMap& xMap, c
 
         if (isSampleNanOrInf(sample)) {
             flushPolygon(painter, v0, polygon);
+            previous = QwtIntervalSample();
             continue;
         }
 

@@ -125,7 +125,7 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& da
     }
 
     if (count < 2)
-        return 0.0;
+        return count == 0 ? qQNaN() : 0.0;
 
     const double m = sum / count;
     double sumSq   = 0.0;
@@ -209,6 +209,8 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(double position,
     // Count outliers
     int outlierCount = 0;
     for (int i = 0; i < sortedData.size(); ++i) {
+        if (qwt_is_nan_or_inf(sortedData[ i ]))
+            continue;
         if (sortedData[ i ] < whiskerLower || sortedData[ i ] > whiskerUpper)
             outlierCount++;
     }

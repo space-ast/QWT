@@ -25,14 +25,15 @@
  *****************************************************************************/
 
 #include "qwt_raster_data.h"
-#include "qwt_point_3d.h"
-#include "qwt_interval.h"
-#include "qwt_math.h"
 
 #include <qrect.h>
 #include <qpolygon.h>
 #include <qnumeric.h>
 #include <qlist.h>
+
+#include "qwt_point_3d.h"
+#include "qwt_interval.h"
+#include "qwt_math.h"
 #include <qmap.h>
 
 class QwtRasterData::ContourPlane
@@ -370,7 +371,7 @@ QwtRasterData::contourLines(const QRectF& rect, const QSize& raster, const QList
             }
 
             if (qwt_is_nan_or_inf(zSum)) {
-                // one of the points is NaN
+                // one of the points is NaN or Inf
                 continue;
             }
 
