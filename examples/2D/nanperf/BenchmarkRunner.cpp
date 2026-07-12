@@ -1,4 +1,4 @@
-#include "BenchmarkRunner.h"
+﻿#include "BenchmarkRunner.h"
 #include "PlotPanel.h"
 #include "FilterModes.h"
 
@@ -128,13 +128,14 @@ QString BenchmarkRunner::analyze(const QVector< BenchResult >& results)
     const double otherRatio   = (otherBaseAvg > 0.0) ? otherNanAvg / otherBaseAvg : 0.0;
 
     QString text;
-    text += QStringLiteral("Bottleneck Analysis:\n");
-    text += QStringLiteral("• boundingRect avg %1 ms (mode-independent) → autoscale O(n) scan bottleneck\n").arg(brAvg, 0, 'f', 3);
-    text += QStringLiteral("• FilterPointsLTTB with NaN replot %1 ms vs baseline %2 ms (%3x) → AVX2 SIMD disabled by NaN\n")
+    text += QString("Bottleneck Analysis:\n");
+    text +=
+        QString(u8"• boundingRect avg %1 ms (mode-independent) → autoscale O(n) scan bottleneck\n").arg(brAvg, 0, 'f', 3);
+    text += QString(u8"• FilterPointsLTTB with NaN replot %1 ms vs baseline %2 ms (%3x) → AVX2 SIMD disabled by NaN\n")
                 .arg(lttbNanAvg, 0, 'f', 3)
                 .arg(lttbBaseAvg, 0, 'f', 3)
                 .arg(lttbRatio, 0, 'f', 2);
-    text += QStringLiteral("• Other modes NaN penalty %1x (%2 ms vs baseline %3 ms) → confirms cliff is LTTB-specific\n")
+    text += QString(u8"• Other modes NaN penalty %1x (%2 ms vs baseline %3 ms) → confirms cliff is LTTB-specific\n")
                 .arg(otherRatio, 0, 'f', 2)
                 .arg(otherNanAvg, 0, 'f', 3)
                 .arg(otherBaseAvg, 0, 'f', 3);

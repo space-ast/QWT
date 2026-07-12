@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 #include "PlotPanel.h"
 #include "FilterModes.h"
 #include "BenchmarkRunner.h"
@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget* parent)
     setCentralWidget(central);
 
     refreshPanels();
-    setWindowTitle(QStringLiteral("nanperf — NaN Rendering & Performance"));
+    setWindowTitle(QStringLiteral("nanperf - NaN Rendering & Performance"));
     resize(1280, 960);
 }
 
@@ -182,7 +182,8 @@ void MainWindow::onExport()
     if (m_lastResults.isEmpty())
         return;
     const QString path = QFileDialog::getSaveFileName(
-        this, QStringLiteral("Export Markdown"), QStringLiteral("nanperf-report.md"), QStringLiteral("Markdown (*.md)"));
+        this, QStringLiteral("Export Markdown"), QStringLiteral("nanperf-report.md"), QStringLiteral("Markdown (*.md)")
+    );
     if (path.isEmpty())
         return;
     QFile file(path);

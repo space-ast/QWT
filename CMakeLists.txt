@@ -73,6 +73,13 @@ if(MSVC)
     string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /MP")
 endif()
 
+if(MINGW)
+    # GCC defaults -finput-charset=UTF-8 but -fexec-charset follows the
+    # system code page (e.g. GBK/CP936 on Chinese Windows), which corrupts
+    # UTF-8 narrow string literals fed to QStringLiteral / QString::fromUtf8.
+    add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
+
 ########################################################
 # Install Path Settings
 ########################################################
