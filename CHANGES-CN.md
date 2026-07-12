@@ -1,3 +1,58 @@
+## tag:v7.3.4 (2026-07-12)
+
+### 新功能
+
+- **全 2D 模块统一 NaN/Inf 处理**
+    - 将 5 种混用的 NaN 检测方式（`qwt_is_nan_or_inf`、`!std::isfinite`、`qIsNaN`、`std::isnan`、本地位级 `qwtIsNaN`）统一为 `qwt_is_nan_or_inf()`，覆盖 `src/plot/` 和 `src/core/`
+    - 将 `isSampleNanOrInf()` 从匿名命名空间提升为 `qwt_series_data.h` 中的公共导出 API，供所有绘图项使用
+    - 为 10+ 个原先缺失 NaN 处理的绘图项添加 NaN/Inf 跳过：
+        - `QwtPlotBarChart`、`QwtPlotHistogram`、`QwtPlotIntervalCurve`、`QwtPlotMultiBarChart`
+        - `QwtPlotTradingCurve`、`QwtPlotVectorField`、`QwtPlotBoxChart`、`QwtPlotSpectroCurve`
+        - `QwtPolarCurve`、`QwtPlotSpectrogram`（替换本地位级 `qwtIsNaN`）、`QwtPolarSpectrogram`
+    - 补全 `QwtPlotCurve` 中 4 处缺失的 NaN 跳过路径
+    - `QwtColorMap::rgb()` 和 `colorIndex()` 对 NaN/Inf 输入值返回透明色
+    - `QwtBoxStatistics` 在排序和统计计算前预过滤 NaN/Inf
+    - 新增双语 NaN 处理用户指南（`docs/use-guide/nan-handling.md`）
+
+- **nanperf — NaN 性能基准测试示例**
+    - 新增示例位于 `examples/2D/nanperf/`，用于基准测试 NaN 处理性能
+    - `NanDataGenerator` 支持可配置的 NaN 分布模式，附带单元测试
+    - `BenchmarkRunner` 提供计时框架，跨过滤模式和数据量进行分析
+    - `MainWindow` 采用 2×2 网格布局、控制栏、扫描编排和 Markdown 报告导出
+    - `FilterModes` 和 `PlotPanel` 组件用于并排对比
+
+- **PySide6 绑定（POC）**
+    - 初始 PySide6/Shiboken6 绑定，覆盖 `qwt::core` 类
+    - 类型系统扩展至全部 core 模块类
+    - 完整功能测试套件（`bindings/tests/test_core.py`）
+    - CMake 集成，包含 `FindPySide6Shiboken.cmake` 和 `Shiboken6Tools`
+
+- **QwtDate 现代化**
+    - 将 `QwtDate` 内部实现从已弃用的 `Qt::TimeSpec` 迁移至 `QTimeZone`
+    - 在 `qwt_qt5qt6_compat.hpp` 中新增 `qwt::compat::` 时区辅助函数，保持 Qt 5.12+/Qt6 双兼容
+    - 更新 `qwt_date_scale_draw.cpp` 和 `qwt_date_scale_engine.cpp` 使用新 API
+
+### Bug 修复
+
+- 修复 `QwtVectorFieldSample` NaN 检查 — 原先检查 `vx` 两次，漏检 `vy`
+- 修复 `QwtInterval::contains(NaN)` — 原先错误返回 `true`，现正确返回 `false`
+- 修复 `qwtBoundingRect` 越界访问和 NaN 传播 bug
+- 修复 `QwtLinearColorMap::colorIndex()` — 注释声称处理 NaN 但实现未处理
+- 修复 `QwtGridData::findValueRange` NaN 传播和 `dyMin` 计算 bug
+- 修复 `QwtPolarSpectrogram` Indexed 路径缺失 NaN 守卫
+
+### 构建
+
+- 确保 MinGW 下 UTF-8 窄字符串字面量正确（CMake `target_compile_definitions` 添加 `UNICODE`/`_UNICODE`）
+- 新增 `qmakeExample` — 演示使用 qmake 进行单文件合并构建
+
+### 文档
+
+- 新增 qmake 单文件构建指南（中文，`docs/zh/build-guide/qmake-single-file.md`）
+- 在双语 README 中添加 qmake 使用说明
+- 修复曲线文档和头文件注释中错误的默认 `PaintAttribute` 描述
+- 更新双语曲线文档中的降采样算法推荐说明
+
 ## tag:v7.3.2 (2026-06-20)
 
 ### 新功能

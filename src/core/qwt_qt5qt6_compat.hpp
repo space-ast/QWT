@@ -2,6 +2,7 @@
 #define QWT_QT5QT6_COMPAT_HPP
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>
+#include <QtCore/QTimeZone>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QWheelEvent>
@@ -121,6 +122,46 @@ inline int wheelEventDelta(QWheelEvent* e)
     return e->angleDelta().y();
 #endif
 }
+/**
+ * @brief Get the UTC time zone
+ * @return QTimeZone representing UTC
+ * @note QTimeZone::utc() is available since Qt 6.5; for earlier versions
+ *       the constructor with the IANA ID "UTC" is used.
+ */
+inline QTimeZone utcTimeZone()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    return QTimeZone::utc();
+#else
+    return QTimeZone("UTC");
+#endif
+}
+
+/**
+ * @brief Get the system time zone
+ * @return QTimeZone representing the system's local time zone
+ */
+inline QTimeZone systemTimeZone()
+{
+    return QTimeZone::systemTimeZone();
+}
+
+/**
+ * @brief Create a time zone from an offset in seconds ahead of UTC
+ * @param seconds Offset in seconds from UTC
+ * @return QTimeZone with the given offset
+ * @note QTimeZone::fromSecondsAheadOfUtc() is available since Qt 6.4;
+ *       for earlier versions the deprecated integer constructor is used.
+ */
+inline QTimeZone offsetTimeZone(int seconds)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+    return QTimeZone::fromSecondsAheadOfUtc(seconds);
+#else
+    return QTimeZone(seconds);
+#endif
+}
+
 }  // namespace   compat
 }  // namespace   qwt
 #endif  // QWT_QT5QT6_COMPAT_HPP

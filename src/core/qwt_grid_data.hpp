@@ -4,12 +4,15 @@
  *****************************************************************************/
 #ifndef QWT_GRID_DATA_HPP
 #define QWT_GRID_DATA_HPP
+
 #include <vector>
 #include <algorithm>
 #include <limits>
 #include <cmath>
 #include <cassert>
 #include <stdexcept>
+
+#include "qwt_math.h"
 
 /**
  * @class QwtGridData
@@ -463,11 +466,19 @@ protected:
     {
         m_dataMin = std::numeric_limits< T >::max();
         m_dataMax = std::numeric_limits< T >::lowest();
+        bool found = false;
         for (const auto& column : m_data) {
             for (const auto& val : column) {
+                if (qwt_is_nan_or_inf(val))
+                    continue;
                 m_dataMin = std::min(m_dataMin, val);
                 m_dataMax = std::max(m_dataMax, val);
+                found = true;
             }
+        }
+        if (!found) {
+            m_dataMin = std::numeric_limits< T >::quiet_NaN();
+            m_dataMax = std::numeric_limits< T >::quiet_NaN();
         }
     }
 

@@ -1812,9 +1812,9 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
         QRectF boundingRect = item->boundingRect();
 
         // Check if valid, including NaN and infinity checks
-        if (boundingRect.isValid() && !boundingRect.isEmpty() && std::isfinite(boundingRect.left())
-            && std::isfinite(boundingRect.right()) && std::isfinite(boundingRect.top())
-            && std::isfinite(boundingRect.bottom())) {
+        if (boundingRect.isValid() && !boundingRect.isEmpty() && !qwt_is_nan_or_inf(boundingRect.left())
+            && !qwt_is_nan_or_inf(boundingRect.right()) && !qwt_is_nan_or_inf(boundingRect.top())
+            && !qwt_is_nan_or_inf(boundingRect.bottom())) {
 
             minX    = std::min(minX, boundingRect.left());
             maxX    = std::max(maxX, boundingRect.right());

@@ -63,21 +63,30 @@ static QwtInterval qwtMagnitudeRange(const QwtSeriesData< QwtVectorFieldSample >
     if (series->size() == 0)
         return QwtInterval(0, 1);
 
-    const QwtVectorFieldSample s0 = series->sample(0);
+    double min = -1.0;
+    double max = -1.0;
+    bool found = false;
 
-    double min = s0.vx * s0.vx + s0.vy * s0.vy;
-    double max = min;
-
-    for (uint i = 1; i < series->size(); i++) {
+    for (uint i = 0; i < series->size(); i++) {
         const QwtVectorFieldSample s = series->sample(i);
-        const double l               = s.vx * s.vx + s.vy * s.vy;
+        if (isSampleNanOrInf(s))
+            continue;
 
-        if (l < min)
+        const double l = s.vx * s.vx + s.vy * s.vy;
+        if (!found) {
             min = l;
-
-        if (l > max)
             max = l;
+            found = true;
+        } else {
+            if (l < min)
+                min = l;
+            if (l > max)
+                max = l;
+        }
     }
+
+    if (!found)
+        return QwtInterval(0, 1);
 
     min = std::sqrt(min);
     max = std::sqrt(max);
@@ -937,9 +946,14 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
 
         for (int i = from; i <= to; i++) {
             const QwtVectorFieldSample sample = series->sample(i);
-            if (!sample.isNull()) {
-                matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
-            }
+
+            if (isSampleNanOrInf(sample))
+                continue;
+
+            if (sample.isNull())
+                continue;
+
+            matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
         }
 
         const int numEntries               = matrix.numRows() * matrix.numColumns();
@@ -967,6 +981,9 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
     } else {
         for (int i = from; i <= to; i++) {
             const QwtVectorFieldSample sample = series->sample(i);
+
+            if (isSampleNanOrInf(sample))
+                continue;
 
             // arrows with zero length are never drawn
             if (sample.isNull())

@@ -99,10 +99,15 @@ double QwtBoxStatisticsCalculator::mean(const QVector< double >& data)
         return 0.0;
 
     double sum = 0.0;
-    for (int i = 0; i < data.size(); ++i)
-        sum += data[ i ];
+    int count = 0;
+    for (int i = 0; i < data.size(); ++i) {
+        if (!qwt_is_nan_or_inf(data[ i ])) {
+            sum += data[ i ];
+            ++count;
+        }
+    }
 
-    return sum / data.size();
+    return count > 0 ? sum / count : qQNaN();
 }
 
 double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& data)
@@ -110,14 +115,28 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& da
     if (data.size() < 2)
         return 0.0;
 
-    const double m = mean(data);
+    double sum = 0.0;
+    int count = 0;
+    for (int i = 0; i < data.size(); ++i) {
+        if (!qwt_is_nan_or_inf(data[ i ])) {
+            sum += data[ i ];
+            ++count;
+        }
+    }
+
+    if (count < 2)
+        return count == 0 ? qQNaN() : 0.0;
+
+    const double m = sum / count;
     double sumSq   = 0.0;
     for (int i = 0; i < data.size(); ++i) {
+        if (qwt_is_nan_or_inf(data[ i ]))
+            continue;
         const double diff = data[ i ] - m;
         sumSq += diff * diff;
     }
 
-    return std::sqrt(sumSq / (data.size() - 1));
+    return std::sqrt(sumSq / (count - 1));
 }
 
 /**
@@ -190,6 +209,8 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(double position,
     // Count outliers
     int outlierCount = 0;
     for (int i = 0; i < sortedData.size(); ++i) {
+        if (qwt_is_nan_or_inf(sortedData[ i ]))
+            continue;
         if (sortedData[ i ] < whiskerLower || sortedData[ i ] > whiskerUpper)
             outlierCount++;
     }
@@ -212,7 +233,14 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(double position,
                                                           WhiskerMethod method,
                                                           double coefficient)
 {
-    QVector< double > sorted = sortData(rawData);
+    QVector< double > filtered;
+    filtered.reserve(rawData.size());
+    for (int i = 0; i < rawData.size(); ++i) {
+        if (!qwt_is_nan_or_inf(rawData[ i ]))
+            filtered.append(rawData[ i ]);
+    }
+
+    QVector< double > sorted = sortData(filtered);
     return calculate(position, sorted, method, coefficient);
 }
 
@@ -229,6 +257,8 @@ QVector< double > QwtBoxStatisticsCalculator::extractOutliers(const QwtBoxSample
 
     for (int i = 0; i < sortedData.size(); ++i) {
         const double val = sortedData[ i ];
+        if (qwt_is_nan_or_inf(val))
+            continue;
         if (val < sample.whiskerLower || val > sample.whiskerUpper)
             outliers.append(val);
     }
@@ -253,7 +283,14 @@ void QwtBoxStatisticsCalculator::calculateFull(double position,
                                                WhiskerMethod method,
                                                double coefficient)
 {
-    QVector< double > sorted = sortData(rawData);
+    QVector< double > filtered;
+    filtered.reserve(rawData.size());
+    for (int i = 0; i < rawData.size(); ++i) {
+        if (!qwt_is_nan_or_inf(rawData[ i ]))
+            filtered.append(rawData[ i ]);
+    }
+
+    QVector< double > sorted = sortData(filtered);
     sample                   = calculate(position, sorted, method, coefficient);
 
     QVector< double > outlierValues = extractOutliers(sample, sorted);

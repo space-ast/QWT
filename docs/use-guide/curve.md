@@ -311,23 +311,23 @@ curve->setPaintAttribute(QwtPlotCurve::ImageBuffer, true);             // Image 
 | `ClipPolygons` | Clip polygons outside the canvas to avoid rendering invalid regions |
 | `FilterPoints` | Filter duplicate points and points outside the canvas |
 | `FilterPointsAggressive` | More aggressive filtering, removes intermediate points in the same pixel column |
-| `FilterPointsPixel` | Pixel-column downsampling, keeps first/min/max/last (4 points per column) for extreme speed |
-| `FilterPointsLTTB` | MinMax bucket downsampling (simplified LTTB), preserves waveform shape better |
+| `FilterPointsPixel` | Pixel-column downsampling, keeps first/min/max/last (4 points per column) |
+| `FilterPointsLTTB` | MinMax bucket downsampling (default, recommended), preserves waveform shape |
 | `MinimizeMemory` | Reduce temporary memory usage (may decrease performance) |
 | `ImageBuffer` | Use image buffer for drawing scatter points (suitable for millions of data points) |
 
 !!! note "Default Settings"
-    Starting from Qwt 7.x, `ClipPolygons | FilterPointsAggressive` is enabled by default — no manual setup needed for basic optimization.
+    Starting from Qwt 7.x, `ClipPolygons | FilterPointsLTTB` is enabled by default. No manual setup is needed for basic optimization, and `FilterPointsLTTB` performs best in benchmarks for most scenarios.
 
 #### Downsampling Algorithms in Detail
 
-##### FilterPointsAggressive — Aggressive Filtering (Default)
+##### FilterPointsAggressive — Aggressive Filtering
 
 Based on QwtPointMapper's Quad Reduce algorithm. Merges consecutive points that map to the same pixel coordinates, removing redundant intermediate points.
 
 - **Principle**: Scans along both X and Y directions, reducing consecutive points mapping to the same pixel row/column to key points
 - **Output size**: Proportional to canvas pixel dimensions, approximately `4 × max(canvas_width, canvas_height)`
-- **Best for**: General large-dataset scenarios with good waveform fidelity
+- **Best for**: General large-dataset scenarios with good waveform fidelity. Use as a temporary fallback when you need precise screenshots or exports
 - **Time complexity**: O(n)
 
 ##### FilterPointsPixel — Pixel-Column Downsampling
@@ -348,9 +348,9 @@ curve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, true);
 !!! warning "FilterPointsPixel Caveats"
     This algorithm overrides `FilterPointsAggressive` when both are set (Pixel takes priority). Since only 4 points per column are retained, high-frequency details may be lost — suitable for trend observation rather than precise analysis.
 
-##### FilterPointsLTTB — MinMax Bucket Downsampling (Recommended)
+##### FilterPointsLTTB — MinMax Bucket Downsampling (Default, Recommended)
 
-Divides the visible data range into N equal-count buckets (N = 2 × canvas width), retaining the Y-minimum and Y-maximum point from each bucket. Similar to a simplified LTTB (Largest Triangle Three Buckets) algorithm. Benchmarks show this is the fastest rendering method for million-level data.
+Divides the visible data range into N equal-count buckets (N = 2 × canvas width), retaining the Y-minimum and Y-maximum point from each bucket. Similar to a simplified LTTB (Largest Triangle Three Buckets) algorithm. Benchmarks show this is the fastest rendering method for million-level data, so it is enabled by default.
 
 - **Principle**: Splits data into equal-sized buckets by index, finds extrema in each bucket, preserves original X coordinates
 - **Output size**: Approximately `2 × N = 4 × canvas_width`
@@ -371,47 +371,37 @@ curve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
 
 #### How to Choose a Rendering Method
 
-Select the appropriate rendering strategy based on data scale and use case:
+For most scenarios, simply use the default settings. `QwtPlotCurve` enables `ClipPolygons | FilterPointsLTTB` by default, which benchmarks show is optimal for the vast majority of data sizes and use cases.
 
 ```mermaid
 graph TD
-    A[Data size?] -->|"< 10K points"| B[Default settings<br/>FilterPointsAggressive]
-    A -->|"10K ~ 100K"| C{Need precise waveform?}
-    C -->|Yes| D[FilterPointsLTTB]
-    C -->|No| E[FilterPointsAggressive<br/>already enabled by default]
-    A -->|"100K ~ 1M"| F{Primary goal?}
-    F -->|Best performance| D
-    F -->|Trend observation| G[FilterPointsPixel]
-    A -->|"> 1M"| H{Display mode?}
-    H -->|Best performance| D
-    H -->|Scatter distribution| I["Dots style + ImageBuffer"]
-    H -->|Trend observation| G
+    A[Start] -->|Normal line / Lines data| B[Use default<br/>ClipPolygons | FilterPointsLTTB]
+    A -->|Massive scatter distribution| C["Dots style + ImageBuffer"]
+    A -->|High-quality screenshot / export| D[Temporarily switch to FilterPointsAggressive<br/>or disable downsampling]
+    A -->|Special requirement: pixel-column-aligned trend| E[FilterPointsPixel]
 ```
 
 **Quick Reference Table:**
 
 | Data Size | Scenario | Recommended Config | Notes |
 |-----------|----------|-------------------|-------|
-| < 10K | General plotting | Default (`FilterPointsAggressive`) | No extra optimization needed |
-| 10K–100K | Real-time curves | `FilterPointsAggressive` (default) | Default algorithm is efficient enough |
-| 10K–100K | Signal analysis | `FilterPointsLTTB` | Preserves waveform detail |
-| 100K–1M | Real-time scrolling | `FilterPointsLTTB` | Benchmarked as fastest |
-| 100K–1M | Offline playback | `FilterPointsLTTB` | Balances speed and waveform fidelity |
-| > 1M | Trend overview | `FilterPointsLTTB` | Benchmarked as fastest for million-level data |
+| Any | General plotting / real-time curves / signal analysis | Default (`ClipPolygons | FilterPointsLTTB`) | Default is optimal in benchmarks; no manual adjustment needed |
+| Any | Precise screenshot or export | Temporarily disable downsampling, or use `FilterPointsAggressive` | Avoids minor downsampling effects on waveform detail |
 | > 1M | Scatter distribution | `Dots` + `ImageBuffer` | Optimized for massive scatter plots |
-| > 1M | Trend observation | `FilterPointsPixel` | Alternative, slightly slower than LTTB |
+| Large data | Pixel-column-aligned coarse trend only | `FilterPointsPixel` | Alternative; benchmarks show it is slower than the default |
 
 **Usage Examples:**
 
 ```cpp
-// === Scenario 1: Real-time monitoring of million-level sensor data (LTTB recommended) ===
-QwtPlotCurve* sensorCurve = new QwtPlotCurve("Sensor Data");
-sensorCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
-sensorCurve->setPaintAttribute(QwtPlotCurve::ClipPolygons, true);  // already on by default
+// === Scenario 1: Normal curve drawing (default is already optimal) ===
+QwtPlotCurve* curve = new QwtPlotCurve("Data Curve");
+// Default ClipPolygons | FilterPointsLTTB is already enabled; just use it.
 
-// === Scenario 2: Oscilloscope waveform analysis (preserve waveform features) ===
-QwtPlotCurve* scopeCurve = new QwtPlotCurve("Waveform");
-scopeCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, true);
+// === Scenario 2: Temporarily get the highest-precision output (e.g. screenshot / export) ===
+QwtPlotCurve* exportCurve = new QwtPlotCurve("Export Curve");
+exportCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, false);
+exportCurve->setPaintAttribute(QwtPlotCurve::FilterPointsPixel, false);
+exportCurve->setPaintAttribute(QwtPlotCurve::FilterPointsAggressive, true);
 
 // === Scenario 3: Massive scatter data ===
 QwtPlotCurve* scatterCurve = new QwtPlotCurve("Scatter");
@@ -427,9 +417,9 @@ debugCurve->setPaintAttribute(QwtPlotCurve::FilterPointsLTTB, false);
 
 !!! tip "Comprehensive Tips for Large Datasets"
     - Real-time updates: Disable `setAutoReplot()`, call `replot()` manually after batch updates
-    - Monotonically increasing X data: `FilterPointsPixel` and `FilterPointsLTTB` automatically use binary search for visible range — no manual data trimming needed
-    - Frequent zoom/pan scenarios: `FilterPointsLTTB` is recommended, benchmarked as fastest
-    - High-quality screenshots or exports: Temporarily disable downsampling, use `FilterPointsAggressive` for the most accurate output
+    - Monotonically increasing X data: `FilterPointsLTTB` automatically uses binary search for the visible range — no manual data trimming needed
+    - Frequent zoom/pan scenarios: `FilterPointsLTTB` is already enabled by default and is the fastest in benchmarks
+    - High-quality screenshots or exports: Temporarily disable downsampling, or use `FilterPointsAggressive` for the most accurate output
 
 #### Benchmark Results
 
@@ -439,13 +429,14 @@ Below is a real-world performance comparison with 1,000,000 data points (canvas 
 |--------|-----------------|---------------------|-----|
 | None (no optimization) | 26,212 | 262.12 | 3.8 |
 | FilterPoints | 44,472 | 444.72 | 2.2 |
-| FilterPointsAggressive (default) | 17,539 | 175.39 | 5.7 |
+| FilterPointsAggressive | 17,539 | 175.39 | 5.7 |
 | FilterPointsPixel | 23,216 | 232.16 | 4.3 |
 | **FilterPointsLTTB** | **13,349** | **133.49** | **7.5** |
 
 **Conclusions:**
-- `FilterPointsLTTB` delivers the best performance at 7.5 FPS, 32% faster than the default method
-- `FilterPointsAggressive` is the second-best choice and is already efficient as the default
+- `FilterPointsLTTB` delivers the best performance at 7.5 FPS, about 24% faster than `FilterPointsAggressive`
+- `FilterPointsLTTB` is already enabled by default, so no manual adjustment is needed for most scenarios
+- `FilterPointsAggressive` is the second-best choice, useful when you temporarily need a more precise output
 - `FilterPoints` basic filtering is actually the slowest — overhead exceeds benefit
 - No optimization (None) is faster than `FilterPoints`, confirming basic filtering is counterproductive at this scale
 

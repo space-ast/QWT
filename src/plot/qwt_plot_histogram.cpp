@@ -435,6 +435,12 @@ void QwtPlotHistogram::drawOutline(QPainter* painter, const QwtScaleMap& xMap, c
     for (int i = from; i <= to; i++) {
         const QwtIntervalSample sample = this->sample(i);
 
+        if (isSampleNanOrInf(sample)) {
+            flushPolygon(painter, v0, polygon);
+            previous = QwtIntervalSample();
+            continue;
+        }
+
         if (!sample.interval.isValid()) {
             flushPolygon(painter, v0, polygon);
             previous = sample;
@@ -505,7 +511,7 @@ void QwtPlotHistogram::drawColumns(QPainter* painter, const QwtScaleMap& xMap, c
 
     for (int i = from; i <= to; i++) {
         const QwtIntervalSample sample = series->sample(i);
-        if (!sample.interval.isNull()) {
+        if (!isSampleNanOrInf(sample) && !sample.interval.isNull()) {
             const QwtColumnRect rect = columnRect(sample, xMap, yMap);
             drawColumn(painter, rect, sample);
         }
@@ -536,7 +542,7 @@ void QwtPlotHistogram::drawLines(QPainter* painter, const QwtScaleMap& xMap, con
 
     for (int i = from; i <= to; i++) {
         const QwtIntervalSample sample = series->sample(i);
-        if (!sample.interval.isNull()) {
+        if (!isSampleNanOrInf(sample) && !sample.interval.isNull()) {
             const QwtColumnRect rect = columnRect(sample, xMap, yMap);
 
             QRectF r = rect.toRect();

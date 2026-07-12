@@ -681,6 +681,9 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
     for (int i = from; i <= to; i++) {
         const QwtBoxSample& sample = this->sample(i);
 
+        if (isSampleNanOrInf(sample))
+            continue;
+
         double posPixel = posMap->transform(sample.position);
         if (doAlign)
             posPixel = qRound(posPixel);

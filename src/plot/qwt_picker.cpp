@@ -137,7 +137,6 @@ public:
         , isActive(false)
         , trackerPosition(-1, -1)
         , mouseTracking(false)
-        , openGL(false)
     {
     }
 
@@ -181,8 +180,6 @@ public:
 
     QPointer< Rubberband > rubberBandOverlay;
     QPointer< Tracker > trackerOverlay;
-
-    bool openGL;
 };
 
 /**
@@ -235,7 +232,6 @@ void QwtPicker::init(QWidget* parent, RubberBand rubberBand, DisplayMode tracker
         if (parent->focusPolicy() == Qt::NoFocus)
             parent->setFocusPolicy(Qt::WheelFocus);
 
-        m_data->openGL        = parent->inherits("QGLWidget");
         m_data->trackerFont   = parent->font();
         m_data->mouseTracking = parent->hasMouseTracking();
 

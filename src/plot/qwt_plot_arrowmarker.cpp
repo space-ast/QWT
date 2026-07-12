@@ -452,7 +452,7 @@ void QwtPlotArrowMarker::setLength(double length)
 {
     QWT_D(d);
     // Validate input
-    if (qIsNaN(length) || qIsInf(length)) {
+    if (qwt_is_nan_or_inf(length)) {
         qWarning("QwtPlotArrowMarker::setLength: Invalid length value");
         return;
     }
@@ -486,7 +486,7 @@ void QwtPlotArrowMarker::setAngle(double angle)
 {
     QWT_D(d);
     // Validate input
-    if (qIsNaN(angle) || qIsInf(angle)) {
+    if (qwt_is_nan_or_inf(angle)) {
         qWarning("QwtPlotArrowMarker::setAngle: Invalid angle value");
         return;
     }
@@ -1017,7 +1017,8 @@ void QwtPlotArrowMarker::drawArrowLine(QPainter* painter, const QPointF& canvasS
         return;
 
     // Check if points are valid
-    if (qIsNaN(canvasStart.x()) || qIsNaN(canvasStart.y()) || qIsNaN(canvasEnd.x()) || qIsNaN(canvasEnd.y())) {
+    if (qwt_is_nan_or_inf(canvasStart.x()) || qwt_is_nan_or_inf(canvasStart.y())
+        || qwt_is_nan_or_inf(canvasEnd.x()) || qwt_is_nan_or_inf(canvasEnd.y())) {
         qWarning("QwtPlotArrowMarker::drawArrowLine: Invalid canvas coordinates");
         return;
     }

@@ -493,6 +493,9 @@ void QwtPlotTradingCurve::drawSymbols(QPainter* painter,
     for (int i = from; i <= to; i++) {
         const QwtOHLCSample s = sample(i);
 
+        if (isSampleNanOrInf(s))
+            continue;
+
         if (!doClip || qwtIsSampleInside(s, tMin, tMax, vMin, vMax)) {
             QwtOHLCSample translatedSample;
 

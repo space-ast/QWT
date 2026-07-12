@@ -28,61 +28,74 @@
 #include "qwt_point_polar.h"
 #include "qwt_math.h"
 
-// check nan or inf
-static inline bool isSampleNanOrInf(const QPointF& sample)
+/**
+ * @brief Check if a QPointF sample contains NaN or Inf
+ * @param sample The point to check
+ * @return true if either coordinate is NaN or infinite
+ */
+bool isSampleNanOrInf(const QPointF& sample)
 {
     return qwt_is_nan_or_inf(sample);
 }
 
-static inline bool isSampleNanOrInf(const QwtPoint3D& sample)
+/**
+ * @brief Check if a QwtPoint3D sample contains NaN or Inf
+ * @param sample The 3D point to check
+ * @return true if any of x, y, or z is NaN or infinite
+ */
+bool isSampleNanOrInf(const QwtPoint3D& sample)
 {
-    return !std::isfinite(sample.x()) || !std::isfinite(sample.y()) || !std::isfinite(sample.z());
+    return qwt_is_nan_or_inf(sample.x()) || qwt_is_nan_or_inf(sample.y()) || qwt_is_nan_or_inf(sample.z());
 }
 
-static inline bool isSampleNanOrInf(const QwtPointPolar& sample)
+/// @return true if azimuth or radius is NaN or infinite
+bool isSampleNanOrInf(const QwtPointPolar& sample)
 {
-    return !std::isfinite(sample.azimuth()) || !std::isfinite(sample.radius());
+    return qwt_is_nan_or_inf(sample.azimuth()) || qwt_is_nan_or_inf(sample.radius());
 }
 
-static inline bool isSampleNanOrInf(const QwtSetSample& sample)
+/// @return true if the position (value) is NaN or infinite; set elements are checked in qwtBoundingRect
+bool isSampleNanOrInf(const QwtSetSample& sample)
 {
-    // Special: directly returns false; judgement is done inside qwtBoundingRect(const QwtSetSample& sample)
-    Q_UNUSED(sample);
-    return false;
+    return qwt_is_nan_or_inf(sample.value);
 }
 
-static inline bool isSampleNanOrInf(const QwtIntervalSample& sample)
+/// @return true if value or interval bounds are NaN or infinite
+bool isSampleNanOrInf(const QwtIntervalSample& sample)
 {
-
-    return !std::isfinite(sample.value) || !std::isfinite(sample.interval.minValue())
-           || !std::isfinite(sample.interval.maxValue());
+    return qwt_is_nan_or_inf(sample.value) || qwt_is_nan_or_inf(sample.interval.minValue())
+           || qwt_is_nan_or_inf(sample.interval.maxValue());
 }
 
-static inline bool isSampleNanOrInf(const QwtOHLCSample& sample)
+/// @return true if any of open, high, low, close, or time is NaN or infinite
+bool isSampleNanOrInf(const QwtOHLCSample& sample)
 {
-
-    return !std::isfinite(sample.close) || !std::isfinite(sample.high) || !std::isfinite(sample.low)
-           || !std::isfinite(sample.open) || !std::isfinite(sample.time);
+    return qwt_is_nan_or_inf(sample.open) || qwt_is_nan_or_inf(sample.high) || qwt_is_nan_or_inf(sample.low)
+           || qwt_is_nan_or_inf(sample.close) || qwt_is_nan_or_inf(sample.time);
 }
 
-static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
+/// @return true if any of x, y, vx, or vy is NaN or infinite
+bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
 {
-
-    return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
+    return qwt_is_nan_or_inf(sample.x) || qwt_is_nan_or_inf(sample.y) || qwt_is_nan_or_inf(sample.vx)
+           || qwt_is_nan_or_inf(sample.vy);
 }
 
-static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
+/// @return true if position or any whisker/quartile value is NaN or infinite
+bool isSampleNanOrInf(const QwtBoxSample& sample)
 {
-    return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower) || !std::isfinite(sample.q1)
-           || !std::isfinite(sample.median) || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+    return qwt_is_nan_or_inf(sample.position) || qwt_is_nan_or_inf(sample.whiskerLower) || qwt_is_nan_or_inf(sample.q1)
+           || qwt_is_nan_or_inf(sample.median) || qwt_is_nan_or_inf(sample.q3)
+           || qwt_is_nan_or_inf(sample.whiskerUpper);
 }
 
-static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
+/// @return true if boxPosition or any outlier value is NaN or infinite
+bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
 {
-    if (!std::isfinite(sample.boxPosition))
+    if (qwt_is_nan_or_inf(sample.boxPosition))
         return true;
     for (int i = 0; i < sample.values.size(); ++i) {
-        if (!std::isfinite(sample.values[ i ]))
+        if (qwt_is_nan_or_inf(sample.values[ i ]))
             return true;
     }
     return false;
@@ -119,11 +132,12 @@ static inline QRectF qwtBoundingRect(const QwtSetSample& sample)
     double maxY = sample.set[ begin ];
     while (begin < sample.set.size() && qwt_is_nan_or_inf(minY)) {
         ++begin;
-        minY = sample.set[ begin ];
-        maxY = sample.set[ begin ];
+        if (begin < sample.set.size()) {
+            minY = sample.set[ begin ];
+            maxY = sample.set[ begin ];
+        }
     }
     for (int i = begin + 1; i < sample.set.size(); ++i) {
-        // modify by czy at 2025-12
         if (qwt_is_nan_or_inf(sample.set[ i ])) {
             continue;
         }
@@ -165,14 +179,26 @@ static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
     if (sample.values.isEmpty())
         return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
 
-    double minVal = sample.values[ 0 ];
-    double maxVal = sample.values[ 0 ];
-    for (int i = 1; i < sample.values.size(); ++i) {
-        if (sample.values[ i ] < minVal)
+    double minVal = 0.0;
+    double maxVal = 0.0;
+    bool found = false;
+    for (int i = 0; i < sample.values.size(); ++i) {
+        if (qwt_is_nan_or_inf(sample.values[ i ]))
+            continue;
+        if (!found) {
             minVal = sample.values[ i ];
-        if (sample.values[ i ] > maxVal)
             maxVal = sample.values[ i ];
+            found = true;
+        } else {
+            if (sample.values[ i ] < minVal)
+                minVal = sample.values[ i ];
+            if (sample.values[ i ] > maxVal)
+                maxVal = sample.values[ i ];
+        }
     }
+    if (!found)
+        return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
+
     return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
 }
 
@@ -207,7 +233,6 @@ QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to
 
     size_t i;
     for (i = from; i <= to; i++) {
-        // chenzongyan modify at 202512: add nan checking
         if (isSampleNanOrInf(series.sample(i))) {
             continue;
         }
@@ -220,7 +245,6 @@ QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to
     }
 
     for (; i <= to; i++) {
-        // chenzongyan modify at 202512: add nan checking
         if (isSampleNanOrInf(series.sample(i))) {
             continue;
         }

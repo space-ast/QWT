@@ -37,6 +37,36 @@
 class QwtPointPolar;
 
 /**
+ * @brief Check whether a QPointF sample contains NaN or Inf coordinates
+ * @return true if either x or y is NaN or infinite
+ */
+QWTCORE_EXPORT bool isSampleNanOrInf(const QPointF& sample);
+
+/// @return true if any of x, y, or z is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPoint3D& sample);
+
+/// @return true if azimuth or radius is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPointPolar& sample);
+
+/// @return true if the position (value) is NaN or infinite; set elements are checked in qwtBoundingRect
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtSetSample& sample);
+
+/// @return true if value or interval bounds are NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtIntervalSample& sample);
+
+/// @return true if any of open, high, low, close, or time is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtOHLCSample& sample);
+
+/// @return true if any of x, y, vx, or vy is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtVectorFieldSample& sample);
+
+/// @return true if position or any whisker/quartile value is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxSample& sample);
+
+/// @return true if boxPosition or any outlier value is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxOutlierSample& sample);
+
+/**
  * @brief Abstract interface for iterating over samples
  * @details Qwt offers several implementations of the QwtSeriesData API,
  *          but in situations, where data of an application specific format

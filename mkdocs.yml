@@ -65,6 +65,7 @@ plugins:
                     - Qwt 7.0 New Features: use-guide/qwt7-new-features.md
                 - Build Guide:
                     - Build Instructions: build-guide/build-instructions.md
+                    - Qmake Single-File Build: build-guide/qmake-single-file.md
                 - Development Guide:
                     - Dev Guide Home: dev-guide/index.md
                     - Coding Standards: dev-guide/coding-standards.md
@@ -82,6 +83,7 @@ plugins:
                     - Plot Layout: use-guide/plot-layout.md
                 - Data Processing:
                     - Series Data: use-guide/series-data.md
+                    - NaN Handling: use-guide/nan-handling.md
                 - Styles & Symbols:
                     - Symbol: use-guide/symbol.md
                 - Utility Classes:
@@ -140,6 +142,7 @@ plugins:
                     - Qwt 7.0新特性: use-guide/qwt7-new-features.md
                 - 构建指南:
                     - 构建说明: build-guide/build-instructions.md
+                    - qmake单文件构建: build-guide/qmake-single-file.md
                 - 开发指引:
                     - 开发指引首页: dev-guide/index.md
                     - 编码规范: dev-guide/coding-standards.md
@@ -157,6 +160,7 @@ plugins:
                     - 布局管理: use-guide/plot-layout.md
                 - 数据处理:
                     - 数据系列: use-guide/series-data.md
+                    - NaN数据处理: use-guide/nan-handling.md
                 - 样式与符号:
                     - 符号样式: use-guide/symbol.md
                 - 工具类:

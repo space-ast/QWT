@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.5)
 ########################################################
 set(QWT_VERSION_MAJOR 7)
 set(QWT_VERSION_MINOR 3)
-set(QWT_VERSION_PATCH 2)
+set(QWT_VERSION_PATCH 4)
 set(QWT_VERSION "${QWT_VERSION_MAJOR}.${QWT_VERSION_MINOR}.${QWT_VERSION_PATCH}")
 message(STATUS "QWT Version is ${QWT_VERSION}")
 
@@ -73,6 +73,13 @@ if(MSVC)
     string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus /MP")
 endif()
 
+if(MINGW)
+    # GCC defaults -finput-charset=UTF-8 but -fexec-charset follows the
+    # system code page (e.g. GBK/CP936 on Chinese Windows), which corrupts
+    # UTF-8 narrow string literals fed to QStringLiteral / QString::fromUtf8.
+    add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+endif()
+
 ########################################################
 # Install Path Settings
 ########################################################
@@ -100,6 +107,14 @@ if(QWT_CONFIG_BUILD_PLAYGROUND)
 endif()
 if(QWT_CONFIG_BUILD_TESTS)
     add_subdirectory(tests)
+endif()
+
+########################################################
+# Python Bindings (PySide6 / Shiboken6)
+########################################################
+option(QWT_CONFIG_BUILD_BINDINGS "Build PySide6 Python bindings via Shiboken6" OFF)
+if(QWT_CONFIG_BUILD_BINDINGS)
+    add_subdirectory(bindings)
 endif()
 
 ########################################################

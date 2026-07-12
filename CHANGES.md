@@ -1,3 +1,58 @@
+## tag:v7.3.4 (2026-07-12)
+
+### New Features
+
+- **Unified NaN/Inf Handling Across All 2D Modules**
+    - Unified 5 scattered NaN detection methods (`qwt_is_nan_or_inf`, `!std::isfinite`, `qIsNaN`, `std::isnan`, local bit-level `qwtIsNaN`) into a single `qwt_is_nan_or_inf()` across `src/plot/` and `src/core/`
+    - Promoted `isSampleNanOrInf()` from anonymous namespace to public exported API in `qwt_series_data.h`, available for all plot items
+    - Added NaN/Inf skipping to 10+ plot items that previously lacked handling:
+        - `QwtPlotBarChart`, `QwtPlotHistogram`, `QwtPlotIntervalCurve`, `QwtPlotMultiBarChart`
+        - `QwtPlotTradingCurve`, `QwtPlotVectorField`, `QwtPlotBoxChart`, `QwtPlotSpectroCurve`
+        - `QwtPolarCurve`, `QwtPlotSpectrogram` (replaced local bit-level `qwtIsNaN`), `QwtPolarSpectrogram`
+    - Added NaN/Inf skipping to 4 missing code paths in `QwtPlotCurve`
+    - `QwtColorMap::rgb()` and `colorIndex()` now return transparent for NaN/Inf input values
+    - Pre-filters NaN/Inf in `QwtBoxStatistics` before sort and statistical calculations
+    - Added bilingual NaN handling user guide (`docs/use-guide/nan-handling.md`)
+
+- **nanperf — NaN Performance Benchmark Example**
+    - New example at `examples/2D/nanperf/` for benchmarking NaN handling performance
+    - `NanDataGenerator` with configurable NaN distribution patterns and unit tests
+    - `BenchmarkRunner` with timing harness and analysis across filter modes and data sizes
+    - `MainWindow` with 2×2 grid layout, control bar, sweep orchestration, and Markdown report export
+    - `FilterModes` and `PlotPanel` components for side-by-side comparison
+
+- **PySide6 Bindings (POC)**
+    - Initial PySide6/Shiboken6 binding for `qwt::core` classes
+    - Expanded typesystem to cover all core module classes
+    - Full functional test suite (`bindings/tests/test_core.py`)
+    - CMake integration with `FindPySide6Shiboken.cmake` and `Shiboken6Tools`
+
+- **QwtDate Modernization**
+    - Migrated `QwtDate` internals from deprecated `Qt::TimeSpec` to `QTimeZone`
+    - Added `qwt::compat::` timezone helper functions in `qwt_qt5qt6_compat.hpp` for Qt 5.12+/Qt6 dual compatibility
+    - Updated `qwt_date_scale_draw.cpp` and `qwt_date_scale_engine.cpp` to use new API
+
+### Bug Fixes
+
+- Fixed `QwtVectorFieldSample` NaN check — was checking `vx` twice, missing `vy`
+- Fixed `QwtInterval::contains(NaN)` — was incorrectly returning `true`, now returns `false`
+- Fixed `qwtBoundingRect` out-of-bounds access and NaN propagation bugs
+- Fixed `QwtLinearColorMap::colorIndex()` — comment claimed NaN handling but implementation lacked it
+- Fixed `QwtGridData::findValueRange` NaN propagation and `dyMin` calculation bug
+- Fixed `QwtPolarSpectrogram` Indexed code path missing NaN guard
+
+### Build
+
+- Ensured UTF-8 narrow string literals on MinGW (CMake `target_compile_definitions` with `UNICODE`/`_UNICODE`)
+- Added `qmakeExample` — demonstrates single-file amalgamated build with qmake
+
+### Documentation
+
+- Added qmake single-file build guide (Chinese, `docs/zh/build-guide/qmake-single-file.md`)
+- Added qmake usage instructions to bilingual READMEs
+- Fixed incorrect default `PaintAttribute` documentation in curve guides and header comment
+- Updated downsampling algorithm recommendations in bilingual curve documentation
+
 ## tag:v7.3.2 (2026-06-20)
 
 ### New Features

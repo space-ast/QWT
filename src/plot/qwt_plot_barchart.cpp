@@ -369,7 +369,11 @@ void QwtPlotBarChart::drawSeries(QPainter* painter,
     painter->save();
 
     for (int i = from; i <= to; i++) {
-        drawSample(painter, xMap, yMap, canvasRect, interval, i, sample(i));
+        const QPointF s = sample(i);
+        if (isSampleNanOrInf(s))
+            continue;
+
+        drawSample(painter, xMap, yMap, canvasRect, interval, i, s);
     }
 
     painter->restore();

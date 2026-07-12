@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<typesystem package="qwtcore">
+    <!-- Reference PySide6's already-generated Qt types; do not regenerate. -->
+    <load-typesystem name="typesystem_core.xml" generate="no"/>
+    <load-typesystem name="typesystem_gui.xml" generate="no"/>
+
+    <!-- ===== Rejections (API-extractor level, before protected-hack inlines) ===== -->
+    <!-- buildTicks is protected and takes a C-style QList<double>[] array parameter.
+         shiboken loses the template arg and generates uncompilable "::QList ticks[]".
+         <modify-function remove="all"> removes the Python binding but the
+         avoid-protected-hack still emits a _protected inline; <rejection> rejects
+         the function entirely at the API extractor level. -->
+    <rejection class="QwtLinearScaleEngine" function-name="buildTicks"/>
+    <rejection class="QwtLogScaleEngine" function-name="buildTicks"/>
+
+    <!-- ===== Value types ===== -->
+    <!-- Note: shiboken6 no longer supports top-level "Class::Enum" nesting; enums
+         are declared inside their owning type with a simple name, and flag pairs
+         use the flags="..." attribute. -->
+    <value-type name="QwtInterval">
+        <enum-type name="BorderFlag" flags="BorderFlags"/>
+    </value-type>
+    <value-type name="QwtPoint3D"/>
+    <value-type name="QwtPointPolar"/>
+    <value-type name="QwtScaleDiv">
+        <enum-type name="TickType"/>
+        <!-- Drop the two constructors taking a C-style QList<double>[] array:
+             shiboken can't synthesize a minimal constructor for "QList[3]". -->
+        <modify-function signature="QwtScaleDiv(const QwtInterval&amp;,QList&lt;double&gt;[3])" remove="all"/>
+        <modify-function signature="QwtScaleDiv(double,double,QList&lt;double&gt;[3])" remove="all"/>
+    </value-type>
+    <value-type name="QwtScaleMap">
+        <!-- QwtScaleMap takes ownership of the QwtTransform passed to setTransformation -->
+        <modify-function signature="setTransformation(QwtTransform*)">
+            <modify-argument index="1"><define-ownership owner="c++"/></modify-argument>
+        </modify-function>
+    </value-type>
+    <value-type name="QwtStatisticalSample"/>
+    <value-type name="QwtIntervalSample"/>
+    <value-type name="QwtSetSample"/>
+    <value-type name="QwtOHLCSample"/>
+    <value-type name="QwtVectorFieldSample"/>
+    <value-type name="QwtBoxSample"/>
+    <value-type name="QwtBoxOutlierSample"/>
+    <value-type name="QwtBezier">
+        <!-- appendToPolygon takes QPolygonF& (forward-declared, non-const ref);
+             shiboken can't synthesize a minimal constructor for it. toPolygon
+             (returns QPolygonF by value) and pointAt remain bound. -->
+        <modify-function signature="appendToPolygon(const QPointF&amp;,const QPointF&amp;,const QPointF&amp;,const QPointF&amp;,QPolygonF&amp;)const" remove="all"/>
+    </value-type>
+    <!-- QwtClipper is a namespace, not a class; shiboken generates no wrapper
+         for it. Its free functions (clipPolygon, clippedPolygon, etc.) are not
+         bound in this pass. Can be revisited via <namespace-type> or <function>
+         entries in a later task. -->
+
+    <!-- ===== Object types (polymorphic / subclassable) ===== -->
+    <object-type name="QwtColorMap">
+        <enum-type name="Format"/>
+    </object-type>
+    <object-type name="QwtLinearColorMap">
+        <enum-type name="Mode"/>
+    </object-type>
+    <object-type name="QwtAlphaColorMap"/>
+    <object-type name="QwtHueColorMap"/>
+    <object-type name="QwtSaturationValueColorMap"/>
+    <object-type name="QwtColorMapPreset">
+        <enum-type name="Preset"/>
+    </object-type>
+    <object-type name="QwtColorCycle">
+        <enum-type name="Palette"/>
+    </object-type>
+
+    <object-type name="QwtTransform"/>
+    <object-type name="QwtNullTransform"/>
+    <object-type name="QwtLogTransform"/>
+    <object-type name="QwtPowerTransform"/>
+
+    <object-type name="QwtScaleArithmetic"/>
+    <object-type name="QwtScaleEngine">
+        <enum-type name="Attribute" flags="Attributes"/>
+        <!-- QwtScaleEngine takes ownership of the QwtTransform passed to setTransformation -->
+        <modify-function signature="setTransformation(QwtTransform*)">
+            <modify-argument index="1"><define-ownership owner="c++"/></modify-argument>
+        </modify-function>
+        <!-- transformation() returns an internal pointer; Python must not delete it -->
+        <modify-function signature="transformation()const">
+            <modify-argument index="0"><define-ownership owner="c++"/></modify-argument>
+        </modify-function>
+    </object-type>
+    <object-type name="QwtLinearScaleEngine"/>
+    <object-type name="QwtLogScaleEngine"/>
+
+    <!-- Series data: only concrete exported instantiations (not the template).
+         KNOWN LIMITATION: the QwtArraySeriesData<T>/QwtSeriesData<T> template
+         bases cannot be bound by shiboken (no concrete class symbol), so the
+         inherited methods (size, sample, setSamples, samples, setRectOfInterest)
+         are NOT exposed on these subclasses. Only the overridden virtual
+         boundingRect() is available. Declaring template instantiations as
+         object-types was tried but does not resolve the base.
+
+         Task 3 fix: QWT_PYTHON_WRAPPER is now forwarded to shiboken's clang
+         parser (see Shiboken6ToolsConfig.cmake), so the QwtSeriesData<T>
+         pure-virtuals become non-pure with default impls (the template base is
+         no longer abstract, so the concrete subclasses instantiate cleanly).
+         The template-inherited methods themselves are still not auto-exposed
+         (shiboken cannot resolve the template base), so they are re-declared
+         on QwtPointSeriesData via <add-function> below. The add-functions
+         call through to the C++ implementation (this->size()/this->sample());
+         a Python subclass that overrides size()/sample() shadows the bound
+         method, so s.size() dispatches to the Python override. -->
+    <object-type name="QwtPointSeriesData">
+        <!-- Re-expose the template-inherited accessors that shiboken dropped
+             because the QwtArraySeriesData<QPointF> base is unresolvable.
+             size_t maps to Py_ssize_t/size_t via the size_t primitive. -->
+        <add-function signature="size()" return-type="size_t">
+            <inject-code class="target" position="beginning">
+<![CDATA[
+                size_t _result = %CPPSELF->QwtPointSeriesData::size();
+                %PYARG_0 = Shiboken::Conversions::copyToPython(Shiboken::Conversions::PrimitiveTypeConverter<size_t>(), &_result);
+]]>
+            </inject-code>
+        </add-function>
+        <add-function signature="sample(size_t)" return-type="QPointF">
+            <inject-code class="target" position="beginning">
+<![CDATA[
+                QPointF _result = %CPPSELF->QwtPointSeriesData::sample(%1);
+                %PYARG_0 = Shiboken::Conversions::copyToPython(Shiboken::Module::get(SbkPySide6_QtCoreTypeStructs[SBK_QPointF_IDX]), &_result);
+]]>
+            </inject-code>
+        </add-function>
+    </object-type>
+    <object-type name="QwtPoint3DSeriesData"/>
+    <object-type name="QwtIntervalSeriesData"/>
+    <object-type name="QwtSetSeriesData"/>
+    <object-type name="QwtVectorFieldData"/>
+    <object-type name="QwtTradingChartData"/>
+    <object-type name="QwtBoxChartData"/>
+    <object-type name="QwtBoxOutlierChartData"/>
+    <object-type name="QwtSyntheticPointData"/>
+
+    <object-type name="QwtRasterData">
+        <enum-type name="Attribute" flags="Attributes"/>
+        <enum-type name="ConrecFlag" flags="ConrecFlags"/>
+    </object-type>
+    <object-type name="QwtMatrixRasterData">
+        <enum-type name="ResampleMode"/>
+    </object-type>
+    <object-type name="QwtGridRasterData">
+        <enum-type name="ResampleMode"/>
+    </object-type>
+
+    <object-type name="QwtBoxStatisticsCalculator">
+        <enum-type name="WhiskerMethod"/>
+    </object-type>
+    <object-type name="QwtSystemClock"/>
+    <object-type name="QwtDate">
+        <enum-type name="Week0Type"/>
+        <enum-type name="IntervalType"/>
+    </object-type>
+</typesystem>

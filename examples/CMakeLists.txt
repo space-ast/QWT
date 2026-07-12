@@ -33,6 +33,7 @@ add_subdirectory(2D/stockchart)
 add_subdirectory(2D/sysinfo)
 add_subdirectory(2D/tvplot)
 add_subdirectory(2D/ticks_inside)
+add_subdirectory(2D/nanperf)
 
 if(QWT_CONFIG_QWTPLOT_3D)
     add_subdirectory(3D/autoswitch)
@@ -46,3 +47,7 @@ if(QWT_CONFIG_BUILD_STATIC_EXAMPLE)
     # 静态编译示例
     add_subdirectory(staticExample)
 endif()
+
+# NOTE: qmakeExample is a qmake-based project that uses the src-amalgamate
+#       single file. It is NOT built by CMake.
+#       Build it with: cd examples/qmakeExample && qmake && make

@@ -26,6 +26,7 @@
 
 #include "qwt_date_scale_draw.h"
 #include "qwt_text.h"
+#include "qwt_qt5qt6_compat.hpp"
 
 class QwtDateScaleDraw::PrivateData
 {
@@ -286,15 +287,11 @@ QwtDate::IntervalType QwtDateScaleDraw::intervalType(const QwtScaleDiv& scaleDiv
 QDateTime QwtDateScaleDraw::toDateTime(double value) const
 {
     QWT_DC(d);
-    QDateTime dt = QwtDate::toDateTime(value, d->timeSpec);
-    if (d->timeSpec == Qt::OffsetFromUTC) {
+    const QTimeZone timeZone = QwtDate::toTimeZone(d->timeSpec, d->utcOffset);
+    QDateTime dt = QwtDate::toDateTime(value, timeZone);
+
+    if (d->timeSpec == Qt::OffsetFromUTC)
         dt = dt.addSecs(d->utcOffset);
-#if QT_VERSION >= 0x050200
-        dt.setOffsetFromUtc(d->utcOffset);
-#else
-        dt.setUtcOffset(d->utcOffset);
-#endif
-    }
 
     return dt;
 }

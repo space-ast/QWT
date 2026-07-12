@@ -26,6 +26,8 @@
 
 #include "qwt_interval.h"
 
+#include <cmath>
+
 namespace
 {
 static const struct RegisterQwtInterval
@@ -79,6 +81,9 @@ QwtInterval QwtInterval::inverted() const
 bool QwtInterval::contains(double value) const
 {
     if (!isValid())
+        return false;
+
+    if (std::isnan(value))
         return false;
 
     if ((value < m_minValue) || (value > m_maxValue))

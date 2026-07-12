@@ -11,6 +11,8 @@
 
 #include <qvector.h>
 
+#include "qwt_math.h"
+
 static inline QRgb qwtHsvToRgb(int h, int s, int v, int a)
 {
 #if 0
@@ -249,6 +251,9 @@ void QwtColorMap::setFormat(Format format)
  */
 uint QwtColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0;
+
     const double width = vMax - vMin;
     if (width <= 0.0)
         return 0;
@@ -444,6 +449,9 @@ QColor QwtLinearColorMap::color2() const
  */
 QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -460,10 +468,13 @@ QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
  * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and 255.
- * @note NaN values are mapped to 0.
+ * @note NaN or Inf values are mapped to 0.
  */
 uint QwtLinearColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -586,6 +597,9 @@ int QwtAlphaColorMap::alpha2() const
  */
 QRgb QwtAlphaColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -815,6 +829,9 @@ int QwtHueColorMap::alpha() const
  */
 QRgb QwtHueColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0)
@@ -1063,6 +1080,9 @@ int QwtSaturationValueColorMap::alpha() const
  */
 QRgb QwtSaturationValueColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0)

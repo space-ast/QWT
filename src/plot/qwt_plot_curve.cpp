@@ -618,6 +618,10 @@ void QwtPlotCurve::drawSticks(QPainter* painter,
 
     for (int i = from; i <= to; i++) {
         const QPointF sample = series->sample(i);
+
+        if (isSampleNanOrInf(sample))
+            continue;
+
         double xi            = xMap.transform(sample.x());
         double yi            = yMap.transform(sample.y());
         if (doAlign) {
@@ -690,6 +694,9 @@ void QwtPlotCurve::drawDots(QPainter* painter,
         for (int i = from; i <= to; i++) {
             const QPointF sample = series->sample(i);
 
+            if (isSampleNanOrInf(sample))
+                continue;
+
             double xi = xMap.transform(sample.x());
             double yi = yMap.transform(sample.y());
 
@@ -745,8 +752,12 @@ void QwtPlotCurve::drawSteps(QPainter* painter,
     const QwtSeriesData< QPointF >* series = data();
 
     int i, ip;
-    for (i = from, ip = 0; i <= to; i++, ip += 2) {
+    for (i = from, ip = 0; i <= to; i++) {
         const QPointF sample = series->sample(i);
+
+        if (isSampleNanOrInf(sample))
+            continue;
+
         double xi            = xMap.transform(sample.x());
         double yi            = yMap.transform(sample.y());
         if (doAlign) {
@@ -769,7 +780,13 @@ void QwtPlotCurve::drawSteps(QPainter* painter,
 
         points[ ip ].rx() = xi;
         points[ ip ].ry() = yi;
+        ip += 2;
     }
+
+    if (ip == 0)
+        return;
+
+    polygon.resize(ip - 1);
 
     if (d->paintAttributes & ClipPolygons) {
         QRectF clipRect = qwtIntersectedClipRect(canvasRect, painter);
@@ -1029,6 +1046,9 @@ int QwtPlotCurve::closestPoint(const QPointF& pos, double* dist) const
 
     for (uint i = 0; i < numSamples; i++) {
         const QPointF sample = series->sample(i);
+
+        if (isSampleNanOrInf(sample))
+            continue;
 
         const double cx = xMap.transform(sample.x()) - pos.x();
         const double cy = yMap.transform(sample.y()) - pos.y();
