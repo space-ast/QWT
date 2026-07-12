@@ -937,7 +937,7 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
 
         for (int i = from; i <= to; i++) {
             const QwtVectorFieldSample sample = series->sample(i);
-            if (!sample.isNull()) {
+            if (!isSampleNanOrInf(sample) && !sample.isNull()) {
                 matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
             }
         }
@@ -967,6 +967,9 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
     } else {
         for (int i = from; i <= to; i++) {
             const QwtVectorFieldSample sample = series->sample(i);
+
+            if (isSampleNanOrInf(sample))
+                continue;
 
             // arrows with zero length are never drawn
             if (sample.isNull())

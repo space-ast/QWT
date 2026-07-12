@@ -435,7 +435,11 @@ void QwtPlotMultiBarChart::drawSeries(QPainter* painter,
     painter->save();
 
     for (int i = from; i <= to; i++) {
-        drawSample(painter, xMap, yMap, canvasRect, interval, i, sample(i));
+        const QwtSetSample s = sample(i);
+        if (qwt_is_nan_or_inf(s.value))
+            continue;
+
+        drawSample(painter, xMap, yMap, canvasRect, interval, i, s);
     }
 
     painter->restore();
@@ -518,6 +522,9 @@ void QwtPlotMultiBarChart::drawGroupedBars(QPainter* painter,
             const double x1 = x0 + i * barWidth;
             const double x2 = x1 + barWidth;
 
+            if (qwt_is_nan_or_inf(sample.set[ i ]))
+                continue;
+
             const double y2 = yMap.transform(sample.set[ i ]);
 
             QwtColumnRect barRect;
@@ -540,6 +547,9 @@ void QwtPlotMultiBarChart::drawGroupedBars(QPainter* painter,
         for (int i = 0; i < numBars; i++) {
             double y1 = y0 + i * barHeight;
             double y2 = y1 + barHeight;
+
+            if (qwt_is_nan_or_inf(sample.set[ i ]))
+                continue;
 
             double x2 = xMap.transform(sample.set[ i ]);
 
@@ -601,6 +611,9 @@ void QwtPlotMultiBarChart::drawStackedBars(QPainter* painter,
 
         for (int i = 0; i < numBars; i++) {
             const double si = sample.set[ i ];
+            if (qwt_is_nan_or_inf(si))
+                continue;
+
             if (si == 0.0)
                 continue;
 
@@ -638,6 +651,9 @@ void QwtPlotMultiBarChart::drawStackedBars(QPainter* painter,
 
         for (int i = 0; i < sample.set.size(); i++) {
             const double si = sample.set[ i ];
+            if (qwt_is_nan_or_inf(si))
+                continue;
+
             if (si == 0.0)
                 continue;
 

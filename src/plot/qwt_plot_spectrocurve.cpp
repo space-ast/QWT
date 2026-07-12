@@ -321,6 +321,9 @@ void QwtPlotSpectroCurve::drawDots(QPainter* painter,
     for (int i = from; i <= to; i++) {
         const QwtPoint3D sample = series->sample(i);
 
+        if (isSampleNanOrInf(sample))
+            continue;
+
         double xi = xMap.transform(sample.x());
         double yi = yMap.transform(sample.y());
         if (doAlign) {

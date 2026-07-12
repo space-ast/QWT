@@ -436,6 +436,18 @@ void QwtPlotIntervalCurve::drawTube(QPainter* painter,
         QPointF& maxValue = points[ 2 * size - 1 - i ];
 
         const QwtIntervalSample intervalSample = sample(from + i);
+
+        if (isSampleNanOrInf(intervalSample)) {
+            if (i > 0) {
+                minValue = points[ i - 1 ];
+                maxValue = points[ 2 * size - i ];
+            } else {
+                minValue = QPointF(0, 0);
+                maxValue = QPointF(0, 0);
+            }
+            continue;
+        }
+
         if (orientation() == Qt::Vertical) {
             double x  = xMap.transform(intervalSample.value);
             double y1 = yMap.transform(intervalSample.interval.minValue());
@@ -546,6 +558,9 @@ void QwtPlotIntervalCurve::drawSymbols(QPainter* painter,
 
     for (int i = from; i <= to; i++) {
         const QwtIntervalSample s = sample(i);
+
+        if (isSampleNanOrInf(s))
+            continue;
 
         if (orientation() == Qt::Vertical) {
             if (!doClip || qwtIsVSampleInside(s, xMin, xMax, yMin, yMax)) {
