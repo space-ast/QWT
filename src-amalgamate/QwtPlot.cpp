@@ -385,10 +385,15 @@ double QwtBoxStatisticsCalculator::mean(const QVector< double >& data)
 		return 0.0;
 
 	double sum = 0.0;
-	for (int i = 0; i < data.size(); ++i)
-		sum += data[ i ];
+	int count = 0;
+	for (int i = 0; i < data.size(); ++i) {
+		if (!qwt_is_nan_or_inf(data[ i ])) {
+			sum += data[ i ];
+			++count;
+		}
+	}
 
-	return sum / data.size();
+	return count > 0 ? sum / count : qQNaN();
 }
 
 double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& data)
@@ -396,14 +401,28 @@ double QwtBoxStatisticsCalculator::standardDeviation(const QVector< double >& da
 	if (data.size() < 2)
 		return 0.0;
 
-	const double m = mean(data);
+	double sum = 0.0;
+	int count = 0;
+	for (int i = 0; i < data.size(); ++i) {
+		if (!qwt_is_nan_or_inf(data[ i ])) {
+			sum += data[ i ];
+			++count;
+		}
+	}
+
+	if (count < 2)
+		return count == 0 ? qQNaN() : 0.0;
+
+	const double m = sum / count;
 	double sumSq   = 0.0;
 	for (int i = 0; i < data.size(); ++i) {
+		if (qwt_is_nan_or_inf(data[ i ]))
+			continue;
 		const double diff = data[ i ] - m;
 		sumSq += diff * diff;
 	}
 
-	return std::sqrt(sumSq / (data.size() - 1));
+	return std::sqrt(sumSq / (count - 1));
 }
 
 /**
@@ -476,6 +495,8 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculate(double position,
 	// Count outliers
 	int outlierCount = 0;
 	for (int i = 0; i < sortedData.size(); ++i) {
+		if (qwt_is_nan_or_inf(sortedData[ i ]))
+			continue;
 		if (sortedData[ i ] < whiskerLower || sortedData[ i ] > whiskerUpper)
 			outlierCount++;
 	}
@@ -498,7 +519,14 @@ QwtBoxSample QwtBoxStatisticsCalculator::calculateFromRaw(double position,
 														  WhiskerMethod method,
 														  double coefficient)
 {
-	QVector< double > sorted = sortData(rawData);
+	QVector< double > filtered;
+	filtered.reserve(rawData.size());
+	for (int i = 0; i < rawData.size(); ++i) {
+		if (!qwt_is_nan_or_inf(rawData[ i ]))
+			filtered.append(rawData[ i ]);
+	}
+
+	QVector< double > sorted = sortData(filtered);
 	return calculate(position, sorted, method, coefficient);
 }
 
@@ -515,6 +543,8 @@ QVector< double > QwtBoxStatisticsCalculator::extractOutliers(const QwtBoxSample
 
 	for (int i = 0; i < sortedData.size(); ++i) {
 		const double val = sortedData[ i ];
+		if (qwt_is_nan_or_inf(val))
+			continue;
 		if (val < sample.whiskerLower || val > sample.whiskerUpper)
 			outliers.append(val);
 	}
@@ -539,7 +569,14 @@ void QwtBoxStatisticsCalculator::calculateFull(double position,
 											   WhiskerMethod method,
 											   double coefficient)
 {
-	QVector< double > sorted = sortData(rawData);
+	QVector< double > filtered;
+	filtered.reserve(rawData.size());
+	for (int i = 0; i < rawData.size(); ++i) {
+		if (!qwt_is_nan_or_inf(rawData[ i ]))
+			filtered.append(rawData[ i ]);
+	}
+
+	QVector< double > sorted = sortData(filtered);
 	sample                   = calculate(position, sorted, method, coefficient);
 
 	QVector< double > outlierValues = extractOutliers(sample, sorted);
@@ -549,6 +586,8 @@ void QwtBoxStatisticsCalculator::calculateFull(double position,
 
 
 /*** Start of inlined file: qwt_interval.cpp ***/
+#include <cmath>
+
 namespace
 {
 static const struct RegisterQwtInterval
@@ -602,6 +641,9 @@ QwtInterval QwtInterval::inverted() const
 bool QwtInterval::contains(double value) const
 {
 	if (!isValid())
+		return false;
+
+	if (std::isnan(value))
 		return false;
 
 	if ((value < m_minValue) || (value > m_maxValue))
@@ -1134,6 +1176,9 @@ void QwtColorMap::setFormat(Format format)
  */
 uint QwtColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0;
+
 	const double width = vMax - vMin;
 	if (width <= 0.0)
 		return 0;
@@ -1329,6 +1374,9 @@ QColor QwtLinearColorMap::color2() const
  */
 QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0u;
+
 	QWT_DC(d);
 	const double width = vMax - vMin;
 	if (width <= 0.0)
@@ -1345,10 +1393,13 @@ QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
  * @param[in] vMax Maximum of the value interval.
  * @param[in] value Value to map into a color index.
  * @return Index, between 0 and 255.
- * @note NaN values are mapped to 0.
+ * @note NaN or Inf values are mapped to 0.
  */
 uint QwtLinearColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0;
+
 	QWT_DC(d);
 	const double width = vMax - vMin;
 	if (width <= 0.0)
@@ -1471,6 +1522,9 @@ int QwtAlphaColorMap::alpha2() const
  */
 QRgb QwtAlphaColorMap::rgb(double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0u;
+
 	QWT_DC(d);
 	const double width = vMax - vMin;
 	if (width <= 0.0)
@@ -1700,6 +1754,9 @@ int QwtHueColorMap::alpha() const
  */
 QRgb QwtHueColorMap::rgb(double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0u;
+
 	QWT_DC(d);
 	const double width = vMax - vMin;
 	if (width <= 0)
@@ -1948,6 +2005,9 @@ int QwtSaturationValueColorMap::alpha() const
  */
 QRgb QwtSaturationValueColorMap::rgb(double vMin, double vMax, double value) const
 {
+	if (qwt_is_nan_or_inf(value))
+		return 0u;
+
 	QWT_DC(d);
 	const double width = vMax - vMin;
 	if (width <= 0)
@@ -2975,6 +3035,7 @@ QDebug operator<<(QDebug debug, const QwtPoint3D& point)
 #include <qpolygon.h>
 #include <qnumeric.h>
 #include <qlist.h>
+
 #include <qmap.h>
 
 class QwtRasterData::ContourPlane
@@ -3311,8 +3372,8 @@ QwtRasterData::contourLines(const QRectF& rect, const QSize& raster, const QList
 					zMax = z;
 			}
 
-			if (qIsNaN(zSum)) {
-				// one of the points is NaN
+			if (qwt_is_nan_or_inf(zSum)) {
+				// one of the points is NaN or Inf
 				continue;
 			}
 
@@ -3514,7 +3575,7 @@ void QwtGridRasterData::setValue(const QVector< double >& x, const QVector< doub
 	if (dy.empty()) {
 		d->dyMin = 0;
 	} else {
-		d->dyMin = *std::max_element(dy.begin(), dy.end());
+		d->dyMin = *std::min_element(dy.begin(), dy.end());
 	}
 }
 
@@ -4128,13 +4189,14 @@ static inline Qt::DayOfWeek qwtFirstDayOfWeek()
 static inline void qwtFloorTime(QwtDate::IntervalType intervalType, QDateTime& dt)
 {
 	// when dt is inside the special hour where DST is ending
-	// an hour is no unique. Therefore we have to
+	// an hour is not unique. Therefore we have to
 	// use UTC time.
 
-	const Qt::TimeSpec timeSpec = dt.timeSpec();
+	const QTimeZone timeZone = dt.timeZone();
+	const bool isLocalTime = (timeZone == qwt::compat::systemTimeZone());
 
-	if (timeSpec == Qt::LocalTime)
-		dt = dt.toTimeSpec(Qt::UTC);
+	if (isLocalTime)
+		dt = dt.toTimeZone(qwt::compat::utcTimeZone());
 
 	const QTime t = dt.time();
 	switch (intervalType) {
@@ -4154,13 +4216,13 @@ static inline void qwtFloorTime(QwtDate::IntervalType intervalType, QDateTime& d
 		break;
 	}
 
-	if (timeSpec == Qt::LocalTime)
-		dt = dt.toTimeSpec(Qt::LocalTime);
+	if (isLocalTime)
+		dt = dt.toTimeZone(timeZone);
 }
 
-static inline QDateTime qwtToTimeSpec(const QDateTime& dt, Qt::TimeSpec spec)
+static inline QDateTime qwtToTimeZone(const QDateTime& dt, const QTimeZone& timeZone)
 {
-	if (dt.timeSpec() == spec)
+	if (dt.timeZone() == timeZone)
 		return dt;
 
 	const qint64 jd = dt.date().toJulianDay();
@@ -4171,11 +4233,11 @@ static inline QDateTime qwtToTimeSpec(const QDateTime& dt, Qt::TimeSpec spec)
 		// for those dates
 
 		QDateTime dt2 = dt;
-		dt2.setTimeSpec(spec);
+		dt2.setTimeZone(timeZone);
 		return dt2;
 	}
 
-	return dt.toTimeSpec(spec);
+	return dt.toTimeZone(timeZone);
 }
 
 #if 0
@@ -4239,18 +4301,37 @@ static inline QDate qwtToDate(int year, int month = 1, int day = 1)
 }
 
 /**
+ * @brief Convert a Qt::TimeSpec to a QTimeZone
+ * @param timeSpec Time specification
+ * @param offsetSeconds Offset in seconds (used for Qt::OffsetFromUTC)
+ * @return QTimeZone corresponding to the time specification
+ */
+QTimeZone QwtDate::toTimeZone(Qt::TimeSpec timeSpec, int offsetSeconds)
+{
+	switch (timeSpec) {
+	case Qt::UTC:
+		return qwt::compat::utcTimeZone();
+	case Qt::LocalTime:
+		return qwt::compat::systemTimeZone();
+	case Qt::OffsetFromUTC:
+		return qwt::compat::offsetTimeZone(offsetSeconds);
+	default:
+		return qwt::compat::utcTimeZone();
+	}
+}
+
+/**
  * @brief Translate from double to QDateTime
  *
  * @param value Number of milliseconds since the epoch,
  *              1970-01-01T00:00:00 UTC
- * @param timeSpec Time specification
+ * @param timeZone Time zone
  * @return Datetime value
  *
- * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
- * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+ * @sa toDouble(), QwtDate::toDateTime(double, Qt::TimeSpec)
  *
  */
-QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
+QDateTime QwtDate::toDateTime(double value, const QTimeZone& timeZone)
 {
 	const int msecsPerDay = 86400000;
 
@@ -4268,12 +4349,29 @@ QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
 
 	static const QTime timeNull(0, 0, 0, 0);
 
-	QDateTime dt(d, timeNull.addMSecs(msecs), Qt::UTC);
+	QDateTime dt(d, timeNull.addMSecs(msecs), qwt::compat::utcTimeZone());
 
-	if (timeSpec == Qt::LocalTime)
-		dt = qwtToTimeSpec(dt, timeSpec);
+	if (timeZone != qwt::compat::utcTimeZone())
+		dt = qwtToTimeZone(dt, timeZone);
 
 	return dt;
+}
+
+/**
+ * @brief Translate from double to QDateTime
+ *
+ * @param value Number of milliseconds since the epoch,
+ *              1970-01-01T00:00:00 UTC
+ * @param timeSpec Time specification
+ * @return Datetime value
+ *
+ * @sa toDouble(), QDateTime::setMSecsSinceEpoch()
+ * @note The return datetime for Qt::OffsetFromUTC will be Qt::UTC
+ *
+ */
+QDateTime QwtDate::toDateTime(double value, Qt::TimeSpec timeSpec)
+{
+	return QwtDate::toDateTime(value, QwtDate::toTimeZone(timeSpec));
 }
 
 /**
@@ -4291,7 +4389,7 @@ double QwtDate::toDouble(const QDateTime& dateTime)
 {
 	const int msecsPerDay = 86400000;
 
-	const QDateTime dt = qwtToTimeSpec(dateTime, Qt::UTC);
+	const QDateTime dt = qwtToTimeZone(dateTime, qwt::compat::utcTimeZone());
 
 	const double days = dt.date().toJulianDay() - QwtDate::JulianDayForEpoch;
 
@@ -4599,27 +4697,7 @@ int QwtDate::weekNumber(const QDate& date, Week0Type type)
  */
 int QwtDate::utcOffset(const QDateTime& dateTime)
 {
-	int seconds = 0;
-
-	switch (dateTime.timeSpec()) {
-	case Qt::UTC: {
-		break;
-	}
-	case Qt::OffsetFromUTC: {
-#if QT_VERSION >= 0x050200
-		seconds = dateTime.offsetFromUtc();
-#else
-		seconds = dateTime.utcOffset();
-#endif
-		break;
-	}
-	default: {
-		const QDateTime dt1(dateTime.date(), dateTime.time(), Qt::UTC);
-		seconds = dateTime.secsTo(dt1);
-	}
-	}
-
-	return seconds;
+	return dateTime.offsetFromUtc();
 }
 
 /**
@@ -7008,61 +7086,74 @@ double QwtSyntheticPointData::x(size_t index) const
 
 
 /*** Start of inlined file: qwt_series_data.cpp ***/
-// check nan or inf
-static inline bool isSampleNanOrInf(const QPointF& sample)
+/**
+ * @brief Check if a QPointF sample contains NaN or Inf
+ * @param sample The point to check
+ * @return true if either coordinate is NaN or infinite
+ */
+bool isSampleNanOrInf(const QPointF& sample)
 {
 	return qwt_is_nan_or_inf(sample);
 }
 
-static inline bool isSampleNanOrInf(const QwtPoint3D& sample)
+/**
+ * @brief Check if a QwtPoint3D sample contains NaN or Inf
+ * @param sample The 3D point to check
+ * @return true if any of x, y, or z is NaN or infinite
+ */
+bool isSampleNanOrInf(const QwtPoint3D& sample)
 {
-	return !std::isfinite(sample.x()) || !std::isfinite(sample.y()) || !std::isfinite(sample.z());
+	return qwt_is_nan_or_inf(sample.x()) || qwt_is_nan_or_inf(sample.y()) || qwt_is_nan_or_inf(sample.z());
 }
 
-static inline bool isSampleNanOrInf(const QwtPointPolar& sample)
+/// @return true if azimuth or radius is NaN or infinite
+bool isSampleNanOrInf(const QwtPointPolar& sample)
 {
-	return !std::isfinite(sample.azimuth()) || !std::isfinite(sample.radius());
+	return qwt_is_nan_or_inf(sample.azimuth()) || qwt_is_nan_or_inf(sample.radius());
 }
 
-static inline bool isSampleNanOrInf(const QwtSetSample& sample)
+/// @return true if the position (value) is NaN or infinite; set elements are checked in qwtBoundingRect
+bool isSampleNanOrInf(const QwtSetSample& sample)
 {
-	// Special: directly returns false; judgement is done inside qwtBoundingRect(const QwtSetSample& sample)
-	Q_UNUSED(sample);
-	return false;
+	return qwt_is_nan_or_inf(sample.value);
 }
 
-static inline bool isSampleNanOrInf(const QwtIntervalSample& sample)
+/// @return true if value or interval bounds are NaN or infinite
+bool isSampleNanOrInf(const QwtIntervalSample& sample)
 {
-
-	return !std::isfinite(sample.value) || !std::isfinite(sample.interval.minValue())
-		   || !std::isfinite(sample.interval.maxValue());
+	return qwt_is_nan_or_inf(sample.value) || qwt_is_nan_or_inf(sample.interval.minValue())
+		   || qwt_is_nan_or_inf(sample.interval.maxValue());
 }
 
-static inline bool isSampleNanOrInf(const QwtOHLCSample& sample)
+/// @return true if any of open, high, low, close, or time is NaN or infinite
+bool isSampleNanOrInf(const QwtOHLCSample& sample)
 {
-
-	return !std::isfinite(sample.close) || !std::isfinite(sample.high) || !std::isfinite(sample.low)
-		   || !std::isfinite(sample.open) || !std::isfinite(sample.time);
+	return qwt_is_nan_or_inf(sample.open) || qwt_is_nan_or_inf(sample.high) || qwt_is_nan_or_inf(sample.low)
+		   || qwt_is_nan_or_inf(sample.close) || qwt_is_nan_or_inf(sample.time);
 }
 
-static inline bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
+/// @return true if any of x, y, vx, or vy is NaN or infinite
+bool isSampleNanOrInf(const QwtVectorFieldSample& sample)
 {
-
-	return !std::isfinite(sample.x) || !std::isfinite(sample.y) || !std::isfinite(sample.vx) || !std::isfinite(sample.vx);
+	return qwt_is_nan_or_inf(sample.x) || qwt_is_nan_or_inf(sample.y) || qwt_is_nan_or_inf(sample.vx)
+		   || qwt_is_nan_or_inf(sample.vy);
 }
 
-static inline bool isSampleNanOrInf(const QwtBoxSample& sample)
+/// @return true if position or any whisker/quartile value is NaN or infinite
+bool isSampleNanOrInf(const QwtBoxSample& sample)
 {
-	return !std::isfinite(sample.position) || !std::isfinite(sample.whiskerLower) || !std::isfinite(sample.q1)
-		   || !std::isfinite(sample.median) || !std::isfinite(sample.q3) || !std::isfinite(sample.whiskerUpper);
+	return qwt_is_nan_or_inf(sample.position) || qwt_is_nan_or_inf(sample.whiskerLower) || qwt_is_nan_or_inf(sample.q1)
+		   || qwt_is_nan_or_inf(sample.median) || qwt_is_nan_or_inf(sample.q3)
+		   || qwt_is_nan_or_inf(sample.whiskerUpper);
 }
 
-static inline bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
+/// @return true if boxPosition or any outlier value is NaN or infinite
+bool isSampleNanOrInf(const QwtBoxOutlierSample& sample)
 {
-	if (!std::isfinite(sample.boxPosition))
+	if (qwt_is_nan_or_inf(sample.boxPosition))
 		return true;
 	for (int i = 0; i < sample.values.size(); ++i) {
-		if (!std::isfinite(sample.values[ i ]))
+		if (qwt_is_nan_or_inf(sample.values[ i ]))
 			return true;
 	}
 	return false;
@@ -7099,11 +7190,12 @@ static inline QRectF qwtBoundingRect(const QwtSetSample& sample)
 	double maxY = sample.set[ begin ];
 	while (begin < sample.set.size() && qwt_is_nan_or_inf(minY)) {
 		++begin;
-		minY = sample.set[ begin ];
-		maxY = sample.set[ begin ];
+		if (begin < sample.set.size()) {
+			minY = sample.set[ begin ];
+			maxY = sample.set[ begin ];
+		}
 	}
 	for (int i = begin + 1; i < sample.set.size(); ++i) {
-		// modify by czy at 2025-12
 		if (qwt_is_nan_or_inf(sample.set[ i ])) {
 			continue;
 		}
@@ -7145,14 +7237,26 @@ static inline QRectF qwtBoundingRect(const QwtBoxOutlierSample& sample)
 	if (sample.values.isEmpty())
 		return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
 
-	double minVal = sample.values[ 0 ];
-	double maxVal = sample.values[ 0 ];
-	for (int i = 1; i < sample.values.size(); ++i) {
-		if (sample.values[ i ] < minVal)
+	double minVal = 0.0;
+	double maxVal = 0.0;
+	bool found = false;
+	for (int i = 0; i < sample.values.size(); ++i) {
+		if (qwt_is_nan_or_inf(sample.values[ i ]))
+			continue;
+		if (!found) {
 			minVal = sample.values[ i ];
-		if (sample.values[ i ] > maxVal)
 			maxVal = sample.values[ i ];
+			found = true;
+		} else {
+			if (sample.values[ i ] < minVal)
+				minVal = sample.values[ i ];
+			if (sample.values[ i ] > maxVal)
+				maxVal = sample.values[ i ];
+		}
 	}
+	if (!found)
+		return QRectF(sample.boxPosition, 0.0, 0.0, -1.0);  // invalid
+
 	return QRectF(sample.boxPosition, minVal, 0.0, maxVal - minVal);
 }
 
@@ -7187,7 +7291,6 @@ QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to
 
 	size_t i;
 	for (i = from; i <= to; i++) {
-		// chenzongyan modify at 202512: add nan checking
 		if (isSampleNanOrInf(series.sample(i))) {
 			continue;
 		}
@@ -7200,7 +7303,6 @@ QRectF qwtBoundingRectT(const QwtSeriesData< T >& series, size_t from, size_t to
 	}
 
 	for (; i <= to; i++) {
-		// chenzongyan modify at 202512: add nan checking
 		if (isSampleNanOrInf(series.sample(i))) {
 			continue;
 		}
@@ -30615,6 +30717,15 @@ QPainterPath QwtSplineCurveFitter::fitCurvePath(const QPolygonF& points) const
 
 
 /*** Start of inlined file: qwt_date_scale_draw.cpp ***/
+
+/*** Start of inlined file: qwt_qt5qt6_compat.hpp ***/
+#ifndef QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
+#define QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
+
+#endif
+
+/*** End of inlined file: qwt_qt5qt6_compat.hpp ***/
+
 class QwtDateScaleDraw::PrivateData
 {
 	QWT_DECLARE_PUBLIC(QwtDateScaleDraw)
@@ -30874,15 +30985,11 @@ QwtDate::IntervalType QwtDateScaleDraw::intervalType(const QwtScaleDiv& scaleDiv
 QDateTime QwtDateScaleDraw::toDateTime(double value) const
 {
 	QWT_DC(d);
-	QDateTime dt = QwtDate::toDateTime(value, d->timeSpec);
-	if (d->timeSpec == Qt::OffsetFromUTC) {
+	const QTimeZone timeZone = QwtDate::toTimeZone(d->timeSpec, d->utcOffset);
+	QDateTime dt = QwtDate::toDateTime(value, timeZone);
+
+	if (d->timeSpec == Qt::OffsetFromUTC)
 		dt = dt.addSecs(d->utcOffset);
-#if QT_VERSION >= 0x050200
-		dt.setOffsetFromUtc(d->utcOffset);
-#else
-		dt.setUtcOffset(d->utcOffset);
-#endif
-	}
 
 	return dt;
 }
@@ -31216,7 +31323,7 @@ static double qwtDivideMajorStep(double stepSize, int maxMinSteps, QwtDate::Inte
 static QList< double > qwtDstTicks(const QDateTime& dateTime, int secondsMajor, int secondsMinor)
 {
 	if (secondsMinor <= 0)
-		QList< double >();
+		return QList< double >();
 
 	QDateTime minDate = dateTime.addSecs(-secondsMajor);
 	minDate           = QwtDate::floor(minDate, QwtDate::Hour);
@@ -31254,7 +31361,7 @@ static QwtScaleDiv qwtDivideToSeconds(const QDateTime& minDate,
 	}
 
 	bool daylightSaving = false;
-	if (minDate.timeSpec() == Qt::LocalTime) {
+	if (minDate.timeZone() == qwt::compat::systemTimeZone()) {
 		daylightSaving = intervalType > QwtDate::Hour;
 		if (intervalType == QwtDate::Hour) {
 			daylightSaving = stepSize > 1;
@@ -31832,13 +31939,8 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
 
 	QDateTime dt = dateTime;
 
-	if (dateTime.timeSpec() == Qt::OffsetFromUTC) {
-#if QT_VERSION >= 0x050200
-		dt.setOffsetFromUtc(0);
-#else
-		dt.setUtcOffset(0);
-#endif
-	}
+	if (dateTime.timeSpec() == Qt::OffsetFromUTC)
+		dt.setTimeZone(qwt::compat::utcTimeZone());
 
 	switch (intervalType) {
 	case QwtDate::Millisecond: {
@@ -31964,13 +32066,8 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
 	}
 	}
 
-	if (dateTime.timeSpec() == Qt::OffsetFromUTC) {
-#if QT_VERSION >= 0x050200
-		dt.setOffsetFromUtc(dateTime.offsetFromUtc());
-#else
-		dt.setUtcOffset(dateTime.utcOffset());
-#endif
-	}
+	if (dateTime.timeSpec() == Qt::OffsetFromUTC)
+		dt.setTimeZone(qwt::compat::offsetTimeZone(dateTime.offsetFromUtc()));
 
 	return dt;
 }
@@ -31986,21 +32083,16 @@ QwtDateScaleEngine::alignDate(const QDateTime& dateTime, double stepSize, QwtDat
 QDateTime QwtDateScaleEngine::toDateTime(double value) const
 {
 	QWT_DC(d);
-	QDateTime dt = QwtDate::toDateTime(value, d->timeSpec);
+	const QTimeZone timeZone = QwtDate::toTimeZone(d->timeSpec, d->utcOffset);
+	QDateTime dt = QwtDate::toDateTime(value, timeZone);
 	if (!dt.isValid()) {
 		const QDate date = (value <= 0.0) ? QwtDate::minDate() : QwtDate::maxDate();
 
-		dt = QDateTime(date, QTime(0, 0), d->timeSpec);
+		dt = QDateTime(date, QTime(0, 0), timeZone);
 	}
 
-	if (d->timeSpec == Qt::OffsetFromUTC) {
+	if (d->timeSpec == Qt::OffsetFromUTC)
 		dt = dt.addSecs(d->utcOffset);
-#if QT_VERSION >= 0x050200
-		dt.setOffsetFromUtc(d->utcOffset);
-#else
-		dt.setUtcOffset(d->utcOffset);
-#endif
-	}
 
 	return dt;
 }
@@ -34345,7 +34437,6 @@ public:
 		, isActive(false)
 		, trackerPosition(-1, -1)
 		, mouseTracking(false)
-		, openGL(false)
 	{
 	}
 
@@ -34389,8 +34480,6 @@ public:
 
 	QPointer< Rubberband > rubberBandOverlay;
 	QPointer< Tracker > trackerOverlay;
-
-	bool openGL;
 };
 
 /**
@@ -34443,7 +34532,6 @@ void QwtPicker::init(QWidget* parent, RubberBand rubberBand, DisplayMode tracker
 		if (parent->focusPolicy() == Qt::NoFocus)
 			parent->setFocusPolicy(Qt::WheelFocus);
 
-		m_data->openGL        = parent->inherits("QGLWidget");
 		m_data->trackerFont   = parent->font();
 		m_data->mouseTracking = parent->hasMouseTracking();
 
@@ -43457,7 +43545,11 @@ void QwtPlotBarChart::drawSeries(QPainter* painter,
 	painter->save();
 
 	for (int i = from; i <= to; i++) {
-		drawSample(painter, xMap, yMap, canvasRect, interval, i, sample(i));
+		const QPointF s = sample(i);
+		if (isSampleNanOrInf(s))
+			continue;
+
+		drawSample(painter, xMap, yMap, canvasRect, interval, i, s);
 	}
 
 	painter->restore();
@@ -44261,6 +44353,10 @@ void QwtPlotCurve::drawSticks(QPainter* painter,
 
 	for (int i = from; i <= to; i++) {
 		const QPointF sample = series->sample(i);
+
+		if (isSampleNanOrInf(sample))
+			continue;
+
 		double xi            = xMap.transform(sample.x());
 		double yi            = yMap.transform(sample.y());
 		if (doAlign) {
@@ -44333,6 +44429,9 @@ void QwtPlotCurve::drawDots(QPainter* painter,
 		for (int i = from; i <= to; i++) {
 			const QPointF sample = series->sample(i);
 
+			if (isSampleNanOrInf(sample))
+				continue;
+
 			double xi = xMap.transform(sample.x());
 			double yi = yMap.transform(sample.y());
 
@@ -44388,8 +44487,12 @@ void QwtPlotCurve::drawSteps(QPainter* painter,
 	const QwtSeriesData< QPointF >* series = data();
 
 	int i, ip;
-	for (i = from, ip = 0; i <= to; i++, ip += 2) {
+	for (i = from, ip = 0; i <= to; i++) {
 		const QPointF sample = series->sample(i);
+
+		if (isSampleNanOrInf(sample))
+			continue;
+
 		double xi            = xMap.transform(sample.x());
 		double yi            = yMap.transform(sample.y());
 		if (doAlign) {
@@ -44412,7 +44515,13 @@ void QwtPlotCurve::drawSteps(QPainter* painter,
 
 		points[ ip ].rx() = xi;
 		points[ ip ].ry() = yi;
+		ip += 2;
 	}
+
+	if (ip == 0)
+		return;
+
+	polygon.resize(ip - 1);
 
 	if (d->paintAttributes & ClipPolygons) {
 		QRectF clipRect = qwtIntersectedClipRect(canvasRect, painter);
@@ -44672,6 +44781,9 @@ int QwtPlotCurve::closestPoint(const QPointF& pos, double* dist) const
 
 	for (uint i = 0; i < numSamples; i++) {
 		const QPointF sample = series->sample(i);
+
+		if (isSampleNanOrInf(sample))
+			continue;
 
 		const double cx = xMap.transform(sample.x()) - pos.x();
 		const double cy = yMap.transform(sample.y()) - pos.y();
@@ -46240,6 +46352,12 @@ void QwtPlotHistogram::drawOutline(QPainter* painter, const QwtScaleMap& xMap, c
 	for (int i = from; i <= to; i++) {
 		const QwtIntervalSample sample = this->sample(i);
 
+		if (isSampleNanOrInf(sample)) {
+			flushPolygon(painter, v0, polygon);
+			previous = QwtIntervalSample();
+			continue;
+		}
+
 		if (!sample.interval.isValid()) {
 			flushPolygon(painter, v0, polygon);
 			previous = sample;
@@ -46310,7 +46428,7 @@ void QwtPlotHistogram::drawColumns(QPainter* painter, const QwtScaleMap& xMap, c
 
 	for (int i = from; i <= to; i++) {
 		const QwtIntervalSample sample = series->sample(i);
-		if (!sample.interval.isNull()) {
+		if (!isSampleNanOrInf(sample) && !sample.interval.isNull()) {
 			const QwtColumnRect rect = columnRect(sample, xMap, yMap);
 			drawColumn(painter, rect, sample);
 		}
@@ -46341,7 +46459,7 @@ void QwtPlotHistogram::drawLines(QPainter* painter, const QwtScaleMap& xMap, con
 
 	for (int i = from; i <= to; i++) {
 		const QwtIntervalSample sample = series->sample(i);
-		if (!sample.interval.isNull()) {
+		if (!isSampleNanOrInf(sample) && !sample.interval.isNull()) {
 			const QwtColumnRect rect = columnRect(sample, xMap, yMap);
 
 			QRectF r = rect.toRect();
@@ -46904,11 +47022,61 @@ void QwtPlotIntervalCurve::drawTube(QPainter* painter,
 	QPolygonF polygon(2 * size);
 	QPointF* points = polygon.data();
 
+	// Pre-scan for first valid sample to seed leading-NaN fallback
+	QPointF seedMin, seedMax;
+	bool hasValid = false;
+	for (uint k = 0; k < size; k++) {
+		const QwtIntervalSample s = sample(from + k);
+		if (!isSampleNanOrInf(s)) {
+			if (orientation() == Qt::Vertical) {
+				double x  = xMap.transform(s.value);
+				double y1 = yMap.transform(s.interval.minValue());
+				double y2 = yMap.transform(s.interval.maxValue());
+				if (doAlign) {
+					x  = qRound(x);
+					y1 = qRound(y1);
+					y2 = qRound(y2);
+				}
+				seedMin = QPointF(x, y1);
+				seedMax = QPointF(x, y2);
+			} else {
+				double y  = yMap.transform(s.value);
+				double x1 = xMap.transform(s.interval.minValue());
+				double x2 = xMap.transform(s.interval.maxValue());
+				if (doAlign) {
+					y  = qRound(y);
+					x1 = qRound(x1);
+					x2 = qRound(x2);
+				}
+				seedMin = QPointF(x1, y);
+				seedMax = QPointF(x2, y);
+			}
+			hasValid = true;
+			break;
+		}
+	}
+	if (!hasValid) {
+		painter->restore();
+		return;
+	}
+
 	for (uint i = 0; i < size; i++) {
 		QPointF& minValue = points[ i ];
 		QPointF& maxValue = points[ 2 * size - 1 - i ];
 
 		const QwtIntervalSample intervalSample = sample(from + i);
+
+		if (isSampleNanOrInf(intervalSample)) {
+			if (i > 0) {
+				minValue = points[ i - 1 ];
+				maxValue = points[ 2 * size - i ];
+			} else {
+				minValue = seedMin;
+				maxValue = seedMax;
+			}
+			continue;
+		}
+
 		if (orientation() == Qt::Vertical) {
 			double x  = xMap.transform(intervalSample.value);
 			double y1 = yMap.transform(intervalSample.interval.minValue());
@@ -47019,6 +47187,9 @@ void QwtPlotIntervalCurve::drawSymbols(QPainter* painter,
 
 	for (int i = from; i <= to; i++) {
 		const QwtIntervalSample s = sample(i);
+
+		if (isSampleNanOrInf(s))
+			continue;
 
 		if (orientation() == Qt::Vertical) {
 			if (!doClip || qwtIsVSampleInside(s, xMin, xMax, yMin, yMax)) {
@@ -48367,7 +48538,7 @@ void QwtPlotArrowMarker::setLength(double length)
 {
 	QWT_D(d);
 	// Validate input
-	if (qIsNaN(length) || qIsInf(length)) {
+	if (qwt_is_nan_or_inf(length)) {
 		qWarning("QwtPlotArrowMarker::setLength: Invalid length value");
 		return;
 	}
@@ -48401,7 +48572,7 @@ void QwtPlotArrowMarker::setAngle(double angle)
 {
 	QWT_D(d);
 	// Validate input
-	if (qIsNaN(angle) || qIsInf(angle)) {
+	if (qwt_is_nan_or_inf(angle)) {
 		qWarning("QwtPlotArrowMarker::setAngle: Invalid angle value");
 		return;
 	}
@@ -48932,7 +49103,8 @@ void QwtPlotArrowMarker::drawArrowLine(QPainter* painter, const QPointF& canvasS
 		return;
 
 	// Check if points are valid
-	if (qIsNaN(canvasStart.x()) || qIsNaN(canvasStart.y()) || qIsNaN(canvasEnd.x()) || qIsNaN(canvasEnd.y())) {
+	if (qwt_is_nan_or_inf(canvasStart.x()) || qwt_is_nan_or_inf(canvasStart.y())
+		|| qwt_is_nan_or_inf(canvasEnd.x()) || qwt_is_nan_or_inf(canvasEnd.y())) {
 		qWarning("QwtPlotArrowMarker::drawArrowLine: Invalid canvas coordinates");
 		return;
 	}
@@ -49038,6 +49210,8 @@ inline static bool qwtIsIncreasing(const QwtScaleMap& map, const QVector< double
 
 	for (int i = 0; i < values.size(); i++) {
 		const double y = values[ i ];
+		if (qwt_is_nan_or_inf(y))
+			continue;
 		if (y != 0.0)
 			return (map.isInverting() != (y > 0.0));
 	}
@@ -49431,7 +49605,11 @@ void QwtPlotMultiBarChart::drawSeries(QPainter* painter,
 	painter->save();
 
 	for (int i = from; i <= to; i++) {
-		drawSample(painter, xMap, yMap, canvasRect, interval, i, sample(i));
+		const QwtSetSample s = sample(i);
+		if (qwt_is_nan_or_inf(s.value))
+			continue;
+
+		drawSample(painter, xMap, yMap, canvasRect, interval, i, s);
 	}
 
 	painter->restore();
@@ -49514,6 +49692,9 @@ void QwtPlotMultiBarChart::drawGroupedBars(QPainter* painter,
 			const double x1 = x0 + i * barWidth;
 			const double x2 = x1 + barWidth;
 
+			if (qwt_is_nan_or_inf(sample.set[ i ]))
+				continue;
+
 			const double y2 = yMap.transform(sample.set[ i ]);
 
 			QwtColumnRect barRect;
@@ -49536,6 +49717,9 @@ void QwtPlotMultiBarChart::drawGroupedBars(QPainter* painter,
 		for (int i = 0; i < numBars; i++) {
 			double y1 = y0 + i * barHeight;
 			double y2 = y1 + barHeight;
+
+			if (qwt_is_nan_or_inf(sample.set[ i ]))
+				continue;
 
 			double x2 = xMap.transform(sample.set[ i ]);
 
@@ -49597,6 +49781,9 @@ void QwtPlotMultiBarChart::drawStackedBars(QPainter* painter,
 
 		for (int i = 0; i < numBars; i++) {
 			const double si = sample.set[ i ];
+			if (qwt_is_nan_or_inf(si))
+				continue;
+
 			if (si == 0.0)
 				continue;
 
@@ -49634,6 +49821,9 @@ void QwtPlotMultiBarChart::drawStackedBars(QPainter* painter,
 
 		for (int i = 0; i < sample.set.size(); i++) {
 			const double si = sample.set[ i ];
+			if (qwt_is_nan_or_inf(si))
+				continue;
+
 			if (si == 0.0)
 				continue;
 
@@ -50020,8 +50210,8 @@ QBitmap QwtPlotCachePanner::contentsMask() const
 QPixmap QwtPlotCachePanner::grab() const
 {
 	const QWidget* cv = canvas();
-	if (cv && cv->inherits("QGLWidget")) {
-		// we can't grab from a QGLWidget
+	if (cv && (cv->inherits("QGLWidget") || cv->inherits("QOpenGLWidget"))) {
+		// we can't grab from a QGLWidget/QOpenGLWidget
 
 		QPixmap pm(cv->size());
 		QwtPainter::fillPixmap(cv, pm);
@@ -55375,6 +55565,9 @@ void QwtPlotSpectroCurve::drawDots(QPainter* painter,
 	for (int i = from; i <= to; i++) {
 		const QwtPoint3D sample = series->sample(i);
 
+		if (isSampleNanOrInf(sample))
+			continue;
+
 		double xi = xMap.transform(sample.x());
 		double yi = yMap.transform(sample.y());
 		if (doAlign) {
@@ -55422,19 +55615,6 @@ void QwtPlotSpectroCurve::drawDots(QPainter* painter,
 #endif
 
 #include <algorithm>
-
-static inline bool qwtIsNaN(double d)
-{
-	// qt_is_nan is private header and qIsNaN is not inlined
-	// so we need these code here too
-
-	const uchar* ch = (const uchar*)&d;
-	if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-		return (ch[ 0 ] & 0x7f) == 0x7f && ch[ 1 ] > 0xf0;
-	} else {
-		return (ch[ 7 ] & 0x7f) == 0x7f && ch[ 6 ] > 0xf0;
-	}
-}
 
 class QwtPlotSpectrogram::PrivateData
 {
@@ -55984,7 +56164,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 
 				const double value = d->data->value(tx, ty);
 
-				if (hasGaps && qwtIsNaN(value)) {
+				if (hasGaps && qwt_is_nan_or_inf(value)) {
 					*line++ = 0u;
 				} else if (numColors == 0) {
 					*line++ = colorMap->rgb(rMin, rMax, value);
@@ -56006,7 +56186,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 
 				const double value = d->data->value(tx, ty);
 
-				if (hasGaps && qwtIsNaN(value)) {
+				if (hasGaps && qwt_is_nan_or_inf(value)) {
 					*line++ = 0;
 				} else {
 					const uint index = d->colorMap->colorIndex(256, rMin, rMax, value);
@@ -56940,6 +57120,9 @@ void QwtPlotTradingCurve::drawSymbols(QPainter* painter,
 	for (int i = from; i <= to; i++) {
 		const QwtOHLCSample s = sample(i);
 
+		if (isSampleNanOrInf(s))
+			continue;
+
 		if (!doClip || qwtIsSampleInside(s, tMin, tMax, vMin, vMax)) {
 			QwtOHLCSample translatedSample;
 
@@ -57161,21 +57344,30 @@ static QwtInterval qwtMagnitudeRange(const QwtSeriesData< QwtVectorFieldSample >
 	if (series->size() == 0)
 		return QwtInterval(0, 1);
 
-	const QwtVectorFieldSample s0 = series->sample(0);
+	double min = -1.0;
+	double max = -1.0;
+	bool found = false;
 
-	double min = s0.vx * s0.vx + s0.vy * s0.vy;
-	double max = min;
-
-	for (uint i = 1; i < series->size(); i++) {
+	for (uint i = 0; i < series->size(); i++) {
 		const QwtVectorFieldSample s = series->sample(i);
-		const double l               = s.vx * s.vx + s.vy * s.vy;
+		if (isSampleNanOrInf(s))
+			continue;
 
-		if (l < min)
+		const double l = s.vx * s.vx + s.vy * s.vy;
+		if (!found) {
 			min = l;
-
-		if (l > max)
 			max = l;
+			found = true;
+		} else {
+			if (l < min)
+				min = l;
+			if (l > max)
+				max = l;
+		}
 	}
+
+	if (!found)
+		return QwtInterval(0, 1);
 
 	min = std::sqrt(min);
 	max = std::sqrt(max);
@@ -58035,9 +58227,14 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
 
 		for (int i = from; i <= to; i++) {
 			const QwtVectorFieldSample sample = series->sample(i);
-			if (!sample.isNull()) {
-				matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
-			}
+
+			if (isSampleNanOrInf(sample))
+				continue;
+
+			if (sample.isNull())
+				continue;
+
+			matrix.addSample(xMap.transform(sample.x), yMap.transform(sample.y), sample.vx, sample.vy);
 		}
 
 		const int numEntries               = matrix.numRows() * matrix.numColumns();
@@ -58065,6 +58262,9 @@ void QwtPlotVectorField::drawSymbols(QPainter* painter,
 	} else {
 		for (int i = from; i <= to; i++) {
 			const QwtVectorFieldSample sample = series->sample(i);
+
+			if (isSampleNanOrInf(sample))
+				continue;
 
 			// arrows with zero length are never drawn
 			if (sample.isNull())
@@ -58821,6 +59021,9 @@ void QwtPlotBoxChart::drawSeries(QPainter* painter,
 
 	for (int i = from; i <= to; i++) {
 		const QwtBoxSample& sample = this->sample(i);
+
+		if (isSampleNanOrInf(sample))
+			continue;
 
 		double posPixel = posMap->transform(sample.position);
 		if (doAlign)
@@ -62077,10 +62280,18 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 
 	if (d->curveFitter) {
 		QPolygonF points(size);
+		int validCount = 0;
 		for (int j = from; j <= to; j++) {
 			const QwtPointPolar point = sample(j);
-			points[ j - from ]        = QPointF(point.azimuth(), point.radius());
+			if (isSampleNanOrInf(point))
+				continue;
+
+			points[ validCount++ ] = QPointF(point.azimuth(), point.radius());
 		}
+		points.resize(validCount);
+
+		if (validCount == 0)
+			return;
 
 		points = d->curveFitter->fitCurve(points);
 
@@ -62101,16 +62312,21 @@ void QwtPolarCurve::drawLines(QPainter* painter,
 		polyline.resize(size);
 		QPointF* polylineData = polyline.data();
 
+		int validCount = 0;
 		for (int i = from; i <= to; i++) {
 			QwtPointPolar point = sample(i);
+			if (isSampleNanOrInf(point))
+				continue;
+
 			if (!qwtInsidePole(radialMap, point.radius())) {
 				double r                 = radialMap.transform(point.radius());
 				const double a           = azimuthMap.transform(point.azimuth());
-				polylineData[ i - from ] = qwtPolar2Pos(pole, r, a);
+				polylineData[ validCount++ ] = qwtPolar2Pos(pole, r, a);
 			} else {
-				polylineData[ i - from ] = pole;
+				polylineData[ validCount++ ] = pole;
 			}
 		}
+		polyline.resize(validCount);
 	}
 
 	QRectF clipRect;
@@ -62163,6 +62379,9 @@ void QwtPolarCurve::drawSymbols(QPainter* painter,
 		QPolygonF points;
 		for (int j = 0; j < n; j++) {
 			const QwtPointPolar point = sample(i + j);
+
+			if (isSampleNanOrInf(point))
+				continue;
 
 			if (!qwtInsidePole(radialMap, point.radius())) {
 				const double r = radialMap.transform(point.radius());
@@ -63416,7 +63635,7 @@ void QwtPolarSpectrogram::renderTile(const QwtScaleMap& azimuthMap,
 				const double radius  = radialMap.invTransform(r);
 
 				const double value = d->data->value(azimuth, radius);
-				if (qIsNaN(value)) {
+				if (qwt_is_nan_or_inf(value)) {
 					*line++ = 0u;
 				} else {
 					*line++ = d->colorMap->rgb(irMin, irMax, value);
@@ -63446,8 +63665,12 @@ void QwtPolarSpectrogram::renderTile(const QwtScaleMap& azimuthMap,
 
 				const double value = d->data->value(azimuth, radius);
 
-				const uint index = d->colorMap->colorIndex(256, irMin, irMax, value);
-				*line++          = static_cast< unsigned char >(index);
+				if (qwt_is_nan_or_inf(value)) {
+					*line++ = 0;
+				} else {
+					const uint index = d->colorMap->colorIndex(256, irMin, irMax, value);
+					*line++          = static_cast< unsigned char >(index);
+				}
 			}
 		}
 	}
@@ -64902,7 +65125,7 @@ bool QwtPlot::isParasiteShareAxis(QwtAxisId axisId) const
 {
 	QWT_DC(d);
 	if (axisId < 0 || axisId >= QwtAxis::AxisPositions) {
-		return false;  // Invalid axis treated as “not shared”
+		return false;  // Invalid axis treated as "not shared"
 	}
 	return bool(d->shareConn[ axisId ]);
 }
@@ -65245,9 +65468,9 @@ void QwtPlot::rescaleAxes(bool onlyVisibleItems, double marginPercent, QwtAxisId
 		QRectF boundingRect = item->boundingRect();
 
 		// Check if valid, including NaN and infinity checks
-		if (boundingRect.isValid() && !boundingRect.isEmpty() && std::isfinite(boundingRect.left())
-			&& std::isfinite(boundingRect.right()) && std::isfinite(boundingRect.top())
-			&& std::isfinite(boundingRect.bottom())) {
+		if (boundingRect.isValid() && !boundingRect.isEmpty() && !qwt_is_nan_or_inf(boundingRect.left())
+			&& !qwt_is_nan_or_inf(boundingRect.right()) && !qwt_is_nan_or_inf(boundingRect.top())
+			&& !qwt_is_nan_or_inf(boundingRect.bottom())) {
 
 			minX    = std::min(minX, boundingRect.left());
 			maxX    = std::max(maxX, boundingRect.right());
@@ -65495,7 +65718,7 @@ int QwtPlot::parasitePlotCount() const
  *   being closer to the outside of the canvas.
  *
  * Calculation flow:
- * 1. Collect the “net” rectangles of the host and all visible parasite axes (with old edgeMargin and margin stripped);
+ * 1. Collect the "net" rectangles of the host and all visible parasite axes (with old edgeMargin and margin stripped);
  * 2. For each level i:
  *    - margin     = sum of net rectangle sizes from level 0 to i-1;
  *    - edgeMargin = sum of net rectangle sizes from level i+1 to the last level;
@@ -65531,7 +65754,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 	struct AxisLayer
 	{
 		QwtPlot* plot = nullptr;
-		QRectF scaleRect;  // “Net” rectangle with old edgeMargin/margin removed
+		QRectF scaleRect;  // "Net" rectangle with old edgeMargin/margin removed
 	};
 	const auto shrinkRect = [](QRectF r, int delta, QwtAxisId id) -> QRectF {
 		if (delta == 0)
@@ -65588,7 +65811,7 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 
 	for (int i = 0; i < layers.size(); ++i) {
 #if QwtPlot_DEBUG_PRINT
-		qDebug() << “ layers[“ << i << “] scaleRect =” << layers[ i ].scaleRect;
+		qDebug() << " layers[" << i << "] scaleRect =" << layers[ i ].scaleRect;
 #endif
 	}
 
@@ -65612,8 +65835,8 @@ void QwtPlot::updateAxisEdgeMargin(QwtAxisId axisId)
 			axisWidget->setMargin(margin);
 		}
 #if QwtPlot_DEBUG_PRINT
-		qDebug() << “ [“ << i << “] setEdgeMargin(“ << edgeMargin << “)”;
-		qDebug() << “ [“ << i << “] setMargin(“ << margin << “)”;
+		qDebug() << " [" << i << "] setEdgeMargin(" << edgeMargin << ")";
+		qDebug() << " [" << i << "] setMargin(" << margin << ")";
 #endif
 	}
 }
@@ -68799,15 +69022,6 @@ QRectF QwtParasitePlotLayout::parasiteScaleRect(QwtAxisId aid) const
 #include <QDebug>
 #include <QTimer>
 // qwt
-
-
-/*** Start of inlined file: qwt_qt5qt6_compat.hpp ***/
-#ifndef QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
-#define QWT_PLOT_QT5QT6_COMPAT_HPP_FWD_H
-
-#endif
-
-/*** End of inlined file: qwt_qt5qt6_compat.hpp ***/
 
 class QwtPlotScaleEventDispatcher::PrivateData
 {

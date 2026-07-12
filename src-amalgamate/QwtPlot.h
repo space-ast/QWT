@@ -32,14 +32,14 @@
  * @def Qwt numeric version MAJ.MIN.{PAT}
  */
 #ifndef QWT_VERSION_PAT
-#define QWT_VERSION_PAT 2
+#define QWT_VERSION_PAT 4
 #endif
 
 /**
  * @def Version string
  */
 #ifndef QWT_VERSION_STR
-#define QWT_VERSION_STR "7.3.2"
+#define QWT_VERSION_STR "7.3.4"
 #endif
 
 #endif // QWT_VERSION_INFO_H
@@ -1954,6 +1954,7 @@ QWTCORE_EXPORT QDebug operator<<(QDebug, const QwtScaleMap&);
 #define QWT_QT5QT6_COMPAT_HPP
 #include <QtCore/QtGlobal>
 #include <QtCore/QObject>
+#include <QtCore/QTimeZone>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QWheelEvent>
@@ -2073,6 +2074,46 @@ inline int wheelEventDelta(QWheelEvent* e)
 	return e->angleDelta().y();
 #endif
 }
+/**
+ * @brief Get the UTC time zone
+ * @return QTimeZone representing UTC
+ * @note QTimeZone::utc() is available since Qt 6.5; for earlier versions
+ *       the constructor with the IANA ID "UTC" is used.
+ */
+inline QTimeZone utcTimeZone()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+	return QTimeZone::utc();
+#else
+	return QTimeZone("UTC");
+#endif
+}
+
+/**
+ * @brief Get the system time zone
+ * @return QTimeZone representing the system's local time zone
+ */
+inline QTimeZone systemTimeZone()
+{
+	return QTimeZone::systemTimeZone();
+}
+
+/**
+ * @brief Create a time zone from an offset in seconds ahead of UTC
+ * @param seconds Offset in seconds from UTC
+ * @return QTimeZone with the given offset
+ * @note QTimeZone::fromSecondsAheadOfUtc() is available since Qt 6.4;
+ *       for earlier versions the deprecated integer constructor is used.
+ */
+inline QTimeZone offsetTimeZone(int seconds)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
+	return QTimeZone::fromSecondsAheadOfUtc(seconds);
+#else
+	return QTimeZone(seconds);
+#endif
+}
+
 }  // namespace   compat
 }  // namespace   qwt
 #endif  // QWT_QT5QT6_COMPAT_HPP
@@ -2740,6 +2781,36 @@ inline bool QwtPoint3D::operator!=(const QwtPoint3D& other) const noexcept
 class QwtPointPolar;
 
 /**
+ * @brief Check whether a QPointF sample contains NaN or Inf coordinates
+ * @return true if either x or y is NaN or infinite
+ */
+QWTCORE_EXPORT bool isSampleNanOrInf(const QPointF& sample);
+
+/// @return true if any of x, y, or z is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPoint3D& sample);
+
+/// @return true if azimuth or radius is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtPointPolar& sample);
+
+/// @return true if the position (value) is NaN or infinite; set elements are checked in qwtBoundingRect
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtSetSample& sample);
+
+/// @return true if value or interval bounds are NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtIntervalSample& sample);
+
+/// @return true if any of open, high, low, close, or time is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtOHLCSample& sample);
+
+/// @return true if any of x, y, vx, or vy is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtVectorFieldSample& sample);
+
+/// @return true if position or any whisker/quartile value is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxSample& sample);
+
+/// @return true if boxPosition or any outlier value is NaN or infinite
+QWTCORE_EXPORT bool isSampleNanOrInf(const QwtBoxOutlierSample& sample);
+
+/**
  * @brief Abstract interface for iterating over samples
  * @details Qwt offers several implementations of the QwtSeriesData API,
  *          but in situations, where data of an application specific format
@@ -3263,6 +3334,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QwtRasterData::Attributes)
 /*** Start of inlined file: qwt_grid_data.hpp ***/
 #ifndef QWT_GRID_DATA_HPP
 #define QWT_GRID_DATA_HPP
+
 #include <vector>
 #include <algorithm>
 #include <limits>
@@ -3722,11 +3794,19 @@ protected:
 	{
 		m_dataMin = std::numeric_limits< T >::max();
 		m_dataMax = std::numeric_limits< T >::lowest();
+		bool found = false;
 		for (const auto& column : m_data) {
 			for (const auto& val : column) {
+				if (qwt_is_nan_or_inf(val))
+					continue;
 				m_dataMin = std::min(m_dataMin, val);
 				m_dataMax = std::max(m_dataMax, val);
+				found = true;
 			}
+		}
+		if (!found) {
+			m_dataMin = std::numeric_limits< T >::quiet_NaN();
+			m_dataMax = std::numeric_limits< T >::quiet_NaN();
 		}
 	}
 
@@ -4105,6 +4185,7 @@ private:
 #define QWT_DATE_H
 
 #include <qdatetime.h>
+#include <QTimeZone>
 
 /**
  * @brief A collection of methods around date/time values
@@ -4200,8 +4281,14 @@ public:
 	// Get maximum date
 	static QDate maxDate();
 
+	// Convert Qt::TimeSpec to QTimeZone
+	static QTimeZone toTimeZone(Qt::TimeSpec timeSpec, int offsetSeconds = 0);
+
 	// Convert double to QDateTime
 	static QDateTime toDateTime(double value, Qt::TimeSpec = Qt::UTC);
+
+	// Convert double to QDateTime with a specific time zone
+	static QDateTime toDateTime(double value, const QTimeZone& timeZone);
 
 	// Convert QDateTime to double
 	static double toDouble(const QDateTime&);
@@ -16398,8 +16485,7 @@ public:
 
 	/**
 	 * @brief Attributes to modify the drawing algorithm
-	 * @details The default setting enables ClipPolygons | FilterPoints |
-	 * FilterPointsAggressive
+	 * @details The default setting enables ClipPolygons | FilterPointsLTTB
 	 * @sa setPaintAttribute(), testPaintAttribute()
 	 */
 	enum PaintAttribute
