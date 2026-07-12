@@ -406,6 +406,7 @@ void QwtPolarCurve::drawLines(QPainter* painter,
             polylineData[ i ] = qwtPolar2Pos(pole, r, a);
         }
     } else {
+        polyline.resize(size);
         QPointF* polylineData = polyline.data();
 
         int validCount = 0;
