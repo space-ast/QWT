@@ -47,19 +47,6 @@
 
 #include <algorithm>
 
-static inline bool qwtIsNaN(double d)
-{
-    // qt_is_nan is private header and qIsNaN is not inlined
-    // so we need these code here too
-
-    const uchar* ch = (const uchar*)&d;
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        return (ch[ 0 ] & 0x7f) == 0x7f && ch[ 1 ] > 0xf0;
-    } else {
-        return (ch[ 7 ] & 0x7f) == 0x7f && ch[ 6 ] > 0xf0;
-    }
-}
-
 class QwtPlotSpectrogram::PrivateData
 {
     QWT_DECLARE_PUBLIC(QwtPlotSpectrogram)
@@ -608,7 +595,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 
                 const double value = d->data->value(tx, ty);
 
-                if (hasGaps && qwtIsNaN(value)) {
+                if (hasGaps && qwt_is_nan_or_inf(value)) {
                     *line++ = 0u;
                 } else if (numColors == 0) {
                     *line++ = colorMap->rgb(rMin, rMax, value);
@@ -630,7 +617,7 @@ void QwtPlotSpectrogram::renderTile(const QwtScaleMap& xMap, const QwtScaleMap& 
 
                 const double value = d->data->value(tx, ty);
 
-                if (hasGaps && qwtIsNaN(value)) {
+                if (hasGaps && qwt_is_nan_or_inf(value)) {
                     *line++ = 0;
                 } else {
                     const uint index = d->colorMap->colorIndex(256, rMin, rMax, value);
