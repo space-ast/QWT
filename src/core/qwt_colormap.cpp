@@ -8,6 +8,7 @@
  *****************************************************************************/
 
 #include "qwt_colormap.h"
+#include "qwt_math.h"
 
 #include <qvector.h>
 
@@ -444,6 +445,9 @@ QColor QwtLinearColorMap::color2() const
  */
 QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -464,6 +468,9 @@ QRgb QwtLinearColorMap::rgb(double vMin, double vMax, double value) const
  */
 uint QwtLinearColorMap::colorIndex(int numColors, double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -586,6 +593,9 @@ int QwtAlphaColorMap::alpha2() const
  */
 QRgb QwtAlphaColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0.0)
@@ -815,6 +825,9 @@ int QwtHueColorMap::alpha() const
  */
 QRgb QwtHueColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0)
@@ -1063,6 +1076,9 @@ int QwtSaturationValueColorMap::alpha() const
  */
 QRgb QwtSaturationValueColorMap::rgb(double vMin, double vMax, double value) const
 {
+    if (qwt_is_nan_or_inf(value))
+        return 0u;
+
     QWT_DC(d);
     const double width = vMax - vMin;
     if (width <= 0)
