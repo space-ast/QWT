@@ -83,6 +83,7 @@ plugins:
                     - Plot Layout: use-guide/plot-layout.md
                 - Data Processing:
                     - Series Data: use-guide/series-data.md
+                    - NaN Handling: use-guide/nan-handling.md
                 - Styles & Symbols:
                     - Symbol: use-guide/symbol.md
                 - Utility Classes:
@@ -159,6 +160,7 @@ plugins:
                     - 布局管理: use-guide/plot-layout.md
                 - 数据处理:
                     - 数据系列: use-guide/series-data.md
+                    - NaN数据处理: use-guide/nan-handling.md
                 - 样式与符号:
                     - 符号样式: use-guide/symbol.md
                 - 工具类:
