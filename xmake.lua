@@ -14,7 +14,12 @@ target("qwt")
     add_headerfiles("src/(**.h)", {prefixdir = "qwt"})
     add_includedirs("src")
     add_includedirs(os.dirs("src/**"))
-    add_defines("QWT_MAKEDLL", "QWT_DLL", "QWT3D_MAKEDLL", "QWT3D_DLL", "GL2PSDLL_EXPORTS", "GL2PSDLL")
+    add_defines(
+        "QWTCORE_MAKEDLL", "QWTCORE_DLL",
+        "QWT_MAKEDLL", "QWT_DLL", 
+        "QWT3D_MAKEDLL", "QWT3D_DLL", 
+        "GL2PSDLL_EXPORTS", "GL2PSDLL"
+    )
     if is_plat("windows") and is_mode("debug") then
         set_suffixname("D")
     end
